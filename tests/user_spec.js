@@ -32,12 +32,27 @@ var createUser = frisby.create('create user')
   .post(URL+'/user', user)
   .expectStatus(201);
 
+var updatedUser = JSON.parse(JSON.stringify(user));
+updatedUser.firstname = 'updated first name';
+var updateUser = frisby.create('update user')
+  .put(URL+'/user/'+user.username, updatedUser)
+  .expectStatus(200);
+
+var getUpdatedUser = frisby.create('get updated user')
+  .get(URL+'/user/'+user.username)
+  .expectJSON(updatedUser)
+  .expectStatus(200);
+
 var deleteUser = frisby.create('delete user')
   .delete(URL+'/user/'+user.username)
   .expectStatus(200);
 
 var setAddress = frisby.create('set address')
   .put(URL+'/user/'+user.username+'/address', address)
+  .expectStatus(200);
+
+var deleteAddress = frisby.create('delete address')
+  .delete(URL+'/user/'+user.username+'/address')
   .expectStatus(200);
 
 var getAddress = frisby.create('get address')
@@ -49,9 +64,15 @@ describe("/user", function() {
   it("creates, gets and deletes a user", function() {
     createUser.after(function() {
       getUser.after(function() {
-        setAddress.after(function() {
-          getAddress.after(function() {
-            deleteUser.toss();
+        updateUser.after(function() {
+          getUpdatedUser.after(function() {
+            setAddress.after(function() {
+              getAddress.after(function() {
+                deleteAddress.after(function() {
+                  deleteUser.toss();
+                }).toss();
+              }).toss();
+            }).toss();
           }).toss();
         }).toss();
       }).toss();
