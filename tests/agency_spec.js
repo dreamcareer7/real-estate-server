@@ -1,0 +1,59 @@
+var frisby = require('frisby');
+var config = require('../lib/config.js');
+
+var URL = 'http://localhost:'+config.http.port;
+
+frisby.globalSetup({
+  request: {
+    json:true
+  }
+});
+
+var agency = {
+  type:'agency',
+  name:'AB',
+  phonenumber:'999999999',
+  address:'Worst Neighborhood',
+};
+
+
+var createAgency = frisby.create('create agency')
+  .post(URL+'/agency', agency)
+  .expectStatus(201)
+  .afterJSON(function(json) {
+    agency.id = json.id;
+
+    getAgency = frisby.create('get agency')
+      .get(URL+'/agency/'+agency.id)
+      .expectJSON(agency)
+      .expectStatus(200);
+
+    updatedAgency = JSON.parse(JSON.stringify(agency));
+    updatedAgency.name = 'ABA';
+    
+    updateAgency = frisby.create('update agency')
+      .put(URL+'/agency/'+agency.id, updatedAgency)
+      .expectStatus(200);
+
+    getUpdatedAgency = frisby.create('get updated agency')
+      .get(URL+'/agency/'+agency.id)
+      .expectJSON(updatedAgency)
+      .expectStatus(200);
+
+    deleteAgency = frisby.create('delete agency')
+      .delete(URL+'/agency/'+agency.id)
+      .expectStatus(204);
+  });
+
+
+describe("/agency", function() {
+  it("creates, gets and deletes a agency", function() {
+    createAgency.after(function() {
+      getAgency.after(function() {
+        updateAgency.after(function() {
+          getUpdatedAgency.toss();
+        }).toss();
+      }).toss();
+    }).toss();
+  });
+});
