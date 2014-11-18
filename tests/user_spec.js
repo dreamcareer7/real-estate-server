@@ -53,7 +53,7 @@ var createUser = frisby.create('create user')
 
     deleteUser = frisby.create('delete user')
       .delete(URL+'/user/'+user.id)
-      .expectStatus(200);
+      .expectStatus(204);
 
     setAddress = frisby.create('set address')
       .put(URL+'/user/'+user.id+'/address', address)
@@ -61,7 +61,7 @@ var createUser = frisby.create('create user')
 
     deleteAddress = frisby.create('delete address')
       .delete(URL+'/user/'+user.id+'/address')
-      .expectStatus(200);
+      .expectStatus(204);
 
     getAddress = frisby.create('get address')
       .get(URL+'/user/'+user.id+'/address')
