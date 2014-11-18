@@ -54,7 +54,19 @@ var createAgency = frisby.create('create agency')
     createAgent = frisby.create('create agent')
       .post(URL+'/agency/'+agency.id+'/agents', agent)
       .expectStatus(201)
-      .expectJSON(agent);
+      .expectJSON(agent)
+      .afterJSON(function(ajson) {
+        agent.id = ajson.id;
+
+        getAgents = frisby.create('list agents')
+          .get(URL+'/agency/'+agency.id+'/agents')
+          .expectStatus(200)
+          .expectJSON([agent]);
+
+        deleteAgent = frisby.create('delete agent')
+          .delete(URL+'/user/'+agent.id)
+          .expectStatus(204);
+      });
   });
 
 
@@ -65,8 +77,10 @@ describe("/agency", function() {
         updateAgency.after(function() {
           getUpdatedAgency.after(function() {
             createAgent.after(function() {
-              deleteAgent.after(function() {
-                deleteAgency.toss();
+              getAgents.after(function() {
+                deleteAgent.after(function() {
+                  deleteAgency.toss();
+                }).toss();
               }).toss();
             }).toss();
           }).toss();
