@@ -3,12 +3,18 @@ var config = require('../lib/config.js');
 
 var URL = 'http://localhost:'+config.http.port;
 
+frisby.globalSetup({
+  request: {
+    json:true
+  }
+});
+
 var event = {
   action:'view',
   user_id:1,
   subject_type:'listing',
   subject_id:2,
-  timestamp:((new Date).getTime())/1000
+  timestamp:((new Date).getTime())
 };
 
 

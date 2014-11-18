@@ -3,6 +3,12 @@ var config = require('../lib/config.js');
 
 var URL = 'http://localhost:'+config.http.port;
 
+frisby.globalSetup({
+  request: {
+    json:true
+  }
+});
+
 var user = {
   username:'phubar',
   firstname:'foo',
