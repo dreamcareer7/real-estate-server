@@ -16,6 +16,13 @@ var agency = {
   address:'Worst Neighborhood',
 };
 
+var agent = {
+  username:'phubar',
+  firstname:'foo',
+  lastname:'bar',
+  email:'foo.bar@provider.tld',
+  phonenumber:'989124834198',
+};
 
 var createAgency = frisby.create('create agency')
   .post(URL+'/agency', agency)
@@ -30,7 +37,7 @@ var createAgency = frisby.create('create agency')
 
     updatedAgency = JSON.parse(JSON.stringify(agency));
     updatedAgency.name = 'ABA';
-    
+
     updateAgency = frisby.create('update agency')
       .put(URL+'/agency/'+agency.id, updatedAgency)
       .expectStatus(200);
@@ -43,6 +50,11 @@ var createAgency = frisby.create('create agency')
     deleteAgency = frisby.create('delete agency')
       .delete(URL+'/agency/'+agency.id)
       .expectStatus(204);
+
+    createAgent = frisby.create('create agent')
+      .post(URL+'/agency/'+agency.id+'/agents', agent)
+      .expectStatus(201)
+      .expectJSON(agent);
   });
 
 
@@ -51,7 +63,13 @@ describe("/agency", function() {
     createAgency.after(function() {
       getAgency.after(function() {
         updateAgency.after(function() {
-          getUpdatedAgency.toss();
+          getUpdatedAgency.after(function() {
+            createAgent.after(function() {
+              deleteAgent.after(function() {
+                deleteAgency.toss();
+              }).toss();
+            }).toss();
+          }).toss();
         }).toss();
       }).toss();
     }).toss();
