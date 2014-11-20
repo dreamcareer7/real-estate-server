@@ -12,16 +12,16 @@ frisby.globalSetup({
 var agency = {
   type:'agency',
   name:'AB',
-  phonenumber:'999999999',
+  phone_number:'999999999',
   address:'Worst Neighborhood',
 };
 
 var agent = {
   username:'agentsmith',
-  firstname:'foo',
-  lastname:'bar',
+  first_name:'foo',
+  last_name:'bar',
   email:'foo.bar@provider.tld',
-  phonenumber:'989124834198',
+  phone_number:'989124834198',
 };
 
 var createAgency = frisby.create('create agency')

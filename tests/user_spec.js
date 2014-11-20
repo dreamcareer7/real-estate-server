@@ -11,21 +11,21 @@ frisby.globalSetup({
 
 var user = {
   username:'phubar',
-  firstname:'foo',
-  lastname:'bar',
+  first_name:'foo',
+  last_name:'bar',
   email:'foo.bar@provider.tld',
-  phonenumber:'989124834198',
+  phone_number:'989124834198',
 };
 
 var address = {
   title:'title',
   subtitle:'subtitle',
-  streetnumber:'#333',
-  streetname:'phu street',
+  street_number:'#333',
+  street_name:'phu street',
   city:'los majones',
   state:'texas',
-  statecode:'TX',
-  postalcode:'12345',
+  state_code:'TX',
+  zip_code:'12345',
   neighborhood:'disastrous place'
 }
 
@@ -41,7 +41,7 @@ var createUser = frisby.create('create user')
       .expectStatus(200);
 
     updatedUser = JSON.parse(JSON.stringify(user));
-    updatedUser.firstname = 'updated first name';
+    updatedUser.first_name = 'updated first name';
     updateUser = frisby.create('update user')
       .put(URL+'/user/'+user.id, updatedUser)
       .expectStatus(200);
