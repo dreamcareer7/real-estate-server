@@ -1,0 +1,9 @@
+{
+  "clients" : {
+    "0.1" : {
+        "type": "session",
+        "api_base_url": "https://api.shortlisted.com:443",
+        "client_version_status": "UPGRADE_AVAILABLE"
+    }
+  }
+}
