@@ -28,11 +28,14 @@ var createAgency = frisby.create('create agency')
   .post(URL+'/agency', agency)
   .expectStatus(201)
   .afterJSON(function(json) {
-    agency.id = json.id;
+    agency.id = json.data.id;
 
     getAgency = frisby.create('get agency')
       .get(URL+'/agency/'+agency.id)
-      .expectJSON(agency)
+      .expectJSON({
+        code:'OK',
+        data:agency
+      })
       .expectStatus(200);
 
     updatedAgency = JSON.parse(JSON.stringify(agency));
@@ -44,7 +47,10 @@ var createAgency = frisby.create('create agency')
 
     getUpdatedAgency = frisby.create('get updated agency')
       .get(URL+'/agency/'+agency.id)
-      .expectJSON(updatedAgency)
+      .expectJSON({
+        data:'OK',
+        data:updatedAgency
+      })
       .expectStatus(200);
 
     deleteAgency = frisby.create('delete agency')
@@ -54,14 +60,20 @@ var createAgency = frisby.create('create agency')
     createAgent = frisby.create('create agent')
       .post(URL+'/agency/'+agency.id+'/agents', agent)
       .expectStatus(201)
-      .expectJSON(agent)
+      .expectJSON({
+        code:'OK',
+        data:agent
+      })
       .afterJSON(function(ajson) {
-        agent.id = ajson.id;
+        agent.id = ajson.data.id;
 
         getAgents = frisby.create('list agents')
           .get(URL+'/agency/'+agency.id+'/agents')
           .expectStatus(200)
-          .expectJSON([agent]);
+          .expectJSON({
+            code:'OK',
+            data:[agent]
+          });
 
         deleteAgent = frisby.create('delete agent')
           .delete(URL+'/user/'+agent.id)

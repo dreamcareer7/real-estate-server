@@ -15,6 +15,7 @@ var user = {
   last_name:'bar',
   email:'foo.bar@provider.tld',
   phone_number:'989124834198',
+  password:'520d41b29f891bbaccf31d9fcfa72e82ea20fcf0'
 };
 
 var address = {
@@ -33,11 +34,15 @@ var createUser = frisby.create('create user')
   .post(URL+'/user', user)
   .expectStatus(201)
   .afterJSON(function(json) {
-    user.id = json.id;
-
+    user.id = json.data.id;
+    delete user.password;
+    
     getUser = frisby.create('get user')
       .get(URL+'/user/'+user.id)
-      .expectJSON(user)
+      .expectJSON({
+        code:'OK',
+        data:user,
+      })
       .expectStatus(200);
 
     updatedUser = JSON.parse(JSON.stringify(user));
@@ -48,7 +53,10 @@ var createUser = frisby.create('create user')
 
     getUpdatedUser = frisby.create('get updated user')
       .get(URL+'/user/'+user.id)
-      .expectJSON(updatedUser)
+      .expectJSON({
+        code:'OK',
+        data:updatedUser
+      })
       .expectStatus(200);
 
     deleteUser = frisby.create('delete user')
@@ -65,7 +73,10 @@ var createUser = frisby.create('create user')
 
     getAddress = frisby.create('get address')
       .get(URL+'/user/'+user.id+'/address')
-      .expectJSON(address)
+      .expectJSON({
+        data:'OK',
+        data:address
+      })
       .expectStatus(200);
   });
 
