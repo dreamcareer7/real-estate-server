@@ -11,8 +11,9 @@
   "dependencies": {
     "amanda": "^0.5.1",
     "body-parser": "^1.9.2",
-    "express": "^4.10.2",
-    "pg": "^3.6.3",
+    "compress": "^0.99.0",
+    "compression": "^1.2.0",
+    "pg": "^3.6.3"
   },
   "devDependencies": {
     "frisby": "^0.8.3"
