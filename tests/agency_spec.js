@@ -22,6 +22,7 @@ var agent = {
   last_name:'bar',
   email:'foo.bar@provider.tld',
   phone_number:'989124834198',
+  password:'520d41b29f891bbaccf31d9fcfa72e82ea20fcf0'
 };
 
 var createAgency = frisby.create('create agency')
@@ -60,12 +61,9 @@ var createAgency = frisby.create('create agency')
     createAgent = frisby.create('create agent')
       .post(URL+'/agency/'+agency.id+'/agents', agent)
       .expectStatus(201)
-      .expectJSON({
-        code:'OK',
-        data:agent
-      })
       .afterJSON(function(ajson) {
         agent.id = ajson.data.id;
+        delete agent.password;
 
         getAgents = frisby.create('list agents')
           .get(URL+'/agency/'+agency.id+'/agents')
@@ -78,7 +76,7 @@ var createAgency = frisby.create('create agency')
         deleteAgent = frisby.create('delete agent')
           .delete(URL+'/user/'+agent.id)
           .expectStatus(204);
-      });
+      })
   });
 
 
