@@ -13,6 +13,10 @@
     "body-parser": "^1.9.2",
     "compress": "^0.99.0",
     "compression": "^1.2.0",
+    "oauth2orize": "^1.0.1",
+    "passport": "^0.2.1",
+    "passport-http-bearer": "^1.0.1",
+    "passport-oauth2-client-password": "^0.1.2",
     "pg": "^3.6.3"
   },
   "devDependencies": {
