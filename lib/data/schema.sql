@@ -10,17 +10,31 @@ SET check_function_bodies = false;
 SET client_min_messages = warning;
 
 --
--- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner:
 --
 
 CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
 
 
 --
--- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner:
 --
 
 COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
+
+
+--
+-- Name: uuid-ossp; Type: EXTENSION; Schema: -; Owner:
+--
+
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp" WITH SCHEMA public;
+
+
+--
+-- Name: EXTENSION "uuid-ossp"; Type: COMMENT; Schema: -; Owner:
+--
+
+COMMENT ON EXTENSION "uuid-ossp" IS 'generate universally unique identifiers (UUIDs)';
 
 
 SET search_path = public, pg_catalog;
@@ -30,11 +44,10 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
--- Name: addresses; Type: TABLE; Schema: public; Owner: emilsedgh; Tablespace: 
+-- Name: addresses; Type: TABLE; Schema: public; Owner: emilsedgh; Tablespace:
 --
 
 CREATE TABLE addresses (
-    id integer NOT NULL,
     type character varying(10),
     title character varying(255),
     subtitle character varying(255),
@@ -45,112 +58,95 @@ CREATE TABLE addresses (
     state_code character varying(5),
     zip_code character varying(10),
     neighborhood character varying(255),
-    user_id integer
+    id uuid DEFAULT uuid_generate_v1() NOT NULL,
+    user_id uuid
 );
 
 
 ALTER TABLE addresses OWNER TO emilsedgh;
 
 --
--- Name: addresses_id_seq; Type: SEQUENCE; Schema: public; Owner: emilsedgh
---
-
-CREATE SEQUENCE addresses_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE addresses_id_seq OWNER TO emilsedgh;
-
---
--- Name: addresses_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: emilsedgh
---
-
-ALTER SEQUENCE addresses_id_seq OWNED BY addresses.id;
-
-
---
--- Name: agencies; Type: TABLE; Schema: public; Owner: emilsedgh; Tablespace: 
+-- Name: agencies; Type: TABLE; Schema: public; Owner: emilsedgh; Tablespace:
 --
 
 CREATE TABLE agencies (
-    id integer NOT NULL,
     type character varying(10),
     name character varying(255),
     phone_number character varying(20),
-    address text
+    address text,
+    id uuid DEFAULT uuid_generate_v1() NOT NULL
 );
 
 
 ALTER TABLE agencies OWNER TO emilsedgh;
 
 --
--- Name: agencies_id_seq; Type: SEQUENCE; Schema: public; Owner: emilsedgh
+-- Name: clients; Type: TABLE; Schema: public; Owner: emilsedgh; Tablespace:
 --
 
-CREATE SEQUENCE agencies_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
+CREATE TABLE clients (
+    id uuid DEFAULT uuid_generate_v1(),
+    version character varying(10),
+    response jsonb,
+    secret character varying(255),
+    name character varying(255)
+);
 
 
-ALTER TABLE agencies_id_seq OWNER TO emilsedgh;
-
---
--- Name: agencies_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: emilsedgh
---
-
-ALTER SEQUENCE agencies_id_seq OWNED BY agencies.id;
-
+ALTER TABLE clients OWNER TO emilsedgh;
 
 --
--- Name: events; Type: TABLE; Schema: public; Owner: emilsedgh; Tablespace: 
+-- Name: events; Type: TABLE; Schema: public; Owner: emilsedgh; Tablespace:
 --
 
 CREATE TABLE events (
-    id integer NOT NULL,
     action character varying(10),
-    user_id integer,
     "timestamp" timestamp without time zone,
     subject_type character varying(10),
-    subject_id integer
+    id uuid DEFAULT uuid_generate_v1() NOT NULL,
+    subject_id uuid,
+    user_id uuid
 );
 
 
 ALTER TABLE events OWNER TO emilsedgh;
 
 --
--- Name: events_id_seq; Type: SEQUENCE; Schema: public; Owner: emilsedgh
+-- Name: sessions; Type: TABLE; Schema: public; Owner: emilsedgh; Tablespace:
 --
 
-CREATE SEQUENCE events_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
+CREATE TABLE sessions (
+    id uuid DEFAULT uuid_generate_v1(),
+    device_uuid uuid,
+    device_name character varying(255),
+    client_version character varying(30),
+    created_time timestamp without time zone DEFAULT now()
+);
 
 
-ALTER TABLE events_id_seq OWNER TO emilsedgh;
-
---
--- Name: events_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: emilsedgh
---
-
-ALTER SEQUENCE events_id_seq OWNED BY events.id;
-
+ALTER TABLE sessions OWNER TO emilsedgh;
 
 --
--- Name: users; Type: TABLE; Schema: public; Owner: emilsedgh; Tablespace: 
+-- Name: tokens; Type: TABLE; Schema: public; Owner: emilsedgh; Tablespace:
+--
+
+CREATE TABLE tokens (
+    id uuid DEFAULT uuid_generate_v1(),
+    token character varying(60),
+    client_id uuid,
+    type character varying(10),
+    user_id uuid,
+    expire_date timestamp without time zone
+);
+
+
+ALTER TABLE tokens OWNER TO emilsedgh;
+
+--
+-- Name: users; Type: TABLE; Schema: public; Owner: emilsedgh; Tablespace:
 --
 
 CREATE TABLE users (
-    id integer NOT NULL,
     username character varying(30),
     first_name character varying(30),
     last_name character varying(30),
@@ -158,202 +154,53 @@ CREATE TABLE users (
     phone_number character varying(20),
     type character varying(10),
     created_time timestamp without time zone DEFAULT now(),
-    agency_id integer
+    id uuid DEFAULT uuid_generate_v1() NOT NULL,
+    agency_id uuid,
+    password character varying(512)
 );
 
 
 ALTER TABLE users OWNER TO emilsedgh;
 
 --
--- Name: users_id_seq; Type: SEQUENCE; Schema: public; Owner: emilsedgh
---
-
-CREATE SEQUENCE users_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE users_id_seq OWNER TO emilsedgh;
-
---
--- Name: users_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: emilsedgh
---
-
-ALTER SEQUENCE users_id_seq OWNED BY users.id;
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: emilsedgh
---
-
-ALTER TABLE ONLY addresses ALTER COLUMN id SET DEFAULT nextval('addresses_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: emilsedgh
---
-
-ALTER TABLE ONLY agencies ALTER COLUMN id SET DEFAULT nextval('agencies_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: emilsedgh
---
-
-ALTER TABLE ONLY events ALTER COLUMN id SET DEFAULT nextval('events_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: emilsedgh
---
-
-ALTER TABLE ONLY users ALTER COLUMN id SET DEFAULT nextval('users_id_seq'::regclass);
-
-
---
 -- Data for Name: addresses; Type: TABLE DATA; Schema: public; Owner: emilsedgh
 --
 
-COPY addresses (id, type, title, subtitle, street_number, street_name, city, state, state_code, zip_code, neighborhood, user_id) FROM stdin;
+COPY addresses (type, title, subtitle, street_number, street_name, city, state, state_code, zip_code, neighborhood, id, user_id) FROM stdin;
 \.
 
 
---
--- Name: addresses_id_seq; Type: SEQUENCE SET; Schema: public; Owner: emilsedgh
---
-
-SELECT pg_catalog.setval('addresses_id_seq', 53, true);
-
 
 --
--- Data for Name: agencies; Type: TABLE DATA; Schema: public; Owner: emilsedgh
+-- Data for Name: clients; Type: TABLE DATA; Schema: public; Owner: emilsedgh
 --
 
-COPY agencies (id, type, name, phone_number, address) FROM stdin;
-1	agency	AB	999999999	Worst Neighborhood
-2	agency	AB	999999999	Worst Neighborhood
-3	agency	AB	999999999	Worst Neighborhood
-4	agency	AB	999999999	Worst Neighborhood
-5	agency	AB	999999999	Worst Neighborhood
-6	agency	AB	999999999	Worst Neighborhood
-7	agency	AB	999999999	Worst Neighborhood
-8	agency	AB	999999999	Worst Neighborhood
-9	agency	AB	999999999	Worst Neighborhood
-14	\N	foo	\N	\N
-17	agency	AB	999999999	Worst Neighborhood
-18	agency	AB	999999999	Worst Neighborhood
-19	agency	ABA	999999999	Worst Neighborhood
-20	agency	ABA	999999999	Worst Neighborhood
-21	agency	ABA	999999999	Worst Neighborhood
-22	agency	ABA	999999999	Worst Neighborhood
-23	agency	ABA	999999999	Worst Neighborhood
-24	agency	ABA	999999999	Worst Neighborhood
-25	agency	ABA	999999999	Worst Neighborhood
-26	agency	ABA	999999999	Worst Neighborhood
-31	agency	ABA	999999999	Worst Neighborhood
-35	agency	ABA	999999999	Worst Neighborhood
-36	agency	ABA	999999999	Worst Neighborhood
-37	agency	ABA	999999999	Worst Neighborhood
-38	agency	ABA	999999999	Worst Neighborhood
-39	agency	ABA	999999999	Worst Neighborhood
-40	agency	ABA	999999999	Worst Neighborhood
-41	agency	ABA	999999999	Worst Neighborhood
-42	agency	ABA	999999999	Worst Neighborhood
-43	agency	ABA	999999999	Worst Neighborhood
-44	agency	ABA	999999999	Worst Neighborhood
-45	agency	ABA	999999999	Worst Neighborhood
-46	agency	ABA	999999999	Worst Neighborhood
-47	agency	ABA	999999999	Worst Neighborhood
-48	agency	ABA	999999999	Worst Neighborhood
-49	agency	ABA	999999999	Worst Neighborhood
-50	agency	ABA	999999999	Worst Neighborhood
+COPY clients (id, version, response, secret, name) FROM stdin;
+bf0da47e-7226-11e4-905b-0024d71b10fc	0.1	{"type": "session", "api_base_url": "https://api.shortlisted.com:443", "client_version_status": "UPGRADE_AVAILABLE"}	secret	Unit Test
 \.
-
-
---
--- Name: agencies_id_seq; Type: SEQUENCE SET; Schema: public; Owner: emilsedgh
---
-
-SELECT pg_catalog.setval('agencies_id_seq', 61, true);
 
 
 --
 -- Data for Name: events; Type: TABLE DATA; Schema: public; Owner: emilsedgh
 --
 
-COPY events (id, action, user_id, "timestamp", subject_type, subject_id) FROM stdin;
-2	view	1	2014-11-18 00:51:01	listing	2
-3	view	1	2014-11-18 00:51:24	listing	2
-4	view	1	2014-11-18 00:52:10	listing	2
-5	view	1	2014-11-18 00:52:53	listing	2
-6	view	1	2014-11-18 00:54:48	listing	2
-7	view	1	2014-11-18 00:55:02	listing	2
-8	view	1	2014-11-18 00:57:26	listing	2
-9	view	1	2014-11-18 00:57:49	listing	2
-10	view	1	2014-11-18 00:58:06	listing	2
-11	view	1	2014-11-18 00:59:20	listing	2
-12	view	1	2014-11-18 00:59:29	listing	2
-13	view	1	2014-11-18 01:00:31	listing	2
-14	view	1	2014-11-18 01:00:33	listing	2
-15	view	1	2014-11-18 01:39:04.131	listing	2
-16	view	1	2014-11-18 01:39:39	listing	2
-17	view	1	2014-11-18 01:40:07	listing	2
-18	view	1	2014-11-18 01:40:17	listing	2
-19	view	1	2014-11-18 01:40:35.501	listing	2
-20	view	1	2014-11-18 01:41:31.083	listing	2
-21	view	1	2014-11-18 01:41:33.971	listing	2
-22	view	1	2014-11-18 01:44:35.888	listing	2
-23	view	1	2014-11-18 01:45:00.321	listing	2
-24	view	1	2014-11-18 01:45:12.864	listing	2
-25	view	1	2014-11-18 01:46:05.478	listing	2
-26	view	1	2014-11-18 01:46:25.739	listing	2
-27	view	1	2014-11-18 01:47:02.024	listing	2
-28	view	1	2014-11-18 14:01:40.54	listing	2
-29	view	1	2014-11-18 14:05:25.175	listing	2
-30	view	1	46850-12-24 19:03:11.000064	listing	2
-31	view	1	46850-12-27 03:46:36	listing	2
-32	view	1	46850-12-27 04:12:15.000064	listing	2
-33	view	1	46851-01-03 23:27:18.000128	listing	2
-34	view	1	46851-01-27 20:01:31.000064	listing	2
-35	view	1	46851-01-27 23:51:20.999936	listing	2
-36	view	1	46851-03-16 23:34:17.999872	listing	2
-37	view	1	46852-04-30 03:03:23.000064	listing	2
-38	view	1	46852-04-30 17:06:16.999936	listing	2
-39	view	1	46852-05-01 05:00:36.999936	listing	2
-40	view	1	46852-05-27 15:43:19.000064	listing	2
-41	view	1	46852-06-29 12:11:32.999936	listing	2
-42	view	1	46856-12-14 13:33:36	listing	2
+COPY events (action, "timestamp", subject_type, id, subject_id, user_id) FROM stdin;
+view	46868-08-16 12:50:57.999872	listing	253550cc-741f-11e4-8605-0024d71b10fc	7cc88bc8-7100-11e4-905b-0024d71b10fc	74a1aa38-7100-11e4-905b-0024d71b10fc
 \.
-
-
---
--- Name: events_id_seq; Type: SEQUENCE SET; Schema: public; Owner: emilsedgh
---
-
-SELECT pg_catalog.setval('events_id_seq', 42, true);
 
 
 --
 -- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: emilsedgh
 --
 
-COPY users (id, username, first_name, last_name, email, phone_number, type, created_time, agency_id) FROM stdin;
-89	emilsedgh	Emil	Sedgh	\N	\N	agentt	2014-11-18 23:39:16.108473	2
+COPY users (username, first_name, last_name, email, phone_number, type, created_time, id, agency_id, password) FROM stdin;
+emilsedgh	emil	sedgh	\N	\N	user	2014-11-22 12:52:27.99155	13d5262e-7229-11e4-905b-0024d71b10fc	\N	12345
+test	John	Doe	j.doe@host.tld	\N	user	2014-11-25 00:32:41.506672	3aaa6a98-741d-11e4-a1b5-0024d71b10fc	\N	password
 \.
 
 
 --
--- Name: users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: emilsedgh
---
-
-SELECT pg_catalog.setval('users_id_seq', 118, true);
-
-
---
--- Name: addresses_pkey; Type: CONSTRAINT; Schema: public; Owner: emilsedgh; Tablespace: 
+-- Name: addresses_pkey; Type: CONSTRAINT; Schema: public; Owner: emilsedgh; Tablespace:
 --
 
 ALTER TABLE ONLY addresses
@@ -361,7 +208,7 @@ ALTER TABLE ONLY addresses
 
 
 --
--- Name: agencies_pkey; Type: CONSTRAINT; Schema: public; Owner: emilsedgh; Tablespace: 
+-- Name: agencies_pkey; Type: CONSTRAINT; Schema: public; Owner: emilsedgh; Tablespace:
 --
 
 ALTER TABLE ONLY agencies
@@ -369,7 +216,7 @@ ALTER TABLE ONLY agencies
 
 
 --
--- Name: events_pkey; Type: CONSTRAINT; Schema: public; Owner: emilsedgh; Tablespace: 
+-- Name: events_pkey; Type: CONSTRAINT; Schema: public; Owner: emilsedgh; Tablespace:
 --
 
 ALTER TABLE ONLY events
@@ -377,7 +224,7 @@ ALTER TABLE ONLY events
 
 
 --
--- Name: users_pkey; Type: CONSTRAINT; Schema: public; Owner: emilsedgh; Tablespace: 
+-- Name: users_pkey; Type: CONSTRAINT; Schema: public; Owner: emilsedgh; Tablespace:
 --
 
 ALTER TABLE ONLY users
