@@ -13,7 +13,14 @@ vim lib/config.js
 ```
 And set configuration option of your database.
 
+## Run the app ##
+
+```bash
+npm start
+```
+
 ## Howto Test ##
+
 ```bash
 npm test
 ```
