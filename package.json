@@ -5,12 +5,13 @@
   "main": "index.js",
   "scripts": {
     "test": "jasmine-node tests",
-    "start" : "node index.js"
+    "start": "node index.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "amanda": "^0.5.1",
+    "async": "^0.9.0",
     "body-parser": "^1.9.2",
     "compress": "^0.99.0",
     "compression": "^1.2.0",
