@@ -4,10 +4,16 @@ var session = {
   client_version:'0.1'
 };
 
-require('./setup.js')(function(err, frisby, URL) {
+var setup = require('./setup.js');
+
+var req = JSON.parse(JSON.stringify(session));
+req.client_id = setup.auth.client_id;
+req.client_secret = setup.auth.client_secret;
+
+setup(function(err, frisby, URL) {
 
   var createSession = frisby.create('create session')
-    .post(URL+'/session', session)
+    .post(URL+'/session', req)
     .expectStatus(201)
     .expectJSON({
       code:'OK',
