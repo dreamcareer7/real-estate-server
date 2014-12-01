@@ -1,3 +1,5 @@
+var setup = require('./setup.js');
+
 var password = '520d41b29f891bbaccf31d9fcfa72e82ea20fcf0';
 
 var user = {
@@ -8,6 +10,10 @@ var user = {
   phone_number:'989124834198',
   password:password
 };
+
+var client = JSON.parse(JSON.stringify(user));
+client.client_id = setup.auth.client_id;
+client.client_secret = setup.auth.client_secret;
 
 var address = {
   title:'title',
@@ -21,9 +27,9 @@ var address = {
   neighborhood:'disastrous place'
 }
 
-require('./setup.js')(function(err, frisby, URL) {
+setup(function(err, frisby, URL) {
   var createUser = frisby.create('create user')
-    .post(URL+'/user', user)
+    .post(URL+'/user', client)
     .expectStatus(201)
     .afterJSON(function(json) {
       user.id = json.data.id;

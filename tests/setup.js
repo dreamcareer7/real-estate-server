@@ -38,3 +38,5 @@ module.exports = function(cb) {
     auth.toss();
   });
 };
+
+module.exports.auth = auth_params;
