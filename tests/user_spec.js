@@ -29,7 +29,7 @@ var address = {
 
 setup(function(err, frisby, URL) {
   var createUser = frisby.create('create user')
-    .post(URL+'/user', client)
+    .post(URL+'/users', client)
     .expectStatus(201)
     .afterJSON(function(json) {
       user.id = json.data.id;

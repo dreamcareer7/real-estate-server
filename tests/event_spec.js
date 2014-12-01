@@ -9,7 +9,7 @@ var event = {
 var setup = require('./setup.js');
 setup(function(err, frisby, URL) {
   var createEvent = frisby.create('create event')
-  .post(URL+'/event', event)
+  .post(URL+'/events', event)
   .expectStatus(201);
 
 

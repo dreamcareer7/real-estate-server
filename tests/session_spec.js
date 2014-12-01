@@ -13,7 +13,7 @@ req.client_secret = setup.auth.client_secret;
 setup(function(err, frisby, URL) {
 
   var createSession = frisby.create('create session')
-    .post(URL+'/session', req)
+    .post(URL+'/sessions', req)
     .expectStatus(201)
     .expectJSON({
       code:'OK',

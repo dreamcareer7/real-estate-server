@@ -16,7 +16,7 @@ var agent = {
 
 require('./setup.js')(function(err, frisby, URL) {
   var createAgency = frisby.create('create agency')
-    .post(URL+'/agency', agency)
+    .post(URL+'/agencies', agency)
     .expectStatus(201)
     .afterJSON(function(json) {
       agency.id = json.data.id;
