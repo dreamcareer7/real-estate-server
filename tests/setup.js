@@ -12,7 +12,7 @@ frisby.globalSetup({
 var auth_params = {
   client_id:'bf0da47e-7226-11e4-905b-0024d71b10fc',
   client_secret:'secret',
-  username:'test',
+  username:'j.doe@host.tld',
   password:'password',
   grant_type:'password',
 }

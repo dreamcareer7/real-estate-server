@@ -6,7 +6,6 @@ var agency = {
 };
 
 var agent = {
-  username:'agentsmith',
   first_name:'foo',
   last_name:'bar',
   email:'foo.bar@provider.tld',

@@ -3,7 +3,6 @@ var setup = require('./setup.js');
 var password = '520d41b29f891bbaccf31d9fcfa72e82ea20fcf0';
 
 var user = {
-  username:'phubar',
   first_name:'foo',
   last_name:'bar',
   email:'foo.bar@provider.tld',
