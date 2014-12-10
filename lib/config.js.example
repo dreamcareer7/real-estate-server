@@ -1,0 +1,23 @@
+module.exports = {
+  pg: {
+    connection: {
+      user:'emilsedgh',
+      database:'shortlisted',
+      password:'12345678',
+    }
+  },
+
+  http: {
+    port:8080
+  },
+
+  auth: {
+    access_token_lifetime: 86400
+  },
+
+  salt: {
+    string:'aVv6LQ4sbpp5zDZsQA3beSmy',
+    iterations:1000,
+    length:5
+  }
+}
