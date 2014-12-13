@@ -15,6 +15,7 @@
     "body-parser": "^1.9.2",
     "compress": "^0.99.0",
     "compression": "^1.2.0",
+    "express": "^4.10.4",
     "oauth2orize": "^1.0.1",
     "passport": "^0.2.1",
     "passport-http-bearer": "^1.0.1",
@@ -22,6 +23,7 @@
     "pg": "^3.6.3"
   },
   "devDependencies": {
-    "frisby": "^0.8.3"
+    "frisby": "^0.8.3",
+    "jasmine-node": "^1.14.5"
   }
 }
