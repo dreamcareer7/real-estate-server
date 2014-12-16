@@ -16,11 +16,14 @@
     "compress": "^0.99.0",
     "compression": "^1.2.0",
     "express": "^4.10.4",
+    "express-winston": "^0.2.9",
     "oauth2orize": "^1.0.1",
     "passport": "^0.2.1",
     "passport-http-bearer": "^1.0.1",
     "passport-oauth2-client-password": "^0.1.2",
-    "pg": "^3.6.3"
+    "pg": "^3.6.3",
+    "winston": "^0.8.3",
+    "winston-postgre": "0.0.1"
   },
   "devDependencies": {
     "frisby": "^0.8.3",
