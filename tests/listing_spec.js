@@ -11,7 +11,6 @@ var listing = {
   password: password
 };
 
-
 var client = JSON.parse(JSON.stringify(listing));
 client.client_id = setup.auth.client_id;
 client.client_secret = setup.auth.client_secret;
