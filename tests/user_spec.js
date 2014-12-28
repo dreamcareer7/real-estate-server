@@ -22,8 +22,12 @@ var address = {
   city:'los majones',
   state:'texas',
   state_code:'TX',
-  zip_code:'12345',
-  neighborhood:'disastrous place'
+  postal_code:'12345',
+  neighborhood:'disastrous place',
+  street_prefix: 'foobar',
+  unit_number: '12D',
+  country:'United States',
+  country_code:'USA'
 }
 
 setup(function(err, frisby, URL) {

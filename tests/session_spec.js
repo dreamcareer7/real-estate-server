@@ -20,7 +20,7 @@ setup(function(err, frisby, URL) {
       data:{
         type: "session",
         api_base_url: "https://api.shortlisted.com:443",
-        client_version_status: "UPGRADE_AVAILABLE",
+        client_version_status: "UpgradeAvailable",
       }
     });
 
