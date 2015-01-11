@@ -39,7 +39,7 @@ setup(function(err, frisby, URL) {
       delete user.password;
 
       getUser = frisby.create('get user')
-        .get(URL+'/user/'+user.id)
+        .get(URL+'/users/'+user.id)
         .expectJSON({
           code:'OK',
           data:user,
@@ -54,11 +54,11 @@ setup(function(err, frisby, URL) {
       delete expectedUser.password;
 
       updateUser = frisby.create('update user')
-        .put(URL+'/user/'+user.id, updatedUser)
+        .put(URL+'/users/'+user.id, updatedUser)
         .expectStatus(200);
 
       getUpdatedUser = frisby.create('get updated user')
-        .get(URL+'/user/'+user.id)
+        .get(URL+'/users/'+user.id)
         .expectJSON({
           code:'OK',
           data:expectedUser
@@ -66,19 +66,19 @@ setup(function(err, frisby, URL) {
         .expectStatus(200);
 
       deleteUser = frisby.create('delete user')
-        .delete(URL+'/user/'+user.id)
+        .delete(URL+'/users/'+user.id)
         .expectStatus(204);
 
       setAddress = frisby.create('set address')
-        .put(URL+'/user/'+user.id+'/address', address)
+        .put(URL+'/users/'+user.id+'/address', address)
         .expectStatus(200);
 
       deleteAddress = frisby.create('delete address')
-        .delete(URL+'/user/'+user.id+'/address')
+        .delete(URL+'/users/'+user.id+'/address')
         .expectStatus(204);
 
       getAddress = frisby.create('get address')
-        .get(URL+'/user/'+user.id+'/address')
+        .get(URL+'/users/'+user.id+'/address')
         .expectJSON({
           data:'OK',
           data:address
@@ -87,7 +87,7 @@ setup(function(err, frisby, URL) {
     });
 
 
-  describe("/user", function() {
+  describe("/users", function() {
     it("creates, gets and deletes a user", function() {
       createUser.after(function() {
         getUser.after(function() {
