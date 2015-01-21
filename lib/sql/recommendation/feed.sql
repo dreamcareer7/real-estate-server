@@ -3,6 +3,6 @@ SELECT (COUNT(*) OVER())::INT AS full_count,
 FROM recommendations
 WHERE recommendations.referring_user = $1
   AND recommendations.referred_shortlist = $2
-  AND recommendations.status <> 'Favorited'
+  AND recommendations.status = 'Unacknowledged'
 ORDER BY recommendations.created_at DESC LIMIT $3
 OFFSET $4

@@ -1,12 +1,13 @@
 WITH favs AS
-  (SELECT JSON_AGG(CASE WHEN status = 'Favorited' THEN referring_user END) AS favorited_by,
+  (SELECT JSON_AGG(CASE WHEN favorited = TRUE THEN referring_user END) AS favorited_by,
           referred_shortlist,
           object,
-          BOOL_OR(CASE WHEN status = 'Favorited' THEN TRUE ELSE FALSE END) AS favorited
+          BOOL_OR(CASE WHEN favorited = TRUE THEN TRUE ELSE FALSE END) AS favorited
    FROM recommendations
    WHERE referred_shortlist = $2
    GROUP BY referred_shortlist,
-            object )
+            object
+  )
 SELECT (COUNT(*) OVER())::INT AS full_count,
        id
 FROM recommendations

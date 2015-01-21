@@ -1,3 +1,3 @@
 UPDATE recommendations
-SET status = 'Favorited'
+SET status = 'Unpinned'
 WHERE id = $1
