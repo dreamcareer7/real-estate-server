@@ -29,8 +29,12 @@ var sql_insert_listing = "WITH\
  listing_agency AS (SELECT id FROM agencies ORDER BY RANDOM() LIMIT 1)\
  INSERT INTO listings(\
  property_id, cover_image_url, currency,\
- price, status, alerting_agent_id, listing_agent_id, listing_agency_id)\
- VALUES($1, $2, $3, $4, $5, (SELECT id FROM alerting_agent), (SELECT id FROM listing_agent), (SELECT id FROM listing_agency)) RETURNING id";
+ price, status, alerting_agent_id, listing_agent_id, listing_agency_id,\
+ gallery_image_urls)\
+ VALUES($1, $2, $3, $4, $5, (SELECT id FROM alerting_agent), (SELECT id FROM listing_agent), (SELECT id FROM listing_agency),\
+ ARRAY['http://emilsedgh.info:8088/listings/cover3.jpg', 'http://emilsedgh.info:8088/listings/cover4.jpg',\
+ 'http://emilsedgh.info:8088/listings/cover5.jpg', 'http://emilsedgh.info:8088/listings/cover6.jpg',\
+ 'http://emilsedgh.info:8088/listings/cover7.jpg']) RETURNING id";
 
 var sql_all_shortlist_users = "SELECT\
  shortlists_users.user, shortlist\
