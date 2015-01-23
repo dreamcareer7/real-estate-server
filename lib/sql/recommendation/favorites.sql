@@ -2,7 +2,7 @@ WITH favs AS
   (SELECT JSON_AGG(CASE WHEN favorited = TRUE THEN referring_user END) AS favorited_by,
           referred_shortlist,
           object,
-          BOOL_OR(CASE WHEN favorited = TRUE THEN TRUE ELSE FALSE END) AS favorited
+          BOOL_OR(CASE WHEN status = 'Pinned' THEN TRUE ELSE FALSE END) AS favorited
    FROM recommendations
    WHERE referred_shortlist = $2
    GROUP BY referred_shortlist,

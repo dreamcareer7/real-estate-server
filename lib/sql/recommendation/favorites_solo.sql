@@ -12,7 +12,7 @@ SELECT id,
        referred_shortlist
 FROM recommendations
 WHERE referring_user = $1
-  AND favorited = TRUE
+  AND status = 'Pinned'
 GROUP BY OBJECT,
          message_thread,
          recommendation_type,
