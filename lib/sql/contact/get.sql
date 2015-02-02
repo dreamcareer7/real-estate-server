@@ -1,6 +1,6 @@
 SELECT
-COUNT(*) OVER() AS full_count,
-contact_id
+    (COUNT(*) OVER())::INT AS full_count,
+    contact_id
 FROM contacts
 WHERE
   user_id = $1

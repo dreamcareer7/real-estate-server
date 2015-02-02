@@ -1,5 +1,5 @@
 SELECT
-    COUNT(*) OVER() AS full_count,
+    (COUNT(*) OVER())::INT AS full_count,
     *,
     'message' AS type
 FROM messages
