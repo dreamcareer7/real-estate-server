@@ -14,6 +14,7 @@ SELECT 'message_room' AS type,
        (SELECT COUNT(*) FROM messages WHERE message_room = message_rooms.id AND image_url <> NULL)::INT AS image_count,
        (SELECT COUNT(*) FROM messages WHERE message_room = message_rooms.id AND document_url <> NULL)::INT AS document_count,
        (SELECT COUNT(*) FROM messages WHERE message_room = message_rooms.id AND video_url <> NULL)::INT AS video_count,
+       (SELECT COUNT(*) FROM messages WHERE message_room = message_rooms.id)::INT AS message_count,
        EXTRACT(EPOCH FROM created_at)::INT AS created_at,
        EXTRACT(EPOCH FROM updated_at)::INT AS updated_at
 FROM message_rooms
