@@ -1,4 +1,5 @@
 UPDATE recommendations
 SET status = 'Pinned',
-    favorited = TRUE
+    favorited = TRUE,
+    updated_at = NOW()
 WHERE id = $1
