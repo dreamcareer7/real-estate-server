@@ -6,7 +6,7 @@ INSERT INTO
                     referring_savedsearch,
                     referring_shortlist,
                     object,
-                    message_thread)
+                    message_room)
 VALUES ($1,
         $2,
         $3,

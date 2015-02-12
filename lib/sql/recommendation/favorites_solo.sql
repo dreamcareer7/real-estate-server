@@ -14,7 +14,7 @@ FROM recommendations
 WHERE referring_user = $1
   AND status = 'Pinned'
 GROUP BY OBJECT,
-         message_thread,
+         message_room,
          recommendation_type,
          SOURCE,
          source_url,
