@@ -1,14 +1,14 @@
 module.exports = {
   pg: {
     connection: {
-      user:'emilsedgh',
-      database:'shortlisted',
-      password:'12345678',
+      user: 'ashkan',
+      database: 'shortlisted',
+      password: '',
     }
   },
 
   http: {
-    port:8080
+    port: 3078
   },
 
   auth: {
@@ -16,8 +16,17 @@ module.exports = {
   },
 
   salt: {
-    string:'aVv6LQ4sbpp5zDZsQA3beSmy',
-    iterations:1000,
-    length:5
+    string: 'aVv6LQ4sbpp5zDZsQA3beSmy',
+    iterations: 1000,
+    length: 5
+  },
+
+  amazon: {
+    cfbase: 'https://d2j29n432zojb.cloudfront.net/'
+  },
+
+  buckets: {
+    avatars: 'shortlisted-test',
+    user_covers: 'shortlisted-test'
   }
 }
