@@ -20,6 +20,7 @@
     "compression": "^1.2.0",
     "express": "^4.10.4",
     "express-winston": "^0.2.9",
+    "multiparty": "^4.1.1",
     "node-uuid": "^1.4.2",
     "oauth2orize": "^1.0.1",
     "passport": "^0.2.1",
