@@ -1,10 +1,12 @@
-SELECT
-    (SELECT COUNT(*) FROM messages WHERE message_room = $1)::INT AS full_count,
-    id
+SELECT id
 FROM messages
 WHERE message_room = $1
-AND CASE WHEN $3 THEN EXTRACT(EPOCH FROM created_at)::INT >= $2
-                 ELSE created_at < NOW()
+AND CASE
+    WHEN $2 = 'Since' THEN uuid_timestamp(id) > uuid_timestamp($3)
+    WHEN $2 = 'Max' THEN uuid_timestamp(id) < uuid_timestamp($3)
+    ELSE TRUE
     END
-ORDER BY CASE WHEN $3 THEN created_at END,
-         CASE WHEN NOT $3 THEN created_at END DESC
+ORDER BY
+    CASE WHEN $4 THEN created_at END,
+    CASE WHEN NOT $4 THEN created_at END DESC
+LIMIT $5;

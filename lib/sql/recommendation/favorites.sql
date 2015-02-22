@@ -9,14 +9,19 @@ WITH favs AS
    GROUP BY referred_shortlist,
             object
   )
-SELECT (COUNT(*) OVER())::INT AS full_count,
-       id
+SELECT id
 FROM recommendations
 INNER JOIN favs ON recommendations.referred_shortlist = favs.referred_shortlist
 AND recommendations.object = favs.object
 WHERE recommendations.referring_user = $1
   AND recommendations.referred_shortlist = $2
   AND favs.favorited = TRUE
-ORDER BY favs.updated_at DESC
-LIMIT $3
-OFFSET $4
+AND CASE
+    WHEN $3 = 'Since' THEN uuid_timestamp(id) > uuid_timestamp($4)
+    WHEN $3 = 'Max' THEN uuid_timestamp(id) < uuid_timestamp($4)
+    ELSE TRUE
+    END
+ORDER BY
+    CASE WHEN $5 THEN created_at END,
+    CASE WHEN NOT $5 THEN created_at END DESC
+LIMIT $6;

@@ -1,5 +1,4 @@
 SELECT id,
-       (COUNT(*) OVER())::INT AS full_count,
        'recommendation' AS TYPE,
        MAX(created_at) AS created_at,
        MAX(updated_at) AS updated_at,
@@ -13,12 +12,19 @@ SELECT id,
 FROM recommendations
 WHERE referring_user = $1
   AND status = 'Pinned'
-GROUP BY OBJECT,
+AND CASE
+    WHEN $2 = 'Since' THEN uuid_timestamp(id) > uuid_timestamp($3)
+    WHEN $2 = 'Max' THEN uuid_timestamp(id) < uuid_timestamp($3)
+    ELSE TRUE
+    END
+GROUP BY object,
          message_room,
          recommendation_type,
-         SOURCE,
+         source,
          source_url,
          referring_savedsearch,
          referred_shortlist
-ORDER BY created_at DESC LIMIT $2
-OFFSET $3
+ORDER BY
+    CASE WHEN $4 THEN created_at END,
+    CASE WHEN NOT $4 THEN created_at END DESC
+LIMIT $5;
