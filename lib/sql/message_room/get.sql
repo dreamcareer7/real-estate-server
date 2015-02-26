@@ -7,7 +7,7 @@ WITH invs AS
 SELECT 'message_room' AS type,
        message_rooms.id,
        message_rooms.message_room_type,
-       message_rooms.recommendation,
+       message_rooms.listing,
        message_rooms.shortlist,
        message_rooms.owner,
        invs.users,
