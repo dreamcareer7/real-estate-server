@@ -8,7 +8,7 @@ var chance = new Chance();
 var property_type = [ "SingleFamilyHome", "MultiFamilyHome", "Townhome", "Condo" ]
 var listing_status = [ "Open", "SalePending", "RemovedBySeller", "Sold" ]
 var listing_cover = [ "cover.jpg", "cover1.jpg", "cover2.jpg" ]
-var app_base_listings = "http://emilsedgh.info:8088/listings/"
+var app_base_listings = "http://api.shortlisted.co:8088/listings/"
 
 var sql_insert_address = "INSERT INTO addresses(\
  title, subtitle, street_number,\
@@ -32,18 +32,29 @@ var sql_insert_listing = "WITH\
  price, status, alerting_agent_id, listing_agent_id, listing_agency_id,\
  gallery_image_urls)\
  VALUES($1, $2, $3, $4, $5, (SELECT id FROM alerting_agent), (SELECT id FROM listing_agent), (SELECT id FROM listing_agency),\
- ARRAY['http://emilsedgh.info:8088/listings/cover3.jpg', 'http://emilsedgh.info:8088/listings/cover4.jpg',\
- 'http://emilsedgh.info:8088/listings/cover5.jpg', 'http://emilsedgh.info:8088/listings/cover6.jpg',\
- 'http://emilsedgh.info:8088/listings/cover7.jpg']) RETURNING id";
+ ARRAY['http://api.shortlisted.co:8088/listings/cover3.jpg', 'http://api.shortlisted.co:8088/listings/cover4.jpg',\
+ 'http://api.shortlisted.co:8088/listings/cover5.jpg', 'http://api.shortlisted.co:8088/listings/cover6.jpg',\
+ 'http://api.shortlisted.co:8088/listings/cover7.jpg']) RETURNING id";
 
 var sql_all_shortlist_users = "SELECT\
- shortlists_users.user, shortlist\
- FROM shortlists_users";
+ shortlists_users.user AS id\
+ FROM shortlists_users\
+ WHERE shortlist = $1";
+
+var sql_all_shortlists = "SELECT\
+ id \
+ FROM shortlists";
+
+var sql_create_comment_room = "INSERT INTO message_rooms(listing, shortlist, message_room_type)\
+ VALUES($1, $2, $3) RETURNING id";
+
+var sql_add_user_to_comment_room = "INSERT INTO message_rooms_users(message_room, \"user\")\
+ VALUES($1, $2)";
 
 var sql_rec_to = "INSERT INTO recommendations(\
  source, source_url, referring_user,\
- referred_shortlist, object, recommendation_type)\
- VALUES('RCRRE', 'http://shortlisted.com', $1, $2, $3, 'Listing')";
+ referred_shortlist, object, recommendation_type, message_room)\
+ VALUES('RCRRE', 'http://shortlisted.com', $1, $2, $3, 'Listing', $4)";
 
 function random_address(cb) {
   db.query(sql_insert_address, [ chance.word(), // title
@@ -106,8 +117,8 @@ function random_listing(cb) {
   });
 }
 
-function make_recommendation_to_user_on_shortlist(user, shortlist, listing, cb) {
-  db.query(sql_rec_to, [user, shortlist, listing], function(err, res) {
+function make_recommendation_to_user_on_shortlist(user, shortlist, listing, message_room, cb) {
+  db.query(sql_rec_to, [user, shortlist, listing, message_room], function(err, res) {
     if (err)
       return cb(err);
 
@@ -120,19 +131,43 @@ function recommend_to_all_users(cb) {
     if (err)
       return cb(err);
 
-    db.query(sql_all_shortlist_users, [ ],
-             function(err, res) {
-               if (err)
-                 return cb(err);
+    db.query(sql_all_shortlists, [], function(err, res) {
+      if(err) {
+        return cb(err);
+      }
 
-               async.map(res.rows,
-                         function(target, cb) {
-                           return make_recommendation_to_user_on_shortlist(target.user, target.shortlist, listing_id, cb);
-                         },
-                         function(err, done) {
-                           cb(null, 'Done');
-                         });
-             });
+      async.map(res.rows,
+                function(target_shortlist, cb) {
+                  var message_room_id;
+                  db.query(sql_create_comment_room, [listing_id, target_shortlist.id, 'Comment'], function(err, res) {
+                    if(err) {
+                      return cb(err);
+                    }
+
+                    message_room_id = res.rows[0].id;
+                  });
+
+                  db.query(sql_all_shortlist_users, [target_shortlist.id], function(err, res) {
+                    if (err) {
+                      return cb(err);
+                    }
+
+                    async.map(res.rows,
+                              function(target_user, cb) {
+                                db.query(sql_add_user_to_comment_room, [message_room_id, target_user.id], function(err, res) {
+                                  if(err) {
+                                    return cb(err);
+                                  }
+                                });
+
+                                return make_recommendation_to_user_on_shortlist(target_user.id, target_shortlist.id, listing_id, message_room_id, cb);
+                              },
+                              function(err, done) {
+                                cb(null, 'Done');
+                              });
+                  });
+                });
+    });
   });
 }
 
