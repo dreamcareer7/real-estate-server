@@ -4,6 +4,8 @@ SELECT users.*,
   (SELECT ROW_TO_JSON(_)
    FROM
      (SELECT addresses.*,
+             EXTRACT(EPOCH FROM addresses.created_at) AS created_at,
+             EXTRACT(EPOCH FROM addresses.updated_at) AS updated_at,
              'address' AS TYPE) AS _) AS address
 FROM users
 LEFT JOIN addresses ON users.address_id = addresses.id
