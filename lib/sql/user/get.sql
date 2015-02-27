@@ -1,9 +1,6 @@
 SELECT users.*,
-       EXTRACT(EPOCH
-               FROM users.created_at)::INT AS created_at,
-       EXTRACT(EPOCH
-               FROM users.updated_at)::INT AS updated_at,
-
+       EXTRACT(EPOCH FROM users.created_at) AS created_at,
+       EXTRACT(EPOCH FROM users.updated_at) AS updated_at,
   (SELECT ROW_TO_JSON(_)
    FROM
      (SELECT addresses.*,
