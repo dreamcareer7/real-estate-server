@@ -3,11 +3,19 @@ FROM recommendations
 WHERE recommendations.referring_user = $1
 AND recommendations.status = 'Unacknowledged'
 AND CASE
-    WHEN $2 = 'Since' THEN uuid_timestamp(id) > uuid_timestamp($3)
-    WHEN $2 = 'Max' THEN uuid_timestamp(id) < uuid_timestamp($3)
+    WHEN $2 = 'Since_C' THEN created_at > TIMESTAMP WITH TIME ZONE 'EPOCH' + $3 * INTERVAL '1 SECOND'
+    WHEN $2 = 'Max_C' THEN created_at < TIMESTAMP WITH TIME ZONE 'EPOCH' + $3 * INTERVAL '1 SECOND'
+    WHEN $2 = 'Since_U' THEN updated_at > TIMESTAMP WITH TIME ZONE 'EPOCH' + $3 * INTERVAL '1 SECOND'
+    WHEN $2 = 'Max_U' THEN updated_at < TIMESTAMP WITH TIME ZONE 'EPOCH' + $3 * INTERVAL '1 SECOND'
     ELSE TRUE
     END
 ORDER BY
-    CASE WHEN $4 THEN created_at END,
-    CASE WHEN NOT $4 THEN created_at END DESC
-LIMIT $5;
+    CASE $2
+        WHEN 'Since_C' THEN created_at
+        WHEN 'Since_U' THEN updated_at
+    END,
+    CASE $2
+        WHEN 'Max_C' THEN created_at
+        WHEN 'Max_U' THEN updated_at
+    END DESC
+LIMIT $4;
