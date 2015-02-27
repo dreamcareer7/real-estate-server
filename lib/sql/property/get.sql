@@ -1,6 +1,7 @@
 SELECT 'property' AS TYPE,
        properties.*,
-
+       EXTRACT(EPOCH FROM created_at) AS created_at,
+       EXTRACT(EPOCH FROM updated_at) AS updated_at,
   (SELECT ROW_TO_JSON(_)
    FROM
      (SELECT addresses.*,
