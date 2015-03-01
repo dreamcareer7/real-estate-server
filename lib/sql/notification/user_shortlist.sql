@@ -1,4 +1,4 @@
 SELECT id
 FROM notifications
-WHERE referring_user = $1
-AND referring_shortlist = $2
+WHERE referred_user = $1
+AND referred_shortlist = $2

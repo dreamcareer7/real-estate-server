@@ -1,9 +1,8 @@
 INSERT INTO notifications(
-            notification_action,
+            notification_type,
             object,
             message,
-            image_url,
-            referring_user,
-            referring_shortlist
+            referred_user,
+            referred_shortlist
         )
-VALUES ($1, $2, $3, $4, $5, $6) RETURNING id;
+VALUES ($1, $2, $3, $4, $5) RETURNING id;
