@@ -17,10 +17,10 @@ WHERE recommendations.referring_user = $1
   AND recommendations.referred_shortlist = $2
   AND favs.favorited = TRUE
 AND CASE
-    WHEN $3 = 'Since_C' THEN recommendations.created_at > TIMESTAMP WITH TIME ZONE 'EPOCH' + $4 * INTERVAL '1 SECOND'
-    WHEN $3 = 'Max_C' THEN recommendations.created_at < TIMESTAMP WITH TIME ZONE 'EPOCH' + $4 * INTERVAL '1 SECOND'
-    WHEN $3 = 'Since_U' THEN recommendations.updated_at > TIMESTAMP WITH TIME ZONE 'EPOCH' + $4 * INTERVAL '1 SECOND'
-    WHEN $3 = 'Max_U' THEN recommendations.updated_at < TIMESTAMP WITH TIME ZONE 'EPOCH' + $4 * INTERVAL '1 SECOND'
+    WHEN $3 = 'Since_C' THEN recommendations.created_at > TIMESTAMP WITH TIME ZONE 'EPOCH' + $4 * INTERVAL '1 MICROSECOND'
+    WHEN $3 = 'Max_C' THEN recommendations.created_at < TIMESTAMP WITH TIME ZONE 'EPOCH' + $4 * INTERVAL '1 MICROSECOND'
+    WHEN $3 = 'Since_U' THEN recommendations.updated_at > TIMESTAMP WITH TIME ZONE 'EPOCH' + $4 * INTERVAL '1 MICROSECOND'
+    WHEN $3 = 'Max_U' THEN recommendations.updated_at < TIMESTAMP WITH TIME ZONE 'EPOCH' + $4 * INTERVAL '1 MICROSECOND'
     ELSE TRUE
     END
 ORDER BY
