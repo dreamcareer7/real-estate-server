@@ -13,18 +13,19 @@ FROM recommendations
 WHERE referring_user = $1
   AND status = 'Pinned'
 AND CASE
-    WHEN $2 = 'Since' THEN uuid_timestamp(id) > uuid_timestamp($3)
-    WHEN $2 = 'Max' THEN uuid_timestamp(id) < uuid_timestamp($3)
+    WHEN $2 = 'Since_C' THEN created_at > TIMESTAMP WITH TIME ZONE 'EPOCH' + $3 * INTERVAL '1 MICROSECOND'
+    WHEN $2 = 'Max_C' THEN created_at < TIMESTAMP WITH TIME ZONE 'EPOCH' + $3 * INTERVAL '1 MICROSECOND'
+    WHEN $2 = 'Since_U' THEN updated_at > TIMESTAMP WITH TIME ZONE 'EPOCH' + $3 * INTERVAL '1 MICROSECOND'
+    WHEN $2 = 'Max_U' THEN updated_at < TIMESTAMP WITH TIME ZONE 'EPOCH' + $3 * INTERVAL '1 MICROSECOND'
     ELSE TRUE
     END
-GROUP BY object,
-         message_room,
-         recommendation_type,
-         source,
-         source_url,
-         referring_savedsearch,
-         referred_shortlist
 ORDER BY
-    CASE WHEN $4 THEN created_at END,
-    CASE WHEN NOT $4 THEN created_at END DESC
-LIMIT $5;
+    CASE $2
+        WHEN 'Since_C' THEN created_at
+        WHEN 'Since_U' THEN updated_at
+    END,
+    CASE $2
+        WHEN 'Max_C' THEN created_at
+        WHEN 'Max_U' THEN updated_at
+    END DESC
+LIMIT $4;

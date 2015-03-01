@@ -9,7 +9,7 @@ SELECT 'recommendation' AS TYPE,
        message_room,
        recommendation_type,
        status,
-       EXTRACT(EPOCH FROM created_at)::INT AS created_at,
-       EXTRACT(EPOCH FROM updated_at)::INT AS updated_at
+       EXTRACT(EPOCH FROM created_at) AS created_at,
+       EXTRACT(EPOCH FROM updated_at) AS updated_at
 FROM recommendations
 WHERE id = $1

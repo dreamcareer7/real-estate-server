@@ -18,8 +18,8 @@ SELECT 'recommendation' AS TYPE,
        recommendations.message_room,
        recommendations.status,
        favs.favorited_by,
-       EXTRACT(EPOCH FROM created_at)::INT AS created_at,
-       EXTRACT(EPOCH FROM updated_at)::INT AS updated_at
+       EXTRACT(EPOCH FROM created_at) AS created_at,
+       EXTRACT(EPOCH FROM updated_at) AS updated_at
 FROM recommendations
 INNER JOIN favs ON recommendations.referred_shortlist = favs.referred_shortlist
 AND recommendations.object = favs.object
