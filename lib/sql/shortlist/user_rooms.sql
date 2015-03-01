@@ -8,5 +8,6 @@ WHERE "user" = $1
                 WHEN 'OneToOneMessaging' THEN message_rooms.message_room_type = 'OneToOneMessaging'
                 WHEN 'Comment' THEN message_rooms.message_room_type = 'Comment'
                 WHEN 'GroupMessaging' THEN message_rooms.message_room_type = 'GroupMessaging'
+                WHEN 'Message' THEN message_rooms.message_room_type = 'Shortlist' OR message_rooms.message_room_type = 'OneToOneMessaging' OR message_rooms.message_room_type = 'GroupMessaging'
                 ELSE TRUE
         END
