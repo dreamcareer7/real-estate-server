@@ -1,5 +1,5 @@
 INSERT INTO notifications(
-            notification_type,
+            notification_action,
             object,
             message,
             referred_user,
