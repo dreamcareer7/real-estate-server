@@ -1,3 +1,3 @@
 SELECT id
 FROM notifications
-WHERE receiving_user = $1
+WHERE notified_user = $1
