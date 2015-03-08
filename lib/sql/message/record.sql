@@ -16,4 +16,4 @@ VALUES($1,
        $6,
        $7,
        $8)
-RETURNING id
+RETURNING id;
