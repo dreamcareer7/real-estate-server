@@ -15,8 +15,8 @@ var sql_insert_address = "INSERT INTO addresses(\
  street_name, city, state,\
  state_code, postal_code, neighborhood,\
  street_prefix, unit_number, country,\
- country_code)\
- VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13) RETURNING id";
+ country_code, location)\
+ VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, ST_SetSRID(ST_MakePoint($14, $15), 4326)) RETURNING id";
 
 var sql_insert_property = "INSERT INTO properties(\
  bedroom_count, bathroom_count, address_id,\
@@ -57,6 +57,7 @@ var sql_rec_to = "INSERT INTO recommendations(\
  VALUES('RCRRE', 'http://shortlisted.com', $1, $2, $3, 'Listing', $4)";
 
 function random_address(cb) {
+  var cords = chance.coordinates().split(",").map(parseFloat);
   db.query(sql_insert_address, [ chance.word(), // title
                                  chance.word(), // subtitle
                                  chance.integer({min: 7, max: 299}), // street_number
@@ -69,7 +70,10 @@ function random_address(cb) {
                                  chance.word(), // street_prefix
                                  chance.integer({min: 1, max: 100}), // unit_number
                                  'United States', // country
-                                 'USA' ], // country code
+                                 'USA', // country code
+                                 cords[0], // latitude
+                                 cords[1] // longitude
+                               ],
            function(err, res) {
              if (err)
                return cb(err);
@@ -156,6 +160,7 @@ function recommend_to_all_users(cb) {
                               function(target_user, cb) {
                                 db.query(sql_add_user_to_comment_room, [message_room_id, target_user.id], function(err, res) {
                                   if(err) {
+                                    console.log('msroom_id:', message_room_id, 'target_user:', target_user.id);
                                     return cb(err);
                                   }
                                 });

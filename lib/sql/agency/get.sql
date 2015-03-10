@@ -6,6 +6,7 @@ SELECT 'agency' AS TYPE,
      (SELECT addresses.*,
              EXTRACT(EPOCH FROM addresses.created_at) AS created_at,
              EXTRACT(EPOCH FROM addresses.updated_at) AS updated_at,
+             ST_AsGeoJSON(addresses.location) AS location,
              'address' AS TYPE) AS _) AS address
 FROM agencies
 LEFT JOIN addresses ON agencies.address_id = addresses.id

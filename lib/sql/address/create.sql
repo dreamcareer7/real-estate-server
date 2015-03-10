@@ -11,7 +11,8 @@ INSERT INTO
               country_code,
               unit_number,
               postal_code,
-              neighborhood)
+              neighborhood,
+              location)
 VALUES ($1,
         $2,
         $3,
@@ -24,4 +25,5 @@ VALUES ($1,
         $10,
         $11,
         $12,
-        $13) RETURNING id
+        $13,
+        ST_SetSRID(ST_MakePoint($14, $15), 4326)) RETURNING id

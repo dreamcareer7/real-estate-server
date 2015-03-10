@@ -8,6 +8,7 @@ SELECT 'user' AS TYPE,
             (SELECT addresses.*,
                      EXTRACT(EPOCH FROM addresses.created_at) AS created_at,
                      EXTRACT(EPOCH FROM addresses.updated_at) AS updated_at,
+                     ST_AsGeoJSON(addresses.location) AS location,
                     'address' AS TYPE
             ) AS _
        ) AS address
