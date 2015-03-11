@@ -4,7 +4,7 @@ var password = '520d41b29f891bbaccf31d9fcfa72e82ea20fcf0';
 
 var shortlist = {
     shortlist_type: 'Shoppers',
-    description: 'foobar',
+    title: 'foobar',
     owner: '3aaa6a98-741d-11e4-a1b5-0024d71b10fc'
 };
 
