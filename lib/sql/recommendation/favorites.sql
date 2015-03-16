@@ -9,7 +9,8 @@ WITH favs AS
    GROUP BY referred_shortlist,
             object
   )
-SELECT id
+SELECT id,
+       (COUNT(*) OVER())::INT AS total
 FROM recommendations
 INNER JOIN favs ON recommendations.referred_shortlist = favs.referred_shortlist
 AND recommendations.object = favs.object
