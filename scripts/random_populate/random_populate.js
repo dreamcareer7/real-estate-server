@@ -149,27 +149,27 @@ function recommend_to_all_users(cb) {
                     }
 
                     message_room_id = res.rows[0].id;
-                  });
 
-                  db.query(sql_all_shortlist_users, [target_shortlist.id], function(err, res) {
-                    if (err) {
-                      return cb(err);
-                    }
+                    db.query(sql_all_shortlist_users, [target_shortlist.id], function(err, res) {
+                      if (err) {
+                        return cb(err);
+                      }
 
-                    async.map(res.rows,
-                              function(target_user, cb) {
-                                db.query(sql_add_user_to_comment_room, [message_room_id, target_user.id], function(err, res) {
-                                  if(err) {
-                                    console.log('msroom_id:', message_room_id, 'target_user:', target_user.id);
-                                    return cb(err);
-                                  }
-                                });
+                      async.map(res.rows,
+                                function(target_user, cb) {
+                                  db.query(sql_add_user_to_comment_room, [message_room_id, target_user.id], function(err, res) {
+                                    if(err) {
+                                      console.log('msroom_id:', message_room_id, 'target_user:', target_user.id);
+                                      return cb(err);
+                                    }
+                                  });
 
                                 return make_recommendation_to_user_on_shortlist(target_user.id, target_shortlist.id, listing_id, message_room_id, cb);
                               },
                               function(err, done) {
                                 cb(null, 'Done');
                               });
+                    });
                   });
                 });
     });
