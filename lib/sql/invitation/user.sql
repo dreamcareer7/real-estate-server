@@ -1,3 +1,3 @@
 SELECT id
 FROM invitation_records
-WHERE referring_user = $1
+WHERE invited_user = $1

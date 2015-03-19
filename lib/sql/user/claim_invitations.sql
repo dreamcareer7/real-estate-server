@@ -1,3 +1,3 @@
 UPDATE invitation_records
-SET referring_user = $1
+SET invited_user = $1
 WHERE email = $2

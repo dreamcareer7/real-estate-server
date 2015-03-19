@@ -1,6 +1,7 @@
 INSERT INTO invitation_records(
-            referring_user,
+            inviting_user,
+            invited_user,
             email,
             resource
         )
-VALUES ($1, $2, $3) RETURNING id;
+VALUES ($1, $2, $3, $4) RETURNING id;
