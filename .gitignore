@@ -2,6 +2,7 @@ node_modules
 lib/config.js
 lib/sslcert/server.key
 lib/sslcert/server.crt
+scripts/ntreis/timing.config.js
 .tern-port
 .tern-project
 .DS_Store

@@ -4,9 +4,10 @@ INSERT INTO
                     source_url,
                     referring_user,
                     referring_savedsearch,
-                    referring_shortlist,
+                    referred_shortlist,
                     object,
-                    message_room)
+                    message_room,
+                    matrix_unique_id)
 VALUES ($1,
         $2,
         $3,

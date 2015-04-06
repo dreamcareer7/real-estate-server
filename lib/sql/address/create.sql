@@ -12,7 +12,8 @@ INSERT INTO
               unit_number,
               postal_code,
               neighborhood,
-              location)
+              location,
+              matrix_unique_id)
 VALUES ($1,
         $2,
         $3,
@@ -26,4 +27,5 @@ VALUES ($1,
         $11,
         $12,
         $13,
-        ST_SetSRID(ST_MakePoint($14, $15), 4326)) RETURNING id
+        ST_SetSRID(ST_MakePoint($14, $15), 4326),
+        $16) RETURNING id
