@@ -815,10 +815,17 @@ ALTER TYPE currency_code OWNER TO ashkan;
 --
 
 CREATE TYPE listing_status AS ENUM (
-    'Open',
-    'SalePending',
-    'RemovedBySeller',
-    'Sold'
+    'Active',
+    'Sold',
+    'Pending',
+    'Temp Off Market',
+    'Leased',
+    'Active Option Contract',
+    'Active Contingent',
+    'Active Kick Out',
+    'Withdrawn',
+    'Expired',
+    'Cancelled'
 );
 
 
@@ -880,25 +887,102 @@ ALTER TYPE message_type OWNER TO ashkan;
 --
 
 CREATE TYPE notification_action AS ENUM (
-    'Message',
+    'Liked',
+    'Composed',
+    'Edited',
+    'Added',
+    'Removed',
+    'Posted',
     'Favorited',
-    'CoshopperAdded',
-    'ListingPriceChange',
-    'MessageRoomActivity'
+    'Changed',
+    'Created',
+    'Shared',
+    'Arrived',
+    'Toured',
+    'Accepted',
+    'Declined',
+    'Joined',
+    'Left',
+    'Archived',
+    'Deleted',
+    'Opened',
+    'Closed',
+    'Pinned',
+    'Sent'
 );
 
 
 ALTER TYPE notification_action OWNER TO ashkan;
 
 --
+-- Name: notification_object_class; Type: TYPE; Schema: public; Owner: ashkan
+--
+
+CREATE TYPE notification_object_class AS ENUM (
+    'Recommendation',
+    'Listing',
+    'Message',
+    'Comment',
+    'Room',
+    'HotSheet',
+    'Photo',
+    'Video',
+    'Document',
+    'Tour',
+    'Co-Shopper',
+    'Price',
+    'Status',
+    'MessageRoom',
+    'Shortlist'
+);
+
+
+ALTER TYPE notification_object_class OWNER TO ashkan;
+
+--
+-- Name: property_subtype; Type: TYPE; Schema: public; Owner: ashkan
+--
+
+CREATE TYPE property_subtype AS ENUM (
+    'MUL-Apartment/5Plex+',
+    'MUL-Fourplex',
+    'MUL-Full Duplex',
+    'MUL-Multiple Single Units',
+    'MUL-Triplex',
+    'LSE-Apartment',
+    'LSE-Condo/Townhome',
+    'LSE-Duplex',
+    'LSE-Fourplex',
+    'LSE-House',
+    'LSE-Mobile',
+    'LSE-Triplex',
+    'LND-Commercial',
+    'LND-Farm/Ranch',
+    'LND-Residential',
+    'RES-Condo',
+    'RES-Farm/Ranch',
+    'RES-Half Duplex',
+    'RES-Single Family',
+    'RES-Townhouse',
+    'COM-Lease',
+    'COM-Sale',
+    'COM-Sale or Lease (Either)',
+    'COM-Sale/Leaseback (Both)'
+);
+
+
+ALTER TYPE property_subtype OWNER TO ashkan;
+
+--
 -- Name: property_type; Type: TYPE; Schema: public; Owner: ashkan
 --
 
 CREATE TYPE property_type AS ENUM (
-    'SingleFamilyHome',
-    'MultiFamilyHome',
-    'Townhome',
-    'Condo'
+    'Residential',
+    'Residential Lease',
+    'Multi-Family',
+    'Commercial',
+    'Lots & Acreage'
 );
 
 
@@ -1040,7 +1124,9 @@ CREATE TABLE addresses (
     country country_name NOT NULL,
     country_code country_code_3 NOT NULL,
     created_at timestamp with time zone DEFAULT now(),
-    updated_at timestamp with time zone DEFAULT now()
+    updated_at timestamp with time zone DEFAULT now(),
+    location geometry(Point,4326),
+    matrix_unique_id bigint
 );
 
 
@@ -1134,17 +1220,32 @@ CREATE TABLE events (
 ALTER TABLE events OWNER TO ashkan;
 
 --
+-- Name: foo; Type: TABLE; Schema: public; Owner: ashkan; Tablespace: 
+--
+
+CREATE TABLE foo (
+    id uuid DEFAULT uuid_generate_v4() NOT NULL,
+    price double precision,
+    description text,
+    uid bigint NOT NULL
+);
+
+
+ALTER TABLE foo OWNER TO ashkan;
+
+--
 -- Name: invitation_records; Type: TABLE; Schema: public; Owner: ashkan; Tablespace: 
 --
 
 CREATE TABLE invitation_records (
     id uuid DEFAULT uuid_generate_v1(),
-    referring_user uuid,
+    invited_user uuid,
     email character varying(50) NOT NULL,
     resource uuid NOT NULL,
     created_at timestamp with time zone DEFAULT now(),
     updated_at timestamp with time zone DEFAULT now(),
-    accepted boolean DEFAULT false
+    accepted boolean DEFAULT false,
+    inviting_user uuid NOT NULL
 );
 
 
@@ -1178,8 +1279,12 @@ CREATE TABLE listings (
     cover_image_url text,
     currency currency_code,
     price double precision,
-    status listing_status,
-    gallery_image_urls text[]
+    gallery_image_urls text[],
+    matrix_unique_id bigint NOT NULL,
+    original_price double precision,
+    last_price double precision,
+    low_price double precision,
+    status listing_status NOT NULL
 );
 
 
@@ -1366,6 +1471,21 @@ CREATE TABLE messages (
 ALTER TABLE messages OWNER TO ashkan;
 
 --
+-- Name: notification_tokens; Type: TABLE; Schema: public; Owner: ashkan; Tablespace: 
+--
+
+CREATE TABLE notification_tokens (
+    id uuid DEFAULT uuid_generate_v1(),
+    "user" uuid NOT NULL,
+    device_token text NOT NULL,
+    created_at timestamp with time zone DEFAULT now(),
+    updated_at timestamp with time zone DEFAULT now()
+);
+
+
+ALTER TABLE notification_tokens OWNER TO ashkan;
+
+--
 -- Name: notifications; Type: TABLE; Schema: public; Owner: ashkan; Tablespace: 
 --
 
@@ -1375,10 +1495,12 @@ CREATE TABLE notifications (
     message text,
     created_at timestamp with time zone DEFAULT now(),
     updated_at timestamp with time zone DEFAULT now(),
-    referred_user uuid NOT NULL,
-    referred_shortlist uuid NOT NULL,
+    notified_user uuid NOT NULL,
+    shortlist uuid NOT NULL,
     read boolean DEFAULT false,
-    notification_action notification_action NOT NULL
+    action notification_action NOT NULL,
+    object_class notification_object_class NOT NULL,
+    notifying_user uuid
 );
 
 
@@ -1514,9 +1636,13 @@ CREATE TABLE properties (
     address_id uuid,
     description text,
     square_meters double precision,
-    property_type property_type,
     created_at timestamp with time zone DEFAULT now(),
-    updated_at timestamp with time zone DEFAULT now()
+    updated_at timestamp with time zone DEFAULT now(),
+    matrix_unique_id bigint NOT NULL,
+    property_type property_type NOT NULL,
+    property_subtype property_subtype NOT NULL,
+    lot_square_meters double precision,
+    year_built smallint
 );
 
 
@@ -1539,7 +1665,8 @@ CREATE TABLE recommendations (
     message_room uuid,
     recommendation_type recommendation_type,
     favorited boolean DEFAULT false,
-    status recommendation_status DEFAULT 'Unacknowledged'::recommendation_status
+    status recommendation_status DEFAULT 'Unacknowledged'::recommendation_status,
+    matrix_unique_id bigint NOT NULL
 );
 
 
@@ -1612,11 +1739,12 @@ ALTER TABLE sessions OWNER TO ashkan;
 CREATE TABLE shortlists (
     id uuid DEFAULT uuid_generate_v1() NOT NULL,
     shortlist_type shortlist_type NOT NULL,
-    description text,
+    title text,
     owner uuid NOT NULL,
     created_at timestamp with time zone DEFAULT now(),
     updated_at timestamp with time zone DEFAULT now(),
-    status shortlist_status DEFAULT 'New'::shortlist_status
+    status shortlist_status DEFAULT 'New'::shortlist_status,
+    alert_index smallint DEFAULT 1
 );
 
 
@@ -1804,6 +1932,14 @@ ALTER TABLE ONLY events
 
 
 --
+-- Name: foo_uid_key; Type: CONSTRAINT; Schema: public; Owner: ashkan; Tablespace: 
+--
+
+ALTER TABLE ONLY foo
+    ADD CONSTRAINT foo_uid_key UNIQUE (uid);
+
+
+--
 -- Name: invitation_records_email_resource_key; Type: CONSTRAINT; Schema: public; Owner: ashkan; Tablespace: 
 --
 
@@ -1816,7 +1952,7 @@ ALTER TABLE ONLY invitation_records
 --
 
 ALTER TABLE ONLY invitation_records
-    ADD CONSTRAINT invitation_records_referring_user_resource_key UNIQUE (referring_user, resource);
+    ADD CONSTRAINT invitation_records_referring_user_resource_key UNIQUE (invited_user, resource);
 
 
 --
@@ -1881,6 +2017,14 @@ ALTER TABLE ONLY mam_user
 
 ALTER TABLE ONLY message_rooms_users
     ADD CONSTRAINT message_rooms_users_message_room_user_key UNIQUE (message_room, "user");
+
+
+--
+-- Name: notification_tokens_user_device_token_key; Type: CONSTRAINT; Schema: public; Owner: ashkan; Tablespace: 
+--
+
+ALTER TABLE ONLY notification_tokens
+    ADD CONSTRAINT notification_tokens_user_device_token_key UNIQUE ("user", device_token);
 
 
 --
