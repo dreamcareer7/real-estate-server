@@ -83,7 +83,7 @@ function createObjects(data, cb) {
 
   property.bedroom_count = parseInt(data.BedsTotal) || 0;
   property.bathroom_count = parseFloat(data.BathsTotal) || 0.0;
-  property.description = data.TaxLegalDescription;
+  property.description = data.PublicRemarks;
   property.square_meters = (parseFloat(data.SqFtTotal) || 0.0 ) / 10.764;
   property.lot_square_meters = parseFloat(data.LotSizeAreaSQFT) || 0.0;
   property.property_type = data.PropertyType;
