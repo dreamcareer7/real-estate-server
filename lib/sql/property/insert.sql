@@ -1,11 +1,21 @@
 INSERT INTO
     properties(property_type,
+               property_subtype,
                bedroom_count,
                bathroom_count,
+               address_id,
+               matrix_unique_id,
                description,
-               square_meters)
+               square_meters,
+               lot_square_meters,
+               year_built)
 VALUES ($1,
         $2,
         $3,
         $4,
-        $5) RETURNING id
+        $5,
+        $6,
+        $7,
+        $8,
+        $9,
+        $10) RETURNING id

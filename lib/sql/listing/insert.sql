@@ -5,11 +5,19 @@ INSERT INTO
              listing_agency_id,
              currency,
              price,
-             status)
+             status,
+             matrix_unique_id,
+             original_price,
+             last_price,
+             low_price)
 VALUES ($1,
         $2,
         $3,
         $4,
         $5,
         $6,
-        $7) RETURNING id
+        $7,
+        $8,
+        $9,
+        $10,
+        $11) RETURNING id
