@@ -1057,7 +1057,7 @@ CREATE TABLE addresses (
     postal_code character varying(10),
     neighborhood character varying(255),
     id uuid DEFAULT uuid_generate_v1() NOT NULL,
-    street_prefix character varying(20),
+    street_suffix character varying(20),
     unit_number character varying(20),
     country country_name NOT NULL,
     country_code country_code_3 NOT NULL,
@@ -1737,7 +1737,7 @@ ALTER TABLE ONLY privacy_list ALTER COLUMN id SET DEFAULT nextval('privacy_list_
 -- Data for Name: addresses; Type: TABLE DATA; Schema: public; Owner: ashkan
 --
 
-COPY addresses (title, subtitle, street_number, street_name, city, state, state_code, postal_code, neighborhood, id, street_prefix, unit_number, country, country_code, created_at, updated_at, location, matrix_unique_id) FROM stdin;
+COPY addresses (title, subtitle, street_number, street_name, city, state, state_code, postal_code, neighborhood, id, street_suffix, unit_number, country, country_code, created_at, updated_at, location, matrix_unique_id) FROM stdin;
 ojpo    amazidi 133 Ufiofe Heights  Oguheno Tennessee   ME  R1P 2U1 1320 Ifte Terrace   425cd7bc-cc15-11e4-bd44-5404a61babbf    usafokta    17  United States   USA 2015-03-16 23:17:20.335928+03:30    2015-03-16 23:17:20.335928+03:30    0101000020E61000005322895E468F50C061FD9FC37CE94FC0  \N
         \N  Meadowview  Caddo Mills     Texas   TX  75135       04a1d9dc-db82-11e4-a83d-5404a61babbf    \N      United States   USA 2015-04-05 15:23:38.663251+04:30    2015-04-05 15:23:38.663251+04:30    0101000020E6100000FFB3E6C75F5AC0BFE44BA8E0F0C04940  53305550
         \N  Hillary Mansfield   Texas   TX  76063       04a1d9a0-db82-11e4-a20d-5404a61babbf    \N      United States   USA 2015-04-05 15:23:38.658748+04:30    2015-04-05 15:23:38.658748+04:30    0101000020E6100000FFB3E6C75F5AC0BFE44BA8E0F0C04940  53035323

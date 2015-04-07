@@ -1,7 +1,7 @@
 INSERT INTO
     addresses(title,
               subtitle,
-              street_prefix,
+              street_suffix,
               street_number,
               street_name,
               city,

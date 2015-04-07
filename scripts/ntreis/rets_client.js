@@ -70,7 +70,7 @@ function createObjects(data, cb) {
   address.state_code = data.StateOrProvince;
   address.postal_code = data.PostalCode;
   address.neighborhood = '';
-  address.street_prefix = data.StreetSuffix;
+  address.street_suffix = data.StreetSuffix;
   address.street_number = data.StreetNumber;
   address.unit_number = data.UnitNumber;
   address.country = 'United States';

@@ -24,7 +24,7 @@ var address = {
   state_code:'TX',
   postal_code:'12345',
   neighborhood:'disastrous place',
-  street_prefix: 'foobar',
+  street_suffix: 'foobar',
   unit_number: '12D',
   country:'United States',
   country_code:'USA'

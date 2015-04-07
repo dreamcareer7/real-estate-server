@@ -1,7 +1,7 @@
 UPDATE addresses
 SET title = $1,
     subtitle = $2,
-    street_prefix = $3,
+    street_suffix = $3,
     street_number = $4,
     street_name = $5,
     city = $6,

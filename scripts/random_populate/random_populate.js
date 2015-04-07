@@ -14,7 +14,7 @@ var sql_insert_address = "INSERT INTO addresses(\
  title, subtitle, street_number,\
  street_name, city, state,\
  state_code, postal_code, neighborhood,\
- street_prefix, unit_number, country,\
+ street_suffix, unit_number, country,\
  country_code, location)\
  VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, ST_SetSRID(ST_MakePoint($14, $15), 4326)) RETURNING id";
 
@@ -67,7 +67,7 @@ function random_address(cb) {
                                  chance.state(), // state_code
                                  chance.postal(), // postal
                                  chance.address(), // neighborhood
-                                 chance.word(), // street_prefix
+                                 chance.word(), // street_suffix
                                  chance.integer({min: 1, max: 100}), // unit_number
                                  'United States', // country
                                  'USA', // country code
