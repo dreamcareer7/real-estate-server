@@ -117,6 +117,9 @@ function createObjects(data, cb) {
         }
 
         Address.update(current.id, address, function(err, next) {
+          if(err)
+            return cb(err);
+
           console.log('UPDATED an ADDRESS');
           return cb(null, next.id);
         });
@@ -136,6 +139,9 @@ function createObjects(data, cb) {
         }
 
         Property.update(current.id, property, function(err, next) {
+          if(err)
+            return cb(err);
+
           console.log('UPDATED a PROPERTY');
           return cb(null, next.id);
         });
@@ -146,12 +152,12 @@ function createObjects(data, cb) {
 
       Listing.getByMUI(data.Matrix_Unique_ID, function(err, current) {
         if (err) {
-          if (err.code == 'ResourceNotFound') {
+          if (err.code === 'ResourceNotFound') {
             async.waterfall([
               function(cb) {
                 client.getPhotos("Property", "Photo", data.Matrix_Unique_ID, function(err, images) {
                   if (err)
-                    return cb(err);
+                    return cb(null, []);
 
                   async.map(images, function(image, cb) {
                     if (typeof(image.buffer) === 'object')
@@ -160,7 +166,7 @@ function createObjects(data, cb) {
                     return cb(null, null);
                   }, function(err, links) {
                        if(err)
-                         return cb(err);
+                         return cb(null, []);
 
                        return cb(null, links);
                      });
@@ -173,28 +179,41 @@ function createObjects(data, cb) {
 
                 console.log('LINKS:', links);
                 console.log('CREATED a LISTING');
-                Listing.create(listing, function(err, listing) {
+                Listing.create(listing, function(err, next) {
                   if(err)
                     return cb(err);
 
-                  return cb(null, listing.id);
+                  console.log('ERR1:', next);
+                  return cb(null, next);
                 });
               }
-              ]);
-          }
-          return cb(err);
-        }
+            ], function(err, results) {
+                 if(err)
+                   return cb(err);
 
-        Listing.update(current.id, listing, function(err, next) {
-          console.log('UPDATED a LISTING');
-          return cb(null, next.id);
-        });
+                 return cb(null, results);
+               });
+          } else {
+            console.log('AKBAR:', err);
+            return cb(err);
+          }
+        }
+        else {
+          Listing.update(current.id, listing, function(err, next) {
+            if(err)
+              return cb(err);
+
+            console.log('UPDATED a LISTING');
+            return cb(null, next.id);
+          });
+        }
       });
     }
   ], function(err, result) {
        if(err)
          return cb(err);
 
+       console.log('ERR2:', result);
        return cb(null, {address: address, listing: listing, property: property, listing_id: result});
      });
 }
@@ -243,14 +262,17 @@ async.auto({
   objects: ['mls',
             function(cb, results) {
               async.map(results.mls, createObjects, function(err, objects) {
-                if(err)
+                if(err) {
+                  console.log('ERR3:', err);
                   return cb(err);
+                }
 
                 return cb(null, objects);
               });
             }],
   recs: ['objects',
          function(cb, results) {
+           console.log('RECS');
            var listing_ids = results.objects.map(function(r) {
                                return r.listing_id;
                              });
@@ -261,8 +283,6 @@ async.auto({
 
              return cb(null, recs);
            });
-
-           return cb(null, 'Foo');
          }],
   update_last_run: ['mls',
                     function(cb, results) {
@@ -274,7 +294,7 @@ async.auto({
                    ]
 }, function(err, results) {
      if(err)
-       console.log('err:', err);
+       console.log('ERRT:', err);
      // else {
      //   // console.log(results.objects.length);
      //   // console.log(results.objects);
