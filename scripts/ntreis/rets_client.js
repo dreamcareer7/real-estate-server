@@ -11,6 +11,7 @@ require('../../lib/models/Shortlist.js');
 require('../../lib/models/User.js');
 require('../../lib/models/MessageRoom.js');
 require('../../lib/models/Recommendation.js');
+require('../../lib/models/S3.js');
 
 var retsLoginUrl = config.ntreis.login_url;
 var retsUser = config.ntreis.user;
@@ -146,10 +147,41 @@ function createObjects(data, cb) {
       Listing.getByMUI(data.Matrix_Unique_ID, function(err, current) {
         if (err) {
           if (err.code == 'ResourceNotFound') {
-            console.log('CREATED a LISTING');
-            return Listing.create(listing, cb);
-          }
+            async.waterfall([
+              function(cb) {
+                client.getPhotos("Property", "Photo", data.Matrix_Unique_ID, function(err, images) {
+                  if (err)
+                    return cb(err);
 
+                  async.map(images, function(image, cb) {
+                    if (typeof(image.buffer) === 'object')
+                      return S3.upload('shortlisted-test', image.buffer, cb);
+
+                    return cb(null, null);
+                  }, function(err, links) {
+                       if(err)
+                         return cb(err);
+
+                       return cb(null, links);
+                     });
+                });
+              },
+              function(links, cb) {
+                links = links.filter(Boolean);
+                listing.gallery_images = "{" + links.join(',') + "}";
+                listing.cover = links[0] || '';
+
+                console.log('LINKS:', links);
+                console.log('CREATED a LISTING');
+                Listing.create(listing, function(err, listing) {
+                  if(err)
+                    return cb(err);
+
+                  return cb(null, listing);
+                });
+              }
+              ]);
+          }
           return cb(err);
         }
 

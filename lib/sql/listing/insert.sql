@@ -23,5 +23,5 @@ VALUES ($1,
         $9,
         $10,
         $11,
-        ARRAY['http://api.shortlisted.co:8088/listings/cover3.jpg', 'http://api.shortlisted.co:8088/listings/cover4.jpg', 'http://api.shortlisted.co:8088/listings/cover5.jpg', 'http://api.shortlisted.co:8088/listings/cover6.jpg', 'http://api.shortlisted.co:8088/listings/cover7.jpg'],
-        'http://api.shortlisted.co:8088/listings/cover3.jpg') RETURNING id
+        ARRAY[$12],
+        $13) RETURNING id
