@@ -155,7 +155,7 @@ function createObjects(data, cb) {
           if (err.code === 'ResourceNotFound') {
             async.waterfall([
               function(cb) {
-                client.getPhotos("Property", "Photo", data.Matrix_Unique_ID, function(err, images) {
+                client.getPhotos("Property", "LargePhoto", data.Matrix_Unique_ID, function(err, images) {
                   if (err)
                     return cb(null, []);
 

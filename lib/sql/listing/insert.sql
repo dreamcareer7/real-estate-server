@@ -23,5 +23,5 @@ VALUES ($1,
         $9,
         $10,
         $11,
-        ARRAY[$12],
+        $12,
         $13) RETURNING id
