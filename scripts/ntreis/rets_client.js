@@ -177,7 +177,7 @@ function createObjects(data, cb) {
                   if(err)
                     return cb(err);
 
-                  return cb(null, listing);
+                  return cb(null, listing.id);
                 });
               }
               ]);
