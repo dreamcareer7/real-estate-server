@@ -5,4 +5,6 @@ WHERE $1 >= minimum_price AND
       $2 >= minimum_square_meters AND
       $2 <= maximum_square_meters AND
       $3 >= min_bedrooms AND
-      $4 >= min_bathrooms;
+      $4 >= min_bathrooms AND
+      $5 = property_type AND
+      property_subtypes @> $6::property_subtype[]

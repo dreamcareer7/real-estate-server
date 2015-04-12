@@ -10,6 +10,7 @@ INSERT INTO
              original_price,
              last_price,
              low_price,
+             association_fee,
              gallery_image_urls,
              cover_image_url)
 VALUES ($1,
@@ -24,4 +25,5 @@ VALUES ($1,
         $10,
         $11,
         $12,
-        $13) RETURNING id
+        $13,
+        $14) RETURNING id

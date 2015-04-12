@@ -9,6 +9,8 @@ INSERT INTO alerts(
         created_by,
         shortlist,
         location,
+        property_type,
+        property_subtypes,
         title
     )
-VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, ST_SetSRID(ST_MakePoint($10, $11), 4326), $12) RETURNING id;
+VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, ST_SetSRID(ST_MakePoint($10, $11), 4326), $12, $13, $14) RETURNING id;

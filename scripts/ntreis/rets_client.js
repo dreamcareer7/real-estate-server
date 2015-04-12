@@ -86,11 +86,26 @@ function createObjects(data, cb) {
   property.bathroom_count = parseFloat(data.BathsTotal) || 0.0;
   property.description = data.PublicRemarks;
   property.square_meters = (parseFloat(data.SqFtTotal) || 0.0 ) / 10.764;
-  property.lot_square_meters = parseFloat(data.LotSizeAreaSQFT) || 0.0;
+  property.lot_square_meters = (parseFloat(data.LotSizeAreaSQFT) || 0.0) / 10.764;
   property.property_type = data.PropertyType;
   property.property_subtype = data.PropertySubType;
   property.matrix_unique_id = parseInt(data.Matrix_Unique_ID);
   property.year_build = parseInt(data.YearBuilt) || 0;
+  property.parking_spaces = data.NumberOfParkingSpaces;
+  property.accessibility_features = data.AccessibilityFeatures;
+  property.bedroom_bathroom_features = data.BedroomBathroomFeatures;
+  property.commercial_features = data.CommercialFeatures;
+  property.community_features = data.CommunityFeatures;
+  property.energysaving_features = data.EnergySavingFeatures;
+  property.exterior_features = data.ExteriorFeatures;
+  property.interior_features = data.InteriorFeatures;
+  property.farmranch_features = data.FarmRanchFeatures;
+  property.fireplace_features = data.FireplaceFeatures;
+  property.lot_features = data.LotFeatures;
+  property.parking_features = data.ParkingFeatures;
+  property.pool_features = data.PoolFeatures;
+  property.security_features = data.SecurityFeatures;
+
   // property.created_at
   // property.updated_at
 
@@ -101,6 +116,8 @@ function createObjects(data, cb) {
   listing.last_price = parseFloat(data.LastListPrice) || 0.0;
   listing.low_price = parseFloat(data.ListPriceLow) || 0.0;
   listing.original_price = parseFloat(data.OriginalListPrice) || 0.0;
+  listing.association_fee = parseFloat(data.AssociationFee) || 0.0;
+
   // listing.created_at
   // listing.updated_at
 
@@ -183,7 +200,6 @@ function createObjects(data, cb) {
                   if(err)
                     return cb(err);
 
-                  console.log('ERR1:', next);
                   return cb(null, next);
                 });
               }
@@ -194,7 +210,6 @@ function createObjects(data, cb) {
                  return cb(null, results);
                });
           } else {
-            console.log('AKBAR:', err);
             return cb(err);
           }
         }
@@ -213,7 +228,6 @@ function createObjects(data, cb) {
        if(err)
          return cb(err);
 
-       console.log('ERR2:', result);
        return cb(null, {address: address, listing: listing, property: property, listing_id: result});
      });
 }
@@ -263,7 +277,6 @@ async.auto({
             function(cb, results) {
               async.map(results.mls, createObjects, function(err, objects) {
                 if(err) {
-                  console.log('ERR3:', err);
                   return cb(err);
                 }
 
@@ -272,7 +285,6 @@ async.auto({
             }],
   recs: ['objects',
          function(cb, results) {
-           console.log('RECS');
            var listing_ids = results.objects.map(function(r) {
                                return r.listing_id;
                              });
@@ -294,7 +306,7 @@ async.auto({
                    ]
 }, function(err, results) {
      if(err)
-       console.log('ERRT:', err);
+       console.log('ERREXIT:', err);
      // else {
      //   // console.log(results.objects.length);
      //   // console.log(results.objects);
