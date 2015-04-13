@@ -45,11 +45,17 @@ function generateRecommendationsForListing(id, cb) {
       console.log('matched shortlists:', shortlists);
 
       async.map(shortlists, function(id, cb) {
-        return Shortlist.recommendListing(id, listing, cb);
+        Shortlist.recommendListing(id, listing, function(err, results) {
+          if(err)
+            return cb(null, null);
+
+          return cb(null, results);
+        });
       }, function(err, recs) {
            if(err)
              return cb(err);
 
+           recs = recs.filter(Boolean);
            return cb(null, recs);
          });
     });
@@ -91,20 +97,22 @@ function createObjects(data, cb) {
   property.property_subtype = data.PropertySubType;
   property.matrix_unique_id = parseInt(data.Matrix_Unique_ID);
   property.year_build = parseInt(data.YearBuilt) || 0;
-  property.parking_spaces = data.NumberOfParkingSpaces;
-  property.accessibility_features = data.AccessibilityFeatures;
-  property.bedroom_bathroom_features = data.BedroomBathroomFeatures;
-  property.commercial_features = data.CommercialFeatures;
-  property.community_features = data.CommunityFeatures;
-  property.energysaving_features = data.EnergySavingFeatures;
-  property.exterior_features = data.ExteriorFeatures;
-  property.interior_features = data.InteriorFeatures;
-  property.farmranch_features = data.FarmRanchFeatures;
-  property.fireplace_features = data.FireplaceFeatures;
-  property.lot_features = data.LotFeatures;
-  property.parking_features = data.ParkingFeatures;
-  property.pool_features = data.PoolFeatures;
-  property.security_features = data.SecurityFeatures;
+  property.parking_spaces = parseFloat(data.NumberOfParkingSpaces) || 0.0;
+
+  // Property Features
+  property.accessibility_features = '{' + data.AccessibilityFeatures + '}';
+  property.bedroom_bathroom_features = '{' + data.BedroomBathroomFeatures + '}';
+  property.commercial_features = '{' + data.CommercialFeatures + '}';
+  property.community_features = '{' + data.CommunityFeatures + '}';
+  property.energysaving_features = '{' + data.EnergySavingFeatures + '}';
+  property.exterior_features = '{' + data.ExteriorFeatures + '}';
+  property.interior_features = '{' + data.InteriorFeatures + '}';
+  property.farmranch_features = '{' + data.FarmRanchFeatures + '}';
+  property.fireplace_features = '{' + data.FireplaceFeatures + '}';
+  property.lot_features = '{' + data.LotFeatures + '}';
+  property.parking_features = '{' + data.ParkingFeatures + '}';
+  property.pool_features = '{' + data.PoolFeatures + '}';
+  property.security_features = '{' + data.SecurityFeatures + '}';
 
   // property.created_at
   // property.updated_at
