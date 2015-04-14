@@ -4,6 +4,8 @@ var error = require('../../lib/models/Error.js');
 var config = require('../../lib/config.js');
 var fs = require('fs');
 
+var _u = require('underscore');
+
 require('../../lib/models/Address.js');
 require('../../lib/models/Property.js');
 require('../../lib/models/Listing.js');
@@ -199,8 +201,9 @@ function createObjects(data, cb) {
               },
               function(links, cb) {
                 links = links.filter(Boolean);
-                listing.gallery_images = "{" + links.join(',') + "}";
                 listing.cover = links[0] || '';
+                links = _u.shuffle(links);
+                listing.gallery_images = "{" + links.join(',') + "}";
 
                 console.log('LINKS:', links);
                 console.log('CREATED a LISTING');
