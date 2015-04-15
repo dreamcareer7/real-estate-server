@@ -188,7 +188,7 @@ function createObjects(data, cb) {
 
                   async.map(images, function(image, cb) {
                     if (typeof(image.buffer) === 'object')
-                      return S3.upload('shortlisted-test', image.buffer, cb);
+                      return S3.upload('shortlisted-test', image.buffer, 'jpg', cb);
 
                     return cb(null, null);
                   }, function(err, links) {
