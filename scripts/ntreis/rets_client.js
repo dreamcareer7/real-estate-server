@@ -3,7 +3,7 @@ var db = require('../../lib/utils/db.js');
 var error = require('../../lib/models/Error.js');
 var config = require('../../lib/config.js');
 var fs = require('fs');
-
+var sleep = require('sleep');
 var _u = require('underscore');
 
 require('../../lib/models/Address.js');
@@ -69,7 +69,7 @@ function createObjects(data, cb) {
   var property = {};
   var listing = {};
 
-  address.location = {};
+  // address.location = {};
 
   address.title = '';
   address.subtitle = '';
@@ -85,8 +85,8 @@ function createObjects(data, cb) {
   address.country = 'United States';
   address.country_code = 'USA';
   address.matrix_unique_id = data.Matrix_Unique_ID;
-  address.location.latitude = 51.507351;
-  address.location.longitude = -0.127758;
+  // address.location.latitude = 51.507351;
+  // address.location.longitude = -0.127758;
   // address.created_at
   // address.updated_at
 
@@ -243,88 +243,92 @@ function createObjects(data, cb) {
      });
 }
 
-async.auto({
-  last_run: function(cb) {
-    if (timing.last_run)
-      return cb(null, timing.last_run);
+function magic() {
+  async.auto({
+    last_run: function(cb) {
+      if (timing.last_run)
+        return cb(null, timing.last_run);
 
-    var initial = new Date(Date.now() - timing.initial * 24 * 3600 * 1000);
-    return cb(null, initial.toNTREISString());
-  },
-  mls: ['last_run',
-        function(cb, results) {
-          console.log(results.last_run);
-          client.once('connection.success', function() {
-            client.getTable("Property", "Listing");
-            var fields;
+      var initial = new Date(Date.now() - timing.initial * 24 * 3600 * 1000);
+      return cb(null, initial.toNTREISString());
+    },
+    mls: ['last_run',
+          function(cb, results) {
+            console.log(results.last_run);
+            client.once('connection.success', function() {
+              client.getTable("Property", "Listing");
+              var fields;
 
-            client.once('metadata.table.success', function(table) {
-              fields = table.Fields;
+              client.once('metadata.table.success', function(table) {
+                fields = table.Fields;
 
-              client.query("Property", "Listing",
-                           "(MatrixModifiedDT=" + results.last_run +")",
-                           function(err, data) {
-                             if (err)
-                               return cb(err);
+                client.query("Property", "Listing",
+                             "(MatrixModifiedDT=" + results.last_run +")",
+                             function(err, data) {
+                               if (err)
+                                 return cb(err);
 
-                             data.sort(function(a, b) {
-                               var a_ = new Date(a.MatrixModifiedDT);
-                               var b_ = new Date(b.MatrixModifiedDT);
+                               data.sort(function(a, b) {
+                                 var a_ = new Date(a.MatrixModifiedDT);
+                                 var b_ = new Date(b.MatrixModifiedDT);
 
-                               if(a_ > b_)
-                                 return 1;
-                               else if(b_ > a_)
-                                 return -1;
-                               else
-                                 return 0;
+                                 if(a_ > b_)
+                                   return 1;
+                                 else if(b_ > a_)
+                                   return -1;
+                                 else
+                                   return 0;
+                               });
+
+                               return cb(null, data);
                              });
-
-                             return cb(null, data);
-                           });
-            });
-          });
-        }],
-  objects: ['mls',
-            function(cb, results) {
-              async.map(results.mls, createObjects, function(err, objects) {
-                if(err) {
-                  return cb(err);
-                }
-
-                return cb(null, objects);
               });
-            }],
-  recs: ['objects',
-         function(cb, results) {
-           var listing_ids = results.objects.map(function(r) {
-                               return r.listing_id;
-                             });
+            });
+          }],
+    objects: ['mls',
+              function(cb, results) {
+                async.map(results.mls, createObjects, function(err, objects) {
+                  if(err) {
+                    return cb(err);
+                  }
 
-           async.map(listing_ids, generateRecommendationsForListing, function(err, recs) {
-             if(err)
-               return cb(err);
+                  return cb(null, objects);
+                });
+              }],
+    recs: ['objects',
+           function(cb, results) {
+             var listing_ids = results.objects.map(function(r) {
+                                 return r.listing_id;
+                               });
 
-             return cb(null, recs);
-           });
-         }],
-  update_last_run: ['mls',
-                    function(cb, results) {
-                      var last_run = apply_time_delta(results.mls[results.mls.length - 1].MatrixModifiedDT + 'Z');
-                      timing.last_run = last_run;
-                      fs.writeFileSync("timing.config.js", JSON.stringify(timing, null, 2));
-                      return cb(null, false);
-                    }
-                   ]
-}, function(err, results) {
-     if(err)
-       console.log('ERREXIT:', err);
-     // else {
-     //   // console.log(results.objects.length);
-     //   // console.log(results.objects);
-     //   results.mls.map(function(r) {
-     //     // console.log(r.MatrixModifiedDT);
-     //     // console.log(r.Status);
-     //     // console.log(r.PropertySubType);
-     //   });
-     // }
-   });
+             async.map(listing_ids, generateRecommendationsForListing, function(err, recs) {
+               if(err)
+                 return cb(err);
+
+               return cb(null, recs);
+             });
+           }],
+    update_last_run: ['mls',
+                      function(cb, results) {
+                        var last_run = apply_time_delta(results.mls[results.mls.length - 1].MatrixModifiedDT + 'Z');
+                        timing.last_run = last_run;
+                        fs.writeFileSync("timing.config.js", JSON.stringify(timing, null, 2));
+                        return cb(null, false);
+                      }
+                     ]
+  }, function(err, results) {
+       if(err)
+         console.log('ERREXIT:', err);
+       // else {
+       //   // console.log(results.objects.length);
+       //   // console.log(results.objects);
+       //   results.mls.map(function(r) {
+       //     // console.log(r.MatrixModifiedDT);
+       //     // console.log(r.Status);
+       //     // console.log(r.PropertySubType);
+       //   });
+       // }
+     });
+}
+
+magic();
