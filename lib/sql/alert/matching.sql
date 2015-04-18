@@ -10,4 +10,4 @@ WHERE
     properties.bedroom_count >= $5 AND
     properties.bathroom_count >= $6 AND
     properties.property_type = $7 AND
-    properties.property_subtype @> $8::property_subtype[]
+    ARRAY[properties.property_subtype] @> $8::property_subtype[]
