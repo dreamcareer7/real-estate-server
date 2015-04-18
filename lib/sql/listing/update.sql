@@ -8,5 +8,6 @@ SET alerting_agent_id = $1,
     original_price = $7,
     last_price = $8,
     low_price = $9,
-    association_fee = $10
+    association_fee = $10,
+    updated_at = NOW()
 WHERE id = $11

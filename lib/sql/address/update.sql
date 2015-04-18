@@ -11,5 +11,6 @@ SET title = $1,
     country_code = $10,
     unit_number = $11,
     postal_code = $12,
-    neighborhood = $13
+    neighborhood = $13,
+    updated_at = NOW()
 WHERE id = $14

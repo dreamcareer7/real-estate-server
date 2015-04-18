@@ -20,5 +20,6 @@ SET property_type = $1,
     lot_features = $19,
     parking_features = $20,
     pool_features = $21,
-    security_features = $22
+    security_features = $22,
+    updated_at = NOW()
 WHERE id = $23

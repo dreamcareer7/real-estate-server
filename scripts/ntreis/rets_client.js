@@ -47,7 +47,7 @@ function generateRecommendationsForListing(id, cb) {
       console.log('matched shortlists:', shortlists);
 
       async.map(shortlists, function(id, cb) {
-        Shortlist.recommendListing(id, listing, function(err, results) {
+        Shortlist.recommendListing(id, listing.id, function(err, results) {
           if(err)
             return cb(null, null);
 
@@ -73,15 +73,15 @@ function createObjects(data, cb) {
 
   address.title = '';
   address.subtitle = '';
-  address.street_name = data.StreetName;
-  address.city = data.City;
+  address.street_name = data.StreetName.trim();
+  address.city = data.City.trim();
   address.state = 'Texas';
-  address.state_code = data.StateOrProvince;
-  address.postal_code = data.PostalCode;
+  address.state_code = data.StateOrProvince.trim();
+  address.postal_code = data.PostalCode.trim();
   address.neighborhood = '';
-  address.street_suffix = data.StreetSuffix;
-  address.street_number = data.StreetNumber;
-  address.unit_number = data.UnitNumber;
+  address.street_suffix = data.StreetSuffix.trim();
+  address.street_number = data.StreetNumber.trim();
+  address.unit_number = data.UnitNumber.trim();
   address.country = 'United States';
   address.country_code = 'USA';
   address.matrix_unique_id = data.Matrix_Unique_ID;
@@ -92,11 +92,11 @@ function createObjects(data, cb) {
 
   property.bedroom_count = parseInt(data.BedsTotal) || 0;
   property.bathroom_count = parseFloat(data.BathsTotal) || 0.0;
-  property.description = data.PublicRemarks;
+  property.description = data.PublicRemarks.trim();
   property.square_meters = (parseFloat(data.SqFtTotal) || 0.0 ) / 10.764;
   property.lot_square_meters = (parseFloat(data.LotSizeAreaSQFT) || 0.0) / 10.764;
-  property.property_type = data.PropertyType;
-  property.property_subtype = data.PropertySubType;
+  property.property_type = data.PropertyType.trim();
+  property.property_subtype = data.PropertySubType.trim();
   property.matrix_unique_id = parseInt(data.Matrix_Unique_ID);
   property.year_build = parseInt(data.YearBuilt) || 0;
   property.parking_spaces = parseFloat(data.NumberOfParkingSpaces) || 0.0;
@@ -121,7 +121,7 @@ function createObjects(data, cb) {
 
   listing.currency = 'USD';
   listing.price = parseFloat(data.ListPrice) || 0.0;
-  listing.status = data.Status;
+  listing.status = data.Status.trim();
   listing.matrix_unique_id = parseInt(data.Matrix_Unique_ID);
   listing.last_price = parseFloat(data.LastListPrice) || 0.0;
   listing.low_price = parseFloat(data.ListPriceLow) || 0.0;
@@ -188,7 +188,7 @@ function createObjects(data, cb) {
 
                   async.map(images, function(image, cb) {
                     if (typeof(image.buffer) === 'object')
-                      return S3.upload('shortlisted-test', image.buffer, 'jpg', cb);
+                      return S3.upload(config.buckets.listing_images, image.buffer, '.jpg', cb);
 
                     return cb(null, null);
                   }, function(err, links) {
@@ -202,7 +202,13 @@ function createObjects(data, cb) {
               function(links, cb) {
                 links = links.filter(Boolean);
                 listing.cover = links[0] || '';
-                links = _u.shuffle(links);
+
+                // If array length is greater than 2, we shuffle everything except the first element which is always our cover
+                // This fixes issue #17 and is caused by duplicate photos being returned by the NTREIS
+                // We shuffle them to make duplicate images less annoying.
+                // I hate this hack.
+                links = (links.length > 2) ? Array.prototype.concat(links.slice(0, 1), _u.shuffle(links.slice(1))) : links;
+
                 listing.gallery_images = "{" + links.join(',') + "}";
 
                 console.log('LINKS:', links);
@@ -262,8 +268,10 @@ function magic() {
               client.once('metadata.table.success', function(table) {
                 fields = table.Fields;
 
-                client.query("Property", "Listing",
+                client.query("Property",
+                             "Listing",
                              "(MatrixModifiedDT=" + results.last_run +")",
+                             // "(Limit=100)",
                              function(err, data) {
                                if (err)
                                  return cb(err);
@@ -280,6 +288,7 @@ function magic() {
                                    return 0;
                                });
 
+                               console.log('INFO: Received', data.length, 'entries between', data[0].MatrixModifiedDT, '<->', data[data.length-1].MatrixModifiedDT);
                                return cb(null, data);
                              });
               });
@@ -287,7 +296,7 @@ function magic() {
           }],
     objects: ['mls',
               function(cb, results) {
-                async.map(results.mls, createObjects, function(err, objects) {
+                async.mapLimit(results.mls, config.ntreis.parallel, createObjects, function(err, objects) {
                   if(err) {
                     return cb(err);
                   }

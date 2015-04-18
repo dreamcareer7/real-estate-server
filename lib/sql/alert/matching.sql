@@ -1,4 +1,4 @@
-SELECT listings.id
+SELECT DISTINCT (listings.id)
 FROM listings
 INNER JOIN properties
 ON listings.property_id = properties.id
@@ -8,6 +8,6 @@ WHERE
     properties.square_meters >= $3 AND
     properties.square_meters <= $4 AND
     properties.bedroom_count >= $5 AND
-    properties.bedroom_count <= $6 AND
+    properties.bathroom_count >= $6 AND
     properties.property_type = $7 AND
-    properties.property_subtype = $8
+    properties.property_subtypes @> $8::property_subtype[]
