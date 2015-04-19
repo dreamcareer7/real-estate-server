@@ -16,6 +16,8 @@
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.9.2",
     "chance": "^0.7.1",
+    "colors": "^1.0.3",
+    "commander": "^2.8.0",
     "compress": "^0.99.0",
     "compression": "^1.2.0",
     "express": "^4.10.4",
