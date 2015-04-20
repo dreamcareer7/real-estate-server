@@ -9,7 +9,7 @@ INSERT INTO
                square_meters,
                lot_square_meters,
                year_built,
-               parking_spaces,
+               parking_spaces_covered_total,
                accessibility_features,
                bedroom_bathroom_features,
                commercial_features,
@@ -22,7 +22,10 @@ INSERT INTO
                lot_features,
                parking_features,
                pool_features,
-               security_features)
+               security_features,
+               half_bathroom_count,
+               full_bathroom_count,
+               heating)
 VALUES ($1,
         $2,
         $3,
@@ -46,4 +49,7 @@ VALUES ($1,
         $21,
         $22,
         $23,
-        $24) RETURNING id
+        $24,
+        $25,
+        $26,
+        $27) RETURNING id

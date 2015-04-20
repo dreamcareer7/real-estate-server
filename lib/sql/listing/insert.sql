@@ -11,6 +11,11 @@ INSERT INTO
              last_price,
              low_price,
              association_fee,
+             association_fee_frequency,
+             association_fee_includes,
+             association_type,
+             mls_number,
+             unexempt_taxes,
              gallery_image_urls,
              cover_image_url)
 VALUES ($1,
@@ -26,4 +31,9 @@ VALUES ($1,
         $11,
         $12,
         $13,
-        $14) RETURNING id
+        $14,
+        $15,
+        $16,
+        $17,
+        $18,
+        $19) RETURNING id

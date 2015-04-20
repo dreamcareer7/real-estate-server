@@ -131,7 +131,8 @@ function createObjects(data, cb) {
   property.property_subtype = data.PropertySubType.trim();
   property.matrix_unique_id = parseInt(data.Matrix_Unique_ID);
   property.year_build = parseInt(data.YearBuilt) || 0;
-  property.parking_spaces = parseFloat(data.NumberOfParkingSpaces) || 0.0;
+  property.parking_spaces_covered_total = parseFloat(data.ParkingSpacesCoveredTotal) || 0.0;
+  property.heating = '{' + data.Heating + '}';
 
   // Property Features
   property.accessibility_features = '{' + data.AccessibilityFeatures + '}';
@@ -156,6 +157,12 @@ function createObjects(data, cb) {
   listing.low_price = parseFloat(data.ListPriceLow) || 0.0;
   listing.original_price = parseFloat(data.OriginalListPrice) || 0.0;
   listing.association_fee = parseFloat(data.AssociationFee) || 0.0;
+  listing.association_fee_frequency = data.AssociationFeeFrequency;
+  listing.association_fee_includes = data.AssociationFeeIncludes;
+  listing.association_type = data.AssociationType;
+  listing.mls_number = data.MLSNumber;
+  listing.unexempt_taxes = data.UnexemptTaxes;
+
 
   async.waterfall([
     function(cb) {
