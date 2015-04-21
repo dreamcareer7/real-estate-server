@@ -313,13 +313,14 @@ function fetch() {
                                  return cb(err);
 
                                data.sort(ByMatrixModifiedDT);
-                               data = data.slice(0, program.limit);
+                               var limited_data = data.slice(0, program.limit);
 
                                console.log('INFO: Received'.cyan, data.length, 'entries between'.cyan,
                                            data[0].MatrixModifiedDT.yellow,
                                            '<->'.cyan,
-                                           data[data.length-1].MatrixModifiedDT.yellow);
-                               return cb(null, data);
+                                           data[data.length-1].MatrixModifiedDT.yellow,
+                                           'Limiting to'.cyan, program.limit);
+                               return cb(null, limited_data);
                              });
               });
             });
