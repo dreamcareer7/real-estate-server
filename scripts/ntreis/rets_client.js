@@ -161,7 +161,7 @@ function createObjects(data, cb) {
   listing.association_fee_includes = data.AssociationFeeIncludes;
   listing.association_type = data.AssociationType;
   listing.mls_number = data.MLSNumber;
-  listing.unexempt_taxes = data.UnexemptTaxes;
+  listing.unexempt_taxes = parseFloat(data.UnexemptTaxes) || 0.0;
 
 
   async.waterfall([
