@@ -6,4 +6,4 @@ WHERE message_room_id IN
      WHERE shortlist = $1
     )
     AND user_id = $2
-    AND read = false) AS new_comments_count;
+    AND read = false) AS badge_count;
