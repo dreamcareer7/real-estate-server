@@ -70,38 +70,6 @@ function byMatrixModifiedDT(a, b) {
     return 0;
 }
 
-function generateRecommendationsForListing(id, cb) {
-  Listing.get(id, function(err, listing) {
-    if(err)
-      return cb(err);
-
-    Listing.matchingShortlistsbyAlerts(id, function(err, shortlists) {
-      if(err)
-        return cb(err);
-
-      async.map(shortlists, function(id, cb) {
-        console.log('Recommending Listing with MUI:'.cyan,
-                    ('#' + listing.matrix_unique_id).red,
-                    '('.cyan, listing.id.yellow, ')'.cyan,
-                    'to Shortlist with ID:'.cyan,
-                    id.yellow);
-        Shortlist.recommendListing(id, listing.id, function(err, results) {
-          if(err)
-            return cb(null, null);
-
-          return cb(null, results);
-        });
-      }, function(err, recs) {
-           if(err)
-             return cb(err);
-
-           recs = recs.filter(Boolean);
-           return cb(null, recs);
-         });
-    });
-  });
-}
-
 function createObjects(data, cb) {
   var address = {};
   var property = {};
@@ -358,7 +326,7 @@ function fetch() {
                                  return r.listing_id;
                                });
 
-             async.map(listing_ids, generateRecommendationsForListing, function(err, recs) {
+             async.map(listing_ids, Recommendation.generateForListing, function(err, recs) {
                if(err)
                  return cb(err);
 
