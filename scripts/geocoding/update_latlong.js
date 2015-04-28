@@ -18,7 +18,7 @@ function updateAddress(id, cb) {
     if(err)
       return cb(err);
 
-    var standard = address.street_number + ' ' + address.street_name + ', ' + address.city + ', ' + address.state_code
+    var standard = address.street_number + ' ' + address.street_name + ', ' + address.city + ', ' + address.state_code;
     console.log('querying:', standard);
     gm.geocode(standard, function(err, data) {
       console.log('DEBUG:', JSON.stringify(data));

@@ -58,7 +58,7 @@ function applyTimeDelta(dt) {
   return lapsed.toNTREISString();
 }
 
-function ByMatrixModifiedDT(a, b) {
+function byMatrixModifiedDT(a, b) {
   var a_ = new Date(a.MatrixModifiedDT);
   var b_ = new Date(b.MatrixModifiedDT);
 
@@ -172,19 +172,31 @@ function createObjects(data, cb) {
         if (err) {
           if (err.code == 'ResourceNotFound') {
             console.log('CREATED an ADDRESS'.green);
-            return Address.create(address, cb);
+            Address.create(address, function(err, address_id) {
+              if(err)
+                return cb(err);
+
+              Address.updateGeoFromOSM(address_id, function(err, result) {
+                console.log('updating GEO information on address with id:', address_id);
+                if(err)
+                  return cb(err);
+
+                return cb(null, address_id);
+              });
+            });
           }
-
-          return cb(err);
-        }
-
-        Address.update(current.id, address, function(err, next) {
-          if(err)
+          else {
             return cb(err);
+          }
+        } else {
+          Address.update(current.id, address, function(err, next) {
+            if(err)
+              return cb(err);
 
-          console.log('UPDATED an ADDRESS'.yellow);
-          return cb(null, next.id);
-        });
+            console.log('UPDATED an ADDRESS'.yellow);
+            return cb(null, next.id);
+          });
+        }
       });
     },
     function(address_id, cb) {
@@ -314,7 +326,7 @@ function fetch() {
                                if (err)
                                  return cb(err);
 
-                               data.sort(ByMatrixModifiedDT);
+                               data.sort(byMatrixModifiedDT);
                                var limited_data = data.slice(0, program.limit);
 
                                console.log('INFO: Received'.cyan, data.length, 'entries between'.cyan,
