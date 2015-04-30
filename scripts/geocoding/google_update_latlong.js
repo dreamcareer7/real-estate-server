@@ -8,7 +8,7 @@ var sleep = require('sleep');
 
 require('../../lib/models/Address.js');
 
-Address.getBatchOfAddressesWithoutLatLong(3, function(err, address_ids) {
+Address.getBatchOfAddressesWithoutLatLong(4, function(err, address_ids) {
   if(err) {
     console.log(err);
     process.exit(1);

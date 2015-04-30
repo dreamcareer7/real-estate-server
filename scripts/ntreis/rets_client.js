@@ -295,13 +295,13 @@ function fetch() {
                                  return cb(err);
 
                                data.sort(byMatrixModifiedDT);
-                               var limited_data = data.slice(0, program.limit);
-
                                console.log('INFO: Received'.cyan, data.length, 'entries between'.cyan,
                                            data[0].MatrixModifiedDT.yellow,
                                            '<->'.cyan,
                                            data[data.length-1].MatrixModifiedDT.yellow,
                                            'Limiting to'.cyan, program.limit);
+                               var limited_data = data.slice(0, program.limit);
+
                                return cb(null, limited_data);
                              });
               });
