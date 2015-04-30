@@ -7,7 +7,8 @@
         },
         {
             "script": "./scripts/ntreis/rets_client.js",
-            "name": "NTREIS Connector MVPv1"
+            "name": "NTREIS Connector MVPv1",
+            "args": ["-p"],
         },
         {
             "script": "./scripts/geocoding/google_update_latlong.js",
