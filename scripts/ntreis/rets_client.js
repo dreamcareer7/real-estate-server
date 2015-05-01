@@ -31,7 +31,7 @@ var retsUser = config.ntreis.user;
 var retsPassword = config.ntreis.password;
 
 var client = require('rets-client').getClient(retsLoginUrl, retsUser, retsPassword);
-var timing = JSON.parse(fs.readFileSync('timing.config.js', 'utf8'));
+var timing = JSON.parse(fs.readFileSync('./timing.config.js', 'utf8'));
 
 Date.prototype.toNTREISString = function() {
   return this.toISOString().replace('Z', '+');
