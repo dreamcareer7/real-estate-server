@@ -398,7 +398,7 @@ function fetch() {
          createdAddresses + ' New Addresses, '  + updatedAddresses + ' Updated Addresses, ' +
          s3ResourcesCreated + ' New Images uploaded to S3, ' +
          geocodedAddresses + ' Addresses Geocoded successfully using OSM,  ' +
-         ((createdAddresses - geocodedAddresses) / createdAddresses) * 100 + '% Miss rate on OSM, ' +
+         Math.round(((createdAddresses - geocodedAddresses) / createdAddresses) * 100) + '% Miss rate on OSM, ' +
          'pausing for ' + remaining + ' seconds before running the next fetch.' + ' Exit status: ' +
          ((err) ? 'FAILURE' : 'OK') + ' Error: ' + err;
 
