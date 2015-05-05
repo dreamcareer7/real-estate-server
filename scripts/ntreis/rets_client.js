@@ -24,7 +24,7 @@ var itemsEnd = '';
 
 var payload = {
   channel: '#ntreis-updates',
-  username: 'NTREIS Connector',
+  username: config.slack.this,
   icon_emoji: ':house:'
 }
 
