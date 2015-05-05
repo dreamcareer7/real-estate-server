@@ -9,6 +9,37 @@ var sleep = require('sleep');
 var _u = require('underscore');
 var program = require('commander');
 var colors = require('colors');
+var request = require('request');
+
+var updatedAddresses = 0;
+var updatedProperties = 0;
+var updatedListings = 0;
+var createdAddresses = 0;
+var createdProperties = 0;
+var createdListings = 0;
+var geocodedAddresses = 0;
+var totalItems = 0;
+var itemsStart = '';
+var itemsEnd = '';
+
+var payload = {
+  channel: '#ntreis-updates',
+  username: 'NTREIS Connector',
+  icon_emoji: ':house:'
+}
+
+var headers = {
+  'User-Agent': 'Super Agent/0.0.1',
+  'Content-Type': 'application/x-www-form-urlencoded'
+}
+
+var options = {
+  url: config.slack.webhook,
+  method: 'POST',
+  headers: headers,
+  form: {
+  }
+}
 
 program.version(config.ntreis.version)
 .option('-d, --enable-recs', 'Disable recommending listings to matching alerts: fetches data only')
@@ -144,11 +175,14 @@ function createObjects(data, cb) {
               if(err)
                 return cb(err);
 
+              createdAddresses++;
               Address.updateGeoFromOSM(address_id, function(err, result) {
                 console.log('updating GEO information on address with id:', address_id);
                 if(err)
                   return cb(err);
 
+                if (result)
+                  geocodedAddresses++;
                 return cb(null, address_id);
               });
             });
@@ -161,6 +195,7 @@ function createObjects(data, cb) {
             if(err)
               return cb(err);
 
+            updatedAddresses++;
             console.log('UPDATED an ADDRESS'.yellow);
             return cb(null, next.id);
           });
@@ -174,6 +209,7 @@ function createObjects(data, cb) {
         if(err) {
           if(err.code == 'ResourceNotFound') {
             console.log('CREATED a PROPERTY'.green);
+            createdProperties++;
             return Property.create(property, cb);
           }
 
@@ -184,6 +220,7 @@ function createObjects(data, cb) {
           if(err)
             return cb(err);
 
+          updatedProperties++;
           console.log('UPDATED a PROPERTY'.yellow);
           return cb(null, next.id);
         });
@@ -234,6 +271,7 @@ function createObjects(data, cb) {
                   if(err)
                     return cb(err);
 
+                  createdListings++;
                   return cb(null, next);
                 });
               }
@@ -252,6 +290,7 @@ function createObjects(data, cb) {
             if(err)
               return cb(err);
 
+            updatedListings++;
             console.log('UPDATED a LISTING'.yellow);
             return cb(null, next.id);
           });
@@ -295,6 +334,10 @@ function fetch() {
                                  return cb(err);
 
                                data.sort(byMatrixModifiedDT);
+                               totalItems = data.length;
+                               itemsStart = data[0].MatrixModifiedDT;
+                               itemsEnd = data[data.length-1].MatrixModifiedDT;
+
                                console.log('INFO: Received'.cyan, data.length, 'entries between'.cyan,
                                            data[0].MatrixModifiedDT.yellow,
                                            '<->'.cyan,
@@ -333,7 +376,7 @@ function fetch() {
                return cb(null, recs);
              });
            }],
-    update_last_run: ['mls',
+    update_last_run: ['mls', 'objects',
                       function(cb, results) {
                         var last_run = applyTimeDelta(results.mls[results.mls.length - 1].MatrixModifiedDT + 'Z');
                         timing.last_run = last_run;
@@ -345,6 +388,25 @@ function fetch() {
        var endTime = (new Date()).getTime();
        var elapsed = (endTime - startTime) / 1000;
        var remaining = parseInt(config.ntreis.pause - elapsed);
+       payload.text = 'Fetch completed in ' + elapsed + ' seconds. Received total of ' +
+         totalItems + ' items between: ' + itemsStart + ' <-> ' + itemsEnd + ' Summary: ' +
+         createdListings + ' New Listings, ' + updatedListings + ' Updated Listings, ' +
+         createdProperties + ' New Properties, ' + updatedProperties + ' Updated Properties, ' +
+         createdAddresses + ' New Addresses, '  + updatedAddresses + ' Updated Addresses, ' +
+         geocodedAddresses + ' Addresses Geocoded successfully using OSM,  ' +
+         ((createdAddresses - geocodedAddresses) / createdAddresses) * 100 + '% Miss rate on OSM, ' +
+         'pausing for ' + remaining + ' seconds before running the next fetch.' + ' Exit status: ' +
+         ((err) ? 'FAILURE' : 'OK') + ' Error: ' + err;
+
+       console.log('Info:'.yellow, payload.text);
+       options.form.payload = JSON.stringify(payload);
+
+       request.post(options, function(err, res, body) {
+         if(err) {
+           console.log('Error sending update to slack:', err);
+         }
+       });
+
        console.log('Total Running Time:', elapsed + 's');
        if(err)
          console.log('INFO: (TERM) Script terminated with error:'.red, err);
