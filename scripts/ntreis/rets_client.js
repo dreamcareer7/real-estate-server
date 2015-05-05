@@ -18,6 +18,7 @@ var createdAddresses = 0;
 var createdProperties = 0;
 var createdListings = 0;
 var geocodedAddresses = 0;
+var s3ResourcesCreated = 0;
 var totalItems = 0;
 var itemsStart = '';
 var itemsEnd = '';
@@ -242,8 +243,10 @@ function createObjects(data, cb) {
                     return cb(null, []);
 
                   async.map(images, function(image, cb) {
-                    if (typeof(image.buffer) === 'object')
+                    if (typeof(image.buffer) === 'object') {
+                      s3ResourcesCreated++;
                       return S3.upload(config.buckets.listing_images, image.buffer, config.ntreis.default_photo_ext, cb);
+                    }
 
                     return cb(null, null);
                   }, function(err, links) {
@@ -393,6 +396,7 @@ function fetch() {
          createdListings + ' New Listings, ' + updatedListings + ' Updated Listings, ' +
          createdProperties + ' New Properties, ' + updatedProperties + ' Updated Properties, ' +
          createdAddresses + ' New Addresses, '  + updatedAddresses + ' Updated Addresses, ' +
+         s3ResourcesCreated + ' New Images uploaded to S3, ' +
          geocodedAddresses + ' Addresses Geocoded successfully using OSM,  ' +
          ((createdAddresses - geocodedAddresses) / createdAddresses) * 100 + '% Miss rate on OSM, ' +
          'pausing for ' + remaining + ' seconds before running the next fetch.' + ' Exit status: ' +
