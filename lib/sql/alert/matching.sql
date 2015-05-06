@@ -13,7 +13,7 @@ WHERE
     ((properties.half_bathroom_count + properties.full_bathroom_count) >= $7) AND
     properties.property_type = $8 AND
     properties.property_subtype = ANY ($9::property_subtype[]) AND
-    ST_Distance(ST_SetSRID(ST_MakePoint($10, $11), 4326), addresses.location, TRUE) < 10000 AND
+    ST_Distance(ST_SetSRID(ST_MakePoint($10, $11), 4326), addresses.location, TRUE) < $12 AND
     listings.id NOT IN (
       SELECT DISTINCT(recommendations.object)
       FROM recommendations

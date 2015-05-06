@@ -11,6 +11,7 @@ INSERT INTO alerts(
         location,
         property_type,
         property_subtypes,
-        title
+        title,
+        radius
     )
-VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, ST_SetSRID(ST_MakePoint($10, $11), 4326), $12, $13, $14) RETURNING id;
+VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, ST_SetSRID(ST_MakePoint($10, $11), 4326), $12, $13, $14, $15) RETURNING id;
