@@ -1,3 +1,3 @@
 DELETE FROM notification_tokens
-WHERE "user" = $1
-    AND device_token = $2
+WHERE "user" = $1 AND
+      device_token = $2
