@@ -1,4 +1,3 @@
 UPDATE recommendations
-SET favorited = $2,
-    updated_at = NOW()
+SET favorited = $2
 WHERE id = $1

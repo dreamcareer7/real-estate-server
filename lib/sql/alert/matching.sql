@@ -5,6 +5,7 @@ ON listings.property_id = properties.id
 INNER JOIN addresses
 ON properties.address_id = addresses.id
 WHERE
+    listings.status = 'Active' AND
     listings.price >= $2 AND
     listings.price <= $3 AND
     properties.square_meters >= $4 AND
