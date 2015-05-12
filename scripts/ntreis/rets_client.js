@@ -245,7 +245,7 @@ function createObjects(data, cb) {
                   async.map(images, function(image, cb) {
                     if (typeof(image.buffer) === 'object') {
                       s3ResourcesCreated++;
-                      return S3.upload(config.buckets.listing_images, image.buffer, config.ntreis.default_photo_ext, cb);
+                      return S3.upload(config.buckets.listing_images, {body: image.buffer, ext: config.ntreis.default_photo_ext}, cb);
                     }
 
                     return cb(null, null);

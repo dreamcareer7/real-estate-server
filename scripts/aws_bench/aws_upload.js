@@ -13,14 +13,14 @@ var rl = readline.createInterface({
 rl.question("enter name of the file for upload: ", function(file) {
   var ext = path.extname(file);
 
-  fs.readFile(file, function(err, data) {
+  fs.readFile(file, function(err, body) {
     if(err) {
       console.log(err);
       return;
     }
 
     console.time("S3-upload");
-    S3.upload('shortlisted-test', data, ext, function(err, res) {
+    S3.upload('shortlisted-test', {body: body, ext: ext}, function(err, res) {
       if(err) {
         console.log(err);
         return;
