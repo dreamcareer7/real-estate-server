@@ -6,7 +6,8 @@ INSERT INTO messages(
     document_url,
     video_url,
     object,
-    author
+    author,
+    image_thumbnail_url
 )
 VALUES($1,
        $2,
@@ -15,5 +16,6 @@ VALUES($1,
        $5,
        $6,
        $7,
-       $8)
+       $8,
+       $9)
 RETURNING id;
