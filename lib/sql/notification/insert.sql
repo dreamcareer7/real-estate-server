@@ -4,7 +4,10 @@ INSERT INTO notifications(
             object,
             notifying_user,
             message,
+            auxiliary_object_class,
+            auxiliary_object,
+            recommendation,
             notified_user,
             shortlist
         )
-VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id;
+VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING id;
