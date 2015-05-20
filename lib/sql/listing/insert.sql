@@ -22,7 +22,8 @@ INSERT INTO
              list_office_mui,
              list_office_mls_id,
              list_office_name,
-             list_office_phone
+             list_office_phone,
+             possession
             )
 VALUES ($1,
         $2,
@@ -47,4 +48,5 @@ VALUES ($1,
         $21,
         $22,
         $23,
-        $24) RETURNING id
+        $24,
+        $25) RETURNING id

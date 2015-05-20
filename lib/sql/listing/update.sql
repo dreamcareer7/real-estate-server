@@ -18,5 +18,6 @@ SET alerting_agent_id = $1,
     list_office_mls_id = $17,
     list_office_name = $18,
     list_office_phone = $19,
+    possession = $20,
     updated_at = NOW()
-WHERE id = $20
+WHERE id = $21

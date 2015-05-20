@@ -175,7 +175,6 @@ function createObjects(data, cb) {
   property.roof = data.Roof;
   property.pool_yn = Boolean(parseInt(data.PoolYN));
   property.handicap_yn = Boolean(parseInt(data.HandicapYN));
-
   property.elementary_school_name = data.ElementarySchoolName;
   property.intermediate_school_name = data.IntermediateSchoolName;
   property.high_school_name = data.HighSchoolName;
@@ -199,12 +198,12 @@ function createObjects(data, cb) {
   listing.association_type = data.AssociationType;
   listing.mls_number = data.MLSNumber;
   listing.unexempt_taxes = parseFloat(data.UnexemptTaxes) || 0.0;
-
   listing.financing_proposed = data.FinancingProposed;
   listing.list_office_mui = parseInt(data.ListOffice_MUI);
   listing.list_office_mls_id = data.ListOfficeMLSID;
   listing.list_office_name = data.ListOfficeName;
   listing.list_office_phone = data.ListOfficePhone;
+  listing.possession = data.Possession;
 
   async.waterfall([
     function(cb) {
