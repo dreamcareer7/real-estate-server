@@ -173,12 +173,12 @@ function createObjects(data, cb) {
   property.construction_materials_walls = data.ConstructionMaterialsWalls;
   property.foundation_details = data.FoundationDetails;
   property.roof = data.Roof;
-  property.pool_yn = parseInt(data.PoolYN) || 0;
-  property.handicap_yn = parseInt(data.HandicapYN) || 0;
+  property.pool_yn = Boolean(parseInt(data.PoolYN));
+  property.handicap_yn = Boolean(parseInt(data.HandicapYN));
 
   property.elementary_school_name = data.ElementarySchoolName;
   property.intermediate_school_name = data.IntermediateSchoolName;
-  property.high_school_Name = data.HighSchoolName;
+  property.high_school_name = data.HighSchoolName;
   property.junior_high_school_name = data.JuniorHighSchoolName;
   property.middle_school_name = data.MiddleSchoolName;
   property.primary_school_name = data.PrimarySchoolName;
@@ -201,7 +201,7 @@ function createObjects(data, cb) {
   listing.unexempt_taxes = parseFloat(data.UnexemptTaxes) || 0.0;
 
   listing.financing_proposed = data.FinancingProposed;
-  listing.list_office_mui = data.ListOffice_MUI;
+  listing.list_office_mui = parseInt(data.ListOffice_MUI);
   listing.list_office_mls_id = data.ListOfficeMLSID;
   listing.list_office_name = data.ListOfficeName;
   listing.list_office_phone = data.ListOfficePhone;
