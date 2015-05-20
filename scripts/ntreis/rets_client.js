@@ -151,6 +151,41 @@ function createObjects(data, cb) {
   property.pool_features = '{' + data.PoolFeatures + '}';
   property.security_features = '{' + data.SecurityFeatures + '}';
 
+  property.flooring = '{' + data.Flooring + '}';
+  property.utilities = '{' + data.Utilities + '}';
+  property.utilities_other = '{' + data.UtilitiesOther + '}';
+
+  property.architectural_style = data.ArchitecturalStyle;
+  property.structural_style = data.StructuralStyle;
+  property.number_of_stories = parseInt(data.NumberOfStories) || 0;
+  property.number_of_stories_in_building = parseInt(data.NumberOfStoriesInBuilding) || 0;
+  property.number_of_parking_spaces = parseFloat(data.NumberOfParkingSpaces) || 0.0;
+  property.parking_spaces_carport = parseFloat(data.ParkingSpacesCarport) || 0.0;
+  property.parking_spaces_garage = parseFloat(data.ParkingSpacesGarage) || 0.0;
+  property.garage_length = parseFloat(data.GarageLength) || 0.0;
+  property.garage_width = parseFloat(data.GarageWidth) || 0.0;
+  property.number_of_dining_areas = parseInt(data.NumberOfDiningAreas) || 0;
+  property.number_of_living_areas = parseInt(data.NumberOfLivingAreas) || 0;
+  property.fireplaces_total = parseInt(data.FireplacesTotal) || 0;
+  property.lot_number = data.LotNumber;
+  property.soil_type = data.SoilType;
+  property.construction_materials = data.ConstructionMaterials;
+  property.construction_materials_walls = data.ConstructionMaterialsWalls;
+  property.foundation_details = data.FoundationDetails;
+  property.roof = data.Roof;
+  property.pool_yn = parseInt(data.PoolYN) || 0;
+  property.handicap_yn = parseInt(data.HandicapYN) || 0;
+
+  property.elementary_school_name = data.ElementarySchoolName;
+  property.intermediate_school_name = data.IntermediateSchoolName;
+  property.high_school_Name = data.HighSchoolName;
+  property.junior_high_school_name = data.JuniorHighSchoolName;
+  property.middle_school_name = data.MiddleSchoolName;
+  property.primary_school_name = data.PrimarySchoolName;
+  property.senior_high_school_name = data.SeniorHighSchoolName;
+  property.school_district = data.SchoolDistrict;
+
+
   listing.currency = 'USD';
   listing.price = parseFloat(data.ListPrice) || 0.0;
   listing.status = data.Status.trim();
@@ -165,6 +200,11 @@ function createObjects(data, cb) {
   listing.mls_number = data.MLSNumber;
   listing.unexempt_taxes = parseFloat(data.UnexemptTaxes) || 0.0;
 
+  listing.financing_proposed = data.FinancingProposed;
+  listing.list_office_mui = data.ListOffice_MUI;
+  listing.list_office_mls_id = data.ListOfficeMLSID;
+  listing.list_office_name = data.ListOfficeName;
+  listing.list_office_phone = data.ListOfficePhone;
 
   async.waterfall([
     function(cb) {

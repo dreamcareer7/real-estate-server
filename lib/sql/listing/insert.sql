@@ -17,7 +17,13 @@ INSERT INTO
              mls_number,
              unexempt_taxes,
              gallery_image_urls,
-             cover_image_url)
+             cover_image_url,
+             financing_proposed,
+             list_office_mui,
+             list_office_mls_id,
+             list_office_name,
+             list_office_phone
+            )
 VALUES ($1,
         $2,
         $3,
@@ -36,4 +42,9 @@ VALUES ($1,
         $16,
         $17,
         $18,
-        $19) RETURNING id
+        $19,
+        $20,
+        $21,
+        $22,
+        $23,
+        $24) RETURNING id
