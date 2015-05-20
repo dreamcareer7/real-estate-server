@@ -3,7 +3,7 @@ INSERT INTO
                     source,
                     source_url,
                     referring_user,
-                    referring_savedsearch,
+                    referring_alerts,
                     referred_shortlist,
                     object,
                     message_room,

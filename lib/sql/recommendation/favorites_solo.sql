@@ -7,7 +7,7 @@ SELECT id,
        recommendation_type,
        SOURCE,
        source_url,
-       referring_savedsearch,
+       referring_alerts,
        referred_shortlist
 FROM recommendations
 WHERE referring_user = $1

@@ -1,4 +1,5 @@
-SELECT DISTINCT (shortlist)
+SELECT id,
+       shortlist
 FROM alerts
 WHERE $1 >= minimum_price AND
       $1 <= maximum_price AND
