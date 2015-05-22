@@ -34,13 +34,19 @@ Address.getBatchOfAddressesWithoutLatLong(config.google.address_batch_size, func
                    var elapsed = (endTime - startTime) / 1000;
                    var remaining = parseInt(config.google.pause - elapsed);
 
-                   if (remaining > 0) {
-                     console.log('Pausing for'.yellow,
-                                 remaining,
-                                 'seconds before termination to meet Google\'s limit on daily requests...'.yellow);
-                     sleep.sleep(remaining);
-                   }
+                   results = results.filter(Boolean);
+                   async.map(results, Address.reschedule, function(err, ok) {
+                     if(err)
+                       return;
 
-                   return;
+                     if (remaining > 0) {
+                       console.log('Pausing for'.yellow,
+                                   remaining,
+                                   'seconds before termination to meet Google\'s limit on daily requests...'.yellow);
+                       sleep.sleep(remaining);
+                     }
+
+                     return;
+                   });
                  });
 });
