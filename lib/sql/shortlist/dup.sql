@@ -1,5 +1,5 @@
 SELECT BOOL_OR(
-         object = $1 AND
-         referred_shortlist = $2
+         referred_shortlist = $1
+         object = $2 AND
        ) AS is_dup
 FROM recommendations;
