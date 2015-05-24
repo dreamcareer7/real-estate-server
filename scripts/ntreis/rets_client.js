@@ -131,6 +131,7 @@ function createObjects(data, cb) {
   property.lot_square_meters = (parseFloat(data.LotSizeAreaSQFT) || 0.0) / 10.764;
   property.property_type = data.PropertyType.trim();
   property.property_subtype = data.PropertySubType.trim();
+
   property.matrix_unique_id = parseInt(data.Matrix_Unique_ID);
   property.year_build = parseInt(data.YearBuilt) || 0;
   property.parking_spaces_covered_total = parseFloat(data.ParkingSpacesCoveredTotal) || 0.0;
@@ -183,7 +184,7 @@ function createObjects(data, cb) {
   property.primary_school_name = data.PrimarySchoolName;
   property.senior_high_school_name = data.SeniorHighSchoolName;
   property.school_district = data.SchoolDistrict;
-
+  property.subdivision_name = data.SubdivisionName;
 
   listing.currency = 'USD';
   listing.price = parseFloat(data.ListPrice) || 0.0;
@@ -204,6 +205,13 @@ function createObjects(data, cb) {
   listing.list_office_name = data.ListOfficeName;
   listing.list_office_phone = data.ListOfficePhone;
   listing.possession = data.Possession;
+
+  // Ugly hacks and fixes
+  if (property.property_subtype === '')
+    property.property_subtype = 'Unknown';
+
+  if (property.property_type === '')
+    property.property_type = 'Unknown';
 
   async.waterfall([
     function(cb) {

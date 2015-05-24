@@ -55,5 +55,6 @@ SET property_type = $1,
     primary_school_name = $54,
     senior_high_school_name = $55,
     school_district = $56,
+    subdivision_name = $57
     updated_at = NOW()
-WHERE id = $57
+WHERE id = $58

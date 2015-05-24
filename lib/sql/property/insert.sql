@@ -56,7 +56,8 @@ INSERT INTO
                middle_school_name,
                primary_school_name,
                senior_high_school_name,
-               school_district
+               school_district,
+               subdivision_name
         )
 VALUES ($1,
         $2,
@@ -115,5 +116,6 @@ VALUES ($1,
         $55,
         $56,
         $57,
-        $58
+        $58,
+        $59
 ) RETURNING id
