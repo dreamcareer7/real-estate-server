@@ -24,6 +24,7 @@
     "express-winston": "^0.2.9",
     "googlemaps": "^0.1.20",
     "multiparty": "^4.1.1",
+    "newrelic": "^1.19.2",
     "node-uuid": "^1.4.2",
     "oauth2orize": "^1.0.1",
     "passport": "^0.2.1",

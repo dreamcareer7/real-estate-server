@@ -6,3 +6,5 @@ scripts/ntreis/timing.config.js
 .tern-port
 .tern-project
 .DS_Store
+*.log
+newrelic.js
