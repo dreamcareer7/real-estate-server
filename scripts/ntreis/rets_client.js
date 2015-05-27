@@ -200,10 +200,52 @@ function createObjects(data, cb) {
   listing.mls_number = data.MLSNumber;
   listing.unexempt_taxes = parseFloat(data.UnexemptTaxes) || 0.0;
   listing.financing_proposed = data.FinancingProposed;
-  listing.list_office_mui = parseInt(data.ListOffice_MUI);
+
+  listing.list_office_mui = parseInt(data.ListOffice_MUI) | 0;
   listing.list_office_mls_id = data.ListOfficeMLSID;
   listing.list_office_name = data.ListOfficeName;
   listing.list_office_phone = data.ListOfficePhone;
+
+  listing.co_list_office_mui = parseInt(data.CoListOffice_MUI) | 0;
+  listing.co_list_office_mls_id = data.CoListOfficeMLSID;
+  listing.co_list_office_name = data.CoListOfficeName;
+  listing.co_list_office_phone = data.CoListOfficePhone;
+
+  listing.selling_office_mui = parseInt(data.SellingOffice_MUI) | 0;
+  listing.selling_office_mls_id = data.SellingOfficeMLSID;
+  listing.selling_office_name = data.SellingOfficeName;
+  listing.selling_office_phone = data.SellingOfficePhone;
+
+  listing.co_selling_office_mui = parseInt(data.CoSellingOffice_MUI) | 0;
+  listing.co_selling_office_mls_id = data.CoSellingOfficeMLSID;
+  listing.co_selling_office_name = data.CoSellingOfficeName;
+  listing.co_selling_office_phone = data.CoSellingOfficePhone;
+
+  listing.list_agent_mui = parseInt(data.ListAgent_MUI) | 0;
+  listing.list_agent_direct_work_phone = data.ListAgentDirectWorkPhone;
+  listing.list_agent_email = data.ListAgentEmail;
+  listing.list_agent_full_name = data.ListAgentFullName;
+  listing.list_agent_mls_id = data.ListAgentMLSID;
+
+  listing.co_list_agent_mui = parseInt(data.CoListAgent_MUI) | 0;
+  listing.co_list_agent_direct_work_phone = data.CoListAgentDirectWorkPhone;
+  listing.co_list_agent_email = data.CoListAgentEmail;
+  listing.co_list_agent_full_name = data.CoListAgentFullName;
+  listing.co_list_agent_mls_id = data.CoListAgentMLSID;
+
+  listing.selling_agent_mui = parseInt(data.SellingAgent_MUI) | 0;
+  listing.selling_agent_direct_work_phone = data.SellingAgentDirectWorkPhone;
+  listing.selling_agent_email = data.SellingAgentEmail;
+  listing.selling_agent_full_name = data.SellingAgentFullName;
+  listing.selling_agent_mls_id = data.SellingAgentMLSID;
+
+  listing.co_selling_agent_mui = parseInt(data.CoSellingAgent_MUI) | 0;
+  listing.co_selling_agent_direct_work_phone = data.CoSellingAgentDirectWorkPhone;
+  listing.co_selling_agent_email = data.CoSellingAgentEmail;
+  listing.co_selling_agent_full_name = data.CoSellingAgentFullName;
+  listing.co_selling_agent_mls_id = data.CoSellingAgentMLSID;
+
+  listing.listing_agreement = data.ListingAgreement;
   listing.possession = data.Possession;
 
   // Ugly hacks and fixes
