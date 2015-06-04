@@ -156,8 +156,8 @@ function createObjects(data, cb) {
   property.utilities = '{' + data.Utilities + '}';
   property.utilities_other = '{' + data.UtilitiesOther + '}';
 
-  property.architectural_style = data.ArchitecturalStyle;
-  property.structural_style = data.StructuralStyle;
+  property.architectural_style = data.ArchitecturalStyle.trim();
+  property.structural_style = data.StructuralStyle.trim();
   property.number_of_stories = parseInt(data.NumberOfStories) || 0;
   property.number_of_stories_in_building = parseInt(data.NumberOfStoriesInBuilding) || 0;
   property.number_of_parking_spaces = parseFloat(data.NumberOfParkingSpaces) || 0.0;
@@ -168,23 +168,34 @@ function createObjects(data, cb) {
   property.number_of_dining_areas = parseInt(data.NumberOfDiningAreas) || 0;
   property.number_of_living_areas = parseInt(data.NumberOfLivingAreas) || 0;
   property.fireplaces_total = parseInt(data.FireplacesTotal) || 0;
-  property.lot_number = data.LotNumber;
-  property.soil_type = data.SoilType;
-  property.construction_materials = data.ConstructionMaterials;
-  property.construction_materials_walls = data.ConstructionMaterialsWalls;
-  property.foundation_details = data.FoundationDetails;
-  property.roof = data.Roof;
+  property.lot_number = data.LotNumber.trim();
+  property.number_of_stories = parseInt(data.NumberOfStories) || 0;
+  property.number_of_stories_in_building = parseInt(data.NumberOfStoriesInBuilding) || 0;
+  property.number_of_parking_spaces = parseFloat(data.NumberOfParkingSpaces) || 0.0;
+  property.parking_spaces_carport = parseFloat(data.ParkingSpacesCarport) || 0.0;
+  property.parking_spaces_garage = parseFloat(data.ParkingSpacesGarage) || 0.0;
+  property.garage_length = parseFloat(data.GarageLength) || 0.0;
+  property.garage_width = parseFloat(data.GarageWidth) || 0.0;
+  property.number_of_dining_areas = parseInt(data.NumberOfDiningAreas) || 0;
+  property.number_of_living_areas = parseInt(data.NumberOfLivingAreas) || 0;
+  property.fireplaces_total = parseInt(data.FireplacesTotal) || 0;
+  property.lot_number = data.LotNumber.trim();
+  property.soil_type = data.SoilType.trim();
+  property.construction_materials = data.ConstructionMaterials.trim();
+  property.construction_materials_walls = data.ConstructionMaterialsWalls.trim();
+  property.foundation_details = data.FoundationDetails.trim();
+  property.roof = data.Roof.trim();
   property.pool_yn = Boolean(parseInt(data.PoolYN));
   property.handicap_yn = Boolean(parseInt(data.HandicapYN));
-  property.elementary_school_name = data.ElementarySchoolName;
-  property.intermediate_school_name = data.IntermediateSchoolName;
-  property.high_school_name = data.HighSchoolName;
-  property.junior_high_school_name = data.JuniorHighSchoolName;
-  property.middle_school_name = data.MiddleSchoolName;
-  property.primary_school_name = data.PrimarySchoolName;
-  property.senior_high_school_name = data.SeniorHighSchoolName;
-  property.school_district = data.SchoolDistrict;
-  property.subdivision_name = data.SubdivisionName;
+  property.elementary_school_name = data.ElementarySchoolName.trim();
+  property.intermediate_school_name = data.IntermediateSchoolName.trim();
+  property.high_school_name = data.HighSchoolName.trim();
+  property.junior_high_school_name = data.JuniorHighSchoolName.trim();
+  property.middle_school_name = data.MiddleSchoolName.trim();
+  property.primary_school_name = data.PrimarySchoolName.trim();
+  property.senior_high_school_name = data.SeniorHighSchoolName.trim();
+  property.school_district = data.SchoolDistrict.trim();
+  property.subdivision_name = data.SubdivisionName.trim();
 
   listing.currency = 'USD';
   listing.price = parseFloat(data.ListPrice) || 0.0;
@@ -196,57 +207,57 @@ function createObjects(data, cb) {
   listing.association_fee = parseFloat(data.AssociationFee) || 0.0;
   listing.association_fee_frequency = data.AssociationFeeFrequency;
   listing.association_fee_includes = data.AssociationFeeIncludes;
-  listing.association_type = data.AssociationType;
-  listing.mls_number = data.MLSNumber;
+  listing.association_type = data.AssociationType.trim();
+  listing.mls_number = data.MLSNumber.trim();
   listing.unexempt_taxes = parseFloat(data.UnexemptTaxes) || 0.0;
-  listing.financing_proposed = data.FinancingProposed;
+  listing.financing_proposed = data.FinancingProposed.trim();
 
   listing.list_office_mui = parseInt(data.ListOffice_MUI) | 0;
-  listing.list_office_mls_id = data.ListOfficeMLSID;
-  listing.list_office_name = data.ListOfficeName;
-  listing.list_office_phone = data.ListOfficePhone;
+  listing.list_office_mls_id = data.ListOfficeMLSID.trim();
+  listing.list_office_name = data.ListOfficeName.trim();
+  listing.list_office_phone = data.ListOfficePhone.trim();
 
   listing.co_list_office_mui = parseInt(data.CoListOffice_MUI) | 0;
-  listing.co_list_office_mls_id = data.CoListOfficeMLSID;
-  listing.co_list_office_name = data.CoListOfficeName;
-  listing.co_list_office_phone = data.CoListOfficePhone;
+  listing.co_list_office_mls_id = data.CoListOfficeMLSID.trim();
+  listing.co_list_office_name = data.CoListOfficeName.trim();
+  listing.co_list_office_phone = data.CoListOfficePhone.trim();
 
   listing.selling_office_mui = parseInt(data.SellingOffice_MUI) | 0;
-  listing.selling_office_mls_id = data.SellingOfficeMLSID;
-  listing.selling_office_name = data.SellingOfficeName;
-  listing.selling_office_phone = data.SellingOfficePhone;
+  listing.selling_office_mls_id = data.SellingOfficeMLSID.trim();
+  listing.selling_office_name = data.SellingOfficeName.trim();
+  listing.selling_office_phone = data.SellingOfficePhone.trim();
 
   listing.co_selling_office_mui = parseInt(data.CoSellingOffice_MUI) | 0;
-  listing.co_selling_office_mls_id = data.CoSellingOfficeMLSID;
-  listing.co_selling_office_name = data.CoSellingOfficeName;
-  listing.co_selling_office_phone = data.CoSellingOfficePhone;
+  listing.co_selling_office_mls_id = data.CoSellingOfficeMLSID.trim();
+  listing.co_selling_office_name = data.CoSellingOfficeName.trim();
+  listing.co_selling_office_phone = data.CoSellingOfficePhone.trim();
 
   listing.list_agent_mui = parseInt(data.ListAgent_MUI) | 0;
-  listing.list_agent_direct_work_phone = data.ListAgentDirectWorkPhone;
-  listing.list_agent_email = data.ListAgentEmail;
-  listing.list_agent_full_name = data.ListAgentFullName;
-  listing.list_agent_mls_id = data.ListAgentMLSID;
+  listing.list_agent_direct_work_phone = data.ListAgentDirectWorkPhone.trim();
+  listing.list_agent_email = data.ListAgentEmail.trim();
+  listing.list_agent_full_name = data.ListAgentFullName.trim();
+  listing.list_agent_mls_id = data.ListAgentMLSID.trim();
 
   listing.co_list_agent_mui = parseInt(data.CoListAgent_MUI) | 0;
-  listing.co_list_agent_direct_work_phone = data.CoListAgentDirectWorkPhone;
-  listing.co_list_agent_email = data.CoListAgentEmail;
-  listing.co_list_agent_full_name = data.CoListAgentFullName;
-  listing.co_list_agent_mls_id = data.CoListAgentMLSID;
+  listing.co_list_agent_direct_work_phone = data.CoListAgentDirectWorkPhone.trim();
+  listing.co_list_agent_email = data.CoListAgentEmail.trim();
+  listing.co_list_agent_full_name = data.CoListAgentFullName.trim();
+  listing.co_list_agent_mls_id = data.CoListAgentMLSID.trim();
 
   listing.selling_agent_mui = parseInt(data.SellingAgent_MUI) | 0;
-  listing.selling_agent_direct_work_phone = data.SellingAgentDirectWorkPhone;
-  listing.selling_agent_email = data.SellingAgentEmail;
-  listing.selling_agent_full_name = data.SellingAgentFullName;
-  listing.selling_agent_mls_id = data.SellingAgentMLSID;
+  listing.selling_agent_direct_work_phone = data.SellingAgentDirectWorkPhone.trim();
+  listing.selling_agent_email = data.SellingAgentEmail.trim();
+  listing.selling_agent_full_name = data.SellingAgentFullName.trim();
+  listing.selling_agent_mls_id = data.SellingAgentMLSID.trim();
 
   listing.co_selling_agent_mui = parseInt(data.CoSellingAgent_MUI) | 0;
-  listing.co_selling_agent_direct_work_phone = data.CoSellingAgentDirectWorkPhone;
-  listing.co_selling_agent_email = data.CoSellingAgentEmail;
-  listing.co_selling_agent_full_name = data.CoSellingAgentFullName;
-  listing.co_selling_agent_mls_id = data.CoSellingAgentMLSID;
+  listing.co_selling_agent_direct_work_phone = data.CoSellingAgentDirectWorkPhone.trim();
+  listing.co_selling_agent_email = data.CoSellingAgentEmail.trim();
+  listing.co_selling_agent_full_name = data.CoSellingAgentFullName.trim();
+  listing.co_selling_agent_mls_id = data.CoSellingAgentMLSID.trim();
 
-  listing.listing_agreement = data.ListingAgreement;
-  listing.possession = data.Possession;
+  listing.listing_agreement = data.ListingAgreement.trim();
+  listing.possession = data.Possession.trim();
 
   // Ugly hacks and fixes
   if (property.property_subtype === '')
