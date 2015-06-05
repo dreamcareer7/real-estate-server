@@ -9,4 +9,4 @@ WHERE $1 >= minimum_price AND
       $4 >= min_bathrooms AND
       $5 = property_type AND
       property_subtypes @> $6::property_subtype[] AND
-      ST_Within(ST_SetSRID(ST_MakePoint($7, $8), 4326), points) = TRUE
+      COALESCE(ST_Within(ST_SetSRID(ST_MakePoint($7, $8), 4326), points), FALSE) = TRUE
