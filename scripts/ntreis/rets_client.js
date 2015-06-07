@@ -47,6 +47,7 @@ program.version(config.ntreis.version)
 .option('-p, --enable-photo-fetch', 'Disable fetching photos of properties')
 .option('-r, --enable-cf-links', 'Disable displaying of CloudFront links')
 .option('-l, --limit', 'Limit RETS server response manually (default: 100)', parseInt)
+.option('-i, --initial', 'Performing initial fetch process')
 .parse(process.argv);
 
 require('../../lib/models/Address.js');
@@ -80,6 +81,7 @@ function notice() {
   console.log('Instant Recommendation:'.yellow, (program.enableRecs) ? 'yes'.green : 'no'.red);
   console.log('Photo Fetching:'.yellow, (program.enablePhotoFetch) ? 'yes'.green : 'no'.red);
   console.log('Show CloudFront Links:'.yellow, (program.enableCfLinks) ? 'yes'.green : 'no'.red);
+  console.log('Initial Fetch:'.yellow, (program.initial) ? 'yes'.green : 'no'.red);
   console.log('Manual RETS Response Limit:'.yellow, program.limit);
 }
 
@@ -93,6 +95,18 @@ function applyTimeDelta(dt) {
 function byMatrixModifiedDT(a, b) {
   var a_ = new Date(a.MatrixModifiedDT);
   var b_ = new Date(b.MatrixModifiedDT);
+
+  if(a_ > b_)
+    return 1;
+  else if(b_ > a_)
+    return -1;
+  else
+    return 0;
+}
+
+function byMatrix_Unique_ID(a, b) {
+  var a_ = a.Matrix_Unique_ID;
+  var b_ = b.Matrix_Unique_ID;
 
   if(a_ > b_)
     return 1;
@@ -412,39 +426,49 @@ function fetch() {
   var startTime = (new Date()).getTime();
   async.auto({
     last_run: function(cb) {
-      if (timing.last_run)
-        return cb(null, timing.last_run);
+      if (program.initial) {
+        if (timing.last_id)
+          return cb(null, (timing.last_id));
 
-      var initial = new Date(Date.now() - timing.initial * 24 * 3600 * 1000);
-      return cb(null, initial.toNTREISString());
+        var initial = '0';
+        return cb(null, initial);
+      } else {
+        if (timing.last_run)
+          return cb(null, timing.last_run);
+
+        var initial = new Date(Date.now() - timing.initial * 24 * 3600 * 1000);
+        return cb(null, initial.toNTREISString());
+      }
     },
     mls: ['last_run',
           function(cb, results) {
-            console.log('Fetching listings with modification time after:', results.last_run.cyan);
+            console.log('Fetching listings with', ((program.initial) ? 'Matrix_Unique_ID greater than' : 'modification time after'), results.last_run.cyan);
             client.once('connection.success', function() {
               client.getTable("Property", "Listing");
               var fields;
-
+              var query = (program.initial) ? ('(MATRIX_UNIQUE_ID=' + results.last_run + '+)') : ('(MatrixModifiedDT=' + results.last_run + ')')
+              console.log('Notice:'.cyan, 'Performing', query);
               client.once('metadata.table.success', function(table) {
                 fields = table.Fields;
 
                 client.query("Property",
                              "Listing",
-                             "(MatrixModifiedDT=" + results.last_run +")",
-                             // "(Limit=5)",
+                             query,
                              function(err, data) {
                                if (err)
                                  return cb(err);
 
-                               data.sort(byMatrixModifiedDT);
+                               data.sort((program.initial) ? byMatrix_Unique_ID : byMatrixModifiedDT);
                                totalItems = data.length;
-                               itemsStart = data[0].MatrixModifiedDT;
-                               itemsEnd = data[data.length-1].MatrixModifiedDT;
+                               itemsStart = data[0];
+                               itemsEnd = data[data.length-1];
 
                                console.log('INFO: Received'.cyan, data.length, 'entries between'.cyan,
-                                           data[0].MatrixModifiedDT.yellow,
+                                           itemsStart.MatrixModifiedDT.yellow,
+                                           '(' + itemsStart.Matrix_Unique_ID.red + ')',
                                            '<->'.cyan,
-                                           data[data.length-1].MatrixModifiedDT.yellow,
+                                           itemsEnd.MatrixModifiedDT.yellow,
+                                           '(' + itemsEnd.Matrix_Unique_ID.red + ')',
                                            'Limiting to'.cyan, program.limit);
                                var limited_data = data.slice(0, program.limit);
 
@@ -481,10 +505,21 @@ function fetch() {
            }],
     update_last_run: ['mls', 'objects',
                       function(cb, results) {
-                        var last_run = applyTimeDelta(results.mls[results.mls.length - 1].MatrixModifiedDT + 'Z');
-                        timing.last_run = last_run;
-                        fs.writeFileSync("timing.config.js", JSON.stringify(timing, null, 2));
-                        return cb(null, false);
+                        var last_item = results.mls[results.mls.length - 1];
+
+                        if (program.limit) {
+                          var last_run = last_item.Matrix_Unique_ID + '+';
+                          timing.last_id = last_run;
+
+                          fs.writeFileSync("timing.config.js", JSON.stringify(timing, null, 2));
+                          return cb(null, false);
+                        } else {
+                          var last_run = applyTimeDelta(last_item.MatrixModifiedDT + 'Z');
+                          timing.last_run = last_run;
+
+                          fs.writeFileSync("timing.config.js", JSON.stringify(timing, null, 2));
+                          return cb(null, false);
+                        }
                       }
                      ]
   }, function(err, results) {
@@ -492,7 +527,9 @@ function fetch() {
        var elapsed = (endTime - startTime) / 1000;
        var remaining = parseInt(config.ntreis.pause - elapsed);
        payload.text = 'Fetch completed in ' + elapsed + ' seconds. Received total of ' +
-         totalItems + ' items between: ' + itemsStart + ' <-> ' + itemsEnd + ' Summary: ' +
+         totalItems + ' items between: ' +
+         itemsStart.MatrixModifiedDT + '(' + itemsStart.Matrix_Unique_ID + ')' + ' <-> ' +
+         itemsEnd.MatrixModifiedDT + '(' + itemsEnd.Matrix_Unique_ID + ')' + ' Summary: ' +
          createdListings + ' New Listings, ' + updatedListings + ' Updated Listings, ' +
          createdProperties + ' New Properties, ' + updatedProperties + ' Updated Properties, ' +
          createdAddresses + ' New Addresses, '  + updatedAddresses + ' Updated Addresses, ' +
