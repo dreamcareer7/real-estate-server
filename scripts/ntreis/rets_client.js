@@ -508,7 +508,7 @@ function fetch() {
                         var last_item = results.mls[results.mls.length - 1];
 
                         if (program.limit) {
-                          var last_run = last_item.Matrix_Unique_ID + '+';
+                          var last_run = last_item.Matrix_Unique_ID;
                           timing.last_id = last_run;
 
                           fs.writeFileSync("timing.config.js", JSON.stringify(timing, null, 2));
