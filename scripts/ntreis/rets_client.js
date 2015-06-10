@@ -507,7 +507,7 @@ function fetch() {
                       function(cb, results) {
                         var last_item = results.mls[results.mls.length - 1];
 
-                        if (program.limit) {
+                        if (program.initial) {
                           var last_run = last_item.Matrix_Unique_ID;
                           timing.last_id = last_run;
 
