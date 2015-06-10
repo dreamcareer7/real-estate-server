@@ -43,7 +43,7 @@ var options = {
 }
 
 program.version(config.ntreis.version)
-.option('-d, --enable-recs', 'Disable recommending listings to matching alerts: fetches data only')
+.option('-e, --enable-recs', 'Enable recommending listings to matching alerts')
 .option('-p, --enable-photo-fetch', 'Disable fetching photos of properties')
 .option('-r, --enable-cf-links', 'Disable displaying of CloudFront links')
 .option('-l, --limit', 'Limit RETS server response manually (default: 100)', parseInt)
@@ -446,7 +446,7 @@ function fetch() {
             client.once('connection.success', function() {
               client.getTable("Property", "Listing");
               var fields;
-              var query = (program.initial) ? ('(MATRIX_UNIQUE_ID=' + results.last_run + '+)') : ('(MatrixModifiedDT=' + results.last_run + ')')
+              var query = (program.initial) ? ('(MATRIX_UNIQUE_ID=' + results.last_run + '+),(STATUS=A,AC,AOC,AKO)') : ('(MatrixModifiedDT=' + results.last_run + ')')
               console.log('Notice:'.cyan, 'Performing', query);
               client.once('metadata.table.success', function(table) {
                 fields = table.Fields;
