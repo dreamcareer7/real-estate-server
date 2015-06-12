@@ -13,111 +13,103 @@ SET client_min_messages = warning;
 -- Name: shortlisted; Type: SCHEMA; Schema: -; Owner: ashkan
 --
 
-CREATE SCHEMA shortlisted;
-
-
-ALTER SCHEMA shortlisted OWNER TO ashkan;
+-- CREATE SCHEMA shortlisted;
 
 --
 -- Name: tiger; Type: SCHEMA; Schema: -; Owner: ashkan
 --
 
-CREATE SCHEMA tiger;
-
-
-ALTER SCHEMA tiger OWNER TO ashkan;
+-- CREATE SCHEMA tiger;
 
 --
--- Name: fuzzystrmatch; Type: EXTENSION; Schema: -; Owner: 
+-- Name: fuzzystrmatch; Type: EXTENSION; Schema: -; Owner:
 --
 
-CREATE EXTENSION IF NOT EXISTS fuzzystrmatch WITH SCHEMA public;
+-- CREATE EXTENSION IF NOT EXISTS fuzzystrmatch WITH SCHEMA public;
 
 
 --
--- Name: EXTENSION fuzzystrmatch; Type: COMMENT; Schema: -; Owner: 
+-- Name: EXTENSION fuzzystrmatch; Type: COMMENT; Schema: -; Owner:
 --
 
-COMMENT ON EXTENSION fuzzystrmatch IS 'determine similarities and distance between strings';
-
-
---
--- Name: postgis; Type: EXTENSION; Schema: -; Owner: 
---
-
-CREATE EXTENSION IF NOT EXISTS postgis WITH SCHEMA public;
+-- COMMENT ON EXTENSION fuzzystrmatch IS 'determine similarities and distance between strings';
 
 
 --
--- Name: EXTENSION postgis; Type: COMMENT; Schema: -; Owner: 
+-- Name: postgis; Type: EXTENSION; Schema: -; Owner:
 --
 
-COMMENT ON EXTENSION postgis IS 'PostGIS geometry, geography, and raster spatial types and functions';
-
-
---
--- Name: postgis_tiger_geocoder; Type: EXTENSION; Schema: -; Owner: 
---
-
-CREATE EXTENSION IF NOT EXISTS postgis_tiger_geocoder WITH SCHEMA tiger;
+-- CREATE EXTENSION IF NOT EXISTS postgis WITH SCHEMA public;
 
 
 --
--- Name: EXTENSION postgis_tiger_geocoder; Type: COMMENT; Schema: -; Owner: 
+-- Name: EXTENSION postgis; Type: COMMENT; Schema: -; Owner:
 --
 
-COMMENT ON EXTENSION postgis_tiger_geocoder IS 'PostGIS tiger geocoder and reverse geocoder';
+-- COMMENT ON EXTENSION postgis IS 'PostGIS geometry, geography, and raster spatial types and functions';
+
+
+--
+-- Name: postgis_tiger_geocoder; Type: EXTENSION; Schema: -; Owner:
+--
+
+-- CREATE EXTENSION IF NOT EXISTS postgis_tiger_geocoder WITH SCHEMA tiger;
+
+
+--
+-- Name: EXTENSION postgis_tiger_geocoder; Type: COMMENT; Schema: -; Owner:
+--
+
+-- COMMENT ON EXTENSION postgis_tiger_geocoder IS 'PostGIS tiger geocoder and reverse geocoder';
 
 
 --
 -- Name: topology; Type: SCHEMA; Schema: -; Owner: ashkan
 --
 
-CREATE SCHEMA topology;
-
-
-ALTER SCHEMA topology OWNER TO ashkan;
-
---
--- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
---
-
-CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
+-- CREATE SCHEMA topology;
 
 
 --
--- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner:
 --
 
-COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
-
-
---
--- Name: postgis_topology; Type: EXTENSION; Schema: -; Owner: 
---
-
-CREATE EXTENSION IF NOT EXISTS postgis_topology WITH SCHEMA topology;
+-- CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
 
 
 --
--- Name: EXTENSION postgis_topology; Type: COMMENT; Schema: -; Owner: 
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner:
 --
 
-COMMENT ON EXTENSION postgis_topology IS 'PostGIS topology spatial types and functions';
-
-
---
--- Name: uuid-ossp; Type: EXTENSION; Schema: -; Owner: 
---
-
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp" WITH SCHEMA public;
+-- COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
 
 
 --
--- Name: EXTENSION "uuid-ossp"; Type: COMMENT; Schema: -; Owner: 
+-- Name: postgis_topology; Type: EXTENSION; Schema: -; Owner:
 --
 
-COMMENT ON EXTENSION "uuid-ossp" IS 'generate universally unique identifiers (UUIDs)';
+-- CREATE EXTENSION IF NOT EXISTS postgis_topology WITH SCHEMA topology;
+
+
+--
+-- Name: EXTENSION postgis_topology; Type: COMMENT; Schema: -; Owner:
+--
+
+-- COMMENT ON EXTENSION postgis_topology IS 'PostGIS topology spatial types and functions';
+
+
+--
+-- Name: uuid-ossp; Type: EXTENSION; Schema: -; Owner:
+--
+
+-- CREATE EXTENSION IF NOT EXISTS "uuid-ossp" WITH SCHEMA public;
+
+
+--
+-- Name: EXTENSION "uuid-ossp"; Type: COMMENT; Schema: -; Owner:
+--
+
+-- COMMENT ON EXTENSION "uuid-ossp" IS 'generate universally unique identifiers (UUIDs)';
 
 
 SET search_path = public, pg_catalog;
@@ -380,8 +372,6 @@ CREATE TYPE country_code_3 AS ENUM (
 );
 
 
-ALTER TYPE country_code_3 OWNER TO ashkan;
-
 --
 -- Name: country_name; Type: TYPE; Schema: public; Owner: ashkan
 --
@@ -640,8 +630,6 @@ CREATE TYPE country_name AS ENUM (
 );
 
 
-ALTER TYPE country_name OWNER TO ashkan;
-
 --
 -- Name: currency_code; Type: TYPE; Schema: public; Owner: ashkan
 --
@@ -808,8 +796,6 @@ CREATE TYPE currency_code AS ENUM (
 );
 
 
-ALTER TYPE currency_code OWNER TO ashkan;
-
 --
 -- Name: listing_status; Type: TYPE; Schema: public; Owner: ashkan
 --
@@ -825,11 +811,11 @@ CREATE TYPE listing_status AS ENUM (
     'Active Kick Out',
     'Withdrawn',
     'Expired',
-    'Cancelled'
+    'Cancelled',
+    'Withdrawn Sublisting',
+    'Incomplete'
 );
 
-
-ALTER TYPE listing_status OWNER TO ashkan;
 
 --
 -- Name: mam_behaviour; Type: TYPE; Schema: public; Owner: ashkan
@@ -842,8 +828,6 @@ CREATE TYPE mam_behaviour AS ENUM (
 );
 
 
-ALTER TYPE mam_behaviour OWNER TO ashkan;
-
 --
 -- Name: mam_direction; Type: TYPE; Schema: public; Owner: ashkan
 --
@@ -853,8 +837,6 @@ CREATE TYPE mam_direction AS ENUM (
     'O'
 );
 
-
-ALTER TYPE mam_direction OWNER TO ashkan;
 
 --
 -- Name: message_room_type; Type: TYPE; Schema: public; Owner: ashkan
@@ -868,8 +850,6 @@ CREATE TYPE message_room_type AS ENUM (
 );
 
 
-ALTER TYPE message_room_type OWNER TO ashkan;
-
 --
 -- Name: message_type; Type: TYPE; Schema: public; Owner: ashkan
 --
@@ -879,8 +859,6 @@ CREATE TYPE message_type AS ENUM (
     'SubLevel'
 );
 
-
-ALTER TYPE message_type OWNER TO ashkan;
 
 --
 -- Name: notification_action; Type: TYPE; Schema: public; Owner: ashkan
@@ -912,8 +890,6 @@ CREATE TYPE notification_action AS ENUM (
 );
 
 
-ALTER TYPE notification_action OWNER TO ashkan;
-
 --
 -- Name: notification_object_class; Type: TYPE; Schema: public; Owner: ashkan
 --
@@ -936,8 +912,6 @@ CREATE TYPE notification_object_class AS ENUM (
     'Shortlist'
 );
 
-
-ALTER TYPE notification_object_class OWNER TO ashkan;
 
 --
 -- Name: property_subtype; Type: TYPE; Schema: public; Owner: ashkan
@@ -967,11 +941,10 @@ CREATE TYPE property_subtype AS ENUM (
     'COM-Lease',
     'COM-Sale',
     'COM-Sale or Lease (Either)',
-    'COM-Sale/Leaseback (Both)'
+    'COM-Sale/Leaseback (Both)',
+    'Unknown'
 );
 
-
-ALTER TYPE property_subtype OWNER TO ashkan;
 
 --
 -- Name: property_type; Type: TYPE; Schema: public; Owner: ashkan
@@ -982,11 +955,10 @@ CREATE TYPE property_type AS ENUM (
     'Residential Lease',
     'Multi-Family',
     'Commercial',
-    'Lots & Acreage'
+    'Lots & Acreage',
+    'Unknown'
 );
 
-
-ALTER TYPE property_type OWNER TO ashkan;
 
 --
 -- Name: recommendation_status; Type: TYPE; Schema: public; Owner: ashkan
@@ -999,8 +971,6 @@ CREATE TYPE recommendation_status AS ENUM (
 );
 
 
-ALTER TYPE recommendation_status OWNER TO ashkan;
-
 --
 -- Name: recommendation_type; Type: TYPE; Schema: public; Owner: ashkan
 --
@@ -1012,8 +982,6 @@ CREATE TYPE recommendation_type AS ENUM (
     'Card'
 );
 
-
-ALTER TYPE recommendation_type OWNER TO ashkan;
 
 --
 -- Name: shortlist_status; Type: TYPE; Schema: public; Owner: ashkan
@@ -1030,8 +998,6 @@ CREATE TYPE shortlist_status AS ENUM (
 );
 
 
-ALTER TYPE shortlist_status OWNER TO ashkan;
-
 --
 -- Name: shortlist_type; Type: TYPE; Schema: public; Owner: ashkan
 --
@@ -1041,8 +1007,6 @@ CREATE TYPE shortlist_type AS ENUM (
     'Sellers'
 );
 
-
-ALTER TYPE shortlist_type OWNER TO ashkan;
 
 --
 -- Name: source_type; Type: TYPE; Schema: public; Owner: ashkan
@@ -1055,8 +1019,6 @@ CREATE TYPE source_type AS ENUM (
 );
 
 
-ALTER TYPE source_type OWNER TO ashkan;
-
 --
 -- Name: user_on_room_status; Type: TYPE; Schema: public; Owner: ashkan
 --
@@ -1066,8 +1028,6 @@ CREATE TYPE user_on_room_status AS ENUM (
     'Muted'
 );
 
-
-ALTER TYPE user_on_room_status OWNER TO ashkan;
 
 --
 -- Name: user_status; Type: TYPE; Schema: public; Owner: ashkan
@@ -1082,8 +1042,6 @@ CREATE TYPE user_status AS ENUM (
 );
 
 
-ALTER TYPE user_status OWNER TO ashkan;
-
 --
 -- Name: uuid_timestamp(uuid); Type: FUNCTION; Schema: public; Owner: ashkan
 --
@@ -1094,11 +1052,9 @@ CREATE FUNCTION uuid_timestamp(id uuid) RETURNS timestamp with time zone
   select TIMESTAMP WITH TIME ZONE 'epoch' +
       ( ( ( ('x' || lpad(split_part(id::text, '-', 1), 16, '0'))::bit(64)::bigint) +
       (('x' || lpad(split_part(id::text, '-', 2), 16, '0'))::bit(64)::bigint << 32) +
-      ((('x' || lpad(split_part(id::text, '-', 3), 16, '0'))::bit(64)::bigint&4095) << 48) - 122192928000000000) / 10) * INTERVAL '1 microsecond';    
+      ((('x' || lpad(split_part(id::text, '-', 3), 16, '0'))::bit(64)::bigint&4095) << 48) - 122192928000000000) / 10) * INTERVAL '1 microsecond';
 $$;
 
-
-ALTER FUNCTION public.uuid_timestamp(id uuid) OWNER TO ashkan;
 
 --
 -- Name: wipe_everything(); Type: FUNCTION; Schema: public; Owner: ashkan
@@ -1109,8 +1065,6 @@ CREATE FUNCTION wipe_everything() RETURNS void
     AS $$
 BEGIN
 TRUNCATE TABLE recommendations CASCADE;
-TRUNCATE TABLE listings CASCADE;
-TRUNCATE TABLE properties CASCADE;
 TRUNCATE TABLE messages CASCADE;
 TRUNCATE TABLE message_rooms_users CASCADE;
 TRUNCATE TABLE message_rooms CASCADE;
@@ -1121,34 +1075,31 @@ TRUNCATE TABLE notifications CASCADE;
 TRUNCATE TABLE alerts CASCADE;
 TRUNCATE TABLE contacts CASCADE;
 TRUNCATE TABLE notification_tokens CASCADE;
-TRUNCATE TABLE messages_ack CASCADE;
-END; 
+TRUNCATE TABLE messages_ack CASCADE;END;
 $$;
 
-
-ALTER FUNCTION public.wipe_everything() OWNER TO ashkan;
 
 SET default_tablespace = '';
 
 SET default_with_oids = false;
 
 --
--- Name: addresses; Type: TABLE; Schema: public; Owner: ashkan; Tablespace: 
+-- Name: addresses; Type: TABLE; Schema: public; Owner: ashkan; Tablespace:
 --
 
 CREATE TABLE addresses (
-    title character varying(255),
-    subtitle character varying(255),
-    street_number character varying(20),
-    street_name character varying(255),
-    city character varying(255),
-    state character varying(20),
-    state_code character varying(5),
-    postal_code character varying(10),
-    neighborhood character varying(255),
+    title text,
+    subtitle text,
+    street_number text,
+    street_name text,
+    city text,
+    state text,
+    state_code text,
+    postal_code text,
+    neighborhood text,
     id uuid DEFAULT uuid_generate_v1() NOT NULL,
-    street_suffix character varying(20),
-    unit_number character varying(20),
+    street_suffix text,
+    unit_number text,
     country country_name NOT NULL,
     country_code country_code_3 NOT NULL,
     created_at timestamp with time zone DEFAULT now(),
@@ -1158,10 +1109,8 @@ CREATE TABLE addresses (
 );
 
 
-ALTER TABLE addresses OWNER TO ashkan;
-
 --
--- Name: agencies; Type: TABLE; Schema: public; Owner: ashkan; Tablespace: 
+-- Name: agencies; Type: TABLE; Schema: public; Owner: ashkan; Tablespace:
 --
 
 CREATE TABLE agencies (
@@ -1174,10 +1123,8 @@ CREATE TABLE agencies (
 );
 
 
-ALTER TABLE agencies OWNER TO ashkan;
-
 --
--- Name: alerts; Type: TABLE; Schema: public; Owner: ashkan; Tablespace: 
+-- Name: alerts; Type: TABLE; Schema: public; Owner: ashkan; Tablespace:
 --
 
 CREATE TABLE alerts (
@@ -1197,14 +1144,15 @@ CREATE TABLE alerts (
     cover_image_url text,
     title character varying(255),
     property_type property_type NOT NULL,
-    property_subtypes property_subtype[] NOT NULL
+    property_subtypes property_subtype[] NOT NULL,
+    points geometry(Polygon,4326),
+    horizontal_distance double precision NOT NULL,
+    vertical_distance double precision NOT NULL
 );
 
 
-ALTER TABLE alerts OWNER TO ashkan;
-
 --
--- Name: clients; Type: TABLE; Schema: public; Owner: ashkan; Tablespace: 
+-- Name: clients; Type: TABLE; Schema: public; Owner: ashkan; Tablespace:
 --
 
 CREATE TABLE clients (
@@ -1216,10 +1164,8 @@ CREATE TABLE clients (
 );
 
 
-ALTER TABLE clients OWNER TO ashkan;
-
 --
--- Name: contacts; Type: TABLE; Schema: public; Owner: ashkan; Tablespace: 
+-- Name: contacts; Type: TABLE; Schema: public; Owner: ashkan; Tablespace:
 --
 
 CREATE TABLE contacts (
@@ -1231,10 +1177,8 @@ CREATE TABLE contacts (
 );
 
 
-ALTER TABLE contacts OWNER TO ashkan;
-
 --
--- Name: events; Type: TABLE; Schema: public; Owner: ashkan; Tablespace: 
+-- Name: events; Type: TABLE; Schema: public; Owner: ashkan; Tablespace:
 --
 
 CREATE TABLE events (
@@ -1247,10 +1191,8 @@ CREATE TABLE events (
 );
 
 
-ALTER TABLE events OWNER TO ashkan;
-
 --
--- Name: foo; Type: TABLE; Schema: public; Owner: ashkan; Tablespace: 
+-- Name: foo; Type: TABLE; Schema: public; Owner: ashkan; Tablespace:
 --
 
 CREATE TABLE foo (
@@ -1258,10 +1200,8 @@ CREATE TABLE foo (
 );
 
 
-ALTER TABLE foo OWNER TO ashkan;
-
 --
--- Name: invitation_records; Type: TABLE; Schema: public; Owner: ashkan; Tablespace: 
+-- Name: invitation_records; Type: TABLE; Schema: public; Owner: ashkan; Tablespace:
 --
 
 CREATE TABLE invitation_records (
@@ -1276,10 +1216,8 @@ CREATE TABLE invitation_records (
 );
 
 
-ALTER TABLE invitation_records OWNER TO ashkan;
-
 --
--- Name: last; Type: TABLE; Schema: public; Owner: ashkan; Tablespace: 
+-- Name: last; Type: TABLE; Schema: public; Owner: ashkan; Tablespace:
 --
 
 CREATE TABLE last (
@@ -1289,10 +1227,8 @@ CREATE TABLE last (
 );
 
 
-ALTER TABLE last OWNER TO ashkan;
-
 --
--- Name: listings; Type: TABLE; Schema: public; Owner: ashkan; Tablespace: 
+-- Name: listings; Type: TABLE; Schema: public; Owner: ashkan; Tablespace:
 --
 
 CREATE TABLE listings (
@@ -1313,18 +1249,55 @@ CREATE TABLE listings (
     low_price double precision,
     status listing_status NOT NULL,
     association_fee double precision,
-    mls_number character varying(10),
+    mls_number text,
     association_fee_frequency text,
     association_fee_includes text,
     association_type text,
-    unexempt_taxes double precision
+    unexempt_taxes double precision,
+    financing_proposed text,
+    list_office_mui bigint,
+    list_office_mls_id text,
+    list_office_name text,
+    list_office_phone text,
+    possession text,
+    co_list_office_mui bigint,
+    co_list_office_mls_id text,
+    co_list_office_name text,
+    co_list_office_phone text,
+    selling_office_mui bigint,
+    selling_office_mls_id text,
+    selling_office_name text,
+    selling_office_phone text,
+    co_selling_office_mui bigint,
+    co_selling_office_mls_id text,
+    co_selling_office_name text,
+    co_selling_office_phone text,
+    list_agent_mui bigint,
+    list_agent_direct_work_phone text,
+    list_agent_email text,
+    list_agent_full_name text,
+    list_agent_mls_id text,
+    co_list_agent_mui bigint,
+    co_list_agent_direct_work_phone text,
+    co_list_agent_email text,
+    co_list_agent_full_name text,
+    co_list_agent_mls_id text,
+    selling_agent_mui bigint,
+    selling_agent_direct_work_phone text,
+    selling_agent_email text,
+    selling_agent_full_name text,
+    selling_agent_mls_id text,
+    co_selling_agent_mui bigint,
+    co_selling_agent_direct_work_phone text,
+    co_selling_agent_email text,
+    co_selling_agent_full_name text,
+    co_selling_agent_mls_id text,
+    listing_agreement text
 );
 
 
-ALTER TABLE listings OWNER TO ashkan;
-
 --
--- Name: logs; Type: TABLE; Schema: public; Owner: ashkan; Tablespace: 
+-- Name: logs; Type: TABLE; Schema: public; Owner: ashkan; Tablespace:
 --
 
 CREATE TABLE logs (
@@ -1336,10 +1309,8 @@ CREATE TABLE logs (
 );
 
 
-ALTER TABLE logs OWNER TO ashkan;
-
 --
--- Name: mam_config; Type: TABLE; Schema: public; Owner: ashkan; Tablespace: 
+-- Name: mam_config; Type: TABLE; Schema: public; Owner: ashkan; Tablespace:
 --
 
 CREATE TABLE mam_config (
@@ -1349,10 +1320,8 @@ CREATE TABLE mam_config (
 );
 
 
-ALTER TABLE mam_config OWNER TO ashkan;
-
 --
--- Name: mam_message; Type: TABLE; Schema: public; Owner: ashkan; Tablespace: 
+-- Name: mam_message; Type: TABLE; Schema: public; Owner: ashkan; Tablespace:
 --
 
 CREATE TABLE mam_message (
@@ -1366,10 +1335,8 @@ CREATE TABLE mam_message (
 );
 
 
-ALTER TABLE mam_message OWNER TO ashkan;
-
 --
--- Name: mam_muc_message; Type: TABLE; Schema: public; Owner: ashkan; Tablespace: 
+-- Name: mam_muc_message; Type: TABLE; Schema: public; Owner: ashkan; Tablespace:
 --
 
 CREATE TABLE mam_muc_message (
@@ -1380,10 +1347,8 @@ CREATE TABLE mam_muc_message (
 );
 
 
-ALTER TABLE mam_muc_message OWNER TO ashkan;
-
 --
--- Name: mam_server_user; Type: TABLE; Schema: public; Owner: ashkan; Tablespace: 
+-- Name: mam_server_user; Type: TABLE; Schema: public; Owner: ashkan; Tablespace:
 --
 
 CREATE TABLE mam_server_user (
@@ -1392,8 +1357,6 @@ CREATE TABLE mam_server_user (
     user_name character varying(250) NOT NULL
 );
 
-
-ALTER TABLE mam_server_user OWNER TO ashkan;
 
 --
 -- Name: mam_server_user_id_seq; Type: SEQUENCE; Schema: public; Owner: ashkan
@@ -1407,8 +1370,6 @@ CREATE SEQUENCE mam_server_user_id_seq
     CACHE 1;
 
 
-ALTER TABLE mam_server_user_id_seq OWNER TO ashkan;
-
 --
 -- Name: mam_server_user_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: ashkan
 --
@@ -1417,7 +1378,7 @@ ALTER SEQUENCE mam_server_user_id_seq OWNED BY mam_server_user.id;
 
 
 --
--- Name: mam_user; Type: TABLE; Schema: public; Owner: ashkan; Tablespace: 
+-- Name: mam_user; Type: TABLE; Schema: public; Owner: ashkan; Tablespace:
 --
 
 CREATE TABLE mam_user (
@@ -1425,8 +1386,6 @@ CREATE TABLE mam_user (
     user_name character varying(250) NOT NULL
 );
 
-
-ALTER TABLE mam_user OWNER TO ashkan;
 
 --
 -- Name: mam_user_id_seq; Type: SEQUENCE; Schema: public; Owner: ashkan
@@ -1440,8 +1399,6 @@ CREATE SEQUENCE mam_user_id_seq
     CACHE 1;
 
 
-ALTER TABLE mam_user_id_seq OWNER TO ashkan;
-
 --
 -- Name: mam_user_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: ashkan
 --
@@ -1450,7 +1407,7 @@ ALTER SEQUENCE mam_user_id_seq OWNED BY mam_user.id;
 
 
 --
--- Name: message_rooms; Type: TABLE; Schema: public; Owner: ashkan; Tablespace: 
+-- Name: message_rooms; Type: TABLE; Schema: public; Owner: ashkan; Tablespace:
 --
 
 CREATE TABLE message_rooms (
@@ -1464,10 +1421,8 @@ CREATE TABLE message_rooms (
 );
 
 
-ALTER TABLE message_rooms OWNER TO ashkan;
-
 --
--- Name: message_rooms_users; Type: TABLE; Schema: public; Owner: ashkan; Tablespace: 
+-- Name: message_rooms_users; Type: TABLE; Schema: public; Owner: ashkan; Tablespace:
 --
 
 CREATE TABLE message_rooms_users (
@@ -1480,10 +1435,8 @@ CREATE TABLE message_rooms_users (
 );
 
 
-ALTER TABLE message_rooms_users OWNER TO ashkan;
-
 --
--- Name: messages; Type: TABLE; Schema: public; Owner: ashkan; Tablespace: 
+-- Name: messages; Type: TABLE; Schema: public; Owner: ashkan; Tablespace:
 --
 
 CREATE TABLE messages (
@@ -1497,14 +1450,13 @@ CREATE TABLE messages (
     created_at timestamp with time zone DEFAULT now(),
     updated_at timestamp with time zone DEFAULT now(),
     message_room uuid NOT NULL,
-    message_type message_type NOT NULL
+    message_type message_type NOT NULL,
+    image_thumbnail_url text
 );
 
 
-ALTER TABLE messages OWNER TO ashkan;
-
 --
--- Name: messages_ack; Type: TABLE; Schema: public; Owner: ashkan; Tablespace: 
+-- Name: messages_ack; Type: TABLE; Schema: public; Owner: ashkan; Tablespace:
 --
 
 CREATE TABLE messages_ack (
@@ -1516,10 +1468,8 @@ CREATE TABLE messages_ack (
 );
 
 
-ALTER TABLE messages_ack OWNER TO ashkan;
-
 --
--- Name: notification_tokens; Type: TABLE; Schema: public; Owner: ashkan; Tablespace: 
+-- Name: notification_tokens; Type: TABLE; Schema: public; Owner: ashkan; Tablespace:
 --
 
 CREATE TABLE notification_tokens (
@@ -1531,10 +1481,8 @@ CREATE TABLE notification_tokens (
 );
 
 
-ALTER TABLE notification_tokens OWNER TO ashkan;
-
 --
--- Name: notifications; Type: TABLE; Schema: public; Owner: ashkan; Tablespace: 
+-- Name: notifications; Type: TABLE; Schema: public; Owner: ashkan; Tablespace:
 --
 
 CREATE TABLE notifications (
@@ -1548,14 +1496,15 @@ CREATE TABLE notifications (
     read boolean DEFAULT false,
     action notification_action NOT NULL,
     object_class notification_object_class NOT NULL,
-    notifying_user uuid
+    notifying_user uuid,
+    auxiliary_object_class notification_object_class,
+    auxiliary_object uuid,
+    recommendation uuid
 );
 
 
-ALTER TABLE notifications OWNER TO ashkan;
-
 --
--- Name: offline_message; Type: TABLE; Schema: public; Owner: ashkan; Tablespace: 
+-- Name: offline_message; Type: TABLE; Schema: public; Owner: ashkan; Tablespace:
 --
 
 CREATE TABLE offline_message (
@@ -1569,8 +1518,6 @@ CREATE TABLE offline_message (
 );
 
 
-ALTER TABLE offline_message OWNER TO ashkan;
-
 --
 -- Name: offline_message_id_seq; Type: SEQUENCE; Schema: public; Owner: ashkan
 --
@@ -1583,8 +1530,6 @@ CREATE SEQUENCE offline_message_id_seq
     CACHE 1;
 
 
-ALTER TABLE offline_message_id_seq OWNER TO ashkan;
-
 --
 -- Name: offline_message_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: ashkan
 --
@@ -1593,7 +1538,7 @@ ALTER SEQUENCE offline_message_id_seq OWNED BY offline_message.id;
 
 
 --
--- Name: privacy_default_list; Type: TABLE; Schema: public; Owner: ashkan; Tablespace: 
+-- Name: privacy_default_list; Type: TABLE; Schema: public; Owner: ashkan; Tablespace:
 --
 
 CREATE TABLE privacy_default_list (
@@ -1602,10 +1547,8 @@ CREATE TABLE privacy_default_list (
 );
 
 
-ALTER TABLE privacy_default_list OWNER TO ashkan;
-
 --
--- Name: privacy_list; Type: TABLE; Schema: public; Owner: ashkan; Tablespace: 
+-- Name: privacy_list; Type: TABLE; Schema: public; Owner: ashkan; Tablespace:
 --
 
 CREATE TABLE privacy_list (
@@ -1616,10 +1559,8 @@ CREATE TABLE privacy_list (
 );
 
 
-ALTER TABLE privacy_list OWNER TO ashkan;
-
 --
--- Name: privacy_list_data; Type: TABLE; Schema: public; Owner: ashkan; Tablespace: 
+-- Name: privacy_list_data; Type: TABLE; Schema: public; Owner: ashkan; Tablespace:
 --
 
 CREATE TABLE privacy_list_data (
@@ -1636,8 +1577,6 @@ CREATE TABLE privacy_list_data (
 );
 
 
-ALTER TABLE privacy_list_data OWNER TO ashkan;
-
 --
 -- Name: privacy_list_id_seq; Type: SEQUENCE; Schema: public; Owner: ashkan
 --
@@ -1650,8 +1589,6 @@ CREATE SEQUENCE privacy_list_id_seq
     CACHE 1;
 
 
-ALTER TABLE privacy_list_id_seq OWNER TO ashkan;
-
 --
 -- Name: privacy_list_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: ashkan
 --
@@ -1660,7 +1597,7 @@ ALTER SEQUENCE privacy_list_id_seq OWNED BY privacy_list.id;
 
 
 --
--- Name: private_storage; Type: TABLE; Schema: public; Owner: ashkan; Tablespace: 
+-- Name: private_storage; Type: TABLE; Schema: public; Owner: ashkan; Tablespace:
 --
 
 CREATE TABLE private_storage (
@@ -1671,10 +1608,8 @@ CREATE TABLE private_storage (
 );
 
 
-ALTER TABLE private_storage OWNER TO ashkan;
-
 --
--- Name: properties; Type: TABLE; Schema: public; Owner: ashkan; Tablespace: 
+-- Name: properties; Type: TABLE; Schema: public; Owner: ashkan; Tablespace:
 --
 
 CREATE TABLE properties (
@@ -1707,14 +1642,44 @@ CREATE TABLE properties (
     parking_spaces_covered_total double precision,
     half_bathroom_count double precision,
     full_bathroom_count double precision,
-    heating text[]
+    heating text[],
+    flooring text[],
+    utilities text[],
+    utilities_other text[],
+    architectural_style text,
+    structural_style text,
+    number_of_stories smallint,
+    number_of_stories_in_building smallint,
+    number_of_parking_spaces double precision,
+    parking_spaces_carport double precision,
+    parking_spaces_garage double precision,
+    garage_length double precision,
+    garage_width double precision,
+    number_of_dining_areas smallint,
+    number_of_living_areas smallint,
+    fireplaces_total smallint,
+    lot_number text,
+    soil_type text,
+    construction_materials text,
+    construction_materials_walls text,
+    foundation_details text,
+    roof text,
+    pool_yn boolean,
+    handicap_yn boolean,
+    elementary_school_name text,
+    intermediate_school_name text,
+    high_school_name text,
+    junior_high_school_name text,
+    middle_school_name text,
+    primary_school_name text,
+    senior_high_school_name text,
+    school_district text,
+    subdivision_name text
 );
 
 
-ALTER TABLE properties OWNER TO ashkan;
-
 --
--- Name: recommendations; Type: TABLE; Schema: public; Owner: ashkan; Tablespace: 
+-- Name: recommendations; Type: TABLE; Schema: public; Owner: ashkan; Tablespace:
 --
 
 CREATE TABLE recommendations (
@@ -1722,7 +1687,6 @@ CREATE TABLE recommendations (
     source source_type,
     source_url text,
     referring_user uuid NOT NULL,
-    referring_savedsearch uuid,
     referred_shortlist uuid NOT NULL,
     created_at timestamp with time zone DEFAULT now(),
     updated_at timestamp with time zone DEFAULT now(),
@@ -1731,14 +1695,13 @@ CREATE TABLE recommendations (
     recommendation_type recommendation_type,
     favorited boolean DEFAULT false,
     status recommendation_status DEFAULT 'Unacknowledged'::recommendation_status,
-    matrix_unique_id bigint NOT NULL
+    matrix_unique_id bigint NOT NULL,
+    referring_alerts uuid[]
 );
 
 
-ALTER TABLE recommendations OWNER TO ashkan;
-
 --
--- Name: roster_version; Type: TABLE; Schema: public; Owner: ashkan; Tablespace: 
+-- Name: roster_version; Type: TABLE; Schema: public; Owner: ashkan; Tablespace:
 --
 
 CREATE TABLE roster_version (
@@ -1747,10 +1710,8 @@ CREATE TABLE roster_version (
 );
 
 
-ALTER TABLE roster_version OWNER TO ashkan;
-
 --
--- Name: rostergroups; Type: TABLE; Schema: public; Owner: ashkan; Tablespace: 
+-- Name: rostergroups; Type: TABLE; Schema: public; Owner: ashkan; Tablespace:
 --
 
 CREATE TABLE rostergroups (
@@ -1760,10 +1721,8 @@ CREATE TABLE rostergroups (
 );
 
 
-ALTER TABLE rostergroups OWNER TO ashkan;
-
 --
--- Name: rosterusers; Type: TABLE; Schema: public; Owner: ashkan; Tablespace: 
+-- Name: rosterusers; Type: TABLE; Schema: public; Owner: ashkan; Tablespace:
 --
 
 CREATE TABLE rosterusers (
@@ -1780,10 +1739,8 @@ CREATE TABLE rosterusers (
 );
 
 
-ALTER TABLE rosterusers OWNER TO ashkan;
-
 --
--- Name: sessions; Type: TABLE; Schema: public; Owner: ashkan; Tablespace: 
+-- Name: sessions; Type: TABLE; Schema: public; Owner: ashkan; Tablespace:
 --
 
 CREATE TABLE sessions (
@@ -1795,10 +1752,8 @@ CREATE TABLE sessions (
 );
 
 
-ALTER TABLE sessions OWNER TO ashkan;
-
 --
--- Name: shortlists; Type: TABLE; Schema: public; Owner: ashkan; Tablespace: 
+-- Name: shortlists; Type: TABLE; Schema: public; Owner: ashkan; Tablespace:
 --
 
 CREATE TABLE shortlists (
@@ -1813,10 +1768,8 @@ CREATE TABLE shortlists (
 );
 
 
-ALTER TABLE shortlists OWNER TO ashkan;
-
 --
--- Name: shortlists_users; Type: TABLE; Schema: public; Owner: ashkan; Tablespace: 
+-- Name: shortlists_users; Type: TABLE; Schema: public; Owner: ashkan; Tablespace:
 --
 
 CREATE TABLE shortlists_users (
@@ -1828,10 +1781,8 @@ CREATE TABLE shortlists_users (
 );
 
 
-ALTER TABLE shortlists_users OWNER TO ashkan;
-
 --
--- Name: tokens; Type: TABLE; Schema: public; Owner: ashkan; Tablespace: 
+-- Name: tokens; Type: TABLE; Schema: public; Owner: ashkan; Tablespace:
 --
 
 CREATE TABLE tokens (
@@ -1844,19 +1795,17 @@ CREATE TABLE tokens (
 );
 
 
-ALTER TABLE tokens OWNER TO ashkan;
-
 --
--- Name: users; Type: TABLE; Schema: public; Owner: ashkan; Tablespace: 
+-- Name: users; Type: TABLE; Schema: public; Owner: ashkan; Tablespace:
 --
 
 CREATE TABLE users (
-    username character varying(30),
-    first_name character varying(30),
-    last_name character varying(30),
-    email character varying(50) NOT NULL,
-    phone_number character varying(20),
-    type character varying(10) NOT NULL,
+    username text,
+    first_name text,
+    last_name text,
+    email text NOT NULL,
+    phone_number text,
+    type text NOT NULL,
     created_at timestamp with time zone DEFAULT now(),
     id uuid DEFAULT uuid_generate_v1() NOT NULL,
     agency_id uuid,
@@ -1865,14 +1814,14 @@ CREATE TABLE users (
     cover_image_url text DEFAULT 'http://emilsedgh.info:8088/users/cover.jpg'::text,
     profile_image_url text DEFAULT 'http://emilsedgh.info:8088/users/profile.jpg'::text,
     updated_at timestamp with time zone DEFAULT now(),
-    user_status user_status DEFAULT 'Active'::user_status NOT NULL
+    user_status user_status DEFAULT 'Active'::user_status NOT NULL,
+    profile_image_thumbnail_url text,
+    cover_image_thumbnail_url text
 );
 
 
-ALTER TABLE users OWNER TO ashkan;
-
 --
--- Name: vcard; Type: TABLE; Schema: public; Owner: ashkan; Tablespace: 
+-- Name: vcard; Type: TABLE; Schema: public; Owner: ashkan; Tablespace:
 --
 
 CREATE TABLE vcard (
@@ -1883,10 +1832,8 @@ CREATE TABLE vcard (
 );
 
 
-ALTER TABLE vcard OWNER TO ashkan;
-
 --
--- Name: vcard_search; Type: TABLE; Schema: public; Owner: ashkan; Tablespace: 
+-- Name: vcard_search; Type: TABLE; Schema: public; Owner: ashkan; Tablespace:
 --
 
 CREATE TABLE vcard_search (
@@ -1918,12 +1865,10 @@ CREATE TABLE vcard_search (
 );
 
 
-ALTER TABLE vcard_search OWNER TO ashkan;
-
 SET search_path = tiger, pg_catalog;
 
 --
--- Name: foo; Type: TABLE; Schema: tiger; Owner: ashkan; Tablespace: 
+-- Name: foo; Type: TABLE; Schema: tiger; Owner: ashkan; Tablespace:
 --
 
 CREATE TABLE foo (
@@ -1931,8 +1876,6 @@ CREATE TABLE foo (
     title text
 );
 
-
-ALTER TABLE foo OWNER TO ashkan;
 
 SET search_path = public, pg_catalog;
 
@@ -1965,7 +1908,7 @@ ALTER TABLE ONLY privacy_list ALTER COLUMN id SET DEFAULT nextval('privacy_list_
 
 
 --
--- Name: addresses_pkey; Type: CONSTRAINT; Schema: public; Owner: ashkan; Tablespace: 
+-- Name: addresses_pkey; Type: CONSTRAINT; Schema: public; Owner: ashkan; Tablespace:
 --
 
 ALTER TABLE ONLY addresses
@@ -1973,7 +1916,7 @@ ALTER TABLE ONLY addresses
 
 
 --
--- Name: agencies_pkey; Type: CONSTRAINT; Schema: public; Owner: ashkan; Tablespace: 
+-- Name: agencies_pkey; Type: CONSTRAINT; Schema: public; Owner: ashkan; Tablespace:
 --
 
 ALTER TABLE ONLY agencies
@@ -1981,7 +1924,7 @@ ALTER TABLE ONLY agencies
 
 
 --
--- Name: alerts_pkey; Type: CONSTRAINT; Schema: public; Owner: ashkan; Tablespace: 
+-- Name: alerts_pkey; Type: CONSTRAINT; Schema: public; Owner: ashkan; Tablespace:
 --
 
 ALTER TABLE ONLY alerts
@@ -1989,7 +1932,7 @@ ALTER TABLE ONLY alerts
 
 
 --
--- Name: contacts_user_id_contact_id_key; Type: CONSTRAINT; Schema: public; Owner: ashkan; Tablespace: 
+-- Name: contacts_user_id_contact_id_key; Type: CONSTRAINT; Schema: public; Owner: ashkan; Tablespace:
 --
 
 ALTER TABLE ONLY contacts
@@ -1997,7 +1940,7 @@ ALTER TABLE ONLY contacts
 
 
 --
--- Name: events_pkey; Type: CONSTRAINT; Schema: public; Owner: ashkan; Tablespace: 
+-- Name: events_pkey; Type: CONSTRAINT; Schema: public; Owner: ashkan; Tablespace:
 --
 
 ALTER TABLE ONLY events
@@ -2005,7 +1948,7 @@ ALTER TABLE ONLY events
 
 
 --
--- Name: invitation_records_email_resource_key; Type: CONSTRAINT; Schema: public; Owner: ashkan; Tablespace: 
+-- Name: invitation_records_email_resource_key; Type: CONSTRAINT; Schema: public; Owner: ashkan; Tablespace:
 --
 
 ALTER TABLE ONLY invitation_records
@@ -2013,7 +1956,7 @@ ALTER TABLE ONLY invitation_records
 
 
 --
--- Name: invitation_records_pkey; Type: CONSTRAINT; Schema: public; Owner: ashkan; Tablespace: 
+-- Name: invitation_records_pkey; Type: CONSTRAINT; Schema: public; Owner: ashkan; Tablespace:
 --
 
 ALTER TABLE ONLY invitation_records
@@ -2021,7 +1964,7 @@ ALTER TABLE ONLY invitation_records
 
 
 --
--- Name: invitation_records_referring_user_resource_key; Type: CONSTRAINT; Schema: public; Owner: ashkan; Tablespace: 
+-- Name: invitation_records_referring_user_resource_key; Type: CONSTRAINT; Schema: public; Owner: ashkan; Tablespace:
 --
 
 ALTER TABLE ONLY invitation_records
@@ -2029,7 +1972,7 @@ ALTER TABLE ONLY invitation_records
 
 
 --
--- Name: last_pkey; Type: CONSTRAINT; Schema: public; Owner: ashkan; Tablespace: 
+-- Name: last_pkey; Type: CONSTRAINT; Schema: public; Owner: ashkan; Tablespace:
 --
 
 ALTER TABLE ONLY last
@@ -2037,7 +1980,7 @@ ALTER TABLE ONLY last
 
 
 --
--- Name: listings_pkey; Type: CONSTRAINT; Schema: public; Owner: ashkan; Tablespace: 
+-- Name: listings_pkey; Type: CONSTRAINT; Schema: public; Owner: ashkan; Tablespace:
 --
 
 ALTER TABLE ONLY listings
@@ -2045,7 +1988,7 @@ ALTER TABLE ONLY listings
 
 
 --
--- Name: logs_pkey; Type: CONSTRAINT; Schema: public; Owner: ashkan; Tablespace: 
+-- Name: logs_pkey; Type: CONSTRAINT; Schema: public; Owner: ashkan; Tablespace:
 --
 
 ALTER TABLE ONLY logs
@@ -2053,7 +1996,7 @@ ALTER TABLE ONLY logs
 
 
 --
--- Name: mam_message_pkey; Type: CONSTRAINT; Schema: public; Owner: ashkan; Tablespace: 
+-- Name: mam_message_pkey; Type: CONSTRAINT; Schema: public; Owner: ashkan; Tablespace:
 --
 
 ALTER TABLE ONLY mam_message
@@ -2061,7 +2004,7 @@ ALTER TABLE ONLY mam_message
 
 
 --
--- Name: mam_muc_message_pkey; Type: CONSTRAINT; Schema: public; Owner: ashkan; Tablespace: 
+-- Name: mam_muc_message_pkey; Type: CONSTRAINT; Schema: public; Owner: ashkan; Tablespace:
 --
 
 ALTER TABLE ONLY mam_muc_message
@@ -2069,7 +2012,7 @@ ALTER TABLE ONLY mam_muc_message
 
 
 --
--- Name: mam_server_user_pkey; Type: CONSTRAINT; Schema: public; Owner: ashkan; Tablespace: 
+-- Name: mam_server_user_pkey; Type: CONSTRAINT; Schema: public; Owner: ashkan; Tablespace:
 --
 
 ALTER TABLE ONLY mam_server_user
@@ -2077,7 +2020,7 @@ ALTER TABLE ONLY mam_server_user
 
 
 --
--- Name: mam_user_pkey; Type: CONSTRAINT; Schema: public; Owner: ashkan; Tablespace: 
+-- Name: mam_user_pkey; Type: CONSTRAINT; Schema: public; Owner: ashkan; Tablespace:
 --
 
 ALTER TABLE ONLY mam_user
@@ -2085,7 +2028,7 @@ ALTER TABLE ONLY mam_user
 
 
 --
--- Name: message_rooms_pkey; Type: CONSTRAINT; Schema: public; Owner: ashkan; Tablespace: 
+-- Name: message_rooms_pkey; Type: CONSTRAINT; Schema: public; Owner: ashkan; Tablespace:
 --
 
 ALTER TABLE ONLY message_rooms
@@ -2093,7 +2036,7 @@ ALTER TABLE ONLY message_rooms
 
 
 --
--- Name: message_rooms_users_message_room_user_key; Type: CONSTRAINT; Schema: public; Owner: ashkan; Tablespace: 
+-- Name: message_rooms_users_message_room_user_key; Type: CONSTRAINT; Schema: public; Owner: ashkan; Tablespace:
 --
 
 ALTER TABLE ONLY message_rooms_users
@@ -2101,7 +2044,7 @@ ALTER TABLE ONLY message_rooms_users
 
 
 --
--- Name: message_rooms_users_pkey; Type: CONSTRAINT; Schema: public; Owner: ashkan; Tablespace: 
+-- Name: message_rooms_users_pkey; Type: CONSTRAINT; Schema: public; Owner: ashkan; Tablespace:
 --
 
 ALTER TABLE ONLY message_rooms_users
@@ -2109,7 +2052,7 @@ ALTER TABLE ONLY message_rooms_users
 
 
 --
--- Name: messages_ack_message_id_message_room_id_user_id_key; Type: CONSTRAINT; Schema: public; Owner: ashkan; Tablespace: 
+-- Name: messages_ack_message_id_message_room_id_user_id_key; Type: CONSTRAINT; Schema: public; Owner: ashkan; Tablespace:
 --
 
 ALTER TABLE ONLY messages_ack
@@ -2117,7 +2060,7 @@ ALTER TABLE ONLY messages_ack
 
 
 --
--- Name: messages_ack_pkey; Type: CONSTRAINT; Schema: public; Owner: ashkan; Tablespace: 
+-- Name: messages_ack_pkey; Type: CONSTRAINT; Schema: public; Owner: ashkan; Tablespace:
 --
 
 ALTER TABLE ONLY messages_ack
@@ -2125,7 +2068,7 @@ ALTER TABLE ONLY messages_ack
 
 
 --
--- Name: messages_pkey; Type: CONSTRAINT; Schema: public; Owner: ashkan; Tablespace: 
+-- Name: messages_pkey; Type: CONSTRAINT; Schema: public; Owner: ashkan; Tablespace:
 --
 
 ALTER TABLE ONLY messages
@@ -2133,7 +2076,7 @@ ALTER TABLE ONLY messages
 
 
 --
--- Name: notification_tokens_pkey; Type: CONSTRAINT; Schema: public; Owner: ashkan; Tablespace: 
+-- Name: notification_tokens_pkey; Type: CONSTRAINT; Schema: public; Owner: ashkan; Tablespace:
 --
 
 ALTER TABLE ONLY notification_tokens
@@ -2141,7 +2084,7 @@ ALTER TABLE ONLY notification_tokens
 
 
 --
--- Name: notification_tokens_user_device_token_key; Type: CONSTRAINT; Schema: public; Owner: ashkan; Tablespace: 
+-- Name: notification_tokens_user_device_token_key; Type: CONSTRAINT; Schema: public; Owner: ashkan; Tablespace:
 --
 
 ALTER TABLE ONLY notification_tokens
@@ -2149,7 +2092,7 @@ ALTER TABLE ONLY notification_tokens
 
 
 --
--- Name: notifications_pkey; Type: CONSTRAINT; Schema: public; Owner: ashkan; Tablespace: 
+-- Name: notifications_pkey; Type: CONSTRAINT; Schema: public; Owner: ashkan; Tablespace:
 --
 
 ALTER TABLE ONLY notifications
@@ -2157,7 +2100,7 @@ ALTER TABLE ONLY notifications
 
 
 --
--- Name: offline_message_pkey; Type: CONSTRAINT; Schema: public; Owner: ashkan; Tablespace: 
+-- Name: offline_message_pkey; Type: CONSTRAINT; Schema: public; Owner: ashkan; Tablespace:
 --
 
 ALTER TABLE ONLY offline_message
@@ -2165,7 +2108,7 @@ ALTER TABLE ONLY offline_message
 
 
 --
--- Name: privacy_default_list_pkey; Type: CONSTRAINT; Schema: public; Owner: ashkan; Tablespace: 
+-- Name: privacy_default_list_pkey; Type: CONSTRAINT; Schema: public; Owner: ashkan; Tablespace:
 --
 
 ALTER TABLE ONLY privacy_default_list
@@ -2173,7 +2116,7 @@ ALTER TABLE ONLY privacy_default_list
 
 
 --
--- Name: privacy_list_id_key; Type: CONSTRAINT; Schema: public; Owner: ashkan; Tablespace: 
+-- Name: privacy_list_id_key; Type: CONSTRAINT; Schema: public; Owner: ashkan; Tablespace:
 --
 
 ALTER TABLE ONLY privacy_list
@@ -2181,7 +2124,7 @@ ALTER TABLE ONLY privacy_list
 
 
 --
--- Name: properties_pkey; Type: CONSTRAINT; Schema: public; Owner: ashkan; Tablespace: 
+-- Name: properties_pkey; Type: CONSTRAINT; Schema: public; Owner: ashkan; Tablespace:
 --
 
 ALTER TABLE ONLY properties
@@ -2189,7 +2132,7 @@ ALTER TABLE ONLY properties
 
 
 --
--- Name: recommendations_pkey; Type: CONSTRAINT; Schema: public; Owner: ashkan; Tablespace: 
+-- Name: recommendations_pkey; Type: CONSTRAINT; Schema: public; Owner: ashkan; Tablespace:
 --
 
 ALTER TABLE ONLY recommendations
@@ -2197,7 +2140,7 @@ ALTER TABLE ONLY recommendations
 
 
 --
--- Name: recommendations_referred_shortlist_referring_user_object_key; Type: CONSTRAINT; Schema: public; Owner: ashkan; Tablespace: 
+-- Name: recommendations_referred_shortlist_referring_user_object_key; Type: CONSTRAINT; Schema: public; Owner: ashkan; Tablespace:
 --
 
 ALTER TABLE ONLY recommendations
@@ -2205,7 +2148,7 @@ ALTER TABLE ONLY recommendations
 
 
 --
--- Name: roster_version_pkey; Type: CONSTRAINT; Schema: public; Owner: ashkan; Tablespace: 
+-- Name: roster_version_pkey; Type: CONSTRAINT; Schema: public; Owner: ashkan; Tablespace:
 --
 
 ALTER TABLE ONLY roster_version
@@ -2213,7 +2156,7 @@ ALTER TABLE ONLY roster_version
 
 
 --
--- Name: shortlists_pkey; Type: CONSTRAINT; Schema: public; Owner: ashkan; Tablespace: 
+-- Name: shortlists_pkey; Type: CONSTRAINT; Schema: public; Owner: ashkan; Tablespace:
 --
 
 ALTER TABLE ONLY shortlists
@@ -2221,7 +2164,7 @@ ALTER TABLE ONLY shortlists
 
 
 --
--- Name: shortlists_users_pkey; Type: CONSTRAINT; Schema: public; Owner: ashkan; Tablespace: 
+-- Name: shortlists_users_pkey; Type: CONSTRAINT; Schema: public; Owner: ashkan; Tablespace:
 --
 
 ALTER TABLE ONLY shortlists_users
@@ -2229,7 +2172,7 @@ ALTER TABLE ONLY shortlists_users
 
 
 --
--- Name: unique_user_shortlist_key; Type: CONSTRAINT; Schema: public; Owner: ashkan; Tablespace: 
+-- Name: unique_user_shortlist_key; Type: CONSTRAINT; Schema: public; Owner: ashkan; Tablespace:
 --
 
 ALTER TABLE ONLY shortlists_users
@@ -2237,7 +2180,15 @@ ALTER TABLE ONLY shortlists_users
 
 
 --
--- Name: users_pkey; Type: CONSTRAINT; Schema: public; Owner: ashkan; Tablespace: 
+-- Name: users_email_key; Type: CONSTRAINT; Schema: public; Owner: ashkan; Tablespace:
+--
+
+ALTER TABLE ONLY users
+    ADD CONSTRAINT users_email_key UNIQUE (email);
+
+
+--
+-- Name: users_pkey; Type: CONSTRAINT; Schema: public; Owner: ashkan; Tablespace:
 --
 
 ALTER TABLE ONLY users
@@ -2245,7 +2196,7 @@ ALTER TABLE ONLY users
 
 
 --
--- Name: vcard_pkey; Type: CONSTRAINT; Schema: public; Owner: ashkan; Tablespace: 
+-- Name: vcard_pkey; Type: CONSTRAINT; Schema: public; Owner: ashkan; Tablespace:
 --
 
 ALTER TABLE ONLY vcard
@@ -2253,7 +2204,7 @@ ALTER TABLE ONLY vcard
 
 
 --
--- Name: vcard_search_pkey; Type: CONSTRAINT; Schema: public; Owner: ashkan; Tablespace: 
+-- Name: vcard_search_pkey; Type: CONSTRAINT; Schema: public; Owner: ashkan; Tablespace:
 --
 
 ALTER TABLE ONLY vcard_search
@@ -2261,189 +2212,189 @@ ALTER TABLE ONLY vcard_search
 
 
 --
--- Name: i_last_seconds; Type: INDEX; Schema: public; Owner: ashkan; Tablespace: 
+-- Name: i_last_seconds; Type: INDEX; Schema: public; Owner: ashkan; Tablespace:
 --
 
 CREATE INDEX i_last_seconds ON last USING btree (seconds);
 
 
 --
--- Name: i_mam_config; Type: INDEX; Schema: public; Owner: ashkan; Tablespace: 
+-- Name: i_mam_config; Type: INDEX; Schema: public; Owner: ashkan; Tablespace:
 --
 
 CREATE INDEX i_mam_config ON mam_config USING btree (user_id, remote_jid);
 
 
 --
--- Name: i_mam_message_username_id; Type: INDEX; Schema: public; Owner: ashkan; Tablespace: 
+-- Name: i_mam_message_username_id; Type: INDEX; Schema: public; Owner: ashkan; Tablespace:
 --
 
 CREATE INDEX i_mam_message_username_id ON mam_message USING btree (user_id, id);
 
 
 --
--- Name: i_mam_message_username_jid_id; Type: INDEX; Schema: public; Owner: ashkan; Tablespace: 
+-- Name: i_mam_message_username_jid_id; Type: INDEX; Schema: public; Owner: ashkan; Tablespace:
 --
 
 CREATE INDEX i_mam_message_username_jid_id ON mam_message USING btree (user_id, remote_bare_jid, id);
 
 
 --
--- Name: i_mam_muc_message_room_name_added_at; Type: INDEX; Schema: public; Owner: ashkan; Tablespace: 
+-- Name: i_mam_muc_message_room_name_added_at; Type: INDEX; Schema: public; Owner: ashkan; Tablespace:
 --
 
 CREATE INDEX i_mam_muc_message_room_name_added_at ON mam_muc_message USING btree (room_id, id);
 
 
 --
--- Name: i_mam_server_user_name; Type: INDEX; Schema: public; Owner: ashkan; Tablespace: 
+-- Name: i_mam_server_user_name; Type: INDEX; Schema: public; Owner: ashkan; Tablespace:
 --
 
 CREATE UNIQUE INDEX i_mam_server_user_name ON mam_server_user USING btree (server, user_name);
 
 
 --
--- Name: i_mam_user_name; Type: INDEX; Schema: public; Owner: ashkan; Tablespace: 
+-- Name: i_mam_user_name; Type: INDEX; Schema: public; Owner: ashkan; Tablespace:
 --
 
 CREATE UNIQUE INDEX i_mam_user_name ON mam_user USING btree (user_name);
 
 
 --
--- Name: i_offline_message; Type: INDEX; Schema: public; Owner: ashkan; Tablespace: 
+-- Name: i_offline_message; Type: INDEX; Schema: public; Owner: ashkan; Tablespace:
 --
 
 CREATE INDEX i_offline_message ON offline_message USING btree (server, username, id);
 
 
 --
--- Name: i_privacy_list_username; Type: INDEX; Schema: public; Owner: ashkan; Tablespace: 
+-- Name: i_privacy_list_username; Type: INDEX; Schema: public; Owner: ashkan; Tablespace:
 --
 
 CREATE INDEX i_privacy_list_username ON privacy_list USING btree (username);
 
 
 --
--- Name: i_privacy_list_username_name; Type: INDEX; Schema: public; Owner: ashkan; Tablespace: 
+-- Name: i_privacy_list_username_name; Type: INDEX; Schema: public; Owner: ashkan; Tablespace:
 --
 
 CREATE UNIQUE INDEX i_privacy_list_username_name ON privacy_list USING btree (username, name);
 
 
 --
--- Name: i_private_storage_username; Type: INDEX; Schema: public; Owner: ashkan; Tablespace: 
+-- Name: i_private_storage_username; Type: INDEX; Schema: public; Owner: ashkan; Tablespace:
 --
 
 CREATE INDEX i_private_storage_username ON private_storage USING btree (username);
 
 
 --
--- Name: i_private_storage_username_namespace; Type: INDEX; Schema: public; Owner: ashkan; Tablespace: 
+-- Name: i_private_storage_username_namespace; Type: INDEX; Schema: public; Owner: ashkan; Tablespace:
 --
 
 CREATE UNIQUE INDEX i_private_storage_username_namespace ON private_storage USING btree (username, namespace);
 
 
 --
--- Name: i_rosteru_jid; Type: INDEX; Schema: public; Owner: ashkan; Tablespace: 
+-- Name: i_rosteru_jid; Type: INDEX; Schema: public; Owner: ashkan; Tablespace:
 --
 
 CREATE INDEX i_rosteru_jid ON rosterusers USING btree (jid);
 
 
 --
--- Name: i_rosteru_user_jid; Type: INDEX; Schema: public; Owner: ashkan; Tablespace: 
+-- Name: i_rosteru_user_jid; Type: INDEX; Schema: public; Owner: ashkan; Tablespace:
 --
 
 CREATE UNIQUE INDEX i_rosteru_user_jid ON rosterusers USING btree (username, jid);
 
 
 --
--- Name: i_rosteru_username; Type: INDEX; Schema: public; Owner: ashkan; Tablespace: 
+-- Name: i_rosteru_username; Type: INDEX; Schema: public; Owner: ashkan; Tablespace:
 --
 
 CREATE INDEX i_rosteru_username ON rosterusers USING btree (username);
 
 
 --
--- Name: i_vcard_search_lbday; Type: INDEX; Schema: public; Owner: ashkan; Tablespace: 
+-- Name: i_vcard_search_lbday; Type: INDEX; Schema: public; Owner: ashkan; Tablespace:
 --
 
 CREATE INDEX i_vcard_search_lbday ON vcard_search USING btree (lbday);
 
 
 --
--- Name: i_vcard_search_lctry; Type: INDEX; Schema: public; Owner: ashkan; Tablespace: 
+-- Name: i_vcard_search_lctry; Type: INDEX; Schema: public; Owner: ashkan; Tablespace:
 --
 
 CREATE INDEX i_vcard_search_lctry ON vcard_search USING btree (lctry);
 
 
 --
--- Name: i_vcard_search_lemail; Type: INDEX; Schema: public; Owner: ashkan; Tablespace: 
+-- Name: i_vcard_search_lemail; Type: INDEX; Schema: public; Owner: ashkan; Tablespace:
 --
 
 CREATE INDEX i_vcard_search_lemail ON vcard_search USING btree (lemail);
 
 
 --
--- Name: i_vcard_search_lfamily; Type: INDEX; Schema: public; Owner: ashkan; Tablespace: 
+-- Name: i_vcard_search_lfamily; Type: INDEX; Schema: public; Owner: ashkan; Tablespace:
 --
 
 CREATE INDEX i_vcard_search_lfamily ON vcard_search USING btree (lfamily);
 
 
 --
--- Name: i_vcard_search_lfn; Type: INDEX; Schema: public; Owner: ashkan; Tablespace: 
+-- Name: i_vcard_search_lfn; Type: INDEX; Schema: public; Owner: ashkan; Tablespace:
 --
 
 CREATE INDEX i_vcard_search_lfn ON vcard_search USING btree (lfn);
 
 
 --
--- Name: i_vcard_search_lgiven; Type: INDEX; Schema: public; Owner: ashkan; Tablespace: 
+-- Name: i_vcard_search_lgiven; Type: INDEX; Schema: public; Owner: ashkan; Tablespace:
 --
 
 CREATE INDEX i_vcard_search_lgiven ON vcard_search USING btree (lgiven);
 
 
 --
--- Name: i_vcard_search_llocality; Type: INDEX; Schema: public; Owner: ashkan; Tablespace: 
+-- Name: i_vcard_search_llocality; Type: INDEX; Schema: public; Owner: ashkan; Tablespace:
 --
 
 CREATE INDEX i_vcard_search_llocality ON vcard_search USING btree (llocality);
 
 
 --
--- Name: i_vcard_search_lmiddle; Type: INDEX; Schema: public; Owner: ashkan; Tablespace: 
+-- Name: i_vcard_search_lmiddle; Type: INDEX; Schema: public; Owner: ashkan; Tablespace:
 --
 
 CREATE INDEX i_vcard_search_lmiddle ON vcard_search USING btree (lmiddle);
 
 
 --
--- Name: i_vcard_search_lnickname; Type: INDEX; Schema: public; Owner: ashkan; Tablespace: 
+-- Name: i_vcard_search_lnickname; Type: INDEX; Schema: public; Owner: ashkan; Tablespace:
 --
 
 CREATE INDEX i_vcard_search_lnickname ON vcard_search USING btree (lnickname);
 
 
 --
--- Name: i_vcard_search_lorgname; Type: INDEX; Schema: public; Owner: ashkan; Tablespace: 
+-- Name: i_vcard_search_lorgname; Type: INDEX; Schema: public; Owner: ashkan; Tablespace:
 --
 
 CREATE INDEX i_vcard_search_lorgname ON vcard_search USING btree (lorgname);
 
 
 --
--- Name: i_vcard_search_lorgunit; Type: INDEX; Schema: public; Owner: ashkan; Tablespace: 
+-- Name: i_vcard_search_lorgunit; Type: INDEX; Schema: public; Owner: ashkan; Tablespace:
 --
 
 CREATE INDEX i_vcard_search_lorgunit ON vcard_search USING btree (lorgunit);
 
 
 --
--- Name: pk_rosterg_user_jid; Type: INDEX; Schema: public; Owner: ashkan; Tablespace: 
+-- Name: pk_rosterg_user_jid; Type: INDEX; Schema: public; Owner: ashkan; Tablespace:
 --
 
 CREATE INDEX pk_rosterg_user_jid ON rostergroups USING btree (username, jid);
@@ -2734,4 +2685,3 @@ GRANT ALL ON SCHEMA public TO PUBLIC;
 --
 -- PostgreSQL database dump complete
 --
-

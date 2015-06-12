@@ -291,7 +291,7 @@ function createObjects(data, cb) {
                 return cb(err);
 
               createdAddresses++;
-              Address.updateGeoFromOSM(address_id, function(err, result) {
+              Address.updateGeoFromGoogle(address_id, function(err, result) {
                 console.log('updating GEO information on address with id:', address_id);
                 if(err)
                   return cb(err);
