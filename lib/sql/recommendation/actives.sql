@@ -3,5 +3,5 @@ SELECT id,
 FROM recommendations
 WHERE recommendations.referring_user = $1 AND
       recommendations.referred_shortlist = $2 AND
-      (SELECT COUNT(*) FROM messages WHERE messages.message_room = recommendations.message_room) > 0
+      (SELECT message_room_status FROM message_rooms WHERE id = recommendations.message_room) = 'Active'
 ORDER BY updated_at DESC

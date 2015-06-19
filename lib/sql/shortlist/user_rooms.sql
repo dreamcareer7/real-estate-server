@@ -4,7 +4,7 @@ INNER JOIN message_rooms
     ON message_rooms_users.message_room = message_rooms.id
 WHERE "user" = $1
     AND message_rooms.shortlist = $2
-    AND (((SELECT COUNT(*) FROM messages WHERE message_room = message_rooms.id)::INT > 0) OR (message_rooms.message_room_type IN ('Shortlist', 'OneToOneMessaging', 'GroupMessaging')))
+    AND ((message_rooms.message_room_status = 'Active') OR (message_rooms.message_room_type IN ('Shortlist', 'OneToOneMessaging', 'GroupMessaging')))
     AND CASE $3 WHEN 'Shortlist' THEN message_rooms.message_room_type = 'Shortlist'
                 WHEN 'OneToOneMessaging' THEN message_rooms.message_room_type = 'OneToOneMessaging'
                 WHEN 'Comment' THEN message_rooms.message_room_type = 'Comment'

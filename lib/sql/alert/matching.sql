@@ -1,4 +1,4 @@
-SELECT DISTINCT (listings.id)
+SELECT DISTINCT(listings.id)
 FROM listings
 INNER JOIN properties
 ON listings.property_id = properties.id
