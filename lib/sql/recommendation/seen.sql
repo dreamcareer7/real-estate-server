@@ -5,8 +5,7 @@ WHERE
   COALESCE(ARRAY_LENGTH(referring_alerts, 1), 0) > 0 AND
   recommendations.referring_user = $1 AND
   recommendations.referred_shortlist = $2 AND
-  recommendations.status = 'Unacknowledged' AND
-  recommendations.hidden = FALSE
+  recommendations.status = 'Unpinned'
 AND CASE
     WHEN $3 = 'Since_C' THEN created_at > TIMESTAMP WITH TIME ZONE 'EPOCH' + $4 * INTERVAL '1 MICROSECOND'
     WHEN $3 = 'Max_C' THEN created_at < TIMESTAMP WITH TIME ZONE 'EPOCH' + $4 * INTERVAL '1 MICROSECOND'
