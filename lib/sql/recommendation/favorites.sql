@@ -16,7 +16,6 @@ INNER JOIN favs ON recommendations.referred_shortlist = favs.referred_shortlist
 AND recommendations.object = favs.object
 WHERE recommendations.referring_user = $1
   AND recommendations.referred_shortlist = $2
-  AND recommendations.hidden = FALSE
   AND favs.favorited = TRUE
 AND CASE
     WHEN $3 = 'Since_C' THEN recommendations.created_at > TIMESTAMP WITH TIME ZONE 'EPOCH' + $4 * INTERVAL '1 MICROSECOND'
