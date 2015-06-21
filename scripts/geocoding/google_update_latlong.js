@@ -1,5 +1,6 @@
+require('../connection.js');
+
 var async = require('async');
-var db = require('../../lib/utils/db.js');
 var error = require('../../lib/models/Error.js');
 var config = require('../../lib/config.js');
 var _u = require('underscore');
@@ -15,6 +16,7 @@ require('../../lib/models/Recommendation.js');
 require('../../lib/models/Shortlist.js');
 require('../../lib/models/User.js');
 require('../../lib/models/MessageRoom.js');
+
 
 Address.getBatchOfAddressesWithoutLatLong(config.google.address_batch_size, function(err, address_ids) {
   if(err) {

@@ -1,3 +1,5 @@
+require('../connection.js');
+
 var path = require('path')
 
 require('../../lib/models/S3.js');
