@@ -534,7 +534,7 @@ function fetch() {
          createdProperties + ' New Properties, ' + updatedProperties + ' Updated Properties, ' +
          createdAddresses + ' New Addresses, '  + updatedAddresses + ' Updated Addresses, ' +
          s3ResourcesCreated + ' New Images uploaded to S3, ' +
-         geocodedAddresses + ' Addresses Geocoded successfully using OSM, ' +
+         geocodedAddresses + ' Addresses Geocoded successfully using GoogleMapsAPI, ' +
          Math.round(((createdAddresses - geocodedAddresses) / createdAddresses) * 100) + '% miss rate on GoogleMapsAPI, ' +
          'pausing for ' + remaining + ' seconds before running the next fetch.' + ' Exit status: ' +
          ((err) ? 'FAILURE' : 'OK') + ' Error: ' + err;

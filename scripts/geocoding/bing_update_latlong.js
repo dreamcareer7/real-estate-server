@@ -16,7 +16,7 @@ require('../../lib/models/Shortlist.js');
 require('../../lib/models/User.js');
 require('../../lib/models/MessageRoom.js');
 
-Address.getBatchOfAddressesWithoutLatLong(config.google.address_batch_size, function(err, address_ids) {
+Address.getBatchOfAddressesWithoutLatLong(config.bing.address_batch_size, function(err, address_ids) {
   if(err) {
     console.log(err);
     process.exit(1);
@@ -24,21 +24,21 @@ Address.getBatchOfAddressesWithoutLatLong(config.google.address_batch_size, func
 
   var startTime = (new Date()).getTime();
   async.mapLimit(address_ids,
-                 config.google.concurrency,
+                 config.bing.concurrency,
                  function(r, cb) {
-                   sleep.usleep(config.google.staging);
-                   return Address.updateGeoFromGoogleDirect(r, cb);
+                   sleep.usleep(config.bing.staging);
+                   return Address.updateGeoFromBingDirect(r, cb);
                  },
                  function(err, results) {
                    if(err) {
                      console.log(err);
-                     sleep.usleep(config.google.staging);
+                     sleep.sleep(config.bing.staging);
                      return;
                    }
 
                    var endTime = (new Date()).getTime();
                    var elapsed = (endTime - startTime) / 1000;
-                   var remaining = parseInt(config.google.pause - elapsed);
+                   var remaining = parseInt(config.bing.pause - elapsed);
 
                    results = results.filter(Boolean);
                    async.map(results, Address.reschedule, function(err, ok) {
@@ -48,7 +48,7 @@ Address.getBatchOfAddressesWithoutLatLong(config.google.address_batch_size, func
                      if (remaining > 0) {
                        console.log('Pausing for'.yellow,
                                    remaining,
-                                   'seconds before termination to meet Google\'s limit on daily requests...'.yellow);
+                                   'seconds before termination to meet Bing\'s limit on daily requests...'.yellow);
                        sleep.sleep(remaining);
                      }
 
