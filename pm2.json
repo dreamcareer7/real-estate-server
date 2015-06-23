@@ -3,20 +3,20 @@
     [
         {
             "script": "./index.js",
-            "name": "Backend MVPv1"
+            "name": "API Service"
         },
         {
             "script": "./scripts/ntreis/rets_client.js",
-            "name": "NTREIS Connector MVPv1",
-            "args": ["-p", "-r"],
+            "name": "NTREIS Connector",
+            "args": ["-p", "-r", "-e"],
         },
         {
             "script": "./scripts/geocoding/google_update_latlong.js",
-            "name": "Google Geocoder MVPv1"
+            "name": "Google Geocoder"
         },
         {
             "script": "./scripts/geocoding/bing_update_latlong.js",
-            "name": "Bing Geocoder MVPv1"
+            "name": "Bing Geocoder"
         }
     ]
 }
