@@ -16,7 +16,7 @@ require('../../lib/models/Shortlist.js');
 require('../../lib/models/User.js');
 require('../../lib/models/MessageRoom.js');
 
-Address.getBatchOfAddressesWithoutLatLong(config.bing.address_batch_size, function(err, address_ids) {
+Address.getBatchOfAddressesWithoutLatLongBing(config.bing.address_batch_size, function(err, address_ids) {
   if(err) {
     console.log(err);
     process.exit(1);
@@ -32,7 +32,7 @@ Address.getBatchOfAddressesWithoutLatLong(config.bing.address_batch_size, functi
                  function(err, results) {
                    if(err) {
                      console.log(err);
-                     sleep.sleep(config.bing.staging);
+                     sleep.usleep(config.bing.staging);
                      return;
                    }
 

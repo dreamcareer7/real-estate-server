@@ -16,7 +16,7 @@ require('../../lib/models/Shortlist.js');
 require('../../lib/models/User.js');
 require('../../lib/models/MessageRoom.js');
 
-Address.getBatchOfAddressesWithoutLatLong(config.google.address_batch_size, function(err, address_ids) {
+Address.getBatchOfAddressesWithoutLatLongGoogle(config.google.address_batch_size, function(err, address_ids) {
   if(err) {
     console.log(err);
     process.exit(1);
