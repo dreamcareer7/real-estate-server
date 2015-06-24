@@ -327,7 +327,7 @@ function createObjects(data, cb) {
                 return cb(err);
 
               createdAddresses++;
-              Address.updateGeoFromGoogle(address_id, function(err, result) {
+              Address.updateGeoFromGoogleDirect(address_id, function(err, result) {
                 console.log('updating GEO information on address with id:', address_id);
                 if(err)
                   return cb(err);
