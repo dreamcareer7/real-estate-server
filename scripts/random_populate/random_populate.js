@@ -1,3 +1,5 @@
+require('../connection.js');
+
 var async = require('async');
 var Chance = require('chance');
 var db = require('../../lib/utils/db.js');
