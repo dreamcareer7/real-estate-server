@@ -1,5 +1,6 @@
+require('../connection.js');
+
 var async = require('async');
-var db = require('../../lib/utils/db.js');
 var error = require('../../lib/models/Error.js');
 var config = require('../../lib/config.js');
 var _u = require('underscore');
