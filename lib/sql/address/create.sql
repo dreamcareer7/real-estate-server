@@ -12,7 +12,13 @@ INSERT INTO
               unit_number,
               postal_code,
               neighborhood,
-              matrix_unique_id)
+              matrix_unique_id,
+              county_or_parish,
+              direction,
+              street_dir_prefix,
+              street_dir_suffix,
+              street_number_searchable
+             )
 VALUES ($1,
         $2,
         $3,
@@ -26,4 +32,9 @@ VALUES ($1,
         $11,
         $12,
         $13,
-        $14) RETURNING id
+        $14,
+        $15,
+        $16,
+        $17,
+        $18,
+        $19) RETURNING id
