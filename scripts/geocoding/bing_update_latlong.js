@@ -1,7 +1,6 @@
 require('../connection.js');
 
 var async = require('async');
-var db = require('../../lib/utils/db.js');
 var error = require('../../lib/models/Error.js');
 var config = require('../../lib/config.js');
 var _u = require('underscore');
@@ -21,6 +20,7 @@ require('../../lib/models/MessageRoom.js');
 Address.getBatchOfAddressesWithoutLatLongBing(config.bing.address_batch_size, function(err, address_ids) {
   if(err) {
     console.log(err);
+    process.exit(1);
   }
 
   var startTime = (new Date()).getTime();
