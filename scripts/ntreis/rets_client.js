@@ -561,6 +561,9 @@ function fetch() {
                       }
                      ]
   }, function(err, results) {
+       if(err)
+         return cb(err);
+
        var endTime = (new Date()).getTime();
        var elapsed = (endTime - startTime) / 1000;
        var remaining = parseInt(config.ntreis.pause - elapsed);
@@ -584,24 +587,21 @@ function fetch() {
          if(err) {
            console.log('Error sending update to slack:', err);
          }
+
+         console.log('Total Running Time:', elapsed + 's');
+         if(err)
+           console.log('INFO: (TERM) Script terminated with error:'.red, err);
+         else {
+           console.log('INFO: (TERM) Script finished successfully'.green);
+         }
+
+         if (remaining > 0) {
+           console.log('Pausing for'.yellow,
+                       remaining,
+                       'seconds before termination to meet NTREIS limit on heavy requests...'.yellow);
+           sleep.sleep(remaining);
+           process.exit(0);
+         }
        });
-
-       console.log('Total Running Time:', elapsed + 's');
-       if(err)
-         console.log('INFO: (TERM) Script terminated with error:'.red, err);
-       else {
-         console.log('INFO: (TERM) Script finished successfully'.green);
-       }
-
-       if (remaining > 0) {
-         console.log('Pausing for'.yellow,
-                     remaining,
-                     'seconds before termination to meet NTREIS limit on heavy requests...'.yellow);
-         sleep.sleep(remaining);
-       }
      });
 }
-
-init();
-fetch();
-process.exit(0);

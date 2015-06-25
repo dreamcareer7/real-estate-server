@@ -45,18 +45,17 @@ Address.getBatchOfAddressesWithoutLatLongBing(config.bing.address_batch_size, fu
                    results = results.filter(Boolean);
                    async.map(results, Address.reschedule, function(err, ok) {
                      if(err)
-                       return;
+                       console.log('Error rescheduling addresses');
 
                      if (remaining > 0) {
                        console.log('Pausing for'.yellow,
                                    remaining,
                                    'seconds before termination to meet Bing\'s limit on daily requests...'.yellow);
                        sleep.sleep(remaining);
+                       process.exit(0);
+                     } else {
+                       process.exit(0);
                      }
-
-                     return;
                    });
                  });
 });
-
-process.exit(0);
