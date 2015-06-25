@@ -601,6 +601,8 @@ function fetch() {
                        'seconds before termination to meet NTREIS limit on heavy requests...'.yellow);
            sleep.sleep(remaining);
            process.exit(0);
+         } else {
+           process.exit(0);
          }
        });
      });
