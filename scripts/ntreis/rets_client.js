@@ -607,3 +607,6 @@ function fetch() {
        });
      });
 }
+
+init();
+fetch();
