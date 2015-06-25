@@ -21,7 +21,6 @@ require('../../lib/models/MessageRoom.js');
 Address.getBatchOfAddressesWithoutLatLongBing(config.bing.address_batch_size, function(err, address_ids) {
   if(err) {
     console.log(err);
-    process.exit(1);
   }
 
   var startTime = (new Date()).getTime();
