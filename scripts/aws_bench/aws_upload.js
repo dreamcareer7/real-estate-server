@@ -35,3 +35,5 @@ rl.question("enter name of the file for upload: ", function(file) {
 
   rl.close();
 });
+
+process.exit(0);

@@ -58,3 +58,5 @@ Address.getBatchOfAddressesWithoutLatLongBing(config.bing.address_batch_size, fu
                    });
                  });
 });
+
+process.exit(0);

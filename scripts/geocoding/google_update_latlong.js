@@ -57,3 +57,5 @@ Address.getBatchOfAddressesWithoutLatLongGoogle(config.google.address_batch_size
                    });
                  });
 });
+
+process.exit(0);

@@ -181,3 +181,5 @@ function recommend_to_all_users(cb) {
 recommend_to_all_users(function(err, res) {
   console.log(res);
 });
+
+process.exit(0);

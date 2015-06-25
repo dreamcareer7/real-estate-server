@@ -604,3 +604,4 @@ function fetch() {
 
 init();
 fetch();
+process.exit(0);
