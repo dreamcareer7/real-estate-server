@@ -329,7 +329,7 @@ function createObjects(data, cb) {
                 return cb(err);
 
               createdAddresses++;
-              Address.updateGeoFromGoogleDirect(address_id, function(err, result) {
+              Address.updateGeo(address_id, function(err, result) {
                 console.log('updating GEO information on address with id:', address_id);
                 if(err)
                   return cb(err);
@@ -561,9 +561,6 @@ function fetch() {
                       }
                      ]
   }, function(err, results) {
-       if(err)
-         return cb(err);
-
        var endTime = (new Date()).getTime();
        var elapsed = (endTime - startTime) / 1000;
        var remaining = parseInt(config.ntreis.pause - elapsed);
