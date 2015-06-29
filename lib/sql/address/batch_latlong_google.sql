@@ -1,6 +1,6 @@
 SELECT id
 FROM addresses
-WHERE location IS null AND
-      matrix_unique_id IS NOT NULL
+WHERE geocoded_google IS NOT TRUE AND
+      corrupted_google IS NOT TRUE
 ORDER BY created_at DESC
 LIMIT $1
