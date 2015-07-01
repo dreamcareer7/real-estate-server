@@ -16,7 +16,7 @@ SELECT 'recommendation' AS TYPE,
        recommendations.referring_alerts,
        recommendations.object,
        recommendations.message_room,
-       recommendations.status,
+       recommendations.read,
        favs.favorited_by,
        EXTRACT(EPOCH FROM created_at) AS created_at,
        EXTRACT(EPOCH FROM updated_at) AS updated_at

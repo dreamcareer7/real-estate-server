@@ -3,7 +3,8 @@ WITH favs AS
           referred_shortlist,
           object,
           MAX(updated_at) AS updated_at,
-          BOOL_OR(CASE WHEN status = 'Pinned' THEN TRUE ELSE FALSE END) AS favorited
+          MAX(created_at) AS created_at,
+          BOOL_OR(favorited) AS favorited
    FROM recommendations
    WHERE referred_shortlist = $2
    GROUP BY referred_shortlist,
@@ -22,15 +23,19 @@ AND CASE
     WHEN $3 = 'Max_C' THEN recommendations.created_at < TIMESTAMP WITH TIME ZONE 'EPOCH' + $4 * INTERVAL '1 MICROSECOND'
     WHEN $3 = 'Since_U' THEN recommendations.updated_at > TIMESTAMP WITH TIME ZONE 'EPOCH' + $4 * INTERVAL '1 MICROSECOND'
     WHEN $3 = 'Max_U' THEN recommendations.updated_at < TIMESTAMP WITH TIME ZONE 'EPOCH' + $4 * INTERVAL '1 MICROSECOND'
+    WHEN $3 = 'Init_C' THEN created_at < NOW()
+    WHEN $3 = 'Init_U' THEN updated_at < NOW()
     ELSE TRUE
     END
 ORDER BY
     CASE $3
-        WHEN 'Since_C' THEN recommendations.created_at
-        WHEN 'Since_U' THEN recommendations.updated_at
+        WHEN 'Since_C' THEN favs.created_at
+        WHEN 'Since_U' THEN favs.updated_at
     END,
     CASE $3
-        WHEN 'Max_C' THEN recommendations.created_at
-        WHEN 'Max_U' THEN recommendations.updated_at
+        WHEN 'Max_C' THEN favs.created_at
+        WHEN 'Max_U' THEN favs.updated_at
+        WHEN 'Init_C' THEN favs.created_at
+        WHEN 'Init_U' THEN favs.updated_at
     END DESC
 LIMIT $5;

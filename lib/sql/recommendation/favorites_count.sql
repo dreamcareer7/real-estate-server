@@ -3,7 +3,7 @@ WITH favs AS
           referred_shortlist,
           object,
           MAX(updated_at) AS updated_at,
-          BOOL_OR(CASE WHEN status = 'Pinned' THEN TRUE ELSE FALSE END) AS favorited
+          BOOL_OR(favorited) AS favorited
    FROM recommendations
    WHERE referred_shortlist = $2
    GROUP BY referred_shortlist,
