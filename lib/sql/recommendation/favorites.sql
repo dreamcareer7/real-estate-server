@@ -23,8 +23,8 @@ AND CASE
     WHEN $3 = 'Max_C' THEN recommendations.created_at < TIMESTAMP WITH TIME ZONE 'EPOCH' + $4 * INTERVAL '1 MICROSECOND'
     WHEN $3 = 'Since_U' THEN recommendations.updated_at > TIMESTAMP WITH TIME ZONE 'EPOCH' + $4 * INTERVAL '1 MICROSECOND'
     WHEN $3 = 'Max_U' THEN recommendations.updated_at < TIMESTAMP WITH TIME ZONE 'EPOCH' + $4 * INTERVAL '1 MICROSECOND'
-    WHEN $3 = 'Init_C' THEN created_at < NOW()
-    WHEN $3 = 'Init_U' THEN updated_at < NOW()
+    WHEN $3 = 'Init_C' THEN recommendations.created_at < NOW()
+    WHEN $3 = 'Init_U' THEN recommendations.updated_at < NOW()
     ELSE TRUE
     END
 ORDER BY
