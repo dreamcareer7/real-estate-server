@@ -1,4 +1,4 @@
 UPDATE recommendations
-SET status = 'Pinned',
+SET read = TRUE,
     favorited = TRUE
 WHERE id = $1
