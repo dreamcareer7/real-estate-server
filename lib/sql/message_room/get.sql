@@ -14,7 +14,7 @@ SELECT 'message_room' AS type,
        (SELECT COUNT(*) FROM messages WHERE message_room = message_rooms.id AND image_url IS NOT NULL)::INT AS image_count,
        (SELECT COUNT(*) FROM messages WHERE message_room = message_rooms.id AND document_url IS NOT NULL)::INT AS document_count,
        (SELECT COUNT(*) FROM messages WHERE message_room = message_rooms.id AND video_url IS NOT NULL)::INT AS video_count,
-       (SELECT COUNT(*) FROM messages WHERE message_room = message_rooms.id)::INT AS comment_count,
+       (SELECT COUNT(*) FROM messages WHERE message_room = message_rooms.id AND (video_url IS NULL AND image_url IS NULL AND document_url IS NULL)::INT AS comment_count,
        (SELECT id FROM messages WHERE message_room = message_rooms.id ORDER BY messages.created_at DESC LIMIT 1) AS latest_message,
        EXTRACT(EPOCH FROM created_at) AS created_at,
        EXTRACT(EPOCH FROM updated_at) AS updated_at
