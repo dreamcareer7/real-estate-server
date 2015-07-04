@@ -8,6 +8,9 @@ INSERT INTO notifications(
             auxiliary_object,
             recommendation,
             notified_user,
-            shortlist
+            shortlist,
+            subject,
+            subject_class,
+            auxiliary_subject_class
         )
 VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING id;
