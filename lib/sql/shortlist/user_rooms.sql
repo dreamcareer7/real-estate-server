@@ -16,6 +16,8 @@ WHERE "user" = $1
              WHEN $4 = 'Max_C' THEN message_rooms.created_at < TIMESTAMP WITH TIME ZONE 'EPOCH' + $5 * INTERVAL '1 MICROSECOND'
              WHEN $4 = 'Since_U' THEN message_rooms.updated_at > TIMESTAMP WITH TIME ZONE 'EPOCH' + $5 * INTERVAL '1 MICROSECOND'
              WHEN $4 = 'Max_U' THEN message_rooms.updated_at < TIMESTAMP WITH TIME ZONE 'EPOCH' + $5 * INTERVAL '1 MICROSECOND'
+             WHEN $4 = 'Init_C' THEN message_rooms.created_at < NOW()
+             WHEN $4 = 'Init_U' THEN message_rooms.updated_at < NOW()
              ELSE TRUE
     END
 ORDER BY
@@ -26,5 +28,7 @@ ORDER BY
     CASE $4
         WHEN 'Max_C' THEN message_rooms.created_at
         WHEN 'Max_U' THEN message_rooms.updated_at
+        WHEN 'Init_C' THEN message_rooms.created_at
+        WHEN 'Init_U' THEN message_rooms.updated_at
     END DESC
 LIMIT $6;
