@@ -2,7 +2,7 @@ INSERT INTO notifications(
             action,
             object_class,
             object,
-            notifying_user,
+            notifying_users,
             message,
             auxiliary_object_class,
             auxiliary_object,
