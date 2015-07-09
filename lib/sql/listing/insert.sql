@@ -83,7 +83,8 @@ INSERT INTO
              keybox_number,
              close_date,
              back_on_market_date,
-             deposit_amount
+             deposit_amount,
+             photo_count
             )
 VALUES ($1,
         $2,
@@ -169,5 +170,6 @@ VALUES ($1,
         $82,
         $83,
         $84,
-        $85
+        $85,
+        $86
        ) RETURNING id

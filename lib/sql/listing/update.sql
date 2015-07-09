@@ -79,5 +79,6 @@ SET alerting_agent_id = $1,
     close_date = $78,
     back_on_market_date = $79,
     deposit_amount = $80,
+    photo_count = $81,
     updated_at = NOW()
-WHERE id = $81
+WHERE id = $82
