@@ -9,6 +9,10 @@ SELECT 'recommendation' AS TYPE,
        message_room,
        recommendation_type,
        status,
+       favorited,
+       hidden,
+       read,
+       added_tour,
        EXTRACT(EPOCH FROM created_at) AS created_at,
        EXTRACT(EPOCH FROM updated_at) AS updated_at
 FROM recommendations
