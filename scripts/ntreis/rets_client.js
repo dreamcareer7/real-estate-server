@@ -276,7 +276,6 @@ function createObjects(data, cb) {
   listing.co_selling_agent_mls_id = data.CoSellingAgentMLSID.trim();
   listing.listing_agreement = data.ListingAgreement.trim();
   listing.possession = data.Possession.trim();
-
   listing.capitalization_rate = data.CapitalizationRate.trim();
   listing.compensation_paid = data.CompensationPaid.trim();
   listing.date_available = data.DateAvailable.trim();
@@ -304,6 +303,8 @@ function createObjects(data, cb) {
   listing.close_date = data.CloseDate.trim();
   listing.back_on_market_date = data.BackOnMarketDate.trim();
   listing.deposit_amount = parseFloat(data.DepositAmount.trim()) || 0.0;
+
+  listing.photo_count = parseInt(data.PhotoCount.trim()) || 0;
 
   // Ugly hacks and fixes
   if (property.property_subtype === '')
