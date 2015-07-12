@@ -27,7 +27,7 @@ SELECT 'recommendation' AS TYPE,
        favs.favorited_by AS favorited_by,
        favs.added_tour_by AS added_tour_by,
        favs.favorited AS favorited_some,
-       favs.added_tour AS tour_requested,
+       favs.tour_requested AS tour_requested,
        EXTRACT(EPOCH FROM created_at) AS created_at,
        EXTRACT(EPOCH FROM updated_at) AS updated_at
 FROM recommendations
