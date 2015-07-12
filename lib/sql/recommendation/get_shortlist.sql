@@ -1,5 +1,5 @@
 WITH favs AS
-  (SELECT JSON_AGG(CASE WHEN favorited = TRUE THEN referring_user END) AS favorited_by
+  (SELECT JSON_AGG(CASE WHEN favorited = TRUE THEN referring_user END) AS favorited_by,
           JSON_AGG(CASE WHEN added_tour = TRUE THEN referring_user END) AS added_tour_by,
           BOOL_OR(favorited) AS favorited,
           BOOL_OR(added_tour) AS tour_requested,
