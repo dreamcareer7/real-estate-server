@@ -1,13 +1,4 @@
-SELECT 'url' AS type,
-       id,
-       CASE WHEN image_url IS NOT NULL THEN image_url
-            WHEN video_url IS NOT NULL THEN video_url
-            WHEN document_url IS NOT NULL THEN document_url
-       END AS url,
-       CASE WHEN image_url IS NOT NULL THEN 'image'
-            WHEN video_url IS NOT NULL THEN 'video'
-            WHEN document_url IS NOT NULL THEN 'document'
-       END AS document_type
+SELECT id
 FROM messages
 WHERE message_room = $1
 AND CASE
@@ -19,6 +10,7 @@ AND CASE
     WHEN $2 = 'Init_U' THEN updated_at < NOW()
     ELSE TRUE
     END
+AND ((video_url IS NOT NULL) OR (document_url IS NOT NULL) OR (image_url IS NOT NULL))
 ORDER BY
     CASE $2
         WHEN 'Since_C' THEN created_at
