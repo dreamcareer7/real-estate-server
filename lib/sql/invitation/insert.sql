@@ -4,4 +4,4 @@ INSERT INTO invitation_records(
             email,
             resource
         )
-VALUES ($1, $2, $3, $4) RETURNING id;
+VALUES ($1, $2, LOWER($3), $4) RETURNING id;

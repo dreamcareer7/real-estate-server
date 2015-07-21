@@ -1,2 +1,2 @@
 INSERT INTO password_recovery_records(email, "user", token)
-VALUES ($1, $2, $3)
+VALUES (LOWER($1), $2, $3)

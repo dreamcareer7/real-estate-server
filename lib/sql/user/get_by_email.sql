@@ -1,3 +1,3 @@
 SELECT *
 FROM users
-WHERE email = $1
+WHERE LOWER(email) = LOWER($1)
