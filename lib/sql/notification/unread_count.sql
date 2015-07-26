@@ -1,4 +1,4 @@
 SELECT COUNT(*) AS total_count
-FROM messages_ack
-WHERE user_id = $1
-AND read = FALSE
+FROM notifications
+WHERE notified_user = $1
+AND read IS FALSE

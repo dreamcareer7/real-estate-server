@@ -1,10 +1,12 @@
 WITH favs AS
   (SELECT JSON_AGG(CASE WHEN favorited = TRUE THEN referring_user END) AS favorited_by,
+          JSON_AGG(CASE WHEN added_tour = TRUE THEN referring_user END) AS added_tour_by,
           referred_shortlist,
           object,
           MAX(updated_at) AS updated_at,
           MAX(created_at) AS created_at,
-          BOOL_OR(favorited) AS favorited
+          BOOL_OR(favorited) AS favorited,
+          BOOL_OR(added_tour) AS added_tour
    FROM recommendations
    WHERE referred_shortlist = $2
    GROUP BY referred_shortlist,
