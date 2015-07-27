@@ -3,6 +3,9 @@ lib/config.js
 lib/sslcert/server.key
 lib/sslcert/server.crt
 scripts/ntreis/timing.config.js
+scripts/announcements/announcement.html
+scripts/announcements/announcement.asc
+scripts/announcements/subject_announcement.asc
 .tern-port
 .tern-project
 .DS_Store
