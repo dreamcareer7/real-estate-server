@@ -15,5 +15,4 @@ SET currency = $1,
     horizontal_distance = $15,
     vertical_distance = $16,
     points = ST_SetSRID(ST_GeomFromText($17), 4326),
-    title = $18
-WHERE id = $19
+WHERE id = $18
