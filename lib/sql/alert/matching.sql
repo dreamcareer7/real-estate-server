@@ -16,4 +16,5 @@ WHERE
     properties.property_subtype = ANY ($8::property_subtype[]) AND
     addresses.location IS NOT NULL AND
     COALESCE(ST_Within(addresses.location, ST_SetSRID(ST_GeomFromText($9), 4326)), FALSE) = TRUE AND
-    properties.year_built >= $10
+    COALESCE(properties.year_built >= $10, TRUE) = TRUE AND
+    COALESCE(properties.pool_yn = $11, TRUE) = TRUE

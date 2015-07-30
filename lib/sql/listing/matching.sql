@@ -10,4 +10,5 @@ WHERE $1 >= minimum_price AND
       $5 = property_type AND
       property_subtypes @> $6::property_subtype[] AND
       COALESCE(ST_Within(ST_SetSRID(ST_MakePoint($7, $8), 4326), points), FALSE) = TRUE AND
-      $9 >= year_built
+      COALESCE($9 >= year_built, TRUE) = TRUE AND
+      COALESCE($10 = pool, TRUE) = TRUE
