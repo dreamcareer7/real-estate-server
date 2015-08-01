@@ -2,14 +2,14 @@ INSERT INTO notifications(
             action,
             object_class,
             object,
-            notifying_users,
+            subject,
             message,
             auxiliary_object_class,
             auxiliary_object,
             recommendation,
             notified_user,
             shortlist,
-            subject,
+            auxiliary_subject,
             subject_class,
             auxiliary_subject_class
         )
