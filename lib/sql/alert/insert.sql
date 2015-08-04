@@ -14,6 +14,7 @@ INSERT INTO alerts(
         title,
         horizontal_distance,
         vertical_distance,
-        points
+        points,
+        year_built
     )
-VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, ST_SetSRID(ST_MakePoint($10, $11), 4326), $12, $13, $14, $15, $16, ST_SetSRID(ST_GeomFromText($17::text), 4326)) RETURNING id;
+VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, ST_SetSRID(ST_MakePoint($10, $11), 4326), $12, $13, $14, $15, $16, ST_SetSRID(ST_GeomFromText($17::text), 4326), $18) RETURNING id;
