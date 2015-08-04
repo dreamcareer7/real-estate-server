@@ -1,6 +1,6 @@
 WITH favs AS
   (SELECT JSON_AGG(CASE WHEN favorited = TRUE THEN referring_user END) AS favorited_by,
-          JSON_AGG(CASE WHEN added_tour = TRUE THEN referring_user END) AS added_tour_by,
+          JSON_AGG(CASE WHEN added_tour = TRUE THEN referring_user END) AS requested_by,
           referred_shortlist,
           object,
           MAX(updated_at) AS updated_at,
