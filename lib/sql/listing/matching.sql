@@ -11,4 +11,7 @@ WHERE $1 >= minimum_price AND
       property_subtypes @> $6::property_subtype[] AND
       COALESCE(ST_Within(ST_SetSRID(ST_MakePoint($7, $8), 4326), points), FALSE) = TRUE AND
       COALESCE($9 >= year_built, TRUE) = TRUE AND
-      COALESCE($10 = pool, TRUE) = TRUE
+      COALESCE($10 = pool, TRUE) = TRUE AND
+      COALESCE($11 > maximum_lot_square_meters, TRUE) = TRUE AND
+      COALESCE($11 < minimum_lot_square_meters, TRUE) = TRUE AND
+      archived IS FALSE
