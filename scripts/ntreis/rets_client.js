@@ -60,6 +60,11 @@ require('../../lib/models/User.js');
 require('../../lib/models/MessageRoom.js');
 require('../../lib/models/Recommendation.js');
 require('../../lib/models/S3.js');
+require('../../lib/models/Notification.js');
+require('../../lib/models/SES.js');
+require('../../lib/models/Crypto.js');
+require('../../lib/models/Email.js');
+require('../../lib/models/Invitation.js');
 
 var retsLoginUrl = config.ntreis.login_url;
 var retsUser = config.ntreis.user;
