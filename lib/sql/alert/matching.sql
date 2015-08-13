@@ -1,4 +1,5 @@
-SELECT DISTINCT(listings.id)
+SELECT DISTINCT(listings.id),
+       (COUNT(*) OVER())::INT AS total
 FROM listings
 INNER JOIN properties
 ON listings.property_id = properties.id
