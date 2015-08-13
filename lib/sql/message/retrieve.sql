@@ -1,4 +1,5 @@
-SELECT id
+SELECT id,
+       (COUNT(*) OVER())::INT AS count
 FROM messages
 WHERE message_room = $1
 AND CASE
