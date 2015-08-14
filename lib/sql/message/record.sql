@@ -8,6 +8,7 @@ INSERT INTO messages(
     object,
     author,
     image_thumbnail_url,
+    viewable_by,
     subjects,
     objects,
     subject_class,
