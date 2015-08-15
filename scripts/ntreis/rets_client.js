@@ -58,6 +58,7 @@ require('../../lib/models/Listing.js');
 require('../../lib/models/Shortlist.js');
 require('../../lib/models/User.js');
 require('../../lib/models/MessageRoom.js');
+require('../../lib/models/Message.js');
 require('../../lib/models/Recommendation.js');
 require('../../lib/models/S3.js');
 require('../../lib/models/Notification.js');
@@ -65,6 +66,7 @@ require('../../lib/models/SES.js');
 require('../../lib/models/Crypto.js');
 require('../../lib/models/Email.js');
 require('../../lib/models/Invitation.js');
+require('../../lib/models/ObjectUtil.js');
 
 var retsLoginUrl = config.ntreis.login_url;
 var retsUser = config.ntreis.user;
@@ -447,13 +449,15 @@ function createObjects(data, cb) {
           }
         }
         else {
-          Listing.update(current.id, listing, function(err, next) {
-            if(err)
-              return cb(err);
+          Listing.issueChangeNotifications(current.id, current, listing, function(err, ok) {
+            Listing.update(current.id, listing, function(err, next) {
+              if(err)
+                return cb(err);
 
-            updatedListings++;
-            console.log('UPDATED a LISTING'.yellow);
-            return cb(null, next.id);
+              updatedListings++;
+              console.log('UPDATED a LISTING'.yellow);
+              return cb(null, next.id);
+            });
           });
         }
       });
