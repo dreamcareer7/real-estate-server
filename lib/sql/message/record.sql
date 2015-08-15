@@ -9,10 +9,7 @@ INSERT INTO messages(
     author,
     image_thumbnail_url,
     viewable_by,
-    subjects,
-    objects,
-    subject_class,
-    object_class
+    notification
 )
 VALUES($1,
        $2,
@@ -24,8 +21,5 @@ VALUES($1,
        $8,
        $9,
        $10,
-       $11,
-       $12,
-       $13,
-       $14)
+       $11)
 RETURNING id;
