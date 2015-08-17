@@ -2,7 +2,7 @@ SELECT id,
        'recommendation' AS TYPE,
        MAX(created_at) AS created_at,
        MAX(updated_at) AS updated_at,
-       JSON_AGG(referring_user) AS favorited_by,
+       JSON_AGG(referred_user) AS favorited_by,
        object,
        recommendation_type,
        SOURCE,
@@ -10,7 +10,7 @@ SELECT id,
        referring_alerts,
        referred_shortlist
 FROM recommendations
-WHERE referring_user = $1
+WHERE referred_user = $1
   AND favorited = TRUE
   AND hidden = FALSE
 AND CASE

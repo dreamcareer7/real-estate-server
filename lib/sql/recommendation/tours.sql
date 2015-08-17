@@ -1,6 +1,6 @@
 WITH favs AS
-  (SELECT JSON_AGG(CASE WHEN favorited = TRUE THEN referring_user END) AS favorited_by,
-          JSON_AGG(CASE WHEN added_tour = TRUE THEN referring_user END) AS requested_by,
+  (SELECT JSON_AGG(CASE WHEN favorited = TRUE THEN referred_user END) AS favorited_by,
+          JSON_AGG(CASE WHEN added_tour = TRUE THEN referred_user END) AS requested_by,
           referred_shortlist,
           object,
           MAX(updated_at) AS updated_at,
@@ -17,7 +17,7 @@ SELECT id,
 FROM recommendations
 INNER JOIN favs ON recommendations.referred_shortlist = favs.referred_shortlist
 AND recommendations.object = favs.object
-WHERE recommendations.referring_user = $1
+WHERE recommendations.referred_user = $1
   AND recommendations.referred_shortlist = $2
   AND favs.added_tour = TRUE
 AND CASE

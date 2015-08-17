@@ -3,7 +3,7 @@ SELECT id,
 FROM recommendations
 WHERE
   COALESCE(ARRAY_LENGTH(referring_alerts, 1), 0) > 0 AND
-  recommendations.referring_user = $1 AND
+  recommendations.referred_user = $1 AND
   recommendations.referred_shortlist = $2 AND
   recommendations.read IS FALSE AND
   recommendations.hidden = FALSE

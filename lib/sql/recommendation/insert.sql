@@ -2,7 +2,7 @@ INSERT INTO
     recommendations(recommendation_type,
                     source,
                     source_url,
-                    referring_user,
+                    referred_user,
                     referring_alerts,
                     referred_shortlist,
                     object,
