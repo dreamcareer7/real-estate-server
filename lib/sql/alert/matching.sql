@@ -18,6 +18,7 @@ WHERE
     addresses.location IS NOT NULL AND
     COALESCE(ST_Within(addresses.location, ST_SetSRID(ST_GeomFromText($9), 4326)), FALSE) = TRUE AND
     COALESCE(properties.year_built >= $10, TRUE) = TRUE AND
-    COALESCE(properties.pool_yn = $11, TRUE) = TRUE AND
-    COALESCE(properties.lot_square_meters >= $12, TRUE) = TRUE AND
-    COALESCE(properties.lot_square_meters <= $13, TRUE) = TRUE
+    COALESCE(properties.year_built <= $11, TRUE) = TRUE AND
+    COALESCE(properties.pool_yn = $12, TRUE) = TRUE AND
+    COALESCE(properties.lot_square_meters >= $13, TRUE) = TRUE AND
+    COALESCE(properties.lot_square_meters <= $14, TRUE) = TRUE
