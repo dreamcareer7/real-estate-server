@@ -160,7 +160,7 @@ function createObjects(data, cb) {
   property.property_type = data.PropertyType.trim();
   property.property_subtype = data.PropertySubType.trim();
   property.matrix_unique_id = parseInt(data.Matrix_Unique_ID) || 0;
-  property.year_build = parseInt(data.YearBuilt) || 0;
+  property.year_built = parseInt(data.YearBuilt) || 0;
   property.parking_spaces_covered_total = parseFloat(data.ParkingSpacesCoveredTotal) || 0.0;
   property.heating = '{' + data.Heating + '}';
   property.flooring = '{' + data.Flooring + '}';
