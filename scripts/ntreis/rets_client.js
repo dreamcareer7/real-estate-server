@@ -58,6 +58,7 @@ require('../../lib/models/Listing.js');
 require('../../lib/models/Shortlist.js');
 require('../../lib/models/User.js');
 require('../../lib/models/MessageRoom.js');
+require('../../lib/models/Message.js');
 require('../../lib/models/Recommendation.js');
 require('../../lib/models/S3.js');
 require('../../lib/models/Notification.js');
@@ -65,6 +66,7 @@ require('../../lib/models/SES.js');
 require('../../lib/models/Crypto.js');
 require('../../lib/models/Email.js');
 require('../../lib/models/Invitation.js');
+require('../../lib/models/ObjectUtil.js');
 
 var retsLoginUrl = config.ntreis.login_url;
 var retsUser = config.ntreis.user;
@@ -396,37 +398,24 @@ function createObjects(data, cb) {
                 if (!program.enablePhotoFetch)
                   return cb(null, []);
 
-                client.getPhotos("Property", config.ntreis.gallery, data.Matrix_Unique_ID, function(err, images) {
-                  if (err)
-                    return cb(null, []);
-
-                  async.map(images, function(image, cb) {
-                    if (typeof(image.buffer) === 'object') {
-                      s3ResourcesCreated++;
-                      return S3.upload(config.buckets.listing_images, {body: image.buffer, ext: config.ntreis.default_photo_ext}, cb);
-                    }
-
-                    return cb(null, null);
-                  }, function(err, links) {
-                       if(err)
-                         return cb(null, []);
-
-                       return cb(null, links);
-                     });
-                });
+                Listing.fetchPhotos(data.Matrix_Unique_ID, client, config, cb);
               },
               function(links, cb) {
-                links = links.filter(Boolean);
+                s3ResourcesCreated += links.length;
                 listing.cover = links[0] || '';
 
                 // If array length is greater than 2, we shuffle everything except the first element which is always our cover
                 // This fixes issue #17 and is caused by duplicate photos being returned by the NTREIS
                 // We shuffle them to make duplicate images less annoying.
                 // I hate this hack.
-                links = (links.length > 2) ? Array.prototype.concat(links.slice(0, 1), _u.shuffle(links.slice(1))) : links;
-                listing.gallery_images = "{" + links.join(',') + "}";
+                // links = (links.length > 2) ? Array.prototype.concat(links.slice(0, 1), _u.shuffle(links.slice(1))) : links;
+                // listing.gallery_images = '{' + links.join(',') + '}';
+                links = links.splice(1);
+                listing.gallery_images = '{' + links.join(',') + '}';
 
-                if (program.enableCfLinks) console.log('CloudFront Resources:'.blue, links);
+                if (program.enableCfLinks)
+                  console.log('CloudFront Resources:'.blue, links);
+
                 console.log('CREATED a LISTING'.green);
                 Listing.create(listing, function(err, next) {
                   if(err)
@@ -447,14 +436,39 @@ function createObjects(data, cb) {
           }
         }
         else {
-          Listing.update(current.id, listing, function(err, next) {
-            if(err)
-              return cb(err);
+          async.auto({
+            issue_change_notifications: function(cb) {
+              return Listing.issueChangeNotifications(current.id, current, listing, cb);
+            },
+            listing_photos: function(cb) {
+              if((program.enablePhotoFetch) && (listing.photo_count) > 0 && (current.photo_count != listing.photo_count)) {
+                console.log('UPDATED a LISTING PHOTOS'.cyan);
+                Listing.fetchPhotos(data.Matrix_Unique_ID, client, config, function(err, links) {
+                  if(err)
+                    return cb(err);
 
-            updatedListings++;
-            console.log('UPDATED a LISTING'.yellow);
-            return cb(null, next.id);
-          });
+                  s3ResourcesCreated += links.length;
+                  listing.cover = links[0] || '';
+                  var tmp = links.splice(1);
+                  listing.gallery_images = '{' + tmp.join(',') + '}';
+                  return cb(null, null);
+                });
+              } else {
+                return cb(null, null);
+              }
+            },
+            update: ['listing_photos',
+                     function(cb, results) {
+                       Listing.update(current.id, listing, cb);
+                     }]
+          }, function(err, results) {
+               if(err)
+                 return cb(err);
+
+               updatedListings++;
+               console.log('UPDATED a LISTING'.yellow);
+               return cb(null, results.update.id);
+             });
         }
       });
     }

@@ -1,6 +1,6 @@
 SELECT id
 FROM recommendations
-WHERE recommendations.referring_user = $1
+WHERE recommendations.referred_user = $1
 AND recommendations.read IS FALSE
 AND recommendations.hidden = FALSE
 AND CASE

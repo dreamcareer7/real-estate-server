@@ -6,7 +6,7 @@ INSERT INTO recommendations(source,
                             message_room,
                             recommendation_type,
                             matrix_unique_id,
-                            referring_user)
+                            referred_user)
     SELECT source,
            source_url,
            referring_alerts,
@@ -15,7 +15,7 @@ INSERT INTO recommendations(source,
            message_room,
            recommendation_type,
            matrix_unique_id,
-           $1 AS referring_user
+           $1 AS referred_user
     FROM recommendations
     WHERE referred_shortlist = $2
     GROUP BY source,

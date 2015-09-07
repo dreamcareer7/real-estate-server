@@ -54,7 +54,7 @@ var sql_add_user_to_comment_room = "INSERT INTO message_rooms_users(message_room
  VALUES($1, $2)";
 
 var sql_rec_to = "INSERT INTO recommendations(\
- source, source_url, referring_user,\
+ source, source_url, referred_user,\
  referred_shortlist, object, recommendation_type, message_room)\
  VALUES('RCRRE', 'http://shortlisted.com', $1, $2, $3, 'Listing', $4)";
 
