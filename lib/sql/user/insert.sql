@@ -1,4 +1,4 @@
-INSERT INTO users (first_name, last_name, password, email, phone_number, agency_id, user_code)
+INSERT INTO users (first_name, last_name, password, email, phone_number, agency_id, user_type)
 VALUES ($1,
         $2,
         $3,
