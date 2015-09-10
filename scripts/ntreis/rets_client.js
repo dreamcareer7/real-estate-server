@@ -50,6 +50,7 @@ program.version(config.ntreis.version)
 .option('-r, --enable-cf-links', 'Disable displaying of CloudFront links')
 .option('-l, --limit', 'Limit RETS server response manually (default: 100)', parseInt)
 .option('-i, --initial', 'Performing initial fetch process')
+.option('-n, --enable-notifications', 'Enable Listing change notifications')
 .parse(process.argv);
 
 require('../../lib/models/Address.js');
@@ -91,6 +92,7 @@ function notice() {
   console.log('Photo Fetching:'.yellow, (program.enablePhotoFetch) ? 'yes'.green : 'no'.red);
   console.log('Show CloudFront Links:'.yellow, (program.enableCfLinks) ? 'yes'.green : 'no'.red);
   console.log('Initial Fetch:'.yellow, (program.initial) ? 'yes'.green : 'no'.red);
+  console.log('Listing Change Notifications:'.yellow, (program.enableNotifications) ? 'yes'.green : 'no'.red);
   console.log('Manual RETS Response Limit:'.yellow, program.limit);
 }
 
@@ -438,10 +440,14 @@ function createObjects(data, cb) {
         else {
           async.auto({
             issue_change_notifications: function(cb) {
-              return Listing.issueChangeNotifications(current.id, current, listing, cb);
+              if(program.enableNotifications) {
+                return Listing.issueChangeNotifications(current.id, current, listing, cb);
+              } else {
+                return cb();
+              }
             },
             listing_photos: function(cb) {
-              if((program.enablePhotoFetch) && (listing.photo_count) > 0 && (current.photo_count != listing.photo_count)) {
+              if((program.enablePhotoFetch) && (listing.photo_count > 0) && (current.photo_count != listing.photo_count)) {
                 console.log('UPDATED a LISTING PHOTOS'.cyan);
                 Listing.fetchPhotos(data.Matrix_Unique_ID, client, config, function(err, links) {
                   if(err)
