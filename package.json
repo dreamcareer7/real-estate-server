@@ -35,7 +35,7 @@
     "pg": "^3.6.3",
     "request": "^2.49.0",
     "rets-client": "^1.1.5",
-    "sleep": "^2.0.0",
+    "sleep": "^3.0.0",
     "sprintf-js": "^1.0.3",
     "superstack": "0.0.4",
     "underscore": "^1.8.3",
