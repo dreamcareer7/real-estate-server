@@ -1,4 +1,4 @@
-SELECT (shortlists_users.push_enabled AND (NOT shortlists.archived)) AS ok
+SELECT (shortlists_users.push_enabled) AS ok
 FROM shortlists_users
 INNER JOIN shortlists
     ON shortlists_users.shortlist = shortlists.id
