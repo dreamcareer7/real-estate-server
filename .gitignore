@@ -11,3 +11,4 @@ scripts/announcements/subject_announcement.asc
 .DS_Store
 *.log
 newrelic.js
+docs/

@@ -84,7 +84,9 @@ INSERT INTO
              close_date,
              back_on_market_date,
              deposit_amount,
-             photo_count
+             photo_count,
+             dom,
+             cdom
             )
 VALUES ($1,
         $2,
@@ -171,5 +173,7 @@ VALUES ($1,
         $83,
         $84,
         $85,
-        $86
+        $86,
+        $87,
+        $88
        ) RETURNING id
