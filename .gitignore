@@ -1,5 +1,6 @@
 node_modules
 lib/config.js
+lib/config.js.v1
 lib/sslcert/server.key
 lib/sslcert/server.crt
 scripts/ntreis/timing.config.js

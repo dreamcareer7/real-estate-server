@@ -11,6 +11,7 @@ AND CASE
     ELSE TRUE
     END
 AND ((video_url IS NOT NULL) OR (document_url IS NOT NULL) OR (image_url IS NOT NULL))
+AND deleted_at IS NULL
 ORDER BY
     CASE $2
         WHEN 'Since_C' THEN created_at

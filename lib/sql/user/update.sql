@@ -5,5 +5,6 @@ SET first_name = $1,
     phone_number = $4,
     profile_image_url = $5,
     cover_image_url = $6,
-    user_type = $7
+    user_type = $7,
+    updated_at = NOW()
 WHERE id = $8

@@ -1,10 +1,10 @@
-SELECT room
+SELECT room,
+       (COUNT(*) OVER())::INT AS total
 FROM rooms_users
 INNER JOIN rooms
     ON rooms_users.room = rooms.id
 WHERE "user" = $1
-    rooms_user.deleted_at IS NULL
-    rooms.deleted_at IS NULL
+    AND rooms.deleted_at IS NULL
     AND CASE WHEN $2 = 'Since_C' THEN rooms.created_at > TIMESTAMP WITH TIME ZONE 'EPOCH' + $3 * INTERVAL '1 MICROSECOND'
              WHEN $2 = 'Max_C' THEN rooms.created_at < TIMESTAMP WITH TIME ZONE 'EPOCH' + $3 * INTERVAL '1 MICROSECOND'
              WHEN $2 = 'Since_U' THEN rooms.updated_at > TIMESTAMP WITH TIME ZONE 'EPOCH' + $3 * INTERVAL '1 MICROSECOND'

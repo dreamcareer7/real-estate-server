@@ -1,3 +1,3 @@
 UPDATE rooms
-SET alert_index = $2
+SET deleted_at = NOW()
 WHERE id = $1
