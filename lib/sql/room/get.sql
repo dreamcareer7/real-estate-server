@@ -4,6 +4,5 @@ SELECT 'room' AS TYPE,
        EXTRACT(EPOCH FROM updated_at) AS updated_at,
        EXTRACT(EPOCH FROM deleted_at) AS deleted_at
 FROM rooms
-WHERE id = $1 AND
-      deleted_at IS NULL
+WHERE id = $1
 LIMIT 1
