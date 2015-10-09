@@ -1,5 +1,5 @@
 INSERT INTO messages(
-    message_room,
+    room,
     message_type,
     comment,
     image_url,
@@ -8,7 +8,6 @@ INSERT INTO messages(
     object,
     author,
     image_thumbnail_url,
-    viewable_by,
     notification
 )
 VALUES($1,
@@ -20,6 +19,5 @@ VALUES($1,
        $7,
        $8,
        $9,
-       $10,
-       $11)
+       $10)
 RETURNING id;
