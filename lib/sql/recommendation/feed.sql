@@ -1,12 +1,26 @@
+WITH recs AS (
+    SELECT recommendations.id,
+           recommendations.hidden,
+           recommendations.created_at,
+           recommendations.updated_at,
+           recommendations.referring_alerts,
+           ARRAY_AGG(recommendations_eav."user") FILTER (WHERE recommendations_eav.action = 'Read') AS read_by
+     FROM recommendations
+     FULL JOIN recommendations_eav ON recommendations_eav.recommendation = recommendations.id
+     WHERE recommendations.room = $2 AND
+           recommendations.deleted_at IS NULL AND
+           recommendations.hidden = FALSE AND
+           COALESCE(ARRAY_LENGTH(recommendations.referring_alerts, 1), 0) > 0
+     GROUP BY recommendations.id,
+              recommendations.hidden,
+              recommendations.created_at,
+              recommendations.updated_at,
+              recommendations.referring_alerts
+)
 SELECT id,
        (COUNT(*) OVER())::INT AS total
-FROM recommendations
-WHERE
-  COALESCE(ARRAY_LENGTH(referring_alerts, 1), 0) > 0 AND
-  recommendations.referred_user = $1 AND
-  recommendations.referred_shortlist = $2 AND
-  recommendations.read IS FALSE AND
-  recommendations.hidden = FALSE
+FROM recs
+WHERE (NOT ($1 = ANY (COALESCE(read_by, '{}'))))
 AND CASE
     WHEN $3 = 'Since_C' THEN created_at > TIMESTAMP WITH TIME ZONE 'EPOCH' + $4 * INTERVAL '1 MICROSECOND'
     WHEN $3 = 'Max_C' THEN created_at < TIMESTAMP WITH TIME ZONE 'EPOCH' + $4 * INTERVAL '1 MICROSECOND'
