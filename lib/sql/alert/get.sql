@@ -4,6 +4,7 @@ SELECT *,
        ST_AsGeoJSON(points) AS points,
        EXTRACT(EPOCH FROM created_at) AS created_at,
        EXTRACT(EPOCH FROM updated_at) AS updated_at,
+       EXTRACT(EPOCH FROM deleted_at) AS deleted_at,
        property_subtypes::text[] AS property_subtypes
 FROM alerts
 WHERE id = $1
