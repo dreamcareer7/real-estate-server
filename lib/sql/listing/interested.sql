@@ -1,5 +1,7 @@
-SELECT DISTINCT(referred_shortlist) AS id
+SELECT DISTINCT(recommendations.room) AS id
 FROM recommendations
-WHERE object = $1 AND
-      (favorited IS TRUE OR
-       added_tour IS TRUE)
+INNER JOIN recommendations_eav
+ON recommendations.id = recommendations_eav.recommendation
+WHERE recommendations.listing = $1 AND
+      (recommendations_eav.action = 'Favorited' OR
+       recommendations_eav.action = 'TourRequested')

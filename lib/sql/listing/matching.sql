@@ -1,5 +1,5 @@
 SELECT id,
-       shortlist
+       room
 FROM alerts
 WHERE $1 >= minimum_price AND
       $1 <= maximum_price AND
@@ -15,4 +15,4 @@ WHERE $1 >= minimum_price AND
       COALESCE($10 = pool, TRUE) = TRUE AND
       COALESCE($11 > maximum_lot_square_meters, TRUE) = TRUE AND
       COALESCE($11 < minimum_lot_square_meters, TRUE) = TRUE AND
-      archived IS FALSE
+      deleted_at IS NULL
