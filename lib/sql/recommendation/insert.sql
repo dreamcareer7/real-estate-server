@@ -2,7 +2,7 @@ INSERT INTO
     recommendations(recommendation_type,
                     source,
                     source_url,
-                    referring_alerts,
+                    referring_objects,
                     room,
                     listing,
                     matrix_unique_id)

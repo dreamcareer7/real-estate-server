@@ -3,7 +3,7 @@ WITH recs AS (
            recommendations.hidden,
            recommendations.created_at,
            recommendations.updated_at,
-           recommendations.referring_alerts,
+           recommendations.referring_objects,
            COUNT(messages.id) FILTER (WHERE messages.id IS NOT NULL) AS message_count
      FROM recommendations
      FULL JOIN messages ON messages.object = recommendations.id
@@ -14,7 +14,7 @@ WITH recs AS (
               recommendations.hidden,
               recommendations.created_at,
               recommendations.updated_at,
-              recommendations.referring_alerts
+              recommendations.referring_objects
 )
 SELECT id,
        (COUNT(*) OVER())::INT AS total,

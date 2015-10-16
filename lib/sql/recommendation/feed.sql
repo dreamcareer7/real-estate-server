@@ -3,19 +3,19 @@ WITH recs AS (
            recommendations.hidden,
            recommendations.created_at,
            recommendations.updated_at,
-           recommendations.referring_alerts,
+           recommendations.referring_objects,
            ARRAY_AGG(recommendations_eav."user") FILTER (WHERE recommendations_eav.action = 'Read') AS read_by
      FROM recommendations
      FULL JOIN recommendations_eav ON recommendations_eav.recommendation = recommendations.id
      WHERE recommendations.room = $2 AND
            recommendations.deleted_at IS NULL AND
            recommendations.hidden = FALSE AND
-           COALESCE(ARRAY_LENGTH(recommendations.referring_alerts, 1), 0) > 0
+           COALESCE(ARRAY_LENGTH(recommendations.referring_objects, 1), 0) > 0
      GROUP BY recommendations.id,
               recommendations.hidden,
               recommendations.created_at,
               recommendations.updated_at,
-              recommendations.referring_alerts
+              recommendations.referring_objects
 )
 SELECT id,
        (COUNT(*) OVER())::INT AS total
