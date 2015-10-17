@@ -8,7 +8,6 @@ INSERT INTO messages(
     recommendation,
     reference,
     author,
-    image_thumbnail_url,
     notification
 )
 VALUES($1,
@@ -20,6 +19,5 @@ VALUES($1,
        $7,
        $8,
        $9,
-       $10,
-       $11)
+       $10)
 RETURNING id;
