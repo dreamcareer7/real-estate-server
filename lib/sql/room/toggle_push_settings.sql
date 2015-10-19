@@ -1,4 +1,4 @@
-UPDATE shortlists_users
+UPDATE rooms_users
 SET push_enabled = $3
 WHERE "user" = $1 AND
-      shortlist = $2
+      room = $2

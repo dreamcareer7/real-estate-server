@@ -13,9 +13,8 @@ require('../../lib/models/Address.js');
 require('../../lib/models/Property.js');
 require('../../lib/models/Listing.js');
 require('../../lib/models/Recommendation.js');
-require('../../lib/models/Shortlist.js');
+require('../../lib/models/Room.js');
 require('../../lib/models/User.js');
-require('../../lib/models/MessageRoom.js');
 
 Address.getBatchOfAddressesWithoutLatLongGoogle(config.google.address_batch_size, function(err, address_ids) {
   if(err) {

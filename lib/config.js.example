@@ -2,7 +2,7 @@ module.exports = {
   pg: {
     connection: {
       user: 'ashkan',
-      database: 'shortlisted',
+      database: 'rechat',
       password: '',
     }
   },
