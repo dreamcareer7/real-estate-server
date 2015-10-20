@@ -24,6 +24,7 @@
     "express": "^4.10.4",
     "express-winston": "^0.2.9",
     "googlemaps": "^1.0.1",
+    "kue": "^0.9.6",
     "longjohn": "^0.2.7",
     "multiparty": "^4.1.1",
     "newrelic": "^1.19.2",
