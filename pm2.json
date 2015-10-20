@@ -17,6 +17,10 @@
         {
             "script": "./scripts/geocoding/bing_update_latlong.js",
             "name": "Bing Geocoder"
+        },
+        {
+            "script": "./scripts/urban_airship/urban_airship.js",
+            "name": "Urban Airship Job-Queue"
         }
     ]
 }

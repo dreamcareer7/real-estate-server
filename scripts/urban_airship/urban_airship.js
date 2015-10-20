@@ -1,10 +1,11 @@
+require('../connection.js');
+require('../../lib/models/index.js')();
+
 var UrbanAirshipPush = require('urban-airship-push');
 var async = require('async');
-require('../../lib/models/index.js')();
 var queue = require('kue').createQueue();
 var config = require('../../lib/config.js');
 var airship = new UrbanAirshipPush(config.airship);
-require('../connection.js');
 
 function airship_transport_send_device(notification, token, cb) {
   var pushInfo = {
@@ -43,19 +44,19 @@ function airship_transport_send(user_id, room_id, notification, cb) {
     room: Room.get.bind(null, room_id),
     tokens: ['user', Notification.getDeviceTokensForUser.bind(null, user_id)],
     user_ok_for_push: ['user', User.isPushOK.bind(null, user_id)],
-    room_ok_for_push: ['user', 'room',Room.isPushOK.bind(null, user_id, room_id)],
+    room_ok_for_push: ['user', 'room', Room.isPushOK.bind(null, user_id, room_id)],
     send: ['tokens',
-          'user_ok_for_push',
-          'room_ok_for_push',
-          function(cb, results) {
-            if (results.user_ok_for_push && results.room_ok_for_push) {
-              async.map(results.tokens, function(token, cb) {
-                return airship_transport_send_device(notification, token, cb);
-              }, cb);
-            } else {
-              return cb();
-            }
-    }]
+           'user_ok_for_push',
+           'room_ok_for_push',
+           function(cb, results) {
+             if (results.user_ok_for_push && results.room_ok_for_push) {
+               async.map(results.tokens, function(token, cb) {
+                 return airship_transport_send_device(notification, token, cb);
+               }, cb);
+             } else {
+               return cb();
+             }
+           }]
   }, cb);
 }
 
