@@ -5,7 +5,8 @@ SELECT *,
        EXTRACT(EPOCH FROM contacts.deleted_at) AS deleted_at
 FROM contacts
 WHERE
-  "user" = $1
+  "user" = $1 AND
+  deleted_at IS NULL
 AND CASE
     WHEN $2 = 'Since_C' THEN created_at > TIMESTAMP WITH TIME ZONE 'EPOCH' + $3 * INTERVAL '1 MICROSECOND'
     WHEN $2 = 'Max_C' THEN created_at < TIMESTAMP WITH TIME ZONE 'EPOCH' + $3 * INTERVAL '1 MICROSECOND'
