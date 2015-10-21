@@ -34,6 +34,7 @@ function airship_transport_send_device(notification, token, cb) {
       return cb();
     }
 
+    console.log('Job completed successfully');
     return cb(null, data);
   });
 }
@@ -62,5 +63,6 @@ function airship_transport_send(user_id, room_id, notification, cb) {
 
 
 queue.process('airship_transport_send', function(job, done) {
-  airship_transport_send(job.data.user_id, job.data.room_id, job.data.airship_notification);
+  console.log('New Job');
+  airship_transport_send(job.data.user_id, job.data.room_id, job.data.airship_notification, done);
 });
