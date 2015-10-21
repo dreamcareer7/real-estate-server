@@ -3,8 +3,9 @@ require('../../lib/models/index.js')();
 
 var UrbanAirshipPush = require('urban-airship-push');
 var async = require('async');
-var queue = require('kue').createQueue();
 var config = require('../../lib/config.js');
+var queue = require('../../lib/utils/queue.js');
+
 var airship = new UrbanAirshipPush(config.airship);
 
 function airship_transport_send_device(notification, token, cb) {
