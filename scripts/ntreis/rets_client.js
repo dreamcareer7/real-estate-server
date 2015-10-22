@@ -518,7 +518,6 @@ function fetch() {
 
                 var timeoutReached = false;
                 var timeout = setTimeout(function() {
-                  console.log('Timeout reached');
                   timeoutReached = true;
                   cb('Timeout on RETS client reached');
                 }, config.ntreis.timeout);
