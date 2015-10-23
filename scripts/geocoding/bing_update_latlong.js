@@ -27,7 +27,7 @@ Address.getBatchOfAddressesWithoutLatLongBing(config.bing.address_batch_size, fu
                  config.bing.concurrency,
                  function(r, cb) {
                    sleep.usleep(config.bing.staging);
-                   return Address.updateGeoFromBingDirect(r, cb);
+                   return Address.updateGeoFromBing(r, cb);
                  },
                  function(err, results) {
                    if(err) {

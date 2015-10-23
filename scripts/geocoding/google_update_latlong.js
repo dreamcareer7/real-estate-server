@@ -27,7 +27,7 @@ Address.getBatchOfAddressesWithoutLatLongGoogle(config.google.address_batch_size
                  config.google.concurrency,
                  function(r, cb) {
                    sleep.usleep(config.google.staging);
-                   return Address.updateGeoFromGoogleDirect(r, cb);
+                   return Address.updateGeoFromGoogle(r, cb);
                  },
                  function(err, results) {
                    if(err) {
