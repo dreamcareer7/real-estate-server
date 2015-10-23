@@ -174,6 +174,6 @@ VALUES ($1,
         $84,
         $85,
         $86,
-        $87,
-        $88
+        NOW() - $87 * INTERVAL '1 DAY',
+        NOW() - $88 * INTERVAL '1 DAY'
        ) RETURNING id
