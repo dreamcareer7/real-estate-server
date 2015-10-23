@@ -3,34 +3,34 @@ global.frisby = require('frisby');
 var config = require('../lib/config.js');
 var async  = require('async');
 
-var URL = 'http://localhost:'+config.http.port;
+var URL = config.tests.base_url + ':' + config.http.port;
 
 frisby.globalSetup({
   request: {
-    json:true
+    json: true
   }
 });
 
 var auth_params = {
-  client_id:'bf0da47e-7226-11e4-905b-0024d71b10fc',
-  client_secret:'secret',
-  username:'d@d.com',
-  password:'foo',
-  grant_type:'password',
+  client_id: config.tests.client_id,
+  client_secret: config.tests.client_secret,
+  username: config.tests.user,
+  password: config.tests.password,
+  grant_type: 'password',
 }
 
 var authorize = function(cb) {
   return frisby.create('get token')
-    .post(URL+'/oauth2/token', auth_params)
+    .post(URL + '/oauth2/token', auth_params)
     .expectStatus(200)
     .afterJSON(function(json) {
       frisby.globalSetup({
-        timeout:10000,
+        timeout: 10000,
         request: {
-          json:true,
-          baseUri:URL,
+          json: true,
+          baseUri: URL,
           headers: {
-            Authorization: 'Bearer '+json.access_token
+            Authorization: 'Bearer ' + json.access_token
           }
         }
       });

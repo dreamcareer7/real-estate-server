@@ -1,4 +1,4 @@
-var room = {"title":"","client_type":"Buyer","room_type":"Group"}
+var room = require('./data/room.js');
 
 var createRoom = (cb) => {
   return frisby.create('create room')
