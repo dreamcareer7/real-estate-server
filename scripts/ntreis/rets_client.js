@@ -511,7 +511,8 @@ function fetch() {
             client.once('connection.success', function() {
               client.getTable("Property", "Listing");
               var fields;
-              var query = (program.initial) ? ('(MATRIX_UNIQUE_ID=' + results.last_run + '+),(STATUS=A,AC,AOC,AKO)') : ('(MatrixModifiedDT=' + results.last_run + ')')
+              var query = (program.initial) ? ('(MATRIX_UNIQUE_ID=' + results.last_run + '+),(STATUS=A,AC,AOC,AKO)')
+                        : ('(MatrixModifiedDT=' + results.last_run + ')')
               console.log('Notice:'.cyan, 'Performing', query);
               client.once('metadata.table.success', function(table) {
                 fields = table.Fields;
