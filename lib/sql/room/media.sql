@@ -1,6 +1,6 @@
 SELECT id
 FROM messages
-WHERE message_room = $1
+WHERE room = $1
 AND CASE
     WHEN $2 = 'Since_C' THEN created_at > TIMESTAMP WITH TIME ZONE 'EPOCH' + $3 * INTERVAL '1 MICROSECOND'
     WHEN $2 = 'Max_C' THEN created_at < TIMESTAMP WITH TIME ZONE 'EPOCH' + $3 * INTERVAL '1 MICROSECOND'
