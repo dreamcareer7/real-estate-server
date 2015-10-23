@@ -2,7 +2,7 @@ var Tests    = require('./Tests.js');
 
 var config   = require('../lib/config.js');
 var user     = require('./data/user.js');
-var address  = require('./data/alert.js')
+var address  = require('./data/address.js')
 
 var frisby   = Tests.frisby;
 var password = config.tests.password;

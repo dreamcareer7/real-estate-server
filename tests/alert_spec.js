@@ -20,8 +20,8 @@ var createAlert = (cb) => {
          .after(cb)
          .expectStatus(200)
          .expectJSON({
-           code:'OK',
-           data:criteria
+           code: 'OK',
+           data: criteria
          });
 }
 

@@ -1,35 +1,36 @@
-var room = require('./data/room.js');
+var Tests = require('./Tests.js');
+var room  = require('./data/room.js');
 
 var createRoom = (cb) => {
   return frisby.create('create room')
-    .post('/rooms', room)
-    .expectStatus(201)
-    .expectJSON({
-      code:'OK',
-      data:room
-    })
-    .afterJSON(function(json) {
-      room.id = json.data.id;
-      cb(null, json)
-    });
+         .post('/rooms', room)
+         .expectStatus(201)
+         .expectJSON({
+           code: 'OK',
+           data: room
+         })
+         .afterJSON(function(json) {
+           room.id = json.data.id;
+           cb(null, json)
+         });
 }
 
 var getRoom = (cb) => {
   return frisby.create('get room')
-    .get('/rooms/'+room.id)
-    .expectStatus(200)
-    .expectJSON({
-      code:'OK',
-      data:room
-    })
-    .after(cb);
+         .get('/rooms/' + room.id)
+         .expectStatus(200)
+         .expectJSON({
+           code: 'OK',
+           data: room
+         })
+         .after(cb);
 }
 
 var deleteRoom = (cb) => {
   return frisby.create('delete room')
-    .delete('/rooms/'+room.id)
-    .expectStatus(204)
-    .after(cb);
+         .delete('/rooms/' + room.id)
+         .expectStatus(204)
+         .after(cb);
 }
 
 var tasks = {
@@ -38,6 +39,6 @@ var tasks = {
   deleteRoom
 };
 
-// Tests.run(tasks);
+Tests.run(tasks);
 
 module.exports = tasks;

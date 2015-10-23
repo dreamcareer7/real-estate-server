@@ -2,7 +2,6 @@ global.frisby = require('frisby');
 
 var config = require('../lib/config.js');
 var async  = require('async');
-
 var URL = config.tests.base_url + ':' + config.http.port;
 
 frisby.globalSetup({
@@ -14,9 +13,9 @@ frisby.globalSetup({
 var auth_params = {
   client_id: config.tests.client_id,
   client_secret: config.tests.client_secret,
-  username: config.tests.user,
+  username: config.tests.username,
   password: config.tests.password,
-  grant_type: 'password',
+  grant_type: 'password'
 }
 
 var authorize = function(cb) {
@@ -51,7 +50,7 @@ function run(tasks) {
 }
 
 module.exports = {
-  auth:auth_params,
-  frisby:frisby,
-  run:run
+  auth: auth_params,
+  frisby: frisby,
+  run: run
 }
