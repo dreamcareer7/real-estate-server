@@ -19,12 +19,8 @@
             "name": "Bing Geocoder"
         },
         {
-            "script": "./scripts/urban_airship/urban_airship.js",
-            "name": "Urban Airship Job-Queue"
-        },
-        {
-            "script": "./scripts/ses/ses.js",
-            "name": "AWS SES (Email) Job-Queue"
+            "script": "./scripts/workers.js",
+            "name": "Airship and SES"
         }
     ]
 }
