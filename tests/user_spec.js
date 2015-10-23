@@ -1,52 +1,42 @@
-var Tests  = require('./Tests.js');
-var frisby = Tests.frisby;
+var Tests    = require('./Tests.js');
 
-var password = 'aaaaaa';
-var user =  {first_name:'John', last_name: 'Doe', email:'emilsedgh@gmail.com', user_type:'Client', 'password':password,'grant_type':'password'}
+var config   = require('../lib/config.js');
+var user     = require('./data/user.js');
+var address  = require('./data/address.js')
+
+var frisby   = Tests.frisby;
+var password = config.tests.password;
 
 var client = JSON.parse(JSON.stringify(user));
+
 client.client_id = Tests.auth.client_id;
 client.client_secret = Tests.auth.client_secret;
 
-var address = {
-  title:'title',
-  subtitle:'subtitle',
-  street_number:'#333',
-  street_name:'phu street',
-  city:'los majones',
-  state:'texas',
-  state_code:'TX',
-  postal_code:'12345',
-  neighborhood:'disastrous place',
-  street_suffix: 'foobar',
-  unit_number: '12D',
-  country:'United States',
-  country_code:'USA'
-}
 
+console.log(client);
 var createUser = (cb) => {
   return frisby.create('create user')
-    .post('/users', client)
-    .expectStatus(201)
-    .afterJSON(function(json) {
-      user.id = json.data.id;
-      delete user.password;
-      delete user.grant_type;
-      delete user.client_id;
-      delete user.client_secret;
-      cb(null, json)
-    });
+         .post('/users', client)
+         .expectStatus(201)
+         .afterJSON(function(json) {
+           user.id = json.data.id;
+           delete user.password;
+           delete user.grant_type;
+           delete user.client_id;
+           delete user.client_secret;
+           cb(null, json)
+         });
 }
 
 var getUser = function(cb) {
   return frisby.create('get user')
-  .get('/users/'+user.id)
-  .expectJSON({
-    code:'OK',
-    data:user,
-  })
-  .expectStatus(200)
-  .after(cb);
+         .get('/users/'+ user.id)
+         .expectJSON({
+           code: 'OK',
+           data: user,
+         })
+         .expectStatus(200)
+         .after(cb);
 }
 
 var updateUser = (cb) => {
@@ -55,37 +45,37 @@ var updateUser = (cb) => {
   updatedUser.password = password;
 
   return frisby.create('update user')
-  .put('/users/'+user.id, updatedUser)
-  .expectStatus(200)
-  .after(cb);
+         .put('/users/' + user.id, updatedUser)
+         .expectStatus(200)
+         .after(cb);
 }
 
 var resetPassword = (cb) => {
   return frisby.create('initiate password reset')
-  .post('/users/reset_password', {email:user.email})
-  .expectStatus(200)
-  .after(cb);
+         .post('/users/reset_password', {email: user.email})
+         .expectStatus(200)
+         .after(cb);
 }
 
 var deleteUser = (cb) => {
   return frisby.create('delete user')
-  .delete('/users/'+user.id)
-  .after(cb)
-  .expectStatus(204);
+         .delete('/users/' + user.id)
+         .after(cb)
+         .expectStatus(204);
 }
 
 var setAddress = (cb) => {
   return frisby.create('set address')
-  .put('/users/'+user.id+'/address', address)
-  .after(cb)
-  .expectStatus(200);
+         .put('/users/' + user.id + '/address', address)
+         .after(cb)
+         .expectStatus(200);
 }
 
 var deleteAddress = (cb) => {
   return frisby.create('delete address')
-  .delete('/users/'+user.id+'/address')
-  .after(cb)
-  .expectStatus(200);
+         .delete('/users/' + user.id + '/address')
+         .after(cb)
+         .expectStatus(200);
 }
 
 var tasks = {

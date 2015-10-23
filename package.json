@@ -11,7 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "amanda": "^0.5.1",
-    "async": "^0.9.0",
+    "async": "^1.4.2",
     "aws-sdk": "^2.1.10",
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.9.2",
@@ -23,6 +23,7 @@
     "deasync": "^0.1.0",
     "express": "^4.10.4",
     "express-winston": "^0.2.9",
+    "frisby": "^0.8.5",
     "googlemaps": "^1.0.1",
     "kue": "^0.9.6",
     "longjohn": "^0.2.7",
@@ -46,7 +47,7 @@
     "winston-postgre": "0.0.1"
   },
   "devDependencies": {
-    "frisby": "^0.8.3",
+    "frisby": "git+https://github.com/vlucas/frisby.git",
     "jasmine-node": "^1.14.5"
   }
 }
