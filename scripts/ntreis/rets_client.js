@@ -516,10 +516,21 @@ function fetch() {
               client.once('metadata.table.success', function(table) {
                 fields = table.Fields;
 
+                var timeoutReached = false;
+                var timeout = setTimeout(function() {
+                  timeoutReached = true;
+                  cb('Timeout on RETS client reached');
+                }, config.ntreis.timeout);
+
                 client.query("Property",
                              "Listing",
                              query,
                              function(err, data) {
+                               if(timeoutReached)
+                                 return console.log('We got a response, but it was way too late. We already consider it a timeout.');
+
+                               clearTimeout(timeout);
+
                                if (err)
                                  return cb(err);
 
