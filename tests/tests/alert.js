@@ -1,8 +1,7 @@
+var criteria = require('./data/alert_criteria.js');
 var room;
 
 var createRoom = (cb) => {
-  var criteria = require('./data/alert_criteria.js');
-
   var create = require('./room.js').createRoom;
   var fn = create((err, json) => {
     room = json.data;
