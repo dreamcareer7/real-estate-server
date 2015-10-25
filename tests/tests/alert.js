@@ -1,25 +1,14 @@
 var criteria = require('./data/alert_criteria.js');
-var room;
-
-var createRoom = (cb) => {
-  var create = require('./room.js').createRoom;
-  var fn = create((err, json) => {
-    room = json.data;
-    cb(null, json);
-  })
-
-  return fn;
-}
 
 var createAlert = (cb) => {
   return frisby.create('create alert')
-         .post('/rooms/' + room.id + '/alerts', criteria)
-         .after(cb)
-         .expectStatus(200)
-         .expectJSON({
-           code: 'OK',
-           data: criteria
-         });
+        .post('/rooms/' + results.createRoom.data.id + '/alerts', criteria)
+        .after(cb)
+        .expectStatus(200)
+        .expectJSON({
+          code: 'OK',
+          data: criteria
+        });
 }
 
 var vAlert = (cb) => {
@@ -32,7 +21,7 @@ var vAlert = (cb) => {
 
 
 module.exports = {
-  createRoom,
+  createRoom:require('./room.js').createRoom,
   createAlert,
   vAlert
 }
