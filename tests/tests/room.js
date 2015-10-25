@@ -3,7 +3,7 @@ var room    = require('./data/room.js');
 var create = (cb) => {
   return frisby.create('create room')
          .post('/rooms', room)
-         .expectStatus(201)
+         .expectStatus(200)
          .after(cb)
          .expectJSON({
            code: 'OK',
