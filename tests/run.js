@@ -25,7 +25,7 @@ require('./init.js')( () => {
 }).toss();
 
 function setupApp(cb) {
-  require('../lib/index.js')({
+  require('../lib/bootstrap.js')({
     port:config.tests.port,
     database:'../tests/database.js'
   })
