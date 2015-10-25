@@ -1,5 +1,4 @@
 var room    = require('./data/room.js');
-var message = require('./data/message.js');
 
 var create = (cb) => {
   return frisby.create('create room')
@@ -57,34 +56,13 @@ var getUserRooms = (cb) => {
          .after(cb);
 }
 
-var postMessage = (cb) => {
-  return frisby.create('post a message')
-        .post('/rooms/'+ results.room.create.data.id+'/messages', message)
-        .expectStatus(200)
-        .after(cb);
-}
 
-var getMessages = (cb) => {
-  return frisby.create('get messages')
-         .get('/rooms/' + results.room.create.data.id+'/messages')
-         .expectStatus(200)
-         .expectJSON({
-           code:'OK',
-           data:[
-           {}, //First message is "Blah joined"
-           results.room.postMessage.data
-          ]
-         })
-         .after(cb);
-}
 
 
 module.exports = {
   create,
   get:get,
   getUserRooms,
-  postMessage,
-  getMessages,
   removeUser,
   addUser,
   getUserRoomsAgain:getUserRooms,
