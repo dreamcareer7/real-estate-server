@@ -13,21 +13,30 @@ program
 
 function prepareTasks(cb) {
   function runFrisbies(tasks) {
-    var runF = function(task, key, cb) {
-      task((err, res) => {
-        global.results[key] = res;
+    var runF = function(task, cb) {
+      task.fn((err, res) => {
+        global.results[task.spec][task.name] = res.body;
         cb(err, res);
       }).toss();
     }
 
-    async.forEachOfSeries(tasks, runF);
+    async.forEachSeries(tasks, runF);
   }
 
-  var frisbies = {};
-  var registerFile = (filename) => {
-    console.log('Registering file', filename);
-    var fns = require(filename);
-    Object.keys(fns).map( (name) => frisbies[name] = fns[name] )
+  var frisbies = [];
+  var registerSpec = (spec) => {
+    var fns = require('./tests/'+spec+'.js');
+
+    if(!results[spec])
+      results[spec] = {};
+
+    Object.keys(fns).map( (name) => {
+      frisbies.push({
+        spec:spec,
+        name:name,
+        fn:fns[name]
+      })
+    })
   }
 
   var getSpecs = function(cb) {
@@ -41,12 +50,12 @@ function prepareTasks(cb) {
     cb(null, specs);
   }
 
-  getSpecs( (err, files) => {
+  getSpecs( (err, specs) => {
     if(err)
       return cb(err);
 
     require('./init.js')( () => {
-      files.map( (file) => registerFile('./tests/'+file+'.js') )
+      specs.map( (spec) => registerSpec(spec) )
       runFrisbies(frisbies);
     }).toss();
     cb();

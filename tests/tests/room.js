@@ -1,39 +1,36 @@
 var room  = require('./data/room.js');
 
-var createRoom = (cb) => {
+var create = (cb) => {
   return frisby.create('create room')
          .post('/rooms', room)
          .expectStatus(201)
+         .after(cb)
          .expectJSON({
            code: 'OK',
            data: room
          })
-         .afterJSON( (json) => {
-           room.id = json.data.id;
-           cb(null, json)
-         });
 }
 
-var getRoom = (cb) => {
+var get = (cb) => {
   return frisby.create('get room')
-         .get('/rooms/' + room.id)
+         .get('/rooms/' + results.room.create.data.id)
          .expectStatus(200)
          .expectJSON({
            code: 'OK',
-           data: room
+           data: results.room.create.data
          })
          .after(cb);
 }
 
-var deleteRoom = (cb) => {
+var del = (cb) => {
   return frisby.create('delete room')
-         .delete('/rooms/' + room.id)
+         .delete('/rooms/' + results.room.create.data.id)
          .expectStatus(204)
          .after(cb);
 }
 
 module.exports = {
-  createRoom,
-  getRoom,
-  deleteRoom
+  create,
+  get:get,
+  delele:del
 };

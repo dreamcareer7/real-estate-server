@@ -11,38 +11,31 @@ client.client_id = config.tests.client_id;
 client.client_secret = config.tests.client_secret;
 
 
-var createUser = (cb) => {
+var create = (cb) => {
   return frisby.create('create user')
          .post('/users', client)
          .expectStatus(201)
-         .afterJSON( (json) => {
-           user.id = json.data.id;
-           delete user.password;
-           delete user.grant_type;
-           delete user.client_id;
-           delete user.client_secret;
-           cb(null, json)
-         });
+         .after(cb);
 }
 
-var getUser = (cb) => {
+var get = (cb) => {
   return frisby.create('get user')
-         .get('/users/'+ user.id)
+         .get('/users/'+ results.user.create.data.id)
          .expectJSON({
            code: 'OK',
-           data: user,
+           data: results.user.create.data,
          })
          .expectStatus(200)
          .after(cb);
 }
 
-var updateUser = (cb) => {
+var update = (cb) => {
   var updatedUser = JSON.parse(JSON.stringify(user));
   updatedUser.first_name = 'updated first name';
   updatedUser.password = password;
 
   return frisby.create('update user')
-         .put('/users/' + user.id, updatedUser)
+         .put('/users/' + results.user.create.data.id, updatedUser)
          .expectStatus(200)
          .after(cb);
 }
@@ -54,32 +47,33 @@ var resetPassword = (cb) => {
          .after(cb);
 }
 
-var deleteUser = (cb) => {
+var del = (cb) => {
   return frisby.create('delete user')
-         .delete('/users/' + user.id)
+         .delete('/users/' + results.user.create.data.id)
          .after(cb)
          .expectStatus(204);
 }
 
 var setAddress = (cb) => {
   return frisby.create('set address')
-         .put('/users/' + user.id + '/address', address)
+         .put('/users/' + results.user.create.data.id + '/address', address)
          .after(cb)
          .expectStatus(200);
 }
 
 var deleteAddress = (cb) => {
   return frisby.create('delete address')
-         .delete('/users/' + user.id + '/address')
+         .delete('/users/' + results.user.create.data.id + '/address')
          .after(cb)
          .expectStatus(200);
 }
 
 module.exports = {
-  createUser,
-  getUser,
-  updateUser,
+  create,
+  get:get,
+  update,
   resetPassword,
   setAddress,
-  deleteAddress
+  deleteAddress,
+  delete:del
 }
