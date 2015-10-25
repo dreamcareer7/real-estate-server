@@ -1,24 +1,21 @@
-var Tests    = require('./Tests.js');
+var config   = require('../../lib/config.js');
 
-var config   = require('../lib/config.js');
 var user     = require('./data/user.js');
 var address  = require('./data/address.js')
 
-var frisby   = Tests.frisby;
 var password = config.tests.password;
 
 var client = JSON.parse(JSON.stringify(user));
 
-client.client_id = Tests.auth.client_id;
-client.client_secret = Tests.auth.client_secret;
+client.client_id = config.tests.client_id;
+client.client_secret = config.tests.client_secret;
 
 
-console.log(client);
 var createUser = (cb) => {
   return frisby.create('create user')
          .post('/users', client)
          .expectStatus(201)
-         .afterJSON(function(json) {
+         .afterJSON( (json) => {
            user.id = json.data.id;
            delete user.password;
            delete user.grant_type;
@@ -28,7 +25,7 @@ var createUser = (cb) => {
          });
 }
 
-var getUser = function(cb) {
+var getUser = (cb) => {
   return frisby.create('get user')
          .get('/users/'+ user.id)
          .expectJSON({
@@ -78,7 +75,7 @@ var deleteAddress = (cb) => {
          .expectStatus(200);
 }
 
-var tasks = {
+module.exports = {
   createUser,
   getUser,
   updateUser,
@@ -86,7 +83,3 @@ var tasks = {
   setAddress,
   deleteAddress
 }
-
-Tests.run(tasks);
-
-module.exports = tasks;

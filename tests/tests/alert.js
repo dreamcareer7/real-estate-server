@@ -1,11 +1,9 @@
-var Tests  = require('./Tests.js');
-var criteria = require('./data/alert_criteria.js');
-var vcriteria = require('./data/valert_criteria.js')
 var room;
-var curlify = require('request-as-curl');
 
 var createRoom = (cb) => {
-  var create = require('./room_spec.js').createRoom;
+  var criteria = require('./data/alert_criteria.js');
+
+  var create = require('./room.js').createRoom;
   var fn = create((err, json) => {
     room = json.data;
     cb(null, json);
@@ -26,20 +24,16 @@ var createAlert = (cb) => {
 }
 
 var vAlert = (cb) => {
+  var criteria = require('./data/valert_criteria.js')
   return frisby.create('virtual alert')
-         .post('/valerts', vcriteria)
+         .post('/valerts', criteria)
          .expectStatus(200)
-         .after( (err, res) => {
-           //     console.log(curlify(res.req, vcriteria));
-           //     console.log(res.headers['content-length']);
-           cb(err, res);
-         } );
+         .after(cb);
 }
 
-var tasks = {
-  //   createRoom,
-  //   createAlert,
+
+module.exports = {
+  createRoom,
+  createAlert,
   vAlert
 }
-
-Tests.run(tasks);

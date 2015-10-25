@@ -1,4 +1,3 @@
-var Tests = require('./Tests.js');
 var room  = require('./data/room.js');
 
 var createRoom = (cb) => {
@@ -9,7 +8,7 @@ var createRoom = (cb) => {
            code: 'OK',
            data: room
          })
-         .afterJSON(function(json) {
+         .afterJSON( (json) => {
            room.id = json.data.id;
            cb(null, json)
          });
@@ -33,12 +32,8 @@ var deleteRoom = (cb) => {
          .after(cb);
 }
 
-var tasks = {
+module.exports = {
   createRoom,
   getRoom,
   deleteRoom
 };
-
-Tests.run(tasks);
-
-module.exports = tasks;
