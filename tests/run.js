@@ -55,12 +55,17 @@ function prepareTasks(cb) {
     if(err)
       return cb(err);
 
-    require('./init.js')( () => {
+      var authorizeIndex = specs.indexOf('authorize');
+      if(authorizeIndex > -1)
+        specs.splice(specs.indexOf('authorize'), 1);
+
+      specs.unshift('authorize');
+
       specs.map( (spec) => registerSpec(spec) );
       runFrisbies(frisbies);
-    }).toss();
-    cb();
-  });
+
+      cb();
+  })
 }
 
 function setupApp(cb) {

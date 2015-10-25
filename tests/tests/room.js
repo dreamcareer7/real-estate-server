@@ -1,4 +1,5 @@
-var room  = require('./data/room.js');
+var room    = require('./data/room.js');
+var message = require('./data/message.js');
 
 var create = (cb) => {
   return frisby.create('create room')
@@ -29,8 +30,63 @@ var del = (cb) => {
          .after(cb);
 }
 
+var removeUser = (cb) => {
+  return frisby.create('remove user from a room')
+         .delete('/rooms/' + results.room.create.data.id+'/users/'+results.authorize.token.data.id)
+         .expectStatus(204)
+         .after(cb);
+}
+
+var addUser = (cb) => {
+  return frisby.create('add user to a room')
+         .post('/rooms/' + results.room.create.data.id+'/users', {
+           user_id:results.authorize.token.data.id
+          })
+         .expectStatus(200)
+         .after(cb);
+}
+
+var getUserRooms = (cb) => {
+  return frisby.create('get a user\'s rooms')
+         .get('/rooms')
+         .expectStatus(200)
+         .expectJSON({
+           code:'OK',
+           data:[]
+         })
+         .after(cb);
+}
+
+var postMessage = (cb) => {
+  return frisby.create('post a message')
+        .post('/rooms/'+ results.room.create.data.id+'/messages', message)
+        .expectStatus(200)
+        .after(cb);
+}
+
+var getMessages = (cb) => {
+  return frisby.create('get messages')
+         .get('/rooms/' + results.room.create.data.id+'/messages')
+         .expectStatus(200)
+         .expectJSON({
+           code:'OK',
+           data:[
+           {}, //First message is "Blah joined"
+           results.room.postMessage.data
+          ]
+         })
+         .after(cb);
+}
+
+
 module.exports = {
   create,
   get:get,
-  delele:del
+  getUserRooms,
+  postMessage,
+  getMessages,
+  removeUser,
+  addUser,
+  getUserRoomsAgain:getUserRooms,
+  delete:del
 };
