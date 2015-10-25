@@ -65,7 +65,8 @@ function prepareTasks(cb) {
 function setupApp(cb) {
   require('../lib/bootstrap.js')({
     port:config.tests.port,
-    database:'../tests/database.js'
+    database:'../tests/database.js',
+    logger:'../tests/logger.js'
   })
 
   setTimeout(cb, 500);
