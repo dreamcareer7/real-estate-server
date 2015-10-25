@@ -1,4 +1,4 @@
-var config = require('../lib/config.js');
+var config = require('../../lib/config.js');
 var URL = 'http://localhost:' + config.tests.port;
 
 frisby.globalSetup({
@@ -15,11 +15,11 @@ var auth_params = {
   grant_type: 'password'
 };
 
-var authorize = (cb) => {
+var token = (cb) => {
   return frisby.create('get token')
     .post(URL + '/oauth2/token', auth_params)
     .expectStatus(200)
-    .afterJSON( (json) => {
+    .after( (err, res, json) => {
       frisby.globalSetup({
         timeout: 10000,
         request: {
@@ -30,8 +30,8 @@ var authorize = (cb) => {
           }
         }
       });
-      cb();
+      cb(err, res);
   });
-};
+}
 
-module.exports = authorize;
+module.exports = {token};

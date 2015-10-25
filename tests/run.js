@@ -15,6 +15,7 @@ program
 function prepareTasks(cb) {
   function runFrisbies(tasks) {
     var runF = function(task, cb) {
+      console.log('Running', task);
       task.fn((err, res) => {
         global.results[task.spec][task.name] = res.body;
         cb(err, res);
@@ -55,12 +56,17 @@ function prepareTasks(cb) {
     if(err)
       return cb(err);
 
-    require('./init.js')( () => {
+      var authorizeIndex = specs.indexOf('authorize');
+      if(authorizeIndex > -1)
+        specs.splice(specs.indexOf('authorize'), 1);
+
+      specs.unshift('authorize');
+
       specs.map( (spec) => registerSpec(spec) );
       runFrisbies(frisbies);
-    }).toss();
-    cb();
-  });
+
+      cb();
+  })
 }
 
 function setupApp(cb) {
