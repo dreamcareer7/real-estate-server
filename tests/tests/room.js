@@ -29,8 +29,39 @@ var del = (cb) => {
          .after(cb);
 }
 
+var removeUser = (cb) => {
+  return frisby.create('remove user from a room')
+         .delete('/rooms/' + results.room.create.data.id+'/users/'+results.authorize.token.data.id)
+         .expectStatus(204)
+         .after(cb);
+}
+
+var addUser = (cb) => {
+  return frisby.create('add user to a room')
+         .post('/rooms/' + results.room.create.data.id+'/users', {
+           user_id:results.authorize.token.data.id
+          })
+         .expectStatus(200)
+         .after(cb);
+}
+
+var getUserRooms = (cb) => {
+  return frisby.create('get a user\'s rooms')
+         .get('/rooms')
+         .expectStatus(200)
+         .expectJSON({
+           code:'OK',
+           data:[]
+         })
+         .after(cb);
+}
+
 module.exports = {
   create,
   get:get,
-  delele:del
+  getUserRooms,
+  removeUser,
+  addUser,
+  getUserRoomsAgain:getUserRooms,
+  delete:del
 };
