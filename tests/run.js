@@ -1,9 +1,10 @@
+var fs      = require('fs');
 var jasmine = require('jasmine-node');
-global.frisby = require('frisby');
-var async  = require('async');
+var async   = require('async');
 var program = require('commander');
-var fs = require('fs');
-var config = require('../lib/config.js');
+var config  = require('../lib/config.js');
+
+global.frisby = require('frisby');
 global.results = {};
 
 program
@@ -18,14 +19,14 @@ function prepareTasks(cb) {
         global.results[task.spec][task.name] = res.body;
         cb(err, res);
       }).toss();
-    }
+    };
 
     async.forEachSeries(tasks, runF);
   }
 
   var frisbies = [];
   var registerSpec = (spec) => {
-    var fns = require('./tests/'+spec+'.js');
+    var fns = require('./tests/' + spec + '.js');
 
     if(!results[spec])
       results[spec] = {};
@@ -35,9 +36,9 @@ function prepareTasks(cb) {
         spec:spec,
         name:name,
         fn:fns[name]
-      })
-    })
-  }
+      });
+    });
+  };
 
   var getSpecs = function(cb) {
     if(program.args.length > 0)
@@ -45,8 +46,8 @@ function prepareTasks(cb) {
 
     var files = fs.readdirSync(__dirname+'/tests');
     var specs = files
-      .filter( (file) => file.substring(file.length-3, file.length) === '.js' )
-      .map( (file) => file.replace('.js', '') )
+          .filter( (file) => file.substring(file.length-3, file.length) === '.js' )
+          .map( (file) => file.replace('.js', '') );
     cb(null, specs);
   }
 
@@ -55,7 +56,7 @@ function prepareTasks(cb) {
       return cb(err);
 
     require('./init.js')( () => {
-      specs.map( (spec) => registerSpec(spec) )
+      specs.map( (spec) => registerSpec(spec) );
       runFrisbies(frisbies);
     }).toss();
     cb();
@@ -64,10 +65,10 @@ function prepareTasks(cb) {
 
 function setupApp(cb) {
   require('../lib/bootstrap.js')({
-    port:config.tests.port,
-    database:'../tests/database.js',
-    logger:'../tests/logger.js'
-  })
+    port: config.tests.port,
+    database: '../tests/database.js',
+    logger: '../tests/logger.js'
+  });
 
   setTimeout(cb, 500);
 }
@@ -78,7 +79,7 @@ function setupJasmine() {
 
   var print = function print(str) {
     process.stdout.write(str);
-  }
+  };
 
   var reporter = new jasmine.TerminalReporter({
     print: print,
@@ -96,5 +97,6 @@ prepareTasks( (err) => {
     console.log(err);
     process.exit();
   }
+
   async.series([setupApp,setupJasmine]);
-})
+});

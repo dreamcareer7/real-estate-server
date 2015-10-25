@@ -13,7 +13,7 @@ var auth_params = {
   username: config.tests.username,
   password: config.tests.password,
   grant_type: 'password'
-}
+};
 
 var authorize = (cb) => {
   return frisby.create('get token')
@@ -32,6 +32,6 @@ var authorize = (cb) => {
       });
       cb();
   });
-}
+};
 
 module.exports = authorize;

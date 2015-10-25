@@ -8,6 +8,6 @@ db.conn( (err, conn) => {
     domain.db = conn;
     domain.enter();
   });
-} );
+});
 
-module.exports = ()=>{}
+module.exports = () =>{};

@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jasmine-node tests",
+    "test": "node tests/run.js",
     "start": "node index.js"
   },
   "author": "",
