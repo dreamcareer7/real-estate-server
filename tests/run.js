@@ -15,7 +15,6 @@ program
 function prepareTasks(cb) {
   function runFrisbies(tasks) {
     var runF = function(task, cb) {
-      console.log('Running', task);
       task.fn((err, res) => {
         global.results[task.spec][task.name] = res.body;
         cb(err, res);
