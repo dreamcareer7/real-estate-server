@@ -12,6 +12,15 @@ program
   .option('-t', '--trace')
   .parse(process.argv);
 
+frisby.globalSetup({
+  timeout: 10000,
+  request: {
+    json: true,
+    baseUri:'http://localhost:' + config.tests.port
+  }
+});
+
+
 function prepareTasks(cb) {
   function runFrisbies(tasks) {
     var runF = function(task, cb) {

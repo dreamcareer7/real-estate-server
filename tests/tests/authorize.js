@@ -1,11 +1,4 @@
 var config = require('../../lib/config.js');
-var URL = 'http://localhost:' + config.tests.port;
-
-frisby.globalSetup({
-  request: {
-    json: true
-  }
-});
 
 var auth_params = {
   client_id: config.tests.client_id,
@@ -17,19 +10,16 @@ var auth_params = {
 
 var token = (cb) => {
   return frisby.create('get token')
-    .post(URL + '/oauth2/token', auth_params)
+    .post('/oauth2/token', auth_params)
     .expectStatus(200)
     .after( (err, res, json) => {
-      frisby.globalSetup({
-        timeout: 10000,
-        request: {
-          json: true,
-          baseUri: URL,
-          headers: {
-            Authorization: 'Bearer ' + json.access_token
-          }
-        }
-      });
+      var setup = frisby.globalSetup();
+
+      setup.request.headers = {
+        Authorization:'Bearer ' + json.access_token
+      }
+
+      frisby.globalSetup(setup);
       cb(err, res);
   });
 }
