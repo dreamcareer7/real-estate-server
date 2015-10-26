@@ -1,12 +1,19 @@
-WITH rooms AS (
-    SELECT rooms.id,
+WITH r AS (
+    SELECT rooms_users.room AS id,
+    JSON_AGG(users.first_name) AS first_names,
+    JSON_AGG(users.last_name) AS last_names,
+    JSON_AGG(users.email) AS emails,
+    JSON_AGG(users.phone_number) AS phone_numbers,
     ARRAY_AGG(rooms_users."user") AS users
-    FROM rooms
-    INNER JOIN rooms_users
-        ON rooms.id = rooms_users.room
-    GROUP BY rooms.id
+    FROM rooms_users
+    INNER JOIN users
+    ON rooms_users."user" = users.id
+    GROUP BY rooms_users.room
    )
-SELECT id
-FROM rooms
-WHERE $1 = ANY (rooms.users) AND
-      $2 <@ rooms.users
+SELECT id,
+       first_names,
+       last_names,
+       emails,
+       phone_numbers
+FROM r
+WHERE $1 = ANY (r.users)
