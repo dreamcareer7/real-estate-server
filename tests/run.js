@@ -99,7 +99,10 @@ function setupJasmine() {
     print: print,
     color: true,
     includeStackTrace: program.trace,
-    onComplete: process.exit
+    onComplete: (runner) => {
+      var code = runner.results().failedCount > 0;
+      process.exit(code);
+    }
   });
   jasmineEnv.addReporter(reporter);
 
