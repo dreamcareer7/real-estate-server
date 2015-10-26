@@ -109,11 +109,13 @@ function setupJasmine() {
   jasmineEnv.execute();
 }
 
-prepareTasks( (err) => {
-  if(err) {
-    console.log(err);
-    process.exit();
-  }
+setupApp( () => {
+  prepareTasks( (err) => {
+    if(err) {
+      console.log(err);
+      process.exit();
+    }
 
-  async.series([setupApp,setupJasmine]);
+    setupJasmine()
+  });
 });
