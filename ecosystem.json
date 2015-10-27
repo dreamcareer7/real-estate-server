@@ -31,7 +31,7 @@
       ref  : "origin/v2-develop",
       repo : "git@bitbucket.org:rechat/shortlisted-server.git",
       path : "/home/shortlisted/rechat-trunk",
-      "post-deploy" : "npm install && pm2 startOrRestart index.js --name trunk --env production",
+      "post-deploy" : "npm install && pm2 stop index || pm2 start index.js --name trunk --env production",
       "pre-deploy-local": "npm test"
     },
     dev : {
@@ -40,7 +40,7 @@
       ref  : "origin/v2-develop",
       repo : "git@bitbucket.org:rechat/shortlisted-server.git",
       path : "/home/shortlisted/rechat-dev",
-      "post-deploy" : "npm install && PM2_HOME='~/.pm2-dev' pm2 startOrRestart index.js --name dev --env production",
+      "post-deploy" : "npm install && PM2_HOME='~/.pm2-dev' pm2 stop index || pm2 start index.js --name dev --env production",
       "pre-deploy-local": "npm test"
     }
   }
