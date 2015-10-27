@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "node tests/run.js",
-    "start": "node index.js"
+    "start": "node index.js",
+    "migrate":"node node_modules/migrate/bin/migrate --state-file migrations/state"
   },
   "author": "",
   "license": "ISC",
@@ -27,6 +28,7 @@
     "googlemaps": "^1.0.1",
     "kue": "^0.9.6",
     "longjohn": "^0.2.7",
+    "migrate": "^0.2.2",
     "multiparty": "^4.1.1",
     "newrelic": "^1.19.2",
     "node-uuid": "^1.4.2",
