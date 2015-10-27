@@ -1,0 +1,9 @@
+{
+  apps: [
+    {
+      "script": "./scripts/ntreis/rets_client.js",
+      "name": "NTREIS Connector",
+      "args": ["-p", "-r", "-e"],
+    }
+  ]
+}
