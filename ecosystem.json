@@ -33,7 +33,7 @@
       path : "/home/shortlisted/rechat-trunk",
       "post-deploy" : "npm install && pm2 startOrRestart ecosystem.json5 --env production"
     },
-    trunk : {
+    dev : {
       user : "shortlisted",
       host : "tehlug.org",
       ref  : "origin/v2-develop",
