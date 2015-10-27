@@ -16,18 +16,14 @@
     "aws-sdk": "^2.1.10",
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.9.2",
-    "chance": "^0.7.1",
     "colors": "^1.0.3",
     "commander": "^2.8.0",
-    "compress": "^0.99.0",
     "compression": "^1.2.0",
     "deasync": "^0.1.0",
     "express": "^4.10.4",
     "express-winston": "^0.2.9",
-    "frisby": "^0.8.5",
     "googlemaps": "^1.0.1",
     "kue": "^0.9.6",
-    "longjohn": "^0.2.7",
     "migrate": "^0.2.2",
     "multiparty": "^4.1.1",
     "newrelic": "^1.19.2",
@@ -42,15 +38,13 @@
     "rets-client": "^1.1.5",
     "sleep": "^3.0.0",
     "sprintf-js": "^1.0.3",
-    "superstack": "0.0.4",
     "underscore": "^1.8.3",
     "urban-airship-push": "^0.1.0",
     "winston": "^0.8.3",
-    "winston-papertrail": "^1.0.1",
-    "winston-postgre": "0.0.1"
+    "winston-papertrail": "^1.0.1"
   },
   "devDependencies": {
-    "frisby": "git+https://github.com/vlucas/frisby.git",
+    "frisby": "^0.8.5",
     "jasmine-node": "^1.14.5"
   }
 }
