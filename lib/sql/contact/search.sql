@@ -2,7 +2,9 @@ SELECT contacts.id
 FROM contacts
 LEFT JOIN users
 ON contacts.contact_user = users.id
-WHERE contacts."user" = $1 AND (
+WHERE contacts."user" = $1 AND
+      contacts.deleted_at IS NULL AND
+    (
         contacts.email ~* $2 OR
         contacts.first_name ~* $2 OR
         contacts.last_name ~* $2 OR

@@ -2,8 +2,8 @@
 
 var db = require('../lib/utils/db');
 
-var sql_up   = 'SOME SQL TO DO';
-var sql_down = 'SOME SQL TO UNDO';
+var sql_up = 'DO $$ BEGIN BEGIN ALTER TABLE CONTACTS ADD COLUMN deleted_at timestamptz; EXCEPTION WHEN duplicate_column THEN RAISE NOTICE \'column deleted_at exists\'; END; END; $$;';
+var sql_down = 'ALTER TABLE contacts DROP COLUMN deleted_at';
 
 var runSql = (sql) => {
   return (next) => {
