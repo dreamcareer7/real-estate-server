@@ -1,8 +1,11 @@
 var criteria = require('./data/alert_criteria.js');
 
+
+registerSpec('room', ['create']);
+
 var create = (cb) => {
   return frisby.create('create alert')
-        .post('/rooms/' + results.alert.room.data.id + '/alerts', criteria)
+        .post('/rooms/' + results.room.create.data.id + '/alerts', criteria)
         .after(cb)
         .expectStatus(200)
         .expectJSON({
@@ -21,7 +24,6 @@ var virtual = (cb) => {
 
 
 module.exports = {
-  room:require('./room.js').create,
   create,
   virtual
 }

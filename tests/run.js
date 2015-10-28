@@ -34,13 +34,15 @@ function prepareTasks(cb) {
   }
 
   var frisbies = [];
-  var registerSpec = (spec) => {
+  global.registerSpec = (spec, tests) => {
     var fns = require('./tests/' + spec + '.js');
 
     if(!results[spec])
       results[spec] = {};
 
-    Object.keys(fns).map( (name) => {
+    Object.keys(fns)
+    .filter( (name) => (!tests || tests.indexOf(name) > -1) )
+    .map( (name) => {
       frisbies.push({
         spec:spec,
         name:name,
@@ -71,6 +73,7 @@ function prepareTasks(cb) {
       specs.unshift('authorize');
 
       specs.map( (spec) => registerSpec(spec) );
+    
       runFrisbies(frisbies);
 
       cb();
