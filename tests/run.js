@@ -9,7 +9,7 @@ global.results = {};
 
 program
   .usage('[options] <spec> <spec>')
-  .option('-t', '--trace')
+  .option('-k, --keepup', 'Keep the instance up, don\'t exit when tests are complete')
   .parse(process.argv);
 
 frisby.globalSetup({
@@ -24,6 +24,9 @@ frisby.globalSetup({
 function prepareTasks(cb) {
   function runFrisbies(tasks) {
     var runF = function(task, cb) {
+      if(global.results[task.spec][task.name])
+        return cb(null, global.results[task.spec][task.name]);
+
       task.fn((err, res) => {
         global.results[task.spec][task.name] = res.body;
         cb(err, res);
@@ -73,7 +76,7 @@ function prepareTasks(cb) {
       specs.unshift('authorize');
 
       specs.map( (spec) => registerSpec(spec) );
-    
+
       runFrisbies(frisbies);
 
       cb();
@@ -101,8 +104,10 @@ function setupJasmine() {
   var reporter = new jasmine.TerminalReporter({
     print: print,
     color: true,
-    includeStackTrace: program.trace,
+    includeStackTrace: false,
     onComplete: (runner) => {
+      if(program.keepup)
+        return ;
       var code = runner.results().failedCount > 0;
       process.exit(code);
     }
