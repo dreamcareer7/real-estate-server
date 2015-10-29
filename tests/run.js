@@ -9,24 +9,21 @@ global.results = {};
 
 program
   .usage('[options] <spec> <spec>')
-  .option('-k, --keepup', 'Keep the instance up, don\'t exit when tests are complete')
+  .option('-s, --sql', 'Run queries against database when running tests is over')
+  .option('-t, --trace', 'Show stack traces')
   .parse(process.argv);
 
 frisby.globalSetup({
-  timeout: 10000,
+  timeout: 20000,
   request: {
     json: true,
     baseUri:'http://localhost:' + config.tests.port
   }
 });
 
-
 function prepareTasks(cb) {
-  function runFrisbies(tasks) {
+  runFrisbies = function(tasks) {
     var runF = function(task, cb) {
-      if(global.results[task.spec][task.name])
-        return cb(null, global.results[task.spec][task.name]);
-
       task.fn((err, res) => {
         global.results[task.spec][task.name] = res.body;
         cb(err, res);
@@ -52,6 +49,8 @@ function prepareTasks(cb) {
         fn:fns[name]
       });
     });
+
+    return fns;
   };
 
   var getSpecs = function(cb) {
@@ -84,33 +83,53 @@ function prepareTasks(cb) {
 }
 
 function setupApp(cb) {
+  var prepareDatabase = () => {
+    var Domain = require('domain');
+    var db = require('../lib/utils/db');
+
+    var domain = Domain.create();
+
+    db.conn( (err, conn) => {
+      conn.query('BEGIN TRANSACTION ISOLATION LEVEL SERIALIZABLE', (err) => {
+        domain.db = conn;
+        domain.enter();
+      });
+    });
+
+    module.exports = () =>{};
+  }
+
   require('../lib/bootstrap.js')({
     port: config.tests.port,
-    database: '../tests/database.js',
+    database: prepareDatabase,
     logger: '../tests/logger.js'
   });
 
   setTimeout(cb, 500);
 }
 
+var jasmineEnv;
 function setupJasmine() {
-  var jasmineEnv = jasmine.getEnv();
+  jasmineEnv = jasmine.getEnv();
   jasmineEnv.updateInterval = 250;
 
   var print = function print(str) {
     process.stdout.write(str);
   };
 
+  var exit = (runner) => {
+    if(program.sql)
+      return ;
+
+    var code = runner.results().failedCount > 0;
+    process.exit(code);
+  }
+
   var reporter = new jasmine.TerminalReporter({
     print: print,
     color: true,
-    includeStackTrace: false,
-    onComplete: (runner) => {
-      if(program.keepup)
-        return ;
-      var code = runner.results().failedCount > 0;
-      process.exit(code);
-    }
+    includeStackTrace: program.trace,
+    onComplete: exit
   });
   jasmineEnv.addReporter(reporter);
 
@@ -126,4 +145,37 @@ setupApp( () => {
 
     setupJasmine()
   });
+});
+
+
+var pretty = require('prettyjson').render;
+
+var query = (sql) => {
+  savePoint( (err) => {
+    if(err) {
+      console.log(err.toString().red);
+      return ;
+    }
+
+    process.domain.db.query(sql.toString().trim(), (err, res) => {
+      if(err) {
+        console.log(err.toString().red);
+        process.domain.db.query('ROLLBACK TO SAVEPOINT point', () => {})
+        return ;
+      }
+      console.log(pretty(res.rows));
+    })
+  })
+}
+
+var savePoint = (cb) => {
+  process.domain.db.query('SAVEPOINT point', cb);
+}
+
+process.stdin.on('data', (command) => {
+  var command = command.toString().trim();
+  if(!command)
+    return ;
+
+  query(command)
 });
