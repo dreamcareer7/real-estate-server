@@ -29,4 +29,4 @@ module.exports = {
     avatars: 'shortlisted-test',
     user_covers: 'shortlisted-test'
   }
-}
+};

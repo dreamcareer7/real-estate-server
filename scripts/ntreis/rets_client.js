@@ -64,7 +64,6 @@ require('../../lib/models/S3.js');
 require('../../lib/models/Notification.js');
 require('../../lib/models/SES.js');
 require('../../lib/models/Crypto.js');
-require('../../lib/models/Email.js');
 require('../../lib/models/Invitation.js');
 require('../../lib/models/ObjectUtil.js');
 

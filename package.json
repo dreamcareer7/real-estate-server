@@ -38,6 +38,7 @@
     "rets-client": "^1.1.5",
     "sleep": "^3.0.0",
     "sprintf-js": "^1.0.3",
+    "twilio": "^2.5.1",
     "underscore": "^1.8.3",
     "urban-airship-push": "^0.1.0",
     "winston": "^0.8.3",
