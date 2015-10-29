@@ -6,7 +6,7 @@ WITH recs AS (
            recommendations.referring_objects,
            COUNT(messages.id) FILTER (WHERE messages.id IS NOT NULL) AS message_count
      FROM recommendations
-     FULL JOIN messages ON messages.object = recommendations.id
+     FULL JOIN messages ON messages.recommendation = recommendations.id
      WHERE recommendations.room = $2 AND
            recommendations.deleted_at IS NULL AND
            recommendations.hidden = FALSE
@@ -18,27 +18,28 @@ WITH recs AS (
 )
 SELECT id,
        (COUNT(*) OVER())::INT AS total,
-       lower($1)
+       LOWER($1),
+       LOWER($3)
 FROM recs
 WHERE message_count > 0
 AND CASE
-    WHEN $3 = 'Since_C' THEN created_at > TIMESTAMP WITH TIME ZONE 'EPOCH' + $4 * INTERVAL '1 MICROSECOND'
-    WHEN $3 = 'Max_C' THEN created_at < TIMESTAMP WITH TIME ZONE 'EPOCH' + $4 * INTERVAL '1 MICROSECOND'
-    WHEN $3 = 'Since_U' THEN updated_at > TIMESTAMP WITH TIME ZONE 'EPOCH' + $4 * INTERVAL '1 MICROSECOND'
-    WHEN $3 = 'Max_U' THEN updated_at < TIMESTAMP WITH TIME ZONE 'EPOCH' + $4 * INTERVAL '1 MICROSECOND'
-    WHEN $3 = 'Init_C' THEN created_at < NOW()
-    WHEN $3 = 'Init_U' THEN updated_at < NOW()
+    WHEN $4 = 'Since_C' THEN created_at > TIMESTAMP WITH TIME ZONE 'EPOCH' + $5 * INTERVAL '1 MICROSECOND'
+    WHEN $4 = 'Max_C' THEN created_at < TIMESTAMP WITH TIME ZONE 'EPOCH' + $5 * INTERVAL '1 MICROSECOND'
+    WHEN $4 = 'Since_U' THEN updated_at > TIMESTAMP WITH TIME ZONE 'EPOCH' + $5 * INTERVAL '1 MICROSECOND'
+    WHEN $4 = 'Max_U' THEN updated_at < TIMESTAMP WITH TIME ZONE 'EPOCH' + $5 * INTERVAL '1 MICROSECOND'
+    WHEN $4 = 'Init_C' THEN created_at < NOW()
+    WHEN $4 = 'Init_U' THEN updated_at < NOW()
     ELSE TRUE
     END
 ORDER BY
-    CASE $3
+    CASE $4
         WHEN 'Since_C' THEN created_at
         WHEN 'Since_U' THEN updated_at
     END,
-    CASE $3
+    CASE $4
         WHEN 'Max_C' THEN created_at
         WHEN 'Max_U' THEN updated_at
         WHEN 'Init_C' THEN created_at
         WHEN 'Init_U' THEN updated_at
     END
-LIMIT $5;
+LIMIT $6;
