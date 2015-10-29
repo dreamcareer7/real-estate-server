@@ -11,10 +11,10 @@ var runSql = (sql) => {
       if(err)
         return next(err);
 
-      client.query(sql, next)
-    })
-  }
-}
+      return client.query(sql, next);
+    });
+  };
+};
 
 exports.up = runSql(sql_up);
 exports.down = runSql(sql_down);
