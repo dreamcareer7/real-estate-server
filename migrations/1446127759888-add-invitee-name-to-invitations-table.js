@@ -2,8 +2,8 @@
 
 var db = require('../lib/utils/db');
 
-var sql_up   = 'SOME SQL TO DO';
-var sql_down = 'SOME SQL TO UNDO';
+var sql_up   = 'DO $$ BEGIN ALTER TABLE invitation_records ADD COLUMN invitee_name text NOT NULL; EXCEPTION WHEN duplicate_column THEN END; $$;';
+var sql_down = 'ALTER TABLE contacts DROP COLUMN invitee_name;';
 
 var runSql = (sql) => {
   return (next) => {

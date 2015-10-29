@@ -1,8 +1,8 @@
-'use strict'
+'use strict';
 
 var db = require('../lib/utils/db');
 
-var sql_up = 'DO $$ BEGIN BEGIN ALTER TABLE contacts ADD COLUMN deleted_at timestamptz; EXCEPTION WHEN duplicate_column THEN END; $$;';
+var sql_up = 'DO $$ BEGIN ALTER TABLE contacts ADD COLUMN deleted_at timestamptz; EXCEPTION WHEN duplicate_column THEN END; $$;';
 var sql_down = 'ALTER TABLE contacts DROP COLUMN deleted_at';
 
 var runSql = (sql) => {
