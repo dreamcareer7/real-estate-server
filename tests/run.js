@@ -35,7 +35,7 @@ function prepareTasks(cb) {
 
   var frisbies = [];
   global.registerSpec = (spec, tests) => {
-    var fns = require('./tests/' + spec + '.js');
+    var fns = require('./specs/' + spec + '.js');
 
     if(!results[spec])
       results[spec] = {};
@@ -57,7 +57,7 @@ function prepareTasks(cb) {
     if(program.args.length > 0)
       return cb(null, program.args);
 
-    var files = fs.readdirSync(__dirname+'/tests');
+    var files = fs.readdirSync(__dirname+'/specs');
     var specs = files
           .filter( (file) => file.substring(file.length-3, file.length) === '.js' )
           .map( (file) => file.replace('.js', '') );
