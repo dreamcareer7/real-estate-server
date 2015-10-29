@@ -2,7 +2,7 @@ registerSpec('alert', ['create']);
 
 var feed = (cb) => {
   return frisby.create('get feed')
-        .get('/rooms/' + results.room.create.data.id + '/recs/feed')
+        .get('/rooms/' + results.room.create.data.id + '/recs/feed?filter='+results.alert.create.data.id)
         .after(cb)
         .expectStatus(200)
         .expectJSON({
@@ -29,7 +29,7 @@ var favorites = (cb) => {
 
 var markAsFavorite = (cb) => {
   return frisby.create('favorite a rec')
-        .patch('/rooms/' + results.room.create.data.id + '/recs/'+results.recs.feed.data[1].id+'/favorite', {
+        .patch('/rooms/' + results.room.create.data.id + '/recs/'+results.recommendation.feed.data[1].id+'/favorite', {
           favorite:true
         })
         .after(cb)
@@ -43,7 +43,7 @@ var markAsFavoriteWorked = (cb) => {
         .expectStatus(200)
         .expectJSON({
           code: 'OK',
-          data:[results.recs.feed.data[1]]
+          data:[results.recommendation.feed.data[1]]
         })
         .expectJSONLength('data', 1);
 }
@@ -62,12 +62,12 @@ var seen = (cb) => {
 
 var markAsSeen = (cb) => {
   return frisby.create('mark a rec as seen')
-        .delete('/rooms/' + results.room.create.data.id + '/recs/feed/'+results.recs.feed.data[1].id)
+        .delete('/rooms/' + results.room.create.data.id + '/recs/feed/'+results.recommendation.feed.data[1].id)
         .after(cb)
         .expectStatus(200)
         .expectJSON({
           code:'OK',
-          data:results.recs.feed.data[1]
+          data:results.recommendation.feed.data[1]
         })
 }
 
@@ -83,7 +83,7 @@ var markAsSeenWorked = (cb) => {
             count:1,
             total:1
           },
-          data:[results.recs.feed.data[1]]
+          data:[results.recommendation.feed.data[1]]
         })
         .expectJSONLength('data', 1);
 }
