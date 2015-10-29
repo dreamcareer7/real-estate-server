@@ -10,8 +10,8 @@ WITH recs AS (
      WHERE recommendations.room = $2 AND
            recommendations.deleted_at IS NULL AND
            recommendations.hidden = FALSE AND CASE
-           WHEN $3::text IS NULL THEN COALESCE(ARRAY_LENGTH(recommendations.referring_objects, 1), 0) > 0
-           ELSE $3::uuid[] IN (referring_objects)
+           WHEN $3::uuid[] IS NULL THEN (COALESCE(ARRAY_LENGTH(recommendations.referring_objects, 1), 0) > 0)
+           ELSE ($3::uuid[] IN (referring_objects))
            END
      GROUP BY recommendations.id,
               recommendations.hidden,
