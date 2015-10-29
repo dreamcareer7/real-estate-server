@@ -14,11 +14,10 @@ var retrieve = (cb) => {
          .expectStatus(200)
          .expectJSON({
            code:'OK',
-           data:[
-           {}, //First message is "Blah joined"
-           results.message.post.data
-          ]
+           data:[]
          })
+         .expectJSON('data.?', results.message.post.data)
+         .expectJSONLength('data', 2)
          .after(cb);
 }
 
