@@ -7,8 +7,8 @@ exports.up = function(next) {
     if(err)
       return next(err);
 
-    client.query('CREATE INDEX properties_lot_square_meters_idx ON properties(lot_square_meters)', next)
-  })
+    return client.query('CREATE INDEX properties_lot_square_meters_idx ON properties(lot_square_meters)', next);
+  });
 };
 
 exports.down = function(next) {
@@ -16,6 +16,6 @@ exports.down = function(next) {
     if(err)
       return next(err);
 
-    client.query('DROP INDEX properties_lot_square_meters_idx', next)
-  })
+    return client.query('DROP INDEX properties_lot_square_meters_idx', next);
+  });
 };
