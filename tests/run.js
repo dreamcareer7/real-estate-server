@@ -3,11 +3,10 @@ var program = require('commander');
 var config  = require('../lib/config.js');
 var fork    = require('child_process').fork;
 var clui    = require('clui');
+var async   = require('async');
 
 program
   .usage('[options] <spec> <spec>')
-  .option('-s, --sql', 'Run queries against database when running tests is over')
-  .option('-t, --trace', 'Show stack traces')
   .parse(process.argv);
 
 var getSpecs = function(cb) {
@@ -21,31 +20,36 @@ var getSpecs = function(cb) {
   cb(null, specs);
 }
 
-function spawnProcesses(cb) {
-  getSpecs( (err, specs) => {
-    if(err)
-      return cb(err);
-
-    specs.map(spawnSpec);
-  })
-}
-
 var results = {};
 
 var updateUI = function() {
-  process.stdout.write('\033[9A');
+  var screen = new clui.LineBuffer({
+    x:0,
+    y:0,
+    width:'console',
+    height:'console'
+  });
 
   Object.keys(results).forEach( (spec) => {
     var result = results[spec];
 
-    var line = new clui.Line();
+    var line = new clui.Line(screen);
+
+    var icons = {
+      'Pending'  : '○',
+      'Running'  : '◌',
+      'Done'     : '●'
+    }
+
+    line.column( icons[result.state].green, 10);
+
     line.column( ('Spec: '+spec).green, 40);
 
-    if(results[spec]) {
+    if(result.tests.length > 0) {
 
       var s = '';
 
-      result.forEach( (test) => {
+      result.tests.forEach( (test) => {
         if(test.failed > 0)
           s += '■'.yellow;
         else
@@ -58,31 +62,60 @@ var updateUI = function() {
       line.column('Waiting'.yellow, 40)
     }
     line.fill();
-    line.output();
+    line.store();
+
 
     if(!result) return ;
-    result.forEach( (test) => {
-//       if(test.failed > 0)
-//         console.log(spec, test);
+    result.tests.forEach( (test) => {
+      if(test.failed < 1)
+        return ;
+
+      var line = new clui.Line(screen);
+      line.padding(15).column(test.name.red, 60);
+      line.fill().store();
     });
+  })
+
+  process.stdout.write('\033[9A');
+  screen.fill(new clui.Line(' ').fill());
+  screen.output();
+}
+
+function spawnProcesses(cb) {
+  getSpecs( (err, specs) => {
+    if(err)
+      return cb(err);
+
+    specs.map( (spec) => {
+      results[spec] = {
+        state:'Pending',
+        tests:[]
+      }
+    })
+
+    async.mapLimit(specs, 1, spawnSpec, cb);
   })
 }
 
-function spawnSpec(spec) {
+function spawnSpec(spec, cb) {
   var runner = fork(__dirname+'/runner.js', [spec]);
 
-  results[spec] = null;
-
+  results[spec].state = 'Running';
 
   runner.on('message', (m) => {
-    if(m.code !== 'done')
+    if(m.code !== 'test done')
       return ;
 
-    results[spec] = m.data;
+//     console.log(m);
+    results[spec].tests.push(m.test);
     updateUI();
+  });
 
-//     console.log('DONE', spec);
+  runner.on('exit', () => {
+    results[spec].state = 'Done';
     connections[spec].query('ROLLBACK', connections[spec].release);
+    cb();
+    updateUI();
   });
 }
 

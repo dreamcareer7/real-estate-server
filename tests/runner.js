@@ -6,7 +6,7 @@ global.frisby = require('frisby');
 global.results = {};
 
 frisby.globalSetup({
-  timeout: 40000,
+  timeout: 10000,
   request: {
     json: true,
     baseUri:'http://localhost:' + config.tests.port,
@@ -54,25 +54,20 @@ var prepareTasks = function() {
   return frisbies;
 }
 
-function reportData(runner) {
-  var data = [];
+function reportData(test) {
+  var results = test.results();
 
-
-  runner.suites().forEach( (suite) => {
-    var results = suite.results();
-
-    data.push({
-      name:suite.getFullName(),
-      description:suite.description,
-      total:results.totalCount,
-      passed:results.passedCount,
-      failed:results.failedCount
-    })
-  });
+  var data = {
+    name:test.getFullName(),
+    description:test.description,
+    total:results.totalCount,
+    passed:results.passedCount,
+    failed:results.failedCount
+  }
 
   process.send({
-    code:'done',
-    data
+    code:'test done',
+    test:data
   });
 }
 
@@ -87,7 +82,8 @@ function setupJasmine() {
 
   var reporter = new jasmine.JsApiReporter();
 
-  reporter.reportRunnerResults = reportData;
+  reporter.reportSuiteResults = reportData;
+  reporter.reportRunnerResults = process.exit;
 
   jasmineEnv.addReporter(reporter);
 
