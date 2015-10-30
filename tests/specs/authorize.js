@@ -15,9 +15,7 @@ var token = (cb) => {
     .after( (err, res, json) => {
       var setup = frisby.globalSetup();
 
-      setup.request.headers = {
-        Authorization:'Bearer ' + json.access_token
-      }
+      setup.request.headers['Authorization'] = 'Bearer ' + json.access_token;
 
       frisby.globalSetup(setup);
       cb(err, res);

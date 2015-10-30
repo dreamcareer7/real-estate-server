@@ -1,11 +1,8 @@
 var fs      = require('fs');
-var jasmine = require('jasmine-node');
-var async   = require('async');
 var program = require('commander');
 var config  = require('../lib/config.js');
-
-global.frisby = require('frisby');
-global.results = {};
+var fork    = require('child_process').fork;
+var clui    = require('clui');
 
 program
   .usage('[options] <spec> <spec>')
@@ -13,169 +10,129 @@ program
   .option('-t, --trace', 'Show stack traces')
   .parse(process.argv);
 
-frisby.globalSetup({
-  timeout: 20000,
-  request: {
-    json: true,
-    baseUri:'http://localhost:' + config.tests.port
-  }
-});
+var getSpecs = function(cb) {
+  if(program.args.length > 0)
+    return cb(null, program.args);
 
-function prepareTasks(cb) {
-  runFrisbies = function(tasks) {
-    var runF = function(task, cb) {
-      task.fn((err, res) => {
-        global.results[task.spec][task.name] = res.body;
-        cb(err, res);
-      }).toss();
-    };
+  var files = fs.readdirSync(__dirname+'/specs');
+  var specs = files
+        .filter( (file) => file.substring(file.length-3, file.length) === '.js' )
+        .map( (file) => file.replace('.js', '') );
+  cb(null, specs);
+}
 
-    async.forEachSeries(tasks, runF);
-  }
-
-  var frisbies = [];
-  global.registerSpec = (spec, tests) => {
-    var fns = require('./specs/' + spec + '.js');
-
-    if(!results[spec])
-      results[spec] = {};
-
-    Object.keys(fns)
-    .filter( (name) => (!tests || tests.indexOf(name) > -1) )
-    .map( (name) => {
-      frisbies.push({
-        spec:spec,
-        name:name,
-        fn:fns[name]
-      });
-    });
-
-    return fns;
-  };
-
-  var getSpecs = function(cb) {
-    if(program.args.length > 0)
-      return cb(null, program.args);
-
-    var files = fs.readdirSync(__dirname+'/specs');
-    var specs = files
-          .filter( (file) => file.substring(file.length-3, file.length) === '.js' )
-          .map( (file) => file.replace('.js', '') );
-    cb(null, specs);
-  }
-
+function spawnProcesses(cb) {
   getSpecs( (err, specs) => {
     if(err)
       return cb(err);
 
-      var authorizeIndex = specs.indexOf('authorize');
-      if(authorizeIndex > -1)
-        specs.splice(specs.indexOf('authorize'), 1);
+    specs.map(spawnSpec);
+  })
+}
 
-      specs.unshift('authorize');
+var results = {};
 
-      specs.map( (spec) => registerSpec(spec) );
+var updateUI = function() {
+  process.stdout.write('\033[9A');
 
-      runFrisbies(frisbies);
+  Object.keys(results).forEach( (spec) => {
+    var result = results[spec];
 
-      cb();
+    var line = new clui.Line();
+    line.column( ('Spec: '+spec).green, 40);
+
+    if(results[spec]) {
+
+      var s = '';
+
+      result.forEach( (test) => {
+        if(test.failed > 0)
+          s += '■'.yellow;
+        else
+          s += '■'.green;
+      });
+
+      line.column(s, 40);
+
+    } else {
+      line.column('Waiting'.yellow, 40)
+    }
+    line.fill();
+    line.output();
+
+    if(!result) return ;
+    result.forEach( (test) => {
+//       if(test.failed > 0)
+//         console.log(spec, test);
+    });
+  })
+}
+
+function spawnSpec(spec) {
+  var runner = fork(__dirname+'/runner.js', [spec]);
+
+  results[spec] = null;
+
+
+  runner.on('message', (m) => {
+    if(m.code !== 'done')
+      return ;
+
+    results[spec] = m.data;
+    updateUI();
+
+//     console.log('DONE', spec);
+    connections[spec].query('ROLLBACK', connections[spec].release);
+  });
+}
+
+var Domain = require('domain');
+var db = require('../lib/utils/db');
+
+var connections = {};
+
+var database = (app) => {
+  app.use( (req, res, next) => {
+    var domain = Domain.create();
+    var spec = req.headers['x-spec'];
+
+    if(connections[spec]) {
+      domain.db = connections[spec];
+      domain.run(next);
+      return ;
+    }
+
+    db.conn( (err, conn, release) => {
+      var end = res.end;
+      res.end = function(data, encoding, callback) {
+        release();
+        end.call(res, data, encoding, callback);
+      }
+      req.on('close', release);
+      conn.query('BEGIN', (err) => {
+        connections[spec] = conn;
+        domain.db = conn;
+        domain.run(next);
+      });
+    });
   })
 }
 
 function setupApp(cb) {
-  var prepareDatabase = () => {
-    var Domain = require('domain');
-    var db = require('../lib/utils/db');
-
-    var domain = Domain.create();
-
-    db.conn( (err, conn) => {
-      conn.query('BEGIN TRANSACTION ISOLATION LEVEL SERIALIZABLE', (err) => {
-        domain.db = conn;
-        domain.enter();
-      });
-    });
-
-    module.exports = () =>{};
-  }
-
   require('../lib/bootstrap.js')({
     port: config.tests.port,
-    database: prepareDatabase,
+    database: database,
     logger: '../tests/logger.js'
   });
 
   setTimeout(cb, 500);
 }
 
-var jasmineEnv;
-function setupJasmine() {
-  jasmineEnv = jasmine.getEnv();
-  jasmineEnv.updateInterval = 250;
-
-  var print = function print(str) {
-    process.stdout.write(str);
-  };
-
-  var exit = (runner) => {
-    if(program.sql)
-      return ;
-
-    var code = runner.results().failedCount > 0;
-    process.exit(code);
-  }
-
-  var reporter = new jasmine.TerminalReporter({
-    print: print,
-    color: true,
-    includeStackTrace: program.trace,
-    onComplete: exit
-  });
-  jasmineEnv.addReporter(reporter);
-
-  jasmineEnv.execute();
-}
-
 setupApp( () => {
-  prepareTasks( (err) => {
+  spawnProcesses( (err) => {
     if(err) {
       console.log(err);
       process.exit();
     }
-
-    setupJasmine()
   });
-});
-
-
-var pretty = require('prettyjson').render;
-
-var query = (sql) => {
-  savePoint( (err) => {
-    if(err) {
-      console.log(err.toString().red);
-      return ;
-    }
-
-    process.domain.db.query(sql.toString().trim(), (err, res) => {
-      if(err) {
-        console.log(err.toString().red);
-        process.domain.db.query('ROLLBACK TO SAVEPOINT point', () => {})
-        return ;
-      }
-      console.log(pretty(res.rows));
-    })
-  })
-}
-
-var savePoint = (cb) => {
-  process.domain.db.query('SAVEPOINT point', cb);
-}
-
-process.stdin.on('data', (command) => {
-  var command = command.toString().trim();
-  if(!command)
-    return ;
-
-  query(command)
 });
