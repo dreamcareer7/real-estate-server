@@ -51,7 +51,7 @@ var updateUI = function() {
 
       result.tests.forEach( (test) => {
         if(test.failed > 0)
-          s += '■'.yellow;
+          s += '■'.red;
         else
           s += '■'.green;
       });
@@ -73,6 +73,12 @@ var updateUI = function() {
       var line = new clui.Line(screen);
       line.padding(15).column(test.name.red, 60);
       line.fill().store();
+
+      test.messages.forEach( (message) => {
+        var line = new clui.Line(screen);
+        line.padding(20).column(message.red, 60);
+        line.fill().store();
+      })
     });
   })
 
@@ -106,7 +112,6 @@ function spawnSpec(spec, cb) {
     if(m.code !== 'test done')
       return ;
 
-//     console.log(m);
     results[spec].tests.push(m.test);
     updateUI();
   });

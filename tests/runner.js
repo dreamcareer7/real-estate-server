@@ -62,8 +62,18 @@ function reportData(test) {
     description:test.description,
     total:results.totalCount,
     passed:results.passedCount,
-    failed:results.failedCount
+    failed:results.failedCount,
+    messages:[]
   }
+
+  results.items_.forEach( (item) => {
+    if(item.failedCount < 1)
+      return ;
+
+    item.items_.forEach( (err) => {
+      data.messages.push(err.message)
+    })
+  });
 
   process.send({
     code:'test done',
