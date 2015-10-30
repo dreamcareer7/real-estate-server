@@ -71,12 +71,12 @@ var updateUI = function() {
         return ;
 
       var line = new clui.Line(screen);
-      line.padding(15).column(test.name.red, 60);
+      line.padding(15).column(test.name.red, 600);
       line.fill().store();
 
       test.messages.forEach( (message) => {
         var line = new clui.Line(screen);
-        line.padding(20).column(message.red, 60);
+        line.padding(20).column(message.red, 600);
         line.fill().store();
       })
     });
