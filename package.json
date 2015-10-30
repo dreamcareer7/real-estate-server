@@ -46,7 +46,7 @@
   },
   "devDependencies": {
     "clui": "^0.3.1",
-    "frisby": "^0.8.5",
+    "frisby": "git+https://github.com/emilsedgh/frisby.git#fix_request",
     "jasmine-node": "^1.14.5"
   }
 }
