@@ -114,8 +114,8 @@ function spawnSpec(spec, cb) {
   runner.on('exit', () => {
     results[spec].state = 'Done';
     connections[spec].query('ROLLBACK', connections[spec].release);
-    cb();
     updateUI();
+    cb();
   });
 }
 
@@ -165,7 +165,7 @@ setupApp( () => {
   spawnProcesses( (err) => {
     if(err) {
       console.log(err);
-      process.exit();
     }
+    process.exit();
   });
 });
