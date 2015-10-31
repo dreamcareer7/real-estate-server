@@ -8,7 +8,9 @@ var auth_params = {
   grant_type: 'password'
 };
 
-var token = (cb) => {
+var token = (cb, auth) => {
+  if(auth === undefined) //You can optionally give it an auth object. Or it will have a default.
+    auth = auth_params;
   return frisby.create('get token')
     .post('/oauth2/token', auth_params)
     .expectStatus(200)
