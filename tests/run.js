@@ -21,6 +21,9 @@ var getSpecs = function(cb) {
 }
 
 var results = {};
+var requests = [];
+
+var newline = () => new clui.Line(' ').fill();
 
 var updateUI = function() {
   var screen = new clui.LineBuffer({
@@ -82,9 +85,51 @@ var updateUI = function() {
     });
   })
 
+  screen.addLine(newline());
+
+  requests.map( (req) => {
+    var line = new clui.Line(screen);
+
+    if(req.responseStatus > 499)
+      var statusColor = 'red';
+    else
+      var statusColor = 'green';
+
+    if(req.elapsed < 500)
+      var elapsedColor = 'green';
+    else if(req.elapse < 1000)
+      var elapsedColor = 'yellow';
+    else
+      var elapsedColor = 'red';
+
+    line.column((req.elapsed.toString()+'ms')[elapsedColor], 8);
+    line.column(req.responseStatus.toString()[statusColor], 5);
+    line.column(req.method.toUpperCase()[statusColor], 8);
+    line.column(req.path[statusColor]);
+    line.fill().store();
+  });
+
   process.stdout.write('\033[9A');
-  screen.fill(new clui.Line(' ').fill());
+  screen.fill(newline());
   screen.output();
+}
+
+function logger(req, res, next) {
+  var start = new Date().getTime();
+
+  var end = res.end;
+  res.end = function(data, encoding, callback) {
+    requests.unshift({
+      method:req.method,
+      path:req.path,
+      responseStatus:res.statusCode,
+      elapsed: (new Date).getTime() - start
+    });
+    updateUI();
+    end.call(res, data, encoding, callback);
+  }
+
+  next();
 }
 
 function spawnProcesses(cb) {
@@ -157,13 +202,15 @@ var database = (app) => {
 }
 
 function setupApp(cb) {
-  require('../lib/bootstrap.js')({
+  var app = require('../lib/bootstrap.js')({
     port: config.tests.port,
     database: database,
-    logger: '../tests/logger.js'
+    logger: '../tests/logger.js',
+
+    middleware: [logger]
   });
 
-  setTimeout(cb, 500);
+  process.nextTick(cb);
 }
 
 setupApp( () => {
