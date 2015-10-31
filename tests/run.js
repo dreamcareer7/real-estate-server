@@ -95,12 +95,13 @@ var updateUI = function() {
     else
       var statusColor = 'green';
 
-    if(req.elapsed < 500)
+    if(req.elapsed < 200) {
       var elapsedColor = 'green';
-    else if(req.elapse < 1000)
+    } else if(req.elapsed < 1000) {
       var elapsedColor = 'yellow';
-    else
+    } else {
       var elapsedColor = 'red';
+    }
 
     line.column((req.elapsed.toString()+'ms')[elapsedColor], 8);
     line.column(req.responseStatus.toString()[statusColor], 5);
