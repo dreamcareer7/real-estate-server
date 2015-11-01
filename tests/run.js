@@ -48,8 +48,9 @@ var updateUI = function() {
 
     line.column( ('Spec: '+spec).green, 40);
 
-    if(result.tests.length > 0) {
-
+    if(result.state === 'Pending') {
+      line.column('Pending'.yellow)
+    } else {
       var s = '';
 
       result.tests.forEach( (test) => {
@@ -60,9 +61,6 @@ var updateUI = function() {
       });
 
       line.column(s, 40);
-
-    } else {
-      line.column('Waiting'.yellow, 40)
     }
     line.fill();
     line.store();
