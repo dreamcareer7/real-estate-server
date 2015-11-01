@@ -7,6 +7,7 @@ var async   = require('async');
 
 program
   .usage('[options] <suite> <suite>')
+  .option('-d, --disable-ui', 'Disable UI and show debug output from the app')
   .parse(process.argv);
 
 var getSuites = function(cb) {
@@ -107,6 +108,9 @@ var updateUI = function() {
     line.column(req.path[statusColor]);
     line.fill().store();
   });
+
+  if(program.disableUi)
+    return ;
 
   process.stdout.write('\033[9A');
   screen.fill(newline());
