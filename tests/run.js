@@ -6,18 +6,18 @@ var clui    = require('clui');
 var async   = require('async');
 
 program
-  .usage('[options] <spec> <spec>')
+  .usage('[options] <suite> <suite>')
   .parse(process.argv);
 
-var getSpecs = function(cb) {
+var getSuites = function(cb) {
   if(program.args.length > 0)
     return cb(null, program.args);
 
-  var files = fs.readdirSync(__dirname+'/specs');
-  var specs = files
+  var files = fs.readdirSync(__dirname+'/suites');
+  var suites = files
         .filter( (file) => file.substring(file.length-3, file.length) === '.js' )
         .map( (file) => file.replace('.js', '') );
-  cb(null, specs);
+  cb(null, suites);
 }
 
 var results = {};
@@ -33,8 +33,8 @@ var updateUI = function() {
     height:'console'
   });
 
-  Object.keys(results).forEach( (spec) => {
-    var result = results[spec];
+  Object.keys(results).forEach( (suite) => {
+    var result = results[suite];
 
     var line = new clui.Line(screen);
 
@@ -46,7 +46,7 @@ var updateUI = function() {
 
     line.column( icons[result.state].green, 10);
 
-    line.column( ('Spec: '+spec).green, 40);
+    line.column( ('Suite: '+suite).green, 40);
 
     if(result.state === 'Pending') {
       line.column('Pending'.yellow)
@@ -132,37 +132,37 @@ function logger(req, res, next) {
 }
 
 function spawnProcesses(cb) {
-  getSpecs( (err, specs) => {
+  getSuites( (err, suites) => {
     if(err)
       return cb(err);
 
-    specs.map( (spec) => {
-      results[spec] = {
+    suites.map( (suite) => {
+      results[suite] = {
         state:'Pending',
         tests:[]
       }
     })
 
-    async.map(specs, spawnSpec, cb);
+    async.map(suites, spawSuite, cb);
   })
 }
 
-function spawnSpec(spec, cb) {
-  var runner = fork(__dirname+'/runner.js', [spec]);
+function spawSuite(suite, cb) {
+  var runner = fork(__dirname+'/runner.js', [suite]);
 
-  results[spec].state = 'Running';
+  results[suite].state = 'Running';
 
   runner.on('message', (m) => {
     if(m.code !== 'test done')
       return ;
 
-    results[spec].tests.push(m.test);
+    results[suite].tests.push(m.test);
     updateUI();
   });
 
   runner.on('exit', () => {
-    results[spec].state = 'Done';
-    connections[spec].query('ROLLBACK', connections[spec].done);
+    results[suite].state = 'Done';
+    connections[suite].query('ROLLBACK', connections[suite].done);
     updateUI();
     cb();
   });
@@ -176,10 +176,10 @@ var connections = {};
 var database = (app) => {
   app.use( (req, res, next) => {
     var domain = Domain.create();
-    var spec = req.headers['x-spec'];
+    var suite = req.headers['x-suite'];
 
-    if(connections[spec]) {
-      domain.db = connections[spec];
+    if(connections[suite]) {
+      domain.db = connections[suite];
       domain.run(next);
       return ;
     }
@@ -187,7 +187,7 @@ var database = (app) => {
     db.conn( (err, conn, done) => {
       conn.done = done;
       conn.query('BEGIN', (err) => {
-        connections[spec] = conn;
+        connections[suite] = conn;
         domain.db = conn;
         domain.run(next);
       });

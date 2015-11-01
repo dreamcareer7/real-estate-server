@@ -1,7 +1,7 @@
 var criteria = require('./data/alert_criteria.js');
 
 
-registerSpec('room', ['create']);
+registerSuite('room', ['create']);
 
 var create = (cb) => {
   return frisby.create('create alert')

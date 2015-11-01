@@ -1,5 +1,5 @@
 var message = require('./data/message.js');
-registerSpec('room', ['create']);
+registerSuite('room', ['create']);
 
 var post = (cb) => {
   return frisby.create('post a message')

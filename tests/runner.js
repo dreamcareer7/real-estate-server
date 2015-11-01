@@ -11,7 +11,7 @@ frisby.globalSetup({
     json: true,
     baseUri:'http://localhost:' + config.tests.port,
     headers: {
-      'x-spec' : process.argv[2]
+      'x-suite' : process.argv[2]
     }
   }
 });
@@ -19,7 +19,7 @@ frisby.globalSetup({
 var runFrisbies = function(tasks) {
   var runF = function(task, cb) {
     task.fn((err, res) => {
-      global.results[task.spec][task.name] = res.body;
+      global.results[task.suite][task.name] = res.body;
       cb(err, res);
     }).toss();
   };
@@ -29,17 +29,17 @@ var runFrisbies = function(tasks) {
 
 var prepareTasks = function() {
   var frisbies = [];
-  global.registerSpec = (spec, tests) => {
-    var fns = require('./specs/' + spec + '.js');
+  global.registerSuite = (suite, tests) => {
+    var fns = require('./suites/' + suite + '.js');
 
-    if(!results[spec])
-      results[spec] = {};
+    if(!results[suite])
+      results[suite] = {};
 
     Object.keys(fns)
     .filter( (name) => (!tests || tests.indexOf(name) > -1) )
     .map( (name) => {
       frisbies.push({
-        spec:spec,
+        suite:suite,
         name:name,
         fn:fns[name]
       });
@@ -48,8 +48,8 @@ var prepareTasks = function() {
     return fns;
   };
 
-  registerSpec('authorize');
-  registerSpec(process.argv[2]);
+  registerSuite('authorize');
+  registerSuite(process.argv[2]);
 
   return frisbies;
 }

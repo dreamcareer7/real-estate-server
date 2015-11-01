@@ -1,5 +1,4 @@
-var _ = require('underscore');
-registerSpec('user', ['create']);
+registerSuite('user', ['create']);
 
 var add = (cb) => {
   return frisby.create('add a contact')

@@ -1,4 +1,4 @@
-registerSpec('alert', ['create']);
+registerSuite('alert', ['create']);
 
 var feed = (cb) => {
   return frisby.create('get feed')
