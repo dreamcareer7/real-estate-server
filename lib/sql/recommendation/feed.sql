@@ -1,9 +1,9 @@
 WITH recs AS (
     SELECT recommendations.id,
            recommendations.hidden,
+           recommendations.referring_objects,
            recommendations.created_at,
            recommendations.updated_at,
-           recommendations.referring_objects,
            ARRAY_AGG(recommendations_eav."user") FILTER (WHERE recommendations_eav.action = 'Read') AS read_by
      FROM recommendations
      FULL JOIN recommendations_eav ON recommendations_eav.recommendation = recommendations.id

@@ -41,5 +41,5 @@ ORDER BY
         WHEN 'Max_U' THEN updated_at
         WHEN 'Init_C' THEN created_at
         WHEN 'Init_U' THEN updated_at
-    END
+    END DESC
 LIMIT $6;
