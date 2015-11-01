@@ -6,7 +6,7 @@ global.frisby = require('frisby');
 global.results = {};
 
 frisby.globalSetup({
-  timeout: 10000,
+  timeout: 20000,
   request: {
     json: true,
     baseUri:'http://localhost:' + config.tests.port,

@@ -145,7 +145,7 @@ function spawnProcesses(cb) {
       }
     })
 
-    async.mapLimit(specs, 1, spawnSpec, cb);
+    async.map(specs, spawnSpec, cb);
   })
 }
 
@@ -164,7 +164,7 @@ function spawnSpec(spec, cb) {
 
   runner.on('exit', () => {
     results[spec].state = 'Done';
-    connections[spec].query('ROLLBACK', connections[spec].release);
+    connections[spec].query('ROLLBACK', connections[spec].done);
     updateUI();
     cb();
   });
@@ -186,13 +186,8 @@ var database = (app) => {
       return ;
     }
 
-    db.conn( (err, conn, release) => {
-      var end = res.end;
-      res.end = function(data, encoding, callback) {
-        release();
-        end.call(res, data, encoding, callback);
-      }
-      req.on('close', release);
+    db.conn( (err, conn, done) => {
+      conn.done = done;
       conn.query('BEGIN', (err) => {
         connections[spec] = conn;
         domain.db = conn;
