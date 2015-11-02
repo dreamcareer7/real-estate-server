@@ -3,11 +3,13 @@ var program = require('commander');
 var config  = require('../lib/config.js');
 var fork    = require('child_process').fork;
 var async   = require('async');
+var colors = require('colors');
 var EventEmitter = require('events');
 
 program
   .usage('[options] <suite> <suite>')
   .option('-d, --disable-ui', 'Disable UI and show debug output from the app')
+  .option('-s, --server <server>', 'Instead of setting your own version, run tests against <server>')
   .parse(process.argv);
 
 global.Run = new EventEmitter;
@@ -35,7 +37,9 @@ function spawnProcesses(cb) {
 }
 
 function spawnSuite(suite, cb) {
-  var runner = fork(__dirname+'/runner.js', [suite]);
+  var url = program.server ? program.server : 'http://localhost:' + config.tests.port;
+
+  var runner = fork(__dirname+'/runner.js', [suite, url]);
 
   Run.emit('spawn', suite);
 
@@ -44,7 +48,6 @@ function spawnSuite(suite, cb) {
   });
 
   runner.on('exit', () => {
-    connections[suite].query('ROLLBACK', connections[suite].done);
     Run.emit('suite done', suite);
     cb();
   });
@@ -76,8 +79,14 @@ var database = (req, res, next) => {
 }
 
 function setupApp(cb) {
+  console.log('111');
   var app = require('../lib/bootstrap.js')();
   app.use(database);
+
+  Run.on('exit', (suite) => {
+    connections[suite].query('ROLLBACK', connections[suite].done);
+  })
+
   Run.emit('app ready', app);
   app.listen(config.tests.port);
   cb();
@@ -86,11 +95,16 @@ function setupApp(cb) {
 if(!program.disableUi)
   require('./ui.js')
 
-setupApp( (app) => {
-  spawnProcesses( (err) => {
-    if(err) {
-      console.log(err);
-    }
-    process.exit();
-  });
+var steps = [];
+
+if(!program.server)
+  steps.push(setupApp);
+
+steps.push(spawnProcesses);
+
+async.series(steps, (err) => {
+  if(err) {
+    console.log(err);
+  }
+  process.exit();
 });

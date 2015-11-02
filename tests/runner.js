@@ -9,7 +9,7 @@ frisby.globalSetup({
   timeout: 20000,
   request: {
     json: true,
-    baseUri:'http://localhost:' + config.tests.port,
+    baseUri:process.argv[3],
     headers: {
       'x-suite' : process.argv[2]
     }
