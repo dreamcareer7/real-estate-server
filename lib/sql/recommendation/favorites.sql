@@ -2,9 +2,9 @@ WITH recs AS (
     SELECT recommendations.id,
            recommendations.hidden,
            recommendations.created_at,
-           recommendations.updated_at,
            recommendations.referring_objects,
-           ARRAY_AGG(recommendations_eav."user") FILTER (WHERE recommendations_eav.action = 'Favorited') AS favorited_by
+           ARRAY_AGG(recommendations_eav."user") FILTER (WHERE recommendations_eav.action = 'Favorited') AS favorited_by,
+           MAX(recommendations_eav.created_at) FILTER (WHERE recommendations_eav.action = 'Favorited') AS updated_at
      FROM recommendations
      FULL JOIN recommendations_eav ON recommendations_eav.recommendation = recommendations.id
      WHERE recommendations.room = $2 AND
@@ -13,7 +13,6 @@ WITH recs AS (
      GROUP BY recommendations.id,
               recommendations.hidden,
               recommendations.created_at,
-              recommendations.updated_at,
               recommendations.referring_objects
 )
 SELECT id,
@@ -41,5 +40,5 @@ ORDER BY
         WHEN 'Max_U' THEN updated_at
         WHEN 'Init_C' THEN created_at
         WHEN 'Init_U' THEN updated_at
-    END
+    END DESC
 LIMIT $6;
