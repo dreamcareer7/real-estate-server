@@ -6,17 +6,28 @@ var async   = require('async');
 var colors = require('colors');
 var EventEmitter = require('events');
 
+global.Run = new EventEmitter;
+
 program
   .usage('[options] <suite> <suite>')
   .option('-d, --disable-ui', 'Disable UI and show debug output from the app')
   .option('-s, --server <server>', 'Instead of setting your own version, run tests against <server>')
   .option('-c, --concurrency <n>', 'Number of suites to run at the same time (defaults to 20)')
+  .option('--curl', 'Throw curl commands (disabled ui)')
+  .option('--keep', 'Keep the server running after execution is completed')
   .parse(process.argv);
 
 if(!program.concurrency)
   program.concurrency = 20;
 
-global.Run = new EventEmitter;
+if(program.curl) {
+  program.disableUi = true;
+  require('./curl.js')
+}
+
+if(!program.disableUi)
+  require('./ui.js')
+
 
 var getSuites = function(cb) {
   if(program.args.length > 0)
@@ -87,17 +98,17 @@ function setupApp(cb) {
   var app = require('../lib/bootstrap.js')();
   app.use(database);
 
-  Run.on('suite done', (suite) => {
-    connections[suite].query('ROLLBACK', connections[suite].done);
-  })
+  if(!program.keep) {
+    Run.on('suite done', (suite) => {
+      connections[suite].query('ROLLBACK', connections[suite].done);
+      delete connections[suite];
+    })
+  }
 
   Run.emit('app ready', app);
   app.listen(config.tests.port);
   cb();
 }
-
-if(!program.disableUi)
-  require('./ui.js')
 
 var steps = [];
 
@@ -110,5 +121,7 @@ async.series(steps, (err) => {
   if(err) {
     console.log(err);
   }
-  process.exit();
+
+  if(!program.keep)
+    process.exit();
 });
