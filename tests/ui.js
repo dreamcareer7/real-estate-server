@@ -55,6 +55,8 @@ function updateUI() {
     height:'console'
   });
 
+  screen.addLine(newline());
+  
   Object.keys(suites).forEach( (suite) => {
     var result = suites[suite];
 

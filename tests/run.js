@@ -10,7 +10,11 @@ program
   .usage('[options] <suite> <suite>')
   .option('-d, --disable-ui', 'Disable UI and show debug output from the app')
   .option('-s, --server <server>', 'Instead of setting your own version, run tests against <server>')
+  .option('-c, --concurrency <n>', 'Number of suites to run at the same time (defaults to 20)')
   .parse(process.argv);
+
+if(!program.concurrency)
+  program.concurrency = 20;
 
 global.Run = new EventEmitter;
 
@@ -32,7 +36,8 @@ function spawnProcesses(cb) {
       return cb(err);
 
     suites.map((suite) => Run.emit('register suite', suite));
-    async.map(suites, spawnSuite, cb);
+
+    async.mapLimit(suites, program.concurrency, spawnSuite, cb);
   })
 }
 
@@ -79,11 +84,10 @@ var database = (req, res, next) => {
 }
 
 function setupApp(cb) {
-  console.log('111');
   var app = require('../lib/bootstrap.js')();
   app.use(database);
 
-  Run.on('exit', (suite) => {
+  Run.on('suite done', (suite) => {
     connections[suite].query('ROLLBACK', connections[suite].done);
   })
 

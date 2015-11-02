@@ -6,7 +6,7 @@ global.frisby = require('frisby');
 global.results = {};
 
 frisby.globalSetup({
-  timeout: 20000,
+  timeout: 10000,
   request: {
     json: true,
     baseUri:process.argv[3],
@@ -19,7 +19,9 @@ frisby.globalSetup({
 var runFrisbies = function(tasks) {
   var runF = function(task, cb) {
     task.fn((err, res) => {
-      global.results[task.suite][task.name] = res.body;
+      if(res.body)
+        global.results[task.suite][task.name] = res.body;
+
       cb(err, res);
     }).toss();
   };
