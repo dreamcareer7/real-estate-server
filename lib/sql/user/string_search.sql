@@ -2,5 +2,6 @@ SELECT id,
        (COUNT(*) OVER())::INT AS total
 FROM users
 WHERE
-    lower(email) = ANY($1) AND
+    (first_name ~* $1 OR
+    last_name ~* $1) AND
     deleted_at IS NULL
