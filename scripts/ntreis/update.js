@@ -20,7 +20,6 @@ program.version(config.ntreis.version)
 
 (function notice() {
   console.log('NTREIS connector'.cyan, config.ntreis.version.cyan);
-  console.log('Runtime arguments:');
   console.log('Instant Recommendation:'.yellow, (program.enableRecs) ? 'yes'.green : 'no'.red);
   console.log('Photo Fetching:'.yellow, (program.enablePhotoFetch) ? 'yes'.green : 'no'.red);
   console.log('Show CloudFront Links:'.yellow, (program.enableCfLinks) ? 'yes'.green : 'no'.red);
@@ -51,6 +50,8 @@ var counts = {};
 })
 
 Client.on('data fetched', (data) => {
+  console.log('Total items to be processes', data.length);
+
   counts['total'] = data.length;
   itemsStart = data[0];
   itemsEnd = data[data.length-1];
@@ -130,7 +131,7 @@ Client.work(options, (err) => {
     var miss_rate = Math.round(((counts['new address'] - counts['address geocoded']) / counts['new address']) * 100)
 
     var text = [
-      'Execution time: %d',
+      'Execution time: %d seconds',
       'Total items: %d',
       'First item: %s',
       'Last item: %s',
@@ -143,7 +144,7 @@ Client.work(options, (err) => {
     ].join('\n');
 
     var text = util.format(text,
-      getElapsed(),
+      getElapsed()/1000,
       counts.total,
       itemsStart.Matrix_Unique_ID,
       itemsEnd.Matrix_Unique_ID,
