@@ -17,6 +17,8 @@ var add = (cb) => {
 }
 
 var get = (cb) => {
+  results.user.create.data.type = 'compact_user';
+
   return frisby.create('get list of contacts and see if the one we added is there')
     .get('/contacts')
     .expectStatus(200)
@@ -31,6 +33,8 @@ var get = (cb) => {
 }
 
 var search = (cb) => {
+  results.user.create.data.type = 'compact_user';
+
   return frisby.create('search contacts and see if the one we added is there')
     .get('/contacts/search?q='+results.user.create.data.first_name)
     .expectStatus(200)
