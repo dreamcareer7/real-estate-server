@@ -79,9 +79,11 @@ function upsertAddress(address, cb) {
             if(err)
               return cb(err);
 
-            Client.emit('address geocoded', address);
-            if (result)
-              return cb(null, address_id);
+            if (result) {
+              Client.emit('address geocoded', address);
+            }
+
+            return cb(null, address_id);
           });
         });
         return ;
