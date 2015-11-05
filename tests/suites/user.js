@@ -43,7 +43,7 @@ var update = (cb) => {
 var resetPassword = (cb) => {
   return frisby.create('initiate password reset')
          .post('/users/reset_password', {email: user.email})
-         .expectStatus(200)
+         .expectStatus(204)
          .after(cb);
 }
 
