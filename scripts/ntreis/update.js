@@ -59,7 +59,9 @@ Client.on('data fetched', (data) => {
 Client.on('starting query', (query) => console.log('Notice:'.cyan, 'Performing', query) )
 
 if(program.enableCfLinks)
-  Client.on('photo added', (listing, links) => console.log(links));
+  Client.on('photo added', (listing, links) => {
+    if(links && links.length > 0) console.log(links)
+  });
 
 function getElapsed() {
   return ((new Date()).getTime()) - startTime;
