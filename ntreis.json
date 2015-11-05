@@ -1,7 +1,7 @@
 {
   apps: [
     {
-      "script": "./scripts/ntreis/rets_client.js",
+      "script": "./scripts/ntreis/update.js",
       "name": "NTREIS Connector",
       "args": ["-p", "-r", "-e"],
     }
