@@ -175,7 +175,7 @@ function upsertListing(listing, property_id, cb) {
             if(err)
               return cb(err);
 
-            Client.emit('photo added', listing);
+            Client.emit('photo added', listing, links);
             listing.cover = links[0] || '';
             var tmp = links.splice(1);
             listing.gallery_images = '{' + tmp.join(',') + '}';
