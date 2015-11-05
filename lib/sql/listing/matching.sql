@@ -13,6 +13,6 @@ WHERE $1 >= minimum_price AND
       COALESCE($9 >= minimum_year_built, TRUE) = TRUE AND
       COALESCE($9 <= maximum_year_built, TRUE) = TRUE AND
       COALESCE($10 = pool, TRUE) = TRUE AND
-      COALESCE($11 > maximum_lot_square_meters, TRUE) = TRUE AND
-      COALESCE($11 < minimum_lot_square_meters, TRUE) = TRUE AND
+      COALESCE($11 <= maximum_lot_square_meters, TRUE) = TRUE AND
+      COALESCE($11 >= minimum_lot_square_meters, TRUE) = TRUE AND
       deleted_at IS NULL
