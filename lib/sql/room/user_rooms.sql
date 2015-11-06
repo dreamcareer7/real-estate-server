@@ -1,13 +1,13 @@
 WITH user_rooms AS (
     SELECT rooms_users.room AS id,
            (COUNT(*) OVER())::INT AS total,
-           MAX(messages.created_at) AS updated_at,
+           COALESCE(MAX(messages.created_at), MAX(rooms.created_at)) AS updated_at,
            MAX(rooms.created_at) AS created_at
            FROM rooms_users
+           LEFT JOIN messages
+               ON rooms_users.room = messages.room
            INNER JOIN rooms
                ON rooms_users.room = rooms.id
-           INNER JOIN messages
-               ON rooms_users.room = messages.room
            WHERE "user" = $1 AND
                rooms.deleted_at IS NULL
            GROUP BY messages.room,
@@ -24,7 +24,7 @@ WHERE
         WHEN $2 = 'Init_C' THEN user_rooms.created_at < NOW()
         WHEN $2 = 'Init_U' THEN user_rooms.updated_at < NOW()
         ELSE TRUE
-        END
+   END
 ORDER BY
     CASE $2
         WHEN 'Since_C' THEN user_rooms.created_at
