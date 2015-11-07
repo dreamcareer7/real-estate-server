@@ -25,11 +25,11 @@ FROM recs
 WHERE (NOT ($1 = ANY (COALESCE(read_by, '{}'))))
 AND CASE
         WHEN $4 = 'Since_C' THEN created_at > TIMESTAMP WITH TIME ZONE 'EPOCH' + $5 * INTERVAL '1 MICROSECOND'
-        WHEN $4 = 'Max_C' THEN created_at < TIMESTAMP WITH TIME ZONE 'EPOCH' + $5 * INTERVAL '1 MICROSECOND'
+        WHEN $4 = 'Max_C' THEN created_at <= TIMESTAMP WITH TIME ZONE 'EPOCH' + $5 * INTERVAL '1 MICROSECOND'
         WHEN $4 = 'Since_U' THEN updated_at > TIMESTAMP WITH TIME ZONE 'EPOCH' + $5 * INTERVAL '1 MICROSECOND'
-        WHEN $4 = 'Max_U' THEN updated_at < TIMESTAMP WITH TIME ZONE 'EPOCH' + $5 * INTERVAL '1 MICROSECOND'
-        WHEN $4 = 'Init_C' THEN created_at < NOW()
-        WHEN $4 = 'Init_U' THEN updated_at < NOW()
+        WHEN $4 = 'Max_U' THEN updated_at <= TIMESTAMP WITH TIME ZONE 'EPOCH' + $5 * INTERVAL '1 MICROSECOND'
+        WHEN $4 = 'Init_C' THEN created_at <= NOW()
+        WHEN $4 = 'Init_U' THEN updated_at <= NOW()
         ELSE TRUE
     END
 ORDER BY
