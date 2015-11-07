@@ -74,7 +74,6 @@ function upsertAddress(address, cb) {
           if(err)
             return cb(err);
 
-
           Address.updateGeo(address_id, function(err, result) {
             if(err)
               return cb(err);

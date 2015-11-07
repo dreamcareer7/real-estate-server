@@ -205,5 +205,5 @@ module.exports = (data) => {
     address,
     property,
     listing
-  }
-}
+  };
+};

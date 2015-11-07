@@ -47,7 +47,7 @@ var counts = {};
   Client.on(event, (model) => {
     console.log(event.green, (++counts[event]).toString().yellow);
   });
-})
+});
 
 Client.on('data fetched', (data) => {
   console.log('Total items to be processes', data.length);
@@ -57,11 +57,11 @@ Client.on('data fetched', (data) => {
   itemsEnd = data[data.length-1];
 });
 
-Client.on('starting query', (query) => console.log('Notice:'.cyan, 'Performing', query) )
+Client.on('starting query', (query) => console.log('Notice:'.cyan, 'Performing', query));
 
 if(program.enableCfLinks)
   Client.on('photo added', (listing, links) => {
-    if(links && links.length > 0) console.log(links)
+    if(links && links.length > 0) console.log(links);
   });
 
 function getElapsed() {
@@ -73,13 +73,13 @@ function reportToSlack(text, cb) {
     channel: '#ntreis-updates',
     username: config.slack.this,
     icon_emoji: ':house:',
-    text:text
-  }
+    text: text
+  };
 
   var headers = {
     'User-Agent': 'Super Agent/0.0.1',
     'Content-Type': 'application/x-www-form-urlencoded'
-  }
+  };
 
   var options = {
     url: config.slack.webhook,
@@ -88,7 +88,7 @@ function reportToSlack(text, cb) {
     form: {
       payload:JSON.stringify(payload)
     }
-  }
+  };
 
   request.post(options, function(err, res, body) {
     if(err) {
@@ -100,11 +100,11 @@ function reportToSlack(text, cb) {
 
 var options = {
   limit: program.limit ? program.limit : config.ntreis.default_limit,
-  enablePhotoFetch:program.enablePhotoFetch,
-  initial:program.initial,
-  enableRecs:program.enableRecs,
-  enableNotifications:program.enableNotifications
-}
+  enablePhotoFetch: program.enablePhotoFetch,
+  initial: program.initial,
+  enableRecs: program.enableRecs,
+  enableNotifications: program.enableNotifications
+};
 
 var considerExit = () => {
   var remaining = parseInt(config.ntreis.pause - getElapsed());
@@ -117,20 +117,21 @@ var considerExit = () => {
               'milliseconds before termination to meet NTREIS limit on heavy requests...'.yellow);
 
   setTimeout(process.exit, remaining);
-}
+};
 
 Client.work(options, (err) => {
   console.log('Total Running Time:', (getElapsed()/1000) + 's');
+  var text;
 
   if(err) {
     console.log('INFO: (TERM) Script terminated with error:'.red, err);
-    var text = 'Error on NTRES script: '+err;
+    text = 'Error on NTRES script: '+err;
   } else {
     console.log('INFO: (TERM) Script finished successfully'.green);
 
-    var miss_rate = Math.round(((counts['new address'] - counts['address geocoded']) / counts['new address']) * 100)
+    var miss_rate = Math.round(((counts['new address'] - counts['address geocoded']) / counts['new address']) * 100);
 
-    var text = [
+    text = [
       'Execution time: %d seconds',
       'Total items: %d',
       'First item: %s',
@@ -143,7 +144,7 @@ Client.work(options, (err) => {
       'Miss rate: %s%'
     ].join('\n');
 
-    var text = util.format(text,
+    text = util.format(text,
       getElapsed()/1000,
       counts.total,
       itemsStart.Matrix_Unique_ID,
