@@ -1,3 +1,5 @@
+var _ = require('underscore');
+
 registerSuite('alert', ['create']);
 
 var feed = (cb) => {
@@ -61,13 +63,20 @@ var seen = (cb) => {
 }
 
 var markAsSeen = (cb) => {
+  var rec = _.clone(results.recommendation.feed.data[1]);
+
+  //These are only present when recommendation is part of a collection
+  delete rec.document_count;
+  delete rec.video_count;
+  delete rec.image_count;
+
   return frisby.create('mark a rec as seen')
         .delete('/rooms/' + results.room.create.data.id + '/recs/feed/'+results.recommendation.feed.data[1].id)
         .after(cb)
         .expectStatus(200)
         .expectJSON({
           code:'OK',
-          data:results.recommendation.feed.data[1]
+          data:rec
         })
 }
 
