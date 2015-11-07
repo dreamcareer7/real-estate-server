@@ -141,7 +141,8 @@ Client.work(options, (err) => {
       'Addresses: %s new, %s updated',
       'Images: %s',
       'Geocoded: %s',
-      'Miss rate: %s%'
+      'Miss rate: %s%',
+      '----------------------------------'
     ].join('\n');
 
     text = util.format(text,
