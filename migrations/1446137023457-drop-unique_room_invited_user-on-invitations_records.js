@@ -2,8 +2,8 @@
 
 var db = require('../lib/utils/db');
 
-var sql_up   = 'ALTER TABLE invitation_records DROP CONSTRAINT invitation_records_email_room_key;';
-var sql_down = 'ALTER TABLE invitation_records ADD UNIQUE(email, room);';
+var sql_up   = 'ALTER TABLE invitation_records DROP CONSTRAINT invitation_records_invited_user_room_key;';
+var sql_down = 'ALTER TABLE invitation_records ADD UNIQUE(invited_user, room);';
 
 var runSql = (sql) => {
   return (next) => {
