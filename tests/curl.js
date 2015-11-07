@@ -4,6 +4,18 @@ function logger(req, res, next) {
   console.log( ('--------- '+req.headers['x-suite']+': '+req.method+' '+req.path+' ---------').yellow );
   console.log(ascurl(req).green);
   console.log();
+
+  if(req.body)
+    console.log(req.body);
+
+  var end = res.end;
+
+  res.end = function(data, encoding, callback) {
+    if (data)
+      console.log(data.toString().red)
+    end.call(res, data, encoding, callback);
+  }
+
   next();
 }
 
