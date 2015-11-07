@@ -2,11 +2,8 @@ var ascurl = require('request-as-curl');
 
 function logger(req, res, next) {
   console.log( ('--------- '+req.headers['x-suite']+': '+req.method+' '+req.path+' ---------').yellow );
-  console.log(ascurl(req).green);
-  console.log();
+  console.log(ascurl(req, req.body).green);
 
-  if(req.body)
-    console.log(req.body);
 
   var end = res.end;
 
