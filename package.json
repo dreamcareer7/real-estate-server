@@ -8,6 +8,9 @@
     "start": "node index.js",
     "migrate": "node node_modules/migrate/bin/migrate --state-file migrations/state --template-file scripts/migrate_template.js"
   },
+  "engines" : {
+    "node" : "~4.2"
+  },
   "author": "",
   "license": "ISC",
   "dependencies": {
