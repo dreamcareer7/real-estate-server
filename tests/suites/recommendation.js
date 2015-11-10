@@ -66,6 +66,7 @@ var markAsSeen = (cb) => {
   var rec = _.clone(results.recommendation.feed.data[1]);
 
   //These are only present when recommendation is part of a collection
+  delete rec.comment_count;
   delete rec.document_count;
   delete rec.video_count;
   delete rec.image_count;
