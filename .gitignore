@@ -1,5 +1,6 @@
 node_modules
 lib/configs/development.js
+lib/configs/newrelic.js
 lib/sslcert/server.key
 lib/sslcert/server.crt
 scripts/ntreis/timing.config.js
@@ -10,6 +11,5 @@ scripts/announcements/subject_announcement.asc
 .tern-project
 .DS_Store
 *.log
-newrelic.js
 docs
 migrations/state
