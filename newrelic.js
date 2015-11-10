@@ -1,2 +1,2 @@
 var config = require('./lib/config.js');
-module.exports = config.newrelic;
+exports.config = config.newrelic;
