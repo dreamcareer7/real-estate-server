@@ -24,6 +24,7 @@
     "express-winston": "^0.2.9",
     "googlemaps": "^1.0.1",
     "kue": "^0.9.6",
+    "merge": "^1.2.0",
     "migrate": "^0.2.2",
     "multiparty": "^4.1.1",
     "newrelic": "^1.19.2",
