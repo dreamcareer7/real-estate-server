@@ -2,7 +2,7 @@
 
 var db = require('../lib/utils/db');
 
-var sql_up   = 'ALTER TYPE client_type ADD VALUE \'Unknown\'';
+var sql_up   = 'ALTER TYPE client_type ADD VALUE IF NOT EXISTS \'Unknown\'';
 // There is no trivial way to downgrade
 var sql_down = '';
 
