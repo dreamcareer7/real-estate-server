@@ -6,7 +6,7 @@
   "scripts": {
     "test": "node tests/run.js",
     "start": "node index.js",
-    "migrate": "node node_modules/@gustavnikolaj/migrate/bin/migrate --state-file migrations/state --template-file scripts/migrate_template.js"
+    "migrate": "node node_modules/@gustavnikolaj/migrate/bin/migrate --template-file scripts/migrate_template.js"
   },
   "engines": {
     "node": "4.2.2"
