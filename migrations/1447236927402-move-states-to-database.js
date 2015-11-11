@@ -3,15 +3,15 @@
 var db = require('../lib/utils/db');
 
 var createDb   = 'CREATE TABLE migrations ( created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(), state jsonb );';
-var insert = 'INSERT INTO migrations (state) VALUES (\'{"state":{"pos":14}}\');';
+var insert = 'INSERT INTO migrations (state) VALUES (\'{"pos":14}\');';
 var dropDb = 'DROP TABLE migrations';
 
-function up(next) => {
+function up(next) {
   db.conn( (err, client) => {
     if(err)
       return next(err);
 
-    client.query(dropDb, (err) => {
+    client.query(createDb, (err) => {
       if(err)
         return next(err);
 
@@ -20,7 +20,7 @@ function up(next) => {
   });
 }
 
-function down(next) => {
+function down(next) {
   db.conn( (err, client) => {
     if(err)
       return next(err);
