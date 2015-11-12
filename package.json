@@ -6,14 +6,15 @@
   "scripts": {
     "test": "node tests/run.js",
     "start": "node index.js",
-    "migrate": "node node_modules/migrate/bin/migrate --state-file migrations/state --template-file scripts/migrate_template.js"
+    "migrate": "node node_modules/@gustavnikolaj/migrate/bin/migrate --template-file scripts/migrate_template.js"
   },
-  "engines" : {
-    "node" : "4.2.2"
+  "engines": {
+    "node": "4.2.2"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@gustavnikolaj/migrate": "^1.0.0",
     "amanda": "^0.5.1",
     "async": "^1.4.2",
     "aws-sdk": "^2.1.10",
@@ -28,7 +29,6 @@
     "googlemaps": "^1.0.1",
     "kue": "^0.9.6",
     "merge": "^1.2.0",
-    "migrate": "^0.2.2",
     "multiparty": "^4.1.1",
     "newrelic": "^1.19.2",
     "node-uuid": "^1.4.2",

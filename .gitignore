@@ -12,4 +12,3 @@ scripts/announcements/subject_announcement.asc
 .DS_Store
 *.log
 docs
-migrations/state
