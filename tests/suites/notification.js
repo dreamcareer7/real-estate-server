@@ -16,6 +16,7 @@ var getUsersNotification = (cb) => {
         }
       ]
     })
+  .expectJSONLength('data',1)
 }
 
 
@@ -48,7 +49,7 @@ var push = (cb) => {
   return frisby.create('register push')
     .post('/notifications/tokens', token_model)
     .after(cb)
-    .expectStatus(201)
+    .expectStatus(200)
     .expectJSON({
       code: 'OK',
       data: {
