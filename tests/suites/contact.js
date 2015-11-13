@@ -25,7 +25,6 @@ var get = (cb) => {
   return frisby.create('get list of contacts and see if the one we added is there')
     .get('/contacts')
     .expectStatus(200)
-    .expectJSONLength('data', 1)
     .expectJSON({
       data:'OK',
       data:[
