@@ -10,5 +10,7 @@ scripts/announcements/subject_announcement.asc
 .tern-port
 .tern-project
 .DS_Store
+.idea/
+.idea/*
 *.log
 docs
