@@ -18,12 +18,17 @@ frisby.globalSetup({
 
 var runFrisbies = function(tasks) {
   var runF = function(task, cb) {
-    task.fn((err, res) => {
+    var f = task.fn((err, res) => {
       if(res.body)
         global.results[task.suite][task.name] = res.body;
 
       cb(err, res);
-    }).toss();
+    });
+
+    f.current.outgoing.headers['x-test-name'] = task.name;
+    f.current.outgoing.headers['x-test-description'] = f.current.describe;
+
+    f.toss();
   };
 
   async.forEachSeries(tasks, runF);

@@ -49,6 +49,7 @@
     "winston-papertrail": "^1.0.1"
   },
   "devDependencies": {
+    "api-blueprint-http-formatter": "0.0.1",
     "clui": "^0.3.1",
     "frisby": "git+https://github.com/emilsedgh/frisby.git#fix_request",
     "jasmine-node": "^1.14.5",
