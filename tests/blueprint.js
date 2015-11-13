@@ -1,12 +1,14 @@
-var bf = require('api-blueprint-http-formatter').format;
 var fs = require('fs');
 var _ = require('underscore');
+var utils = require('util');
 
 var calls = [];
 
 function logger(req, res, next) {
-  var end = res.end;
+  if(req.headers['x-suite'] !== req.headers['x-original-suite'])
+    return next();  //Dont document dependencies.
 
+  var end = res.end;
 
   res.end = function(data, encoding, callback) {
     calls.push({req,res,data});
@@ -22,9 +24,13 @@ Run.on('app ready', (app) => {
 
 process.on('exit', generate);
 
-function findOriginal(url, params) {
+function findOriginal(url, params, qs) {
   Object.keys(params).forEach( (param_name) => {
     url = url.replace(params[param_name], ':'+param_name);
+  });
+
+  Object.keys(qs).forEach( (q) => {
+    url = url.replace(qs[q], '<'+q+'>');
   });
 
   return url;
@@ -36,13 +42,21 @@ function generate() {
 
   calls.forEach( (call) => {
     var suite = call.req.headers['x-suite'];
+
     if(!suites[suite])
       suites[suite] = [];
 
     suites[suite].push(call);
   });
 
-  var templates = Object.keys(suites).map( (suite_name) => generateSuite(suite_name, suites[suite_name]) );
+
+  var templates = Object.keys(suites)
+  .sort( (a, b) => {
+    if(a < b) return -1;
+    if(a < b) return 0;
+    return 0;
+  })
+  .map( (suite_name) => generateSuite(suite_name, suites[suite_name]) )
 
   var templates = Object.keys(suites).map( (suite_name) => '<!-- include('+suite_name+'.md) -->' );
 
@@ -50,13 +64,38 @@ function generate() {
 }
 
 function generateSuite(name, calls) {
-  var template = '# '+name+' \n';
+  var template = '# Group %s \n %s \n';
+
+  try {
+    var doc = fs.readFileSync(__dirname+'/../docs/'+name+'.md').toString();
+  } catch(e) {
+    var doc = '';
+  }
+
+  template = utils.format(template, capitalize(name), doc);
 
   calls.forEach( (call) => {
-    template += bf(cleanup(call.req, call.res, call.data))+'\n';
-  })
+    template += generateTest(call)
+  });
 
   fs.writeFileSync('/tmp/docs/'+name+'.md', template);
+}
+
+function generateTest(call) {
+  var t = bf(cleanup(call.req, call.res, call.data))+'\n';
+
+  var description = capitalize(call.req.headers['x-test-description']);
+
+  var suite = call.req.headers['x-suite'];
+  var test  = call.req.headers['x-test-name'];
+
+  try {
+    var doc = fs.readFileSync(__dirname+'/../docs/'+suite+'/'+test+'.md').toString();
+  } catch(e) {
+    var doc = '';
+  }
+
+  return utils.format(t, description, doc);
 }
 
 function cleanup(req, res, data) {
@@ -67,6 +106,7 @@ function cleanup(req, res, data) {
     'x-suite',
     'x-test-name',
     'x-test-description',
+    'x-original-suite',
     'content-length',
     'connection',
     'host',
@@ -85,7 +125,7 @@ function cleanup(req, res, data) {
     request:{
       method:req.method,
       headers:reqHeaders,
-      uri:findOriginal(req.url, req.params),
+      uri:findOriginal(req.url, req.params, req.query),
       body:req.body ? JSON.stringify(req.body) : ''
     },
     response:{
@@ -96,3 +136,43 @@ function cleanup(req, res, data) {
     }
   }
 }
+
+function capitalize(s) {
+  return s.substr(0,1).toUpperCase()+s.substr(1);
+}
+
+function bf(pair, description) {
+  var indent, newline, output, req, res,
+    _this = this;
+  output = "";
+  indent = "    ";
+  newline = "\n";
+  req = pair['request'];
+  res = pair['response'];
+  output = "## " + req['method'] + " " + req['uri'] + newline;
+  output += '## %s' + newline;
+  output += newline+'%s'+newline;
+  output += "+ Request" + newline;
+//   output += indent + "+ Headers" + newline;
+//   output += newline;
+//   Object.keys(req['headers']).forEach(function(key) {
+//     return output += indent + indent + indent + key + ":" + req['headers'][key] + newline;
+//   });
+
+
+  req['body'].split('\n').forEach(function(line) {
+    return output += indent + indent + indent + line + newline;
+  });
+  output += newline;
+  output += "+ Response" + " " + res['statusCode'] + newline;
+//   output += indent + "+ Headers" + newline;
+//   output += newline;
+//   Object.keys(res['headers']).forEach(function(key) {
+//     return output += indent + indent + indent + key + ":" + res['headers'][key] + newline;
+//   });
+  res['body'].split('\n').forEach(function(line) {
+    return output += indent + indent + indent + line + newline;
+  });
+  output += newline;
+  return output;
+};
