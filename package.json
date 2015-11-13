@@ -45,8 +45,7 @@
     "twilio": "^2.5.1",
     "underscore": "^1.8.3",
     "urban-airship-push": "^0.1.0",
-    "winston": "^0.8.3",
-    "winston-papertrail": "^1.0.1"
+    "winston": "^0.8.3"
   },
   "devDependencies": {
     "clui": "^0.3.1",
