@@ -7,6 +7,5 @@ SELECT COALESCE(COUNT(messages.id) FILTER (WHERE messages.document_url IS NOT NU
                                                   (messages.notification IS NULL)))::INT, 0) AS comment_count
 FROM recommendations
 INNER JOIN messages
-ON recommendations.room = messages.room
+ON recommendations.id = messages.recommendation
 WHERE recommendations.id = $1
-GROUP BY messages.room
