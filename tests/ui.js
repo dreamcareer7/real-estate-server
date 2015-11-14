@@ -56,7 +56,7 @@ function updateUI() {
   });
 
   screen.addLine(newline());
-  
+
   Object.keys(suites).forEach( (suite) => {
     var result = suites[suite];
 
@@ -135,4 +135,9 @@ function updateUI() {
   process.stdout.write('\033[9A');
   screen.fill(newline());
   screen.output();
+}
+
+module.exports = (program) => {
+  if(!program.keep)
+    Run.on('done', process.exit);
 }

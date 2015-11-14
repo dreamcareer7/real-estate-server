@@ -16,19 +16,23 @@ program
   .option('--curl', 'Throw curl commands (disabled ui)')
   .option('--disable-response', 'When in curl mode, do not write responses to stdout')
   .option('--keep', 'Keep the server running after execution is completed')
+  .option('--blueprint', 'Creates API Blueprint from unit tests')
   .parse(process.argv);
 
 if(!program.concurrency)
   program.concurrency = 20;
 
+if(program.blueprint) {
+  require('./blueprint.js')(program);
+}
+
 if(program.curl) {
   program.disableUi = true;
-  require('./curl.js')(!program.disableResponse);
+  require('./curl.js')(program);
 }
 
 if(!program.disableUi)
-  require('./ui.js')
-
+  require('./ui.js')(program)
 
 var getSuites = function(cb) {
   if(program.args.length > 0)
@@ -123,6 +127,5 @@ async.series(steps, (err) => {
     console.log(err);
   }
 
-  if(!program.keep)
-    process.exit();
+  Run.emit('done');
 });
