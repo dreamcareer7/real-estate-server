@@ -70,6 +70,7 @@ function generate() {
 
   aglio.render(md, {
 //     themeTemplate:'triple',
+    themeFullWidth:true,
     includePath:'/tmp/rechat'
   },  (err, html) => {
     fs.writeFileSync('/tmp/rechat/full.html', html);
