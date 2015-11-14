@@ -12,3 +12,4 @@ scripts/announcements/subject_announcement.asc
 .tern-project
 .DS_Store
 *.log
+jsdoc/docs
