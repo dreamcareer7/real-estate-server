@@ -1,4 +1,5 @@
 node_modules
+docs
 lib/configs/development.js
 lib/configs/newrelic.js
 lib/sslcert/server.key

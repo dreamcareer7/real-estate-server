@@ -1,8 +1,9 @@
-var fs = require('fs');
-var _ = require('underscore');
-var utils = require('util');
-var aglio = require('aglio');
-var spawn = require('child_process').spawn;
+var fs       = require('fs');
+var _        = require('underscore');
+var utils    = require('util');
+var aglio    = require('aglio');
+var spawn    = require('child_process').spawn;
+var docfiles = '/../api_docs/';
 
 try {
   fs.mkdirSync('/tmp/rechat');
@@ -85,7 +86,7 @@ function generateSuite(name, calls) {
   var template = '# Group %s \n %s \n';
 
   try {
-    var doc = fs.readFileSync(__dirname+'/../docs/'+name+'.md').toString();
+    var doc = fs.readFileSync(__dirname + docfiles + name + '.md').toString();
   } catch(e) {
     var doc = '';
   }
@@ -108,7 +109,7 @@ function generateTest(call) {
   var test  = call.req.headers['x-test-name'];
 
   try {
-    var doc = fs.readFileSync(__dirname+'/../docs/'+suite+'/'+test+'.md').toString();
+    var doc = fs.readFileSync(__dirname + docfiles + suite + '/' + test + '.md').toString();
   } catch(e) {
     var doc = '';
   }
