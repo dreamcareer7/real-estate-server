@@ -7,7 +7,7 @@
     "test": "node tests/run.js",
     "start": "node index.js",
     "migrate": "node node_modules/@gustavnikolaj/migrate/bin/migrate --template-file scripts/migrate_template.js",
-    "docs": "node tests/run --blueprint"
+    "docs": "node tests/run -d --blueprint"
   },
   "engines": {
     "node": "4.2.2"
