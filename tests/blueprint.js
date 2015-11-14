@@ -1,6 +1,12 @@
 var fs = require('fs');
 var _ = require('underscore');
 var utils = require('util');
+var aglio = require('aglio');
+var spawn = require('child_process').spawn;
+
+try {
+  fs.mkdirSync('/tmp/rechat');
+} catch (e) {}
 
 var calls = [];
 
@@ -22,7 +28,7 @@ Run.on('app ready', (app) => {
   app.use(logger);
 });
 
-process.on('exit', generate);
+Run.on('done', generate);
 
 function findOriginal(url, params, qs) {
   Object.keys(params).forEach( (param_name) => {
@@ -60,7 +66,18 @@ function generate() {
 
   var templates = Object.keys(suites).map( (suite_name) => '<!-- include('+suite_name+'.md) -->' );
 
-  fs.writeFileSync('/tmp/docs/all.md', templates.join('\n\n'));
+  var md = templates.join('\n\n');
+
+  aglio.render(md, {
+    themeTemplate:'triple',
+    includePath:'/tmp/rechat'
+  },  (err, html) => {
+    fs.writeFileSync('/tmp/rechat/full.html', html);
+
+    spawn('xdg-open', ['/tmp/rechat/full.html']);
+    console.log('Your browser is now opened. Documentation is stored at /tmp/rechat/full.html');
+    process.exit();
+  })
 }
 
 function generateSuite(name, calls) {
@@ -78,7 +95,7 @@ function generateSuite(name, calls) {
     template += generateTest(call)
   });
 
-  fs.writeFileSync('/tmp/docs/'+name+'.md', template);
+  fs.writeFileSync('/tmp/rechat/'+name+'.md', template);
 }
 
 function generateTest(call) {

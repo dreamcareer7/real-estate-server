@@ -127,6 +127,7 @@ async.series(steps, (err) => {
     console.log(err);
   }
 
-  if(!program.keep)
-    process.exit();
+  Run.emit('done');
+//   if(!program.keep)
+//     process.exit();
 });
