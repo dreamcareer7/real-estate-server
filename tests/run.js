@@ -23,16 +23,16 @@ if(!program.concurrency)
   program.concurrency = 20;
 
 if(program.blueprint) {
-  require('./blueprint.js');
+  require('./blueprint.js')(program);
 }
 
 if(program.curl) {
   program.disableUi = true;
-  require('./curl.js')(!program.disableResponse);
+  require('./curl.js')(program);
 }
 
 if(!program.disableUi)
-  require('./ui.js')
+  require('./ui.js')(program)
 
 var getSuites = function(cb) {
   if(program.args.length > 0)
@@ -128,6 +128,4 @@ async.series(steps, (err) => {
   }
 
   Run.emit('done');
-//   if(!program.keep)
-//     process.exit();
 });

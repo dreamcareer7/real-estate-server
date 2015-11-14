@@ -136,3 +136,8 @@ function updateUI() {
   screen.fill(newline());
   screen.output();
 }
+
+module.exports = (program) => {
+  if(!program.keep)
+    Run.on('done', process.exit);
+}
