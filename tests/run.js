@@ -18,7 +18,7 @@ program
   .parse(process.argv);
 
 if(!program.concurrency)
-  program.concurrency = 20;
+  program.concurrency = 1;
 
 if(program.curl) {
   program.disableUi = true;
