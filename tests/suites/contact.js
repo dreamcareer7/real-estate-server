@@ -2,20 +2,20 @@ registerSuite('user', ['create']);
 
 var add = (cb) => {
   return frisby.create('add a contact')
-         .post('/contacts', {
-            contacts:[
-              {
-                email: results.user.create.data.email,
-                force_creation: true
-              }
-            ]
-          })
-         .expectStatus(200)
-         .expectJSONLength('data', 1)
-         .expectJSON({
-           code:'OK',
-           data:[]
-         })
+    .post('/contacts', {
+      contacts: [
+        {
+          email: results.user.create.data.email,
+          force_creation: true
+        }
+      ]
+    })
+    .expectStatus(200)
+    .expectJSONLength('data', 1)
+    .expectJSON({
+      code: 'OK',
+      data: []
+    })
     .after(cb);
 };
 
@@ -27,13 +27,21 @@ var get = (cb) => {
     .expectStatus(200)
     .expectJSONLength('data', 1)
     .expectJSON({
-      data:'OK',
-      data:[
+      data: 'OK',
+      data: [
         {contact_user: results.user.create.data}
       ]
     })
     .after(cb);
 };
+
+var update = (cb) => {
+  return frisby.create('update a contact')
+    .put('/contacts/' + results.contact.add.data[0].id, results.contact.add.data[0].contact_user)
+    .after(cb)
+    .expectStatus(204)
+};
+
 
 var search = (cb) => {
   results.user.create.data.type = 'compact_user';
@@ -44,7 +52,7 @@ var search = (cb) => {
     .expectJSONLength('data', 1)
     .expectJSON({
       data: 'OK',
-      data:[
+      data: [
         {contact_user: results.user.create.data}
       ]
     })
@@ -61,6 +69,7 @@ var del = (cb) => {
 module.exports = {
   add,
   get: get,
+  update,
   search,
   delete: del
 };
