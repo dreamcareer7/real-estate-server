@@ -193,3 +193,6 @@ function bf(pair, description) {
   output += newline;
   return output;
 };
+
+
+module.exports = () => {}
