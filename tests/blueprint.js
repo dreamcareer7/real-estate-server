@@ -69,7 +69,7 @@ function generate() {
   var md = templates.join('\n\n');
 
   aglio.render(md, {
-    themeTemplate:'triple',
+//     themeTemplate:'triple',
     includePath:'/tmp/rechat'
   },  (err, html) => {
     fs.writeFileSync('/tmp/rechat/full.html', html);
