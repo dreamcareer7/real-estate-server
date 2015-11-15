@@ -7,10 +7,12 @@ var generator = spawn('node', [
 
 var output = generator.stdout.toString().trim();
 
+console.log('Output ready');
+
 var express = require('express');
 var app = express();
 
-var port = process.env.HTTP_PORT || 3080;
+var port = process.env.PORT || 3080;
 var http = require('http').Server(app);
 
 app.get('/', (req,res) => res.end(output));
