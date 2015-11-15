@@ -7,7 +7,9 @@ var docfiles = '/../api_docs/';
 
 try {
   fs.mkdirSync('/tmp/rechat');
-} catch (e) {}
+} catch (e) {
+  console.log('Error building directory');
+}
 
 var calls = [];
 
