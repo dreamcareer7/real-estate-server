@@ -6,7 +6,7 @@ global.frisby = require('frisby');
 global.results = {};
 
 frisby.globalSetup({
-  timeout: 10000,
+  timeout: 30000,
   request: {
     json: true,
     baseUri:process.argv[3],
@@ -18,12 +18,18 @@ frisby.globalSetup({
 
 var runFrisbies = function(tasks) {
   var runF = function(task, cb) {
-    task.fn((err, res) => {
+    var f = task.fn((err, res) => {
       if(res.body)
         global.results[task.suite][task.name] = res.body;
 
       cb(err, res);
-    }).toss();
+    });
+
+    f.current.outgoing.headers['x-original-suite'] = task.suite;
+    f.current.outgoing.headers['x-test-name'] = task.name;
+    f.current.outgoing.headers['x-test-description'] = f.current.describe;
+
+    f.toss();
   };
 
   async.forEachSeries(tasks, runF);

@@ -16,19 +16,24 @@ program
   .option('--curl', 'Throw curl commands (disabled ui)')
   .option('--disable-response', 'When in curl mode, do not write responses to stdout')
   .option('--keep', 'Keep the server running after execution is completed')
+  .option('--docs', 'Setup REST API')
   .parse(process.argv);
 
 if(!program.concurrency)
-  program.concurrency = 20;
+  program.concurrency = 1;
+
+if(program.docs) {
+  program.disableUi = true;
+  require('./docs.js')(program);
+}
 
 if(program.curl) {
   program.disableUi = true;
-  require('./curl.js')(!program.disableResponse);
+  require('./curl.js')(program);
 }
 
 if(!program.disableUi)
-  require('./ui.js')
-
+  require('./ui.js')(program)
 
 var getSuites = function(cb) {
   if(program.args.length > 0)
@@ -123,6 +128,5 @@ async.series(steps, (err) => {
     console.log(err);
   }
 
-  if(!program.keep)
-    process.exit();
+  Run.emit('done');
 });

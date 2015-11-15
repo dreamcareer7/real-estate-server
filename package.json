@@ -6,7 +6,8 @@
   "scripts": {
     "test": "node tests/run.js",
     "start": "node index.js",
-    "migrate": "node node_modules/@gustavnikolaj/migrate/bin/migrate --template-file scripts/migrate_template.js"
+    "migrate": "node node_modules/@gustavnikolaj/migrate/bin/migrate --template-file scripts/migrate_template.js",
+    "docs": "node api_docs/index.js"
   },
   "engines": {
     "node": "4.2.2"
@@ -45,9 +46,12 @@
     "twilio": "^2.5.1",
     "underscore": "^1.8.3",
     "urban-airship-push": "^0.1.0",
-    "winston": "^0.8.3"
+    "winston": "^0.8.3",
+    "redis": "^2.3.0"
   },
   "devDependencies": {
+    "aglio": "^2.2.0",
+    "api-blueprint-http-formatter": "0.0.1",
     "clui": "^0.3.1",
     "frisby": "git+https://github.com/emilsedgh/frisby.git#fix_request",
     "jasmine-node": "^1.14.5",
