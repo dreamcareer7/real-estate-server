@@ -16,14 +16,15 @@ program
   .option('--curl', 'Throw curl commands (disabled ui)')
   .option('--disable-response', 'When in curl mode, do not write responses to stdout')
   .option('--keep', 'Keep the server running after execution is completed')
-  .option('--blueprint', 'Creates API Blueprint from unit tests')
+  .option('--docs', 'Setup REST API')
   .parse(process.argv);
 
 if(!program.concurrency)
   program.concurrency = 1;
 
-if(program.blueprint) {
-  require('./blueprint.js')(program);
+if(program.docs) {
+  program.disableUi = true;
+  require('./docs.js')(program);
 }
 
 if(program.curl) {

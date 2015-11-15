@@ -74,10 +74,7 @@ function generate() {
     themeFullWidth:true,
     includePath:'/tmp/rechat'
   },  (err, html) => {
-    fs.writeFileSync('/tmp/rechat/full.html', html);
-
-    spawn('xdg-open', ['/tmp/rechat/full.html']);
-    console.log('Your browser is now opened. Documentation is stored at /tmp/rechat/full.html');
+    process.stdout.write(html);
     process.exit();
   })
 }
