@@ -2,7 +2,7 @@
 
 var db = require('../lib/utils/db');
 
-var sql_up   = 'DO $$ BEGIN ALTER TABLE contacts ADD COLUMN address text; EXCEPTION WHEN duplicate_column THEN END; $$;';
+var sql_up   = 'DO $$ BEGIN ALTER TABLE contacts ADD COLUMN address jsonb; EXCEPTION WHEN duplicate_column THEN END; $$;';
 var sql_down = 'ALTER TABLE contacts DROP COLUMN IF EXISTS address;';
 
 var runSql = (sql) => {

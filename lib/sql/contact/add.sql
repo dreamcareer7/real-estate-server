@@ -11,6 +11,6 @@ INSERT INTO contacts("user",
                      birthday,
                      address
                     )
-VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
+VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, TIMESTAMP WITH TIME ZONE 'EPOCH' + $11 * INTERVAL '1 SECOND' , $12)
 ON CONFLICT DO NOTHING
 RETURNING id

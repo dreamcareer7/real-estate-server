@@ -11,4 +11,4 @@ SET contact_user = $1,
     birthday = TIMESTAMP WITH TIME ZONE 'EPOCH' + $10 * INTERVAL '1 SECOND',
     address = $11,
     updated_at = NOW()
-WHERE id = $2
+WHERE id = $12
