@@ -1,3 +1,3 @@
 SELECT *
-FROM verification_codes
+FROM verifications
 WHERE id = $1

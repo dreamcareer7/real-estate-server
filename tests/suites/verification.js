@@ -10,20 +10,12 @@ var create = (cb) => {
 
 var verify = (cb) => {
   return frisby.create('verify code')
-    .get('/verifications/' + results.verification.create.id + '/users/' + results.user.create.data.id)
-    .after(cb)
-    .expectStatus(200);
-}
-
-var get = (cb) => {
-  return frisby.create('get code')
-    .get('/verifications/' + results.verification.create.id)
+    .get('/verifications/' + results.verification.create.code + '/users/' + results.verification.create.user_id)
     .after(cb)
     .expectStatus(200);
 }
 
 module.exports = {
   create,
-  verify,
-  get: get
+  verify
 }
