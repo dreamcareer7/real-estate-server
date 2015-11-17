@@ -1,9 +1,0 @@
-{
-  apps: [
-    {
-      "script": "./scripts/ntreis/update.js",
-      "name": "NTREIS Connector",
-      "args": ["-p", "-r", "-e"],
-    }
-  ]
-}
