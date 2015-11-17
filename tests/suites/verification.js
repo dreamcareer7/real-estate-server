@@ -17,7 +17,7 @@ var create = (cb) => {
 
 var verify = (cb) => {
   return frisby.create('verify code')
-    .get('/verifications/' + results.verification.create.data.code + '?user_id=' + results.verification.create.data.user_id)
+    .patch('/self/phone_verification?code=' + results.verification.create.data.code)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
