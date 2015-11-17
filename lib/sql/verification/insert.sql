@@ -1,4 +1,4 @@
-INSERT INTO public.verifications(code, user_id)
+INSERT INTO verifications(code, user_id)
     VALUES ($1, $2)
 ON CONFLICT (user_id) DO UPDATE
     SET code = $1
