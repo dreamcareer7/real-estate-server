@@ -2,19 +2,15 @@
 
 var db = require('../lib/utils/db');
 
-var sql_up = 'CREATE TABLE verifications\
+var sql_up = 'CREATE TABLE IF NOT EXISTS verifications\
 (\
   id uuid DEFAULT uuid_generate_v1(),\
   code character(5),\
-  user_id uuid,\
-  CONSTRAINT verification_user_id_fkey FOREIGN KEY (user_id)\
-    REFERENCES users (id) MATCH SIMPLE\
+  \"user\" uuid,\
+  CONSTRAINT verification_user_fkey FOREIGN KEY (\"user\")\
+    REFERENCES users(id) MATCH SIMPLE\
   ON UPDATE NO ACTION ON DELETE NO ACTION\
-)\
-CREATE UNIQUE INDEX verifications_user_id_idx\
-ON verifications\
-USING btree\
-(user_id);';
+);';
 
 var sql_down = 'DROP TABLE verifications';
 
