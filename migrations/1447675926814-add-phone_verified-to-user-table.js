@@ -2,8 +2,8 @@
 
 var db = require('../lib/utils/db');
 
-var sql_up   = 'ALTER TABLE public.users ADD COLUMN phone_confirmed boolean DEFAULT false;';
-var sql_down = 'ALTER TABLE public.users DROP COLUMN phone_confirmed;';
+var sql_up   = 'ALTER TABLE users ADD COLUMN phone_confirmed boolean DEFAULT false;';
+var sql_down = 'ALTER TABLE users DROP COLUMN phone_confirmed;';
 
 var runSql = (sql) => {
   return (next) => {
