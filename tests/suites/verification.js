@@ -8,13 +8,11 @@ var create = (cb) => {
     .expectStatus(201)
     .expectJSON({
       code: 'OK',
-      data: [
-        {
-          type: 'invitation'
-        }
-      ]
+      data: {
+        type: 'verification'
+      }
+
     })
-    .expectJSONLength('data', 1);
 }
 
 var verify = (cb) => {
@@ -24,13 +22,10 @@ var verify = (cb) => {
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
-      data: [
-        {
-          status: 'verified'
-        }
-      ]
+      data: {
+        type: 'verification'
+      }
     })
-    .expectJSONLength('data', 1);
 }
 
 module.exports = {
