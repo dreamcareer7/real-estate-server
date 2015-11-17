@@ -26,7 +26,7 @@ var get = (cb) => {
     .get('/contacts')
     .expectStatus(200)
     .expectJSON({
-      data: 'OK',
+      code: 'OK',
       data: [
         {contact_user: results.user.create.data}
       ]
@@ -38,7 +38,10 @@ var update = (cb) => {
   return frisby.create('update a contact')
     .put('/contacts/' + results.contact.add.data[0].id, results.contact.add.data[0].contact_user)
     .after(cb)
-    .expectStatus(204)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK'
+    });
 };
 
 

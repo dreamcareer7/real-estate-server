@@ -10,7 +10,6 @@ var create = (cb) => {
       data: {
         type: 'verification'
       }
-
     });
 };
 
