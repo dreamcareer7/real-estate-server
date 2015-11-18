@@ -1,26 +1,34 @@
 SELECT id,
        (COUNT(*) OVER())::INT AS count
 FROM messages
-WHERE message_room = $1
+WHERE room = $1 AND
+      deleted_at IS NULL
 AND CASE
-    WHEN $3 = 'Since_C' THEN created_at > TIMESTAMP WITH TIME ZONE 'EPOCH' + $4 * INTERVAL '1 MICROSECOND'
-    WHEN $3 = 'Max_C' THEN created_at < TIMESTAMP WITH TIME ZONE 'EPOCH' + $4 * INTERVAL '1 MICROSECOND'
-    WHEN $3 = 'Since_U' THEN updated_at > TIMESTAMP WITH TIME ZONE 'EPOCH' + $4 * INTERVAL '1 MICROSECOND'
-    WHEN $3 = 'Max_U' THEN updated_at < TIMESTAMP WITH TIME ZONE 'EPOCH' + $4 * INTERVAL '1 MICROSECOND'
-    WHEN $3 = 'Init_C' THEN created_at < NOW()
-    WHEN $3 = 'Init_U' THEN updated_at < NOW()
+    WHEN $5 = 'None' THEN TRUE
+    ELSE $5::uuid = recommendation
+    END
+AND CASE
+    WHEN $6 = 'None' THEN TRUE
+    ELSE $6::uuid = reference
+    END
+AND CASE
+    WHEN $2 = 'Since_C' THEN created_at > TIMESTAMP WITH TIME ZONE 'EPOCH' + $3 * INTERVAL '1 MICROSECOND'
+    WHEN $2 = 'Max_C' THEN created_at <= TIMESTAMP WITH TIME ZONE 'EPOCH' + $3 * INTERVAL '1 MICROSECOND'
+    WHEN $2 = 'Since_U' THEN updated_at > TIMESTAMP WITH TIME ZONE 'EPOCH' + $3 * INTERVAL '1 MICROSECOND'
+    WHEN $2 = 'Max_U' THEN updated_at <= TIMESTAMP WITH TIME ZONE 'EPOCH' + $3 * INTERVAL '1 MICROSECOND'
+    WHEN $2 = 'Init_C' THEN created_at <= CLOCK_TIMESTAMP()
+    WHEN $2 = 'Init_U' THEN updated_at <= CLOCK_TIMESTAMP()
     ELSE TRUE
     END
-AND ((viewable_by = $2) OR (viewable_by IS NULL))
 ORDER BY
-    CASE $3
+    CASE $2
         WHEN 'Since_C' THEN created_at
         WHEN 'Since_U' THEN updated_at
     END,
-    CASE $3
+    CASE $2
         WHEN 'Max_C' THEN created_at
         WHEN 'Max_U' THEN updated_at
         WHEN 'Init_C' THEN created_at
         WHEN 'Init_U' THEN updated_at
     END DESC
-LIMIT $5;
+LIMIT $4;

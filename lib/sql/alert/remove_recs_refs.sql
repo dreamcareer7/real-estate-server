@@ -1,4 +1,4 @@
 UPDATE recommendations
-SET referring_alerts = ARRAY_REMOVE(referring_alerts, $1)
-WHERE referred_shortlist = $2 AND
-      ($1 = ANY(referring_alerts))
+SET referring_objects = ARRAY_REMOVE(referring_objects, $1)
+WHERE room = $2 AND
+      ($1 = ANY(referring_objects))

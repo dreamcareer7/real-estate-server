@@ -7,12 +7,13 @@ INSERT INTO notifications(
             auxiliary_object_class,
             auxiliary_object,
             recommendation,
-            notified_user,
-            shortlist,
+            room,
             auxiliary_subject,
             subject_class,
             auxiliary_subject_class,
             extra_subject_class,
-            extra_object_class
+            extra_object_class,
+            exclude,
+            specific
         )
-VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15) RETURNING id;
+VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16) RETURNING id;

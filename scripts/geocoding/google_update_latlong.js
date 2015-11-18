@@ -13,9 +13,8 @@ require('../../lib/models/Address.js');
 require('../../lib/models/Property.js');
 require('../../lib/models/Listing.js');
 require('../../lib/models/Recommendation.js');
-require('../../lib/models/Shortlist.js');
+require('../../lib/models/Room.js');
 require('../../lib/models/User.js');
-require('../../lib/models/MessageRoom.js');
 
 Address.getBatchOfAddressesWithoutLatLongGoogle(config.google.address_batch_size, function(err, address_ids) {
   if(err) {
@@ -28,7 +27,7 @@ Address.getBatchOfAddressesWithoutLatLongGoogle(config.google.address_batch_size
                  config.google.concurrency,
                  function(r, cb) {
                    sleep.usleep(config.google.staging);
-                   return Address.updateGeoFromGoogleDirect(r, cb);
+                   return Address.updateGeoFromGoogle(r, cb);
                  },
                  function(err, results) {
                    if(err) {

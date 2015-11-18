@@ -1,17 +1,17 @@
-# Shortlisted backend #
+# Rechat API #
 
 ## How to install ##
 
-Assuming you already have nodejs, git and postgres:
+Assuming you already have node.js, git and postgres:
 
 ```bash
-git clone git@bitbucket.org:shayanhamidi/shortlisted-server.git
+git clone git@bitbucket.org:rechat/shortlisted-server.git
 cd shortlisted-server
 npm install .
-psql shortlisted < lib/data/schema.sql
+psql rechat < lib/data/schema.sql
 vim lib/config.js
 ```
-And set configuration option of your database.
+And set configuration options of your database.
 
 ## Run the app ##
 

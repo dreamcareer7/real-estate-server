@@ -1,4 +1,4 @@
-WITH address_ids AS
+with address_ids AS
 (
   SELECT id FROM addresses WHERE
     location IS NOT NULL AND
@@ -26,6 +26,6 @@ FROM listings WHERE
       COALESCE(lot_square_meters >= $12, TRUE) = TRUE AND
       COALESCE(lot_square_meters <= $13, TRUE) = TRUE AND
       address_id IN(
-        SELECT * FROM address_ids
+        select * from address_ids
       )
   )
