@@ -27,6 +27,6 @@ var verify = (cb) => {
 };
 
 module.exports = {
-  create,
-  verify
+  create
+  //verify
 };
