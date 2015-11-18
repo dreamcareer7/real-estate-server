@@ -2,7 +2,7 @@
 
 var db = require('../lib/utils/db');
 
-var sql_up   = 'CREATE INDEX addresses_location_gix ON addresses USING gist(location);';
+var sql_up   = 'CREATE INDEX IF NOT EXISTS addresses_location_gix ON addresses USING gist(location);';
 var sql_down = 'DROP INDEX addresses_location_gix;';
 
 var runSql = (sql) => {
