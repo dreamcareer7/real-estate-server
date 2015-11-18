@@ -1,24 +1,31 @@
-SELECT listings.id AS id,
-       (COUNT(*) OVER())::INT AS total
-FROM listings
-INNER JOIN properties
-ON listings.property_id = properties.id
-INNER JOIN addresses
-ON properties.address_id = addresses.id
-WHERE
-    listings.status = 'Active' AND
-    listings.price >= $1 AND
-    listings.price <= $2 AND
-    properties.square_meters >= $3 AND
-    properties.square_meters <= $4 AND
-    properties.bedroom_count >= $5 AND
-    ((properties.half_bathroom_count + properties.full_bathroom_count) >= $6) AND
-    properties.property_type = $7 AND
-    properties.property_subtype = ANY ($8::property_subtype[]) AND
-    addresses.location IS NOT NULL AND
-    COALESCE(ST_Within(addresses.location, ST_SetSRID(ST_GeomFromText($9), 4326)), FALSE) = TRUE AND
-    COALESCE(properties.year_built >= $10, TRUE) = TRUE AND
-    COALESCE(properties.year_built <= $11, TRUE) = TRUE AND
-    COALESCE(properties.pool_yn = $12, TRUE) = TRUE AND
-    COALESCE(properties.lot_square_meters >= $13, TRUE) = TRUE AND
-    COALESCE(properties.lot_square_meters <= $14, TRUE) = TRUE
+WITH address_ids AS
+(
+  SELECT id FROM addresses WHERE
+    location IS NOT NULL AND
+    COALESCE(ST_Within(addresses.location, ST_SetSRID(ST_GeomFromText($14), 4326)), FALSE) = TRUE
+)
+
+SELECT
+  listings.id AS id,
+  (COUNT(*) OVER())::INT AS total
+FROM listings WHERE
+  listings.status = 'Active' AND
+  listings.price >= $1 AND
+  listings.price <= $2 AND
+  listings.property_id IN(
+    SELECT id FROM properties WHERE
+      square_meters >= $3 AND
+      square_meters <= $4 AND
+      bedroom_count >= $5 AND
+      ((half_bathroom_count + full_bathroom_count) >= $6) AND
+      property_type = $7 AND
+      property_subtype = ANY ($8::property_subtype[]) AND
+      COALESCE(year_built >= $9, TRUE) = TRUE AND
+      COALESCE(year_built <= $10, TRUE) = TRUE AND
+      COALESCE(pool_yn = $11, TRUE) = TRUE AND
+      COALESCE(lot_square_meters >= $12, TRUE) = TRUE AND
+      COALESCE(lot_square_meters <= $13, TRUE) = TRUE AND
+      address_id IN(
+        SELECT * FROM address_ids
+      )
+  )
