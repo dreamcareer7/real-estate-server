@@ -1,7 +1,7 @@
-var config   = require('../../lib/config.js');
+var config = require('../../lib/config.js');
 
-var user     = require('./data/user.js');
-var address  = require('./data/address.js');
+var user = require('./data/user.js');
+var address = require('./data/address.js');
 
 var password = config.tests.password;
 
@@ -20,7 +20,7 @@ var create = (cb) => {
 
 var get = (cb) => {
   return frisby.create('get user')
-    .get('/users/'+ results.user.create.data.id)
+    .get('/users/' + results.user.create.data.id)
     .expectJSON({
       code: 'OK',
       data: results.user.create.data
@@ -68,6 +68,51 @@ var deleteAddress = (cb) => {
     .expectStatus(200);
 };
 
+var searchByEmail = (cb) => {
+  return frisby.create('search users by email')
+    .get('/users/search?email=' + results.user.create.data.email)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      data: [
+        {
+          type: 'compact_user'
+        }
+      ]
+    })
+    .expectJSONLength('data', 1);
+}
+
+var searchByCode = (cb) => {
+  return frisby.create('search users by code')
+    .get('/users/search?code=' + results.user.create.data.user_code)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      data: {
+        type: 'user'
+      }
+    })
+}
+
+var searchByPhone = (cb) => {
+  return frisby.create('search users by phone')
+    .get('/users/search?phone=' + results.user.create.data.phone_number)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      data: [
+        {
+          type: 'compact_user'
+        }
+      ]
+    })
+    .expectJSONLength('data', 1);
+}
+
 module.exports = {
   create,
   get: get,
@@ -75,5 +120,8 @@ module.exports = {
   resetPassword,
   setAddress,
   deleteAddress,
+  searchByEmail,
+  searchByCode,
+  searchByPhone,
   delete: del
 };
