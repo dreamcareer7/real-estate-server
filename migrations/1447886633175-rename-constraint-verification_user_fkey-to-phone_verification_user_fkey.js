@@ -2,8 +2,8 @@
 
 var db = require('../lib/utils/db');
 
-var sql_up   = 'DO $$ BEGIN ALTER TABLE users ADD COLUMN phone_confirmed boolean DEFAULT false; EXCEPTION WHEN duplicate_column THEN END; $$;';
-var sql_down = 'ALTER TABLE users DROP COLUMN phone_confirmed;';
+var sql_up   = 'ALTER TABLE IF EXISTS phone_verifications RENAME CONSTRAINT verifications_user_fkey TO phone_verifications_user_fkey;';
+var sql_down = 'ALTER TABLE IF EXISTS phone_verifications RENAME CONSTRAINT phone_verifications_user_fkey TO verifications_user_fkey;';
 
 var runSql = (sql) => {
   return (next) => {
