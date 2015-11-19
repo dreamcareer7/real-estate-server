@@ -2,7 +2,9 @@
 
 var db = require('../lib/utils/db');
 
-var sql_up   = 'CREATE OR REPLACE FUNCTION toggle_phone_confirmed() RETURNS TRIGGER AS $toggle_phone_confirmed$\
+var sql_up   = 'DROP FUNCTION IF EXISTS toggle_phone_verification();';
+
+var sql_down = 'CREATE OR REPLACE FUNCTION toggle_phone_confirmed() RETURNS TRIGGER AS $toggle_phone_confirmed$\
                 BEGIN\
                 UPDATE users\
                 SET phone_confirmed = false\
@@ -10,8 +12,6 @@ var sql_up   = 'CREATE OR REPLACE FUNCTION toggle_phone_confirmed() RETURNS TRIG
                 RETURN NEW;\
                 END;\
                 $toggle_phone_confirmed$ language plpgsql;';
-
-var sql_down = 'DROP FUNCTION IF EXISTS toggle_phone_confirmed();';
 
 var runSql = (sql) => {
   return (next) => {
