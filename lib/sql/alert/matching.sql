@@ -2,7 +2,7 @@ with address_ids AS
 (
   SELECT id FROM addresses WHERE
     location IS NOT NULL AND
-    COALESCE(ST_Within(addresses.location, ST_SetSRID(ST_GeomFromText($14), 4326)), FALSE) = TRUE
+    ST_Within(addresses.location, ST_SetSRID(ST_GeomFromText($14), 4326))
 )
 
 SELECT
