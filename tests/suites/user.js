@@ -40,16 +40,19 @@ var update = (cb) => {
     .expectStatus(200);
 };
 
+var changePassword = (cb) => {
+  return frisby.create('change password of a user')
+    .patch('/users/self/password', {
+      old_password: password,
+      new_password: 'aaaaaa'
+    })
+    .after(cb)
+    .expectStatus(200);
+};
+
 var resetPassword = (cb) => {
   return frisby.create('initiate password reset')
     .post('/users/reset_password', {email: user.email})
-    .after(cb)
-    .expectStatus(204);
-};
-
-var del = (cb) => {
-  return frisby.create('delete user')
-    .delete('/users/self')
     .after(cb)
     .expectStatus(204);
 };
@@ -61,12 +64,22 @@ var setAddress = (cb) => {
     .expectStatus(200);
 };
 
-var deleteAddress = (cb) => {
-  return frisby.create('delete address')
-    .delete('/users/self/address')
+var patchUserTimeZone = (cb) => {
+  return frisby.create('change timezone setting for a user')
+    .patch('/users/self/timezone', {time_zone: results.user.create.data.timezone})
     .after(cb)
-    .expectStatus(200);
+    .expectStatus(204);
 };
+
+var searchRelatedUser = (cb) => {
+  return frisby.create('find related user')
+    .get('/users/related/search?q=' + results.user.create.data.first_name)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK'
+    });
+}
 
 var searchByEmail = (cb) => {
   return frisby.create('search users by email')
@@ -113,15 +126,32 @@ var searchByPhone = (cb) => {
     .expectJSONLength('data', 1);
 }
 
+var deleteAddress = (cb) => {
+  return frisby.create('delete address')
+    .delete('/users/self/address')
+    .after(cb)
+    .expectStatus(200);
+};
+
+var del = (cb) => {
+  return frisby.create('delete user')
+    .delete('/users/self')
+    .after(cb)
+    .expectStatus(204);
+};
+
 module.exports = {
   create,
   get: get,
   update,
+  changePassword,
   resetPassword,
   setAddress,
-  deleteAddress,
+  patchUserTimeZone,
+  searchRelatedUser,
   searchByEmail,
   searchByCode,
   searchByPhone,
+  deleteAddress,
   delete: del
 };
