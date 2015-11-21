@@ -22,6 +22,18 @@ var get = (cb) => {
     .after(cb);
 }
 
+var getRoomMedia = (cb) => {
+  return frisby.create('get room\'s media')
+    .get('/rooms/' + results.room.create.data.id + '/media')
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      data: [],
+      info: {}
+    })
+    .after(cb);
+}
+
 var del = (cb) => {
   return frisby.create('delete room')
     .delete('/rooms/' + results.room.create.data.id)
@@ -54,6 +66,17 @@ var getUserRooms = (cb) => {
       data: []
     })
     .after(cb);
+}
+
+var patchRoom = (cb) => {
+  return frisby.create('patch a room')
+    .put('/rooms/' + results.room.create.data.id, room)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      data: room
+    });
 }
 
 var searchByUser = (cb) => {
@@ -155,9 +178,11 @@ var searchByTitle = (cb) => {
 module.exports = {
   create,
   get: get,
+  getRoomMedia,
   getUserRooms,
   addUser,
   getUserRoomsAgain: getUserRooms,
+  patchRoom,
   searchByUser,
   searchByFirstName,
   searchByLastName,
