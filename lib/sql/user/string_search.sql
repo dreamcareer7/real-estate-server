@@ -18,7 +18,9 @@ FROM related_users
 INNER JOIN users
 ON related_users.id = users.id
 WHERE
-    ((CASE WHEN $2::text IS NOT NULL THEN users.first_name ~* $2::text ELSE TRUE END) OR
-     (CASE WHEN $2::text IS NOT NULL THEN users.last_name ~* $2::text ELSE TRUE END)) AND
+    (users.first_name ~* ANY($2) OR
+     users.last_name ~* ANY($2) OR
+     users.email ~* ANY($2) OR
+     users.phone_number ~* ANY($2)) AND
      users.deleted_at IS NULL
 ORDER BY users.first_name
