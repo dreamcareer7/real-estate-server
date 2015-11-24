@@ -22,9 +22,6 @@ delete_password_recoveries AS (
 ),
 delete_messages AS (
     DELETE FROM messages WHERE author = $1
-),
-delete_rooms AS (
-    DELETE FROM rooms WHERE lead_agent = $1 OR owner = $1
 )
 
 DELETE FROM users WHERE id = $1
