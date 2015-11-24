@@ -300,31 +300,85 @@ function fetch(cb, results) {
   });
 }
 
+
 Client.work = function(options, cb) {
   Client.options = options;
 
   async.auto({
     mls: [fetch],
     objects: ['mls',
-              (cb, results) =>
-                async.mapLimit(results.mls, config.ntreis.parallel, createObjects, cb)
-             ],
+      (cb, results) =>
+        async.mapLimit(results.mls, config.ntreis.parallel, createObjects, cb)
+    ],
     recs: ['objects',
-           (cb, results) => {
-             if(!Client.options.enableRecs)
-               return cb(null, false);
+      (cb, results) => {
+        if(!Client.options.enableRecs)
+          return cb(null, false);
 
-             var listing_ids = results.objects.map( (r) => r.listing_id )
+        var listing_ids = results.objects.map( (r) => r.listing_id )
 
-             async.map(listing_ids, Recommendation.generateForListing, cb);
-           }],
+        async.map(listing_ids, Recommendation.generateForListing, cb);
+      }],
     update_last_run: ['mls', 'objects',
-                      (cb, results) => {
-                        saveLastRun(results.mls[results.mls.length - 1]);
-                        cb();
-                      }
-                     ]
+      (cb, results) => {
+        saveLastRun(results.mls[results.mls.length - 1]);
+        cb();
+      }
+    ]
   }, cb);
 }
+
+
+
+
+Client.searchByLocation = function (points, cb) {
+  var from = '2015-11-23T00:00:00.000+'
+  console.log('locating listings around ', from.cyan);
+
+  var timeoutReached = false;
+  var timeout = setTimeout(function() {
+    timeoutReached = true;
+    cb('Timeout on RETS client reached');
+  }, config.ntreis.timeout);
+
+  client.once('connection.success', function() {
+    if(timeoutReached)
+      return console.log('We got a response, but it was way too late. We already consider it a timeout.');
+
+    client.getTable("Property", "Listing");
+    var fields;
+
+    var query = ('(MatrixModifiedDT=' + from + '),' +
+                 '( Longitude=' + points[0].longitude +'+),(Latitude='+ points[0].latitude +'-),' +
+                 '( Longitude=' + points[1].longitude +'-),(Latitude='+ points[2].latitude +'+)'
+    )
+
+
+    Client.emit('starting query', query);
+    client.once('metadata.table.success', function(table) {
+      if(timeoutReached)
+        return console.log('We got a response, but it was way too late. We already consider it a timeout.');
+
+      fields = table.Fields;
+      client.query("Property",
+        "Listing",
+        query,
+        function(err, data) {
+          if(timeoutReached)
+            return console.log('We got a response, but it was way too late. We already consider it a timeout.');
+
+          clearTimeout(timeout);
+
+          if (err)
+            return cb(err);
+          data.sort((Client.options.initial) ? byMatrix_Unique_ID : byMatrixModifiedDT);
+
+          return cb(null,data);
+        });
+    });
+  });
+}
+
+
 
 module.exports = Client;
