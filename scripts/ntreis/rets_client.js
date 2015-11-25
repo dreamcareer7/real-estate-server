@@ -187,15 +187,15 @@ function upsertListing(listing, property_id, cb) {
         }
       },
       update: ['listing_photos',
-                function(cb, results) {
-                  Listing.update(current.id, listing, cb);
-                }]
+        function(cb, results) {
+          Listing.update(current.id, listing, cb);
+        }]
     }, function(err, results) {
-          if(err)
-            return cb(err);
+      if(err)
+        return cb(err);
 
-          return cb(null, results.update.id);
-        });
+      return cb(null, results.update.id);
+    });
   });
 }
 
@@ -269,7 +269,7 @@ function fetch(cb, results) {
     client.getTable("Property", "Listing");
     var fields;
     var query = (Client.options.initial) ? ('(MATRIX_UNIQUE_ID=' + last_run + '+),(STATUS=A,AC,AOC,AKO)')
-              : ('(MatrixModifiedDT=' + last_run + ')')
+      : ('(MatrixModifiedDT=' + last_run + ')')
 
     Client.emit('starting query', query);
     client.once('metadata.table.success', function(table) {
@@ -279,27 +279,26 @@ function fetch(cb, results) {
       fields = table.Fields;
 
       client.query("Property",
-                    "Listing",
-                    query,
-                    function(err, data) {
-                      if(timeoutReached)
-                        return console.log('We got a response, but it was way too late. We already consider it a timeout.');
+        "Listing",
+        query,
+        function(err, data) {
+          if(timeoutReached)
+            return console.log('We got a response, but it was way too late. We already consider it a timeout.');
 
-                      clearTimeout(timeout);
+          clearTimeout(timeout);
 
-                      if (err)
-                        return cb(err);
+          if (err)
+            return cb(err);
 
-                      data.sort((Client.options.initial) ? byMatrix_Unique_ID : byMatrixModifiedDT);
+          data.sort((Client.options.initial) ? byMatrix_Unique_ID : byMatrixModifiedDT);
 
-                      var limited_data = data.slice(0, Client.options.limit);
-                      Client.emit('data fetched', limited_data)
-                      return cb(null, limited_data);
-                    });
+          var limited_data = data.slice(0, Client.options.limit);
+          Client.emit('data fetched', limited_data)
+          return cb(null, limited_data);
+        });
     });
   });
 }
-
 
 Client.work = function(options, cb) {
   Client.options = options;
@@ -327,58 +326,5 @@ Client.work = function(options, cb) {
     ]
   }, cb);
 }
-
-
-
-
-Client.searchByLocation = function (points, cb) {
-  var from = '2015-11-23T00:00:00.000+'
-  console.log('locating listings around ', from.cyan);
-
-  var timeoutReached = false;
-  var timeout = setTimeout(function() {
-    timeoutReached = true;
-    cb('Timeout on RETS client reached');
-  }, config.ntreis.timeout);
-
-  client.once('connection.success', function() {
-    if(timeoutReached)
-      return console.log('We got a response, but it was way too late. We already consider it a timeout.');
-
-    client.getTable("Property", "Listing");
-    var fields;
-
-    var query = ('(MatrixModifiedDT=' + from + '),' +
-                 '( Longitude=' + points[0].longitude +'+),(Latitude='+ points[0].latitude +'-),' +
-                 '( Longitude=' + points[1].longitude +'-),(Latitude='+ points[2].latitude +'+)'
-    )
-
-
-    Client.emit('starting query', query);
-    client.once('metadata.table.success', function(table) {
-      if(timeoutReached)
-        return console.log('We got a response, but it was way too late. We already consider it a timeout.');
-
-      fields = table.Fields;
-      client.query("Property",
-        "Listing",
-        query,
-        function(err, data) {
-          if(timeoutReached)
-            return console.log('We got a response, but it was way too late. We already consider it a timeout.');
-
-          clearTimeout(timeout);
-
-          if (err)
-            return cb(err);
-          data.sort((Client.options.initial) ? byMatrix_Unique_ID : byMatrixModifiedDT);
-
-          return cb(null,data);
-        });
-    });
-  });
-}
-
-
 
 module.exports = Client;
