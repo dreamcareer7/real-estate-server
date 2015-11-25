@@ -11,7 +11,7 @@ var sql_up   = 'CREATE OR REPLACE FUNCTION toggle_phone_confirmed() RETURNS TRIG
                 END;\
                 $toggle_phone_confirmed$ language plpgsql;';
 
-var sql_down = 'DROP FUNCTION toggle_phone_confirmed();';
+var sql_down = 'DROP FUNCTION IF EXISTS toggle_phone_confirmed();';
 
 var runSql = (sql) => {
   return (next) => {
