@@ -299,6 +299,8 @@ function connect(cb) {
     if(timeoutReached)
       return timeoutMessage();
 
+    clearTimeout(timeout);
+
     connected = true;
     cb();
   });
