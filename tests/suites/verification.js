@@ -1,32 +1,26 @@
 registerSuite('user', ['create']);
 
-var create = (cb) => {
+var createPhoneVerification = (cb) => {
   return frisby.create('create verification')
-    .post('/verifications')
+    .post('/phone_verifications')
     .after(cb)
-    .expectStatus(201)
-    .expectJSON({
-      code: 'OK',
-      data: {
-        type: 'verification'
-      }
-    });
+    .expectStatus(204)
 };
 
-var verify = (cb) => {
-  return frisby.create('verify code')
-    .patch('/users/self/phone_verification?code=' + results.verification.create.data.code)
+var createEmailVerification = (cb) => {
+  return frisby.create('create verification')
+    .post('/email_verifications')
     .after(cb)
-    .expectStatus(200)
-    .expectJSON({
-      code: 'OK',
-      data: {
-        type: 'verification'
-      }
-    });
+    .expectStatus(204)
 };
 
+var verifyPhone = (cb) => {
+  return frisby.create('create verification')
+    .post('/email_verifications')
+    .after(cb)
+    .expectStatus(204)
+};
 module.exports = {
-  create
-  //verify
+  createPhoneVerification,
+  createEmailVerification
 };
