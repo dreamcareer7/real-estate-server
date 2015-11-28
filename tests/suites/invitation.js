@@ -11,7 +11,8 @@ var create = (cb) => {
         inviting_user: results.authorize.token.data.id,
         email: results.user.create.data.email,
         phone_number: results.user.create.data.phone_number,
-        invitee_name: results.user.create.data.first_name,
+        invitee_first_name: results.user.create.data.first_name,
+        invitee_last_name: results.user.create.data.last_name,
         room: results.room.create.data.id,
         url: ""
       }]
