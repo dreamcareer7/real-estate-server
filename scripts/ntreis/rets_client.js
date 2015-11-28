@@ -38,7 +38,21 @@ var client = require('rets-client').getClient(retsLoginUrl, retsUser, retsPasswo
 var timing = JSON.parse(fs.readFileSync(__dirname+'/timing.config.js', 'utf8'));
 
 Date.prototype.toNTREISString = function() {
-  return this.toISOString().replace('Z', '+');
+  var pad = function(number) {
+    if (number < 10) {
+      return '0' + number;
+    }
+    return number;
+  }
+
+  return this.getUTCFullYear() +
+    '-' + pad(this.getMonth() + 1) +
+    '-' + pad(this.getDate()) +
+    'T' + pad(this.getHours()) +
+    ':' + pad(this.getMinutes()) +
+    ':' + pad(this.getSeconds()) +
+    '.' + (this.getMilliseconds() / 1000).toFixed(3).slice(2, 5) +
+    '+';
 }
 
 function byMatrixModifiedDT(a, b) {
@@ -219,92 +233,136 @@ function createObjects(data, cb) {
 }
 
 function getLastRun(cb) {
-  if (Client.options.initial) {
-    if (timing.last_id)
-      return timing.last_id;
+  if(Client.options.startFrom) {
+    var t = new Date((new Date()).getTime() - (Client.options.startFrom * 3600000));
 
-    return '0';
-  } else {
-    if (timing.last_run)
-      return timing.last_run;
+    Client.last_run = {
+      last_modified_date:t,
+      is_initial_completed:true
+    };
 
-    var initial = new Date(Date.now() - timing.initial * 24 * 3600 * 1000);
-    return initial.toNTREISString();
-  }
-}
-
-function applyTimeDelta(dt) {
-  var dt_ = new Date(dt);
-  var lapsed = new Date(dt_.getTime() + 100);
-
-  return lapsed.toNTREISString();
-}
-
-function saveLastRun(last_item) {
-  if (Client.options.initial) {
-    var last_run = last_item.Matrix_Unique_ID;
-    timing.last_id = last_run;
-  } else {
-    var last_run = applyTimeDelta(last_item.MatrixModifiedDT + 'Z');
-    timing.last_run = last_run;
+    return cb();
   }
 
-  fs.writeFileSync("timing.config.js", JSON.stringify(timing, null, 2));
+  db.query('SELECT * FROM ntreis_jobs ORDER BY created_at DESC LIMIT 1', [], (err, res) => {
+    if(err)
+      return cb(err);
+
+    if(res.rows.length < 1)
+      Client.last_run = {};
+    else {
+      Client.last_run = res.rows[0];
+      Client.last_run.last_modified_date.setTime
+    }
+
+    cb();
+  });
 }
 
-function fetch(cb, results) {
-  var last_run = getLastRun();
-  console.log('Fetching listings with', ((Client.options.initial) ? 'Matrix_Unique_ID greater than' : 'modification time after'), last_run.cyan);
+function saveLastRun(data, cb) {
+  var last_date = null;
+  var last_mui  = null;
+
+  if(data.length > 0) {
+    data.sort(byMatrixModifiedDT);
+    var last_date = data[data.length -1].MatrixModifiedDT;
+
+    data.sort(byMatrix_Unique_ID);
+    var last_mui =  data[data.length -1].Matrix_Unique_ID;
+  }
+
+  db.query('INSERT INTO ntreis_jobs (last_modified_date, last_id, results, query, is_initial_completed) VALUES ($1, $2, $3, $4, $5)', [
+    last_date,
+    last_mui,
+    data.length,
+    Client.query,
+    Client.last_run.is_initial_completed,
+  ], cb);
+}
+
+Client.on('initial completed', () => Client.last_run.is_initial_completed = true );
+
+var connected = false;
+function connect(cb) {
+  if(connected)
+    return cb();
 
   var timeoutReached = false;
   var timeout = setTimeout(function() {
     timeoutReached = true;
-    cb('Timeout on RETS client reached');
+    cb('Timeout while connecting to RETS server');
   }, config.ntreis.timeout);
+
+  var timeoutMessage = console.log.bind(console.log,
+    'We got a response, but it was way too late. We already consider it a timeout.');
 
   client.once('connection.success', function() {
     if(timeoutReached)
-      return console.log('We got a response, but it was way too late. We already consider it a timeout.');
+      return timeoutMessage();
 
-    client.getTable("Property", "Listing");
-    var fields;
-    var query = (Client.options.initial) ? ('(MATRIX_UNIQUE_ID=' + last_run + '+),(STATUS=A,AC,AOC,AKO)')
-      : ('(MatrixModifiedDT=' + last_run + ')')
-
-    Client.emit('starting query', query);
-    client.once('metadata.table.success', function(table) {
-      if(timeoutReached)
-        return console.log('We got a response, but it was way too late. We already consider it a timeout.');
-
-      fields = table.Fields;
-
-      client.query("Property",
-        "Listing",
-        query,
-        function(err, data) {
-          if(timeoutReached)
-            return console.log('We got a response, but it was way too late. We already consider it a timeout.');
-
-          clearTimeout(timeout);
-
-          if (err)
-            return cb(err);
-
-          data.sort((Client.options.initial) ? byMatrix_Unique_ID : byMatrixModifiedDT);
-
-          var limited_data = data.slice(0, Client.options.limit);
-          Client.emit('data fetched', limited_data)
-          return cb(null, limited_data);
-        });
-    });
+    connected = true;
+    cb();
   });
+}
+
+function fetch(cb) {
+  var by_id    = !(Client.last_run.is_initial_completed);
+  var last_id  = Client.last_run.last_id ? Client.last_run.last_id : 0;
+  var last_run = Client.last_run.last_modified_date;
+
+  var timeoutReached = false;
+  var timeout = setTimeout(function() {
+    timeoutReached = true;
+    cb('Timeout while querying RETS server');
+  }, config.ntreis.timeout);
+
+  var timeoutMessage = console.log.bind(console.log,
+    'We got a response, but it was way too late. We already consider it a timeout.');
+
+
+
+  var query = (by_id) ? ('(MATRIX_UNIQUE_ID='+last_id +'+)') :
+            ('(MatrixModifiedDT=' + last_run.toNTREISString() + ')');
+
+  Client.query = query;
+  console.log('Query'.yellow, query.cyan);
+
+  var processResponse = function(err, data) {
+    if(timeoutReached)
+      return timeoutMessage();
+
+    clearTimeout(timeout);
+
+    if(by_id) {
+      if(err && err.replyCode == '20201') {
+        Client.emit('initial completed');
+        return cb(null, []);
+      }
+    }
+
+    if (err)
+      return cb(err);
+
+    Client.emit('data fetched', data);
+
+    if(by_id && (data.length < Client.options.limit)) {
+      Client.emit('initial completed');
+    }
+
+    return cb(null, data);
+  }
+
+  Client.emit('starting query', query);
+  client.query('Property', 'Listing', query, processResponse, Client.options.limit);
 }
 
 Client.work = function(options, cb) {
   Client.options = options;
 
   async.auto({
-    mls: [fetch],
+    connect:connect,
+    last_run:getLastRun,
+    mls: ['connect', 'last_run', fetch],
     objects: ['mls',
       (cb, results) =>
         async.mapLimit(results.mls, config.ntreis.parallel, createObjects, cb)
@@ -317,11 +375,11 @@ Client.work = function(options, cb) {
         var listing_ids = results.objects.map( (r) => r.listing_id )
 
         async.map(listing_ids, Recommendation.generateForListing, cb);
-      }],
+      }
+    ],
     update_last_run: ['mls', 'objects',
       (cb, results) => {
-        saveLastRun(results.mls[results.mls.length - 1]);
-        cb();
+        saveLastRun(results.mls, cb);
       }
     ]
   }, cb);

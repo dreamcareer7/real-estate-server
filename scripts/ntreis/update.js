@@ -14,7 +14,7 @@ program.version(config.ntreis.version)
 .option('-p, --enable-photo-fetch', 'Disable fetching photos of properties')
 .option('-r, --enable-cf-links', 'Disable displaying of CloudFront links')
 .option('-l, --limit <limit>', 'Limit RETS server response manually (default: 100)')
-.option('-i, --initial', 'Performing initial fetch process')
+.option('--start-from <hours_ago>', 'Fetches all the updates since <hours_ago>')
 .option('-n, --enable-notifications', 'Enable Listing change notifications')
 .parse(process.argv);
 
@@ -26,6 +26,7 @@ program.version(config.ntreis.version)
   console.log('Initial Fetch:'.yellow, (program.initial) ? 'yes'.green : 'no'.red);
   console.log('Listing Change Notifications:'.yellow, (program.enableNotifications) ? 'yes'.green : 'no'.red);
   console.log('Manual RETS Response Limit:'.yellow, program.limit);
+  console.log('Manual starting point:'.yellow, program.startFrom);
 })();
 
 var itemsStart;
@@ -99,11 +100,11 @@ function reportToSlack(text, cb) {
 }
 
 var options = {
-  limit: program.limit ? program.limit : config.ntreis.default_limit,
+  limit: program.limit ? parseInt(program.limit) : config.ntreis.default_limit,
   enablePhotoFetch: program.enablePhotoFetch,
-  initial: program.initial,
   enableRecs: program.enableRecs,
-  enableNotifications: program.enableNotifications
+  enableNotifications: program.enableNotifications,
+  startFrom:program.startFrom
 };
 
 var considerExit = () => {
@@ -119,7 +120,9 @@ var considerExit = () => {
   setTimeout(process.exit, remaining);
 };
 
-Client.work(options, (err) => {
+var initialCompleted = false;
+
+function processResponse(err) {
   console.log('Total Running Time:', (getElapsed()/1000) + 's');
   var text;
 
@@ -160,5 +163,26 @@ Client.work(options, (err) => {
     console.log(text);
   }
 
-  reportToSlack(text, considerExit);
+  if(initialCompleted) {
+    console.log('Marking inital completed');
+    var options = {
+      enablePhotoFetch: program.enablePhotoFetch,
+      enableRecs: program.enableRecs,
+      enableNotifications: program.enableNotifications,
+      startFrom:24
+    };
+
+    Client.work(options, processResponse);
+    initialCompleted = false;
+
+  } else {
+    reportToSlack(text, considerExit);
+  }
+}
+
+Client.work(options, processResponse);
+
+Client.on('initial completed', () => {
+  console.log('Initial process completed. We will now fetch last 24 hours data');
+  initialCompleted = true;
 });
