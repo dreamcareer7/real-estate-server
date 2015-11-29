@@ -23,7 +23,7 @@ var EventEmitter = require('events');
   'Crypto',
   'Invitation',
   'ObjectUtil'
-].map( (model) => require('../../lib/models/'+model+'.js') );
+].map((model) => require('../../lib/models/' + model + '.js'));
 
 Error.autoReport = false;
 
@@ -35,9 +35,9 @@ var retsUser = config.ntreis.user;
 var retsPassword = config.ntreis.password;
 
 var client = require('rets-client').getClient(retsLoginUrl, retsUser, retsPassword);
-var timing = JSON.parse(fs.readFileSync(__dirname+'/timing.config.js', 'utf8'));
+var timing = JSON.parse(fs.readFileSync(__dirname + '/timing.config.js', 'utf8'));
 
-Date.prototype.toNTREISString = function() {
+Date.prototype.toNTREISString = function () {
   return this.toISOString().replace('Z', '+');
 }
 
@@ -45,9 +45,9 @@ function byMatrixModifiedDT(a, b) {
   var a_ = new Date(a.MatrixModifiedDT);
   var b_ = new Date(b.MatrixModifiedDT);
 
-  if(a_ > b_)
+  if (a_ > b_)
     return 1;
-  else if(b_ > a_)
+  else if (b_ > a_)
     return -1;
   else
     return 0;
@@ -57,25 +57,25 @@ function byMatrix_Unique_ID(a, b) {
   var a_ = a.Matrix_Unique_ID;
   var b_ = b.Matrix_Unique_ID;
 
-  if(a_ > b_)
+  if (a_ > b_)
     return 1;
-  else if(b_ > a_)
+  else if (b_ > a_)
     return -1;
   else
     return 0;
 }
 
 function upsertAddress(address, cb) {
-  Address.getByMUI(address.matrix_unique_id, function(err, current) {
+  Address.getByMUI(address.matrix_unique_id, function (err, current) {
     if (err) {
       if (err.code == 'ResourceNotFound') {
         Client.emit('new address', address);
-        Address.create(address, function(err, address_id) {
-          if(err)
+        Address.create(address, function (err, address_id) {
+          if (err)
             return cb(err);
 
-          Address.updateGeo(address_id, function(err, result) {
-            if(err)
+          Address.updateGeo(address_id, function (err, result) {
+            if (err)
               return cb(err);
 
             if (result) {
@@ -85,14 +85,14 @@ function upsertAddress(address, cb) {
             return cb(null, address_id);
           });
         });
-        return ;
+        return;
       }
 
       return cb(err);
     } else {
       Client.emit('updated address', address);
-      Address.update(current.id, address, function(err, next) {
-        if(err)
+      Address.update(current.id, address, function (err, next) {
+        if (err)
           return cb(err);
 
         return cb(null, next.id);
@@ -104,9 +104,9 @@ function upsertAddress(address, cb) {
 function upsertProperty(property, address_id, cb) {
   property.address_id = address_id;
 
-  Property.getByMUI(property.matrix_unique_id, function(err, current) {
-    if(err) {
-      if(err.code == 'ResourceNotFound') {
+  Property.getByMUI(property.matrix_unique_id, function (err, current) {
+    if (err) {
+      if (err.code == 'ResourceNotFound') {
         Client.emit('new property', property);
         return Property.create(property, cb);
       }
@@ -115,8 +115,8 @@ function upsertProperty(property, address_id, cb) {
     }
 
     Client.emit('updated property', property);
-    Property.update(current.id, property, function(err, next) {
-      if(err)
+    Property.update(current.id, property, function (err, next) {
+      if (err)
         return cb(err);
 
       return cb(null, next.id);
@@ -127,7 +127,7 @@ function upsertProperty(property, address_id, cb) {
 function upsertListing(listing, property_id, cb) {
   listing.property_id = property_id;
 
-  Listing.getByMUI(listing.matrix_unique_id, function(err, current) {
+  Listing.getByMUI(listing.matrix_unique_id, function (err, current) {
     if (err && err.code !== 'ResourceNotFound')
       return cb(err);
 
@@ -135,13 +135,13 @@ function upsertListing(listing, property_id, cb) {
       Client.emit('new listing', listing);
 
       async.waterfall([
-        function(cb) {
+        function (cb) {
           if (!Client.options.enablePhotoFetch)
             return cb(null, []);
 
           Listing.fetchPhotos(listing.matrix_unique_id, client, config, cb);
         },
-        function(links, cb) {
+        function (links, cb) {
           listing.cover = links[0] || '';
 
           // If array length is greater than 2, we shuffle everything except the first element which is always our cover
@@ -158,22 +158,22 @@ function upsertListing(listing, property_id, cb) {
           Listing.create(listing, cb);
         }
       ], cb);
-      return ;
+      return;
     }
 
     Client.emit('updated listing', listing);
     async.auto({
-      issue_change_notifications: function(cb) {
-        if(Client.options.enableNotifications) {
+      issue_change_notifications: function (cb) {
+        if (Client.options.enableNotifications) {
           return Listing.issueChangeNotifications(current.id, current, listing, cb);
         } else {
           return cb();
         }
       },
-      listing_photos: function(cb) {
-        if((Client.options.enablePhotoFetch) && (listing.photo_count > 0) && (current.photo_count != listing.photo_count)) {
-          Listing.fetchPhotos(listing.matrix_unique_id, client, config, function(err, links) {
-            if(err)
+      listing_photos: function (cb) {
+        if ((Client.options.enablePhotoFetch) && (listing.photo_count > 0) && (current.photo_count != listing.photo_count)) {
+          Listing.fetchPhotos(listing.matrix_unique_id, client, config, function (err, links) {
+            if (err)
               return cb(err);
 
             Client.emit('photo added', listing, links);
@@ -187,11 +187,11 @@ function upsertListing(listing, property_id, cb) {
         }
       },
       update: ['listing_photos',
-        function(cb, results) {
+        function (cb, results) {
           Listing.update(current.id, listing, cb);
         }]
-    }, function(err, results) {
-      if(err)
+    }, function (err, results) {
+      if (err)
         return cb(err);
 
       return cb(null, results.update.id);
@@ -210,8 +210,8 @@ function createObjects(data, cb) {
     upsertAddress.bind(null, address),
     upsertProperty.bind(null, property),
     upsertListing.bind(null, listing)
-  ], function(err, result) {
-    if(err)
+  ], function (err, result) {
+    if (err)
       return cb(err);
 
     return cb(null, {address: address, listing: listing, property: property, listing_id: result});
@@ -257,13 +257,13 @@ function fetch(cb, results) {
   console.log('Fetching listings with', ((Client.options.initial) ? 'Matrix_Unique_ID greater than' : 'modification time after'), last_run.cyan);
 
   var timeoutReached = false;
-  var timeout = setTimeout(function() {
+  var timeout = setTimeout(function () {
     timeoutReached = true;
     cb('Timeout on RETS client reached');
   }, config.ntreis.timeout);
 
-  client.once('connection.success', function() {
-    if(timeoutReached)
+  client.once('connection.success', function () {
+    if (timeoutReached)
       return console.log('We got a response, but it was way too late. We already consider it a timeout.');
 
     client.getTable("Property", "Listing");
@@ -272,8 +272,8 @@ function fetch(cb, results) {
       : ('(MatrixModifiedDT=' + last_run + ')')
 
     Client.emit('starting query', query);
-    client.once('metadata.table.success', function(table) {
-      if(timeoutReached)
+    client.once('metadata.table.success', function (table) {
+      if (timeoutReached)
         return console.log('We got a response, but it was way too late. We already consider it a timeout.');
 
       fields = table.Fields;
@@ -281,8 +281,8 @@ function fetch(cb, results) {
       client.query("Property",
         "Listing",
         query,
-        function(err, data) {
-          if(timeoutReached)
+        function (err, data) {
+          if (timeoutReached)
             return console.log('We got a response, but it was way too late. We already consider it a timeout.');
 
           clearTimeout(timeout);
@@ -300,7 +300,7 @@ function fetch(cb, results) {
   });
 }
 
-Client.work = function(options, cb) {
+Client.work = function (options, cb) {
   Client.options = options;
 
   async.auto({
@@ -311,10 +311,10 @@ Client.work = function(options, cb) {
     ],
     recs: ['objects',
       (cb, results) => {
-        if(!Client.options.enableRecs)
+        if (!Client.options.enableRecs)
           return cb(null, false);
 
-        var listing_ids = results.objects.map( (r) => r.listing_id )
+        var listing_ids = results.objects.map((r) => r.listing_id)
 
         async.map(listing_ids, Recommendation.generateForListing, cb);
       }],
@@ -325,6 +325,51 @@ Client.work = function(options, cb) {
       }
     ]
   }, cb);
+}
+
+Client.searchByLocation = function (criteria, cb) {
+  var timeoutReached = false;
+  var timeout = setTimeout(function () {
+    timeoutReached = true;
+    cb('Timeout on RETS client reached');
+  }, config.ntreis.timeout);
+
+  client.once('connection.success', function () {
+    if (timeoutReached)
+      return console.log('We got a response, but it was way too late. We already consider it a timeout.');
+
+    client.getTable("Property", "Listing");
+    var fields;
+
+    var query = ('(MatrixModifiedDT=' + criteria.from + '+),' +
+      '( Longitude=' + criteria.points[0].longitude + '+),(Latitude=' + criteria.points[0].latitude + '-),' +
+      '( Longitude=' + criteria.points[1].longitude + '-),(Latitude=' + criteria.points[2].latitude + '+),' +
+      '  (STATUS=A,AC,AOC,AKO), (OriginalListPrice=' + criteria.minimum_price + '+)'
+    )
+
+    Client.emit('starting query', query);
+    client.once('metadata.table.success', function (table) {
+      if (timeoutReached)
+        return console.log('We got a response, but it was way too late. We already consider it a timeout.');
+
+      fields = table.Fields;
+      client.query("Property",
+        "Listing",
+        query,
+        function (err, data) {
+          if (timeoutReached)
+            return console.log('We got a response, but it was way too late. We already consider it a timeout.');
+
+          clearTimeout(timeout);
+
+          if (err)
+            return cb(err);
+          data.sort((Client.options.initial) ? byMatrix_Unique_ID : byMatrixModifiedDT);
+
+          return cb(null, data);
+        });
+    });
+  });
 }
 
 module.exports = Client;
