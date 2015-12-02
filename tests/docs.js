@@ -7,9 +7,7 @@ var docfiles = '/../api_docs/';
 
 try {
   fs.mkdirSync('/tmp/rechat');
-} catch (e) {
-  console.log('Error building directory');
-}
+} catch (e) {}
 
 var calls = [];
 
@@ -34,13 +32,15 @@ Run.on('app ready', (app) => {
 Run.on('done', generate);
 
 function findOriginal(url, params, qs) {
-  Object.keys(params).forEach( (param_name) => {
-    url = url.replace(params[param_name], ':'+param_name);
-  });
+  if(params)
+    Object.keys(params).forEach( (param_name) => {
+      url = url.replace(params[param_name], ':'+param_name);
+    });
 
-  Object.keys(qs).forEach( (q) => {
-    url = url.replace(qs[q], '<'+q+'>');
-  });
+  if(qs)
+    Object.keys(qs).forEach( (q) => {
+      url = url.replace(qs[q], '<'+q+'>');
+    });
 
   return url;
 }

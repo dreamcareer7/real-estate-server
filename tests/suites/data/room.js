@@ -1,5 +1,5 @@
 module.exports = {
-  title: '',
+  title: 'sampleroom',
   client_type: 'Buyer',
   room_type: 'Group'
 };
