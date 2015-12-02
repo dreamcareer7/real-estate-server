@@ -6,4 +6,6 @@ var domain = Domain.create();
 
 var getConnection = deasync(db.conn);
 domain.db = getConnection();
+domain.jobs = [];
+domain.jobs.push = job => job.save();
 domain.enter();
