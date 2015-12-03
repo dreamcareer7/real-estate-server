@@ -366,33 +366,48 @@ function fetch(cb) {
   client.query('Property', 'Listing', query, processResponse, Client.options.limit);
 }
 
+var raw_insert = 'INSERT INTO raw_listings (listing) VALUES ';
+
+var raw = (cb, results) => {
+  var data = results.mls.map( l => JSON.stringify(l) );
+
+  var parts = []
+  for(var i=1; i<=data.length; i++) {
+    parts.push('($'+i+')');
+  }
+
+  raw_insert += parts.join(',');
+
+  db.query(raw_insert, data, cb);
+}
+
 Client.work = function(options, cb) {
   Client.options = options;
 
-  async.auto({
+  var objects = (cb, results) => async.mapLimit(results.mls, config.ntreis.parallel, createObjects, cb);
+
+  var recs = (cb, results) => {
+    var listing_ids = results.objects.map( (r) => r.listing_id )
+
+    async.map(listing_ids, Recommendation.generateForListing, cb);
+  }
+
+  var save = (cb, results) => saveLastRun(results.mls, cb)
+
+  var steps = {
     connect:connect,
     last_run:getLastRun,
     mls: ['connect', 'last_run', fetch],
-    objects: ['mls',
-      (cb, results) =>
-        async.mapLimit(results.mls, config.ntreis.parallel, createObjects, cb)
-    ],
-    recs: ['objects',
-      (cb, results) => {
-        if(!Client.options.enableRecs)
-          return cb(null, false);
+    raw: ['mls', raw]
+  };
 
-        var listing_ids = results.objects.map( (r) => r.listing_id )
+  if(Client.options.process)
+    steps.objects = ['mls', objects];
 
-        async.map(listing_ids, Recommendation.generateForListing, cb);
-      }
-    ],
-    update_last_run: ['mls', 'objects',
-      (cb, results) => {
-        saveLastRun(results.mls, cb);
-      }
-    ]
-  }, cb);
+  if(Client.options.process && Client.options.enableRecs)
+    steps.recs = ['objects', recs];
+
+  async.auto(steps, (err, results) => save(cb, results))
 }
 
 module.exports = Client;

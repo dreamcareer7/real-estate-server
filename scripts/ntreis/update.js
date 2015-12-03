@@ -18,6 +18,7 @@ program.version(config.ntreis.version)
 .option('-n, --enable-notifications', 'Enable Listing change notifications')
 .option('-a, --all', 'By default, script fetches only active listings. This options makes it fetch All listings')
 .option('-ng, --no-geocode', 'Prevent geocoding')
+.option('-np, --no-process', 'Prevent processing')
 .parse(process.argv);
 
 (function notice() {
@@ -31,6 +32,7 @@ program.version(config.ntreis.version)
   console.log('Manual starting point:'.yellow, program.startFrom);
   console.log('Geocode:'.yellow, program.geocode);
   console.log('Fetching all listings:'.yellow, program.all);
+  console.log('Process listings:'.yellow, program.process);
 })();
 
 var itemsStart;
@@ -111,6 +113,7 @@ var options = {
   enableNotifications: program.enableNotifications,
   startFrom:program.startFrom,
   geocode:program.geocode,
+  process:program.process,
   all:program.all
 };
 
