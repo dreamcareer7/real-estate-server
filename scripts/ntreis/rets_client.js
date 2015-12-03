@@ -25,7 +25,7 @@ var EventEmitter = require('events');
   'ObjectUtil'
 ].map( (model) => require('../../lib/models/'+model+'.js') );
 
-Error.autoReport = false;
+// Error.autoReport = false;
 
 var Client = new EventEmitter;
 Client.options = {};
@@ -369,11 +369,9 @@ function fetch(cb) {
 var raw_insert = 'INSERT INTO raw_listings (listing) VALUES ($1)';
 
 var raw = (cb, results) => {
-  fs.writeFileSync('/tmp/results.json', JSON.stringify(results.mls));
-
   var data = _u.clone(results.mls);
 
-  async.mapLimit(data, 100, db.query.bind(null, raw_insert), cb);
+  async.mapLimit(data, 100, (l,cb) => db.query(raw_insert, [l], cb), cb);
 }
 
 Client.work = function(options, cb) {
