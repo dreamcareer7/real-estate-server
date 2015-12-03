@@ -48,7 +48,8 @@ var counts = {};
   counts[event] = 0;
 
   Client.on(event, (model) => {
-    console.log(event.green, (++counts[event]).toString().yellow);
+    ++counts[event];
+//     console.log(event.green, (++counts[event]).toString().yellow);
   });
 });
 
