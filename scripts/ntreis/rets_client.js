@@ -325,6 +325,9 @@ function fetch(cb) {
   var query = (by_id) ? ('(MATRIX_UNIQUE_ID='+last_id +'+)') :
             ('(MatrixModifiedDT=' + last_run.toNTREISString() + ')');
 
+  if(by_id && !Client.options.all)
+    query += ',(STATUS=A,AC,AOC,AKO)';
+
   Client.query = query;
   console.log('Query'.yellow, query.cyan);
 
