@@ -17,6 +17,7 @@ program.version(config.ntreis.version)
 .option('--start-from <hours_ago>', 'Fetches all the updates since <hours_ago>')
 .option('-n, --enable-notifications', 'Enable Listing change notifications')
 .option('-a, --all', 'By default, script fetches only active listings. This options makes it fetch All listings')
+.option('-ng, --no-geocode', 'Prevent geocoding')
 .parse(process.argv);
 
 (function notice() {
@@ -28,6 +29,7 @@ program.version(config.ntreis.version)
   console.log('Listing Change Notifications:'.yellow, (program.enableNotifications) ? 'yes'.green : 'no'.red);
   console.log('Manual RETS Response Limit:'.yellow, program.limit);
   console.log('Manual starting point:'.yellow, program.startFrom);
+  console.log('Geocode:'.yellow, program.geocode);
   console.log('Fetching all listings:'.yellow, program.all);
 })();
 
@@ -108,6 +110,7 @@ var options = {
   enableRecs: program.enableRecs,
   enableNotifications: program.enableNotifications,
   startFrom:program.startFrom,
+  geocode:program.geocode,
   all:program.all
 };
 
