@@ -332,6 +332,9 @@ function fetch(cb) {
   console.log('Query'.yellow, query.cyan);
 
   var processResponse = function(err, data) {
+    if(!Client.options.enablePhotoFetch)
+      client.logout(); // We're done for the moment. Release the connection.
+
     if(timeoutReached)
       return timeoutMessage();
 
