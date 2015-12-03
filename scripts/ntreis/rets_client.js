@@ -369,7 +369,7 @@ function fetch(cb) {
 var raw_insert = 'INSERT INTO raw_listings (listing) VALUES ';
 
 var raw = (cb, results) => {
-  var data = results.mls.map( l => JSON.stringify(l) );
+  var data = _u.clone(results.mls);
 
   var parts = []
   for(var i=1; i<=data.length; i++) {
