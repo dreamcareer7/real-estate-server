@@ -366,19 +366,14 @@ function fetch(cb) {
   client.query('Property', 'Listing', query, processResponse, Client.options.limit);
 }
 
-var raw_insert = 'INSERT INTO raw_listings (listing) VALUES ';
+var raw_insert = 'INSERT INTO raw_listings (listing) VALUES ($1)';
 
 var raw = (cb, results) => {
+  fs.writeFileSync('/tmp/results.json', JSON.stringify(results.mls));
+
   var data = _u.clone(results.mls);
 
-  var parts = []
-  for(var i=1; i<=data.length; i++) {
-    parts.push('($'+i+')');
-  }
-
-  raw_insert += parts.join(',');
-
-  db.query(raw_insert, data, cb);
+  async.mapLimit(data, 100, db.query.bind(null, raw_insert), cb);
 }
 
 Client.work = function(options, cb) {
