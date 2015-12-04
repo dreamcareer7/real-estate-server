@@ -67,8 +67,8 @@ function byMatrixModifiedDT(a, b) {
 }
 
 function byMatrix_Unique_ID(a, b) {
-  var a_ = a.Matrix_Unique_ID;
-  var b_ = b.Matrix_Unique_ID;
+  var a_ = parseInt(a.Matrix_Unique_ID);
+  var b_ = parseInt(b.Matrix_Unique_ID);
 
   if(a_ > b_)
     return 1;
