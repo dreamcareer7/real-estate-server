@@ -9,6 +9,13 @@ var util = require('util');
 var request = require('request');
 var config = require('../../lib/config.js');
 
+var StatsD = require('node-dogstatsd').StatsD
+
+var enable_stats = config.dogstatsd && config.dogstatsd.host && config.dogstatsd.port;
+
+if(enable_stats)
+  var stats = new StatsD(config.dogstatsd.host, config.dogstatsd.port);
+
 program.version(config.ntreis.version)
 .option('-e, --enable-recs', 'Enable recommending listings to matching alerts')
 .option('-p, --enable-photo-fetch', 'Disable fetching photos of properties')
@@ -53,12 +60,12 @@ var counts = {};
 
   Client.on(event, (model) => {
     ++counts[event];
-//     console.log(event.green, (++counts[event]).toString().yellow);
+    console.log(event.green, (++counts[event]).toString().yellow);
   });
 });
 
 Client.on('data fetched', (data) => {
-  console.log('Total items to be processes', data.length);
+  console.log('Total items to be processed', data.length);
 
   counts['total'] = data.length;
   itemsStart = data[0];
@@ -133,6 +140,10 @@ var considerExit = () => {
 var initialCompleted = false;
 
 function processResponse(err) {
+  if(enable_stats) {
+    stats.gauge('ntreis.total_items', counts.total);
+  }
+
   console.log('Total Running Time:', (getElapsed()/1000) + 's');
   var text;
 

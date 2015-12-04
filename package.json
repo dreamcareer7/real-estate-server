@@ -34,6 +34,7 @@
     "merge": "^1.2.0",
     "multiparty": "^4.1.1",
     "newrelic": "^1.19.2",
+    "node-dogstatsd": "0.0.6",
     "node-uuid": "^1.4.2",
     "numeral": "^1.5.3",
     "oauth2orize": "^1.0.1",
