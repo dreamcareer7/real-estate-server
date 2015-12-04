@@ -9,17 +9,17 @@ var util = require('util');
 var request = require('request');
 var config = require('../../lib/config.js');
 
-var StatsD = require('node-dogstatsd').StatsD
+var StatsD = require('node-dogstatsd').StatsD;
 
 var enable_stats = config.dogstatsd && config.dogstatsd.host && config.dogstatsd.port;
 
 if(enable_stats)
   var stats = new StatsD(config.dogstatsd.host, config.dogstatsd.port);
 
-console.log('Stats', enable_stats, config.dogstatsd);
+console.log('Stats', enable_stats, config.dogstatsd, stats);
 
-if(enable_stats)
-  stats.socket.on('err', e => console.log(e));
+// if(enable_stats)
+//   stats.socket.on('err', e => console.log(e));
 
 program.version(config.ntreis.version)
 .option('-e, --enable-recs', 'Enable recommending listings to matching alerts')
