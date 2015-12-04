@@ -147,6 +147,10 @@ var initialCompleted = false;
 function processResponse(err) {
   if(enable_stats) {
     stats.gauge('ntreis.total_items', counts.total);
+
+    console.log(stats.socket);
+    if(stats.socet)
+      stats.socket.on('error', err => console.log(err));
   }
 
   console.log('Total Running Time:', (getElapsed()/1000) + 's');
