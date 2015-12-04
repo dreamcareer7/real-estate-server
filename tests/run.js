@@ -86,6 +86,8 @@ var database = (req, res, next) => {
 
   if(connections[suite]) {
     domain.db = connections[suite];
+    domain.jobs = [];
+    domain.jobs.push = job => job.save();
     domain.run(next);
     return ;
   }

@@ -92,7 +92,6 @@ var searchByUser = (cb) => {
         }
       ]
     })
-    .expectJSONLength('data', 1);
 }
 
 var searchByFirstName = (cb) => {
@@ -108,7 +107,6 @@ var searchByFirstName = (cb) => {
         }
       ]
     })
-    .expectJSONLength('data', 1);
 }
 
 var searchByLastName = (cb) => {
@@ -124,7 +122,6 @@ var searchByLastName = (cb) => {
         }
       ]
     })
-    .expectJSONLength('data', 1);
 }
 
 var searchByEmail = (cb) => {
@@ -140,7 +137,6 @@ var searchByEmail = (cb) => {
         }
       ]
     })
-    .expectJSONLength('data', 1);
 }
 
 var searchByPhone = (cb) => {
@@ -156,7 +152,6 @@ var searchByPhone = (cb) => {
         }
       ]
     })
-    .expectJSONLength('data', 1);
 }
 
 var searchByTitle = (cb) => {
@@ -172,7 +167,6 @@ var searchByTitle = (cb) => {
         }
       ]
     })
-    .expectJSONLength('data', 1);
 }
 
 module.exports = {

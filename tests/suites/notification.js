@@ -16,7 +16,6 @@ var getUsersNotification = (cb) => {
         }
       ]
     })
-  .expectJSONLength('data',1)
 }
 
 
