@@ -141,8 +141,15 @@ var considerExit = () => {
 var initialCompleted = false;
 
 function processResponse(err) {
-  if(metrics_enabled)
-    metrics.gauge('ntreis.total_items', counts.total);
+  if(metrics_enabled) {
+    metrics.gauge('ntreis.elapsed',           getElapsed()/1000);
+    metrics.gauge('ntreis.total_items',       counts.total);
+    metrics.gauge('ntreis.new_items',         counts['new listing']);
+    metrics.gauge('ntreis.updated_items',     counts['updated listing']);
+    metrics.gauge('ntreis.added_photos',      counts['photo added']);
+    metrics.gauge('ntreis.geocoded',          counts['address geocoded']);
+    metrics.gauge('ntreis.geocode_miss_rate', counts['miss_rate']);
+  }
 
   console.log('Total Running Time:', (getElapsed()/1000) + 's');
   var text;
