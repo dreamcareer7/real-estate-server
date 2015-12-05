@@ -6,6 +6,7 @@ var add = (cb) => {
       contacts: [
         {
           email: results.user.create.data.email,
+          phone_number: results.user.create.data.phone_number,
           force_creation: true
         }
       ]
