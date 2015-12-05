@@ -8,18 +8,14 @@ var program = require('commander');
 var util = require('util');
 var request = require('request');
 var config = require('../../lib/config.js');
+var metrics = require('datadog-metrics');
 
-var StatsD = require('node-dogstatsd').StatsD;
+var metrics_enabled = !!config.datadogs.api_key;
 
-var enable_stats = config.dogstatsd && config.dogstatsd.host && config.dogstatsd.port;
-
-if(enable_stats)
-  var stats = new StatsD(config.dogstatsd.host, config.dogstatsd.port);
-
-console.log('Stats', enable_stats, config.dogstatsd, stats);
-
-// if(enable_stats)
-//   stats.socket.on('err', e => console.log(e));
+if(metrics_enabled)
+  metrics.init({
+    apiKey:config.datadogs.api_key
+  });
 
 program.version(config.ntreis.version)
 .option('-e, --enable-recs', 'Enable recommending listings to matching alerts')
@@ -145,12 +141,14 @@ var considerExit = () => {
 var initialCompleted = false;
 
 function processResponse(err) {
-  if(enable_stats) {
-    stats.gauge('ntreis.total_items', counts.total);
-
-    console.log(stats.socket);
-    if(stats.socet)
-      stats.socket.on('error', err => console.log(err));
+  if(metrics_enabled) {
+    metrics.gauge('ntreis.elapsed',           getElapsed()/1000);
+    metrics.gauge('ntreis.total_items',       counts.total);
+    metrics.gauge('ntreis.new_items',         counts['new listing']);
+    metrics.gauge('ntreis.updated_items',     counts['updated listing']);
+    metrics.gauge('ntreis.added_photos',      counts['photo added']);
+    metrics.gauge('ntreis.geocoded',          counts['address geocoded']);
+    metrics.gauge('ntreis.geocode_miss_rate', counts['miss_rate']);
   }
 
   console.log('Total Running Time:', (getElapsed()/1000) + 's');
