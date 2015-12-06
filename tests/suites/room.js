@@ -1,81 +1,49 @@
 var room = require('./data/room.js');
 
+var updated_room = 'updated_title';
+
 var create = (cb) => {
   return frisby.create('create room')
     .post('/rooms', room)
-    .expectStatus(200)
     .after(cb)
+    .expectStatus(200)
     .expectJSON({
       code: 'OK',
       data: room
-    })
+    });
 }
 
-var get = (cb) => {
+var getRoom = (cb) => {
   return frisby.create('get room')
     .get('/rooms/' + results.room.create.data.id)
+    .after(cb)
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
       data: results.room.create.data
-    })
-    .after(cb);
+    });
 }
 
 var getRoomMedia = (cb) => {
   return frisby.create('get room\'s media')
     .get('/rooms/' + results.room.create.data.id + '/media')
+    .after(cb)
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
       data: [],
       info: {}
-    })
-    .after(cb);
-}
-
-var del = (cb) => {
-  return frisby.create('delete room')
-    .delete('/rooms/' + results.room.create.data.id)
-    .expectStatus(204)
-    .after(cb);
-}
-
-var removeUser = (cb) => {
-  return frisby.create('remove user from a room')
-    .delete('/rooms/' + results.room.create.data.id + '/users/' + results.authorize.token.data.id)
-    .expectStatus(204)
-    .after(cb);
-}
-
-var addUser = (cb) => {
-  return frisby.create('add user to a room')
-    .post('/rooms/' + results.room.create.data.id + '/users', {
-      user_id: results.authorize.token.data.id
-    })
-    .expectStatus(200)
-    .after(cb);
+    });
 }
 
 var getUserRooms = (cb) => {
   return frisby.create('get a user\'s rooms')
     .get('/rooms')
-    .expectStatus(200)
-    .expectJSON({
-      code: 'OK',
-      data: []
-    })
-    .after(cb);
-}
-
-var patchRoom = (cb) => {
-  return frisby.create('patch a room')
-    .put('/rooms/' + results.room.create.data.id, room)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
-      data: room
+      data: []
     });
 }
 
@@ -169,20 +137,112 @@ var searchByTitle = (cb) => {
     })
 }
 
+var addUser = (cb) => {
+  return frisby.create('add user to a room')
+    .post('/rooms/' + results.room.create.data.id + '/users', {
+      user_id: results.authorize.token.data.id
+    })
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      data: room
+    });
+}
+
+var removeUser = (cb) => {
+  return frisby.create('remove user from a room')
+    .delete('/rooms/' + results.room.create.data.id + '/users/' + results.authorize.token.data.id)
+    .after(cb)
+    .expectStatus(204);
+}
+
+var removeUserWorked = (cb) => {
+  return frisby.create('get a user\'s rooms')
+    .get('/rooms')
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      data: [],
+      info: {
+        count: results.room.getUserRooms.info.count - 1
+      }
+    });
+}
+
+var patchRoom = (cb) => {
+  room.title = updated_room;
+  return frisby.create('patch a room')
+    .put('/rooms/' + results.room.create.data.id, room)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      data: room
+    });
+}
+
+var patchRoomWorked = (cb) => {
+  //room.title = updated_room;
+  return frisby.create('get room')
+    .get('/rooms/' + results.room.create.data.id)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      data: {
+        title: updated_room
+      }
+    });
+}
+
+var removeUser = (cb) => {
+  return frisby.create('remove user from a room')
+    .delete('/rooms/' + results.room.create.data.id + '/users/' + results.authorize.token.data.id)
+    .expectStatus(204)
+    .after(cb);
+}
+
+var deleteRoom = (cb) => {
+  return frisby.create('delete room')
+    .delete('/rooms/' + results.room.create.data.id)
+    .expectStatus(204)
+    .after(cb);
+}
+
+var deleteRoomWorked = (cb) => {
+  return frisby.create('get room')
+    .get('/rooms/' + results.room.create.data.id)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK'
+    })
+    .expectJSONTypes({
+      data:{
+        deleted_at: Number
+      }
+    });
+}
+
 module.exports = {
   create,
-  get: get,
+  getRoom,
   getRoomMedia,
   getUserRooms,
-  addUser,
-  getUserRoomsAgain: getUserRooms,
-  patchRoom,
   searchByUser,
   searchByFirstName,
   searchByLastName,
   searchByEmail,
   searchByPhone,
   searchByTitle,
+  addUser,
   removeUser,
-  delete: del
+  removeUserWorked,
+  patchRoom,
+  patchRoomWorked,
+  removeUser,
+  deleteRoom,
+  deleteRoomWorked
 };
