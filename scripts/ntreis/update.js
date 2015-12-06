@@ -60,7 +60,6 @@ var counts = {};
   counts[event] = 0;
 
   Client.on(event, (model) => {
-    ++counts[event];
     console.log(event.green, (++counts[event]).toString().yellow);
   });
 });
