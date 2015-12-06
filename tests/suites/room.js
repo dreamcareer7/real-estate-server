@@ -217,9 +217,11 @@ var deleteRoomWorked = (cb) => {
     .after(cb)
     .expectStatus(200)
     .expectJSON({
-      code: 'OK',
-      data: {
-        deleted_at: function(val) { expect(val.length) > 10; }
+      code: 'OK'
+    })
+    .expectJSONTypes({
+      data:{
+        deleted_at: Number
       }
     });
 }
