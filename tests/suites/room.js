@@ -218,7 +218,9 @@ var deleteRoomWorked = (cb) => {
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
-      data: []
+      data: {
+        deleted_at: function(val) { expect(val.length) > 10; }
+      }
     });
 }
 
@@ -238,5 +240,7 @@ module.exports = {
   removeUserWorked,
   patchRoom,
   patchRoomWorked,
-  deleteRoom
+  removeUser,
+  deleteRoom,
+  deleteRoomWorked
 };
