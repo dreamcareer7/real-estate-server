@@ -5,5 +5,6 @@ module.exports = {
   user_type: 'Client',
   password: '123456',
   phone_number: '342423432141',
-  grant_type: 'password'
+  grant_type: 'password',
+  address:{title:'foo'}
 };
