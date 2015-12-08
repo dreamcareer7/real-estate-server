@@ -265,7 +265,7 @@ function saveLastRun(data, cb) {
   var last_date = null;
   var last_mui  = null;
 
-  if(data.length > 0) {
+  if(data && data.length > 0) {
     data.sort(byMatrixModifiedDT);
     var last_date = data[data.length -1].MatrixModifiedDT;
 
