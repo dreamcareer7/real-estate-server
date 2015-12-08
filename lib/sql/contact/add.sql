@@ -1,2 +1,26 @@
-INSERT INTO contacts(user_id, contact_id)
-VALUES ($1, $2)
+INSERT INTO contacts("user",
+                     contact_user,
+                     first_name,
+                     last_name,
+                     phone_number,
+                     email,
+                     cover_image_url,
+                     profile_image_url,
+                     invitation_url,
+                     company,
+                     birthday,
+                     address
+                    )
+VALUES ($1,
+        $2,
+        $3,
+        $4,
+        $5,
+        $6,
+        $7,
+        $8,
+        $9,
+        $10,
+        TIMESTAMP WITH TIME ZONE 'EPOCH' + $11 * INTERVAL '1 SECOND',
+        $12)
+RETURNING id

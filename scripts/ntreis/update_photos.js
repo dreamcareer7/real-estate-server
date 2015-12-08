@@ -12,9 +12,8 @@ require('../../lib/models/Address.js');
 require('../../lib/models/Property.js');
 require('../../lib/models/Listing.js');
 require('../../lib/models/Recommendation.js');
-require('../../lib/models/Shortlist.js');
+require('../../lib/models/Room.js');
 require('../../lib/models/User.js');
-require('../../lib/models/MessageRoom.js');
 require('../../lib/models/S3.js');
 
 var retsLoginUrl = config.ntreis.login_url;

@@ -1,0 +1,1 @@
+INSERT INTO migrations (state) VALUES ($1)

@@ -1,2 +1,3 @@
-DELETE FROM alerts
+UPDATE alerts
+SET deleted_at = NOW()
 WHERE id = $1
