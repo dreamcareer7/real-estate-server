@@ -1,4 +1,5 @@
 registerSuite('user', ['create']);
+registerSuite('tag', ['getAll']);
 
 var first_name = 'updated_user_name';
 var profile_image = 'updated_profile_image';
@@ -157,7 +158,7 @@ var search = (cb) => {
 var addTag = (cb) => {
   return frisby.create('add tag to a contact')
     .post('/contacts/' + results.contact.create.data[0].id + '/tags', {
-      tag_id: 'a3d585fc-9d89-11e5-91c9-14109fd0b9b3'
+      tag_id: results.tag.getAll.data[0].id
     })
     .after(cb)
     .expectStatus(200)
@@ -168,7 +169,7 @@ var addTag = (cb) => {
 
 var removeTag = (cb) => {
   return frisby.create('remove tag from a contact')
-    .delete('/contacts/' + results.contact.create.data[0].id + '/tags/a3d585fc-9d89-11e5-91c9-14109fd0b9b3')
+    .delete('/contacts/' + results.contact.create.data[0].id + '/tags/' +results.tag.getAll.data[0].id)
     .expectStatus(204)
     .after(cb);
 }
