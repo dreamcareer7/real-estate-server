@@ -31,6 +31,7 @@ program.version(config.ntreis.version)
 
 (function notice() {
   console.log('NTREIS connector'.cyan, config.ntreis.version.cyan);
+  console.log('NTREIS url'.cyan, config.ntreis.login_url.cyan);
   console.log('Instant Recommendation:'.yellow, (program.enableRecs) ? 'yes'.green : 'no'.red);
   console.log('Photo Fetching:'.yellow, (program.enablePhotoFetch) ? 'yes'.green : 'no'.red);
   console.log('Show CloudFront Links:'.yellow, (program.enableCfLinks) ? 'yes'.green : 'no'.red);
