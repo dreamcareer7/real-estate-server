@@ -154,6 +154,25 @@ var search = (cb) => {
     });
 };
 
+var addTag = (cb) => {
+  return frisby.create('add tag to a contact')
+    .post('/contacts/' + results.contact.create.data[0].id + '/tags', {
+      tag_id: 'a3d585fc-9d89-11e5-91c9-14109fd0b9b3'
+    })
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK'
+    });
+}
+
+var removeTag = (cb) => {
+  return frisby.create('remove tag from a contact')
+    .delete('/contacts/' + results.contact.create.data[0].id + '/tags/a3d585fc-9d89-11e5-91c9-14109fd0b9b3')
+    .expectStatus(204)
+    .after(cb);
+}
+
 var deleteContact = (cb) => {
   return frisby.create('delete a contact')
     .delete('/contacts/' + results.contact.create.data[0].id)
@@ -186,6 +205,8 @@ module.exports = {
   patchContactCoverImage,
   patchContactCoverImageWorked,
   search,
+  addTag,
+  removeTag,
   deleteContact,
   deleteContactWorked
 };
