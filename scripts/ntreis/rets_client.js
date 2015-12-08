@@ -2,28 +2,12 @@ require('../connection.js');
 
 var async = require('async');
 var db = require('../../lib/utils/db.js');
-var error = require('../../lib/models/Error.js');
 var config = require('../../lib/config.js');
-var fs = require('fs');
 var _u = require('underscore');
-var colors = require('colors');
 var EventEmitter = require('events');
+var dd = require('datadog-metrics');
 
-[
-  'Address',
-  'Property',
-  'Listing',
-  'Room',
-  'User',
-  'Message',
-  'Recommendation',
-  'S3',
-  'Notification',
-  'SES',
-  'Crypto',
-  'Invitation',
-  'ObjectUtil'
-].map( (model) => require('../../lib/models/'+model+'.js') );
+require('../../lib/models/index.js')();
 
 Error.autoReport = false;
 
@@ -31,7 +15,7 @@ var Client = new EventEmitter;
 Client.options = {};
 
 var retsLoginUrl = config.ntreis.login_url;
-var retsUser = config.ntreis.user;
+var retsUser     = config.ntreis.user;
 var retsPassword = config.ntreis.password;
 
 var client = require('rets-client').getClient(retsLoginUrl, retsUser, retsPassword);
@@ -78,162 +62,6 @@ function byMatrix_Unique_ID(a, b) {
     return 0;
 }
 
-function upsertAddress(address, cb) {
-  Address.getByMUI(address.matrix_unique_id, function(err, current) {
-    if (err) {
-      if (err.code == 'ResourceNotFound') {
-        Client.emit('new address', address);
-        Address.create(address, function(err, address_id) {
-          if(err)
-            return cb(err);
-
-          if(!Client.options.geocode)
-            return cb(null, address_id);
-
-          Address.updateGeo(address_id, function(err, result) {
-            if(err)
-              return cb(err);
-
-            if (result) {
-              Client.emit('address geocoded', address);
-            }
-
-            return cb(null, address_id);
-          });
-        });
-        return ;
-      }
-
-      return cb(err);
-    } else {
-      Client.emit('updated address', address);
-      Address.update(current.id, address, function(err, next) {
-        if(err)
-          return cb(err);
-
-        return cb(null, next.id);
-      });
-    }
-  });
-}
-
-function upsertProperty(property, address_id, cb) {
-  property.address_id = address_id;
-
-  Property.getByMUI(property.matrix_unique_id, function(err, current) {
-    if(err) {
-      if(err.code == 'ResourceNotFound') {
-        Client.emit('new property', property);
-        return Property.create(property, cb);
-      }
-
-      return cb(err);
-    }
-
-    Client.emit('updated property', property);
-    Property.update(current.id, property, function(err, next) {
-      if(err)
-        return cb(err);
-
-      return cb(null, next.id);
-    });
-  });
-}
-
-function upsertListing(listing, property_id, cb) {
-  listing.property_id = property_id;
-
-  Listing.getByMUI(listing.matrix_unique_id, function(err, current) {
-    if (err && err.code !== 'ResourceNotFound')
-      return cb(err);
-
-    if (err && err.code === 'ResourceNotFound') {
-      Client.emit('new listing', listing);
-
-      async.waterfall([
-        function(cb) {
-          if (!Client.options.enablePhotoFetch)
-            return cb(null, []);
-
-          Listing.fetchPhotos(listing.matrix_unique_id, client, config, cb);
-        },
-        function(links, cb) {
-          listing.cover = links[0] || '';
-
-          // If array length is greater than 2, we shuffle everything except the first element which is always our cover
-          // This fixes issue #17 and is caused by duplicate photos being returned by the NTREIS
-          // We shuffle them to make duplicate images less annoying.
-          // I hate this hack.
-          // links = (links.length > 2) ? Array.prototype.concat(links.slice(0, 1), _u.shuffle(links.slice(1))) : links;
-          // listing.gallery_images = '{' + links.join(',') + '}';
-          links = links.splice(1);
-          listing.gallery_images = '{' + links.join(',') + '}';
-
-          Client.emit('photo added', listing, links);
-
-          Listing.create(listing, cb);
-        }
-      ], cb);
-      return ;
-    }
-
-    Client.emit('updated listing', listing);
-    async.auto({
-      issue_change_notifications: function(cb) {
-        if(Client.options.enableNotifications) {
-          return Listing.issueChangeNotifications(current.id, current, listing, cb);
-        } else {
-          return cb();
-        }
-      },
-      listing_photos: function(cb) {
-        if((Client.options.enablePhotoFetch) && (listing.photo_count > 0) && (current.photo_count != listing.photo_count)) {
-          Listing.fetchPhotos(listing.matrix_unique_id, client, config, function(err, links) {
-            if(err)
-              return cb(err);
-
-            Client.emit('photo added', listing, links);
-            listing.cover = links[0] || '';
-            var tmp = links.splice(1);
-            listing.gallery_images = '{' + tmp.join(',') + '}';
-            return cb(null, null);
-          });
-        } else {
-          return cb(null, null);
-        }
-      },
-      update: ['listing_photos',
-        function(cb, results) {
-          Listing.update(current.id, listing, cb);
-        }]
-    }, function(err, results) {
-      if(err)
-        return cb(err);
-
-      return cb(null, results.update.id);
-    });
-  });
-}
-
-var populate = require('./populate.js');
-function createObjects(data, cb) {
-  var populated = populate(data);
-  var address = populated.address;
-  var property = populated.property;
-  var listing = populated.listing;
-
-  async.waterfall([
-    upsertAddress.bind(null, address),
-    upsertProperty.bind(null, property),
-    upsertListing.bind(null, listing)
-  ], function(err, result) {
-    if(err)
-      return cb(err);
-
-    return cb(null, {address: address, listing: listing, property: property, listing_id: result});
-  });
-}
-
 function getLastRun(cb) {
   if(Client.options.startFrom) {
     var t = new Date((new Date()).getTime() - (Client.options.startFrom * 3600000));
@@ -246,7 +74,8 @@ function getLastRun(cb) {
     return cb();
   }
 
-  db.query('SELECT * FROM ntreis_jobs ORDER BY created_at DESC LIMIT 1', [], (err, res) => {
+  var s = 'SELECT * FROM ntreis_jobs WHERE resource = $1 AND class = $2 ORDER BY created_at DESC LIMIT 1';
+  db.query(s, [Client.options.resource, Client.options.class], (err, res) => {
     if(err)
       return cb(err);
 
@@ -273,12 +102,16 @@ function saveLastRun(data, cb) {
     var last_mui =  data[data.length -1].Matrix_Unique_ID;
   }
 
-  db.query('INSERT INTO ntreis_jobs (last_modified_date, last_id, results, query, is_initial_completed) VALUES ($1, $2, $3, $4, $5)', [
+  var s = 'INSERT INTO ntreis_jobs (last_modified_date, \
+  last_id, results, query, is_initial_completed, class, resource) VALUES ($1, $2, $3, $4, $5, $6, $7)'
+  db.query(s, [
     last_date,
     last_mui,
     data.length,
     Client.query,
     Client.last_run.is_initial_completed,
+    Client.options.class,
+    Client.options.resource
   ], cb);
 }
 
@@ -328,16 +161,13 @@ function fetch(cb) {
   var query = (by_id) ? ('(MATRIX_UNIQUE_ID='+last_id +'+)') :
             ('(MatrixModifiedDT=' + last_run.toNTREISString() + ')');
 
-  if(by_id && !Client.options.all)
-    query += ',(STATUS=A,AC,AOC,AKO)';
+  if(by_id && Client.options.query)
+    query += ','+Client.options.query;
 
   Client.query = query;
   console.log('Query'.yellow, query.cyan);
 
   var processResponse = function(err, data) {
-    if(!Client.options.enablePhotoFetch)
-      client.logout(); // We're done for the moment. Release the connection.
-
     if(timeoutReached)
       return timeoutMessage();
 
@@ -363,27 +193,36 @@ function fetch(cb) {
   }
 
   Client.emit('starting query', query);
-  client.query('Property', 'Listing', query, processResponse, Client.options.limit);
+  client.query(Client.options.resource, Client.options.class, query, processResponse, Client.options.limit);
+
+//   client.getAllTable( function(err, tables) {
+//     console.log(JSON.stringify(tables));
+//   } );
 }
 
-var raw_insert = 'INSERT INTO raw_listings (listing) VALUES ($1)';
+var raw_insert = 'INSERT INTO mls_data (resource, class, value) VALUES ($1, $2, $3)';
 
 var raw = (cb, results) => {
   var data = _u.clone(results.mls);
 
-  async.mapLimit(data, 100, (l,cb) => db.query(raw_insert, [l], cb), cb);
+  async.mapLimit(data, 100, (l,cb) => db.query(raw_insert, [
+    Client.options.resource,
+    Client.options.class, l
+  ], cb), cb);
 }
+
+function notice() {
+  console.log('--------- Fetch options ---------'.yellow);
+  console.log('Manual RETS Response Limit:'.yellow, Client.options.limit);
+  console.log('Manual starting point:'.yellow, Client.options.startFrom);
+}
+
+Client.logout = client.logout.bind(client);
 
 Client.work = function(options, cb) {
   Client.options = options;
 
-  var objects = (cb, results) => async.mapLimit(results.mls, config.ntreis.parallel, createObjects, cb);
-
-  var recs = (cb, results) => {
-    var listing_ids = results.objects.map( (r) => r.listing_id )
-
-    async.map(listing_ids, Recommendation.generateForListing, cb);
-  }
+  notice();
 
   var save = (cb, results) => saveLastRun(results.mls, cb)
 
@@ -391,61 +230,38 @@ Client.work = function(options, cb) {
     connect:connect,
     last_run:getLastRun,
     mls: ['connect', 'last_run', fetch],
-    raw: ['mls', raw]
+    raw: ['mls', raw],
   };
 
-  if(Client.options.process)
-    steps.objects = ['mls', objects];
+  if(Client.options.processor)
+    steps.process = ['mls', Client.options.processor];
 
-  if(Client.options.process && Client.options.enableRecs)
-    steps.recs = ['objects', recs];
+  async.auto(steps, (err, results) => {
+    if(err)
+      return cb(err);
 
-  async.auto(steps, (err, results) => save(cb, results))
-}
-
-Client.searchByLocation = function (criteria, cb) {
-  var timeoutReached = false;
-  var timeout = setTimeout(function () {
-    timeoutReached = true;
-    cb('Timeout on RETS client reached');
-  }, config.ntreis.timeout);
-
-  client.once('connection.success', function () {
-    if (timeoutReached)
-      return console.log('We got a response, but it was way too late. We already consider it a timeout.');
-
-    client.getTable("Property", "Listing");
-    var fields;
-
-    var query = ('(MatrixModifiedDT=' + criteria.from + '+),' +
-      '( Longitude=' + criteria.points[0].longitude + '+),(Latitude=' + criteria.points[0].latitude + '-),' +
-      '( Longitude=' + criteria.points[1].longitude + '-),(Latitude=' + criteria.points[2].latitude + '+),' +
-      '  (STATUS=A,AC,AOC,AKO), (OriginalListPrice=' + criteria.minimum_price + '+)'
-    )
-
-    Client.emit('starting query', query);
-    client.once('metadata.table.success', function (table) {
-      if (timeoutReached)
-        return console.log('We got a response, but it was way too late. We already consider it a timeout.');
-
-      fields = table.Fields;
-      client.query("Property",
-        "Listing",
-        query,
-        function (err, data) {
-          if (timeoutReached)
-            return console.log('We got a response, but it was way too late. We already consider it a timeout.');
-
-          clearTimeout(timeout);
-
-          if (err)
-            return cb(err);
-          data.sort((Client.options.initial) ? byMatrix_Unique_ID : byMatrixModifiedDT);
-
-          return cb(null, data);
-        });
-    });
+    save(cb, results);
   });
 }
+
+var dd_enabled = !!config.datadogs.api_key;
+
+if(dd_enabled)
+  dd.init({
+    apiKey:config.datadogs.api_key
+  });
+
+var meters = {};
+Client.increment = (name) => {
+  if(!meters[name])
+    meters[name] = 0;
+
+  meters[name]++;
+
+  if(dd_enabled)
+    dd.increment('mls.'+name);
+}
+
+Client.getMetric = name => meters[name] || 0;
 
 module.exports = Client;
