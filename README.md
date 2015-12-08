@@ -18,6 +18,7 @@ And set configuration options of your database.
 ```bash
 npm start
 ```
+port 3078
 
 ## Howto Test ##
 
