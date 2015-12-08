@@ -197,6 +197,7 @@ var deleteContactWorked = (cb) => {
 
 module.exports = {
   create,
+  addTag,
   get: get,
   updateContact,
   updateContactWorked,
@@ -205,7 +206,6 @@ module.exports = {
   patchContactCoverImage,
   patchContactCoverImageWorked,
   search,
-  addTag,
   removeTag,
   deleteContact,
   deleteContactWorked
