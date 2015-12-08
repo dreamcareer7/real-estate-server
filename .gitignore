@@ -15,3 +15,4 @@ scripts/announcements/subject_announcement.asc
 .idea/*
 *.log
 jsdoc/docs
+*.bk

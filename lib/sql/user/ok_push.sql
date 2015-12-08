@@ -1,4 +1,10 @@
-SELECT ((CURRENT_TIME(0) AT TIME ZONE users.timezone)::time > '08:30:00'::time) AND
-       ((CURRENT_TIME(0) AT TIME ZONE users.timezone)::time < '21:30:00'::time) AS ok
+SELECT (
+        EXTRACT(
+        EPOCH FROM (
+            DATE_TRUNC('day', (NOW() AT TIME ZONE users.timezone) + INTERVAL '02:30:00') +
+            INTERVAL '7:30:00'
+        ) AT TIME ZONE users.timezone) -
+        EXTRACT(EPOCH FROM NOW())
+       ) AS remaining
 FROM users
 WHERE id = $1

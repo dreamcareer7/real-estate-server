@@ -10,7 +10,7 @@
     "docs": "node api_docs/index.js"
   },
   "engines": {
-    "node": "4.2.2"
+    "node": "4.x"
   },
   "author": "",
   "license": "ISC",
@@ -24,6 +24,7 @@
     "colors": "^1.0.3",
     "commander": "^2.8.0",
     "compression": "^1.2.0",
+    "datadog-metrics": "^0.2.1",
     "deasync": "^0.1.0",
     "debug": "^2.2.0",
     "express": "^4.10.4",

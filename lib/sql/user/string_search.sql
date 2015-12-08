@@ -18,9 +18,11 @@ FROM related_users
 INNER JOIN users
 ON related_users.id = users.id
 WHERE
-    (users.first_name ~* ANY($2) OR
-     users.last_name ~* ANY($2) OR
-     users.email ~* ANY($2) OR
-     users.phone_number ~* ANY($2)) AND
-     users.deleted_at IS NULL
+    (
+     (CASE WHEN ARRAY_LENGTH($2::text[], 1) IS NULL THEN TRUE ELSE users.first_name ~* ANY($2) END) OR
+     (CASE WHEN ARRAY_LENGTH($2::text[], 1) IS NULL THEN TRUE ELSE users.last_name ~* ANY($2) END) OR
+     (CASE WHEN ARRAY_LENGTH($2::text[], 1) IS NULL THEN TRUE ELSE users.email ~* ANY($2) END) OR
+     (CASE WHEN ARRAY_LENGTH($2::text[], 1) IS NULL THEN TRUE ELSE users.phone_number ~* ANY($2) END)
+    ) AND
+    users.deleted_at IS NULL
 ORDER BY users.first_name

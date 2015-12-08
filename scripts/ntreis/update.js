@@ -8,14 +8,25 @@ var program = require('commander');
 var util = require('util');
 var request = require('request');
 var config = require('../../lib/config.js');
+var metrics = require('datadog-metrics');
+
+var metrics_enabled = !!config.datadogs.api_key;
+
+if(metrics_enabled)
+  metrics.init({
+    apiKey:config.datadogs.api_key
+  });
 
 program.version(config.ntreis.version)
 .option('-e, --enable-recs', 'Enable recommending listings to matching alerts')
 .option('-p, --enable-photo-fetch', 'Disable fetching photos of properties')
 .option('-r, --enable-cf-links', 'Disable displaying of CloudFront links')
 .option('-l, --limit <limit>', 'Limit RETS server response manually (default: 100)')
-.option('-i, --initial', 'Performing initial fetch process')
+.option('--start-from <hours_ago>', 'Fetches all the updates since <hours_ago>')
 .option('-n, --enable-notifications', 'Enable Listing change notifications')
+.option('-a, --all', 'By default, script fetches only active listings. This options makes it fetch All listings')
+.option('-ng, --no-geocode', 'Prevent geocoding')
+.option('-np, --no-process', 'Prevent processing')
 .parse(process.argv);
 
 (function notice() {
@@ -26,6 +37,10 @@ program.version(config.ntreis.version)
   console.log('Initial Fetch:'.yellow, (program.initial) ? 'yes'.green : 'no'.red);
   console.log('Listing Change Notifications:'.yellow, (program.enableNotifications) ? 'yes'.green : 'no'.red);
   console.log('Manual RETS Response Limit:'.yellow, program.limit);
+  console.log('Manual starting point:'.yellow, program.startFrom);
+  console.log('Geocode:'.yellow, program.geocode);
+  console.log('Fetching all listings:'.yellow, program.all);
+  console.log('Process listings:'.yellow, program.process);
 })();
 
 var itemsStart;
@@ -50,7 +65,7 @@ var counts = {};
 });
 
 Client.on('data fetched', (data) => {
-  console.log('Total items to be processes', data.length);
+  console.log('Total items to be processed', data.length);
 
   counts['total'] = data.length;
   itemsStart = data[0];
@@ -99,11 +114,14 @@ function reportToSlack(text, cb) {
 }
 
 var options = {
-  limit: program.limit ? program.limit : config.ntreis.default_limit,
+  limit: program.limit ? parseInt(program.limit) : config.ntreis.default_limit,
   enablePhotoFetch: program.enablePhotoFetch,
-  initial: program.initial,
   enableRecs: program.enableRecs,
-  enableNotifications: program.enableNotifications
+  enableNotifications: program.enableNotifications,
+  startFrom:program.startFrom,
+  geocode:program.geocode,
+  process:program.process,
+  all:program.all
 };
 
 var considerExit = () => {
@@ -119,7 +137,19 @@ var considerExit = () => {
   setTimeout(process.exit, remaining);
 };
 
-Client.work(options, (err) => {
+var initialCompleted = false;
+
+function processResponse(err) {
+  if(metrics_enabled) {
+    metrics.gauge('ntreis.elapsed',           getElapsed()/1000);
+    metrics.gauge('ntreis.total_items',       counts.total);
+    metrics.gauge('ntreis.new_items',         counts['new listing']);
+    metrics.gauge('ntreis.updated_items',     counts['updated listing']);
+    metrics.gauge('ntreis.added_photos',      counts['photo added']);
+    metrics.gauge('ntreis.geocoded',          counts['address geocoded']);
+    metrics.gauge('ntreis.geocode_miss_rate', counts['miss_rate']);
+  }
+
   console.log('Total Running Time:', (getElapsed()/1000) + 's');
   var text;
 
@@ -160,5 +190,26 @@ Client.work(options, (err) => {
     console.log(text);
   }
 
-  reportToSlack(text, considerExit);
+  if(initialCompleted) {
+    console.log('Marking inital completed');
+    var options = {
+      enablePhotoFetch: program.enablePhotoFetch,
+      enableRecs: program.enableRecs,
+      enableNotifications: program.enableNotifications,
+      startFrom:24
+    };
+
+    Client.work(options, processResponse);
+    initialCompleted = false;
+
+  } else {
+    reportToSlack(text, considerExit);
+  }
+}
+
+Client.work(options, processResponse);
+
+Client.on('initial completed', () => {
+  console.log('Initial process completed. We will now fetch last 24 hours data');
+  initialCompleted = true;
 });

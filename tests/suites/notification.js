@@ -14,12 +14,12 @@ var getUsersNotification = (cb) => {
         {
           type: 'notification'
         }
-      ]
+      ],
+      info: {}
     })
 }
 
-
-var get = (cb) => {
+var getNotification = (cb) => {
   return frisby.create('get a notification by id')
     .get('/notifications/' + results.notification.getUsersNotification.data[0].id)
     .after(cb)
@@ -33,7 +33,6 @@ var get = (cb) => {
     })
 }
 
-
 var acknowledgeNotification = (cb) => {
   return frisby.create('acknowledge notification')
     .delete('/notifications/' + results.notification.getUsersNotification.data[0].id)
@@ -41,8 +40,25 @@ var acknowledgeNotification = (cb) => {
     .expectStatus(204)
 }
 
+var acknowledgeNotificationWorked = (cb) => {
+  return frisby.create('make sure acknowledgeNotification was successful')
+    .get('/notifications')
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      data: [
+        {
+          type: 'notification'
+        }
+      ],
+      info: {
+        count: results.notification.getUsersNotification.info.count - 1
+      }
+    })
+}
 
-var push = (cb) => {
+var pushNotification = (cb) => {
   var token = require('./data/token.js')
   var token_model = JSON.parse(JSON.stringify(token));
   return frisby.create('register push')
@@ -59,10 +75,9 @@ var push = (cb) => {
     .expectJSONLength(2);
 }
 
-
-var cancelPush = (cb) => {
+var cancelPushNotification = (cb) => {
   return frisby.create('cancel push')
-    .delete('/notifications/tokens/' + results.notification.push.data.id)
+    .delete('/notifications/tokens/' + results.notification.pushNotification.data.id)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
@@ -87,9 +102,10 @@ var patchNotificationSettings = (cb) => {
 
 module.exports = {
   getUsersNotification,
+  getNotification,
   acknowledgeNotification,
-  get: get,
-  push,
-  cancelPush,
+  acknowledgeNotificationWorked,
+  pushNotification,
+  cancelPushNotification,
   patchNotificationSettings
 }
