@@ -1,7 +1,7 @@
 module.exports = {
     "type": "compact_listing",
     "id": String,
-    "created_at": Number().,
+    "created_at": Number,
     "updated_at": Number,
     "deleted_at": null,
     "price": Number,
