@@ -19,6 +19,7 @@ var retsUser     = config.ntreis.user;
 var retsPassword = config.ntreis.password;
 
 var client = require('rets-client').getClient(retsLoginUrl, retsUser, retsPassword);
+Client.rets = client;
 
 Date.prototype.toNTREISString = function() {
   var pad = function(number) {
@@ -51,8 +52,8 @@ function byMatrixModifiedDT(a, b) {
 }
 
 function byMatrix_Unique_ID(a, b) {
-  var a_ = parseInt(a.Matrix_Unique_ID);
-  var b_ = parseInt(b.Matrix_Unique_ID);
+  var a_ = parseInt(a.Matrix_Unique_ID || a.matrix_unique_id);
+  var b_ = parseInt(b.Matrix_Unique_ID || b.matrix_unique_id);
 
   if(a_ > b_)
     return 1;
@@ -83,7 +84,6 @@ function getLastRun(cb) {
       Client.last_run = {};
     else {
       Client.last_run = res.rows[0];
-      Client.last_run.last_modified_date.setTime
     }
 
     cb();
@@ -91,6 +91,9 @@ function getLastRun(cb) {
 }
 
 function saveLastRun(data, cb) {
+  if(!data || data.length < 1)
+    return cb('No data was fetched');
+
   var last_date = null;
   var last_mui  = null;
 
@@ -99,7 +102,7 @@ function saveLastRun(data, cb) {
     var last_date = data[data.length -1].MatrixModifiedDT;
 
     data.sort(byMatrix_Unique_ID);
-    var last_mui =  data[data.length -1].Matrix_Unique_ID;
+    var last_mui =  data[data.length -1].Matrix_Unique_ID || data[data.length -1].matrix_unique_id;
   }
 
   var s = 'INSERT INTO ntreis_jobs (last_modified_date, \
@@ -109,13 +112,11 @@ function saveLastRun(data, cb) {
     last_mui,
     data.length,
     Client.query,
-    Client.last_run.is_initial_completed,
+    Client.last_run.is_initial_completed || shouldTransit,
     Client.options.class,
     Client.options.resource
   ], cb);
 }
-
-Client.on('initial completed', () => Client.last_run.is_initial_completed = true );
 
 var connected = false;
 function connect(cb) {
@@ -143,7 +144,7 @@ function connect(cb) {
 }
 
 function fetch(cb) {
-  var by_id    = !(Client.last_run.is_initial_completed);
+  var by_id    = Client.options.by_id || !(Client.last_run.is_initial_completed);
   var last_id  = Client.last_run.last_id ? Client.last_run.last_id : 0;
   var last_run = Client.last_run.last_modified_date;
 
@@ -198,6 +199,16 @@ function fetch(cb) {
 //   client.getAllTable( function(err, tables) {
 //     console.log(JSON.stringify(tables));
 //   } );
+
+//   client.getObject('Media', 'LargePhoto', '15612756', (a,b,c,d) => {
+//     console.log(a,b,c.toString(),d)
+//   });
+
+//   client.getResources( (a,b,c) => console.log(a,b,c) );
+
+//   client.getAllForeignKeys( (a,b,c) => console.log(a,b,c) );
+//     client.getClass('Media', (a,b,c) => console.log(a,b,c) );
+//     client.getObjectMeta('Media', (a,b,c) => console.log(a,b,c) );
 }
 
 var raw_insert = 'INSERT INTO mls_data (resource, class, value) VALUES ($1, $2, $3)';
@@ -217,30 +228,47 @@ function notice() {
   console.log('Manual starting point:'.yellow, Client.options.startFrom);
 }
 
-Client.logout = client.logout.bind(client);
+var shouldTransit = false;
+
+Client.on('initial completed', () => {
+  console.log('initial fetch completed.');
+  shouldTransit = true;
+});
 
 Client.work = function(options, cb) {
   Client.options = options;
 
   notice();
 
+  var transit = (cb) => {
+    shouldTransit = false; //Mark it as false again so we wont do this recursively
+
+    options.startFrom = 24;
+    Client.work(options, cb);
+  }
+
   var save = (cb, results) => saveLastRun(results.mls, cb)
+
+  var process = Client.options.processor ? Client.options.processor : cb => cb()
 
   var steps = {
     connect:connect,
     last_run:getLastRun,
     mls: ['connect', 'last_run', fetch],
     raw: ['mls', raw],
+    process:['mls', process],
+    save:['raw', 'process', save]
   };
 
   if(Client.options.processor)
     steps.process = ['mls', Client.options.processor];
 
-  async.auto(steps, (err, results) => {
-    if(err)
-      return cb(err);
+  async.auto(steps, (err, res) => {
+    console.log('All steps finished', err, shouldTransit);
+    if(!shouldTransit)
+      return cb(err, res);
 
-    save(cb, results);
+    transit(cb)
   });
 }
 
