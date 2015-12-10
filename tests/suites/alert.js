@@ -1,4 +1,7 @@
 var criteria = require('./data/alert_criteria.js');
+var alert = require('./data/publicized/alert.js');
+var info = require('./data/publicized/info.js');
+var compact_listing = require('./data/publicized/compact_listing.js');
 
 
 registerSuite('room', ['create']);
@@ -12,7 +15,8 @@ var create = (cb) => {
     .expectJSON({
       code: 'OK',
       data: criteria
-    });
+    })
+    .expectJSONTypes('data', alert)
 }
 
 var getUserAlerts = (cb) => {
@@ -35,7 +39,8 @@ var getUserAlerts = (cb) => {
       ]
     })
     .expectJSONTypes({
-      info: Object
+      'data':[alert],
+      info: info
     });
 }
 
@@ -59,7 +64,11 @@ var getRoomAlerts = (cb) => {
         count: 1
       }
     })
-    .expectJSONLength('data', 1);
+    .expectJSONLength('data', 1)
+    .expectJSONTypes({
+      'data':[alert],
+      info: info
+    });
 }
 
 var patchAlert = (cb) => {
@@ -72,9 +81,7 @@ var patchAlert = (cb) => {
     .expectJSON({
       code: 'OK'
     })
-    .expectJSONTypes({
-      data: Object
-    });
+    .expectJSONTypes('data', alert)
 }
 
 var patchAlertWorked = (cb) => {
@@ -93,6 +100,7 @@ var patchAlertWorked = (cb) => {
         count: 1
       }
     })
+    .expectJSONTypes('data', [alert])
     .expectJSONLength('data', 1);
 }
 
@@ -110,6 +118,10 @@ var virtual = (cb) => {
         }
       ]
     })
+    .expectJSONTypes({
+      'data':[compact_listing],
+      info: info
+    });
 }
 
 var bulkAlertShare = (cb) => {
