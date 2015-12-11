@@ -174,7 +174,7 @@ function fetch(cb) {
 
     clearTimeout(timeout);
 
-    if(by_id) {
+    if(Client.last_run && Client.last_run.is_initial_completed === false) {
       if(err && err.replyCode == '20201') {
         Client.emit('initial completed');
         return cb(null, []);
@@ -186,7 +186,7 @@ function fetch(cb) {
 
     Client.emit('data fetched', data);
 
-    if(by_id && (data.length < Client.options.limit)) {
+    if(Client.last_run && Client.last_run.is_initial_completed === false && (data.length < Client.options.limit)) {
       Client.emit('initial completed');
     }
 
@@ -264,7 +264,6 @@ Client.work = function(options, cb) {
     steps.process = ['mls', Client.options.processor];
 
   async.auto(steps, (err, res) => {
-    console.log('All steps finished', err, shouldTransit);
     if(!shouldTransit)
       return cb(err, res);
 
