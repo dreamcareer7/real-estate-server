@@ -8,6 +8,7 @@ var util   = require('util');
 
 var program = require('./program.js')
   .option('-e, --enable-recs', 'Enable recommending listings to matching alerts')
+  .option('-p, --enable-photo-fetch', 'Disable fetching photos of properties')
   .option('-r, --enable-cf-links', 'Disable displaying of CloudFront links')
   .option('-np, --no-process', 'Prevent processing')
   .option('-ng, --no-geocode', 'Prevent geocoding')
@@ -19,6 +20,7 @@ var options = program.parse(process.argv);
 (function notice() {
   console.log('--------- Listing options ---------'.yellow);
   console.log('Instant Recommendation:'.yellow, (options.enableRecs) ? 'yes'.green : 'no'.red);
+  console.log('Photo Fetching:'.yellow, (options.enablePhotoFetch) ? 'yes'.green : 'no'.red);
   console.log('Show CloudFront Links:'.yellow, (options.enableCfLinks) ? 'yes'.green : 'no'.red);
   console.log('Listing Change Notifications:'.yellow, (options.enableNotifications) ? 'yes'.green : 'no'.red);
   console.log('Geocode:'.yellow, options.geocode);
@@ -110,22 +112,65 @@ function upsertListing(listing, property_id, cb) {
 
     if (err && err.code === 'ResourceNotFound') {
       Client.increment('new_listing');
-      Listing.create(listing, cb);
 
+      async.waterfall([
+        function(cb) {
+          if (!options.enablePhotoFetch)
+            return cb(null, []);
+
+          Listing.fetchPhotos(listing.matrix_unique_id, client, config, cb);
+        },
+        function(links, cb) {
+          listing.cover = links[0] || '';
+
+          // If array length is greater than 2, we shuffle everything except the first element which is always our cover
+          // This fixes issue #17 and is caused by duplicate photos being returned by the NTREIS
+          // We shuffle them to make duplicate images less annoying.
+          // I hate this hack.
+          // links = (links.length > 2) ? Array.prototype.concat(links.slice(0, 1), _u.shuffle(links.slice(1))) : links;
+          // listing.gallery_images = '{' + links.join(',') + '}';
+          links = links.splice(1);
+          listing.gallery_images = '{' + links.join(',') + '}';
+
+          Client.increment('added_photo');
+
+          Listing.create(listing, cb);
+        }
+      ], cb);
       return ;
     }
 
     Client.increment('updated_listing');
     async.auto({
       issue_change_notifications: function(cb) {
-        if(!options.enableNotifications)
+        if(options.enableNotifications) {
+          return Listing.issueChangeNotifications(current.id, current, listing, cb);
+        } else {
           return cb();
-
-        Listing.issueChangeNotifications(current.id, current, listing, cb);
+        }
       },
-      update: function(cb, results) {
-        Listing.update(current.id, listing, cb);
-      }
+      listing_photos: function(cb) {
+
+        if((Client.options.enablePhotoFetch) && (listing.photo_count > 0) && (current.photo_count != listing.photo_count)) {
+          console.log('Fetching photos');
+          Listing.fetchPhotos(listing.matrix_unique_id, client, config, function(err, links) {
+            if(err)
+              return cb(err);
+
+            Client.increment('photo_added');
+            listing.cover = links[0] || '';
+            var tmp = links.splice(1);
+            listing.gallery_images = '{' + tmp.join(',') + '}';
+            return cb(null, null);
+          });
+        } else {
+          return cb(null, null);
+        }
+      },
+      update: ['listing_photos',
+        function(cb, results) {
+          Listing.update(current.id, listing, cb);
+        }]
     }, function(err, results) {
       if(err)
         return cb(err);
@@ -160,7 +205,8 @@ function createObjects(data, cb) {
 var firstId, lastId = null;
 
 Client.on('data fetched', (data) => {
-    Client.rets.logout(); // We're done for the moment. Release the connection.
+  if(!options.enablePhotoFetch)
+    Client.logout(); // We're done for the moment. Release the connection.
 
   firstId = data[0].Matrix_Unique_ID;
   lastId =  data[data.length - 1].Matrix_Unique_ID;
@@ -175,6 +221,7 @@ function report() {
     'Listings: %s new, %s updated',
     'Properties: %s new, %s updated',
     'Addresses: %s new, %s updated',
+    'Images: %s',
     'Geocoded: %s',
     'Miss rate: %s%',
     '----------------------------------'
@@ -194,6 +241,7 @@ function report() {
     Client.getMetric('new_listing'), Client.getMetric('updated_listing'),
     Client.getMetric('new_property'), Client.getMetric('updated_property'),
     Client.getMetric('new_address'), Client.getMetric('updated_address'),
+    Client.getMetric('photo_added'),
     Client.getMetric('geocoded_address'),
     miss_rate
   );
