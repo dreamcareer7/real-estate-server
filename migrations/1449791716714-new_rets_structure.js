@@ -12,7 +12,9 @@ var sqls = [
   'ALTER TABLE mls_data ADD matrix_unique_id integer',
   'ALTER TABLE mls_data ADD CONSTRAINT matrix_unique_id UNIQUE (matrix_unique_id)',
   'ALTER TABLE ntreis_jobs ADD class varchar',
-  'ALTER TABLE ntreis_jobs ADD resource varchar'
+  'ALTER TABLE ntreis_jobs ADD resource varchar',
+  'UPDATE ntreis_jobs SET class = \'Listing\', resource = \'Property\'',
+  'ALTER TABLE ntreis_jobs RENAME TO mls_jobs'
 ];
 
 var runAll = (next) => {
