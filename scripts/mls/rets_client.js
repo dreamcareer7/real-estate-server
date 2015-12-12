@@ -75,16 +75,14 @@ function getLastRun(cb) {
     return cb();
   }
 
-  var s = 'SELECT * FROM ntreis_jobs WHERE resource = $1 AND class = $2 ORDER BY created_at DESC LIMIT 1';
-  db.query(s, [Client.options.resource, Client.options.class], (err, res) => {
+  MLSJob.getLastRun(Client.options.resource, Client.options.class, (err, last_run) => {
     if(err)
       return cb(err);
 
-    if(res.rows.length < 1)
-      Client.last_run = {};
-    else {
-      Client.last_run = res.rows[0];
-    }
+    if(!last_run)
+      last_run = {};
+
+    Client.last_run = last_run;
 
     cb();
   });
