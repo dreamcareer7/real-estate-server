@@ -21,6 +21,8 @@ var retsPassword = config.ntreis.password;
 var client = require('rets-client').getClient(retsLoginUrl, retsUser, retsPassword);
 Client.rets = client;
 
+Client.logout = () => client.logout();
+
 Date.prototype.toNTREISString = function() {
   var pad = function(number) {
     if (number < 10) {
@@ -105,17 +107,17 @@ function saveLastRun(data, cb) {
     var last_mui =  data[data.length -1].Matrix_Unique_ID || data[data.length -1].matrix_unique_id;
   }
 
-  var s = 'INSERT INTO ntreis_jobs (last_modified_date, \
-  last_id, results, query, is_initial_completed, class, resource) VALUES ($1, $2, $3, $4, $5, $6, $7)'
-  db.query(s, [
-    last_date,
-    last_mui,
-    data.length,
-    Client.query,
-    Client.last_run.is_initial_completed || shouldTransit,
-    Client.options.class,
-    Client.options.resource
-  ], cb);
+  var job = {
+    last_modified_date:last_date,
+    last_id:parseInt(last_mui),
+    results:data.length,
+    query:Client.query,
+    is_initial_completed:Client.last_run.is_initial_completed || shouldTransit,
+    class:Client.options.class,
+    resource:Client.options.resource
+  };
+
+  MLSJob.insert(job, cb);
 }
 
 var connected = false;
