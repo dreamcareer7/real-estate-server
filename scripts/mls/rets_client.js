@@ -21,8 +21,6 @@ var retsPassword = config.ntreis.password;
 var client = require('rets-client').getClient(retsLoginUrl, retsUser, retsPassword);
 Client.rets = client;
 
-Client.logout = () => client.logout();
-
 Date.prototype.toNTREISString = function() {
   var pad = function(number) {
     if (number < 10) {
@@ -161,14 +159,19 @@ function fetch(cb) {
 
 
 
-  var query = (by_id) ? ('(MATRIX_UNIQUE_ID='+last_id +'+)') :
-            ('(MatrixModifiedDT=' + last_run.toNTREISString() + ')');
-
   if(Client.options.query)
-    query = Client.options.query.replace('%s', query);
+    Client.query = Client.options.query;
+  else {
+    var query = (by_id) ? ('(MATRIX_UNIQUE_ID='+last_id +'+)') :
+              ('(MatrixModifiedDT=' + last_run.toNTREISString() + ')');
 
-  Client.query = query;
-  console.log('Query'.yellow, query.cyan);
+    if(by_id && Client.options.additionalQuery)
+      query += ','+Client.options.additionalQuery;
+
+    Client.query = query;
+  }
+
+  console.log('Query'.yellow, Client.query.cyan);
 
   var processResponse = function(err, data) {
     if(timeoutReached)
@@ -195,8 +198,8 @@ function fetch(cb) {
     return cb(null, data);
   }
 
-  Client.emit('starting query', query);
-  client.query(Client.options.resource, Client.options.class, query, processResponse, Client.options.limit);
+  Client.emit('starting query', Client.query);
+  client.query(Client.options.resource, Client.options.class, Client.query, processResponse, Client.options.limit);
 
 //   client.getAllTable( function(err, tables) {
 //     console.log(JSON.stringify(tables));

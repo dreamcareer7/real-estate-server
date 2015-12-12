@@ -5,6 +5,7 @@ var colors = require('colors');
 var exit   = require('./exit.js');
 var async  = require('async');
 var util   = require('util');
+var config = require('../../lib/config.js');
 
 var program = require('./program.js')
   .option('-e, --enable-recs', 'Enable recommending listings to matching alerts')
@@ -32,7 +33,7 @@ if(options.process)
   options.processor = processData;
 
 if(!options.all)
-  options.query = '%s,(STATUS=A,AC,AOC,AKO)';
+  options.additionalQuery = '%s,(STATUS=A,AC,AOC,AKO)';
 
 options.resource = 'Property';
 options.class = 'Listing';
@@ -118,7 +119,7 @@ function upsertListing(listing, property_id, cb) {
           if (!options.enablePhotoFetch)
             return cb(null, []);
 
-          Listing.fetchPhotos(listing.matrix_unique_id, client, config, cb);
+          Listing.fetchPhotos(listing.matrix_unique_id, Client.rets, config, cb);
         },
         function(links, cb) {
           listing.cover = links[0] || '';
@@ -152,8 +153,7 @@ function upsertListing(listing, property_id, cb) {
       listing_photos: function(cb) {
 
         if((Client.options.enablePhotoFetch) && (listing.photo_count > 0) && (current.photo_count != listing.photo_count)) {
-          console.log('Fetching photos');
-          Listing.fetchPhotos(listing.matrix_unique_id, client, config, function(err, links) {
+          Listing.fetchPhotos(listing.matrix_unique_id, Client.rets, config, function(err, links) {
             if(err)
               return cb(err);
 
@@ -206,7 +206,7 @@ var firstId, lastId = null;
 
 Client.on('data fetched', (data) => {
   if(!options.enablePhotoFetch)
-    Client.logout(); // We're done for the moment. Release the connection.
+    Client.rets.logout(); // We're done for the moment. Release the connection.
 
   firstId = data[0].Matrix_Unique_ID;
   lastId =  data[data.length - 1].Matrix_Unique_ID;
