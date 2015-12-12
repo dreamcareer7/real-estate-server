@@ -164,8 +164,8 @@ function fetch(cb) {
   var query = (by_id) ? ('(MATRIX_UNIQUE_ID='+last_id +'+)') :
             ('(MatrixModifiedDT=' + last_run.toNTREISString() + ')');
 
-  if(by_id && Client.options.query)
-    query += ','+Client.options.query;
+  if(Client.options.query)
+    query = Client.options.query.replace('%s', query);
 
   Client.query = query;
   console.log('Query'.yellow, query.cyan);
@@ -259,8 +259,10 @@ Client.work = function(options, cb) {
     mls: ['connect', 'last_run', fetch],
     raw: ['mls', raw],
     process:['mls', process],
-    save:['raw', 'process', save]
   };
+
+  if(!Client.options.dontSave)
+    steps.save = ['raw', 'process', save];
 
   if(Client.options.processor)
     steps.process = ['mls', Client.options.processor];
