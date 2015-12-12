@@ -4,35 +4,19 @@ require('../../lib/utils/db.js');
 require('../../lib/models/index.js')();
 var _ = require('underscore');
 var spawn = require('child_process').spawn;
+var config = require('../../lib/config.js');
 
-var tasks = [
-  {
-    class:'Listing',
-    resource:'Property',
-    command: ['listings.js', '-p', '-r', '-e', '-n', '-l', 10],
-    interval:300000,
-    priority:0
-  },
-
-  {
-    class:'Agent',
-    resource:'Agent',
-    command: ['agents.js', '-l', 10],
-    interval:300000,
-    priority:2
-  },
-
-  {
-    class:'Media',
-    resource:'Media',
-    command: ['photos.js', '-d', '100', '-u', '100', '-l', 10],
-    interval: 0,
-    priority:1
-  }
-];
+var tasks = config.scheduler.tasks;
 
 function getLastRun(task, cb) {
   MLSJob.getLastRun(task.class, task.resource, cb)
+}
+
+var queue = async.priorityQueue(runTask, 1);
+queue.drain = schedule;
+
+function addToQueue(task) {
+  queue.push(task, task.priority);
 }
 
 function schedule() {
@@ -48,22 +32,13 @@ function schedule() {
 
       return elapsed >= task.interval;
     })
-    .sort( (a,b) => {
-      if(a.priority > b.priority) return 1;
-      if(a.priority < b.priority) return -1;
-      return 0;
-    })
-    .forEach(addToQueue)
+    .forEach(addToQueue);
+
+    if(queue.length() < 1)
+      setTimeout(schedule, 30*1000)
   }
 
   async.map(tasks, getLastRun, processLastRuns);
-}
-
-var queue = async.queue(runTask, 1);
-queue.drain = schedule;
-
-function addToQueue(task) {
-  queue.push(task);
 }
 
 function runTask(task, cb) {
