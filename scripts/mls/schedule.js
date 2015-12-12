@@ -49,6 +49,7 @@ function runTask(task, cb) {
   p.on('close', cb);
 
   p.stdout.pipe(process.stdout);
+  p.stderr.pipe(process.stderr);
 }
 
 
