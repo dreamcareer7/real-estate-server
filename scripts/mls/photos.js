@@ -21,6 +21,7 @@ function processData(cb, results) {
 }
 
 function insertPhoto(photo, cb) {
+  Client.increment('process_photo');
   Photo.create({
     matrix_unique_id:parseInt(photo.matrix_unique_id),
     listing_mui:parseInt(photo.Table_MUI),
@@ -30,6 +31,7 @@ function insertPhoto(photo, cb) {
 }
 
 function _saveImage(payload, cb) {
+  Client.increment('fetch_photo');
   if(payload.data.mime  !== 'image/jpeg') {
     Photo.markError(payload.photo.matrix_unique_id, payload.data.data.toString(), cb)
     return;
