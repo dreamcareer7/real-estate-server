@@ -2,7 +2,7 @@
 
 var Client = require('./rets_client.js');
 var colors = require('colors');
-var exit   = require('./exit.js');
+var slack  = require('./slack.js');
 var async  = require('async');
 var util   = require('util');
 var config = require('../../lib/config.js');
@@ -236,7 +236,7 @@ function report() {
   );
 
   text = util.format(text,
-    exit.elapsed()/1000,
+    slack.elapsed()/1000,
     Client.getMetric('processed_listing'),
     firstId,
     lastId,
@@ -249,5 +249,5 @@ function report() {
   );
   console.log(text);
 
-  exit.slack(text, exit.exit);
+  slack.report(text, process.exit);
 }

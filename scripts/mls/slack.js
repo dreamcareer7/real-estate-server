@@ -36,20 +36,4 @@ function getElapsed() {
   return ((new Date()).getTime()) - startTime;
 }
 
-function considerExit(err) {
-  if(err)
-    console.log('Error', err.red);
-
-  var remaining = parseInt(config.ntreis.pause - getElapsed());
-
-  if (remaining < 0)
-    process.exit();
-
-  console.log('Pausing for'.yellow,
-              remaining,
-              'milliseconds before termination to meet NTREIS limit on heavy requests...'.yellow);
-
-  setTimeout(process.exit, remaining);
-}
-
-module.exports = {exit:considerExit, elapsed:getElapsed, slack:reportToSlack};
+module.exports = {elapsed:getElapsed, report:reportToSlack};
