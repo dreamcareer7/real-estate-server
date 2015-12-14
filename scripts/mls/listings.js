@@ -183,7 +183,7 @@ function upsertListing(listing, property_id, cb) {
 }
 
 function processData(cb, results) {
-  async.mapLimit(results.mls, 100, createObjects, cb);
+  async.mapLimit(results.mls, 200, createObjects, cb);
 }
 
 var populate = require('./populate.js');
