@@ -7,6 +7,8 @@ var async  = require('async');
 var util   = require('util');
 var config = require('../../lib/config.js');
 
+Error.autoReport = false;
+
 var program = require('./program.js')
   .option('-e, --enable-recs', 'Enable recommending listings to matching alerts')
   .option('-p, --enable-photo-fetch', 'Disable fetching photos of properties')

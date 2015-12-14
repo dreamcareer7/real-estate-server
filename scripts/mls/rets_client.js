@@ -9,8 +9,6 @@ var dd = require('datadog-metrics');
 
 require('../../lib/models/index.js')();
 
-Error.autoReport = false;
-
 var Client = new EventEmitter;
 Client.options = {};
 
