@@ -33,7 +33,7 @@ if(options.process)
   options.processor = processData;
 
 if(!options.all)
-  options.additionalQuery = '%s,(STATUS=A,AC,AOC,AKO)';
+  options.additionalQuery = '(STATUS=A,AC,AOC,AKO)';
 
 options.resource = 'Property';
 options.class = 'Listing';
