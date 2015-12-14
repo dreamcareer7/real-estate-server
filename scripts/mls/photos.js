@@ -42,7 +42,7 @@ function _saveImage(payload, cb) {
     mime:payload.data.mime
   }
 
-  S3.upload(config.buckets.listing_images, file, (err, url) => {
+  S3.upload(config.buckets.photos, file, (err, url) => {
     if(err)
       return cb(err);
 
@@ -74,6 +74,7 @@ function savePhotos(cb) {
   var limit = options.limit || 2000;
 
   Photo.getUnprocessedPhotos( {limit:limit}, (err, photos) => {
+    console.log('Limit', limit, err, photos.length);
     async.map(photos, processPhoto, cb);
   });
 }
