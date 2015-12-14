@@ -1,0 +1,23 @@
+INSERT INTO agents
+(
+  email,
+  mlsid,
+  fax,
+  full_name,
+  first_name,
+  last_name,
+  middle_name,
+  phone_number,
+  nar_number,
+  office_mui,
+  status,
+  office_mlsid,
+  work_phone,
+  generational_name,
+  matrix_unique_id,
+  matrix_modified_dt
+)
+VALUES
+(
+  $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16
+)

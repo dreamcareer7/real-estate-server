@@ -2,8 +2,6 @@ node_modules
 docs
 lib/configs/development.js
 lib/configs/newrelic.js
-lib/sslcert/server.key
-lib/sslcert/server.crt
 scripts/ntreis/timing.config.js
 scripts/announcements/announcement.html
 scripts/announcements/announcement.asc

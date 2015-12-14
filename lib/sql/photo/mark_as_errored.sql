@@ -1,0 +1,1 @@
+UPDATE photos SET last_processed = NOW(), error = $1 WHERE matrix_unique_id = $2;
