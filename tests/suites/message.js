@@ -1,6 +1,9 @@
 var message = require('./data/message.js');
 registerSuite('room', ['create']);
 
+var message_response = require('./data/publicized/message.js');
+var info_response = require('./data/publicized/info.js');
+
 var post = (cb) => {
   return frisby.create('post a message')
     .post('/rooms/' + results.room.create.data.id + '/messages', message)
@@ -14,6 +17,10 @@ var post = (cb) => {
           id: results.room.create.data.owner.id
         }
       }
+    })
+    .expectJSONTypes({
+      code: String,
+      data: message_response
     });
 }
 
@@ -26,10 +33,15 @@ var retrieve = (cb) => {
       code: 'OK',
       data: [results.message.post.data]
     })
-    .expectJSONLength('data', 2);
+    .expectJSONLength('data', 2)
+    .expectJSONTypes({
+      code: String,
+      data: [message_response],
+      info: info_response
+    });
 }
 
 module.exports = {
   post,
-  retrieve,
+  retrieve
 };
