@@ -263,13 +263,13 @@ module.exports = {
   addTag,
   getContact,
   updateContact,
-   updateContactWorked,
-   patchContactProfileImage,
-   patchContactProfileImageWorked,
-   patchContactCoverImage,
-   patchContactCoverImageWorked,
-   search,
-   removeTag,
-   deleteContact,
-   deleteContactWorked
+  updateContactWorked,
+  patchContactProfileImage,
+  patchContactProfileImageWorked,
+  patchContactCoverImage,
+  patchContactCoverImageWorked,
+  search,
+  removeTag,
+  deleteContact,
+  deleteContactWorked
 };

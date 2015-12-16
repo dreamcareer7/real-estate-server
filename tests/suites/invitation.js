@@ -2,6 +2,8 @@
 registerSuite('room', ['create'])
 registerSuite('user', ['create'])
 
+var invitation_response = require('./data/publicized/invitation.js');
+var info_response = require('./data/publicized/info.js');
 
 var create = (cb) => {
   return frisby.create('create invitation')
@@ -27,7 +29,12 @@ var create = (cb) => {
         }
       ]
     })
-    .expectJSONLength('data', 1);
+    .expectJSONLength('data', 1)
+    .expectJSONTypes({
+      code: String,
+      data: [invitation_response],
+      info: info_response
+    });
 }
 
 module.exports = {
