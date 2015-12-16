@@ -5,7 +5,29 @@ var sql = require('../lib/utils/require_sql.js');
 var geo = require('../lib/utils/geo.js');
 require('./connection.js')
 var _ = require('underscore');
-var client = require('./ntreis/rets_client.js')
+var Client = require('./mls/rets_client.js')
+
+var search = function(criteria, cb) {
+  var options = {};
+  options.resource = 'Property';
+  options.class = 'Listing';
+  options.dontSave = true;
+  options.query = ('(MatrixModifiedDT=' + criteria.from + '+),' +
+    '( Longitude=' + criteria.points[0].longitude + '+),(Latitude=' + criteria.points[0].latitude + '-),' +
+    '( Longitude=' + criteria.points[1].longitude + '-),(Latitude=' + criteria.points[2].latitude + '+),' +
+    '  (STATUS=A,AC,AOC,AKO), (OriginalListPrice=' + criteria.minimum_price + '+)'
+  )
+
+  options.processor = (done, results) => {
+    done();
+    cb(null, results.mls)
+  }
+
+  Client.work(options, (err)=>{
+    if(err)
+      console.log(err);
+  });
+}
 
 var randomLocation = {
   longitude: -96.7981853613128,
@@ -85,28 +107,27 @@ function compare(rechat, mls) {
 Alert.check(criteria, function (err, rechat_listings) {
   if (err)
     console.log(err);
-  client.searchByLocation(criteria, function (err, mls_listings) {
+
+  search(criteria, (err, mls_listings) => {
     if (err)
       if (err.replyCode == '20201')
         console.log('No MLS Records Found.');
       else
         console.log(err);
-    else {
-      var rechat_array = []
-      for (var i = 0; i < rechat_listings.length; i++) {
-        rechat_array.push(rechat_listings[i].mls_number)
-      }
 
-      var mls_array = []
-      for (var i = 0; i < mls_listings.length; i++) {
-        mls_array.push(mls_listings[i].MLSNumber)
-      }
-
-      console.log('Found ' + rechat_array.length + ' listings in rechat database and ' + mls_listings.length + ' in MLS database');
-      compare(rechat_array, mls_array);
+    var rechat_array = []
+    for (var i = 0; i < rechat_listings.length; i++) {
+      rechat_array.push(rechat_listings[i].mls_number)
     }
-    process.exit();
 
+    var mls_array = []
+    for (var i = 0; i < mls_listings.length; i++) {
+      mls_array.push(mls_listings[i].MLSNumber)
+    }
+
+    console.log('Found ' + rechat_array.length + ' listings in rechat database and ' + mls_listings.length + ' in MLS database');
+    compare(rechat_array, mls_array);
+
+    process.exit();
   });
-})
-;
+});

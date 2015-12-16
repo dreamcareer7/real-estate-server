@@ -1,0 +1,1 @@
+UPDATE photos SET last_processed = NOW(), url = $1 WHERE matrix_unique_id = $2;

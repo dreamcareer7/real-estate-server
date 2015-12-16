@@ -1,0 +1,1 @@
+SELECT * FROM mls_jobs WHERE resource = $1 AND class = $2 ORDER BY created_at DESC LIMIT 1
