@@ -5,7 +5,7 @@
 Assuming you already have node.js, git and postgres:
 
 ```bash
-git clone git@bitbucket.org:rechat/shortlisted-server.git
+git clone git@bitbucket.org:rechat/server.git
 cd shortlisted-server
 npm install .
 psql rechat < lib/data/schema.sql
