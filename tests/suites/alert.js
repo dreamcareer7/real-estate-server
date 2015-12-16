@@ -16,7 +16,7 @@ var create = (cb) => {
       code: 'OK',
       data: criteria
     })
-    .expectJSONTypes('data', alert_response)
+    .expectJSONTypes('data', alert_response);
 }
 
 var getUserAlerts = (cb) => {

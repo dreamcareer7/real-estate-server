@@ -244,7 +244,7 @@ var deleteContact = (cb) => {
 };
 
 var deleteContactWorked = (cb) => {
-  var before_count = results.contact.get.info.count;
+  var before_count = results.contact.getContact.info.count;
 
   return frisby.create('get list of contacts and make sure delete contact was successful')
     .get('/contacts')
