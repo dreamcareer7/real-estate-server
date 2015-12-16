@@ -1,6 +1,6 @@
 var config = require('../../lib/config.js');
 
-var authorize = require('./data/publicized/authorize.js');
+var authorize_reponse = require('./data/publicized/authorize.js');
 
 var auth_params = {
   client_id: config.tests.client_id,
@@ -24,7 +24,7 @@ var token = (cb, auth) => {
       frisby.globalSetup(setup);
       cb(err, res);
     })
-    .expectJSONTypes(authorize);
+    .expectJSONTypes(authorize_reponse);
 }
 
 module.exports = {token};

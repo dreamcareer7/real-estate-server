@@ -1,5 +1,5 @@
 var criteria = require('./data/alert_criteria.js');
-var alert = require('./data/publicized/alert.js');
+var alert_response = require('./data/publicized/alert.js');
 var info = require('./data/publicized/info.js');
 var compact_listing = require('./data/publicized/compact_listing.js');
 
@@ -16,7 +16,7 @@ var create = (cb) => {
       code: 'OK',
       data: criteria
     })
-    .expectJSONTypes('data', alert)
+    .expectJSONTypes('data', alert_response)
 }
 
 var getUserAlerts = (cb) => {
@@ -39,7 +39,7 @@ var getUserAlerts = (cb) => {
       ]
     })
     .expectJSONTypes({
-      'data':[alert],
+      data:[alert_response],
       info: info
     });
 }
@@ -66,7 +66,7 @@ var getRoomAlerts = (cb) => {
     })
     .expectJSONLength('data', 1)
     .expectJSONTypes({
-      'data':[alert],
+      'data':[alert_response],
       info: info
     });
 }
@@ -81,7 +81,7 @@ var patchAlert = (cb) => {
     .expectJSON({
       code: 'OK'
     })
-    .expectJSONTypes('data', alert)
+    .expectJSONTypes('data', alert_response)
 }
 
 var patchAlertWorked = (cb) => {
@@ -100,7 +100,7 @@ var patchAlertWorked = (cb) => {
         count: 1
       }
     })
-    .expectJSONTypes('data', [alert])
+    .expectJSONTypes('data', [alert_response])
     .expectJSONLength('data', 1);
 }
 
