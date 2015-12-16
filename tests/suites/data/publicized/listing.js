@@ -72,6 +72,7 @@ module.exports = {
   "permit_comments_reviews_yn": Boolean,
   "permit_internet_yn": Boolean,
   "price_change_timestamp": String,
+  "price_change_timestamp": String,
   "matrix_modified_dt": String,
   "property_association_fees": String,
   "showing_instructions_type": String,

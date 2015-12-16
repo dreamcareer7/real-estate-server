@@ -39,7 +39,7 @@ var getUserAlerts = (cb) => {
       ]
     })
     .expectJSONTypes({
-      data:[alert_response],
+      data: [alert_response],
       info: info
     });
 }
@@ -66,7 +66,7 @@ var getRoomAlerts = (cb) => {
     })
     .expectJSONLength('data', 1)
     .expectJSONTypes({
-      'data':[alert_response],
+      'data': [alert_response],
       info: info
     });
 }
@@ -119,7 +119,7 @@ var virtual = (cb) => {
       ]
     })
     .expectJSONTypes({
-      'data':[compact_listing],
+      'data': [compact_listing],
       info: info
     });
 }

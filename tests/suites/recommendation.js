@@ -2,6 +2,9 @@ var _ = require('underscore');
 
 registerSuite('alert', ['create']);
 
+var recommendation_response = require('./data/publicized/recommendation.js');
+var info_response = require('./data/publicized/info.js');
+
 var feed = (cb) => {
   return frisby.create('get feed')
     .get('/rooms/' + results.room.create.data.id + '/recs/feed?filter=' + results.alert.create.data.id)
@@ -15,6 +18,11 @@ var feed = (cb) => {
         }
       ],
       info: {}
+    })
+    .expectJSONTypes({
+      code: String,
+      data: [recommendation_response],
+      info: info_response
     });
 }
 
@@ -26,12 +34,59 @@ var getFavorites = (cb) => {
     .expectJSON({
       code: 'OK',
       data: [],
-      info:{
-        count:0,
-        total:0
+      info: {
+        count: 0,
+        total: 0
       }
     })
-    .expectJSONLength('data', 0);
+    .expectJSONLength('data', 0)
+    .expectJSONTypes({
+      code: String,
+      data: [recommendation_response],
+      info: info_response
+    });
+}
+
+var getTours = (cb) => {
+  return frisby.create('get tours')
+    .get('/rooms/' + results.room.create.data.id + '/recs/tours')
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      data: [],
+      info: {
+        count: 0,
+        total: 0
+      }
+    })
+    .expectJSONLength('data', 0)
+    .expectJSONTypes({
+      code: String,
+      data: [recommendation_response],
+      info: info_response
+    });
+}
+
+var getActives = (cb) => {
+  return frisby.create('get actives')
+    .get('/rooms/' + results.room.create.data.id + '/recs/actives')
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      data: [],
+      info: {
+        count: 0,
+        total: 0
+      }
+    })
+    .expectJSONLength('data', 0)
+    .expectJSONTypes({
+      code: String,
+      data: [recommendation_response],
+      info: info_response
+    });
 }
 
 var markAsFavorite = (cb) => {
@@ -46,6 +101,10 @@ var markAsFavorite = (cb) => {
       data: {
         type: 'recommendation'
       }
+    })
+    .expectJSONTypes({
+      code: String,
+      data: recommendation_response
     });
 }
 
@@ -57,28 +116,12 @@ var markAsFavoriteWorked = (cb) => {
     .expectJSON({
       code: 'OK',
       data: [results.recommendation.feed.data[1]],
-      info:{
-        count:1,
-        total:1
+      info: {
+        count: 1,
+        total: 1
       }
     })
-    .expectJSONLength('data', 1);
-}
-
-var getTours = (cb) => {
-  return frisby.create('get tours')
-    .get('/rooms/' + results.room.create.data.id + '/recs/tours')
-    .after(cb)
-    .expectStatus(200)
-    .expectJSON({
-      code: 'OK',
-      data: [],
-      info:{
-        count:0,
-        total:0
-      }
-    })
-    .expectJSONLength('data', 0);
+    .expectJSONLength('data', 1)
 }
 
 var markAsTour = (cb) => {
@@ -93,23 +136,11 @@ var markAsTour = (cb) => {
       data: {
         type: 'recommendation'
       }
-    });
-}
-
-var getActives = (cb) => {
-  return frisby.create('get actives')
-    .get('/rooms/' + results.room.create.data.id + '/recs/actives')
-    .after(cb)
-    .expectStatus(200)
-    .expectJSON({
-      code: 'OK',
-      data: [],
-      info:{
-        count:0,
-        total:0
-      }
     })
-    .expectJSONLength('data', 0);
+    .expectJSONTypes({
+      code: String,
+      data: recommendation_response
+    });
 }
 
 var markAsTourWorked = (cb) => {
@@ -120,9 +151,9 @@ var markAsTourWorked = (cb) => {
     .expectJSON({
       code: 'OK',
       data: [],
-      info:{
-        count:1,
-        total:1
+      info: {
+        count: 1,
+        total: 1
       }
     })
     .expectJSONLength('data', 1);
@@ -136,9 +167,9 @@ var seen = (cb) => {
     .expectJSON({
       code: 'OK',
       data: [],
-      info:{
-        count:0,
-        total:0
+      info: {
+        count: 0,
+        total: 0
       }
     })
     .expectJSONLength('data', 0);
