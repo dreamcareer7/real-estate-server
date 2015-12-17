@@ -10,6 +10,7 @@ var create = (cb) => {
     .post('/contacts', {
       contacts: [
         {
+          tags: ['foo'],
           email: results.user.create.data.email,
           phone_number: results.user.create.data.phone_number,
           force_creation: true
@@ -207,17 +208,17 @@ var deleteContactWorked = (cb) => {
 
 module.exports = {
   create,
-  addTag,
-  get: get,
-  getByTag,
-  updateContact,
-  updateContactWorked,
-  patchContactProfileImage,
-  patchContactProfileImageWorked,
-  patchContactCoverImage,
-  patchContactCoverImageWorked,
-  search,
-  removeTag,
-  deleteContact,
-  deleteContactWorked
+  //addTag,
+  //get: get,
+  //getByTag,
+  //updateContact,
+  //updateContactWorked,
+  //patchContactProfileImage,
+  //patchContactProfileImageWorked,
+  //patchContactCoverImage,
+  //patchContactCoverImageWorked,
+  //search,
+  //removeTag,
+  //deleteContact,
+  //deleteContactWorked
 };
