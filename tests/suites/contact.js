@@ -157,7 +157,7 @@ var search = (cb) => {
 var addTag = (cb) => {
   return frisby.create('add tag to a contact')
     .post('/contacts/' + results.contact.create.data[0].id + '/tags', {
-      tags: ['foo']
+      tags: ['foo', 'bar']
     })
     .after(cb)
     .expectStatus(200)
