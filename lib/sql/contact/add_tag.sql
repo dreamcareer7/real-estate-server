@@ -1,4 +1,3 @@
-INSERT INTO contacts_tags(contact, tag)
-    VALUES ($1, $2)
-ON CONFLICT (contact, tag) DO NOTHING
-RETURNING id
+INSERT INTO tags(entity, tag, type)
+    VALUES ($1, $2, 'contact')
+ON CONFLICT (entity, tag, type) DO NOTHING
