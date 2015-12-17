@@ -157,7 +157,7 @@ var search = (cb) => {
 var addTag = (cb) => {
   return frisby.create('add tag to a contact')
     .post('/contacts/' + results.contact.create.data[0].id + '/tags', {
-      tags: ['foo','bar']
+      tags: ['foo']
     })
     .after(cb)
     .expectStatus(200)
@@ -208,16 +208,16 @@ var deleteContactWorked = (cb) => {
 module.exports = {
   create,
   addTag,
-  //get: get,
-  //getByTag,
-  //updateContact,
-  //updateContactWorked,
-  //patchContactProfileImage,
-  //patchContactProfileImageWorked,
-  //patchContactCoverImage,
-  //patchContactCoverImageWorked,
-  //search,
-  //removeTag,
-  //deleteContact,
-  //deleteContactWorked
+  get: get,
+  getByTag,
+  updateContact,
+  updateContactWorked,
+  patchContactProfileImage,
+  patchContactProfileImageWorked,
+  patchContactCoverImage,
+  patchContactCoverImageWorked,
+  search,
+  removeTag,
+  deleteContact,
+  deleteContactWorked
 };
