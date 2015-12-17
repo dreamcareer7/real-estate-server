@@ -5,7 +5,6 @@ var db = require('../../lib/utils/db.js');
 var config = require('../../lib/config.js');
 var _u = require('underscore');
 var EventEmitter = require('events');
-var dd = require('datadog-metrics');
 
 require('../../lib/models/index.js')();
 
@@ -273,25 +272,5 @@ Client.work = function(options, cb) {
     transit(cb)
   });
 }
-
-var dd_enabled = !!config.datadogs.api_key;
-
-if(dd_enabled)
-  dd.init({
-    apiKey:config.datadogs.api_key
-  });
-
-var meters = {};
-Client.increment = (name) => {
-  if(!meters[name])
-    meters[name] = 0;
-
-  meters[name]++;
-
-  if(dd_enabled)
-    dd.increment('mls.'+name);
-}
-
-Client.getMetric = name => meters[name] || 0;
 
 module.exports = Client;
