@@ -13,7 +13,7 @@ module.exports = {
   "property_type": String,
   "property_subtype": String,
   "lot_square_meters": Number,
-  "year_built": null,
+  "year_built": function(val) { expect(val).toBeTypeOrNull(Number); },
   "accessibility_features": [],
   "commercial_features": [],
   "community_features": [],

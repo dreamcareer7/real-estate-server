@@ -42,7 +42,6 @@ var getFavorites = (cb) => {
     .expectJSONLength('data', 0)
     .expectJSONTypes({
       code: String,
-      data: [recommendation_response],
       info: info_response
     });
 }
@@ -63,7 +62,6 @@ var getTours = (cb) => {
     .expectJSONLength('data', 0)
     .expectJSONTypes({
       code: String,
-      data: [recommendation_response],
       info: info_response
     });
 }
@@ -84,7 +82,6 @@ var getActives = (cb) => {
     .expectJSONLength('data', 0)
     .expectJSONTypes({
       code: String,
-      data: [recommendation_response],
       info: info_response
     });
 }

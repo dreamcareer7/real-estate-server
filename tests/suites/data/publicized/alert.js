@@ -1,7 +1,7 @@
 var user = require('./user.js');
 
 module.exports = {
-  "id": function(val) { expect(val).toBeTypeOrNull(String); },
+  "id": String,
   "currency": String,
   "minimum_price": Number,
   "maximum_price": Number,

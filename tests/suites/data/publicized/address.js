@@ -19,7 +19,7 @@ module.exports = {
   "matrix_unique_id": String,
   "geocoded": Boolean,
   "geo_source": String,
-  "partial_match_google": null,
+  "partial_match_google": function(val) { expect(val).toBeTypeOrNull(Boolean); },
   "county_or_parish": String,
   "direction": null,
   "street_dir_prefix": String,
@@ -28,10 +28,10 @@ module.exports = {
   "geo_source_formatted_address_google": String,
   "geocoded_google": Boolean,
   "geocoded_bing": Boolean,
-  "location_bing": null,
-  "geo_source_formatted_address_bing": null,
+  "location_bing": function(val) { expect(val).toBeTypeOrNull(String); },
+  "geo_source_formatted_address_bing": function(val) { expect(val).toBeTypeOrNull(String); },
   "geo_confidence_google": String,
-  "geo_confidence_bing": null,
+  "geo_confidence_bing": function(val) { expect(val).toBeTypeOrNull(String); },
   "location": {
     "longitude": Number,
     "latitude": Number,
@@ -40,7 +40,7 @@ module.exports = {
   "approximate": Boolean,
   "corrupted": Boolean,
   "corrupted_google": Boolean,
-  "corrupted_bing": null,
+  "corrupted_bing": function(val) { expect(val).toBeTypeOrNull(Boolean); },
   "deleted_at": null,
   "type": String
 };

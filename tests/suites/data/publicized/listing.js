@@ -91,8 +91,8 @@ module.exports = {
   "deposit_amount": Number,
   "photo_count": Number,
   "deleted_at": null,
-  "dom": null,
-  "cdom": null,
+  "dom": function(val) { expect(val).toBeTypeOrNull(Number); },
+  "cdom": function(val) { expect(val).toBeTypeOrNull(Number); },
   "property": property,
   "alerting_agent": null,
   "listing_agent": null

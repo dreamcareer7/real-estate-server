@@ -1,6 +1,6 @@
 module.exports = {
     "type": String,
-    "username": null,
+    "username": function(val) { expect(val).toBeTypeOrNull(String); },
     "first_name": String,
     "last_name": String,
     "email": String,
