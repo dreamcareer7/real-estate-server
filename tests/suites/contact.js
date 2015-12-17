@@ -51,6 +51,7 @@ var get = (cb) => {
 
 var updateContact = (cb) => {
   results.contact.create.data[0].contact_user.first_name = first_name;
+  results.contact.create.data[0].contact_user.tags = ['newTag'];
   return frisby.create('update a contact')
     .put('/contacts/' + results.contact.create.data[0].id, results.contact.create.data[0].contact_user)
     .after(cb)
@@ -208,17 +209,17 @@ var deleteContactWorked = (cb) => {
 
 module.exports = {
   create,
-  //addTag,
-  //get: get,
-  //getByTag,
-  //updateContact,
-  //updateContactWorked,
-  //patchContactProfileImage,
-  //patchContactProfileImageWorked,
-  //patchContactCoverImage,
-  //patchContactCoverImageWorked,
-  //search,
-  //removeTag,
-  //deleteContact,
-  //deleteContactWorked
+  addTag,
+  get: get,
+  getByTag,
+  updateContact,
+  updateContactWorked,
+  patchContactProfileImage,
+  patchContactProfileImageWorked,
+  patchContactCoverImage,
+  patchContactCoverImageWorked,
+  search,
+  removeTag,
+  deleteContact,
+  deleteContactWorked
 };
