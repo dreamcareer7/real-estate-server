@@ -46,7 +46,7 @@ function upsertAddress(address, cb) {
   Address.getByMUI(address.matrix_unique_id, function(err, current) {
     if (err) {
       if (err.code == 'ResourceNotFound') {
-        Client.increment('new_address');
+        Metric.increment('new_address');
         Address.create(address, function(err, address_id) {
           if(err)
             return cb(err);
@@ -59,7 +59,7 @@ function upsertAddress(address, cb) {
               return cb(err);
 
             if (result) {
-              Client.increment('geocoded_address');
+              Metric.increment('geocoded_address');
             }
 
             return cb(null, address_id);
@@ -70,7 +70,7 @@ function upsertAddress(address, cb) {
 
       return cb(err);
     } else {
-      Client.increment('updated_address');
+      Metric.increment('updated_address');
       Address.update(current.id, address, function(err, next) {
         if(err)
           return cb(err);
@@ -87,14 +87,14 @@ function upsertProperty(property, address_id, cb) {
   Property.getByMUI(property.matrix_unique_id, function(err, current) {
     if(err) {
       if(err.code == 'ResourceNotFound') {
-        Client.increment('new_property');
+        Metric.increment('new_property');
         return Property.create(property, cb);
       }
 
       return cb(err);
     }
 
-    Client.increment('updated_property');
+    Metric.increment('updated_property');
     Property.update(current.id, property, function(err, next) {
       if(err)
         return cb(err);
@@ -114,7 +114,7 @@ function upsertListing(listing, property_id, cb) {
       return cb(err);
 
     if (err && err.code === 'ResourceNotFound') {
-      Client.increment('new_listing');
+      Metric.increment('new_listing');
 
       async.waterfall([
         function(cb) {
@@ -135,7 +135,7 @@ function upsertListing(listing, property_id, cb) {
           links = links.splice(1);
           listing.gallery_images = '{' + links.join(',') + '}';
 
-          Client.increment('added_photo');
+          Metric.increment('added_photo');
 
           Listing.create(listing, cb);
         }
@@ -143,7 +143,7 @@ function upsertListing(listing, property_id, cb) {
       return ;
     }
 
-    Client.increment('updated_listing');
+    Metric.increment('updated_listing');
     async.auto({
       issue_change_notifications: function(cb) {
         if(options.enableNotifications) {
@@ -159,7 +159,7 @@ function upsertListing(listing, property_id, cb) {
             if(err)
               return cb(err);
 
-            Client.increment('photo_added');
+            Metric.increment('photo_added');
             listing.cover = links[0] || '';
             var tmp = links.splice(1);
             listing.gallery_images = '{' + tmp.join(',') + '}';
@@ -193,7 +193,7 @@ function createObjects(data, cb) {
   var property = populated.property;
   var listing = populated.listing;
 
-  Client.increment('processed_listing');
+  Metric.increment('processed_listing');
 
   async.waterfall([
     upsertAddress.bind(null, address),
@@ -215,6 +215,8 @@ Client.on('data fetched', (data) => {
 });
 
 function report() {
+  Metric.flush();
+  
   var text = [
     'Execution time: %d seconds',
     'Total items: %d',
@@ -231,20 +233,20 @@ function report() {
 
   var miss_rate = Math.round(
     (
-      (Client.getMetric('new_address') - Client.getMetric('geocoded_address')) / Client.getMetric('new_address')
+      (Metric.get('new_address') - Metric.get('geocoded_address')) / Metric.get('new_address')
     ) * 100
   );
 
   text = util.format(text,
     slack.elapsed()/1000,
-    Client.getMetric('processed_listing'),
+    Metric.get('processed_listing'),
     firstId,
     lastId,
-    Client.getMetric('new_listing'), Client.getMetric('updated_listing'),
-    Client.getMetric('new_property'), Client.getMetric('updated_property'),
-    Client.getMetric('new_address'), Client.getMetric('updated_address'),
-    Client.getMetric('photo_added'),
-    Client.getMetric('geocoded_address'),
+    Metric.get('new_listing'), Metric.get('updated_listing'),
+    Metric.get('new_property'), Metric.get('updated_property'),
+    Metric.get('new_address'), Metric.get('updated_address'),
+    Metric.get('photo_added'),
+    Metric.get('geocoded_address'),
     miss_rate
   );
   console.log(text);

@@ -1,5 +1,4 @@
 registerSuite('user', ['create']);
-registerSuite('tag', ['getAll']);
 
 var first_name = 'updated_user_name';
 var profile_image = 'updated_profile_image';
@@ -11,6 +10,7 @@ var create = (cb) => {
     .post('/contacts', {
       contacts: [
         {
+          tags: ['foo'],
           email: results.user.create.data.email,
           phone_number: results.user.create.data.phone_number,
           force_creation: true
@@ -51,6 +51,7 @@ var get = (cb) => {
 
 var updateContact = (cb) => {
   results.contact.create.data[0].contact_user.first_name = first_name;
+  results.contact.create.data[0].contact_user.tags = ['newTag'];
   return frisby.create('update a contact')
     .put('/contacts/' + results.contact.create.data[0].id, results.contact.create.data[0].contact_user)
     .after(cb)
@@ -158,8 +159,18 @@ var search = (cb) => {
 var addTag = (cb) => {
   return frisby.create('add tag to a contact')
     .post('/contacts/' + results.contact.create.data[0].id + '/tags', {
-      tag_id: results.tag.getAll.data[0].id
+      tags: ['foo', 'bar']
     })
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK'
+    });
+}
+
+var getByTag = (cb) => {
+  return frisby.create('filter contacts by tags')
+    .get('/contacts?tags=foo,bar')
     .after(cb)
     .expectStatus(200)
     .expectJSON({
@@ -169,7 +180,7 @@ var addTag = (cb) => {
 
 var removeTag = (cb) => {
   return frisby.create('remove tag from a contact')
-    .delete('/contacts/' + results.contact.create.data[0].id + '/tags/' +results.tag.getAll.data[0].id)
+    .delete('/contacts/' + results.contact.create.data[0].id + '/tags/test')
     .expectStatus(204)
     .after(cb);
 }
@@ -200,6 +211,7 @@ module.exports = {
   create,
   addTag,
   get: get,
+  getByTag,
   updateContact,
   updateContactWorked,
   patchContactProfileImage,
