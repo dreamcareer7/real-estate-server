@@ -8,7 +8,7 @@ module.exports = {
   "created_at": Number,
   "id": String,
   "cover_image_url": function(val) { expect(val).toBeTypeOrNull(String); },
-  "profile_image_url": String,
+  "profile_image_url": function(val) { expect(val).toBeTypeOrNull(String); },
   "updated_at": Number,
   "user_status": String,
   "profile_image_thumbnail_url": function(val) { expect(val).toBeTypeOrNull(String); },

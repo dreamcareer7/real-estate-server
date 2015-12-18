@@ -21,7 +21,7 @@ module.exports = {
   "geo_source": String,
   "partial_match_google": function(val) { expect(val).toBeTypeOrNull(Boolean); },
   "county_or_parish": String,
-  "direction": null,
+  "direction": function(val) { expect(val).toBeTypeOrNull(String); },
   "street_dir_prefix": String,
   "street_dir_suffix": String,
   "street_number_searchable": String,
@@ -41,6 +41,6 @@ module.exports = {
   "corrupted": Boolean,
   "corrupted_google": Boolean,
   "corrupted_bing": function(val) { expect(val).toBeTypeOrNull(Boolean); },
-  "deleted_at": null,
+  "deleted_at": function(val) { expect(val).toBeTypeOrNull(Number); },
   "type": String
 };

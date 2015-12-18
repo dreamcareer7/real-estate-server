@@ -11,7 +11,7 @@ module.exports = {
   "hidden": Boolean,
   "created_at": Number,
   "updated_at": Number,
-  "deleted_at": null,
+  "deleted_at": function(val) { expect(val).toBeTypeOrNull(Number); },
   "read_by": Array,
   "favorited_by": Array,
   "tour_requested_by": Array,

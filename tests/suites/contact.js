@@ -6,7 +6,6 @@ var cover_image = 'updated_cover_image';
 
 var contact_response = require('./data/publicized/contact.js');
 var info_response = require('./data/publicized/info.js');
-var tag_response = require('./data/publicized/tag.js');
 
 
 var create = (cb) => {
@@ -80,10 +79,7 @@ var updateContact = (cb) => {
     })
     .expectJSONTypes({
       code: String,
-      data: contact_response,
-      data: {
-        tags: [tag_response]
-      }
+      data: contact_response
     });
 };
 
@@ -122,10 +118,7 @@ var patchContactProfileImage = (cb) => {
     })
     .expectJSONTypes({
       code: String,
-      data: contact_response,
-      data: {
-        tags: [tag_response]
-      }
+      data: contact_response
     });
 };
 
@@ -162,10 +155,7 @@ var patchContactCoverImage = (cb) => {
     })
     .expectJSONTypes({
       code: String,
-      data: contact_response,
-      data: {
-        tags: [tag_response]
-      }
+      data: contact_response
     });
 };
 
@@ -223,10 +213,7 @@ var addTag = (cb) => {
     })
     .expectJSONTypes({
       code: String,
-      data: contact_response,
-      data: {
-        tags: [tag_response]
-      }
+      data: contact_response
     });
 }
 

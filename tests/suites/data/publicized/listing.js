@@ -3,7 +3,7 @@ var property = require('./property.js');
 module.exports = {
   "type": String,
   "id": String,
-  "listing_agency_id": null,
+  "listing_agency_id": function(val) { expect(val).toBeTypeOrNull(String); },
   "created_at": Number,
   "updated_at": Number,
   "cover_image_url": String,
@@ -71,8 +71,8 @@ module.exports = {
   "permit_address_internet_yn": Boolean,
   "permit_comments_reviews_yn": Boolean,
   "permit_internet_yn": Boolean,
-  "price_change_timestamp": String,
-  "price_change_timestamp": String,
+  "price_change_timestamp": function(val) { expect(val).toBeTypeOrNull(String); },
+  "price_change_timestamp": function(val) { expect(val).toBeTypeOrNull(String); },
   "matrix_modified_dt": String,
   "property_association_fees": String,
   "showing_instructions_type": String,
@@ -86,7 +86,7 @@ module.exports = {
   "keybox_type": String,
   "keybox_number": String,
   "close_date": String,
-  "close_price": null,
+  "close_price": function(val) { expect(val).toBeTypeOrNull(String); },
   "back_on_market_date": String,
   "deposit_amount": Number,
   "photo_count": Number,
@@ -94,6 +94,6 @@ module.exports = {
   "dom": function(val) { expect(val).toBeTypeOrNull(Number); },
   "cdom": function(val) { expect(val).toBeTypeOrNull(Number); },
   "property": property,
-  "alerting_agent": null,
-  "listing_agent": null
+  "alerting_agent": function(val) { expect(val).toBeTypeOrNull(String); },
+  "listing_agent": function(val) { expect(val).toBeTypeOrNull(String); }
 };

@@ -14,7 +14,7 @@ module.exports = {
   "invitation_url": function(val) { expect(val).toBeTypeOrNull(String); },
   "company": function(val) { expect(val).toBeTypeOrNull(String); },
   "address": function(val) { expect(val).toBeTypeOrNull(String); },
-  "birthday": null,
+  "birthday": function(val) { expect(val).toBeTypeOrNull(Number); },
   "cover_image_url": function(val) { expect(val).toBeTypeOrNull(String); },
   "type": "contact",
   "tags": function(val) { expect(val).toBeTypeOrNull(Array); },
