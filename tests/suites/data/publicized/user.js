@@ -17,7 +17,7 @@ module.exports = {
   "timezone": String,
   "user_code": Number,
   "user_type": String,
-  "deleted_at": function(val) { expect(val).toBeTypeOrNull(Number); },
+  "deleted_at": function(val) { expect(val).toBeTypeOrNull(String); },
   "phone_confirmed": Boolean,
   "current_time": String,
   "push_allowed": Boolean,

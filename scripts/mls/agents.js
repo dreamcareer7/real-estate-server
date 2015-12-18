@@ -18,7 +18,7 @@ function processData(cb, results) {
 }
 
 function insertAgent(data, cb) {
-  Client.increment('processed_agent');
+  Metric.increment('processed_agent');
 
   var agent = populate(data);
 
@@ -28,7 +28,7 @@ function insertAgent(data, cb) {
 function report(err) {
   if(err)
     console.log(err);
-  
+
   process.exit();
 }
 

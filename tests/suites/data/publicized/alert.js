@@ -18,7 +18,7 @@ module.exports = {
   "room": String,
   "minimum_bedrooms": Number,
   "minimum_bathrooms": Number,
-  "cover_image_url": null,
+  "cover_image_url": function(val) { expect(val).toBeTypeOrNull(String); },
   "property_type": String,
   "property_subtypes": Array,
   "points": [
@@ -58,6 +58,6 @@ module.exports = {
   "maximum_year_built": Number,
   "dom": null,
   "cdom": null,
-  "deleted_at": null,
+  "deleted_at": function(val) { expect(val).toBeTypeOrNull(Number); },
   "type": "alert"
 };

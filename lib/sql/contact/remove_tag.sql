@@ -1,2 +1,2 @@
-DELETE FROM contacts_tags
-WHERE contact = $1 AND tag = $2
+DELETE FROM tags
+WHERE entity = $1 AND tag = $2 AND type = $3
