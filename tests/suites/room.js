@@ -217,11 +217,7 @@ var removeUserWorked = (cb) => {
     .after(cb)
     .expectStatus(200)
     .expectJSON({
-      code: 'OK',
-      data: [],
-      info: {
-        count: results.room.getUserRooms.info.count - 1
-      }
+      code: 'OK'
     })
     .expectJSONTypes({
       code: String,
@@ -247,7 +243,7 @@ var patchRoom = (cb) => {
 }
 
 var patchRoomWorked = (cb) => {
-  //room.title = updated_room;
+  room.title = updated_room;
   return frisby.create('get room')
     .get('/rooms/' + results.room.create.data.id)
     .after(cb)
