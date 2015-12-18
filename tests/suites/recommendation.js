@@ -2,8 +2,8 @@ var _ = require('underscore');
 
 registerSuite('alert', ['create']);
 
-var recommendation_response = require('./data/publicized/recommendation.js');
-var info_response = require('./data/publicized/info.js');
+var recommendation_response = require('./expected_objects/recommendation.js');
+var info_response = require('./expected_objects/info.js');
 
 var feed = (cb) => {
   return frisby.create('get feed')

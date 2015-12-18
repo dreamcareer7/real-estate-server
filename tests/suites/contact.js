@@ -4,8 +4,8 @@ var first_name = 'updated_user_name';
 var profile_image = 'updated_profile_image';
 var cover_image = 'updated_cover_image';
 
-var contact_response = require('./data/publicized/contact.js');
-var info_response = require('./data/publicized/info.js');
+var contact_response = require('./expected_objects/contact.js');
+var info_response = require('./expected_objects/info.js');
 
 
 var create = (cb) => {

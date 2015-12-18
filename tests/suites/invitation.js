@@ -2,8 +2,8 @@
 registerSuite('room', ['create'])
 registerSuite('user', ['create'])
 
-var invitation_response = require('./data/publicized/invitation.js');
-var info_response = require('./data/publicized/info.js');
+var invitation_response = require('./expected_objects/invitation.js');
+var info_response = require('./expected_objects/info.js');
 
 var create = (cb) => {
   return frisby.create('create invitation')

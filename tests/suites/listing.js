@@ -1,7 +1,7 @@
 var listing = require('./data/listing.js');
 
-var listing_response = require('./data/publicized/listing.js');
-var info_response = require('./data/publicized/info.js');
+var listing_response = require('./expected_objects/listing.js');
+var info_response = require('./expected_objects/info.js');
 
 var by_mui = (cb) => {
   return frisby.create('search for a listing by mui')

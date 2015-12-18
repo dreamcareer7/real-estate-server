@@ -2,9 +2,9 @@
 registerSuite('room', ['create']);
 registerSuite('invitation', ['create']);
 
-var notification_response = require('./data/publicized/notification.js');
-var info_response = require('./data/publicized/info.js');
-var user_response = require('./data/publicized/user.js');
+var notification_response = require('./expected_objects/notification.js');
+var info_response = require('./expected_objects/info.js');
+var user_response = require('./expected_objects/user.js');
 
 var getUsersNotification = (cb) => {
   return frisby.create('get all notifications for a user')

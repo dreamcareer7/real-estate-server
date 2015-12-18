@@ -1,7 +1,7 @@
 var criteria = require('./data/alert_criteria.js');
-var alert_response = require('./data/publicized/alert.js');
-var info = require('./data/publicized/info.js');
-var compact_listing = require('./data/publicized/compact_listing.js');
+var alert_response = require('./expected_objects/alert.js');
+var info = require('./expected_objects/info.js');
+var compact_listing = require('./expected_objects/compact_listing.js');
 
 
 registerSuite('room', ['create']);

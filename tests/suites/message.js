@@ -1,8 +1,8 @@
 var message = require('./data/message.js');
 registerSuite('room', ['create']);
 
-var message_response = require('./data/publicized/message.js');
-var info_response = require('./data/publicized/info.js');
+var message_response = require('./expected_objects/message.js');
+var info_response = require('./expected_objects/info.js');
 
 var post = (cb) => {
   return frisby.create('post a message')

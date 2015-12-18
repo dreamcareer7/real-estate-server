@@ -1,6 +1,6 @@
 var config = require('../../lib/config.js');
 
-var authorize_reponse = require('./data/publicized/authorize.js');
+var authorize_reponse = require('./expected_objects/authorize.js');
 
 var auth_params = {
   client_id: config.tests.client_id,
