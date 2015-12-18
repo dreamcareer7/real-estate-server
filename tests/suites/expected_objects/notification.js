@@ -17,7 +17,7 @@ module.exports = {
   "auxiliary_subject_class": null,
   "extra_subject_class": null,
   "extra_object_class": null,
-  "deleted_at": null,
+  "deleted_at": function(val) { expect(val).toBeTypeOrNull(Number); },
   "specific": null,
   "notification_type": String,
   "objects": null,

@@ -42,6 +42,7 @@ var getFavorites = (cb) => {
     .expectJSONLength('data', 0)
     .expectJSONTypes({
       code: String,
+      data: Array,
       info: info_response
     });
 }
@@ -62,6 +63,7 @@ var getTours = (cb) => {
     .expectJSONLength('data', 0)
     .expectJSONTypes({
       code: String,
+      data: Array,
       info: info_response
     });
 }
@@ -82,6 +84,7 @@ var getActives = (cb) => {
     .expectJSONLength('data', 0)
     .expectJSONTypes({
       code: String,
+      data: Array,
       info: info_response
     });
 }
@@ -119,6 +122,11 @@ var markAsFavoriteWorked = (cb) => {
       }
     })
     .expectJSONLength('data', 1)
+    .expectJSONTypes({
+      code: String,
+      data: [recommendation_response],
+      info: info_response
+    });
 }
 
 var markAsTour = (cb) => {
@@ -153,7 +161,12 @@ var markAsTourWorked = (cb) => {
         total: 1
       }
     })
-    .expectJSONLength('data', 1);
+    .expectJSONLength('data', 1)
+    .expectJSONTypes({
+      code: String,
+      data: [recommendation_response],
+      info: info_response
+    });
 }
 
 var seen = (cb) => {
@@ -169,7 +182,12 @@ var seen = (cb) => {
         total: 0
       }
     })
-    .expectJSONLength('data', 0);
+    .expectJSONLength('data', 0)
+    .expectJSONTypes({
+      code: String,
+      data: Array,
+      info: info_response
+    });
 }
 
 var markAsSeen = (cb) => {
@@ -189,6 +207,10 @@ var markAsSeen = (cb) => {
       code: 'OK',
       data: rec
     })
+    .expectJSONTypes({
+      code: String,
+      data: recommendation_response
+    });
 }
 
 var markAsSeenWorked = (cb) => {
@@ -204,7 +226,12 @@ var markAsSeenWorked = (cb) => {
       },
       data: [results.recommendation.feed.data[1]]
     })
-    .expectJSONLength('data', 1);
+    .expectJSONLength('data', 1)
+    .expectJSONTypes({
+      code: String,
+      data: [recommendation_response],
+      info: info_response
+    });
 }
 
 var recommendManually = (cb) => {
@@ -219,6 +246,10 @@ var recommendManually = (cb) => {
       data: {
         type: 'recommendation'
       }
+    })
+    .expectJSONTypes({
+      code: String,
+      data: recommendation_response
     });
 }
 
@@ -232,6 +263,10 @@ var recommendManuallyWorked = (cb) => {
       data: {
         type: 'recommendation'
       }
+    })
+    .expectJSONTypes({
+      code: String,
+      data: recommendation_response
     });
 }
 
@@ -243,8 +278,12 @@ var bulkRecommendManually = (cb) => {
     .after(cb)
     .expectStatus(200)
     .expectJSON({
-      code: 'OK',
-      data: []
+      code: 'OK'
+    })
+    .expectJSONTypes({
+      code: String,
+      data: Array,
+      info: info_response
     });
 }
 
