@@ -2,6 +2,7 @@ var config = require('../../lib/config.js');
 
 var session = require('./data/session.js');
 var client = JSON.parse(JSON.stringify(session));
+var session_response = require('./expected_objects/session.js');
 
 client.client_id = config.tests.client_id;
 client.client_secret = config.tests.client_secret;
@@ -17,7 +18,10 @@ var create = (cb) => {
       data: {
         type: 'session'
       }
-
+    })
+    .expectJSONTypes({
+      code: String,
+      data: session_response
     });
 }
 
