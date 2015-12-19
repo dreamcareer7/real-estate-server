@@ -99,7 +99,9 @@ function updateUI() {
       line.padding(15).column(test.name.red, 600);
       line.fill().store();
 
-      test.messages.forEach( (message) => {
+      test.messages
+      .filter( message => message !== 'Passed.' )
+      .forEach( (message) => {
         var line = new clui.Line(screen);
         line.padding(20).column(message.red, 600);
         line.fill().store();

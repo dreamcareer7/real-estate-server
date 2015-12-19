@@ -1,5 +1,6 @@
 var user = require('./user.js');
 var notification = require('./notification.js');
+var recommendation = require('./recommendation.js');
 
 
 module.exports = {
@@ -10,7 +11,7 @@ module.exports = {
   "created_at": Number,
   "updated_at": Number,
   "status": String,
-  "lead_agent": user,
+  "lead_agent": function(val) { expect(val).toBeTypeOrNull(user); },
   "room_code": Number,
   "deleted_at": function(val) { expect(val).toBeTypeOrNull(Number); },
   "room_type": String,
@@ -23,14 +24,14 @@ module.exports = {
     "document_url": function(val) { expect(val).toBeTypeOrNull(String); },
     "video_url": function(val) { expect(val).toBeTypeOrNull(String); },
     "recommendation": function(val) { expect(val).toBeTypeOrNull(String); },
-    "author": function(val) { expect(val).toBeTypeOrNull(String); },
+    "author": function(val) { expect(val).toBeTypeOrNull(user); },
     "created_at": Number,
     "updated_at": Number,
     "message_type": String,
     "image_thumbnail_url": function(val) { expect(val).toBeTypeOrNull(String); },
     "deleted_at": function(val) { expect(val).toBeTypeOrNull(Number); },
-    "notification": notification,
+    "notification": function(val) { expect(val).toBeTypeOrNull(notification); },
     "reference": null
   },
-  "users": function(val) { expect(val).toBeTypeOrNull([user]); },
+  "users": function(val) { expect(val).toBeTypeOrNull([user]); }
 };

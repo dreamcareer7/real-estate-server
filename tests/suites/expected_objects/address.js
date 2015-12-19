@@ -27,10 +27,10 @@ module.exports = {
   "street_number_searchable": String,
   "geo_source_formatted_address_google": String,
   "geocoded_google": Boolean,
-  "geocoded_bing": Boolean,
+  "geocoded_bing": function(val) { expect(val).toBeTypeOrNull(Boolean); },
   "location_bing": function(val) { expect(val).toBeTypeOrNull(String); },
   "geo_source_formatted_address_bing": function(val) { expect(val).toBeTypeOrNull(String); },
-  "geo_confidence_google": String,
+  "geo_confidence_google": function(val) { expect(val).toBeTypeOrNull(String); },
   "geo_confidence_bing": function(val) { expect(val).toBeTypeOrNull(String); },
   "location": {
     "longitude": Number,

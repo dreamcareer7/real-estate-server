@@ -91,7 +91,7 @@ var getActives = (cb) => {
 
 var markAsFavorite = (cb) => {
   return frisby.create('favorite a rec')
-    .patch('/rooms/' + results.room.create.data.id + '/recs/' + results.recommendation.feed.data[1].id + '/favorite', {
+    .patch('/rooms/' + results.room.create.data.id + '/recs/' + results.recommendation.feed.data[0].id + '/favorite', {
       favorite: true
     })
     .after(cb)
@@ -115,7 +115,7 @@ var markAsFavoriteWorked = (cb) => {
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
-      data: [results.recommendation.feed.data[1]],
+      data: [results.recommendation.feed.data[0]],
       info: {
         count: 1,
         total: 1
@@ -131,7 +131,7 @@ var markAsFavoriteWorked = (cb) => {
 
 var markAsTour = (cb) => {
   return frisby.create('tour a rec')
-    .patch('/rooms/' + results.room.create.data.id + '/recs/' + results.recommendation.feed.data[1].id + '/tour', {
+    .patch('/rooms/' + results.room.create.data.id + '/recs/' + results.recommendation.feed.data[0].id + '/tour', {
       tour: true
     })
     .after(cb)
@@ -191,7 +191,7 @@ var seen = (cb) => {
 }
 
 var markAsSeen = (cb) => {
-  var rec = _.clone(results.recommendation.feed.data[1]);
+  var rec = _.clone(results.recommendation.feed.data[0]);
 
   //These are only present when recommendation is part of a collection
   delete rec.comment_count;
@@ -200,7 +200,7 @@ var markAsSeen = (cb) => {
   delete rec.image_count;
 
   return frisby.create('mark a rec as seen')
-    .delete('/rooms/' + results.room.create.data.id + '/recs/feed/' + results.recommendation.feed.data[1].id)
+    .delete('/rooms/' + results.room.create.data.id + '/recs/feed/' + results.recommendation.feed.data[0].id)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
@@ -224,7 +224,7 @@ var markAsSeenWorked = (cb) => {
         count: 1,
         total: 1
       },
-      data: [results.recommendation.feed.data[1]]
+      data: [results.recommendation.feed.data[0]]
     })
     .expectJSONLength('data', 1)
     .expectJSONTypes({
@@ -255,7 +255,7 @@ var recommendManually = (cb) => {
 
 var recommendManuallyWorked = (cb) => {
   return frisby.create('make sure recommendManually was successful')
-    .get('/rooms/' + results.room.create.data.id + '/recs/' + results.recommendation.feed.data[1].id)
+    .get('/rooms/' + results.room.create.data.id + '/recs/' + results.recommendation.feed.data[0].id)
     .after(cb)
     .expectStatus(200)
     .expectJSON({

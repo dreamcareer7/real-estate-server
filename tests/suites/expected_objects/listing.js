@@ -6,7 +6,7 @@ module.exports = {
   "listing_agency_id": function(val) { expect(val).toBeTypeOrNull(String); },
   "created_at": Number,
   "updated_at": Number,
-  "cover_image_url": String,
+  "cover_image_url": function(val) { expect(val).toBeTypeOrNull(String); },
   "currency": String,
   "price": Number,
   "gallery_image_urls": [String],
