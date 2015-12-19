@@ -7,15 +7,19 @@ require('./connection.js')
 var _ = require('underscore');
 var Client = require('./mls/rets_client.js')
 
-var search = function(criteria, cb) {
+var search = function (criteria, cb) {
   var options = {};
   options.resource = 'Property';
   options.class = 'Listing';
   options.dontSave = true;
-  options.query = ('(MatrixModifiedDT=' + criteria.from + '+),' +
-    '( Longitude=' + criteria.points[0].longitude + '+),(Latitude=' + criteria.points[0].latitude + '-),' +
+  options.query = ('( Longitude=' + criteria.points[0].longitude + '+),(Latitude=' + criteria.points[0].latitude + '-),' +
     '( Longitude=' + criteria.points[1].longitude + '-),(Latitude=' + criteria.points[2].latitude + '+),' +
-    '  (STATUS=A,AC,AOC,AKO), (OriginalListPrice=' + criteria.minimum_price + '+)'
+    '(STATUS=A,AC,AOC,AKO), (ListPrice=' + criteria.maximum_price + '-), (ListPrice=' + criteria.minimum_price + '+),' +
+    '(SqFtTotal=' + criteria.maximum_square_meters + '-), (SqFtTotal=' + criteria.minimum_square_meters + '+),' +
+    '(BedsTotal=' + criteria.minimum_bedrooms + '+),' +
+    //'(PropertyType=' + criteria.property_type + '), (PropertySubType=' + criteria.property_subtypes.join() + '),' +
+    '(YearBuilt=' + criteria.minimum_year_built + '+), (YearBuilt=' + criteria.maximum_year_built + '-),' +
+    '(PoolYN=1), LotSizeAreaSQFT=' + criteria.maximum_lot_square_meters + '-), (LotSizeAreaSQFT=' + criteria.minimum_lot_square_meters + '+)'
   )
 
   options.processor = (done, results) => {
@@ -23,8 +27,8 @@ var search = function(criteria, cb) {
     cb(null, results.mls)
   }
 
-  Client.work(options, (err)=>{
-    if(err)
+  Client.work(options, (err)=> {
+    if (err)
       console.log(err);
   });
 }
@@ -44,6 +48,7 @@ var criteria = {
   maximum_price: 9223372036854776000,
   limit: '1000',
   maximum_lot_square_meters: 856872169904754400,
+  minimum_lot_square_meters: 0,
   minimum_bathrooms: 1,
   maximum_square_meters: 856872169904754400,
   location: {
@@ -77,31 +82,34 @@ var criteria = {
   created_by: '66f30c4e-6d33-11e5-8206-230211c15dec'
 };
 
-
 function compare(rechat, mls) {
-  var same = "";
-  var diff = "";
+  var both = "";
+  var rechat_only = "";
+  var mls_only = "";
   for (var i = 0; i < rechat.length; i++) {
     //check if exist in mls
     var mls_index = mls.indexOf(rechat[i]);
     if (mls_index > 0) {
-      same += rechat[i] + ', ';
+      both += rechat[i] + ', ';
       mls.splice(mls_index, 1);
     }
     else {
-      diff += rechat[i] + ', ';
+      rechat_only += rechat[i] + ', ';
     }
   }
   //check if there is remaining item in mls
   if (mls.length > 0)
     for (var i = 0; i < mls.length; i++) {
-      diff += mls[i] + ', ';
+      mls_only += mls[i] + ', ';
     }
 
-  console.log('same result count: ', same.split(',').length - 1);
-  console.log('different result count: ', diff.split(',').length - 1);
-  console.log(same.green);
-  console.log(diff.red);
+  var same_count = both.split(',').length - 1;
+  var rechat_count = rechat_only.split(',').length - 1;
+  var mls_count = mls_only.split(',').length - 1;
+
+  console.log('SAME RESULTS (' + same_count + ')', both.green);
+  console.log('ONLY IN RECHAT (' + rechat_count + ')', rechat_only.red);
+  console.log('ONLY IN MLS (' + mls_count + ')', mls_only.yellow);
 };
 
 Alert.check(criteria, function (err, rechat_listings) {
@@ -115,18 +123,17 @@ Alert.check(criteria, function (err, rechat_listings) {
       else
         console.log(err);
 
-    var rechat_array = []
-    for (var i = 0; i < rechat_listings.length; i++) {
-      rechat_array.push(rechat_listings[i].mls_number)
-    }
+    var rechat_array = rechat_listings.map(function (r) {
+      return r.mls_number;
+    });
 
-    var mls_array = []
-    for (var i = 0; i < mls_listings.length; i++) {
-      mls_array.push(mls_listings[i].MLSNumber)
-    }
+    var mls_array = mls_listings.map(function (r) {
+      return r.MLSNumber;
+    });
 
     console.log('Found ' + rechat_array.length + ' listings in rechat database and ' + mls_listings.length + ' in MLS database');
-    compare(rechat_array, mls_array);
+
+    compare(rechat_array.sort(), mls_array.sort());
 
     process.exit();
   });
