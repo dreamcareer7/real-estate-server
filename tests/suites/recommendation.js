@@ -7,7 +7,7 @@ var info_response = require('./expected_objects/info.js');
 
 var feed = (cb) => {
   return frisby.create('get feed')
-    .get('/rooms/' + results.room.create.data.id + '/recs/feed?filter=' + results.alert.create.data.id)
+    .get('/rooms/' + results.room.create.data.id + '/recs/feed')
     .after(cb)
     .expectStatus(200)
     .expectJSON({
