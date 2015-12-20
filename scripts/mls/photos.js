@@ -13,7 +13,10 @@ var options = program.parse(process.argv);
 
 options.resource = 'Media';
 options.class = 'Media';
-options.by_id = true;
+options.fields = {
+  id:'matrix_unique_id',
+  modified:'ModifiedDate'
+}
 options.processor = processData;
 
 function processData(cb, results) {
