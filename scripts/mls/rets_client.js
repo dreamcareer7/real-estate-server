@@ -5,6 +5,7 @@ var db = require('../../lib/utils/db.js');
 var config = require('../../lib/config.js');
 var _u = require('underscore');
 var EventEmitter = require('events');
+var util = require('util');
 
 require('../../lib/models/index.js')();
 
@@ -36,9 +37,9 @@ Date.prototype.toNTREISString = function() {
     '+';
 }
 
-function byMatrixModifiedDT(a, b) {
-  var a_ = new Date(a.MatrixModifiedDT);
-  var b_ = new Date(b.MatrixModifiedDT);
+function sortByModified(a, b) {
+  var a_ = new Date(a[Client.options.fields.modified]);
+  var b_ = new Date(b[Client.options.fields.modified]);
 
   if(a_ > b_)
     return 1;
@@ -48,9 +49,9 @@ function byMatrixModifiedDT(a, b) {
     return 0;
 }
 
-function byMatrix_Unique_ID(a, b) {
-  var a_ = parseInt(a.Matrix_Unique_ID || a.matrix_unique_id);
-  var b_ = parseInt(b.Matrix_Unique_ID || b.matrix_unique_id);
+function sortById(a, b) {
+  var a_ = parseInt(a[Client.options.fields.id]);
+  var b_ = parseInt(b[Client.options.fields.id]);
 
   if(a_ > b_)
     return 1;
@@ -93,11 +94,11 @@ function saveLastRun(data, cb) {
   var last_mui  = null;
 
   if(data.length > 0) {
-    data.sort(byMatrixModifiedDT);
-    var last_date = data[data.length -1].MatrixModifiedDT;
+    data.sort(sortByModified);
+    var last_date = data[data.length -1][Client.options.fields.modified];
 
-    data.sort(byMatrix_Unique_ID);
-    var last_mui =  data[data.length -1].Matrix_Unique_ID || data[data.length -1].matrix_unique_id;
+    data.sort(sortById);
+    var last_mui =  data[data.length -1][Client.options.fields.id];
   }
 
   var job = {
@@ -139,7 +140,7 @@ function connect(cb) {
 }
 
 function fetch(cb) {
-  var by_id    = Client.options.by_id || !(Client.last_run.is_initial_completed);
+  var by_id    = !(Client.last_run.is_initial_completed);
   var last_id  = Client.last_run.last_id ? Client.last_run.last_id : 0;
   var last_run = Client.last_run.last_modified_date;
 
@@ -157,8 +158,12 @@ function fetch(cb) {
   if(Client.options.query)
     Client.query = Client.options.query;
   else {
-    var query = (by_id) ? ('(MATRIX_UNIQUE_ID='+last_id +'+)') :
-              ('(MatrixModifiedDT=' + last_run.toNTREISString() + ')');
+    var query;
+    if(by_id) {
+      query = util.format('(%s=%s+)', Client.options.fields.id, last_id);
+    } else {
+      query = util.format('(%s=%s)', Client.options.fields.modified, last_run.toNTREISString());
+    }
 
     if(by_id && Client.options.additionalQuery)
       query += ','+Client.options.additionalQuery;
@@ -237,6 +242,15 @@ Client.on('initial completed', () => {
 
 Client.work = function(options, cb) {
   Client.options = options;
+
+  if(!Client.options.fields)
+    Client.options.fields = {};
+
+  if(!Client.options.fields.id)
+    Client.options.fields.id = 'Matrix_Unique_ID';
+
+  if(!Client.options.fields.modified)
+    Client.options.fields.modified = 'MatrixModifiedDT';
 
   notice();
 
