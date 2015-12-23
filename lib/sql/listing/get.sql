@@ -8,7 +8,7 @@ SELECT 'listing' AS TYPE,
        (
         SELECT ARRAY_AGG(url) FROM photos
         WHERE listing_mui = listings.matrix_unique_id
-       ) as photos,
+       ) as gallery_image_urls,
        (
         SELECT url FROM photos
         WHERE listing_mui = listings.matrix_unique_id
