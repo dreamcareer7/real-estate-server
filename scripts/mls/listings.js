@@ -44,7 +44,7 @@ function upsertAddress(address, cb) {
   Address.getByMUI(address.matrix_unique_id, function(err, current) {
     if (err) {
       if (err.code == 'ResourceNotFound') {
-        Metric.increment('new_address');
+        Metric.increment('mls.new_address');
         Address.create(address, function(err, address_id) {
           if(err)
             return cb(err);
@@ -57,7 +57,7 @@ function upsertAddress(address, cb) {
               return cb(err);
 
             if (result) {
-              Metric.increment('geocoded_address');
+              Metric.increment('mls.geocoded_address');
             }
 
             return cb(null, address_id);
@@ -68,7 +68,7 @@ function upsertAddress(address, cb) {
 
       return cb(err);
     } else {
-      Metric.increment('updated_address');
+      Metric.increment('mls.updated_address');
       Address.update(current.id, address, function(err, next) {
         if(err)
           return cb(err);
@@ -85,14 +85,14 @@ function upsertProperty(property, address_id, cb) {
   Property.getByMUI(property.matrix_unique_id, function(err, current) {
     if(err) {
       if(err.code == 'ResourceNotFound') {
-        Metric.increment('new_property');
+        Metric.increment('mls.new_property');
         return Property.create(property, cb);
       }
 
       return cb(err);
     }
 
-    Metric.increment('updated_property');
+    Metric.increment('mls.updated_property');
     Property.update(current.id, property, function(err, next) {
       if(err)
         return cb(err);
@@ -112,13 +112,13 @@ function upsertListing(listing, property_id, cb) {
       return cb(err);
 
     if (err && err.code === 'ResourceNotFound') {
-      Metric.increment('new_listing');
+      Metric.increment('mls.new_listing');
 
       Listing.create(listing, cb);
       return ;
     }
 
-    Metric.increment('updated_listing');
+    Metric.increment('mls.updated_listing');
 
     async.series({
       notifications: cb => {
@@ -150,7 +150,7 @@ function createObjects(data, cb) {
   var property = populated.property;
   var listing = populated.listing;
 
-  Metric.increment('processed_listing');
+  Metric.increment('mls.processed_listing');
 
   async.waterfall([
     upsertAddress.bind(null, address),
@@ -188,19 +188,19 @@ function report() {
 
   var miss_rate = Math.round(
     (
-      (Metric.get('new_address') - Metric.get('geocoded_address')) / Metric.get('new_address')
+      (Metric.get('mls.new_address') - Metric.get('mls.geocoded_address')) / Metric.get('mls.new_address')
     ) * 100
   );
 
   text = util.format(text,
     slack.elapsed()/1000,
-    Metric.get('processed_listing'),
+    Metric.get('mls.processed_listing'),
     firstId,
     lastId,
-    Metric.get('new_listing'), Metric.get('updated_listing'),
-    Metric.get('new_property'), Metric.get('updated_property'),
-    Metric.get('new_address'), Metric.get('updated_address'),
-    Metric.get('geocoded_address'),
+    Metric.get('mls.new_listing'), Metric.get('mls.updated_listing'),
+    Metric.get('mls.new_property'), Metric.get('mls.updated_property'),
+    Metric.get('mls.new_address'), Metric.get('mls.updated_address'),
+    Metric.get('mls.geocoded_address'),
     miss_rate
   );
   console.log(text);
