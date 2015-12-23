@@ -40,6 +40,11 @@ function _saveImage(payload, cb) {
     return;
   }
 
+  if(payload.data.data === null) {
+    Photo.markError(payload.photo.matrix_unique_id, 'Data is empty', cb);
+    return ;
+  }
+
   var file = {
     name:payload.photo.matrix_unique_id,
     ext:'.jpg',
