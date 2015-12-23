@@ -1,15 +1,11 @@
 INSERT INTO
     transactions(
-        room,
+    "user",
         title,
         recommendation,
         listing,
         listing_data,
         transaction_type,
-        buyer,
-        seller,
-        buyer_agent,
-        seller_agent,
         transaction_status,
         contract_price,
         original_price,
@@ -23,15 +19,7 @@ INSERT INTO
         sale_commission_total,
         earnest_money_amount,
         earnest_money_held_by,
-        escrow_number,
-        co_buyer_agent,
-        co_seller_agent,
-        lawyer,
-        lender,
-        broker,
-        team_lead,
-        appraiser,
-        inspector
+        escrow_number
     )
 VALUES (
         $1,
@@ -53,17 +41,5 @@ VALUES (
         $17,
         $18,
         $19,
-        $20,
-        $21,
-        $22,
-        $23,
-        $24,
-        $25,
-        $26,
-        $27,
-        $28,
-        $29,
-        $30,
-        $31,
-        $32
+        $20
     ) RETURNING id;
