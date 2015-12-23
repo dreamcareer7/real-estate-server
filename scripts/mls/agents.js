@@ -18,7 +18,7 @@ function processData(cb, results) {
 }
 
 function insertAgent(data, cb) {
-  Metric.increment('processed_agent');
+  Metric.increment('mls.processed_agent');
 
   var agent = populate(data);
 
