@@ -110,25 +110,24 @@ var criteria = {
 };
 
 function logDiff(rechat, mls) {
-  console.log((rechat.mls_number + ' found in local DB with different attributes').red);
-  //find diff
   if (Math.round(rechat.square_meters * 10.764) != mls.SqFtTotal)
     console.log(rechat.mls_number + ' => square_meters is different: RECHAT: ' + (Math.round(rechat.square_meters * 10.764)).toString() + ' MLS: ' + mls.SqFtTotal);
-  if ((rechat.lot_square_meters * 10.764).toFixed(2) != mls.LotSizeAreaSQFT)
+  else if ((rechat.lot_square_meters * 10.764).toFixed(2) != mls.LotSizeAreaSQFT)
     console.log(rechat.mls_number + ' => lot_square_meters is different: RECHAT: ' + (rechat.lot_square_meters * 10.764).toFixed(2) + ' MLS: ' + mls.LotSizeAreaSQFT);
-  if (rechat.bedroom_count != mls.BedsTotal)
+  else if (rechat.bedroom_count != mls.BedsTotal)
     console.log(rechat.mls_number + ' => bedroom_count is different: RECHAT: ' + rechat.bedroom_count + ' MLS: ' + mls.BedsTotal);
-  if (rechat.bathroom_count != mls.BathsFull)
+  else if (rechat.bathroom_count != mls.BathsFull)
     console.log(rechat.mls_number + ' => bathroom_count is different: RECHAT: ' + rechat.bathroom_count + ' MLS: ' + mls.BathsFull);
-  if (rechat.property_type != mls.PropertyType)
+  else if (rechat.property_type != mls.PropertyType)
     console.log(rechat.mls_number + ' => property_type is different: RECHAT: ' + rechat.property_type + ' MLS: ' + mls.PropertyType);
-  if (rechat.property_subtype != mls.PropertySubType)
+  else if (rechat.property_subtype != mls.PropertySubType)
     console.log(rechat.mls_number + ' => property_subtype is different: RECHAT: ' + rechat.property_subtype + ' MLS: ' + mls.PropertySubType);
-  if (rechat.year_built != mls.YearBuilt)
+  else if (rechat.year_built != mls.YearBuilt)
     console.log(rechat.mls_number + ' => year_built is different: RECHAT: ' + rechat.year_built + ' MLS: ' + mls.YearBuilt);
-  if (rechat.pool_yn != mls.PoolYN)
+  else if (rechat.pool_yn != mls.PoolYN)
     console.log(rechat.mls_number + ' => pool_yn is different: RECHAT: ' + rechat.pool_yn + ' MLS: ' + mls.PoolYN);
-  console.log();
+  else
+    console.log('all attributes was the same, difference is probably because of location diff');
 }
 
 function compare(rechat, mls) {
