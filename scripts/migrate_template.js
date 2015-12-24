@@ -1,20 +1,34 @@
 'use strict';
 
+var async = require('async');
 var db = require('../lib/utils/db');
 
-var sql_up   = 'SOME SQL TO DO';
-var sql_down = 'SOME SQL TO UNDO';
+var up = [
+  'DO SOMETHING',
+  'DO SOMETHING ELSE',
+  'EVEN DO MORE'
+]
 
-var runSql = (sql) => {
-  return (next) => {
-    db.conn( (err, client) => {
-      if(err)
-        return next(err);
+var down = [
+  'UNDO SOMETHING',
+  'UNDO SOMETHING ELSE',
+  'UNDO EVEN MORE'
+]
 
-      return client.query(sql, next);
-    });
-  };
+var runAll = (sqls, next) => {
+  db.conn( (err, client) => {
+    if(err)
+      return next(err);
+
+    async.eachSeries(sqls, client.query.bind(client), next);
+  });
 };
 
-exports.up = runSql(sql_up);
-exports.down = runSql(sql_down);
+var run = (queries) => {
+  return (next) => {
+    runAll(queries, next);
+  }
+}
+
+exports.up = run(up)
+exports.down = run(down)
