@@ -17,7 +17,7 @@ var search = function (criteria, cb) {
     '( Longitude=' + criteria.points[1].longitude + '-),(Latitude=' + criteria.points[2].latitude + '+),' +
     '(STATUS=A), (ListPrice=' + criteria.maximum_price + '-), (ListPrice=' + criteria.minimum_price + '+),' +
     '(SqFtTotal=' + criteria.maximum_square_meters + '-), (SqFtTotal=' + criteria.minimum_square_meters + '+),' +
-    '(BedsTotal=' + criteria.minimum_bedrooms + '+),' +
+    '(BedsTotal=' + criteria.minimum_bedrooms + '+),(BathsFull=' + criteria.minimum_bathrooms + '+),' +
     '(PropertyType=RES), (PropertySubType=RESFAM,RESDUP,RESRAN,RESCON,RESTOW),' + '(YearBuilt=' + criteria.minimum_year_built + '+), (YearBuilt=' + criteria.maximum_year_built + '-),' +
     '(LotSizeAreaSQFT=' + criteria.maximum_lot_square_meters + '-), (LotSizeAreaSQFT=' + criteria.minimum_lot_square_meters + '+)'
   )
@@ -111,21 +111,21 @@ var criteria = {
 
 function logDiff(rechat, mls) {
   if (Math.round(rechat.square_meters * 10.764) != mls.SqFtTotal)
-    console.log(rechat.mls_number + ' => square_meters is different: RECHAT: ' + (Math.round(rechat.square_meters * 10.764)).toString() + ' MLS: ' + mls.SqFtTotal);
+    console.log((rechat.mls_number + ' => square_meters is different: RECHAT: ' + (Math.round(rechat.square_meters * 10.764)).toString() + ' MLS: ' + mls.SqFtTotal).red);
   else if ((rechat.lot_square_meters * 10.764).toFixed(2) != mls.LotSizeAreaSQFT)
-    console.log(rechat.mls_number + ' => lot_square_meters is different: RECHAT: ' + (rechat.lot_square_meters * 10.764).toFixed(2) + ' MLS: ' + mls.LotSizeAreaSQFT);
+    console.log((rechat.mls_number + ' => lot_square_meters is different: RECHAT: ' + (rechat.lot_square_meters * 10.764).toFixed(2) + ' MLS: ' + mls.LotSizeAreaSQFT).red);
   else if (rechat.bedroom_count != mls.BedsTotal)
-    console.log(rechat.mls_number + ' => bedroom_count is different: RECHAT: ' + rechat.bedroom_count + ' MLS: ' + mls.BedsTotal);
+    console.log((rechat.mls_number + ' => bedroom_count is different: RECHAT: ' + rechat.bedroom_count + ' MLS: ' + mls.BedsTotal).red);
   else if (rechat.bathroom_count != mls.BathsFull)
-    console.log(rechat.mls_number + ' => bathroom_count is different: RECHAT: ' + rechat.bathroom_count + ' MLS: ' + mls.BathsFull);
+    console.log((rechat.mls_number + ' => bathroom_count is different: RECHAT: ' + rechat.bathroom_count + ' MLS: ' + mls.BathsFull).red);
   else if (rechat.property_type != mls.PropertyType)
-    console.log(rechat.mls_number + ' => property_type is different: RECHAT: ' + rechat.property_type + ' MLS: ' + mls.PropertyType);
+    console.log((rechat.mls_number + ' => property_type is different: RECHAT: ' + rechat.property_type + ' MLS: ' + mls.PropertyType).red);
   else if (rechat.property_subtype != mls.PropertySubType)
-    console.log(rechat.mls_number + ' => property_subtype is different: RECHAT: ' + rechat.property_subtype + ' MLS: ' + mls.PropertySubType);
+    console.log((rechat.mls_number + ' => property_subtype is different: RECHAT: ' + rechat.property_subtype + ' MLS: ' + mls.PropertySubType).red);
   else if (rechat.year_built != mls.YearBuilt)
-    console.log(rechat.mls_number + ' => year_built is different: RECHAT: ' + rechat.year_built + ' MLS: ' + mls.YearBuilt);
+    console.log((rechat.mls_number + ' => year_built is different: RECHAT: ' + rechat.year_built + ' MLS: ' + mls.YearBuilt).red);
   else if (rechat.pool_yn != mls.PoolYN)
-    console.log(rechat.mls_number + ' => pool_yn is different: RECHAT: ' + rechat.pool_yn + ' MLS: ' + mls.PoolYN);
+    console.log((rechat.mls_number + ' => pool_yn is different: RECHAT: ' + rechat.pool_yn + ' MLS: ' + mls.PoolYN).red);
   else
     console.log('all attributes was the same, difference is probably because of location diff');
 }
@@ -153,7 +153,7 @@ function compare(rechat, mls) {
     mls_only = Object.keys(mls);
 
   //check detail for what we found only in rechat
-  if(rechat_only.length > 0) {
+  if (rechat_only.length > 0) {
     var search_criteria = '(MLSNumber=' + rechat_only.join() + ')';
     searchMlsByNumbers(search_criteria, (err, mls_listings) => {
       if (err)
@@ -168,21 +168,21 @@ function compare(rechat, mls) {
             logDiff(res, listing);
           }
           else
-            console.log((mls_number + ' not found in local DB').red);
+            console.log((mls_number + ' => found in MLS bot not found in local DB').red);
         });
       });
     });
   }
 
   //check detail for what we found only in mls
-  if(mls_only.length > 0) {
+  if (mls_only.length > 0) {
     mls_only.forEach(function (mls_number) {
       Alert.getByMlsNumber(mls_number, function (err, res) {
         if (res) {
           logDiff(res, mls[mls_number]);
         }
         else
-          console.log((mls_number + ' not found in local DB').red);
+          console.log((mls_number + ' => found in MLS bot not found in local DB').red);
       });
     });
   }
