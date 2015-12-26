@@ -6,7 +6,7 @@ SELECT 'listing' AS TYPE,
        EXTRACT(EPOCH FROM listings.updated_at) AS updated_at,
        EXTRACT(EPOCH FROM listings.deleted_at) AS deleted_at,
        (
-        SELECT COELASESCE(ARRAY_AGG(url), '{}'::text[]) FROM photos
+        SELECT COALESCE(ARRAY_AGG(url), '{}'::text[]) FROM photos
         WHERE listing_mui = listings.matrix_unique_id
        ) as gallery_image_urls,
        (
