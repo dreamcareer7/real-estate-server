@@ -1,8 +1,13 @@
 SELECT 'transaction' AS TYPE,
        *,
-       EXTRACT(EPOCH FROM transactions.created_at) AS created_at,
-       EXTRACT(EPOCH FROM transactions.updated_at) AS updated_at,
-       EXTRACT(EPOCH FROM transactions.deleted_at) AS deleted_at
+       (
+        SELECT ARRAY_AGG(contact)
+        FROM transaction_contacts
+        WHERE "transaction" = $1
+       ) AS contacts,
+       EXTRACT(EPOCH FROM created_at) AS created_at,
+       EXTRACT(EPOCH FROM updated_at) AS updated_at,
+       EXTRACT(EPOCH FROM deleted_at) AS deleted_at
 FROM transactions
 WHERE id = $1
 LIMIT 1

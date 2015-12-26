@@ -2,7 +2,8 @@
 
 var db = require('../lib/utils/db');
 
-var sql_up   = 'CREATE TABLE IF NOT EXISTS transactions(id uuid DEFAULT uuid_generate_v1(), "user" uuid NOT NULL REFERENCES users(id), title text, \
+var sql_up   = 'CREATE TABLE IF NOT EXISTS transactions(id uuid DEFAULT uuid_generate_v1() PRIMARY KEY, \
+"user" uuid NOT NULL REFERENCES users(id), title text, \
 recommendation uuid REFERENCES recommendations(id), listing uuid REFERENCES listings(id), listing_data jsonb, \
 transaction_type transaction_type NOT NULL, transaction_status listing_status NOT NULL, \
 contract_price float, original_price float, sale_commission_rate float, buyer_sale_commission_split_share float, \
