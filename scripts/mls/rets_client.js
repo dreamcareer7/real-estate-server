@@ -216,14 +216,16 @@ function fetch(cb) {
 //     client.getObjectMeta('Media', (a,b,c) => console.log(a,b,c) );
 }
 
-var raw_insert = 'INSERT INTO mls_data (resource, class, value) VALUES ($1, $2, $3)';
+var raw_insert = 'INSERT INTO mls_data (resource, class, matrix_unique_id, value) VALUES ($1, $2, $3, $4)';
 
 var raw = (cb, results) => {
   var data = _u.clone(results.mls);
 
   async.mapLimit(data, 100, (l,cb) => db.query(raw_insert, [
     Client.options.resource,
-    Client.options.class, l
+    Client.options.class,
+    l[Client.options.fields.id],
+    l
   ], cb), cb);
 }
 
