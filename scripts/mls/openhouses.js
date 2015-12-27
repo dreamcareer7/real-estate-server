@@ -6,6 +6,7 @@ var Client = require('./rets_client.js');
 var program = require('./program.js')
 var options = program.parse(process.argv);
 
+Error.autoReport = false;
 
 options.resource = 'OpenHouse';
 options.class = 'OpenHouse';
