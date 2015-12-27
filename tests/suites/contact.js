@@ -4,6 +4,9 @@ var first_name = 'updated_user_name';
 var profile_image = 'updated_profile_image';
 var cover_image = 'updated_cover_image';
 
+var contact_response = require('./expected_objects/contact.js');
+var info_response = require('./expected_objects/info.js');
+
 
 var create = (cb) => {
   return frisby.create('add a contact')
@@ -17,6 +20,7 @@ var create = (cb) => {
         }
       ]
     })
+    .after(cb)
     .expectStatus(200)
     .expectJSONLength('data', 1)
     .expectJSON({
@@ -30,10 +34,14 @@ var create = (cb) => {
         count: 1
       }
     })
-    .after(cb);
+    .expectJSONTypes({
+      code: String,
+      data: [contact_response],
+      info: info_response
+    });
 };
 
-var get = (cb) => {
+var getContact = (cb) => {
   results.user.create.data.type = 'compact_user';
 
   return frisby.create('get list of contacts and see if the one we added is there')
@@ -46,6 +54,11 @@ var get = (cb) => {
         {contact_user: results.user.create.data}
       ],
       info: {}
+    })
+    .expectJSONTypes({
+      code: String,
+      data: [contact_response],
+      info: info_response
     });
 };
 
@@ -63,6 +76,10 @@ var updateContact = (cb) => {
         phone_number: results.user.create.data.phone_number,
         type: "contact"
       }
+    })
+    .expectJSONTypes({
+      code: String,
+      data: contact_response
     });
 };
 
@@ -78,6 +95,11 @@ var updateContactWorked = (cb) => {
       data: [
         {first_name: first_name}
       ]
+    })
+    .expectJSONTypes({
+      code: String,
+      data: [contact_response],
+      info: info_response
     });
 };
 
@@ -93,6 +115,10 @@ var patchContactProfileImage = (cb) => {
       data: {
         profile_image_url: profile_image
       }
+    })
+    .expectJSONTypes({
+      code: String,
+      data: contact_response
     });
 };
 
@@ -106,6 +132,11 @@ var patchContactProfileImageWorked = (cb) => {
       data: [
         {profile_image_url: profile_image}
       ]
+    })
+    .expectJSONTypes({
+      code: String,
+      data: [contact_response],
+      info: info_response
     });
 };
 
@@ -121,6 +152,10 @@ var patchContactCoverImage = (cb) => {
       data: {
         cover_image_url: cover_image
       }
+    })
+    .expectJSONTypes({
+      code: String,
+      data: contact_response
     });
 };
 
@@ -134,6 +169,11 @@ var patchContactCoverImageWorked = (cb) => {
       data: [
         {cover_image_url: cover_image}
       ]
+    })
+    .expectJSONTypes({
+      code: String,
+      data: [contact_response],
+      info: info_response
     });
 };
 
@@ -153,6 +193,11 @@ var search = (cb) => {
       info: {
         count: 1
       }
+    })
+    .expectJSONTypes({
+      code: String,
+      data: [contact_response],
+      info: info_response
     });
 };
 
@@ -165,6 +210,10 @@ var addTag = (cb) => {
     .expectStatus(200)
     .expectJSON({
       code: 'OK'
+    })
+    .expectJSONTypes({
+      code: String,
+      data: contact_response
     });
 }
 
@@ -193,7 +242,7 @@ var deleteContact = (cb) => {
 };
 
 var deleteContactWorked = (cb) => {
-  var before_count = results.contact.get.info.count;
+  var before_count = results.contact.getContact.info.count;
 
   return frisby.create('get list of contacts and make sure delete contact was successful')
     .get('/contacts')
@@ -210,7 +259,7 @@ var deleteContactWorked = (cb) => {
 module.exports = {
   create,
   addTag,
-  get: get,
+  getContact,
   getByTag,
   updateContact,
   updateContactWorked,

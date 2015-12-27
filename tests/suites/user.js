@@ -1,7 +1,9 @@
 var config = require('../../lib/config.js');
-
 var user = require('./data/user.js');
 var address = require('./data/address.js');
+var user_response = require('./expected_objects/user.js');
+var compact_user_response = require('./expected_objects/compact_user.js');
+var info_response = require('./expected_objects/info.js');
 
 var password = config.tests.password;
 
@@ -15,18 +17,26 @@ var create = (cb) => {
   return frisby.create('create user')
     .post('/users', client)
     .after(cb)
-    .expectStatus(201);
+    .expectStatus(201)
+    .expectJSONTypes({
+      code: String,
+      data: user_response
+    });
 };
 
-var get = (cb) => {
+var getUser = (cb) => {
   return frisby.create('get user')
     .get('/users/' + results.user.create.data.id)
+    .after(cb)
+    .expectStatus(200)
     .expectJSON({
       code: 'OK',
       data: results.user.create.data
     })
-    .after(cb)
-    .expectStatus(200);
+    .expectJSONTypes({
+      code: String,
+      data: user_response
+    });
 };
 
 var update = (cb) => {
@@ -37,7 +47,11 @@ var update = (cb) => {
   return frisby.create('update user')
     .put('/users/self', updatedUser)
     .after(cb)
-    .expectStatus(200);
+    .expectStatus(200)
+    .expectJSONTypes({
+      code: String,
+      data: user_response
+    });
 };
 
 var changePassword = (cb) => {
@@ -61,7 +75,11 @@ var setAddress = (cb) => {
   return frisby.create('set address')
     .put('/users/self/address', address)
     .after(cb)
-    .expectStatus(200);
+    .expectStatus(200)
+    .expectJSONTypes({
+      code: String,
+      data: user_response
+    });
 };
 
 var patchUserTimeZone = (cb) => {
@@ -78,6 +96,11 @@ var searchRelatedUser = (cb) => {
     .expectStatus(200)
     .expectJSON({
       code: 'OK'
+    })
+    .expectJSONTypes({
+      code: String,
+      data: Array,
+      info: info_response
     });
 }
 
@@ -94,7 +117,11 @@ var searchByEmail = (cb) => {
         }
       ]
     })
-    .expectJSONLength('data', 1);
+    .expectJSONTypes({
+      code: String,
+      data: [compact_user_response],
+      info: info_response
+    });
 }
 
 var searchByCode = (cb) => {
@@ -108,6 +135,10 @@ var searchByCode = (cb) => {
         type: 'user'
       }
     })
+    .expectJSONTypes({
+      code: String,
+      data: user_response
+    });
 }
 
 var searchByPhone = (cb) => {
@@ -123,17 +154,25 @@ var searchByPhone = (cb) => {
         }
       ]
     })
-    .expectJSONLength('data', 1);
+    .expectJSONTypes({
+      code: String,
+      data: [compact_user_response],
+      info: info_response
+    });
 }
 
 var deleteAddress = (cb) => {
   return frisby.create('delete address')
     .delete('/users/self/address')
     .after(cb)
-    .expectStatus(200);
+    .expectStatus(200)
+    .expectJSONTypes({
+      code: String,
+      data: user_response
+    });
 };
 
-var del = (cb) => {
+var deleteUser = (cb) => {
   return frisby.create('delete user')
     .delete('/users/self')
     .after(cb)
@@ -142,7 +181,7 @@ var del = (cb) => {
 
 module.exports = {
   create,
-  get: get,
+  getUser,
   update,
   changePassword,
   resetPassword,
@@ -153,5 +192,5 @@ module.exports = {
   searchByCode,
   searchByPhone,
   deleteAddress,
-  delete: del
+  deleteUser
 };

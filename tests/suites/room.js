@@ -1,4 +1,6 @@
 var room = require('./data/room.js');
+var room_response = require('./expected_objects/room.js');
+var info_response = require('./expected_objects/info.js');
 
 var updated_room = 'updated_title';
 
@@ -10,6 +12,10 @@ var create = (cb) => {
     .expectJSON({
       code: 'OK',
       data: room
+    })
+    .expectJSONTypes({
+      code: String,
+      data: room_response
     });
 }
 
@@ -21,6 +27,10 @@ var getRoom = (cb) => {
     .expectJSON({
       code: 'OK',
       data: results.room.create.data
+    })
+    .expectJSONTypes({
+      code: String,
+      data: room_response
     });
 }
 
@@ -33,6 +43,11 @@ var getRoomMedia = (cb) => {
       code: 'OK',
       data: [],
       info: {}
+    })
+    .expectJSONTypes({
+      code: String,
+      data: Array,
+      info: info_response
     });
 }
 
@@ -44,6 +59,11 @@ var getUserRooms = (cb) => {
     .expectJSON({
       code: 'OK',
       data: []
+    })
+    .expectJSONTypes({
+      code: String,
+      data: [room_response],
+      info: info_response
     });
 }
 
@@ -60,6 +80,11 @@ var searchByUser = (cb) => {
         }
       ]
     })
+    .expectJSONTypes({
+      code: String,
+      data: [room_response],
+      info: info_response
+    });
 }
 
 var searchByFirstName = (cb) => {
@@ -75,6 +100,11 @@ var searchByFirstName = (cb) => {
         }
       ]
     })
+    .expectJSONTypes({
+      code: String,
+      data: [room_response],
+      info: info_response
+    });
 }
 
 var searchByLastName = (cb) => {
@@ -90,6 +120,11 @@ var searchByLastName = (cb) => {
         }
       ]
     })
+    .expectJSONTypes({
+      code: String,
+      data: [room_response],
+      info: info_response
+    });
 }
 
 var searchByEmail = (cb) => {
@@ -105,6 +140,11 @@ var searchByEmail = (cb) => {
         }
       ]
     })
+    .expectJSONTypes({
+      code: String,
+      data: [room_response],
+      info: info_response
+    });
 }
 
 var searchByPhone = (cb) => {
@@ -120,6 +160,11 @@ var searchByPhone = (cb) => {
         }
       ]
     })
+    .expectJSONTypes({
+      code: String,
+      data: [room_response],
+      info: info_response
+    });
 }
 
 var searchByTitle = (cb) => {
@@ -135,6 +180,11 @@ var searchByTitle = (cb) => {
         }
       ]
     })
+    .expectJSONTypes({
+      code: String,
+      data: [room_response],
+      info: info_response
+    });
 }
 
 var addUser = (cb) => {
@@ -147,6 +197,10 @@ var addUser = (cb) => {
     .expectJSON({
       code: 'OK',
       data: room
+    })
+    .expectJSONTypes({
+      code: String,
+      data: room_response
     });
 }
 
@@ -163,11 +217,12 @@ var removeUserWorked = (cb) => {
     .after(cb)
     .expectStatus(200)
     .expectJSON({
-      code: 'OK',
-      data: [],
-      info: {
-        count: results.room.getUserRooms.info.count - 1
-      }
+      code: 'OK'
+    })
+    .expectJSONTypes({
+      code: String,
+      data: [room_response],
+      info: info_response
     });
 }
 
@@ -180,11 +235,15 @@ var patchRoom = (cb) => {
     .expectJSON({
       code: 'OK',
       data: room
+    })
+    .expectJSONTypes({
+      code: String,
+      data: room_response
     });
 }
 
 var patchRoomWorked = (cb) => {
-  //room.title = updated_room;
+  room.title = updated_room;
   return frisby.create('get room')
     .get('/rooms/' + results.room.create.data.id)
     .after(cb)
@@ -194,6 +253,10 @@ var patchRoomWorked = (cb) => {
       data: {
         title: updated_room
       }
+    })
+    .expectJSONTypes({
+      code: String,
+      data: room_response
     });
 }
 
@@ -223,6 +286,10 @@ var deleteRoomWorked = (cb) => {
       data:{
         deleted_at: Number
       }
+    })
+    .expectJSONTypes({
+      code: String,
+      data: room_response
     });
 }
 

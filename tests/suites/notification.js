@@ -2,6 +2,9 @@
 registerSuite('room', ['create']);
 registerSuite('invitation', ['create']);
 
+var notification_response = require('./expected_objects/notification.js');
+var info_response = require('./expected_objects/info.js');
+var user_response = require('./expected_objects/user.js');
 
 var getUsersNotification = (cb) => {
   return frisby.create('get all notifications for a user')
@@ -17,6 +20,11 @@ var getUsersNotification = (cb) => {
       ],
       info: {}
     })
+    .expectJSONTypes({
+      code: String,
+      data: [notification_response],
+      info: info_response
+    });
 }
 
 var getNotification = (cb) => {
@@ -29,8 +37,11 @@ var getNotification = (cb) => {
       data: {
         type: 'notification'
       }
-
     })
+    .expectJSONTypes({
+      code: String,
+      data: notification_response
+    });
 }
 
 var acknowledgeNotification = (cb) => {
@@ -38,24 +49,6 @@ var acknowledgeNotification = (cb) => {
     .delete('/notifications/' + results.notification.getUsersNotification.data[0].id)
     .after(cb)
     .expectStatus(204)
-}
-
-var acknowledgeNotificationWorked = (cb) => {
-  return frisby.create('make sure acknowledgeNotification was successful')
-    .get('/notifications')
-    .after(cb)
-    .expectStatus(200)
-    .expectJSON({
-      code: 'OK',
-      data: [
-        {
-          type: 'notification'
-        }
-      ],
-      info: {
-        count: results.notification.getUsersNotification.info.count - 1
-      }
-    })
 }
 
 var pushNotification = (cb) => {
@@ -72,7 +65,11 @@ var pushNotification = (cb) => {
       }
 
     })
-    .expectJSONLength(2);
+    .expectJSONLength(2)
+    .expectJSONTypes({
+      code: String,
+      data: user_response
+    });
 }
 
 var cancelPushNotification = (cb) => {
@@ -87,7 +84,11 @@ var cancelPushNotification = (cb) => {
       }
 
     })
-    .expectJSONLength(2);
+    .expectJSONLength(2)
+    .expectJSONTypes({
+      code: String,
+      data: user_response
+    });
 }
 
 var patchNotificationSettings = (cb) => {
@@ -104,7 +105,6 @@ module.exports = {
   getUsersNotification,
   getNotification,
   acknowledgeNotification,
-  acknowledgeNotificationWorked,
   pushNotification,
   cancelPushNotification,
   patchNotificationSettings
