@@ -29,3 +29,9 @@ FROM listings WHERE
         select * from address_ids
       )
   )
+  AND (
+    ($15::boolean IS NULL) OR (
+      SELECT count(*) > 0 FROM open_houses WHERE
+      listing_mui = listings.matrix_unique_id AND start_time > NOW()
+    )
+  )
