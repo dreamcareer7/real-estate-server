@@ -1,5 +1,6 @@
 SELECT
   listings.mls_number,
+  listings.status,
   properties.square_meters,
   properties.bedroom_count,
   properties.half_bathroom_count + properties.full_bathroom_count as bathroom_count,
