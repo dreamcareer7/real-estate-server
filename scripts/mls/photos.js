@@ -47,7 +47,7 @@ function _saveImage(payload, cb) {
   }
 
   var saveExif = (cb) => {
-    new ExifImage({image: payload.data.data}, function (error, exifData) {
+    new ExifImage({image: payload.data.data}, function (err, exifData) {
       if(err)
         return cb(err);
 
