@@ -7,3 +7,4 @@ INSERT INTO notification_tokens(
                                 device_token
                                )
 VALUES ($1, $2)
+ON CONFLICT DO NOTHING

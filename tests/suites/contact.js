@@ -64,10 +64,10 @@ var getContact = (cb) => {
 };
 
 var updateInvalidContact = (cb) => {
-  return frisby.create('update a contact')
+  return frisby.create('pass invalid id to update contact and expect not found response')
     .put('/contacts/' + random_guid , results.contact.create.data[0].contact_user)
     .after(cb)
-    .expectStatus(200);
+    .expectStatus(404);
 };
 
 var updateContact = (cb) => {
@@ -269,7 +269,7 @@ module.exports = {
   addTag,
   getContact,
   getByTag,
-  //updateInvalidContact,
+  updateInvalidContact,
   updateContact,
   updateContactWorked,
   patchContactProfileImage,
