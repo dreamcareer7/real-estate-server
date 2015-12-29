@@ -46,27 +46,33 @@ function _saveImage(payload, cb) {
     return ;
   }
 
-  var file = {
-    name:payload.photo.matrix_unique_id,
-    ext:'.jpg',
-    body:payload.data.data,
-    mime:payload.data.mime
-  }
+  var saveExif = (cb) => {
+    new ExifImage({image: payload.data.data}, function (error, exifData) {
+      if(err)
+        return cb(err);
 
-  var exif = new ExifImage({image: body}, function (error, exifData) {
-    if(!err)
-      return exifData;
+      Photo.setExif(exifData, payload.photo.matrix_unique_id,cb);
+    });
   }
 
 
-  S3.upload(config.buckets.photos, file, (err, url) => {
-    if(err)
-      return cb(err);
+  var upload = (cb) => {
+    var file = {
+      name:payload.photo.matrix_unique_id,
+      ext:'.jpg',
+      body:payload.data.data,
+      mime:payload.data.mime
+    }
 
-    Photo.setUrl(payload.photo.matrix_unique_id, url, cb);
+    S3.upload(config.buckets.photos, file, (err, url) => {
+      if(err)
+        return cb(err);
 
-    Photo.setExif(exif, payload.photo.matrix_unique_id,cb);
-  });
+      Photo.setUrl(payload.photo.matrix_unique_id, url, cb);
+    });
+  }
+
+  async.parallel([saveExif, upload], cb);
 }
 
 var saveImage = async.queue(_saveImage, options.uploadConcurrency || 20);

@@ -25,9 +25,9 @@ var processPhoto = function(photo, cb) {
             console.log(err);
             return cb(err);
           }
+
+          return cb();
         })
-        console.log(photo.id + ' processed.');
-        return cb();
 
       });
     } catch (error) {
