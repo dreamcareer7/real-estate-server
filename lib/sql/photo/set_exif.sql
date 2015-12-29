@@ -1,0 +1,1 @@
+UPDATE photos SET exif = $1 WHERE id = $2;
