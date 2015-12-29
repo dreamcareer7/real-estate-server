@@ -4,6 +4,7 @@ var async = require('async')
 var Client = require('./rets_client.js');
 var fs = require('fs');
 var config = require('../../lib/config.js');
+var ExifImage = require('exif').ExifImage;
 require('../../lib/models/index.js')();
 
 var program = require('./program.js')
