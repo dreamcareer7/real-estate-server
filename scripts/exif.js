@@ -26,7 +26,7 @@ var processPhoto = function(photo, cb) {
         if(exifData.gps.GPSLongitude)
           exifData.gps.longitude = exifData.gps.GPSLongitude[0] + (exifData.gps.GPSLongitude[1]/60) + (exifData.gps.GPSLongitude[2]/3600)
 
-        Photo.setExif(exifData, photo.id, function (err) {
+        Photo.setExif(exifData, photo.matrix_unique_id, function (err) {
           if (err) {
             console.log(err);
             return cb(err);
