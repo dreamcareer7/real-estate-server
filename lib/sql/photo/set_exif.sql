@@ -1,0 +1,1 @@
+UPDATE photos SET exif = $1 WHERE matrix_unique_id = $2;

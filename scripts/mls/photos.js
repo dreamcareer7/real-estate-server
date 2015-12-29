@@ -4,6 +4,7 @@ var async = require('async')
 var Client = require('./rets_client.js');
 var fs = require('fs');
 var config = require('../../lib/config.js');
+var ExifImage = require('exif').ExifImage;
 require('../../lib/models/index.js')();
 
 var program = require('./program.js')
@@ -52,11 +53,19 @@ function _saveImage(payload, cb) {
     mime:payload.data.mime
   }
 
+  var exif = new ExifImage({image: body}, function (error, exifData) {
+    if(!err)
+      return exifData;
+  }
+
+
   S3.upload(config.buckets.photos, file, (err, url) => {
     if(err)
       return cb(err);
 
     Photo.setUrl(payload.photo.matrix_unique_id, url, cb);
+
+    Photo.setExif(exif, payload.photo.matrix_unique_id,cb);
   });
 }
 

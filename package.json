@@ -27,6 +27,7 @@
     "datadog-metrics": "^0.2.1",
     "deasync": "^0.1.0",
     "debug": "^2.2.0",
+    "exif": "^0.4.0",
     "exiftool": "git+https://github.com/ashkang/exiftool.git",
     "express": "^4.10.4",
     "express-winston": "^0.2.9",
