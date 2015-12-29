@@ -20,12 +20,6 @@ var processPhoto = function(photo, cb) {
           return cb(error);
         }
 
-        //convert gps data
-        if(exifData.gps.GPSLatitude)
-          exifData.gps.latitude = exifData.gps.GPSLatitude[0] + (exifData.gps.GPSLatitude[1]/60) + (exifData.gps.GPSLatitude[2]/3600)
-        if(exifData.gps.GPSLongitude)
-          exifData.gps.longitude = exifData.gps.GPSLongitude[0] + (exifData.gps.GPSLongitude[1]/60) + (exifData.gps.GPSLongitude[2]/3600)
-
         Photo.setExif(exifData, photo.matrix_unique_id, function (err) {
           if (err) {
             console.log(err);
