@@ -7,6 +7,7 @@ var cover_image = 'updated_cover_image';
 var contact_response = require('./expected_objects/contact.js');
 var info_response = require('./expected_objects/info.js');
 
+var random_guid = '6c06f77a-f02b-11e4-90b4-0a95648eeb58'
 
 var create = (cb) => {
   return frisby.create('add a contact')
@@ -60,6 +61,13 @@ var getContact = (cb) => {
       data: [contact_response],
       info: info_response
     });
+};
+
+var updateInvalidContact = (cb) => {
+  return frisby.create('update a contact')
+    .put('/contacts/' + random_guid , results.contact.create.data[0].contact_user)
+    .after(cb)
+    .expectStatus(200);
 };
 
 var updateContact = (cb) => {
@@ -261,6 +269,7 @@ module.exports = {
   addTag,
   getContact,
   getByTag,
+  //updateInvalidContact,
   updateContact,
   updateContactWorked,
   patchContactProfileImage,

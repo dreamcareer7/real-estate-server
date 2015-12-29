@@ -221,7 +221,7 @@ var removeUserWorked = (cb) => {
     })
     .expectJSONTypes({
       code: String,
-      data: [room_response],
+      data: [],
       info: info_response
     });
 }
