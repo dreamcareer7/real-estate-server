@@ -58,5 +58,9 @@ var processPhotos = function (callback) {
   });
 }
 
-async.whilst(isMoreImageToProcess, processPhotos, process.exit);
+async.whilst(isMoreImageToProcess, processPhotos, (err) => {
+  if(err)
+    console.log(err);
+  process.exit();
+});
 
