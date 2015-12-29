@@ -4,7 +4,7 @@ var async = require('async');
 var db = require('../lib/utils/db');
 
 var up = [
-  'CREATE UNIQUE INDEX IF NOT EXISTS mls_data_matrux_unique_id_idx on mls_data(matrix_unique_id)'
+  'CREATE UNIQUE INDEX IF NOT EXISTS mls_data_matrix_unique_id_idx on mls_data_new(matrix_unique_id)'
 ]
 
 var down = [
