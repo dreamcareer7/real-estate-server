@@ -40,9 +40,9 @@ function report(err) {
 }
 
 function populate(data) {
-  //We've seen cases like mui=54933611 where it has no date and it doesnt show on MLS Matrix Portal. Mark it as invalid.
-//   if(!data.OpenHouseDate)
-//     return false;
+//   We've seen cases like mui=54933611 where it has no date and it doesnt show on MLS Matrix Portal. Mark it as invalid.
+  if(!data.OpenHouseDate)
+    return false;
 
   var openhouse = {};
 
