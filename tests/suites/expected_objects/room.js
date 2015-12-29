@@ -19,7 +19,7 @@ module.exports = {
   "latest_message": {
     "type": String,
     "id": String,
-    "comment": String,
+    "comment": function(val) { expect(val).toBeTypeOrNull(String); },
     "image_url": function(val) { expect(val).toBeTypeOrNull(String); },
     "document_url": function(val) { expect(val).toBeTypeOrNull(String); },
     "video_url": function(val) { expect(val).toBeTypeOrNull(String); },

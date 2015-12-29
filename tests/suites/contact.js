@@ -1,12 +1,11 @@
 registerSuite('user', ['create']);
-
+var uuid = require('node-uuid');
 var first_name = 'updated_user_name';
 var profile_image = 'updated_profile_image';
 var cover_image = 'updated_cover_image';
 
 var contact_response = require('./expected_objects/contact.js');
 var info_response = require('./expected_objects/info.js');
-
 
 var create = (cb) => {
   return frisby.create('add a contact')
@@ -103,6 +102,13 @@ var updateContactWorked = (cb) => {
     });
 };
 
+var updateContact404 = (cb) => {
+  return frisby.create('pass invalid id to update contact and expect not found response')
+    .put('/contacts/' + uuid.v1() , results.contact.create.data[0].contact_user)
+    .after(cb)
+    .expectStatus(404);
+};
+
 var patchContactProfileImage = (cb) => {
   return frisby.create('update profile image url for a contact')
     .patch('/contacts/' + results.contact.create.data[0].id + '/profile_image_url', {
@@ -140,6 +146,15 @@ var patchContactProfileImageWorked = (cb) => {
     });
 };
 
+var patchContactProfileImage404 = (cb) => {
+  return frisby.create('expect 404 from update image with invalid id')
+    .patch('/contacts/' + uuid.v1() + '/profile_image_url', {
+      profile_image_url: profile_image
+    })
+    .after(cb)
+    .expectStatus(404);
+};
+
 var patchContactCoverImage = (cb) => {
   return frisby.create('update cover image url for a contact')
     .patch('/contacts/' + results.contact.create.data[0].id + '/cover_image_url', {
@@ -175,6 +190,15 @@ var patchContactCoverImageWorked = (cb) => {
       data: [contact_response],
       info: info_response
     });
+};
+
+var patchContactCoverImage404 = (cb) => {
+  return frisby.create('expect 404 from update cover image with invalid id')
+    .patch('/contacts/' + uuid.v1() + '/cover_image_url', {
+      cover_image_url: cover_image
+    })
+    .after(cb)
+    .expectStatus(404);
 };
 
 var search = (cb) => {
@@ -263,10 +287,13 @@ module.exports = {
   getByTag,
   updateContact,
   updateContactWorked,
+  updateContact404,
   patchContactProfileImage,
   patchContactProfileImageWorked,
+  patchContactProfileImage404,
   patchContactCoverImage,
   patchContactCoverImageWorked,
+  patchContactCoverImage404,
   search,
   removeTag,
   deleteContact,

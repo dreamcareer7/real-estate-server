@@ -13,7 +13,7 @@ module.exports = {
   "auxiliary_object_class": function(val) { expect(val).toBeTypeOrNull(String); },
   "auxiliary_object": function(val) { expect(val).toBeTypeOrNull(String); },
   "recommendation": function(val) { expect(val).toBeTypeOrNull(String); },
-  "auxiliary_subject": function(val) { expect(val).toBeTypeOrNull(String); },
+  "auxiliary_subject": function(val) { expect(val).toBeTypeOrNull(Object); },
   "subject_class": String,
   "auxiliary_subject_class": function(val) { expect(val).toBeTypeOrNull(String); },
   "extra_subject_class": function(val) { expect(val).toBeTypeOrNull(String); },
@@ -22,6 +22,6 @@ module.exports = {
   "specific": function(val) { expect(val).toBeTypeOrNull(String); },
   "notification_type": String,
   "objects": function(val) { expect(val).toBeTypeOrNull(Array); },
-  "subjects": [user],
+  "subjects": [function(val) { expect(val).toBeTypeOrNull(user); }],
   "recommendations": function(val) { expect(val).toBeTypeOrNull([recommendation]); },
 };
