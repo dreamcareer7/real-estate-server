@@ -12,15 +12,20 @@ var isMore = true;
 var isMoreImageToProcess = function() { return isMore }
 
 var processPhoto = function(photo, cb) {
+  console.log('Processing');
   request.get(photo.url, function (err, res, body) {
+    console.log('Got image');
     try {
       new ExifImage({image: body}, function (error, exifData) {
+        console.log('Got Exif');
         if (error) {
           console.log('Error: ' + error.message);
           return cb(error);
         }
 
+        console.log('Setting exif');
         Photo.setExif(exifData, photo.matrix_unique_id, function (err) {
+          console.log('Set result', err);
           if (err) {
             console.log(err);
             return cb(err);
@@ -39,6 +44,7 @@ var processPhoto = function(photo, cb) {
 var processPhotos = function (callback) {
   console.log('Fetching new ' + options.limit + ' records');
   Photo.getPhotosWithoutExif(options, function (err, res) {
+    console.log('Got photos', res.length);
     if (err)
       return callback(err);
 
@@ -52,5 +58,5 @@ var processPhotos = function (callback) {
   });
 }
 
-async.whilst(isMoreImageToProcess, processPhotos);
+async.whilst(isMoreImageToProcess, processPhotos, process.exit);
 
