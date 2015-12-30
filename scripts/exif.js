@@ -15,7 +15,8 @@ var processPhoto = function(photo, cb) {
       return cb(err);
 
     Photo.setExif(body, photo.matrix_unique_id, (err) => {
-      console.log(err);
+      if(err)
+        console.log(err);
       cb(); //Dont exit for all if it fails for a pic.
     });
   });
