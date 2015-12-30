@@ -1,6 +1,6 @@
 require('../connection.js');
 
-var path = require('path')
+var path = require('path');
 
 require('../../lib/models/S3.js');
 
@@ -22,14 +22,14 @@ rl.question("enter name of the file for upload: ", function(file) {
     }
 
     console.time("S3-upload");
-    S3.upload('shortlisted-test', {body: body, ext: ext}, function(err, res) {
+    S3.upload('shortlisted-test', {body: body, ext: ext}, function(err, upload) {
       if(err) {
         console.log(err);
         return;
       }
 
       console.timeEnd("S3-upload");
-      console.log(res);
+      console.log(upload);
     });
   });
 
