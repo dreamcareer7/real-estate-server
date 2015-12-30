@@ -4,15 +4,17 @@ var async = require('async');
 var db = require('../lib/utils/db');
 
 var up = [
-  'DO SOMETHING',
-  'DO SOMETHING ELSE',
-  'EVEN DO MORE'
+'CREATE TABLE IF NOT EXISTS tasks(id uuid DEFAULT uuid_generate_v1() PRIMARY KEY, \
+"user" uuid NOT NULL REFERENCES users(id), \
+title text, \
+due_date timestamptz, \
+status task_status NOT NULL DEFAULT \'New\', \
+"transaction" uuid REFERENCES transactions(id), \
+created_at timestamptz DEFAULT NOW(), updated_at timestamptz DEFAULT NOW(), deleted_at timestamptz);'
 ];
 
 var down = [
-  'UNDO SOMETHING',
-  'UNDO SOMETHING ELSE',
-  'UNDO EVEN MORE'
+  'DROP TABLE IF EXISTS tasks'
 ];
 
 var runAll = (sqls, next) => {
