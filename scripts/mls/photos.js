@@ -59,7 +59,7 @@ function _saveImage(payload, cb) {
       mime: payload.data.mime
     };
 
-    S3.upload(config.buckets.photos, file, (err, upload) => {
+    S3.upload('photos', file, (err, upload) => {
       if(err)
         return cb(err);
 

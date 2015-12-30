@@ -5,7 +5,7 @@ var db      = require('../lib/utils/db.js');
 var sql     = require('../lib/utils/require_sql.js');
 var async   = require('async');
 var request = require('request').defaults({ encoding: null });
-var options = {limit:100};
+var options = {limit:2000};
 
 var isMore = true;
 var isMoreImageToProcess = function() { return isMore; };
@@ -15,7 +15,9 @@ var processPhoto = function(photo, cb) {
     if(err)
       return cb(err);
 
-    Photo.setExif(body, photo.matrix_unique_id, cb);
+    Photo.setExif(body, photo.matrix_unique_id, (err) => {
+      cb(); //Dont exit for all if it fails for a pic.
+    });
   });
 };
 
