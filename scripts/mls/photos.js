@@ -4,7 +4,6 @@ var async = require('async')
 var Client = require('./rets_client.js');
 var fs = require('fs');
 var config = require('../../lib/config.js');
-var ExifImage = require('exif').ExifImage;
 require('../../lib/models/index.js')();
 
 var program = require('./program.js')
@@ -47,12 +46,7 @@ function _saveImage(payload, cb) {
   }
 
   var saveExif = (cb) => {
-    new ExifImage({image: payload.data.data}, function (err, exifData) {
-      if(err)
-        return cb(err);
-
-      Photo.setExif(exifData, payload.photo.matrix_unique_id,cb);
-    });
+    Photo.setExif(payload.data.data, payload.photo.matrix_unique_id, cb);
   }
 
 
