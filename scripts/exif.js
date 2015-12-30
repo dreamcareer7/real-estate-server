@@ -3,7 +3,6 @@ var db = require('../lib/utils/db.js');
 var sql = require('../lib/utils/require_sql.js');
 require('./connection.js')
 var async = require('async');
-var ExifImage = require('exif').ExifImage;
 var request = require('request').defaults({ encoding: null });
 var options = {limit:100};
 
