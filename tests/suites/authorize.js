@@ -27,4 +27,24 @@ var token = (cb, auth) => {
     .expectJSONTypes(authorize_reponse);
 }
 
-module.exports = {token};
+var token401 = (cb, auth) => {
+  if (auth === undefined)
+    auth = auth_params;
+  return frisby.create('get token')
+    .post('/oauth2/token')
+    .expectStatus(401);
+}
+
+var token403 = (cb, auth) => {
+  if (auth === undefined)
+    auth = auth_params;
+  return frisby.create('get token')
+    .post('/oauth2/token', auth_params)
+    .expectStatus(403);
+}
+
+module.exports = {
+  token,
+  //token401,
+  //token403
+};

@@ -37,6 +37,14 @@ var create = (cb) => {
     });
 }
 
+var create400 = (cb) => {
+  return frisby.create('create invitation')
+    .post('/invitations/')
+    .after(cb)
+    .expectStatus(400);
+}
+
 module.exports = {
-  create
+  create,
+  create400
 }
