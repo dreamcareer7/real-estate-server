@@ -4,15 +4,11 @@ var async = require('async');
 var db = require('../lib/utils/db');
 
 var up = [
-  'DO SOMETHING',
-  'DO SOMETHING ELSE',
-  'EVEN DO MORE'
+  'CREATE TYPE task_status AS ENUM (\'New\', \'Done\', \'Later\');'
 ];
 
 var down = [
-  'UNDO SOMETHING',
-  'UNDO SOMETHING ELSE',
-  'UNDO EVEN MORE'
+  'DROP TYPE IF EXISTS task_status;',
 ];
 
 var runAll = (sqls, next) => {

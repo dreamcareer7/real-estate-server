@@ -4,15 +4,15 @@ var async = require('async');
 var db = require('../lib/utils/db');
 
 var up = [
-  'DO SOMETHING',
-  'DO SOMETHING ELSE',
-  'EVEN DO MORE'
+  'CREATE TABLE IF NOT EXISTS task_contacts (id uuid default uuid_generate_v4() PRIMARY KEY, \
+task uuid not null REFERENCES tasks(id), \
+contact uuid not null REFERENCES contacts(id));',
+  'ALTER TABLE task_contacts ADD UNIQUE(task, contact);'
 ];
 
 var down = [
-  'UNDO SOMETHING',
-  'UNDO SOMETHING ELSE',
-  'UNDO EVEN MORE'
+  'ALTER TABLE task_contacts DROP CONSTRAINT task_contacts_task_contact_key;',
+  'DROP TABLE task_contacts;'
 ];
 
 var runAll = (sqls, next) => {
