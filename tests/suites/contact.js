@@ -40,6 +40,45 @@ var create = (cb) => {
     });
 };
 
+var create400 = (cb) => {
+  return frisby.create('dont pass conctact model and expect 400')
+    .post('/contacts')
+    .after(cb)
+    .expectStatus(400)
+};
+
+var addTag = (cb) => {
+  return frisby.create('add tag to a contact')
+    .post('/contacts/' + results.contact.create.data[0].id + '/tags', {
+      tags: ['foo', 'bar']
+    })
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK'
+    })
+    .expectJSONTypes({
+      code: String,
+      data: contact_response
+    });
+}
+
+var addTag404 = (cb) => {
+  return frisby.create('add tag to invalid contact and expect 404')
+    .post('/contacts/' + uuid.v1() + '/tags', {
+      tags: ['foo', 'bar']
+    })
+    .after(cb)
+    .expectStatus(404);
+}
+
+var addTag400 = (cb) => {
+  return frisby.create('add tag to a contact')
+    .post('/contacts/' + results.contact.create.data[0].id + '/tags')
+    .after(cb)
+    .expectStatus(400);
+}
+
 var getContact = (cb) => {
   results.user.create.data.type = 'compact_user';
 
@@ -225,22 +264,6 @@ var search = (cb) => {
     });
 };
 
-var addTag = (cb) => {
-  return frisby.create('add tag to a contact')
-    .post('/contacts/' + results.contact.create.data[0].id + '/tags', {
-      tags: ['foo', 'bar']
-    })
-    .after(cb)
-    .expectStatus(200)
-    .expectJSON({
-      code: 'OK'
-    })
-    .expectJSONTypes({
-      code: String,
-      data: contact_response
-    });
-}
-
 var getByTag = (cb) => {
   return frisby.create('filter contacts by tags')
     .get('/contacts?tags=foo,bar')
@@ -254,6 +277,13 @@ var getByTag = (cb) => {
 var removeTag = (cb) => {
   return frisby.create('remove tag from a contact')
     .delete('/contacts/' + results.contact.create.data[0].id + '/tags/test')
+    .expectStatus(204)
+    .after(cb);
+}
+
+var removeTag404 = (cb) => {
+  return frisby.create('pass invalid id to remove tag and expect 404')
+    .delete('/contacts/' + uuid.v1() + '/tags/test')
     .expectStatus(204)
     .after(cb);
 }
@@ -282,7 +312,10 @@ var deleteContactWorked = (cb) => {
 
 module.exports = {
   create,
+  create400,
   addTag,
+  addTag404,
+  addTag400,
   getContact,
   getByTag,
   updateContact,
