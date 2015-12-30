@@ -6,7 +6,7 @@ var async = require('async');
 var ExifImage = require('exif').ExifImage;
 var request = require('request').defaults({ encoding: null });
 
-var options = {limit:50};
+var options = {limit:10};
 
 var isMore = true;
 var isMoreImageToProcess = function() { return isMore }
