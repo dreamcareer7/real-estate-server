@@ -6,7 +6,7 @@ var async = require('async');
 var ExifImage = require('exif').ExifImage;
 var request = require('request').defaults({ encoding: null });
 
-var options = {limit:100};
+var options = {limit:50};
 
 var isMore = true;
 var isMoreImageToProcess = function() { return isMore }
@@ -16,7 +16,7 @@ var processPhoto = function(photo, cb) {
   request.get(photo.url, function (err, res, body) {
     console.log('Got image');
     try {
-      new ExifImage({image: body}, function (error, exifData) {
+      var i = new ExifImage({image: body}, function (error, exifData) {
         console.log('Got Exif');
         if (error) {
           console.log('Error: ' + error.message);
