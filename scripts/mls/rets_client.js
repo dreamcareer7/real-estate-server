@@ -216,7 +216,10 @@ function fetch(cb) {
 //     client.getObjectMeta('Media', (a,b,c) => console.log(a,b,c) );
 }
 
-var raw_insert = 'INSERT INTO mls_data (resource, class, matrix_unique_id, value) VALUES ($1, $2, $3, $4)';
+var raw_insert = 'INSERT INTO mls_data (resource, class, matrix_unique_id, value) \
+  VALUES ($1, $2, $3, $4) ON CONFLICT (matrix_unique_id) DO UPDATE SET \
+  value = EXCLUDED.value \
+  WHERE mls_data.matrix_unique_id = $3';
 
 var raw = (cb, results) => {
   var data = _u.clone(results.mls);

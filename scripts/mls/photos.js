@@ -7,8 +7,8 @@ var config = require('../../lib/config.js');
 require('../../lib/models/index.js')();
 
 var program = require('./program.js')
-  .option('-d, --download-concurency <n>', 'Download (From RETS) concurrency')
-  .option('-u, --upload-concurency <n>',   'Upload   (To S3)     concurrency')
+      .option('-d, --download-concurency <n>', 'Download (From RETS) concurrency')
+      .option('-u, --upload-concurency <n>',   'Upload   (To S3)     concurrency');
 var options = program.parse(process.argv);
 
 options.resource = 'Media';
@@ -16,7 +16,8 @@ options.class = 'Media';
 options.fields = {
   id:'matrix_unique_id',
   modified:'ModifiedDate'
-}
+};
+
 options.processor = processData;
 
 function processData(cb, results) {
@@ -36,7 +37,7 @@ function insertPhoto(photo, cb) {
 function _saveImage(payload, cb) {
   Metric.increment('mls.fetch_photo');
   if(payload.data.mime  !== 'image/jpeg') {
-    Photo.markError(payload.photo.matrix_unique_id, payload.data.data.toString(), cb)
+    Photo.markError(payload.photo.matrix_unique_id, payload.data.data.toString(), cb);
     return;
   }
 
@@ -45,19 +46,29 @@ function _saveImage(payload, cb) {
     return ;
   }
 
-  var file = {
-    name:payload.photo.matrix_unique_id,
-    ext:'.jpg',
-    body:payload.data.data,
-    mime:payload.data.mime
-  }
+  var saveExif = (cb) => {
+    Photo.setExif(payload.data.data, payload.photo.matrix_unique_id, cb);
+  };
 
-  S3.upload(config.buckets.photos, file, (err, url) => {
-    if(err)
-      return cb(err);
 
-    Photo.setUrl(payload.photo.matrix_unique_id, url, cb);
-  });
+  var upload = (cb) => {
+    var file = {
+      name: payload.photo.matrix_unique_id,
+      ext: '.jpg',
+      body: payload.data.data,
+      mime: payload.data.mime
+    };
+
+    S3.upload(config.buckets.photos, file, (err, upload) => {
+      if(err)
+        return cb(err);
+
+      var url = upload.url;
+      Photo.setUrl(payload.photo.matrix_unique_id, url, cb);
+    });
+  };
+
+  async.parallel([saveExif, upload], cb);
 }
 
 var saveImage = async.queue(_saveImage, options.uploadConcurrency || 20);
@@ -76,7 +87,7 @@ function processPhoto(photo, cb) {
     saveImage.push({
       photo:photo,
       data:data
-    }, cb)
+    }, cb);
   });
 }
 
@@ -92,6 +103,6 @@ function savePhotos(cb) {
 Client.work(options, (err) => {
   savePhotos( err => {
     Metric.flush();
-    setTimeout( process.exit, 2000 );
-  } );
+    setTimeout(process.exit, 2000);
+  });
 });
