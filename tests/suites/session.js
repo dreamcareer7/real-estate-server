@@ -25,7 +25,7 @@ var create = (cb) => {
     });
 }
 
-var create400 = (cb) => {
+var create401 = (cb) => {
   return frisby.create('expect 401 with empty model when creating new session')
     .post('/sessions')
     .after(cb)
@@ -41,6 +41,6 @@ var goat = (cb) => {
 
 module.exports = {
   create,
-  create400,
+  create401,
   goat
 }
