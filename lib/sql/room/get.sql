@@ -4,15 +4,12 @@ SELECT 'room' AS TYPE,
        EXTRACT(EPOCH FROM updated_at) AS updated_at,
        EXTRACT(EPOCH FROM deleted_at) AS deleted_at,
        (SELECT id FROM messages WHERE room = $1 ORDER BY created_at DESC LIMIT 1) AS latest_message,
-       (
-         WITH t AS (
-                     SELECT array_agg("user"::text) u,
-                            array_agg(push_enabled::text) p
-                     FROM rooms_users
-                     WHERE room = $1
-                   )
-         SELECT json_object(t.u, t.p)
-         FROM t
+       (SELECT json_object_agg("user", CASE WHEN
+                                        push_enabled IS TRUE THEN '{"system_generated": true}'::json
+                                        ELSE '{"system_generated": false}'::json
+                                       END
+                              )
+        FROM rooms_users WHERE room = $1
        ) AS notification_settings
 FROM rooms
 WHERE id = $1
