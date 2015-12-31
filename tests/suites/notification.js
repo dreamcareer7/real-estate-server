@@ -46,7 +46,7 @@ var getNotification = (cb) => {
 }
 
 var getNotification404 = (cb) => {
-  return frisby.create('get a notification by id')
+  return frisby.create('expect 404 with invalid notification id')
     .get('/notifications/' + uuid.v1())
     .after(cb)
     .expectStatus(404);
@@ -60,7 +60,7 @@ var acknowledgeNotification = (cb) => {
 }
 
 var acknowledgeNotification404 = (cb) => {
-  return frisby.create('acknowledge notification')
+  return frisby.create('expect 404 with invalid notification id')
     .delete('/notifications/' + uuid.v1())
     .after(cb)
     .expectStatus(404)
@@ -116,7 +116,7 @@ var patchNotificationSettings = (cb) => {
 }
 
 var patchNotificationSettings404 = (cb) => {
-  return frisby.create('update notification settings')
+  return frisby.create('expect 404 with invalid notification id')
     .patch('/room/' + uuid.v1() + '/notifications', {
       notification: "true"
     })

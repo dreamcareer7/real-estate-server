@@ -38,7 +38,7 @@ var create = (cb) => {
 }
 
 var create400 = (cb) => {
-  return frisby.create('create invitation')
+  return frisby.create('expect 400 with empty model')
     .post('/invitations/')
     .after(cb)
     .expectStatus(400);

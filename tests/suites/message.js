@@ -26,14 +26,14 @@ var post = (cb) => {
 }
 
 var post400 = (cb) => {
-  return frisby.create('post a message')
+  return frisby.create('expect 400 with empty model')
     .post('/rooms/' + results.room.create.data.id + '/messages')
     .after(cb)
     .expectStatus(400);
 }
 
 var post404 = (cb) => {
-  return frisby.create('post a message')
+  return frisby.create('expect 404 with invalid room id')
     .post('/rooms/' + uuid.v1() + '/messages')
     .after(cb)
     .expectStatus(404);
@@ -57,7 +57,7 @@ var retrieve = (cb) => {
 }
 
 var retrieve404 = (cb) => {
-  return frisby.create('get messages')
+  return frisby.create('expect 404 with invalid room id')
     .get('/rooms/' + uuid.v1() + '/messages')
     .after(cb)
     .expectStatus(404);
