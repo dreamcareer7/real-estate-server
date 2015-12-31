@@ -1,6 +1,5 @@
 //register dependencies
 registerSuite('room', ['create'])
-registerSuite('user', ['create'])
 
 var invitation_response = require('./expected_objects/invitation.js');
 var info_response = require('./expected_objects/info.js');
