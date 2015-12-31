@@ -2,7 +2,7 @@ var criteria = require('./data/alert_criteria.js');
 var alert_response = require('./expected_objects/alert.js');
 var info = require('./expected_objects/info.js');
 var compact_listing = require('./expected_objects/compact_listing.js');
-
+var uuid = require('node-uuid');
 
 registerSuite('room', ['create']);
 var maximum_price = 100000;
@@ -17,6 +17,13 @@ var create = (cb) => {
       data: criteria
     })
     .expectJSONTypes('data', alert_response);
+}
+
+var create400 = (cb) => {
+  return frisby.create('expect 400 with empty model when creating an alert')
+    .post('/rooms/' + results.room.create.data.id + '/alerts')
+    .after(cb)
+    .expectStatus(400);
 }
 
 var getUserAlerts = (cb) => {
@@ -84,6 +91,15 @@ var patchAlert = (cb) => {
     .expectJSONTypes('data', alert_response)
 }
 
+var patchAlert404 = (cb) => {
+  return frisby.create('expect 404 with invalid alert id when updating an alert')
+    .put('/rooms/' + results.alert.create.data.room + '/alerts/' + uuid.v1(), {
+      maximum_price: maximum_price
+    })
+    .after(cb)
+    .expectStatus(404);
+}
+
 var patchAlertWorked = (cb) => {
   return frisby.create('make sure patch alert was successful')
     .get('/rooms/' + results.alert.create.data.room + '/alerts')
@@ -124,6 +140,14 @@ var virtual = (cb) => {
     });
 }
 
+var virtual400 = (cb) => {
+  var criteria = require('./data/valert_criteria.js')
+  return frisby.create('expect 400 with empty model when creating a valert')
+    .post('/valerts')
+    .after(cb)
+    .expectStatus(400);
+}
+
 var bulkAlertShare = (cb) => {
   return frisby.create('bulk alert share')
     .post('/alerts', {alert: results.alert.create.data})
@@ -139,11 +163,25 @@ var bulkAlertShare = (cb) => {
     });
 }
 
+var bulkAlertShare400 = (cb) => {
+  return frisby.create('expect 400 with invalid alert id when sharing an alert')
+    .post('/alerts', {alert: uuid.v1()})
+    .after(cb)
+    .expectStatus(400);
+}
+
 var deleteAlert = (cb) => {
   return frisby.create('delete alert')
     .delete('/rooms/' + results.alert.create.data.room + '/alerts/' + results.alert.create.data.id)
     .after(cb)
     .expectStatus(204)
+}
+
+var deleteAlert404 = (cb) => {
+  return frisby.create('expect 404 with invalid alert id when deleting an alert')
+    .delete('/rooms/' + results.alert.create.data.room + '/alerts/' + uuid.v1())
+    .after(cb)
+    .expectStatus(404)
 }
 
 var deleteAlertWorked = (cb) => {
@@ -162,12 +200,17 @@ var deleteAlertWorked = (cb) => {
 
 module.exports = {
   create,
+  create400,
   getUserAlerts,
   getRoomAlerts,
   patchAlert,
+  patchAlert404,
   patchAlertWorked,
   virtual,
+  virtual400,
   bulkAlertShare,
+  bulkAlertShare400,
+  deleteAlert404,
   deleteAlert,
   deleteAlertWorked
 }

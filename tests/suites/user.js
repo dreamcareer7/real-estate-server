@@ -4,6 +4,7 @@ var address = require('./data/address.js');
 var user_response = require('./expected_objects/user.js');
 var compact_user_response = require('./expected_objects/compact_user.js');
 var info_response = require('./expected_objects/info.js');
+var uuid = require('node-uuid');
 
 var password = config.tests.password;
 
@@ -24,6 +25,13 @@ var create = (cb) => {
     });
 };
 
+var create401 = (cb) => {
+  return frisby.create('create user')
+    .post('/users')
+    .after(cb)
+    .expectStatus(401);
+};
+
 var getUser = (cb) => {
   return frisby.create('get user')
     .get('/users/' + results.user.create.data.id)
@@ -37,6 +45,13 @@ var getUser = (cb) => {
       code: String,
       data: user_response
     });
+};
+
+var getUser404 = (cb) => {
+  return frisby.create('expect 404 with invalid user id when getting a user')
+    .get('/users/' + uuid.v1())
+    .after(cb)
+    .expectStatus(404);
 };
 
 var update = (cb) => {
@@ -64,11 +79,25 @@ var changePassword = (cb) => {
     .expectStatus(200);
 };
 
+var changePassword401 = (cb) => {
+  return frisby.create('expect 401 with empty model when changing password of a user')
+    .patch('/users/self/password')
+    .after(cb)
+    .expectStatus(401);
+};
+
 var resetPassword = (cb) => {
   return frisby.create('initiate password reset')
     .post('/users/reset_password', {email: user.email})
     .after(cb)
     .expectStatus(204);
+};
+
+var resetPassword404 = (cb) => {
+  return frisby.create('expect 404 with invalid email when initiating password reset')
+    .post('/users/reset_password', {email: 'invalid email'})
+    .after(cb)
+    .expectStatus(404);
 };
 
 var setAddress = (cb) => {
@@ -80,6 +109,13 @@ var setAddress = (cb) => {
       code: String,
       data: user_response
     });
+};
+
+var setAddress400 = (cb) => {
+  return frisby.create('set address')
+    .put('/users/self/address')
+    .after(cb)
+    .expectStatus(400);
 };
 
 var patchUserTimeZone = (cb) => {
@@ -181,11 +217,16 @@ var deleteUser = (cb) => {
 
 module.exports = {
   create,
+  create401,
   getUser,
+  getUser404,
   update,
   changePassword,
+  changePassword401,
   resetPassword,
+  resetPassword404,
   setAddress,
+  setAddress400,
   patchUserTimeZone,
   searchRelatedUser,
   searchByEmail,
