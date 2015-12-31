@@ -5,6 +5,7 @@ registerSuite('invitation', ['create']);
 var notification_response = require('./expected_objects/notification.js');
 var info_response = require('./expected_objects/info.js');
 var user_response = require('./expected_objects/user.js');
+var uuid = require('node-uuid');
 
 var getUsersNotification = (cb) => {
   return frisby.create('get all notifications for a user')
@@ -44,11 +45,25 @@ var getNotification = (cb) => {
     });
 }
 
+var getNotification404 = (cb) => {
+  return frisby.create('get a notification by id')
+    .get('/notifications/' + uuid.v1())
+    .after(cb)
+    .expectStatus(404);
+}
+
 var acknowledgeNotification = (cb) => {
   return frisby.create('acknowledge notification')
     .delete('/notifications/' + results.notification.getUsersNotification.data[0].id)
     .after(cb)
     .expectStatus(204)
+}
+
+var acknowledgeNotification404 = (cb) => {
+  return frisby.create('acknowledge notification')
+    .delete('/notifications/' + uuid.v1())
+    .after(cb)
+    .expectStatus(404)
 }
 
 var pushNotification = (cb) => {
@@ -100,12 +115,24 @@ var patchNotificationSettings = (cb) => {
     .expectStatus(204)
 }
 
+var patchNotificationSettings404 = (cb) => {
+  return frisby.create('update notification settings')
+    .patch('/room/' + uuid.v1() + '/notifications', {
+      notification: "true"
+    })
+    .after(cb)
+    .expectStatus(404)
+}
+
 
 module.exports = {
   getUsersNotification,
   getNotification,
+  getNotification404,
   acknowledgeNotification,
+  acknowledgeNotification404,
   pushNotification,
   cancelPushNotification,
-  patchNotificationSettings
+  patchNotificationSettings,
+  patchNotificationSettings404
 }
