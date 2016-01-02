@@ -76,7 +76,6 @@ function getLastRun(cb) {
   MLSJob.getLastRun(Client.options.class, Client.options.resource, (err, last_run) => {
     if(err)
       return cb(err);
-
     if(!last_run)
       last_run = {};
 
