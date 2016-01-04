@@ -6,7 +6,7 @@ SELECT 'compact_listing' AS TYPE,
        listings.price AS price,
        listings.status AS status,
        listings.mls_number AS mls_number,
-       CASE WHEN address.location IS NOT NULL THEN
+       CASE WHEN addresses.location IS NOT NULL THEN
        json_build_object(
           'latitude', ST_Y(addresses.location),
           'longitude', ST_X(addresses.location),
