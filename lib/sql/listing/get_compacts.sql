@@ -17,6 +17,7 @@ SELECT 'compact_listing' AS TYPE,
          ORDER BY "order" LIMIT 1
        ) as cover_image_url,
        json_build_object(
+          'type', 'compact_address',
           'street_number', addresses.street_number,
           'street_name', addresses.street_name,
           'city', addresses.city,
@@ -28,7 +29,9 @@ SELECT 'compact_listing' AS TYPE,
           'country', addresses.country,
           'country_code', addresses.country_code,
           'street_dir_prefix', addresses.street_dir_prefix,
-          'street_dir_suffix', addresses.street_dir_suffix
+          'street_dir_suffix', addresses.street_dir_suffix,
+          'created_at', EXTRACT(EPOCH FROM addresses.created_at),
+          'updated_at', EXTRACT(EPOCH FROM addresses.updated_at)
        ) AS address
 FROM listings
 JOIN properties ON listings.property_id = properties.id

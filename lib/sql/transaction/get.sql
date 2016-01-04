@@ -5,6 +5,11 @@ SELECT 'transaction' AS TYPE,
         FROM transaction_contacts
         WHERE "transaction" = $1
        ) AS contacts,
+       (
+        SELECT ARRAY_AGG(id)
+        FROM important_dates
+        WHERE "transaction" = $1
+       ) AS important_dates,
        EXTRACT(EPOCH FROM created_at) AS created_at,
        EXTRACT(EPOCH FROM updated_at) AS updated_at,
        EXTRACT(EPOCH FROM deleted_at) AS deleted_at
