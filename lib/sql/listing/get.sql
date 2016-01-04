@@ -19,7 +19,9 @@ SELECT 'listing' AS TYPE,
        (
          SELECT json_agg(a) FROM (
            SELECT
-             start_time,end_time,type,description
+            EXTRACT(EPOCH FROM start_time) as start_time,
+            EXTRACT(EPOCH FROM end_time)   as end_time
+            ,type,description
            FROM open_houses WHERE listing_mui = listings.matrix_unique_id
          ) AS a
        ) AS open_houses
