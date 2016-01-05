@@ -33,7 +33,22 @@ SELECT 'compact_listing' AS TYPE,
           'street_dir_suffix', addresses.street_dir_suffix,
           'created_at', EXTRACT(EPOCH FROM addresses.created_at),
           'updated_at', EXTRACT(EPOCH FROM addresses.updated_at)
-       ) AS address
+       ) AS address,
+       (
+         SELECT json_agg(a) FROM (
+           SELECT
+            EXTRACT(EPOCH FROM start_time) as start_time,
+            EXTRACT(EPOCH FROM end_time)   as end_time
+            ,type,description
+           FROM open_houses WHERE listing_mui = listings.matrix_unique_id
+         ) AS a
+       ) AS open_houses,
+       json_build_object(
+          'half_bathroom_count', properties.half_bathroom_count,
+          'full_bathroom_count', properties.full_bathroom_count,
+          'square_meters', properties.square_meters,
+          'bedroom_count', properties.bedroom_count
+       ) AS compact_property
 FROM listings
 JOIN properties ON listings.property_id = properties.id
 JOIN addresses ON properties.address_id = addresses.id
