@@ -48,7 +48,9 @@ SELECT 'compact_listing' AS TYPE,
           'half_bathroom_count', properties.half_bathroom_count,
           'full_bathroom_count', properties.full_bathroom_count,
           'square_meters', properties.square_meters,
-          'bedroom_count', properties.bedroom_count
+          'bedroom_count', properties.bedroom_count,
+          'created_at', EXTRACT(EPOCH FROM properties.created_at),
+          'updated_at', EXTRACT(EPOCH FROM properties.updated_at)
        ) AS compact_property
 FROM listings
 JOIN properties ON listings.property_id = properties.id
