@@ -44,6 +44,7 @@ SELECT 'compact_listing' AS TYPE,
          ) AS a
        ) AS open_houses,
        json_build_object(
+          'type', 'compact_property',
           'half_bathroom_count', properties.half_bathroom_count,
           'full_bathroom_count', properties.full_bathroom_count,
           'square_meters', properties.square_meters,
