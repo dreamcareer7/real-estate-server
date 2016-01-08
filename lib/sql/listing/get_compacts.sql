@@ -37,6 +37,7 @@ SELECT 'compact_listing' AS TYPE,
        (
          SELECT json_agg(a) FROM (
            SELECT
+            'open_house' as type, created_at, updated_at,
             EXTRACT(EPOCH FROM start_time) as start_time,
             EXTRACT(EPOCH FROM end_time)   as end_time
             ,type,description
