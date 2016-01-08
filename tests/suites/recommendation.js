@@ -4,6 +4,7 @@ registerSuite('alert', ['create']);
 
 var recommendation_response = require('./expected_objects/recommendation.js');
 var info_response = require('./expected_objects/info.js');
+var uuid = require('node-uuid')
 
 var feed = (cb) => {
   return frisby.create('get feed')
@@ -18,7 +19,19 @@ var feed = (cb) => {
         }
       ],
       info: {}
+    })
+    .expectJSONTypes({
+      code: String,
+      data: [recommendation_response],
+      info: info_response
     });
+}
+
+var feed404 = (cb) => {
+  return frisby.create('expect 404 with invalid room id')
+    .get('/rooms/' + uuid.v1() + '/recs/feed')
+    .after(cb)
+    .expectStatus(404);
 }
 
 var getFavorites = (cb) => {
@@ -42,6 +55,13 @@ var getFavorites = (cb) => {
     });
 }
 
+var getFavorites404 = (cb) => {
+  return frisby.create('expect 404 with invalid room id')
+    .get('/rooms/' + uuid.v1() + '/recs/favorites')
+    .after(cb)
+    .expectStatus(404);
+}
+
 var getTours = (cb) => {
   return frisby.create('get tours')
     .get('/rooms/' + results.room.create.data.id + '/recs/tours')
@@ -61,6 +81,13 @@ var getTours = (cb) => {
       data: Array,
       info: info_response
     });
+}
+
+var getTours404 = (cb) => {
+  return frisby.create('expect 404 with invalid room id')
+    .get('/rooms/' + uuid.v1() + '/recs/tours')
+    .after(cb)
+    .expectStatus(404);
 }
 
 var getActives = (cb) => {
@@ -84,6 +111,13 @@ var getActives = (cb) => {
     });
 }
 
+var getActives404 = (cb) => {
+  return frisby.create('expect 404 with invalid room id')
+    .get('/rooms/' + uuid.v1() + '/recs/actives')
+    .after(cb)
+    .expectStatus(404);
+}
+
 var markAsFavorite = (cb) => {
   return frisby.create('favorite a rec')
     .patch('/rooms/' + results.room.create.data.id + '/recs/' + results.recommendation.feed.data[0].id + '/favorite', {
@@ -101,6 +135,15 @@ var markAsFavorite = (cb) => {
       code: String,
       data: recommendation_response
     });
+}
+
+var markAsFavorite404 = (cb) => {
+  return frisby.create('expect 404 with invalid recommendation id')
+    .patch('/rooms/' + results.room.create.data.id + '/recs/' + uuid.v1() + '/favorite', {
+      favorite: true
+    })
+    .after(cb)
+    .expectStatus(404);
 }
 
 var markAsFavoriteWorked = (cb) => {
@@ -141,6 +184,15 @@ var markAsTour = (cb) => {
       code: String,
       data: recommendation_response
     });
+}
+
+var markAsTour404 = (cb) => {
+  return frisby.create('expect 404 with invalid recommendation id')
+    .patch('/rooms/' + results.room.create.data.id + '/recs/' + uuid.v1() + '/tour', {
+      tour: true
+    })
+    .after(cb)
+    .expectStatus(404);
 }
 
 var markAsTourWorked = (cb) => {
@@ -185,6 +237,13 @@ var seen = (cb) => {
     });
 }
 
+var seen404 = (cb) => {
+  return frisby.create('expect 404 with invalid room id')
+    .get('/rooms/' + uuid.v1() + '/recs/seen')
+    .after(cb)
+    .expectStatus(404);
+}
+
 var markAsSeen = (cb) => {
   var rec = _.clone(results.recommendation.feed.data[0]);
 
@@ -206,6 +265,13 @@ var markAsSeen = (cb) => {
       code: String,
       data: recommendation_response
     });
+}
+
+var markAsSeen404 = (cb) => {
+  return frisby.create('expect 404 with invalid recommendation id')
+    .delete('/rooms/' + results.room.create.data.id + '/recs/feed/' + uuid.v1())
+    .after(cb)
+    .expectStatus(404);
 }
 
 var markAsSeenWorked = (cb) => {
@@ -248,6 +314,24 @@ var recommendManually = (cb) => {
     });
 }
 
+var recommendManually400 = (cb) => {
+  return frisby.create('expect 400 with invalid mls number')
+    .post('/rooms/' + results.room.create.data.id + '/recs', {
+      mls_number: 1
+    })
+    .after(cb)
+    .expectStatus(400);
+}
+
+var recommendManually404 = (cb) => {
+  return frisby.create('expect 400 with invalid mls number')
+    .post('/rooms/' + results.room.create.data.id + '/recs', {
+      mls_number: uuid.v1()
+    })
+    .after(cb)
+    .expectStatus(404);
+}
+
 var recommendManuallyWorked = (cb) => {
   return frisby.create('make sure recommendManually was successful')
     .get('/rooms/' + results.room.create.data.id + '/recs/' + results.recommendation.feed.data[0].id)
@@ -282,19 +366,49 @@ var bulkRecommendManually = (cb) => {
     });
 }
 
+var bulkRecommendManually400 = (cb) => {
+  return frisby.create('expect 400 with invalid mls number')
+    .post('/recs', {
+      mls_number: 1
+    })
+    .after(cb)
+    .expectStatus(400)
+}
+
+var bulkRecommendManually404 = (cb) => {
+  return frisby.create('expect 400 with invalid mls number')
+    .post('/recs', {
+      mls_number: uuid.v1()
+    })
+    .after(cb)
+    .expectStatus(404)
+}
+
 module.exports = {
   feed,
+  feed404,
   getFavorites,
+  getFavorites404,
   getTours,
+  getTours404,
   getActives,
+  getActives404,
   markAsFavorite,
+  markAsFavorite404,
   markAsFavoriteWorked,
   markAsTour,
+  markAsTour404,
   markAsTourWorked,
   seen,
+  seen404,
   markAsSeen,
+  markAsSeen404,
   markAsSeenWorked,
   recommendManually,
+  recommendManually400,
+  recommendManually404,
   recommendManuallyWorked,
-  bulkRecommendManually
+  bulkRecommendManually,
+  bulkRecommendManually400,
+  bulkRecommendManually404
 }

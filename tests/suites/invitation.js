@@ -1,6 +1,5 @@
 //register dependencies
 registerSuite('room', ['create'])
-registerSuite('user', ['create'])
 
 var invitation_response = require('./expected_objects/invitation.js');
 var info_response = require('./expected_objects/info.js');
@@ -37,6 +36,14 @@ var create = (cb) => {
     });
 }
 
+var create400 = (cb) => {
+  return frisby.create('expect 400 with empty model')
+    .post('/invitations/')
+    .after(cb)
+    .expectStatus(400);
+}
+
 module.exports = {
-  create
+  create,
+  create400
 }

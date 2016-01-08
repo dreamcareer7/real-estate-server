@@ -3,7 +3,6 @@ var uuid = require('node-uuid');
 var first_name = 'updated_user_name';
 var profile_image = 'updated_profile_image';
 var cover_image = 'updated_cover_image';
-
 var contact_response = require('./expected_objects/contact.js');
 var info_response = require('./expected_objects/info.js');
 
@@ -39,6 +38,45 @@ var create = (cb) => {
       info: info_response
     });
 };
+
+var create400 = (cb) => {
+  return frisby.create('expect 400 with empty model when creating a contact')
+    .post('/contacts')
+    .after(cb)
+    .expectStatus(400)
+};
+
+var addTag = (cb) => {
+  return frisby.create('add tag to a contact')
+    .post('/contacts/' + results.contact.create.data[0].id + '/tags', {
+      tags: ['foo', 'bar']
+    })
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK'
+    })
+    .expectJSONTypes({
+      code: String,
+      data: contact_response
+    });
+}
+
+var addTag400 = (cb) => {
+  return frisby.create('expect 400 with empty model when adding a tag')
+    .post('/contacts/' + results.contact.create.data[0].id + '/tags')
+    .after(cb)
+    .expectStatus(400);
+}
+
+var addTag404 = (cb) => {
+  return frisby.create('expect 404 with invalid contact id when adding a tag to a contact')
+    .post('/contacts/' + uuid.v1() + '/tags', {
+      tags: ['foo', 'bar']
+    })
+    .after(cb)
+    .expectStatus(404);
+}
 
 var getContact = (cb) => {
   results.user.create.data.type = 'compact_user';
@@ -103,7 +141,7 @@ var updateContactWorked = (cb) => {
 };
 
 var updateContact404 = (cb) => {
-  return frisby.create('pass invalid id to update contact and expect not found response')
+  return frisby.create('expect 404 with invalid contact id when updating a contact')
     .put('/contacts/' + uuid.v1() , results.contact.create.data[0].contact_user)
     .after(cb)
     .expectStatus(404);
@@ -147,7 +185,7 @@ var patchContactProfileImageWorked = (cb) => {
 };
 
 var patchContactProfileImage404 = (cb) => {
-  return frisby.create('expect 404 from update image with invalid id')
+  return frisby.create('expect 404 with invalid contact id when updating a profile image')
     .patch('/contacts/' + uuid.v1() + '/profile_image_url', {
       profile_image_url: profile_image
     })
@@ -193,7 +231,7 @@ var patchContactCoverImageWorked = (cb) => {
 };
 
 var patchContactCoverImage404 = (cb) => {
-  return frisby.create('expect 404 from update cover image with invalid id')
+  return frisby.create('expect 404 with invalid contact id when updating a cover image')
     .patch('/contacts/' + uuid.v1() + '/cover_image_url', {
       cover_image_url: cover_image
     })
@@ -225,22 +263,6 @@ var search = (cb) => {
     });
 };
 
-var addTag = (cb) => {
-  return frisby.create('add tag to a contact')
-    .post('/contacts/' + results.contact.create.data[0].id + '/tags', {
-      tags: ['foo', 'bar']
-    })
-    .after(cb)
-    .expectStatus(200)
-    .expectJSON({
-      code: 'OK'
-    })
-    .expectJSONTypes({
-      code: String,
-      data: contact_response
-    });
-}
-
 var getByTag = (cb) => {
   return frisby.create('filter contacts by tags')
     .get('/contacts?tags=foo,bar')
@@ -254,6 +276,13 @@ var getByTag = (cb) => {
 var removeTag = (cb) => {
   return frisby.create('remove tag from a contact')
     .delete('/contacts/' + results.contact.create.data[0].id + '/tags/test')
+    .expectStatus(204)
+    .after(cb);
+}
+
+var removeTag404 = (cb) => {
+  return frisby.create('expect 404 with invalid id when removing a tag')
+    .delete('/contacts/' + uuid.v1() + '/tags/test')
     .expectStatus(204)
     .after(cb);
 }
@@ -282,7 +311,10 @@ var deleteContactWorked = (cb) => {
 
 module.exports = {
   create,
+  create400,
   addTag,
+  addTag400,
+  addTag404,
   getContact,
   getByTag,
   updateContact,
