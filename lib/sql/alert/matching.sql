@@ -30,7 +30,7 @@ FROM listings WHERE
       )
   )
   AND (
-    ($15::boolean IS NULL) OR (
+    ($15::boolean IS NULL OR $15::boolean = false) OR (
       SELECT count(*) > 0 FROM open_houses WHERE
       listing_mui = listings.matrix_unique_id AND start_time > NOW()
     )
