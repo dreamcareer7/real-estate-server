@@ -89,7 +89,7 @@ module.exports = {
   "close_price": function(val) { expect(val).toBeTypeOrNull(String); },
   "back_on_market_date": String,
   "deposit_amount": Number,
-  "photo_count": Number,
+  "photo_count": function(val) { expect(val).toBeTypeOrNull(Number); },
   "deleted_at": null,
   "dom": function(val) { expect(val).toBeTypeOrNull(Number); },
   "cdom": function(val) { expect(val).toBeTypeOrNull(Number); },

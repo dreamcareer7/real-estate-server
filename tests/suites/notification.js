@@ -93,11 +93,11 @@ var cancelPushNotification = (cb) => {
 
 var patchNotificationSettings = (cb) => {
   return frisby.create('update notification settings')
-    .patch('/room/' + results.room.create.data.id + '/notifications', {
-      notification: "true"
+    .patch('/rooms/' + results.room.create.data.id + '/notifications', {
+      notification: true
     })
     .after(cb)
-    .expectStatus(204)
+    .expectStatus(200)
 }
 
 

@@ -19,11 +19,6 @@ var feed = (cb) => {
       ],
       info: {}
     });
-    //.expectJSONTypes({
-    //  code: String,
-    //  data: [recommendation_response],
-    //  info: info_response
-    //});
 }
 
 var getFavorites = (cb) => {
