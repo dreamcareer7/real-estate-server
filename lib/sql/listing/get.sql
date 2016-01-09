@@ -19,7 +19,7 @@ SELECT 'listing' AS TYPE,
        (
          SELECT json_agg(a) FROM (
            SELECT
-            'type' as open_house_type,
+            type as open_house_type,
             'open_house' as type,
             EXTRACT(EPOCH FROM created_at) as created_at,
             EXTRACT(EPOCH FROM updated_at) as updated_at,
