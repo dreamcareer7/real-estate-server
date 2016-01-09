@@ -35,13 +35,8 @@ function report(err) {
 function populate(data) {
   var agent = {};
 
-  // Triming zeros and invalid characters
-  var mlsid = data.MLSID;
-  mlsid = ObjectUtil.makeAllNumeric(mlsid);
-  mlsid = ObjectUtil.trimLeadingZeros(mlsid);
-
   agent.email              = data.Email;
-  agent.mlsid              = mlsid;
+  agent.mlsid              = data.MLSID;
   agent.fax                = data.FaxPhone;
   agent.first_name         = data.FirstName;
   agent.last_name          = data.LastName;

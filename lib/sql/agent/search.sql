@@ -1,5 +1,5 @@
 SELECT *,
        'agent' AS type
 FROM agents
-WHERE mlsid = $1
+WHERE regexp_replace(mlsid, '^0*', '', 'g') = $1
 LIMIT 1
