@@ -20,5 +20,5 @@ SET currency = $1,
     pool = $20,
     minimum_lot_square_meters = $21,
     maximum_lot_square_meters = $22,
-    statuses = $23
+    listing_statuses = $23
 WHERE id = $24

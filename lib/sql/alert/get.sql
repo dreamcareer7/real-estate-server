@@ -6,7 +6,7 @@ SELECT *,
        EXTRACT(EPOCH FROM updated_at) AS updated_at,
        EXTRACT(EPOCH FROM deleted_at) AS deleted_at,
        property_subtypes::text[] AS property_subtypes,
-       statuses::text[] AS statuses
+       listing_statuses::text[] AS listing_statuses
 FROM alerts
 WHERE id = $1
 LIMIT 1
