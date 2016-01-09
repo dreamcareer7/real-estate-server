@@ -9,7 +9,7 @@ SELECT
   listings.id AS id,
   (COUNT(*) OVER())::INT AS total
 FROM listings WHERE
-  listings.status = 'Active' AND
+  listings.status = ANY($16::listing_status[]) AND
   listings.price >= $1 AND
   listings.price <= $2 AND
   listings.property_id IN(
@@ -25,7 +25,7 @@ FROM listings WHERE
       COALESCE(pool_yn = $11, TRUE) = TRUE AND
       COALESCE(lot_square_meters >= $12, TRUE) = TRUE AND
       COALESCE(lot_square_meters <= $13, TRUE) = TRUE AND
-      address_id IN(
+      address_id IN (
         select * from address_ids
       )
   )

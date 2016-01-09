@@ -1,12 +1,13 @@
 require('../lib/models/index.js')();
-var db = require('../lib/utils/db.js');
+require('./connection.js');
+
+var db     = require('../lib/utils/db.js');
 var config = require('../lib/config.js');
-var sql = require('../lib/utils/require_sql.js');
-var geo = require('../lib/utils/geo.js');
-require('./connection.js')
-var _ = require('underscore');
-var Client = require('./mls/rets_client.js')
-var async = require('async');
+var sql    = require('../lib/utils/require_sql.js');
+var geo    = require('../lib/utils/geo.js');
+var _      = require('underscore');
+var Client = require('./mls/rets_client.js');
+var async  = require('async');
 
 var search = function (criteria, cb) {
   var options = {};
@@ -14,25 +15,26 @@ var search = function (criteria, cb) {
   options.class = 'Listing';
   options.dontSave = true;
   options.query = ('( Longitude=' + criteria.points[0].longitude + '+),(Latitude=' + criteria.points[0].latitude + '-),' +
-    '( Longitude=' + criteria.points[1].longitude + '-),(Latitude=' + criteria.points[2].latitude + '+),' +
-    '(STATUS=A), (ListPrice=' + criteria.maximum_price + '-), (ListPrice=' + criteria.minimum_price + '+),' +
-    '(SqFtTotal=' + criteria.maximum_square_meters + '-), (SqFtTotal=' + criteria.minimum_square_meters + '+),' +
-    '(BedsTotal=' + criteria.minimum_bedrooms + '+),' +
-    '(PropertyType=RES), (PropertySubType=RESFAM,RESDUP,RESRAN,RESCON,RESTOW),' + '(YearBuilt=' + criteria.minimum_year_built + '+), (YearBuilt=' + criteria.maximum_year_built + '-),' +
-    '(LotSizeAreaSQFT=' + criteria.maximum_lot_square_meters + '-), (LotSizeAreaSQFT=' + criteria.minimum_lot_square_meters + '+)'
-  )
+                   '( Longitude=' + criteria.points[1].longitude + '-),(Latitude=' + criteria.points[2].latitude + '+),' +
+                   '(STATUS=A), (ListPrice=' + criteria.maximum_price + '-), (ListPrice=' + criteria.minimum_price + '+),' +
+                   '(SqFtTotal=' + criteria.maximum_square_meters + '-), (SqFtTotal=' + criteria.minimum_square_meters + '+),' +
+                   '(BedsTotal=' + criteria.minimum_bedrooms + '+),' +
+                   '(PropertyType=RES), (PropertySubType=RESFAM,RESDUP,RESRAN,RESCON,RESTOW),' +
+                   '(YearBuilt=' + criteria.minimum_year_built + '+), (YearBuilt=' + criteria.maximum_year_built + '-),' +
+                   '(LotSizeAreaSQFT=' + criteria.maximum_lot_square_meters + '-), (LotSizeAreaSQFT=' + criteria.minimum_lot_square_meters + '+)'
+                  );
   //options.query = ('( MLSNumber=13227035)');
 
   options.processor = (done, results) => {
     done();
-    cb(null, results.mls)
-  }
+    cb(null, results.mls);
+  };
 
   Client.work(options, (err)=> {
     if (err)
       console.log(err);
   });
-}
+};
 
 var searchMlsByNumbers = function (criteria, cb) {
   var options = {};
@@ -43,19 +45,19 @@ var searchMlsByNumbers = function (criteria, cb) {
 
   options.processor = (done, results) => {
     done();
-    cb(null, results.mls)
-  }
+    cb(null, results.mls);
+  };
 
   Client.work(options, (err)=> {
     if (err)
       console.log(err);
   });
-}
+};
 
 var randomLocation = {
   longitude: -96.7981853613128,
   latitude: 32.84284394397976
-}
+};
 
 var randomGeoPoints = geo.generateRandomPoints({
   'lat': randomLocation.latitude,
@@ -105,6 +107,9 @@ var criteria = {
     'RES-Farm/Ranch',
     'RES-Condo',
     'RES-Townhouse'
+  ],
+  statuses: [
+    'Active'
   ],
   created_by: '66f30c4e-6d33-11e5-8206-230211c15dec'
 };

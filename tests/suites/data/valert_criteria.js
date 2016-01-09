@@ -31,5 +31,8 @@ module.exports = {
     'RES-Condo',
     'RES-Townhouse'
   ],
+  statuses: [
+    'Active'
+  ],
   created_by: '66f30c4e-6d33-11e5-8206-230211c15dec'
 };
