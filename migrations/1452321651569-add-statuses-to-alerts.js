@@ -4,7 +4,7 @@ var async = require('async');
 var db = require('../lib/utils/db');
 
 var up = [
-  'ALTER TABLE alerts ADD statuses listing_status[] NOT NULL;',
+  'ALTER TABLE alerts ADD statuses listing_status[] NOT NULL DEFAULT \'{"Active"}\';',
   'UPDATE alerts SET statuses = \'{"Active"}\';'
 ];
 
