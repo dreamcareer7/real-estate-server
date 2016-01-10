@@ -13,7 +13,6 @@ var program = require('./program.js')
   .option('-d, --download-concurency <n>', 'Download (From RETS) concurrency');
 var options = program.parse(process.argv);
 
-options.additionalQuery = '(OfficeStatus=A)';
 options.process = true;
 
 options.resource = 'Office';
