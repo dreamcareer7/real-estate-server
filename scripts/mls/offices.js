@@ -7,8 +7,6 @@ var util = require('util');
 var config = require('../../lib/config.js');
 require('../../lib/models/index.js')();
 
-Error.autoReport = false;
-
 var program = require('./program.js');
 var options = program.parse(process.argv);
 
