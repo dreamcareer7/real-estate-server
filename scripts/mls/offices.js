@@ -9,17 +9,13 @@ require('../../lib/models/index.js')();
 
 Error.autoReport = false;
 
-var program = require('./program.js')
-  .option('-d, --download-concurency <n>', 'Download (From RETS) concurrency');
+var program = require('./program.js');
 var options = program.parse(process.argv);
-
-options.process = true;
 
 options.resource = 'Office';
 options.class = 'Office';
 
-if (options.process)
-  options.processor = processData;
+options.processor = processData;
 
 Client.work(options, report);
 
@@ -82,33 +78,9 @@ var upsert = function (office, cb) {
   });
 }
 
-var firstId, lastId = null;
+function report(err) {
+  if(err)
+    console.log(err);
 
-Client.on('data fetched', (data) => {
-  Client.rets.logout(); // We're done for the moment. Release the connection.
-
-  firstId = data[0].Matrix_Unique_ID;
-  lastId = data[data.length - 1].Matrix_Unique_ID;
-});
-
-function report() {
-  Metric.flush();
-
-  var text = [
-    'Execution time: %d seconds',
-    'Total items: %d',
-    'First item: %s',
-    'Last item: %s',
-    'Offices: %s new, %s updated',
-    '----------------------------------'
-  ].join('\n');
-
-  text = util.format(text,
-    slack.elapsed() / 1000,
-    Metric.get('mls.processed_office'),
-    firstId,
-    lastId,
-    Metric.get('mls.new_offices'), Metric.get('mls.updated_offices')
-  );
-  console.log(text);
+  process.exit();
 }
