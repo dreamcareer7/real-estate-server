@@ -1,46 +1,72 @@
+var optionalString = function(val) {
+  expect(val).toBeTypeOrNull(String);
+};
+
+var optionalNumber = function(val) {
+  expect(val).toBeTypeOrNull(Number);
+};
+
+var optionalArray = function(val) {
+  expect(val).toBeTypeOrNull(Array);
+};
+
+var optionalBoolean = function(val) {
+  expect(val).toBeTypeOrNull(Boolean);
+};
+
+var optionalLocation = function(val) {
+  if (!val)
+    return;
+
+  if (!val.latitude || typeof(val.latitude) != 'number')
+    throw 'Location.latitude is required';
+
+  if (!val.longitude || typeof(val.longitude) != 'number')
+    throw 'Location.longitude is required';
+
+  if (!val.type || typeof(val.type) != 'string' || val.type != 'location')
+    throw 'Location.type is required';
+};
+
 module.exports = {
-  "title": String,
-  "subtitle": String,
-  "street_number": String,
-  "street_name": String,
-  "city": String,
-  "state": String,
-  "state_code": String,
-  "postal_code": String,
-  "neighborhood": String,
+  "title": optionalString,
+  "subtitle": optionalString,
+  "street_number": optionalString,
+  "street_name": optionalString,
+  "city": optionalString,
+  "state": optionalString,
+  "state_code": optionalString,
+  "postal_code": optionalString,
+  "neighborhood": optionalString,
   "id": String,
-  "street_suffix": String,
-  "unit_number": String,
-  "country": String,
-  "country_code": String,
+  "street_suffix": optionalString,
+  "unit_number": optionalString,
+  "country": optionalString,
+  "country_code": optionalString,
   "created_at": Number,
   "updated_at": Number,
-  "location_google": String,
+  "location_google": optionalString,
   "matrix_unique_id": String,
-  "geocoded": Boolean,
-  "geo_source": String,
-  "partial_match_google": function(val) { expect(val).toBeTypeOrNull(Boolean); },
-  "county_or_parish": String,
-  "direction": function(val) { expect(val).toBeTypeOrNull(String); },
-  "street_dir_prefix": String,
-  "street_dir_suffix": String,
-  "street_number_searchable": String,
-  "geo_source_formatted_address_google": String,
-  "geocoded_google": Boolean,
-  "geocoded_bing": function(val) { expect(val).toBeTypeOrNull(Boolean); },
-  "location_bing": function(val) { expect(val).toBeTypeOrNull(String); },
-  "geo_source_formatted_address_bing": function(val) { expect(val).toBeTypeOrNull(String); },
-  "geo_confidence_google": function(val) { expect(val).toBeTypeOrNull(String); },
-  "geo_confidence_bing": function(val) { expect(val).toBeTypeOrNull(String); },
-  "location": {
-    "longitude": Number,
-    "latitude": Number,
-    "type": String,
-  },
-  "approximate": Boolean,
-  "corrupted": Boolean,
-  "corrupted_google": Boolean,
-  "corrupted_bing": function(val) { expect(val).toBeTypeOrNull(Boolean); },
-  "deleted_at": function(val) { expect(val).toBeTypeOrNull(Number); },
+  "geocoded": optionalBoolean,
+  "geo_source": optionalString,
+  "partial_match_google": optionalBoolean,
+  "county_or_parish": optionalString,
+  "direction": optionalString,
+  "street_dir_prefix": optionalString,
+  "street_dir_suffix": optionalString,
+  "street_number_searchable": optionalString,
+  "geo_source_formatted_address_google": optionalString,
+  "geocoded_google": optionalBoolean,
+  "geocoded_bing": optionalBoolean,
+  "location_bing": optionalString,
+  "geo_source_formatted_address_bing": optionalString,
+  "geo_confidence_google": optionalString,
+  "geo_confidence_bing": optionalString,
+  "location": optionalLocation,
+  "approximate": optionalBoolean,
+  "corrupted": optionalBoolean,
+  "corrupted_google": optionalBoolean,
+  "corrupted_bing": optionalBoolean,
+  "deleted_at": optionalNumber,
   "type": String
 };
