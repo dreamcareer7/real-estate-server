@@ -10,6 +10,7 @@ var options = program.parse(process.argv);
 options.resource = 'Agent';
 options.class = 'Agent';
 options.processor = processData;
+options.job = 'agents';
 
 Client.work(options, report);
 

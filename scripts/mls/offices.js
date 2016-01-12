@@ -12,6 +12,7 @@ var options = program.parse(process.argv);
 
 options.resource = 'Office';
 options.class = 'Office';
+options.job = 'offices';
 
 options.processor = processData;
 

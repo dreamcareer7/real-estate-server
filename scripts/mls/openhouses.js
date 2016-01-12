@@ -14,6 +14,7 @@ options.fields = {
   id:'matrix_unique_id'
 }
 options.processor = processData;
+options.job = 'open_houses';
 
 Client.work(options, report);
 
