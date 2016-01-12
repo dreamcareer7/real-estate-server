@@ -51,7 +51,7 @@ function upsertProperty(property, address_id, cb) {
     if(current)
       return cb(null, current.id);
 
-    Metric.increment('mls.old.updated_property');
+    Metric.increment('mls.old.new_property');
     Property.create(property, cb);
   });
 }
