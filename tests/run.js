@@ -106,6 +106,8 @@ function setupApp(cb) {
   var app = require('../lib/bootstrap.js')();
   app.use(database);
 
+  Error.autoReport = false;
+  
   if(!program.keep) {
     Run.on('suite done', (suite) => {
       connections[suite].query('ROLLBACK', connections[suite].done);

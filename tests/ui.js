@@ -4,6 +4,8 @@ var bytes = require('bytes');
 var suites = {};
 var requests = [];
 
+Error.autoReport = false;
+
 function logger(req, res, next) {
   var start = new Date().getTime();
 
@@ -14,7 +16,7 @@ function logger(req, res, next) {
       path:req.path,
       responseStatus:res.statusCode,
       elapsed: (new Date).getTime() - start,
-      length:data.length
+      length:data ? data.length : null
     });
     updateUI();
     end.call(res, data, encoding, callback);
@@ -129,16 +131,22 @@ function updateUI() {
       var elapsedColor = 'red';
     }
 
-    if(req.length < 10000) {
+    if(!req.length || req.length < 50000) {
       var lengthColor = 'green';
-    } else if(req.elapsed < 10000) {
+    } else if(req.length < 100000) {
       var lengthColor = 'yellow';
     } else {
       var lengthColor = 'red';
     }
 
+    var length = req.length;
+    if(length)
+      length = bytes(length, {decimalPlaces:0})[lengthColor];
+    else
+      length = '';
+
     line.column((req.elapsed.toString()+'ms')[elapsedColor], 8);
-    line.column((bytes(req.length, {decimalPlaces:0}))[lengthColor], 8);
+    line.column(length, 6);
     line.column(req.responseStatus.toString()[statusColor], 5);
     line.column(req.method.toUpperCase()[statusColor], 8);
     line.column(req.path[statusColor]);
