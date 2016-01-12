@@ -57,6 +57,7 @@
   "devDependencies": {
     "aglio": "^2.2.0",
     "api-blueprint-http-formatter": "0.0.1",
+    "bytes": "^2.2.0",
     "clui": "^0.3.1",
     "frisby": "git+https://github.com/emilsedgh/frisby.git#fix_nested",
     "jasmine-node": "^1.14.5",

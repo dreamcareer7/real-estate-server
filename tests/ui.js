@@ -1,4 +1,5 @@
 var clui    = require('clui');
+var bytes = require('bytes');
 
 var suites = {};
 var requests = [];
@@ -12,7 +13,8 @@ function logger(req, res, next) {
       method:req.method,
       path:req.path,
       responseStatus:res.statusCode,
-      elapsed: (new Date).getTime() - start
+      elapsed: (new Date).getTime() - start,
+      length:data.length
     });
     updateUI();
     end.call(res, data, encoding, callback);
@@ -127,7 +129,16 @@ function updateUI() {
       var elapsedColor = 'red';
     }
 
+    if(req.length < 10000) {
+      var lengthColor = 'green';
+    } else if(req.elapsed < 10000) {
+      var lengthColor = 'yellow';
+    } else {
+      var lengthColor = 'red';
+    }
+
     line.column((req.elapsed.toString()+'ms')[elapsedColor], 8);
+    line.column((bytes(req.length, {decimalPlaces:0}))[lengthColor], 8);
     line.column(req.responseStatus.toString()[statusColor], 5);
     line.column(req.method.toUpperCase()[statusColor], 8);
     line.column(req.path[statusColor]);
