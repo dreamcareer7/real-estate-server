@@ -1,0 +1,26 @@
+  INSERT INTO property_rooms(matrix_unique_id,
+    matrix_modified_dt,
+    description,
+    length,
+    width,
+    features,
+    listing_mui,
+    listing,
+    level,
+    type,
+    created_at,
+    updated_at)
+VALUES ($1,
+        CASE WHEN $2 = '' THEN NULL ELSE $2::timestamptz END,
+        $3,
+        $4,
+        $5,
+        $6,
+        $7,
+        $8,
+        $9,
+        $10,
+        now(),
+        now())
+ON CONFLICT (matrix_unique_id) DO NOTHING
+RETURNING id
