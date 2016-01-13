@@ -36,20 +36,20 @@ function report(err) {
 function populate(data) {
   var agent = {};
 
-  agent.email              = data.Email || null;
+  agent.email              = data.Email || undefined;
   agent.mlsid              = data.MLSID;
-  agent.fax                = data.FaxPhone || null;
-  agent.first_name         = data.FirstName || null;
-  agent.last_name          = data.LastName || null;
-  agent.full_name          = data.FullName || null;
-  agent.middle_name        = data.MiddleName || null;
-  agent.phone_number       = data.CellPhone || null;
-  agent.nar_number         = data.NARNumber || null;
-  agent.office_mui         = data.Office_MUI ? parseInt(data.Office_MUI) : null;
-  agent.status             = data.AgentStatus || null;
+  agent.fax                = data.FaxPhone || undefined;
+  agent.first_name         = data.FirstName || undefined;
+  agent.last_name          = data.LastName || undefined;
+  agent.full_name          = data.FullName || undefined;
+  agent.middle_name        = data.MiddleName || undefined;
+  agent.phone_number       = data.CellPhone || undefined;
+  agent.nar_number         = data.NARNumber || undefined;
+  agent.office_mui         = data.Office_MUI ? parseInt(data.Office_MUI) : undefined;
+  agent.status             = data.AgentStatus || undefined;
   agent.office_mlsid       = (data.OfficeMLSID === 'Blank') ? '' : data.OfficeMLSID;
-  agent.work_phone         = data.DirectWorkPhone || null;
-  agent.generational_name  = data.GenerationalName || null;
+  agent.work_phone         = data.DirectWorkPhone || undefined;
+  agent.generational_name  = data.GenerationalName || undefined;
   agent.matrix_unique_id   = parseInt(data.Matrix_Unique_ID);
   agent.matrix_modified_dt = data.MatrixModifiedDT;
 
