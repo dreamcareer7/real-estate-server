@@ -42,4 +42,3 @@ FROM listings WHERE
       ) END
     ) END
   )
-LIMIT 5000
