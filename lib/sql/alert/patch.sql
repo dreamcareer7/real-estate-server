@@ -22,5 +22,5 @@ SET currency = $1,
     maximum_lot_square_meters = $22,
     listing_statuses = $23,
     open_house = $24,
-    minimum_sold_date = $25
+    minimum_sold_date = to_timestamp($25)
 WHERE id = $26
