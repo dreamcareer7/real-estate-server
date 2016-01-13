@@ -36,9 +36,9 @@ FROM listings WHERE
     )
   )
   AND (
-    CASE WHEN ($17::bigint) IS NULL THEN TRUE ELSE (
+    CASE WHEN ($17::float) IS NULL THEN TRUE ELSE (
       CASE WHEN listings.close_date IS NULL THEN FALSE ELSE (
-        to_timestamp(listings.close_date, 'YYYY-MM-DD %HH24:MI:SS') > to_timestamp($17::bigint)
+        to_timestamp(listings.close_date, 'YYYY-MM-DD %HH24:MI:SS') > to_timestamp($17::float)
       ) END
     ) END
   )
