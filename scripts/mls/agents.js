@@ -10,6 +10,7 @@ var options = program.parse(process.argv);
 options.resource = 'Agent';
 options.class = 'Agent';
 options.processor = processData;
+options.job = 'agents';
 
 Client.work(options, report);
 
@@ -35,20 +36,20 @@ function report(err) {
 function populate(data) {
   var agent = {};
 
-  agent.email              = data.Email;
+  agent.email              = data.Email || null;
   agent.mlsid              = data.MLSID;
-  agent.fax                = data.FaxPhone;
-  agent.first_name         = data.FirstName;
-  agent.last_name          = data.LastName;
-  agent.full_name          = data.FullName;
-  agent.middle_name        = data.MiddleName;
-  agent.phone_number       = data.CellPhone;
-  agent.nar_number         = data.NARNumber;
-  agent.office_mui         = data.Office_MUI ? parseInt(data.Office_MUI) : undefined;
-  agent.status             = data.AgentStatus;
+  agent.fax                = data.FaxPhone || null;
+  agent.first_name         = data.FirstName || null;
+  agent.last_name          = data.LastName || null;
+  agent.full_name          = data.FullName || null;
+  agent.middle_name        = data.MiddleName || null;
+  agent.phone_number       = data.CellPhone || null;
+  agent.nar_number         = data.NARNumber || null;
+  agent.office_mui         = data.Office_MUI ? parseInt(data.Office_MUI) : null;
+  agent.status             = data.AgentStatus || null;
   agent.office_mlsid       = (data.OfficeMLSID === 'Blank') ? '' : data.OfficeMLSID;
-  agent.work_phone         = data.DirectWorkPhone;
-  agent.generational_name  = data.GenerationalName;
+  agent.work_phone         = data.DirectWorkPhone || null;
+  agent.generational_name  = data.GenerationalName || null;
   agent.matrix_unique_id   = parseInt(data.Matrix_Unique_ID);
   agent.matrix_modified_dt = data.MatrixModifiedDT;
 

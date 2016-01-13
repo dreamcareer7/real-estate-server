@@ -7,11 +7,14 @@ var util = require('util');
 var config = require('../../lib/config.js');
 require('../../lib/models/index.js')();
 
+Error.autoReport = false;
+
 var program = require('./program.js');
 var options = program.parse(process.argv);
 
 options.resource = 'Office';
 options.class = 'Office';
+options.job = 'offices';
 
 options.processor = processData;
 
@@ -26,7 +29,7 @@ function map(mls_office) {
     board: mls_office.Board,
     email: mls_office.Email,
     fax: mls_office.FaxPhone,
-    office_mui: mls_office.HeadOffice_MUI ? parseInt(mls_office.HeadOffice_MUI) : null,
+    office_mui: mls_office.HeadOffice_MUI ? parseInt(mls_office.HeadOffice_MUI) : 0,
     office_mls_id: mls_office.HeadOfficeMLSID,
     licence_number: mls_office.LicenseNumber,
     address: mls_office.MailAddress,

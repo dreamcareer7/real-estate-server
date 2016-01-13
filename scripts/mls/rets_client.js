@@ -33,8 +33,7 @@ Date.prototype.toNTREISString = function() {
     'T' + pad(this.getHours()) +
     ':' + pad(this.getMinutes()) +
     ':' + pad(this.getSeconds()) +
-    '.' + (this.getMilliseconds() / 1000).toFixed(3).slice(2, 5) +
-    '+';
+    '.' + (this.getMilliseconds() / 1000).toFixed(3).slice(2, 5)
 }
 
 function sortByModified(a, b) {
@@ -73,7 +72,7 @@ function getLastRun(cb) {
     return cb();
   }
 
-  MLSJob.getLastRun(Client.options.class, Client.options.resource, (err, last_run) => {
+  MLSJob.getLastRun(Client.options.job, (err, last_run) => {
     if(err)
       return cb(err);
     if(!last_run)
@@ -106,9 +105,10 @@ function saveLastRun(data, cb) {
     results:data.length,
     query:Client.query,
     is_initial_completed:Client.last_run.is_initial_completed || shouldTransit,
-    class:Client.options.class,
-    resource:Client.options.resource
+    name:Client.options.job,
   };
+
+  Client.emit('saving job', job);
 
   MLSJob.insert(job, cb);
 }
@@ -158,10 +158,11 @@ function fetch(cb) {
     Client.query = Client.options.query;
   else {
     var query;
+    var q = '(%s=%s+)';
     if(by_id) {
-      query = util.format('(%s=%s+)', Client.options.fields.id, last_id);
+      query = util.format(q, Client.options.fields.id, last_id);
     } else {
-      query = util.format('(%s=%s)', Client.options.fields.modified, last_run.toNTREISString());
+      query = util.format(q, Client.options.fields.modified, last_run.toNTREISString());
     }
 
     if(by_id && Client.options.additionalQuery)
@@ -185,6 +186,9 @@ function fetch(cb) {
       }
     }
 
+    if(err && err.replyCode == '20201') //Not an error. Just no results.
+      return cb(null, []);
+
     if (err)
       return cb(err);
 
@@ -204,21 +208,17 @@ function fetch(cb) {
 //     console.log(JSON.stringify(tables));
 //   } );
 
-//   client.getObject('Media', 'LargePhoto', '15612756', (a,b,c,d) => {
-//     console.log(a,b,c.toString(),d)
-//   });
-
 //   client.getResources( (a,b,c) => console.log(a,b,c) );
 
 //   client.getAllForeignKeys( (a,b,c) => console.log(a,b,c) );
-//     client.getClass('Media', (a,b,c) => console.log(a,b,c) );
-//     client.getObjectMeta('Media', (a,b,c) => console.log(a,b,c) );
+//     client.getClass('Office', (a,b,c) => console.log(a,b,c) );
+//     client.getObjectMeta('Office', (a,b,c) => console.log(a,b,c) );
 }
 
 var raw_insert = 'INSERT INTO mls_data (resource, class, matrix_unique_id, value) \
   VALUES ($1, $2, $3, $4) ON CONFLICT (matrix_unique_id) DO UPDATE SET \
   value = EXCLUDED.value \
-  WHERE mls_data.matrix_unique_id = $3';
+  WHERE mls_data.matrix_unique_id = $3 AND mls_data.value->>$5 < $6';
 
 var raw = (cb, results) => {
   var data = _u.clone(results.mls);
@@ -227,7 +227,9 @@ var raw = (cb, results) => {
     Client.options.resource,
     Client.options.class,
     l[Client.options.fields.id],
-    l
+    l,
+    Client.options.fields.modified,
+    l[Client.options.fields.modified]
   ], cb), cb);
 }
 

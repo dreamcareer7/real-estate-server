@@ -17,6 +17,7 @@ options.fields = {
   id:'matrix_unique_id',
   modified:'ModifiedDate'
 };
+options.job = 'photos';
 
 options.processor = processData;
 

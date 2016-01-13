@@ -11,7 +11,6 @@ Error.autoReport = false;
 
 var program = require('./program.js')
   .option('-e, --enable-recs', 'Enable recommending listings to matching alerts')
-  .option('-r, --enable-cf-links', 'Disable displaying of CloudFront links')
   .option('-np, --no-process', 'Prevent processing')
   .option('-ng, --no-geocode', 'Prevent geocoding')
   .option('-n, --enable-notifications', 'Enable Listing change notifications')
@@ -22,7 +21,6 @@ var options = program.parse(process.argv);
 (function notice() {
   console.log('--------- Listing options ---------'.yellow);
   console.log('Instant Recommendation:'.yellow, (options.enableRecs) ? 'yes'.green : 'no'.red);
-  console.log('Show CloudFront Links:'.yellow, (options.enableCfLinks) ? 'yes'.green : 'no'.red);
   console.log('Listing Change Notifications:'.yellow, (options.enableNotifications) ? 'yes'.green : 'no'.red);
   console.log('Geocode:'.yellow, options.geocode);
   console.log('Process listings:'.yellow, options.process);
@@ -37,6 +35,7 @@ if(!options.all)
 
 options.resource = 'Property';
 options.class = 'Listing';
+options.job = 'listings';
 
 Client.work(options, report);
 
