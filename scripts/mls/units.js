@@ -17,7 +17,6 @@ options.process = true;
 
 options.resource = 'PropertySubTable';
 options.class = 'Unit';
-options.additionalQuery = '(MatrixModifiedDT=2016-01-01+)';
 
 if (options.process)
   options.processor = processData;
