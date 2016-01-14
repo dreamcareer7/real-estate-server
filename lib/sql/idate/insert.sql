@@ -7,5 +7,5 @@ INSERT INTO
 VALUES (
         $1,
         $2,
-        to_timstamp($3)
+        to_timestamp($3)
     ) RETURNING id;
