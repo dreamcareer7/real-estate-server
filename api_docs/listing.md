@@ -1,3 +1,5 @@
+# Group Listing
+
 ## Overview
 A listing contains information about a property and its current sale.
 
@@ -14,3 +16,12 @@ However, each `listing` object has a `property` object inside.
 
   So please do no look for methods to add new listings.
 :::
+
+### Get by MUI [GET /listings/search]
+<!-- include(tests/listing/by_mui.md) -->
+
+### Get by MLS Number [GET /listings/search]
+<!-- include(tests/listing/by_mls.md) -->
+
+### Get by ID [GET /listings/{id}]
+<!-- include(tests/listing/getListing.md) -->

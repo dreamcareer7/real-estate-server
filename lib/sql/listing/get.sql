@@ -5,6 +5,7 @@ SELECT 'listing' AS TYPE,
        EXTRACT(EPOCH FROM listings.created_at) AS created_at,
        EXTRACT(EPOCH FROM listings.updated_at) AS updated_at,
        EXTRACT(EPOCH FROM listings.deleted_at) AS deleted_at,
+       (CASE WHEN LENGTH(close_date) > 0 THEN EXTRACT(EPOCH FROM close_date::timestamp) ELSE NULL END) as close_date,
        (
         SELECT COALESCE(ARRAY_AGG(url), '{}'::text[]) FROM photos
         WHERE listing_mui = listings.matrix_unique_id AND photos.url IS NOT NULL

@@ -8,10 +8,14 @@ var optionalNumber = function(val) {
   expect(val).toBeTypeOrNull(Number);
 };
 
+var optionalBoolean = function(val) {
+  expect(val).toBeTypeOrNull(Boolean);
+};
+
 module.exports = {
   "type": String,
   "id": String,
-  "listing_agency_id": function(val) { expect(val).toBeTypeOrNull(String); },
+  "listing_agency_id": optionalString,
   "created_at": Number,
   "updated_at": Number,
   "cover_image_url": optionalString,
@@ -29,7 +33,7 @@ module.exports = {
   "association_fee_includes": optionalString,
   "association_type": optionalString,
   "unexempt_taxes": Number,
-  "financing_proposed": function(val) { expect(val).toBeTypeOrNull(String); },
+  "financing_proposed": optionalString,
   "list_office_mui": optionalString,
   "list_office_mls_id": optionalString,
   "list_office_name": optionalString,
@@ -76,9 +80,9 @@ module.exports = {
   "mls_area_minor": optionalString,
   "mls": optionalString,
   "move_in_date": optionalString,
-  "permit_address_internet_yn": Boolean,
-  "permit_comments_reviews_yn": Boolean,
-  "permit_internet_yn": Boolean,
+  "permit_address_internet_yn": optionalBoolean,
+  "permit_comments_reviews_yn": optionalBoolean,
+  "permit_internet_yn": optionalBoolean,
   "price_change_timestamp": optionalString,
   "price_change_timestamp": optionalString,
   "matrix_modified_dt": String,
@@ -97,10 +101,10 @@ module.exports = {
   "close_price": optionalString,
   "back_on_market_date": optionalString,
   "deposit_amount": optionalNumber,
-  "photo_count": function(val) { expect(val).toBeTypeOrNull(Number); },
+  "photo_count": optionalNumber,
   "deleted_at": null,
-  "dom": function(val) { expect(val).toBeTypeOrNull(Number); },
-  "cdom": function(val) { expect(val).toBeTypeOrNull(Number); },
+  "dom": optionalNumber,
+  "cdom": optionalNumber,
   "property": property,
   "alerting_agent": optionalString,
   "listing_agent": optionalString

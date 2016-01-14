@@ -3,11 +3,13 @@ var _        = require('underscore');
 var utils    = require('util');
 var aglio    = require('aglio');
 var spawn    = require('child_process').spawn;
-var docfiles = '/../api_docs/';
+var copy     = require('copy-dir');
+
+copy.sync(__dirname + '/../api_docs/', '/tmp/rechat');
 
 try {
-  fs.mkdirSync('/tmp/rechat');
-} catch (e) {}
+  fs.mkdirSync('/tmp/rechat/tests');
+} catch(e) {}
 
 var calls = [];
 
@@ -31,45 +33,36 @@ Run.on('app ready', (app) => {
 
 Run.on('done', generate);
 
-function findOriginal(url, params, qs) {
+function findParams(url, params, qs) {
+  var res = {};
+
   if(params)
     Object.keys(params).forEach( (param_name) => {
-      url = url.replace(params[param_name], ':'+param_name);
+      res[param_name] = params[param_name];
     });
 
   if(qs)
     Object.keys(qs).forEach( (q) => {
-      url = url.replace(qs[q], '<'+q+'>');
+      res[q] = qs[q];
     });
 
-  return url;
+  return res;
 }
 
-
 function generate() {
-  var suites = {};
-
   calls.forEach( (call) => {
     var suite = call.req.headers['x-suite'];
+    var test  = call.req.headers['x-test-name'];
 
-    if(!suites[suite])
-      suites[suite] = [];
+    var md = generateTest(call);
+    try {
+      fs.mkdirSync('/tmp/rechat/tests/'+suite);
+    } catch(e) {}
 
-    suites[suite].push(call);
+    fs.writeFileSync('/tmp/rechat/tests/'+suite+'/'+test+'.md', md);
   });
 
-
-  var templates = Object.keys(suites)
-  .sort( (a, b) => {
-    if(a < b) return -1;
-    if(a < b) return 0;
-    return 0;
-  })
-  .map( (suite_name) => generateSuite(suite_name, suites[suite_name]) )
-
-  var templates = Object.keys(suites).map( (suite_name) => '<!-- include('+suite_name+'.md) -->' );
-
-  var md = templates.join('\n\n');
+  var md = fs.readFileSync('/tmp/rechat/index.md').toString();
 
   aglio.render(md, {
 //     themeTemplate:'triple',
@@ -81,39 +74,8 @@ function generate() {
   })
 }
 
-function generateSuite(name, calls) {
-  var template = '# Group %s \n %s \n';
-
-  try {
-    var doc = fs.readFileSync(__dirname + docfiles + name + '.md').toString();
-  } catch(e) {
-    var doc = '';
-  }
-
-  template = utils.format(template, capitalize(name), doc);
-
-  calls.forEach( (call) => {
-    template += generateTest(call)
-  });
-
-  fs.writeFileSync('/tmp/rechat/'+name+'.md', template);
-}
-
 function generateTest(call) {
-  var t = bf(cleanup(call.req, call.res, call.data))+'\n';
-
-  var description = capitalize(call.req.headers['x-test-description']);
-
-  var suite = call.req.headers['x-suite'];
-  var test  = call.req.headers['x-test-name'];
-
-  try {
-    var doc = fs.readFileSync(__dirname + docfiles + suite + '/' + test + '.md').toString();
-  } catch(e) {
-    var doc = '';
-  }
-
-  return utils.format(t, description, doc);
+  return bf(cleanup(call.req, call.res, call.data))
 }
 
 function cleanup(req, res, data) {
@@ -143,8 +105,8 @@ function cleanup(req, res, data) {
     request:{
       method:req.method,
       headers:reqHeaders,
-      uri:findOriginal(req.url, req.params, req.query),
-      body:req.body ? JSON.stringify(req.body) : ''
+      query:findParams(req.url, req.params, req.query),
+      body:req.body ? JSON.stringify(req.body) : '',
     },
     response:{
       headers:resHeaders,
@@ -167,10 +129,17 @@ function bf(pair, description) {
   newline = "\n";
   req = pair['request'];
   res = pair['response'];
-  output = "## " + req['method'] + " " + req['uri'] + newline;
-  output += '## %s' + newline;
-  output += newline+'%s'+newline;
-  output += "+ Request" + newline;
+
+  if(req.query) {
+    output += "+ Parameters" + newline;
+
+    Object.keys(req.query).map( name => {
+      output += indent+ '+ '+name+': `'+req.query[name]+'`'+newline
+    });
+  }
+
+  if(req.body !== '{}') {
+    output += "+ Request" + newline;
 //   output += indent + "+ Headers" + newline;
 //   output += newline;
 //   Object.keys(req['headers']).forEach(function(key) {
@@ -178,10 +147,11 @@ function bf(pair, description) {
 //   });
 
 
-  req['body'].split('\n').forEach(function(line) {
-    return output += indent + indent + indent + line + newline;
-  });
-  output += newline;
+    req['body'].split('\n').forEach(function(line) {
+      return output += indent + indent + indent + line + newline;
+    });
+    output += newline;
+  }
   output += "+ Response" + " " + res['statusCode'] + newline;
 //   output += indent + "+ Headers" + newline;
 //   output += newline;

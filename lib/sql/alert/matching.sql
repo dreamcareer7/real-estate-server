@@ -12,7 +12,7 @@ FROM listings WHERE
   listings.status = ANY($16::listing_status[]) AND
   listings.price >= $1 AND
   listings.price <= $2 AND
-  listings.property_id IN(
+  listings.property_id IN (
     SELECT id FROM properties WHERE
       square_meters >= $3 AND
       square_meters <= $4 AND
@@ -34,4 +34,11 @@ FROM listings WHERE
       SELECT count(*) > 0 FROM open_houses WHERE
       listing_mui = listings.matrix_unique_id AND start_time > NOW()
     )
+  )
+  AND (
+    CASE WHEN ($17::float) IS NULL THEN TRUE ELSE (
+      CASE WHEN listings.close_date IS NULL THEN FALSE ELSE (
+        to_timestamp(listings.close_date, 'YYYY-MM-DD %HH24:MI:SS') > to_timestamp($17::float)
+      ) END
+    ) END
   )

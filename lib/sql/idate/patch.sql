@@ -1,3 +1,4 @@
 UPDATE important_dates
 SET title = $1
-WHERE id = $2
+    due_date = to_timestamp($2)
+WHERE id = $3
