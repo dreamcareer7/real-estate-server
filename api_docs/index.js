@@ -15,7 +15,10 @@ var app = express();
 var port = process.env.PORT || 3080;
 var http = require('http').Server(app);
 
-app.get('/', (req,res) => res.end(output));
+app.get('/', (req,res) => {
+  res.set('Content-Type', 'text/html');
+  res.end(output)
+});
 
 app.listen(port);
 
