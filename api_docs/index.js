@@ -1,13 +1,13 @@
-var spawn = require('child_process').spawnSync;
+var spawn = require('child_process').exec;
+var mkdir = require('fs').mkdirSync;
 
-var generator = spawn('node', [
-                      __dirname+'/../tests/run',
-                      '--docs'
-                ]);
+try {
+  mkdir('/tmp/rechat');
+} catch(e) {}
 
-var output = generator.stdout.toString().trim();
-
-console.log('Output ready');
+spawn('node '+__dirname+'/../tests/run --docs > /tmp/rechat/index.html', function(err, out) {
+  console.log('Served on port', port);
+});
 
 var express = require('express');
 var app = express();
@@ -15,13 +15,5 @@ var app = express();
 var port = process.env.PORT || 3080;
 var http = require('http').Server(app);
 
-app.get('/', (req,res) => {
-  res.set('Content-Type', 'text/html');
-  res.end(output)
-});
-
+app.use(express.static('/tmp/rechat'));
 app.listen(port);
-
-var url = 'http://localhost:'+port;
-console.log('Your browser is now opened. Documentation is stored at', port);
-spawn('xdg-open', [url]);
