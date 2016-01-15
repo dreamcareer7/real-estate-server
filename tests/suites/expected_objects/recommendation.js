@@ -1,4 +1,5 @@
 var listing = require('./listing.js');
+var v = require('../../../lib/utils/response_validation.js');
 
 module.exports = {
   "type": "recommendation",
@@ -11,7 +12,7 @@ module.exports = {
   "hidden": Boolean,
   "created_at": Number,
   "updated_at": Number,
-  "deleted_at": function(val) { expect(val).toBeTypeOrNull(Number); },
+  "deleted_at": v.optionalNumber,
   "read_by": Array,
   "favorited_by": Array,
   "tour_requested_by": Array,

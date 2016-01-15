@@ -1,4 +1,5 @@
 var user = require('./user.js');
+var v = require('../../../lib/utils/response_validation.js');
 
 module.exports = {
   "id": String,
@@ -18,7 +19,7 @@ module.exports = {
   "room": String,
   "minimum_bedrooms": Number,
   "minimum_bathrooms": Number,
-  "cover_image_url": function(val) { expect(val).toBeTypeOrNull(String); },
+  "cover_image_url": v.optionalString,
   "property_type": String,
   "property_subtypes": Array,
   "points": [
@@ -51,13 +52,13 @@ module.exports = {
   "horizontal_distance": Number,
   "vertical_distance": Number,
   "minimum_year_built": Number,
-  "pool": null,
+  "pool": v.optionalBoolean,
   "title": String,
   "minimum_lot_square_meters": Number,
   "maximum_lot_square_meters": Number,
   "maximum_year_built": Number,
-  "dom": null,
-  "cdom": null,
-  "deleted_at": function(val) { expect(val).toBeTypeOrNull(Number); },
+  "dom": v.optionalNumber,
+  "cdom": v.optionalNumber,
+  "deleted_at": v.optionalNumber,
   "type": "alert"
 };
