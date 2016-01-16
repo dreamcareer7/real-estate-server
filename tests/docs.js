@@ -7,6 +7,9 @@ var copy     = require('copy-dir');
 
 copy.sync(__dirname + '/../api_docs/', '/tmp/rechat');
 
+//Disable app's stdout so it wont noise our HTML
+process.stdout.write = function() {}
+
 try {
   fs.mkdirSync('/tmp/rechat/tests');
 } catch(e) {}
