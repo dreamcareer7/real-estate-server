@@ -27,9 +27,6 @@ function upsertAddress(address, cb) {
       if(err)
         return cb(err);
 
-      if(!options.geocode)
-        return cb(null, address_id);
-
       Address.updateGeo(address_id, function(err, result) {
         if(err)
           return cb(err);
