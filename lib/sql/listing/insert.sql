@@ -79,6 +79,7 @@ INSERT INTO
              keybox_type,
              keybox_number,
              close_date,
+             close_price,
              back_on_market_date,
              deposit_amount,
              dom,
