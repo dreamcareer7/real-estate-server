@@ -115,7 +115,7 @@ function report(err) {
 function buildQuery(last_run) {
   var query = '(MatrixModifiedDT=%s-),(MatrixModifiedDT=%s+)';
   var from  = last_run.last_modified_date;
-  var to    = new Date(from.getTime() - (1000 * 3600 * 48));
+  var to    = new Date(from.getTime() - (1000 * 3600 * 96));
 
   Client.once('saving job', (job) => {
     job.last_modified_date = to.toISOString();
