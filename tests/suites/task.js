@@ -1,4 +1,5 @@
 var uuid = require('node-uuid');
+var task_response = require('./expected_objects/task.js');
 
 registerSuite('contact', ['create']);
 
@@ -10,6 +11,13 @@ var create = (cb) => {
     })
     .after(cb)
     .expectStatus(200)
+    .expectJSON({
+      code: 'OK'
+    })
+    .expectJSONTypes({
+      code: String,
+      data: task_response
+    });
 }
 
 var assign = (cb) => {
@@ -19,6 +27,13 @@ var assign = (cb) => {
     })
     .after(cb)
     .expectStatus(200)
+    .expectJSON({
+      code: 'OK'
+    })
+    .expectJSONTypes({
+      code: String,
+      data: task_response
+    });
 }
 
 var assign400 = (cb) => {
@@ -33,6 +48,13 @@ var getTask = (cb) => {
     .get('/tasks/' + results.task.create.data.id)
     .after(cb)
     .expectStatus(200)
+    .expectJSON({
+      code: 'OK'
+    })
+    .expectJSONTypes({
+      code: String,
+      data: task_response
+    });
 }
 
 var getUserTasks = (cb) => {
@@ -40,6 +62,13 @@ var getUserTasks = (cb) => {
     .get('/tasks')
     .after(cb)
     .expectStatus(200)
+    .expectJSON({
+      code: 'OK'
+    })
+    .expectJSONTypes({
+      code: String,
+      data: [task_response]
+    });
 }
 
 var patchTask = (cb) => {
@@ -50,6 +79,13 @@ var patchTask = (cb) => {
   })
     .after(cb)
     .expectStatus(200)
+    .expectJSON({
+      code: 'OK'
+    })
+    .expectJSONTypes({
+      code: String,
+      data: task_response
+    });
 }
 
 var withdraw = (cb) => {

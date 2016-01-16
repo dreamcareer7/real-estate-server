@@ -1,4 +1,5 @@
 var user = require('./user.js');
+var v = require('../../../lib/utils/response_validation.js');
 
 module.exports =
 {
@@ -11,7 +12,7 @@ module.exports =
   "updated_at": Number,
   "accepted": Boolean,
   "inviting_user": user,
-  "deleted_at": null,
+  "deleted_at": v.optionalNumber,
   "phone_number": String,
   "invitee_first_name": String,
   "invitee_last_name": String

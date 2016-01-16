@@ -1,9 +1,11 @@
+var v = require('../../../lib/utils/response_validation.js');
+
 module.exports = {
     "type": "compact_listing",
     "id": String,
     "created_at": Number,
     "updated_at": Number,
-    "deleted_at": null,
+    "deleted_at": v.optionalNumber,
     "price": Number,
     "status": String,
     "mls_number": String,
