@@ -181,6 +181,7 @@ module.exports = (data) => {
   listing.keybox_type = data.KeyBoxType.trim();
   listing.keybox_number = data.KeyboxNumber.trim();
   listing.close_date = data.CloseDate.trim();
+  listing.close_price = data.ClosePrice.trim();
   listing.back_on_market_date = data.BackOnMarketDate.trim();
   listing.deposit_amount = parseFloat(data.DepositAmount.trim()) || 0.0;
 
