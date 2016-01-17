@@ -1,22 +1,24 @@
 registerSuite('user', ['create']);
+registerSuite('listing', ['by_mui']);
+
 var uuid = require('node-uuid');
 var first_name = 'updated_user_name';
 var profile_image = 'updated_profile_image';
 var cover_image = 'updated_cover_image';
 var contact_response = require('./expected_objects/contact.js');
 var info_response = require('./expected_objects/info.js');
+var contact = require('./data/contact.js');
 
 var create = (cb) => {
+  contact.contact_user = results.user.create.data;
+  contact.address = results.listing.by_mui.data.address;
+  contact.first_name = results.user.create.data.first_name;
+  contact.last_name = results.user.create.data.last_name;
+  contact.phone_number = results.user.create.data.phone_number;
+  contact.email = results.user.create.data.email;
   return frisby.create('add a contact')
     .post('/contacts', {
-      contacts: [
-        {
-          tags: ['foo'],
-          email: results.user.create.data.email,
-          phone_number: results.user.create.data.phone_number,
-          force_creation: true
-        }
-      ]
+      contacts: [contact]
     })
     .after(cb)
     .expectStatus(200)
@@ -88,7 +90,10 @@ var getContact = (cb) => {
     .expectJSON({
       code: 'OK',
       data: [
-        {contact_user: results.user.create.data}
+        {
+          contact_user: results.user.create.data,
+          tags: ['bar', 'foo', 'new']
+        }
       ],
       info: {}
     })
@@ -142,7 +147,7 @@ var updateContactWorked = (cb) => {
 
 var updateContact404 = (cb) => {
   return frisby.create('expect 404 with invalid contact id when updating a contact')
-    .put('/contacts/' + uuid.v1() , results.contact.create.data[0].contact_user)
+    .put('/contacts/' + uuid.v1(), results.contact.create.data[0].contact_user)
     .after(cb)
     .expectStatus(404);
 };
