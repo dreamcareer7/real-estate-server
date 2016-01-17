@@ -9,12 +9,7 @@ var sleep = require('sleep');
 var colors = require('colors');
 var dayLimit = 0;
 
-require('../../lib/models/Address.js');
-require('../../lib/models/Property.js');
-require('../../lib/models/Listing.js');
-require('../../lib/models/Recommendation.js');
-require('../../lib/models/Room.js');
-require('../../lib/models/User.js');
+require('../../lib/models/index.js')();
 
 Address.getBatchOfAddressesWithoutLatLongBing(config.bing.address_batch_size, function(err, address_ids) {
   if(err) {
@@ -26,13 +21,11 @@ Address.getBatchOfAddressesWithoutLatLongBing(config.bing.address_batch_size, fu
   async.mapLimit(address_ids,
                  config.bing.concurrency,
                  function(r, cb) {
-                   sleep.usleep(config.bing.staging);
                    return Address.updateGeoFromBing(r, cb);
                  },
                  function(err, results) {
                    if(err) {
                      console.log(err);
-                     sleep.usleep(config.bing.staging);
                      return;
                    }
 
