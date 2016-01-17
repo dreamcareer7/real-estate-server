@@ -145,20 +145,6 @@ var addRoleWorked = (cb) => {
     });
 }
 
-var addRoleWorked = (cb) => {
-  return frisby.create('create a transaction by user id')
-    .get('/transactions/')
-    .after(cb)
-    .expectStatus(200)
-    .expectJSON({
-      code: 'OK'
-    })
-    .expectJSONTypes({
-      code: String,
-      data: [transaction_response]
-    });
-}
-
 var addRole404 = (cb) => {
   return frisby.create('expect 404 with invalid transaction id when adding a role')
     .post('/transactions/' + uuid.v1() + '/contacts/' + results.contact.create.data[0].id + '/roles',
@@ -319,7 +305,10 @@ module.exports = {
   addRoleWorked,
   addRole404,
   addRole404_2,
+  removeRole404,
+  removeRole404_2,
   removeRole,
+  removeRoleWorked,
   withdraw,
   withdrawWorked,
   withdraw404,
