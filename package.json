@@ -30,6 +30,7 @@
     "exif-parser": "^0.1.9",
     "express": "^4.10.4",
     "express-winston": "^0.2.9",
+    "file-type": "^3.4.0",
     "forever": "^0.15.1",
     "googlemaps": "^1.0.1",
     "kue": "^0.9.6",
