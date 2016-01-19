@@ -1,5 +1,6 @@
 var user = require('./user.js');
 var recommendation = require('./recommendation.js');
+var v = require('../../../lib/utils/response_validation.js');
 
 module.exports = {
   "type": String,
@@ -9,19 +10,19 @@ module.exports = {
   "updated_at": Number,
   "room": String,
   "action": String,
-  "object_class": function(val) { expect(val).toBeTypeOrNull(String); },
-  "auxiliary_object_class": function(val) { expect(val).toBeTypeOrNull(String); },
-  "auxiliary_object": function(val) { expect(val).toBeTypeOrNull(String); },
-  "recommendation": function(val) { expect(val).toBeTypeOrNull(String); },
-  "auxiliary_subject": function(val) { expect(val).toBeTypeOrNull(Object); },
+  "object_class": v.optionalString,
+  "auxiliary_object_class": v.optionalString,
+  "auxiliary_object": v.optionalString,
+  "recommendation": v.optionalString,
+  "auxiliary_subject": v.optionalObject,
   "subject_class": String,
-  "auxiliary_subject_class": function(val) { expect(val).toBeTypeOrNull(String); },
-  "extra_subject_class": function(val) { expect(val).toBeTypeOrNull(String); },
-  "extra_object_class": function(val) { expect(val).toBeTypeOrNull(String); },
-  "deleted_at": function(val) { expect(val).toBeTypeOrNull(Number); },
-  "specific": function(val) { expect(val).toBeTypeOrNull(String); },
+  "auxiliary_subject_class": v.optionalString,
+  "extra_subject_class": v.optionalString,
+  "extra_object_class": v.optionalString,
+  "deleted_at": v.optionalNumber,
+  "specific": v.optionalString,
   "notification_type": String,
-  "objects": function(val) { expect(val).toBeTypeOrNull(Array); },
+  "objects": v.optionalObject,
   "subjects": [function(val) { expect(val).toBeTypeOrNull(user); }],
   "recommendations": function(val) { expect(val).toBeTypeOrNull([recommendation]); },
 };

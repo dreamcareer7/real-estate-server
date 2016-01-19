@@ -57,7 +57,9 @@ function _saveImage(payload, cb) {
       name: payload.photo.matrix_unique_id,
       ext: '.jpg',
       body: payload.data.data,
-      mime: payload.data.mime
+      info: {
+        'mime' : payload.data.mime
+      }
     };
 
     S3.upload('photos', file, (err, upload) => {

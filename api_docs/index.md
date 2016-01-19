@@ -8,4 +8,6 @@
 <!-- include(alert.md) -->
 <!-- include(recommendation.md) -->
 <!-- include(notification.md) -->
+<!-- include(task.md) -->
+<!-- include(transaction.md) -->
 <!-- include(socket.md) -->

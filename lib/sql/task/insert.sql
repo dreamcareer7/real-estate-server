@@ -9,6 +9,6 @@ VALUES (
         $1,
         $2,
         $3,
-        $4
+        CASE WHEN $4::float IS NULL THEN NULL ELSE to_timestamp($4::float) END
        )
 RETURNING id;
