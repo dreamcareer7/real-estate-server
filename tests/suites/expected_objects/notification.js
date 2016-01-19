@@ -2,6 +2,14 @@ var user = require('./user.js');
 var recommendation = require('./recommendation.js');
 var v = require('../../../lib/utils/response_validation.js');
 
+var optionalRecommendationArray = function(val) {
+  expect(val).toBeTypeOrNull([recommendation]);
+};
+
+var optionalUserArray = function(val) {
+  expect(val).toBeTypeOrNull([user]);
+};
+
 module.exports = {
   "type": String,
   "id": String,
@@ -23,6 +31,6 @@ module.exports = {
   "specific": v.optionalString,
   "notification_type": String,
   "objects": v.optionalObject,
-  "subjects": [function(val) { expect(val).toBeTypeOrNull(user); }],
-  "recommendations": function(val) { expect(val).toBeTypeOrNull([recommendation]); },
+  "subjects": optionalUserArray,
+  "recommendations": optionalRecommendationArray
 };
