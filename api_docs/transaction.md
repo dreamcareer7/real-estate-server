@@ -1,5 +1,7 @@
 # Group Transaction
 
+Possible values for `transaction_status` are `Buyer`,`Seller`,`Buyer/Seller`,`Lease`}
+
 ## Get User's Transaction [GET /transactions]
 <!-- include(tests/transaction/getUserTransaction.md) -->
 
