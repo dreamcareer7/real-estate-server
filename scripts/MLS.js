@@ -111,6 +111,7 @@ var criteria = {
   listing_statuses: [
     'Active'
   ],
+  open_house: true,
   created_by: '66f30c4e-6d33-11e5-8206-230211c15dec'
 };
 

@@ -4,8 +4,14 @@ var message_response = require('./expected_objects/message.js');
 var info_response = require('./expected_objects/info.js');
 
 registerSuite('room', ['create']);
+registerSuite('recommendation', ['feed']);
+registerSuite('notification', ['getUsersNotification']);
 
 var post = (cb) => {
+  message.recommendation = results.recommendation.feed.data[0].id;
+  message.author = results.room.create.data.owner.id;
+  message.notification = results.notification.getUsersNotification.data[0].id;
+  message.room = results.notification.getUsersNotification.data[0].room;
   return frisby.create('post a message')
     .post('/rooms/' + results.room.create.data.id + '/messages', message)
     .after(cb)
@@ -48,7 +54,6 @@ var retrieve = (cb) => {
       code: 'OK',
       data: [results.message.post.data]
     })
-    .expectJSONLength('data', 2)
     .expectJSONTypes({
       code: String,
       data: [message_response],
