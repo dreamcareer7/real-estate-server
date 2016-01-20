@@ -25,7 +25,7 @@ module.exports = {
   sale_commission_total: v.optionalNumber,
   earnest_money_amount: v.optionalNumber,
   earnest_money_held_by: v.optionalNumber,
-  escrow_number: v.optionalNumber,
+  escrow_number: v.optionalString,
   created_at: v.optionalNumber,
   updated_at: v.optionalNumber,
   deleted_at: v.optionalNumber,

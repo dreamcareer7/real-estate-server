@@ -1,5 +1,7 @@
 var config = require('../../lib/config.js');
+var transaction = require('./data/transaction.js')
 var uuid = require('node-uuid');
+//registerSuite('recommendation', ['feed']);
 registerSuite('contact', ['create']);
 
 var transaction_response = require('./expected_objects/transaction.js');
@@ -9,10 +11,7 @@ var transaction_response = require('./expected_objects/transaction.js');
 
 var create = (cb) => {
   return frisby.create('create new transaction')
-    .post('/transactions', {
-      user: results.contact.create.data[0].contact_user.id,
-      transaction_type: 'Buyer'
-    })
+    .post('/transactions', transaction)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
