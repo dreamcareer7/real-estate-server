@@ -7,6 +7,10 @@ var copy     = require('copy-dir');
 
 copy.sync(__dirname + '/../api_docs/', '/tmp/rechat');
 
+//Disable app's stdout so it wont noise our HTML
+var writer = process.stdout.write.bind(process.stdout);
+process.stdout.write = function() {}
+
 try {
   fs.mkdirSync('/tmp/rechat/tests');
 } catch(e) {}
@@ -69,7 +73,7 @@ function generate() {
     themeFullWidth:true,
     includePath:'/tmp/rechat'
   },  (err, html) => {
-    process.stdout.write(html);
+    writer(html);
     process.exit();
   })
 }

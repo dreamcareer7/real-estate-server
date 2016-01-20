@@ -113,6 +113,6 @@ module.exports = {
   getTask,
   getUserTasks,
   patchTask,
-  //withdraw,
-  //deleteTask
+  withdraw,
+  deleteTask
 }

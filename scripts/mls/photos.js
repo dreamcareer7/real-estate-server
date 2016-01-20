@@ -1,9 +1,10 @@
 #!/usr/bin/env node
 
-var async = require('async')
+var async  = require('async');
 var Client = require('./rets_client.js');
-var fs = require('fs');
+var fs     = require('fs');
 var config = require('../../lib/config.js');
+
 require('../../lib/models/index.js')();
 
 var program = require('./program.js')
@@ -14,8 +15,8 @@ var options = program.parse(process.argv);
 options.resource = 'Media';
 options.class = 'Media';
 options.fields = {
-  id:'matrix_unique_id',
-  modified:'ModifiedDate'
+  id: 'matrix_unique_id',
+  modified: 'ModifiedDate'
 };
 options.job = 'photos';
 
@@ -28,10 +29,10 @@ function processData(cb, results) {
 function insertPhoto(photo, cb) {
   Metric.increment('mls.process_photo');
   Photo.create({
-    matrix_unique_id:parseInt(photo.matrix_unique_id),
-    listing_mui:parseInt(photo.Table_MUI),
-    description:photo.Description,
-    order:parseInt(photo.Order)
+    matrix_unique_id: parseInt(photo.matrix_unique_id),
+    listing_mui: parseInt(photo.Table_MUI),
+    description: photo.Description,
+    order: parseInt(photo.Order)
   }, cb);
 }
 
@@ -57,7 +58,10 @@ function _saveImage(payload, cb) {
       name: payload.photo.matrix_unique_id,
       ext: '.jpg',
       body: payload.data.data,
-      mime: payload.data.mime
+      info: {
+        mime: payload.data.mime,
+        'mime-extension': 'jpg'
+      }
     };
 
     S3.upload('photos', file, (err, upload) => {

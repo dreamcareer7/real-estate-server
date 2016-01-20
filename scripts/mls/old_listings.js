@@ -23,25 +23,8 @@ function upsertAddress(address, cb) {
       return cb(null, current.id);
 
     Metric.increment('mls.old.new_address');
-    Address.create(address, function(err, address_id) {
-      if(err)
-        return cb(err);
-
-      if(!options.geocode)
-        return cb(null, address_id);
-
-      Address.updateGeo(address_id, function(err, result) {
-        if(err)
-          return cb(err);
-
-        if (result) {
-          Metric.increment('mls.old.geocoded_address');
-        }
-
-        return cb(null, address_id);
-      });
-    });
-  })
+    Address.create(address, cb);
+  });
 }
 
 function upsertProperty(property, address_id, cb) {
@@ -115,7 +98,7 @@ function report(err) {
 function buildQuery(last_run) {
   var query = '(MatrixModifiedDT=%s-),(MatrixModifiedDT=%s+)';
   var from  = last_run.last_modified_date;
-  var to    = new Date(from.getTime() - (1000 * 3600 * 96));
+  var to    = new Date(from.getTime() - (1000 * 3600 * 12));
 
   Client.once('saving job', (job) => {
     job.last_modified_date = to.toISOString();

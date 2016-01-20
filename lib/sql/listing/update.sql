@@ -81,5 +81,7 @@ SET alerting_agent_id = $1,
     deposit_amount = $80,
     dom = NOW() - $81 * INTERVAL '1 DAY',
     cdom = NOW() - $82 * INTERVAL '1 DAY',
+    buyers_agency_commission = $83,
+    sub_agency_commission = $84,
     updated_at = NOW()
 WHERE id = $83
