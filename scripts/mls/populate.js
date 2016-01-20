@@ -189,6 +189,9 @@ module.exports = (data) => {
   listing.dom = parseInt(data.DOM.trim()) || -1;
   listing.cdom = parseInt(data.DOM.trim()) || -1;
 
+  listing.buyers_agency_commission = data.BuyersAgencyCommission.trim();
+  listing.sub_agency_commission    = data.SubAgencyCommission.trim();
+
   // Ugly hacks and fixes
   if (property.property_subtype === '')
     property.property_subtype = 'Unknown';

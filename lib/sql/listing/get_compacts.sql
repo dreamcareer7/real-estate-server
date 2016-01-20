@@ -7,6 +7,8 @@ SELECT 'compact_listing' AS TYPE,
        listings.price AS price,
        listings.status AS status,
        listings.mls_number AS mls_number,
+       listings.buyers_agency_commission AS buyers_agency_commission,
+       listings.sub_agency_commission AS sub_agency_commission,
        CASE WHEN addresses.location IS NOT NULL THEN
        json_build_object(
           'latitude', ST_Y(addresses.location),

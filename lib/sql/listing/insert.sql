@@ -83,7 +83,9 @@ INSERT INTO
              back_on_market_date,
              deposit_amount,
              dom,
-             cdom
+             cdom,
+             buyers_agency_commission,
+             sub_agency_commission
             )
 VALUES ($1,
         $2,
@@ -169,5 +171,7 @@ VALUES ($1,
         $82,
         $83,
         NOW() - $84 * INTERVAL '1 DAY',
-        NOW() - $85 * INTERVAL '1 DAY'
+        NOW() - $85 * INTERVAL '1 DAY',
+        $86,
+        $87
        ) RETURNING id
