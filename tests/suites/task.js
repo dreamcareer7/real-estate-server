@@ -2,12 +2,16 @@ var uuid = require('node-uuid');
 var task_response = require('./expected_objects/task.js');
 
 registerSuite('contact', ['create']);
+registerSuite('transaction', ['create']);
 
 var create = (cb) => {
   return frisby.create('create new task')
     .post('/tasks', {
       user: results.contact.create.data[0].contact_user.id,
-      title: 'NewTask'
+      title: 'NewTask',
+      due_date: 2015,
+      status: 'New',
+      transaction: results.transaction.create.data.id,
     })
     .after(cb)
     .expectStatus(200)
@@ -74,7 +78,6 @@ var getUserTasks = (cb) => {
 var patchTask = (cb) => {
   return frisby.create('update a task')
     .put('/tasks/' + results.task.create.data.id,{
-    user: results.contact.create.data[0].contact_user.id,
       title: 'UpdatedTask'
   })
     .after(cb)
@@ -110,6 +113,6 @@ module.exports = {
   getTask,
   getUserTasks,
   patchTask,
-  withdraw,
-  deleteTask
+  //withdraw,
+  //deleteTask
 }
