@@ -102,8 +102,10 @@ function buildQuery(last_run) {
   var to    = new Date(from.getTime() - (1000 * 3600 * 96));
 
   var last_query = getLastQuery();
-  if(last_query === query) {
-    to = new Date( (new Date(last_query.to)).getTime() / 2);
+
+  if(last_query.from === from.toISOString()) {
+    to = new Date( (((new Date(last_query.to)).getTime() - from.getTime() ) / 2 )+from.getTime());
+    console.log('Retry mode', to);
   }
 
   saveLastQuery({
