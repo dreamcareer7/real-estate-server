@@ -5,6 +5,7 @@ var colors = require('colors');
 var async  = require('async');
 var config = require('../../lib/config.js');
 var util   = require('util');
+var fs     = require('fs');
 
 Error.autoReport = false;
 
@@ -98,11 +99,38 @@ function report(err) {
 function buildQuery(last_run) {
   var query = '(MatrixModifiedDT=%s-),(MatrixModifiedDT=%s+)';
   var from  = last_run.last_modified_date;
-  var to    = new Date(from.getTime() - (1000 * 3600 * 12));
+  var to    = new Date(from.getTime() - (1000 * 3600 * 96));
+
+  var last_query = getLastQuery();
+  if(last_query === query) {
+    to = new Date( (new Date(last_query.to)).getTime() / 2);
+  }
+
+  saveLastQuery({
+    from:from,
+    to:to
+  })
 
   Client.once('saving job', (job) => {
     job.last_modified_date = to.toISOString();
   });
 
   return util.format(query, from.toNTREISString(), to.toNTREISString());
+}
+
+var lastFile = '/tmp/old_listings_last_query.json';
+function getLastQuery() {
+  try {
+    var info = JSON.parse(fs.readFileSync(lastFile).toString());
+    return info;
+  } catch(e) {
+    return {
+      from:null,
+      to:null
+    }
+  }
+}
+
+function saveLastQuery(last) {
+  fs.writeFileSync(lastFile, JSON.stringify(last))
 }
