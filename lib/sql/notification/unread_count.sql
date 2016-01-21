@@ -12,11 +12,12 @@ WITH rn AS (
   FROM notifications
   FULL JOIN notifications_acks
     ON notifications.id = notifications_acks.notification
-  WHERE notifications.room = ANY(
+  WHERE notifications.room = ANY (
     SELECT room
     FROM rooms_users
     WHERE "user" = $1
   ) AND notifications_acks.id IS NULL
+    AND notifications.room IS NOT NULL
   GROUP BY notifications.room
 ) SELECT 'notification_summary' AS type,
          0 AS task_notification_count,
