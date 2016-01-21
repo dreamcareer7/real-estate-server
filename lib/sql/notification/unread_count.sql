@@ -24,5 +24,5 @@ WITH rn AS (
 ) SELECT 'notification_summary' AS type,
          0 AS task_notification_count,
          0 AS transaction_notification_count,
-         (0 + 0 + ARRAY_LENGTH(ARRAY_AGG(r), 1)) AS total_notification_count,
-         JSON_AGG(r) AS room_notification_summaries from rn
+         (0 + 0 + COALESCE(ARRAY_LENGTH(ARRAY_AGG(r), 1), 0)) AS total_notification_count,
+         COALESCE(ARRAY_AGG(r), '{}'::json[]) AS room_notification_summaries from rn
