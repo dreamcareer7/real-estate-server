@@ -31,6 +31,7 @@
     "express-winston": "^0.2.9",
     "file-type": "^3.4.0",
     "forever": "^0.15.1",
+    "form-data": "^0.2.0",
     "googlemaps": "^1.0.1",
     "kue": "^0.9.6",
     "mailgun-js": "^0.7.7",

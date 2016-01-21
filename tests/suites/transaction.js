@@ -1,18 +1,18 @@
 var config = require('../../lib/config.js');
+var transaction = require('./data/transaction.js')
 var uuid = require('node-uuid');
-registerSuite('contact', ['create']);
-
+var fs = require('fs');
+var path = require('path');
+var FormData = require('form-data');
 var transaction_response = require('./expected_objects/transaction.js');
 var info_response = require('./expected_objects/info.js');
 var transaction_response = require('./expected_objects/transaction.js');
 
+registerSuite('contact', ['create']);
 
 var create = (cb) => {
   return frisby.create('create new transaction')
-    .post('/transactions', {
-      user: results.contact.create.data[0].contact_user.id,
-      transaction_type: 'Buyer'
-    })
+    .post('/transactions', transaction)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
@@ -43,6 +43,33 @@ var getTransaction = (cb) => {
       code: String,
       data: transaction_response
     });
+}
+
+var attach = (cb) => {
+  var form = new FormData();
+  var logoPath = path.resolve(__dirname, './data/logo.png');
+  var binaryData = [0xDE, 0xCA, 0xFB, 0xAD];
+  var form = new FormData();
+  form.append('buffer', new Buffer(binaryData), {
+    contentType: 'application/octet-stream',
+    filename: 'logo.png'
+  });
+
+  form.append('image', fs.createReadStream(logoPath), {
+    knownLength: fs.statSync(logoPath).size
+  });
+  return frisby.create('attach file')
+    .post('/transactions/' + results.transaction.create.data.id + '/attachments', form,
+    {
+      json: false,
+      headers: {
+        'authorization': 'Bearer ' + results.authorize.token.access_token,
+        'content-type': 'multipart/form-data; boundary=' + form.getBoundary(),
+        'content-length': form.getLengthSync()
+      }
+    })
+    .after(cb)
+    .expectStatus(200);
 }
 
 var getTransaction404 = (cb) => {
@@ -89,11 +116,13 @@ var assignWorked = (cb) => {
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
-      data: {contacts:[
-        {
-          id: results.contact.create.data[0].id
-        }
-      ]}
+      data: {
+        contacts: [
+          {
+            id: results.contact.create.data[0].id
+          }
+        ]
+      }
     });
 }
 
@@ -137,25 +166,13 @@ var addRoleWorked = (cb) => {
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
-      data: {contacts:[
-        {
-          roles:['foo']
-        }
-      ]}
-    });
-}
-
-var addRoleWorked = (cb) => {
-  return frisby.create('create a transaction by user id')
-    .get('/transactions/')
-    .after(cb)
-    .expectStatus(200)
-    .expectJSON({
-      code: 'OK'
-    })
-    .expectJSONTypes({
-      code: String,
-      data: [transaction_response]
+      data: {
+        contacts: [
+          {
+            roles: ['foo']
+          }
+        ]
+      }
     });
 }
 
@@ -207,11 +224,13 @@ var removeRoleWorked = (cb) => {
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
-      data: {contacts:[
-        {
-          roles:[]
-        }
-      ]}
+      data: {
+        contacts: [
+          {
+            roles: []
+          }
+        ]
+      }
     });
 }
 
@@ -229,7 +248,7 @@ var withdrawWorked = (cb) => {
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
-      data: {contacts:null}
+      data: {contacts: null}
     });
 }
 
@@ -292,7 +311,7 @@ var removeWorked = (cb) => {
     .after(cb)
     .expectStatus(200)
     .expectJSONTypes({
-      data:{
+      data: {
         deleted_at: Number
       }
     });
@@ -308,6 +327,7 @@ var remove404 = (cb) => {
 module.exports = {
   create,
   create400,
+  attach,
   getTransaction,
   getTransaction404,
   getUserTransaction,
@@ -319,7 +339,10 @@ module.exports = {
   addRoleWorked,
   addRole404,
   addRole404_2,
+  removeRole404,
+  removeRole404_2,
   removeRole,
+  removeRoleWorked,
   withdraw,
   withdrawWorked,
   withdraw404,
