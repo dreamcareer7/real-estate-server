@@ -105,7 +105,6 @@ var deleteTask = (cb) => {
     .expectStatus(204)
 }
 
-
 module.exports = {
   create,
   assign,
