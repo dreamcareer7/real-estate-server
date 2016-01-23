@@ -105,7 +105,7 @@ function buildQuery(last_run) {
     options.offset = last_run.offset + options.limit;
 
     Client.once('saving job', (job) => {
-      job.last_modified_date = last_run.last_modified_date;
+      job.last_modified_date = last_run.last_modified_date.toISOString();
     });
 
     return last_run.query;
