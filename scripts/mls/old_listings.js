@@ -97,42 +97,30 @@ function report(err) {
 }
 
 function buildQuery(last_run) {
-  var query = '(MatrixModifiedDT=%s-),(MatrixModifiedDT=%s+)';
-  var from  = last_run.last_modified_date;
-  var to    = new Date(from.getTime() - (1000 * 3600 * 96));
+  options.limit = 20000;
 
-  var last_query = getLastQuery();
+  if(last_run.results === options.limit) {
+    //Last run had most possible results. We should fetch next page.
+    console.log('Next page');
+    options.offset = last_run.offset + options.limit;
 
-  if(last_query.from === from.toISOString()) {
-    to = new Date( (((new Date(last_query.to)).getTime() - from.getTime() ) / 2 )+from.getTime());
-    console.log('Retry mode', to);
+    Client.once('saving job', (job) => {
+      job.last_modified_date = last_run.last_modified_date.toISOString();
+    });
+
+    return last_run.query;
   }
 
-  saveLastQuery({
-    from:from,
-    to:to
-  })
+  var query = '(MatrixModifiedDT=%s-),(MatrixModifiedDT=%s+)';
+
+  var from  = last_run.last_modified_date;
+  var to    = new Date(from.getTime() - (1000 * 3600 * 96));
 
   Client.once('saving job', (job) => {
     job.last_modified_date = to.toISOString();
   });
 
+  options.offset = 0;
+
   return util.format(query, from.toNTREISString(), to.toNTREISString());
-}
-
-var lastFile = '/tmp/old_listings_last_query.json';
-function getLastQuery() {
-  try {
-    var info = JSON.parse(fs.readFileSync(lastFile).toString());
-    return info;
-  } catch(e) {
-    return {
-      from:null,
-      to:null
-    }
-  }
-}
-
-function saveLastQuery(last) {
-  fs.writeFileSync(lastFile, JSON.stringify(last))
 }

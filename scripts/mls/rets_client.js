@@ -106,6 +106,8 @@ function saveLastRun(data, cb) {
     query:Client.query,
     is_initial_completed:Client.last_run.is_initial_completed || shouldTransit,
     name:Client.options.job,
+    limit:Client.options.limit,
+    offset:Client.options.offset
   };
 
   Client.emit('saving job', job);
@@ -202,7 +204,7 @@ function fetch(cb) {
   }
 
   Client.emit('starting query', Client.query);
-  client.query(Client.options.resource, Client.options.class, Client.query, processResponse, Client.options.limit);
+  client.query(Client.options.resource, Client.options.class, Client.query, processResponse, Client.options.limit, Client.options.offset);
 
 //   client.getAllTable( function(err, tables) {
 //     console.log(JSON.stringify(tables));

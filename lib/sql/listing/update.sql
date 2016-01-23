@@ -84,4 +84,4 @@ SET alerting_agent_id = $1,
     buyers_agency_commission = $83,
     sub_agency_commission = $84,
     updated_at = NOW()
-WHERE id = $83
+WHERE id = $85
