@@ -1,10 +1,20 @@
 SELECT 'transaction' AS TYPE,
        *,
        (
-        SELECT ARRAY_AGG(contact)
+        SELECT JSON_AGG(
+         JSON_BUILD_OBJECT(
+          'type', 'role',
+          'contact', contact,
+          'role_types', (
+           SELECT JSON_AGG(role)
+           FROM transaction_contact_roles
+           WHERE transaction_contact = transaction_contacts.id
+          )
+         )
+        )
         FROM transaction_contacts
-        WHERE "transaction" = $1
-       ) AS contacts,
+        WHERE transaction = $1
+       ) AS roles,
        (
         SELECT ARRAY_AGG(id)
         FROM important_dates
