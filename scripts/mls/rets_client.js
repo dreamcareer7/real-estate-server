@@ -204,7 +204,7 @@ function fetch(cb) {
   }
 
   Client.emit('starting query', Client.query);
-  client.query(Client.options.resource, Client.options.class, Client.query, processResponse, Client.options.limit);
+  client.query(Client.options.resource, Client.options.class, Client.query, processResponse, Client.options.limit, Client.options.offset);
 
 //   client.getAllTable( function(err, tables) {
 //     console.log(JSON.stringify(tables));
