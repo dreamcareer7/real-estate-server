@@ -10,6 +10,11 @@ queue.process('airship_transport_send_device', config.airship.parallel, function
   Notification.sendToDevice(job.data.notification, job.data.token, done);
 });
 
+queue.process('create_notification', config.airship.parallel, function(job, done) {
+  console.log('-> Processed a notificatio'.yellow);
+  Notification.create(job.data.notification, done);
+});
+
 queue.process('email', config.email.parallel, function(job, done) {
   console.log('-> Processed an email'.cyan);
   Mailgun.callMailgun(job.data, done);
