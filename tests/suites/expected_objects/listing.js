@@ -87,7 +87,7 @@ module.exports = {
   "keybox_type": v.optionalString,
   "keybox_number": v.optionalString,
   "close_date": v.optionalNumber,
-  "close_price": v.optionalString,
+  "close_price": v.optionalNumber,
   "back_on_market_date": v.optionalString,
   "deposit_amount": v.optionalNumber,
   "photo_count": v.optionalNumber,
