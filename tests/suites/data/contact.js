@@ -4,6 +4,5 @@ module.exports = {
   company: 'rechat',
   birthday: 1000000,
   cover_image_url: 'http://rechat.co/cover_image_url/cover_image_url.png',
-  tags: [ 'New' ],
-  force_creation: true
+  tags: [ 'New' ]
 };
