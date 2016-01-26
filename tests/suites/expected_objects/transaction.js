@@ -29,6 +29,8 @@ module.exports = {
   created_at: v.optionalNumber,
   updated_at: v.optionalNumber,
   deleted_at: v.optionalNumber,
-  contacts: v.optionalArray,
-  important_dates: v.optionalArray
+  roles: v.optionalArray,
+  important_dates: v.optionalArray,
+  attachments: v.optionalArray,
+  tasks: v.optionalArray
 }
