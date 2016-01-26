@@ -92,7 +92,7 @@ var getContact = (cb) => {
       data: [
         {
           contact_user: results.user.create.data,
-          tags: ['bar', 'foo', 'new']
+          tags: ['new', 'foo', 'bar']
         }
       ],
       info: {}
