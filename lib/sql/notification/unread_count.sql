@@ -21,8 +21,36 @@ WITH rn AS (
     (COALESCE(notifications.exclude <> $1, TRUE) OR
     COALESCE(notifications.specific = $1, FALSE))
   GROUP BY notifications.room
-) SELECT 'notification_summary' AS type,
-         0 AS task_notification_count,
-         0 AS transaction_notification_count,
-         (0 + 0 + COALESCE(ARRAY_LENGTH(ARRAY_AGG(r), 1), 0)) AS total_notification_count,
-         COALESCE(ARRAY_AGG(r), '{}'::json[]) AS room_notification_summaries from rn
+),
+tc AS (
+  SELECT COUNT(*)::INT AS total
+  FROM notifications
+  FULL JOIN notifications_acks
+    ON notifications.id = notifications_acks.notification
+  WHERE notifications.specific = $1 AND
+        notifications_acks.id IS NULL AND
+        notifications.room IS NULL AND
+        (
+          notifications.object_class = 'Task' OR
+          notifications.subject_class = 'Task'
+        )
+),
+trc AS (
+  SELECT COUNT(*)::INT AS total
+  FROM notifications
+  FULL JOIN notifications_acks
+    ON notifications.id = notifications_acks.notification
+  WHERE notifications.specific = $1 AND
+        notifications_acks.id IS NULL AND
+        notifications.room IS NULL AND
+        (
+          notifications.object_class = 'Transaction' OR
+          notifications.subject_class = 'Transaction'
+        )
+)
+SELECT 'notification_summary' AS type,
+       (SELECT total FROM tc) AS task_notification_count,
+       (SELECT total FROM trc) AS transaction_notification_count,
+       ((SELECT total FROM tc) + (SELECT total FROM trc) + COALESCE(ARRAY_LENGTH(ARRAY_AGG(r), 1), 0)) AS total_notification_count,
+       COALESCE(ARRAY_AGG(r), '{}'::json[]) AS room_notification_summaries
+FROM rn
