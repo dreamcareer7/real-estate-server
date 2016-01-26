@@ -8,7 +8,7 @@ module.exports =
   "title": String,
   "due_date": v.optionalNumber,
   "status": String,
-  "transaction": function(val) { expect(val).toBeTypeOrNull(transaction); },
+  "transaction": v.optionalString,
   "created_at": v.optionalNumber,
   "updated_at": v.optionalNumber,
   "deleted_at": v.optionalNumber,
