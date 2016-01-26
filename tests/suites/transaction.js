@@ -117,9 +117,11 @@ var assignWorked = (cb) => {
     .expectJSON({
       code: 'OK',
       data: {
-        contacts: [
+        roles: [
           {
-            id: results.contact.create.data[0].id
+            contact: {
+              id: results.contact.create.data[0].id
+            }
           }
         ]
       }
@@ -167,9 +169,9 @@ var addRoleWorked = (cb) => {
     .expectJSON({
       code: 'OK',
       data: {
-        contacts: [
+        roles: [
           {
-            roles: ['foo']
+            role_types: ['foo']
           }
         ]
       }
@@ -225,9 +227,9 @@ var removeRoleWorked = (cb) => {
     .expectJSON({
       code: 'OK',
       data: {
-        contacts: [
+        roles: [
           {
-            roles: []
+            role_types: null
           }
         ]
       }
@@ -248,7 +250,7 @@ var withdrawWorked = (cb) => {
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
-      data: {contacts: null}
+      data: {roles: null}
     });
 }
 
