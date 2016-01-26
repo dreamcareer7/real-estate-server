@@ -84,6 +84,20 @@ var database = (req, res, next) => {
   var domain = Domain.create();
   var suite = req.headers['x-suite'];
 
+  domain.on('error', (e) => {
+    delete e.domain;
+    delete e.domainThrown;
+    delete e.domainEmitter;
+    delete e.domainBound;
+
+    if(e.http >= 500)
+      res.json({message: 'Internal Error'});
+    else
+      res.json(e);
+
+    domain.dispose();
+  });
+
   if(connections[suite]) {
     domain.db = connections[suite];
     domain.jobs = [];
