@@ -6,6 +6,11 @@ Each user has an address book on Rechat.
 This address book differs from her address book on her phone and only consists of rechat users.
 
 ### Create [POST /contacts]
+
+Column                     | Description
+---------------------------| ---------
+match_credentials (Boolean)| Creates this contact only if a user with matching credentials is found
+
 <!-- include(tests/contact/create.md) -->
 
 ### Get [GET /contacts/{id}]
