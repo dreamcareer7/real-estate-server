@@ -11,7 +11,7 @@ var create = (cb) => {
       title: 'NewTask',
       due_date: 2015,
       status: 'New',
-      transaction: results.transaction.create.data.id,
+      transaction: results.transaction.create.data.id
     })
     .after(cb)
     .expectStatus(200)
@@ -22,7 +22,7 @@ var create = (cb) => {
       code: String,
       data: task_response
     });
-}
+};
 
 var assign = (cb) => {
   return frisby.create('assign contact to a task')
@@ -38,14 +38,14 @@ var assign = (cb) => {
       code: String,
       data: task_response
     });
-}
+};
 
 var assign400 = (cb) => {
   return frisby.create('assign contact to a task')
     .post('/tasks/' + results.task.create.data.id + '/contacts')
     .after(cb)
-    .expectStatus(400)
-}
+    .expectStatus(400);
+};
 
 var getTask = (cb) => {
   return frisby.create('get task by id')
@@ -59,7 +59,7 @@ var getTask = (cb) => {
       code: String,
       data: task_response
     });
-}
+};
 
 var getUserTasks = (cb) => {
   return frisby.create('get user\'s task')
@@ -73,7 +73,7 @@ var getUserTasks = (cb) => {
       code: String,
       data: [task_response]
     });
-}
+};
 
 var patchTask = (cb) => {
   return frisby.create('update a task')
@@ -89,21 +89,21 @@ var patchTask = (cb) => {
       code: String,
       data: task_response
     });
-}
+};
 
 var withdraw = (cb) => {
   return frisby.create('withdraw contact from a task')
     .delete('/tasks/' + results.task.create.data.id + '/contacts/' + results.contact.create.data[0].id)
     .after(cb)
-    .expectStatus(200)
-}
+    .expectStatus(200);
+};
 
 var deleteTask = (cb) => {
   return frisby.create('delete a task')
     .delete('/tasks/' + results.task.create.data.id)
     .after(cb)
-    .expectStatus(204)
-}
+    .expectStatus(204);
+};
 
 module.exports = {
   create,
@@ -114,4 +114,4 @@ module.exports = {
   patchTask,
   withdraw,
   deleteTask
-}
+};
