@@ -96,7 +96,12 @@ var getUserTransaction = (cb) => {
 var assign = (cb) => {
   return frisby.create('assign contact to transaction')
     .post('/transactions/' + results.transaction.create.data.id + '/roles', {
-      contacts: [results.contact.create.data[0].id]
+      roles: [
+        {
+          contact: results.contact.create.data[0].id,
+          role_types: ['foo']
+        }
+      ]
     })
     .after(cb)
     .expectStatus(200)
@@ -138,7 +143,7 @@ var assign400 = (cb) => {
 var assign404 = (cb) => {
   return frisby.create('expect 404 with invalid id when assigning contact to transaction')
     .post('/transactions/' + uuid.v1() + '/roles', {
-      contacts: [results.contact.create.data[0].id]
+      roles: [results.contact.create.data[0].id]
     })
     .after(cb)
     .expectStatus(404);
@@ -158,7 +163,9 @@ var withdrawWorked = (cb) => {
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
-      data: {roles: null}
+      data: {
+        roles: null
+      }
     });
 };
 
@@ -238,21 +245,21 @@ module.exports = {
   create,
   create400,
   attach,
-  // getTransaction,
-  // getTransaction404,
-  // getUserTransaction,
-  // assign,
-  // assignWorked,
-  // assign400,
-  // assign404,
-  // withdraw,
-  // withdrawWorked,
-  // withdraw404,
-  // withdraw404_2,
-  // patchTransaction,
-  // patchTransactionWorked,
-  // patchTransaction404,
-  // remove,
-  // removeWorked,
-  // remove404
+  getTransaction,
+  getTransaction404,
+  getUserTransaction,
+  assign,
+  assignWorked,
+  assign400,
+  assign404,
+  withdraw,
+  withdrawWorked,
+  withdraw404,
+  withdraw404_2,
+  patchTransaction,
+  patchTransactionWorked,
+  patchTransaction404,
+  remove,
+  removeWorked,
+  remove404
 };
