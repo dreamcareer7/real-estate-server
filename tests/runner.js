@@ -10,9 +10,7 @@ frisby.globalSetup({
   request: {
     json: true,
     baseUri:process.argv[3],
-    headers: {
-      'x-suite' : process.argv[2]
-    }
+    headers: {}
   }
 });
 
@@ -25,6 +23,7 @@ var runFrisbies = function(tasks) {
       cb(err, res);
     });
 
+    f.current.outgoing.headers['x-suite'] = process.argv[2];
     f.current.outgoing.headers['x-original-suite'] = task.suite;
     f.current.outgoing.headers['x-test-name'] = task.name;
     f.current.outgoing.headers['x-test-description'] = f.current.describe;
