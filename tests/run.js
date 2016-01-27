@@ -33,7 +33,7 @@ if(program.curl) {
 }
 
 if(!program.disableUi)
-  require('./ui.js')(program)
+  require('./ui.js')(program);
 
 var getSuites = function(cb) {
   if(program.args.length > 0)
@@ -43,8 +43,9 @@ var getSuites = function(cb) {
   var suites = files
         .filter( (file) => file.substring(file.length-3, file.length) === '.js' )
         .map( (file) => file.replace('.js', '') );
-  cb(null, suites);
-}
+
+  return cb(null, suites);
+};
 
 
 function spawnProcesses(cb) {
@@ -55,8 +56,8 @@ function spawnProcesses(cb) {
     suites.map((suite) => Run.emit('register suite', suite));
 
     async.mapLimit(suites, program.concurrency, spawnSuite, cb);
-  })
-}
+  });
+};
 
 function spawnSuite(suite, cb) {
   var url = program.server ? program.server : 'http://localhost:' + config.tests.port;
@@ -89,7 +90,7 @@ var database = (req, res, next) => {
     delete e.domainThrown;
     delete e.domainEmitter;
     delete e.domainBound;
-
+    console.log(e);
     if(e.http >= 500)
       res.json({message: 'Internal Error'});
     else
@@ -114,19 +115,19 @@ var database = (req, res, next) => {
       domain.run(next);
     });
   });
-}
+};
 
 function setupApp(cb) {
   var app = require('../lib/bootstrap.js')();
   app.use(database);
 
   Error.autoReport = false;
-  
+
   if(!program.keep) {
     Run.on('suite done', (suite) => {
       connections[suite].query('ROLLBACK', connections[suite].done);
       delete connections[suite];
-    })
+    });
   }
 
   Run.emit('app ready', app);
