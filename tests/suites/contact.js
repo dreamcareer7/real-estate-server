@@ -89,7 +89,7 @@ var getContact = (cb) => {
     .after(cb)
     .expectStatus(200)
     .afterJSON( json => {
-      var must = ['new', 'bar', 'foo'];
+      var must = ['New', 'bar', 'foo'];
       var is = json.data[0].tags;
 
       if(!_.isEqual(is.sort(), must.sort()))
@@ -100,7 +100,6 @@ var getContact = (cb) => {
       data: [
         {
           contact_user: results.user.create.data,
-          tags: ['new', 'foo', 'bar']
         }
       ],
       info: {}
