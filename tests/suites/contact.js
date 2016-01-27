@@ -1,13 +1,14 @@
 registerSuite('user', ['create']);
 registerSuite('listing', ['by_mui']);
 
-var uuid = require('node-uuid');
-var first_name = 'updated_user_name';
-var profile_image = 'updated_profile_image';
-var cover_image = 'updated_cover_image';
+var uuid             = require('node-uuid');
+var first_name       = 'updated_user_name';
+var profile_image    = 'updated_profile_image';
+var cover_image      = 'updated_cover_image';
 var contact_response = require('./expected_objects/contact.js');
-var info_response = require('./expected_objects/info.js');
-var contact = require('./data/contact.js');
+var info_response    = require('./expected_objects/info.js');
+var contact          = require('./data/contact.js');
+var _                = require('underscore');
 
 var create = (cb) => {
   contact.contact_user = results.user.create.data;
@@ -87,6 +88,13 @@ var getContact = (cb) => {
     .get('/contacts')
     .after(cb)
     .expectStatus(200)
+    .afterJSON( json => {
+      var must = ['new', 'bar', 'foo'];
+      var is = json.data[0].tags;
+
+      if(!_.isEqual(is.sort(), must.sort()))
+        throw new Error('Tags dont match: Its ['+is+'] But should be ['+must+']')
+    })
     .expectJSON({
       code: 'OK',
       data: [
