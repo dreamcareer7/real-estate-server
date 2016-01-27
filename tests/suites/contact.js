@@ -6,7 +6,6 @@ var contact_response = require('./expected_objects/contact.js');
 var info_response    = require('./expected_objects/info.js');
 var contact          = require('./data/contact.js');
 var _                = require('underscore');
-
 var first_name       = 'updated_user_name';
 var profile_image    = 'updated_profile_image';
 var cover_image      = 'updated_cover_image';
