@@ -9,7 +9,7 @@ This address book differs from her address book on her phone and only consists o
 
 Column                     | Description
 ---------------------------| ---------
-match_credentials (Boolean)| Creates this contact only if a user with matching credentials is found
+match_credentials (Boolean)| When set to true, creates the contact only if a user with matching credentials is found. If not set or false, always creates the contact
 
 <!-- include(tests/contact/create.md) -->
 
