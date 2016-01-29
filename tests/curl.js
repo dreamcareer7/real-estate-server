@@ -6,7 +6,7 @@ function logger(req, res, next) {
   var end = res.end;
 
   res.end = function(data, encoding, callback) {
-    console.log( ('--------- '+req.headers['x-suite']+': '+req.method+' '+req.path+' ---------').yellow );
+    console.log( (req.headers['x-test-description']+': '+req.method+' '+req.path).yellow );
     console.log(ascurl(req, req.body).green);
 
     if (enableResponse && data)
