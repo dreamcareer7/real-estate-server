@@ -3,25 +3,25 @@
 ### Create User [POST /users]
 <!-- include(tests/user/create.md) -->
 
-### Get User [GET /user/{id}]
+### Get User [GET /users/{id}]
 <!-- include(tests/user/getUser.md) -->
 
-### Delete User [DELETE /user/{id}]
+### Delete User [DELETE /users/{id}]
 <!-- include(tests/user/deleteUser.md) -->
 
-### Change Password [POST /user/self/password]
+### Change Password [POST /users/self/password]
 <!-- include(tests/user/changePassword.md) -->
 
-### Reset Password [POST /user/reset_password]
+### Reset Password [POST /users/reset_password]
 <!-- include(tests/user/resetPassword.md) -->
 
-### Set Timezone [PATH /user/self/timezone]
+### Set Timezone [PATH /users/self/timezone]
 <!-- include(tests/user/patchUserTimeZone.md) -->
 
-### Set Address [PUT /user/self/address]
+### Set Address [PUT /users/self/address]
 <!-- include(tests/user/setAddress.md) -->
 
-### Unset Address [DELETE /user/self/address]
+### Unset Address [DELETE /users/self/address]
 <!-- include(tests/user/deleteAddress.md) -->
 
 ### Find related users [GET /users/related/search]
