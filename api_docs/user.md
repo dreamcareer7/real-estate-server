@@ -9,13 +9,13 @@
 ### Delete User [DELETE /users/{id}]
 <!-- include(tests/user/deleteUser.md) -->
 
-### Change Password [POST /users/self/password]
+### Change Password [PATCH /users/self/password]
 <!-- include(tests/user/changePassword.md) -->
 
 ### Reset Password [POST /users/reset_password]
 <!-- include(tests/user/resetPassword.md) -->
 
-### Set Timezone [PATH /users/self/timezone]
+### Set Timezone [PATCH /users/self/timezone]
 <!-- include(tests/user/patchUserTimeZone.md) -->
 
 ### Set Address [PUT /users/self/address]
