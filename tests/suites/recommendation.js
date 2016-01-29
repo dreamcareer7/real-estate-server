@@ -147,13 +147,16 @@ var markAsFavorite404 = (cb) => {
 }
 
 var markAsFavoriteWorked = (cb) => {
+  var expect = JSON.parse(JSON.stringify(results.recommendation.feed.data[0]));
+  expect.favorited_by = [results.authorize.token.data];
+
   return frisby.create('make sure favorite was successful')
     .get('/rooms/' + results.room.create.data.id + '/recs/favorites')
     .after(cb)
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
-      data: [results.recommendation.feed.data[0]],
+      data: [expect],
       info: {
         count: 1,
         total: 1
