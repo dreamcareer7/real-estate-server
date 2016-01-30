@@ -62,6 +62,19 @@ var getListing = (cb) => {
     });
 }
 
+var by_query = (cb) => {
+  return frisby.create('search for a listing by string search')
+    .get('/listings/search?q=Dallas&status=Active,Leased')
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      info: {
+        count:10
+      }
+    })
+}
+
 var getListing404 = (cb) => {
   return frisby.create('expect 404 with invalid listing id')
     .get('/listings/' + uuid.v1())
@@ -75,5 +88,6 @@ module.exports = {
   by_mls,
   by_mls404,
   getListing,
-  getListing404
+  getListing404,
+  by_query
 }
