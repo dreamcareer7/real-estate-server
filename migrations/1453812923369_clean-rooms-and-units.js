@@ -7,7 +7,7 @@ var up = [
   'ALTER TABLE property_rooms DROP COLUMN listing',
   'ALTER TABLE property_rooms RENAME COLUMN type TO room_type',
   'ALTER TABLE units DROP COLUMN listing',
-  'ALTER TABLE units RENAME COLUMN square_meters TO square_feet'
+  'ALTER TABLE units RENAME COLUMN square_meters TO square_feet',
   'ALTER TABLE units RENAME TO property_units'
 ];
 
