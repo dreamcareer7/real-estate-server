@@ -12,7 +12,7 @@ var options = program.parse(process.argv);
 options.resource = 'Property';
 options.class = 'Listing';
 options.dontSave = true;
-options.query = '(Matrix_Unique_ID='+options.mui+')';
+options.query = '(MLSNumber=11157821)';
 Client.work(options, report);
 
 function report(cb, results) {
