@@ -44,6 +44,42 @@ var getTransaction = (cb) => {
     });
 };
 
+var addNote = (cb) => {
+  return frisby.create('add note to transaction')
+    .post('/transactions/' + results.transaction.create.data.id + '/notes',{note:'foo'})
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK'
+    })
+    .expectJSONTypes({
+      code: String,
+      data: transaction_response
+    });
+};
+
+var getNotes = (cb) => {
+  return frisby.create('get transaction notes')
+    .get('/transactions/' + results.transaction.create.data.id + '/notes')
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK'
+    })
+    .expectJSONLength('data', 1)
+    .expectJSONTypes({
+      code: String,
+      data: [{note: 'foo'}]
+    });
+};
+
+var removeNote = (cb) => {
+  return frisby.create('remove transaction notes')
+    .delete('/transactions/' + results.transaction.create.data.id + '/notes/' + results.transaction.getNotes.data[0].id)
+    .after(cb)
+    .expectStatus(204);
+};
+
 var attach = (cb) => {
   var form = new FormData();
   var logoPath = path.resolve(__dirname, './data/logo.png');
@@ -244,6 +280,9 @@ var remove404 = (cb) => {
 module.exports = {
   create,
   create400,
+  addNote,
+  getNotes,
+  removeNote,
   attach,
   getTransaction,
   getTransaction404,
