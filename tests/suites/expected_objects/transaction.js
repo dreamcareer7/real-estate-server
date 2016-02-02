@@ -30,6 +30,7 @@ module.exports = {
   updated_at: v.optionalNumber,
   deleted_at: v.optionalNumber,
   roles: v.optionalArray,
+  notes: v.optionalArray,
   important_dates: v.optionalArray,
   attachments: v.optionalArray,
   tasks: v.optionalArray
