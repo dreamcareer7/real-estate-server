@@ -23,10 +23,12 @@ WITH rn AS (
   GROUP BY notifications.room
 ),
 tc AS (
-  SELECT COUNT(*)::INT AS total
+  SELECT tasks.id AS task
   FROM notifications
   FULL JOIN notifications_acks
     ON notifications.id = notifications_acks.notification
+  INNER JOIN tasks
+    ON (notifications.object = tasks.id OR notifications.subject = tasks.id)
   WHERE notifications.specific = $1 AND
         notifications_acks.id IS NULL AND
         notifications.room IS NULL AND
@@ -36,10 +38,12 @@ tc AS (
         )
 ),
 trc AS (
-  SELECT COUNT(*)::INT AS total
+  SELECT transactions.id AS transaction
   FROM notifications
   FULL JOIN notifications_acks
     ON notifications.id = notifications_acks.notification
+  INNER JOIN transactions
+    ON (notifications.object = transactions.id OR notifications.subject = transactions.id)
   WHERE notifications.specific = $1 AND
         notifications_acks.id IS NULL AND
         notifications.room IS NULL AND
@@ -49,8 +53,10 @@ trc AS (
         )
 )
 SELECT 'notification_summary' AS type,
-       (SELECT total FROM tc) AS task_notification_count,
-       (SELECT total FROM trc) AS transaction_notification_count,
-       ((SELECT total FROM tc) + (SELECT total FROM trc) + COALESCE(ARRAY_LENGTH(ARRAY_AGG(r), 1), 0)) AS total_notification_count,
+       (SELECT COUNT(*) FROM tc) AS task_notification_count,
+       (SELECT COUNT(*) FROM trc) AS transaction_notification_count,
+       ((SELECT COUNT(*) FROM tc) + (SELECT COUNT(*) FROM trc) + COALESCE(ARRAY_LENGTH(ARRAY_AGG(r), 1), 0)) AS total_notification_count,
+       COALESCE((SELECT ARRAY_AGG(task) from tc), '{}'::uuid[]) AS task_notification_summaries,
+       COALESCE((SELECT ARRAY_AGG(transaction) from trc), '{}'::uuid[]) AS transaction_notification_summaries,
        COALESCE(ARRAY_AGG(r), '{}'::json[]) AS room_notification_summaries
 FROM rn
