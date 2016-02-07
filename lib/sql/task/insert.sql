@@ -5,13 +5,15 @@ INSERT INTO
       title,
       "transaction",
       due_date,
-      private
+      private,
+      expense
     )
 VALUES (
          $1,
          $2,
          $3,
          CASE WHEN $4::float IS NULL THEN NULL ELSE to_timestamp($4::float) END,
-         $5
+         $5,
+         $6
        )
 RETURNING id;

@@ -32,13 +32,15 @@ SELECT 'transaction' AS TYPE,
          WHERE object = $1 AND
          (
            CASE WHEN attachments.private IS TRUE THEN attachments."user" = $2 ELSE TRUE END
-         )
+         ) AND
+         deleted_at IS NULL
        ) AS attachments,
        (
          SELECT ARRAY_AGG(id)
          FROM tasks
          WHERE transaction = $1 AND
-         CASE WHEN private IS TRUE THEN "user" = $2 ELSE TRUE END
+         CASE WHEN private IS TRUE THEN "user" = $2 ELSE TRUE END AND
+         deleted_at IS NULL
        ) AS tasks,
        EXTRACT(EPOCH FROM created_at) AS created_at,
        EXTRACT(EPOCH FROM updated_at) AS updated_at,
