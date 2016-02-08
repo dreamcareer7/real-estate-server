@@ -37,7 +37,7 @@ Search room for user names, phone numbers, emails, room title and more
 
 ### Add Users to a room [POST /rooms/{id}/users]
 You can add multiple users to a room in the same call
-<!-- include(tests/room/addUser.md )-->
+<!-- include(tests/room/addUser.md) -->
 
 ### Remove user from a room [DELETE /rooms/{rid}/users/{id}]
 <!-- include(tests/room/removeUser.md) -->
