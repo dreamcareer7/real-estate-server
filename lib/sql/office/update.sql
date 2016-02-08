@@ -4,7 +4,7 @@
     fax = $3,
     office_mui = $4,
     office_mls_id = $5,
-    licence_number = $6,
+    license_number = $6,
     address = $7,
     care_of = $8,
     city = $9,

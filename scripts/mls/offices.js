@@ -31,7 +31,7 @@ function map(mls_office) {
     fax: mls_office.FaxPhone,
     office_mui: mls_office.HeadOffice_MUI ? parseInt(mls_office.HeadOffice_MUI) : 0,
     office_mls_id: mls_office.HeadOfficeMLSID,
-    licence_number: mls_office.LicenseNumber,
+    license_number: mls_office.LicenseNumber,
     address: mls_office.MailAddress,
     care_of: mls_office.MailCareOf,
     city: mls_office.MailCity,

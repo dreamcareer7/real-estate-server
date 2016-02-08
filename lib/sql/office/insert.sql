@@ -3,7 +3,7 @@
     fax,
     office_mui,
     office_mls_id,
-    licence_number,
+    license_number,
     address,
     care_of,
     city,

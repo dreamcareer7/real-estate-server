@@ -23,42 +23,42 @@ CREATE SCHEMA topology;
 ALTER SCHEMA topology OWNER TO ashkan;
 
 --
--- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner:
 --
 
 CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
 
 
 --
--- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner:
 --
 
 COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
 
 
 --
--- Name: postgis; Type: EXTENSION; Schema: -; Owner: 
+-- Name: postgis; Type: EXTENSION; Schema: -; Owner:
 --
 
 CREATE EXTENSION IF NOT EXISTS postgis WITH SCHEMA public;
 
 
 --
--- Name: EXTENSION postgis; Type: COMMENT; Schema: -; Owner: 
+-- Name: EXTENSION postgis; Type: COMMENT; Schema: -; Owner:
 --
 
 COMMENT ON EXTENSION postgis IS 'PostGIS geometry, geography, and raster spatial types and functions';
 
 
 --
--- Name: uuid-ossp; Type: EXTENSION; Schema: -; Owner: 
+-- Name: uuid-ossp; Type: EXTENSION; Schema: -; Owner:
 --
 
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp" WITH SCHEMA public;
 
 
 --
--- Name: EXTENSION "uuid-ossp"; Type: COMMENT; Schema: -; Owner: 
+-- Name: EXTENSION "uuid-ossp"; Type: COMMENT; Schema: -; Owner:
 --
 
 COMMENT ON EXTENSION "uuid-ossp" IS 'generate universally unique identifiers (UUIDs)';
@@ -1269,7 +1269,7 @@ UPDATE addresses SET geocoded = TRUE, geo_source = 'Google', approximate = TRUE,
 UPDATE addresses SET geocoded = TRUE, geo_source = 'Bing', approximate = TRUE, corrupted = FALSE, location = location_bing WHERE geo_confidence_google = 'APPROXIMATE' AND geocoded IS NOT TRUE AND (STRPOS(LOWER(geo_source_formatted_address_bing), LOWER(postal_code)) > 0);
 UPDATE addresses SET geocoded = TRUE, geo_source = 'Google', approximate = TRUE, corrupted = FALSE, location = location_google WHERE geo_confidence_google = 'APPROXIMATE' AND geocoded IS NOT TRUE AND (STRPOS(LOWER(geo_source_formatted_address_google), LOWER(postal_code)) > 0);
 UPDATE addresses SET geocoded = TRUE, geo_source = 'Bing', approximate = TRUE, corrupted = FALSE, location = location_bing WHERE geocoded IS NOT TRUE AND geocoded_bing IS TRUE;
-END; 
+END;
 $$;
 
 
@@ -1295,7 +1295,7 @@ ALTER FUNCTION public.last_agg(anyelement, anyelement) OWNER TO ashkan;
 CREATE FUNCTION sort_column(anyelement, character varying) RETURNS timestamp with time zone
     LANGUAGE sql
     AS $_$
-  SELECT 
+  SELECT
     CASE $2
         WHEN 'Since_C' THEN $1.created_at
         WHEN 'Since_U' THEN $1.updated_at
@@ -1330,7 +1330,7 @@ CREATE FUNCTION uuid_timestamp(id uuid) RETURNS timestamp with time zone
   select TIMESTAMP WITH TIME ZONE 'epoch' +
       ( ( ( ('x' || lpad(split_part(id::text, '-', 1), 16, '0'))::bit(64)::bigint) +
       (('x' || lpad(split_part(id::text, '-', 2), 16, '0'))::bit(64)::bigint << 32) +
-      ((('x' || lpad(split_part(id::text, '-', 3), 16, '0'))::bit(64)::bigint&4095) << 48) - 122192928000000000) / 10) * INTERVAL '1 microsecond';    
+      ((('x' || lpad(split_part(id::text, '-', 3), 16, '0'))::bit(64)::bigint&4095) << 48) - 122192928000000000) / 10) * INTERVAL '1 microsecond';
 $$;
 
 
@@ -1354,7 +1354,7 @@ ALTER FUNCTION public.wipe_everything() OWNER TO ashkan;
 CREATE FUNCTION within_page(anyelement, character varying, timestamp with time zone) RETURNS boolean
     LANGUAGE sql
     AS $_$
-  SELECT 
+  SELECT
     CASE $2
       WHEN 'Since_C' THEN $1.created_at >  $3
       WHEN 'Max_C'   THEN $1.created_at <= $3
@@ -1410,7 +1410,7 @@ BEGIN
     -- check if any topo_geom is defined only by one of the
     -- joined faces. In such case there would be no way to adapt
     -- the definition in case of healing, so we'd have to bail out
-    -- 
+    --
     fidary = ARRAY[lf, rf];
     sql := 'SELECT t.* from ('
       || 'SELECT r.topogeo_id, r.layer_id'
@@ -1425,7 +1425,7 @@ BEGIN
       || ') group by r.topogeo_id, r.layer_id, l.schema_name, l.table_name, '
       || ' l.feature_column ) t';
 
-    -- No surface can be defined by universal face 
+    -- No surface can be defined by universal face
     IF lf != 0 AND rf != 0 THEN -- {
       sql := sql || ' WHERE NOT t.elems @> ' || quote_literal(fidary);
     END IF; -- }
@@ -1998,7 +1998,7 @@ CREATE TABLE offices (
     fax text,
     office_mui integer,
     office_mls_id text,
-    licence_number text,
+    license_number text,
     address text,
     care_of text,
     city text,
@@ -3672,4 +3672,3 @@ GRANT ALL ON SCHEMA public TO PUBLIC;
 --
 -- PostgreSQL database dump complete
 --
-
