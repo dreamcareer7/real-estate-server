@@ -7,6 +7,7 @@ INSERT INTO
                matrix_unique_id,
                description,
                square_meters,
+               building_square_meters,
                lot_square_meters,
                year_built,
                parking_spaces_covered_total,

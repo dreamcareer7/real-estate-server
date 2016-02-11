@@ -29,6 +29,7 @@ module.exports = (data) => {
   property.full_bathroom_count = parseFloat(data.BathsFull) || undefined; // -1.0;
   property.description = data.PublicRemarks.trim();
   property.square_meters = (parseFloat(data.SqFtTotal) || 0.0 ) / 10.764;
+  property.building_square_meters = (parseFloat(data.SQFTBuilding) || 0.0 ) / 10.764;
   property.lot_square_meters = (parseFloat(data.LotSizeAreaSQFT) || 0.0) / 10.764;
   property.property_type = data.PropertyType.trim();
   property.property_subtype = data.PropertySubType.trim();
