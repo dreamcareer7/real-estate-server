@@ -82,6 +82,20 @@ var getListing404 = (cb) => {
     .expectStatus(404);
 }
 
+var similars = (cb) => {
+  return frisby.create('get similar listings from recommendation engine')
+    .get('/listings/'+listing.mls_number+'/similars')
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      info:{
+        count:5
+      },
+      data:[]
+    })
+    .expectJSONLength('data', 5);
+}
+
 module.exports = {
   by_mui,
   by_mui404,
@@ -89,5 +103,6 @@ module.exports = {
   by_mls404,
   getListing,
   getListing404,
-  by_query
+  by_query,
+  similars
 }
