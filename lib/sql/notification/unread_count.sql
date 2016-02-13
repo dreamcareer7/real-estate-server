@@ -53,9 +53,10 @@ trc AS (
         )
 )
 SELECT 'notification_summary' AS type,
-       (SELECT COUNT(*) FROM tc) AS task_notification_count,
-       (SELECT COUNT(*) FROM trc) AS transaction_notification_count,
-       ((SELECT COUNT(*) FROM tc) + (SELECT COUNT(*) FROM trc) + COALESCE(ARRAY_LENGTH(ARRAY_AGG(r), 1), 0)) AS total_notification_count,
+       (SELECT COUNT(*) FROM tc)::int AS task_notification_count,
+       (SELECT COUNT(*) FROM trc)::int AS transaction_notification_count,
+       COUNT(r)::int AS room_notification_count,
+       ((SELECT COUNT(*) FROM tc) + (SELECT COUNT(*) FROM trc) + COALESCE(ARRAY_LENGTH(ARRAY_AGG(r), 1), 0))::int AS total_notification_count,
        COALESCE((SELECT ARRAY_AGG(task) from tc), '{}'::uuid[]) AS task_ids,
        COALESCE((SELECT ARRAY_AGG(transaction) from trc), '{}'::uuid[]) AS transaction_ids,
        COALESCE(ARRAY_AGG(r), '{}'::json[]) AS room_notification_summaries
