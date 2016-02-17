@@ -6,6 +6,9 @@
 ### Get User [GET /users/{id}]
 <!-- include(tests/user/getUser.md) -->
 
+### Update User [PUT /users/{id}]
+<!-- include(tests/user/update.md) -->
+
 ### Delete User [DELETE /users/{id}]
 <!-- include(tests/user/deleteUser.md) -->
 
