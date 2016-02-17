@@ -24,24 +24,24 @@ SELECT 'transaction' AS TYPE,
         WHERE "transaction" = $1 AND
         deleted_at IS NULL
        ) AS important_dates,
-       (
+       CASE WHEN $2::uuid IS NOT NULL THEN (
          SELECT ARRAY_AGG(attachment)
          FROM attachments_eav
          INNER JOIN attachments
            ON attachments_eav.attachment = attachments.id
          WHERE object = $1 AND
          (
-           CASE WHEN attachments.private IS TRUE THEN attachments."user" = $2 ELSE TRUE END
+           CASE WHEN attachments.private IS TRUE THEN attachments."user" = $2::uuid ELSE TRUE END
          ) AND
          deleted_at IS NULL
-       ) AS attachments,
-       (
+       ) ELSE NULL END AS attachments,
+       CASE WHEN $2::uuid IS NOT NULL THEN (
          SELECT ARRAY_AGG(id)
          FROM tasks
          WHERE transaction = $1 AND
-         CASE WHEN private IS TRUE THEN "user" = $2 ELSE TRUE END AND
+         CASE WHEN private IS TRUE THEN "user" = $2::uuid ELSE TRUE END AND
          deleted_at IS NULL
-       ) AS tasks,
+       ) ELSE NULL END AS tasks,
        EXTRACT(EPOCH FROM created_at) AS created_at,
        EXTRACT(EPOCH FROM updated_at) AS updated_at,
        EXTRACT(EPOCH FROM deleted_at) AS deleted_at
