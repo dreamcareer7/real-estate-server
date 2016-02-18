@@ -13,7 +13,6 @@ var client = JSON.parse(JSON.stringify(user));
 client.client_id = config.tests.client_id;
 client.client_secret = config.tests.client_secret;
 
-
 var create = (cb) => {
   return frisby.create('create user')
     .post('/users', client)
