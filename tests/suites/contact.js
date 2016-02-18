@@ -1,22 +1,26 @@
 registerSuite('user', ['create']);
-var uuid = require('node-uuid');
-var first_name = 'updated_user_name';
-var profile_image = 'updated_profile_image';
-var cover_image = 'updated_cover_image';
+registerSuite('listing', ['by_mui']);
+
+var uuid             = require('node-uuid');
 var contact_response = require('./expected_objects/contact.js');
-var info_response = require('./expected_objects/info.js');
+var info_response    = require('./expected_objects/info.js');
+var contact          = require('./data/contact.js');
+var _                = require('underscore');
+
+var first_name       = 'updated_user_name';
+var profile_image    = 'updated_profile_image';
+var cover_image      = 'updated_cover_image';
 
 var create = (cb) => {
+  contact.contact_user = results.user.create.data;
+  contact.address = results.listing.by_mui.data.address;
+  contact.first_name = results.user.create.data.first_name;
+  contact.last_name = results.user.create.data.last_name;
+  contact.phone_number = results.user.create.data.phone_number;
+  contact.email = results.user.create.data.email;
   return frisby.create('add a contact')
     .post('/contacts', {
-      contacts: [
-        {
-          tags: ['foo'],
-          email: results.user.create.data.email,
-          phone_number: results.user.create.data.phone_number,
-          force_creation: true
-        }
-      ]
+      contacts: [contact]
     })
     .after(cb)
     .expectStatus(200)
@@ -26,7 +30,7 @@ var create = (cb) => {
       data: [{
         email: results.user.create.data.email,
         phone_number: results.user.create.data.phone_number,
-        type: "contact"
+        type: 'contact'
       }],
       info: {
         count: 1
@@ -43,7 +47,7 @@ var create400 = (cb) => {
   return frisby.create('expect 400 with empty model when creating a contact')
     .post('/contacts')
     .after(cb)
-    .expectStatus(400)
+    .expectStatus(400);
 };
 
 var addTag = (cb) => {
@@ -60,14 +64,14 @@ var addTag = (cb) => {
       code: String,
       data: contact_response
     });
-}
+};
 
 var addTag400 = (cb) => {
   return frisby.create('expect 400 with empty model when adding a tag')
     .post('/contacts/' + results.contact.create.data[0].id + '/tags')
     .after(cb)
     .expectStatus(400);
-}
+};
 
 var addTag404 = (cb) => {
   return frisby.create('expect 404 with invalid contact id when adding a tag to a contact')
@@ -76,7 +80,7 @@ var addTag404 = (cb) => {
     })
     .after(cb)
     .expectStatus(404);
-}
+};
 
 var getContact = (cb) => {
   results.user.create.data.type = 'compact_user';
@@ -85,10 +89,19 @@ var getContact = (cb) => {
     .get('/contacts')
     .after(cb)
     .expectStatus(200)
+    .afterJSON( json => {
+      var must = ['New', 'bar', 'foo'];
+      var is = json.data[0].tags;
+
+      if(_.difference(is, must).length != 0)
+        throw new Error('Tags dont match: Its ['+is+'] But should be ['+must+']');
+    })
     .expectJSON({
       code: 'OK',
       data: [
-        {contact_user: results.user.create.data}
+        {
+          contact_user: results.user.create.data
+        }
       ],
       info: {}
     })
@@ -142,7 +155,7 @@ var updateContactWorked = (cb) => {
 
 var updateContact404 = (cb) => {
   return frisby.create('expect 404 with invalid contact id when updating a contact')
-    .put('/contacts/' + uuid.v1() , results.contact.create.data[0].contact_user)
+    .put('/contacts/' + uuid.v1(), results.contact.create.data[0].contact_user)
     .after(cb)
     .expectStatus(404);
 };
@@ -271,21 +284,21 @@ var getByTag = (cb) => {
     .expectJSON({
       code: 'OK'
     });
-}
+};
 
 var removeTag = (cb) => {
   return frisby.create('remove tag from a contact')
     .delete('/contacts/' + results.contact.create.data[0].id + '/tags/test')
     .expectStatus(204)
     .after(cb);
-}
+};
 
 var removeTag404 = (cb) => {
   return frisby.create('expect 404 with invalid id when removing a tag')
     .delete('/contacts/' + uuid.v1() + '/tags/test')
     .expectStatus(204)
     .after(cb);
-}
+};
 
 var deleteContact = (cb) => {
   return frisby.create('delete a contact')

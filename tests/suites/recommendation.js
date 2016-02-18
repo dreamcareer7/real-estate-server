@@ -128,7 +128,8 @@ var markAsFavorite = (cb) => {
     .expectJSON({
       code: 'OK',
       data: {
-        type: 'recommendation'
+        type: 'recommendation',
+        favorited_by:[results.authorize.token.data]
       }
     })
     .expectJSONTypes({
@@ -147,13 +148,16 @@ var markAsFavorite404 = (cb) => {
 }
 
 var markAsFavoriteWorked = (cb) => {
+  var expect = _.clone(results.recommendation.feed.data[0]);
+  expect.favorited_by = [results.authorize.token.data];
+
   return frisby.create('make sure favorite was successful')
     .get('/rooms/' + results.room.create.data.id + '/recs/favorites')
     .after(cb)
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
-      data: [results.recommendation.feed.data[0]],
+      data: [expect],
       info: {
         count: 1,
         total: 1
@@ -252,6 +256,8 @@ var markAsSeen = (cb) => {
   delete rec.document_count;
   delete rec.video_count;
   delete rec.image_count;
+
+  rec.read_by = [results.authorize.token.data]
 
   return frisby.create('mark a rec as seen')
     .delete('/rooms/' + results.room.create.data.id + '/recs/feed/' + results.recommendation.feed.data[0].id)

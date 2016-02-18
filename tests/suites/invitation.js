@@ -24,7 +24,9 @@ var create = (cb) => {
       code: 'OK',
       data: [
         {
-          type: 'invitation'
+          type: 'invitation',
+          invited_user: results.user.create.data,
+          inviting_user: results.authorize.token.data
         }
       ]
     })
@@ -47,3 +49,4 @@ module.exports = {
   create,
   create400
 }
+

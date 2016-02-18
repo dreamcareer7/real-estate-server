@@ -1,5 +1,5 @@
 SELECT id,
-       (COUNT(*) OVER())::INT AS count
+       (COUNT(*) OVER())::INT AS total
 FROM messages
 WHERE room = $1 AND
       deleted_at IS NULL

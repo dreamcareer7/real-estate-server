@@ -19,5 +19,4 @@ module.exports = {
   "cover_image_url": v.optionalString,
   "type": "contact",
   "tags": v.optionalArray
-}
-
+};

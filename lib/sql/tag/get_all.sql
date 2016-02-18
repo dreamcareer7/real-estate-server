@@ -1,2 +1,3 @@
-SELECT 'tag' AS TYPE,*
+SELECT 'tag' AS TYPE,
+       *
 FROM tags

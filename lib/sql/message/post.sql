@@ -8,7 +8,8 @@ INSERT INTO messages(
     recommendation,
     reference,
     author,
-    notification
+    notification,
+    mentions
 )
 VALUES($1,
        $2,
@@ -19,5 +20,6 @@ VALUES($1,
        $7,
        $8,
        $9,
-       $10)
+       $10,
+       $11)
 RETURNING id;

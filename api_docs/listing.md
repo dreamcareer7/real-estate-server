@@ -23,5 +23,16 @@ However, each `listing` object has a `property` object inside.
 ### Get by MLS Number [GET /listings/search]
 <!-- include(tests/listing/by_mls.md) -->
 
+### Find Listings by query [GET /listings/search{?q,status}]
+`q` (string) The query like _Dallas_
+
+`status`A list of wanted statuses, separated by comma, like _Leased,Sold_
+
+<!-- include(tests/listing/by_query.md) -->
+
+
 ### Get by ID [GET /listings/{id}]
 <!-- include(tests/listing/getListing.md) -->
+
+### Get similar listings [GET /listings/{mls_number}/similars]
+<!-- include(tests/listing/similars.md) -->

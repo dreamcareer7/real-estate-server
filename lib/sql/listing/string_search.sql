@@ -23,4 +23,10 @@ WHERE
       ) ~* ALL($1)
      ) ELSE TRUE END
     )
+    AND (
+      CASE
+        WHEN $2::listing_status[] IS NULL THEN TRUE
+        ELSE listings.status = ANY($2::listing_status[])
+      END
+    )
 LIMIT 10

@@ -1,3 +1,3 @@
 INSERT INTO tags(entity, tag, type)
-    VALUES ($1, $2, 'contact')
+    VALUES ($1, $2, 'Contact')
 ON CONFLICT (entity, tag, type) DO NOTHING

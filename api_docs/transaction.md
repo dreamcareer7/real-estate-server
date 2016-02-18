@@ -17,17 +17,11 @@ Possible values for `transaction_status` are `Buyer`,`Seller`,`Buyer/Seller`,`Le
 ## Get Transaction [GET /transactions/{id}]
 <!-- include(tests/transaction/getTransaction.md) -->
 
-## Assign Contact [POST /transactions/{id}/contacts]
+## Assign Contact [POST /transactions/{id}/roles]
 <!-- include(tests/transaction/assign.md) -->
 
-## Widthdraw Contact [DELETE /transactions/{id}/contacts/{rid}]
+## Widthdraw Contact [DELETE /transactions/{id}/roles/{rid}]
 <!-- include(tests/transaction/withdraw.md) -->
-
-## Add Role [POST /transactions/{id}/contacts/{cid}/roles]
-<!-- include(tests/transaction/addRole.md) -->
-
-## Remove Role [DELETE /transactions/{id}/contacts/{cid}/roles/{role}]
-<!-- include(tests/transaction/removeRole.md) -->
 
 module.exports = {
   patchTransaction,

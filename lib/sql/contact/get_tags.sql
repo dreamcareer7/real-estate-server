@@ -1,2 +1,5 @@
-SELECT tag FROM tags
-WHERE entity = $1 and type = $2
+SELECT tag
+FROM tags
+WHERE entity = $1 AND
+      type = $2
+ORDER BY tag

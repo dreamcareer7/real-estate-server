@@ -2,12 +2,17 @@ var uuid = require('node-uuid');
 var task_response = require('./expected_objects/task.js');
 
 registerSuite('contact', ['create']);
+registerSuite('transaction', ['create']);
 
 var create = (cb) => {
   return frisby.create('create new task')
     .post('/tasks', {
       user: results.contact.create.data[0].contact_user.id,
-      title: 'NewTask'
+      title: 'NewTask',
+      due_date: 2015,
+      status: 'New',
+      transaction: results.transaction.create.data.id,
+      expense: 4500
     })
     .after(cb)
     .expectStatus(200)
@@ -18,7 +23,7 @@ var create = (cb) => {
       code: String,
       data: task_response
     });
-}
+};
 
 var assign = (cb) => {
   return frisby.create('assign contact to a task')
@@ -34,14 +39,14 @@ var assign = (cb) => {
       code: String,
       data: task_response
     });
-}
+};
 
 var assign400 = (cb) => {
   return frisby.create('assign contact to a task')
     .post('/tasks/' + results.task.create.data.id + '/contacts')
     .after(cb)
-    .expectStatus(400)
-}
+    .expectStatus(400);
+};
 
 var getTask = (cb) => {
   return frisby.create('get task by id')
@@ -55,7 +60,7 @@ var getTask = (cb) => {
       code: String,
       data: task_response
     });
-}
+};
 
 var getUserTasks = (cb) => {
   return frisby.create('get user\'s task')
@@ -69,12 +74,11 @@ var getUserTasks = (cb) => {
       code: String,
       data: [task_response]
     });
-}
+};
 
 var patchTask = (cb) => {
   return frisby.create('update a task')
     .put('/tasks/' + results.task.create.data.id,{
-    user: results.contact.create.data[0].contact_user.id,
       title: 'UpdatedTask'
   })
     .after(cb)
@@ -86,22 +90,21 @@ var patchTask = (cb) => {
       code: String,
       data: task_response
     });
-}
+};
 
 var withdraw = (cb) => {
   return frisby.create('withdraw contact from a task')
     .delete('/tasks/' + results.task.create.data.id + '/contacts/' + results.contact.create.data[0].id)
     .after(cb)
-    .expectStatus(200)
-}
+    .expectStatus(200);
+};
 
 var deleteTask = (cb) => {
   return frisby.create('delete a task')
     .delete('/tasks/' + results.task.create.data.id)
     .after(cb)
-    .expectStatus(204)
-}
-
+    .expectStatus(204);
+};
 
 module.exports = {
   create,
@@ -112,4 +115,4 @@ module.exports = {
   patchTask,
   withdraw,
   deleteTask
-}
+};

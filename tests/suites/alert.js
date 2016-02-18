@@ -8,6 +8,8 @@ registerSuite('room', ['create']);
 var maximum_price = 100000;
 
 var create = (cb) => {
+  criteria.created_by = results.room.create.data.owner;
+  criteria.room = results.room.create.data.id;
   return frisby.create('create alert')
     .post('/rooms/' + results.room.create.data.id + '/alerts', criteria)
     .after(cb)
@@ -64,7 +66,8 @@ var getRoomAlerts = (cb) => {
           created_by: {
             type: "user",
             id: results.room.create.data.owner.id
-          }
+          },
+          room: results.room.create.data.id
         }
       ],
       info: {

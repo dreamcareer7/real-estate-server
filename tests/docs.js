@@ -73,6 +73,9 @@ function generate() {
     themeFullWidth:true,
     includePath:'/tmp/rechat'
   },  (err, html) => {
+    if(err)
+      process.stderr.write(err);
+    
     writer(html);
     process.exit();
   })
