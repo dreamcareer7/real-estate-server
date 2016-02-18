@@ -169,7 +169,10 @@ Client.on('data fetched', (data) => {
   lastId =  data[data.length - 1].Matrix_Unique_ID;
 });
 
-function report() {
+function report(e) {
+  if(e)
+    console.log(e);
+  
   Metric.flush();
 
   var text = [
