@@ -25,7 +25,9 @@ that listing will be recommended to users on that chat room.
 ### Delete Alert [DELETE /rooms/{rid}/alerts/{id}]
 <!-- include(tests/alert/deleteAlert.md) -->
 
-### Search for listings (Valert) [POST /valerts]
+### Search for listings [POST /valerts]
+This is called a `Virtual Alert` as it shares all the characteristics of an alert, except that its not saved and the results are
+returned immediately.
 <!-- include(tests/alert/virtual.md) -->
 
 ### Share Alerts [POST /alerts]
