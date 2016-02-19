@@ -85,7 +85,8 @@ INSERT INTO
              dom,
              cdom,
              buyers_agency_commission,
-             sub_agency_commission
+             sub_agency_commission,
+             list_date
             )
 VALUES ($1,
         $2,
@@ -166,12 +167,13 @@ VALUES ($1,
         $77,
         $78,
         $79,
-        CASE WHEN COALESCE(LENGTH($80::text) < 1, TRUE) IS TRUE THEN NULL ELSE $80::timestamptz END,
+        CASE WHEN $80 = '' THEN NULL ELSE $80::timestamptz END,
         $81,
         $82,
         $83,
         NOW() - $84 * INTERVAL '1 DAY',
         NOW() - $85 * INTERVAL '1 DAY',
         $86,
-        $87
+        $87,
+        CASE WHEN $88 = '' THEN NULL ELSE $88::timestamptz END
        ) RETURNING id

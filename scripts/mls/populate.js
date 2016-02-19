@@ -119,6 +119,7 @@ module.exports = (data) => {
   listing.mls_number = data.MLSNumber.trim();
   listing.unexempt_taxes = parseFloat(data.UnexemptTaxes) || undefined; // 0.0;
   listing.financing_proposed = data.FinancingProposed.trim();
+  listing.list_date = data.ListingContractDate.trim();
   listing.list_office_mui = parseInt(data.ListOffice_MUI) || -1;
   listing.list_office_mls_id = data.ListOfficeMLSID.trim();
   listing.list_office_name = data.ListOfficeName.trim();

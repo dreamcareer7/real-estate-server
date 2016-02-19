@@ -75,7 +75,7 @@ SET alerting_agent_id = $1,
     active_option_contract_date = $74,
     keybox_type = $75,
     keybox_number = $76,
-    close_date = CASE WHEN COALESCE(LENGTH($77::text) < 1, TRUE) IS TRUE THEN NULL ELSE $77::timestamptz END,
+    close_date = CASE WHEN $77 = '' THEN NULL ELSE $77::timestamptz END,
     close_price = $78,
     back_on_market_date = $79,
     deposit_amount = $80,
@@ -83,5 +83,6 @@ SET alerting_agent_id = $1,
     cdom = NOW() - $82 * INTERVAL '1 DAY',
     buyers_agency_commission = $83,
     sub_agency_commission = $84,
+    list_date = CASE WHEN $77 = '' THEN NULL ELSE $85::timestamptz END,
     updated_at = NOW()
-WHERE id = $85
+WHERE id = $86
