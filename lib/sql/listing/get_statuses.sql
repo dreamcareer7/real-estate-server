@@ -1,1 +1,1 @@
-SELECT enum_range(NULL::listing_status)
+SELECT unnest(enum_range(NULL::listing_status)) as state
