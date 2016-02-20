@@ -1,0 +1,5 @@
+WAIT=30
+TIMEOUT=5
+ATTEMPTS=30
+
+/admin/ping     pong
