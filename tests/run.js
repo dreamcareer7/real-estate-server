@@ -140,6 +140,12 @@ function setupApp(cb) {
 
   Run.emit('app ready', app);
 
+  app.on('after loading routes', () => {
+    app.use((err, req, res, next) => {
+      process.domain.emit('error', err);
+    });
+  });
+
   app.listen(config.tests.port, () => {
     cb()
   });
