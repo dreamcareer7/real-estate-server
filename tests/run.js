@@ -85,18 +85,26 @@ var database = (req, res, next) => {
   var domain = Domain.create();
   var suite = req.headers['x-suite'];
 
+  var handled = false;
   domain.on('error', (e) => {
+    if(handled)
+      return ;
+    handled = true
+
     delete e.domain;
     delete e.domainThrown;
     delete e.domainEmitter;
     delete e.domainBound;
-    console.log(e);
+
+    if(!e.http)
+      e.http = 500;
+
+    res.status(e.http);
+
     if(e.http >= 500)
       res.json({message: 'Internal Error'});
     else
       res.json(e);
-
-    domain.dispose();
   });
 
   if(connections[suite]) {
@@ -130,8 +138,9 @@ function setupApp(cb) {
     });
   }
 
+  Run.emit('app ready', app);
+
   app.listen(config.tests.port, () => {
-    Run.emit('app ready', app);
     cb()
   });
 }

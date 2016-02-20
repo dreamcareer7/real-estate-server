@@ -8,7 +8,7 @@ try {
 spawn('node '+__dirname+'/../tests/run --docs > /tmp/rechat/index.html', function(err, out) {
   if(err)
     console.log(err);
-  
+
   console.log('Served on port', port);
 });
 
