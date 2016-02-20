@@ -130,9 +130,10 @@ function setupApp(cb) {
     });
   }
 
-  Run.emit('app ready', app);
-  app.listen(config.tests.port);
-  cb();
+  app.listen(config.tests.port, () => {
+    Run.emit('app ready', app);
+    cb()
+  });
 }
 
 var steps = [];
