@@ -4,15 +4,19 @@ var async = require('async');
 var db = require('../lib/utils/db');
 
 var up = [
+  'BEGIN',
   'DO SOMETHING',
   'DO SOMETHING ELSE',
-  'EVEN DO MORE'
+  'EVEN DO MORE',
+  'COMMIT'
 ];
 
 var down = [
+  'BEGIN',
   'UNDO SOMETHING',
   'UNDO SOMETHING ELSE',
-  'UNDO EVEN MORE'
+  'UNDO EVEN MORE',
+  'COMMIT'
 ];
 
 var runAll = (sqls, next) => {
