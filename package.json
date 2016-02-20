@@ -34,6 +34,7 @@
     "form-data": "^0.2.0",
     "googlemaps": "^1.0.1",
     "kue": "^0.9.6",
+    "linger": "0.0.3",
     "mailgun-js": "^0.7.7",
     "merge": "^1.2.0",
     "migratus": "^0.4.0",
