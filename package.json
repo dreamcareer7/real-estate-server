@@ -33,6 +33,7 @@
     "forever": "^0.15.1",
     "form-data": "^0.2.0",
     "googlemaps": "^1.0.1",
+    "hiredis": "^0.4.1",
     "kue": "^0.9.6",
     "linger": "0.0.3",
     "mailgun-js": "^0.7.7",
