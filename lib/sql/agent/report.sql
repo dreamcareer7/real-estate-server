@@ -19,7 +19,8 @@ WITH listed_listings AS (                               /* These are listings wh
     UNION
     SELECT DISTINCT selling_agent_mls_id AS agent FROM sold_listings
   ) combined_agents
-  WHERE agent IS NOT NULL
+  WHERE agent IS NOT NULL AND
+  CASE WHEN $21::text IS NULL THEN TRUE ELSE agent_exp(agent) = $21 END
 
 ), listed_volumes AS (                                  /* Count number of listings by each agent */
   SELECT count(*) as listed_volume, list_agent_mls_id FROM listed_listings GROUP BY list_agent_mls_id
@@ -58,6 +59,7 @@ WITH listed_listings AS (                               /* These are listings wh
 
 SELECT
   all_agents.agent,
+  agent_exp(all_agents.agent) as agent_experience,
   listed_volumes.listed_volume,
   listed_values.listed_value,
   selling_volumes.selling_volume,
@@ -65,7 +67,8 @@ SELECT
   active_volumes.active_volume,
   active_values.active_value,
   total_active_volumes.total_active_volume,
-  total_active_values.total_active_value
+  total_active_values.total_active_value,
+  offices.name as office_name
 FROM all_agents
   LEFT JOIN listed_volumes ON all_agents.agent = listed_volumes.list_agent_mls_id
   LEFT JOIN listed_values  ON all_agents.agent = listed_values.list_agent_mls_id
@@ -75,6 +78,8 @@ FROM all_agents
   LEFT JOIN active_values ON all_agents.agent = active_values.list_agent_mls_id
   LEFT JOIN total_active_volumes ON all_agents.agent = total_active_volumes.list_agent_mls_id
   LEFT JOIN total_active_values ON all_agents.agent = total_active_values.list_agent_mls_id
+  LEFT JOIN agents ON all_agents.agent = agents.mlsid
+  LEFT JOIN offices ON agents.office_mlsid = offices.mls_id
 WHERE
   CASE WHEN $5::integer IS NULL THEN TRUE ELSE listed_volume >= $5 END AND
   CASE WHEN $6::integer IS NULL THEN TRUE ELSE listed_volume <= $6 END AND
