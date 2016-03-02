@@ -58,6 +58,7 @@ SELECT 'compact_listing' AS TYPE,
           'square_meters', properties.square_meters,
           'bedroom_count', properties.bedroom_count,
           'bathroom_count', properties.bathroom_count,
+          'year_built', properties.year_built,
           'created_at', EXTRACT(EPOCH FROM properties.created_at),
           'updated_at', EXTRACT(EPOCH FROM properties.updated_at)
        ) AS compact_property
