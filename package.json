@@ -32,6 +32,7 @@
     "file-type": "^3.4.0",
     "forever": "^0.15.1",
     "form-data": "^0.2.0",
+    "google-libphonenumber": "^1.0.14",
     "googlemaps": "^1.0.1",
     "hiredis": "^0.4.1",
     "kue": "^0.9.6",
