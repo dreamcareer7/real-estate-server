@@ -4,6 +4,7 @@ INSERT INTO cmas
     room,
     suggested_price,
     comment,
+    main_listing,
     listings,
     lowest_price,
     median_price,
@@ -14,4 +15,4 @@ INSERT INTO cmas
     average_dom,
     highest_dom
   )
-VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13) RETURNING id;
+VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14) RETURNING id;
