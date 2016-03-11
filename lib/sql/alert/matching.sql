@@ -36,7 +36,7 @@ FROM listings WHERE
     )
   )
   AND (
-    CASE WHEN ($17::float) IS NULL THEN TRUE ELSE (
+    CASE WHEN ((($17::float) IS NULL) OR (listings.status <> 'Sold')) THEN TRUE ELSE (
       CASE WHEN listings.close_date IS NULL THEN FALSE ELSE (
         close_date > to_timestamp($17::float)
       ) END
