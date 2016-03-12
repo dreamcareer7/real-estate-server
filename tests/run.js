@@ -5,6 +5,7 @@ var fork    = require('child_process').fork;
 var async   = require('async');
 var colors = require('colors');
 var EventEmitter = require('events');
+var queue  = require('../lib/utils/queue.js');
 
 global.Run = new EventEmitter;
 
@@ -148,6 +149,10 @@ function setupApp(cb) {
 
   app.listen(config.tests.port, () => {
     cb()
+  });
+
+  queue.process('create_notification', config.airship.parallel, (job, done) => {
+    Notification.create(job.data.notification, done);
   });
 }
 
