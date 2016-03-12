@@ -178,7 +178,7 @@ var searchByCode = (cb) => {
 
 var searchByPhone = (cb) => {
   return frisby.create('search users by phone')
-    .get('/users/search?phone=' + results.user.create.data.phone_number)
+    .get('/users/search?phone=' + encodeURIComponent(results.user.create.data.phone_number))
     .after(cb)
     .expectStatus(200)
     .expectJSON({
