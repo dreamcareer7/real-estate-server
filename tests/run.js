@@ -100,6 +100,8 @@ var database = (req, res, next) => {
     if(!e.http)
       e.http = 500;
 
+    console.log(e)
+
     res.status(e.http);
 
     if(e.http >= 500)
