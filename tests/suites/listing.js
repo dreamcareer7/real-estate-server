@@ -104,5 +104,5 @@ module.exports = {
   getListing,
   getListing404,
   by_query,
-  similars
+//   similars
 }

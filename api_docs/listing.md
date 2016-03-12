@@ -33,6 +33,3 @@ However, each `listing` object has a `property` object inside.
 
 ### Get by ID [GET /listings/{id}]
 <!-- include(tests/listing/getListing.md) -->
-
-### Get similar listings [GET /listings/{mls_number}/similars]
-<!-- include(tests/listing/similars.md) -->
