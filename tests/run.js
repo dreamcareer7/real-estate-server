@@ -151,10 +151,10 @@ function setupApp(cb) {
 
   app.listen(config.tests.port, () => {
     cb()
-  });
 
-  queue.process('create_notification', config.airship.parallel, (job, done) => {
-    Notification.create(job.data.notification, done);
+    queue.process('create_notification', 1, (job, done) => {
+      Notification.create(job.data.notification, done);
+    });
   });
 }
 
