@@ -5,12 +5,14 @@ try {
   mkdir('/tmp/rechat');
 } catch(e) {}
 
-spawn('node '+__dirname+'/../tests/run --docs > /tmp/rechat/index.html', function(err, out) {
+var c = spawn('node '+__dirname+'/../tests/run --docs > /tmp/rechat/index.html', function(err, out) {
   if(err)
     console.log(err);
 
   console.log('Served on port', port);
 });
+
+c.stderr.pipe(process.stderr)
 
 var express = require('express');
 var app = express();

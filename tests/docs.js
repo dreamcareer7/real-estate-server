@@ -36,6 +36,9 @@ Run.on('app ready', (app) => {
 });
 
 Run.on('done', generate);
+Run.on('suite done', (suite) => {
+  process.stderr.write('✓ ' + suite + '\n')
+})
 
 function findParams(url, params, qs) {
   var res = {};
@@ -75,7 +78,7 @@ function generate() {
   },  (err, html) => {
     if(err)
       process.stderr.write(err);
-    
+
     writer(html);
     process.exit();
   })
