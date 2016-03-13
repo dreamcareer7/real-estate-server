@@ -1,3 +1,5 @@
+process.env.NODE_ENV = 'tests'; //So we read the proper config file
+
 var fs      = require('fs');
 var program = require('commander');
 var config  = require('../lib/config.js');
@@ -6,6 +8,9 @@ var async   = require('async');
 var colors = require('colors');
 var EventEmitter = require('events');
 var queue  = require('../lib/utils/queue.js');
+var redis = require('redis')
+
+var redisClient = redis.createClient(config.redis);
 
 global.Run = new EventEmitter;
 
@@ -101,6 +106,7 @@ var database = (req, res, next) => {
       e.http = 500;
 
     console.log(e)
+    process.stderr.write('Error: ' + JSON.stringify(e.stack) + '\n')
 
     res.status(e.http);
 
@@ -150,10 +156,13 @@ function setupApp(cb) {
   });
 
   app.listen(config.tests.port, () => {
-    cb()
+    //Clear all jobs on test db
+    redisClient.flushall( err => {
+      queue.process('create_notification', 1, (job, done) => {
+        Notification.create(job.data.notification, done);
+      });
 
-    queue.process('create_notification', 1, (job, done) => {
-      Notification.create(job.data.notification, done);
+      cb();
     });
   });
 }
