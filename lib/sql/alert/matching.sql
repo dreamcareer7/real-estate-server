@@ -1,34 +1,35 @@
 with address_ids AS
 (
-  SELECT id FROM addresses WHERE
-    location IS NOT NULL AND
-    ST_Within(addresses.location, ST_SetSRID(ST_GeomFromText($14), 4326))
+  SELECT addresses.id FROM addresses
+  JOIN listings ON addresses.matrix_unique_id = listings.matrix_unique_id
+  WHERE
+    addresses.location IS NOT NULL AND
+    ST_Within(addresses.location, ST_SetSRID(ST_GeomFromText($14), 4326)) AND
+    listings.status = ANY($16::listing_status[]) AND
+    listings.price >= $1 AND
+    listings.price <= $2
+), property_ids AS
+(
+  SELECT id FROM properties WHERE
+    square_meters >= $3 AND
+    square_meters <= $4 AND
+    bedroom_count >= $5 AND
+    ((half_bathroom_count + full_bathroom_count) >= $6) AND
+    property_type = $7 AND
+    property_subtype = ANY ($8::property_subtype[]) AND
+    COALESCE(year_built >= $9, TRUE) = TRUE AND
+    COALESCE(year_built <= $10, TRUE) = TRUE AND
+    COALESCE(pool_yn = $11, TRUE) = TRUE AND
+    COALESCE(lot_square_meters >= $12, TRUE) = TRUE AND
+    COALESCE(lot_square_meters <= $13, TRUE) = TRUE AND
+    address_id IN (SELECT * FROM address_ids)
 )
 
 SELECT
   listings.id AS id,
   (COUNT(*) OVER())::INT AS total
 FROM listings WHERE
-  listings.status = ANY($16::listing_status[]) AND
-  listings.price >= $1 AND
-  listings.price <= $2 AND
-  listings.property_id IN (
-    SELECT id FROM properties WHERE
-      square_meters >= $3 AND
-      square_meters <= $4 AND
-      bedroom_count >= $5 AND
-      ((half_bathroom_count + full_bathroom_count) >= $6) AND
-      property_type = $7 AND
-      property_subtype = ANY ($8::property_subtype[]) AND
-      COALESCE(year_built >= $9, TRUE) = TRUE AND
-      COALESCE(year_built <= $10, TRUE) = TRUE AND
-      COALESCE(pool_yn = $11, TRUE) = TRUE AND
-      COALESCE(lot_square_meters >= $12, TRUE) = TRUE AND
-      COALESCE(lot_square_meters <= $13, TRUE) = TRUE AND
-      address_id IN (
-        select * from address_ids
-      )
-  )
+  listings.property_id IN (SELECT * FROM property_ids)
   AND (
     ($15::boolean IS NULL OR $15::boolean = false) OR (
       SELECT count(*) > 0 FROM open_houses WHERE
