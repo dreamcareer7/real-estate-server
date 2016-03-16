@@ -1,13 +1,17 @@
-with address_ids AS
+WITH listing_muis AS
+(
+  SELECT matrix_unique_id FROM listings WHERE
+  status = ANY($16::listing_status[]) AND
+  listings.price >= $1 AND
+  listings.price <= $2
+),
+address_ids AS
 (
   SELECT addresses.id FROM addresses
-  JOIN listings ON addresses.matrix_unique_id = listings.matrix_unique_id
   WHERE
     addresses.location IS NOT NULL AND
     ST_Within(addresses.location, ST_SetSRID(ST_GeomFromText($14), 4326)) AND
-    listings.status = ANY($16::listing_status[]) AND
-    listings.price >= $1 AND
-    listings.price <= $2
+    matrix_unique_id IN( SELECT matrix_unique_id FROM listing_muis )
 ), property_ids AS
 (
   SELECT id FROM properties WHERE
@@ -22,7 +26,7 @@ with address_ids AS
     COALESCE(pool_yn = $11, TRUE) = TRUE AND
     COALESCE(lot_square_meters >= $12, TRUE) = TRUE AND
     COALESCE(lot_square_meters <= $13, TRUE) = TRUE AND
-    address_id IN (SELECT * FROM address_ids)
+    address_id IN (SELECT id FROM address_ids)
 )
 
 SELECT
