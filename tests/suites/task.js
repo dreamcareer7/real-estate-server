@@ -12,7 +12,8 @@ var create = (cb) => {
       due_date: 2015,
       status: 'New',
       transaction: results.transaction.create.data.id,
-      expense: 4500
+      expense: 4500,
+      private: false
     })
     .after(cb)
     .expectStatus(200)
