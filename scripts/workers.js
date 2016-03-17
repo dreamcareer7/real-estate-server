@@ -10,6 +10,11 @@ queue.process('seamless_communication', config.email.parallel, (job, done) => {
   Notification.processSeamless(job, done);
 });
 
+queue.process('alert_share', config.email.parallel, (job, done) => {
+  console.log('-> Processed an Alert share'.black.greenBG);
+  Alert.processEmail(job, done);
+});
+
 queue.process('airship_transport_send_device', config.airship.parallel, (job, done) => {
   console.log('-> Processed a push notification'.green);
   Notification.sendToDevice(job.data.notification, job.data.token, done);
