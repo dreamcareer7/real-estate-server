@@ -41,10 +41,25 @@ function schedule() {
 
 function runTask(task, cb) {
   console.log('Spawning', task.name)
+  var timedout = () => {
+    console.log('Timed out', task.name);
+    p.kill();
+  }
+
+  var timeout = setTimeout(timedout, 20*60*1000);
+
+  var alreadyDone = false;
+  var done = function() {
+    if(alreadyDone)
+      return ;
+    alreadyDone = true;
+    console.log('Finished', task.name);
+    cb();
+    clearTimeout(timeout)
+  }
   var c = _.clone(task.command);
   var p = spawn(__dirname+'/'+c[0], c.splice(1));
-  p.on('close', () => console.log('Finished', task.name));
-  p.on('close', cb);
+  p.on('close', done);
 
   p.stdout.pipe(process.stdout);
   p.stderr.pipe(process.stderr);
