@@ -6,7 +6,7 @@ module.exports = {
   "first_name": String,
   "last_name": String,
   "email": String,
-  "phone_number": String,
+  "phone_number": v.optionalString,
   "created_at": Number,
   "id": String,
   "cover_image_url": v.optionalString,
