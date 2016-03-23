@@ -1,5 +1,5 @@
 INSERT INTO
-    sessions(device_uuid,
+    sessions(device_id,
              device_name,
              client_version)
 VALUES ($1,
