@@ -5,8 +5,9 @@ WITH verified AS (
     EXISTS (
         SELECT id
         FROM email_verifications
-        WHERE code = $1 AND
-              email = $2
+        WHERE code  = $1 AND
+              email = $2 AND
+              ((NOW() - created_at) < '1 day'::interval)
     )
 )
 DELETE FROM email_verifications
