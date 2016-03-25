@@ -276,16 +276,8 @@
         <center>
 
             <!-- Begin Header -->
-            <table class="Normalize Container" width="100%%" cellpadding="0" cellspacing="0" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;width: 570px;background: rgb(255, 255, 255);margin: 0px;border: none;padding: 15px;direction: rtl;word-break: break-word;font-family: 'Helvetica', 'Helvetica Neue', 'Arial', 'sans-serif';">
+            <table class="Normalize Container" width="100%%" cellpadding="0" cellspacing="0" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;width: 570px;background: rgb(255, 255, 255);margin: 50px 0px 0px 0px;border: none;padding: 15px;direction: rtl;word-break: break-word;font-family: 'Helvetica', 'Helvetica Neue', 'Arial', 'sans-serif';">
                 <tbody class="Normalize" valign="middle" style="margin: 0px;border: none;padding: 15px;direction: rtl;word-break: break-word;border-collapse: collapse;font-family: 'Helvetica', 'Helvetica Neue', 'Arial', 'sans-serif';">
-
-                    <!-- Begin Status -->
-                    <tr class="Normalize" valign="middle" style="margin: 0px;border: none;padding: 15px;direction: rtl;word-break: break-word;border-collapse: collapse;font-family: 'Helvetica', 'Helvetica Neue', 'Arial', 'sans-serif';">
-                        <td class="Normalize Center" valign="middle" align="center" width="100%%" style="border-collapse: collapse;margin: 0px;border: none;padding: 15px;direction: rtl;word-break: break-word;font-family: 'Helvetica', 'Helvetica Neue', 'Arial', 'sans-serif';text-align: center;">
-                            <p style="direction: ltr;line-height: 17px;font-size: 13px;color: #afafb1;font-weight: 100;text-align: left;margin: 0px 0px !important;">%(address)s status has changed from %(old_status)s to %(current_status)s. This listing alert is from <b>%(room_name)s</b>.</p>
-                        </td>
-                    </tr>
-                    <!-- End Status -->
 
                     <!-- Begin Head -->
                     <tr class="Normalize" valign="middle" style="background: #fafafc;border-bottom: 1px solid #f3f1f1;margin: 0px;border: none;padding: 15px;direction: rtl;word-break: break-word;border-collapse: collapse;font-family: 'Helvetica', 'Helvetica Neue', 'Arial', 'sans-serif';">
@@ -300,7 +292,7 @@
                         <td class="Normalize Center" valign="middle" align="center" width="100%%" style="border-collapse: collapse;margin: 0px;border: none;padding: 15px;direction: rtl;word-break: break-word;font-family: 'Helvetica', 'Helvetica Neue', 'Arial', 'sans-serif';text-align: center;">
                             <h2 style="margin: 0;width: 65%;float: left;text-align: left;padding-left: 15px;direction: ltr;color: #4a4a4a;font-weight: 100;font-size: 25px;box-sizing: border-box;">Hi %(name)s!</h2>
                             <a href="$(listing_uri)s" style="background: #3388ff;float: right;width: 35%;box-sizing: border-box;color: #ffffff;display: block;font-size: 13px;padding: 0px 0px;font-weight: 500;line-height: 40px;text-align: center;border-radius: 4px;text-decoration: none!important;">View Listing</a>
-                            <p style="font-weight: 570;float: left;text-align: left;direction: ltr;padding-top: 25px;font-size: 16px;line-height: 25px;margin: 0px 0px !important;"><span style="color: #9b9b9d;font-weight: lighter;">%(address)s</span> status has changed from %(old_status)s to %(new_status)s.</p>
+                            <p style="font-weight: 570;float: left;text-align: left;direction: ltr;padding-top: 25px;font-size: 16px;line-height: 25px;margin: 0px 0px !important;color: #9b9b9d;">%(address)s price has dropped from <span style="color: #4a4a4a;font-weight: bold;">%(old_price)s to %(new_price)s. thats a %(diff)s drop!.</span> </p>
                         </td>
                     </tr>
                     <!-- End User Centeric -->
@@ -334,7 +326,7 @@
                                     <td valign="bottom" align="left" width="100%%" style="border-collapse: collapse;">
                                         <div style="margin-top: 20px;float: left;display: inline-block;padding: 8px 15px;border-radius: 50px;background: rgba(0, 0, 0, 0.75);color: #ffffff;font-size: 13px;margin-right: 10px;font-weight: 100; direction: ltr; text-align:left;">
                                             <span style="width: 10px;height: 10px; margin-right: 5px;background: #ff3b30;display: inline-block;border-radius: 50%%;"></span>
-                                            %(new_status)s
+                                            %(status)s
                                         </div>
                                         <div style="margin-top: 20px;float: left;display: inline-block;padding: 8px 15px;border-radius: 50px;background: rgba(0, 0, 0, 0.75);color: #ffffff;font-size: 13px;margin-right: 10px;font-weight: 100; direction: ltr; text-align:left;">%(date)s</div>
                                     </td>
