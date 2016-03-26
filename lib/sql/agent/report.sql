@@ -44,6 +44,20 @@ WITH listed_listings AS (                               /* These are listings wh
   WHERE status = 'Active'
   GROUP BY list_agent_mls_id
 
+), total_volumes AS (
+  SELECT
+    (COALESCE(listed_volumes.listed_volume, 0) + COALESCE(selling_volumes.selling_volume, 0)) as total_volume, all_agents.agent
+  FROM all_agents
+  FULL JOIN listed_volumes  ON all_agents.agent = listed_volumes.list_agent_mls_id
+  FULL JOIN selling_volumes ON all_agents.agent = selling_volumes.selling_agent_mls_id
+
+), total_values AS (
+  SELECT
+    (COALESCE(listed_values.listed_value, 0) + COALESCE(selling_values.selling_value, 0)) as total_value, all_agents.agent
+  FROM all_agents
+  FULL JOIN listed_values  ON all_agents.agent = listed_values.list_agent_mls_id
+  FULL JOIN selling_values ON all_agents.agent = selling_values.selling_agent_mls_id
+
 ), total_active_volumes AS (
   SELECT count(*) as total_active_volume, list_agent_mls_id FROM listings
   WHERE status = 'Active' AND
@@ -66,6 +80,8 @@ SELECT
   selling_values.selling_value,
   active_volumes.active_volume,
   active_values.active_value,
+  total_volumes.total_volume,
+  total_values.total_value,
   total_active_volumes.total_active_volume,
   total_active_values.total_active_value,
   offices.name as office_name
@@ -76,6 +92,8 @@ FROM all_agents
   LEFT JOIN selling_values ON all_agents.agent = selling_values.selling_agent_mls_id
   LEFT JOIN active_volumes ON all_agents.agent = active_volumes.list_agent_mls_id
   LEFT JOIN active_values ON all_agents.agent = active_values.list_agent_mls_id
+  LEFT JOIN total_volumes ON all_agents.agent = total_volumes.agent
+  LEFT JOIN total_values ON all_agents.agent = total_values.agent
   LEFT JOIN total_active_volumes ON all_agents.agent = total_active_volumes.list_agent_mls_id
   LEFT JOIN total_active_values ON all_agents.agent = total_active_values.list_agent_mls_id
   LEFT JOIN agents ON all_agents.agent = agents.mlsid
@@ -103,4 +121,10 @@ WHERE
   CASE WHEN $18::integer IS NULL THEN TRUE ELSE total_active_volume <= $18 END AND
 
   CASE WHEN $19::integer IS NULL THEN TRUE ELSE total_active_value >= $19 END AND
-  CASE WHEN $20::integer IS NULL THEN TRUE ELSE total_active_value <= $20 END
+  CASE WHEN $20::integer IS NULL THEN TRUE ELSE total_active_value <= $20 END AND
+
+  CASE WHEN $22::integer IS NULL THEN TRUE ELSE total_value >= $23 END AND
+  CASE WHEN $23::integer IS NULL THEN TRUE ELSE total_value <= $23 END AND
+
+  CASE WHEN $24::integer IS NULL THEN TRUE ELSE total_volume >= $24 END AND
+  CASE WHEN $25::integer IS NULL THEN TRUE ELSE total_volume <= $25 END
