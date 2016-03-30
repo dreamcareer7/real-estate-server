@@ -10,9 +10,14 @@ queue.process('seamless_communication', config.email.parallel, (job, done) => {
   Notification.processSeamless(job, done);
 });
 
-queue.process('alert_share', config.email.parallel, (job, done) => {
-  console.log('-> Processed an Alert share'.black.greenBG);
+queue.process('alert_share_email', config.email.parallel, (job, done) => {
+  console.log('-> Processed an Alert share email'.black.greenBG);
   Alert.processEmail(job, done);
+});
+
+queue.process('alert_share_sms', config.email.parallel, (job, done) => {
+  console.log('-> Processed an Alert share SMS'.black.blueBG);
+  Alert.processSMS(job, done);
 });
 
 queue.process('airship_transport_send_device', config.airship.parallel, (job, done) => {
