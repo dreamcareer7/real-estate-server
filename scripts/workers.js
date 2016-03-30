@@ -30,6 +30,11 @@ queue.process('email', config.email.parallel, (job, done) => {
   Mailgun.callMailgun(job.data, done);
 });
 
+queue.process('email_ses', config.email.parallel, (job, done) => {
+  console.log('-> Processed an email (SES)'.black.cyanBG);
+  SES.callSES(job.data, done);
+});
+
 queue.process('sms', config.twilio.parallel, (job, done) => {
   console.log('-> Processed an SMS'.magenta);
   Twilio.callTwilio(job.data, done);
