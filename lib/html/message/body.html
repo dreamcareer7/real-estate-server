@@ -1,79 +1,329 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"
-      style="margin: 0; padding: 0; font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 100%%; line-height: 1.6;">
-<head style="margin: 0; padding: 0; font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 100%%; line-height: 1.6;">
-    <meta name="viewport" content="width=device-width"
-          style="margin: 0; padding: 0; font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 100%%; line-height: 1.6;">
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"
-          style="margin: 0; padding: 0; font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 100%%; line-height: 1.6;">
-    <title style="margin: 0; padding: 0; font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 100%%; line-height: 1.6;"></title>
+<html>
+    <head>
+        <!-- Email Title -->
+        <title>Alert Mail</title>
 
-</head>
-<body bgcolor="#FFFFFF" style="
- -webkit-font-smoothing: antialiased;
-    -webkit-text-size-adjust: none;
-    height: 100%%;
-    width: 100%%;
-">
-<div style="box-sizing: border-box; width: 576px; border: 1px solid #e7e4e3; margin: 0 auto; font-family: sans-serif;/* height: 750px; */"
-     bgcolor="#ffffff">
-    <div style="box-sizing: border-box; border-bottom: 1px solid #e7e4e3; background-color: #fafafc;display: block;padding: 8px 20px 14px;min-height: 25px !important;"
-         bgcolor="#fafafc">
-        <h1 style="box-sizing: border-box; font-size: 20px; color: #3388ff; margin: 0; padding: 0;display: inline-block;width: 48%%;line-height: 1.6;">
-            Rechat</h1>
+        <!-- General META -->
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+        <meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-        <div style="box-sizing: border-box; color: #c7c7cc;display: inline-block;width: 50%%;text-align: right;line-height: 1.6;font-family: Helvetica;font-size: 14px;font-weight: normal;"></div>
-    </div>
+        <!-- Social -->
+        <meta property="og:title" content="">
 
-    <div style="padding: 42px 30px 36px; box-sizing: border-box;display: block;line-height: 1.6;" bgcolor="#ffffff">
+        <!-- StyleSheet -->
+        <style>
+            #outlook a
+            {
+                padding:0;
+            }
 
-        <div style="color: #9b9b9b;display: block;">
-            <div style="height: 30px;">
-                <table width="100%%">
-                    <tr>
-                        <td>
-                            <h3 style="color: #000000;text-align: center;font-size: 28px;font-family: Helvetica;font-weight: lighter;display: block;padding: 0;line-height: 28px;margin: 0; text-align: left">
-                                Hi %(first_name)s</h3></td>
-                        <td style="text-align: right">
-                            <a href="%(url)s" target="_blank"
-                               style="background-color: #3388ff;color: #fff;text-decoration: none;padding: 9px 30px;border-radius: 4px;display: inline-block;font-size: 16px;font-family: Helvetica;">View
-                                on Rechat</a></td>
+            .ExternalClass
+            {
+                width:100%%;
+            }
+
+            .ExternalClass,
+            .ExternalClass p,
+            .ExternalClass span,
+            .ExternalClass font,
+            .ExternalClass td,
+            .ExternalClass div
+            {
+                line-height: 100%%;
+            }
+
+            #backgroundTable
+            {
+                margin:0;
+                padding:0;
+                width:100%% !important;
+                line-height: 100%% !important;
+            }
+
+            img
+            {
+                outline:none;
+                text-decoration:none;
+                border:none;
+                -ms-interpolation-mode: bicubic;
+            }
+
+            a img
+            {
+                border:none;
+            }
+
+            .image_fix
+            {
+                display:block;
+            }
+
+            p
+            {
+                margin: 0px 0px !important;
+            }
+
+            table td
+            {
+                border-collapse: collapse;
+            }
+
+            table
+            {
+                border-collapse:collapse;
+                mso-table-lspace:0pt;
+                mso-table-rspace:0pt;
+            }
+
+            a
+            {
+                color: #0a8cce;
+                text-decoration: none;
+                text-decoration:none!important;
+            }
+
+            .Body
+            {
+                padding: 0;
+                width: 600px;
+                margin: 0 auto;
+                background: rgb(255, 255, 255);
+                -ms-text-size-adjust:100%%;
+                -webkit-text-size-adjust:100%%;
+            }
+
+            .Container
+            {
+                width: 600px;
+                background: rgb(255, 255, 255);
+            }
+
+            .Normalize
+            {
+                margin: 0px;
+                border: none;
+                padding: 15px 15px 15px 0px;
+                direction: rtl;
+                word-break: break-word;
+                border-collapse: collapse;
+                font-family: 'Helvetica', 'Helvetica Neue', 'Arial', 'sans-serif';
+            }
+
+            .Main
+            {
+                padding: 15px !important;
+                border-top: none;
+                border-left: 1px solid rgb(240, 240, 240);
+                border-right: 1px solid rgb(240, 240, 240);
+                border-bottom: 1px solid rgb(240, 240, 240);
+            }
+
+            .Center
+            {
+                text-align: center;
+            }
+
+            .Right
+            {
+                text-align: right;
+            }
+
+            .Left
+            {
+                text-align: left;
+            }
+
+            .Header
+            {
+                line-height: 35px;
+                padding-bottom: 25px;
+                border-bottom: 1px solid rgb(235, 235, 235);
+            }
+
+            .Username
+            {
+                margin: 0px;
+                font-size: 20px;
+                font-weight: 500;
+                padding: 25px 0px 15px;
+                color: rgb(15, 15, 15);
+            }
+
+            .Paragraph
+            {
+                margin: 0px;
+                line-height: 2;
+                font-size: 12px;
+                padding: 10px 0px;
+                color: rgb(85, 85, 85);
+            }
+
+            .Code
+            {
+                line-height: 2;
+                font-size: 12px;
+                font-weight: 700;
+                padding: 10px 0px;
+                margin: 15px 0px 10px;
+                color: rgb(45, 45, 45);
+            }
+
+            .Button
+            {
+                width: 100%%;
+                display: block;
+                font-size: 13px;
+                padding: 0px 0px;
+                font-weight: 500;
+                line-height: 40px;
+                text-align: center;
+                border-radius: 4px;
+                margin: 15px 0px 0px;
+                text-decoration: none;
+                color: rgb(255, 255, 255);
+                background: rgb(51, 136, 255);
+            }
+
+            .Column
+            {
+                width: 50%%;
+                float: right;
+                text-align: right;
+            }
+
+            .Footer
+            {
+                padding-top: 25px;
+                padding-bottom: 25px;
+                border-top: 1px solid rgb(235, 235, 235);
+            }
+
+            .Caption
+            {
+                width: 100%%;
+                float: right;
+                font-size: 11px;
+                font-weight: 500;
+                text-align: right;
+                margin-bottom: 10px;
+                color: rgb(153, 153, 153);
+            }
+
+            .SentTo
+            {
+                width: 100%%;
+                float: right;
+                margin-top: 47px;
+                font-size: 9px;
+                text-align: right;
+                line-height: 25px;
+                color: rgb(192, 192, 192);
+            }
+
+            .Setting
+            {
+                font-size: 10px;
+                text-align: right;
+                line-height: 25px;
+                text-decoration: none;
+                color: rgb(85, 85, 85);
+            }
+
+            .Link
+            {
+                width: 100%%;
+                float: right;
+                font-size: 10px;
+                line-height: 25px;
+                text-align: right;
+                text-decoration: none;
+                color: rgb(85, 85, 85);
+            }
+
+            .ViewOn
+            {
+                width: 100%%;
+                float: right;
+                display: block;
+                font-size: 12px;
+                margin-top: 25px;
+                line-height: 60px;
+                color: rgb(180, 180, 180);
+                background: rgb(255, 255, 255);
+            }
+
+            .Copyright
+            {
+                width: 100%%;
+                float: right;
+                display: block;
+                font-size: 11px;
+                margin-top: 25px;
+                line-height:80px;
+                color: rgb(190, 190, 190);
+                background: rgb(252, 252, 252);
+                border: 1px solid rgb(245, 245, 245);
+            }
+        </style>
+
+    </head>
+
+    <body class="Body" style="padding: 0;width: 600px;margin: 0 auto;background: rgb(255, 255, 255);-ms-text-size-adjust: 100%%;-webkit-text-size-adjust: 100%%;">
+
+            <!-- Begin Center -->
+<center>
+            <!-- Begin Footer -->
+            <table class="Normalize Container" width="100%%" cellpadding="0" cellspacing="0" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;width: 600px;background: rgb(255, 255, 255);margin: 0px;border: none;padding: 15px;direction: rtl;word-break: break-word;font-family: 'Helvetica', 'Helvetica Neue', 'Arial', 'sans-serif';">
+
+                    <!-- Begin Detail -->
+                    <tr class="Normalize" valign="middle" style="margin: 0px;border: none;padding: 15px;direction: rtl;word-break: break-word;border-collapse: collapse;font-family: 'Helvetica', 'Helvetica Neue', 'Arial', 'sans-serif';">
+                        <td class="Normalize Center Wrapper" valign="middle" align="center" width="100%%" style="border-collapse: collapse;margin: 0px;border: none;padding: 15px;direction: rtl;word-break: break-word;font-family: 'Helvetica', 'Helvetica Neue', 'Arial', 'sans-serif';text-align: center;">
+
+                            <!-- Begin Avatar -->
+                            <table width="20%%" align="left" border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
+                                <tr>
+                                    <td valign="middle" align="left" width="100%%" style="border-collapse: collapse;">
+                                        <img src="%(avatar)s" width="80" height="80" style="border-radius: 50%%;outline: none;text-decoration: none;border: none;-ms-interpolation-mode: bicubic;">
+                                    </td>
+                                </tr>
+                            </table>
+                            <!-- End Avatar -->
+                            
+                            <!-- Begin Content -->
+                            <table width="40%%" align="left" border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
+                                <tr>
+                                    <td valign="middle" align="left" width="100%%" style="padding-left: 10px;padding-top: 11px;border-collapse: collapse;">
+                                        <div style="width: 100%%; color: #000000;font-size: 14px;font-weight: 570;">%(sender_name)s</div>
+                                        <div style="width: 100%%;display: block;padding: 5px 0 10px;font-size: 14px;color: #757575;direction: ltr;">%(agency_name)s</div>
+                                        <div style="width: 100%%; padding-left: 5px;font-weight: lighter;font-size: 14px;color: #c5c5c5;">%(agency_phone)s</div>
+                                    </td>
+                                </tr>
+                            </table>
+                            <!-- End Content -->
+                        </td>
                     </tr>
-                </table>
+                    <!-- End Detail -->
+                <tbody class="Normalize" valign="middle" style="margin: 0px;border: none;padding: 15px;direction: rtl;word-break: break-word;border-collapse: collapse;font-family: 'Helvetica', 'Helvetica Neue', 'Arial', 'sans-serif';">
 
-                <p style="line-height: 22px;font-size: 16px;font-family: Helvetica;padding: 0;margin: 0;">
+                    <!-- Begin View On Rechat -->
+                    <tr class="Normalize" valign="middle" style="margin: 0px;border: none;padding: 15px;direction: rtl;word-break: break-word;border-collapse: collapse;font-family: 'Helvetica', 'Helvetica Neue', 'Arial', 'sans-serif';">
+                        <td class="Normalize Center ViewOn" valign="middle" align="right" width="100%%" style="border-collapse: collapse;margin: 0px;border: none;padding: 15px;direction: rtl;word-break: break-word;font-family: 'Helvetica', 'Helvetica Neue', 'Arial', 'sans-serif';text-align: center;width: 100%%;float: right;display: block;font-size: 12px;margin-top: 25px;line-height: 50px;color: rgb(180, 180, 180);background: rgb(255, 255, 255);">
 
-                </p>
-            </div>
-            <div>
-                <p style="line-height: 22px;font-size: 16px;color:9b9b9b;font-family: Helvetica;padding: 26px 0px 40px 0px;margin: 0;">
-                    %(sender_name)s sent a message in <b
-                        style="margin: 0;color:#9b9b9b; padding: 0; font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 1.6;">%(room)s</b>.
-                </p>
-            </div>
-            <hr style="background-color: #e7e4e3; height: 1px; border: 0;">
+                         <center style="font-size:14px;">Reply directly to this email or <a href="$(listing_uri)s" style="color: #3388ff;text-decoration: none!important;">view on Rechat</a></center>
+                         <!-- Begin Privacy -->
+                         <center>Rechat@2016, All Rights Reserved. <a href="%(mls_terms)s" style="color:#bebebe; text-decoration: underline !important;">MLS Terms</a></center>
+                        <!-- End Privacy -->
+                        </td>
+                    </tr>
+                    <!-- End View On Rechat -->
+                </tbody>
+            </table>
+            <!-- End Footer -->
 
-            <div style="padding-top: 30px;">
-                %(list)s
-            </div>
+        </center>
+        <!-- Begin Center -->
 
-            <div style="height: 30px; margin-top: 100px;">
-                <p style="line-height: 22px;font-size: 16px;color: #4A4A4Afont-family: Helvetica;padding: 0;margin: 0; text-align: center;">
-
-                    Reply directly to this email or <a href="%(url)s"
-                                                       style="color: #3388ff; text-decoration: none; font-weight: bold">view
-                    on Rechat</a>
-                </p>
-            </div>
-        </div>
-    </div>
-    <div style="background-color: #fcfcfc;box-sizing: border-box;padding: 40px;color: #b1b1b1;border-top: 1px solid #e7e4e3;display: block; height: 75; text-align: center !important;font-size: 12px;line-height: 18px;">
-        Rechat © 2016, All rights reserved.<a href="http://tinyurl.com/mls-terms-of-use" target="_blank"
-                                              style="color: #b1b1b1; text-decoration: none;">MLS Terms</a>
-    </div>
-</div>
-
-</body>
-
+    </body>
 </html>
