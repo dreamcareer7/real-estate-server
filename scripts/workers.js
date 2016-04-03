@@ -7,7 +7,7 @@ var queue  = require('../lib/utils/queue.js');
 
 queue.process('seamless_communication', config.email.parallel, (job, done) => {
   console.log('-> Processed a seamless communication email batch'.blue);
-  Notification.processSeamless(job, done);
+  Message.processSeamless(job, done);
 });
 
 queue.process('alert_share_email', config.email.parallel, (job, done) => {
