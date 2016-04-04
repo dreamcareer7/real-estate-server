@@ -5,8 +5,6 @@ var Client = require('./rets_client.js');
 var fs     = require('fs');
 var config = require('../../lib/config.js');
 
-require('../../lib/models/index.js')();
-
 var program = require('./program.js')
       .option('-d, --download-concurency <n>', 'Download (From RETS) concurrency')
       .option('-u, --upload-concurency <n>',   'Upload   (To S3)     concurrency');

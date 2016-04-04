@@ -9,8 +9,6 @@ var sleep = require('sleep');
 var colors = require('colors');
 var dayLimit = 0;
 
-require('../../lib/models/index.js')();
-
 Address.getBatchOfAddressesWithoutLatLongBing(config.bing.address_batch_size, function(err, address_ids) {
   if(err) {
     console.log(err);

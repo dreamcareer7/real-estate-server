@@ -1,5 +1,4 @@
 require('./connection.js');
-require('../lib/models/index.js')();
 require('colors');
 
 var config = require('../lib/config.js');

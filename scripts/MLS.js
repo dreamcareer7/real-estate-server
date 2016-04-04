@@ -1,4 +1,3 @@
-require('../lib/models/index.js')();
 require('./connection.js');
 
 var db     = require('../lib/utils/db.js');

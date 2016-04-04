@@ -7,8 +7,6 @@ var _u = require('underscore');
 var EventEmitter = require('events');
 var util = require('util');
 
-require('../../lib/models/index.js')();
-
 var Client = new EventEmitter;
 Client.options = {};
 

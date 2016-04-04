@@ -5,7 +5,6 @@ var slack = require('./slack.js');
 var async = require('async');
 var util = require('util');
 var config = require('../../lib/config.js');
-require('../../lib/models/index.js')();
 
 Error.autoReport = false;
 

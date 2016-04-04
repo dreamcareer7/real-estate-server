@@ -1,7 +1,6 @@
 var async = require('async');
 require('../connection.js');
 require('../../lib/utils/db.js');
-require('../../lib/models/index.js')();
 var _ = require('underscore');
 var spawn = require('child_process').spawn;
 var config = require('../../lib/config.js');
