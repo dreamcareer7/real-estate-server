@@ -1,432 +1,377 @@
 <html>
-    <head>
-        <!-- Email Title -->
-        <title>Alert Mail</title>
-
-        <!-- General META -->
-        <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
-        <meta http-equiv="Content-type" content="text/html;charset=UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-        <!-- Social -->
-        <meta property="og:title" content="">
-
-        <!-- StyleSheet -->
-        <style>
-            #outlook a
-            {
-                padding:0;
-            }
-
-            .ExternalClass
-            {
-                width:100%%;
-            }
-
-            .ExternalClass,
-            .ExternalClass p,
-            .ExternalClass span,
-            .ExternalClass font,
-            .ExternalClass td,
-            .ExternalClass div
-            {
-                line-height: 100%%;
-            }
-
-            #backgroundTable
-            {
-                margin:0;
-                padding:0;
-                width:100%% !important;
-                line-height: 100%% !important;
-            }
-
-            img
-            {
-                outline:none;
-                text-decoration:none;
-                border:none;
-                -ms-interpolation-mode: bicubic;
-            }
-
-            a img
-            {
-                border:none;
-            }
-
-            .image_fix
-            {
-                display:block;
-            }
-
-            p
-            {
-                margin: 0px 0px !important;
-            }
-
-            table td
-            {
-                border-collapse: collapse;
-            }
-
-            table
-            {
-                border-collapse:collapse;
-                mso-table-lspace:0pt;
-                mso-table-rspace:0pt;
-            }
-
-            a
-            {
-                color: #0a8cce;
-                text-decoration: none;
-                text-decoration:none!important;
-            }
-
-            .Body
-            {
-                padding: 0;
-                width: 600px;
-                margin: 0 auto;
-                background: rgb(255, 255, 255);
-                -ms-text-size-adjust:100%%;
-                -webkit-text-size-adjust:100%%;
-            }
-
-            .Container
-            {
-                width: 600px;
-                background: rgb(255, 255, 255);
-            }
-
-            .Normalize
-            {
-                margin: 0px;
-                border: none;
-                padding: 15px 15px 15px 0px;
-                direction: rtl;
-                word-break: break-word;
-                border-collapse: collapse;
-                font-family: 'Helvetica', 'Helvetica Neue', 'Arial', 'sans-serif';
-            }
-
-            .Main
-            {
-                padding: 15px !important;
-                border-top: none;
-                border-left: 1px solid rgb(240, 240, 240);
-                border-right: 1px solid rgb(240, 240, 240);
-                border-bottom: 1px solid rgb(240, 240, 240);
-            }
-
-            .Center
-            {
-                text-align: center;
-            }
-
-            .Right
-            {
-                text-align: right;
-            }
-
-            .Left
-            {
-                text-align: left;
-            }
-
-            .Header
-            {
-                line-height: 35px;
-                padding-bottom: 25px;
-                border-bottom: 1px solid rgb(235, 235, 235);
-            }
-
-            .Username
-            {
-                margin: 0px;
-                font-size: 20px;
-                font-weight: 500;
-                padding: 25px 0px 15px;
-                color: rgb(15, 15, 15);
-            }
-
-            .Paragraph
-            {
-                margin: 0px;
-                line-height: 2;
-                font-size: 12px;
-                padding: 10px 0px;
-                color: rgb(85, 85, 85);
-            }
-
-            .Code
-            {
-                line-height: 2;
-                font-size: 12px;
-                font-weight: 700;
-                padding: 10px 0px;
-                margin: 15px 0px 10px;
-                color: rgb(45, 45, 45);
-            }
-
-            .Button
-            {
-                width: 100%%;
-                display: block;
-                font-size: 13px;
-                padding: 0px 0px;
-                font-weight: 500;
-                line-height: 40px;
-                text-align: center;
-                border-radius: 4px;
-                margin: 15px 0px 0px;
-                text-decoration: none;
-                color: rgb(255, 255, 255);
-                background: rgb(51, 136, 255);
-            }
-
-            .Column
-            {
-                width: 50%%;
-                float: right;
-                text-align: right;
-            }
-
-            .Footer
-            {
-                padding-top: 25px;
-                padding-bottom: 25px;
-                border-top: 1px solid rgb(235, 235, 235);
-            }
-
-            .Caption
-            {
-                width: 100%%;
-                float: right;
-                font-size: 11px;
-                font-weight: 500;
-                text-align: right;
-                margin-bottom: 10px;
-                color: rgb(153, 153, 153);
-            }
-
-            .SentTo
-            {
-                width: 100%%;
-                float: right;
-                margin-top: 47px;
-                font-size: 9px;
-                text-align: right;
-                line-height: 25px;
-                color: rgb(192, 192, 192);
-            }
-
-            .Setting
-            {
-                font-size: 10px;
-                text-align: right;
-                line-height: 25px;
-                text-decoration: none;
-                color: rgb(85, 85, 85);
-            }
-
-            .Link
-            {
-                width: 100%%;
-                float: right;
-                font-size: 10px;
-                line-height: 25px;
-                text-align: right;
-                text-decoration: none;
-                color: rgb(85, 85, 85);
-            }
-
-            .ViewOn
-            {
-                width: 100%%;
-                float: right;
-                display: block;
-                font-size: 12px;
-                margin-top: 25px;
-                line-height: 60px;
-                color: rgb(180, 180, 180);
-                background: rgb(255, 255, 255);
-            }
-
-            .Copyright
-            {
-                width: 100%%;
-                float: right;
-                display: block;
-                font-size: 11px;
-                margin-top: 25px;
-                line-height:80px;
-                color: rgb(190, 190, 190);
-                background: rgb(252, 252, 252);
-                border: 1px solid rgb(245, 245, 245);
-            }
-        </style>
-
-    </head>
-
-    <body class="Body" style="padding: 0;width: 600px;margin: 0 auto;background: rgb(255, 255, 255);-ms-text-size-adjust: 100%%;-webkit-text-size-adjust: 100%%;">
-
-        <!-- Begin Center -->
-        <center>
-
-
-  <!-- Begin Header -->
-            <table class="Normalize Container" width="100%%" cellpadding="0" cellspacing="0" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;width: 600px;background: rgb(255, 255, 255);margin: 0px;border: none;padding: 15px;direction: rtl;word-break: break-word;font-family: 'Helvetica', 'Helvetica Neue', 'Arial', 'sans-serif';">
-                <tbody class="Normalize" valign="middle" style="margin: 0px;border: none;padding: 15px;direction: rtl;word-break: break-word;border-collapse: collapse;font-family: 'Helvetica', 'Helvetica Neue', 'Arial', 'sans-serif';">
-                    <!-- Begin User Centeric -->
-                    <tr class="Normalize" valign="middle" style="margin: 0px;border: none;padding: 15px;direction: rtl;word-break: break-word;border-collapse: collapse;font-family: 'Helvetica', 'Helvetica Neue', 'Arial', 'sans-serif';">
-                        <td class="Normalize Center" valign="middle" align="center" width="100%%" style="border-collapse: collapse;margin: 0px;border: none;direction: rtl;word-break: break-word;font-family: 'Helvetica', 'Helvetica Neue', 'Arial', 'sans-serif';text-align: center;">
-                            <h2 style="margin: 0;width: 65%;float: left;text-align: left;direction: ltr;color: #4a4a4a;font-weight: 500;font-size: 16px;box-sizing: border-box;">Hi %(name)s!</h2>
-                            <p style="font-weight: 570;float: left;text-align: left;direction: ltr;padding-top: 25px;font-size: 16px;line-height: 25px;margin: 0px 0px !important;">%(address)s price has dropped from <span style="color: #4a4a4a;font-weight: bold;">%(old_price)s to %(new_price)s. thats a %(diff)s drop!.</span> </p>
-                            <p style="clear: both; text-align: left; padding-top: 10px"><a href="%(listing_uri)s">%(listing_uri)s</a></p>
+   <head>
+      <!-- Email Title -->
+      <title>Alert Mail</title>
+      <!-- General META -->
+      <meta charset="UTF-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+      <meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <!-- Social -->
+      <meta property="og:title" content="">
+      <!-- StyleSheet -->
+      <style>
+         #outlook a
+         {
+         padding:0;
+         }
+         .ExternalClass
+         {
+         width:100%%;
+         }
+         .ExternalClass,
+         .ExternalClass p,
+         .ExternalClass span,
+         .ExternalClass font,
+         .ExternalClass td,
+         .ExternalClass div
+         {
+         line-height: 100%%;
+         }
+         #backgroundTable
+         {
+         margin:0;
+         padding:0;
+         width:100%% !important;
+         line-height: 100%% !important;
+         }
+         img
+         {
+         outline:none;
+         text-decoration:none;
+         border:none;
+         -ms-interpolation-mode: bicubic;
+         }
+         a img
+         {
+         border:none;
+         }
+         .image_fix
+         {
+         display:block;
+         }
+         p
+         {
+         margin: 0px 0px !important;
+         }
+         table td
+         {
+         border-collapse: collapse;
+         }
+         table
+         {
+         border-collapse:collapse;
+         mso-table-lspace:0pt;
+         mso-table-rspace:0pt;
+         }
+         a
+         {
+         color: #0a8cce;
+         text-decoration: none;
+         text-decoration:none!important;
+         }
+         .Body
+         {
+         padding: 0;
+         width: 600px;
+         margin: 0 auto;
+         background: rgb(255, 255, 255);
+         -ms-text-size-adjust:100%%;
+         -webkit-text-size-adjust:100%%;
+         }
+         .Container
+         {
+         width: 600px;
+         background: rgb(255, 255, 255);
+         }
+         .Normalize
+         {
+         margin: 0px;
+         border: none;
+         padding: 15px 15px 15px 0px;
+         direction: rtl;
+         word-break: break-word;
+         border-collapse: collapse;
+         font-family: 'Helvetica', 'Helvetica Neue', 'Arial', 'sans-serif';
+         }
+         .Main
+         {
+         padding: 15px !important;
+         border-top: none;
+         border-left: 1px solid rgb(240, 240, 240);
+         border-right: 1px solid rgb(240, 240, 240);
+         border-bottom: 1px solid rgb(240, 240, 240);
+         }
+         .Center
+         {
+         text-align: center;
+         }
+         .Right
+         {
+         text-align: right;
+         }
+         .Left
+         {
+         text-align: left;
+         }
+         .Header
+         {
+         line-height: 35px;
+         padding-bottom: 25px;
+         border-bottom: 1px solid rgb(235, 235, 235);
+         }
+         .Username
+         {
+         margin: 0px;
+         font-size: 20px;
+         font-weight: 500;
+         padding: 25px 0px 15px;
+         color: rgb(15, 15, 15);
+         }
+         .Paragraph
+         {
+         margin: 0px;
+         line-height: 2;
+         font-size: 12px;
+         padding: 10px 0px;
+         color: rgb(85, 85, 85);
+         }
+         .Code
+         {
+         line-height: 2;
+         font-size: 12px;
+         font-weight: 700;
+         padding: 10px 0px;
+         margin: 15px 0px 10px;
+         color: rgb(45, 45, 45);
+         }
+         .Button
+         {
+         width: 100%%;
+         display: block;
+         font-size: 13px;
+         padding: 0px 0px;
+         font-weight: 500;
+         line-height: 40px;
+         text-align: center;
+         border-radius: 4px;
+         margin: 15px 0px 0px;
+         text-decoration: none;
+         color: rgb(255, 255, 255);
+         background: rgb(51, 136, 255);
+         }
+         .Column
+         {
+         width: 50%%;
+         float: right;
+         text-align: right;
+         }
+         .Footer
+         {
+         padding-top: 25px;
+         padding-bottom: 25px;
+         border-top: 1px solid rgb(235, 235, 235);
+         }
+         .Caption
+         {
+         width: 100%%;
+         float: right;
+         font-size: 11px;
+         font-weight: 500;
+         text-align: right;
+         margin-bottom: 10px;
+         color: rgb(153, 153, 153);
+         }
+         .SentTo
+         {
+         width: 100%%;
+         float: right;
+         margin-top: 47px;
+         font-size: 9px;
+         text-align: right;
+         line-height: 25px;
+         color: rgb(192, 192, 192);
+         }
+         .Setting
+         {
+         font-size: 10px;
+         text-align: right;
+         line-height: 25px;
+         text-decoration: none;
+         color: rgb(85, 85, 85);
+         }
+         .Link
+         {
+         width: 100%%;
+         float: right;
+         font-size: 10px;
+         line-height: 25px;
+         text-align: right;
+         text-decoration: none;
+         color: rgb(85, 85, 85);
+         }
+         .ViewOn
+         {
+         width: 100%%;
+         float: right;
+         display: block;
+         font-size: 12px;
+         margin-top: 25px;
+         line-height: 60px;
+         color: rgb(180, 180, 180);
+         background: rgb(255, 255, 255);
+         }
+         .Copyright
+         {
+         width: 100%%;
+         float: right;
+         display: block;
+         font-size: 11px;
+         margin-top: 25px;
+         line-height:80px;
+         color: rgb(190, 190, 190);
+         background: rgb(252, 252, 252);
+         border: 1px solid rgb(245, 245, 245);
+         }
+      </style>
+   </head>
+   <body class="Body" style="padding: 0;width: 600px;margin: 0 auto;background: rgb(255, 255, 255);-ms-text-size-adjust: 100%%;-webkit-text-size-adjust: 100%%;">
+      <!-- Begin Center -->
+      <center>
+         <!-- Begin Header -->
+         <table class="Normalize Container" width="100%%" cellpadding="0" cellspacing="0" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;width: 600px;background: rgb(255, 255, 255);margin: 0px;border: none;padding: 15px;direction: rtl;word-break: break-word;font-family: 'Helvetica', 'Helvetica Neue', 'Arial', 'sans-serif';">
+            <tbody class="Normalize" valign="middle" style="margin: 0px;border: none;padding: 15px;direction: rtl;word-break: break-word;border-collapse: collapse;font-family: 'Helvetica', 'Helvetica Neue', 'Arial', 'sans-serif';">
+               <!-- Begin User Centeric -->
+               <tr class="Normalize" valign="middle" style="margin: 0px;border: none;padding: 15px;direction: rtl;word-break: break-word;border-collapse: collapse;font-family: 'Helvetica', 'Helvetica Neue', 'Arial', 'sans-serif';">
+                  <td class="Normalize Center" valign="middle" align="center" width="100%%" style="border-collapse: collapse;margin: 0px;border: none;direction: rtl;word-break: break-word;font-family: 'Helvetica', 'Helvetica Neue', 'Arial', 'sans-serif';text-align: center;">
+                     <h2 style="margin: 0;width: 65%;float: left;text-align: left;direction: ltr;color: #4a4a4a;font-weight: 500;font-size: 16px;box-sizing: border-box;">Hi %(name)s!</h2>
+                     <p style="font-weight: 570;float: left;text-align: left;direction: ltr;padding-top: 25px;font-size: 16px;line-height: 25px;margin: 0px 0px !important;">%(address)s price has dropped from <span style="color: #4a4a4a;font-weight: bold;">%(old_price)s to %(new_price)s. thats a %(diff)s drop!.</span> </p>
+                     <p style="clear: both; text-align: left; padding-top: 10px"><a href="%(listing_uri)s">%(listing_uri)s</a></p>
+                  </td>
+               </tr>
+               <!-- End User Centeric -->
+            </tbody>
+         </table>
+         <!-- End Header -->
+         <!-- Begin Main Wrapper -->
+         <table class="Normalize Container Main" width="100%%" cellpadding="0" cellspacing="0" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;width: 600px;background: rgb(255, 255, 255);margin: 0px;border: none;padding: 15px !important;direction: rtl;word-break: break-word;font-family: 'Helvetica', 'Helvetica Neue', 'Arial', 'sans-serif';border-top: none;border-left: 1px solid rgb(240, 240, 240);border-right: 1px solid rgb(240, 240, 240);border-bottom: 1px solid rgb(240, 240, 240);">
+            <tbody class="Normalize" valign="middle" style="margin: 0px;border: none;padding: 15px;direction: rtl;word-break: break-word;border-collapse: collapse;font-family: 'Helvetica', 'Helvetica Neue', 'Arial', 'sans-serif';">
+               <!-- Begin Cover Image -->
+               <tr class="Normalize" valign="middle" style="margin: 0px;border: none;padding: 15px;direction: rtl;word-break: break-word;border-collapse: collapse;font-family: 'Helvetica', 'Helvetica Neue', 'Arial', 'sans-serif';">
+                  <td class="Normalize Center Wrapper" valign="bottom" align="center" width="100%%" height="575" style="background: url(%(photo_uri)s) no-repeat;background-size: cover;background-attachment: initial;background-repeat: no-repeat;border-collapse: collapse;margin: 0px;border: none;padding: 15px;direction: rtl;word-break: break-word;font-family: 'Helvetica', 'Helvetica Neue', 'Arial', 'sans-serif';text-align: center;">
+                     <!-- Begin Price -->
+                     <table width="50%%" align="right" border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
+                        <tr>
+                           <td valign="bottom" align="left" width="100%%" style="border-collapse: collapse;">
+                              <h4 style="color: #ffffff;text-decoration: line-through; -moz-text-decoration-color: red;text-decoration-color: red;-webkit-text-decoration-color: red;font-size: 17px;font-weight: 100;text-align: right;direction: ltr;margin: 0;">%(old_price)s</h4>
+                              <h3 style="color: #ffffff;direction: ltr;text-align: right;font-size: 27px;margin: 0;font-weight: 500;">%(new_price)s</h3>
+                           </td>
+                        </tr>
+                     </table>
+                     <!-- End Price -->
+                     <!-- Begin Tag -->
+                     <table width="50%%" align="left" border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
+                        <tr>
+                           <td valign="bottom" align="left" width="100%%" style="border-collapse: collapse;">
+                              <div style="margin-top: 20px;float: left;display: inline-block;padding: 8px 15px;border-radius: 50px;background: rgba(0, 0, 0, 0.75);color: #ffffff;font-size: 13px;margin-right: 10px;font-weight: 100; direction: ltr; text-align:left;">
+                                 <span style="width: 10px;height: 10px; margin-right: 5px;background: %(status_color)s;display: inline-block;border-radius: 50%%;"></span>
+                                 %(status)s
+                              </div>
+                              <div style="margin-top: 20px;float: left;display: inline-block;padding: 8px 15px;border-radius: 50px;background: rgba(0, 0, 0, 0.75);color: #ffffff;font-size: 13px;margin-right: 10px;font-weight: 100; direction: ltr; text-align:left;">%(date)s</div>
+                           </td>
+                        </tr>
+                     </table>
+                     <!-- End Tag -->
+                  </td>
+               </tr>
+               <!-- End Cover Image -->
+               <!-- Begin Detail -->
+               <tr class="Normalize" valign="middle" style="margin: 0px;border: none;padding: 15px;direction: rtl;word-break: break-word;border-collapse: collapse;font-family: 'Helvetica', 'Helvetica Neue', 'Arial', 'sans-serif';">
+                  <td class="Normalize Center Wrapper" valign="middle" align="center" width="100%%" style="border-collapse: collapse;margin: 0px;border: none;padding: 15px;direction: rtl;word-break: break-word;font-family: 'Helvetica', 'Helvetica Neue', 'Arial', 'sans-serif';text-align: center;">
+                     <h2 style="font-weight: 300;text-align: left;direction: ltr;font-size: 27px;font-family: serif !important;margin-bottom: 0;">%(address)s</h2>
+                     <h4 style="text-align: left;direction: ltr;margin-top: 0;font-weight: 100;color: #bfc2c3;font-size: 13px;">%(area)s, %(city)s</h4>
+                     <span style="text-align: left;display: inline-block;float: left;color: 626262;font-size: 20px;font-weight: 100;direction: ltr;">%(bedroom_count)s Beds</span>
+                     <span style="float: left;margin: 5px 20px 0;">&bull;</span>
+                     <span style="text-align: left;display: inline-block;float: left;color: 626262;font-size: 20px;font-weight: 100;direction: ltr;">%(bathroom_count)s Baths</span>
+                     <span style="float: left;margin: 5px 20px 0;">&bull;</span>
+                     <span style="text-align: left;display: inline-block;float: left;color: 626262;font-size: 20px;font-weight: 100;direction: ltr;">%(square_meters)s Sqft</span>
+                     <span style="float: left;margin: 5px 20px 0;">&bull;</span>
+                     <span style="text-align: left;display: inline-block;float: left;color: 626262;font-size: 20px;font-weight: 100;direction: ltr;">%(lot)s Lot</span>
+                     <p style="display: block;width: 100%%;float: left;padding-top: 15px;padding-bottom: 5px;text-align: left;font-size: 13px;line-height: 20px;direction: ltr;color: #898989;margin: 0px 0px !important;">%(description)s</p>
+                  </td>
+               </tr>
+               <!-- End Detail -->
+               <!-- Begin Divider -->
+               <tr class="Normalize" valign="middle" style="margin: 0px;border: none;padding: 15px;direction: rtl;word-break: break-word;border-collapse: collapse;font-family: 'Helvetica', 'Helvetica Neue', 'Arial', 'sans-serif';">
+                  <td class="Normalize Center Wrapper" valign="middle" align="center" width="100%%" style="padding-top: 0 !important;padding-bottom: 0 !important;border-collapse: collapse;margin: 0px;border: none;padding: 15px;direction: rtl;word-break: break-word;font-family: 'Helvetica', 'Helvetica Neue', 'Arial', 'sans-serif';text-align: center;">
+                     <span style="width: 100%%;display: block;border-bottom: 1px solid #ececec;"></span>
+                  </td>
+               </tr>
+               <!-- End Divider -->
+               <!-- Begin Divider -->
+               <tr class="Normalize" valign="middle" style="margin: 0px;border: none;padding: 15px;direction: rtl;word-break: break-word;border-collapse: collapse;font-family: 'Helvetica', 'Helvetica Neue', 'Arial', 'sans-serif';">
+                  <td class="Normalize Center Wrapper" valign="middle" align="center" width="100%%" style="padding-top: 0 !important;padding-bottom: 0 !important;border-collapse: collapse;margin: 0px;border: none;padding: 15px;direction: rtl;word-break: break-word;font-family: 'Helvetica', 'Helvetica Neue', 'Arial', 'sans-serif';text-align: center;">
+                     <span style="width: 100%%;display: block;border-bottom: 1px solid #ececec;"></span>
+                  </td>
+               </tr>
+               <!-- End Divider -->
+               <!-- Begin External Link -->
+               <tr class="Normalize" valign="middle" style="margin: 0px;border: none;padding: 15px;direction: rtl;word-break: break-word;border-collapse: collapse;font-family: 'Helvetica', 'Helvetica Neue', 'Arial', 'sans-serif';">
+                  <td class="Normalize Center Wrapper" valign="middle" align="center" width="100%%" style="border-collapse: collapse;margin: 0px;border: none;padding: 15px;direction: rtl;word-break: break-word;font-family: 'Helvetica', 'Helvetica Neue', 'Arial', 'sans-serif';text-align: center;">
+                     <!-- Begin Right Side -->
+                     <a class="Button" href="%(listing_uri)s" width="100%%" style="color: rgb(255, 255, 255);width: 100%%;display: block;font-size: 13px;padding: 0px 0px;font-weight: 500;line-height: 40px;text-align: center;border-radius: 4px;margin: 15px 0px 0px;text-decoration: none!important;background: rgb(51, 136, 255);">
+                        <center>View Listing</center>
+                     </a>
+                     <!-- End Right Side -->
+                  </td>
+               </tr>
+               <!-- End External Link -->
+            </tbody>
+         </table>
+         <!-- End Main Wrapper -->
+         <!-- Begin Footer -->
+         <table class="Normalize Container" width="100%%" cellpadding="0" cellspacing="0" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;width: 600px;background: rgb(255, 255, 255);margin: 0px;border: none;padding: 15px;direction: rtl;word-break: break-word;font-family: 'Helvetica', 'Helvetica Neue', 'Arial', 'sans-serif';">
+            <!-- Begin Detail -->
+            <tr class="Normalize" valign="middle" style="margin: 0px;border: none;padding: 15px;direction: rtl;word-break: break-word;border-collapse: collapse;font-family: 'Helvetica', 'Helvetica Neue', 'Arial', 'sans-serif';">
+               <td class="Normalize Center Wrapper" valign="middle" align="center" width="100%%" style="border-collapse: collapse;margin: 0px;border: none;padding: 15px;direction: rtl;word-break: break-word;font-family: 'Helvetica', 'Helvetica Neue', 'Arial', 'sans-serif';text-align: center;">
+                  <!-- Begin Avatar -->
+                  <table width="20%%" align="left" border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
+                     <tr>
+                        <td valign="middle" align="left" width="100%%" style="border-collapse: collapse;">
+                           <img src="%(avatar)s" width="80" height="80" style="border-radius: 50%%;outline: none;text-decoration: none;border: none;-ms-interpolation-mode: bicubic;">
                         </td>
-                    </tr>
-                    <!-- End User Centeric -->
-
-                </tbody>
-            </table>
-            <!-- End Header -->
-            <!-- Begin Main Wrapper -->
-            <table class="Normalize Container Main" width="100%%" cellpadding="0" cellspacing="0" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;width: 600px;background: rgb(255, 255, 255);margin: 0px;border: none;padding: 15px !important;direction: rtl;word-break: break-word;font-family: 'Helvetica', 'Helvetica Neue', 'Arial', 'sans-serif';border-top: none;border-left: 1px solid rgb(240, 240, 240);border-right: 1px solid rgb(240, 240, 240);border-bottom: 1px solid rgb(240, 240, 240);">
-                <tbody class="Normalize" valign="middle" style="margin: 0px;border: none;padding: 15px;direction: rtl;word-break: break-word;border-collapse: collapse;font-family: 'Helvetica', 'Helvetica Neue', 'Arial', 'sans-serif';">
-
-                    <!-- Begin Cover Image -->
-                    <tr class="Normalize" valign="middle" style="margin: 0px;border: none;padding: 15px;direction: rtl;word-break: break-word;border-collapse: collapse;font-family: 'Helvetica', 'Helvetica Neue', 'Arial', 'sans-serif';">
-                        <td class="Normalize Center Wrapper" valign="bottom" align="center" width="100%%" height="575" style="background: url(%(photo_uri)s) no-repeat;background-size: cover;background-attachment: initial;background-repeat: no-repeat;border-collapse: collapse;margin: 0px;border: none;padding: 15px;direction: rtl;word-break: break-word;font-family: 'Helvetica', 'Helvetica Neue', 'Arial', 'sans-serif';text-align: center;">
-
-                            <!-- Begin Price -->
-                            <table width="50%%" align="right" border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
-                                <tr>
-                                    <td valign="bottom" align="left" width="100%%" style="border-collapse: collapse;">
-                                        <h4 style="color: #ffffff;text-decoration: line-through; -moz-text-decoration-color: red;text-decoration-color: red;-webkit-text-decoration-color: red;font-size: 17px;font-weight: 100;text-align: right;direction: ltr;margin: 0;">%(old_price)s</h4>
-                                        <h3 style="color: #ffffff;direction: ltr;text-align: right;font-size: 27px;margin: 0;font-weight: 500;">%(new_price)s</h3>
-                                    </td>
-                                </tr>
-                            </table>
-                            <!-- End Price -->
-
-                            <!-- Begin Tag -->
-                            <table width="50%%" align="left" border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
-                                <tr>
-                                    <td valign="bottom" align="left" width="100%%" style="border-collapse: collapse;">
-                                        <div style="margin-top: 20px;float: left;display: inline-block;padding: 8px 15px;border-radius: 50px;background: rgba(0, 0, 0, 0.75);color: #ffffff;font-size: 13px;margin-right: 10px;font-weight: 100; direction: ltr; text-align:left;">
-                                            <span style="width: 10px;height: 10px; margin-right: 5px;background: %(status_color)s;display: inline-block;border-radius: 50%%;"></span>
-                                            %(status)s
-                                        </div>
-                                        <div style="margin-top: 20px;float: left;display: inline-block;padding: 8px 15px;border-radius: 50px;background: rgba(0, 0, 0, 0.75);color: #ffffff;font-size: 13px;margin-right: 10px;font-weight: 100; direction: ltr; text-align:left;">%(date)s</div>
-                                    </td>
-                                </tr>
-                            </table>
-                            <!-- End Tag -->
-
+                     </tr>
+                  </table>
+                  <!-- End Avatar -->
+                  <!-- Begin Content -->
+                  <table width="40%%" align="left" border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
+                     <tr>
+                        <td valign="middle" align="left" width="100%%" style="padding-left: 10px;padding-top: 11px;border-collapse: collapse;">
+                           <div style="width: 100%%; color: #000000;font-size: 14px;font-weight: 570;">%(sender_name)s</div>
+                           <div style="width: 100%%;display: block;padding: 5px 0 10px;font-size: 14px;color: #757575;direction: ltr;">%(agency_name)s</div>
+                           <div style="width: 100%%; padding-left: 5px;font-weight: lighter;font-size: 14px;color: #c5c5c5;">%(agency_phone)s</div>
                         </td>
-                    </tr>
-                    <!-- End Cover Image -->
-
-                    <!-- Begin Detail -->
-                    <tr class="Normalize" valign="middle" style="margin: 0px;border: none;padding: 15px;direction: rtl;word-break: break-word;border-collapse: collapse;font-family: 'Helvetica', 'Helvetica Neue', 'Arial', 'sans-serif';">
-                        <td class="Normalize Center Wrapper" valign="middle" align="center" width="100%%" style="border-collapse: collapse;margin: 0px;border: none;padding: 15px;direction: rtl;word-break: break-word;font-family: 'Helvetica', 'Helvetica Neue', 'Arial', 'sans-serif';text-align: center;">
-                            <h2 style="font-weight: 300;text-align: left;direction: ltr;font-size: 27px;font-family: serif !important;margin-bottom: 0;">%(address)s</h2>
-                            <h4 style="text-align: left;direction: ltr;margin-top: 0;font-weight: 100;color: #bfc2c3;font-size: 13px;">%(area)s, %(city)s</h4>
-                            <span style="text-align: left;display: inline-block;float: left;color: 626262;font-size: 20px;font-weight: 100;direction: ltr;">%(bedroom_count)s Beds</span>
-                            <span style="float: left;margin: 5px 20px 0;">&bull;</span>
-                            <span style="text-align: left;display: inline-block;float: left;color: 626262;font-size: 20px;font-weight: 100;direction: ltr;">%(bathroom_count)s Baths</span>
-                            <span style="float: left;margin: 5px 20px 0;">&bull;</span>
-                            <span style="text-align: left;display: inline-block;float: left;color: 626262;font-size: 20px;font-weight: 100;direction: ltr;">%(square_meters)s Sqft</span>
-                            <span style="float: left;margin: 5px 20px 0;">&bull;</span>
-                            <span style="text-align: left;display: inline-block;float: left;color: 626262;font-size: 20px;font-weight: 100;direction: ltr;">%(lot)s Lot</span>
-                            <p style="display: block;width: 100%%;float: left;padding-top: 15px;padding-bottom: 5px;text-align: left;font-size: 13px;line-height: 20px;direction: ltr;color: #898989;margin: 0px 0px !important;">%(description)s</p>
-                        </td>
-                    </tr>
-                    <!-- End Detail -->
-
-                    <!-- Begin Divider -->
-                    <tr class="Normalize" valign="middle" style="margin: 0px;border: none;padding: 15px;direction: rtl;word-break: break-word;border-collapse: collapse;font-family: 'Helvetica', 'Helvetica Neue', 'Arial', 'sans-serif';">
-                        <td class="Normalize Center Wrapper" valign="middle" align="center" width="100%%" style="padding-top: 0 !important;padding-bottom: 0 !important;border-collapse: collapse;margin: 0px;border: none;padding: 15px;direction: rtl;word-break: break-word;font-family: 'Helvetica', 'Helvetica Neue', 'Arial', 'sans-serif';text-align: center;">
-                            <span style="width: 100%%;display: block;border-bottom: 1px solid #ececec;"></span>
-                        </td>
-                    </tr>
-                    <!-- End Divider -->
-                    <!-- Begin Divider -->
-                    <tr class="Normalize" valign="middle" style="margin: 0px;border: none;padding: 15px;direction: rtl;word-break: break-word;border-collapse: collapse;font-family: 'Helvetica', 'Helvetica Neue', 'Arial', 'sans-serif';">
-                        <td class="Normalize Center Wrapper" valign="middle" align="center" width="100%%" style="padding-top: 0 !important;padding-bottom: 0 !important;border-collapse: collapse;margin: 0px;border: none;padding: 15px;direction: rtl;word-break: break-word;font-family: 'Helvetica', 'Helvetica Neue', 'Arial', 'sans-serif';text-align: center;">
-                            <span style="width: 100%%;display: block;border-bottom: 1px solid #ececec;"></span>
-                        </td>
-                    </tr>
-                    <!-- End Divider -->
-                    <!-- Begin External Link -->
-                    <tr class="Normalize" valign="middle" style="margin: 0px;border: none;padding: 15px;direction: rtl;word-break: break-word;border-collapse: collapse;font-family: 'Helvetica', 'Helvetica Neue', 'Arial', 'sans-serif';">
-                        <td class="Normalize Center Wrapper" valign="middle" align="center" width="100%%" style="border-collapse: collapse;margin: 0px;border: none;padding: 15px;direction: rtl;word-break: break-word;font-family: 'Helvetica', 'Helvetica Neue', 'Arial', 'sans-serif';text-align: center;">
-
-                            <!-- Begin Right Side -->
-                            <a class="Button" href="%(listing_uri)s" width="100%%" style="color: rgb(255, 255, 255);width: 100%%;display: block;font-size: 13px;padding: 0px 0px;font-weight: 500;line-height: 40px;text-align: center;border-radius: 4px;margin: 15px 0px 0px;text-decoration: none!important;background: rgb(51, 136, 255);"><center>View Listing</center></a>
-                            <!-- End Right Side -->
-
-                        </td>
-                    </tr>
-                    <!-- End External Link -->
-
-                </tbody>
-
-            </table>
-            <!-- End Main Wrapper -->
-
-            <!-- Begin Footer -->
-            <table class="Normalize Container" width="100%%" cellpadding="0" cellspacing="0" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;width: 600px;background: rgb(255, 255, 255);margin: 0px;border: none;padding: 15px;direction: rtl;word-break: break-word;font-family: 'Helvetica', 'Helvetica Neue', 'Arial', 'sans-serif';">
-
-                    <!-- Begin Detail -->
-                    <tr class="Normalize" valign="middle" style="margin: 0px;border: none;padding: 15px;direction: rtl;word-break: break-word;border-collapse: collapse;font-family: 'Helvetica', 'Helvetica Neue', 'Arial', 'sans-serif';">
-                        <td class="Normalize Center Wrapper" valign="middle" align="center" width="100%%" style="border-collapse: collapse;margin: 0px;border: none;padding: 15px;direction: rtl;word-break: break-word;font-family: 'Helvetica', 'Helvetica Neue', 'Arial', 'sans-serif';text-align: center;">
-
-                            <!-- Begin Avatar -->
-                            <table width="20%%" align="left" border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
-                                <tr>
-                                    <td valign="middle" align="left" width="100%%" style="border-collapse: collapse;">
-                                        <img src="%(avatar)s" width="80" height="80" style="border-radius: 50%%;outline: none;text-decoration: none;border: none;-ms-interpolation-mode: bicubic;">
-                                    </td>
-                                </tr>
-                            </table>
-                            <!-- End Avatar -->
-                            
-                            <!-- Begin Content -->
-                            <table width="40%%" align="left" border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
-                                <tr>
-                                    <td valign="middle" align="left" width="100%%" style="padding-left: 10px;padding-top: 11px;border-collapse: collapse;">
-                                        <div style="width: 100%%; color: #000000;font-size: 14px;font-weight: 570;">%(sender_name)s</div>
-                                        <div style="width: 100%%;display: block;padding: 5px 0 10px;font-size: 14px;color: #757575;direction: ltr;">%(agency_name)s</div>
-                                        <div style="width: 100%%; padding-left: 5px;font-weight: lighter;font-size: 14px;color: #c5c5c5;">%(agency_phone)s</div>
-                                    </td>
-                                </tr>
-                            </table>
-                            <!-- End Content -->
-                        </td>
-                    </tr>
-                    <!-- End Detail -->
-                <tbody class="Normalize" valign="middle" style="margin: 0px;border: none;padding: 15px;direction: rtl;word-break: break-word;border-collapse: collapse;font-family: 'Helvetica', 'Helvetica Neue', 'Arial', 'sans-serif';">
-
-                    <!-- Begin View On Rechat -->
-                    <tr class="Normalize" valign="middle" style="margin: 0px;border: none;padding: 15px;direction: rtl;word-break: break-word;border-collapse: collapse;font-family: 'Helvetica', 'Helvetica Neue', 'Arial', 'sans-serif';">
-                        <td class="Normalize Center ViewOn" valign="middle" align="right" width="100%%" style="border-collapse: collapse;margin: 0px;border: none;padding: 15px;direction: rtl;word-break: break-word;font-family: 'Helvetica', 'Helvetica Neue', 'Arial', 'sans-serif';text-align: center;width: 100%%;float: right;display: block;font-size: 12px;margin-top: 25px;line-height: 50px;color: rgb(180, 180, 180);background: rgb(255, 255, 255);">
-
-                         <center style="font-size:14px;">Reply directly to this email or <a href="%(listing_uri)s" style="color: #3388ff;text-decoration: none!important;">view on Rechat</a></center>
-                         <!-- Begin Privacy -->
-                         <center>Rechat@2016, All Rights Reserved. <a href="%(mls_terms)s" style="color:#bebebe; text-decoration: underline !important;">MLS Terms</a></center>
-                        <!-- End Privacy -->
-                        </td>
-                    </tr>
-                    <!-- End View On Rechat -->
-                </tbody>
-            </table>
-            <!-- End Footer -->
-
-        </center>
-        <!-- Begin Center -->
-
-    </body>
+                     </tr>
+                  </table>
+                  <!-- End Content -->
+               </td>
+            </tr>
+            <!-- End Detail -->
+            <tbody class="Normalize" valign="middle" style="margin: 0px;border: none;padding: 15px;direction: rtl;word-break: break-word;border-collapse: collapse;font-family: 'Helvetica', 'Helvetica Neue', 'Arial', 'sans-serif';">
+               <!-- Begin View On Rechat -->
+               <tr class="Normalize" valign="middle" style="margin: 0px;border: none;padding: 15px;direction: rtl;word-break: break-word;border-collapse: collapse;font-family: 'Helvetica', 'Helvetica Neue', 'Arial', 'sans-serif';">
+                  <td class="Normalize Center ViewOn" valign="middle" align="right" width="100%%" style="border-collapse: collapse;margin: 0px;border: none;padding: 15px;direction: rtl;word-break: break-word;font-family: 'Helvetica', 'Helvetica Neue', 'Arial', 'sans-serif';text-align: center;width: 100%%;float: right;display: block;font-size: 12px;margin-top: 25px;line-height: 50px;color: rgb(180, 180, 180);background: rgb(255, 255, 255);">
+                     <center style="font-size:14px;">Reply directly to this email or <a href="%(listing_uri)s" style="color: #3388ff;text-decoration: none!important;">view on Rechat</a></center>
+                     <!-- Begin Privacy -->
+                     <center>Rechat@2016, All Rights Reserved. <a href="%(mls_terms)s" style="color:#bebebe; text-decoration: underline !important;">MLS Terms</a></center>
+                     <!-- End Privacy -->
+                  </td>
+               </tr>
+               <!-- End View On Rechat -->
+            </tbody>
+         </table>
+         <!-- End Footer -->
+      </center>
+      <!-- Begin Center -->
+   </body>
 </html>
