@@ -29,6 +29,16 @@ queue.process('cma_share_sms', config.email.parallel, (job, done) => {
   CMA.processSMS(job, done);
 });
 
+queue.process('listing_share_email', config.email.parallel, (job, done) => {
+  console.log('-> Processed a Listing share email'.black.yellowBG.dim);
+  Listing.processEmail(job, done);
+});
+
+queue.process('listing_share_sms', config.email.parallel, (job, done) => {
+  console.log('-> Processed a Listing share SMS'.black.magentaBG.dim);
+  Listing.processSMS(job, done);
+});
+
 queue.process('airship_transport_send_device', config.airship.parallel, (job, done) => {
   console.log('-> Processed a push notification'.green);
   Notification.sendToDevice(job.data.notification, job.data.token, done);
