@@ -33,7 +33,10 @@
                </td>
             </tr>
             <!-- End User Centeric -->
-            <!-- Begin Cover Image -->
+            <tr>
+               <td style="padding-left: 70px;">
+                  <table>
+                     <!-- Begin Cover Image -->
             <tr class="Normalize" valign="middle" style="margin: 0px;border: none;padding: 15px;direction: rtl;word-break: break-word;border-collapse: collapse;font-family: 'Helvetica', 'Helvetica Neue', 'Arial', 'sans-serif';">
                <td class="Normalize Center Wrapper" valign="bottom" align="center" width="100%%" height="150" style="background-color: #748090;border-collapse: collapse;margin: 0px;border: none;padding: 15px;direction: rtl;word-break: break-word;font-family: 'Helvetica', 'Helvetica Neue', 'Arial', 'sans-serif';text-align: center;">
                   <!-- Begin Tag -->
@@ -46,19 +49,21 @@
                               <h3 style="font-weight: 100;text-align: left;direction: ltr;font-size: 14px;font-family: 'Helvetica', 'Helvetica Neue', 'Arial', 'sans-serif';margin: 0;color: #ffffff; padding: 0px 0px 5px 0px;">%(address)s</h3>
                            </td>
                         </tr>
-                        <tr>
-                           <td>
-                              <span style="text-align: left;float: left;color: #ffffff;font-size: 14;font-weight: 100;direction: ltr;">%(bedroom_count)s Beds</span>
-                              <span style="float: left;margin: 5px 20px 0; color: #ffffff">•</span>
-                              <span style="text-align: left;float: left;color: #ffffff;font-size: 14;font-weight: 100;direction: ltr;">%(bathroom_count)s Baths</span>
-                              <span style="float: left;margin: 5px 20px 0; color: #ffffff">•</span>
-                              <span style="text-align: left;display: inline-block;float: left;color: #ffffff;font-size: 14;font-weight: 100;direction: ltr;">%(square_meters)s Sqft</span>
-                              <span style="float: left;margin: 5px 20px 0; color: #ffffff">•</span>
-                              <span style="text-align: left;display: inline-block;float: left;color: #ffffff;font-size: 14;font-weight: 100;direction: ltr;">%(lot_size)s Lot</span>
-                              <span style="float: left;margin: 5px 20px 0; color: #ffffff">•</span>
-                              <span style="text-align: left;display: inline-block;float: left;color: #ffffff;font-size: 14;font-weight: 100;direction: ltr;">Built in %(year_built)s</span>
-                           </td>
-                        </tr>
+                                 <tr>
+                                    <td>
+                                       <span style="text-align: left;float: left;color: #ffffff;font-size: 14;font-weight: 100;direction: ltr;">%(bedroom_count)s Beds</span>
+                                       <span style="float: left;margin: 5px 20px 0; color: #ffffff">•</span>
+                                       <span style="text-align: left;float: left;color: #ffffff;font-size: 14;font-weight: 100;direction: ltr;">%(bathroom_count)s Baths</span>
+                                       <span style="float: left;margin: 5px 20px 0; color: #ffffff">•</span>
+                                       <span style="text-align: left;display: inline-block;float: left;color: #ffffff;font-size: 14;font-weight: 100;direction: ltr;">%(square_meters)s Sqft</span>
+                                       <span style="float: left;margin: 5px 20px 0; color: #ffffff">•</span>
+                                       <span style="text-align: left;display: inline-block;float: left;color: #ffffff;font-size: 14;font-weight: 100;direction: ltr;">Built in %(year_built)s</span>
+                                       <span style="display: s(Lot_status)%">
+                                       <span style="float: left;margin: 5px 20px 0; color: #ffffff">•</span>
+                                       <span style="text-align: left;display: inline-block;float: left;color: #ffffff;font-size: 14;font-weight: 100;direction: ltr;">%(lot_size)s Lot</span>
+                                       </span>
+                                    </td>
+                                 </tr>
                         <!-- End Detail -->
                      </tbody>
                   </table>
@@ -77,6 +82,11 @@
                </td>
             </tr>
             <!-- End External Link -->
+         </td>
+                     </tr>
+                  </table>
+               </td>
+            </tr>
          </tbody>
       </table>
       <!-- End Comment -->
