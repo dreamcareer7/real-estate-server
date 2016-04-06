@@ -4,7 +4,7 @@ WHERE
     (
       to_tsvector('english', address) @@ plainto_tsquery('english', $1)
       OR
-      address ILIKE '%$1%'
+      address ILIKE '%' || $1 || '%'
     )
     AND (
       CASE
