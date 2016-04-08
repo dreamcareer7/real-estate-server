@@ -12,4 +12,4 @@ WHERE
         ELSE status = ANY($2::listing_status[])
       END
     )
-LIMIT 50
+LIMIT 75

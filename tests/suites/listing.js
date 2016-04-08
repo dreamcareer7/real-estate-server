@@ -70,7 +70,7 @@ var by_query = (cb) => {
     .expectJSON({
       code: 'OK',
       info: {
-        count:10
+        count:75
       }
     })
 }
