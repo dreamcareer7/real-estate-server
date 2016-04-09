@@ -30,7 +30,7 @@ function report(err) {
   if(err)
     console.log(err);
 
-  process.exit();
+  Agent.refreshContacts(process.exit)
 }
 
 function populate(data) {

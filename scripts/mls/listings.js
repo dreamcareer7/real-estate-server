@@ -173,7 +173,10 @@ function done(err) {
   if(err)
     return report(e);
 
-  Alert.refreshFilters(report);
+  async.parallel([
+    Alert.refreshFilters,
+    Agent.refreshContacts
+  ], report)
 }
 
 function report(e) {
