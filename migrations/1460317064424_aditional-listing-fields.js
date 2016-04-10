@@ -8,7 +8,7 @@ var up = [
 ];
 
 var down = [
-  'ALTER TABLE listings DROP COLUMN showing_instructions, appointment_phone DROP COLUMN, DROP COLUMN appointment_phone_ext, DROP COLUMN appointment_call, DROP COLUMN owner_name, DROP COLUMN seller_type, DROP COLUMN occupancy, DROP COLUMN private_remarks'
+  'ALTER TABLE listings DROP COLUMN showing_instructions, DROP COLUMN appointment_phone, DROP COLUMN appointment_phone_ext, DROP COLUMN appointment_call, DROP COLUMN owner_name, DROP COLUMN seller_type, DROP COLUMN occupancy, DROP COLUMN private_remarks'
 ];
 
 var runAll = (sqls, next) => {
