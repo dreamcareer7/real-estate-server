@@ -86,7 +86,15 @@ INSERT INTO
              cdom,
              buyers_agency_commission,
              sub_agency_commission,
-             list_date
+             list_date,
+             showing_instructions,
+             appointment_phone,
+             appointment_phone_ext,
+             appointment_call,
+             owner_name,
+             seller_type,
+             occupancy,
+             private_remarks
             )
 VALUES ($1,
         $2,
@@ -175,5 +183,13 @@ VALUES ($1,
         NOW() - $85 * INTERVAL '1 DAY',
         $86,
         $87,
-        CASE WHEN $88 = '' THEN NULL ELSE $88::timestamptz END
+        CASE WHEN $88 = '' THEN NULL ELSE $88::timestamptz END,
+        $89,
+        $90,
+        $91,
+        $92,
+        $93,
+        $94,
+        $95,
+        $96
        ) RETURNING id

@@ -83,6 +83,14 @@ SET alerting_agent_id = $1,
     cdom = NOW() - $82 * INTERVAL '1 DAY',
     buyers_agency_commission = $83,
     sub_agency_commission = $84,
-    list_date = CASE WHEN $77 = '' THEN NULL ELSE $85::timestamptz END,
-    updated_at = NOW()
-WHERE id = $86
+    list_date = CASE WHEN $85 = '' THEN NULL ELSE $85::timestamptz END,
+    updated_at = NOW(),
+    showing_instructions = $86,
+    appointment_phone = $87,
+    appointment_phone_ext = $88,
+    appointment_call = $89,
+    owner_name = $90,
+    seller_type = $91,
+    occupancy = $92,
+    private_remarks = $93
+WHERE id = $94

@@ -173,6 +173,7 @@ module.exports = (data) => {
   listing.matrix_modified_dt = data.MatrixModifiedDT.trim();
   listing.property_association_fees = data.PropertyAssociationFees.trim();
   listing.showing_instructions_type = data.ShowingInstructionsType.trim();
+  listing.showing_instructions = data.ShowingInstructions.trim();
   listing.special_notes = data.SpecialNotes.trim();
   listing.tax_legal_description = data.TaxLegalDescription.trim();
   listing.total_annual_expenses_include = data.TotalAnnualExpensesInclude.trim();
@@ -193,6 +194,16 @@ module.exports = (data) => {
 
   listing.buyers_agency_commission = data.BuyersAgencyCommission.trim();
   listing.sub_agency_commission    = data.SubAgencyCommission.trim();
+
+  listing.appointment_phone = data.AppointmentPhone.trim();
+  listing.appointment_phone_ext = data.AppointmentPhoneExt.trim();
+  listing.appointment_call = data.AppointmentCall.trim();
+
+  listing.owner_name = data.OwnerName.trim();
+  listing.seller_type = data.SellerType.trim();
+  listing.occupancy = data.Occupancy.trim();
+  listing.private_remarks = data.PrivateRemarks.trim();
+
 
   // Ugly hacks and fixes
   if (property.property_subtype === '')

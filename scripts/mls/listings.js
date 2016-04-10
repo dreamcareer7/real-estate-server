@@ -171,7 +171,7 @@ Client.on('data fetched', (data) => {
 
 function done(err) {
   if(err)
-    return report(e);
+    return report(err);
 
   async.parallel([
     Alert.refreshFilters,
