@@ -239,15 +239,15 @@
       <!-- Begin Center -->
       <center>
          <!-- Begin Header -->
-         <table class="Normalize Container" width="100%%%" cellpadding="0" cellspacing="0" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;width: 570px;background: rgb(255, 255, 255);margin: 0px;border: none;padding: 15px;direction: rtl;word-break: break-word;font-family: 'Helvetica', 'Helvetica Neue', 'Arial', 'sans-serif';">
+         <table class="Normalize Container" width="100%%" cellpadding="0" cellspacing="0" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;width: 570px;background: rgb(255, 255, 255);margin: 0px;border: none;padding: 15px;direction: rtl;word-break: break-word;font-family: 'Helvetica', 'Helvetica Neue', 'Arial', 'sans-serif';">
             <tbody class="Normalize" valign="middle" style="margin: 0px;border: none;padding: 15px;direction: rtl;word-break: break-word;border-collapse: collapse;font-family: 'Helvetica', 'Helvetica Neue', 'Arial', 'sans-serif';">
                <!-- Begin User Centeric -->
                <tr class="Normalize" valign="middle" style="margin: 0px;border: none;padding: 15px;direction: rtl;word-break: break-word;border-collapse: collapse;font-family: 'Helvetica', 'Helvetica Neue', 'Arial', 'sans-serif';">
-                  <td class="Normalize Center" valign="middle" align="center" width="100%%%" style="border-collapse: collapse;margin: 0px;border: none;padding: 15px;direction: rtl;word-break: break-word;font-family: 'Helvetica', 'Helvetica Neue', 'Arial', 'sans-serif';text-align: center;">
+                  <td class="Normalize Center" valign="middle" align="center" width="100%%" style="border-collapse: collapse;margin: 0px;border: none;padding: 15px;direction: rtl;word-break: break-word;font-family: 'Helvetica', 'Helvetica Neue', 'Arial', 'sans-serif';text-align: center;">
                      <p style="font-weight: 100;float: left;text-align: left;direction: ltr;font-size: 13px;line-height: 25px;margin: 0px 0px !important;">Hi %(first_name)s</p>
                      <p style="font-weight: 100;float: left;text-align: left;direction: ltr;font-size: 13px;line-height: 25px;margin: 0px 0px !important;">Here is a home that meets your needs. <b>%(address)s</b> has %(properties)s.</p>
                      <p style="font-weight: 100;float: left;text-align: left;direction: ltr;font-size: 13px;line-height: 25px;margin: 0px 0px !important;">Best,</p>
-                     <p style="font-weight: 100;float: left;text-align: left;direction: ltr;font-size: 13px;line-height: 25px;margin: 0px 0px !important; clear: both;">%(sender_name)s</p>
+                     <p style="font-weight: 100;float: left;text-align: left;direction: ltr;font-size: 13px;line-height: 25px;margin: 0px 0px !important; clear: both;">%(sender_full_name)s</p>
                   </td>
                </tr>
                <!-- End User Centeric -->
@@ -278,7 +278,7 @@
                         <tr>
                            <td valign="bottom" align="left" width="100%%" style="border-collapse: collapse;">
                               <div style="margin-top: 20px;float: left;display: inline-block;padding: 8px 15px;border-radius: 50px;background: rgba(0, 0, 0, 0.75);color: #ffffff;font-size: 13px;margin-right: 10px;font-weight: 100; direction: ltr; text-align:left;">
-                                 <span style="width: 10px;height: 10px; margin-right: 5px;background: %(status_color);display: inline-block;border-radius: 50%%;"></span>
+                                 <span style="width: 10px;height: 10px; margin-right: 5px;background: %(status_color)s;display: inline-block;border-radius: 50%%;"></span>
                                  %(status)s
                               </div>
                               <div style="margin-top: 20px;float: left;display: inline-block;padding: 8px 15px;border-radius: 50px;background: rgba(0, 0, 0, 0.75);color: #ffffff;font-size: 13px;margin-right: 10px;font-weight: 100; direction: ltr; text-align:left;">%(dom)s</div>
@@ -336,7 +336,7 @@
                      <table width="40%%" align="left" border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
                         <tr>
                            <td valign="middle" align="left" width="100%%" style="padding-left: 10px;padding-top: 11px;border-collapse: collapse;">
-                              <div style="width: 100%%; color: #000000;font-size: 14px;font-weight: 570;">%(sender_name)s</div>
+                              <div style="width: 100%%; color: #000000;font-size: 14px;font-weight: 570;">%(sender_full_name)s</div>
                               <div style="width: 100%%;display: block;padding: 5px 0 10px;font-size: 14px;color: #757575;direction: ltr;">%(agency_name)s</div>
                               <div style="width: 100%%; padding-left: 5px;font-weight: lighter;font-size: 14px;color: #c5c5c5;">%(agency_phone)s</div>
                            </td>
@@ -359,7 +359,7 @@
                <tr class="Normalize" valign="middle" style="margin: 0px;border: none;padding: 15px;direction: rtl;word-break: break-word;border-collapse: collapse;font-family: 'Helvetica', 'Helvetica Neue', 'Arial', 'sans-serif';">
                   <td class="Normalize Center Copyright" valign="middle" align="right" width="100%%" style="border-collapse: collapse;margin: 0px;border: 1px solid rgb(245, 245, 245);padding: 15px;direction: rtl;word-break: break-word;font-family: 'Helvetica', 'Helvetica Neue', 'Arial', 'sans-serif';text-align: center;width: 100%%;float: right;display: block;font-size: 11px;margin-top: 25px;line-height: 80px;color: rgb(190, 190, 190);background: rgb(252, 252, 252);">
                      <!-- Begin Privacy -->
-                     <center>Rechat@2016, All Rights Reserved. <a href="" style="color:#bebebe; text-decoration: underline !important;">MLS Terms</a></center>
+                     <center>Rechat@2016, All Rights Reserved. <a href="%(mls_terms)s" style="color:#bebebe; text-decoration: underline !important;">MLS Terms</a></center>
                      <!-- End Privacy -->
                   </td>
                </tr>
