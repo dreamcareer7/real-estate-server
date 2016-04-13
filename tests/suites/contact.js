@@ -335,12 +335,12 @@ module.exports = {
   updateContact404,
   patchContactProfileImage,
   patchContactProfileImageWorked,
-  //patchContactProfileImage404,
-  //patchContactCoverImage,
-  //patchContactCoverImageWorked,
-  //patchContactCoverImage404,
-  //search,
-  //removeTag,
-  //deleteContact,
-  //deleteContactWorked
+  patchContactProfileImage404,
+  patchContactCoverImage,
+  patchContactCoverImageWorked,
+  patchContactCoverImage404,
+  search,
+  removeTag,
+  deleteContact,
+  deleteContactWorked
 };
