@@ -10,7 +10,6 @@ SELECT 'recommendation' AS TYPE,
        EXTRACT(EPOCH FROM recommendations.created_at) AS created_at,
        EXTRACT(EPOCH FROM recommendations.updated_at) AS updated_at,
        EXTRACT(EPOCH FROM recommendations.deleted_at) AS deleted_at,
-       json_agg(recommendations_eav."user") FILTER (WHERE recommendations_eav.action = 'Read') AS read_by,
        json_agg(recommendations_eav."user") FILTER (WHERE recommendations_eav.action = 'Favorited') AS favorited_by,
        json_agg(recommendations_eav."user") FILTER (WHERE recommendations_eav.action = 'TourRequested') AS tour_requested_by
 FROM recommendations

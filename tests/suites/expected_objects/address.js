@@ -18,7 +18,7 @@ module.exports = {
   "created_at": Number,
   "updated_at": Number,
   "location_google": v.optionalString,
-  "matrix_unique_id": String,
+  "matrix_unique_id": Number,
   "geocoded": v.optionalBoolean,
   "geo_source": v.optionalString,
   "partial_match_google": v.optionalBoolean,

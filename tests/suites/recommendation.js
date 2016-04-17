@@ -257,8 +257,6 @@ var markAsSeen = (cb) => {
   delete rec.video_count;
   delete rec.image_count;
 
-  rec.read_by = [results.authorize.token.data]
-
   return frisby.create('mark a rec as seen')
     .delete('/rooms/' + results.room.create.data.id + '/recs/feed/' + results.recommendation.feed.data[0].id)
     .after(cb)

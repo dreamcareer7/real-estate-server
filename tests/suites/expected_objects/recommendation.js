@@ -13,7 +13,6 @@ module.exports = {
   "created_at": Number,
   "updated_at": Number,
   "deleted_at": v.optionalNumber,
-  "read_by": Array,
   "favorited_by": Array,
   "tour_requested_by": Array,
   "comment_count": Number,

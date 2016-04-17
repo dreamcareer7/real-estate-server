@@ -10,7 +10,7 @@ module.exports = {
   "square_meters": Number,
   "created_at": Number,
   "updated_at": Number,
-  "matrix_unique_id": String,
+  "matrix_unique_id": Number,
   "property_type": String,
   "property_subtype": String,
   "lot_square_meters": v.optionalNumber,

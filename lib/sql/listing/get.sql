@@ -50,7 +50,11 @@ property AS (
 address AS (
   SELECT addresses.*,
        'address' AS TYPE,
-       ST_AsGeoJSON(addresses.location) AS location,
+       (
+        CASE WHEN location IS NULL THEN NULL ELSE
+          json_build_object('type', 'location', 'longitude', ST_X(location), 'latitude', ST_Y(location))
+        END
+       ) as location,
        EXTRACT(EPOCH FROM addresses.created_at) AS created_at,
        EXTRACT(EPOCH FROM addresses.updated_at) AS updated_at
   FROM addresses
