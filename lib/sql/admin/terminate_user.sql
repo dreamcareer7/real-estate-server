@@ -5,8 +5,8 @@ delete_rooms_users AS (
 delete_notification_tokens AS (
     DELETE FROM notification_tokens WHERE "user" = $1
 ),
-delete_notification_acks AS (
-    DELETE FROM notifications_acks WHERE "user" = $1
+delete_notification_users AS (
+    DELETE FROM notifications_users WHERE "user" = $1
 ),
 delete_invitation_records AS (
     DELETE FROM invitation_records WHERE inviting_user = $1 OR invited_user = $1

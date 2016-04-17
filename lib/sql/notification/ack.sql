@@ -1,5 +1,3 @@
-INSERT INTO notifications_acks(
-                                "user",
-                                notification
-                               )
-VALUES($1, $2) ON CONFLICT DO NOTHING;
+UPDATE notifications_users
+SET acked_at = NOW()
+WHERE  "user" = $1 AND notification = $2
