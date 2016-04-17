@@ -6,8 +6,8 @@ WITH verification AS (
     email = $2 AND
     ((NOW() - created_at) < '1 day'::interval)
   LIMIT 1
-)
-,verified AS (
+),
+verified AS (
     UPDATE users
     SET email_confirmed = TRUE
     WHERE email = (SELECT email FROM verification)

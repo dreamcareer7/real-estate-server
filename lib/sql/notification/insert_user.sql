@@ -1,0 +1,1 @@
+INSERT INTO notifications_users (notification, "user") VALUES ($1, $2)

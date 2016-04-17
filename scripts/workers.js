@@ -41,7 +41,7 @@ queue.process('listing_share_sms', config.email.parallel, (job, done) => {
 
 queue.process('airship_transport_send_device', config.airship.parallel, (job, done) => {
   console.log('-> Processed a push notification'.green);
-  Notification.sendToDevice(job.data.notification, job.data.token, done);
+  Notification.sendToDevice(job.data.notification, job.data.token, job.data.user_id, done);
 });
 
 queue.process('create_notification', config.airship.parallel, (job, done) => {
@@ -63,3 +63,10 @@ queue.process('sms', config.twilio.parallel, (job, done) => {
   console.log('-> Processed an SMS'.magenta);
   Twilio.callTwilio(job.data, done);
 });
+
+setInterval( () => {
+  Notification.sendPushForUnread(err => {
+    if(err)
+      console.log(err);
+  })
+}, 1000)
