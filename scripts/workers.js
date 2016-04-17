@@ -64,7 +64,9 @@ queue.process('sms', config.twilio.parallel, (job, done) => {
   Twilio.callTwilio(job.data, done);
 });
 
-Notification.sendPushForUnread(err => {
-  if(err)
-    console.log(err);
-})
+setInterval( () => {
+  Notification.sendPushForUnread(err => {
+    if(err)
+      console.log(err);
+  })
+}, 1000)
