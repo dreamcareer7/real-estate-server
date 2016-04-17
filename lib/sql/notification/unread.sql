@@ -4,4 +4,7 @@ WHERE
   AND notification NOT IN(
     SELECT notification FROM notifications_deliveries -- Items in notifications_deliveries are already pushed to users once
   )
-GROuP BY "user"
+  AND "user" IN (
+    SELECT DISTINCT "user" FROM notification_tokens -- Filter out users who have no devices registered
+  )
+GROUP BY "user"
