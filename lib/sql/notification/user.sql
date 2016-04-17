@@ -1,8 +1,8 @@
 SELECT notifications.id AS id,
        (COUNT(*) OVER())::INT AS total
 FROM notifications
-FULL JOIN notifications_acks
-    ON notifications.id = notifications_acks.notification
+FULL JOIN notifications_users
+    ON notifications.id = notifications_users.notification
 FULL JOIN rooms
     ON notifications.room = rooms.id
 WHERE (
@@ -12,7 +12,7 @@ WHERE (
         ) OR
         COALESCE(notifications.specific = $1, FALSE)
       ) AND
-      notifications_acks.id IS NULL AND
+      notifications_users.acked_at IS NULL AND
       (
         (rooms.id IS NOT NULL AND rooms.deleted_at IS NULL) OR
         (rooms.id IS NULL)
