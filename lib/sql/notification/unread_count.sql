@@ -14,7 +14,9 @@ WITH rn AS (
     ON notifications.id = notifications_users.notification
   INNER JOIN rooms
     ON notifications.room = rooms.id
-  WHERE notifications.room = ANY (SELECT room FROM rooms_users WHERE "user" = $1) AND
+  WHERE
+    notifications_users.user = $1 AND
+    notifications.room = ANY (SELECT room FROM rooms_users WHERE "user" = $1) AND
     notifications_users.acked_at IS NULL AND
     notifications.room IS NOT NULL AND
     rooms.deleted_at IS NULL AND
@@ -31,6 +33,7 @@ tc AS (
     ON (notifications.object = tasks.id OR notifications.subject = tasks.id)
   WHERE notifications.specific = $1 AND
         notifications_users.acked_at IS NULL AND
+        notifications_users.user = $1 AND
         notifications.room IS NULL AND
         (
           notifications.object_class = 'Task' OR
@@ -46,6 +49,7 @@ trc AS (
     ON (notifications.object = transactions.id OR notifications.subject = transactions.id)
   WHERE notifications.specific = $1 AND
         notifications_users.acked_at IS NULL AND
+        notifications_users.user = $1 AND
         notifications.room IS NULL AND
         (
           notifications.object_class = 'Transaction' OR
