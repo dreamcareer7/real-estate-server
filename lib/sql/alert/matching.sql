@@ -34,3 +34,4 @@ WHERE
       ) END
     ) END
   )
+ORDER BY order_listings(status)
