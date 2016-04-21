@@ -7,7 +7,12 @@ WITH recs AS (
          MAX(messages.created_at) FILTER (WHERE messages.id IS NOT NULL) AS updated_at
   FROM recommendations
   FULL JOIN messages ON messages.recommendation = recommendations.id
-  WHERE recommendations.room = $2 AND
+  WHERE recommendations.room IN
+        (
+          SELECT room
+          FROM rooms_users
+          WHERE "user" = $1
+        ) AND
         recommendations.deleted_at IS NULL AND
         recommendations.hidden = FALSE
   GROUP BY recommendations.id,
@@ -17,7 +22,7 @@ WITH recs AS (
 )
 SELECT id,
        (COUNT(*) OVER())::INT AS total,
-       LOWER($1),
+       LOWER($2),
        LOWER($3)
 FROM recs
 WHERE message_count > 0
