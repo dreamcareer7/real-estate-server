@@ -1,16 +1,16 @@
 process.env.NODE_ENV = 'tests'; //So we read the proper config file
 
-var fs      = require('fs');
-var program = require('commander');
-var config  = require('../lib/config.js');
-var fork    = require('child_process').fork;
-var async   = require('async');
-var colors = require('colors');
+var fs           = require('fs');
+var program      = require('commander');
+var config       = require('../lib/config.js');
+var fork         = require('child_process').fork;
+var async        = require('async');
+var colors       = require('colors');
 var EventEmitter = require('events');
-var queue  = require('../lib/utils/queue.js');
-var redis = require('redis')
+var queue        = require('../lib/utils/queue.js');
+var redis        = require('redis');
 
-var redisClient = redis.createClient(config.redis);
+var redisClient  = redis.createClient(config.redis);
 
 global.Run = new EventEmitter;
 
