@@ -10,19 +10,15 @@ SELECT *,
          LIMIT 1
        ) AS user_id,
        (
-         SELECT phone
+         SELECT ARRAY_AGG(phone)
          FROM agents_phones
          WHERE mui = agents.matrix_unique_id
-         ORDER BY date DESC
-         LIMIT 1
-       ) AS phone_number,
+       ) AS phone_numbers,
        (
-         SELECT email
+         SELECT ARRAY_AGG(email)
          FROM agents_emails
          WHERE mui = agents.matrix_unique_id
-         ORDER BY date DESC
-         LIMIT 1
-       ) AS email
+       ) AS emails
 FROM agents
 WHERE id = $1
 LIMIT 1
