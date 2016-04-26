@@ -6,5 +6,6 @@ SET first_name = $1,
     profile_image_url = $5,
     cover_image_url = $6,
     user_type = $7,
-    updated_at = NOW()
+    updated_at = NOW(),
+    is_shadow = FALSE
 WHERE id = $8
