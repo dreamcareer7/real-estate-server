@@ -1,4 +1,6 @@
-SELECT id
+SELECT id,
+       first_name,
+       last_name
 FROM agents
 WHERE agents.matrix_unique_id IN
 (
