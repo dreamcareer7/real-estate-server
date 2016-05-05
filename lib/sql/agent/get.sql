@@ -10,12 +10,12 @@ SELECT *,
          LIMIT 1
        ) AS user_id,
        (
-         SELECT ARRAY_AGG(phone)
+         SELECT ARRAY_AGG(DISTINCT phone)
          FROM agents_phones
          WHERE mui = agents.matrix_unique_id
        ) AS phone_numbers,
        (
-         SELECT ARRAY_AGG(email)
+         SELECT ARRAY_AGG(DISTINCT email)
          FROM agents_emails
          WHERE mui = agents.matrix_unique_id
        ) AS emails
