@@ -2,12 +2,51 @@ WITH rn AS (
   SELECT JSON_BUILD_OBJECT(
     'type', 'room_notification_summary',
     'room_id', notifications.room,
-    'system_generated_count', COUNT(notifications.id) FILTER (
-      WHERE notifications.action = ANY('{"PriceDropped", "StatusChanged", "BecameAvailable"}')
-    ),
-    'user_generated_count', COUNT(notifications.id) FILTER (
-      WHERE NOT (notifications.action = ANY('{"PriceDropped", "StatusChanged", "BecameAvailable"}'))
-    )
+    'user_created_alert_ids', ARRAY_AGG(notifications.object) FILTER (
+      WHERE notifications.subject_class = 'User' AND
+            notifications.action = 'Created' AND
+            notifications.object_class = 'Alert'
+      ),
+    'user_edited_alert_ids', ARRAY_AGG(notifications.object) FILTER (
+      WHERE notifications.subject_class = 'User' AND
+            notifications.action = 'Edited' AND
+            notifications.object_class = 'Alert'
+      ),
+    'listing_became_available_room_ids', ARRAY_AGG(notifications.auxiliary_subject) FILTER (
+      WHERE notifications.subject_class = 'Listing' AND
+            notifications.action = 'BecameAvailable' AND
+            notifications.object_class = 'Room'
+      ),
+    'user_favorited_recommendation_ids', ARRAY_AGG(notifications.object) FILTER (
+      WHERE notifications.subject_class = 'User' AND
+            notifications.action = 'Favorited' AND
+            notifications.object_class = 'Recommendation'
+      ),
+    'user_shared_listing', ARRAY_AGG(notifications.recommendation) FILTER (
+      WHERE notifications.subject_class = 'User' AND
+            notifications.action = 'Shared' AND
+            notifications.object_class = 'Listing'
+      ),
+    'user_joined_room_ids', ARRAY_AGG(notifications.object) FILTER (
+      WHERE notifications.subject_class = 'User' AND
+            notifications.action = 'Joined' AND
+            notifications.object_class = 'Room'
+      ),
+    'user_invited_room_ids', ARRAY_AGG(notifications.object) FILTER (
+      WHERE notifications.subject_class = 'User' AND
+            notifications.action = 'Invited' AND
+            notifications.object_class = 'Room'
+      ),
+    'user_created_cma', ARRAY_AGG(notifications.auxiliary_object) FILTER (
+      WHERE notifications.subject_class = 'User' AND
+            notifications.action = 'Created' AND
+            notifications.object_class = 'CMA'
+      ),
+    'user_sent_message_ids', ARRAY_AGG(notifications.auxiliary_object) FILTER (
+      WHERE notifications.subject_class = 'User' AND
+            notifications.action = 'Sent' AND
+            notifications.object_class = 'Message'
+      )
   ) AS r
   FROM notifications
   INNER JOIN notifications_users
