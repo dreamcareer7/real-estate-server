@@ -241,9 +241,9 @@
                <!-- Begin User Centeric -->
                <tr class="Normalize" valign="middle" style="margin: 0px;border: none;padding: 15px;direction: rtl;word-break: break-word;border-collapse: collapse;font-family: 'Helvetica', 'Helvetica Neue', 'Arial', 'sans-serif';">
                   <td class="Normalize Center" valign="middle" align="center" width="100%%" style="border-collapse: collapse;margin: 0px;border: none;direction: rtl;word-break: break-word;font-family: 'Helvetica', 'Helvetica Neue', 'Arial', 'sans-serif';text-align: center;">
-                     <p style="font-weight: 570;float: left;text-align: left;direction: ltr;padding-top: 25px;font-size: 16px;line-height: 25px;;margin: 0px 00px 0px 10px !important;color: #4a4a4a">Hi %(first_name)s Here is a home that meets your needs.<span style="font-weight: bold;">%(address)s </span> has %(properties)s.</p>
-                     <p style="clear: both; text-align: left; padding-top: 10px;margin: 0px 00px 0px 10px !important;">Best</p>
-                     <p style="clear: both; text-align: left; padding-top: 10px;margin: 0px 00px 0px 10px !important;">%(sender_full_name)s</p>
+                     <p style="font-weight: 570;float: left;text-align: left;direction: ltr;padding-top: 25px;font-size: 16px;line-height: 25px;;margin: 0px 00px 0px 10px !important;color: #4a4a4a">Hi %(first_name)s<br><br> Here is a home that meets your needs. <span style="font-weight: bold;">%(address)s </span> has %(properties)s.</p>
+                     <p style="font-size: 16px; clear: both; text-align: left; padding-top: 10px;margin: 0px 00px 0px 10px !important;">Best</p>
+                     <p style="font-size: 16px; clear: both; text-align: left; padding-top: 10px;margin: 0px 00px 0px 10px !important;">%(sender_full_name)s</p>
                   </td>
                </tr>
                <!-- End User Centeric -->
@@ -282,10 +282,14 @@
                      </table>
                   </tr>
                   <!-- Begin Detail -->
-                  <tr class="Normalize" valign="middle" style="margin: 0px;border: none;padding: 15px;direction: rtl;word-break: break-word;border-collapse: collapse;font-family: 'Helvetica', 'Helvetica Neue', 'Arial', 'sans-serif';">
-                     <td class="Normalize Center Wrapper" valign="middle" align="center" width="100%%" style="border-collapse: collapse;margin: 0px;border: none;direction: rtl;word-break: break-word;font-family: 'Helvetica', 'Helvetica Neue', 'Arial', 'sans-serif';text-align: center;">
+                  <tr>
+                     <td>
                         <h3 style="text-align: left;direction: ltr;margin-top: 0;font-weight: 100;color: #000000;font-size: 18px;font-family: 'Helvetica', 'Helvetica Neue', 'Arial', 'sans-serif';">
-                        %(city)s, %(state)s, %(postal_code)s</h4>
+                           %(city)s, %(state)s, %(postal_code)s</h3>
+                     </td>
+                  </tr>
+                  <tr class="Normalize" valign="middle" style="margin: 0px;border: none;padding: 15px;direction: rtl;word-break: break-word;border-collapse: collapse;font-family: 'Helvetica', 'Helvetica Neue', 'Arial', 'sans-serif';">
+                     <td class="Normalize Center Wrapper" valign="middle" align="center" width="100%%" style="color: #000000; border-collapse: collapse;margin: 0px;border: none;direction: rtl;word-break: break-word;font-family: 'Helvetica', 'Helvetica Neue', 'Arial', 'sans-serif';text-align: center;">
                         <span style="text-align: left;display: inline-block;float: left;color: 626262;font-size: 20px;font-weight: 100;direction: ltr;font-family: 'Helvetica', 'Helvetica Neue', 'Arial', 'sans-serif';">%(bedroom_count)s Bed</span>
                         <span style="float: left;margin: 5px 20px 0;color: 626262;">&bull;</span>
                         <span style="text-align: left;display: inline-block;float: left;color: 626262;font-size: 20px;font-weight: 100;direction: ltr;font-family: 'Helvetica', 'Helvetica Neue', 'Arial', 'sans-serif';">%(bathroom_count)s Bath</span>
