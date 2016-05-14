@@ -38,13 +38,13 @@ CREATE MATERIALIZED VIEW agents_emails AS (
   )
 
   SELECT * FROM stated_emails
-  UNION
+  UNION ALL
   SELECT * FROM list_agents
-  UNION
+  UNION ALL
   SELECT * FROM co_list_agents
-  UNION
+  UNION ALL
   SELECT * FROM selling_agents
-  UNION
+  UNION ALL
   SELECT * FROM co_selling_agents
 );
 
