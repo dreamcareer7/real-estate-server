@@ -1,19 +1,19 @@
 WITH recs AS (
-    SELECT recommendations.id,
+  SELECT recommendations.id,
+         recommendations.hidden,
+         recommendations.created_at,
+         recommendations.referring_objects,
+         COUNT(messages.id) FILTER (WHERE messages.id IS NOT NULL) AS message_count,
+         MAX(messages.created_at) FILTER (WHERE messages.id IS NOT NULL) AS updated_at
+  FROM recommendations
+  FULL JOIN messages ON messages.recommendation = recommendations.id
+  WHERE recommendations.room = $2 AND
+        recommendations.deleted_at IS NULL AND
+        recommendations.hidden = FALSE
+  GROUP BY recommendations.id,
            recommendations.hidden,
            recommendations.created_at,
-           recommendations.referring_objects,
-           COUNT(messages.id) FILTER (WHERE messages.id IS NOT NULL) AS message_count,
-           MAX(messages.created_at) FILTER (WHERE messages.id IS NOT NULL) AS updated_at
-     FROM recommendations
-     FULL JOIN messages ON messages.recommendation = recommendations.id
-     WHERE recommendations.room = $2 AND
-           recommendations.deleted_at IS NULL AND
-           recommendations.hidden = FALSE
-     GROUP BY recommendations.id,
-              recommendations.hidden,
-              recommendations.created_at,
-              recommendations.referring_objects
+           recommendations.referring_objects
 )
 SELECT id,
        (COUNT(*) OVER())::INT AS total,

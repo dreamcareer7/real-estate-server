@@ -174,8 +174,7 @@ function done(err) {
     return report(err);
 
   async.parallel([
-    Alert.refreshFilters,
-    Agent.refreshContacts
+    Alert.refreshFilters
   ], report)
 }
 
