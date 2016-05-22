@@ -44,15 +44,15 @@ CREATE MATERIALIZED VIEW agents_phones AS (
   )
 
   SELECT * FROM stated_phones
-  UNION
+  UNION ALL
   SELECT * FROM stated_work_phones
-  UNION
+  UNION ALL
   SELECT * FROM list_agents
-  UNION
+  UNION ALL
   SELECT * FROM co_list_agents
-  UNION
+  UNION ALL
   SELECT * FROM selling_agents
-  UNION
+  UNION ALL
   SELECT * FROM co_selling_agents
 );
 
