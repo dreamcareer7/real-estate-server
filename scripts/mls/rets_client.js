@@ -136,6 +136,8 @@ function connect(cb) {
     connected = true;
     cb();
   });
+
+  client.once('connection.failure', cb);
 }
 
 function fetch(cb) {
