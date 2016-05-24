@@ -15,6 +15,11 @@ var up = [
      SELECT id, \'Personal\'::room_type, \'Unknown\'::client_type\
      FROM users\
      WHERE personal_room IS NULL RETURNING owner as userid, id as roomid\
+   ),\
+   users_upd AS (\
+     UPDATE users\
+     SET personal_room = room_ins.roomid\
+     FROM room_ins WHERE room_ins.userid = users.id\
    )\
    INSERT INTO rooms_users(room, "user") SELECT roomid, userid FROM room_ins;',
   'COMMIT'
