@@ -100,7 +100,7 @@ var getContact = (cb) => {
       code: 'OK',
       data: [
         {
-          contact_user: results.user.create.data
+//           contact_user: results.contact.create.data.contact_user
         }
       ],
       info: {}
@@ -115,6 +115,9 @@ var getContact = (cb) => {
 var updateContact = (cb) => {
   results.contact.create.data[0].contact_user.first_name = first_name;
   results.contact.create.data[0].contact_user.tags = ['newTag'];
+  results.contact.create.data[0].contact_user.email = results.user.create.data.email;
+  results.contact.create.data[0].contact_user.phone_number = results.user.create.data.phone_number;
+
   return frisby.create('update a contact')
     .put('/contacts/' + results.contact.create.data[0].id, results.contact.create.data[0].contact_user)
     .after(cb)
@@ -261,9 +264,9 @@ var search = (cb) => {
     .expectStatus(200)
     .expectJSONLength('data', 1)
     .expectJSON({
-      data: 'OK',
+      code: 'OK',
       data: [
-        {contact_user: results.user.create.data}
+        results.contact.patchContactCoverImage.data
       ],
       info: {
         count: 1
