@@ -31,7 +31,7 @@ var create400 = (cb) => {
 
 var getRoom = (cb) => {
   var room = JSON.parse(JSON.stringify(results.room.create.data));
-  room.latest_message = {};
+  delete room.latest_message;
 
   return frisby.create('get room')
     .get('/rooms/' + results.room.create.data.id)
