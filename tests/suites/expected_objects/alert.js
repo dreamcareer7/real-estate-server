@@ -60,5 +60,6 @@ module.exports = {
   "dom": v.optionalNumber,
   "cdom": v.optionalNumber,
   "deleted_at": v.optionalNumber,
-  "type": "alert"
+  "type": "alert",
+  "users":"object" //Null or Array are both objects
 };
