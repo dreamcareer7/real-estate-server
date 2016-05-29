@@ -24,12 +24,11 @@ Object.keys(definitions).forEach( queue_name => {
 });
 
 
-function processLastRuns(err, last_runs) {
-  if(err)
-    return console.log('Error fetching last runs:', err);
-
-  last_runs.filter( run => {
-    var task = tasks[run.name];
+function processLastRuns(queue, last_runs) {
+  Object.keys(tasks)
+  .map( name => tasks[name] )
+  .filter( (task, index) => {
+    var run = last_runs[index];
 
     if(!run)
       return true; // Was never executed.
@@ -38,12 +37,10 @@ function processLastRuns(err, last_runs) {
 
     return elapsed >= task.interval;
   })
-  .forEach(run => {
-    var task = tasks[run.name];
+  .forEach(task => {
     queues[task.queue].push(task, task.priority);
   });
 
-  var queue = tasks[last_runs[0].name].queue;
   if(queues[queue].length() < 1) {
     setTimeout(schedule.bind(null, queue), 5*1000)
   }
@@ -54,7 +51,12 @@ function schedule(queue) {
   async.map(
     Object.keys(tasks)
       .filter( t => tasks[t].queue === queue )
-  , MLSJob.getLastRun, processLastRuns);
+  , MLSJob.getLastRun, (err, last_runs) => {
+    if(err)
+      return console.log(err)
+
+      processLastRuns(queue, last_runs);
+  });
 }
 
 function runTask(task, cb) {
