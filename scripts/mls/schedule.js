@@ -40,14 +40,12 @@ function processLastRuns(err, last_runs) {
   })
   .forEach(run => {
     var task = tasks[run.name];
-    console.log('Queueing >', task.name, task.queue)
     queues[task.queue].push(task, task.priority);
   });
 
   var queue = tasks[last_runs[0].name].queue;
   if(queues[queue].length() < 1) {
-    console.log('Empt', queue_name)
-    setTimeout(schedule.bind(null, queue_name), 5*1000)
+    setTimeout(schedule.bind(null, queue), 5*1000)
   }
 }
 
