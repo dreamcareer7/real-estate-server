@@ -37,7 +37,7 @@ options.resource = 'Property';
 options.class = 'Listing';
 options.job = 'listings';
 
-Client.work(options, done);
+Client.work(options, report);
 
 function upsertAddress(address, cb) {
   Address.getByMUI(address.matrix_unique_id, function(err, current) {
@@ -168,15 +168,6 @@ Client.on('data fetched', (data) => {
   firstId = data[0].Matrix_Unique_ID;
   lastId =  data[data.length - 1].Matrix_Unique_ID;
 });
-
-function done(err) {
-  if(err)
-    return report(err);
-
-  async.parallel([
-    Alert.refreshFilters
-  ], report)
-}
 
 function report(e) {
   if(e)
