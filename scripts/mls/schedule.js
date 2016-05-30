@@ -33,7 +33,6 @@ function processLastRuns(queue, tasks) {
 
     var elapsed = (new Date).getTime() - task.run.created_at.getTime();
 
-    console.log(queue, task.definition.name, elapsed, task.definition.interval)
     return elapsed >= task.definition.interval;
   })
   .forEach(task => {
