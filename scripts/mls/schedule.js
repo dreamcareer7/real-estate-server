@@ -30,7 +30,7 @@ function processLastRuns(queue, last_runs) {
   .filter( (task, index) => {
     if(task.queue !== queue)
       return false;
-    
+
     var run = last_runs[index];
 
     if(!run)
@@ -38,6 +38,7 @@ function processLastRuns(queue, last_runs) {
 
     var elapsed = (new Date).getTime() - run.created_at.getTime();
 
+    console.log(queue, task.name, elapsed, task.interval)
     return elapsed >= task.interval;
   })
   .forEach(task => {
