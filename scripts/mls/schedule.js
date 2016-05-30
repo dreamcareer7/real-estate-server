@@ -28,6 +28,9 @@ function processLastRuns(queue, last_runs) {
   Object.keys(tasks)
   .map( name => tasks[name] )
   .filter( (task, index) => {
+    if(task.queue !== queue)
+      return false;
+    
     var run = last_runs[index];
 
     if(!run)
