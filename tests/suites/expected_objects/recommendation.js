@@ -18,5 +18,6 @@ module.exports = {
   "comment_count": Number,
   "document_count": Number,
   "video_count": Number,
-  "image_count": Number
+  "image_count": Number,
+  "room": String
 };
