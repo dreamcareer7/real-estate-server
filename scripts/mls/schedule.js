@@ -24,39 +24,42 @@ Object.keys(definitions).forEach( queue_name => {
 });
 
 
-function processLastRuns(err, last_runs) {
-  if(err)
-    return console.log('Error fetching last runs:', err);
+function processLastRuns(queue, tasks) {
+  tasks
+  .filter( task => {
 
-  last_runs.filter( run => {
-    var task = tasks[run.name];
-
-    if(!run)
+    if(!task.run)
       return true; // Was never executed.
 
-    var elapsed = (new Date).getTime() - run.created_at.getTime();
+    var elapsed = (new Date).getTime() - task.run.created_at.getTime();
 
-    return elapsed >= task.interval;
+    return elapsed >= task.definition.interval;
   })
-  .forEach(run => {
-    var task = tasks[run.name];
-    console.log('Queueing >', task.name, task.queue)
-    queues[task.queue].push(task, task.priority);
+  .forEach(task => {
+    queues[task.definition.queue].push(task.definition, task.definition.priority);
   });
 
-  var queue = tasks[last_runs[0].name].queue;
   if(queues[queue].length() < 1) {
-    console.log('Empt', queue_name)
-    setTimeout(schedule.bind(null, queue_name), 5*1000)
+    setTimeout(schedule.bind(null, queue), 5*1000)
   }
 }
 
 function schedule(queue) {
-  console.log('Scheduling', queue)
-  async.map(
-    Object.keys(tasks)
-      .filter( t => tasks[t].queue === queue )
-  , MLSJob.getLastRun, processLastRuns);
+  var current_tasks = Object.keys(tasks)
+    .filter( t => tasks[t].queue === queue );
+
+  async.map(current_tasks, MLSJob.getLastRun, (err, last_runs, c) => {
+    if(err)
+      return console.log(err)
+
+    var results = current_tasks.map((t,i) => {
+      return {
+        definition:tasks[t],
+        run:last_runs[i]
+      }
+    })
+    processLastRuns(queue, results);
+  });
 }
 
 function runTask(task, cb) {
