@@ -22,13 +22,25 @@ var tagUser = function(id, cb) {
   });
 }
 
+var updateUser = function(id, cb) {
+  User.get(id, (err, user) => {
+    if(err) {
+      return cb();
+    }
+
+
+    Intercom.User.update (user);
+    cb();
+  });
+}
+
 User.getAll( (err, users) => {
   if(err) {
     console.log(err);
     return ;
   }
 
-  async.eachLimit(users, 20, tagUser, (err) => {
+  async.eachLimit(users, 20, updateUser, (err) => {
     if(err) {
       console.log(err);
       process.exit();
