@@ -13,5 +13,6 @@ module.exports = {
         "latitude": Number,
         "longitude": Number,
         "type": "location"
-    }
+    },
+    "favorited": Boolean
 };

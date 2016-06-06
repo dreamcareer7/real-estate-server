@@ -9,6 +9,15 @@ WITH listing AS (
         EXTRACT(EPOCH FROM listings.list_date) AS list_date,
         EXTRACT(EPOCH FROM listings.close_date) AS close_date,
 
+        (
+          CASE WHEN $2::uuid IS NULL THEN FALSE ELSE (
+             SELECT count(*) > 0 FROM recommendations
+             JOIN recommendations_eav ON recommendations.id = recommendations_eav.recommendation
+             WHERE recommendations.listing = $1
+             AND recommendations_eav.user = $2
+             AND recommendations_eav.action = 'Favorited'
+          ) END
+        ) as favorited,
 
         (
           SELECT COALESCE(ARRAY_AGG(url), '{}'::text[]) FROM photos
