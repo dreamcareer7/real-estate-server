@@ -13,6 +13,7 @@ List of online users *                | Users.Online     | Array of user ids    
 A User has come online                | User.Online      | user_id                              |                | You will receive N events for each user where N is the number of shared rooms you have with this user
 A User has gone offline               | User.Offline     | user_id                              |                | You will receive N events for each user where N is the number of shared rooms you have with this user
 A Notification has arrived            | Notification     | notification object                  |                | If you are online using websockets, you will not receive push notifications. Instead you will get the notification event on websockets.
+A user has joined the room            | Room.UserJoined  | user object                          |                |
 
 ## Actions
 
