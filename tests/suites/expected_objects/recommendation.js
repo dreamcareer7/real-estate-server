@@ -19,5 +19,6 @@ module.exports = {
   "document_count": Number,
   "video_count": Number,
   "image_count": Number,
-  "room": String
+  "room": String,
+  "users":Array
 };
