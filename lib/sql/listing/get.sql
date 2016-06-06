@@ -12,7 +12,7 @@ WITH listing AS (
         (
           CASE WHEN $2::uuid IS NULL THEN FALSE ELSE (
              SELECT count(*) > 0 FROM recommendations
-             JOIN recommendations_eav ON recommendations.id = recommendations_eav.recommendation
+             LEFT JOIN recommendations_eav ON recommendations.id = recommendations_eav.recommendation
              WHERE recommendations.listing = $1
              AND recommendations_eav.user = $2
              AND recommendations_eav.action = 'Favorited'
