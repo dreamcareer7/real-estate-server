@@ -5,47 +5,56 @@ WITH rn AS (
     'user_created_alert_ids', ARRAY_AGG(notifications.object) FILTER (
       WHERE notifications.subject_class = 'User' AND
             notifications.action = 'Created' AND
-            notifications.object_class = 'Alert'
+            notifications.object_class = 'Alert' AND
+            notifications.deleted_at IS NULL
       ),
     'user_edited_alert_ids', ARRAY_AGG(notifications.object) FILTER (
       WHERE notifications.subject_class = 'User' AND
             notifications.action = 'Edited' AND
-            notifications.object_class = 'Alert'
+            notifications.object_class = 'Alert' AND
+            notifications.deleted_at IS NULL
       ),
     'listing_became_available_room_ids', ARRAY_AGG(notifications.auxiliary_subject) FILTER (
       WHERE notifications.subject_class = 'Listing' AND
             notifications.action = 'BecameAvailable' AND
-            notifications.object_class = 'Room'
+            notifications.object_class = 'Room' AND
+            notifications.deleted_at IS NULL
       ),
     'user_favorited_recommendation_ids', ARRAY_AGG(notifications.object) FILTER (
       WHERE notifications.subject_class = 'User' AND
             notifications.action = 'Favorited' AND
-            notifications.object_class = 'Recommendation'
+            notifications.object_class = 'Recommendation' AND
+            notifications.deleted_at IS NULL
       ),
     'user_shared_listing', ARRAY_AGG(notifications.recommendation) FILTER (
       WHERE notifications.subject_class = 'User' AND
             notifications.action = 'Shared' AND
-            notifications.object_class = 'Listing'
+            notifications.object_class = 'Listing' AND
+            notifications.deleted_at IS NULL
       ),
-    'user_joined_room_ids', ARRAY_AGG(notifications.object) FILTER (
-      WHERE notifications.subject_class = 'User' AND
-            notifications.action = 'Joined' AND
-            notifications.object_class = 'Room'
+    'listing_price_dropped_recommendation_ids', ARRAY_AGG(notifications.recommendation) FILTER (
+      WHERE notifications.subject_class = 'Listing' AND
+            notifications.action = 'PriceDropped' AND
+            notifications.object_class = 'Room' AND
+            notifications.deleted_at IS NULL
       ),
-    'user_invited_room_ids', ARRAY_AGG(notifications.object) FILTER (
-      WHERE notifications.subject_class = 'User' AND
-            notifications.action = 'Invited' AND
-            notifications.object_class = 'Room'
+    'listing_status_changed_recommendation_ids', ARRAY_AGG(notifications.recommendation) FILTER (
+      WHERE notifications.subject_class = 'Listing' AND
+            notifications.action = 'StatusChanged' AND
+            notifications.object_class = 'Room' AND
+            notifications.deleted_at IS NULL
       ),
     'user_created_cma', ARRAY_AGG(notifications.auxiliary_object) FILTER (
       WHERE notifications.subject_class = 'User' AND
             notifications.action = 'Created' AND
-            notifications.object_class = 'CMA'
+            notifications.object_class = 'CMA' AND
+            notifications.deleted_at IS NULL
       ),
     'user_sent_message_ids', ARRAY_AGG(notifications.auxiliary_object) FILTER (
       WHERE notifications.subject_class = 'User' AND
             notifications.action = 'Sent' AND
-            notifications.object_class = 'Message'
+            notifications.object_class = 'Message' AND
+            notifications.deleted_at IS NULL
       )
   ) AS r
   FROM notifications
