@@ -9,19 +9,19 @@ WHERE
     SELECT id FROM notifications
     WHERE
       (
-        object_class     = 'User'
+        subject_class     = 'User'
         AND action       = 'Created'
-        AND subject_class = 'Alert'
-        AND subject = $1
+        AND object_class = 'Alert'
+        AND object = $1
       ) OR
       (
-        object_class     = 'User'
+        subject_class     = 'User'
         AND action       = 'Edited'
-        AND subject_class = 'Alert'
-        AND subject = $1
+        AND object_class = 'Alert'
+        AND object = $1
       ) OR
       (
-        object_class     = 'Listing'
+        subject_class     = 'Listing'
         AND action       = 'BecameAvailable'
         AND auxiliary_subject_class = 'Alert'
         AND auxiliary_subject = $1
