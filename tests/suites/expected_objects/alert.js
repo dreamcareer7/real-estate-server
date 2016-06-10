@@ -54,7 +54,7 @@ module.exports = {
   "minimum_year_built": Number,
   "pool": v.optionalBoolean,
   "title": v.optionalString,
-  "proposedTitle": String,
+  "proposed_title": String,
   "minimum_lot_square_meters": Number,
   "maximum_lot_square_meters": Number,
   "maximum_year_built": Number,

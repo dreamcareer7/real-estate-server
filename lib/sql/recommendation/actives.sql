@@ -1,27 +1,65 @@
-WITH recs AS (
-  SELECT recommendations.id,
-         recommendations.hidden,
-         recommendations.created_at,
-         recommendations.referring_objects,
-         COUNT(messages.id) FILTER (WHERE messages.id IS NOT NULL) AS message_count,
-         MAX(messages.created_at) FILTER (WHERE messages.id IS NOT NULL) AS updated_at
+WITH my_rooms AS(
+  SELECT DISTINCT ON(rooms_users.room) rooms_users.room FROM rooms_users
+  JOIN rooms ON rooms_users.room = rooms.id
+  WHERE
+  rooms.deleted_at IS NULL
+  AND (
+    CASE WHEN $1::uuid IS NULL THEN TRUE ELSE rooms_users.user = $1::uuid END
+  )
+  AND (
+    CASE WHEN $2::uuid IS NULL THEN TRUE ELSE rooms.id = $2::uuid END
+  )
+),
+
+recommeded_manually AS (
+  SELECT DISTINCT ON(recommendation)
+    recommendation
+  FROM notifications
+  WHERE
+    deleted_at IS NULL
+    AND room IN(SELECT * FROM my_rooms)
+    AND subject_class = 'User' AND action = 'Shared' AND object_class = 'Listing'
+),
+
+has_comment AS (
+  SELECT DISTINCT ON (recommendation)
+  recommendation
+  FROM messages
+  JOIN recommendations ON messages.recommendation = recommendations.id
+  WHERE
+    messages.author IS NOT NULL
+    AND recommendations.room IN(SELECT * FROM my_rooms)
+),
+
+favorited AS (
+  SELECT DISTINCT ON (recommendation)
+  recommendations.id
   FROM recommendations
-  FULL JOIN messages ON messages.recommendation = recommendations.id
-  WHERE recommendations.room = $2 AND
-        recommendations.deleted_at IS NULL AND
-        recommendations.hidden = FALSE
-  GROUP BY recommendations.id,
-           recommendations.hidden,
-           recommendations.created_at,
-           recommendations.referring_objects
+  JOIN recommendations_eav ON recommendations.id = recommendations_eav.recommendation
+  WHERE
+    recommendations.room IN(SELECT * FROM my_rooms)
+    AND action = 'Favorited'
+),
+
+summarized AS (
+  SELECT * FROM recommeded_manually
+  UNION
+  SELECT * FROM has_comment
+  UNION
+  SELECT * FROM favorited
+),
+
+recs AS (
+  SELECT id, created_at, updated_at FROM recommendations
+  WHERE id IN(SELECT recommendation FROM summarized) AND hidden = false
 )
+
 SELECT id,
        (COUNT(*) OVER())::INT AS total,
-       LOWER($1),
        LOWER($3)
 FROM recs
-WHERE message_count > 0
-AND CASE
+WHERE
+CASE
     WHEN $4 = 'Since_C' THEN created_at > TIMESTAMP WITH TIME ZONE 'EPOCH' + $5 * INTERVAL '1 MICROSECOND'
     WHEN $4 = 'Max_C' THEN created_at <= TIMESTAMP WITH TIME ZONE 'EPOCH' + $5 * INTERVAL '1 MICROSECOND'
     WHEN $4 = 'Since_U' THEN updated_at > TIMESTAMP WITH TIME ZONE 'EPOCH' + $5 * INTERVAL '1 MICROSECOND'
