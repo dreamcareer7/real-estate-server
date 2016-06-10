@@ -12,18 +12,18 @@ WHERE
         subject_class     = 'User'
         AND action       = 'Created'
         AND object_class = 'Alert'
-        AND object = $1
+        AND object = $2
       ) OR
       (
         subject_class     = 'User'
         AND action       = 'Edited'
         AND object_class = 'Alert'
-        AND object = $1
+        AND object = $2
       ) OR
       (
         subject_class     = 'Listing'
         AND action       = 'BecameAvailable'
         AND auxiliary_subject_class = 'Alert'
-        AND auxiliary_subject = $1
+        AND auxiliary_subject = $2
       )
   )
