@@ -1,4 +1,6 @@
-SELECT alerts.id
+SELECT
+  alerts.id,
+   (COUNT(*) OVER())::INT AS total
 FROM alerts
 INNER JOIN rooms_users
     ON alerts.room = rooms_users.room
