@@ -1,4 +1,6 @@
-SELECT id
+SELECT
+  id,
+  (COUNT(*) OVER())::INT AS total
 FROM alerts
 WHERE room = $1 AND
 deleted_at IS NULL
