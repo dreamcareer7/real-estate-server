@@ -19,8 +19,12 @@ WHERE
   COALESCE(pool_yn = $11, TRUE) = TRUE AND
   COALESCE(lot_square_meters >= $12, TRUE) = TRUE AND
   COALESCE(lot_square_meters <= $13, TRUE) = TRUE AND
-  location IS NOT NULL AND
-  ST_Within(location, ST_SetSRID(ST_GeomFromText($14), 4326))
+  (
+    ($14::text IS NULL) OR (
+      location IS NOT NULL AND
+      ST_Within(location, ST_SetSRID(ST_GeomFromText($14), 4326))
+    )
+  )
   AND (
     ($18::text IS NULL) OR (
       list_office_mls_id = ANY($18::text[])
