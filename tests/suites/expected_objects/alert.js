@@ -53,12 +53,14 @@ module.exports = {
   "vertical_distance": Number,
   "minimum_year_built": Number,
   "pool": v.optionalBoolean,
-  "title": String,
+  "title": v.optionalString,
+  "proposed_title": String,
   "minimum_lot_square_meters": Number,
   "maximum_lot_square_meters": Number,
   "maximum_year_built": Number,
   "dom": v.optionalNumber,
   "cdom": v.optionalNumber,
   "deleted_at": v.optionalNumber,
-  "type": "alert"
+  "type": "alert",
+  "users":v.optionalArray //Null or Array are both objects
 };

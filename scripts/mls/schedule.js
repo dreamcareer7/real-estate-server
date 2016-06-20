@@ -5,37 +5,61 @@ var _ = require('underscore');
 var spawn = require('child_process').spawn;
 var config = require('../../lib/config.js');
 
-var tasks = config.scheduler.tasks;
+var definitions = config.scheduler.queues;
+var queues = {};
+var tasks = {};
 
-var queue = async.priorityQueue(runTask, 1);
-queue.drain = schedule;
+Object.keys(definitions).forEach( queue_name => {
+  queues[queue_name] = async.priorityQueue(runTask, 1);
+  queues[queue_name].drain = schedule.bind(null, queue_name);
 
-function processLastRuns(err, last_runs) {
-  if(err)
-    return console.log('Error fetching last runs:', err);
+  Object.keys(definitions[queue_name]).forEach( task_name => {
+    var definition = definitions[queue_name][task_name];
+    definition.name = task_name;
+    definition.queue = queue_name;
+    tasks[task_name] = definition;
+  })
 
-  Object.keys(tasks).filter( (name, index) => {
-    var run  = last_runs[index];
-    var task = tasks[name];
-    if(!run)
+  schedule(queue_name);
+});
+
+
+function processLastRuns(queue, tasks) {
+  tasks
+  .filter( task => {
+
+    if(!task.run)
       return true; // Was never executed.
 
-    var elapsed = (new Date).getTime() - run.created_at.getTime();
+    var elapsed = (new Date).getTime() - task.run.created_at.getTime();
 
-    return elapsed >= task.interval;
+    return elapsed >= task.definition.interval;
   })
-  .forEach(name => {
-    var task = tasks[name];
-    task.name = name;
-    queue.push(task, tasks[name].priority)
+  .forEach(task => {
+    queues[task.definition.queue].push(task.definition, task.definition.priority);
   });
 
-  if(queue.length() < 1)
-    setTimeout(schedule, 30*1000)
+  if(queues[queue].length() < 1) {
+    setTimeout(schedule.bind(null, queue), 5*1000)
+  }
 }
 
-function schedule() {
-  async.map(Object.keys(tasks), MLSJob.getLastRun, processLastRuns);
+function schedule(queue) {
+  var current_tasks = Object.keys(tasks)
+    .filter( t => tasks[t].queue === queue );
+
+  async.map(current_tasks, MLSJob.getLastRun, (err, last_runs, c) => {
+    if(err)
+      return console.log(err)
+
+    var results = current_tasks.map((t,i) => {
+      return {
+        definition:tasks[t],
+        run:last_runs[i]
+      }
+    })
+    processLastRuns(queue, results);
+  });
 }
 
 function runTask(task, cb) {
@@ -63,6 +87,3 @@ function runTask(task, cb) {
   p.stdout.pipe(process.stdout);
   p.stderr.pipe(process.stderr);
 }
-
-
-schedule()

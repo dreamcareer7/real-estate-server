@@ -1,5 +1,4 @@
 module.exports = {
-  "title":"afsd",
   "maximum_price":9223372036854780000,
   "maximum_lot_square_meters":856872169904754000,
   "minimum_bathrooms":1,

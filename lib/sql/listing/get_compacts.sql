@@ -12,6 +12,15 @@ SELECT 'compact_listing' AS TYPE,
        listings.mls_number AS mls_number,
        listings.buyers_agency_commission AS buyers_agency_commission,
        listings.sub_agency_commission AS sub_agency_commission,
+       (
+        CASE WHEN $2::uuid IS NULL THEN FALSE ELSE (
+            SELECT count(*) > 0 FROM recommendations
+            JOIN recommendations_eav ON recommendations.id = recommendations_eav.recommendation
+            WHERE recommendations.listing = listings.id
+            AND recommendations_eav.user = $2
+            AND recommendations_eav.action = 'Favorited'
+        ) END
+      ) as favorited,
        CASE WHEN addresses.location IS NOT NULL THEN
        json_build_object(
           'latitude', ST_Y(addresses.location),
@@ -69,3 +78,4 @@ FROM listings
 JOIN properties ON listings.property_id = properties.id
 JOIN addresses ON properties.address_id = addresses.id
 WHERE listings.id = ANY($1::uuid[])
+ORDER BY order_listings(listings.status)

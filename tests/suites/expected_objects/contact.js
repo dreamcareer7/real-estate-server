@@ -1,9 +1,9 @@
-var user = require('./user.js');
+var compact_user = require('./compact_user.js');
 var v = require('../../../lib/utils/response_validation.js');
 
 module.exports = {
   "id": String,
-  "contact_user": user,
+  "contact_user": compact_user,
   "created_at": Number,
   "updated_at": Number,
   "deleted_at": v.optionalNumber,

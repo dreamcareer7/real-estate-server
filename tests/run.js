@@ -138,7 +138,7 @@ function setupApp(cb) {
   var app = require('../lib/bootstrap.js')();
   app.use(database);
 
-  Error.autoReport = false;
+//   Error.autoReport = false;
 
   if(!program.keep) {
     Run.on('suite done', (suite) => {
@@ -158,9 +158,14 @@ function setupApp(cb) {
   app.listen(config.tests.port, () => {
     //Clear all jobs on test db
     redisClient.flushall( err => {
-      queue.process('create_notification', 1, (job, done) => {
-        Notification.create(job.data.notification, done);
-      });
+      Notification.schedule = function(notification, cb) {
+        if(!notification.delay)
+          notification.delay = 0;
+
+        setTimeout(function() {
+          Notification.create(notification, cb);
+        }, notification.delay);
+      };
 
       cb();
     });

@@ -13,11 +13,12 @@ module.exports = {
   "created_at": Number,
   "updated_at": Number,
   "deleted_at": v.optionalNumber,
-  "read_by": Array,
   "favorited_by": Array,
   "tour_requested_by": Array,
   "comment_count": Number,
   "document_count": Number,
   "video_count": Number,
-  "image_count": Number
+  "image_count": Number,
+  "room": String,
+  "users":Array
 };

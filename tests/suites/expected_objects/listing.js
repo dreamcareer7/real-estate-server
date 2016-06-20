@@ -96,5 +96,6 @@ module.exports = {
   "cdom": v.optionalNumber,
   "property": property,
   "alerting_agent": v.optionalString,
-  "listing_agent": v.optionalString
+  "listing_agent": v.optionalString,
+  "favorited":Boolean
 };

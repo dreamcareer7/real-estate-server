@@ -64,9 +64,12 @@ queue.process('sms', config.twilio.parallel, (job, done) => {
   Twilio.callTwilio(job.data, done);
 });
 
-setInterval( () => {
+var sendPushForUnread = function() {
   Notification.sendPushForUnread(err => {
     if(err)
       console.log(err);
+
+    setTimeout(sendPushForUnread, 1000)
   })
-}, 1000)
+}
+sendPushForUnread()

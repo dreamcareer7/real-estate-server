@@ -49,5 +49,5 @@ CREATE MATERIALIZED VIEW agents_emails AS (
 );
 
 CREATE UNIQUE INDEX agents_emails_idx ON agents_emails (id);
-CREATE INDEX agents_emails_email ON agents_emails (email);
+CREATE INDEX agents_emails_email ON agents_emails (LOWER(email));
 CREATE INDEX agents_emails_mui ON agents_emails (mui);

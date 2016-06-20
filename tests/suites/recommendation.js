@@ -150,7 +150,8 @@ var markAsFavorite404 = (cb) => {
 var markAsFavoriteWorked = (cb) => {
   var expect = _.clone(results.recommendation.feed.data[0]);
   expect.favorited_by = [results.authorize.token.data];
-
+  expect.listing.favorited = true; //Its now marked as favorited. This should be true now.
+  
   return frisby.create('make sure favorite was successful')
     .get('/rooms/' + results.room.create.data.id + '/recs/favorites')
     .after(cb)
@@ -256,8 +257,6 @@ var markAsSeen = (cb) => {
   delete rec.document_count;
   delete rec.video_count;
   delete rec.image_count;
-
-  rec.read_by = [results.authorize.token.data]
 
   return frisby.create('mark a rec as seen')
     .delete('/rooms/' + results.room.create.data.id + '/recs/feed/' + results.recommendation.feed.data[0].id)
