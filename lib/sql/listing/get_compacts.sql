@@ -13,6 +13,9 @@ SELECT 'compact_listing' AS TYPE,
        listings.buyers_agency_commission AS buyers_agency_commission,
        listings.sub_agency_commission AS sub_agency_commission,
        (
+          SELECT id FROM agents WHERE matrix_unique_id = listings.list_agent_mui LIMIT 1
+        ) as list_agent,
+       (
         CASE WHEN $2::uuid IS NULL THEN FALSE ELSE (
             SELECT count(*) > 0 FROM recommendations
             JOIN recommendations_eav ON recommendations.id = recommendations_eav.recommendation
