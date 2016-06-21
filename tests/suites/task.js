@@ -9,7 +9,7 @@ var create = (cb) => {
     .post('/tasks', {
       user: results.contact.create.data[0].contact_user.id,
       title: 'NewTask',
-      due_date: 2015,
+      due_date: results.contact.create.data[0].contact_user.created_at,
       status: 'New',
       transaction: results.transaction.create.data.id,
       expense: 4500,
