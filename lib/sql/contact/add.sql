@@ -9,7 +9,9 @@ INSERT INTO contacts("user",
                      invitation_url,
                      company,
                      birthday,
-                     address
+                     address,
+                     source_type,
+                     brand
                     )
 VALUES ($1,
         $2,
@@ -22,5 +24,7 @@ VALUES ($1,
         $9,
         $10,
         TIMESTAMP WITH TIME ZONE 'EPOCH' + $11 * INTERVAL '1 SECOND',
-        $12)
+        $12,
+        $13,
+        $14)
 RETURNING id
