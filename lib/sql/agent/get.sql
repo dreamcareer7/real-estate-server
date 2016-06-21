@@ -10,6 +10,12 @@ SELECT *,
          LIMIT 1
        ) AS user_id,
        (
+         SELECT profile_image_url
+         FROM users
+         WHERE agent = $1
+         LIMIT 1
+       ) AS profile_image_url,
+       (
          SELECT ARRAY_AGG(DISTINCT phone)
          FROM agents_phones
          WHERE mui = agents.matrix_unique_id

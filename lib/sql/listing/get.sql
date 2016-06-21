@@ -10,6 +10,10 @@ WITH listing AS (
         EXTRACT(EPOCH FROM listings.close_date) AS close_date,
 
         (
+          SELECT id FROM agents WHERE matrix_unique_id = listings.list_agent_mui LIMIT 1
+        ) as list_agent,
+
+        (
           CASE WHEN $2::uuid IS NULL THEN FALSE ELSE (
              SELECT count(*) > 0 FROM recommendations
              LEFT JOIN recommendations_eav ON recommendations.id = recommendations_eav.recommendation
