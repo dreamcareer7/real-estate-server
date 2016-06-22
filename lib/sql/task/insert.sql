@@ -6,7 +6,8 @@ INSERT INTO
       "transaction",
       due_date,
       private,
-      expense
+      expense,
+      google_id
     )
 VALUES (
          $1,
@@ -14,6 +15,7 @@ VALUES (
          $3,
          CASE WHEN $4::float IS NULL THEN NULL ELSE to_timestamp($4::float) END,
          $5,
-         $6
+         $6,
+         $7
        )
 RETURNING id;
