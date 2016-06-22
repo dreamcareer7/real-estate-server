@@ -7,7 +7,7 @@ var up = [
   'CREATE TYPE contact_source_type AS enum (\'BrokerageWidget\', \'IOSAddressBook\', \'SharesRoom\', \'ExplicitlyCreated\');',
   'ALTER TABLE contacts ADD source_type contact_source_type;',
   'ALTER TABLE contacts ADD brand uuid REFERENCES brands(id);',
-  'ALTER TYPE notification_object_class ADD VALUE \'CreatedFor\';',
+  'ALTER TYPE notification_action ADD VALUE \'CreatedFor\';'
 ];
 
 var down = [
