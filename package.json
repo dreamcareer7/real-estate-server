@@ -37,7 +37,6 @@
     "google-libphonenumber": "^1.0.14",
     "googleapis": "^5.2.1",
     "googlemaps": "^1.0.1",
-    "hiredis": "^0.4.1",
     "intercom-client": "^2.8.0",
     "kue": "^0.9.6",
     "linger": "0.0.3",
