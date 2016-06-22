@@ -4,20 +4,16 @@ var async = require('async');
 var db = require('../lib/utils/db');
 
 var up = [
-  'BEGIN',
   'CREATE TYPE contact_source_type AS enum (\'BrokerageWidget\', \'IOSAddressBook\', \'SharesRoom\', \'ExplicitlyCreated\');',
   'ALTER TABLE contacts ADD source_type contact_source_type;',
   'ALTER TABLE contacts ADD brand uuid REFERENCES brands(id);',
-  'ALTER TYPE notification_object_class ADD VALUE \'CreatedFor\';',
-  'COMMIT'
+  'ALTER TYPE notification_action ADD VALUE \'CreatedFor\';'
 ];
 
 var down = [
-  'BEGIN',
   'ALTER TABLE contacts DROP COLUMN brand;',
   'ALTER TABLE contacts DROP COLUMN source_type;',
   'DROP TYPE contact_source_type;',
-  'COMMIT'
 ];
 
 var runAll = (sqls, next) => {
