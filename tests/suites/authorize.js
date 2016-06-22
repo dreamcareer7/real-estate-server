@@ -10,9 +10,7 @@ var auth_params = {
   grant_type: 'password'
 };
 
-var token = (cb, auth) => {
-  if (auth === undefined) //You can optionally give it an auth object. Or it will have a default.
-    auth = auth_params;
+var token = (cb) => {
   return frisby.create('get token')
     .post('/oauth2/token', auth_params)
     .expectStatus(200)
@@ -27,24 +25,6 @@ var token = (cb, auth) => {
     .expectJSONTypes(authorize_reponse);
 }
 
-var token401 = (cb, auth) => {
-  if (auth === undefined)
-    auth = auth_params;
-  return frisby.create('get token')
-    .post('/oauth2/token')
-    .expectStatus(401);
-}
-
-var token403 = (cb, auth) => {
-  if (auth === undefined)
-    auth = auth_params;
-  return frisby.create('get token')
-    .post('/oauth2/token', auth_params)
-    .expectStatus(403);
-}
-
 module.exports = {
-  token,
-  //token401,
-  //token403
+  token
 };
