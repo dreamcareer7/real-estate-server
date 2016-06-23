@@ -103,6 +103,22 @@ trc AS (
           notifications.object_class = 'Transaction' OR
           notifications.subject_class = 'Transaction'
         )
+),
+tco AS (
+  SELECT contacts.id AS contact
+  FROM notifications
+  INNER JOIN notifications_users
+    ON notifications.id = notifications_users.notification
+  INNER JOIN contacts
+    ON (notifications.object = contacts.id OR notifications.subject = contacts.id)
+  WHERE notifications.specific = $1 AND
+        notifications_users.acked_at IS NULL AND
+        notifications_users.user = $1 AND
+        notifications.room IS NULL AND
+        (
+          notifications.object_class = 'Contact' OR
+          notifications.subject_class = 'Contact'
+        )
 )
 SELECT 'notification_summary' AS type,
        (SELECT COUNT(*) FROM tc)::int AS task_notification_count,
@@ -111,5 +127,6 @@ SELECT 'notification_summary' AS type,
        ((SELECT COUNT(*) FROM tc) + (SELECT COUNT(*) FROM trc) + COALESCE(ARRAY_LENGTH(ARRAY_AGG(r), 1), 0))::int AS total_notification_count,
        COALESCE((SELECT ARRAY_AGG(task) from tc), '{}'::uuid[]) AS task_ids,
        COALESCE((SELECT ARRAY_AGG(transaction) from trc), '{}'::uuid[]) AS transaction_ids,
+       COALESCE((SELECT ARRAY_AGG(contact) from tco), '{}'::uuid[]) AS contact_ids,
        COALESCE(ARRAY_AGG(r), '{}'::json[]) AS room_notification_summaries
 FROM rn
