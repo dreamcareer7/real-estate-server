@@ -42,3 +42,4 @@ CREATE INDEX listings_filters_address_trgm ON listings_filters USING gin (addres
 CREATE INDEX listings_filters_status_order ON listings_filters(order_listings(status));
 CREATE INDEX listings_filters_list_office  ON listings_filters(list_office_mls_id);
 CREATE INDEX listings_filters_list_agent   ON listings_filters(list_agent_mls_id);
+CREATE INDEX listings_filters_address      ON listings_filters USING GIN (to_tsvector('english', address));
