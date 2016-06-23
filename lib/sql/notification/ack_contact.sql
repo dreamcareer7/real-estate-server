@@ -3,19 +3,15 @@ SET
   acked_at = NOW()
 WHERE
   acked_at IS NULL
-  AND "user" = $1
+  AND "user" = $2
   AND notification IN
   (
     SELECT id FROM notifications
     WHERE
-      specific = $2 AND
-      room IS NULL AND
       (
-        object_class = 'Contact' OR
-        subject_class = 'Contact'
-      ) AND
-      (
-        object = $1 OR
-        subject = $1
+        subject = $1 AND
+        subject_class = 'Contact' AND
+        action = 'CreatedFor' AND
+        object_class = 'User'
       )
   )
