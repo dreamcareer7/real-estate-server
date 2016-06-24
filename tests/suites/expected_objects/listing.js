@@ -4,7 +4,6 @@ var v = require('../../../lib/utils/response_validation.js');
 module.exports = {
   "type": String,
   "id": String,
-  "listing_agency_id": v.optionalString,
   "created_at": Number,
   "updated_at": Number,
   "cover_image_url": v.optionalString,
@@ -95,7 +94,6 @@ module.exports = {
   "dom": v.optionalNumber,
   "cdom": v.optionalNumber,
   "property": property,
-  "alerting_agent": v.optionalString,
-  "listing_agent": v.optionalString,
+  "list_agent": v.optionalObject,
   "favorited":Boolean
 };

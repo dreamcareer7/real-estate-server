@@ -1,6 +1,32 @@
-//register dependencies
-registerSuite('room', ['create']);
-registerSuite('invitation', ['create']);
+var config = require('../../lib/config.js');
+
+var authorize_reponse = require('./data/user.js');
+var user = require('./data/user.js');
+var room = require('./data/room.js');
+
+registerSuite('transaction', ['create', 'assign']);
+
+var auth_params = {
+  client_id: config.tests.client_id,
+  client_secret: config.tests.client_secret,
+  username: user.email,
+  password: user.password,
+  grant_type: 'password'
+};
+
+var token = (cb) => {
+  return frisby.create('get token')
+    .post('/oauth2/token', auth_params)
+    .expectStatus(200)
+    .after((err, res, json) => {
+      var setup = frisby.globalSetup();
+
+      setup.request.headers['Authorization'] = 'Bearer ' + json.access_token;
+
+      frisby.globalSetup(setup);
+      cb(err, res);
+    })
+}
 
 var notification_response = require('./expected_objects/notification.js');
 var info_response = require('./expected_objects/info.js');
@@ -25,7 +51,7 @@ var getUsersNotification = (cb) => {
       code: String,
       data: [notification_response],
       info: info_response
-    });
+    })
 }
 
 var getNotification = (cb) => {
@@ -107,8 +133,9 @@ var cancelPushNotification = (cb) => {
 }
 
 var patchNotificationSettings = (cb) => {
+  console.log(results)
   return frisby.create('update notification settings')
-    .patch('/rooms/' + results.room.create.data.id + '/notifications', {
+    .patch('/rooms/' + results.notification.createRoom.data.id + '/notifications', {
       notification: true
     })
     .after(cb)
@@ -124,8 +151,15 @@ var patchNotificationSettings404 = (cb) => {
     .expectStatus(404)
 }
 
+var createRoom = (cb) => {
+  return frisby.create('create room')
+    .post('/rooms', room)
+    .after(cb)
+    .expectStatus(200)
+}
 
 module.exports = {
+  token,
   getUsersNotification,
   getNotification,
   getNotification404,
@@ -133,6 +167,7 @@ module.exports = {
   acknowledgeNotification404,
   pushNotification,
   cancelPushNotification,
+  createRoom,
   patchNotificationSettings,
   patchNotificationSettings404
 }

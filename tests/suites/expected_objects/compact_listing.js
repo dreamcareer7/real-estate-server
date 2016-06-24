@@ -14,5 +14,6 @@ module.exports = {
         "longitude": Number,
         "type": "location"
     },
-    "favorited": Boolean
+    "favorited": Boolean,
+    "list_agent": v.optionalObject
 };
