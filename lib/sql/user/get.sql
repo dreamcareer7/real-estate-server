@@ -5,7 +5,17 @@ SELECT 'user' AS type,
        ((CURRENT_TIME(0) AT TIME ZONE users.timezone)::time < '23:59:59'::time)) AS push_allowed,
        EXTRACT(EPOCH FROM users.created_at) AS created_at,
        EXTRACT(EPOCH FROM users.updated_at) AS updated_at,
-       EXTRACT(EPOCH FROM users.deleted_at) AS deleted_at
+       EXTRACT(EPOCH FROM users.deleted_at) AS deleted_at,
+
+       COALESCE(
+        profile_image_url,
+        (
+          SELECT url FROM agents_images WHERE mui = (
+            SELECT matrix_unique_id FROM agents WHERE id = users.id
+          ) AND image_type = 'Profile' ORDER BY date DESC LIMIT 1
+        )
+       ) as profile_image_url
+
 FROM users
 WHERE id = $1 AND
       deleted_at IS NULL
