@@ -7,7 +7,8 @@ INSERT INTO users
       phone_number,
       user_type,
       agent,
-      is_shadow
+      is_shadow,
+      brand
     )
 VALUES
     (
@@ -18,6 +19,7 @@ VALUES
       $5,
       $6,
       $7,
-      $8
+      $8,
+      $9
     )
 RETURNING id
