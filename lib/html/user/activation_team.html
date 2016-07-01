@@ -20,13 +20,13 @@
                         <tr>
                             <td>
                                 <center>
-                                    <img src="http://static1.varzesh3.com/logo.png">
+                                    <img src="%(team_logo)s">
                                 </center>
                             </td>
                         </tr>
                         <tr>
                             <td style="color: #263445; font-size:22px;">
-                                %(team_fullname)s
+                                %(team_name)s
                             </td>
                         </tr>
                         </tbody>
@@ -40,41 +40,22 @@
                 <table style="height: 200px;width:100%%;">
                     <tbody>
                     <tr>
-                        <td rowspan="2" style="vertical-align: middle;text-align: center;width: 30%%
-                                                            ">
-                            <img src="http://static1.varzesh3.com/agent.png" style="margin: 0px 0px 0px 20px;border-radius: 100px;border: solid;border-color: #435060;border-width: 4px;width: 80%%;">
+                        <td rowspan="2" style="vertical-align: middle;text-align: center;width: 30%%">
+                            <img src="%(agent_profile_url)s" style="margin: 0px 0px 0px 20px;border-radius: 100px;border: solid;border-color: #435060;border-width: 4px;width: 80%%;">
                         </td>
                         <td style="color: #fff;vertical-align: bottom;text-align: left;font-size: 34px;padding-bottom: 10px;">
-                            %(team_name)s
+                            %(agent_name)s
                         </td>
                     </tr>
                     <tr>
                         <td style="color: #8696a4;vertical-align: top;">
-                            %(team_description)s
+                            At %(team_name)s we use Rechat to communicate and connect with clients like you for a better buying experinece. You are 1 step closer to saving your home! Use the link below to activate your account and we hope you love the Rechat experience as much as we do.
                         </td>
                     </tr>
                     </tbody>
                 </table>
             </div>
             <!-- END AGENT -->
-
-            <!-- START BODY -->
-            <div id="body" style="background-color: #fff;width:95%%; clear: both; margin-bottom:20px;">
-                <center>
-                    <div style="line-height: 22px;font-size: 30px;padding: 50px 0px 20px 0px;margin: 0;color: #4a4a4a;">
-                        %(title)s
-                    </div>
-                    <div>
-                        <p style="line-height: 22px;font-size: 17px;padding: 0;margin: 0;color: #4a4a4a;width: 80%%; text-align: center; line-height: 30px;">
-                            %(message)s
-                        </p>
-                    </div>
-                    <div style="text-align: center; padding: 20px 0px 50px 0px; margin:0px 10px 0px 10px;">
-                        <a href="%(branch_url)s" target="_blank" style="background-color:#%(team_color)s ;color: #ffffff !important;text-decoration: none;padding: 12px 30px;border-radius: 4px;display: inline-block;font-size: 12px;">ACTIVATE MY RECHAT ACCOUNT</a>
-                    </div>
-                </center>
-            </div>
-            <!-- END BODY -->
 
             <!-- START SUPPORTER -->
             <div id="supporter" style="width:95%%; margin-bottom: -8;">
@@ -144,7 +125,7 @@
                         </tr>
                         <tr>
                             <td style="font-size: 14px;text-align: center;color: #c6c6c6;text-shadow: 0px 1px #fff; padding-top:30px;">
-                                Rechat © 2016, All Rights Reserved.<a style="color:#c6c6c6 " href="%%(base_url)s/terms/mls "> MLS Terms</a>
+                                Rechat © 2016, All Rights Reserved.<a style="color:#c6c6c6 " href="http://tinyurl.com/mls-terms-of-use"> MLS Terms</a>
                             </td>
                         </tr>
 
