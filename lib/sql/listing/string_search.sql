@@ -40,39 +40,22 @@ normal_results AS (
   SELECT * FROM fuzzy_results
 ),
 
--- all_results AS (
---   SELECT id, status
---   FROM listings_filters
---   WHERE
---     (
---       CASE WHEN
---         (SELECT count(*) FROM normal_results) > 0 -- If there are any normal results
---       THEN id IN (SELECT * FROM normal_results)   -- Return them
---       ELSE id IN (SELECT * FROM suggested_results) -- Otherwise, return results found by misspelled suggestions
---       END
---     )
---     AND
---     CASE
---       WHEN $2::listing_status[] IS NULL THEN TRUE
---       ELSE status = ANY($2::listing_status[])
---     END
--- )
-
 all_results AS (
   SELECT id, status
   FROM listings_filters
   WHERE
-    id IN (SELECT * FROM normal_results)
-    AND ($2::listing_status[] IS NULL OR status = ANY($2::listing_status[]))
-
-  UNION ALL
-
-  SELECT id, status
-  FROM listings_filters
-  WHERE
-    NOT EXISTS(SELECT 1 FROM normal_results)
-    AND id IN (SELECT * FROM suggested_results)
-    AND ($2::listing_status[] IS NULL OR status = ANY($2::listing_status[]))
+    (
+      CASE WHEN
+        (SELECT count(*) FROM normal_results) > 0 -- If there are any normal results
+      THEN id IN (SELECT * FROM normal_results)   -- Return them
+      ELSE id IN (SELECT * FROM suggested_results) -- Otherwise, return results found by misspelled suggestions
+      END
+    )
+    AND
+    CASE
+      WHEN $2::listing_status[] IS NULL THEN TRUE
+      ELSE status = ANY($2::listing_status[])
+    END
 )
 
 SELECT id FROM all_results

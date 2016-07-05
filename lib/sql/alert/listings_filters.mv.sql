@@ -20,16 +20,16 @@ CREATE MATERIALIZED VIEW listings_filters AS SELECT
     addresses.title || ' ' ||
     addresses.subtitle || ' ' ||
     addresses.street_number || ' ' ||
+    addresses.street_dir_prefix || ' ' ||
     addresses.street_name || ' ' ||
+    addresses.street_suffix || ' ' ||
+    addresses.street_dir_suffix || ' ' ||
     addresses.city || ' ' ||
     addresses.state || ' ' ||
     addresses.state_code || ' ' ||
-    addresses.street_suffix || ' ' ||
     addresses.postal_code || ' ' ||
     addresses.country::text || ' ' ||
     addresses.country_code::text || ' ' ||
-    addresses.street_dir_prefix || ' ' ||
-    addresses.street_dir_suffix || ' ' ||
     listings.mls_number
   ) as address
 FROM listings
