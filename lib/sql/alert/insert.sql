@@ -22,6 +22,8 @@ INSERT INTO alerts(
         maximum_lot_square_meters,
         listing_statuses,
         open_house,
-        minimum_sold_date
+        minimum_sold_date,
+        mls_area_major,
+        mls_area_minor
     )
-VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, ST_SetSRID(ST_MakePoint($10, $11), 4326), $12, $13, $14, $15, $16, ST_SetSRID(ST_GeomFromText($17::text), 4326), $18, $19, $20, $21, $22, $23, $24, to_timestamp($25)) RETURNING id;
+VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, ST_SetSRID(ST_MakePoint($10, $11), 4326), $12, $13, $14, $15, $16, ST_SetSRID(ST_GeomFromText($17::text), 4326), $18, $19, $20, $21, $22, $23, $24, to_timestamp($25), $26, $27) RETURNING id;
