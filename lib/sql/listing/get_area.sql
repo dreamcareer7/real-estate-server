@@ -8,7 +8,7 @@ WHERE
   )
   AND (
     ($2::text IS NULL) OR (
-      mls_area_major = ANY($2::int[])
+      mls_area_minor = ANY($2::int[])
     )
   )
   AND CASE
