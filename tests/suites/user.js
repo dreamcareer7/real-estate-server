@@ -100,6 +100,7 @@ var resetPassword404 = (cb) => {
 };
 
 var setAddress = (cb) => {
+  console.log(address);
   return frisby.create('set address')
     .put('/users/self/address', address)
     .after(cb)
@@ -111,6 +112,7 @@ var setAddress = (cb) => {
 };
 
 var setAddress400 = (cb) => {
+  console.log(address);
   return frisby.create('set address')
     .put('/users/self/address')
     .after(cb)

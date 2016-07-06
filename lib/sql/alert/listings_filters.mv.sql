@@ -20,16 +20,16 @@ CREATE MATERIALIZED VIEW listings_filters AS SELECT
     addresses.title || ' ' ||
     addresses.subtitle || ' ' ||
     addresses.street_number || ' ' ||
+    addresses.street_dir_prefix || ' ' ||
     addresses.street_name || ' ' ||
+    addresses.street_suffix || ' ' ||
+    addresses.street_dir_suffix || ' ' ||
     addresses.city || ' ' ||
     addresses.state || ' ' ||
     addresses.state_code || ' ' ||
-    addresses.street_suffix || ' ' ||
     addresses.postal_code || ' ' ||
     addresses.country::text || ' ' ||
     addresses.country_code::text || ' ' ||
-    addresses.street_dir_prefix || ' ' ||
-    addresses.street_dir_suffix || ' ' ||
     listings.mls_number
   ) as address
 FROM listings
@@ -38,7 +38,9 @@ JOIN
 JOIN
   addresses  ON properties.address_id = addresses.id;
 
+CREATE INDEX listings_filters_status       ON listings_filters(status);
 CREATE INDEX listings_filters_address_trgm ON listings_filters USING gin (address gin_trgm_ops);
 CREATE INDEX listings_filters_status_order ON listings_filters(order_listings(status));
 CREATE INDEX listings_filters_list_office  ON listings_filters(list_office_mls_id);
 CREATE INDEX listings_filters_list_agent   ON listings_filters(list_agent_mls_id);
+CREATE INDEX listings_filters_address      ON listings_filters USING GIN (to_tsvector('english', address));
