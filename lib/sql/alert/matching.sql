@@ -36,6 +36,16 @@ WHERE
     )
   )
   AND (
+    ($20::text IS NULL) OR (
+      mls_area_major = ANY($20::int[])
+    )
+  )
+  AND (
+    ($21::text IS NULL) OR (
+      mls_area_minor = ANY($21::int[])
+    )
+  )
+  AND (
     ($15::boolean IS NULL OR $15::boolean = false) OR (
       SELECT count(*) > 0 FROM open_houses WHERE
       listing_mui = listings_filters.matrix_unique_id AND start_time > NOW()
