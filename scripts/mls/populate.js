@@ -106,7 +106,7 @@ module.exports = (data) => {
   property.security_system_yn = Boolean(parseInt(data.SecuritySystemYN.trim()));
 
   listing.currency = 'USD';
-  listing.price = parseFloat(data.ListPrice) || undefined; // 0;
+  listing.price = parseFloat(data.ListPrice) || 0; // 0;
   listing.status = data.Status.trim();
   listing.matrix_unique_id = parseInt(data.Matrix_Unique_ID) || -1;
   listing.last_price = parseFloat(data.LastListPrice) || undefined; // 0.0;
