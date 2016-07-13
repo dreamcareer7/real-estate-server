@@ -69,7 +69,8 @@ var sendPushForUnread = function() {
     if(err)
       console.log(err);
 
-    setTimeout(sendPushForUnread, 1000)
-  })
-}
-sendPushForUnread()
+    setTimeout(sendPushForUnread, 1000);
+  });
+};
+
+sendPushForUnread();
