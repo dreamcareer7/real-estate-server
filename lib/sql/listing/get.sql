@@ -26,6 +26,7 @@ WITH listing AS (
         (
           SELECT COALESCE(ARRAY_AGG(url), '{}'::text[]) FROM photos
           WHERE listing_mui = listings.matrix_unique_id AND photos.url IS NOT NULL
+          ORDER BY "order"
         ) as gallery_image_urls,
 
         (
