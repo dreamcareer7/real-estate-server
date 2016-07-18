@@ -98,7 +98,6 @@ function savePhotos(cb) {
   var limit = options.limit || 2000;
 
   Photo.getUnprocessedPhotos( {limit:limit}, (err, photos) => {
-    console.log('Limit', limit, err, photos.length);
     async.map(photos, processPhoto, cb);
   });
 }
