@@ -42,6 +42,8 @@ JOIN
 JOIN
   addresses  ON properties.address_id = addresses.id;
 
+CREATE UNIQUE INDEX listings_filters_id ON listings_filters(id);
+CREATE INDEX listings_filters_location ON listings_filters USING GIST (location);
 CREATE INDEX listings_filters_mls_area_major ON listings_filters(mls_area_major);
 CREATE INDEX listings_filters_mls_area_minor ON listings_filters(mls_area_minor);
 CREATE INDEX listings_filters_status         ON listings_filters(status);
