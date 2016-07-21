@@ -45,11 +45,11 @@ var sendPushForUnread = function() {
 
 sendPushForUnread();
 
-setTimeout(shutdown, 30000);
+// setTimeout(shutdown, 300000);
 
-function shutdown() {
-  queue.shutdown( 10000, function(err) {
-    console.log('Graceful shutdown:', err);
-    process.exit( 0 );
-  });
-}
+// function shutdown() {
+//   queue.shutdown( 2000, function(err) {
+//     console.log('Graceful shutdown:', err);
+//     process.exit( 0 );
+//   });
+// }
