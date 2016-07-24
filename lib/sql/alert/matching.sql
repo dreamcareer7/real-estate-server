@@ -55,7 +55,20 @@ WHERE
     CASE WHEN ((($17::float) IS NULL) OR (listings_filters.status <> 'Sold')) THEN TRUE ELSE (
       CASE WHEN listings_filters.close_date IS NULL THEN FALSE ELSE (
         close_date > to_timestamp($17::float)
-      ) END
     ) END
-  )
-ORDER BY order_listings(status)
+  ) END
+)
+-- We might be interested in showing alert results for a specific brokerage first.
+-- Also, we might be interested in sorting based on either closed price or listing statuses
+ORDER BY
+  CASE WHEN $22::text IS NULL THEN 0 ELSE
+    CASE WHEN $22::text = list_office_mls_id THEN 0 ELSE 1 END
+  END,
+  CASE WHEN $23::text IS NULL THEN 0 ELSE
+    CASE WHEN $23::text = 'status' THEN order_listings(status) ELSE 1 END
+  END ASC,
+  CASE WHEN $23::text IS NULL THEN 0 ELSE
+    CASE WHEN $23::text = 'close_price' THEN close_price ELSE 1 END
+  END DESC
+LIMIT $24
+OFFSET $25
