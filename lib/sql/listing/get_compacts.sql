@@ -83,4 +83,5 @@ SELECT 'compact_listing' AS TYPE,
 FROM listings
 JOIN properties ON listings.property_id = properties.id
 JOIN addresses ON properties.address_id = addresses.id
-WHERE listings.id = ANY($1::uuid[]);
+WHERE listings.id = ANY($1::uuid[])
+ORDER BY order_listings(listings.status)
