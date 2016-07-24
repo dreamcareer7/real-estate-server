@@ -1,4 +1,4 @@
-  INSERT INTO google_tokens("user",
+INSERT INTO google_tokens("user",
     access_token,
     refresh_token,
     expiry_date,
