@@ -14,7 +14,10 @@ SELECT 'compact_listing' AS TYPE,
        listings.sub_agency_commission AS sub_agency_commission,
        (
           SELECT id FROM agents WHERE matrix_unique_id = listings.list_agent_mui LIMIT 1
-        ) as list_agent,
+       ) as list_agent,
+       (
+          SELECT id FROM offices WHERE matrix_unique_id = listings.list_office_mui LIMIT 1
+       ) as list_office,
        (
         CASE WHEN $2::uuid IS NULL THEN FALSE ELSE (
             SELECT count(*) > 0 FROM recommendations

@@ -4,35 +4,79 @@ require('colors');
 var config = require('../lib/config.js');
 var queue  = require('../lib/utils/queue.js');
 
-queue.process('seamless_communication', config.email.parallel, (job, done) => {
-  console.log('-> Processed a seamless communication email batch'.blue);
+var seamless = (job, done) => {
   Message.processSeamless(job, done);
-});
+}
 
-queue.process('airship_transport_send_device', config.airship.parallel, (job, done) => {
-  console.log('-> Processed a push notification'.green);
+var airship = (job, done) => {
   Notification.sendToDevice(job.data.notification, job.data.token, job.data.user_id, done);
-});
+}
 
-queue.process('create_notification', config.airship.parallel, (job, done) => {
-  console.log('-> Processed a notification'.yellow);
+var notification = (job, done) => {
   Notification.create(job.data.notification, done);
-});
+}
 
-queue.process('email', config.email.parallel, (job, done) => {
-  console.log('-> Processed an email'.cyan);
+var email = (job, done) => {
   Mailgun.callMailgun(job.data, done);
-});
+}
 
-queue.process('email_ses', config.email.parallel, (job, done) => {
-  console.log('-> Processed an email (SES)'.black.cyanBG);
+var ses = (job, done) => {
   SES.callSES(job.data, done);
-});
+}
 
-queue.process('sms', config.twilio.parallel, (job, done) => {
-  console.log('-> Processed an SMS'.magenta);
+var sms = (job, done) => {
   Twilio.callTwilio(job.data, done);
-});
+}
+
+var queues = {
+  seamless_communication: {
+    handler: seamless,
+    parallel: config.email.parallel
+  },
+
+  airship_transport_send_device: {
+    handler: airship,
+    parallel: config.airship.parallel
+  },
+
+  create_notification: {
+    handler: notification,
+    parallel: config.airship.parallel
+  },
+
+  email: {
+    handler: email,
+    parallel: config.email.parallel
+  },
+
+  email_ses: {
+    handler: ses,
+    parallel: config.email.parallel
+  },
+
+  sms: {
+    handler: sms,
+    parallel: config.twilio.parallel
+  }
+}
+
+Object.keys(queues).forEach( queue_name => {
+  var definition = queues[queue_name];
+  queue.process(queue_name, definition.parallel, definition.handler);
+})
+
+setInterval(reportQueueStatistics, 10000);
+
+function reportQueueStatistics() {
+  queue.inactiveCount( (err, count) => {
+    if(err)
+      return Metric.set('inactive_jobs', 99999);
+
+    Metric.set('inactive_jobs', count);
+  });
+}
+
+reportQueueStatistics();
 
 var sendPushForUnread = function() {
   Notification.sendPushForUnread(err => {
@@ -44,12 +88,3 @@ var sendPushForUnread = function() {
 };
 
 sendPushForUnread();
-
-setTimeout(shutdown, 300000);
-
-function shutdown() {
-  queue.shutdown(2000, function(err) {
-    console.log('Graceful shutdown:', err);
-    process.exit(0);
-  });
-}
