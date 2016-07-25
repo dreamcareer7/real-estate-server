@@ -8,7 +8,8 @@ INSERT INTO users
       user_type,
       agent,
       is_shadow,
-      brand
+      brand,
+      fake_email
     )
 VALUES
     (
@@ -20,6 +21,7 @@ VALUES
       $6,
       $7,
       $8,
-      $9
+      $9,
+      $10
     )
 RETURNING id

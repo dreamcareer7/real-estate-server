@@ -7,5 +7,6 @@ SET first_name = $1,
     cover_image_url = $6,
     brand = $7,
     updated_at = NOW(),
-    is_shadow = FALSE
+    is_shadow = FALSE,
+    fake_email = FALSE
 WHERE id = $8
