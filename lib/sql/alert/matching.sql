@@ -61,7 +61,7 @@ WHERE
 -- We might be interested in showing alert results for a specific brokerage first.
 -- Also, we might be interested in sorting based on either closed price or listing statuses
 ORDER BY
-  CASE WHEN $22::text IS NULL OR 'office' <> ALL($23::text[]) THEN 10 ELSE
+  CASE WHEN $22::text IS NULL OR 'office' <> ALL($23::text[]) THEN 1 ELSE
     CASE WHEN $22::text = list_office_mls_id THEN 0 ELSE 1 END
   END,
   CASE WHEN $23::text IS NULL THEN 1 ELSE
@@ -69,6 +69,12 @@ ORDER BY
   END ASC,
   CASE WHEN $23::text IS NULL THEN 1 ELSE
     CASE WHEN 'close_price' = ANY($23::text[]) THEN close_price ELSE 1 END
+  END DESC,
+  CASE WHEN $23::text IS NULL THEN 1 ELSE
+    CASE WHEN 'price' = ANY($23::text[]) THEN price ELSE 1 END
+  END DESC,
+  CASE WHEN $23::text IS NULL THEN 1 ELSE
+    CASE WHEN 'created_at' = ANY($23::text[]) THEN created_at ELSE 0 END
   END DESC
 LIMIT $24
 OFFSET $25
