@@ -7,6 +7,7 @@ CREATE MATERIALIZED VIEW listings_filters AS SELECT
   listings.list_office_mls_id,
   listings.list_agent_mls_id,
   listings.close_price AS close_price,
+  listings.created_at AS created_at,
   -- Areas are stored as something like this: MCKINNEY AREA (53)
   -- When filteting, we only want the number (53). So we extract it.
   (regexp_matches(listings.mls_area_major, E'[0-9]+'))[1]::int as mls_area_major,

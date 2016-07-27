@@ -69,6 +69,9 @@ ORDER BY
   END ASC,
   CASE WHEN $23::text IS NULL THEN 1 ELSE
     CASE WHEN 'close_price' = ANY($23::text[]) THEN close_price ELSE 1 END
+  END DESC,
+  CASE WHEN $23::text IS NULL THEN 1 ELSE
+    CASE WHEN 'price' = ANY($23::text[]) THEN price ELSE 1 END
   END DESC
 LIMIT $24
 OFFSET $25
