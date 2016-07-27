@@ -72,9 +72,6 @@ ORDER BY
   END DESC,
   CASE WHEN $23::text IS NULL THEN 1 ELSE
     CASE WHEN 'price' = ANY($23::text[]) THEN price ELSE 1 END
-  END DESC,
-  CASE WHEN $23::text IS NULL THEN 1 ELSE
-    CASE WHEN 'created_at' = ANY($23::text[]) THEN created_at ELSE 0 END
   END DESC
 LIMIT $24
 OFFSET $25
