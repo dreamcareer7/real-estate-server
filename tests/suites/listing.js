@@ -64,7 +64,7 @@ var getListing = (cb) => {
 
 var by_query = (cb) => {
   return frisby.create('search for a listing by string search')
-    .get('/listings/search?q=Dallas&status=Active,Leased')
+    .get('/listings/search?q=Dallas')
     .after(cb)
     .expectStatus(200)
     .expectJSON({
