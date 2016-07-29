@@ -12,7 +12,7 @@ WHERE
   (
     (COALESCE(half_bathroom_count,0) + COALESCE(full_bathroom_count, 0)) >= $6 -- Be careful, null + 0 IS NULL
   ) AND
-  property_type = $7 AND
+  property_type = ANY ($7::property_type[]) AND
   property_subtype = ANY ($8::property_subtype[]) AND
   COALESCE(year_built >= $9, TRUE) = TRUE AND
   COALESCE(year_built <= $10, TRUE) = TRUE AND
