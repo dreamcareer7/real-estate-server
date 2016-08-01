@@ -4,5 +4,6 @@ SET client_type = $1,
     owner = $3,
     status = $4,
     lead_agent = $5,
+    room_type = $6,
     updated_at = NOW()
-WHERE id = $6
+WHERE id = $7
