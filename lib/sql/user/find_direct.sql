@@ -16,6 +16,6 @@ WITH p AS (
 )
 SELECT room AS id
 FROM p
-WHERE p.members::uuid[] @> '{$1, $2}'::uuid[] AND
-      p.members <@ '{$1, $2}'::uuid[]
+WHERE p.members::uuid[] @> ARRAY[$1::uuid, $2::uuid]::uuid[] AND
+      p.members <@ ARRAY[$1::uuid, $2::uuid]::uuid[]
 LIMIT 1
