@@ -5,7 +5,7 @@ module.exports = {
   "maximum_square_meters":856872169904754000,
   "location":{"longitude":-96.79698789999,"latitude":32.77666419999},
   "horizontal_distance":2655.90060875,
-  "property_type":"Residential",
+  "property_types":["Residential"],
   "vertical_distance":2655.90060875,
   "minimum_square_meters":0,
   "minimum_lot_square_meters":0,

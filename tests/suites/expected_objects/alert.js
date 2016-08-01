@@ -20,7 +20,7 @@ module.exports = {
   "minimum_bedrooms": Number,
   "minimum_bathrooms": Number,
   "cover_image_url": v.optionalString,
-  "property_type": String,
+  "property_types": Array,
   "property_subtypes": Array,
   "points": [
     {

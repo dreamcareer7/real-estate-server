@@ -6,27 +6,27 @@ var queue  = require('../lib/utils/queue.js');
 
 var seamless = (job, done) => {
   Message.processSeamless(job, done);
-}
+};
 
 var airship = (job, done) => {
   Notification.sendToDevice(job.data.notification, job.data.token, job.data.user_id, done);
-}
+};
 
 var notification = (job, done) => {
   Notification.create(job.data.notification, done);
-}
+};
 
 var email = (job, done) => {
   Mailgun.callMailgun(job.data, done);
-}
+};
 
 var ses = (job, done) => {
   SES.callSES(job.data, done);
-}
+};
 
 var sms = (job, done) => {
   Twilio.callTwilio(job.data, done);
-}
+};
 
 var queues = {
   seamless_communication: {
@@ -58,12 +58,12 @@ var queues = {
     handler: sms,
     parallel: config.twilio.parallel
   }
-}
+};
 
 Object.keys(queues).forEach( queue_name => {
   var definition = queues[queue_name];
   queue.process(queue_name, definition.parallel, definition.handler);
-})
+});
 
 setInterval(reportQueueStatistics, 10000);
 
@@ -72,7 +72,7 @@ function reportQueueStatistics() {
     if(err)
       return Metric.set('inactive_jobs', 99999);
 
-    Metric.set('inactive_jobs', count);
+    return Metric.set('inactive_jobs', count);
   });
 }
 

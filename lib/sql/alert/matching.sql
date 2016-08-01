@@ -12,7 +12,7 @@ WHERE
   (
     (COALESCE(half_bathroom_count,0) + COALESCE(full_bathroom_count, 0)) >= $6 -- Be careful, null + 0 IS NULL
   ) AND
-  property_type = $7 AND
+  property_type = ANY ($7::property_type[]) AND
   property_subtype = ANY ($8::property_subtype[]) AND
   COALESCE(year_built >= $9, TRUE) = TRUE AND
   COALESCE(year_built <= $10, TRUE) = TRUE AND
@@ -61,7 +61,7 @@ WHERE
 -- We might be interested in showing alert results for a specific brokerage first.
 -- Also, we might be interested in sorting based on either closed price or listing statuses
 ORDER BY
-  CASE WHEN $22::text IS NULL OR 'office' <> ALL($23::text[]) THEN 10 ELSE
+  CASE WHEN $22::text IS NULL OR 'office' <> ALL($23::text[]) THEN 1 ELSE
     CASE WHEN $22::text = list_office_mls_id THEN 0 ELSE 1 END
   END,
   CASE WHEN $23::text IS NULL THEN 1 ELSE
@@ -69,6 +69,9 @@ ORDER BY
   END ASC,
   CASE WHEN $23::text IS NULL THEN 1 ELSE
     CASE WHEN 'close_price' = ANY($23::text[]) THEN close_price ELSE 1 END
+  END DESC,
+  CASE WHEN $23::text IS NULL THEN 1 ELSE
+    CASE WHEN 'price' = ANY($23::text[]) THEN price ELSE 1 END
   END DESC
 LIMIT $24
 OFFSET $25

@@ -9,7 +9,7 @@ INSERT INTO alerts(
         created_by,
         room,
         location,
-        property_type,
+        property_types,
         property_subtypes,
         title,
         horizontal_distance,

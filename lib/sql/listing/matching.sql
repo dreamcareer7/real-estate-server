@@ -7,8 +7,8 @@ WHERE $1 >= minimum_price AND
       $2 <= maximum_square_meters AND
       $3 >= minimum_bedrooms AND
       $4 >= minimum_bathrooms AND
-      $5 = property_type AND
       $12 = ANY(listing_statuses) AND
+      property_types @> $5::property_type[] AND
       property_subtypes @> $6::property_subtype[] AND
       COALESCE(ST_Within(ST_SetSRID(ST_MakePoint($7, $8), 4326), points), FALSE) = TRUE AND
       COALESCE($9 >= minimum_year_built, TRUE) = TRUE AND
