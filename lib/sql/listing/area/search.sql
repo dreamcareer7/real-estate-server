@@ -1,7 +1,8 @@
 SELECT
   title,
   number,
-  parent
+  parent,
+  'mls_area' as type
 FROM mls_areas
 WHERE
 (
