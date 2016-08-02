@@ -1,0 +1,1 @@
+SELECT *, 'school' as type FROM schools WHERE name ILIKE '%' || $1 || '%'

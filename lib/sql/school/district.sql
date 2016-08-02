@@ -1,0 +1,1 @@
+SELECT *, 'school' as type FROM schools WHERE district = $1::text
