@@ -40,7 +40,7 @@ module.exports = (data) => {
   property.flooring = '{' + data.Flooring + '}';
   property.utilities = '{' + data.Utilities + '}';
   property.utilities_other = '{' + data.UtilitiesOther + '}';
-  property.architectural_style = data.ArchitecturalStyle.trim();
+  property.architectural_style = '{' + data.ArchitecturalStyle.trim().split(',') + '}';
   property.structural_style = data.StructuralStyle.trim();
   property.number_of_stories = parseInt(data.NumberOfStories) || undefined; // -1;
   property.number_of_stories_in_building = parseInt(data.NumberOfStoriesInBuilding) || undefined; // -1;

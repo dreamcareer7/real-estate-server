@@ -3,7 +3,6 @@ var v = require('../../../lib/utils/response_validation.js');
 
 module.exports = {
   "id": String,
-  "currency": String,
   "minimum_price": Number,
   "maximum_price": Number,
   "minimum_square_meters": Number,
@@ -19,7 +18,6 @@ module.exports = {
   "room": String,
   "minimum_bedrooms": Number,
   "minimum_bathrooms": Number,
-  "cover_image_url": v.optionalString,
   "property_types": Array,
   "property_subtypes": Array,
   "points": [
@@ -58,8 +56,6 @@ module.exports = {
   "minimum_lot_square_meters": Number,
   "maximum_lot_square_meters": Number,
   "maximum_year_built": Number,
-  "dom": v.optionalNumber,
-  "cdom": v.optionalNumber,
   "deleted_at": v.optionalNumber,
   "type": "alert",
   "users":v.optionalArray //Null or Array are both objects
