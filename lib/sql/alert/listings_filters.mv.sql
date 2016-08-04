@@ -21,7 +21,18 @@ CREATE MATERIALIZED VIEW listings_filters AS SELECT
   properties.year_built,
   properties.pool_yn,
   properties.lot_square_meters,
+  properties.number_of_parking_spaces,
+  properties.architectural_style,
+  properties.subdivision_name,
+  properties.school_district,
+  properties.elementary_school_name,
+  properties.intermediate_school_name,
+  properties.junior_high_school_name,
+  properties.middle_school_name,
+  properties.primary_school_name,
+  properties.senior_high_school_name,
   addresses.location,
+  addresses.county_or_parish,
   (
     addresses.title || ' ' ||
     addresses.subtitle || ' ' ||
@@ -54,3 +65,5 @@ CREATE INDEX listings_filters_status_order   ON listings_filters(order_listings(
 CREATE INDEX listings_filters_list_office    ON listings_filters(list_office_mls_id);
 CREATE INDEX listings_filters_list_agent     ON listings_filters(list_agent_mls_id);
 CREATE INDEX listings_filters_address        ON listings_filters USING GIN (to_tsvector('english', address));
+CREATE INDEX listings_filters_price          ON listings_filters(price);
+CREATE INDEX listings_filters_close_price    ON listings_filters(close_price);

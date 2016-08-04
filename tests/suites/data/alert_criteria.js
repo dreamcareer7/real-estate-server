@@ -9,7 +9,6 @@ module.exports = {
   "vertical_distance":2655.90060875,
   "minimum_square_meters":0,
   "minimum_lot_square_meters":0,
-  "currency":"USD",
   "maximum_year_built":2015,
   "minimum_year_built":0,
   "points":[
