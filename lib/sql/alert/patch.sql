@@ -32,8 +32,5 @@ SET
     junior_high_schools = $30,
     intermediate_schools = $31,
     sort_order = $32,
-    sort_office = $33,
-    location = ST_SetSRID(ST_MakePoint($34, $35), 4326),
-    vertical_distance = $36,
-    horizontal_distance = $37
-WHERE id = $38
+    sort_office = $33
+WHERE id = $34
