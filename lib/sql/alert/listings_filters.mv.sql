@@ -67,3 +67,4 @@ CREATE INDEX listings_filters_list_agent     ON listings_filters(list_agent_mls_
 CREATE INDEX listings_filters_address        ON listings_filters USING GIN (to_tsvector('english', address));
 CREATE INDEX listings_filters_price          ON listings_filters(price);
 CREATE INDEX listings_filters_close_price    ON listings_filters(close_price);
+CREATE INDEX listings_filters_architecture   ON listings_filters USING GIN (architectural_style);
