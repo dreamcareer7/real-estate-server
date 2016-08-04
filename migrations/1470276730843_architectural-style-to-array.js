@@ -7,7 +7,7 @@ var listings_filters = fs.readFileSync('./lib/sql/alert/listings_filters.mv.sql'
 
 var up = [
   'DROP MATERIALIZED VIEW listings_filters',
-  'ALTER TABLE properties ALTER COLUMN architectural_style TYPE text[] USING string_to_array(architectural_style, ',');',
+  'ALTER TABLE properties ALTER COLUMN architectural_style TYPE text[] USING string_to_array(architectural_style, \',\')',
   listings_filters
 ];
 
