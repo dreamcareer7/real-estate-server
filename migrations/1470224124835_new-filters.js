@@ -2,6 +2,7 @@
 
 var async = require('async');
 var db = require('../lib/utils/db');
+var fs = require('fs');
 var listings_filters = fs.readFileSync('./lib/sql/alert/listings_filters.mv.sql').toString();
 
 var up = [
