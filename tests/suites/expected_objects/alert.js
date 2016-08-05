@@ -10,11 +10,6 @@ module.exports = {
   "created_by": user,
   "created_at": Number,
   "updated_at": Number,
-  "location": {
-    "longitude": Number,
-    "latitude": Number,
-    "type": "location"
-  },
   "room": String,
   "minimum_bedrooms": Number,
   "minimum_bathrooms": Number,
@@ -47,8 +42,6 @@ module.exports = {
       "type": "location"
     }
   ],
-  "horizontal_distance": Number,
-  "vertical_distance": Number,
   "minimum_year_built": Number,
   "pool": v.optionalBoolean,
   "title": v.optionalString,
