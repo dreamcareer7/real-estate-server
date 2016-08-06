@@ -1,0 +1,66 @@
+<tr>
+  <td style="padding-left: 70px;">
+    <table style="width: 100%%">
+      <tr class="Normalize" valign="middle" style="margin: 0px;border: none;padding: 15px;direction: rtl;word-break: break-word;border-collapse: collapse;font-family: 'Helvetica', 'Helvetica Neue', 'Arial', 'sans-serif';">
+        <td style="padding-left: 10px;">
+          <table width="100%%" align="left" border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
+            <tbody>
+                <tr>
+                  <td>
+                    <h2 style="font-weight: 600;text-align: left;direction: ltr;font-size: 27px;font-family: 'Helvetica', 'Helvetica Neue', 'Arial', 'sans-serif';margin-bottom: 0;color: #000000;">
+                      {{listing.price}}
+                    </h2>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                      <h3 style="font-weight: 100;text-align: left;direction: ltr;font-size: 15px;font-family: 'Helvetica', 'Helvetica Neue', 'Arial', 'sans-serif';margin: 0;color: #000000; padding: 0px 0px 5px 0px;">
+                        {{listing.property.address}}
+                      </h3>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="font-weight: 100;text-align: left;direction: ltr;font-size: 14px;font-family: 'Helvetica', 'Helvetica Neue', 'Arial', 'sans-serif';margin: 0;color: #798d8f; padding: 0px 0px 5px 0px;">
+
+                      {{#listing.property.bedroom_count}}
+                        {{listing.property.bedroom_count}} Beds
+                      {{/listing.property.bedroom_count}}
+
+                      {{#listing.property.bathroom_count}}
+                        , {{listing.property.bathroom_count}} Baths
+                      {{/listing.property.bathroom_count}}
+
+                      {{#listing.property.square_meters}}
+                        , {{listing.property.square_meters}} Sqft
+                      {{/listing.property.square_meters}}
+
+                      {{#listing.property.year_built}}
+                        , Built in {{listing.property.year_built}}
+                      {{/listing.property.year_built}}
+
+                      {{#listing.property.lot_size}}
+                        , {{listing.property.lot_size}} Lot
+                      {{/listing.property.lot_size}}
+                  </td>
+                </tr>
+                <!-- End Detail -->
+            </tbody>
+          </table>
+        </td>
+        {{#listing.cover_image_url}}
+          <td style="width: 120px;">
+              <a href="{{branch}}">
+              <img src="{{listing.cover_image_url}}" style="-webkit-border-radius: 5px;-moz-border-radius: 5px;border-radius: 5px; width: 100%%; outline: none;text-decoration: none;border: none;-ms-interpolation-mode: bicubic;">
+              </a>
+          </td>
+        {{/listing.cover_image_url}}
+
+        {{^listing.cover_image_url}}
+          <td style="width: 120px; height: 120px; background-color: #E0E0E0; color: #A0A0A0; text-align: center; font-size: 12px; border-radius: 5px;">
+            No Image
+          </td>
+        {{/listing.cover_image_url}}
+      </tr>
+    </table>
+  </td>
+</tr>
