@@ -12,7 +12,8 @@ FROM notifications
 JOIN notifications_users      ON notifications.id = notifications_users.notification
 FULL JOIN notifications_deliveries ON notifications.id = notifications_deliveries.notification
 WHERE
-  notifications_users.acked_at IS NULL
+  notifications_users.created_at > (NOW() - '30 minute'::interval)
+  AND notifications_users.acked_at IS NULL
   AND notifications.room IS NOT NULL
   AND notifications_deliveries.id IS NULL
 GROUP BY notifications_users.user, notifications.room;
