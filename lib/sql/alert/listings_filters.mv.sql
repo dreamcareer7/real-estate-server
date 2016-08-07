@@ -6,6 +6,8 @@ CREATE MATERIALIZED VIEW listings_filters AS SELECT
   listings.close_date AS close_date,
   listings.list_office_mls_id,
   listings.list_agent_mls_id,
+  listings.selling_office_mls_id,
+  listings.selling_agent_mls_id,
   listings.close_price AS close_price,
   listings.created_at AS created_at,
   -- Areas are stored as something like this: MCKINNEY AREA (53)

@@ -4,3 +4,4 @@ SELECT
 FROM counties
 WHERE
   title ILIKE '%' || $1 || '%'
+ORDER BY title ASC;

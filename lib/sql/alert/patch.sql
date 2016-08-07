@@ -32,5 +32,7 @@ SET
     junior_high_schools = $30,
     intermediate_schools = $31,
     sort_order = $32,
-    sort_office = $33
-WHERE id = $34
+    sort_office = $33,
+    selling_agents = $34,
+    selling_offices = $35
+WHERE id = $36
