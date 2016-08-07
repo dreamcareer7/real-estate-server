@@ -1,5 +1,5 @@
 SELECT
-  title,
+  initcap(lower(title)),
   number,
   parent,
   'mls_area' as type
@@ -16,3 +16,4 @@ AND
     title ILIKE '%' || $1 || '%'
   )
 )
+ORDER BY number ASC;

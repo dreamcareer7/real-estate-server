@@ -5,3 +5,4 @@ SELECT
 FROM schools
 WHERE
   district ILIKE '%' || $1 || '%'
+ORDER BY district ASC;
