@@ -1,5 +1,5 @@
 SELECT
-  initcap(lower(title)),
+  initcap(lower(title)) as title,
   number,
   parent,
   'mls_area' as type
