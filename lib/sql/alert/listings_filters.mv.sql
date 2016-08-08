@@ -23,7 +23,7 @@ CREATE MATERIALIZED VIEW listings_filters AS SELECT
   properties.year_built,
   properties.pool_yn,
   properties.lot_square_meters,
-  properties.number_of_parking_spaces,
+  properties.parking_spaces_covered_total,
   properties.architectural_style,
   properties.subdivision_name,
   properties.school_district,
