@@ -4,7 +4,7 @@ SELECT
   properties.square_meters,
   properties.bedroom_count,
   properties.half_bathroom_count + properties.full_bathroom_count as bathroom_count,
-  properties.property_type,
+  properties.property_types,
   properties.property_subtype,
   properties.year_built,
   properties.pool_yn,

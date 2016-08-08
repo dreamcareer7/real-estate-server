@@ -15,5 +15,5 @@ module.exports = {
         "type": "location"
     },
     "favorited": Boolean,
-    "list_agent": v.optionalObject
+    "list_agent": v.optionalString
 };
