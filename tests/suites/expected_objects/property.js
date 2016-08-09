@@ -35,7 +35,7 @@ module.exports = {
   "flooring": v.optionalArray,
   "utilities": v.optionalArray,
   "utilities_other": v.optionalArray,
-  "architectural_style": v.optionalString,
+  "architectural_style": v.optionalArray,
   "structural_style": v.optionalString,
   "number_of_stories": v.optionalNumber,
   "number_of_stories_in_building": v.optionalNumber,
