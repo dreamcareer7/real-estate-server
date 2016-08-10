@@ -9,7 +9,7 @@ module.exports = {
     latitude: 32.84284394397976
   },
   horizontal_distance: 1200,
-  property_type: 'Residential',
+  property_types: ['Residential'],
   vertical_distance: 1200,
   minimum_square_meters: 0,
   minimum_lot_square_meters: 0,

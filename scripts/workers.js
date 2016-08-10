@@ -3,10 +3,7 @@ require('colors');
 
 var config = require('../lib/config.js');
 var queue  = require('../lib/utils/queue.js');
-
-var seamless = (job, done) => {
-  Message.processSeamless(job, done);
-};
+var async  = require('async');
 
 var airship = (job, done) => {
   Notification.sendToDevice(job.data.notification, job.data.token, job.data.user_id, done);
@@ -29,11 +26,6 @@ var sms = (job, done) => {
 };
 
 var queues = {
-  seamless_communication: {
-    handler: seamless,
-    parallel: config.email.parallel
-  },
-
   airship_transport_send_device: {
     handler: airship,
     parallel: config.airship.parallel
@@ -78,13 +70,17 @@ function reportQueueStatistics() {
 
 reportQueueStatistics();
 
-var sendPushForUnread = function() {
-  Notification.sendPushForUnread(err => {
+
+var sendNotifications = function() {
+  async.series([
+    Notification.sendPushForUnread,
+    Message.sendEmailForUnread,
+  ], err => {
     if(err)
       console.log(err);
 
-    setTimeout(sendPushForUnread, 1000);
-  });
-};
+    setTimeout(sendNotifications, 1000);
+  })
+}
 
-sendPushForUnread();
+sendNotifications();
