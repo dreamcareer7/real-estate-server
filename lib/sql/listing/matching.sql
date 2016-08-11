@@ -18,44 +18,52 @@ WHERE
   (minimum_year_built IS NULL OR minimum_year_built <= $9) AND
   (maximum_year_built IS NULL OR maximum_year_built >= $9) AND
 
-  (listing_statuses IS NULL OR $12 IN listing_statuses) AND
+  (listing_statuses IS NULL OR listing_statuses @> ARRAY[$12::listing_status]) AND
 
   (pool IS NULL OR pool = FALSE OR $10 = TRUE) AND
 
-  (property_types    IS NULL OR $5::property_type    IN property_types)    AND
-  (property_subtypes IS NULL OR $6::property_subtype IN property_subtypes) AND
+  (property_types    IS NULL OR property_types @> ARRAY[$5::property_type])       AND
+  (property_subtypes IS NULL OR property_subtypes @> ARRAY[$6::property_subtype]) AND
 
   (points IS NULL OR ST_Within(ST_SetSRID(ST_MakePoint($7, $8), 4326), points)) AND
 
   (minimum_parking_spaces IS NULL OR minimum_parking_spaces <= $13) AND
 
-  (list_offices IS NULL OR $14 IN list_offices) AND
-  (list_agents  IS NULL OR $15 IN list_agents)  AND
+  (list_offices IS NULL OR list_offices @> ARRAY[$14]) AND
+  (list_agents  IS NULL OR list_agents @> ARRAY[$15])  AND
 
-  (selling_offices IS NULL OR $16 IN selling_offices) AND
-  (selling_agents  IS NULL OR $17 IN selling_agents)  AND
+  (selling_offices IS NULL OR selling_offices @> ARRAY[$16]) AND
+  (selling_agents  IS NULL OR selling_agents  @> ARRAY[$17])  AND
 
-  (architectural_styles IS NULL OR $18 IN architectural_styles) AND
+  (architectural_styles IS NULL OR architectural_styles @> $18) AND
 
-  (counties IS NULL OR $19 IN counties) AND
+  (counties IS NULL OR counties @> ARRAY[$19]) AND
 
-  (subdivisions IS NULL OR $20 IN counties) AND
+  (subdivisions IS NULL OR counties @> ARRAY[$20]) AND
 
-  (school_districts     IS NULL OR $21 IN school_districts)    AND
+  (school_districts     IS NULL OR school_districts @> ARRAY[$21])    AND
 
-  (primary_schools      IS NULL OR $22 IN primary_schools)     AND
+  (primary_schools      IS NULL OR primary_schools @> ARRAY[$22])     AND
 
-  (elementary_schools   IS NULL OR $23 IN elementary_schools)  AND
+  (elementary_schools   IS NULL OR elementary_schools @> ARRAY[$23])  AND
 
-  (senior_high_schools  IS NULL OR $23 IN senior_high_schools) AND
+  (senior_high_schools  IS NULL OR senior_high_schools @> ARRAY[$24]) AND
 
-  (junior_high_schools  IS NULL OR $23 IN junior_high_schools) AND
+  (junior_high_schools  IS NULL OR junior_high_schools @> ARRAY[$25]) AND
 
-  (intermediate_schools IS NULL OR $23 IN junior_high_schools) AND
+  (intermediate_schools IS NULL OR junior_high_schools @> ARRAY[$26]) AND
 
   (mls_areas IS NULL OR
-    ARRAY[
-      (regexp_matches($24, '(.+)\s\((\d+)\)$'))[2]::int,
-      COALESCE((regexp_matches($25, '(.+)\s\((\d+)\)$'))[2]::int, 0)
-    ]
+    (
+      to_jsonb(ARRAY[
+        substring($27 FROM E'[0-9]+')::int,
+        substring($28 FROM E'[0-9]+')::int
+      ]) IN (SELECT jsonb_array_elements(mls_areas))
+    ) OR
+    (
+      to_jsonb(ARRAY[
+        substring($27 FROM E'[0-9]+')::int,
+        0
+      ]) IN (SELECT jsonb_array_elements(mls_areas))
+    )
   )
