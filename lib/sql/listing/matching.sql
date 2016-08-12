@@ -45,24 +45,26 @@ WHERE
 
   (primary_schools      IS NULL OR primary_schools @> ARRAY[$22])     AND
 
-  (elementary_schools   IS NULL OR elementary_schools @> ARRAY[$23])  AND
+  (middle_schools       IS NULL OR primary_schools @> ARRAY[$23])     AND
 
-  (senior_high_schools  IS NULL OR senior_high_schools @> ARRAY[$24]) AND
+  (elementary_schools   IS NULL OR elementary_schools @> ARRAY[$24])  AND
 
-  (junior_high_schools  IS NULL OR junior_high_schools @> ARRAY[$25]) AND
+  (senior_high_schools  IS NULL OR senior_high_schools @> ARRAY[$25]) AND
 
-  (intermediate_schools IS NULL OR junior_high_schools @> ARRAY[$26]) AND
+  (junior_high_schools  IS NULL OR junior_high_schools @> ARRAY[$26]) AND
+
+  (intermediate_schools IS NULL OR junior_high_schools @> ARRAY[$27]) AND
 
   (mls_areas IS NULL OR
     (
       to_jsonb(ARRAY[
-        substring($27 FROM E'[0-9]+')::int,
-        substring($28 FROM E'[0-9]+')::int
+        substring($28 FROM E'[0-9]+')::int,
+        substring($29 FROM E'[0-9]+')::int
       ]) IN (SELECT jsonb_array_elements(mls_areas))
     ) OR
     (
       to_jsonb(ARRAY[
-        substring($27 FROM E'[0-9]+')::int,
+        substring($28 FROM E'[0-9]+')::int,
         0
       ]) IN (SELECT jsonb_array_elements(mls_areas))
     )
