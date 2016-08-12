@@ -11,7 +11,7 @@ SELECT 'user' AS type,
         profile_image_url,
         (
           SELECT url FROM agents_images WHERE mui = (
-            SELECT matrix_unique_id FROM agents WHERE id = users.id
+            SELECT matrix_unique_id FROM agents WHERE id = users.agent
           ) AND image_type = 'Profile' ORDER BY date DESC LIMIT 1
         )
        ) as profile_image_url
