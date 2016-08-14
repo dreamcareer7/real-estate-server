@@ -1,4 +1,6 @@
-SELECT DISTINCT(recommendations.room) AS id
+SELECT
+  DISTINCT(recommendations.room) AS room
+  recommendations.id AS recommendation
 FROM recommendations
 FULL JOIN recommendations_eav
 ON recommendations.id = recommendations_eav.recommendation
