@@ -1,1 +1,2 @@
-SELECT *, 'school' as type FROM schools WHERE district = $1::text
+SELECT *, 'school' as type FROM schools WHERE district = ANY($1)
+ORDER BY name ASC, appearances DESC;

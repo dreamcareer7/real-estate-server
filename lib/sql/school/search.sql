@@ -3,4 +3,4 @@ SELECT *
 FROM schools
 WHERE
 name ILIKE '%' || $1 || '%'
-ORDER BY name ASC;
+ORDER BY name ASC, appearances DESC;
