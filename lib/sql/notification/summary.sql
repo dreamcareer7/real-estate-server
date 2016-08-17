@@ -31,7 +31,7 @@ WITH rn AS (
             (
               SELECT BOOL_OR(COALESCE(CASE WHEN alerts.deleted_at IS NULL THEN TRUE ELSE FALSE END))
               FROM alerts
-              WHERE ARRAY[id] @> (SELECT referring_objects FROM recommendations WHERE id = notifications.object)
+              WHERE ARRAY[id] <@ (SELECT referring_objects FROM recommendations WHERE id = notifications.object)
             ) IS TRUE
       ),
     'user_shared_listing', ARRAY_AGG(notifications.recommendation) FILTER (
@@ -42,7 +42,7 @@ WITH rn AS (
             (
               SELECT BOOL_OR(COALESCE(CASE WHEN alerts.deleted_at IS NULL THEN TRUE ELSE FALSE END))
               FROM alerts
-              WHERE ARRAY[id]  @> (SELECT referring_objects FROM recommendations WHERE id = notifications.recommendation)
+              WHERE ARRAY[id] <@ (SELECT referring_objects FROM recommendations WHERE id = notifications.recommendation)
             ) IS TRUE
       ),
     'listing_price_dropped_recommendation_ids', ARRAY_AGG(notifications.recommendation) FILTER (
@@ -53,7 +53,7 @@ WITH rn AS (
             (
               SELECT BOOL_OR(COALESCE(CASE WHEN alerts.deleted_at IS NULL THEN TRUE ELSE FALSE END))
               FROM alerts
-              WHERE ARRAY[id] @> (SELECT referring_objects FROM recommendations WHERE id = notifications.recommendation)
+              WHERE ARRAY[id] <@ (SELECT referring_objects FROM recommendations WHERE id = notifications.recommendation)
             ) IS TRUE
       ),
     'listing_status_changed_recommendation_ids', ARRAY_AGG(notifications.recommendation) FILTER (
@@ -64,7 +64,7 @@ WITH rn AS (
             (
               SELECT BOOL_OR(COALESCE(CASE WHEN alerts.deleted_at IS NULL THEN TRUE ELSE FALSE END))
               FROM alerts
-              WHERE ARRAY[id] @> (SELECT referring_objects FROM recommendations WHERE id = notifications.recommendation)
+              WHERE ARRAY[id] <@ (SELECT referring_objects FROM recommendations WHERE id = notifications.recommendation)
             ) IS TRUE
       ),
     'user_created_cma', ARRAY_AGG(notifications.auxiliary_object) FILTER (
