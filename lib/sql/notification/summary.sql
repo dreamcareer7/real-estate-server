@@ -27,25 +27,45 @@ WITH rn AS (
       WHERE notifications.subject_class = 'User' AND
             notifications.action = 'Favorited' AND
             notifications.object_class = 'Recommendation' AND
-            notifications.deleted_at IS NULL
+            notifications.deleted_at IS NULL AND
+            (
+              SELECT BOOLOR(COALESCE(CASE WHEN alerts.deleted_at IS NULL THEN TRUE ELSE FALSE END))
+              FROM alerts
+              WHERE ARRAY[id] @> (SELECT referring_objects FROM recommendations WHERE id = notifications.object)
+            ) IS TRUE
       ),
     'user_shared_listing', ARRAY_AGG(notifications.recommendation) FILTER (
       WHERE notifications.subject_class = 'User' AND
             notifications.action = 'Shared' AND
             notifications.object_class = 'Listing' AND
-            notifications.deleted_at IS NULL
+            notifications.deleted_at IS NULL AND
+            (
+              SELECT BOOLOR(COALESCE(CASE WHEN alerts.deleted_at IS NULL THEN TRUE ELSE FALSE END))
+              FROM alerts
+              WHERE ARRAY[id] @> (SELECT referring_objects FROM recommendations WHERE id = notifications.recommendation)
+            ) IS TRUE
       ),
     'listing_price_dropped_recommendation_ids', ARRAY_AGG(notifications.recommendation) FILTER (
       WHERE notifications.subject_class = 'Listing' AND
             notifications.action = 'PriceDropped' AND
             notifications.object_class = 'Room' AND
-            notifications.deleted_at IS NULL
+            notifications.deleted_at IS NULL AND
+            (
+              SELECT BOOLOR(COALESCE(CASE WHEN alerts.deleted_at IS NULL THEN TRUE ELSE FALSE END))
+              FROM alerts
+              WHERE ARRAY[id] @> (SELECT referring_objects FROM recommendations WHERE id = notifications.recommendation)
+            ) IS TRUE
       ),
     'listing_status_changed_recommendation_ids', ARRAY_AGG(notifications.recommendation) FILTER (
       WHERE notifications.subject_class = 'Listing' AND
             notifications.action = 'StatusChanged' AND
             notifications.object_class = 'Room' AND
-            notifications.deleted_at IS NULL
+            notifications.deleted_at IS NULL AND
+            (
+              SELECT BOOLOR(COALESCE(CASE WHEN alerts.deleted_at IS NULL THEN TRUE ELSE FALSE END))
+              FROM alerts
+              WHERE ARRAY[id] @> (SELECT referring_objects FROM recommendations WHERE id = notifications.recommendation)
+            ) IS TRUE
       ),
     'user_created_cma', ARRAY_AGG(notifications.auxiliary_object) FILTER (
       WHERE notifications.subject_class = 'User' AND
