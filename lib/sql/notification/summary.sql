@@ -29,7 +29,7 @@ WITH rn AS (
             notifications.object_class = 'Recommendation' AND
             notifications.deleted_at IS NULL AND
             (
-              SELECT BOOLOR(COALESCE(CASE WHEN alerts.deleted_at IS NULL THEN TRUE ELSE FALSE END))
+              SELECT BOOL_OR(COALESCE(CASE WHEN alerts.deleted_at IS NULL THEN TRUE ELSE FALSE END))
               FROM alerts
               WHERE ARRAY[id] @> (SELECT referring_objects FROM recommendations WHERE id = notifications.object)
             ) IS TRUE
@@ -40,9 +40,9 @@ WITH rn AS (
             notifications.object_class = 'Listing' AND
             notifications.deleted_at IS NULL AND
             (
-              SELECT BOOLOR(COALESCE(CASE WHEN alerts.deleted_at IS NULL THEN TRUE ELSE FALSE END))
+              SELECT BOOL_OR(COALESCE(CASE WHEN alerts.deleted_at IS NULL THEN TRUE ELSE FALSE END))
               FROM alerts
-              WHERE ARRAY[id] @> (SELECT referring_objects FROM recommendations WHERE id = notifications.recommendation)
+              WHERE ARRAY[id]  @> (SELECT referring_objects FROM recommendations WHERE id = notifications.recommendation)
             ) IS TRUE
       ),
     'listing_price_dropped_recommendation_ids', ARRAY_AGG(notifications.recommendation) FILTER (
@@ -51,7 +51,7 @@ WITH rn AS (
             notifications.object_class = 'Room' AND
             notifications.deleted_at IS NULL AND
             (
-              SELECT BOOLOR(COALESCE(CASE WHEN alerts.deleted_at IS NULL THEN TRUE ELSE FALSE END))
+              SELECT BOOL_OR(COALESCE(CASE WHEN alerts.deleted_at IS NULL THEN TRUE ELSE FALSE END))
               FROM alerts
               WHERE ARRAY[id] @> (SELECT referring_objects FROM recommendations WHERE id = notifications.recommendation)
             ) IS TRUE
@@ -62,7 +62,7 @@ WITH rn AS (
             notifications.object_class = 'Room' AND
             notifications.deleted_at IS NULL AND
             (
-              SELECT BOOLOR(COALESCE(CASE WHEN alerts.deleted_at IS NULL THEN TRUE ELSE FALSE END))
+              SELECT BOOL_OR(COALESCE(CASE WHEN alerts.deleted_at IS NULL THEN TRUE ELSE FALSE END))
               FROM alerts
               WHERE ARRAY[id] @> (SELECT referring_objects FROM recommendations WHERE id = notifications.recommendation)
             ) IS TRUE
