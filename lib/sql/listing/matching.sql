@@ -2,6 +2,7 @@ SELECT id,
        room
 FROM alerts
 WHERE
+  deleted_at IS NOT NULL AND
   (minimum_price IS NULL OR minimum_price <= $1) AND
   (maximum_price IS NULL OR maximum_price >= $1) AND
 
