@@ -19,6 +19,12 @@ SELECT 'compact_listing' AS TYPE,
           SELECT id FROM offices WHERE matrix_unique_id = listings.list_office_mui LIMIT 1
        ) as list_office,
        (
+          SELECT id FROM agents WHERE matrix_unique_id = listings.selling_agent_mui LIMIT 1
+       ) as selling_agent,
+       (
+          SELECT id FROM offices WHERE matrix_unique_id = listings.selling_office_mui LIMIT 1
+       ) as selling_office,
+       (
         CASE WHEN $2::uuid IS NULL THEN FALSE ELSE (
             SELECT count(*) > 0 FROM recommendations
             JOIN recommendations_eav ON recommendations.id = recommendations_eav.recommendation
@@ -35,7 +41,10 @@ SELECT 'compact_listing' AS TYPE,
        ) ELSE NULL END AS location,
        (
          SELECT url FROM photos
-         WHERE listing_mui = listings.matrix_unique_id AND photos.url IS NOT NULL
+         WHERE
+          listing_mui = listings.matrix_unique_id
+          AND photos.url IS NOT NULL
+          AND photos.deleted_at IS NULL
          ORDER BY "order" LIMIT 1
        ) as cover_image_url,
        json_build_object(

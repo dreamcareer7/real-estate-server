@@ -1,0 +1,179 @@
+<html>
+  <head>
+      <script src="https://code.jquery.com/jquery-3.1.0.min.js"   integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s="   crossorigin="anonymous"></script>
+      <style>
+        label {
+          display: block;
+          margin-bottom: 10px;
+        }
+        input, select, textarea {
+          display: block;
+        }
+
+        #result {
+          float: right;
+          width: 75%;
+          height: 75%;
+        }
+      </style>
+  </head>
+  <body>
+    <textarea id="result" readonly>Response</textarea>
+
+    <form id="notification">
+      <label>
+        Object Class
+        <select id="object_class">
+          <option value="">--</option>
+          {{#objects}}
+            <option>
+              {{name}}
+            </option>
+          {{/objects}}
+        </select>
+      </label>
+
+      <label>
+        Object ID
+        <input id="object">
+      </label>
+
+      <label>
+        Subject Class
+        <select id="subject_class">
+          <option value="">--</option>
+          {{#objects}}
+            <option>
+              {{name}}
+            </option>
+          {{/objects}}
+        </select>
+      </label>
+
+      <label>
+        Subject ID
+        <input id="subject">
+      </label>
+
+      <label>
+        Action
+        <select id="action">
+          <option value="">--</option>
+          {{#actions}}
+            <option>
+              {{name}}
+            </option>
+          {{/actions}}
+        </select>
+      </label>
+
+      <label>
+        Room ID
+        <input id="room">
+      </label>
+
+      <label>
+        Recommendation ID
+        <input id="recommendation">
+      </label>
+
+      <label>
+        Message
+        <textarea id="message"></textarea>
+      </label>
+
+      <label>
+        Auxiliary Subject Class
+        <select id="auxiliary_subject_class">
+          <option value="">--</option>
+          {{#objects}}
+            <option>
+              {{name}}
+            </option>
+          {{/objects}}
+        </select>
+      </label>
+
+      <label>
+        Auxiliary Subject
+        <input id="auxiliary_subject">
+      </label>
+
+      <label>
+        Auxiliary Object Class
+        <select id="auxiliary_object_class">
+          <option value="">--</option>
+          {{#objects}}
+            <option>
+              {{name}}
+            </option>
+          {{/objects}}
+        </select>
+      </label>
+
+      <label>
+        Auxiliary Object
+        <input id="auxiliary_object">
+      </label>
+
+      <input type="submit">
+    </form>
+
+    <script type="text/javascript">
+      var getObject = function() {
+        var attrs = [
+          'subject_class',
+          'subject',
+          'object_class',
+          'object',
+          'action',
+          'room',
+          'recommendation',
+          'message',
+          'auxiliary_subject_class',
+          'auxiliary_subject',
+          'auxiliary_object_class',
+          'auxiliary_object'
+        ];
+
+        var n = {};
+
+        attrs.forEach(function(attr) {
+          var val = $('#'+attr).val().trim();
+          if(val)
+            n[attr] = val;
+        });
+
+        console.log(n);
+        return n;
+      }
+
+      var $f = $('#notification');
+
+      $f.submit(submitted);
+
+      function submitted(e) {
+        e.preventDefault();
+        save();
+      }
+
+      function save() {
+        $.ajax({
+          url:'/notifications',
+          method:'post',
+          dataType:'json',
+          contentType:'application/json',
+          data: JSON.stringify(getObject()),
+          complete: function(res) {
+            if(res.status > 499) {
+              alert('Make sure you entered all required fields');
+              return ;
+            }
+
+            $('#result').text(JSON.stringify(res.responseJSON, null, 4));
+          }
+        })
+      }
+    </script>
+  </body>
+</html>
