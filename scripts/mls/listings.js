@@ -173,8 +173,6 @@ function report(e) {
   if(e)
     console.log(e);
 
-  Metric.flush();
-
   var text = [
     'Execution time: %d seconds',
     'Total items: %d',
@@ -206,5 +204,6 @@ function report(e) {
     miss_rate
   );
   console.log(text);
-  process.exit();
+
+  Metric.flush(process.exit);
 }
