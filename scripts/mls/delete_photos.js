@@ -17,8 +17,6 @@ options.fields = {
   modified: 'ModifiedDate'
 };
 
-options.dontSave = true;
-
 function processData(cb, results) {
   var photos = results.mls;
   var grouped = {};
