@@ -288,8 +288,19 @@ Client.work = function(options, cb) {
     steps.process = ['mls', Client.options.processor];
 
   async.auto(steps, (err, res) => {
+    if(err) {
+      Slack.send({
+        channel: 'server-errors',
+        text: '🏠 NTREIS Error on '+Client.options.job+'\n`'+JSON.stringify(err)+'`',
+        emoji: ':skull:'
+      }, () => {
+        cb(err);
+      });
+      return ;
+    }
+
     if(!shouldTransit)
-      return cb(err, res);
+      return cb(null, res);
 
     transit(cb)
   });
