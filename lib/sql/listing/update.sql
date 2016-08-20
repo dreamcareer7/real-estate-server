@@ -92,5 +92,6 @@ SET alerting_agent_id = $1,
     owner_name = $90,
     seller_type = $91,
     occupancy = $92,
-    private_remarks = $93
+    private_remarks = $93,
+    photos_checked_at = NULL
 WHERE id = $94
