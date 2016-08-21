@@ -2,7 +2,6 @@
 
 var Client = require('./rets_client.js');
 var colors = require('colors');
-var slack  = require('./slack.js');
 var async  = require('async');
 var util   = require('util');
 var config = require('../../lib/config.js');
@@ -159,8 +158,9 @@ function createObjects(data, cb) {
   ], cb);
 }
 
-
 var firstId, lastId = null;
+
+var startTime = (new Date()).getTime();
 
 Client.on('data fetched', (data) => {
   Client.rets.logout(); // We're done for the moment. Release the connection.
@@ -172,8 +172,6 @@ Client.on('data fetched', (data) => {
 function report(e) {
   if(e)
     console.log(e);
-
-  Metric.flush();
 
   var text = [
     'Execution time: %d seconds',
@@ -195,7 +193,7 @@ function report(e) {
   );
 
   text = util.format(text,
-    slack.elapsed()/1000,
+    ( ((new Date()).getTime()) - startTime) / 1000,
     Metric.get('mls.processed_listing'),
     firstId,
     lastId,
@@ -207,5 +205,5 @@ function report(e) {
   );
   console.log(text);
 
-  slack.report(text, process.exit);
+  Metric.flush(process.exit);
 }

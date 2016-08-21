@@ -94,7 +94,8 @@ INSERT INTO
              owner_name,
              seller_type,
              occupancy,
-             private_remarks
+             private_remarks,
+             photos_checked_at
             )
 VALUES ($1,
         $2,
@@ -191,5 +192,6 @@ VALUES ($1,
         $93,
         $94,
         $95,
-        $96
+        $96,
+        NOW()
        ) RETURNING id

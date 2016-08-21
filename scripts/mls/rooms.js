@@ -1,10 +1,7 @@
 #!/usr/bin/env node
 var Client = require('./rets_client.js');
 var colors = require('colors');
-var slack = require('./slack.js');
 var async = require('async');
-var util = require('util');
-var config = require('../../lib/config.js');
 
 var program = require('./program.js')
 var options = program.parse(process.argv);

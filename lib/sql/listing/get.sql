@@ -25,12 +25,18 @@ WITH listing AS (
 
         (
           SELECT COALESCE(ARRAY_AGG(url ORDER BY "order"), '{}'::text[]) FROM photos
-          WHERE listing_mui = listings.matrix_unique_id AND photos.url IS NOT NULL
+          WHERE
+          listing_mui = listings.matrix_unique_id
+          AND photos.url IS NOT NULL
+          AND photos.deleted_at IS NULL
         ) as gallery_image_urls,
 
         (
           SELECT url FROM photos
-          WHERE listing_mui = listings.matrix_unique_id AND photos.url IS NOT NULL
+          WHERE
+          listing_mui = listings.matrix_unique_id
+          AND photos.url IS NOT NULL
+          AND photos.deleted_at IS NULL
           ORDER BY "order" LIMIT 1
         ) as cover_image_url,
 

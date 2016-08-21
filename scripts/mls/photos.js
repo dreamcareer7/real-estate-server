@@ -104,7 +104,6 @@ function savePhotos(cb) {
 
 Client.work(options, (err) => {
   savePhotos( err => {
-    Metric.flush();
-    setTimeout(process.exit, 2000);
+    Metric.flush(process.exit);
   });
 });

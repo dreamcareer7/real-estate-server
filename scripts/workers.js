@@ -5,6 +5,9 @@ var config = require('../lib/config.js');
 var queue  = require('../lib/utils/queue.js');
 var async  = require('async');
 
+// We have proper error handling here. No need for auto reports.
+Error.autoReport = false;
+
 var airship = (job, done) => {
   Notification.sendToDevice(job.data.notification, job.data.token, job.data.user_id, done);
 };
@@ -54,7 +57,29 @@ var queues = {
 
 Object.keys(queues).forEach( queue_name => {
   var definition = queues[queue_name];
-  queue.process(queue_name, definition.parallel, definition.handler);
+
+  var reportError = err => {
+    var text = '🗑 Worker Error: '+queue_name+' \n :memo: `'+JSON.stringify(err)+'`';
+
+    Slack.send({
+      channel: 'server-errors',
+      text: text,
+      emoji: '💀'
+    })
+  }
+
+  var handler = (job, done) => {
+    var examine = err => {
+      if(err)
+        reportError(err);
+
+      done(err);
+    }
+
+    definition.handler(job, examine);
+  }
+
+  queue.process(queue_name, definition.parallel, handler);
 });
 
 setInterval(reportQueueStatistics, 10000);
@@ -76,8 +101,17 @@ var sendNotifications = function() {
     Notification.sendPushForUnread,
     Message.sendEmailForUnread,
   ], err => {
-    if(err)
+    if(err) {
       console.log(err);
+
+      var text = '🔔 Error while sending notifications: \n :memo: `'+JSON.stringify(err)+'` \n --- \n';
+
+      Slack.send({
+        channel:'server-errors',
+        text: text,
+        emoji:'💀'
+      });
+    }
 
     setTimeout(sendNotifications, 1000);
   })

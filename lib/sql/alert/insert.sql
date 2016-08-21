@@ -36,6 +36,9 @@ INSERT INTO alerts(
         sort_order,
         sort_office,
         selling_agents,
-        selling_offices
+        selling_offices,
+        offices,
+        agents,
+        high_schools
     )
-VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, ST_SetSRID(ST_GeomFromText($12::text), 4326), $13, $14, $15, $16, $17, $18, $19, to_timestamp($20), $21, $22, $23, $24, $25, $26, $27, $28, $29, $30, $31, $32, $33, $34, $35, $36, $37, $38) RETURNING id;
+VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, ST_SetSRID(ST_GeomFromText($12::text), 4326), $13, $14, $15, $16, $17, $18, $19, to_timestamp($20), $21, $22, $23, $24, $25, $26, $27, $28, $29, $30, $31, $32, $33, $34, $35, $36, $37, $38, $39, $40, $41) RETURNING id;
