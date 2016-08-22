@@ -6,5 +6,4 @@ WITH r AS (
    )
 SELECT id
 FROM r
-WHERE $1 = ANY (r.users) AND
-      $2 <@ r.users
+WHERE $1 <@ r.users

@@ -5,6 +5,9 @@ var config = require('../lib/config.js');
 var queue  = require('../lib/utils/queue.js');
 var async  = require('async');
 
+// We have proper error handling here. No need for auto reports.
+Error.autoReport = false;
+
 var airship = (job, done) => {
   Notification.sendToDevice(job.data.notification, job.data.token, job.data.user_id, done);
 };
