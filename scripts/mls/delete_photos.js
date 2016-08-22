@@ -45,8 +45,15 @@ Photo.getUncheckedListings( (err, listings) => {
   options.query = '(Table_MUI='+listings.join(',')+')';
 
   Client.work(options, (err) => {
+    if(err && err === 'No data was fetched') {
+      var groups = {};
+      listings.forEach( l => groups[l] = [] )
+      async.forEachSeries(groups, markAsDeleted, cb);
+      return ;
+    }
+
     if(err)
-      console.log(err);
+      return cb(err);
 
     process.exit();
   })
