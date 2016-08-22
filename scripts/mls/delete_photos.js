@@ -44,10 +44,10 @@ Photo.getUncheckedListings( (err, listings) => {
 
   Client.work(options, (err) => {
     if(err && err === 'No data was fetched')
-      return processData([], cb);
+      return processData([], process.exit);
 
     if(err)
-      return cb(err);
+      console.log(err);
 
     process.exit();
   })
