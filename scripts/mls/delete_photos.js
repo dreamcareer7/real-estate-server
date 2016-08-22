@@ -11,25 +11,21 @@ var options = program.parse(process.argv);
 options.resource = 'Media';
 options.class = 'Media';
 options.job = 'delete_photos';
-options.processor = processData;
+options.processor = (cb, results) => processData(results.mls, cb);
 options.fields = {
   id: 'matrix_unique_id',
   modified: 'ModifiedDate'
 };
 
-function processData(cb, results) {
-  var photos = results.mls;
-  var grouped = {};
+var grouped = {};
 
+function processData(photos, cb) {
   photos.forEach( photo => {
-    if(!grouped[photo.Table_MUI])
-      grouped[photo.Table_MUI] = [];
-
     grouped[photo.Table_MUI].push(parseInt(photo.matrix_unique_id));
   })
 
-  var markAsDeleted = (listing_id, cb) => {
-    Photo.deleteMissing(listing_id, grouped[listing_id], cb);
+  var markAsDeleted = (listing_mui, cb) => {
+    Photo.deleteMissing(listing_mui, grouped[listing_mui], cb);
   }
 
   async.forEachSeries(Object.keys(grouped), markAsDeleted, cb);
@@ -42,15 +38,13 @@ Photo.getUncheckedListings( (err, listings) => {
   if(listings.length < 1)
     return cb();
 
+  listings.forEach( l => grouped[l] = [] );
+
   options.query = '(Table_MUI='+listings.join(',')+')';
 
   Client.work(options, (err) => {
-    if(err && err === 'No data was fetched') {
-      var groups = {};
-      listings.forEach( l => groups[l] = [] )
-      async.forEachSeries(groups, markAsDeleted, cb);
-      return ;
-    }
+    if(err && err === 'No data was fetched')
+      return processData([], cb);
 
     if(err)
       return cb(err);
