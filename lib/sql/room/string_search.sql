@@ -13,7 +13,8 @@ WITH r AS (
     ON rooms_users."user" = users.id
   INNER JOIN rooms
     ON rooms_users."room" = rooms.id
-  WHERE rooms.deleted_at IS NULL
+  WHERE rooms.deleted_at IS NULL AND
+        CASE WHEN $5::room_type[] IS NULL THEN TRUE ELSE ARRAY[rooms.room_type]::room_type[] <@ $5::room_type[] END
   GROUP BY rooms_users.room,
            rooms.title
   ORDER BY sim DESC
