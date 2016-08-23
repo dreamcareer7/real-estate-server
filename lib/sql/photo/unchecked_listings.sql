@@ -3,6 +3,6 @@ SELECT
 FROM listings
 WHERE
   photos_checked_at IS NULL
-  OR
-  photos_checked_at < updated_at
+  AND
+  status IN ('Active', 'Pending', 'Active Option Contract', 'Active Contingent', 'Active Kick Out')
 LIMIT 100;
