@@ -18,5 +18,6 @@ WITH p AS (
 )
 SELECT room AS id
 FROM p
-WHERE $2::uuid[] <@ p.members::uuid[]
+WHERE $2::uuid[] <@ p.members::uuid[] AND
+      p.members::uuid[] <@ $2::uuid[]
 ORDER by p.updated_at
