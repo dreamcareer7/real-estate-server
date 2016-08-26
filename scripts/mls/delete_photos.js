@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 
 var async  = require('async');
-var Client = require('./rets_client.js');
 var config = require('../../lib/config.js');
 
 var program = require('./program.js')
@@ -42,6 +41,7 @@ Photo.getUncheckedListings( (err, listings) => {
 
   options.query = '(Table_MUI='+listings.join(',')+')';
 
+  var Client = require('./rets_client.js');
   Client.work(options, (err) => {
     if(err && err === 'No data was fetched')
       return processData([], process.exit);
