@@ -1,6 +1,7 @@
 var Domain = require('domain');
 var db = require('../lib/utils/db');
 var deasync = require('deasync');
+require('colors');
 require('../lib/models/index.js')();
 
 var domain = Domain.create();
