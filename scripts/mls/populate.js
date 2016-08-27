@@ -189,8 +189,8 @@ module.exports = (data) => {
   listing.deposit_amount = parseFloat(data.DepositAmount.trim()) || 0.0;
 
   listing.photo_count = parseInt(data.PhotoCount.trim()) || 0;
-  listing.dom = parseInt(data.DOM.trim()) || -1;
-  listing.cdom = parseInt(data.DOM.trim()) || -1;
+  listing.dom = parseInt(data.DOM.trim()) || null;
+  listing.cdom = parseInt(data.CDOM.trim()) || null;
 
   listing.buyers_agency_commission = data.BuyersAgencyCommission.trim();
   listing.sub_agency_commission    = data.SubAgencyCommission.trim();
