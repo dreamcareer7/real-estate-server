@@ -94,126 +94,6 @@ var getUserRooms = (cb) => {
     });
 }
 
-var searchByUser = (cb) => {
-  return frisby.create('search rooms by user')
-    .get('/rooms/search?users=' + results.room.create.data.owner.id)
-    .after(cb)
-    .expectStatus(200)
-    .expectJSON({
-      code: 'OK',
-      data: [
-        {
-          type: 'room'
-        }
-      ]
-    })
-    .expectJSONTypes({
-      code: String,
-      data: [room_response],
-      info: info_response
-    });
-}
-
-var searchByFirstName = (cb) => {
-  return frisby.create('search rooms by owner\'s firstname')
-    .get('/rooms/search?q=' + results.room.create.data.owner.first_name)
-    .after(cb)
-    .expectStatus(200)
-    .expectJSON({
-      code: 'OK',
-      data: [
-        {
-          type: 'room'
-        }
-      ]
-    })
-    .expectJSONTypes({
-      code: String,
-      data: [room_response],
-      info: info_response
-    });
-}
-
-var searchByLastName = (cb) => {
-  return frisby.create('search rooms by owner\'s lastname')
-    .get('/rooms/search?q=' + results.room.create.data.owner.last_name)
-    .after(cb)
-    .expectStatus(200)
-    .expectJSON({
-      code: 'OK',
-      data: [
-        {
-          type: 'room'
-        }
-      ]
-    })
-    .expectJSONTypes({
-      code: String,
-      data: [room_response],
-      info: info_response
-    });
-}
-
-var searchByEmail = (cb) => {
-  return frisby.create('search rooms by owner\'s email')
-    .get('/rooms/search?q=' + results.room.create.data.owner.email)
-    .after(cb)
-    .expectStatus(200)
-    .expectJSON({
-      code: 'OK',
-      data: [
-        {
-          type: 'room'
-        }
-      ]
-    })
-    .expectJSONTypes({
-      code: String,
-      data: [room_response],
-      info: info_response
-    });
-}
-
-var searchByPhone = (cb) => {
-  return frisby.create('search rooms by owner\'s phone number')
-    .get('/rooms/search?q=' + results.room.create.data.owner.phone_number)
-    .after(cb)
-    .expectStatus(200)
-    .expectJSON({
-      code: 'OK',
-      data: [
-        {
-          type: 'room'
-        }
-      ]
-    })
-    .expectJSONTypes({
-      code: String,
-      data: [room_response],
-      info: info_response
-    });
-}
-
-var searchByTitle = (cb) => {
-  return frisby.create('search rooms by title')
-    .get('/rooms/search?q=' + results.room.create.data.title)
-    .after(cb)
-    .expectStatus(200)
-    .expectJSON({
-      code: 'OK',
-      data: [
-        {
-          type: 'room'
-        }
-      ]
-    })
-    .expectJSONTypes({
-      code: String,
-      data: [room_response],
-      info: info_response
-    });
-}
-
 var addUser = (cb) => {
   return frisby.create('add user to a room')
     .post('/rooms/' + results.room.create.data.id + '/users', {user:[
@@ -370,12 +250,6 @@ module.exports = {
   getRoomMedia,
   getRoomMedia404,
   getUserRooms,
-  searchByUser,
-  searchByFirstName,
-  searchByLastName,
-  searchByEmail,
-  searchByPhone,
-  searchByTitle,
   addUser,
   addUser400,
   removeUser,
