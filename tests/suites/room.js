@@ -267,6 +267,13 @@ var removeUserWorked = (cb) => {
     });
 }
 
+var removeUserFromPersonal = (cb) => {
+  return frisby.create('remove user from his personal room')
+    .delete('/rooms/' + results.user.create.data.personal_room + '/users/' + results.authorize.token.data.id)
+    .after(cb)
+    .expectStatus(406);
+}
+
 var patchRoom = (cb) => {
   room.title = updated_room;
   return frisby.create('patch a room')
@@ -374,12 +381,11 @@ module.exports = {
   removeUser,
   removeUser404,
   removeUserWorked,
+  removeUserFromPersonal,
   patchRoom,
   patchRoom404,
   patchRoomWorked,
-  removeUser,
-  removeUser404,
   deleteRoom,
   deleteRoom404,
-  deleteRoomWorked
+  deleteRoomWorked,
 };
