@@ -14,9 +14,6 @@ var retsLoginUrl = config.ntreis.login_url;
 var retsUser     = config.ntreis.user;
 var retsPassword = config.ntreis.password;
 
-var client = require('rets-client').getClient(retsLoginUrl, retsUser, retsPassword);
-Client.rets = client;
-
 Date.prototype.toNTREISString = function() {
   var pad = function(number) {
     if (number < 10) {
@@ -113,8 +110,12 @@ function saveLastRun(data, cb) {
   MLSJob.insert(job, cb);
 }
 
+var client;
 var connected = false;
 function connect(cb) {
+  client = require('rets-client').getClient(retsLoginUrl, retsUser, retsPassword);
+  Client.rets = client;
+  
   if(connected)
     return cb();
 
