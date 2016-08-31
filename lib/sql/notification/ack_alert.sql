@@ -2,12 +2,13 @@ UPDATE notifications_users
 SET
   acked_at = NOW()
 WHERE
-  acked_at IS NULL
-  AND "user" = $1
-  AND notification IN
+  acked_at IS NULL AND
+  "user" = $1 AND
   (
-    SELECT id FROM notifications
-    WHERE
+    notification IN
+    (
+      SELECT id FROM notifications
+      WHERE
       (
         subject_class = 'User' AND
         action = 'Created' AND
@@ -26,4 +27,40 @@ WHERE
         auxiliary_subject_class = 'Alert' AND
         auxiliary_subject = $2
       )
+    ) OR
+    notification IN
+    (
+      SELECT notifications.id FROM notifications
+      INNER JOIN recommendations
+      ON notifications.auxiliary_subject = recommendations.id
+      WHERE notifications.subject_class = 'Listing' AND
+            notifications.action = 'BecameAvailable' AND
+            notifications.object_class = 'Room' AND
+            $2 = ANY(recommendations.referring_objects)
+    ) OR
+    notification IN
+    (
+      SELECT notifications.id FROM notifications
+      INNER JOIN recommendations
+      ON notifications.recommendation = recommendations.id
+      WHERE
+      (
+        notifications.subject_class = 'Listing' AND
+        notifications.action = 'PriceDropped' AND
+        notifications.object_class = 'Room' AND
+        $2 = ANY(recommendations.referring_objects)
+      ) OR
+      (
+        notifications.subject_class = 'Listing' AND
+        notifications.action = 'StatusChanged' AND
+        notifications.object_class = 'Room' AND
+        $2 = ANY(recommendations.referring_objects)
+      ) OR
+      (
+        notifications.subject_class = 'OpenHouse' AND
+        notifications.action = 'Available' AND
+        notifications.object_class = 'Listing' AND
+        $2 = ANY(recommendations.referring_objects)
+      )
+    )
   )
