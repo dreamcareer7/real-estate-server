@@ -25,10 +25,5 @@ WHERE
         action = 'BecameAvailable' AND
         auxiliary_subject_class = 'Alert' AND
         auxiliary_subject = $2
-      ) OR
-      (
-        subject_class = 'Listing'
-
-
       )
   )
