@@ -1,4 +1,5 @@
 SELECT
+  id,
   type as open_house_type,
   'open_house' as type,
   EXTRACT(EPOCH FROM created_at) as created_at,
