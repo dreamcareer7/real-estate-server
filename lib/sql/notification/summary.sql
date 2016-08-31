@@ -67,9 +67,9 @@ WITH rn AS (
               WHERE ARRAY[id] <@ (SELECT referring_objects FROM recommendations WHERE id = notifications.recommendation)
             ) IS TRUE
     ),
-    'open_house_available_listing_ids', ARRAY_AGG(notifications.recommendation) FILTER (
+    'open_house_became_available_listing_ids', ARRAY_AGG(notifications.recommendation) FILTER (
       WHERE notifications.subject_class = 'OpenHouse' AND
-            notifications.action = 'Available' AND
+            notifications.action = 'BecameAvailable' AND
             notifications.object_class = 'Listing' AND
             notifications.deleted_at IS NULL AND
             (
@@ -166,7 +166,7 @@ SELECT 'notification_summary' AS type,
        (SELECT COUNT(*) FROM tc)::int AS task_notification_count,
        (SELECT COUNT(*) FROM trc)::int AS transaction_notification_count,
        COUNT(r)::int AS room_notification_count,
-       (
+       (ns
          (SELECT COUNT(*) FROM tc) + (SELECT COUNT(*) FROM trc) + COALESCE(ARRAY_LENGTH(ARRAY_AGG(r), 1), 0)
        )::int AS total_notification_count,
        COALESCE((SELECT ARRAY_AGG(task) from tc), '{}'::uuid[]) AS task_ids,
