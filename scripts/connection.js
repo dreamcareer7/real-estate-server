@@ -26,5 +26,3 @@ process.on('uncaughtException', (e) => {
     emoji: ':skull:'
   }, process.exit);
 });
-
-foo();
