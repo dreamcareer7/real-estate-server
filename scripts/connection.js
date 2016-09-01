@@ -11,3 +11,20 @@ domain.db = getConnection();
 domain.jobs = [];
 domain.jobs.push = job => Job.handle([job], () => {})
 domain.enter();
+
+
+process.on('uncaughtException', (e) => {
+  delete e.domain;
+  delete e.domainThrown;
+  delete e.domainEmitter;
+  delete e.domainBound;
+  
+  console.log(e);
+  Slack.send({
+    channel: 'server-errors',
+    text: 'Uncaught exception on ' + __filename + '\n `'+e+'`',
+    emoji: ':skull:'
+  }, process.exit);
+});
+
+foo();
