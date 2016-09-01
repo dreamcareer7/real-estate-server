@@ -4,14 +4,14 @@ var async = require('async');
 var db = require('../lib/utils/db');
 
 var up = [
-  'ALTER TABLE listings ALTER dom TYPE smallint USING null',
-  'ALTER TABLE listings ALTER cdom TYPE smallint USING null',
+  'ALTER TABLE listings ALTER dom TYPE int USING null',
+  'ALTER TABLE listings ALTER cdom TYPE int USING null',
   'UPDATE listings SET \
     dom = ( \
-      CASE WHEN LENGTH(mls_data.value->>\'DOM\') > 0 THEN (mls_data.value->>\'DOM\')::smallint ELSE NULL END \
+      CASE WHEN LENGTH(mls_data.value->>\'DOM\') > 0 THEN (mls_data.value->>\'DOM\')::int ELSE NULL END \
     ), \
     cdom = ( \
-      CASE WHEN LENGTH(mls_data.value->>\'CDOM\') > 0 THEN (mls_data.value->>\'CDOM\')::smallint ELSE NULL END \
+      CASE WHEN LENGTH(mls_data.value->>\'CDOM\') > 0 THEN (mls_data.value->>\'CDOM\')::int ELSE NULL END \
     ) \
   FROM mls_data \
   WHERE listings.matrix_unique_id = mls_data.matrix_unique_id;'
