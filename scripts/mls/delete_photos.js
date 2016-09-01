@@ -32,11 +32,13 @@ function processData(photos, cb) {
 }
 
 Photo.getUncheckedListings( (err, listings) => {
-  if(err)
-    return cb(err);
-
+  if(err) {
+    console.log(err);
+    process.exit();
+  }
+  
   if(listings.length < 1)
-    return cb();
+    process.exit();
 
   listings.forEach( l => grouped[l] = [] );
 
