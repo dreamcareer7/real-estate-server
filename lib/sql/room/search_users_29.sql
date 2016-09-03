@@ -1,7 +1,7 @@
 WITH p AS (
   SELECT rooms.room_type,
          rooms_users.room,
-         ARRAY_AGG(rooms_users."user") FILTER (WHERE rooms_users."user" <> $1) AS members,
+         ARRAY_AGG(rooms_users."user") AS members,
          rooms.updated_at AS updated_at
   FROM rooms_users
   INNER JOIN rooms ON
