@@ -1,7 +1,7 @@
 WITH user_rooms AS (
     SELECT rooms_users.room AS id,
            (COUNT(*) OVER())::INT AS total,
-           COALESCE(MAX(messages.created_at), MAX(rooms.created_at)) AS updated_at,
+           COALESCE(MAX(messages.created_at), MAX(rooms.updated_at)) AS updated_at,
            MAX(rooms.created_at) AS created_at
            FROM rooms_users
            LEFT JOIN messages
