@@ -7,7 +7,8 @@ SELECT *,
        EXTRACT(EPOCH FROM minimum_sold_date) AS minimum_sold_date,
        property_types::text[] AS property_types,
        property_subtypes::text[] AS property_subtypes,
-       listing_statuses::text[] AS listing_statuses
+       listing_statuses::text[] AS listing_statuses,
+       excluded_listing_ids::uuid[] AS excluded_listing_ids
 FROM alerts
 WHERE id = $1
 LIMIT 1

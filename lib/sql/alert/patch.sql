@@ -38,5 +38,6 @@ SET
     selling_offices = $36,
     offices = $37,
     agents = $38,
-    high_schools = $39
-WHERE id = $40
+    high_schools = $39,
+    excluded_listing_ids = $40
+WHERE id = $41
