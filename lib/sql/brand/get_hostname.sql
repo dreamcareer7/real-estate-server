@@ -1,4 +1,4 @@
 SELECT brand
 FROM brands_hostnames
-WHERE hostname = $1::text
+WHERE LOWER(hostname) = LOWER($1::text)
 LIMIT 1
