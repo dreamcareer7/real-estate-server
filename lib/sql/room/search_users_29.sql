@@ -34,7 +34,7 @@ LEFT JOIN i ON
   p.room = i.room
 WHERE $2::uuid[] <@ p.members::uuid[] AND
       p.members::uuid[] <@ $2::uuid[] AND
-      CASE WHEN ($3::text[] IS NULL OR ARRAY_LENGTH($3::text[], 1) = 0) THEN TRUE ELSE
+      CASE WHEN ($3::text[] IS NULL OR COALESCE(ARRAY_LENGTH($3::text[], 1), 0) = 0) THEN TRUE ELSE
       (
         $3::text[] <@ i.invitees::text[] AND
         i.invitees::text[] <@ $3::text[]
