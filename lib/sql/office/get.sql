@@ -1,4 +1,5 @@
 SELECT
+  id,
   'office' as type,
   name
 FROM offices
