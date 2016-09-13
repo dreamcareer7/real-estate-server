@@ -1,6 +1,6 @@
 WITH brand_offices AS (
   SELECT id, matrix_unique_id FROM offices WHERE id IN (
-    SELECT office FROM brands_offices WHERE id = $1
+    SELECT office FROM brands_offices WHERE brand = $1
   )
 ),
 
