@@ -21,7 +21,7 @@ brand_agents AS (
 
 brand_users AS (
   SELECT id FROM users WHERE id IN (
-    SELECT id FROM users WHERE brand = $1
+    SELECT "user" AS id FROM brands_users WHERE brand = $1
     UNION
     SELECT id FROM users WHERE agent IN( SELECT id FROM brand_agents )
   )
