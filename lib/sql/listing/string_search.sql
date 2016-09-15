@@ -4,6 +4,7 @@ WITH normal_results AS ( -- Normal FULL TEXT search on the query --
     to_tsvector('english', address) @@ plainto_tsquery('english', $1)
     OR
     address ILIKE '%' || $1 || '%'
+    OR mls_number = $1
   LIMIT 75
 ),
 
