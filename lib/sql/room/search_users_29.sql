@@ -18,15 +18,17 @@ WITH p AS (
 ),
 i AS (
   SELECT room,
-         ARRAY_AGG(phone_number) FILTER (WHERE phone_number IS NOT NULL) AS invitees
+         ARRAY_AGG(invitation_records.phone_number) FILTER (WHERE invitation_records.phone_number IS NOT NULL) AS invitees
   FROM invitation_records
-  WHERE room IN
+  INNER JOIN rooms ON
+    invitation_records.room = rooms.id
+  WHERE invitation_records.room IN
   (
     SELECT room
     FROM rooms_users
     WHERE "user" = $1
-  )
-  GROUP BY room
+  ) AND rooms.room_type <> 'Personal'
+  GROUP BY invitation_records.room
 )
 SELECT p.room AS id
 FROM p
