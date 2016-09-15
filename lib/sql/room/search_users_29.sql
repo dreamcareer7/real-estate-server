@@ -11,7 +11,7 @@ WITH p AS (
     SELECT room
     FROM rooms_users
     WHERE "user" = $1
-  )
+  ) AND rooms.room_type <> 'Personal'
   GROUP BY rooms_users.room,
            rooms.room_type,
            rooms.updated_at
@@ -39,5 +39,4 @@ WHERE $2::uuid[] <@ p.members::uuid[] AND
         $3::text[] <@ i.invitees::text[] AND
         i.invitees::text[] <@ $3::text[]
       ) END
-      -- CASE WHEN $3::text[] IS NULL THEN TRUE ELSE TRUE END
 ORDER by updated_at
