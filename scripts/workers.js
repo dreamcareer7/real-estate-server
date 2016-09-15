@@ -20,6 +20,10 @@ var email = (job, done) => {
   Mailgun.callMailgun(job.data, done);
 };
 
+var email_sane = (job, done) => {
+  Email.sendSane(job.data, done);
+}
+
 var ses = (job, done) => {
   SES.callSES(job.data, done);
 };
@@ -44,6 +48,11 @@ var queues = {
     parallel: config.email.parallel
   },
 
+  email_sane: {
+    handler: email_sane,
+    parallel: config.email.parallel
+  },
+  
   email_ses: {
     handler: ses,
     parallel: config.email.parallel

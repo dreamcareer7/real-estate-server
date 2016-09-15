@@ -1,7 +1,7 @@
 SELECT
+  id,
   'office' as type,
-  name,
-  brand
+  name
 FROM offices
 WHERE id = $1
 LIMIT 1
