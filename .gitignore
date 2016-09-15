@@ -6,7 +6,6 @@ scripts/ntreis/timing.config.js
 scripts/announcements/announcement.html
 scripts/announcements/announcement.asc
 scripts/announcements/subject_announcement.asc
-.jshint
 .tern-port
 .tern-project
 .DS_Store
