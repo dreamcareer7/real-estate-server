@@ -25,6 +25,19 @@ brand_users AS (
     UNION
     SELECT id FROM users WHERE agent IN( SELECT id FROM brand_agents )
   )
+),
+
+sorted_brand_users AS (
+  SELECT 
+    brand_users.id as id,
+    (
+      CASE WHEN $2::uuid IS NULL THEN 0 ELSE 
+        (SELECT count(*) FROM contacts WHERE "user" = $1 AND contact_user = $2)
+      END
+    ) as has_contact
+    FROM brand_users
+  JOIN users ON brand_users.id = users.id
+  ORDER BY has_contact DESC, RANDOM()
 )
 
 SELECT *,
@@ -41,7 +54,7 @@ SELECT *,
   ) AS agents,
 
   (
-    SELECT ARRAY_AGG(id) FROM brand_users
+    SELECT ARRAY_AGG(id) FROM sorted_brand_users
   ) AS users,
   
   (
