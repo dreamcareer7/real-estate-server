@@ -33,7 +33,3 @@ Recommendation's you have marked as favorite (Loved)
 ## Recommend Manually [POST /rooms/{id}/recs]
 You can recommend (share) an item with others.
 <!-- include(tests/recommendation/recommendManually.md) -->
-
-## Bulk Recommend [POST /recs]
-Recommend multiple recommendations to multiple rooms
-<!-- include(tests/recommendation/bulkRecommendManually.md) -->

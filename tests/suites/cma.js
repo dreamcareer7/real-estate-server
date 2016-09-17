@@ -74,31 +74,6 @@ var getCMAsForRoom404 = (cb) => {
     .expectStatus(404);
 }
 
-var bulkCMAShare = (cb) => {
-
-  return frisby.create('bulk CMA share')
-    .post('/cmas/', {
-      cma: results.cma.create.data
-    })
-    .after(cb)
-    .expectStatus(200)
-    .expectJSON({
-      code: 'OK'
-    })
-    .expectJSONTypes({
-      code: String,
-      data: []
-    });
-}
-
-var bulkCMAShare400 = (cb) => {
-
-  return frisby.create('expect 400 with empty model')
-    .post('/cmas/')
-    .after(cb)
-    .expectStatus(400);
-}
-
 var deleteCMA = (cb) => {
 
   return frisby.create('delete CMA')
@@ -137,8 +112,6 @@ module.exports = {
   getListingsForCMA404,
   getCMAsForRoom,
   getCMAsForRoom404,
-  bulkCMAShare,
-  bulkCMAShare400,
   deleteCMA,
   deleteCMA404,
   deleteCMAWorked
