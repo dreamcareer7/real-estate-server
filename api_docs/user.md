@@ -27,17 +27,11 @@
 ### Unset Address [DELETE /users/self/address]
 <!-- include(tests/user/deleteAddress.md) -->
 
-### Find related users [GET /users/related/search]
-<!-- include(tests/user/searchRelatedUser.md) -->
-
 ### Find by email [GET /users/related/search]
 <!-- include(tests/user/searchByEmail.md) -->
 
 ### Find by phone [GET /users/related/search]
 <!-- include(tests/user/searchByPhone.md) -->
-
-### Find by code [GET /users/related/search]
-<!-- include(tests/user/searchByCode.md) -->
 
 ### Create Phone Verification [POST /phone_verifications]
 <!-- include(tests/verification/createPhoneVerification.md) -->
