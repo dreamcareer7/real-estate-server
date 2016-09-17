@@ -8,8 +8,6 @@ Other concepts of Rechat like Alerts and recommendations are heavily linked to r
 
 ::: warning
   It is important to remember that even a private discussion between two people happens on a chat room.
-
-  And unlike many services like Facebook, Hangouts, you can have more than one chat room with a single person.
 :::
 
 ### Get a user's Rooms [GET /rooms]
@@ -27,13 +25,6 @@ Other concepts of Rechat like Alerts and recommendations are heavily linked to r
 ### Get Room Media [GET /rooms/{id}/media]
 <!-- include(tests/room/getRoomMedia.md) -->
 
-### Search by User [GET /rooms/search{?users}]
-Searches room by user id's
-<!-- include(tests/room/searchByUser.md) -->
-
-### Search by Query [GET /rooms/search{?q}]
-Search room for user names, phone numbers, emails, room title and more
-<!-- include(tests/room/searchByTitle.md) -->
 
 ### Add Users to a room [POST /rooms/{id}/users]
 You can add multiple users to a room in the same call
