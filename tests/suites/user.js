@@ -2,7 +2,6 @@ var config = require('../../lib/config.js');
 var user = require('./data/user.js');
 var address = require('./data/address.js');
 var user_response = require('./expected_objects/user.js');
-var compact_user_response = require('./expected_objects/compact_user.js');
 var info_response = require('./expected_objects/info.js');
 var uuid = require('node-uuid');
 
@@ -126,74 +125,42 @@ var patchUserTimeZone = (cb) => {
     .expectStatus(204);
 };
 
-var searchRelatedUser = (cb) => {
-  return frisby.create('find related user')
-    .get('/users/related/search?q=' + results.user.create.data.first_name)
-    .after(cb)
-    .expectStatus(200)
-    .expectJSON({
-      code: 'OK'
-    })
-    .expectJSONTypes({
-      code: String,
-      data: Array,
-      info: info_response
-    });
-}
-
 var searchByEmail = (cb) => {
   return frisby.create('search users by email')
-    .get('/users/search?email=' + results.user.create.data.email)
+    .get('/users/search?q[]=' + results.user.create.data.email)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
       data: [
         {
-          type: 'compact_user'
+          type: 'user'
         }
       ]
     })
     .expectJSONTypes({
       code: String,
-      data: [compact_user_response],
+      data: [user_response],
       info: info_response
-    });
-}
-
-var searchByCode = (cb) => {
-  return frisby.create('search users by code')
-    .get('/users/search?code=' + results.user.create.data.user_code)
-    .after(cb)
-    .expectStatus(200)
-    .expectJSON({
-      code: 'OK',
-      data: {
-        type: 'user'
-      }
-    })
-    .expectJSONTypes({
-      code: String,
-      data: user_response
     });
 }
 
 var searchByPhone = (cb) => {
   return frisby.create('search users by phone')
-    .get('/users/search?phone=' + encodeURIComponent(results.user.create.data.phone_number))
+    .get('/users/search?q[]=' + encodeURIComponent(results.user.create.data.phone_number))
     .after(cb)
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
       data: [
         {
-          type: 'compact_user'
+          type: 'user'
         }
       ]
     })
     .expectJSONTypes({
       code: String,
-      data: [compact_user_response],
+      data: [user_response],
       info: info_response
     });
 }
@@ -229,9 +196,7 @@ module.exports = {
   setAddress,
   setAddress400,
   patchUserTimeZone,
-  searchRelatedUser,
   searchByEmail,
-  searchByCode,
   searchByPhone,
   deleteAddress,
   deleteUser

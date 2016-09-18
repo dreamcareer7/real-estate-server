@@ -259,7 +259,7 @@ var search = (cb) => {
   results.user.create.data.type = 'compact_user';
 
   return frisby.create('search contacts and see if the one we added is there')
-    .get('/contacts/search?q=' + results.user.create.data.first_name)
+    .get('/contacts/search?q[]=' + results.user.create.data.first_name)
     .after(cb)
     .expectStatus(200)
     .expectJSONLength('data', 1)

@@ -151,28 +151,6 @@ var virtual400 = (cb) => {
     .expectStatus(400);
 }
 
-var bulkAlertShare = (cb) => {
-  return frisby.create('bulk alert share')
-    .post('/alerts', {alert: results.alert.create.data})
-    .after(cb)
-    .expectStatus(200)
-    .expectJSON({
-      code: 'OK'
-    })
-    .expectJSONTypes({
-      code: String,
-      data: Array,
-      info: Object
-    });
-}
-
-var bulkAlertShare400 = (cb) => {
-  return frisby.create('expect 400 with invalid alert id when sharing an alert')
-    .post('/alerts', {alert: uuid.v1()})
-    .after(cb)
-    .expectStatus(400);
-}
-
 var deleteAlert = (cb) => {
   return frisby.create('delete alert')
     .delete('/rooms/' + results.alert.create.data.room + '/alerts/' + results.alert.create.data.id)
@@ -211,8 +189,6 @@ module.exports = {
   patchAlertWorked,
   virtual,
   virtual400,
-  bulkAlertShare,
-  bulkAlertShare400,
   deleteAlert404,
   deleteAlert,
   deleteAlertWorked

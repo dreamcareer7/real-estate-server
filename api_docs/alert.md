@@ -29,6 +29,3 @@ that listing will be recommended to users on that chat room.
 This is called a `Virtual Alert` as it shares all the characteristics of an alert, except that its not saved and the results are
 returned immediately.
 <!-- include(tests/alert/virtual.md) -->
-
-### Share Alerts [POST /alerts]
-<!-- include(tests/alert/bulkAlertShare.md) -->
