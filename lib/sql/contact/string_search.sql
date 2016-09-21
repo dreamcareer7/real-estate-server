@@ -1,4 +1,4 @@
-SELECT id,
+SELECT contacts.id,
        (COUNT(*) OVER())::INT AS total
 FROM contacts
 LEFT JOIN users
@@ -14,8 +14,7 @@ WHERE contacts."user" = $1 AND
         users.email,
         users.first_name,
         users.last_name,
-        users.phone_number,
-        ' '
+        users.phone_number
       ) ILIKE ALL($2)
 ORDER BY contacts.first_name,
          contacts.last_name,
