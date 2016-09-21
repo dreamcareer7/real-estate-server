@@ -6,8 +6,7 @@ WHERE users.deleted_at IS NULL AND
         users.first_name,
         users.last_name,
         users.email,
-        users.phone_number,
-        ' '
+        users.phone_number
       ) ILIKE ALL($1)
 ORDER BY users.first_name,
          users.last_name,
