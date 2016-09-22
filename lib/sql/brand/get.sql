@@ -31,13 +31,19 @@ sorted_brand_users AS (
   SELECT 
     brand_users.id as id,
     (
+      CASE WHEN $2::uuid IS NULL THEN 0
+           WHEN brand_users.id = $2 THEN 1
+           ELSE 0
+      END
+    ) as is_me,
+    (
       CASE WHEN $2::uuid IS NULL THEN 0 ELSE 
         (SELECT count(*) FROM contacts WHERE "user" = $1 AND contact_user = $2)
       END
     ) as has_contact
     FROM brand_users
   JOIN users ON brand_users.id = users.id
-  ORDER BY has_contact DESC, RANDOM()
+  ORDER BY is_me DESC, has_contact DESC, RANDOM()
 )
 
 SELECT *,
