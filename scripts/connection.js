@@ -18,11 +18,11 @@ process.on('uncaughtException', (e) => {
   delete e.domainThrown;
   delete e.domainEmitter;
   delete e.domainBound;
-  
-  console.log(e);
+
+  console.log(e, e.stack);
   Slack.send({
     channel: 'server-errors',
-    text: 'Uncaught exception on ' + __filename + '\n `'+e+'`',
+    text: 'Uncaught exception: ' + '\n `'+e+'`',
     emoji: ':skull:'
   }, process.exit);
 });
