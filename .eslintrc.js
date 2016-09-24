@@ -107,6 +107,9 @@ module.exports = {
     ],
     'key-spacing': [
       'error'
+    ],
+    'space-infix-ops': [
+      'error'
     ]
   }
 }

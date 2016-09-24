@@ -74,7 +74,7 @@ function updateUI() {
 
     line.column( icons[result.state].green, 10)
 
-    line.column( ('Suite: '+suite).green, 40)
+    line.column( ('Suite: ' + suite).green, 40)
 
     if(result.state === 'Pending') {
       line.column('Pending'.yellow)
@@ -147,7 +147,7 @@ function updateUI() {
     else
       length = ''
 
-    line.column((req.elapsed.toString()+'ms')[elapsedColor], 8)
+    line.column((req.elapsed.toString() + 'ms')[elapsedColor], 8)
     line.column(length, 6)
     line.column(req.responseStatus.toString()[statusColor], 5)
     line.column(req.method.toUpperCase()[statusColor], 8)
