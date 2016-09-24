@@ -1,3 +1,4 @@
+process.env.ORIGINAL_NODE_ENV = process.env.NODE_ENV || 'development'
 process.env.NODE_ENV = 'tests' // So we read the proper config file
 
 require('colors')
