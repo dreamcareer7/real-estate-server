@@ -34,32 +34,32 @@ const sms = (job, done) => {
 
 const queues = {
   airship_transport_send_device: {
-    handler:  airship,
+    handler: airship,
     parallel: config.airship.parallel
   },
 
   create_notification: {
-    handler:  notification,
+    handler: notification,
     parallel: config.airship.parallel
   },
 
   email: {
-    handler:  email,
+    handler: email,
     parallel: config.email.parallel
   },
 
   email_sane: {
-    handler:  email_sane,
+    handler: email_sane,
     parallel: config.email.parallel
   },
 
   email_ses: {
-    handler:  ses,
+    handler: ses,
     parallel: config.email.parallel
   },
 
   sms: {
-    handler:  sms,
+    handler: sms,
     parallel: config.twilio.parallel
   }
 }
@@ -72,8 +72,8 @@ Object.keys(queues).forEach(queue_name => {
 
     Slack.send({
       channel: 'server-errors',
-      text:    text,
-      emoji:   '💀'
+      text: text,
+      emoji: '💀'
     })
   }
 
@@ -116,8 +116,8 @@ const sendNotifications = function () {
 
       Slack.send({
         channel: 'server-errors',
-        text:    text,
-        emoji:   '💀'
+        text: text,
+        emoji: '💀'
       })
     }
 

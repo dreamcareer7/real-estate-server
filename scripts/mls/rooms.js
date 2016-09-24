@@ -21,15 +21,15 @@ function processData (cb, results) {
 
 function map (mls_room) {
   return {
-    matrix_unique_id:   parseInt(mls_room.matrix_unique_id),
+    matrix_unique_id: parseInt(mls_room.matrix_unique_id),
     matrix_modified_dt: mls_room.MatrixModifiedDT,
-    description:        mls_room.RoomDescription,
-    length:             parseInt(mls_room.RoomLength) || null,
-    width:              parseInt(mls_room.RoomWidth) || null,
-    listing_mui:        mls_room.Listing_MUI,
-    features:           mls_room.RoomFeatures,
-    level:              parseInt(mls_room.RoomLevel) || null,
-    room_type:          mls_room.RoomType
+    description: mls_room.RoomDescription,
+    length: parseInt(mls_room.RoomLength) || null,
+    width: parseInt(mls_room.RoomWidth) || null,
+    listing_mui: mls_room.Listing_MUI,
+    features: mls_room.RoomFeatures,
+    level: parseInt(mls_room.RoomLevel) || null,
+    room_type: mls_room.RoomType
   }
 }
 

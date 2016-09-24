@@ -106,8 +106,7 @@ module.exports = {
       {'allowEmptyCatch':true}
     ],
     'key-spacing': [
-      'error',
-      {'align':'value'}
+      'error'
     ]
   }
 }

@@ -53,7 +53,7 @@ function schedule (queue) {
     const results = current_tasks.map((t, i) => {
       return {
         definition: tasks[t],
-        run:        last_runs[i]
+        run: last_runs[i]
       }
     })
     processLastRuns(queue, results)

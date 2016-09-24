@@ -12,11 +12,11 @@ function logger(req, res, next) {
   const end = res.end
   res.end = function(data, encoding, callback) {
     requests.unshift({
-      method:         req.method,
-      path:           req.path,
+      method: req.method,
+      path: req.path,
       responseStatus: res.statusCode,
-      elapsed:        (new Date).getTime() - start,
-      length:         data ? data.length : null
+      elapsed: (new Date).getTime() - start,
+      length: data ? data.length : null
     })
     updateUI()
     end.call(res, data, encoding, callback)
@@ -53,9 +53,9 @@ Run.on('register suite', (suite) => {
 const newline = () => new clui.Line(' ').fill()
 function updateUI() {
   const screen = new clui.LineBuffer({
-    x:      0,
-    y:      0,
-    width:  'console',
+    x: 0,
+    y: 0,
+    width: 'console',
     height: 'console'
   })
 
@@ -69,7 +69,7 @@ function updateUI() {
     const icons = {
       'Pending': '○',
       'Running': '◌',
-      'Done':    '●'
+      'Done': '●'
     }
 
     line.column( icons[result.state].green, 10)

@@ -60,7 +60,7 @@ function getLastRun (cb) {
     const t = new Date((new Date()).getTime() - (Client.options.startFrom * 3600000))
 
     Client.last_run = {
-      last_modified_date:   t,
+      last_modified_date: t,
       is_initial_completed: true
     }
 
@@ -94,14 +94,14 @@ function saveLastRun (data, cb) {
   }
 
   const job = {
-    last_modified_date:   last_date,
-    last_id:              parseInt(last_mui),
-    results:              data.length,
-    query:                Client.query,
+    last_modified_date: last_date,
+    last_id: parseInt(last_mui),
+    results: data.length,
+    query: Client.query,
     is_initial_completed: Client.last_run.is_initial_completed || shouldTransit,
-    name:                 Client.options.job,
-    limit:                Client.options.limit,
-    offset:               Client.options.offset
+    name: Client.options.job,
+    limit: Client.options.limit,
+    offset: Client.options.offset
   }
 
   Client.emit('saving job', job)
@@ -272,11 +272,11 @@ Client.work = function (options, cb) {
   const process = Client.options.processor ? Client.options.processor : cb => cb()
 
   const steps = {
-    connect:  connect,
+    connect: connect,
     last_run: getLastRun,
-    mls:      ['connect', 'last_run', fetch],
-    raw:      ['mls', raw],
-    process:  ['mls', process]
+    mls: ['connect', 'last_run', fetch],
+    raw: ['mls', raw],
+    process: ['mls', process]
   }
 
   if (!Client.options.dontSave)
@@ -289,8 +289,8 @@ Client.work = function (options, cb) {
     if (err) {
       Slack.send({
         channel: 'server-errors',
-        text:    '🏠 NTREIS Error on ' + Client.options.job + '\n`' + JSON.stringify(err) + '`',
-        emoji:   ':skull:'
+        text: '🏠 NTREIS Error on ' + Client.options.job + '\n`' + JSON.stringify(err) + '`',
+        emoji: ':skull:'
       }, () => {
         cb(err)
       })

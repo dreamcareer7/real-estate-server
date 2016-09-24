@@ -39,10 +39,10 @@ const getUserAlerts = (cb) => {
       code: 'OK',
       data: [
         {
-          id:         results.alert.create.data.id,
+          id: results.alert.create.data.id,
           created_by: {
             type: 'user',
-            id:   results.room.create.data.owner.id
+            id: results.room.create.data.owner.id
           }
         }
       ]
@@ -62,10 +62,10 @@ const getRoomAlerts = (cb) => {
       code: 'OK',
       data: [
         {
-          id:         results.alert.create.data.id,
+          id: results.alert.create.data.id,
           created_by: {
             type: 'user',
-            id:   results.room.create.data.owner.id
+            id: results.room.create.data.owner.id
           },
           room: results.room.create.data.id
         }
@@ -77,7 +77,7 @@ const getRoomAlerts = (cb) => {
     .expectJSONLength('data', 1)
     .expectJSONTypes({
       'data': [alert_response],
-      info:   info
+      info: info
     })
 }
 
@@ -139,7 +139,7 @@ const virtual = (cb) => {
     })
     .expectJSONTypes({
       'data': [compact_listing],
-      info:   info
+      info: info
     })
 }
 

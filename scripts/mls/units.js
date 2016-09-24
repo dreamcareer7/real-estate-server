@@ -21,23 +21,23 @@ function processData (cb, results) {
 
 function map (mls_unit) {
   return {
-    dining_length:      parseInt(mls_unit.DiningAreaLength) || null,
-    dining_width:       parseInt(mls_unit.DiningAreaWidth) || null,
-    kitchen_length:     parseInt(mls_unit.KitchenLength) || null,
-    kitchen_width:      parseInt(mls_unit.KitchenWidth) || null,
-    lease:              parseInt(mls_unit.Lease) || null,
-    listing_mui:        parseInt(mls_unit.Listing_MUI) || null,
-    living_length:      parseInt(mls_unit.LivingAreaLength) || null,
-    living_width:       parseInt(mls_unit.LivingAreaWidth) || null,
-    master_length:      parseInt(mls_unit.MasterBedLength) || null,
-    master_width:       parseInt(mls_unit.MasterBedWidth) || null,
-    matrix_unique_id:   parseInt(mls_unit.matrix_unique_id),
+    dining_length: parseInt(mls_unit.DiningAreaLength) || null,
+    dining_width: parseInt(mls_unit.DiningAreaWidth) || null,
+    kitchen_length: parseInt(mls_unit.KitchenLength) || null,
+    kitchen_width: parseInt(mls_unit.KitchenWidth) || null,
+    lease: parseInt(mls_unit.Lease) || null,
+    listing_mui: parseInt(mls_unit.Listing_MUI) || null,
+    living_length: parseInt(mls_unit.LivingAreaLength) || null,
+    living_width: parseInt(mls_unit.LivingAreaWidth) || null,
+    master_length: parseInt(mls_unit.MasterBedLength) || null,
+    master_width: parseInt(mls_unit.MasterBedWidth) || null,
+    matrix_unique_id: parseInt(mls_unit.matrix_unique_id),
     matrix_modified_dt: mls_unit.MatrixModifiedDT,
-    full_bath:          parseInt(mls_unit.NumberOfBathsFull) || null,
-    half_bath:          parseInt(mls_unit.NumberOfBathsHalf) || null,
-    beds:               parseInt(mls_unit.NumberOfBeds) || null,
-    units:              parseInt(mls_unit.NumberOfUnits) || null,
-    square_feet:        parseInt(mls_unit.SqFt) || null
+    full_bath: parseInt(mls_unit.NumberOfBathsFull) || null,
+    half_bath: parseInt(mls_unit.NumberOfBathsHalf) || null,
+    beds: parseInt(mls_unit.NumberOfBeds) || null,
+    units: parseInt(mls_unit.NumberOfUnits) || null,
+    square_feet: parseInt(mls_unit.SqFt) || null
   }
 }
 

@@ -21,7 +21,7 @@ process.on('uncaughtException', (e) => {
   console.log(e, e.stack)
   Slack.send({
     channel: 'server-errors',
-    text:    'Uncaught exception: ' + '\n `' + e + '`',
-    emoji:   ':skull:'
+    text: 'Uncaught exception: ' + '\n `' + e + '`',
+    emoji: ':skull:'
   }, process.exit)
 })

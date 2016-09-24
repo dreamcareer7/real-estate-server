@@ -7,7 +7,7 @@ global.results = {}
 frisby.globalSetup({
   timeout: 30000,
   request: {
-    json:    true,
+    json: true,
     baseUri: process.argv[3],
     headers: {}
   }
@@ -46,8 +46,8 @@ const prepareTasks = function () {
     .map((name) => {
       frisbies.push({
         suite: suite,
-        name:  name,
-        fn:    fns[name]
+        name: name,
+        fn: fns[name]
       })
     })
 
@@ -64,12 +64,12 @@ function reportData (test) {
   const results = test.results()
 
   const data = {
-    name:        test.getFullName(),
+    name: test.getFullName(),
     description: test.description,
-    total:       results.totalCount,
-    passed:      results.passedCount,
-    failed:      results.failedCount,
-    messages:    []
+    total: results.totalCount,
+    passed: results.passedCount,
+    failed: results.failedCount,
+    messages: []
   }
 
   results.items_.forEach((item) => {

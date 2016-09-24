@@ -76,7 +76,7 @@ function generate () {
   aglio.render(md, {
 //     themeTemplate:'triple',
     themeFullWidth: true,
-    includePath:    '/tmp/rechat'
+    includePath: '/tmp/rechat'
   }, (err, html) => {
     if (err)
       process.stderr.write(err)
@@ -115,15 +115,15 @@ function cleanup (req, res, data) {
 
   return {
     request: {
-      method:  req.method,
+      method: req.method,
       headers: reqHeaders,
-      query:   findParams(req.url, req.params, req.query),
-      body:    req.body ? JSON.stringify(req.body) : ''
+      query: findParams(req.url, req.params, req.query),
+      body: req.body ? JSON.stringify(req.body) : ''
     },
     response: {
-      headers:       resHeaders,
-      body:          data ? data.toString() : '',
-      statusCode:    res.statusCode,
+      headers: resHeaders,
+      body: data ? data.toString() : '',
+      statusCode: res.statusCode,
       statusMessage: res.statusMessage
     }
   }

@@ -6,11 +6,11 @@ const room = require('./data/room.js')
 registerSuite('transaction', ['create', 'assign'])
 
 const auth_params = {
-  client_id:     config.tests.client_id,
+  client_id: config.tests.client_id,
   client_secret: config.tests.client_secret,
-  username:      user.email,
-  password:      user.password,
-  grant_type:    'password'
+  username: user.email,
+  password: user.password,
+  grant_type: 'password'
 }
 
 const token = (cb) => {

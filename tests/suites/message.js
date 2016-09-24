@@ -16,7 +16,7 @@ const post = (cb) => {
     .expectJSON({
       code: 'OK',
       data: {
-        type:   'message',
+        type: 'message',
         author: {
           id: results.room.create.data.owner.id
         }

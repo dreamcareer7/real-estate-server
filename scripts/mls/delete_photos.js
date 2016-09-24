@@ -12,7 +12,7 @@ options.class = 'Media'
 options.job = 'delete_photos'
 options.processor = (cb, results) => processData(results.mls, cb)
 options.fields = {
-  id:       'matrix_unique_id',
+  id: 'matrix_unique_id',
   modified: 'ModifiedDate'
 }
 

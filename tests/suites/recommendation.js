@@ -128,7 +128,7 @@ const markAsFavorite = (cb) => {
     .expectJSON({
       code: 'OK',
       data: {
-        type:         'recommendation',
+        type: 'recommendation',
         favorited_by: [results.authorize.token.data]
       }
     })

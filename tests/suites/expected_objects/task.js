@@ -2,15 +2,15 @@ const v = require('./validation.js')
 
 module.exports =
 {
-  'type':        String,
-  'id':          String,
-  'title':       String,
-  'due_date':    v.optionalNumber,
-  'status':      String,
+  'type': String,
+  'id': String,
+  'title': String,
+  'due_date': v.optionalNumber,
+  'status': String,
   'transaction': v.optionalString,
-  'created_at':  v.optionalNumber,
-  'updated_at':  v.optionalNumber,
-  'deleted_at':  v.optionalNumber,
-  'contacts':    v.optionalStringArray,
+  'created_at': v.optionalNumber,
+  'updated_at': v.optionalNumber,
+  'deleted_at': v.optionalNumber,
+  'contacts': v.optionalStringArray,
   'attachments': v.optionalArray
 }

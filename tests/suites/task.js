@@ -6,13 +6,13 @@ registerSuite('transaction', ['create'])
 const create = (cb) => {
   return frisby.create('create new task')
     .post('/tasks', {
-      user:        results.contact.create.data[0].contact_user.id,
-      title:       'NewTask',
-      due_date:    results.contact.create.data[0].contact_user.created_at,
-      status:      'New',
+      user: results.contact.create.data[0].contact_user.id,
+      title: 'NewTask',
+      due_date: results.contact.create.data[0].contact_user.created_at,
+      status: 'New',
       transaction: results.transaction.create.data.id,
-      expense:     4500,
-      private:     false
+      expense: 4500,
+      private: false
     })
     .after(cb)
     .expectStatus(200)

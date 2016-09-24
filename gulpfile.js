@@ -1,23 +1,43 @@
 const gulp = require('gulp')
 const eslint = require('gulp-eslint')
+const spawn = require('child_process').spawn
 
 gulp.task('lint', () => {
-    // ESLint ignores files with "node_modules" paths.
-    // So, it's best to have gulp ignore the directory as well.
-    // Also, Be sure to return the stream from the task;
-    // Otherwise, the task may end before the stream has finished.
   return gulp.src(['**/*.js', '!node_modules/**'])
-        // eslint() attaches the lint output to the "eslint" property
-        // of the file object so it can be used by other modules.
-        .pipe(eslint())
-        // eslint.format() outputs the lint results to the console.
-        // Alternatively use eslint.formatEach() (see Docs).
-        .pipe(eslint.format())
-        // To have the process exit with an error code (1) on
-        // lint error, return the stream and pipe to failAfterError last.
-        .pipe(eslint.failAfterError())
+    .pipe(eslint())
+    .pipe(eslint.format('stylish'))
 })
 
-gulp.task('default', ['lint'], function () {
-    // This will only run if the lint task is successful...
+let node
+gulp.task('server', function() {
+  if (node) node.kill()
+  node = spawn('node', ['index.js'], {stdio: 'inherit'})
+  console.log('Loading server')
+  node.on('close', function (code) {
+    if (code === 8) {
+      gulp.log('Error detected, waiting for changes...')
+    }
+  })
 })
+process.on('exit', () => {
+  if(node)
+    node.kill()
+})
+
+gulp.task('default', ['lint', 'server'], function () {})
+
+const watcher = gulp.watch('lib/**/*', ['server'])
+watcher.on('change', function(event) {
+  if(event.path.split('.').pop() === 'js')
+    lintFile(event.path)
+})
+
+const CLIEngine = require('eslint').CLIEngine
+const cli = new CLIEngine({})
+const formatter = cli.getFormatter()
+
+
+function lintFile(file) {
+  const report = cli.executeOnFiles([file])
+  console.log(formatter(report.results))
+}

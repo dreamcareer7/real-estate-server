@@ -85,7 +85,7 @@ const attach = (cb) => {
 
   form.append('buffer', new Buffer(binaryData), {
     contentType: 'application/octet-stream',
-    filename:    'logo.png'
+    filename: 'logo.png'
   })
 
   form.append('image', fs.createReadStream(logoPath), {
@@ -95,10 +95,10 @@ const attach = (cb) => {
   return frisby.create('attach file')
     .post('/transactions/' + results.transaction.create.data.id + '/attachments', form,
     {
-      json:    false,
+      json: false,
       headers: {
-        'authorization':  'Bearer ' + results.authorize.token.access_token,
-        'content-type':   'multipart/form-data; boundary=' + form.getBoundary(),
+        'authorization': 'Bearer ' + results.authorize.token.access_token,
+        'content-type': 'multipart/form-data; boundary=' + form.getBoundary(),
         'content-length': form.getLengthSync()
       }
     })
@@ -132,7 +132,7 @@ const assign = (cb) => {
     .post('/transactions/' + results.transaction.create.data.id + '/roles', {
       roles: [
         {
-          contact:    results.contact.create.data[0].id,
+          contact: results.contact.create.data[0].id,
           role_types: ['foo']
         }
       ]
@@ -220,7 +220,7 @@ const withdraw404_2 = (cb) => {
 const patchTransaction = (cb) => {
   return frisby.create('patch transaction')
     .put('/transactions/' + results.transaction.create.data.id, {
-      user:             results.contact.create.data[0].contact_user.id,
+      user: results.contact.create.data[0].contact_user.id,
       transaction_type: 'Seller'
     })
     .after(cb)

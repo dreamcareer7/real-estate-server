@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "node tests/run.js",
-    "start": "node index.js",
+    "start": "node_modules/gulp/bin/gulp.js --silent",
     "migration": "node_modules/migratus/bin/create --template scripts/migrate_template.js ",
     "docs": "node api_docs/index.js"
   },

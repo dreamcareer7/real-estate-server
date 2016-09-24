@@ -28,9 +28,9 @@ const create = (cb) => {
     .expectJSON({
       code: 'OK',
       data: [{
-        email:        results.user.create.data.email,
+        email: results.user.create.data.email,
         phone_number: results.user.create.data.phone_number,
-        type:         'contact'
+        type: 'contact'
       }],
       info: {
         count: 1
@@ -125,9 +125,9 @@ const updateContact = (cb) => {
     .expectJSON({
       code: 'OK',
       data: {
-        email:        results.user.create.data.email,
+        email: results.user.create.data.email,
         phone_number: results.user.create.data.phone_number,
-        type:         'contact'
+        type: 'contact'
       }
     })
     .expectJSONTypes({

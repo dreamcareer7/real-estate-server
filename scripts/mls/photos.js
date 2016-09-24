@@ -11,7 +11,7 @@ const options = program.parse(process.argv)
 options.resource = 'Media'
 options.class = 'Media'
 options.fields = {
-  id:       'matrix_unique_id',
+  id: 'matrix_unique_id',
   modified: 'ModifiedDate'
 }
 options.job = 'photos'
@@ -26,9 +26,9 @@ function insertPhoto (photo, cb) {
   Metric.increment('mls.process_photo')
   Photo.create({
     matrix_unique_id: parseInt(photo.matrix_unique_id),
-    listing_mui:      parseInt(photo.Table_MUI),
-    description:      photo.Description,
-    order:            parseInt(photo.Order)
+    listing_mui: parseInt(photo.Table_MUI),
+    description: photo.Description,
+    order: parseInt(photo.Order)
   }, cb)
 }
 
@@ -51,10 +51,10 @@ function _saveImage (payload, cb) {
   const upload = (cb) => {
     const file = {
       name: payload.photo.matrix_unique_id,
-      ext:  '.jpg',
+      ext: '.jpg',
       body: payload.data.data,
       info: {
-        mime:             payload.data.mime,
+        mime: payload.data.mime,
         'mime-extension': 'jpg'
       }
     }
@@ -86,7 +86,7 @@ function processPhoto (photo, cb) {
 
     saveImage.push({
       photo: photo,
-      data:  data
+      data: data
     }, cb)
   })
 }
