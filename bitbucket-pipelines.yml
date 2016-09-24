@@ -9,5 +9,5 @@ pipelines:
     - step:
         script: # Modify the commands below to build your repository.
           - npm --version
-          - NODE_ENV=development npm install --quiet
+          - NODE_ENV=development npm install --silent
           - npm test
