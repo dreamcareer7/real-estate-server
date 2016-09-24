@@ -10,4 +10,4 @@ pipelines:
         script: # Modify the commands below to build your repository.
           - npm --version
           - NODE_ENV=development npm --loglevel=silent install
-          - node tests/run --curl --disable-ui
+          - node tests/run --curl --disable-ui --stop-on-fail

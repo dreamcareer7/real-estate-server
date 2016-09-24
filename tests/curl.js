@@ -26,9 +26,15 @@ module.exports = (program) => {
     if (message.code !== 'test done')
       return
 
-    message.test.messages
-    .filter(m => m !== 'Passed.')
-    .forEach(m => console.log(m.red))
+    const failures = message.test.messages
+      .filter(m => m !== 'Passed.')
+
+    failures.forEach(m => {
+      console.log(m.red)
+    })
+
+    if (failures.length > 0 && program.stopOnFail)
+      process.exit(3)
   })
 
   if (!program.keep)

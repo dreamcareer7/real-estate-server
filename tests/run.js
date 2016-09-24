@@ -22,6 +22,7 @@ program
   .option('-c, --concurrency <n>', 'Number of suites to run at the same time (defaults to 20)')
   .option('--curl', 'Throw curl commands (disabled ui)')
   .option('--disable-response', 'When in curl mode, do not write responses to stdout')
+  .option('--stop-on-fail', 'Stops on the first sight of problem')
   .option('--keep', 'Keep the server running after execution is completed')
   .option('--docs', 'Setup REST API')
   .parse(process.argv)
