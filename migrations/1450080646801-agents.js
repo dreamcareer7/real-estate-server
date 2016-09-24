@@ -1,8 +1,8 @@
-'use strict';
+'use strict'
 
-var db = require('../lib/utils/db');
+const db = require('../lib/utils/db')
 
-var sql_up   = 'CREATE TABLE agents (\
+const sql_up = 'CREATE TABLE agents (\
   id uuid NOT NULL DEFAULT uuid_generate_v1(),\
   email text NOT NULL,\
   mlsid text NOT NULL,\
@@ -20,19 +20,19 @@ var sql_up   = 'CREATE TABLE agents (\
   generational_name text,\
   matrix_unique_id integer NOT NULL,\
   matrix_modified_dt timestamptz\
-)';
-var sql_down = 'DROP TABLE IF EXISTS agents';
+)'
+const sql_down = 'DROP TABLE IF EXISTS agents'
 
-var runSql = (sql) => {
+const runSql = (sql) => {
   return (next) => {
-    db.conn( (err, client) => {
-      if(err)
-        return next(err);
+    db.conn((err, client) => {
+      if (err)
+        return next(err)
 
-      return client.query(sql, next);
-    });
-  };
-};
+      return client.query(sql, next)
+    })
+  }
+}
 
-exports.up = runSql(sql_up);
-exports.down = runSql(sql_down);
+exports.up = runSql(sql_up)
+exports.down = runSql(sql_down)

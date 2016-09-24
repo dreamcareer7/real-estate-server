@@ -1,30 +1,30 @@
-var config = require('../../lib/config.js');
+const config = require('../../lib/config.js')
 
-var authorize_reponse = require('./expected_objects/authorize.js');
+const authorize_reponse = require('./expected_objects/authorize.js')
 
-var auth_params = {
-  client_id: config.tests.client_id,
+const auth_params = {
+  client_id:     config.tests.client_id,
   client_secret: config.tests.client_secret,
-  username: config.tests.username,
-  password: config.tests.password,
-  grant_type: 'password'
-};
+  username:      config.tests.username,
+  password:      config.tests.password,
+  grant_type:    'password'
+}
 
-var token = (cb) => {
+const token = (cb) => {
   return frisby.create('get token')
     .post('/oauth2/token', auth_params)
     .expectStatus(200)
     .after((err, res, json) => {
-      var setup = frisby.globalSetup();
+      const setup = frisby.globalSetup()
 
-      setup.request.headers['Authorization'] = 'Bearer ' + json.access_token;
+      setup.request.headers['Authorization'] = 'Bearer ' + json.access_token
 
-      frisby.globalSetup(setup);
-      cb(err, res);
+      frisby.globalSetup(setup)
+      cb(err, res)
     })
-    .expectJSONTypes(authorize_reponse);
+    .expectJSONTypes(authorize_reponse)
 }
 
 module.exports = {
   token
-};
+}

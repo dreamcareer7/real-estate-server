@@ -1,23 +1,23 @@
-registerSuite('user', ['create']);
-registerSuite('listing', ['by_mui']);
+registerSuite('user', ['create'])
+registerSuite('listing', ['by_mui'])
 
-var uuid             = require('node-uuid');
-var contact_response = require('./expected_objects/contact.js');
-var info_response    = require('./expected_objects/info.js');
-var contact          = require('./data/contact.js');
-var _                = require('underscore');
+const uuid = require('node-uuid')
+const contact_response = require('./expected_objects/contact.js')
+const info_response = require('./expected_objects/info.js')
+const contact = require('./data/contact.js')
+const _ = require('underscore')
 
-var first_name       = 'updated_user_name';
-var profile_image    = 'updated_profile_image';
-var cover_image      = 'updated_cover_image';
+const first_name = 'updated_user_name'
+const profile_image = 'updated_profile_image'
+const cover_image = 'updated_cover_image'
 
-var create = (cb) => {
-  contact.contact_user = results.user.create.data;
-  contact.address = results.listing.by_mui.data.address;
-  contact.first_name = results.user.create.data.first_name;
-  contact.last_name = results.user.create.data.last_name;
-  contact.phone_number = results.user.create.data.phone_number;
-  contact.email = results.user.create.data.email;
+const create = (cb) => {
+  contact.contact_user = results.user.create.data
+  contact.address = results.listing.by_mui.data.address
+  contact.first_name = results.user.create.data.first_name
+  contact.last_name = results.user.create.data.last_name
+  contact.phone_number = results.user.create.data.phone_number
+  contact.email = results.user.create.data.email
   return frisby.create('add a contact')
     .post('/contacts', {
       contacts: [contact]
@@ -28,9 +28,9 @@ var create = (cb) => {
     .expectJSON({
       code: 'OK',
       data: [{
-        email: results.user.create.data.email,
+        email:        results.user.create.data.email,
         phone_number: results.user.create.data.phone_number,
-        type: 'contact'
+        type:         'contact'
       }],
       info: {
         count: 1
@@ -40,17 +40,17 @@ var create = (cb) => {
       code: String,
       data: [contact_response],
       info: info_response
-    });
-};
+    })
+}
 
-var create400 = (cb) => {
+const create400 = (cb) => {
   return frisby.create('expect 400 with empty model when creating a contact')
     .post('/contacts')
     .after(cb)
-    .expectStatus(400);
-};
+    .expectStatus(400)
+}
 
-var addTag = (cb) => {
+const addTag = (cb) => {
   return frisby.create('add tag to a contact')
     .post('/contacts/' + results.contact.create.data[0].id + '/tags', {
       tags: ['foo', 'bar']
@@ -63,38 +63,38 @@ var addTag = (cb) => {
     .expectJSONTypes({
       code: String,
       data: contact_response
-    });
-};
+    })
+}
 
-var addTag400 = (cb) => {
+const addTag400 = (cb) => {
   return frisby.create('expect 400 with empty model when adding a tag')
     .post('/contacts/' + results.contact.create.data[0].id + '/tags')
     .after(cb)
-    .expectStatus(400);
-};
+    .expectStatus(400)
+}
 
-var addTag404 = (cb) => {
+const addTag404 = (cb) => {
   return frisby.create('expect 404 with invalid contact id when adding a tag to a contact')
     .post('/contacts/' + uuid.v1() + '/tags', {
       tags: ['foo', 'bar']
     })
     .after(cb)
-    .expectStatus(404);
-};
+    .expectStatus(404)
+}
 
-var getContact = (cb) => {
-  results.user.create.data.type = 'compact_user';
+const getContact = (cb) => {
+  results.user.create.data.type = 'compact_user'
 
   return frisby.create('get list of contacts and see if the one we added is there')
     .get('/contacts')
     .after(cb)
     .expectStatus(200)
-    .afterJSON( json => {
-      var must = ['New', 'bar', 'foo'];
-      var is = json.data[0].tags;
+    .afterJSON(json => {
+      const must = ['New', 'bar', 'foo']
+      const is = json.data[0].tags
 
-      if(_.difference(is, must).length != 0)
-        throw new Error('Tags dont match: Its ['+is+'] But should be ['+must+']');
+      if (_.difference(is, must).length != 0)
+        throw new Error('Tags dont match: Its [' + is + '] But should be [' + must + ']')
     })
     .expectJSON({
       code: 'OK',
@@ -109,14 +109,14 @@ var getContact = (cb) => {
       code: String,
       data: [contact_response],
       info: info_response
-    });
-};
+    })
+}
 
-var updateContact = (cb) => {
-  results.contact.create.data[0].contact_user.first_name = first_name;
-  results.contact.create.data[0].contact_user.tags = ['newTag'];
-  results.contact.create.data[0].contact_user.email = results.user.create.data.email;
-  results.contact.create.data[0].contact_user.phone_number = results.user.create.data.phone_number;
+const updateContact = (cb) => {
+  results.contact.create.data[0].contact_user.first_name = first_name
+  results.contact.create.data[0].contact_user.tags = ['newTag']
+  results.contact.create.data[0].contact_user.email = results.user.create.data.email
+  results.contact.create.data[0].contact_user.phone_number = results.user.create.data.phone_number
 
   return frisby.create('update a contact')
     .put('/contacts/' + results.contact.create.data[0].id, results.contact.create.data[0].contact_user)
@@ -125,19 +125,19 @@ var updateContact = (cb) => {
     .expectJSON({
       code: 'OK',
       data: {
-        email: results.user.create.data.email,
+        email:        results.user.create.data.email,
         phone_number: results.user.create.data.phone_number,
-        type: "contact"
+        type:         'contact'
       }
     })
     .expectJSONTypes({
       code: String,
       data: contact_response
-    });
-};
+    })
+}
 
-var updateContactWorked = (cb) => {
-  results.user.create.data.type = 'compact_user';
+const updateContactWorked = (cb) => {
+  results.user.create.data.type = 'compact_user'
 
   return frisby.create('make sure update user was successful')
     .get('/contacts')
@@ -153,17 +153,17 @@ var updateContactWorked = (cb) => {
       code: String,
       data: [contact_response],
       info: info_response
-    });
-};
+    })
+}
 
-var updateContact404 = (cb) => {
+const updateContact404 = (cb) => {
   return frisby.create('expect 404 with invalid contact id when updating a contact')
     .put('/contacts/' + uuid.v1(), results.contact.create.data[0].contact_user)
     .after(cb)
-    .expectStatus(404);
-};
+    .expectStatus(404)
+}
 
-var patchContactProfileImage = (cb) => {
+const patchContactProfileImage = (cb) => {
   return frisby.create('update profile image url for a contact')
     .patch('/contacts/' + results.contact.create.data[0].id + '/profile_image_url', {
       profile_image_url: profile_image
@@ -179,10 +179,10 @@ var patchContactProfileImage = (cb) => {
     .expectJSONTypes({
       code: String,
       data: contact_response
-    });
-};
+    })
+}
 
-var patchContactProfileImageWorked = (cb) => {
+const patchContactProfileImageWorked = (cb) => {
   return frisby.create('get list of contacts and see if updated image uri is there')
     .get('/contacts')
     .after(cb)
@@ -197,19 +197,19 @@ var patchContactProfileImageWorked = (cb) => {
       code: String,
       data: [contact_response],
       info: info_response
-    });
-};
+    })
+}
 
-var patchContactProfileImage404 = (cb) => {
+const patchContactProfileImage404 = (cb) => {
   return frisby.create('expect 404 with invalid contact id when updating a profile image')
     .patch('/contacts/' + uuid.v1() + '/profile_image_url', {
       profile_image_url: profile_image
     })
     .after(cb)
-    .expectStatus(404);
-};
+    .expectStatus(404)
+}
 
-var patchContactCoverImage = (cb) => {
+const patchContactCoverImage = (cb) => {
   return frisby.create('update cover image url for a contact')
     .patch('/contacts/' + results.contact.create.data[0].id + '/cover_image_url', {
       cover_image_url: cover_image
@@ -225,10 +225,10 @@ var patchContactCoverImage = (cb) => {
     .expectJSONTypes({
       code: String,
       data: contact_response
-    });
-};
+    })
+}
 
-var patchContactCoverImageWorked = (cb) => {
+const patchContactCoverImageWorked = (cb) => {
   return frisby.create('get list of contacts and see if updated cover uri is there')
     .get('/contacts')
     .after(cb)
@@ -243,20 +243,20 @@ var patchContactCoverImageWorked = (cb) => {
       code: String,
       data: [contact_response],
       info: info_response
-    });
-};
+    })
+}
 
-var patchContactCoverImage404 = (cb) => {
+const patchContactCoverImage404 = (cb) => {
   return frisby.create('expect 404 with invalid contact id when updating a cover image')
     .patch('/contacts/' + uuid.v1() + '/cover_image_url', {
       cover_image_url: cover_image
     })
     .after(cb)
-    .expectStatus(404);
-};
+    .expectStatus(404)
+}
 
-var search = (cb) => {
-  results.user.create.data.type = 'compact_user';
+const search = (cb) => {
+  results.user.create.data.type = 'compact_user'
 
   return frisby.create('search contacts and see if the one we added is there')
     .get('/contacts/search?q[]=' + results.user.create.data.first_name)
@@ -276,42 +276,42 @@ var search = (cb) => {
       code: String,
       data: [contact_response],
       info: info_response
-    });
-};
+    })
+}
 
-var getByTag = (cb) => {
+const getByTag = (cb) => {
   return frisby.create('filter contacts by tags')
     .get('/contacts?tags=foo,bar')
     .after(cb)
     .expectStatus(200)
     .expectJSON({
       code: 'OK'
-    });
-};
+    })
+}
 
-var removeTag = (cb) => {
+const removeTag = (cb) => {
   return frisby.create('remove tag from a contact')
     .delete('/contacts/' + results.contact.create.data[0].id + '/tags/test')
     .expectStatus(204)
-    .after(cb);
-};
+    .after(cb)
+}
 
-var removeTag404 = (cb) => {
+const removeTag404 = (cb) => {
   return frisby.create('expect 404 with invalid id when removing a tag')
     .delete('/contacts/' + uuid.v1() + '/tags/test')
     .expectStatus(204)
-    .after(cb);
-};
+    .after(cb)
+}
 
-var deleteContact = (cb) => {
+const deleteContact = (cb) => {
   return frisby.create('delete a contact')
     .delete('/contacts/' + results.contact.create.data[0].id)
     .expectStatus(204)
-    .after(cb);
-};
+    .after(cb)
+}
 
-var deleteContactWorked = (cb) => {
-  var before_count = results.contact.getContact.info.count;
+const deleteContactWorked = (cb) => {
+  const before_count = results.contact.getContact.info.count
 
   return frisby.create('get list of contacts and make sure delete contact was successful')
     .get('/contacts')
@@ -322,8 +322,8 @@ var deleteContactWorked = (cb) => {
       info: {
         count: before_count - 1
       }
-    });
-};
+    })
+}
 
 module.exports = {
   create,
@@ -344,6 +344,7 @@ module.exports = {
   patchContactCoverImage404,
   search,
   removeTag,
+  removeTag404,
   deleteContact,
   deleteContactWorked
-};
+}

@@ -1,8 +1,8 @@
-'use strict';
+'use strict'
 
-var db = require('../lib/utils/db');
+const db = require('../lib/utils/db')
 
-var sql_up   = 'INSERT INTO tags(name) VALUES\
+const sql_up = 'INSERT INTO tags(name) VALUES\
   (\'buyer\'),\
   (\'seller\'),\
 (\'rental and lease\'),\
@@ -14,20 +14,20 @@ var sql_up   = 'INSERT INTO tags(name) VALUES\
   (\'title company\'),\
   (\'lawyer\'),\
   (\'contractor\'),\
-  (\'appraisal\');';
+  (\'appraisal\');'
 
-var sql_down = 'DELETE FROM tags';
+const sql_down = 'DELETE FROM tags'
 
-var runSql = (sql) => {
+const runSql = (sql) => {
   return (next) => {
-    db.conn( (err, client) => {
-      if(err)
-        return next(err);
+    db.conn((err, client) => {
+      if (err)
+        return next(err)
 
-      return client.query(sql, next);
-    });
-  };
-};
+      return client.query(sql, next)
+    })
+  }
+}
 
-exports.up = runSql(sql_up);
-exports.down = runSql(sql_down);
+exports.up = runSql(sql_up)
+exports.down = runSql(sql_down)

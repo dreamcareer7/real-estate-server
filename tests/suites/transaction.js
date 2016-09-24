@@ -1,15 +1,13 @@
-var uuid                 = require('node-uuid');
-var fs                   = require('fs');
-var path                 = require('path');
-var FormData             = require('form-data');
-var config               = require('../../lib/config.js');
-var transaction          = require('./data/transaction.js');
-var transaction_response = require('./expected_objects/transaction.js');
-var info_response        = require('./expected_objects/info.js');
+const uuid = require('node-uuid')
+const fs = require('fs')
+const path = require('path')
+const FormData = require('form-data')
+const transaction = require('./data/transaction.js')
+const transaction_response = require('./expected_objects/transaction.js')
 
-registerSuite('contact', ['create']);
+registerSuite('contact', ['create'])
 
-var create = (cb) => {
+const create = (cb) => {
   return frisby.create('create new transaction')
     .post('/transactions', transaction)
     .after(cb)
@@ -20,17 +18,17 @@ var create = (cb) => {
     .expectJSONTypes({
       code: String,
       data: transaction_response
-    });
-};
+    })
+}
 
-var create400 = (cb) => {
+const create400 = (cb) => {
   return frisby.create('expect 400 with empty model')
     .post('/transactions')
     .after(cb)
-    .expectStatus(400);
-};
+    .expectStatus(400)
+}
 
-var getTransaction = (cb) => {
+const getTransaction = (cb) => {
   return frisby.create('get transaction')
     .get('/transactions/' + results.transaction.create.data.id)
     .after(cb)
@@ -41,12 +39,12 @@ var getTransaction = (cb) => {
     .expectJSONTypes({
       code: String,
       data: transaction_response
-    });
-};
+    })
+}
 
-var addNote = (cb) => {
+const addNote = (cb) => {
   return frisby.create('add note to transaction')
-    .post('/transactions/' + results.transaction.create.data.id + '/notes',{note:'foo'})
+    .post('/transactions/' + results.transaction.create.data.id + '/notes', {note: 'foo'})
     .after(cb)
     .expectStatus(200)
     .expectJSON({
@@ -55,10 +53,10 @@ var addNote = (cb) => {
     .expectJSONTypes({
       code: String,
       data: transaction_response
-    });
-};
+    })
+}
 
-var getNotes = (cb) => {
+const getNotes = (cb) => {
   return frisby.create('get transaction notes')
     .get('/transactions/' + results.transaction.create.data.id + '/notes')
     .after(cb)
@@ -70,52 +68,52 @@ var getNotes = (cb) => {
     .expectJSONTypes({
       code: String,
       data: [{note: 'foo'}]
-    });
-};
+    })
+}
 
-var removeNote = (cb) => {
+const removeNote = (cb) => {
   return frisby.create('remove transaction notes')
     .delete('/transactions/' + results.transaction.create.data.id + '/notes/' + results.transaction.getNotes.data[0].id)
     .after(cb)
-    .expectStatus(204);
-};
+    .expectStatus(204)
+}
 
-var attach = (cb) => {
-  var form = new FormData();
-  var logoPath = path.resolve(__dirname, './data/logo.png');
-  var binaryData = [0xDE, 0xCA, 0xFB, 0xAD];
+const attach = (cb) => {
+  const form = new FormData()
+  const logoPath = path.resolve(__dirname, './data/logo.png')
+  const binaryData = [0xDE, 0xCA, 0xFB, 0xAD]
 
   form.append('buffer', new Buffer(binaryData), {
     contentType: 'application/octet-stream',
-    filename: 'logo.png'
-  });
+    filename:    'logo.png'
+  })
 
   form.append('image', fs.createReadStream(logoPath), {
     knownLength: fs.statSync(logoPath).size
-  });
+  })
 
   return frisby.create('attach file')
     .post('/transactions/' + results.transaction.create.data.id + '/attachments', form,
     {
-      json: false,
+      json:    false,
       headers: {
-        'authorization': 'Bearer ' + results.authorize.token.access_token,
-        'content-type': 'multipart/form-data; boundary=' + form.getBoundary(),
+        'authorization':  'Bearer ' + results.authorize.token.access_token,
+        'content-type':   'multipart/form-data; boundary=' + form.getBoundary(),
         'content-length': form.getLengthSync()
       }
     })
     .after(cb)
-    .expectStatus(200);
-};
+    .expectStatus(200)
+}
 
-var getTransaction404 = (cb) => {
+const getTransaction404 = (cb) => {
   return frisby.create('expect 404 with invalid transaction id when getting a transaction')
     .get('/transactions/' + uuid.v1())
     .after(cb)
-    .expectStatus(404);
-};
+    .expectStatus(404)
+}
 
-var getUserTransaction = (cb) => {
+const getUserTransaction = (cb) => {
   return frisby.create('create a transaction by user id')
     .get('/transactions/')
     .after(cb)
@@ -126,15 +124,15 @@ var getUserTransaction = (cb) => {
     .expectJSONTypes({
       code: String,
       data: [transaction_response]
-    });
-};
+    })
+}
 
-var assign = (cb) => {
+const assign = (cb) => {
   return frisby.create('assign contact to transaction')
     .post('/transactions/' + results.transaction.create.data.id + '/roles', {
       roles: [
         {
-          contact: results.contact.create.data[0].id,
+          contact:    results.contact.create.data[0].id,
           role_types: ['foo']
         }
       ]
@@ -147,10 +145,10 @@ var assign = (cb) => {
     .expectJSONTypes({
       code: String,
       data: transaction_response
-    });
-};
+    })
+}
 
-var assignWorked = (cb) => {
+const assignWorked = (cb) => {
   return frisby.create('make sure assign worked correctly')
     .get('/transactions/' + results.transaction.create.data.id)
     .after(cb)
@@ -166,33 +164,33 @@ var assignWorked = (cb) => {
           }
         ]
       }
-    });
-};
+    })
+}
 
-var assign400 = (cb) => {
+const assign400 = (cb) => {
   return frisby.create('expect 400 with empty model when assigning contact to transaction')
     .post('/transactions/' + results.transaction.create.data.id + '/roles')
     .after(cb)
-    .expectStatus(400);
-};
+    .expectStatus(400)
+}
 
-var assign404 = (cb) => {
+const assign404 = (cb) => {
   return frisby.create('expect 404 with invalid id when assigning contact to transaction')
     .post('/transactions/' + uuid.v1() + '/roles', {
       roles: [results.contact.create.data[0].id]
     })
     .after(cb)
-    .expectStatus(404);
-};
+    .expectStatus(404)
+}
 
-var withdraw = (cb) => {
+const withdraw = (cb) => {
   return frisby.create('withdraw transaction')
     .delete('/transactions/' + results.transaction.create.data.id + '/roles/' + results.contact.create.data[0].id)
     .after(cb)
-    .expectStatus(200);
-};
+    .expectStatus(200)
+}
 
-var withdrawWorked = (cb) => {
+const withdrawWorked = (cb) => {
   return frisby.create('make sure withdraw worked correctly')
     .get('/transactions/' + results.transaction.create.data.id)
     .after(cb)
@@ -202,27 +200,27 @@ var withdrawWorked = (cb) => {
       data: {
         roles: null
       }
-    });
-};
+    })
+}
 
-var withdraw404 = (cb) => {
+const withdraw404 = (cb) => {
   return frisby.create('expect 404 with invalid transaction id when withdrawing')
     .delete('/transactions/' + uuid.v1() + '/roles/' + results.contact.create.data[0].id)
     .after(cb)
-    .expectStatus(404);
-};
+    .expectStatus(404)
+}
 
-var withdraw404_2 = (cb) => {
+const withdraw404_2 = (cb) => {
   return frisby.create('expect 404 with invalid contact id when withdrawing')
     .delete('/transactions/' + results.transaction.create.data.id + '/roles/' + uuid.v1())
     .after(cb)
-    .expectStatus(404);
-};
+    .expectStatus(404)
+}
 
-var patchTransaction = (cb) => {
+const patchTransaction = (cb) => {
   return frisby.create('patch transaction')
     .put('/transactions/' + results.transaction.create.data.id, {
-      user: results.contact.create.data[0].contact_user.id,
+      user:             results.contact.create.data[0].contact_user.id,
       transaction_type: 'Seller'
     })
     .after(cb)
@@ -230,10 +228,10 @@ var patchTransaction = (cb) => {
     .expectJSONTypes({
       code: String,
       data: transaction_response
-    });
-};
+    })
+}
 
-var patchTransactionWorked = (cb) => {
+const patchTransactionWorked = (cb) => {
   return frisby.create('make sure patch transaction worked correctly')
     .get('/transactions/' + results.transaction.create.data.id)
     .after(cb)
@@ -241,24 +239,24 @@ var patchTransactionWorked = (cb) => {
     .expectJSON({
       code: 'OK',
       data: {transaction_type: 'Seller'}
-    });
-};
+    })
+}
 
-var patchTransaction404 = (cb) => {
+const patchTransaction404 = (cb) => {
   return frisby.create('expect 400 with empty model when patching a  transaction')
     .put('/transactions/' + uuid.v1())
     .after(cb)
-    .expectStatus(404);
-};
+    .expectStatus(404)
+}
 
-var remove = (cb) => {
+const remove = (cb) => {
   return frisby.create('remove a transaction')
     .delete('/transactions/' + results.transaction.create.data.id)
     .after(cb)
-    .expectStatus(204);
-};
+    .expectStatus(204)
+}
 
-var removeWorked = (cb) => {
+const removeWorked = (cb) => {
   return frisby.create('make sure remove worked')
     .get('/transactions/' + results.transaction.create.data.id)
     .after(cb)
@@ -267,15 +265,15 @@ var removeWorked = (cb) => {
       data: {
         deleted_at: Number
       }
-    });
-};
+    })
+}
 
-var remove404 = (cb) => {
+const remove404 = (cb) => {
   return frisby.create('expect 404 with invalid id when removing a transaction')
     .delete('/transactions/' + uuid.v1())
     .after(cb)
-    .expectStatus(404);
-};
+    .expectStatus(404)
+}
 
 module.exports = {
   create,
@@ -301,4 +299,4 @@ module.exports = {
   remove,
   removeWorked,
   remove404
-};
+}

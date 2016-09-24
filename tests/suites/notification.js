@@ -1,39 +1,38 @@
-var config = require('../../lib/config.js');
+const config = require('../../lib/config.js')
 
-var authorize_reponse = require('./data/user.js');
-var user = require('./data/user.js');
-var room = require('./data/room.js');
+const user = require('./data/user.js')
+const room = require('./data/room.js')
 
-registerSuite('transaction', ['create', 'assign']);
+registerSuite('transaction', ['create', 'assign'])
 
-var auth_params = {
-  client_id: config.tests.client_id,
+const auth_params = {
+  client_id:     config.tests.client_id,
   client_secret: config.tests.client_secret,
-  username: user.email,
-  password: user.password,
-  grant_type: 'password'
-};
+  username:      user.email,
+  password:      user.password,
+  grant_type:    'password'
+}
 
-var token = (cb) => {
+const token = (cb) => {
   return frisby.create('get token')
     .post('/oauth2/token', auth_params)
     .expectStatus(200)
     .after((err, res, json) => {
-      var setup = frisby.globalSetup();
+      const setup = frisby.globalSetup()
 
-      setup.request.headers['Authorization'] = 'Bearer ' + json.access_token;
+      setup.request.headers['Authorization'] = 'Bearer ' + json.access_token
 
-      frisby.globalSetup(setup);
-      cb(err, res);
+      frisby.globalSetup(setup)
+      cb(err, res)
     })
 }
 
-var notification_response = require('./expected_objects/notification.js');
-var info_response = require('./expected_objects/info.js');
-var user_response = require('./expected_objects/user.js');
-var uuid = require('node-uuid');
+const notification_response = require('./expected_objects/notification.js')
+const info_response = require('./expected_objects/info.js')
+const user_response = require('./expected_objects/user.js')
+const uuid = require('node-uuid')
 
-var getUsersNotification = (cb) => {
+const getUsersNotification = (cb) => {
   return frisby.create('get all notifications for a user')
     .get('/notifications')
     .after(cb)
@@ -54,7 +53,7 @@ var getUsersNotification = (cb) => {
     })
 }
 
-var getNotification = (cb) => {
+const getNotification = (cb) => {
   return frisby.create('get a notification by id')
     .get('/notifications/' + results.notification.getUsersNotification.data[0].id)
     .after(cb)
@@ -68,33 +67,33 @@ var getNotification = (cb) => {
     .expectJSONTypes({
       code: String,
       data: notification_response
-    });
+    })
 }
 
-var getNotification404 = (cb) => {
+const getNotification404 = (cb) => {
   return frisby.create('expect 404 with invalid notification id')
     .get('/notifications/' + uuid.v1())
     .after(cb)
-    .expectStatus(404);
+    .expectStatus(404)
 }
 
-var acknowledgeNotification = (cb) => {
+const acknowledgeNotification = (cb) => {
   return frisby.create('acknowledge notification')
     .delete('/notifications/' + results.notification.getUsersNotification.data[0].id)
     .after(cb)
     .expectStatus(204)
 }
 
-var acknowledgeNotification404 = (cb) => {
+const acknowledgeNotification404 = (cb) => {
   return frisby.create('expect 404 with invalid notification id')
     .delete('/notifications/' + uuid.v1())
     .after(cb)
     .expectStatus(404)
 }
 
-var pushNotification = (cb) => {
-  var token = require('./data/token.js')
-  var token_model = JSON.parse(JSON.stringify(token));
+const pushNotification = (cb) => {
+  const token = require('./data/token.js')
+  const token_model = JSON.parse(JSON.stringify(token))
   return frisby.create('register push')
     .post('/notifications/tokens', token_model)
     .after(cb)
@@ -110,10 +109,10 @@ var pushNotification = (cb) => {
     .expectJSONTypes({
       code: String,
       data: user_response
-    });
+    })
 }
 
-var cancelPushNotification = (cb) => {
+const cancelPushNotification = (cb) => {
   return frisby.create('cancel push')
     .delete('/notifications/tokens/' + results.notification.pushNotification.data.id)
     .after(cb)
@@ -129,10 +128,10 @@ var cancelPushNotification = (cb) => {
     .expectJSONTypes({
       code: String,
       data: user_response
-    });
+    })
 }
 
-var patchNotificationSettings = (cb) => {
+const patchNotificationSettings = (cb) => {
   console.log(results)
   return frisby.create('update notification settings')
     .patch('/rooms/' + results.notification.createRoom.data.id + '/notifications', {
@@ -142,16 +141,16 @@ var patchNotificationSettings = (cb) => {
     .expectStatus(200)
 }
 
-var patchNotificationSettings404 = (cb) => {
+const patchNotificationSettings404 = (cb) => {
   return frisby.create('expect 404 with invalid notification id')
     .patch('/room/' + uuid.v1() + '/notifications', {
-      notification: "true"
+      notification: 'true'
     })
     .after(cb)
     .expectStatus(404)
 }
 
-var createRoom = (cb) => {
+const createRoom = (cb) => {
   return frisby.create('create room')
     .post('/rooms', room)
     .after(cb)

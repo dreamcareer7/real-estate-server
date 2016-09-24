@@ -1,164 +1,166 @@
-var clui    = require('clui');
-var bytes = require('bytes');
+const clui    = require('clui')
+const bytes = require('bytes')
 
-var suites = {};
-var requests = [];
+const suites = {}
+const requests = []
 
-Error.autoReport = false;
+Error.autoReport = false
 
 function logger(req, res, next) {
-  var start = new Date().getTime();
+  const start = new Date().getTime()
 
-  var end = res.end;
+  const end = res.end
   res.end = function(data, encoding, callback) {
     requests.unshift({
-      method:req.method,
-      path:req.path,
-      responseStatus:res.statusCode,
-      elapsed: (new Date).getTime() - start,
-      length:data ? data.length : null
-    });
-    updateUI();
-    end.call(res, data, encoding, callback);
+      method:         req.method,
+      path:           req.path,
+      responseStatus: res.statusCode,
+      elapsed:        (new Date).getTime() - start,
+      length:         data ? data.length : null
+    })
+    updateUI()
+    end.call(res, data, encoding, callback)
   }
 
-  next();
+  next()
 }
 
-Run.on('spawn', (suite) => suites[suite].state = 'Running');
+Run.on('spawn', (suite) => suites[suite].state = 'Running')
 
 Run.on('message', (suite, message) => {
   if(message.code !== 'test done')
-    return ;
+    return 
 
-  suites[suite].tests.push(message.test);
+  suites[suite].tests.push(message.test)
 })
 
 Run.on('suite done', (suite) => {
-  suites[suite].state = 'Done';
-});
+  suites[suite].state = 'Done'
+})
 
-Run.on('app ready', (app) => app.use(logger));
+Run.on('app ready', (app) => app.use(logger))
 
 Run.on('register suite', (suite) => {
   suites[suite] = {
-    state:'Pending',
-    tests:[]
+    state: 'Pending',
+    tests: []
   }
 });
 
 
-['spawn', 'message', 'suite done', 'register suite'].map( (e) => Run.on(e, updateUI) );
+['spawn', 'message', 'suite done', 'register suite'].map( (e) => Run.on(e, updateUI) )
 
-var newline = () => new clui.Line(' ').fill();
+const newline = () => new clui.Line(' ').fill()
 function updateUI() {
-  var screen = new clui.LineBuffer({
-    x:0,
-    y:0,
-    width:'console',
-    height:'console'
-  });
+  const screen = new clui.LineBuffer({
+    x:      0,
+    y:      0,
+    width:  'console',
+    height: 'console'
+  })
 
-  screen.addLine(newline());
+  screen.addLine(newline())
 
   Object.keys(suites).forEach( (suite) => {
-    var result = suites[suite];
+    const result = suites[suite]
 
-    var line = new clui.Line(screen);
+    const line = new clui.Line(screen)
 
-    var icons = {
-      'Pending'  : '○',
-      'Running'  : '◌',
-      'Done'     : '●'
+    const icons = {
+      'Pending': '○',
+      'Running': '◌',
+      'Done':    '●'
     }
 
-    line.column( icons[result.state].green, 10);
+    line.column( icons[result.state].green, 10)
 
-    line.column( ('Suite: '+suite).green, 40);
+    line.column( ('Suite: '+suite).green, 40)
 
     if(result.state === 'Pending') {
       line.column('Pending'.yellow)
     } else {
-      var s = '';
+      let s = ''
 
       result.tests.forEach( (test) => {
         if(test.failed > 0)
-          s += '■'.red;
+          s += '■'.red
         else
-          s += '■'.green;
-      });
+          s += '■'.green
+      })
 
-      line.column(s, 40);
+      line.column(s, 40)
     }
-    line.fill();
-    line.store();
+    line.fill()
+    line.store()
 
 
-    if(!result) return ;
+    if(!result) return 
     result.tests.forEach( (test) => {
       if(test.failed < 1)
-        return ;
+        return 
 
-      var line = new clui.Line(screen);
-      line.padding(15).column(test.name.red, 600);
-      line.fill().store();
+      const line = new clui.Line(screen)
+      line.padding(15).column(test.name.red, 600)
+      line.fill().store()
 
       test.messages
       .filter( message => message !== 'Passed.' )
       .forEach( (message) => {
-        var line = new clui.Line(screen);
-        line.padding(20).column(message.red, 600);
-        line.fill().store();
+        const line = new clui.Line(screen)
+        line.padding(20).column(message.red, 600)
+        line.fill().store()
       })
-    });
+    })
   })
 
-  screen.addLine(newline());
+  screen.addLine(newline())
 
   requests.map( (req) => {
-    var line = new clui.Line(screen);
+    const line = new clui.Line(screen)
+
+    let statusColor, elapsedColor, lengthColor
 
     if(req.responseStatus > 499)
-      var statusColor = 'red';
+      statusColor = 'red'
     else
-      var statusColor = 'green';
+      statusColor = 'green'
 
     if(req.elapsed < 200) {
-      var elapsedColor = 'green';
+      elapsedColor = 'green'
     } else if(req.elapsed < 1000) {
-      var elapsedColor = 'yellow';
+      elapsedColor = 'yellow'
     } else {
-      var elapsedColor = 'red';
+      elapsedColor = 'red'
     }
 
     if(!req.length || req.length < 50000) {
-      var lengthColor = 'green';
+      lengthColor = 'green'
     } else if(req.length < 100000) {
-      var lengthColor = 'yellow';
+      lengthColor = 'yellow'
     } else {
-      var lengthColor = 'red';
+      lengthColor = 'red'
     }
 
-    var length = req.length;
+    let length = req.length
     if(length)
-      length = bytes(length, {decimalPlaces:0})[lengthColor];
+      length = bytes(length, {decimalPlaces: 0})[lengthColor]
     else
-      length = '';
+      length = ''
 
-    line.column((req.elapsed.toString()+'ms')[elapsedColor], 8);
-    line.column(length, 6);
-    line.column(req.responseStatus.toString()[statusColor], 5);
-    line.column(req.method.toUpperCase()[statusColor], 8);
-    line.column(req.path[statusColor]);
-    line.fill().store();
-  });
+    line.column((req.elapsed.toString()+'ms')[elapsedColor], 8)
+    line.column(length, 6)
+    line.column(req.responseStatus.toString()[statusColor], 5)
+    line.column(req.method.toUpperCase()[statusColor], 8)
+    line.column(req.path[statusColor])
+    line.fill().store()
+  })
 
-  process.stdout.write('\033[9A');
-  screen.fill(newline());
-  screen.output();
+  process.stdout.write('\033[9A')
+  screen.fill(newline())
+  screen.output()
 }
 
 module.exports = (program) => {
   if(!program.keep)
-    Run.on('done', process.exit);
+    Run.on('done', process.exit)
 }

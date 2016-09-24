@@ -1,9 +1,9 @@
-'use strict';
+'use strict'
 
-var async = require('async');
-var db = require('../lib/utils/db');
+const async = require('async')
+const db = require('../lib/utils/db')
 
-var up = [
+const up = [
   'UPDATE addresses set matrix_unique_id = NULL WHERE matrix_unique_id = -1;',
   'UPDATE properties set bedroom_count = NULL WHERE bedroom_count = -1;',
   'UPDATE properties set bathroom_count = NULL WHERE bathroom_count = -1.0;',
@@ -34,25 +34,25 @@ var up = [
   'UPDATE listings set original_price = NULL WHERE original_price = 0;',
   'UPDATE listings set association_fee = NULL WHERE association_fee = 0;',
   'UPDATE listings set unexempt_taxes = NULL WHERE unexempt_taxes = 0;'
-];
+]
 
-var down = [
-];
+const down = [
+]
 
-var runAll = (sqls, next) => {
-  db.conn( (err, client) => {
-    if(err)
-      return next(err);
+const runAll = (sqls, next) => {
+  db.conn((err, client) => {
+    if (err)
+      return next(err)
 
-    async.eachSeries(sqls, client.query.bind(client), next);
-  });
-};
+    async.eachSeries(sqls, client.query.bind(client), next)
+  })
+}
 
-var run = (queries) => {
+const run = (queries) => {
   return (next) => {
-    runAll(queries, next);
-  };
-};
+    runAll(queries, next)
+  }
+}
 
-exports.up = run(up);
-exports.down = run(down);
+exports.up = run(up)
+exports.down = run(down)

@@ -1,19 +1,13 @@
-var room = require('./data/room.js');
-var room_response = require('./expected_objects/room.js');
-var info_response = require('./expected_objects/info.js');
-var uuid = require('node-uuid');
-var cma = require('./data/cma.js');
-var cma_response = require('./expected_objects/cma.js');
-var listing_response = require('./expected_objects/listing.js');
+const uuid = require('node-uuid')
+const cma = require('./data/cma.js')
+const cma_response = require('./expected_objects/cma.js')
+const listing_response = require('./expected_objects/listing.js')
 
+const client = JSON.parse(JSON.stringify(cma))
 
-var client = JSON.parse(JSON.stringify(cma));
+registerSuite('room', ['create'])
 
-registerSuite('room', ['create']);
-
-var updated_room = 'updated_title';
-
-var create = (cb) => {
+const create = (cb) => {
   return frisby.create('create cma')
     .post('/rooms/' + results.room.create.data.id + '/cmas', client)
     .after(cb)
@@ -21,17 +15,17 @@ var create = (cb) => {
     .expectJSONTypes({
       code: String,
       data: cma_response
-    });
+    })
 }
 
-var create400 = (cb) => {
+const create400 = (cb) => {
   return frisby.create('expect 400 with empty model')
     .post('/rooms/' + results.room.create.data.id + '/cmas')
     .after(cb)
-    .expectStatus(400);
-};
+    .expectStatus(400)
+}
 
-var getListingsForCMA = (cb) => {
+const getListingsForCMA = (cb) => {
   return frisby.create('get CMA listings')
     .get('/rooms/' + results.room.create.data.id + '/cmas/' + results.cma.create.data.id + '/listings')
     .after(cb)
@@ -42,17 +36,17 @@ var getListingsForCMA = (cb) => {
     .expectJSONTypes({
       code: String,
       data: [listing_response]
-    });
+    })
 }
 
-var getListingsForCMA404 = (cb) => {
+const getListingsForCMA404 = (cb) => {
   return frisby.create('expect 404 with invalid cma id')
     .get('/rooms/' + results.room.create.data.id + '/cmas/' + uuid.v1() + '/listings')
     .after(cb)
-    .expectStatus(404);
+    .expectStatus(404)
 }
 
-var getCMAsForRoom = (cb) => {
+const getCMAsForRoom = (cb) => {
   return frisby.create('get room CMAs')
     .get('/rooms/' + results.room.create.data.id + '/cmas/')
     .after(cb)
@@ -64,33 +58,31 @@ var getCMAsForRoom = (cb) => {
     .expectJSONTypes({
       code: String,
       data: [cma_response]
-    });
+    })
 }
 
-var getCMAsForRoom404 = (cb) => {
+const getCMAsForRoom404 = (cb) => {
   return frisby.create('expect 404 with invalid room id')
     .get('/rooms/' + uuid.v1() + '/cmas/')
     .after(cb)
-    .expectStatus(404);
+    .expectStatus(404)
 }
 
-var deleteCMA = (cb) => {
-
+const deleteCMA = (cb) => {
   return frisby.create('delete CMA')
     .delete('/rooms/' + results.room.create.data.id + '/cmas/' + results.cma.create.data.id)
     .after(cb)
-    .expectStatus(204);
+    .expectStatus(204)
 }
 
-var deleteCMA404 = (cb) => {
-
+const deleteCMA404 = (cb) => {
   return frisby.create('expect 404 when cma has been already deleted')
     .delete('/rooms/' + results.room.create.data.id + '/cmas/' + uuid.v1())
     .after(cb)
-    .expectStatus(404);
+    .expectStatus(404)
 }
 
-var deleteCMAWorked = (cb) => {
+const deleteCMAWorked = (cb) => {
   return frisby.create('expect empty array when cma is deleted')
     .get('/rooms/' + results.room.create.data.id + '/cmas/')
     .after(cb)
@@ -102,7 +94,7 @@ var deleteCMAWorked = (cb) => {
     .expectJSONTypes({
       code: String,
       data: []
-    });
+    })
 }
 
 module.exports = {
@@ -115,4 +107,4 @@ module.exports = {
   deleteCMA,
   deleteCMA404,
   deleteCMAWorked
-};
+}

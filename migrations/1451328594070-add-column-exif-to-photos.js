@@ -1,20 +1,20 @@
-'use strict';
+'use strict'
 
-var db = require('../lib/utils/db');
+const db = require('../lib/utils/db')
 
-var sql_up   = 'ALTER TABLE photos ADD exif jsonb';
-var sql_down = 'ALTER TABLE photos DROP COLUMN exif;';
+const sql_up = 'ALTER TABLE photos ADD exif jsonb'
+const sql_down = 'ALTER TABLE photos DROP COLUMN exif;'
 
-var runSql = (sql) => {
+const runSql = (sql) => {
   return (next) => {
-    db.conn( (err, client) => {
-      if(err)
-        return next(err);
+    db.conn((err, client) => {
+      if (err)
+        return next(err)
 
-      return client.query(sql, next);
-    });
-  };
-};
+      return client.query(sql, next)
+    })
+  }
+}
 
-exports.up = runSql(sql_up);
-exports.down = runSql(sql_down);
+exports.up = runSql(sql_up)
+exports.down = runSql(sql_down)
