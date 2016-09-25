@@ -1,4 +1,5 @@
 const ascurl = require('request-as-curl')
+const async = require('async')
 
 let enableResponse
 
@@ -18,6 +19,20 @@ function logger (req, res, next) {
   next()
 }
 
+const exit = () => {
+  process.exit(3)
+}
+
+const slack = (messages, cb) => {
+  const text = 'Unit tests failed to run on BitBucket\n' + messages.join('\n')
+
+  Slack.send({
+    channel: 'development',
+    emoji: '💔',
+    text: text
+  }, cb)
+}
+
 module.exports = (program) => {
   enableResponse = !program.disableResponse
   Run.on('app ready', (app) => app.use(logger))
@@ -29,12 +44,22 @@ module.exports = (program) => {
     const failures = message.test.messages
       .filter(m => m !== 'Passed.')
 
+    if (failures.length < 1)
+      return
+
     failures.forEach(m => {
       console.log(m.red)
     })
 
-    if (failures.length > 0 && program.stopOnFail)
-      process.exit(3)
+    const tasks = []
+
+    if(program.slack)
+      tasks.push(slack.bind(null, failures))
+
+    if (program.stopOnFail)
+      tasks.push(exit)
+
+    async.series(tasks)
   })
 
   if (!program.keep)
