@@ -6,4 +6,4 @@ dependencies:
     - npm install --no-progress --dev
 test:
   override:
-    - node tests/run --curl --disable-ui --stop-on-fail
+    - node tests/run --curl --disable-response --stop-on-fail
