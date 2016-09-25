@@ -5,7 +5,7 @@ global.frisby = require('frisby')
 global.results = {}
 
 frisby.globalSetup({
-  timeout: 30000,
+  timeout: 90000,
   request: {
     json: true,
     baseUri: process.argv[3],
