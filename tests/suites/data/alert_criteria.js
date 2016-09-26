@@ -20,6 +20,7 @@ module.exports = {
   'property_subtypes': ['RES-Single Family', 'RES-Half Duplex', 'RES-Farm\/Ranch', 'RES-Condo', 'RES-Townhouse'],
   'listing_statuses': ['Active'],
   'open_house': false,
-  'pool': true
+  'pool': true,
+  'postal_codes': ['75219']
 }
 

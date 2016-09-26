@@ -34,5 +34,6 @@ module.exports = {
   listing_statuses: [
     'Active'
   ],
-  open_house: false
+  open_house: false,
+  postal_codes: ['75219']
 }

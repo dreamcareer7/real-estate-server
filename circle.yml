@@ -1,0 +1,9 @@
+machine:
+  node:
+    version: 6.3.0
+dependencies:
+  override:
+    - npm install --no-progress --dev
+test:
+  override:
+    - node tests/run --curl --disable-response --stop-on-fail
