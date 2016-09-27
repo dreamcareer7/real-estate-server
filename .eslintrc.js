@@ -56,7 +56,8 @@ const globals = [
   'Slack',
   'Facebook',
   'SocketServer',
-  'Twilio'
+  'Twilio',
+  'Poster'
 ]
 
 const global_object = {}
