@@ -28,7 +28,7 @@ module.exports = {
   'pool_features': v.optionalArray,
   'security_features': v.optionalArray,
   'bedroom_bathroom_features': Array,
-  'parking_spaces_covered_total': Number,
+  'parking_spaces_covered_total': v.optionalNumber,
   'half_bathroom_count': v.optionalNumber,
   'full_bathroom_count': v.optionalNumber,
   'heating': v.optionalArray,
