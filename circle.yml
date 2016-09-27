@@ -2,6 +2,8 @@ machine:
   node:
     version: 6.3.0
 dependencies:
+  pre:
+    - sudo apt-get update; sudo apt-get install redis
   override:
     - npm install --no-progress --dev
 test:
