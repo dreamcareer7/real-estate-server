@@ -1,9 +1,9 @@
 machine:
   node:
     version: 6.3.0
+  services:
+    - redis
 dependencies:
-  pre:
-    - sudo apt-get update; sudo apt-get install redis-server
   override:
     - npm install --no-progress --dev
 test:
