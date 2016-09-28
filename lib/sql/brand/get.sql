@@ -69,7 +69,11 @@ SELECT *,
   
   (
     SELECT ARRAY_AGG(hostname ORDER BY "default") FROM brands_hostnames WHERE brand = $1
-  ) AS hostnames
+  ) AS hostnames,
+
+  (
+    SELECT parent FROM brands_parents WHERE brand = $1
+  )
       
 FROM brands
 WHERE id = $1
