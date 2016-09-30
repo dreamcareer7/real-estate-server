@@ -1,21 +1,21 @@
-var spawn = require('child_process').exec;
-var mkdir = require('fs').mkdirSync;
+const spawn = require('child_process').exec
+const mkdir = require('fs').mkdirSync
 
 try {
-  mkdir('/tmp/rechat');
-} catch(e) {}
+  mkdir('/tmp/rechat')
+} catch (e) {}
 
-var c = spawn('node '+__dirname+'/../tests/run --docs > /tmp/rechat/index.html', function(err, out) {
-  console.log('Served on port', port);
-});
+const c = spawn('node ' + __dirname + '/../tests/run --docs > /tmp/rechat/index.html', function (err, out) {
+  console.log('Served on port', port)
+})
 
 c.stderr.pipe(process.stderr)
 
-var express = require('express');
-var app = express();
+const express = require('express')
+const app = express()
 
-var port = process.env.PORT || 3080;
-var http = require('http').Server(app);
+const port = process.env.PORT || 3080
+require('http').Server(app)
 
-app.use(express.static('/tmp/rechat'));
-app.listen(port);
+app.use(express.static('/tmp/rechat'))
+app.listen(port)

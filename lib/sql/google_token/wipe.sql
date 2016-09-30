@@ -1,1 +1,0 @@
-DELETE FROM google_tokens where "user" = $1;

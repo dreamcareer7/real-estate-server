@@ -3,4 +3,4 @@ module.exports = {
   client_type: 'Buyer',
   room_type: 'Group',
   status: 'New'
-};
+}

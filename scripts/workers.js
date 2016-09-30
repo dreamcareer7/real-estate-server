@@ -1,38 +1,38 @@
-require('./connection.js');
-require('colors');
+require('./connection.js')
+require('colors')
 
-var config = require('../lib/config.js');
-var queue  = require('../lib/utils/queue.js');
-var async  = require('async');
+const config = require('../lib/config.js')
+const queue = require('../lib/utils/queue.js')
+const async = require('async')
 
 // We have proper error handling here. No need for auto reports.
-Error.autoReport = false;
+Error.autoReport = false
 
-var airship = (job, done) => {
-  Notification.sendToDevice(job.data.notification, job.data.token, job.data.user_id, done);
-};
-
-var notification = (job, done) => {
-  Notification.create(job.data.notification, done);
-};
-
-var email = (job, done) => {
-  Mailgun.callMailgun(job.data, done);
-};
-
-var email_sane = (job, done) => {
-  Email.sendSane(job.data, done);
+const airship = (job, done) => {
+  Notification.sendToDevice(job.data.notification, job.data.token, job.data.user_id, done)
 }
 
-var ses = (job, done) => {
-  SES.callSES(job.data, done);
-};
+const notification = (job, done) => {
+  Notification.create(job.data.notification, done)
+}
 
-var sms = (job, done) => {
-  Twilio.callTwilio(job.data, done);
-};
+const email = (job, done) => {
+  Mailgun.callMailgun(job.data, done)
+}
 
-var queues = {
+const email_sane = (job, done) => {
+  Email.sendSane(job.data, done)
+}
+
+const ses = (job, done) => {
+  SES.callSES(job.data, done)
+}
+
+const sms = (job, done) => {
+  Twilio.callTwilio(job.data, done)
+}
+
+const queues = {
   airship_transport_send_device: {
     handler: airship,
     parallel: config.airship.parallel
@@ -52,7 +52,7 @@ var queues = {
     handler: email_sane,
     parallel: config.email.parallel
   },
-  
+
   email_ses: {
     handler: ses,
     parallel: config.email.parallel
@@ -62,13 +62,13 @@ var queues = {
     handler: sms,
     parallel: config.twilio.parallel
   }
-};
+}
 
-Object.keys(queues).forEach( queue_name => {
-  var definition = queues[queue_name];
+Object.keys(queues).forEach(queue_name => {
+  const definition = queues[queue_name]
 
-  var reportError = err => {
-    var text = '🗑 Worker Error: '+queue_name+' \n :memo: `'+JSON.stringify(err)+'`';
+  const reportError = err => {
+    const text = '🗑 Worker Error: ' + queue_name + ' \n :memo: `' + JSON.stringify(err) + '`'
 
     Slack.send({
       channel: 'server-errors',
@@ -77,53 +77,52 @@ Object.keys(queues).forEach( queue_name => {
     })
   }
 
-  var handler = (job, done) => {
-    var examine = err => {
-      if(err)
-        reportError(err);
+  const handler = (job, done) => {
+    const examine = err => {
+      if (err)
+        reportError(err)
 
-      done(err);
+      done(err)
     }
 
-    definition.handler(job, examine);
+    definition.handler(job, examine)
   }
 
-  queue.process(queue_name, definition.parallel, handler);
-});
+  queue.process(queue_name, definition.parallel, handler)
+})
 
-setInterval(reportQueueStatistics, 10000);
+setInterval(reportQueueStatistics, 10000)
 
-function reportQueueStatistics() {
-  queue.inactiveCount( (err, count) => {
-    if(err)
-      return Metric.set('inactive_jobs', 99999);
+function reportQueueStatistics () {
+  queue.inactiveCount((err, count) => {
+    if (err)
+      return Metric.set('inactive_jobs', 99999)
 
-    return Metric.set('inactive_jobs', count);
-  });
-}
-
-reportQueueStatistics();
-
-
-var sendNotifications = function() {
-  async.series([
-    Notification.sendPushForUnread,
-    Message.sendEmailForUnread,
-  ], err => {
-    if(err) {
-      console.log(err);
-
-      var text = '🔔 Error while sending notifications: \n :memo: `'+JSON.stringify(err)+'` \n --- \n';
-
-      Slack.send({
-        channel:'server-errors',
-        text: text,
-        emoji:'💀'
-      });
-    }
-
-    setTimeout(sendNotifications, 1000);
+    return Metric.set('inactive_jobs', count)
   })
 }
 
-sendNotifications();
+reportQueueStatistics()
+
+const sendNotifications = function () {
+  async.series([
+    Notification.sendPushForUnread,
+    Message.sendEmailForUnread
+  ], err => {
+    if (err) {
+      console.log(err)
+
+      const text = '🔔 Error while sending notifications: \n :memo: `' + JSON.stringify(err) + '` \n --- \n'
+
+      Slack.send({
+        channel: 'server-errors',
+        text: text,
+        emoji: '💀'
+      })
+    }
+
+    setTimeout(sendNotifications, 1000)
+  })
+}
+
+sendNotifications()

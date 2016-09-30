@@ -1,10 +1,10 @@
-//register dependencies
+// register dependencies
 registerSuite('room', ['create'])
 
-var invitation_response = require('./expected_objects/invitation.js');
-var info_response = require('./expected_objects/info.js');
+const invitation_response = require('./expected_objects/invitation.js')
+const info_response = require('./expected_objects/info.js')
 
-var create = (cb) => {
+const create = (cb) => {
   return frisby.create('create invitation')
     .post('/invitations/', {
       invitations: [{
@@ -15,7 +15,7 @@ var create = (cb) => {
         invitee_first_name: results.user.create.data.first_name,
         invitee_last_name: results.user.create.data.last_name,
         room: results.room.create.data.id,
-        url: ""
+        url: ''
       }]
     })
     .after(cb)
@@ -35,14 +35,14 @@ var create = (cb) => {
       code: String,
       data: [invitation_response],
       info: info_response
-    });
+    })
 }
 
-var create400 = (cb) => {
+const create400 = (cb) => {
   return frisby.create('expect 400 with empty model')
     .post('/invitations/')
     .after(cb)
-    .expectStatus(400);
+    .expectStatus(400)
 }
 
 module.exports = {

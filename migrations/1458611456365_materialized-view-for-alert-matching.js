@@ -1,9 +1,9 @@
-'use strict';
+'use strict'
 
-var async = require('async');
-var db = require('../lib/utils/db');
+const async = require('async')
+const db = require('../lib/utils/db')
 
-var create = "CREATE MATERIALIZED VIEW listings_filters AS SELECT \
+const create = 'CREATE MATERIALIZED VIEW listings_filters AS SELECT \
   listings.id as id, \
   listings.status as status, \
   listings.price as price, \
@@ -23,35 +23,35 @@ FROM listings \
 JOIN \
   properties ON listings.property_id = properties.id \
 JOIN \
-  addresses  ON properties.address_id = addresses.id";
+  addresses  ON properties.address_id = addresses.id'
 
-var up = [
+const up = [
   'BEGIN',
   create,
   'CREATE UNIQUE INDEX listings_filters_id ON listings_filters(id)',
   'CREATE INDEX listings_filters_location ON listings_filters USING GIST (location)',
   'CREATE INDEX listings_filters_status ON listings_filters (status)',
   'COMMIT'
-];
+]
 
-var down = [
+const down = [
   'DROP MATERIALIZED VIEW listings_filters'
-];
+]
 
-var runAll = (sqls, next) => {
-  db.conn( (err, client) => {
-    if(err)
-      return next(err);
+const runAll = (sqls, next) => {
+  db.conn((err, client) => {
+    if (err)
+      return next(err)
 
-    async.eachSeries(sqls, client.query.bind(client), next);
-  });
-};
+    async.eachSeries(sqls, client.query.bind(client), next)
+  })
+}
 
-var run = (queries) => {
+const run = (queries) => {
   return (next) => {
-    runAll(queries, next);
-  };
-};
+    runAll(queries, next)
+  }
+}
 
-exports.up = run(up);
-exports.down = run(down);
+exports.up = run(up)
+exports.down = run(down)

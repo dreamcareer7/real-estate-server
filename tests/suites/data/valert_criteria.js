@@ -17,11 +17,11 @@ module.exports = {
   maximum_year_built: 2015,
   minimum_year_built: 0,
   points: [
-    { longitude: -96.8137143351765, latitude: 32.86503819566057 },
-    { longitude: -96.78265638744912, latitude: 32.86503819566057 },
-    { longitude: -96.78265638744912, latitude: 32.81862570220059 },
-    { longitude: -96.8137143351765, latitude: 32.81862570220059 },
-    { longitude: -96.8137143351765, latitude: 32.86503819566057 } ],
+    {longitude: -96.8137143351765, latitude: 32.86503819566057},
+    {longitude: -96.78265638744912, latitude: 32.86503819566057},
+    {longitude: -96.78265638744912, latitude: 32.81862570220059},
+    {longitude: -96.8137143351765, latitude: 32.81862570220059},
+    {longitude: -96.8137143351765, latitude: 32.86503819566057}],
   minimum_bedrooms: 0,
   minimum_price: 0,
   property_subtypes: [
@@ -34,5 +34,6 @@ module.exports = {
   listing_statuses: [
     'Active'
   ],
-  open_house: false
-};
+  open_house: false,
+  postal_codes: ['75219']
+}

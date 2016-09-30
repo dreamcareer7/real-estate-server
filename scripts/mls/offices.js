@@ -1,28 +1,25 @@
 #!/usr/bin/env node
-var Client = require('./rets_client.js');
-var colors = require('colors');
-var async = require('async');
-var util = require('util');
-var config = require('../../lib/config.js');
+const Client = require('./rets_client.js')
+const async = require('async')
 
-Error.autoReport = false;
+Error.autoReport = false
 
-var program = require('./program.js');
-var options = program.parse(process.argv);
+const program = require('./program.js')
+const options = program.parse(process.argv)
 
-options.resource = 'Office';
-options.class = 'Office';
-options.job = 'offices';
+options.resource = 'Office'
+options.class = 'Office'
+options.job = 'offices'
 
-options.processor = processData;
+options.processor = processData
 
-Client.work(options, report);
+Client.work(options, report)
 
-function processData(cb, results) {
-  async.forEach(results.mls, upsert, cb);
+function processData (cb, results) {
+  async.forEach(results.mls, upsert, cb)
 }
 
-function map(mls_office) {
+function map (mls_office) {
   return {
     board: mls_office.Board,
     email: mls_office.Email,
@@ -59,27 +56,27 @@ function map(mls_office) {
   }
 }
 
-var upsert = function (office, cb) {
-  Metric.increment('mls.processed_office');
+const upsert = function (office, cb) {
+  Metric.increment('mls.processed_office')
   Office.getByMUI(office.Matrix_Unique_ID, function (err, id) {
     if (err && err.code !== 'ResourceNotFound')
-      return cb(err);
+      return cb(err)
 
     if (err && err.code === 'ResourceNotFound') {
-      Metric.increment('mls.new_offices');
+      Metric.increment('mls.new_offices')
 
-      Office.create(map(office), cb);
-      return;
+      Office.create(map(office), cb)
+      return
     }
 
-    Metric.increment('mls.updated_offices');
-    Office.update(id, map(office), cb);
-  });
+    Metric.increment('mls.updated_offices')
+    Office.update(id, map(office), cb)
+  })
 }
 
-function report(err) {
-  if(err)
-    console.log(err);
+function report (err) {
+  if (err)
+    console.log(err)
 
-  process.exit();
+  process.exit()
 }

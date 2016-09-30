@@ -13,6 +13,6 @@ module.exports = {
   profile_image_thumbnail_url: 'http://rechat.com/profile_image_thumbnail_url/profile_image_thumbnail_url.png',
   user_code: 123,
   address: {
-    title:'foo'
+    title: 'foo'
   }
-};
+}

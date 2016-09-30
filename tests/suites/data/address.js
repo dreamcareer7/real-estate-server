@@ -12,4 +12,4 @@ module.exports = {
   unit_number: '12D',
   country: 'United States',
   country_code: 'USA'
-};
+}

@@ -1,20 +1,20 @@
-'use strict';
+'use strict'
 
-var db = require('../lib/utils/db');
+const db = require('../lib/utils/db')
 
-var sql_up   = 'DROP INDEX IF EXISTS contacts_tags_contact_tag_idx;';
-var sql_down = 'CREATE UNIQUE INDEX IF NOT EXISTS contacts_tags_contact_tag_idx on contacts_tags(contact, tag);';
+const sql_up = 'DROP INDEX IF EXISTS contacts_tags_contact_tag_idx;'
+const sql_down = 'CREATE UNIQUE INDEX IF NOT EXISTS contacts_tags_contact_tag_idx on contacts_tags(contact, tag);'
 
-var runSql = (sql) => {
+const runSql = (sql) => {
   return (next) => {
-    db.conn( (err, client) => {
-      if(err)
-        return next(err);
+    db.conn((err, client) => {
+      if (err)
+        return next(err)
 
-      return client.query(sql, next);
-    });
-  };
-};
+      return client.query(sql, next)
+    })
+  }
+}
 
-exports.up = runSql(sql_up);
-exports.down = runSql(sql_down);
+exports.up = runSql(sql_up)
+exports.down = runSql(sql_down)

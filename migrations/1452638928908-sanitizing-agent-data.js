@@ -1,9 +1,9 @@
-'use strict';
+'use strict'
 
-var async = require('async');
-var db = require('../lib/utils/db');
+const async = require('async')
+const db = require('../lib/utils/db')
 
-var up = [
+const up = [
   'ALTER TABLE agents ALTER COLUMN email DROP NOT NULL;',
   'UPDATE agents SET email = CASE WHEN LENGTH(email) = 0 THEN NULL ELSE email END, \
 fax = CASE WHEN LENGTH(fax) = 0 THEN NULL ELSE fax END, \
@@ -15,26 +15,26 @@ phone_number = CASE WHEN LENGTH(phone_number) = 0 THEN NULL ELSE phone_number EN
 nar_number = CASE WHEN LENGTH(nar_number) = 0 THEN NULL ELSE nar_number END, \
 work_phone = CASE WHEN LENGTH(work_phone) = 0 THEN NULL ELSE work_phone END, \
 generational_name = CASE WHEN LENGTH(generational_name) = 0 THEN NULL ELSE generational_name END;'
-];
+]
 
-var down = [
+const down = [
   'ALTER TABLE agents ALTER COLUMN email SET NOT NULL;'
-];
+]
 
-var runAll = (sqls, next) => {
-  db.conn( (err, client) => {
-    if(err)
-      return next(err);
+const runAll = (sqls, next) => {
+  db.conn((err, client) => {
+    if (err)
+      return next(err)
 
-    async.eachSeries(sqls, client.query.bind(client), next);
-  });
-};
+    async.eachSeries(sqls, client.query.bind(client), next)
+  })
+}
 
-var run = (queries) => {
+const run = (queries) => {
   return (next) => {
-    runAll(queries, next);
-  };
-};
+    runAll(queries, next)
+  }
+}
 
-exports.up = run(up);
-exports.down = run(down);
+exports.up = run(up)
+exports.down = run(down)

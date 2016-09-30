@@ -1,13 +1,13 @@
-var room = require('./data/room.js');
-var room_response = require('./expected_objects/room.js');
-var info_response = require('./expected_objects/info.js');
-var uuid = require('node-uuid');
+const room = require('./data/room.js')
+const room_response = require('./expected_objects/room.js')
+const info_response = require('./expected_objects/info.js')
+const uuid = require('node-uuid')
 
-registerSuite('user', ['create']);
+registerSuite('user', ['create'])
 
-var updated_room = 'updated_title';
+const updated_room = 'updated_title'
 
-var create = (cb) => {
+const create = (cb) => {
   return frisby.create('create room')
     .post('/rooms', room)
     .after(cb)
@@ -19,19 +19,19 @@ var create = (cb) => {
     .expectJSONTypes({
       code: String,
       data: room_response
-    });
+    })
 }
 
-var create400 = (cb) => {
+const create400 = (cb) => {
   return frisby.create('expect 400 with empty model when creating a room')
     .post('/rooms')
     .after(cb)
-    .expectStatus(400);
+    .expectStatus(400)
 }
 
-var getRoom = (cb) => {
-  var room = JSON.parse(JSON.stringify(results.room.create.data));
-  delete room.latest_message;
+const getRoom = (cb) => {
+  const room = JSON.parse(JSON.stringify(results.room.create.data))
+  delete room.latest_message
 
   return frisby.create('get room')
     .get('/rooms/' + results.room.create.data.id)
@@ -44,17 +44,17 @@ var getRoom = (cb) => {
     .expectJSONTypes({
       code: String,
       data: room_response
-    });
+    })
 }
 
-var getRoom404 = (cb) => {
+const getRoom404 = (cb) => {
   return frisby.create('expect 404 with invalid room id when getting a room')
     .get('/rooms/' + uuid.v1())
     .after(cb)
-    .expectStatus(404);
+    .expectStatus(404)
 }
 
-var getRoomMedia = (cb) => {
+const getRoomMedia = (cb) => {
   return frisby.create('get room\'s media')
     .get('/rooms/' + results.room.create.data.id + '/media')
     .after(cb)
@@ -68,17 +68,17 @@ var getRoomMedia = (cb) => {
       code: String,
       data: Array,
       info: info_response
-    });
+    })
 }
 
-var getRoomMedia404 = (cb) => {
+const getRoomMedia404 = (cb) => {
   return frisby.create('expect 404 with invalid room id when getting room\'s media')
     .get('/rooms/' + uuid.v1() + '/media')
     .after(cb)
-    .expectStatus(404);
+    .expectStatus(404)
 }
 
-var getUserRooms = (cb) => {
+const getUserRooms = (cb) => {
   return frisby.create('get a user\'s rooms')
     .get('/rooms')
     .after(cb)
@@ -91,12 +91,12 @@ var getUserRooms = (cb) => {
       code: String,
       data: [room_response],
       info: info_response
-    });
+    })
 }
 
-var addUser = (cb) => {
+const addUser = (cb) => {
   return frisby.create('add user to a room')
-    .post('/rooms/' + results.room.create.data.id + '/users', {user:[
+    .post('/rooms/' + results.room.create.data.id + '/users', {user: [
       results.user.create.data.id
     ]})
     .after(cb)
@@ -108,31 +108,17 @@ var addUser = (cb) => {
     .expectJSONTypes({
       code: String,
       data: room_response
-    });
+    })
 }
 
-var addUser400 = (cb) => {
+const addUser400 = (cb) => {
   return frisby.create('expect 400 with empty model when adding user to a room')
     .post('/rooms/' + results.room.create.data.id + '/users')
     .after(cb)
-    .expectStatus(400);
+    .expectStatus(400)
 }
 
-var removeUser = (cb) => {
-  return frisby.create('remove user from a room')
-    .delete('/rooms/' + results.room.create.data.id + '/users/' + results.authorize.token.data.id)
-    .after(cb)
-    .expectStatus(204);
-}
-
-var removeUser404 = (cb) => {
-  return frisby.create('expect 404 with invalid user id when removing user from a room')
-    .delete('/rooms/' + results.room.create.data.id + '/users/' + uuid.v1())
-    .after(cb)
-    .expectStatus(404);
-}
-
-var removeUserWorked = (cb) => {
+const removeUserWorked = (cb) => {
   return frisby.create('get a user\'s rooms')
     .get('/rooms')
     .after(cb)
@@ -144,18 +130,18 @@ var removeUserWorked = (cb) => {
       code: String,
       data: [],
       info: info_response
-    });
+    })
 }
 
-var removeUserFromPersonal = (cb) => {
+const removeUserFromPersonal = (cb) => {
   return frisby.create('remove user from his personal room')
     .delete('/rooms/' + results.user.create.data.personal_room + '/users/' + results.authorize.token.data.id)
     .after(cb)
-    .expectStatus(406);
+    .expectStatus(406)
 }
 
-var patchRoom = (cb) => {
-  room.title = updated_room;
+const patchRoom = (cb) => {
+  room.title = updated_room
   return frisby.create('patch a room')
     .put('/rooms/' + results.room.create.data.id, room)
     .after(cb)
@@ -167,18 +153,18 @@ var patchRoom = (cb) => {
     .expectJSONTypes({
       code: String,
       data: room_response
-    });
+    })
 }
 
-var patchRoom404 = (cb) => {
+const patchRoom404 = (cb) => {
   return frisby.create('expect 404 with invalid toom id when updating a room')
     .put('/rooms/' + uuid.v1(), room)
     .after(cb)
     .expectStatus(404)
 }
 
-var patchRoomWorked = (cb) => {
-  room.title = updated_room;
+const patchRoomWorked = (cb) => {
+  room.title = updated_room
   return frisby.create('get room')
     .get('/rooms/' + results.room.create.data.id)
     .after(cb)
@@ -192,38 +178,38 @@ var patchRoomWorked = (cb) => {
     .expectJSONTypes({
       code: String,
       data: room_response
-    });
+    })
 }
 
-var removeUser = (cb) => {
+const removeUser = (cb) => {
   return frisby.create('remove user from a room')
     .delete('/rooms/' + results.room.create.data.id + '/users/' + results.authorize.token.data.id)
     .expectStatus(204)
-    .after(cb);
+    .after(cb)
 }
 
-var removeUser404 = (cb) => {
+const removeUser404 = (cb) => {
   return frisby.create('expect 404 with invalid user id when removing a user from a room')
     .delete('/rooms/' + results.room.create.data.id + '/users/' + uuid.v1())
     .expectStatus(404)
-    .after(cb);
+    .after(cb)
 }
 
-var deleteRoom = (cb) => {
+const deleteRoom = (cb) => {
   return frisby.create('delete room')
     .delete('/rooms/' + results.room.create.data.id)
     .expectStatus(204)
-    .after(cb);
+    .after(cb)
 }
 
-var deleteRoom404 = (cb) => {
+const deleteRoom404 = (cb) => {
   return frisby.create('expect 404 when deleting invalid room')
     .delete('/rooms/' + uuid.v1())
     .expectStatus(404)
-    .after(cb);
+    .after(cb)
 }
 
-var deleteRoomWorked = (cb) => {
+const deleteRoomWorked = (cb) => {
   return frisby.create('get room')
     .get('/rooms/' + results.room.create.data.id)
     .after(cb)
@@ -232,14 +218,14 @@ var deleteRoomWorked = (cb) => {
       code: 'OK'
     })
     .expectJSONTypes({
-      data:{
+      data: {
         deleted_at: Number
       }
     })
     .expectJSONTypes({
       code: String,
       data: room_response
-    });
+    })
 }
 
 module.exports = {
@@ -261,5 +247,5 @@ module.exports = {
   patchRoomWorked,
   deleteRoom,
   deleteRoom404,
-  deleteRoomWorked,
-};
+  deleteRoomWorked
+}

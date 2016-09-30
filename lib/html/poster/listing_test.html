@@ -1,0 +1,47 @@
+<style>
+  body {
+    width: 100%;
+    height: 100%;
+    background-image: url('{{listing.cover_image_url}}');
+    background-size: contain;
+    background-repeat: no-repeat;
+  }
+  
+  button {
+    background: green;
+    padding: 5px;
+    color: white;
+    margin: 200px;
+    font-size: 20px;
+  }
+  
+  img {
+    width: 160px;
+    height: 160px;
+    border-radius: 2000px;
+  }
+  
+  div {
+    background: rgba(100,100,100,0.8);
+    display: inline-block;
+    color: white;
+    float: left;
+    margin-top: 20px
+  }
+</style>
+
+<body>
+  <button>
+    Active
+  </button>
+  
+  <button>
+    Open House
+  </button>
+  
+  <div>
+    {{user.first_name}} &nbsp; {{user.last_name}}
+    <br>
+    <img src="{{user.profile_image_url}}" />
+  </div>
+</body>
