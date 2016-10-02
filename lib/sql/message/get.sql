@@ -23,7 +23,7 @@ SELECT 'message' AS type,
        ) AS acked_by,
 
        (
-        SELECT JSON_AGG("user") FROM deliveries
+        SELECT JSON_AGG(deliveries) FROM deliveries
        ) AS deliveries,
 
        EXTRACT(EPOCH FROM created_at) AS created_at,
