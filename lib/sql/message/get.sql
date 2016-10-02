@@ -1,3 +1,13 @@
+WITH issued_notification AS (
+  SELECT id FROM notifications WHERE object_class = 'Message' AND object = $1
+),
+
+deliveries AS (
+  SELECT
+    "user", type AS delivery_type
+  FROM notifications_deliveries WHERE notification IN ( SELECT id FROM issued_notification )
+)
+
 SELECT 'message' AS type,
        *,
        (
@@ -7,10 +17,14 @@ SELECT 'message' AS type,
        ) AS attachments,
 
        (
-        SELECT count(*) FROM notifications_users WHERE acked_at IS NOT NULL AND notification IN(
-          SELECT id FROM notifications WHERE object_class = 'Message' AND object = $1
+        SELECT ARRAY_AGG("user") FROM notifications_users WHERE acked_at IS NOT NULL AND notification IN(
+          SELECT id FROM issued_notification
         )
-       ) as ack_count,
+       ) AS acked_by,
+
+       (
+        SELECT JSON_AGG("user") FROM deliveries
+       ) AS deliveries,
 
        EXTRACT(EPOCH FROM created_at) AS created_at,
        EXTRACT(EPOCH FROM updated_at) AS updated_at
