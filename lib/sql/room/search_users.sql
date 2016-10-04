@@ -11,7 +11,9 @@ WITH p AS (
     SELECT room
     FROM rooms_users
     WHERE "user" = $1
-  ) AND rooms.room_type <> 'Personal'
+  )
+  AND rooms.room_type <> 'Personal'
+  AND rooms.deleted_at IS NULL
   GROUP BY rooms_users.room,
            rooms.room_type,
            rooms.updated_at
