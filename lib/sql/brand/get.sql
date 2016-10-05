@@ -68,7 +68,7 @@ SELECT *,
   ) AS roles,
   
   (
-    SELECT ARRAY_AGG(hostname ORDER BY "default") FROM brands_hostnames WHERE brand = $1
+    SELECT ARRAY_AGG(hostname ORDER BY "default" DESC) FROM brands_hostnames WHERE brand = $1
   ) AS hostnames,
 
   (
