@@ -83,10 +83,11 @@ function _fetchImage(mui, cb) {
 var fetchImage = async.queue(_fetchImage, options.downloadConcurrency || 20);
 
 function processPhoto(photo, cb) {
-  console.log('Processing', photo)
   fetchImage.push(photo.matrix_unique_id, (err, data) => {
     if(err)
       return cb(err);
+
+    console.log('Processing', photo, data)
 
     saveImage.push({
       photo:photo,
