@@ -8,7 +8,7 @@ const up = [
 ]
 
 const down = [
-  "ALTER TABLE users ADD user_code integer NOT NULL DEFAULT nextval('users_user_code_seq')"
+  'ALTER TABLE users ADD user_code integer NOT NULL DEFAULT nextval(\'users_user_code_seq\')'
 ]
 
 const runAll = (sqls, next) => {
