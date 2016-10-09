@@ -17,12 +17,10 @@ module.exports = {
   'cover_image_thumbnail_url': v.optionalString,
   'email_confirmed': Boolean,
   'timezone': String,
-  'user_code': Number,
   'user_type': String,
   'deleted_at': v.optionalString,
   'phone_confirmed': Boolean,
   'current_time': String,
   'push_allowed': Boolean,
   'address': v.optionalString,
-  'invitation_url': String
 }
