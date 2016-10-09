@@ -87,8 +87,6 @@ function processPhoto(photo, cb) {
     if(err)
       return cb(err);
 
-    console.log('Processing', photo, data)
-
     saveImage.push({
       photo:photo,
       data:data
