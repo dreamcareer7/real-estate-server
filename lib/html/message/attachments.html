@@ -1,0 +1,35 @@
+<tr>
+  <td class="p-0" style="padding:0 0 0 54px;">
+    <table class="table-center" width="100%" cellpadding="0" cellspacing="0">
+      <tr>
+        <td style="padding:0 0 17px;">
+          <table width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+              {% for attachment in message.attachments %}
+                <th class="flex" width="150" align="left" style="vertical-align:top; padding:0;">
+                  <table width="100%" cellpadding="0" cellspacing="0">
+                    <tr>
+                      <td style="padding:0 0 6px;">
+                        <a style="text-decoration:none;" target="_blank" href="{{attachment.url}}">
+                          <img src="{{attachment.preview_url}}" width="150" style="width:150px; vertical-align:top;" alt="" />
+                        </a>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style="font:14px/17px Lato, Arial, Helvetica, sans-serif; color:#8696a4;">
+                        <a style="color:#8696a4; text-decoration:none;" target="_blank" href="{{attachment.url}}">
+                          {{ attachment.info.original_name | truncate(20, true, '...') }}
+                        </a>
+                      </td>
+                    </tr>
+                  </table>
+                </th>
+                <th class="flex" width="20" height="20" style="padding:0;"></th>
+              {% endfor %}
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </td>
+</tr>
