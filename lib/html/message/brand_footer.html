@@ -1,0 +1,61 @@
+<tr>
+  <td style="padding:0 0 20px;">
+    <table width="100%" cellpadding="0" cellspacing="0">
+      <tr>
+        <td class="plr-10" bgcolor="#263445" style="padding:40px 30px 52px; border-radius:3px;">
+          <table width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+              <td align="center" style="padding:0 0 22px;">
+                <img src="{{brand.users[0].profile_image_url}}" width="200" style="width:200px; vertical-align:top; border-radius: 100%" alt="" />
+              </td>
+            </tr>
+            <tr>
+              <td class="serif" align="center" style="font:700 22px/28px Georgia, Times New Roman, Times, serif; color:#fff;">
+                {{brand.users[0].display_name}}
+              </td>
+            </tr>
+            <tr>
+              <td align="center" style="padding:0 0 8px; font:bold 14px/17px Lato, Arial, Helvetica, sans-serif; color:#8696a4;">
+                Agent, {{brand.message.office_title}}
+              </td>
+            </tr>
+            <tr>
+              <td align="center" style="padding:0 0 50px; font:12px/15px Lato, Arial, Helvetica, sans-serif; color:#8696a4;">
+                {% if brand.users[0].phone_number %}
+                  M: <a style="color:#8696a4; text-decoration:none;">{{brand.users[0].phone_number}}</a>
+                {% endif %}
+
+                {% if brand.users[0].email and brand.users[0].phone_number %}
+                  ,
+                {% endif %}
+
+                {% if brand.users[0].email %}
+                  E: <a style="color:#8696a4; text-decoration:none;">{{brand.users[0].email}}</a>
+                {% endif %}
+              </td>
+            </tr>
+            <tr>
+              <td align="center" style="padding:0 0 24px; font:300 32px/39px Lato, Arial, Helvetica, sans-serif; color:#fff;">
+                Contact me anytime to chat.
+              </td>
+            </tr>
+            <!-- button -->
+            <tr>
+              <td>
+                <table width="260" align="center" style="margin:0 auto;" cellpadding="0" cellspacing="0">
+                  <tr>
+                    <td class="active" bgcolor="{{brand | brand_color('primary', '#2196f3')}}" align="center" style="mso-padding-alt:14px 10px 16px; font:bold 14px/21px Lato, Arial, Helvetica, sans-serif; color:#fff; text-transform:uppercase; letter-spacing:2px; border-radius:3px;">
+                      <a style="padding:14px 10px 16px; color:#fff; text-decoration:none; display:block;" target="_blank" href="http://link">
+                        <span style="display:inline-block; vertical-align:-4px;"><img src="ico-decoration-03.png" width="21" style="width:21px; vertical-align:top; display:block;" alt="" /></span>&nbsp; CHAT WITH ME
+                      </a>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </td>
+</tr>

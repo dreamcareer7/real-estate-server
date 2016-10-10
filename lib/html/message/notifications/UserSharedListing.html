@@ -1,0 +1,118 @@
+{% set listing  = message.notification.objects[0] %}
+{% set property = listing.property %}
+{% set address  = property.address %}
+
+{% set author = message.notification.subjects[0] %}
+{% set created_at = message.notification.created_at %}
+{% set comment %}
+  Shared a home:
+  <a href="{{message.notification.branch_link}}">
+    {{address.street_number}} {{address.street_prefix}} {{address.street_name}} {{address.street_suffix}}
+  </a>
+{% endset %}
+
+{% include 'lib/html/message/comment.html' %}
+
+<tr>
+  <td style="padding:0 0 0 50px;">
+    <table cellpadding="0" cellspacing="0">
+      <tr>
+        <th class="flex img-flex" width="247" align="left" style="vertical-align:top; padding:0;">
+          <img src="{{listing.gallery_image_urls[1]}}" width="247" style="width:247px; display:block; vertical-align:top;" alt="" />
+        </th>
+        <th class="flex img-flex" width="247" align="left" style="vertical-align:top; padding:0;">
+          <img src="{{listing.gallery_image_urls[2]}}" width="247" style="width:247px; display:block; vertical-align:top;" alt="" />
+        </th>
+      </tr>
+      <tr class="table-holder">
+        <th class="tfoot" width="247" align="left" style="vertical-align:top; padding:0;">
+          <table width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+              <td bgcolor="#ffffff" background="{{listing.cover_image_url}}" style="background:#ffffff url({{listing.cover_image_url}}) no-repeat; background-size:100% auto;">
+                <!--[if gte mso 9]>
+                  <v:rect xmlns:v="urn:schemas-microsoft-com:vml" fill="true" stroke="false" style="width:247px; height:200px;">
+                    <v:fill type="tile" src="{{listing.cover_image_url}}" color="#ffffff" />
+                    <v:textbox inset="0,0,0,0">
+                      <![endif]-->
+                        <table width="100%" cellpadding="0" cellspacing="0">
+                          <tr>
+                            <td class="hide" width="10"></td>
+                            <td class="plr-10" height="200" valign="bottom">
+                              <table width="100%" cellpadding="0" cellspacing="0">
+                                <tr>
+                                  <td style="padding:20px 0;">
+                                    <table cellpadding="0" cellspacing="0">
+                                      <tr>
+                                        <td class="active-l" bgcolor="{{listing | listing_status_color}}" align="center" style="mso-padding-alt:3px 6px 4px 7px; font:14px/17px Lato, Arial, Helvetica, sans-serif; color:#fff; letter-spacing:-0.5px; border-radius:3px; box-shadow:0 1px 4px rgba(0, 0, 0, 0.2);">
+                                          <a style="padding:3px 6px 4px 7px; color:#fff; text-decoration:none; display:block;" target="_blank" href="{{message.notification.branch_link}}">{{listing.status}}</a>
+                                        </td>
+                                      </tr>
+                                    </table>
+                                  </td>
+                                </tr>
+                              </table>
+                            </td>
+                            <td class="hide" width="10"></td>
+                          </tr>
+                        </table>
+                      <!--[if gte mso 9]>
+                    </v:textbox>
+                  </v:rect>
+                <![endif]-->
+              </td>
+            </tr>
+          </table>
+        </th>
+        <th class="thead img-flex" width="247" align="left" style="vertical-align:top; padding:0;">
+          <img src="{{listing.gallery_image_urls[3]}}" width="247" style="width:247px; display:block; vertical-align:top;" alt="" />
+        </th>
+      </tr>
+      <tr>
+        <td bgcolor="#ffffff" colspan="2" style="padding:10px 0 19px; border:1px solid #e2e6ea; border-top:none; border-radius:3px;">
+          <table width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+              <td class="adr" style="padding:0 10px 3px; font:700 20px/24px Lato, Arial, Helvetica, sans-serif; color:#263445;">
+                {{address.street_number}} {{address.street_prefix}} {{address.street_name}} {{address.street_suffix}}
+              </td>
+            </tr>
+            <tr>
+              <td class="adr-2" style="padding:0 10px 16px; font:14px/17px Lato, Arial, Helvetica, sans-serif; color:#8696a4;">
+                {{address.city}}, {{address.state_code}} {{address.postal_code}}
+              </td>
+            </tr>
+            <tr>
+              <td style="padding:0 10px 21px; border-bottom:1px solid #e2e6ea;">
+                <table width="100%" cellpadding="0" cellspacing="0">
+                  <tr>
+                    <td width="52" style="font:bold 15px/18px Lato, Arial, Helvetica, sans-serif; color:#35b863;">
+                      {{listing | listing_price}}
+                    </td>
+                    <td bgcolor="#d8d8d8" width="1"></td>
+                    <td width="20"></td>
+                    <td style="font:bold 15px/18px Lato, Arial, Helvetica, sans-serif; color:#263445;">
+                      {{property.bedroom_count}} beds, {{property.bedroom_count}} baths, {{property.square_meters | square_feet}} sqft
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <!-- button -->
+            <tr>
+              <td style="padding:20px 0 0;">
+                <table align="center" width="200" style="margin:0 auto;" cellpadding="0" cellspacing="0">
+                  <tr>
+                    <td class="active-d" align="center" style="mso-padding-alt:10px; font:14px/17px Lato, Arial, Helvetica, sans-serif; color:#263445; border:1px solid #263445; border-radius:3px;">
+                      <a style="padding:11px 10px 10px; color:#263445; text-decoration:none; display:block;" target="_blank" href="{{message.notification.branch_link}}">
+                        View Listing &nbsp; &nbsp;<span style="display:inline-block; vertical-align:2px;"><img src="https://assets.rechat.com/mail/seamless/arrow.png" width="12" style="vertical-align:top; display:block; width:12px;" alt="" /></span>
+                      </a>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </td>
+</tr>

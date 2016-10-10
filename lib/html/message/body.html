@@ -1,276 +1,412 @@
-<html>
-   <head>
-      <!-- Email Title -->
-      <title>Alert Mail</title>
-      <!-- General META -->
-      <meta charset="UTF-8">
-      <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
-      <meta http-equiv="Content-type" content="text/html;charset=UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <!-- Social -->
-      <meta property="og:title" content="">
-      <!-- StyleSheet -->
-      <style>
-         #outlook a
-         {
-         padding:0;
-         }
-         .ExternalClass
-         {
-         width:100%%;
-         }
-         .ExternalClass,
-         .ExternalClass p,
-         .ExternalClass span,
-         .ExternalClass font,
-         .ExternalClass td,
-         .ExternalClass div
-         {
-         line-height: 100%%;
-         }
-         #backgroundTable
-         {
-         margin:0;
-         padding:0;
-         width:100%% !important;
-         line-height: 100%% !important;
-         }
-         img
-         {
-         outline:none;
-         text-decoration:none;
-         border:none;
-         -ms-interpolation-mode: bicubic;
-         }
-         a img
-         {
-         border:none;
-         }
-         .image_fix
-         {
-         display:block;
-         }
-         p
-         {
-         margin: 0px 0px !important;
-         }
-         table td
-         {
-         border-collapse: collapse;
-         }
-         table
-         {
-         border-collapse:collapse;
-         mso-table-lspace:0pt;
-         mso-table-rspace:0pt;
-         }
-         a
-         {
-         color: #0a8cce;
-         text-decoration: none;
-         text-decoration:none!important;
-         }
-         .Body
-         {
-         padding: 0;
-         width: 100%%;
-         margin: 0 auto;
-         background: rgb(255, 255, 255);
-         -ms-text-size-adjust:100%%;
-         -webkit-text-size-adjust:100%%;
-         }
-         .Container
-         {
-         width: 100%%;
-         background: rgb(255, 255, 255);
-         }
-         .Normalize
-         {
-         margin: 0px;
-         border: none;
-         padding: 15px 15px 15px 0px;
-         direction: rtl;
-         word-break: break-word;
-         border-collapse: collapse;
-         font-family: 'Helvetica', 'Helvetica Neue', 'Arial', 'sans-serif';
-         }
-         .Main
-         {
-         padding: 15px !important;
-         border-top: none;
-         border-left: 1px solid rgb(240, 240, 240);
-         border-right: 1px solid rgb(240, 240, 240);
-         border-bottom: 1px solid rgb(240, 240, 240);
-         }
-         .Center
-         {
-         text-align: center;
-         }
-         .Right
-         {
-         text-align: right;
-         }
-         .Left
-         {
-         text-align: left;
-         }
-         .Header
-         {
-         line-height: 35px;
-         padding-bottom: 25px;
-         border-bottom: 1px solid rgb(235, 235, 235);
-         }
-         .Username
-         {
-         margin: 0px;
-         font-size: 20px;
-         font-weight: 500;
-         padding: 25px 0px 15px;
-         color: rgb(15, 15, 15);
-         }
-         .Paragraph
-         {
-         margin: 0px;
-         line-height: 2;
-         font-size: 12px;
-         padding: 10px 0px;
-         color: rgb(85, 85, 85);
-         }
-         .Code
-         {
-         line-height: 2;
-         font-size: 12px;
-         font-weight: 700;
-         padding: 10px 0px;
-         margin: 15px 0px 10px;
-         color: rgb(45, 45, 45);
-         }
-         .Button
-         {
-         width: 100%%;
-         display: block;
-         font-size: 13px;
-         padding: 0px 0px;
-         font-weight: 500;
-         line-height: 40px;
-         text-align: center;
-         border-radius: 4px;
-         margin: 15px 0px 0px;
-         text-decoration: none;
-         color: rgb(255, 255, 255);
-         background: rgb(51, 136, 255);
-         }
-         .Column
-         {
-         width: 50%%;
-         float: right;
-         text-align: right;
-         }
-         .Footer
-         {
-         padding-top: 25px;
-         padding-bottom: 25px;
-         border-top: 1px solid rgb(235, 235, 235);
-         }
-         .Caption
-         {
-         width: 100%%;
-         float: right;
-         font-size: 11px;
-         font-weight: 500;
-         text-align: right;
-         margin-bottom: 10px;
-         color: rgb(153, 153, 153);
-         }
-         .SentTo
-         {
-         width: 100%%;
-         float: right;
-         margin-top: 47px;
-         font-size: 9px;
-         text-align: right;
-         line-height: 25px;
-         color: rgb(192, 192, 192);
-         }
-         .Setting
-         {
-         font-size: 10px;
-         text-align: right;
-         line-height: 25px;
-         text-decoration: none;
-         color: rgb(85, 85, 85);
-         }
-         .Link
-         {
-         width: 100%%;
-         float: right;
-         font-size: 10px;
-         line-height: 25px;
-         text-align: right;
-         text-decoration: none;
-         color: rgb(85, 85, 85);
-         }
-         .ViewOn
-         {
-         width: 100%%;
-         float: right;
-         display: block;
-         font-size: 12px;
-         margin-top: 25px;
-         line-height: 60px;
-         color: rgb(180, 180, 180);
-         background: rgb(255, 255, 255);
-         }
-         .Copyright
-         {
-         width: 100%%;
-         float: right;
-         display: block;
-         font-size: 11px;
-         margin-top: 25px;
-         line-height:80px;
-         color: rgb(190, 190, 190);
-         background: rgb(252, 252, 252);
-         border: 1px solid rgb(245, 245, 245);
-         }
-      </style>
-   </head>
-   <body class="Body" style="padding: 0;width: 100%%;margin: 0 auto;background: rgb(255, 255, 255);-ms-text-size-adjust: 100%%;-webkit-text-size-adjust: 100%%; max-width: 600px;">
-      <!-- Begin Center -->
-      <center>
-        {{#messages}}
-          {{> lib/html/message/message.html}}
-        {{/messages}}
-         <!-- Begin Footer -->
-         <table class="Normalize Container" width="100%%" cellpadding="0" cellspacing="0" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;width: 100%%;background: rgb(255, 255, 255);margin: 0px;border: none;padding: 15px;direction: rtl;word-break: break-word;font-family: 'Helvetica', 'Helvetica Neue', 'Arial', 'sans-serif';">
-            <tbody class="Normalize" valign="middle" style="margin: 0px;border: none;padding: 15px;direction: rtl;word-break: break-word;border-collapse: collapse;font-family: 'Helvetica', 'Helvetica Neue', 'Arial', 'sans-serif';">
-            <!--&lt;!&ndash; Begin External Link &ndash;&gt;-->
-      <!--<tr valign="middle" style="margin: 0px;border: none;padding: 15px;direction: rtl;word-break: break-word;border-collapse: collapse;font-family: 'Helvetica', 'Helvetica Neue', 'Arial', 'sans-serif';">-->
-         <!--<td class="Normalize Center Wrapper" valign="middle" align="center" width="100%%" style="border-collapse: collapse;margin: 0px;border: none;padding: 0px 0px 0px 70px;direction: rtl;word-break: break-word;font-family: 'Helvetica', 'Helvetica Neue', 'Arial', 'sans-serif';text-align: center;">-->
-            <!--&lt;!&ndash; Begin Right Side &ndash;&gt;-->
-            <!--<center>-->
-            <!--<a class="Button" href="%(uri)s" style="color: rgb(255, 255, 255);display: block;font-size: 13px;padding: 0px 0px;font-weight: 500;line-height: 40px;text-align: center;border-radius: 4px;margin: 15px 0px 0px;text-decoration: none!important;background: rgb(51, 136, 255); width: 70%%">-->
-               <!--View Comments-->
-            <!--</a>-->
-            <!--</center>-->
-            <!--&lt;!&ndash; End Right Side &ndash;&gt;-->
-         <!--</td>-->
-      <!--</tr>-->
-      <!--&lt;!&ndash; End External Link &ndash;&gt;-->
-               <!-- Begin View On Rechat -->
-               <tr class="Normalize" valign="middle" style="margin: 0px;border: none;padding: 15px;direction: rtl;word-break: break-word;border-collapse: collapse;font-family: 'Helvetica', 'Helvetica Neue', 'Arial', 'sans-serif';">
-                  <td class="Normalize Center ViewOn" valign="middle" align="right" width="100%%" style="border-collapse: collapse;margin: 0px;border: none;padding: 15px;direction: rtl;word-break: break-word;font-family: 'Helvetica', 'Helvetica Neue', 'Arial', 'sans-serif';text-align: center;width: 100%%;float: right;display: block;font-size: 12px;margin-top: 25px;line-height: 50px;color: rgb(180, 180, 180);background: rgb(255, 255, 255);">
-                     <center style="font-size:14px;">Reply directly to this email or <a href="%(uri)s" style="color: #3388ff;text-decoration: none!important;">view on Rechat</a></center>
-                     <!-- Begin Privacy -->
-                     <center>Rechat@2016, All Rights Reserved. <a href="%(mls_terms)s" style="color:#bebebe; text-decoration: underline !important;">MLS Terms</a></center>
-                     <!-- End Privacy -->
-                  </td>
-               </tr>
-               <!-- End View On Rechat -->
-            </tbody>
-         </table>
-         <!-- End Footer -->
-      </center>
-      <!-- Begin Center -->
-   </body>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>Rechal_email</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,300i,400,400i,700,700i,900,900i" rel="stylesheet" />
+    <style type="text/css">
+      @import 'https://fonts.googleapis.com/css?family=Lato:300,300i,400,400i,700,700i,900,900i';
+      a{
+        outline:none;
+        color:#2196f3;
+        text-decoration:none;
+      }
+      a:hover{text-decoration:underline !important;}
+      a[x-apple-data-detectors]{color:inherit !important; text-decoration:none !important;}
+      .active:hover{opacity:0.8;}
+      .active{transition:all 0.3s ease;}
+      .active-d, .active-l{overflow:hidden;}
+      .active-d a, .active-l a{position:relative; display:inline-block;}
+      .active-d a:after, .active-l a:after{transition:all 0.3s ease; content:""; position:absolute; left:0; top:0; right:0; bottom:0;}
+      .active-d a:hover:after{background:rgba(0,0,0,0.2);}
+      .active-l a:hover:after{background:rgba(255,255,255,0.2);}
+      .active a:hover, .active-d a:hover, .active-l a:hover{text-decoration:none !important;}
+      .adr span{color:#263445 !important; border:none !important;}
+      .adr-2 span{color:#8696a4 !important; border:none !important;}
+      .h-n a{text-decoration:underline !important;}
+      .h-n a:hover{text-decoration:none !important;}
+      a img{border:none;}
+      table td{mso-line-height-rule:exactly;}
+      .ExternalClass, .ExternalClass a, .ExternalClass span, .ExternalClass b, .ExternalClass br, .ExternalClass p, .ExternalClass div{line-height:inherit;}
+      @media only screen and (max-width:500px) {
+        /* default style */
+        table[class~="flexible"]{width:100% !important;}
+        table[class~="table-center"]{float:none !important; margin:0 auto !important; width:auto !important;}
+        span[class~="db"]{display:block !important;}
+        *[class~="img-flex"] img{width:100% !important; height:auto !important;}
+        *[class~="aligncenter"]{text-align:center !important;}
+        tr[class~="table-holder"]{display:table !important; width:100% !important;}
+        th[class~="tcap"]{display:table-caption !important; width:100% !important;}
+        th[class~="thead"]{display:table-header-group !important; width:100% !important;}
+        th[class~="trow"]{display:table-row !important; width:100% !important;}
+        th[class~="tfoot"]{display:table-footer-group !important; width:100% !important;}
+        th[class~="flex"]{display:block !important; width:100% !important;}
+        *[class~="hide"]{display:none !important; width:0 !important; height:0 !important; padding:0 !important; font-size:0 !important; line-height:0 !important;} *[class~="w-a"]{width:auto !important;} *[class~="h-a"]{height:auto !important;} *[class~="p-0"]{padding:0 !important;} *[class~="p-5"]{padding:5px !important;} *[class~="p-10"]{padding:10px !important;} *[class~="p-15"]{padding:15px !important;} *[class~="p-20"]{padding:20px !important;} *[class~="p-25"]{padding:25px !important;} *[class~="p-30"]{padding:30px !important;} *[class~="plr-0"]{padding-left:0 !important; padding-right:0 !important;} *[class~="plr-5"]{padding-left:5px !important; padding-right:5px !important;} *[class~="plr-10"]{padding-left:10px !important; padding-right:10px !important;} *[class~="plr-15"]{padding-left:15px !important; padding-right:15px !important;} *[class~="plr-20"]{padding-left:20px !important; padding-right:20px !important;} *[class~="plr-25"]{padding-left:25px !important; padding-right:25px !important;} *[class~="plr-30"]{padding-left:30px !important; padding-right:30px !important;} *[class~="pl-0"]{padding-left:0 !important;} *[class~="pl-5"]{padding-left:5px !important;} *[class~="pl-10"]{padding-left:10px !important;} *[class~="pl-15"]{padding-left:15px !important;} *[class~="pl-20"]{padding-left:20px !important;} *[class~="pl-25"]{padding-left:25px !important;} *[class~="pl-30"]{padding-left:30px !important;} *[class~="pr-0"]{padding-right:0 !important;} *[class~="pr-5"]{padding-right:5px !important;} *[class~="pr-10"]{padding-right:10px !important;} *[class~="pr-15"]{padding-right:15px !important;} *[class~="pr-20"]{padding-right:20px !important;} *[class~="pr-25"]{padding-right:25px !important;} *[class~="pr-30"]{padding-right:30px !important;} *[class~="pt-0"]{padding-top:0 !important;} *[class~="pt-1"]{padding-top:1px !important;} *[class~="pt-2"]{padding-top:2px !important;} *[class~="pt-3"]{padding-top:3px !important;} *[class~="pt-4"]{padding-top:4px !important;} *[class~="pt-5"]{padding-top:5px !important;} *[class~="pt-6"]{padding-top:6px !important;} *[class~="pt-7"]{padding-top:7px !important;} *[class~="pt-8"]{padding-top:8px !important;} *[class~="pt-9"]{padding-top:9px !important;} *[class~="pt-10"]{padding-top:10px !important;} *[class~="pt-11"]{padding-top:11px !important;} *[class~="pt-12"]{padding-top:12px !important;} *[class~="pt-13"]{padding-top:13px !important;} *[class~="pt-14"]{padding-top:14px !important;} *[class~="pt-15"]{padding-top:15px !important;} *[class~="pt-16"]{padding-top:16px !important;} *[class~="pt-17"]{padding-top:17px !important;} *[class~="pt-18"]{padding-top:18px !important;} *[class~="pt-19"]{padding-top:19px !important;} *[class~="pt-20"]{padding-top:20px !important;} *[class~="pt-21"]{padding-top:21px !important;} *[class~="pt-22"]{padding-top:22px !important;} *[class~="pt-23"]{padding-top:23px !important;} *[class~="pt-24"]{padding-top:24px !important;} *[class~="pt-25"]{padding-top:25px !important;} *[class~="pt-26"]{padding-top:26px !important;} *[class~="pt-27"]{padding-top:27px !important;} *[class~="pt-28"]{padding-top:28px !important;} *[class~="pt-29"]{padding-top:29px !important;} *[class~="pt-30"]{padding-top:30px !important;} *[class~="pt-31"]{padding-top:31px !important;} *[class~="pt-32"]{padding-top:32px !important;} *[class~="pt-33"]{padding-top:33px !important;} *[class~="pt-34"]{padding-top:34px !important;} *[class~="pt-35"]{padding-top:35px !important;} *[class~="pt-36"]{padding-top:36px !important;} *[class~="pt-37"]{padding-top:37px !important;} *[class~="pt-38"]{padding-top:38px !important;} *[class~="pt-39"]{padding-top:39px !important;} *[class~="pt-40"]{padding-top:40px !important;} *[class~="pt-41"]{padding-top:41px !important;} *[class~="pt-42"]{padding-top:42px !important;} *[class~="pt-43"]{padding-top:43px !important;} *[class~="pt-44"]{padding-top:44px !important;} *[class~="pt-45"]{padding-top:45px !important;} *[class~="pt-46"]{padding-top:46px !important;} *[class~="pt-47"]{padding-top:47px !important;} *[class~="pt-48"]{padding-top:48px !important;} *[class~="pt-49"]{padding-top:49px !important;} *[class~="pt-50"]{padding-top:50px !important;} *[class~="pb-0"]{padding-bottom:0 !important;} *[class~="pb-1"]{padding-bottom:1px !important;} *[class~="pb-2"]{padding-bottom:2px !important;} *[class~="pb-3"]{padding-bottom:3px !important;} *[class~="pb-4"]{padding-bottom:4px !important;} *[class~="pb-5"]{padding-bottom:5px !important;} *[class~="pb-6"]{padding-bottom:6px !important;} *[class~="pb-7"]{padding-bottom:7px !important;} *[class~="pb-8"]{padding-bottom:8px !important;} *[class~="pb-9"]{padding-bottom:9px !important;} *[class~="pb-10"]{padding-bottom:10px !important;} *[class~="pb-11"]{padding-bottom:11px !important;} *[class~="pb-12"]{padding-bottom:12px !important;} *[class~="pb-13"]{padding-bottom:13px !important;} *[class~="pb-14"]{padding-bottom:14px !important;} *[class~="pb-15"]{padding-bottom:15px !important;} *[class~="pb-16"]{padding-bottom:16px !important;} *[class~="pb-17"]{padding-bottom:17px !important;} *[class~="pb-18"]{padding-bottom:18px !important;} *[class~="pb-19"]{padding-bottom:19px !important;} *[class~="pb-20"]{padding-bottom:20px !important;} *[class~="pb-21"]{padding-bottom:21px !important;} *[class~="pb-22"]{padding-bottom:22px !important;} *[class~="pb-23"]{padding-bottom:23px !important;} *[class~="pb-24"]{padding-bottom:24px !important;} *[class~="pb-25"]{padding-bottom:25px !important;} *[class~="pb-26"]{padding-bottom:26px !important;} *[class~="pb-27"]{padding-bottom:27px !important;} *[class~="pb-28"]{padding-bottom:28px !important;} *[class~="pb-29"]{padding-bottom:29px !important;} *[class~="pb-30"]{padding-bottom:30px !important;} *[class~="pb-31"]{padding-bottom:31px !important;} *[class~="pb-32"]{padding-bottom:32px !important;} *[class~="pb-33"]{padding-bottom:33px !important;} *[class~="pb-34"]{padding-bottom:34px !important;} *[class~="pb-35"]{padding-bottom:35px !important;} *[class~="pb-36"]{padding-bottom:36px !important;} *[class~="pb-37"]{padding-bottom:37px !important;} *[class~="pb-38"]{padding-bottom:38px !important;} *[class~="pb-39"]{padding-bottom:39px !important;} *[class~="pb-40"]{padding-bottom:40px !important;} *[class~="pb-41"]{padding-bottom:41px !important;} *[class~="pb-42"]{padding-bottom:42px !important;} *[class~="pb-43"]{padding-bottom:43px !important;} *[class~="pb-44"]{padding-bottom:44px !important;} *[class~="pb-45"]{padding-bottom:45px !important;} *[class~="pb-46"]{padding-bottom:46px !important;} *[class~="pb-47"]{padding-bottom:47px !important;} *[class~="pb-48"]{padding-bottom:48px !important;} *[class~="pb-49"]{padding-bottom:49px !important;} *[class~="pb-50"]{padding-bottom:50px !important;} *[class~="fs-0"]{font-size:0 !important;} *[class~="fs-1"]{font-size:1px !important;} *[class~="fs-2"]{font-size:2px !important;} *[class~="fs-3"]{font-size:3px !important;} *[class~="fs-4"]{font-size:4px !important;} *[class~="fs-5"]{font-size:5px !important;} *[class~="fs-6"]{font-size:6px !important;} *[class~="fs-7"]{font-size:7px !important;} *[class~="fs-8"]{font-size:8px !important;} *[class~="fs-9"]{font-size:9px !important;} *[class~="fs-10"]{font-size:10px !important;} *[class~="fs-11"]{font-size:11px !important;} *[class~="fs-12"]{font-size:12px !important;} *[class~="fs-13"]{font-size:13px !important;} *[class~="fs-14"]{font-size:14px !important;} *[class~="fs-15"]{font-size:15px !important;} *[class~="fs-16"]{font-size:16px !important;} *[class~="fs-17"]{font-size:17px !important;} *[class~="fs-18"]{font-size:18px !important;} *[class~="fs-19"]{font-size:19px !important;} *[class~="fs-20"]{font-size:20px !important;} *[class~="fs-21"]{font-size:21px !important;} *[class~="fs-22"]{font-size:22px !important;} *[class~="fs-23"]{font-size:23px !important;} *[class~="fs-24"]{font-size:24px !important;} *[class~="fs-25"]{font-size:25px !important;} *[class~="fs-26"]{font-size:26px !important;} *[class~="fs-27"]{font-size:27px !important;} *[class~="fs-28"]{font-size:28px !important;} *[class~="fs-29"]{font-size:29px !important;} *[class~="fs-30"]{font-size:30px !important;} *[class~="fs-31"]{font-size:31px !important;} *[class~="fs-32"]{font-size:32px !important;} *[class~="fs-33"]{font-size:33px !important;} *[class~="fs-34"]{font-size:34px !important;} *[class~="fs-35"]{font-size:35px !important;} *[class~="fs-36"]{font-size:36px !important;} *[class~="fs-37"]{font-size:37px !important;} *[class~="fs-38"]{font-size:38px !important;} *[class~="fs-39"]{font-size:39px !important;} *[class~="fs-40"]{font-size:40px !important;} *[class~="fs-41"]{font-size:41px !important;} *[class~="fs-42"]{font-size:42px !important;} *[class~="fs-43"]{font-size:43px !important;} *[class~="fs-44"]{font-size:44px !important;} *[class~="fs-45"]{font-size:45px !important;} *[class~="fs-46"]{font-size:46px !important;} *[class~="fs-47"]{font-size:47px !important;} *[class~="fs-48"]{font-size:48px !important;} *[class~="fs-49"]{font-size:49px !important;} *[class~="fs-50"]{font-size:50px !important;} *[class~="lh-0"]{line-height:0 !important;} *[class~="lh-1"]{line-height:1px !important;} *[class~="lh-2"]{line-height:2px !important;} *[class~="lh-3"]{line-height:3px !important;} *[class~="lh-4"]{line-height:4px !important;} *[class~="lh-5"]{line-height:5px !important;} *[class~="lh-6"]{line-height:6px !important;} *[class~="lh-7"]{line-height:7px !important;} *[class~="lh-8"]{line-height:8px !important;} *[class~="lh-9"]{line-height:9px !important;} *[class~="lh-10"]{line-height:10px !important;} *[class~="lh-11"]{line-height:11px !important;} *[class~="lh-12"]{line-height:12px !important;} *[class~="lh-13"]{line-height:13px !important;} *[class~="lh-14"]{line-height:14px !important;} *[class~="lh-15"]{line-height:15px !important;} *[class~="lh-16"]{line-height:16px !important;} *[class~="lh-17"]{line-height:17px !important;} *[class~="lh-18"]{line-height:18px !important;} *[class~="lh-19"]{line-height:19px !important;} *[class~="lh-20"]{line-height:20px !important;} *[class~="lh-21"]{line-height:21px !important;} *[class~="lh-22"]{line-height:22px !important;} *[class~="lh-23"]{line-height:23px !important;} *[class~="lh-24"]{line-height:24px !important;} *[class~="lh-25"]{line-height:25px !important;} *[class~="lh-26"]{line-height:26px !important;} *[class~="lh-27"]{line-height:27px !important;} *[class~="lh-28"]{line-height:28px !important;} *[class~="lh-29"]{line-height:29px !important;} *[class~="lh-30"]{line-height:30px !important;} *[class~="lh-31"]{line-height:31px !important;} *[class~="lh-32"]{line-height:32px !important;} *[class~="lh-33"]{line-height:33px !important;} *[class~="lh-34"]{line-height:34px !important;} *[class~="lh-35"]{line-height:35px !important;} *[class~="lh-36"]{line-height:36px !important;} *[class~="lh-37"]{line-height:37px !important;} *[class~="lh-38"]{line-height:38px !important;} *[class~="lh-39"]{line-height:39px !important;} *[class~="lh-40"]{line-height:40px !important;} *[class~="lh-41"]{line-height:41px !important;} *[class~="lh-42"]{line-height:42px !important;} *[class~="lh-43"]{line-height:43px !important;} *[class~="lh-44"]{line-height:44px !important;} *[class~="lh-45"]{line-height:45px !important;} *[class~="lh-46"]{line-height:46px !important;} *[class~="lh-47"]{line-height:47px !important;} *[class~="lh-48"]{line-height:48px !important;} *[class~="lh-49"]{line-height:49px !important;} *[class~="lh-50"]{line-height:50px !important;}
+        /* custom style */
+        *[class~="w-60"]{width:60px !important;}
+      }
+    </style>
+    <!--[if mso]>
+    <style type=”text/css”>
+      td{font-family: Arial, sans-serif !important;}
+      .serif {font-family: Georgia, Times New Roman, Times, serif;}
+    </style>
+    <![endif]-->
+  </head>
+  <body bgcolor="#f3f3f3" style="margin:0; padding:0; -webkit-text-size-adjust:100%; -ms-text-size-adjust:100%;">
+    <table bgcolor="#f3f3f3" width="100%" style="min-width:320px;" cellspacing="0" cellpadding="0">
+      <!-- fix for gmail -->
+      <tr>
+        <td class="hide" style="line-height:0;"><div style="white-space:nowrap; font:15px/0 courier;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</div></td>
+      </tr>
+      <tr>
+        <td class="p-20 plr-0" style="padding:90px 15px;">
+          <table class="flexible" width="600" align="center" style="margin:0 auto;" cellpadding="0" cellspacing="0">
+            <!-- fix for gmail -->
+            <tr>
+              <td class="hide">
+                <table width="600" style="width:600px !important;" cellpadding="0" cellspacing="0">
+                  <tr>
+                    <td style="min-width:600px; font-size:0; line-height:0;">&nbsp;</td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <!-- pre-header -->
+            <tr>
+              <td align="center" style="padding:0 0 52px;">
+                <a style="text-decoration:none;" target="_blank" href="{{base_url}}">
+                  <img
+                    src="{{brand | brand_asset('site_logo', 'https://assets.rechat.com/mail/seamless/logo.png')}}"
+                    width="60" style="width:60px; font:bold 30px/34px Arial, Helvetica, sans-serif; color:#000; vertical-align:top;" alt="RE" />
+                </a>
+              </td>
+            </tr>
+            <!-- header -->
+            <tr>
+              <td style="padding:0 0 20px;">
+                <table width="100%" cellpadding="0" cellspacing="0">
+                  <tr>
+                    <td bgcolor="#63b5f6" align="center" style="padding:15px 15px 14px; font:700 17px/21px Lato, Arial, Helvetica, sans-serif; color:#fff; letter-spacing:1px; text-transform:uppercase; border-radius: 3px 3px 0 0;">
+                      The only re  al estate app you’ll ever need
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="img-flex">
+                      <img src="https://assets.rechat.com/mail/seamless/header.png" width="600" style="width:600px; vertical-align:top;" alt="" />
+                    </td>
+                  </tr>
+                  {% if user.is_shadow %}
+                    {% include 'lib/html/message/invite.html' %}
+                  {% endif %}
+                </table>
+              </td>
+            </tr>
+            <!-- content -->
+            <!-- block-01 -->
+            <tr>
+              <td style="padding:0 0 20px;">
+                <table width="100%" cellpadding="0" cellspacing="0">
+                  <tr>
+                    <td class="plr-10" bgcolor="#fbfbfb" style="padding:41px 27px 44px; border-radius:3px;">
+                      <table width="100%" cellpadding="0" cellspacing="0">
+                        <!-- title -->
+                        <tr>
+                          <td align="center" style="padding:0 0 39px; font:17px/30px Lato, Arial, Helvetica, sans-serif; color:#263445;">
+                            In this conversation {{room.proposed_title}}
+                          </td>
+                        </tr>
+                        <!-- article-01 -->
+
+                        {% for message in messages %}
+                          {% include 'lib/html/message/message.html' %}
+                        {% endfor %}
+                        <!-- article-02 -->
+
+
+                        <!-- title -->
+                        <tr>
+                          <td align="center" style="font:22px/27px Lato, Arial, Helvetica, sans-serif; color:#263445;">
+                            Don’t miss out on the conversation. <a style="color:#2196f3; text-decoration:none;" target="_blank" href="{{room_url}}">Sign up and have peace of mind</a>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            {% if brand %}
+              {% include 'lib/html/message/brand_footer.html' %}
+            {% endif %}
+            <tr>
+              <td style="padding:0 0 10px;">
+                <table width="100%" cellpadding="0" cellspacing="0">
+                  <tr>
+                    <td class="plr-10" bgcolor="#fbfbfb" style="padding:46px 28px 49px; border-radius:3px;">
+                      <table width="100%" cellpadding="0" cellspacing="0">
+                        <tr>
+                          <td align="center" style="padding:0 0 56px; font:30px/38px Lato, Arial, Helvetica, sans-serif; color:#263445;">
+                            Reasons to become a<br class="hide" />
+                            Rechat Member
+                          </td>
+                        </tr>
+                        <!-- list -->
+                        <!-- item-01 -->
+                        <tr>
+                          <td style="padding:0 0 21px;">
+                            <table width="100%" cellpadding="0" cellspacing="0">
+                              <tr>
+                                <td class="w-60" width="78">
+                                  <img src="https://assets.rechat.com/mail/seamless/feature_realtime.png" width="47" style="width:47px; vertical-align:top;" alt="" />
+                                </td>
+                                <td>
+                                  <table width="100%" cellpadding="0" cellspacing="0">
+                                    <tr>
+                                      <td style="padding:0 0 9px; font:700 22px/27px Lato, Arial, Helvetica, sans-serif; color:#263445;">
+                                        Work in Real Time
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td style="padding:0 0 9px; font:17px/21px Lato, Arial, Helvetica, sans-serif; color:#263445;">
+                                        In real estate, speed matters. Rechat lets you stay connected to clients from anywhere your business takes you.
+                                      </td>
+                                    </tr>
+                                  </table>
+                                </td>
+                              </tr>
+                            </table>
+                          </td>
+                        </tr>
+                        <!-- item-02 -->
+                        <tr>
+                          <td style="padding:0 0 21px;">
+                            <table width="100%" cellpadding="0" cellspacing="0">
+                              <tr>
+                                <td class="w-60" width="78">
+                                  <img src="https://assets.rechat.com/mail/seamless/feature_agents.png" width="47" style="width:47px; vertical-align:top;" alt="" />
+                                </td>
+                                <td>
+                                  <table width="100%" cellpadding="0" cellspacing="0">
+                                    <tr>
+                                      <td style="padding:0 0 9px; font:700 22px/27px Lato, Arial, Helvetica, sans-serif; color:#263445;">
+                                        For Agents
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td style="padding:0 0 9px; font:17px/21px Lato, Arial, Helvetica, sans-serif; color:#263445;">
+                                        Keep your conversations, contacts, transactions, and activities accessible at all times.
+                                      </td>
+                                    </tr>
+                                  </table>
+                                </td>
+                              </tr>
+                            </table>
+                          </td>
+                        </tr>
+                        <!-- item-03 -->
+                        <tr>
+                          <td style="padding:0 0 21px;">
+                            <table width="100%" cellpadding="0" cellspacing="0">
+                              <tr>
+                                <td class="w-60" width="78">
+                                  <img src="https://assets.rechat.com/mail/seamless/feature_teams.png" width="44" style="width:44px; vertical-align:top;" alt="" />
+                                </td>
+                                <td>
+                                  <table width="100%" cellpadding="0" cellspacing="0">
+                                    <tr>
+                                      <td style="padding:0 0 9px; font:700 22px/27px Lato, Arial, Helvetica, sans-serif; color:#263445;">
+                                        For Teams
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td style="padding:0 0 9px; font:17px/21px Lato, Arial, Helvetica, sans-serif; color:#263445;">
+                                        Let your team move faster and effortlessly collaborate on real estate deals.
+                                      </td>
+                                    </tr>
+                                  </table>
+                                </td>
+                              </tr>
+                            </table>
+                          </td>
+                        </tr>
+                        <!-- item-04 -->
+                        <tr>
+                          <td style="padding:0 0 41px;">
+                            <table width="100%" cellpadding="0" cellspacing="0">
+                              <tr>
+                                <td class="w-60" width="78">
+                                  <img src="https://assets.rechat.com/mail/seamless/feature_brokerages.png" width="44" style="width:44px; vertical-align:top;" alt="" />
+                                </td>
+                                <td>
+                                  <table width="100%" cellpadding="0" cellspacing="0">
+                                    <tr>
+                                      <td style="padding:0 0 9px; font:700 22px/27px Lato, Arial, Helvetica, sans-serif; color:#263445;">
+                                        For Brokerages
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td style="padding:0 0 9px; font:17px/21px Lato, Arial, Helvetica, sans-serif; color:#263445;">
+                                        Arm agents with a simple and powerful way to go paperless, keep documents secure, and stay fully compliant.
+                                      </td>
+                                    </tr>
+                                  </table>
+                                </td>
+                              </tr>
+                            </table>
+                          </td>
+                        </tr>
+                        <!-- button -->
+                        <tr>
+                          <td>
+                            <table width="160" align="center" style="margin:0 auto;" cellpadding="0" cellspacing="0">
+                              <tr>
+                                <td class="active" bgcolor="#2196f3" align="center" style="mso-padding-alt:17px 10px; font:bold 14px/17px Lato, Arial, Helvetica, sans-serif; color:#fff; text-transform:uppercase; letter-spacing:2px; border-radius:3px;">
+                                  <a style="padding:17px 10px; color:#fff; text-decoration:none; display:block;" target="_blank" href="{{room_url}}">SIGN UP</a>
+                                </td>
+                              </tr>
+                            </table>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <!-- block-04 -->
+            <tr>
+              <td class="img-flex" align="center" style="padding:0 0 10px;">
+                <a style="text-decoration:none;" target="_blank" href="http://link">
+                  <img src="img-14.jpg" width="600" style="width:600px; vertical-align:top; font:24px/29px Lato, Arial, Helvetica, sans-serif; color:#263445;" alt="Hi, I’m Trey. See how I work faster WITH RECHAT" />
+                </a>
+              </td>
+            </tr>
+            <!-- pre-footer -->
+            <tr>
+              <td bgcolor="#263445" style="padding:30px 10px 27px; border-radius:3px;">
+                <table width="100%" cellpadding="0" cellspacing="0">
+                  <tr>
+                    <td align="center" style="padding:0 0 39px; font:22px/27px Lato, Arial, Helvetica, sans-serif; color:#8696a4;">
+                      Rechat is Everywhere You Go
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <table align="center" style="margin:0 auto;" cellpadding="0" cellspacing="0">
+                        <tr>
+                          <td>
+                            <table width="100%" cellpadding="0" cellspacing="0">
+                              <tr>
+                                <td class="active" align="center" style="padding:0 0 10px;">
+                                  <a style="text-decoration:none;" target="_blank" href="http://link">
+                                    <img src="https://assets.rechat.com/mail/seamless/platform_ios.png" width="36" style="width:36px; vertical-align:top; color:#8696a4;" alt="iOS" />
+                                  </a>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td align="center" style="font:15px/18px Lato, Arial, Helvetica, sans-serif; color:#8696a4; white-space:nowrap;">
+                                  iOS
+                                </td>
+                              </tr>
+                            </table>
+                          </td>
+                          <td width="37"></td>
+                          <td>
+                            <table width="100%" cellpadding="0" cellspacing="0">
+                              <tr>
+                                <td class="active" align="center" style="padding:0 0 10px;">
+                                  <a style="text-decoration:none;" target="_blank" href="http://link">
+                                    <img src="https://assets.rechat.com/mail/seamless/platform_android.png" width="40" style="width:40px; vertical-align:top; color:#8696a4;" alt="android" />
+                                  </a>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td align="center" style="font:15px/18px Lato, Arial, Helvetica, sans-serif; color:#8696a4; white-space:nowrap;">
+                                  Coming Soon!
+                                </td>
+                              </tr>
+                            </table>
+                          </td>
+                          <td width="28"></td>
+                          <td>
+                            <table width="100%" cellpadding="0" cellspacing="0">
+                              <tr>
+                                <td class="active" align="center" style="padding:0 0 10px;">
+                                  <a style="text-decoration:none;" target="_blank" href="http://link">
+                                    <img src="https://assets.rechat.com/mail/seamless/platform_mac.png" width="48" style="width:48px; vertical-align:top; color:#8696a4;" alt="macOS" />
+                                  </a>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td align="center" style="font:15px/18px Lato, Arial, Helvetica, sans-serif; color:#8696a4; white-space:nowrap;">
+                                  Mac OS X
+                                </td>
+                              </tr>
+                            </table>
+                          </td>
+                          <td width="52"></td>
+                          <td>
+                            <table width="100%" cellpadding="0" cellspacing="0">
+                              <tr>
+                                <td class="active" align="center" style="padding:0 0 10px;">
+                                  <a style="text-decoration:none;" target="_blank" href="http://link">
+                                    <img src="https://assets.rechat.com/mail/seamless/platform_web.png" width="48" style="width:48px; vertical-align:top; color:#8696a4;" alt="web" />
+                                  </a>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td align="center" style="font:15px/18px Lato, Arial, Helvetica, sans-serif; color:#8696a4; white-space:nowrap;">
+                                  Web
+                                </td>
+                              </tr>
+                            </table>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <!-- footer -->
+            <tr>
+              <td style="padding:60px 10px 0;">
+                <table width="100%" cellpadding="0" cellspacing="0">
+                  <tr>
+                    <td align="center" style="padding:0 0 19px;">
+                      <a style="text-decoration:none;" target="_blank" href="{{base_url}}">
+                        <img src="https://assets.rechat.com/mail/seamless/logo_grayscale.png" width="40" style="width:40px; font:bold 20px/24px Arial, Helvetica, sans-serif; color:#c6c6c6; vertical-align:top; letter-spacing:2px;" alt="Re" />
+                      </a>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="padding:0 0 7px;">
+                      <table width="130" align="center" style="margin:0 auto;" cellpadding="0" cellspacing="0">
+                        <tr>
+                          <td bgcolor="#d5d5d5" height="1" style="font-size:1px; line-height:1px; box-shadow:0 1px 0 rgba(255, 255, 255, 0.5)"></td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td align="center" style="padding:0 0 6px; font:15px/18px Lato, Arial, Helvetica, sans-serif; color:#c6c6c6; text-shadow:0 1px 0 #fff;">
+                      Powered by <b>Rechat<span style="font-size:11px; line-height:0; vertical-align:3px">&trade;</span></b>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="h-n" align="center" style="font:14px/16px Lato, Arial, Helvetica, sans-serif; color:#c6c6c6; text-shadow:0 1px 0 #fff;">
+                      <i>Connecting agents and clients for a better buying experience.</i><br /><br /><br />
+                      Rechat &copy; 2016, All Rights Reserved. &nbsp;<a style="color:#c6c6c6; text-decoration:underline;" target="_blank" href="{{base_url}}/terms/mls">MLS Terms</a>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
 </html>
