@@ -1,45 +1,45 @@
-'use strict';
+'use strict'
 
-var async = require('async');
-var db = require('../lib/utils/db');
+const async = require('async')
+const db = require('../lib/utils/db')
 
-var create = "CREATE MATERIALIZED VIEW agents_emails AS ( \
+const create = 'CREATE MATERIALIZED VIEW agents_emails AS ( \
   WITH stated_emails AS ( \
-    SELECT ('email_' || id) as id, matrix_unique_id as mui, email, matrix_modified_dt as date \
+    SELECT (\'email_\' || id) as id, matrix_unique_id as mui, email, matrix_modified_dt as date \
     FROM agents \
-    WHERE email <> '' \
+    WHERE email <> \'\' \
   ), \
   \
   list_agents AS (\
     SELECT\
-      ('list_agents_' || id) as id, list_agent_mui as mui, list_agent_email as email, list_date as date\
+      (\'list_agents_\' || id) as id, list_agent_mui as mui, list_agent_email as email, list_date as date\
     FROM listings\
     WHERE\
-      list_agent_email <> ''\
+      list_agent_email <> \'\'\
   ),\
   \
   co_list_agents AS (\
     SELECT\
-      ('co_list_agents_' || id) as id, co_list_agent_mui as mui, co_list_agent_email as email, list_date as date\
+      (\'co_list_agents_\' || id) as id, co_list_agent_mui as mui, co_list_agent_email as email, list_date as date\
     FROM listings\
     WHERE\
-      co_list_agent_email <> ''\
+      co_list_agent_email <> \'\'\
   ),\
   \
   selling_agents AS (\
     SELECT\
-      ('selling_agents_' || id) as id, selling_agent_mui as mui, selling_agent_email as email, list_date as date\
+      (\'selling_agents_\' || id) as id, selling_agent_mui as mui, selling_agent_email as email, list_date as date\
     FROM listings\
     WHERE\
-      selling_agent_email <> ''\
+      selling_agent_email <> \'\'\
   ),\
   \
   co_selling_agents AS (\
     SELECT\
-      ('co_selling_agents_' || id) as id, co_selling_agent_mui as mui, co_selling_agent_email as email, list_date as date\
+      (\'co_selling_agents_\' || id) as id, co_selling_agent_mui as mui, co_selling_agent_email as email, list_date as date\
     FROM listings\
     WHERE\
-      co_selling_agent_email <> ''\
+      co_selling_agent_email <> \'\'\
   )\
   \
   SELECT * FROM stated_emails\
@@ -51,34 +51,34 @@ var create = "CREATE MATERIALIZED VIEW agents_emails AS ( \
   SELECT * FROM selling_agents\
   UNION\
   SELECT * FROM co_selling_agents\
-)";
+)'
 
-var up = [
+const up = [
   'BEGIN',
   create,
   'CREATE UNIQUE INDEX agents_emails_idx ON agents_emails (id)',
   'CREATE INDEX agents_emails_mui ON agents_emails (mui)',
   'COMMIT'
-];
+]
 
-var down = [
+const down = [
   'DROP MATERIALIZED VIEW agents_emails'
-];
+]
 
-var runAll = (sqls, next) => {
-  db.conn( (err, client) => {
-    if(err)
-      return next(err);
+const runAll = (sqls, next) => {
+  db.conn((err, client) => {
+    if (err)
+      return next(err)
 
-    async.eachSeries(sqls, client.query.bind(client), next);
-  });
-};
+    async.eachSeries(sqls, client.query.bind(client), next)
+  })
+}
 
-var run = (queries) => {
+const run = (queries) => {
   return (next) => {
-    runAll(queries, next);
-  };
-};
+    runAll(queries, next)
+  }
+}
 
-exports.up = run(up);
-exports.down = run(down);
+exports.up = run(up)
+exports.down = run(down)

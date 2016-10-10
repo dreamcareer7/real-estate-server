@@ -1,25 +1,25 @@
-require('../connection.js');
+require('../connection.js')
 
-var async = require('async');
-var db = require('../../lib/utils/db.js');
-var config = require('../../lib/config.js');
-var _u = require('underscore');
-var EventEmitter = require('events');
-var util = require('util');
+const async = require('async')
+const db = require('../../lib/utils/db.js')
+const config = require('../../lib/config.js')
+const _u = require('underscore')
+const EventEmitter = require('events')
+const util = require('util')
 
-var Client = new EventEmitter;
-Client.options = {};
+const Client = new EventEmitter()
+Client.options = {}
 
-var retsLoginUrl = config.ntreis.login_url;
-var retsUser     = config.ntreis.user;
-var retsPassword = config.ntreis.password;
+const retsLoginUrl = config.ntreis.login_url
+const retsUser = config.ntreis.user
+const retsPassword = config.ntreis.password
 
-Date.prototype.toNTREISString = function() {
-  var pad = function(number) {
+Date.prototype.toNTREISString = function () {
+  const pad = function (number) {
     if (number < 10) {
-      return '0' + number;
+      return '0' + number
     }
-    return number;
+    return number
   }
 
   return this.getUTCFullYear() +
@@ -31,181 +31,178 @@ Date.prototype.toNTREISString = function() {
     '.' + (this.getMilliseconds() / 1000).toFixed(3).slice(2, 5)
 }
 
-function sortByModified(a, b) {
-  var a_ = new Date(a[Client.options.fields.modified]);
-  var b_ = new Date(b[Client.options.fields.modified]);
+function sortByModified (a, b) {
+  const a_ = new Date(a[Client.options.fields.modified])
+  const b_ = new Date(b[Client.options.fields.modified])
 
-  if(a_ > b_)
-    return 1;
-  else if(b_ > a_)
-    return -1;
+  if (a_ > b_)
+    return 1
+  else if (b_ > a_)
+    return -1
   else
-    return 0;
+    return 0
 }
 
-function sortById(a, b) {
-  var a_ = parseInt(a[Client.options.fields.id]);
-  var b_ = parseInt(b[Client.options.fields.id]);
+function sortById (a, b) {
+  const a_ = parseInt(a[Client.options.fields.id])
+  const b_ = parseInt(b[Client.options.fields.id])
 
-  if(a_ > b_)
-    return 1;
-  else if(b_ > a_)
-    return -1;
+  if (a_ > b_)
+    return 1
+  else if (b_ > a_)
+    return -1
   else
-    return 0;
+    return 0
 }
 
-function getLastRun(cb) {
-  if(Client.options.startFrom) {
-    var t = new Date((new Date()).getTime() - (Client.options.startFrom * 3600000));
+function getLastRun (cb) {
+  if (Client.options.startFrom) {
+    const t = new Date((new Date()).getTime() - (Client.options.startFrom * 3600000))
 
     Client.last_run = {
-      last_modified_date:t,
-      is_initial_completed:true
-    };
+      last_modified_date: t,
+      is_initial_completed: true
+    }
 
-    return cb();
+    return cb()
   }
 
   MLSJob.getLastRun(Client.options.job, (err, last_run) => {
-    if(err)
-      return cb(err);
-    if(!last_run)
-      last_run = {};
+    if (err)
+      return cb(err)
+    if (!last_run)
+      last_run = {}
 
-    Client.last_run = last_run;
+    Client.last_run = last_run
 
-    cb();
-  });
+    cb()
+  })
 }
 
-function saveLastRun(data, cb) {
-  if(!data || data.length < 1)
-    return cb('No data was fetched');
+function saveLastRun (data, cb) {
+  if (!data || data.length < 1)
+    return cb('No data was fetched')
 
-  var last_date = null;
-  var last_mui  = null;
+  let last_date, last_mui = null
 
-  if(data.length > 0) {
-    data.sort(sortByModified);
-    var last_date = data[data.length -1][Client.options.fields.modified];
+  if (data.length > 0) {
+    data.sort(sortByModified)
+    last_date = data[data.length - 1][Client.options.fields.modified]
 
-    data.sort(sortById);
-    var last_mui =  data[data.length -1][Client.options.fields.id];
+    data.sort(sortById)
+    last_mui = data[data.length - 1][Client.options.fields.id]
   }
 
-  var job = {
-    last_modified_date:last_date,
-    last_id:parseInt(last_mui),
-    results:data.length,
-    query:Client.query,
-    is_initial_completed:Client.last_run.is_initial_completed || shouldTransit,
-    name:Client.options.job,
-    limit:Client.options.limit,
-    offset:Client.options.offset
-  };
+  const job = {
+    last_modified_date: last_date,
+    last_id: parseInt(last_mui),
+    results: data.length,
+    query: Client.query,
+    is_initial_completed: Client.last_run.is_initial_completed || shouldTransit,
+    name: Client.options.job,
+    limit: Client.options.limit,
+    offset: Client.options.offset
+  }
 
-  Client.emit('saving job', job);
+  Client.emit('saving job', job)
 
-  MLSJob.insert(job, cb);
+  MLSJob.insert(job, cb)
 }
 
-var client;
-var connected = false;
-function connect(cb) {
-  client = require('rets-client').getClient(retsLoginUrl, retsUser, retsPassword);
-  Client.rets = client;
-  
-  if(connected)
-    return cb();
+let client
+let connected = false
+function connect (cb) {
+  client = require('rets-client').getClient(retsLoginUrl, retsUser, retsPassword)
+  Client.rets = client
 
-  var timeoutReached = false;
-  var timeout = setTimeout(function() {
-    timeoutReached = true;
-    cb('Timeout while connecting to RETS server');
-  }, config.ntreis.timeout);
+  if (connected)
+    return cb()
 
-  var timeoutMessage = console.log.bind(console.log,
-    'We got a response, but it was way too late. We already consider it a timeout.');
+  let timeoutReached = false
+  const timeout = setTimeout(function () {
+    timeoutReached = true
+    cb('Timeout while connecting to RETS server')
+  }, config.ntreis.timeout)
 
-  client.once('connection.success', function() {
-    if(timeoutReached)
-      return timeoutMessage();
+  const timeoutMessage = console.log.bind(console.log,
+    'We got a response, but it was way too late. We already consider it a timeout.')
 
-    clearTimeout(timeout);
+  client.once('connection.success', function () {
+    if (timeoutReached)
+      return timeoutMessage()
 
-    connected = true;
-    cb();
-  });
+    clearTimeout(timeout)
 
-  client.once('connection.failure', cb);
+    connected = true
+    cb()
+  })
+
+  client.once('connection.failure', cb)
 }
 
-function fetch(cb) {
-  var by_id    = !(Client.last_run.is_initial_completed);
-  var last_id  = Client.last_run.last_id ? Client.last_run.last_id : 0;
-  var last_run = Client.last_run.last_modified_date;
+function fetch (cb) {
+  const by_id = !(Client.last_run.is_initial_completed)
+  const last_id = Client.last_run.last_id ? Client.last_run.last_id : 0
+  const last_run = Client.last_run.last_modified_date
 
-  var timeoutReached = false;
-  var timeout = setTimeout(function() {
-    timeoutReached = true;
-    cb('Timeout while querying RETS server');
-  }, config.ntreis.timeout);
+  let timeoutReached = false
+  const timeout = setTimeout(function () {
+    timeoutReached = true
+    cb('Timeout while querying RETS server')
+  }, config.ntreis.timeout)
 
-  var timeoutMessage = console.log.bind(console.log,
-    'We got a response, but it was way too late. We already consider it a timeout.');
+  const timeoutMessage = console.log.bind(console.log,
+    'We got a response, but it was way too late. We already consider it a timeout.')
 
-
-
-  if(Client.options.query)
-    Client.query = Client.options.query;
+  if (Client.options.query)
+    Client.query = Client.options.query
   else {
-    var query;
-    var q = '(%s=%s+)';
-    if(by_id) {
-      query = util.format(q, Client.options.fields.id, last_id);
+    let query
+    const q = '(%s=%s+)'
+    if (by_id) {
+      query = util.format(q, Client.options.fields.id, last_id)
     } else {
-      query = util.format(q, Client.options.fields.modified, last_run.toNTREISString());
+      query = util.format(q, Client.options.fields.modified, last_run.toNTREISString())
     }
 
-    if(by_id && Client.options.additionalQuery)
-      query += ','+Client.options.additionalQuery;
+    if (by_id && Client.options.additionalQuery)
+      query += ',' + Client.options.additionalQuery
 
-    Client.query = query;
+    Client.query = query
   }
 
-  console.log('Query'.yellow, Client.query.cyan);
+  console.log('Query'.yellow, Client.query.cyan)
 
-  var processResponse = function(err, data) {
-    if(timeoutReached)
-      return timeoutMessage();
+  const processResponse = function (err, data) {
+    if (timeoutReached)
+      return timeoutMessage()
 
-    clearTimeout(timeout);
+    clearTimeout(timeout)
 
-    if(Client.last_run && Client.last_run.is_initial_completed === false) {
-      if(err && err.replyCode == '20201') {
-        Client.emit('initial completed');
-        return cb(null, []);
+    if (Client.last_run && Client.last_run.is_initial_completed === false) {
+      if (err && err.replyCode == '20201') {
+        Client.emit('initial completed')
+        return cb(null, [])
       }
     }
 
-    if(err && err.replyCode == '20201') //Not an error. Just no results.
-      return cb(null, []);
+    if (err && err.replyCode == '20201') // Not an error. Just no results.
+      return cb(null, [])
 
     if (err)
-      return cb(err);
+      return cb(err)
 
-    Client.emit('data fetched', data);
+    Client.emit('data fetched', data)
 
-    if(Client.last_run && Client.last_run.is_initial_completed === false && (data.length < Client.options.limit)) {
-      Client.emit('initial completed');
+    if (Client.last_run && Client.last_run.is_initial_completed === false && (data.length < Client.options.limit)) {
+      Client.emit('initial completed')
     }
 
-    return cb(null, data);
+    return cb(null, data)
   }
 
-  Client.emit('starting query', Client.query);
-  client.query(Client.options.resource, Client.options.class, Client.query, processResponse, Client.options.limit, Client.options.offset);
+  Client.emit('starting query', Client.query)
+  client.query(Client.options.resource, Client.options.class, Client.query, processResponse, Client.options.limit, Client.options.offset)
 
 //   client.getAllTable( function(err, tables) {
 //     console.log(JSON.stringify(tables));
@@ -218,93 +215,93 @@ function fetch(cb) {
 //     client.getObjectMeta('Office', (a,b,c) => console.log(a,b,c) );
 }
 
-var raw_insert = 'INSERT INTO mls_data (resource, class, matrix_unique_id, value) \
+const raw_insert = 'INSERT INTO mls_data (resource, class, matrix_unique_id, value) \
   VALUES ($1, $2, $3, $4) ON CONFLICT (matrix_unique_id) DO UPDATE SET \
   value = EXCLUDED.value \
-  WHERE mls_data.matrix_unique_id = $3 AND mls_data.value->>$5 < $6';
+  WHERE mls_data.matrix_unique_id = $3 AND mls_data.value->>$5 < $6'
 
-var raw = (cb, results) => {
-  var data = _u.clone(results.mls);
+const raw = (cb, results) => {
+  const data = _u.clone(results.mls)
 
-  async.mapLimit(data, 100, (l,cb) => db.query(raw_insert, [
+  async.mapLimit(data, 100, (l, cb) => db.query(raw_insert, [
     Client.options.resource,
     Client.options.class,
     l[Client.options.fields.id],
     l,
     Client.options.fields.modified,
     l[Client.options.fields.modified]
-  ], cb), cb);
+  ], cb), cb)
 }
 
-function notice() {
-  console.log('--------- Fetch options ---------'.yellow);
-  console.log('Manual RETS Response Limit:'.yellow, Client.options.limit);
-  console.log('Manual starting point:'.yellow, Client.options.startFrom);
+function notice () {
+  console.log('--------- Fetch options ---------'.yellow)
+  console.log('Manual RETS Response Limit:'.yellow, Client.options.limit)
+  console.log('Manual starting point:'.yellow, Client.options.startFrom)
 }
 
-var shouldTransit = false;
+let shouldTransit = false
 
 Client.on('initial completed', () => {
-  console.log('initial fetch completed.');
-  shouldTransit = true;
-});
+  console.log('initial fetch completed.')
+  shouldTransit = true
+})
 
-Client.work = function(options, cb) {
-  Client.options = options;
+Client.work = function (options, cb) {
+  Client.options = options
 
-  if(!Client.options.fields)
-    Client.options.fields = {};
+  if (!Client.options.fields)
+    Client.options.fields = {}
 
-  if(!Client.options.fields.id)
-    Client.options.fields.id = 'Matrix_Unique_ID';
+  if (!Client.options.fields.id)
+    Client.options.fields.id = 'Matrix_Unique_ID'
 
-  if(!Client.options.fields.modified)
-    Client.options.fields.modified = 'MatrixModifiedDT';
+  if (!Client.options.fields.modified)
+    Client.options.fields.modified = 'MatrixModifiedDT'
 
-  notice();
+  notice()
 
-  var transit = (cb) => {
-    shouldTransit = false; //Mark it as false again so we wont do this recursively
+  const transit = (cb) => {
+    shouldTransit = false // Mark it as false again so we wont do this recursively
 
-    options.startFrom = 24;
-    Client.work(options, cb);
+    options.startFrom = 24
+    Client.work(options, cb)
   }
 
-  var save = (cb, results) => saveLastRun(results.mls, cb)
+  const save = (cb, results) => saveLastRun(results.mls, cb)
 
-  var process = Client.options.processor ? Client.options.processor : cb => cb()
+  const process = Client.options.processor ? Client.options.processor : cb => cb()
 
-  var steps = {
-    connect:connect,
-    last_run:getLastRun,
+  const steps = {
+    connect: connect,
+    last_run: getLastRun,
     mls: ['connect', 'last_run', fetch],
     raw: ['mls', raw],
-    process:['mls', process],
-  };
+    process: ['mls', process]
+  }
 
-  if(!Client.options.dontSave)
-    steps.save = ['raw', 'process', save];
+  if (!Client.options.dontSave)
+    steps.save = ['raw', 'process', save]
 
-  if(Client.options.processor)
-    steps.process = ['mls', Client.options.processor];
+  if (Client.options.processor)
+    steps.process = ['mls', Client.options.processor]
 
   async.auto(steps, (err, res) => {
-    if(err) {
+    if (err) {
       Slack.send({
         channel: 'server-errors',
-        text: '🏠 NTREIS Error on '+Client.options.job+'\n`'+JSON.stringify(err)+'`',
+        text: '🏠 NTREIS Error on ' + Client.options.job + '\n`' + JSON.stringify(err) + '`',
         emoji: ':skull:'
       }, () => {
-        cb(err);
-      });
-      return ;
+        cb(err)
+      })
+      return
     }
 
-    if(!shouldTransit)
-      return cb(null, res);
+    if (!shouldTransit)
+      return cb(null, res)
 
     transit(cb)
-  });
+  })
 }
 
-module.exports = Client;
+module.exports = Client

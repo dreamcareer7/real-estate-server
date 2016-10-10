@@ -1,11 +1,11 @@
-'use strict';
+'use strict'
 
-var async = require('async');
-var db = require('../lib/utils/db');
-var fs = require('fs');
-var listings_filters = fs.readFileSync('./lib/sql/alert/listings_filters.mv.sql').toString();
+const async = require('async')
+const db = require('../lib/utils/db')
+const fs = require('fs')
+const listings_filters = fs.readFileSync('./lib/sql/alert/listings_filters.mv.sql').toString()
 
-var up = [
+const up = [
   'ALTER TABLE alerts ALTER COLUMN listing_statuses DROP DEFAULT',
   'ALTER TABLE alerts ALTER COLUMN listing_statuses DROP NOT NULL',
   'ALTER TABLE alerts ALTER COLUMN minimum_price DROP NOT NULL',
@@ -38,9 +38,9 @@ var up = [
   'ALTER TABLE alerts DROP COLUMN mls_area_minor',
   'DROP MATERIALIZED VIEW listings_filters',
   listings_filters
-];
+]
 
-var down = [
+const down = [
   'ALTER TABLE alerts ALTER COLUMN listing_statuses SET DEFAULT \'{Active}\'::listing_status[];',
   'ALTER TABLE alerts ALTER COLUMN listing_statuses SET NOT NULL',
   'ALTER TABLE alerts ALTER COLUMN minimum_price SET NOT NULL',
@@ -61,23 +61,23 @@ var down = [
   'ALTER TABLE alerts DROP COLUMN senior_high_schools',
   'ALTER TABLE alerts DROP COLUMN junior_high_schools',
   'ALTER TABLE alerts DROP COLUMN intermediate_schools',
-  'ALTER TABLE alerts DROP COLUMN sort_office',
-];
+  'ALTER TABLE alerts DROP COLUMN sort_office'
+]
 
-var runAll = (sqls, next) => {
-  db.conn( (err, client) => {
-    if(err)
-      return next(err);
+const runAll = (sqls, next) => {
+  db.conn((err, client) => {
+    if (err)
+      return next(err)
 
-    async.eachSeries(sqls, client.query.bind(client), next);
-  });
-};
+    async.eachSeries(sqls, client.query.bind(client), next)
+  })
+}
 
-var run = (queries) => {
+const run = (queries) => {
   return (next) => {
-    runAll(queries, next);
-  };
-};
+    runAll(queries, next)
+  }
+}
 
-exports.up = run(up);
-exports.down = run(down);
+exports.up = run(up)
+exports.down = run(down)

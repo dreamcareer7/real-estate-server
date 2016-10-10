@@ -1,8 +1,8 @@
-'use strict';
+'use strict'
 
-var db = require('../lib/utils/db');
+const db = require('../lib/utils/db')
 
-var sql_up   = 'CREATE OR REPLACE FUNCTION wipe_everything() RETURNS VOID AS $$\
+const sql_up = 'CREATE OR REPLACE FUNCTION wipe_everything() RETURNS VOID AS $$\
 BEGIN\
     TRUNCATE TABLE messages_acks CASCADE;\
     TRUNCATE TABLE messages CASCADE;\
@@ -20,20 +20,20 @@ BEGIN\
     TRUNCATE TABLE email_verifications CASCADE;\
     TRUNCATE TABLE phone_verifications CASCADE;\
 END;\
-$$ LANGUAGE plpgsql;';
+$$ LANGUAGE plpgsql;'
 
-var sql_down = 'DROP FUNCTION wipe_everything();';
+const sql_down = 'DROP FUNCTION wipe_everything();'
 
-var runSql = (sql) => {
+const runSql = (sql) => {
   return (next) => {
-    db.conn( (err, client) => {
-      if(err)
-        return next(err);
+    db.conn((err, client) => {
+      if (err)
+        return next(err)
 
-      return client.query(sql, next);
-    });
-  };
-};
+      return client.query(sql, next)
+    })
+  }
+}
 
-exports.up = runSql(sql_up);
-exports.down = runSql(sql_down);
+exports.up = runSql(sql_up)
+exports.down = runSql(sql_down)

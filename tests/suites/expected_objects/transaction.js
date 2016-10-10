@@ -1,15 +1,12 @@
-var user = require('./user.js');
-var contact = require('./contact.js');
-var recommendation = require('./recommendation.js');
-var listing = require('./listing.js');
-var v = require('../../../lib/utils/response_validation.js');
+const recommendation = require('./recommendation.js')
+const listing = require('./listing.js')
+const v = require('./validation.js')
 
 module.exports = {
   id: String,
   title: v.optionalString,
-  title: v.optionalString,
-  recommendation: function(val) { expect(val).toBeTypeOrNull(recommendation); },
-  listing: function(val) { expect(val).toBeTypeOrNull(listing); },
+  recommendation: function (val) { expect(val).toBeTypeOrNull(recommendation) },
+  listing: function (val) { expect(val).toBeTypeOrNull(listing) },
   listing_data: Object,
   transaction_type: v.optionalString,
   transaction_status: v.optionalString,

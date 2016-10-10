@@ -1,10 +1,10 @@
-'use strict';
+'use strict'
 
-var async = require('async');
+const async = require('async')
 
-var db = require('../lib/utils/db');
+const db = require('../lib/utils/db')
 
-var sqls = [
+const sqls = [
   'DROP TABLE IF EXISTS mam_config',
   'DROP TABLE IF EXISTS mam_message',
   'DROP TABLE IF EXISTS mam_message',
@@ -33,18 +33,18 @@ var sqls = [
   'DROP EXTENSION IF EXISTS fuzzystrmatch',
   'DROP SCHEMA IF EXISTS shortlisted CASCADE',
   'DROP SCHEMA IF EXISTS tiger_data CASCADE',
-  'DROP SCHEMA IF EXISTS tiger CASCADE',
-];
+  'DROP SCHEMA IF EXISTS tiger CASCADE'
+]
 
-var runAll = (next) => {
-  db.conn( (err, client) => {
-    if(err)
-      return next(err);
+const runAll = (next) => {
+  db.conn((err, client) => {
+    if (err)
+      return next(err)
 
-    async.eachSeries(sqls, client.query.bind(client), next);
-  });
-};
+    async.eachSeries(sqls, client.query.bind(client), next)
+  })
+}
 
-exports.up = runAll;
+exports.up = runAll
 
-exports.down = () => {} //Hard to downgrade this change.
+exports.down = () => {} // Hard to downgrade this change.

@@ -1,9 +1,9 @@
-'use strict';
+'use strict'
 
-var async = require('async');
-var db = require('../lib/utils/db');
+const async = require('async')
+const db = require('../lib/utils/db')
 
-var create = 'CREATE TABLE IF NOT EXISTS open_houses (\
+const create = 'CREATE TABLE IF NOT EXISTS open_houses (\
   id uuid DEFAULT uuid_generate_v1(),\
   start_time TIMESTAMP,\
   end_time TIMESTAMP,\
@@ -15,24 +15,23 @@ var create = 'CREATE TABLE IF NOT EXISTS open_houses (\
   created_at TIMESTAMPTZ DEFAULT NOW(),\
   updated_at TIMESTAMPTZ DEFAULT NOW(),\
   deleted_at TIMESTAMPTZ\
-)';
-var index = 'CREATE INDEX ON open_houses (listing_mui)'
+)'
+const index = 'CREATE INDEX ON open_houses (listing_mui)'
 
-var drop = 'DROP TABLE open_houses';
+const drop = 'DROP TABLE open_houses'
 
+const runAll = (sqls, next) => {
+  db.conn((err, client) => {
+    if (err)
+      return next(err)
 
-var runAll = (sqls, next) => {
-  db.conn( (err, client) => {
-    if(err)
-      return next(err);
+    async.eachSeries(sqls, client.query.bind(client), next)
+  })
+}
 
-    async.eachSeries(sqls, client.query.bind(client), next);
-  });
-};
-
-var run = (queries) => {
+const run = (queries) => {
   return (next) => {
-    runAll(queries, next);
+    runAll(queries, next)
   }
 }
 

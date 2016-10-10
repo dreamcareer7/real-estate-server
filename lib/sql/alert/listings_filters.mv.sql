@@ -36,6 +36,7 @@ CREATE MATERIALIZED VIEW listings_filters AS SELECT
   properties.senior_high_school_name,
   addresses.location,
   addresses.county_or_parish,
+  addresses.postal_code,
   (
     addresses.title || ' ' ||
     addresses.subtitle || ' ' ||

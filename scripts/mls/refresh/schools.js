@@ -1,16 +1,16 @@
 #!/usr/bin/env node
 
-require('../../connection.js');
-require('../../../lib/utils/db.js');
-require('../../../lib/models/index.js');
+require('../../connection.js')
+require('../../../lib/utils/db.js')
+require('../../../lib/models/index.js')
 
-School.refresh( err => {
-  if(err)
-    console.log(err);
+School.refresh(err => {
+  if (err)
+    console.log(err)
 
-  var job = {
-    name:'refresh_schools',
-  };
+  const job = {
+    name: 'refresh_schools'
+  }
 
-  MLSJob.insert(job, process.exit);
+  MLSJob.insert(job, process.exit)
 })

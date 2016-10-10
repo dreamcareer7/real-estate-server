@@ -1,4 +1,4 @@
 module.exports = {
-  "count": Number,
-  "total": Number
-};
+  'count': Number,
+  'total': Number
+}

@@ -1,18 +1,19 @@
-process.env.NODE_ENV = 'tests'; //So we read the proper config file
+process.env.ORIGINAL_NODE_ENV = process.env.NODE_ENV || 'development'
+process.env.NODE_ENV = 'tests' // So we read the proper config file
 
-var fs           = require('fs');
-var program      = require('commander');
-var config       = require('../lib/config.js');
-var fork         = require('child_process').fork;
-var async        = require('async');
-var colors       = require('colors');
-var EventEmitter = require('events');
-var queue        = require('../lib/utils/queue.js');
-var redis        = require('redis');
+require('colors')
 
-var redisClient  = redis.createClient(config.redis);
+const fs = require('fs')
+const program = require('commander')
+const config = require('../lib/config.js')
+const fork = require('child_process').fork
+const async = require('async')
+const EventEmitter = require('events')
+const redis = require('redis')
 
-global.Run = new EventEmitter;
+const redisClient = redis.createClient(config.redis)
+
+global.Run = new EventEmitter()
 
 program
   .usage('[options] <suite> <suite>')
@@ -21,168 +22,168 @@ program
   .option('-c, --concurrency <n>', 'Number of suites to run at the same time (defaults to 20)')
   .option('--curl', 'Throw curl commands (disabled ui)')
   .option('--disable-response', 'When in curl mode, do not write responses to stdout')
+  .option('--stop-on-fail', 'Stops on the first sight of problem')
   .option('--keep', 'Keep the server running after execution is completed')
   .option('--docs', 'Setup REST API')
-  .parse(process.argv);
+  .parse(process.argv)
 
-if(!program.concurrency)
-  program.concurrency = 1;
+if (!program.concurrency)
+  program.concurrency = 1
 
-if(program.docs) {
-  program.disableUi = true;
-  require('./docs.js')(program);
+if (program.docs) {
+  program.disableUi = true
+  require('./docs.js')(program)
 }
 
-if(program.curl) {
-  program.disableUi = true;
-  require('./curl.js')(program);
+if (program.curl) {
+  program.disableUi = true
+  require('./curl.js')(program)
 }
 
-if(!program.disableUi)
-  require('./ui.js')(program);
+if (!program.disableUi)
+  require('./ui.js')(program)
 
-var getSuites = function(cb) {
-  if(program.args.length > 0)
-    return cb(null, program.args);
+const getSuites = function (cb) {
+  if (program.args.length > 0)
+    return cb(null, program.args)
 
-  var files = fs.readdirSync(__dirname+'/suites');
-  var suites = files
-        .filter( (file) => file.substring(file.length-3, file.length) === '.js' )
-        .map( (file) => file.replace('.js', '') );
+  const files = fs.readdirSync(__dirname + '/suites')
+  const suites = files
+        .filter((file) => file.substring(file.length - 3, file.length) === '.js')
+        .map((file) => file.replace('.js', ''))
 
-  return cb(null, suites);
-};
+  return cb(null, suites)
+}
 
+function spawnProcesses (cb) {
+  getSuites((err, suites) => {
+    if (err)
+      return cb(err)
 
-function spawnProcesses(cb) {
-  getSuites( (err, suites) => {
-    if(err)
-      return cb(err);
+    suites.map((suite) => Run.emit('register suite', suite))
 
-    suites.map((suite) => Run.emit('register suite', suite));
+    async.mapLimit(suites, program.concurrency, spawnSuite, cb)
+  })
+}
 
-    async.mapLimit(suites, program.concurrency, spawnSuite, cb);
-  });
-};
+function spawnSuite (suite, cb) {
+  const url = program.server ? program.server : 'http://localhost:' + config.tests.port
 
-function spawnSuite(suite, cb) {
-  var url = program.server ? program.server : 'http://localhost:' + config.tests.port;
+  const runner = fork(__dirname + '/runner.js', [suite, url])
 
-  var runner = fork(__dirname+'/runner.js', [suite, url]);
-
-  Run.emit('spawn', suite);
+  Run.emit('spawn', suite)
 
   runner.on('message', (m) => {
-    Run.emit('message', suite, m);
-  });
+    Run.emit('message', suite, m)
+  })
 
   runner.on('exit', () => {
-    Run.emit('suite done', suite);
-    cb();
-  });
+    Run.emit('suite done', suite)
+    cb()
+  })
 }
 
-var Domain = require('domain');
-var db = require('../lib/utils/db');
+const Domain = require('domain')
+const db = require('../lib/utils/db')
 
-var connections = {};
+const connections = {}
 
-var database = (req, res, next) => {
-  var domain = Domain.create();
-  var suite = req.headers['x-suite'];
+const database = (req, res, next) => {
+  const domain = Domain.create()
+  const suite = req.headers['x-suite']
 
-  var handled = false;
+  let handled = false
   domain.on('error', (e) => {
-    if(handled)
-      return ;
+    if (handled)
+      return
     handled = true
 
-    delete e.domain;
-    delete e.domainThrown;
-    delete e.domainEmitter;
-    delete e.domainBound;
+    delete e.domain
+    delete e.domainThrown
+    delete e.domainEmitter
+    delete e.domainBound
 
-    if(!e.http)
-      e.http = 500;
+    if (!e.http)
+      e.http = 500
 
     console.log(e)
     process.stderr.write('Error: ' + JSON.stringify(e.stack) + '\n')
 
-    res.status(e.http);
+    res.status(e.http)
 
-    if(e.http >= 500)
-      res.json({message: 'Internal Error'});
+    if (e.http >= 500)
+      res.json({message: 'Internal Error'})
     else
-      res.json(e);
-  });
+      res.json(e)
+  })
 
-  if(connections[suite]) {
-    domain.db = connections[suite];
-    domain.jobs = [];
-    domain.jobs.push = job => job.save();
-    domain.run(next);
-    return ;
+  if (connections[suite]) {
+    domain.db = connections[suite]
+    domain.jobs = []
+    domain.jobs.push = job => job.save()
+    domain.run(next)
+    return
   }
 
-  db.conn( (err, conn, done) => {
-    conn.done = done;
+  db.conn((err, conn, done) => {
+    conn.done = done
     conn.query('BEGIN', (err) => {
-      connections[suite] = conn;
-      domain.db = conn;
-      domain.run(next);
-    });
-  });
-};
+      connections[suite] = conn
+      domain.db = conn
+      domain.run(next)
+    })
+  })
+}
 
-function setupApp(cb) {
-  var app = require('../lib/bootstrap.js')();
-  app.use(database);
+function setupApp (cb) {
+  const app = require('../lib/bootstrap.js')()
+  app.use(database)
 
 //   Error.autoReport = false;
 
-  if(!program.keep) {
+  if (!program.keep) {
     Run.on('suite done', (suite) => {
-      connections[suite].query('ROLLBACK', connections[suite].done);
-      delete connections[suite];
-    });
+      connections[suite].query('ROLLBACK', connections[suite].done)
+      delete connections[suite]
+    })
   }
 
-  Run.emit('app ready', app);
+  Run.emit('app ready', app)
 
   app.on('after loading routes', () => {
     app.use((err, req, res, next) => {
-      process.domain.emit('error', err);
-    });
-  });
+      process.domain.emit('error', err)
+    })
+  })
 
   app.listen(config.tests.port, () => {
-    //Clear all jobs on test db
-    redisClient.flushall( err => {
-      Notification.schedule = function(notification, cb) {
-        if(!notification.delay)
-          notification.delay = 0;
+    // Clear all jobs on test db
+    redisClient.flushall(err => {
+      Notification.schedule = function (notification, cb) {
+        if (!notification.delay)
+          notification.delay = 0
 
-        setTimeout(function() {
-          Notification.create(notification, cb);
-        }, notification.delay);
-      };
+        setTimeout(function () {
+          Notification.create(notification, cb)
+        }, notification.delay)
+      }
 
-      cb();
-    });
-  });
+      cb()
+    })
+  })
 }
 
-var steps = [];
+const steps = []
 
-if(!program.server)
-  steps.push(setupApp);
+if (!program.server)
+  steps.push(setupApp)
 
-steps.push(spawnProcesses);
+steps.push(spawnProcesses)
 
 async.series(steps, (err) => {
-  if(err) {
-    console.log(err);
+  if (err) {
+    console.log(err)
   }
 
-  Run.emit('done');
-});
+  Run.emit('done')
+})

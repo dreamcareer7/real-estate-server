@@ -17,31 +17,28 @@
  * limitations under the License.
  * ============================================================ */
 
-
 !function ($) {
-
-  "use strict"; // jshint ;_;
-
+  'use strict' // jshint ;_;
 
  /* DROPDOWN CLASS DEFINITION
   * ========================= */
 
-  var toggle = '[data-toggle=dropdown]'
-    , Dropdown = function (element) {
-        var $el = $(element).on('click.dropdown.data-api', this.toggle)
-        $('html').on('click.dropdown.data-api', function () {
-          $el.parent().removeClass('open')
-        })
-      }
+  let toggle = '[data-toggle=dropdown]',
+    Dropdown = function (element) {
+      const $el = $(element).on('click.dropdown.data-api', this.toggle)
+      $('html').on('click.dropdown.data-api', function () {
+        $el.parent().removeClass('open')
+      })
+    }
 
   Dropdown.prototype = {
 
-    constructor: Dropdown
+    constructor: Dropdown,
 
-  , toggle: function (e) {
-      var $this = $(this)
-        , $parent
-        , isActive
+    toggle: function (e) {
+      let $this = $(this),
+        $parent,
+        isActive
 
       if ($this.is('.disabled, :disabled')) return
 
@@ -62,15 +59,15 @@
       $this.focus()
 
       return false
-    }
+    },
 
-  , keydown: function (e) {
-      var $this
-        , $items
-        , $active
-        , $parent
-        , isActive
-        , index
+    keydown: function (e) {
+      let $this,
+        $items,
+        $active,
+        $parent,
+        isActive,
+        index
 
       if (!/(38|40|27)/.test(e.keyCode)) return
 
@@ -107,20 +104,20 @@
 
   }
 
-  function clearMenus() {
+  function clearMenus () {
     $('.dropdown-backdrop').remove()
     $(toggle).each(function () {
       getParent($(this)).removeClass('open')
     })
   }
 
-  function getParent($this) {
-    var selector = $this.attr('data-target')
-      , $parent
+  function getParent ($this) {
+    let selector = $this.attr('data-target'),
+      $parent
 
     if (!selector) {
       selector = $this.attr('href')
-      selector = selector && /#/.test(selector) && selector.replace(/.*(?=#[^\s]*$)/, '') //strip for ie7
+      selector = selector && /#/.test(selector) && selector.replace(/.*(?=#[^\s]*$)/, '') // strip for ie7
     }
 
     $parent = selector && $(selector)
@@ -130,23 +127,21 @@
     return $parent
   }
 
-
   /* DROPDOWN PLUGIN DEFINITION
    * ========================== */
 
-  var old = $.fn.dropdown
+  const old = $.fn.dropdown
 
   $.fn.dropdown = function (option) {
     return this.each(function () {
-      var $this = $(this)
-        , data = $this.data('dropdown')
+      let $this = $(this),
+        data = $this.data('dropdown')
       if (!data) $this.data('dropdown', (data = new Dropdown(this)))
       if (typeof option == 'string') data[option].call($this)
     })
   }
 
   $.fn.dropdown.Constructor = Dropdown
-
 
  /* DROPDOWN NO CONFLICT
   * ==================== */
@@ -156,14 +151,12 @@
     return this
   }
 
-
   /* APPLY TO STANDARD DROPDOWN ELEMENTS
    * =================================== */
 
   $(document)
     .on('click.dropdown.data-api', clearMenus)
     .on('click.dropdown.data-api', '.dropdown form', function (e) { e.stopPropagation() })
-    .on('click.dropdown.data-api'  , toggle, Dropdown.prototype.toggle)
-    .on('keydown.dropdown.data-api', toggle + ', [role=menu]' , Dropdown.prototype.keydown)
-
-}(window.jQuery);
+    .on('click.dropdown.data-api', toggle, Dropdown.prototype.toggle)
+    .on('keydown.dropdown.data-api', toggle + ', [role=menu]', Dropdown.prototype.keydown)
+}(window.jQuery)
