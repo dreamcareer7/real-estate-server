@@ -354,41 +354,6 @@ var recommendManuallyWorked = (cb) => {
     });
 }
 
-var bulkRecommendManually = (cb) => {
-  return frisby.create('bulk recommend manually')
-    .post('/recs', {
-      mls_number: results.recommendation.markAsSeenWorked.data[0].listing.mls_number
-    })
-    .after(cb)
-    .expectStatus(200)
-    .expectJSON({
-      code: 'OK'
-    })
-    .expectJSONTypes({
-      code: String,
-      data: Array,
-      info: info_response
-    });
-}
-
-var bulkRecommendManually400 = (cb) => {
-  return frisby.create('expect 400 with invalid mls number')
-    .post('/recs', {
-      mls_number: 1
-    })
-    .after(cb)
-    .expectStatus(400)
-}
-
-var bulkRecommendManually404 = (cb) => {
-  return frisby.create('expect 400 with invalid mls number')
-    .post('/recs', {
-      mls_number: uuid.v1()
-    })
-    .after(cb)
-    .expectStatus(404)
-}
-
 module.exports = {
   feed,
   feed404,
@@ -412,8 +377,5 @@ module.exports = {
   recommendManually,
   recommendManually400,
   recommendManually404,
-  recommendManuallyWorked,
-  bulkRecommendManually,
-  bulkRecommendManually400,
-  bulkRecommendManually404
+  recommendManuallyWorked
 }
