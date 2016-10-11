@@ -39,8 +39,8 @@ function sortByModified (a, b) {
     return 1
   else if (b_ > a_)
     return -1
-  else
-    return 0
+
+  return 0
 }
 
 function sortById (a, b) {
@@ -51,8 +51,8 @@ function sortById (a, b) {
     return 1
   else if (b_ > a_)
     return -1
-  else
-    return 0
+
+  return 0
 }
 
 function getLastRun (cb) {
