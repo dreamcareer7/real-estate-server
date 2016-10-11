@@ -73,11 +73,14 @@ function runTask (task, cb) {
   const done = function () {
     if (alreadyDone)
       return
+
     alreadyDone = true
     console.log('Finished', task.name)
-    cb()
     clearTimeout(timeout)
+
+    return cb()
   }
+
   const c = _.clone(task.command)
   const p = spawn(__dirname + '/' + c[0], c.splice(1))
   p.on('close', done)

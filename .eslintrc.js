@@ -254,6 +254,9 @@ module.exports = {
     ],
     'no-implied-eval': [
       'error'
+    ],
+    'callback-return': [
+      'error'
     ]
   }
 }
