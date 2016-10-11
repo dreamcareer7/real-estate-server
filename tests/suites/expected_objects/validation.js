@@ -1,3 +1,5 @@
+const _u = require('underscore')
+
 const optionalString = function (val) {
   expect(val).toBeTypeOrNull(String)
 }
@@ -26,13 +28,13 @@ const optionalLocation = function (val) {
   if (!val)
     return
 
-  if (!val.latitude || typeof (val.latitude) != 'number')
+  if (!_u.isNumber(val.latitude))
     throw 'Location.latitude is required'
 
-  if (!val.longitude || typeof (val.longitude) != 'number')
+  if (!_u.isNumber(val.longitude))
     throw 'Location.longitude is required'
 
-  if (!val.type || typeof (val.type) != 'string' || val.type != 'location')
+  if (!_u.isString(val.type) || val.type !== 'location')
     throw 'Location.type is required'
 }
 

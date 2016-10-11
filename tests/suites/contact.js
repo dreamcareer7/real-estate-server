@@ -93,7 +93,7 @@ const getContact = (cb) => {
       const must = ['New', 'bar', 'foo']
       const is = json.data[0].tags
 
-      if (_.difference(is, must).length != 0)
+      if (_.difference(is, must).length !== 0)
         throw new Error('Tags dont match: Its [' + is + '] But should be [' + must + ']')
     })
     .expectJSON({

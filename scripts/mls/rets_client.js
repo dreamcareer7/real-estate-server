@@ -180,13 +180,13 @@ function fetch (cb) {
     clearTimeout(timeout)
 
     if (Client.last_run && Client.last_run.is_initial_completed === false) {
-      if (err && err.replyCode == '20201') {
+      if (err && err.replyCode === '20201') {
         Client.emit('initial completed')
         return cb(null, [])
       }
     }
 
-    if (err && err.replyCode == '20201') // Not an error. Just no results.
+    if (err && err.replyCode === '20201') // Not an error. Just no results.
       return cb(null, [])
 
     if (err)

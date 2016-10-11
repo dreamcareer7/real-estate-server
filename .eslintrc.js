@@ -69,7 +69,6 @@ module.exports = function (app) {
   for (var i in files)
     require(files[i])
 }
-
 module.exports = {
   'globals': global_object,
   'env': {
@@ -111,6 +110,57 @@ module.exports = {
     ],
     'space-infix-ops': [
       'error'
+    ],
+    'no-cond-assign': [
+      'error'
+    ],
+    'no-dupe-args': [
+      'error'
+    ],
+    'no-dupe-keys': [
+      'error'
+    ],
+    'no-duplicate-case': [
+      'error'
+    ],
+    'no-empty-character-class': [
+      'error'
+    ],
+    'no-empty': [
+      'error'
+    ],
+    'no-extra-boolean-cast': [
+      'error'
+    ],
+    'no-extra-semi': [
+      'error'
+    ],
+    'no-obj-calls': [
+      'error'
+    ],
+    'no-unexpected-multiline': [
+      'error'
+    ],
+    'no-unreachable': [
+      'error'
+    ],
+    'no-unsafe-negation': [
+      'error'
+    ],
+    'use-isnan': [
+      'error'
+    ],
+    'valid-typeof': [
+      'error'
+    ],
+    'default-case': [
+      'error'
+    ],
+    'eqeqeq': [
+      'error'
     ]
+    // 'guard-for-in': [
+    //   'error'
+    // ]
   }
 }

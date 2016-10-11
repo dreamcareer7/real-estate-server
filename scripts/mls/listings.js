@@ -39,7 +39,7 @@ Client.work(options, report)
 function upsertAddress (address, cb) {
   Address.getByMUI(address.matrix_unique_id, function (err, current) {
     if (err) {
-      if (err.code == 'ResourceNotFound') {
+      if (err.code === 'ResourceNotFound') {
         Metric.increment('mls.new_address')
         Address.create(address, function (err, address_id) {
           if (err)
@@ -80,7 +80,7 @@ function upsertProperty (property, address_id, cb) {
 
   Property.getByMUI(property.matrix_unique_id, function (err, current) {
     if (err) {
-      if (err.code == 'ResourceNotFound') {
+      if (err.code === 'ResourceNotFound') {
         Metric.increment('mls.new_property')
         return Property.create(property, cb)
       }

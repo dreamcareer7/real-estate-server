@@ -3,7 +3,9 @@ const mkdir = require('fs').mkdirSync
 
 try {
   mkdir('/tmp/rechat')
-} catch (e) {}
+} catch (e) {
+  // FIXME: What is to be done here?
+}
 
 const c = spawn('node ' + __dirname + '/../tests/run --docs > /tmp/rechat/index.html', function (err, out) {
   console.log('Served on port', port)
