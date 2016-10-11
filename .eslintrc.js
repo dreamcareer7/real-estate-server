@@ -257,6 +257,9 @@ module.exports = {
     ],
     'callback-return': [
       'error'
+    ],
+    'global-require': [
+      'error'
     ]
   }
 }
