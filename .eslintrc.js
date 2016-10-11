@@ -170,6 +170,30 @@ module.exports = {
     ],
     'no-else-return': [
       'error'
+    ],
+    'no-eq-null': [
+      'error'
+    ],
+    'no-eval': [
+      'error'
+    ],
+    'no-extra-bind': [
+      'error'
+    ],
+    'no-extra-label': [
+      'error'
+    ],
+    'no-fallthrough': [
+      'error'
+    ],
+    'no-floating-decimal': [
+      'error'
+    ],
+    'no-global-assign': [
+      'error'
+    ],
+    'no-implicit-coercion': [
+      'error'
     ]
   }
 }
