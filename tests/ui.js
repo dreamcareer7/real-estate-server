@@ -1,4 +1,4 @@
-const clui    = require('clui')
+const clui = require('clui')
 const bytes = require('bytes')
 
 const suites = {}
@@ -25,11 +25,13 @@ function logger(req, res, next) {
   next()
 }
 
-Run.on('spawn', (suite) => suites[suite].state = 'Running')
-
+Run.on('spawn', (suite) => {
+  suites[suite].state = 'Running'
+})
+  
 Run.on('message', (suite, message) => {
   if(message.code !== 'test done')
-    return 
+    return
 
   suites[suite].tests.push(message.test)
 })
@@ -94,10 +96,10 @@ function updateUI() {
     line.store()
 
 
-    if(!result) return 
+    if(!result) return
     result.tests.forEach( (test) => {
       if(test.failed < 1)
-        return 
+        return
 
       const line = new clui.Line(screen)
       line.padding(15).column(test.name.red, 600)

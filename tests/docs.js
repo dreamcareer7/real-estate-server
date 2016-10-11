@@ -129,7 +129,7 @@ function cleanup (req, res, data) {
   }
 }
 
-function bf (pair) {
+function bf(pair) {
   const indent = '    '
   const newline = '\n'
   const req = pair['request']
@@ -153,7 +153,8 @@ function bf (pair) {
 //   });
 
     req['body'].split('\n').forEach(function (line) {
-      return output += indent + indent + indent + line + newline
+      output += indent + indent + indent + line + newline
+      return output
     })
     output += newline
   }
@@ -164,8 +165,10 @@ function bf (pair) {
 //     return output += indent + indent + indent + key + ":" + res['headers'][key] + newline;
 //   });
   res['body'].split('\n').forEach(function (line) {
-    return output += indent + indent + indent + line + newline
+    output += indent + indent + indent + line + newline
+    return output
   })
+
   output += newline
   return output
 }

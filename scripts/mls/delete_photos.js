@@ -39,7 +39,9 @@ Photo.getUncheckedListings((err, listings) => {
   if (listings.length < 1)
     process.exit()
 
-  listings.forEach(l => grouped[l] = [])
+  listings.forEach(l => {
+    grouped[l] = []
+  })
 
   options.query = '(Table_MUI=' + listings.join(',') + ')'
 

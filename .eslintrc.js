@@ -194,6 +194,66 @@ module.exports = {
     ],
     'no-implicit-coercion': [
       'error'
+    ],
+    'no-implicit-globals': [
+      'error'
+    ],
+    'yoda': [
+      'error'
+    ],
+    'no-with': [
+      'error'
+    ],
+    'no-void': [
+      'error'
+    ],
+    'no-useless-call': [
+      'error'
+    ],
+    'no-unused-labels': [
+      'error'
+    ],
+    'no-unused-expressions': [
+      'error'
+    ],
+    'no-unmodified-loop-condition': [
+      'error'
+    ],
+    'no-sequences': [
+      'error'
+    ],
+    'no-self-compare': [
+      'error'
+    ],
+    'no-self-assign': [
+      'error'
+    ],
+    'no-return-assign': [
+      'error'
+    ],
+    'no-redeclare': [
+      'error'
+    ],
+    'no-proto': [
+      'error'
+    ],
+    'no-new': [
+      'error'
+    ],
+    'no-new-wrappers': [
+      'error'
+    ],
+    'no-new-func': [
+      'error'
+    ],
+    'no-multi-spaces': [
+      'error'
+    ],
+    'no-invalid-this': [
+      'error'
+    ],
+    'no-implied-eval': [
+      'error'
     ]
   }
 }
