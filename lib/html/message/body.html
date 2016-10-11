@@ -87,17 +87,21 @@
             <tr>
               <td style="padding:0 0 20px;">
                 <table width="100%" cellpadding="0" cellspacing="0">
-                  <tr>
-                    <td bgcolor="#63b5f6" align="center" style="padding:15px 15px 14px; font:700 17px/21px Lato, Arial, Helvetica, sans-serif; color:#fff; letter-spacing:1px; text-transform:uppercase; border-radius: 3px 3px 0 0;">
-                      The only re  al estate app you’ll ever need
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="img-flex">
-                      <img src="https://assets.rechat.com/mail/seamless/header.png" width="600" style="width:600px; vertical-align:top;" alt="" />
-                    </td>
-                  </tr>
-                  {% if user.is_shadow %}
+                  {% if brand %}
+                  {%else%}
+                    <tr>
+                      <td bgcolor="#63b5f6" align="center" style="padding:15px 15px 14px; font:700 17px/21px Lato, Arial, Helvetica, sans-serif; color:#fff; letter-spacing:1px; text-transform:uppercase; border-radius: 3px 3px 0 0;">
+                        The only real estate app you’ll ever need
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="img-flex">
+                        <img src="https://assets.rechat.com/mail/seamless/header.png" width="600" style="width:600px; vertical-align:top;" alt="" />
+                      </td>
+                    </tr>
+                  {% endif %}
+
+                  {% if invitation %}
                     {% include 'lib/html/message/invite.html' %}
                   {% endif %}
                 </table>
