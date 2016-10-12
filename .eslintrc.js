@@ -158,9 +158,18 @@ module.exports = {
     ],
     'eqeqeq': [
       'error'
+    ],
+    'no-alert': [
+      'error'
+    ],
+    'no-caller': [
+      'error'
+    ],
+    'no-case-declarations': [
+      'error'
+    ],
+    'no-else-return': [
+      'error'
     ]
-    // 'guard-for-in': [
-    //   'error'
-    // ]
   }
 }

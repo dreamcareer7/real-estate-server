@@ -63,15 +63,15 @@ function upsertAddress (address, cb) {
       }
 
       return cb(err)
-    } else {
-      Metric.increment('mls.updated_address')
-      Address.update(current.id, address, function (err, next) {
-        if (err)
-          return cb(err)
-
-        return cb(null, next.id)
-      })
     }
+
+    Metric.increment('mls.updated_address')
+    Address.update(current.id, address, function (err, next) {
+      if (err)
+        return cb(err)
+
+      return cb(null, next.id)
+    })
   })
 }
 
