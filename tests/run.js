@@ -126,8 +126,14 @@ const database = (req, res, next) => {
   }
 
   db.conn((err, conn, done) => {
+    if (err)
+      return res.error(err)
+
     conn.done = done
     conn.query('BEGIN', (err) => {
+      if (err)
+        return res.error(err)
+
       connections[suite] = conn
       domain.db = conn
       domain.run(next)
@@ -158,7 +164,7 @@ function setupApp (cb) {
 
   app.listen(config.tests.port, () => {
     // Clear all jobs on test db
-    redisClient.flushall(err => {
+    redisClient.flushdb(err => {
       Notification.schedule = function (notification, cb) {
         if (!notification.delay)
           notification.delay = 0
