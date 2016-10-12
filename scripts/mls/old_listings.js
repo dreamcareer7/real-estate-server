@@ -16,7 +16,10 @@ options.class = 'Listing'
 options.job = 'old_listings'
 
 function upsertAddress (address, cb) {
-  Address.getByMUI(address.matrix_unique_id, function (err, current) {
+  Address.getByMUI(address.matrix_unique_id, (err, current) => {
+    if(err)
+      return cb(err)
+
     if (current)
       return cb(null, current.id)
 
@@ -28,7 +31,10 @@ function upsertAddress (address, cb) {
 function upsertProperty (property, address_id, cb) {
   property.address_id = address_id
 
-  Property.getByMUI(property.matrix_unique_id, function (err, current) {
+  Property.getByMUI(property.matrix_unique_id, (err, current) => {
+    if(err)
+      return cb(err)
+
     if (current)
       return cb(null, current.id)
 
@@ -40,7 +46,10 @@ function upsertProperty (property, address_id, cb) {
 function upsertListing (listing, property_id, cb) {
   listing.property_id = property_id
 
-  Listing.getByMUI(listing.matrix_unique_id, function (err, current) {
+  Listing.getByMUI(listing.matrix_unique_id, (err, current) => {
+    if(err)
+      return cb(err)
+
     if (current)
       return cb(null, current.id)
 

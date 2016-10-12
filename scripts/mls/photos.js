@@ -95,11 +95,16 @@ function savePhotos (cb) {
   const limit = options.limit || 2000
 
   Photo.getUnprocessedPhotos({limit: limit}, (err, photos) => {
+    if(err)
+      return cb(err)
+
     async.map(photos, processPhoto, cb)
   })
 }
 
+// eslint-disable-next-line handle-callback-err
 Client.work(options, (err) => {
+  // eslint-disable-next-line handle-callback-err
   savePhotos(err => {
     Metric.flush(process.exit)
   })
