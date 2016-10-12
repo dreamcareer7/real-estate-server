@@ -18,5 +18,5 @@ VALUES
   $6,
   $7
 )
-ON CONFLICT(room, listing) DO UPDATE SET source = EXCLUDED.source
+ON CONFLICT(room, listing) DO NOTHING
 RETURNING id
