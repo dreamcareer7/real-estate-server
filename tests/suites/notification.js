@@ -144,7 +144,7 @@ const patchNotificationSettings = (cb) => {
 const patchNotificationSettings404 = (cb) => {
   return frisby.create('expect 404 with invalid notification id')
     .patch('/room/' + uuid.v1() + '/notifications', {
-      notification: 'true'
+      notification: true
     })
     .after(cb)
     .expectStatus(404)
