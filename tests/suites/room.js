@@ -96,7 +96,7 @@ const getUserRooms = (cb) => {
 
 const addUser = (cb) => {
   return frisby.create('add user to a room')
-    .post('/rooms/' + results.room.create.data.id + '/users', {user: [
+    .post('/rooms/' + results.room.create.data.id + '/users', {users: [
       results.user.create.data.id
     ]})
     .after(cb)
