@@ -10,7 +10,7 @@ brand_agents AS (
     SELECT agent FROM brands_agents WHERE brand = $1
     UNION
     SELECT agent FROM users WHERE id IN (
-      SELECT id FROM users WHERE brand = $1
+      SELECT id FROM brands_users WHERE brand = $1
     )
   )
   OR
@@ -37,7 +37,7 @@ sorted_brand_users AS (
       END
     ) as is_me,
     (
-      CASE WHEN $2::uuid IS NULL THEN 0 ELSE 
+      CASE WHEN $2::uuid IS NULL THEN 0 ELSE
         (SELECT count(*) FROM contacts WHERE "user" = $1 AND contact_user = $2)
       END
     ) as has_contact
