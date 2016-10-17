@@ -119,7 +119,7 @@ const addUser400 = (cb) => {
 }
 
 const removeUserWorked = (cb) => {
-  return frisby.create('get a user\'s rooms')
+  return frisby.create('make sure removing user worked')
     .get('/rooms')
     .after(cb)
     .expectStatus(200)
@@ -165,7 +165,7 @@ const patchRoom404 = (cb) => {
 
 const patchRoomWorked = (cb) => {
   room.title = updated_room
-  return frisby.create('get room')
+  return frisby.create('make sure patching worked')
     .get('/rooms/' + results.room.create.data.id)
     .after(cb)
     .expectStatus(200)
@@ -210,7 +210,7 @@ const deleteRoom404 = (cb) => {
 }
 
 const deleteRoomWorked = (cb) => {
-  return frisby.create('get room')
+  return frisby.create('make sure the room was deleted')
     .get('/rooms/' + results.room.create.data.id)
     .after(cb)
     .expectStatus(200)
