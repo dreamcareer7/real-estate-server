@@ -118,21 +118,6 @@ const addUser400 = (cb) => {
     .expectStatus(400)
 }
 
-const removeUserWorked = (cb) => {
-  return frisby.create('make sure removing user worked')
-    .get('/rooms')
-    .after(cb)
-    .expectStatus(200)
-    .expectJSON({
-      code: 'OK'
-    })
-    .expectJSONTypes({
-      code: String,
-      data: [],
-      info: info_response
-    })
-}
-
 const removeUserFromPersonal = (cb) => {
   return frisby.create('remove user from his personal room')
     .delete('/rooms/' + results.user.create.data.personal_room + '/users/' + results.authorize.token.data.id)
@@ -188,44 +173,18 @@ const removeUser = (cb) => {
     .after(cb)
 }
 
+const removeUserWorked = (cb) => {
+  return frisby.create('make sure that we left the room')
+    .get('/rooms/' + results.room.create.data.id)
+    .expectStatus(403)
+    .after(cb)
+}
+
 const removeUser404 = (cb) => {
   return frisby.create('expect 404 with invalid user id when removing a user from a room')
     .delete('/rooms/' + results.room.create.data.id + '/users/' + uuid.v1())
     .expectStatus(404)
     .after(cb)
-}
-
-const deleteRoom = (cb) => {
-  return frisby.create('delete room')
-    .delete('/rooms/' + results.room.create.data.id)
-    .expectStatus(204)
-    .after(cb)
-}
-
-const deleteRoom404 = (cb) => {
-  return frisby.create('expect 404 when deleting invalid room')
-    .delete('/rooms/' + uuid.v1())
-    .expectStatus(404)
-    .after(cb)
-}
-
-const deleteRoomWorked = (cb) => {
-  return frisby.create('make sure the room was deleted')
-    .get('/rooms/' + results.room.create.data.id)
-    .after(cb)
-    .expectStatus(200)
-    .expectJSON({
-      code: 'OK'
-    })
-    .expectJSONTypes({
-      data: {
-        deleted_at: Number
-      }
-    })
-    .expectJSONTypes({
-      code: String,
-      data: room_response
-    })
 }
 
 module.exports = {
@@ -238,14 +197,11 @@ module.exports = {
   getUserRooms,
   addUser,
   addUser400,
-  removeUser,
+  patchRoom404,
+  patchRoom,
+  patchRoomWorked,
   removeUser404,
+  removeUser,
   removeUserWorked,
   removeUserFromPersonal,
-  patchRoom,
-  patchRoom404,
-  patchRoomWorked,
-  deleteRoom,
-  deleteRoom404,
-  deleteRoomWorked
 }
