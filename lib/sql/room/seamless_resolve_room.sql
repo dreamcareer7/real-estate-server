@@ -5,6 +5,7 @@ ON rooms_users.phone_handler = seamless_phone_pool.id
 INNER JOIN rooms
 ON rooms_users.room = rooms.id
 WHERE rooms_users."user" = $1 AND
-      seamless_phone_pool.phone_number = $2
+      seamless_phone_pool.phone_number = $2 AND
+      rooms.room_type <> 'Personal'
 ORDER BY rooms.updated_at DESC
 LIMIT 1
