@@ -23,7 +23,6 @@ const globals = [
   'Mailgun',
   'MLSArea',
   'SMS',
-  'Invitation',
   'Admin',
   'Crypto',
   'ObjectUtil',
