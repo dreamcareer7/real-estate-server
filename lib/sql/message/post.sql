@@ -1,3 +1,9 @@
+WITH unhide AS (
+  UPDATE rooms
+  SET deleted_at = NULL
+  WHERE id = $1 AND
+        deleted_at IS NOT NULL
+)
 INSERT INTO messages(
     room,
     message_type,
