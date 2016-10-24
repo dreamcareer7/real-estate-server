@@ -1,5 +1,7 @@
 WITH issued_notification AS (
   SELECT id FROM notifications WHERE object_class = 'Message' AND object = $1
+  UNION
+  SELECT notification FROM messages WHERE id = $1
 ),
 
 deliveries AS (
@@ -7,7 +9,8 @@ deliveries AS (
     "user",
     type AS delivery_type,
     'notification_delivery' as type
-  FROM notifications_deliveries WHERE notification IN ( SELECT id FROM issued_notification )
+  FROM notifications_deliveries
+  WHERE notification IN ( SELECT id FROM issued_notification )
 )
 
 SELECT 'message' AS type,
