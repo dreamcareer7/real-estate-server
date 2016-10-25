@@ -106,9 +106,8 @@ reportQueueStatistics()
 
 const sendNotifications = function () {
   async.series([
-    Notification.sendPushForUnread,
+    Notification.sendForUnread,
     Message.sendEmailForUnread,
-    Notification.sendTextForUnread
   ], err => {
     if (err) {
       console.log(err)
