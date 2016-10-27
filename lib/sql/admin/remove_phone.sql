@@ -1,5 +1,8 @@
-UPDATE users
+WITH t AS (
+  UPDATE users
+  SET phone_number = NULL
+  WHERE phone_number = $1::text
+)
+UPDATE contacts
 SET phone_number = NULL
-WHERE id::text = $1::text OR
-      phone_number = $1 OR
-      email = $1
+WHERE phone_number = $1::text
