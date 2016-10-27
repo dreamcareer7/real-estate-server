@@ -1,0 +1,5 @@
+{% if (not before) or (before == 0) %}
+[New Price] {% include 'lib/templates/notifications/logic/room_title.tmpl' %}{{listing | listing_address}} is now {{now | price}}.
+{% else %}
+[Price Change] {% include 'lib/templates/notifications/logic/room_title.tmpl' %}{{listing | listing_address}} went from {{before | price}} to {{now | price}}.
+{% endif %}
