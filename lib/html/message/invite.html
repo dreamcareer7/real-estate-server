@@ -3,7 +3,9 @@
     <table width="100%" cellpadding="0" cellspacing="0">
       <tr>
         <td align="center" style="padding:0 0 30px;">
-          <img src="{{invitation.subjects[0].profile_image_url}}" width="120" style="width:120px; vertical-align:top; border-radius: 100%;" alt="" />
+          {% if invitation.subjects[0].profile_image_url %}
+            <div style="background-image: url({{invitation.subjects[0].profile_image_url}}); background-repeat: no-repeat; background-size: cover; width: 120px; height: 120px; border-radius: 50%"></div>
+          {% endif %}
         </td>
       </tr>
       <tr>
