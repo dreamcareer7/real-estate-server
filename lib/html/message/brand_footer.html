@@ -6,7 +6,7 @@
           <table width="100%" cellpadding="0" cellspacing="0">
             <tr>
               <td align="center" style="padding:0 0 22px;">
-                <img src="{{brand.users[0].profile_image_url}}" width="200" style="width:200px; vertical-align:top; border-radius: 100%" alt="" />
+                <div style="background-image: url({{brand.users[0].profile_image_url}}); background-repeat: no-repeat; background-size: cover; width: 200px; height: 200px; border-radius: 50%"></div>
               </td>
             </tr>
             <tr>
@@ -16,7 +16,7 @@
             </tr>
             <tr>
               <td align="center" style="padding:0 0 8px; font:bold 14px/17px Lato, Arial, Helvetica, sans-serif; color:#8696a4;">
-                Agent, {{brand.message.office_title}}
+                Agent, {{brand | brand_message('office_title')}}
               </td>
             </tr>
             <tr>
