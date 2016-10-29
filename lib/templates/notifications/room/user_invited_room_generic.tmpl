@@ -1,7 +1,5 @@
-This is an automatic message from Rechat, one app that makes your real estate experience easier.
- {{room.users | length}}
- You can reply to this message and the message gets delivered to your teammates instantly.
- {{inviting_user | name}} invited {{invited_user | name}} to join {% include 'lib/templates/notifications/logic/room_title_only.tmpl' %}.
- {% include 'lib/templates/notifications/logic/room_members.tmpl' %}
- {% if room.users | length < 2 %}is{% else %}are{% endif %}
- also in this room.
+{% if target_user.id == auxiliary_object.id %}
+This is an automatic message from Rechat, the Real Estate app that elevates your game.
+ You can reply to this message directly and it gets delivered instantly.
+{% endif %}
+ {{subjects[0] | name}} invited {% if target_user.id == auxiliary_object.id %}you{% else %}{{auxiliary_object | name}}{% endif %} to join {% include 'lib/templates/notifications/logic/room_title_only.tmpl' %}.
