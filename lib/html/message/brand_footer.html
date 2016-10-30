@@ -6,12 +6,12 @@
           <table width="100%" cellpadding="0" cellspacing="0">
             <tr>
               <td align="center" style="padding:0 0 22px;">
-                <div style="background-image: url({{brand.users[0].profile_image_url}}); background-repeat: no-repeat; background-size: cover; width: 200px; height: 200px; border-radius: 50%"></div>
+                <div style="background-image: url({{brand_user.profile_image_url}}); background-repeat: no-repeat; background-size: cover; width: 200px; height: 200px; border-radius: 50%"></div>
               </td>
             </tr>
             <tr>
               <td class="serif" align="center" style="font:700 22px/28px Georgia, Times New Roman, Times, serif; color:#fff;">
-                {{brand.users[0].display_name}}
+                {{brand_user.display_name}}
               </td>
             </tr>
             <tr>
@@ -21,16 +21,16 @@
             </tr>
             <tr>
               <td align="center" style="padding:0 0 50px; font:12px/15px Lato, Arial, Helvetica, sans-serif; color:#8696a4;">
-                {% if brand.users[0].phone_number %}
-                  M: <a style="color:#8696a4; text-decoration:none;">{{brand.users[0].phone_number}}</a>
+                {% if brand_user.phone_number %}
+                  M: <a style="color:#8696a4; text-decoration:none;">{{brand_user.phone_number}}</a>
                 {% endif %}
 
-                {% if brand.users[0].email and brand.users[0].phone_number %}
+                {% if brand_user.email and brand_user.phone_number %}
                   ,
                 {% endif %}
 
-                {% if brand.users[0].email %}
-                  E: <a style="color:#8696a4; text-decoration:none;">{{brand.users[0].email}}</a>
+                {% if brand_user.email %}
+                  E: <a style="color:#8696a4; text-decoration:none;">{{brand_user.email}}</a>
                 {% endif %}
               </td>
             </tr>
@@ -39,20 +39,19 @@
                 Contact me anytime to chat.
               </td>
             </tr>
-            <!-- button -->
-            <tr>
+            <!--<tr>
               <td>
                 <table width="260" align="center" style="margin:0 auto;" cellpadding="0" cellspacing="0">
                   <tr>
                     <td class="active" bgcolor="{{brand | brand_color('primary', '#2196f3')}}" align="center" style="mso-padding-alt:14px 10px 16px; font:bold 14px/21px Lato, Arial, Helvetica, sans-serif; color:#fff; text-transform:uppercase; letter-spacing:2px; border-radius:3px;">
-                      <a style="padding:14px 10px 16px; color:#fff; text-decoration:none; display:block;" target="_blank" href="http://link"> <!-- TODO: URL !-->
+                      <a style="padding:14px 10px 16px; color:#fff; text-decoration:none; display:block;" target="_blank" href="http://link">
                         <span style="display:inline-block; vertical-align:-4px;"><img src="http://assets.rechat.com/mail/seamless/chat.png" width="21" style="width:21px; vertical-align:top; display:block;" alt="" /></span>&nbsp; CHAT WITH ME
                       </a>
                     </td>
                   </tr>
                 </table>
               </td>
-            </tr>
+            </tr> !-->
           </table>
         </td>
       </tr>
