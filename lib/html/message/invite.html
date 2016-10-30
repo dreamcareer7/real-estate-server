@@ -1,33 +1,41 @@
 <tr>
-  <td class="plr-10" bgcolor="#ffffff" style="padding:40px 30px 37px; border-radius:0 0 3px 3px;">
-    <table width="100%" cellpadding="0" cellspacing="0">
-      <tr>
-        <td align="center" style="padding:0 0 30px;">
-          <img src="{{invitation.subjects[0].profile_image_url}}" width="120" style="width:120px; vertical-align:top; border-radius: 100%;" alt="" />
-        </td>
-      </tr>
-      <tr>
-        <td align="center" style="padding:0 0 19px; font:700 36px/38px Lato, Arial, Helvetica, sans-serif; color:#263445;">
-          {{invitation.subjects[0].abbreviated_display_name}} invited you to Rechat!
-        </td>
-      </tr>
-      <tr>
-        <td align="center" style="padding:0 0 29px; font:17px/30px Lato, Arial, Helvetica, sans-serif; color:#263445;">
-          Say hello to Rechat, the simple and beautiful way for agents and brokerages to work smarter, close more deals, and get paid faster.
-        </td>
-      </tr>
-      <!-- button -->
-      <tr>
-        <td>
-          <table width="160" align="center" style="margin:0 auto;" cellpadding="0" cellspacing="0">
-            <tr>
-              <td class="active" bgcolor="#2196f3" align="center" style="mso-padding-alt:17px 10px; font:bold 14px/17px Lato, Arial, Helvetica, sans-serif; color:#fff; text-transform:uppercase; letter-spacing:1px; border-radius:3px;">
-                <a style="padding:17px 10px; color:#fff; text-decoration:none; display:block;" target="_blank" href="{{room_url}}">LET’S GO</a>
-              </td>
-            </tr>
-          </table>
-        </td>
-      </tr>
-    </table>
-  </td>
-</tr>
+    <td style="padding:0 0 20px;">
+      <table width="100%" cellpadding="0" cellspacing="0">
+        <tr>
+          <td class="plr-10" bgcolor="#ffffff" style="padding:40px 30px 37px; border-radius:0 0 3px 3px;">
+            <table width="100%" cellpadding="0" cellspacing="0">
+              <tr>
+                <td align="center" style="padding:0 0 30px;">
+                  {% if invitation.subjects[0].profile_image_url %}
+                    <div style="background-image: url({{invitation.subjects[0].profile_image_url}}); background-repeat: no-repeat; background-size: cover; width: 120px; height: 120px; border-radius: 50%"></div>
+                  {% endif %}
+                </td>
+              </tr>
+              <tr>
+                <td align="center" style="padding:0 0 19px; font:700 36px/38px Lato, Arial, Helvetica, sans-serif; color:#263445;">
+                  {{invitation.subjects[0].abbreviated_display_name}} invited you to Rechat!
+                </td>
+              </tr>
+              <tr>
+                <td align="center" style="padding:0 0 29px; font:17px/30px Lato, Arial, Helvetica, sans-serif; color:#263445;">
+                  Say hello to Rechat, the simple and beautiful way for agents and brokerages to work smarter, close more deals, and get paid faster.
+                </td>
+              </tr>
+              <!-- button -->
+              <tr>
+                <td>
+                  <table width="160" align="center" style="margin:0 auto;" cellpadding="0" cellspacing="0">
+                    <tr>
+                      <td class="active" bgcolor="#2196f3" align="center" style="mso-padding-alt:17px 10px; font:bold 14px/17px Lato, Arial, Helvetica, sans-serif; color:#fff; text-transform:uppercase; letter-spacing:1px; border-radius:3px;">
+                        <a style="padding:17px 10px; color:#fff; text-decoration:none; display:block;" target="_blank" href="{{room_url}}">LET’S GO</a>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
