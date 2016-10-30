@@ -121,7 +121,7 @@
                 </table>
               </td>
             </tr>
-            {% if brand %}
+            {% if brand and brand_user %}
               {% include 'lib/html/message/brand_footer.html' %}
             {% endif %}
             {% if invitation %}
