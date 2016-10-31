@@ -10,7 +10,9 @@ brand_agents AS (
     SELECT agent FROM brands_agents WHERE brand = $1
     UNION
     SELECT agent FROM users WHERE id IN (
-      SELECT id FROM brands_users WHERE brand = $1
+      SELECT id FROM users WHERE brand = $1
+    ) AND office_mui IN(
+      SELECT matrix_unique_id FROM brand_offices
     )
   )
   OR
