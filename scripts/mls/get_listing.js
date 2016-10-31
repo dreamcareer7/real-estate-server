@@ -8,13 +8,13 @@ const program = require('./program.js')
 
 const options = program.parse(process.argv)
 
-options.resource = 'OpenHouse'
-options.class = 'OpenHouse'
+options.resource = 'Property'
+options.class = 'Listing'
 options.dontSave = true
-options.query = '(Listing_MUI=60635034)'
+options.query = '(Matrix_Unique_ID=' + options.mui + ')'
 Client.work(options, report)
 
 function report (cb, results) {
-  console.log(util.inspect(results.mls[0]))
+  console.log(util.inspect(results))
   process.exit()
 }

@@ -50,7 +50,7 @@ function _saveImage (payload, cb) {
 
   const upload = (cb) => {
     const file = {
-      name: payload.photo.matrix_unique_id,
+      name: payload.photo.matrix_unique_id + '-' + payload.photo.revision,
       ext: '.jpg',
       body: payload.data.data,
       info: {
