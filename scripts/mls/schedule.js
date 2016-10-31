@@ -40,7 +40,7 @@ function processLastRuns(queue, tasks) {
   });
 
   if(queues[queue].length() < 1) {
-    setTimeout(schedule.bind(null, queue), 5*1000)
+    setTimeout(schedule.bind(null, queue), 30*1000)
   }
 }
 
