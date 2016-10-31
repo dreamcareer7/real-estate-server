@@ -154,6 +154,7 @@ function fetch (cb) {
   const timeoutMessage = console.log.bind(console.log,
     'We got a response, but it was way too late. We already consider it a timeout.')
 
+  //TODO: Later, due to pagination, we might decide to change the query. We should log there.
   if (Client.options.query)
     Client.query = Client.options.query
   else {
@@ -199,6 +200,22 @@ function fetch (cb) {
     }
 
     return cb(null, data)
+  }
+
+  if (Client.options.offset === undefined && Client.last_run && Client.last_run.limit && Client.last_run.limit <= Client.last_run.results) {
+    if (!Client.last_run.offset)
+      Client.last_run.offset = 0;
+    Client.options.offset = Client.last_run.offset + parseInt(Client.options.limit);
+
+    Client.query = Client.last_run.query;
+  }
+
+  if (Client.options.offset === undefined && Client.last_run && Client.last_run.limit <= Client.last_run.results) {
+    if (!Client.last_run.offset)
+      Client.last_run.offset = 0
+    Client.options.offset = Client.last_run.offset + parseInt(Client.options.limit)
+
+    Client.query = Client.last_run.query
   }
 
   Client.emit('starting query', Client.query)
