@@ -8,7 +8,8 @@ deliveries AS (
   SELECT
     "user",
     type AS delivery_type,
-    'notification_delivery' as type
+    'notification_delivery' as type,
+    created_at
   FROM notifications_deliveries
   WHERE notification IN ( SELECT id FROM issued_notification )
 )
