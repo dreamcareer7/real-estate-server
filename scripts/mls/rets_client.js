@@ -156,7 +156,7 @@ function fetch(cb) {
     'We got a response, but it was way too late. We already consider it a timeout.');
 
 
-
+  //TODO: Later, due to pagination, we might decide to change the query. We should log there.
   if(Client.options.query)
     Client.query = Client.options.query;
   else {
