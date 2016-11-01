@@ -1,0 +1,1 @@
+INSERT INTO websites_hostnames (website, hostname, "default") VALUES ($1, $2, $3)
