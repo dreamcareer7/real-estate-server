@@ -121,7 +121,7 @@ const sendNotifications = function () {
       })
     }
 
-    setTimeout(sendNotifications, 1000)
+    setTimeout(sendNotifications, 5000)
   })
 }
 
