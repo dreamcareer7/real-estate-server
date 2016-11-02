@@ -1,3 +1,4 @@
+require('colors')
 const gulp = require('gulp')
 const eslint = require('gulp-eslint')
 const spawn = require('child_process').spawn
@@ -39,5 +40,8 @@ const formatter = cli.getFormatter()
 
 function lintFile(file) {
   const report = cli.executeOnFiles([file])
-  console.log(formatter(report.results))
+  if (report.results[0] && report.results[0].errorCount > 0)
+    console.log(formatter(report.results))
+  else
+    console.log(file.green, 'Looks good eslint-wise'.green)
 }
