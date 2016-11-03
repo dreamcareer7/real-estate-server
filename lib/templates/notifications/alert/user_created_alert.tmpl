@@ -1,0 +1,3 @@
+{% import "lib/templates/notifications/logic/misc.tmpl" as misc %}
+{% include "lib/templates/notifications/logic/room_title.tmpl" %}
+{{subjects[0] | name}} created a new alert: {{misc.alert_name(objects[0])}}. You’ll get a notification as soon as a new listing is available or a price drops. {% include "lib/templates/notifications/logic/branch.tmpl" %}

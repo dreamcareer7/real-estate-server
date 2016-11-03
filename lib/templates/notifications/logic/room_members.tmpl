@@ -1,0 +1,2 @@
+{% set comma = joiner(", ") %}
+{% for user in room.users %}{{comma()}}{{user | name}}{% endfor %}

@@ -1,0 +1,3 @@
+{% import "lib/templates/notifications/logic/misc.tmpl" as misc %}
+{% include 'lib/templates/notifications/logic/room_title.tmpl' %}
+{{subjects[0] | name}} edited alert: {{misc.alert_name(objects[0])}}. Check your new listings. {% include "lib/templates/notifications/logic/branch.tmpl" %}

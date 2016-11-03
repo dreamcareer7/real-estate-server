@@ -1,0 +1,2 @@
+{% include 'lib/templates/notifications/logic/room_title.tmpl' %}
+{{objects[0] | listing_address}} is open {{subjects[0].start_time | time('dddd')}} {{subjects[0].start_time | time('MMM Do')}} from {{subjects[0].start_time | time('LT')}} to {{subjects[0].end_time | time('LT')}}.

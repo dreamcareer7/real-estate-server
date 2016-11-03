@@ -1,0 +1,14 @@
+{% include 'lib/templates/notifications/logic/room_title.tmpl' %}
+{% set listing = subjects[0] %}
+{% set status = listing.status %}
+{% if target_user and target_user.type == "Agent" %}
+{% set agent = true %}
+{% else %}
+{% set agent = false %}
+{% endif %}
+
+{% if status == "Sold" %}
+{{listing | listing_address}} just sold.{% include "lib/templates/notifications/logic/branch.tmpl" %}
+{% else %}
+{{listing | listing_address}} is now {{status}}. {% include "lib/templates/notifications/logic/branch.tmpl" %}
+{% endif %}
