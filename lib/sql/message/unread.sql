@@ -15,7 +15,7 @@ FULL JOIN
     notifications.id = notifications_deliveries.notification AND 
     notifications_users.user = notifications_deliveries.user
 WHERE
-  notifications_users.created_at < (NOW() - '20 second'::interval)
+  notifications_users.created_at < (NOW() - '2 minute'::interval)
   AND notifications_users.created_at > (NOW() - '30 minute'::interval)
   AND notifications_users.acked_at IS NULL
   AND notifications.room IS NOT NULL

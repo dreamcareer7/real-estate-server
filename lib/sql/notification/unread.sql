@@ -14,6 +14,6 @@ LEFT OUTER JOIN notifications_deliveries
 WHERE
   notifications_deliveries.notification IS NULL AND
   notifications_users.acked_at IS NULL
-  AND notifications_users.created_at < (NOW() - '1 minute'::interval)
+  AND notifications_users.created_at < (NOW() - '20 second'::interval)
   AND notifications_users.created_at > (NOW() - '30 minute'::interval)
 GROUP BY notifications_users."user"
