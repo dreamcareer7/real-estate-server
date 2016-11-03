@@ -1,0 +1,18 @@
+{% set now = subjects[0].price %}
+{% set before = subjects[0].last_price %}
+
+{% if now > before %}
+{% set action = "inc" %}
+{% set p = (((now - before) / before) * 100) %}
+{% else %}
+{% set action = "dec" %}
+{% set p = (((before - now) / before) * 100) %}
+{% endif %}
+
+{% if (not before) or (before == 0) %}
+[New Price] {% include 'lib/templates/notifications/logic/room_title.tmpl' %}{{subjects[0] | listing_address}} is now {{now | price}}.
+{% elif action == "inc" %}
+[Price Change] {% include 'lib/templates/notifications/logic/room_title.tmpl' %}{{subjects[0] | listing_address}} went up by {{p | int}}% from {{before | price}} to {{now | price}}.
+{% elif action == "dec" %}
+[Price Change] {% include 'lib/templates/notifications/logic/room_title.tmpl' %}{{subjects[0] | listing_address}} just dropped it's price by {{p | int}}% from {{before | price}} to {{now | price}}.
+{% endif %}
