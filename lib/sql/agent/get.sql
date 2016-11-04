@@ -17,11 +17,18 @@ SELECT *,
          (SELECT profile_image_url FROM agent_user),
          (SELECT url FROM agents_images WHERE mui = agents.matrix_unique_id AND image_type = 'Profile' ORDER BY date DESC LIMIT 1)
        ) as profile_image_url,
+
+       COALESCE(
+         (SELECT cover_image_url FROM agent_user),
+         (SELECT url FROM agents_images WHERE mui = agents.matrix_unique_id AND image_type = 'Cover' ORDER BY date DESC LIMIT 1)
+       ) as cover_image_url,
+
        (
          SELECT ARRAY_AGG(DISTINCT phone)
          FROM agents_phones
          WHERE mui = agents.matrix_unique_id
        ) AS phone_numbers,
+
        (
          SELECT ARRAY_AGG(DISTINCT email)
          FROM agents_emails
