@@ -1,0 +1,5 @@
+{% set user = subjects[0] %}
+{% set listing = objects[0].listing %}
+[Tour Request]
+{% include 'lib/asc/notifications/logic/room_title.tmpl' %}
+{{user | name}} wants to go see {{listing | listing_address}}.

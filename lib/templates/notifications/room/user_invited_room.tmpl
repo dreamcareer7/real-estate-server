@@ -1,0 +1,7 @@
+{% import "lib/templates/notifications/logic/misc.tmpl" as misc %}
+{% if target_user.id == auxiliary_object.id and transport == "SMS" %}
+This is an automatic message from Rechat, the Real Estate app that elevates your game.
+ You can reply to this message directly and it gets delivered instantly.
+{% endif %}
+ {{subjects[0] | name}} invited {{misc.who(target_user, auxiliary_object)}} to join {% include 'lib/templates/notifications/logic/room_title_only.tmpl' %}.
+{% if transport == "SMS" %} {{branch}}.{% endif %}
