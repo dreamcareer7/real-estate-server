@@ -1,7 +1,9 @@
 {% set author = message.notification.subjects[0] %}
 {% set created_at = message.notification.created_at %}
 {% set comment %}
-  Added an Alert.
+  <span style="color: #8696a4">
+    Added an Alert.
+  </span>
 {% endset %}
 
 {% include 'lib/html/message/comment.html' %}

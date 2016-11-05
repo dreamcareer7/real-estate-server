@@ -5,10 +5,12 @@
 {% set author = message.notification.subjects[0] %}
 {% set created_at = message.notification.created_at %}
 {% set comment %}
-  Shared a home:
-  <a href="{{message.notification.branch_link}}">
-    {{address.street_number}} {{address.street_prefix}} {{address.street_name}} {{address.street_suffix}}
-  </a>
+  <span style="color: #8696a4">
+    Shared a home:
+    <a href="{{message.notification.branch_link}}">
+      {{address.street_number}} {{address.street_prefix}} {{address.street_name}} {{address.street_suffix}}
+    </a>
+  </span>
 {% endset %}
 
 {% include 'lib/html/message/comment.html' %}
@@ -84,7 +86,7 @@
               <td style="padding:0 10px 21px; border-bottom:1px solid #e2e6ea;">
                 <table width="100%" cellpadding="0" cellspacing="0">
                   <tr>
-                    <td width="52" style="font:bold 15px/18px Lato, Arial, Helvetica, sans-serif; color:#35b863;">
+                    <td width="52" style="font:bold 15px/18px Lato, Arial, Helvetica, sans-serif; color:#35b863; margin-right: 20px;">
                       {{listing | listing_price}}
                     </td>
                     <td bgcolor="#d8d8d8" width="1"></td>
