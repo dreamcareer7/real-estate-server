@@ -85,6 +85,10 @@ const sms = (job, done) => {
   Twilio.callTwilio(job.data, done)
 }
 
+const saveLastSeen = (job, done) => {
+  User.saveLastSeen(job.data, done)
+}
+
 const mls_unit = (job, done) => {
   PropertyUnit.create(job.data.processed, done)
 }
@@ -148,6 +152,11 @@ const queues = {
     parallel: config.twilio.parallel
   },
 
+  save_last_seen: {
+    handler: saveLastSeen,
+    parallel: 5
+  },
+  
   'MLS.Unit': {
     handler: mls_unit,
     parallel: 10
