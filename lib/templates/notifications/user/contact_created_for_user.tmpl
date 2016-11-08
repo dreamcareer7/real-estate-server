@@ -1,0 +1,5 @@
+{% if subjects[0] and subjects[0].contact_user %}
+{{subjects[0].contact_user | full_name}} just got connected to you.
+{% else %}
+You have a new contact.
+{% endif %}

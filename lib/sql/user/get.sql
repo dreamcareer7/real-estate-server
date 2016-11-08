@@ -14,7 +14,16 @@ SELECT 'user' AS type,
             SELECT matrix_unique_id FROM agents WHERE id = users.agent
           ) AND image_type = 'Profile' ORDER BY date DESC LIMIT 1
         )
-       ) as profile_image_url
+       ) as profile_image_url,
+
+       COALESCE(
+        cover_image_url,
+        (
+          SELECT url FROM agents_images WHERE mui = (
+            SELECT matrix_unique_id FROM agents WHERE id = users.agent
+          ) AND image_type = 'Cover' ORDER BY date DESC LIMIT 1
+        )
+       ) as cover_image_url
 
 FROM users
 WHERE users.id = $1 AND

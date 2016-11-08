@@ -1,0 +1,8 @@
+{% macro who(target, user) %}
+{% if target.id == user.id %}you{% else %}{{user | name}}{% endif %}
+{% endmacro %}
+
+{% macro alert_name(alert) %}
+{% set title = alert.title or alert.proposed_title %}
+{% if title %}{{title}}{% endif %}
+{% endmacro %}

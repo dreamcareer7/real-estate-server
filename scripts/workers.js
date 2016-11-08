@@ -68,6 +68,7 @@ Object.keys(queues).forEach(queue_name => {
   const definition = queues[queue_name]
 
   const reportError = err => {
+    console.log('Error processing job: ', queue_name, ':', err)
     const text = '🗑 Worker Error: ' + queue_name + ' \n :memo: `' + JSON.stringify(err) + '`'
 
     Slack.send({
@@ -121,7 +122,7 @@ const sendNotifications = function () {
       })
     }
 
-    setTimeout(sendNotifications, 1000)
+    setTimeout(sendNotifications, 5000)
   })
 }
 
