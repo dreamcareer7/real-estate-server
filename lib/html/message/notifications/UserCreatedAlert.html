@@ -22,6 +22,7 @@
               </td>
             </tr>
             <!-- begin block-01 -->
+            {% if alert.listings && alert.listings.length > 0 %}
             {% for listing in alert.listings.slice(0, 3) %}
               {% set property = listing.property %}
               {% set address = property.address %}
@@ -86,6 +87,7 @@
                 </td>
               </tr>
             {% endfor %}
+            {% endif %}
             <!-- end block-01 -->
             <!-- button -->
             <tr>
