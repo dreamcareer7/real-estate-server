@@ -20,6 +20,17 @@ const create = (cb) => {
     })
 }
 
+const getAll = (cb) => {
+  return frisby.create('get user\'s websites')
+    .get('/websites')
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      data: [results.website.create.data]
+    })
+}
+
 const get = (cb) => {
   return frisby.create('get website')
     .get('/websites/' + results.website.create.data.id)
@@ -73,6 +84,7 @@ const getByHostname = (cb) => {
 module.exports = {
   create,
   get,
+  getAll,
   addHostname,
   getByHostname
 }
