@@ -240,7 +240,7 @@ const raw_insert = 'INSERT INTO mls_data (resource, class, matrix_unique_id, val
 const raw = (cb, results) => {
   const data = _u.clone(results.mls)
 
-  async.mapLimit(data, 100, (l, cb) => db.query(raw_insert, [
+  async.mapLimit(data, 100, (l, cb) => db.executeSql(raw_insert, [
     Client.options.resource,
     Client.options.class,
     l[Client.options.fields.id],
