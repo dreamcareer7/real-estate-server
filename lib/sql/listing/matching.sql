@@ -40,7 +40,7 @@ WHERE
 
   (counties IS NULL OR counties @> ARRAY[$19]) AND
 
-  (postal_codes IS NULL OR postal_codes @> $30) AND
+  (postal_codes IS NULL OR postal_codes @> ARRAY[$30]) AND
 
   (subdivisions IS NULL OR subdivisions @> ARRAY[$20]) AND
 
