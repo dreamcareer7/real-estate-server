@@ -81,10 +81,31 @@ const getByHostname = (cb) => {
     })
 }
 
+const update = cb => {
+  const updated = JSON.parse(JSON.stringify(website))
+  updated.template = 'light2'
+  updated.attributes.facebook_url = 'https://updated_facebook_url'
+  updated.attributes.new_attribute = 'value'
+
+  return frisby.create('update a website')
+    .put('/websites/' + results.website.create.data.id, updated)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      data: updated
+    })
+    .expectJSONTypes({
+      code: String,
+      data: website_response
+    })
+}
+
 module.exports = {
   create,
   get,
   getAll,
   addHostname,
-  getByHostname
+  getByHostname,
+  update
 }
