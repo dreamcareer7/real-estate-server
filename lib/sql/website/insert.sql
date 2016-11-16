@@ -1,12 +1,9 @@
-INSERT INTO websites (
-  template,
-  "user",
-  brand,
-  attributes
-) VALUES (
-$1,
-$2,
-$3,
-$4
+WITH inserted AS (
+  INSERT INTO websites ("user") VALUES ($2)
+  RETURNING id
 )
-RETURNING id
+
+INSERT INTO websites_snapshots
+  (brand, template, attributes, website)
+VALUES ($3,$1, $4, (SELECT id FROM inserted))
+RETURNING (SELECT id FROM inserted)
