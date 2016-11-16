@@ -118,6 +118,22 @@ const addUser400 = (cb) => {
     .expectStatus(400)
 }
 
+const search = (cb) => {
+  return frisby.create('search room by email')
+    .get('/rooms/search?q[]=' + results.room.create.data.title)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      data: [room]
+    })
+    .expectJSONTypes({
+      code: String,
+      data: [room_response],
+      info: info_response
+    })
+}
+
 const removeUserFromPersonal = (cb) => {
   return frisby.create('remove user from his personal room')
     .delete('/rooms/' + results.user.create.data.personal_room + '/users/' + results.authorize.token.data.id)
@@ -197,6 +213,7 @@ module.exports = {
   getUserRooms,
   addUser,
   addUser400,
+  search,
   patchRoom404,
   patchRoom,
   patchRoomWorked,
