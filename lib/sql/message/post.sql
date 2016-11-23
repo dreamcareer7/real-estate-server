@@ -6,7 +6,8 @@ WITH unhide AS (
 ),
 unarchive AS (
   UPDATE rooms_users
-  SET archived = false
+  SET archived = false,
+      push_enabled = true
   WHERE room = $1 AND
         archived IS true
 )
