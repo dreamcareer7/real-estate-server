@@ -15,6 +15,7 @@ WITH r AS (
   INNER JOIN rooms
     ON rooms_users.room = rooms.id
   WHERE rooms.deleted_at IS NULL AND
+        rooms_users.archived IS FALSE AND
         CASE WHEN $4::room_type[] IS NULL THEN TRUE ELSE ARRAY[rooms.room_type]::room_type[] <@ $4::room_type[] END AND
         rooms_users."user" <> $1 AND
         rooms_users.room IN
