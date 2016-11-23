@@ -10,6 +10,7 @@ WITH user_rooms AS (
                ON rooms_users.room = rooms.id
            WHERE "user" = $1 AND
                rooms.deleted_at IS NULL AND
+               rooms_users.archived IS FALSE AND
                CASE WHEN ARRAY_LENGTH($5::room_type[], 1) IS NULL THEN TRUE ELSE rooms.room_type = ANY($5::room_type[]) END
            GROUP BY messages.room,
                     rooms_users.room

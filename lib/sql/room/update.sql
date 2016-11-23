@@ -1,9 +1,6 @@
 UPDATE rooms
-SET client_type = $1,
-    title = $2,
-    owner = $3,
-    status = $4,
-    lead_agent = $5,
-    room_type = $6,
+SET title = $1,
+    owner = $2,
+    room_type = $3,
     updated_at = NOW()
-WHERE id = $7
+WHERE id = $4
