@@ -1,0 +1,1 @@
+INSERT INTO godaddy_shoppers ("user", shopper_id) VALUES ($1, $2)
