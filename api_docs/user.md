@@ -38,6 +38,3 @@
 
 ### Create Email Verification [POST /email_verifications]
 <!-- include(tests/verification/createEmailVerification.md) -->
-
-### Invite User [POST /invitations]
-<!-- include(tests/invitation/create.md) -->
