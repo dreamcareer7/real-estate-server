@@ -1,0 +1,1 @@
+SELECT shopper_id FROM godaddy_shoppers WHERE "user" = $1
