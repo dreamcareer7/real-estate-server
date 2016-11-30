@@ -3,6 +3,12 @@ WITH unhide AS (
   SET deleted_at = NULL
   WHERE id = $1 AND
         deleted_at IS NOT NULL
+),
+unarchive AS (
+  UPDATE rooms_users
+  SET archived = false
+  WHERE room = $1 AND
+        archived IS true
 )
 INSERT INTO messages(
     room,

@@ -57,7 +57,9 @@ const globals = [
   'SocketServer',
   'Twilio',
   'Poster',
-  'Website'
+  'Website',
+  'Stripe',
+  'Godaddy'
 ]
 
 const global_object = {}
