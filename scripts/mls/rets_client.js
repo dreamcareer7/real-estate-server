@@ -297,7 +297,7 @@ Client.work = function (options, cb) {
   async.auto(steps, (err, res) => {
     if (err) {
       Slack.send({
-        channel: 'server-errors',
+        channel: '7-server-errors',
         text: '🏠 NTREIS Error on ' + Client.options.job + '\n`' + JSON.stringify(err) + '`',
         emoji: ':skull:'
       }, () => {
