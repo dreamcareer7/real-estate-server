@@ -2,12 +2,13 @@ WITH r AS (
   SELECT rooms_users.room AS id,
          STRING_AGG(
            concat_ws(
+             ' ',
              users.first_name,
              users.last_name,
              users.email,
              users.phone_number,
              rooms.title
-           ), ''
+           ), ' '
          ) AS all
   FROM rooms_users
   INNER JOIN users
