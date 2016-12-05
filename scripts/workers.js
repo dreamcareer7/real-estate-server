@@ -72,7 +72,7 @@ Object.keys(queues).forEach(queue_name => {
     const text = '🗑 Worker Error: ' + queue_name + ' \n :memo: `' + JSON.stringify(err) + '`'
 
     Slack.send({
-      channel: 'server-errors',
+      channel: '7-server-errors',
       text: text,
       emoji: '💀'
     })
