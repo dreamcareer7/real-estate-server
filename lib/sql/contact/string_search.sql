@@ -6,6 +6,7 @@ LEFT JOIN users
 WHERE contacts."user" = $1 AND
       contacts.deleted_at IS NULL AND
       concat_ws(
+        ' ',
         contacts.email,
         contacts.first_name,
         contacts.last_name,
