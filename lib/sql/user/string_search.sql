@@ -3,6 +3,7 @@ SELECT id,
 FROM users
 WHERE users.deleted_at IS NULL AND
       concat_ws(
+        ' ',
         users.first_name,
         users.last_name,
         users.email,
