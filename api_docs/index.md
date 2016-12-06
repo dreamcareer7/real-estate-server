@@ -10,4 +10,6 @@
 <!-- include(notification.md) -->
 <!-- include(task.md) -->
 <!-- include(transaction.md) -->
+<!-- include(office.md) -->
+<!-- include(agent.md) -->
 <!-- include(socket.md) -->
