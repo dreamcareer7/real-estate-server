@@ -1,4 +1,11 @@
-SELECT id
+SELECT
+id
 FROM agents
-WHERE regexp_replace(upper(mlsid), '^0*', '', 'g') = regexp_replace(upper($1), '^0*', '', 'g')
-LIMIT 1
+WHERE
+(first_name || ' ' || middle_name || ' ' || last_name) ILIKE '%' || $1 || '%'
+
+OR full_name ILIKE '%' || $1 || '%'
+
+AND status = 'Active'
+
+AND deleted_at IS NULL
