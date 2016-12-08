@@ -1,0 +1,1 @@
+SELECT id FROM stripe_customers WHERE owner = $1
