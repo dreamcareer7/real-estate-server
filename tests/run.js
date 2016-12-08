@@ -10,6 +10,7 @@ const fork = require('child_process').fork
 const async = require('async')
 const EventEmitter = require('events')
 const redis = require('redis')
+const AssertionError = require('assertion-error')
 
 const redisClient = redis.createClient(config.redis)
 
@@ -102,6 +103,10 @@ const database = (req, res, next) => {
     delete e.domainThrown
     delete e.domainEmitter
     delete e.domainBound
+
+    if (e instanceof AssertionError) {
+      e = Error.Validation(e.message)
+    }
 
     if (!e.http)
       e.http = 500

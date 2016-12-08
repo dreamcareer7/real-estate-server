@@ -78,10 +78,10 @@ const changePassword = (cb) => {
 }
 
 const changePassword401 = (cb) => {
-  return frisby.create('expect 401 with empty model when changing password of a user')
+  return frisby.create('expect 400 with empty model when changing password of a user')
     .patch('/users/self/password')
     .after(cb)
-    .expectStatus(401)
+    .expectStatus(400)
 }
 
 const resetPassword = (cb) => {

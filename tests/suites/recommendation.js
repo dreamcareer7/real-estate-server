@@ -27,12 +27,6 @@ const feed = (cb) => {
     })
 }
 
-const feed404 = (cb) => {
-  return frisby.create('expect 404 with invalid room id')
-    .get('/rooms/' + uuid.v1() + '/recs/feed')
-    .after(cb)
-    .expectStatus(404)
-}
 
 const getFavorites = (cb) => {
   return frisby.create('get favorites')
@@ -319,24 +313,6 @@ const recommendManually = (cb) => {
     })
 }
 
-const recommendManually400 = (cb) => {
-  return frisby.create('expect 400 with invalid mls number')
-    .post('/rooms/' + results.room.create.data.id + '/recs', {
-      mls_number: 1
-    })
-    .after(cb)
-    .expectStatus(400)
-}
-
-const recommendManually404 = (cb) => {
-  return frisby.create('expect 400 with invalid mls number')
-    .post('/rooms/' + results.room.create.data.id + '/recs', {
-      mls_number: uuid.v1()
-    })
-    .after(cb)
-    .expectStatus(404)
-}
-
 const recommendManuallyWorked = (cb) => {
   return frisby.create('make sure recommendManually was successful')
     .get('/rooms/' + results.room.create.data.id + '/recs/' + results.recommendation.feed.data[0].id)
@@ -356,7 +332,6 @@ const recommendManuallyWorked = (cb) => {
 
 module.exports = {
   feed,
-  feed404,
   getFavorites,
   getFavorites404,
   getTours,
@@ -375,7 +350,5 @@ module.exports = {
   markAsSeen404,
   markAsSeenWorked,
   recommendManually,
-  recommendManually400,
-  recommendManually404,
   recommendManuallyWorked
 }

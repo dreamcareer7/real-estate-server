@@ -21,6 +21,8 @@
     "bcrypt": "^0.8.6",
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.9.2",
+    "chai": "^3.5.0",
+    "chai-param": "^0.1.2",
     "colors": "^1.0.3",
     "commander": "^2.8.0",
     "compression": "^1.2.0",

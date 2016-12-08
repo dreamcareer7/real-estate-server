@@ -18,10 +18,10 @@ const by_mui = (cb) => {
 }
 
 const by_mui404 = (cb) => {
-  return frisby.create('expect 404 with invalid mui')
+  return frisby.create('expect 401 with invalid mui')
     .get('/listings/search?mui=1')
     .after(cb)
-    .expectStatus(404)
+    .expectStatus(400)
 }
 
 const by_mls = (cb) => {
@@ -40,10 +40,10 @@ const by_mls = (cb) => {
 }
 
 const by_mls404 = (cb) => {
-  return frisby.create('expect 404 with invalid mls')
+  return frisby.create('expect 401 with invalid mls')
     .get('/listings/search?mls_number=1')
     .after(cb)
-    .expectStatus(404)
+    .expectStatus(400)
 }
 
 const getListing = (cb) => {
