@@ -6,6 +6,7 @@ machine:
 dependencies:
   override:
     - npm install --no-progress --dev
+    - npm install istanbul
 test:
   override:
-    - node tests/run --curl --disable-response --stop-on-fail
+    - node_modules/istanbul/lib/cli.js cover --dir $CIRCLE_ARTIFACTS tests/run.js --stop-on-failure --curl
