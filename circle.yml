@@ -9,4 +9,4 @@ dependencies:
     - npm install istanbul
 test:
   override:
-    - node_modules/istanbul/lib/cli.js cover --dir $CIRCLE_ARTIFACTS tests/run.js --stop-on-failure --curl
+    - node_modules/istanbul/lib/cli.js cover --dir $CIRCLE_ARTIFACTS tests/run.js -- --curl --stop-on-fail
