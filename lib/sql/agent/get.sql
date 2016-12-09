@@ -13,6 +13,8 @@ SELECT *,
 
        (SELECT id FROM agent_user) as user_id,
 
+       (SELECT id FROM offices WHERE matrix_unique_id = agents.office_mui) as office_id,
+
        COALESCE(
          (SELECT profile_image_url FROM agent_user),
          (SELECT url FROM agents_images WHERE mui = agents.matrix_unique_id AND image_type = 'Profile' ORDER BY date DESC LIMIT 1)
