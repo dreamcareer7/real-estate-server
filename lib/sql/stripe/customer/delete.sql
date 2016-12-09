@@ -1,0 +1,1 @@
+UPDATE stripe_customers SET deleted_at = NOW() WHERE id = $1

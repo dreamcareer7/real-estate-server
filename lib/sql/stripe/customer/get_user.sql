@@ -1,1 +1,1 @@
-SELECT id FROM stripe_customers WHERE owner = $1
+SELECT id FROM stripe_customers WHERE owner = $1 AND deleted_at IS NULL
