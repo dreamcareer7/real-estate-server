@@ -1,1 +1,1 @@
-INSERT INTO godaddy_shoppers ("user", shopper_id) VALUES ($1, $2)
+INSERT INTO godaddy_shoppers ("user", shopper_id, email, password) VALUES ($1, $2, $3, $4)

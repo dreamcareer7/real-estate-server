@@ -37,7 +37,7 @@
     "file-type": "^3.4.0",
     "forever": "^0.15.1",
     "form-data": "^0.2.0",
-    "godaddy": "0.0.4",
+    "godaddy": "^0.1.1",
     "google-libphonenumber": "^1.0.14",
     "googlemaps": "^1.0.1",
     "intercom-client": "^2.8.0",
