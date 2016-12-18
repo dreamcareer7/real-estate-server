@@ -1,0 +1,1 @@
+SELECT id FROM forms WHERE formstack_id = $1 AND deleted_at IS NULL
