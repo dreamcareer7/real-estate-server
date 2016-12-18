@@ -37,6 +37,7 @@
     "file-type": "^3.4.0",
     "forever": "^0.15.1",
     "form-data": "^0.2.0",
+    "formstack-web-api-node": "^0.1.0",
     "godaddy": "^0.2.0",
     "google-libphonenumber": "^1.0.14",
     "googlemaps": "^1.0.1",

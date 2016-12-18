@@ -59,7 +59,8 @@ const globals = [
   'Poster',
   'Website',
   'Stripe',
-  'Godaddy'
+  'Godaddy',
+  'Form'
 ]
 
 const global_object = {}
