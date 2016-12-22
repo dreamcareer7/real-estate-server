@@ -27,7 +27,7 @@ WITH rn AS (
               WHERE ARRAY[id] <@ (SELECT referring_objects FROM recommendations WHERE id = notifications.object)
             ) IS TRUE
     ),
-    'user_shared_listing', ARRAY_AGG(notifications.recommendation) FILTER (
+    'user_shared_listing_ids', ARRAY_AGG(notifications.recommendation) FILTER (
       WHERE notifications.subject_class = 'User' AND
             notifications.action = 'Shared' AND
             notifications.object_class = 'Listing' AND
@@ -73,7 +73,7 @@ WITH rn AS (
               WHERE ARRAY[id] <@ (SELECT referring_objects FROM recommendations WHERE id = notifications.recommendation)
             ) IS TRUE
     ),
-    'user_created_cma', ARRAY_AGG(notifications.auxiliary_object) FILTER (
+    'user_created_cma_ids', ARRAY_AGG(notifications.auxiliary_object) FILTER (
       WHERE notifications.subject_class = 'User' AND
             notifications.action = 'Created' AND
             notifications.object_class = 'CMA' AND
