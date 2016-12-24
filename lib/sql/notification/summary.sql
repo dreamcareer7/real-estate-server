@@ -31,12 +31,7 @@ WITH rn AS (
       WHERE notifications.subject_class = 'User' AND
             notifications.action = 'Shared' AND
             notifications.object_class = 'Listing' AND
-            notifications.deleted_at IS NULL AND
-            (
-              SELECT BOOL_OR(COALESCE(CASE WHEN alerts.deleted_at IS NULL THEN TRUE ELSE FALSE END))
-              FROM alerts
-              WHERE ARRAY[id] <@ (SELECT referring_objects FROM recommendations WHERE id = notifications.recommendation)
-            ) IS TRUE
+            notifications.deleted_at IS NULL
     ),
     'listing_became_available_room_ids', ARRAY_AGG(notifications.auxiliary_subject) FILTER (
       WHERE notifications.subject_class = 'Listing' AND
