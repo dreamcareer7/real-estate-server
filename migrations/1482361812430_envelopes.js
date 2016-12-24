@@ -40,10 +40,10 @@ const up = [
     "user" uuid NOT NULL REFERENCES users(id),
     status envelope_recipient_status
   )`,
+  'COMMIT',
   'ALTER TYPE notification_action ADD VALUE \'ReactedTo\'',
   'ALTER TYPE notification_object_class ADD VALUE \'Recipient\'',
-  'ALTER TYPE notification_object_class ADD VALUE \'Envelope\'',
-  'COMMIT'
+  'ALTER TYPE notification_object_class ADD VALUE \'Envelope\''
 ]
 
 const down = [
