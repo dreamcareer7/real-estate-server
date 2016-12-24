@@ -76,7 +76,8 @@
     "twilio": "^2.5.1",
     "underscore": "^1.8.3",
     "urban-airship-push": "^0.1.0",
-    "winston": "^0.8.3"
+    "winston": "^0.8.3",
+    "xml2js": "^0.4.17"
   },
   "devDependencies": {
     "aglio": "^2.2.0",

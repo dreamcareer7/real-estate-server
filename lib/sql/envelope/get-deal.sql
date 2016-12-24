@@ -1,0 +1,1 @@
+SELECT id FROM envelopes WHERE deal = $1
