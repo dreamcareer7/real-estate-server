@@ -5,6 +5,10 @@ SELECT *,
 
    (
     SELECT ARRAY_AGG(id) FROM envelopes_recipients WHERE envelopes_recipients.envelope = envelopes.id
-   ) as recipients
+   ) AS recipients,
+
+   (
+    SELECT JSON_AGG(envelopes_documents) FROM envelopes_documents WHERE envelopes_documents.envelope = envelopes.id
+   ) AS documents
 
 FROM envelopes WHERE id = $1
