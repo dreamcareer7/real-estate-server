@@ -1,8 +1,9 @@
 SELECT *,
   'deal' AS type,
-   EXTRACT(EPOCH FROM created_at) AS created_at,
-   EXTRACT(EPOCH FROM updated_at) AS updated_at,
-   EXTRACT(EPOCH FROM deleted_at) AS deleted_at,
+  EXTRACT(EPOCH FROM created_at) AS created_at,
+  EXTRACT(EPOCH FROM updated_at) AS updated_at,
+  EXTRACT(EPOCH FROM deleted_at) AS deleted_at,
+  address,
 
   (
     SELECT JSON_AGG(deals_roles) FROM deals_roles WHERE deal = $1
