@@ -62,6 +62,7 @@
     "passport-oauth2-client-password": "^0.1.2",
     "password-generator": "^2.0.2",
     "pg": "^4.4.3",
+    "pluralize": "^3.1.0",
     "redis": "^2.3.0",
     "request": "^2.49.0",
     "request-as-curl": "^0.1.0",

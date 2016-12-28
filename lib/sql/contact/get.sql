@@ -1,15 +1,119 @@
-SELECT *,
+SELECT id,
        'contact' AS type,
        EXTRACT(EPOCH FROM contacts.created_at) AS created_at,
        EXTRACT(EPOCH FROM contacts.updated_at) AS updated_at,
-       EXTRACT(EPOCH FROM contacts.deleted_at) AS deleted_at,
-       EXTRACT(EPOCH FROM contacts.birthday)   AS birthday,
        (
-        SELECT ARRAY_AGG(tag) FROM (
-          SELECT tag FROM tags
-          WHERE entity = contacts.id AND type = 'Contact'
-          ORDER BY tag
-        ) t
-       ) as tags
-FROM contacts
-WHERE id = $1
+         SELECT ARRAY_AGG(DISTINCT(id)) FROM
+         (
+           (
+             SELECT id
+             FROM users
+             WHERE email IN
+             (
+               SELECT DISTINCT(email)
+               FROM contacts_emails
+               WHERE contact = ANY(refs) AND
+                     deleted_at IS NULL
+             )
+           )
+           UNION
+           (
+             SELECT id
+             FROM users
+             WHERE phone_number IN
+             (
+               SELECT DISTINCT(phone_number)
+               FROM contacts_phone_numbers
+               WHERE contact = ANY(refs) AND
+                     deleted_at IS NULL
+             )
+           )
+         ) all_connected
+       ) AS users,
+       (
+         SELECT ARRAY_AGG(DISTINCT((attribute->>'brand')::uuid))
+         FROM contacts_attributes
+         WHERE contact = ANY(refs) AND
+               attribute_type = 'brand' AND
+               deleted_at IS NULL
+       ) AS brands,
+       CASE WHEN COALESCE(ARRAY_LENGTH(refs::uuid[], 1), 0) > 1 THEN TRUE ELSE FALSE END AS merged,
+       (
+         WITH r AS
+         (
+           SELECT * FROM UNNEST(contacts.refs) c
+         )
+         SELECT JSON_AGG(ROW_TO_JSON(sub)) FROM
+         (
+           SELECT contacts.*,
+           'sub_contact' AS type,
+           EXTRACT(EPOCH FROM contacts.created_at) AS created_at,
+           EXTRACT(EPOCH FROM contacts.updated_at) AS updated_at,
+           (
+             SELECT ARRAY_AGG(tag) FROM
+             (
+               SELECT tag FROM tags
+               WHERE entity = r.c AND
+                     type = 'Contact'
+               ORDER BY tag
+             ) t
+           ) AS tags,
+           (
+             WITH attrs AS
+             (
+               SELECT attribute_type AS key, JSON_AGG
+               (
+                 COALESCE(attribute, '{}'::jsonb) || JSONB_BUILD_OBJECT
+                 (
+                   'id', id,
+                   'type', attribute_type,
+                   'created_at', EXTRACT(EPOCH FROM created_at),
+                   'updated_at', EXTRACT(EPOCH FROM updated_at)
+                 )
+               ) AS value
+               FROM contacts_attributes
+               WHERE attribute_type <> 'brand' AND
+                     contact = r.c AND
+                     deleted_at IS NULL
+               GROUP by attribute_type
+             )
+             SELECT json_object_agg(key, value)
+             FROM attrs
+           ) AS attributes,
+           (
+             SELECT JSON_AGG
+             (
+               COALESCE(data, '{}'::jsonb) || JSONB_BUILD_OBJECT
+               (
+                 'id', id,
+                 'type', 'email',
+                 'created_at', EXTRACT(EPOCH FROM created_at),
+                 'updated_at', EXTRACT(EPOCH FROM updated_at)
+               )
+             )
+             FROM contacts_emails
+             WHERE contact = r.c AND
+                   deleted_at IS NULL
+           ) AS emails,
+           (
+             SELECT JSON_AGG
+             (
+               COALESCE(data, '{}'::jsonb) || JSONB_BUILD_OBJECT
+               (
+                 'id', id,
+                 'type', 'phone_number',
+                 'created_at', EXTRACT(EPOCH FROM created_at),
+                 'updated_at', EXTRACT(EPOCH FROM updated_at)
+               )
+             )
+             FROM contacts_phone_numbers
+             WHERE contact = r.c AND
+                   deleted_at IS NULL
+           ) AS phone_numbers
+           FROM r
+           INNER JOIN contacts
+           ON r.c = contacts.id
+         ) sub
+       ) AS sub_contacts
+       FROM contacts
+       WHERE id = $1

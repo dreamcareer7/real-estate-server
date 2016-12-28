@@ -30,7 +30,7 @@ brand_users AS (
 ),
 
 sorted_brand_users AS (
-  SELECT 
+  SELECT
     brand_users.id as id,
     (
       CASE WHEN $2::uuid IS NULL THEN 0
@@ -40,8 +40,27 @@ sorted_brand_users AS (
     ) as is_me,
     (
       CASE WHEN $2::uuid IS NULL THEN 0 ELSE
-        (SELECT count(*) FROM contacts WHERE "user" = $1 AND contact_user = $2)
-      END
+      (
+        SELECT
+        (
+          (
+            SELECT COUNT(*)
+            FROM contacts
+            INNER JOIN contacts_emails
+            ON contacts.id = contacts_emails.contact
+            WHERE contacts."user" = $1 AND
+                  LOWER(contacts_emails.email) = (SELECT lower(email) FROM users WHERE id = $2 LIMIT 1)
+          ) +
+          (
+            SELECT COUNT(*)
+            FROM contacts
+            INNER JOIN contacts_phone_numbers
+            ON contacts.id = contacts_phone_numbers.contact
+            WHERE contacts."user" = $1 AND
+                  contacts_phone_numbers.phone_number = (SELECT phone_number FROM users WHERE id = $2 LIMIT 1)
+          )
+        )
+      ) END
     ) as has_contact
     FROM brand_users
   JOIN users ON brand_users.id = users.id
@@ -52,7 +71,7 @@ SELECT *,
   'brand' AS TYPE,
   EXTRACT(EPOCH FROM created_at) AS created_at,
   EXTRACT(EPOCH FROM updated_at) AS updated_at,
-  
+
   (
     SELECT ARRAY_AGG(id) FROM brand_offices
   ) AS offices,
@@ -64,11 +83,11 @@ SELECT *,
   (
     SELECT ARRAY_AGG(id) FROM sorted_brand_users
   ) AS users,
-  
+
   (
     SELECT JSON_AGG(brands_users) FROM brands_users WHERE brand = $1
   ) AS roles,
-  
+
   (
     SELECT ARRAY_AGG(hostname ORDER BY "default" DESC) FROM brands_hostnames WHERE brand = $1
   ) AS hostnames,
@@ -76,7 +95,7 @@ SELECT *,
   (
     SELECT parent FROM brands_parents WHERE brand = $1
   )
-      
+
 FROM brands
 WHERE id = $1
 LIMIT 1
