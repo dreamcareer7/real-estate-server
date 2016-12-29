@@ -3,4 +3,4 @@ SELECT *,
    EXTRACT(EPOCH FROM created_at) AS created_at,
    EXTRACT(EPOCH FROM updated_at) AS updated_at
 
-FROM envelopes_recipients WHERE id = $1
+FROM envelopes_recipients WHERE envelope = $1 AND "user" = $2

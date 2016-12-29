@@ -6,7 +6,8 @@ SELECT
   forms_submissions.form AS form,
   forms_data.author AS author,
   forms_submissions.deal AS deal,
-  forms_data.values AS "values"
+  forms_data.values AS "values",
+  'form_revision' AS type
 FROM forms_data
 JOIN forms_submissions ON forms_submissions.id = forms_data.submission
 WHERE forms_data.id = $1
