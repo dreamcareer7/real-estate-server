@@ -9,7 +9,8 @@ SELECT
   forms_submissions.deal AS deal,
   (
     SELECT count(*) FROM forms_data WHERE forms_data.submission = forms_submissions.id
-  ) as revision_count
+  ) as revision_count,
+  'form_submission' AS type
 FROM forms_submissions
 JOIN forms_data ON forms_submissions.id = forms_data.submission
 WHERE forms_submissions.id = $1
