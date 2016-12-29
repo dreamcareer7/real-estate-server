@@ -26,10 +26,10 @@ const up = [
     'Buyer',
     'Seller',
     'Title',
-    'Lawyer'
-    'Lender'
-    'TeamLead'
-    'Appraiser'
+    'Lawyer',
+    'Lender',
+    'TeamLead',
+    'Appraiser',
     'Inspector'
   )`,
   `CREATE TABLE deals_roles (
