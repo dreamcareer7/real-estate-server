@@ -4,7 +4,6 @@ const async = require('async')
 const db = require('../lib/utils/db')
 
 const up = [
-  'ALTER TABLE contacts ADD FOREIGN KEY("user") REFERENCES users(id);',
   'CREATE TABLE contacts_attributes (\
     id uuid DEFAULT uuid_generate_v1() NOT NULL,\
     contact uuid NOT NULL REFERENCES contacts(id),\
@@ -81,6 +80,7 @@ const up = [
    FROM contacts\
    WHERE address IS NOT NULL',
 
+  'ALTER TABLE contacts DROP COLUMN contact_user',
   'ALTER TABLE contacts DROP COLUMN first_name',
   'ALTER TABLE contacts DROP COLUMN last_name',
   'ALTER TABLE contacts DROP COLUMN email',
@@ -96,7 +96,104 @@ const up = [
 ]
 
 const down = [
-  ''
+  'ALTER TABLE contacts ADD contact_user REFERENCES users(id)',
+  'ALTER TABLE contacts ADD first_name text',
+  'ALTER TABLE contacts ADD last_name text',
+  'ALTER TABLE contacts ADD email text',
+  'ALTER TABLE contacts ADD phone_number text',
+  'ALTER TABLE contacts ADD profile_image_url text',
+  'ALTER TABLE contacts ADD cover_image_url text',
+  'ALTER TABLE contacts ADD invitation_url text',
+  'ALTER TABLE contacts ADD company text',
+  'ALTER TABLE contacts ADD address jsonb',
+  'ALTER TABLE contacts ADD birthday timestamptz',
+  'ALTER TABLE contacts ADD source_type contact_source_type',
+  'ALTER TABLE contacts ADD brand uuid REFERENCES brands(id)',
+
+  'UPDATE contacts SET first_name = \
+  (\
+    SELECT (attribute->>\'first_name\')::text\
+    FROM contacts_attributes\
+    WHERE attribute_type = \'name\' AND contact = contacts.id LIMIT 1\
+  )',
+  'UPDATE contacts SET last_name = \
+  (\
+    SELECT (attribute->>\'last_name\')::text\
+    FROM contacts_attributes\
+    WHERE attribute_type = \'name\' AND contact = contacts.id LIMIT 1\
+  )',
+  'UPDATE contacts SET birthday = \
+  (\
+    SELECT (attribute->>\'birthday\')::timestamptz\
+    FROM contacts_attributes\
+    WHERE attribute_type = \'birthday\' AND contact = contacts.id LIMIT 1\
+  )',
+  'UPDATE contacts SET company = \
+  (\
+    SELECT (attribute->>\'company\')::text\
+    FROM contacts_attributes\
+    WHERE attribute_type = \'company\' AND contact = contacts.id LIMIT 1\
+  )',
+  'UPDATE contacts SET profile_image_url = \
+  (\
+    SELECT (attribute->>\'profile_image_url\')::text\
+    FROM contacts_attributes\
+    WHERE attribute_type = \'profile_image_url\' AND contact = contacts.id LIMIT 1\
+  )',
+  'UPDATE contacts SET cover_image_url = \
+  (\
+    SELECT (attribute->>\'cover_image_url\')::text\
+    FROM contacts_attributes\
+    WHERE attribute_type = \'cover_image_url\' AND contact = contacts.id LIMIT 1\
+  )',
+  'UPDATE contacts SET invitation_url = \
+  (\
+    SELECT (attribute->>\'invitation_url\')::text\
+    FROM contacts_attributes\
+    WHERE attribute_type = \'invitation_url\' AND contact = contacts.id LIMIT 1\
+  )',
+  'UPDATE contacts SET address = \
+  (\
+    SELECT attribute\
+    FROM contacts_attributes\
+    WHERE attribute_type = \'address\' AND contact = contacts.id LIMIT 1\
+  )',
+  'UPDATE contacts SET source_type = \
+  (\
+    SELECT (attribute->>\'source_type\')::contact_source_type\
+    FROM contacts_attributes\
+    WHERE attribute_type = \'source_type\' AND contact = contacts.id LIMIT 1\
+  )',
+  'UPDATE contacts SET brand = \
+  (\
+    SELECT (attribute->>\'brand\')::uuid\
+    FROM contacts_attributes\
+    WHERE attribute_type = \'brand\' AND contact = contacts.id LIMIT 1\
+  )',
+  'UPDATE contacts SET email = \
+  (\
+    SELECT email\
+    FROM contacts_emails\
+    WHERE contact = contacts.id LIMIT 1\
+  )',
+  'UPDATE contacts SET phone_number = \
+  (\
+    SELECT phone_number\
+    FROM contacts_phone_numbers\
+    WHERE contact = contacts.id LIMIT 1\
+  )',
+  'UPDATE contacts SET contact_user = \
+  (\
+    SELECT id\
+    FROM users\
+    WHERE LOWER(email) = contacts.email OR phone_number = contacts.phone_number LIMIT 1\
+  )',
+
+  'ALTER TABLE contacts DROP COLUMN refs',
+  'ALTER TABLE contacts DROP COLUMN merged',
+  'DROP TABLE contacts_emails',
+  'DROP TABLE contacts_phone_numbers',
+  'DROP TABLE contacts_attributes'
 ]
 
 const runAll = (sqls, next) => {
