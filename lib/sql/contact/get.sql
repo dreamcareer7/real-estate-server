@@ -87,6 +87,7 @@ SELECT id,
                (
                  'id', id,
                  'type', 'email',
+                 'email', email,
                  'created_at', EXTRACT(EPOCH FROM created_at),
                  'updated_at', EXTRACT(EPOCH FROM updated_at)
                )
@@ -102,6 +103,7 @@ SELECT id,
                (
                  'id', id,
                  'type', 'phone_number',
+                 'phone_number', phone_number,
                  'created_at', EXTRACT(EPOCH FROM created_at),
                  'updated_at', EXTRACT(EPOCH FROM updated_at)
                )

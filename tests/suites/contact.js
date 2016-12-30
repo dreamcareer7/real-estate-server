@@ -7,20 +7,38 @@ const info_response = require('./expected_objects/info.js')
 const contact = require('./data/contact.js')
 const _ = require('underscore')
 
-const first_name = 'updated_user_name'
-const profile_image = 'updated_profile_image'
-const cover_image = 'updated_cover_image'
-
 const create = (cb) => {
-  contact.contact_user = results.user.create.data
-  contact.address = results.listing.by_mui.data.address
-  contact.first_name = results.user.create.data.first_name
-  contact.last_name = results.user.create.data.last_name
-  contact.phone_number = results.user.create.data.phone_number
-  contact.email = results.user.create.data.email
+  // contact.attributes.address = [
+  //   results.listing.by_mui.data.address
+  // ]
+  //
+  contact.attributes.name = [
+    {
+      type: 'name',
+      first_name: results.user.create.data.first_name,
+      last_name: results.user.create.data.last_name
+    }
+  ]
+
+  contact.phone_numbers = [
+    {
+      type: 'phone_number',
+      phone_number: results.user.create.data.phone_number
+    }
+  ]
+
+  contact.emails = [
+    {
+      type: 'email',
+      email: results.user.create.data.email
+    }
+  ]
+
   return frisby.create('add a contact')
     .post('/contacts', {
-      contacts: [contact]
+      contacts: [
+        contact
+      ]
     })
     .after(cb)
     .expectStatus(200)
@@ -28,8 +46,19 @@ const create = (cb) => {
     .expectJSON({
       code: 'OK',
       data: [{
-        email: results.user.create.data.email,
-        phone_number: results.user.create.data.phone_number,
+        sub_contacts: [
+          {
+            attributes: {
+              name: [
+                {
+                  type: 'name',
+                  first_name: 'John',
+                  last_name: 'Doe'
+                }
+              ]
+            }
+          }
+        ],
         type: 'contact'
       }],
       info: {
@@ -100,7 +129,6 @@ const getContact = (cb) => {
       code: 'OK',
       data: [
         {
-//           contact_user: results.contact.create.data.contact_user
         }
       ],
       info: {}
@@ -110,149 +138,6 @@ const getContact = (cb) => {
       data: [contact_response],
       info: info_response
     })
-}
-
-const updateContact = (cb) => {
-  results.contact.create.data[0].contact_user.first_name = first_name
-  results.contact.create.data[0].contact_user.tags = ['newTag']
-  results.contact.create.data[0].contact_user.email = results.user.create.data.email
-  results.contact.create.data[0].contact_user.phone_number = results.user.create.data.phone_number
-
-  return frisby.create('update a contact')
-    .put('/contacts/' + results.contact.create.data[0].id, results.contact.create.data[0].contact_user)
-    .after(cb)
-    .expectStatus(200)
-    .expectJSON({
-      code: 'OK',
-      data: {
-        email: results.user.create.data.email,
-        phone_number: results.user.create.data.phone_number,
-        type: 'contact'
-      }
-    })
-    .expectJSONTypes({
-      code: String,
-      data: contact_response
-    })
-}
-
-const updateContactWorked = (cb) => {
-  results.user.create.data.type = 'compact_user'
-
-  return frisby.create('make sure update user was successful')
-    .get('/contacts')
-    .after(cb)
-    .expectStatus(200)
-    .expectJSON({
-      code: 'OK',
-      data: [
-        {first_name: first_name}
-      ]
-    })
-    .expectJSONTypes({
-      code: String,
-      data: [contact_response],
-      info: info_response
-    })
-}
-
-const updateContact404 = (cb) => {
-  return frisby.create('expect 404 with invalid contact id when updating a contact')
-    .put('/contacts/' + uuid.v1(), results.contact.create.data[0].contact_user)
-    .after(cb)
-    .expectStatus(404)
-}
-
-const patchContactProfileImage = (cb) => {
-  return frisby.create('update profile image url for a contact')
-    .patch('/contacts/' + results.contact.create.data[0].id + '/profile_image_url', {
-      profile_image_url: profile_image
-    })
-    .after(cb)
-    .expectStatus(200)
-    .expectJSON({
-      code: 'OK',
-      data: {
-        profile_image_url: profile_image
-      }
-    })
-    .expectJSONTypes({
-      code: String,
-      data: contact_response
-    })
-}
-
-const patchContactProfileImageWorked = (cb) => {
-  return frisby.create('get list of contacts and see if updated image uri is there')
-    .get('/contacts')
-    .after(cb)
-    .expectStatus(200)
-    .expectJSON({
-      code: 'OK',
-      data: [
-        {profile_image_url: profile_image}
-      ]
-    })
-    .expectJSONTypes({
-      code: String,
-      data: [contact_response],
-      info: info_response
-    })
-}
-
-const patchContactProfileImage404 = (cb) => {
-  return frisby.create('expect 404 with invalid contact id when updating a profile image')
-    .patch('/contacts/' + uuid.v1() + '/profile_image_url', {
-      profile_image_url: profile_image
-    })
-    .after(cb)
-    .expectStatus(404)
-}
-
-const patchContactCoverImage = (cb) => {
-  return frisby.create('update cover image url for a contact')
-    .patch('/contacts/' + results.contact.create.data[0].id + '/cover_image_url', {
-      cover_image_url: cover_image
-    })
-    .after(cb)
-    .expectStatus(200)
-    .expectJSON({
-      code: 'OK',
-      data: {
-        cover_image_url: cover_image
-      }
-    })
-    .expectJSONTypes({
-      code: String,
-      data: contact_response
-    })
-}
-
-const patchContactCoverImageWorked = (cb) => {
-  return frisby.create('get list of contacts and see if updated cover uri is there')
-    .get('/contacts')
-    .after(cb)
-    .expectStatus(200)
-    .expectJSON({
-      code: 'OK',
-      data: [
-        {cover_image_url: cover_image}
-      ]
-    })
-    .expectJSONTypes({
-      code: String,
-      data: [contact_response],
-      info: info_response
-    })
-}
-
-const patchContactCoverImage404 = (cb) => {
-  return frisby.create('expect 404 with invalid contact id when updating a cover image')
-    .patch('/contacts/' + uuid.v1() + '/cover_image_url', {
-      cover_image_url: cover_image
-    })
-    .after(cb)
-    .expectStatus(404)
 }
 
 const search = (cb) => {
@@ -266,7 +151,8 @@ const search = (cb) => {
     .expectJSON({
       code: 'OK',
       data: [
-        results.contact.patchContactCoverImage.data
+        {
+        }
       ],
       info: {
         count: 1
@@ -333,15 +219,6 @@ module.exports = {
   addTag404,
   getContact,
   getByTag,
-  updateContact,
-  updateContactWorked,
-  updateContact404,
-  patchContactProfileImage,
-  patchContactProfileImageWorked,
-  patchContactProfileImage404,
-  patchContactCoverImage,
-  patchContactCoverImageWorked,
-  patchContactCoverImage404,
   search,
   removeTag,
   removeTag404,
