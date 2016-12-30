@@ -1,6 +1,7 @@
 SELECT
   forms_submissions.id AS id,
   forms_data.id AS last_revision,
+  forms_data.state AS state,
   EXTRACT(EPOCH FROM forms_submissions.created_at) AS created_at,
   EXTRACT(EPOCH FROM forms_data.created_at) AS updated_at,
   forms_submissions.form AS form,
