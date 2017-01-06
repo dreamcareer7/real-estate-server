@@ -12,7 +12,7 @@ const create = (cb) => {
   //   results.listing.by_mui.data.address
   // ]
   //
-  contact.attributes.name = [
+  contact.attributes.names = [
     {
       type: 'name',
       first_name: results.user.create.data.first_name,
