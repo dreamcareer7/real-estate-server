@@ -42,7 +42,7 @@ const up = [
   )`,
   'COMMIT',
   'ALTER TYPE notification_action ADD VALUE \'ReactedTo\'',
-  'ALTER TYPE notification_object_class ADD VALUE \'Recipient\'',
+  'ALTER TYPE notification_object_class ADD VALUE \'EnvelopeRecipient\'',
   'ALTER TYPE notification_object_class ADD VALUE \'Envelope\''
 ]
 
