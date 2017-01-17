@@ -1,3 +1,9 @@
+WITH u AS
+(
+  UPDATE contacts
+  SET updated_at = NOW()
+  WHERE id = $1
+)
 INSERT INTO contacts_attributes
 (
   contact,
