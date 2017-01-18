@@ -6,7 +6,7 @@ SELECT *,
   address,
 
   (
-    SELECT JSON_AGG(deals_roles) FROM deals_roles WHERE deal = $1
+    SELECT ARRAY_AGG(id) FROM deals_roles WHERE deal = $1
   ) AS roles
 
 FROM deals WHERE id = $1
