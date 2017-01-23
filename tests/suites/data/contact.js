@@ -29,9 +29,12 @@ module.exports = {
         type: 'birthday',
         birthday: 1000000
       }
+    ],
+    tags: [
+      {
+        type: 'tag',
+        tag: 'New'
+      }
     ]
   },
-  tags: [
-    'New'
-  ]
 }

@@ -23,7 +23,8 @@ WITH c AS
          ) AS names
   FROM contacts
   WHERE contacts."user" = $1 AND
-        contacts.deleted_at IS NULL
+        contacts.deleted_at IS NULL AND
+        contacts.merged IS FALSE
 )
 SELECT id,
        (COUNT(*) OVER())::INT AS total

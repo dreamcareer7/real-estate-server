@@ -50,15 +50,6 @@ SELECT id,
            EXTRACT(EPOCH FROM contacts.created_at) AS created_at,
            EXTRACT(EPOCH FROM contacts.updated_at) AS updated_at,
            (
-             SELECT ARRAY_AGG(tag) FROM
-             (
-               SELECT tag FROM tags
-               WHERE entity = r.c AND
-                     type = 'Contact'
-               ORDER BY tag
-             ) t
-           ) AS tags,
-           (
              WITH attrs AS
              (
                SELECT attribute_type AS key, JSON_AGG
