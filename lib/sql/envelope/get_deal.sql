@@ -1,1 +1,1 @@
-SELECT id FROM envelopes WHERE deal = $1
+SELECT id FROM envelopes WHERE deal = $1 ORDER BY created_at DESC
