@@ -1,11 +1,10 @@
 registerSuite('user', ['create'])
 registerSuite('listing', ['by_mui'])
 
-const uuid = require('node-uuid')
+// const uuid = require('node-uuid')
 const contact_response = require('./expected_objects/contact.js')
 const info_response = require('./expected_objects/info.js')
 const contact = require('./data/contact.js')
-const _ = require('underscore')
 
 const create = (cb) => {
   // contact.attributes.address = [
@@ -45,22 +44,30 @@ const create = (cb) => {
     .expectJSONLength('data', 1)
     .expectJSON({
       code: 'OK',
-      data: [{
-        sub_contacts: [
-          {
-            attributes: {
-              name: [
-                {
-                  type: 'name',
-                  first_name: 'John',
-                  last_name: 'Doe'
-                }
-              ]
+      data: [
+        {
+          sub_contacts: [
+            {
+              attributes: {
+                names: [
+                  {
+                    type: 'name',
+                    first_name: 'John',
+                    last_name: 'Doe'
+                  }
+                ],
+                tags: [
+                  {
+                    type: 'tag',
+                    tag: 'New'
+                  }
+                ]
+              }
             }
-          }
-        ],
-        type: 'contact'
-      }],
+          ],
+          type: 'contact'
+        }
+      ],
       info: {
         count: 1
       }
@@ -79,38 +86,6 @@ const create400 = (cb) => {
     .expectStatus(400)
 }
 
-const addTag = (cb) => {
-  return frisby.create('add tag to a contact')
-    .post('/contacts/' + results.contact.create.data[0].id + '/tags', {
-      tags: ['foo', 'bar']
-    })
-    .after(cb)
-    .expectStatus(200)
-    .expectJSON({
-      code: 'OK'
-    })
-    .expectJSONTypes({
-      code: String,
-      data: contact_response
-    })
-}
-
-const addTag400 = (cb) => {
-  return frisby.create('expect 400 with empty model when adding a tag')
-    .post('/contacts/' + results.contact.create.data[0].id + '/tags')
-    .after(cb)
-    .expectStatus(400)
-}
-
-const addTag404 = (cb) => {
-  return frisby.create('expect 404 with invalid contact id when adding a tag to a contact')
-    .post('/contacts/' + uuid.v1() + '/tags', {
-      tags: ['foo', 'bar']
-    })
-    .after(cb)
-    .expectStatus(404)
-}
-
 const getContact = (cb) => {
   results.user.create.data.type = 'compact_user'
 
@@ -118,13 +93,6 @@ const getContact = (cb) => {
     .get('/contacts')
     .after(cb)
     .expectStatus(200)
-    .afterJSON(json => {
-      const must = ['New', 'bar', 'foo']
-      const is = json.data[0].tags
-
-      if (_.difference(is, must).length !== 0)
-        throw new Error('Tags dont match: Its [' + is + '] But should be [' + must + ']')
-    })
     .expectJSON({
       code: 'OK',
       data: [
@@ -167,26 +135,12 @@ const search = (cb) => {
 
 const getByTag = (cb) => {
   return frisby.create('filter contacts by tags')
-    .get('/contacts?tags=foo,bar')
+    .get('/contacts?tags[]=foo&tags[]=bar')
     .after(cb)
     .expectStatus(200)
     .expectJSON({
       code: 'OK'
     })
-}
-
-const removeTag = (cb) => {
-  return frisby.create('remove tag from a contact')
-    .delete('/contacts/' + results.contact.create.data[0].id + '/tags/test')
-    .expectStatus(204)
-    .after(cb)
-}
-
-const removeTag404 = (cb) => {
-  return frisby.create('expect 404 with invalid id when removing a tag')
-    .delete('/contacts/' + uuid.v1() + '/tags/test')
-    .expectStatus(204)
-    .after(cb)
 }
 
 const deleteContact = (cb) => {
@@ -214,14 +168,9 @@ const deleteContactWorked = (cb) => {
 module.exports = {
   create,
   create400,
-  addTag,
-  addTag400,
-  addTag404,
   getContact,
   getByTag,
   search,
-  removeTag,
-  removeTag404,
   deleteContact,
   deleteContactWorked
 }
