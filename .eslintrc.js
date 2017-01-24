@@ -65,7 +65,7 @@ const globals = [
   'DealRole',
   'Envelope',
   'EnvelopeRecipient',
-  'File'
+  'AttachedFile'
 ]
 
 const global_object = {}
