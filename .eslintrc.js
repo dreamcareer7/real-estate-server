@@ -64,7 +64,8 @@ const globals = [
   'Deal',
   'DealRole',
   'Envelope',
-  'EnvelopeRecipient'
+  'EnvelopeRecipient',
+  'Activity',
 ]
 
 const global_object = {}
