@@ -7,6 +7,10 @@ SELECT *,
 
   (
     SELECT ARRAY_AGG(id) FROM deals_roles WHERE deal = $1
-  ) AS roles
+  ) AS roles,
+
+  (
+    SELECT ARRAY_AGG(file) FROM files_relations WHERE role = 'Deal' AND role_id = $1 AND deleted_at IS NULL
+  ) AS files
 
 FROM deals WHERE id = $1
