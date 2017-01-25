@@ -1,7 +1,7 @@
 SELECT id,
        (COUNT(*) OVER())::INT AS total
-FROM contacts_activities
-WHERE contact = $1 AND
+FROM activities
+WHERE reference = ANY($1) AND
       deleted_at IS NULL
 AND CASE
     WHEN $2 = 'Since_C' THEN created_at > TIMESTAMP WITH TIME ZONE 'EPOCH' + $3 * INTERVAL '1 MICROSECOND'

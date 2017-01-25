@@ -1,8 +1,9 @@
-INSERT INTO contacts_activities(
-  contact,
-  subject,
-  subject_class,
-  subject_sa,
+INSERT INTO activities(
+  reference,
+  reference_type,
+  object,
+  object_class,
+  object_sa,
   action
 )
 VALUES (
@@ -10,6 +11,7 @@ VALUES (
   $2,
   $3,
   $4,
-  $5
+  $5,
+  $6
 )
 RETURNING id

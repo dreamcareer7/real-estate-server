@@ -18,10 +18,12 @@ const up = [
      \'CreatedTask\'\
    )\
   ',
+  'CREATE TYPE reference_type AS ENUM (\'User\', \'Contact\')',
   'CREATE TABLE activities\
    (\
      id uuid DEFAULT uuid_generate_v1() NOT NULL,\
      reference uuid NOT NULL,\
+     reference_type reference_type NOT NULL,\
      created_at timestamp with time zone DEFAULT now(),\
      updated_at timestamp with time zone DEFAULT now(),\
      deleted_at timestamp with time zone,\
