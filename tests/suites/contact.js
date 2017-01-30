@@ -19,14 +19,14 @@ const create = (cb) => {
     }
   ]
 
-  contact.phone_numbers = [
+  contact.attributes.phone_numbers = [
     {
       type: 'phone_number',
       phone_number: results.user.create.data.phone_number
     }
   ]
 
-  contact.emails = [
+  contact.attributes.emails = [
     {
       type: 'email',
       email: results.user.create.data.email
@@ -49,6 +49,18 @@ const create = (cb) => {
           sub_contacts: [
             {
               attributes: {
+                emails: [
+                  {
+                    type: 'email',
+                    email: 'john@doe.org'
+                  }
+                ],
+                phone_numbers: [
+                  {
+                    type: 'phone_number',
+                    phone_number: '+989124834198'
+                  }
+                ],
                 names: [
                   {
                     type: 'name',
