@@ -1,7 +1,30 @@
+Signing Ceremony has been completed.
+
+<div id="logs"></div>
+
 <script type="text/javascript">
+  const $logs = document.getElementById('logs')
+
+  const log = (message) => {
+    const d = document.createElement('div')
+    d.innerText = message
+    $logs.appendChild(d)
+  }
+
+  log('Script is being executed')
+  log('Window ' + window)
+  log('Webkit ' + window.webkit)
+  log('Handlers ' + window.webkit.messageHandlers)
+  log('List of handlers' + Object.keys(window.webkit.messageHandlers).join(','))
+  log('Close Webview' + window.webkit.messageHandlers['close_webview'])
+  log('Close Webview' + window.webkit.messageHandlers['close_webview'].postMessage)
+
   try {
+    log('Starting to call')
     window.webkit.messageHandlers['close_webview'].postMessage({})
+    log('Called')
   } catch(e) {
-    /* blank */
+    log('Error')
+    log(e)
   }
 </script>
