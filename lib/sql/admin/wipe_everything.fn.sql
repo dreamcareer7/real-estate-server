@@ -19,13 +19,7 @@ BEGIN
     TRUNCATE TABLE phone_verifications CASCADE;
     TRUNCATE TABLE attachments_eav CASCADE;
     TRUNCATE TABLE attachments CASCADE;
-    TRUNCATE TABLE important_dates CASCADE;
     TRUNCATE TABLE notes CASCADE;
-    TRUNCATE TABLE task_contacts CASCADE;
-    TRUNCATE TABLE tasks CASCADE;
-    TRUNCATE TABLE transaction_contact_roles CASCADE;
-    TRUNCATE TABLE transaction_contacts CASCADE;
-    TRUNCATE TABLE transactions CASCADE;
     TRUNCATE TABLE cmas CASCADE;
     TRUNCATE TABLE sessions CASCADE;
     TRUNCATE TABLE tags CASCADE;
