@@ -12,12 +12,6 @@ module.exports = {
         cover_image_url: 'http://rechat.com/cover_image_url/cover_image_url.png'
       }
     ],
-    invitation_url: [
-      {
-        type: 'invitation_url',
-        invitation_url: 'http://rechat.com/join'
-      }
-    ],
     company: [
       {
         type: 'company',
