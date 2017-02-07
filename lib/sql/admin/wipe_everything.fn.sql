@@ -19,10 +19,7 @@ BEGIN
     TRUNCATE TABLE phone_verifications CASCADE;
     TRUNCATE TABLE attachments_eav CASCADE;
     TRUNCATE TABLE attachments CASCADE;
-    TRUNCATE TABLE notes CASCADE;
     TRUNCATE TABLE cmas CASCADE;
     TRUNCATE TABLE sessions CASCADE;
-    TRUNCATE TABLE tags CASCADE;
-    TRUNCATE TABLE tags_contacts CASCADE;
 END;
 $$ LANGUAGE plpgsql;
