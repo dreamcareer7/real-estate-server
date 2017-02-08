@@ -1,4 +1,5 @@
-SELECT id
+SELECT id,
+       (COUNT(*) OVER())::INT AS total
 FROM contacts
 WHERE
   "user" = $1 AND
