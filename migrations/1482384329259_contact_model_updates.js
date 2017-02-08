@@ -4,7 +4,7 @@ const async = require('async')
 const db = require('../lib/utils/db')
 
 const up = [
-  'CREATE TABLE contacts_attributes (\
+  'CREATE TABLE IF NOT EXISTS contacts_attributes (\
     id uuid DEFAULT uuid_generate_v1() NOT NULL,\
     contact uuid NOT NULL REFERENCES contacts(id),\
     attribute_type text NOT NULL,\
@@ -13,7 +13,7 @@ const up = [
     updated_at timestamp with time zone DEFAULT now(),\
     deleted_at timestamp with time zone\
   )',
-  'CREATE TABLE contacts_emails (\
+  'CREATE TABLE IF NOT EXISTS contacts_emails (\
     id uuid DEFAULT uuid_generate_v1() NOT NULL,\
     contact uuid NOT NULL REFERENCES contacts(id),\
     email text,\
@@ -22,7 +22,7 @@ const up = [
     updated_at timestamp with time zone DEFAULT now(),\
     deleted_at timestamp with time zone\
   )',
-  'CREATE TABLE contacts_phone_numbers (\
+  'CREATE TABLE IF NOT EXISTS contacts_phone_numbers (\
     id uuid DEFAULT uuid_generate_v1() NOT NULL,\
     contact uuid NOT NULL REFERENCES contacts(id),\
     phone_number text,\
