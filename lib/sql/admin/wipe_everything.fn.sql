@@ -6,6 +6,7 @@ BEGIN
     TRUNCATE TABLE notifications CASCADE;
     TRUNCATE TABLE notifications_deliveries;
     TRUNCATE TABLE notifications_users;
+    TRUNCATE TABLE notifications_tokens CASCADE;
     TRUNCATE TABLE recommendations_eav CASCADE;
     TRUNCATE TABLE recommendations CASCADE;
     TRUNCATE TABLE rooms_users CASCADE;
@@ -13,7 +14,6 @@ BEGIN
     TRUNCATE TABLE invitation_records CASCADE;
     TRUNCATE TABLE alerts CASCADE;
     TRUNCATE TABLE contacts CASCADE;
-    TRUNCATE TABLE notification_tokens CASCADE;
     TRUNCATE TABLE password_recovery_records CASCADE;
     TRUNCATE TABLE email_verifications CASCADE;
     TRUNCATE TABLE phone_verifications CASCADE;

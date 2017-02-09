@@ -1,3 +1,3 @@
 SELECT device_token
-FROM notification_tokens
+FROM notifications_tokens
 WHERE "user" = $1
