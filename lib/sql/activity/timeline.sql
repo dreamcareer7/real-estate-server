@@ -1,9 +1,16 @@
+WITH c AS (
+  SELECT id,
+         (COUNT(*) OVER())::INT AS total,
+         created_at,
+         updated_at
+  FROM activities
+  WHERE reference = ANY($1) AND
+        deleted_at IS NULL
+)
 SELECT id,
-       (COUNT(*) OVER())::INT AS total
-FROM activities
-WHERE reference = ANY($1) AND
-      deleted_at IS NULL
-AND CASE
+       total
+FROM c
+WHERE CASE
     WHEN $2 = 'Since_C' THEN created_at > TIMESTAMP WITH TIME ZONE 'EPOCH' + $3 * INTERVAL '1 MICROSECOND'
     WHEN $2 = 'Max_C' THEN created_at <= TIMESTAMP WITH TIME ZONE 'EPOCH' + $3 * INTERVAL '1 MICROSECOND'
     WHEN $2 = 'Since_U' THEN updated_at > TIMESTAMP WITH TIME ZONE 'EPOCH' + $3 * INTERVAL '1 MICROSECOND'

@@ -10,7 +10,6 @@ WITH my_rooms AS(
     CASE WHEN $2::uuid IS NULL THEN TRUE ELSE rooms.id = $2::uuid END
   )
 ),
-
 recommeded_manually AS (
   SELECT DISTINCT ON(recommendation)
     recommendation
@@ -20,7 +19,6 @@ recommeded_manually AS (
     AND room IN(SELECT * FROM my_rooms)
     AND subject_class = 'User' AND action = 'Shared' AND object_class = 'Listing'
 ),
-
 has_comment AS (
   SELECT DISTINCT ON (recommendation)
   recommendation
@@ -30,7 +28,6 @@ has_comment AS (
     messages.author IS NOT NULL
     AND recommendations.room IN(SELECT * FROM my_rooms)
 ),
-
 favorited AS (
   SELECT DISTINCT ON (recommendation)
   recommendations.id
@@ -40,7 +37,6 @@ favorited AS (
     recommendations.room IN(SELECT * FROM my_rooms)
     AND action = 'Favorited'
 ),
-
 summarized AS (
   SELECT * FROM recommeded_manually
   UNION
@@ -48,12 +44,10 @@ summarized AS (
   UNION
   SELECT * FROM favorited
 ),
-
 recs AS (
   SELECT id, created_at, updated_at FROM recommendations
   WHERE id IN(SELECT recommendation FROM summarized) AND hidden = false
 )
-
 SELECT id,
        (COUNT(*) OVER())::INT AS total,
        LOWER($3)
