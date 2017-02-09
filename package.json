@@ -76,6 +76,7 @@
     "sprintf-js": "^1.0.3",
     "squel": "^5.3.3",
     "stripe": "^4.13.0",
+    "to-pascal-case": "^1.0.0",
     "to-snake-case": "^1.0.0",
     "twilio": "^2.5.1",
     "underscore": "^1.8.3",
