@@ -71,7 +71,6 @@ const up = [
   'ALTER TABLE godaddy_domains ALTER COLUMN updated_at SET DEFAULT CLOCK_TIMESTAMP()',
   'ALTER TABLE godaddy_shoppers ALTER COLUMN created_at SET DEFAULT CLOCK_TIMESTAMP()',
   'ALTER TABLE godaddy_shoppers ALTER COLUMN updated_at SET DEFAULT CLOCK_TIMESTAMP()',
-  'ALTER TABLE google_tokens ALTER COLUMN created_at SET DEFAULT CLOCK_TIMESTAMP()',
   'ALTER TABLE invitation_records ALTER COLUMN created_at SET DEFAULT CLOCK_TIMESTAMP()',
   'ALTER TABLE invitation_records ALTER COLUMN updated_at SET DEFAULT CLOCK_TIMESTAMP()',
   'ALTER TABLE listings ALTER COLUMN created_at SET DEFAULT CLOCK_TIMESTAMP()',
