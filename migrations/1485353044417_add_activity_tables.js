@@ -6,16 +6,12 @@ const db = require('../lib/utils/db')
 const up = [
   'CREATE TYPE activity_type AS ENUM\
    (\
-     \'ViewedFullView\',\
-     \'ViewedAlert\',\
-     \'AlertSearch\',\
-     \'FavoritedListing\',\
-     \'SharedListing\',\
-     \'CreatedAlert\',\
-     \'CommentedOnListing\',\
-     \'ViewedRecommendation\',\
-     \'OpenedApp\',\
-     \'CreatedTask\'\
+     \'UserViewedAlert\',\
+     \'UserViewedListing\',\
+     \'UserFavoritedListing\',\
+     \'UserSharedListing\',\
+     \'UserCreatedAlert\',\
+     \'UserCommentedRoom\'\
    )\
   ',
   'CREATE TYPE reference_type AS ENUM (\'User\', \'Contact\')',
@@ -24,8 +20,8 @@ const up = [
      id uuid DEFAULT uuid_generate_v1() NOT NULL,\
      reference uuid NOT NULL,\
      reference_type reference_type NOT NULL,\
-     created_at timestamp with time zone DEFAULT now(),\
-     updated_at timestamp with time zone DEFAULT now(),\
+     created_at timestamp with time zone DEFAULT CLOCK_TIMESTAMP(),\
+     updated_at timestamp with time zone DEFAULT CLOCK_TIMESTAMP(),\
      deleted_at timestamp with time zone,\
      object uuid,\
      object_class notification_object_class,\
