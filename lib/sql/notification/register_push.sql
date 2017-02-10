@@ -1,8 +1,8 @@
 WITH deleted AS (
-  DELETE FROM notification_tokens WHERE device_id IS NULL AND "user" = $1
+  DELETE FROM notifications_tokens WHERE device_id IS NULL AND "user" = $1
 )
 
-INSERT INTO notification_tokens
+INSERT INTO notifications_tokens
 (
   "user",
   device_id,
@@ -11,4 +11,4 @@ INSERT INTO notification_tokens
 VALUES ($1, $2, $3)
 ON CONFLICT ("user", device_id) DO UPDATE SET
   device_token = $3
-  WHERE notification_tokens."user" = $1 AND notification_tokens.device_id = $2;
+  WHERE notifications_tokens."user" = $1 AND notifications_tokens.device_id = $2;
