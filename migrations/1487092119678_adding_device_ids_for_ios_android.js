@@ -4,8 +4,8 @@ const async = require('async')
 const db = require('../lib/utils/db')
 
 const up = [
-  'ALTER TABLE contacts ADD ios_address_book_id uuid',
-  'ALTER TABLE contacts ADD android_address_book_id uuid'
+  'ALTER TABLE contacts ADD ios_address_book_id text',
+  'ALTER TABLE contacts ADD android_address_book_id text'
 ]
 
 const down = [
