@@ -2,6 +2,8 @@ SELECT id,
        'contact' AS type,
        EXTRACT(EPOCH FROM contacts.created_at) AS created_at,
        EXTRACT(EPOCH FROM contacts.updated_at) AS updated_at,
+       ios_address_book_id,
+       android_address_book_id,
        (
          SELECT ARRAY_AGG(DISTINCT(id)) FROM
          (
