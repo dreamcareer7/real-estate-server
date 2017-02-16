@@ -1,32 +1,5 @@
-WITH brand_offices AS (
-  SELECT id, matrix_unique_id FROM offices WHERE id IN (
-    SELECT office FROM brands_offices WHERE brand = $1
-  )
-),
-
-brand_agents AS (
-  SELECT id FROM agents WHERE
-  id IN (
-    SELECT agent FROM brands_agents WHERE brand = $1
-    UNION
-    SELECT agent FROM users WHERE id IN (
-      SELECT id FROM users WHERE brand = $1
-    ) AND office_mui IN(
-      SELECT matrix_unique_id FROM brand_offices
-    )
-  )
-  OR
-  office_mui IN(
-    SELECT matrix_unique_id FROM brand_offices
-  )
-),
-
-brand_users AS (
-  SELECT id FROM users WHERE id IN (
-    SELECT "user" AS id FROM brands_users WHERE brand = $1
-    UNION
-    SELECT id FROM users WHERE agent IN( SELECT id FROM brand_agents )
-  )
+WITH brand_users AS (
+  SELECT get_brand_users($1) as id
 ),
 
 sorted_brand_users AS (
