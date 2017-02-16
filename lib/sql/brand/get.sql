@@ -1,5 +1,15 @@
-WITH brand_users AS (
-  SELECT get_brand_users($1) as id
+WITH brand_offices AS (
+  SELECT id, matrix_unique_id FROM offices WHERE id IN (
+    SELECT office FROM brands_offices WHERE brand = $1
+  )
+),
+
+brand_agents AS (
+  SELECT get_brand_agents($1) AS id
+),
+
+brand_users AS (
+  SELECT get_brand_users($1) AS id
 ),
 
 sorted_brand_users AS (
