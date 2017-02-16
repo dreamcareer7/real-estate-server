@@ -3,11 +3,11 @@ CREATE OR REPLACE FUNCTION get_brand_agents(id uuid) RETURNS
 AS
 $$
   SELECT DISTINCT agents.id AS id FROM agents
-    FULL JOIN users          ON agents.id = users.agent
-    FULL JOIN offices        ON agents.office_mui = offices.matrix_unique_id
-    FULL JOIN brands_offices ON offices.id = brands_offices.office
-    FULL JOIN brands_agents  ON agents.id = brands_agents.agent
-    FULL JOIN brands_users   ON users.id = brands_users.user
+    LEFT JOIN users          ON agents.id = users.agent
+    LEFT JOIN offices        ON agents.office_mui = offices.matrix_unique_id
+    LEFT JOIN brands_offices ON offices.id = brands_offices.office
+    LEFT JOIN brands_agents  ON agents.id = brands_agents.agent
+    LEFT JOIN brands_users   ON users.id = brands_users.user
   WHERE (
     (
       brands_offices.brand = $1
