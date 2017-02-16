@@ -1,6 +1,6 @@
 UPDATE notifications_users
 SET
-  acked_at = NOW()
+  acked_at = CLOCK_TIMESTAMP()
 WHERE
   acked_at IS NULL
   AND "user" = $2
