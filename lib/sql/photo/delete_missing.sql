@@ -1,12 +1,12 @@
 WITH updated_listing AS (
-  UPDATE listings SET photos_checked_at = NOW()
+  UPDATE listings SET photos_checked_at = CLOCK_TIMESTAMP()
   WHERE matrix_unique_id = $1::int
 )
 
 UPDATE
   photos
 SET
-  deleted_at = NOW()
+  deleted_at = CLOCK_TIMESTAMP()
 WHERE
   listing_mui = $1::int
   AND

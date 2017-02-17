@@ -1,6 +1,6 @@
 UPDATE notifications
 SET
-  deleted_at = NOW()
+  deleted_at = CLOCK_TIMESTAMP()
 WHERE
   (
     object_class = $1 AND

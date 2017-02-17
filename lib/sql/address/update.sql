@@ -17,5 +17,5 @@ SET title = $1,
     street_dir_prefix = $16,
     street_dir_suffix = $17,
     street_number_searchable = $18,
-    updated_at = NOW()
+    updated_at = CLOCK_TIMESTAMP()
 WHERE id = $19
