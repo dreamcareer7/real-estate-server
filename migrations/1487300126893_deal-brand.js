@@ -2,7 +2,7 @@
 
 const async = require('async')
 const db = require('../lib/utils/db')
-const fn = fs.readFileSync('./lib/sql/brand/brand_children.fn.sql').toString()
+const fn = require('fs').readFileSync('./lib/sql/brand/brand_children.fn.sql').toString()
 
 const up = [
   'BEGIN',
