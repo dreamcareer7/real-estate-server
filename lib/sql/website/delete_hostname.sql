@@ -1,0 +1,1 @@
+DELETE FROM websites_hostnames WHERE website = $1 AND LOWER(hostname) = LOWER($2)
