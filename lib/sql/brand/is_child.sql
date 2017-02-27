@@ -1,0 +1,1 @@
+ SELECT $1 IN (SELECT brand_children($2)) AS is;
