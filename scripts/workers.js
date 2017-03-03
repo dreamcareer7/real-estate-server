@@ -79,7 +79,10 @@ Object.keys(queues).forEach(queue_name => {
   }
 
   const handler = (job, done) => {
+    console.log('Picking Job', queue_name)
+
     const examine = err => {
+      console.log('Job handlded', queue_name, err)
       if (err)
         reportError(err)
 
@@ -110,6 +113,7 @@ const sendNotifications = function () {
     Notification.sendForUnread,
     Message.sendEmailForUnread,
   ], err => {
+    console.log('Done sending seamless items')
     if (err) {
       console.log(err)
 
