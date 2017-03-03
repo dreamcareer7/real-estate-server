@@ -10,7 +10,7 @@ WITH data AS (
     year_built,
     city,
     county_or_parish as county,
-    postal_code
+    postal_code,
     (
       SELECT ARRAY_TO_STRING(
         ARRAY[
