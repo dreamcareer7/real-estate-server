@@ -1,3 +1,3 @@
 UPDATE contacts
-SET deleted_at = NOW()
+SET deleted_at = CLOCK_TIMESTAMP()
 WHERE id = $1

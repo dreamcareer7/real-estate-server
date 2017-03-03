@@ -23,6 +23,6 @@ ON CONFLICT (matrix_unique_id) DO UPDATE SET
   listing_mui = $4,
   refreshments = $5,
   type = $6,
-  updated_at = NOW()
+  updated_at = CLOCK_TIMESTAMP()
   WHERE open_houses.matrix_unique_id = $7
 RETURNING id

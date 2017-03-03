@@ -193,5 +193,5 @@ VALUES ($1,
         $94,
         $95,
         $96,
-        NOW()
+        CLOCK_TIMESTAMP()
        ) RETURNING id

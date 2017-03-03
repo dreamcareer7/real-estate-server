@@ -109,38 +109,6 @@ WITH rn AS (
     )
   GROUP BY notifications.room
 ),
-tc AS (
-  SELECT tasks.id AS task
-  FROM notifications
-  INNER JOIN notifications_users
-    ON notifications.id = notifications_users.notification
-  INNER JOIN tasks
-    ON (notifications.object = tasks.id OR notifications.subject = tasks.id)
-  WHERE notifications.specific = $1 AND
-        notifications_users.acked_at IS NULL AND
-        notifications_users.user = $1 AND
-        notifications.room IS NULL AND
-        (
-          notifications.object_class = 'Task' OR
-          notifications.subject_class = 'Task'
-        )
-),
-trc AS (
-  SELECT transactions.id AS transaction
-  FROM notifications
-  INNER JOIN notifications_users
-    ON notifications.id = notifications_users.notification
-  INNER JOIN transactions
-    ON (notifications.object = transactions.id OR notifications.subject = transactions.id)
-  WHERE notifications.specific = $1 AND
-        notifications_users.acked_at IS NULL AND
-        notifications_users.user = $1 AND
-        notifications.room IS NULL AND
-        (
-          notifications.object_class = 'Transaction' OR
-          notifications.subject_class = 'Transaction'
-        )
-),
 tco AS (
   SELECT contacts.id AS contact
   FROM notifications
@@ -158,14 +126,10 @@ tco AS (
         )
 )
 SELECT 'notification_summary' AS type,
-       (SELECT COUNT(*) FROM tc)::int AS task_notification_count,
-       (SELECT COUNT(*) FROM trc)::int AS transaction_notification_count,
        COUNT(r)::int AS room_notification_count,
        (
-         (SELECT COUNT(*) FROM tc) + (SELECT COUNT(*) FROM trc) + COALESCE(ARRAY_LENGTH(ARRAY_AGG(r), 1), 0)
+         COALESCE(ARRAY_LENGTH(ARRAY_AGG(r), 1), 0)
        )::int AS total_notification_count,
-       COALESCE((SELECT ARRAY_AGG(task) from tc), '{}'::uuid[]) AS task_ids,
-       COALESCE((SELECT ARRAY_AGG(transaction) from trc), '{}'::uuid[]) AS transaction_ids,
        COALESCE((SELECT ARRAY_AGG(contact) from tco), '{}'::uuid[]) AS contact_ids,
        COALESCE(ARRAY_AGG(r), '{}'::json[]) AS room_notification_summaries
 FROM rn

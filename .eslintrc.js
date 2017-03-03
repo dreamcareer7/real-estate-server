@@ -37,14 +37,10 @@ const globals = [
   'Metric',
   'Socket',
   'OpenHouse',
-  'Transaction',
-  'Idate',
-  'Task',
   'Attachment',
   'Office',
   'PropertyUnit',
   'PropertyRoom',
-  'Note',
   'CMA',
   'Brand',
   'School',
@@ -65,6 +61,7 @@ const globals = [
   'DealRole',
   'Envelope',
   'EnvelopeRecipient',
+  'Activity',
   'AttachedFile'
 ]
 

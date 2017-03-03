@@ -8,8 +8,6 @@
 <!-- include(alert.md) -->
 <!-- include(recommendation.md) -->
 <!-- include(notification.md) -->
-<!-- include(task.md) -->
-<!-- include(transaction.md) -->
 <!-- include(office.md) -->
 <!-- include(agent.md) -->
 <!-- include(socket.md) -->

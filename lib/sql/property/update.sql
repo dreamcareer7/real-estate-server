@@ -77,5 +77,5 @@ SET property_type = $1,
     year_built_details = $76,
     zoning = $77,
     security_system_yn = $78,
-    updated_at = NOW()
+    updated_at = CLOCK_TIMESTAMP()
 WHERE id = $79
