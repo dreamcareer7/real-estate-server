@@ -8,14 +8,17 @@ WITH data AS (
     list_date,
     property_type,
     year_built,
+    city,
+    county_or_parish as county,
+    postal_code
     (
       SELECT ARRAY_TO_STRING(
         ARRAY[
           addresses.street_number,
           addresses.street_dir_prefix,
           addresses.street_name,
-          addresses.street_suffix,
-          addresses.city,
+          addresses.street_suffix || ',',
+          addresses.city || ',',
           addresses.state_code,
           addresses.postal_code
         ], ' ', NULL
