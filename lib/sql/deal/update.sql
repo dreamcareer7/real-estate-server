@@ -14,7 +14,7 @@
   expiration_date = $13,
   executed_date = $14,
   option_period_end_date = $15,
-  contingency_end_date $16,
+  contingency_end_date = $16,
   closing_date = $17,
   move_in_date = $18,
   lease_executed_date = $19,
