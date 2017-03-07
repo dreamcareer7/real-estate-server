@@ -1,10 +1,9 @@
 INSERT INTO deals
-  (created_by, listing, deal_type, address, brand)
+  (created_by, listing, context, brand)
   VALUES (
     $1,
     $2,
     $3,
-    $4,
     (
       SELECT brand FROM users WHERE users.id = $1
     )
