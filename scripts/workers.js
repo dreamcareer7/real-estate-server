@@ -1,9 +1,55 @@
-require('./connection.js')
+const Domain = require('domain')
+require('../lib/models/index.js')()
+const db = require('../lib/utils/db')
 require('colors')
 
 const config = require('../lib/config.js')
 const queue = require('../lib/utils/queue.js')
 const async = require('async')
+
+const getDomain = cb => {
+  db.conn(function (err, conn, done) {
+    if (err)
+      return cb(Error.Database(err))
+
+    const domain = Domain.create()
+
+    const rollback = function (err) {
+      console.log('<- Rolling back on worker'.red, err)
+      conn.query('ROLLBACK', done)
+    }
+
+    const commit = cb => {
+      conn.query('COMMIT', function () {
+        done()
+        Job.handle(domain.jobs, cb)
+      })
+    }
+
+    conn.query('BEGIN', function (err) {
+      if (err)
+        return cb(Error.Database(err))
+
+      domain.db = conn
+      domain.jobs = []
+
+      domain.run(() => {
+        cb(null, {rollback,commit})
+      })
+    })
+
+    let handled = false
+    domain.on('error', function (e) {
+      delete e.domain
+      delete e.domainThrown
+      delete e.domainEmitter
+      delete e.domainBound
+
+      console.log('⚠ Panic:'.yellow, e, e.stack)
+      rollback(e.message)
+    })
+  })
+}
 
 // We have proper error handling here. No need for auto reports.
 Error.autoReport = false
@@ -67,29 +113,19 @@ const queues = {
 Object.keys(queues).forEach(queue_name => {
   const definition = queues[queue_name]
 
-  const reportError = err => {
-    console.log('Error processing job: ', queue_name, ':', err)
-    const text = '🗑 Worker Error: ' + queue_name + ' \n :memo: `' + JSON.stringify(err) + '`'
-
-    Slack.send({
-      channel: '7-server-errors',
-      text: text,
-      emoji: '💀'
-    })
-  }
-
   const handler = (job, done) => {
     console.log('Picking Job', queue_name)
 
-    const examine = err => {
-      console.log('Job handlded', queue_name, err)
-      if (err)
-        reportError(err)
+    getDomain((err, {rollback, commit}) => {
+      const examine = err => {
+        if (err)
+          return rollback(err)
 
-      done(err)
-    }
+        commit(done)
+      }
 
-    definition.handler(job, examine)
+      definition.handler(job, examine)
+    })
   }
 
   queue.process(queue_name, definition.parallel, handler)
@@ -108,25 +144,26 @@ function reportQueueStatistics () {
 
 reportQueueStatistics()
 
+
 const sendNotifications = function () {
-  async.series([
-    Notification.sendForUnread,
-    Message.sendEmailForUnread,
-  ], err => {
-    console.log('Done sending seamless items')
-    if (err) {
-      console.log(err)
+  getDomain((err, {rollback, commit}) => {
+    if (err)
+      return rollback(err)
 
-      const text = '🔔 Error while sending notifications: \n :memo: `' + JSON.stringify(err) + '` \n --- \n'
+    async.series([
+      Notification.sendForUnread,
+      Message.sendEmailForUnread,
+    ], err => {
+      if (err)
+        return rollback(err)
 
-      Slack.send({
-        channel: 'server-errors',
-        text: text,
-        emoji: '💀'
+      commit(err => {
+        if (err)
+          console.log('Error committing', err)
+
+        setTimeout(sendNotifications, 5000)
       })
-    }
-
-    setTimeout(sendNotifications, 5000)
+    })
   })
 }
 
