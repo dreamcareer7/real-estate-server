@@ -6,4 +6,4 @@ WHERE
   hidden = FALSE AND
   ARRAY[$1::uuid] IN (referring_objects)
 ORDER BY created_at DESC
-LIMIT 4
+LIMIT 4 -- FIXME
