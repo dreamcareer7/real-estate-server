@@ -7,7 +7,7 @@ const config = require('../lib/config.js')
 const queue = require('../lib/utils/queue.js')
 const async = require('async')
 
-const getDomain = cb => {
+const getDomain = (job, cb) => {
   db.conn(function (err, conn, done) {
     if (err)
       return cb(Error.Database(err))
@@ -15,12 +15,13 @@ const getDomain = cb => {
     const domain = Domain.create()
 
     const rollback = function (err) {
-      console.log('<- Rolling back on worker'.red, err)
+      console.log('<- Rolling back on worker'.red, job, err)
       conn.query('ROLLBACK', done)
     }
 
     const commit = cb => {
       conn.query('COMMIT', function () {
+        console.log('Commited transaction'.green, job)
         done()
         Job.handle(domain.jobs, cb)
       })
@@ -116,7 +117,7 @@ Object.keys(queues).forEach(queue_name => {
   const handler = (job, done) => {
     console.log('Picking Job', queue_name)
 
-    getDomain((err, {rollback, commit}) => {
+    getDomain(job, (err, {rollback, commit}) => {
       const examine = err => {
         if (err)
           return rollback(err)
@@ -146,7 +147,7 @@ reportQueueStatistics()
 
 
 const sendNotifications = function () {
-  getDomain((err, {rollback, commit}) => {
+  getDomain({}, (err, {rollback, commit}) => {
     if (err)
       return rollback(err)
 
