@@ -65,6 +65,7 @@ const airship = (job, done) => {
 }
 
 const notification = (job, done) => {
+  console.log('Notification handler called', process.domain.i)
   Notification.create(job.data.notification, done)
 }
 
@@ -122,7 +123,7 @@ Object.keys(queues).forEach(queue_name => {
   const handler = (job, done) => {
     console.log('Picking Job', queue_name)
 
-    getDomain(job, (err, {rollback, commit}) => {
+    getDomain(job.data, (err, {rollback, commit}) => {
       console.log('Executing job handler', process.domain.i)
       const examine = err => {
         if (err)
