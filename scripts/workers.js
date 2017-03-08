@@ -19,7 +19,7 @@ const getDomain = (job, cb) => {
     console.log('Started domain', domain.i)
 
     const rollback = function (err) {
-      console.log('<- Rolling back on worker'.red, proceess.domain.i, job, err)
+      console.log('<- Rolling back on worker'.red, process.domain.i, job, err)
       conn.query('ROLLBACK', done)
     }
 
