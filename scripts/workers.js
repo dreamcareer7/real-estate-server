@@ -16,7 +16,7 @@ const getDomain = (job, cb) => {
 
     const domain = Domain.create()
     domain.i = ++i
-    console.log('Started domain', domain.i)
+    console.log('Started domain', domain.i, job)
 
     const rollback = function (err) {
       console.log('<- Rolling back on worker'.red, domain.i, job, err)
