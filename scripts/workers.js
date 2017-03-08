@@ -19,13 +19,13 @@ const getDomain = (job, cb) => {
     console.log('Started domain', domain.i)
 
     const rollback = function (err) {
-      console.log('<- Rolling back on worker'.red, process.domain.i, job, err)
+      console.log('<- Rolling back on worker'.red, domain.i, job, err)
       conn.query('ROLLBACK', done)
     }
 
     const commit = cb => {
       conn.query('COMMIT', function () {
-        console.log('Commited transaction'.green, process.domain.i, job)
+        console.log('Commited transaction'.green, domain.i, job)
         done()
         Job.handle(domain.jobs, cb)
       })
