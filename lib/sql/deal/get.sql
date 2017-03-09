@@ -11,6 +11,11 @@ WITH data AS (
     city,
     county_or_parish as county,
     postal_code,
+    street_number,
+    street_dir_prefix,
+    street_name,
+    street_suffix,
+    postal_code,
     (
       SELECT ARRAY_TO_STRING(
         ARRAY[
@@ -30,7 +35,7 @@ WITH data AS (
           addresses.street_number,
           addresses.street_dir_prefix,
           addresses.street_name,
-          addresses.street_suffix || ',',
+          addresses.street_suffix || ','
         ], ' ', NULL
       )
     ) as street_address
