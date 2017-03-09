@@ -7,20 +7,25 @@ const config = require('../lib/config.js')
 const queue = require('../lib/utils/queue.js')
 const async = require('async')
 
-const getDomain = cb => {
+let i = 0
+
+const getDomain = (job, cb) => {
   db.conn(function (err, conn, done) {
     if (err)
       return cb(Error.Database(err))
 
     const domain = Domain.create()
+    domain.i = ++i
+    console.log('Started domain', domain.i)
 
     const rollback = function (err) {
-      console.log('<- Rolling back on worker'.red, err)
+      console.log('<- Rolling back on worker'.red, proceess.domain.i, job, err)
       conn.query('ROLLBACK', done)
     }
 
     const commit = cb => {
       conn.query('COMMIT', function () {
+        console.log('Commited transaction'.green, process.domain.i, job)
         done()
         Job.handle(domain.jobs, cb)
       })
@@ -34,6 +39,7 @@ const getDomain = cb => {
       domain.jobs = []
 
       domain.run(() => {
+        console.log('Entered domain', domain.i, process.domain.i)
         cb(null, {rollback,commit})
       })
     })
@@ -45,7 +51,7 @@ const getDomain = cb => {
       delete e.domainEmitter
       delete e.domainBound
 
-      console.log('⚠ Panic:'.yellow, e, e.stack)
+      console.log('⚠ Panic:'.yellow, domain.i, e, e.stack)
       rollback(e.message)
     })
   })
@@ -116,7 +122,8 @@ Object.keys(queues).forEach(queue_name => {
   const handler = (job, done) => {
     console.log('Picking Job', queue_name)
 
-    getDomain((err, {rollback, commit}) => {
+    getDomain(job, (err, {rollback, commit}) => {
+      console.log('Executing job handler', process.domain.i)
       const examine = err => {
         if (err)
           return rollback(err)
@@ -146,7 +153,7 @@ reportQueueStatistics()
 
 
 const sendNotifications = function () {
-  getDomain((err, {rollback, commit}) => {
+  getDomain({}, (err, {rollback, commit}) => {
     if (err)
       return rollback(err)
 
