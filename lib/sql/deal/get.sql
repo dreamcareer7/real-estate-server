@@ -23,7 +23,17 @@ WITH data AS (
           addresses.postal_code
         ], ' ', NULL
       )
-    ) as address
+    ) as full_address,
+    (
+      SELECT ARRAY_TO_STRING(
+        ARRAY[
+          addresses.street_number,
+          addresses.street_dir_prefix,
+          addresses.street_name,
+          addresses.street_suffix || ',',
+        ], ' ', NULL
+      )
+    ) as street_address
   FROM listings
   JOIN properties ON listings.property_id = properties.id
   JOIN addresses ON properties.address_id = addresses.id
