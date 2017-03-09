@@ -6,7 +6,7 @@ const db = require('../lib/utils/db')
 const up = [
   'BEGIN',
   'ALTER TABLE deals ADD context JSONB DEFAULT \'{}\'',
-  'UPDATE deals SET context = JSON_BUILD_OBJECT(\'deal_type\', deal_type, \'address\', address)',
+  'UPDATE deals SET context = JSON_BUILD_OBJECT(\'deal_type\', deal_type, \'full_address\', address)',
   'ALTER TABLE deals DROP deal_type',
   'ALTER TABLE deals DROP address',
   'ALTER TABLE deals DROP transaction_type',
