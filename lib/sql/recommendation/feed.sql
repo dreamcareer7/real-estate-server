@@ -14,18 +14,15 @@ WITH recs AS (
      FROM recommendations
      WHERE recommendations.room = $2 AND
            recommendations.deleted_at IS NULL AND
-           recommendations.hidden = FALSE AND CASE
-           WHEN $3::uuid[] IS NULL THEN (COALESCE(ARRAY_LENGTH(recommendations.referring_objects, 1), 0) > 0)
-           ELSE ($3::uuid[] IN (referring_objects))
+           recommendations.hidden = FALSE AND
+           COALESCE(ARRAY_LENGTH(recommendations.referring_objects, 1), 0) > 0 AND
+           CASE
+             WHEN $3::uuid[] IS NULL THEN TRUE
+             ELSE $3::uuid[] <@ referring_objects
            END
 )
 SELECT id,
-       (COUNT(*) OVER())::INT AS total,
-       (
-         SELECT COUNT(*)::INT
-         FROM recs
-         WHERE read IS FALSE
-       ) AS new
+       (COUNT(*) OVER())::INT AS total
 FROM recs
 WHERE
 CASE
