@@ -1,5 +1,6 @@
 WITH data AS (
   SELECT
+    'deal_proposed_values' as type,
     transaction_type,
     mls_number,
     mls_area_major,
@@ -10,6 +11,11 @@ WITH data AS (
     year_built,
     city,
     county_or_parish as county,
+    postal_code,
+    street_number,
+    street_dir_prefix,
+    street_name,
+    street_suffix,
     postal_code,
     (
       SELECT ARRAY_TO_STRING(
@@ -23,7 +29,17 @@ WITH data AS (
           addresses.postal_code
         ], ' ', NULL
       )
-    ) as address
+    ) as full_address,
+    (
+      SELECT ARRAY_TO_STRING(
+        ARRAY[
+          addresses.street_number,
+          addresses.street_dir_prefix,
+          addresses.street_name,
+          addresses.street_suffix || ','
+        ], ' ', NULL
+      )
+    ) as street_address
   FROM listings
   JOIN properties ON listings.property_id = properties.id
   JOIN addresses ON properties.address_id = addresses.id

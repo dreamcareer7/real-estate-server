@@ -59,6 +59,7 @@
     "nunjucks": "^2.5.2",
     "oauth2orize": "^1.0.1",
     "opener": "^1.4.1",
+    "parse-address": "0.0.6",
     "passport": "^0.2.1",
     "passport-http-bearer": "^1.0.1",
     "passport-oauth2-client-password": "^0.1.2",

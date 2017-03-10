@@ -16,16 +16,16 @@ const getDomain = (job, cb) => {
 
     const domain = Domain.create()
     domain.i = ++i
-    console.log('Started domain', domain.i)
+    console.log('Started domain', domain.i, job)
 
     const rollback = function (err) {
-      console.log('<- Rolling back on worker'.red, proceess.domain.i, job, err)
+      console.log('<- Rolling back on worker'.red, domain.i, job, err)
       conn.query('ROLLBACK', done)
     }
 
     const commit = cb => {
       conn.query('COMMIT', function () {
-        console.log('Commited transaction'.green, process.domain.i, job)
+        console.log('Commited transaction'.green, domain.i, job)
         done()
         Job.handle(domain.jobs, cb)
       })
@@ -65,6 +65,7 @@ const airship = (job, done) => {
 }
 
 const notification = (job, done) => {
+  console.log('Notification handler called', process.domain.i)
   Notification.create(job.data.notification, done)
 }
 
@@ -122,7 +123,7 @@ Object.keys(queues).forEach(queue_name => {
   const handler = (job, done) => {
     console.log('Picking Job', queue_name)
 
-    getDomain(job, (err, {rollback, commit}) => {
+    getDomain(job.data, (err, {rollback, commit}) => {
       console.log('Executing job handler', process.domain.i)
       const examine = err => {
         if (err)
