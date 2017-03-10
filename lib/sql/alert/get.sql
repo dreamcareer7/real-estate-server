@@ -1,5 +1,17 @@
+WITH recs AS
+(
+  SELECT recommendations.id AS id
+  FROM recommendations
+  LEFT JOIN recommendations_eav
+  ON recommendations.id = recommendations_eav.recommendation AND
+     (CASE WHEN $2::uuid IS NOT NULL THEN recommendations_eav."user" = $2 ELSE FALSE END) AND
+     recommendations_eav.action = 'Read'
+  WHERE room = (SELECT room FROM alerts WHERE id = $1 LIMIT 1) AND
+        recommendations_eav.id IS NULL
+)
 SELECT *,
        'alert' AS type,
+       CASE WHEN $2::uuid IS NULL THEN 0 ELSE (SELECT COUNT(*)::INT FROM recs) END AS new,
        ST_AsGeoJSON(points) AS points,
        EXTRACT(EPOCH FROM created_at) AS created_at,
        EXTRACT(EPOCH FROM updated_at) AS updated_at,

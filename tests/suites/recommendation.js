@@ -56,62 +56,6 @@ const getFavorites404 = (cb) => {
     .expectStatus(404)
 }
 
-const getTours = (cb) => {
-  return frisby.create('get tours')
-    .get('/rooms/' + results.room.create.data.id + '/recs/tours')
-    .after(cb)
-    .expectStatus(200)
-    .expectJSON({
-      code: 'OK',
-      data: [],
-      info: {
-        count: 0,
-        total: 0
-      }
-    })
-    .expectJSONLength('data', 0)
-    .expectJSONTypes({
-      code: String,
-      data: Array,
-      info: info_response
-    })
-}
-
-const getTours404 = (cb) => {
-  return frisby.create('expect 404 with invalid room id')
-    .get('/rooms/' + uuid.v1() + '/recs/tours')
-    .after(cb)
-    .expectStatus(404)
-}
-
-const getActives = (cb) => {
-  return frisby.create('get actives')
-    .get('/rooms/' + results.room.create.data.id + '/recs/actives')
-    .after(cb)
-    .expectStatus(200)
-    .expectJSON({
-      code: 'OK',
-      data: [],
-      info: {
-        count: 0,
-        total: 0
-      }
-    })
-    .expectJSONLength('data', 0)
-    .expectJSONTypes({
-      code: String,
-      data: Array,
-      info: info_response
-    })
-}
-
-const getActives404 = (cb) => {
-  return frisby.create('expect 404 with invalid room id')
-    .get('/rooms/' + uuid.v1() + '/recs/actives')
-    .after(cb)
-    .expectStatus(404)
-}
-
 const markAsFavorite = (cb) => {
   return frisby.create('favorite a rec')
     .patch('/rooms/' + results.room.create.data.id + '/recs/' + results.recommendation.feed.data[0].id + '/favorite', {
@@ -153,55 +97,6 @@ const markAsFavoriteWorked = (cb) => {
     .expectJSON({
       code: 'OK',
       data: [expect],
-      info: {
-        count: 1,
-        total: 1
-      }
-    })
-    .expectJSONLength('data', 1)
-    .expectJSONTypes({
-      code: String,
-      data: [recommendation_response],
-      info: info_response
-    })
-}
-
-const markAsTour = (cb) => {
-  return frisby.create('tour a rec')
-    .patch('/rooms/' + results.room.create.data.id + '/recs/' + results.recommendation.feed.data[0].id + '/tour', {
-      tour: true
-    })
-    .after(cb)
-    .expectStatus(200)
-    .expectJSON({
-      code: 'OK',
-      data: {
-        type: 'recommendation'
-      }
-    })
-    .expectJSONTypes({
-      code: String,
-      data: recommendation_response
-    })
-}
-
-const markAsTour404 = (cb) => {
-  return frisby.create('expect 404 with invalid recommendation id')
-    .patch('/rooms/' + results.room.create.data.id + '/recs/' + uuid.v1() + '/tour', {
-      tour: true
-    })
-    .after(cb)
-    .expectStatus(404)
-}
-
-const markAsTourWorked = (cb) => {
-  return frisby.create('get tours')
-    .get('/rooms/' + results.room.create.data.id + '/recs/tours')
-    .after(cb)
-    .expectStatus(200)
-    .expectJSON({
-      code: 'OK',
-      data: [],
       info: {
         count: 1,
         total: 1
@@ -334,16 +229,9 @@ module.exports = {
   feed,
   getFavorites,
   getFavorites404,
-  getTours,
-  getTours404,
-  getActives,
-  getActives404,
   markAsFavorite,
   markAsFavorite404,
   markAsFavoriteWorked,
-  markAsTour,
-  markAsTour404,
-  markAsTourWorked,
   seen,
   seen404,
   markAsSeen,

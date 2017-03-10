@@ -1,46 +1,51 @@
 WITH recs AS (
-    SELECT recommendations.id,
-           recommendations.hidden,
-           recommendations.referring_objects,
-           recommendations.created_at,
-           recommendations.updated_at,
-           ARRAY_AGG(recommendations_eav."user") FILTER (WHERE recommendations_eav.action = 'Read') AS read_by
+    SELECT id,
+           CASE WHEN
+           (
+             SELECT id
+             FROM recommendations_eav
+             WHERE recommendation = recommendations.id AND
+                   action = 'Read' AND
+                   "user" = $1
+             LIMIT 1
+           ) IS NULL THEN FALSE ELSE TRUE END AS read,
+           created_at,
+           updated_at
      FROM recommendations
-     FULL JOIN recommendations_eav ON recommendations_eav.recommendation = recommendations.id
      WHERE recommendations.room = $2 AND
            recommendations.deleted_at IS NULL AND
            recommendations.hidden = FALSE AND CASE
            WHEN $3::uuid[] IS NULL THEN (COALESCE(ARRAY_LENGTH(recommendations.referring_objects, 1), 0) > 0)
            ELSE ($3::uuid[] IN (referring_objects))
            END
-     GROUP BY recommendations.id,
-              recommendations.hidden,
-              recommendations.created_at,
-              recommendations.updated_at,
-              recommendations.referring_objects
 )
 SELECT id,
-       (COUNT(*) OVER())::INT AS total
+       (COUNT(*) OVER())::INT AS total,
+       (
+         SELECT COUNT(*)::INT
+         FROM recs
+         WHERE read IS FALSE
+       ) AS new
 FROM recs
-WHERE (NOT ($1 = ANY (COALESCE(read_by, '{}'))))
-AND CASE
-        WHEN $4 = 'Since_C' THEN created_at > TIMESTAMP WITH TIME ZONE 'EPOCH' + $5 * INTERVAL '1 MICROSECOND'
-        WHEN $4 = 'Max_C' THEN created_at <= TIMESTAMP WITH TIME ZONE 'EPOCH' + $5 * INTERVAL '1 MICROSECOND'
-        WHEN $4 = 'Since_U' THEN updated_at > TIMESTAMP WITH TIME ZONE 'EPOCH' + $5 * INTERVAL '1 MICROSECOND'
-        WHEN $4 = 'Max_U' THEN updated_at <= TIMESTAMP WITH TIME ZONE 'EPOCH' + $5 * INTERVAL '1 MICROSECOND'
-        WHEN $4 = 'Init_C' THEN created_at <= NOW()
-        WHEN $4 = 'Init_U' THEN updated_at <= NOW()
-        ELSE TRUE
-    END
+WHERE
+CASE
+  WHEN $4 = 'Since_C' THEN created_at > TIMESTAMP WITH TIME ZONE 'EPOCH' + $5 * INTERVAL '1 MICROSECOND'
+  WHEN $4 = 'Max_C' THEN created_at <= TIMESTAMP WITH TIME ZONE 'EPOCH' + $5 * INTERVAL '1 MICROSECOND'
+  WHEN $4 = 'Since_U' THEN updated_at > TIMESTAMP WITH TIME ZONE 'EPOCH' + $5 * INTERVAL '1 MICROSECOND'
+  WHEN $4 = 'Max_U' THEN updated_at <= TIMESTAMP WITH TIME ZONE 'EPOCH' + $5 * INTERVAL '1 MICROSECOND'
+  WHEN $4 = 'Init_C' THEN created_at <= NOW()
+  WHEN $4 = 'Init_U' THEN updated_at <= NOW()
+  ELSE TRUE
+END
 ORDER BY
-    CASE $4
-        WHEN 'Since_C' THEN created_at
-        WHEN 'Since_U' THEN updated_at
-    END,
-    CASE $4
-        WHEN 'Max_C' THEN created_at
-        WHEN 'Max_U' THEN updated_at
-        WHEN 'Init_C' THEN created_at
-        WHEN 'Init_U' THEN updated_at
-    END DESC
-LIMIT $6;
+  CASE $4
+    WHEN 'Since_C' THEN created_at
+    WHEN 'Since_U' THEN updated_at
+  END,
+  CASE $4
+    WHEN 'Max_C' THEN created_at
+    WHEN 'Max_U' THEN updated_at
+    WHEN 'Init_C' THEN created_at
+    WHEN 'Init_U' THEN updated_at
+  END DESC
+LIMIT $6
