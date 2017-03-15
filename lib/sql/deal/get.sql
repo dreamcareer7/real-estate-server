@@ -17,6 +17,7 @@ WITH data AS (
     street_name,
     street_suffix,
     postal_code,
+    unit_number,
     (
       SELECT ARRAY_TO_STRING(
         ARRAY[
