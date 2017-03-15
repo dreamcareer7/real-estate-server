@@ -17,6 +17,8 @@ WITH data AS (
     street_name,
     street_suffix,
     postal_code,
+    lot_number,
+    subdivision_name as subdivision,
     (
       SELECT ARRAY_TO_STRING(
         ARRAY[
