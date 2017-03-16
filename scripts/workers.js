@@ -85,6 +85,10 @@ const sms = (job, done) => {
   Twilio.callTwilio(job.data, done)
 }
 
+const scrape_deal = (job, done) => {
+  Deal.scrape(job.data.deal, done)
+}
+
 const queues = {
   airship_transport_send_device: {
     handler: airship,
@@ -114,6 +118,11 @@ const queues = {
   sms: {
     handler: sms,
     parallel: config.twilio.parallel
+  },
+
+  scrape_deal: {
+    handler: scrape_deal,
+    parallel: 3
   }
 }
 
