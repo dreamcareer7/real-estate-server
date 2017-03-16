@@ -25,6 +25,7 @@
     "busboy": "^0.2.14",
     "chai": "^3.5.0",
     "chai-param": "^0.1.2",
+    "cheerio": "^0.22.0",
     "colors": "^1.0.3",
     "commander": "^2.8.0",
     "compression": "^1.2.0",

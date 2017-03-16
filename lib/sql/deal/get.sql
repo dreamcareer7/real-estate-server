@@ -19,6 +19,7 @@ WITH data AS (
     postal_code,
     lot_number,
     subdivision_name as subdivision,
+    unit_number,
     (
       SELECT ARRAY_TO_STRING(
         ARRAY[
