@@ -21,13 +21,6 @@ const create = (cb) => {
     .expectJSONTypes('data', alert_response)
 }
 
-const create400 = (cb) => {
-  return frisby.create('expect 400 with empty model when creating an alert')
-    .post('/rooms/' + results.room.create.data.id + '/alerts')
-    .after(cb)
-    .expectStatus(400)
-}
-
 const getUserAlerts = (cb) => {
   return frisby.create('get user alerts and make sure create alert was successful')
     .get('/alerts')
@@ -143,13 +136,6 @@ const virtual = (cb) => {
     })
 }
 
-const virtual400 = (cb) => {
-  return frisby.create('expect 400 with empty model when creating a valert')
-    .post('/valerts')
-    .after(cb)
-    .expectStatus(400)
-}
-
 const deleteAlert = (cb) => {
   return frisby.create('delete alert')
     .delete('/rooms/' + results.alert.create.data.room + '/alerts/' + results.alert.create.data.id)
@@ -180,14 +166,12 @@ const deleteAlertWorked = (cb) => {
 
 module.exports = {
   create,
-  create400,
   getUserAlerts,
   getRoomAlerts,
   patchAlert,
   patchAlert404,
   patchAlertWorked,
   virtual,
-  virtual400,
   deleteAlert404,
   deleteAlert,
   deleteAlertWorked
