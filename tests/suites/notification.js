@@ -132,7 +132,6 @@ const cancelPushNotification = (cb) => {
 }
 
 const patchNotificationSettings = (cb) => {
-  console.log(results)
   return frisby.create('update notification settings')
     .patch('/rooms/' + results.notification.createRoom.data.id + '/notifications', {
       notification: true
