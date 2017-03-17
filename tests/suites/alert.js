@@ -4,7 +4,7 @@ const info = require('./expected_objects/info.js')
 const compact_listing = require('./expected_objects/compact_listing.js')
 const uuid = require('node-uuid')
 
-registerSuite('room', ['create'])
+registerSuite('room', ['create', 'addUser'])
 const maximum_price = 100000
 
 const create = (cb) => {
