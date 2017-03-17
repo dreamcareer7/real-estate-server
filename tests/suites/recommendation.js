@@ -67,7 +67,7 @@ const markAsFavorite = (cb) => {
       code: 'OK',
       data: {
         type: 'recommendation',
-        favorited_by: [results.authorize.token.data]
+        favorited_by: [results.authorize.token.data],
       }
     })
     .expectJSONTypes({
@@ -110,36 +110,9 @@ const markAsFavoriteWorked = (cb) => {
     })
 }
 
-const seen = (cb) => {
-  return frisby.create('get seen')
-    .get('/rooms/' + results.room.create.data.id + '/recs/seen')
-    .after(cb)
-    .expectStatus(200)
-    .expectJSON({
-      code: 'OK',
-      data: [],
-      info: {
-        count: 0,
-        total: 0
-      }
-    })
-    .expectJSONLength('data', 0)
-    .expectJSONTypes({
-      code: String,
-      data: Array,
-      info: info_response
-    })
-}
-
-const seen404 = (cb) => {
-  return frisby.create('expect 404 with invalid room id')
-    .get('/rooms/' + uuid.v1() + '/recs/seen')
-    .after(cb)
-    .expectStatus(404)
-}
-
 const markAsSeen = (cb) => {
   const rec = _.clone(results.recommendation.feed.data[0])
+  rec.read_by = [results.authorize.token.data.id]
 
   // These are only present when recommendation is part of a collection
   delete rec.comment_count
@@ -168,31 +141,10 @@ const markAsSeen404 = (cb) => {
     .expectStatus(404)
 }
 
-const markAsSeenWorked = (cb) => {
-  return frisby.create('make sure marking one as seen worked just fine')
-    .get('/rooms/' + results.room.create.data.id + '/recs/seen')
-    .after(cb)
-    .expectStatus(200)
-    .expectJSON({
-      code: 'OK',
-      info: {
-        count: 1,
-        total: 1
-      },
-      data: [results.recommendation.feed.data[0]]
-    })
-    .expectJSONLength('data', 1)
-    .expectJSONTypes({
-      code: String,
-      data: [recommendation_response],
-      info: info_response
-    })
-}
-
 const recommendManually = (cb) => {
   return frisby.create('recommend manually')
     .post('/rooms/' + results.room.create.data.id + '/recs', {
-      mls_number: results.recommendation.markAsSeenWorked.data[0].listing.mls_number
+      mls_number: results.recommendation.markAsSeen.data.listing.mls_number
     })
     .after(cb)
     .expectStatus(200)
@@ -232,11 +184,8 @@ module.exports = {
   markAsFavorite,
   markAsFavorite404,
   markAsFavoriteWorked,
-  seen,
-  seen404,
   markAsSeen,
   markAsSeen404,
-  markAsSeenWorked,
   recommendManually,
   recommendManuallyWorked
 }
