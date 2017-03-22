@@ -86,10 +86,6 @@ const sms = (job, done) => {
   Twilio.callTwilio(job.data, done)
 }
 
-const scrape_deal = (job, done) => {
-  Deal.scrape(job.data.deal, done)
-}
-
 const queues = {
   airship_transport_send_device: {
     handler: airship,
@@ -119,11 +115,6 @@ const queues = {
   sms: {
     handler: sms,
     parallel: config.twilio.parallel
-  },
-
-  scrape_deal: {
-    handler: scrape_deal,
-    parallel: 3
   }
 }
 
@@ -135,6 +126,11 @@ Object.keys(queues).forEach(queue_name => {
 
     // eslint-disable-next-line
     getDomain(job.data, (err, {rollback, commit}) => {
+      if (err) {
+        console.log('Error getting domain', err)
+        return
+      }
+
       debug('Executing job handler', process.domain.i)
       const examine = err => {
         if (err)
