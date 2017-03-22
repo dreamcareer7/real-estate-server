@@ -44,7 +44,6 @@ const getDomain = (job, cb) => {
       })
     })
 
-    let handled = false
     domain.on('error', function (e) {
       delete e.domain
       delete e.domainThrown
@@ -124,6 +123,10 @@ Object.keys(queues).forEach(queue_name => {
     console.log('Picking Job', queue_name)
 
     getDomain(job.data, (err, {rollback, commit}) => {
+      if (err) {
+        console.log('Error getting domain', err)
+        return
+      }
       console.log('Executing job handler', process.domain.i)
       const examine = err => {
         if (err)
