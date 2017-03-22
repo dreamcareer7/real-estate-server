@@ -1,7 +1,9 @@
-const Domain = require('domain')
 require('../lib/models/index.js')()
-const db = require('../lib/utils/db')
 require('colors')
+
+const Domain = require('domain')
+const db = require('../lib/utils/db')
+const debug = require('debug')('rechat:workers')
 
 const config = require('../lib/config.js')
 const queue = require('../lib/utils/queue.js')
@@ -16,7 +18,7 @@ const getDomain = (job, cb) => {
 
     const domain = Domain.create()
     domain.i = ++i
-    console.log('Started domain', domain.i, job)
+    debug('Started domain', domain.i, job)
 
     const rollback = function (err) {
       console.log('<- Rolling back on worker'.red, domain.i, job, err)
@@ -25,7 +27,7 @@ const getDomain = (job, cb) => {
 
     const commit = cb => {
       conn.query('COMMIT', function () {
-        console.log('Commited transaction'.green, domain.i, job)
+        debug('Commited transaction'.green, domain.i, job)
         done()
         Job.handle(domain.jobs, cb)
       })
@@ -39,12 +41,11 @@ const getDomain = (job, cb) => {
       domain.jobs = []
 
       domain.run(() => {
-        console.log('Entered domain', domain.i, process.domain.i)
+        debug('Entered domain', domain.i, process.domain.i)
         cb(null, {rollback,commit})
       })
     })
 
-    let handled = false
     domain.on('error', function (e) {
       delete e.domain
       delete e.domainThrown
@@ -65,7 +66,7 @@ const airship = (job, done) => {
 }
 
 const notification = (job, done) => {
-  console.log('Notification handler called', process.domain.i)
+  debug('Notification handler called', process.domain.i)
   Notification.create(job.data.notification, done)
 }
 
@@ -121,10 +122,11 @@ Object.keys(queues).forEach(queue_name => {
   const definition = queues[queue_name]
 
   const handler = (job, done) => {
-    console.log('Picking Job', queue_name)
+    debug('Picking Job', queue_name)
 
+    // eslint-disable-next-line
     getDomain(job.data, (err, {rollback, commit}) => {
-      console.log('Executing job handler', process.domain.i)
+      debug('Executing job handler', process.domain.i)
       const examine = err => {
         if (err)
           return rollback(err)
@@ -151,7 +153,6 @@ function reportQueueStatistics () {
 }
 
 reportQueueStatistics()
-
 
 const sendNotifications = function () {
   getDomain({}, (err, {rollback, commit}) => {
