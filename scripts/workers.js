@@ -94,7 +94,7 @@ const queues = {
 
   create_notification: {
     handler: notification,
-    parallel: config.airship.parallel
+    parallel: 1
   },
 
   email: {
