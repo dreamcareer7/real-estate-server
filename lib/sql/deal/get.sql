@@ -65,6 +65,10 @@ SELECT *,
 
   (
     SELECT ROW_TO_JSON(data) FROM data LIMIT 1
-  ) as proposed_values
+  ) as proposed_values,
+
+  (
+    SELECT ARRAY_AGG(id) FROM reviews WHERE deal = $1
+  ) as reviews
 
 FROM deals WHERE id = $1
