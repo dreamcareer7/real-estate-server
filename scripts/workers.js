@@ -94,7 +94,7 @@ const queues = {
 
   create_notification: {
     handler: notification,
-    parallel: config.airship.parallel
+    parallel: 1
   },
 
   email: {
@@ -127,6 +127,7 @@ Object.keys(queues).forEach(queue_name => {
     getDomain(job.data, (err, {rollback, commit}) => {
       if (err) {
         console.log('Error getting domain', err)
+        done(err)
         return
       }
 
