@@ -1,3 +1,10 @@
 <script type="text/javascript">
+  if (window.parent) {
+    window.parent.postMessage({
+      status: 'success'
+    })
+    return
+  }
+
   window.location = '%s://%s'
 </script>
