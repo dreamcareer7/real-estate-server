@@ -66,7 +66,7 @@ const airship = (job, done) => {
 }
 
 const notification = (job, done) => {
-  debug('Notification handler called', process.domain.i)
+  console.log('Notification handler called', process.domain.i, job.data.notification)
   Notification.create(job.data.notification, done)
 }
 
@@ -181,4 +181,4 @@ const sendNotifications = function () {
   })
 }
 
-sendNotifications()
+// sendNotifications()
