@@ -2,7 +2,7 @@
   if (window.parent) {
     window.parent.postMessage({
       status: 'success'
-    })
+    }, '*')
     return
   }
 
