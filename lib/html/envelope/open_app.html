@@ -1,6 +1,6 @@
 <script type="text/javascript">
-  if (window.parent) {
-    window.parent.postMessage({
+  if (window.opener) {
+    window.opener.postMessage({
       status: 'success'
     }, '*')
     return
