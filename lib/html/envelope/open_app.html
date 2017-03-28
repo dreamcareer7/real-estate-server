@@ -3,8 +3,9 @@
     window.opener.postMessage({
       status: 'success'
     }, '*')
-    return
-  }
 
-  window.location = '%s://%s'
+    return ;
+  } else {
+    window.location = '%s://%s'
+  }
 </script>
