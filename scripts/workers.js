@@ -182,4 +182,4 @@ const sendNotifications = function () {
   })
 }
 
-// sendNotifications()
+sendNotifications()
