@@ -11,7 +11,7 @@ const up = [
      room uuid NOT NULL REFERENCES rooms(id),
      brand uuid NOT NULL REFERENCES brands(id)
    )`,
-   'ALTER TABLE brands_rooms ADD CONSTRAINT brand_rooms_unique UNIQUE(brand, "user")'
+  'ALTER TABLE brands_rooms ADD CONSTRAINT brand_rooms_unique UNIQUE(brand, "user")',
   'COMMIT'
 ]
 
