@@ -77,7 +77,13 @@ SELECT *,
 
   (
     SELECT parent FROM brands_parents WHERE brand = $1
-  )
+  ),
+
+  (
+    CASE WHEN $2::uuid IS NULL THEN NULL
+          ELSE (SELECT room FROM brands_rooms WHERE brand = $1 AND "user" = $2)
+    END
+  ) as room
 
 FROM brands
 WHERE id = $1
