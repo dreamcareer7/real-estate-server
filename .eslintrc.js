@@ -61,6 +61,7 @@ const globals = [
   'DealRole',
   'Envelope',
   'EnvelopeRecipient',
+  'EnvelopeDocument',
   'Activity',
   'AttachedFile',
   'Review'
