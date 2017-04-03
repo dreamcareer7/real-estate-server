@@ -4,7 +4,7 @@ const info = require('./expected_objects/info.js')
 const compact_listing = require('./expected_objects/compact_listing.js')
 const uuid = require('node-uuid')
 
-registerSuite('room', ['create'])
+registerSuite('room', ['create', 'addUser'])
 const maximum_price = 100000
 
 const create = (cb) => {
@@ -19,13 +19,6 @@ const create = (cb) => {
       data: criteria
     })
     .expectJSONTypes('data', alert_response)
-}
-
-const create400 = (cb) => {
-  return frisby.create('expect 400 with empty model when creating an alert')
-    .post('/rooms/' + results.room.create.data.id + '/alerts')
-    .after(cb)
-    .expectStatus(400)
 }
 
 const getUserAlerts = (cb) => {
@@ -143,13 +136,6 @@ const virtual = (cb) => {
     })
 }
 
-const virtual400 = (cb) => {
-  return frisby.create('expect 400 with empty model when creating a valert')
-    .post('/valerts')
-    .after(cb)
-    .expectStatus(400)
-}
-
 const deleteAlert = (cb) => {
   return frisby.create('delete alert')
     .delete('/rooms/' + results.alert.create.data.room + '/alerts/' + results.alert.create.data.id)
@@ -180,14 +166,12 @@ const deleteAlertWorked = (cb) => {
 
 module.exports = {
   create,
-  create400,
   getUserAlerts,
   getRoomAlerts,
   patchAlert,
   patchAlert404,
   patchAlertWorked,
   virtual,
-  virtual400,
   deleteAlert404,
   deleteAlert,
   deleteAlertWorked

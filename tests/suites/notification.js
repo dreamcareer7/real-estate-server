@@ -3,7 +3,7 @@ const config = require('../../lib/config.js')
 const user = require('./data/user.js')
 const room = require('./data/room.js')
 
-registerSuite('transaction', ['create', 'assign'])
+registerSuite('message', ['post'])
 
 const auth_params = {
   client_id: config.tests.client_id,
@@ -132,7 +132,6 @@ const cancelPushNotification = (cb) => {
 }
 
 const patchNotificationSettings = (cb) => {
-  console.log(results)
   return frisby.create('update notification settings')
     .patch('/rooms/' + results.notification.createRoom.data.id + '/notifications', {
       notification: true

@@ -16,7 +16,7 @@ module.exports = {
   'message': String,
   'created_at': Number,
   'updated_at': Number,
-  'room': v.optionalString,
+//   'room': v.optionalString,
   'action': String,
   'object_class': v.optionalString,
   'auxiliary_object_class': v.optionalString,

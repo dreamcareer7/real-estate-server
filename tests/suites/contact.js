@@ -91,13 +91,6 @@ const create = (cb) => {
     })
 }
 
-const create400 = (cb) => {
-  return frisby.create('expect 400 with empty model when creating a contact')
-    .post('/contacts')
-    .after(cb)
-    .expectStatus(400)
-}
-
 const getContact = (cb) => {
   results.user.create.data.type = 'compact_user'
 
@@ -179,7 +172,6 @@ const deleteContactWorked = (cb) => {
 
 module.exports = {
   create,
-  create400,
   getContact,
   getByTag,
   search,

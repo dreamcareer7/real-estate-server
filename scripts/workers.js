@@ -124,6 +124,7 @@ Object.keys(queues).forEach(queue_name => {
   const handler = (job, done) => {
     debug('Picking Job', queue_name)
 
+    // eslint-disable-next-line
     getDomain(job.data, (err, {rollback, commit}) => {
       if (err) {
         console.log('Error getting domain', err)
