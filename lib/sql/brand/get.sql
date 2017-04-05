@@ -80,8 +80,10 @@ SELECT *,
   ),
 
   (
-    CASE WHEN $2::uuid IS NULL THEN NULL
-          ELSE (SELECT room FROM brands_rooms WHERE brand = $1 AND "user" = $2)
+    CASE WHEN $2::uuid IS NULL THEN
+      NULL
+    ELSE
+      (SELECT room FROM rooms_users WHERE "user" = $2 AND reference = ('Brand/' || $1))
     END
   ) as room
 
