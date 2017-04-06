@@ -4,7 +4,7 @@ const async = require('async')
 const db = require('../lib/utils/db')
 
 const up = [
-  'ALTER TABLE notifications_users ADD IF NOT EXISTS seen_at timestamptz;'
+  'ALTER TABLE notifications_users ADD seen_at timestamptz;'
 ]
 
 const down = [
