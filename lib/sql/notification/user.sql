@@ -26,8 +26,6 @@ ORDER BY
     CASE $2
         WHEN 'Since_C' THEN created_at
         WHEN 'Since_U' THEN updated_at
-        WHEN 'Init_C' THEN created_at
-        WHEN 'Init_U' THEN updated_at
     END,
     CASE $2
         WHEN 'Max_C' THEN created_at
