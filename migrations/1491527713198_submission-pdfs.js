@@ -62,7 +62,7 @@ const saveSubmissionPdf = (revision, cb) => {
     }
 
     AttachedFile.saveFromUrl({
-      path: revision.deal,
+      path: revision.deal + '/revisions',
       filename: results.form.name + '.pdf',
       url,
       user: results.user,
