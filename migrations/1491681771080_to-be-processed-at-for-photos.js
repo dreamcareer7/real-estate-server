@@ -7,6 +7,9 @@ const up = [
   'BEGIN',
   'ALTER TABLE photos RENAME COLUMN last_processed TO processed_at',
   'ALTER TABLE photos ADD to_be_processed_at timestamp with time zone DEFAULT CLOCK_TIMESTAMP()',
+  'UPDATE photos SET to_be_processed_at = NULL',
+  // Whlie we want the default value to be CLOCK_TIMESTAMP(), we want it to be NULL for our current photos
+  // Otherwise we'll just start downloading the whole images again.
   'COMMIT'
 ]
 
