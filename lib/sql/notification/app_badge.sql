@@ -14,7 +14,7 @@ WITH c AS (
     GROUP BY messages.room,
              rooms_users.room
 )
-SELECT (COUNT(DISTINCT(notifications.room)) + COUNT(notifications_users."user") FILTER (WHERE notifications.room IS NULL)) AS app_badge
+SELECT (COUNT(DISTINCT(notifications.room)) + COUNT(notifications_users."user") FILTER (WHERE notifications.room IS NULL))::INT AS app_badge
 FROM notifications_users
 INNER JOIN notifications
   ON notifications_users.notification = notifications.id
