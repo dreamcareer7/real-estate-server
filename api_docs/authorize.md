@@ -25,5 +25,18 @@ and providing it in the HTTP headers for the remainder of the session like this:
   Authorization: Bearer <fetched_access_token>
 ```
 
-Additional to `access_token`, this endpoint will give you profile of the logged in user.
+Additional to `access_token`, this endpoint will give you:
+
+* Profile of the logged in user.
+* Expirey date of the access token
+* A refresh token
+
 <!-- include(tests/authorize/token.md) -->
+
+## Refresh Token [POST]
+An access token has a expirey date and thus will be expired.
+But every time you get an access token (as documented above), you will be given a refresh token which has a longer expirey.
+
+At any time, you can exchange the refresh token with a new pair of tokens like this:
+
+<!-- include(tests/authorize/refresh.md) -->
