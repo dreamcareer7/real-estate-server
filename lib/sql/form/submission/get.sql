@@ -12,7 +12,10 @@ SELECT
   (
     SELECT count(*) FROM forms_data WHERE forms_data.submission = forms_submissions.id
   ) as revision_count,
-  'form_submission' AS type
+  'form_submission' AS type,
+  (
+    SELECT file FROM files_relations WHERE role = 'SubmissionRevision' AND role_id = forms_data.id
+  ) AS file
 FROM forms_submissions
 JOIN forms_data ON forms_submissions.id = forms_data.submission
 JOIN forms ON forms_submissions.form = forms.id

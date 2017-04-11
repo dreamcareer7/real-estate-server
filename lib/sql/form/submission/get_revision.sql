@@ -8,7 +8,10 @@ SELECT
   forms_submissions.deal AS deal,
   forms_data.values AS "values",
   forms_data.state AS state,
-  'form_revision' AS type
+  'form_revision' AS type,
+  (
+    SELECT file FROM files_relations WHERE role = 'SubmissionRevision' AND role_id = forms_data.id
+  ) AS file
 FROM forms_data
 JOIN forms_submissions ON forms_submissions.id = forms_data.submission
 WHERE forms_data.id = $1

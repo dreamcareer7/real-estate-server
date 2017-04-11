@@ -1,0 +1,1 @@
+INSERT INTO brands_rooms(brand, room, "user") VALUES ($1, $2, $3)

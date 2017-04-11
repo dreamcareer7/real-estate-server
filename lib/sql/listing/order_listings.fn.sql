@@ -1,5 +1,6 @@
 CREATE FUNCTION order_listings(listing_status) RETURNS integer
     AS 'SELECT CASE $1
+      WHEN ''Coming Soon''::listing_status            THEN 0
       WHEN ''Active''::listing_status                 THEN 1
 
       WHEN ''Active Option Contract''::listing_status THEN 2

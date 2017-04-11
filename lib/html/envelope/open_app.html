@@ -1,3 +1,9 @@
 <script type="text/javascript">
-  window.location = '%s://%s'
+  if (window.opener) {
+    window.opener.postMessage({
+      status: 'success'
+    }, '*')
+  } else {
+    window.location = '%s://%s'
+  }
 </script>
