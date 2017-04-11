@@ -1,11 +1,15 @@
 const user = require('./user.js')
 const v = require('./validation.js')
 
-module.exports = {
+const refresh = {
   'access_token': v.optionalString,
   'refresh_token': String,
   'expires_in': Number,
   'code': String,
-  'data': user,
-  'token_type': 'Bearer'
+  'token_type': String
 }
+
+const access = JSON.parse(JSON.stringify(refresh))
+access.data = user
+
+module.exports = {access, refresh}
