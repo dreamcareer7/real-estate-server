@@ -37,6 +37,7 @@ const refresh = (cb) => {
     .post('/oauth2/token', params)
     .expectStatus(200)
     .expectJSONTypes(responses.refresh)
+    .after(cb)
 }
 
 
