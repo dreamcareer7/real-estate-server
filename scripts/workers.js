@@ -133,8 +133,11 @@ Object.keys(queues).forEach(queue_name => {
 
       debug('Executing job handler', process.domain.i)
       const examine = err => {
-        if (err)
-          return rollback(err)
+        if (err) {
+          rollback(err)
+          done(err)
+          return
+        }
 
         commit(done)
       }
