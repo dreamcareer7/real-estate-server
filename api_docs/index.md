@@ -27,7 +27,7 @@ Although we have a page that includes [everything](/all.html).
 
 ## Sharing
 
-* [Alerts](/message.html)
+* [Alerts](/alert.html)
 * [Recommendation](/recommendation.html)
 * [CMA](/cma.html)
 
@@ -38,7 +38,7 @@ Although we have a page that includes [everything](/all.html).
 
 ## Misc
 
-* [Notification](/message.html)
+* [Notification](/notification.html)
 * [Websockets](/socket.html)
 
 ## Transaction Platform
