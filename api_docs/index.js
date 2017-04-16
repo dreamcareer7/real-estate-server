@@ -6,6 +6,7 @@ const async = require('async')
 
 const program = require('commander')
   .option('-o, --no-tests', 'Disable running tests, only regenerate docs')
+  .option('-t, --theme <theme>', 'Aglio theme to use')
 
 const options = program.parse(process.argv);
 
@@ -66,6 +67,7 @@ function generateMd(docName, cb) {
   const md = fs.readFileSync(`/tmp/rechat/${docName}.md`).toString()
 
   aglio.render(md, {
+    theme: options.theme || 'olio',
 //     themeTemplate:'triple',
     themeFullWidth: true,
     includePath: '/tmp/rechat'
