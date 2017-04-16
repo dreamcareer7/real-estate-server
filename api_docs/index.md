@@ -39,7 +39,7 @@ Although we have a page that includes [everything](/all.html).
 ## Misc
 
 * [Notification](/message.html)
-* [Websockets](/websocket.html)
+* [Websockets](/socket.html)
 
 ## Transaction Platform
 * [Deals](/deals.html)
