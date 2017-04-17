@@ -16,7 +16,19 @@ WITH c AS (
              rooms_users.room
 )
 SELECT id,
-       total
+       total,
+       (
+         SELECT COUNT(DISTINCT(notifications.room))::INT FROM notifications_users
+         INNER JOIN notifications ON
+           notifications_users.notification = notifications.id
+         WHERE notifications_users."user" = $1 AND
+               notifications.room IN
+               (
+                 SELECT id FROM c
+               ) AND
+               COALESCE(notifications.exclude <> $1, TRUE) AND
+               notifications_users.acked_at IS NULL
+       ) AS new
 FROM c
 WHERE CASE
     WHEN $2 = 'Since_C' THEN created_at > TIMESTAMP WITH TIME ZONE 'EPOCH' + $3 * INTERVAL '1 MICROSECOND'
