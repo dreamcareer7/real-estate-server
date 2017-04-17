@@ -42,11 +42,11 @@ Although we have a page that includes [everything](/all.html).
 * [Websockets](/socket.html)
 
 ## Transaction Platform
-* [Deals](/deals.html)
-* [Forms](/forms.html)
+* [Deals](/deal.html)
+* [Forms](/form.html)
 * [Envelopes](/envelope.html)
 
 ## Team and account management
 
-* [Brands](/brands.html)
+* [Brands](/brand.html)
 * [Payments](/payment.html)
