@@ -30,6 +30,7 @@ Name                  | Comes from MLS? | Comes from DCAD? | Used in forms      
 deal_type             |                 |                  |                     |      RW
 list_price            |       ✓         |                  |        ✓            |      R
 list_date             |       ✓         |                  |        ✓            |      R
+expiration_date       |       ☐         |                  |        ✓            |      R
 closing_date          |                 |                  |        ✓            |      R
 full_address          |       ✓         |                  |        ✓            |      RW
 legal_description     |                 |        ✓         |        ✓            |
