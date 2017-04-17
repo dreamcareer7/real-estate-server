@@ -8,7 +8,7 @@ const program = require('commander')
   .option('-o, --no-tests', 'Disable running tests, only regenerate docs')
   .option('-t, --theme <theme>', 'Aglio theme to use')
 
-const options = program.parse(process.argv);
+const options = program.parse(process.argv)
 
 try {
   mkdir('/tmp/rechat')
@@ -73,7 +73,7 @@ function generateMd(docName, cb) {
     includePath: '/tmp/rechat'
   }, (err, html) => {
     if (err)
-      cb(err)
+      return cb(err)
 
     fs.writeFile(`/tmp/rechat/${docName}.html`, html, cb)
   })

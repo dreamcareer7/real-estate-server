@@ -4,7 +4,7 @@ const async = require('async')
 const db = require('../lib/utils/db')
 
 const up = [
-  `UPDATE users SET user_type = 'Agent', features = '["Deals"]' WHERE email = 'test@rechat.com'`
+  'UPDATE users SET user_type = \'Agent\', features = \'["Deals"]\' WHERE email = \'test@rechat.com\''
 ]
 
 const down = []
