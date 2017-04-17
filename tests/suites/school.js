@@ -1,42 +1,42 @@
 const schools = require('./data/schools.js')
 const schools_response = require('./expected_objects/schools.js')
 
-const invalid_q_search = (cb) => {
+const searchWithInvalidQuery = (cb) => {
   return frisby.create('expect 400 with invalid (small) q')
     .get('/schools/search?q=a')
     .after(cb)
     .expectStatus(400)
 }
 
-const valid_q_search = (cb) => {
-  return frisby.create('expect 200 with valid q')
+const searchWithValidQuery = (cb) => {
+  return frisby.create('expect 200 with valid query')
     .get('/schools/search?q=aaa')
     .after(cb)
     .expectStatus(200)
 }
 
-const invalid_districts_search = (cb) => {
+const invalidDistrictsSearch = (cb) => {
   return frisby.create('expect 400 with invalid districts, districts should be an array')
     .get('/schools/search?districts=a')
     .after(cb)
     .expectStatus(400)
 }
 
-const valid_districts_search = (cb) => {
+const validDistrictsSearch = (cb) => {
   return frisby.create('expect 200 with valid districts')
     .get('/schools/search?districts[]=a')
     .after(cb)
     .expectStatus(200)
 }
 
-const search_by_districts = (cb) => {
+const searchByDistricts = (cb) => {
   return frisby.create('search for schools by districts')
     .get('/schools/search?districts[]=Alabama')
     .after(cb)
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
-      data: schools
+      data: schools.schools
     })
     .expectJSONTypes({
       code: String,
@@ -44,11 +44,22 @@ const search_by_districts = (cb) => {
     })
 }
 
-const search_districts = (cb) => {
+const searchDistrictsWithInvalidQuery = (cb) => {
+  return frisby.create('expect 400 with invalid query, query should be an array')
+    .get('/schools/districts/search?q=a')
+    .after(cb)
+    .expectStatus(400)
+}
+
+const searchDistricts = (cb) => {
   return frisby.create('search for districts')
-    .get('/schools/districts/search')
+    .get('/schools/districts/search?q[]=bb')
     .after(cb)
     .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      data: schools.districts
+    })
     .expectJSONTypes({
       code: String,
       data: [schools_response.districts]
@@ -56,10 +67,11 @@ const search_districts = (cb) => {
 }
 
 module.exports = {
-  invalid_q_search,
-  valid_q_search,
-  invalid_districts_search,
-  valid_districts_search,
-  search_by_districts,
-  search_districts
+  searchWithInvalidQuery,
+  searchWithValidQuery,
+  invalidDistrictsSearch,
+  validDistrictsSearch,
+  searchByDistricts,
+  searchDistrictsWithInvalidQuery,
+  searchDistricts
 }
