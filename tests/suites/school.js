@@ -10,7 +10,7 @@ const searchWithInvalidQuery = (cb) => {
 
 const searchWithValidQuery = (cb) => {
   return frisby.create('expect 200 with valid query')
-    .get('/schools/search?q=aaa')
+    .get('/schools/search?q=Wylie')
     .after(cb)
     .expectStatus(200)
 }
@@ -20,13 +20,6 @@ const invalidDistrictsSearch = (cb) => {
     .get('/schools/search?districts=a')
     .after(cb)
     .expectStatus(400)
-}
-
-const validDistrictsSearch = (cb) => {
-  return frisby.create('expect 200 with valid districts')
-    .get('/schools/search?districts[]=a')
-    .after(cb)
-    .expectStatus(200)
 }
 
 const searchByDistricts = (cb) => {
@@ -70,7 +63,6 @@ module.exports = {
   searchWithInvalidQuery,
   searchWithValidQuery,
   invalidDistrictsSearch,
-  validDistrictsSearch,
   searchByDistricts,
   searchDistrictsWithInvalidQuery,
   searchDistricts

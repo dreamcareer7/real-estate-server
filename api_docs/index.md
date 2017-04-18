@@ -18,6 +18,7 @@ Although we have a page that includes [everything](/all.html).
 * [Agents](/agent.html)
 * [Listings](/listing.html)
 * [Offices (aka Brokerage)](/office.html)
+* [Schools](/school.html)
 
 
 ## Chat
