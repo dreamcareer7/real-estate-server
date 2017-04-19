@@ -58,7 +58,11 @@ SELECT 'user' AS type,
              SELECT contact FROM cp
            ) p
          ) ELSE NULL END
-       ) AS contacts
+       ) AS contacts,
+
+       (
+        SELECT count(*) > 0 FROM docusign_users WHERE "user" = $2::uuid
+       ) as has_docusign
 FROM users
 WHERE users.id = $1 AND
       users.deleted_at IS NULL

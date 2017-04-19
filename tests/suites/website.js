@@ -3,7 +3,7 @@ const website_response = require('./expected_objects/website.js')
 
 registerSuite('user', ['create'])
 
-const hostname = 'http://localsite'
+const hostname = 'localsite'
 
 const create = (cb) => {
   return frisby.create('create a website')
@@ -81,6 +81,23 @@ const getByHostname = (cb) => {
     })
 }
 
+const deleteHostname = cb => {
+  delete results.website.create.data.hostnames[0]
+
+  return frisby.create('delete a hostname from a website')
+    .delete(`/websites/${results.website.create.data.id}/hostnames?hostname=${hostname}`)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      data: results.website.create.data
+    })
+    .expectJSONTypes({
+      code: String,
+      data: website_response
+    })
+}
+
 const update = cb => {
   const updated = JSON.parse(JSON.stringify(website))
   updated.template = 'light2'
@@ -107,5 +124,6 @@ module.exports = {
   getAll,
   addHostname,
   getByHostname,
+  deleteHostname,
   update
 }

@@ -14,3 +14,4 @@ scripts/announcements/subject_announcement.asc
 *.log
 jsdoc/docs
 *.bk
+*.swp

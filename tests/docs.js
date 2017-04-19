@@ -1,13 +1,8 @@
 const fs = require('fs')
 const _ = require('underscore')
-const aglio = require('aglio')
 const copy = require('copy-dir')
 
 copy.sync(__dirname + '/../api_docs/', '/tmp/rechat')
-
-// Disable app's stdout so it wont noise our HTML
-const writer = process.stdout.write.bind(process.stdout)
-process.stdout.write = function () {}
 
 try {
   fs.mkdirSync('/tmp/rechat/tests')
@@ -37,7 +32,7 @@ Run.on('app ready', (app) => {
 
 Run.on('done', generate)
 Run.on('suite done', (suite) => {
-  process.stderr.write('✓ ' + suite + '\n')
+  console.log('✓ ' + suite + '\n')
 })
 
 function findParams (url, params, qs) {
@@ -71,19 +66,7 @@ function generate () {
     fs.writeFileSync('/tmp/rechat/tests/' + suite + '/' + test + '.md', md)
   })
 
-  const md = fs.readFileSync('/tmp/rechat/index.md').toString()
-
-  aglio.render(md, {
-//     themeTemplate:'triple',
-    themeFullWidth: true,
-    includePath: '/tmp/rechat'
-  }, (err, html) => {
-    if (err)
-      process.stderr.write(err)
-
-    writer(html)
-    process.exit()
-  })
+  process.exit()
 }
 
 function generateTest (call) {
