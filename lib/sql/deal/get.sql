@@ -1,6 +1,7 @@
 WITH data AS (
   SELECT
     'deal_proposed_values' as type,
+    cover_image_url as photo,
     status as listing_status,
     transaction_type,
     mls_number,
