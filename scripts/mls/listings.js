@@ -101,15 +101,14 @@ function upsertProperty (property, address_id, cb) {
 function upsertListing (listing, property_id, cb) {
   listing.property_id = property_id
 
-  Listing.getByMUI(listing.matrix_unique_id, function (err, current) {
+  Listing.getByMUI(listing.matrix_unique_id, (err, current) => {
     if (err && err.code !== 'ResourceNotFound')
       return cb(err)
 
     if (err && err.code === 'ResourceNotFound') {
       Metric.increment('mls.new_listing')
 
-      Listing.create(listing, cb)
-      return
+      return Listing.create(listing, cb)
     }
 
     Metric.increment('mls.updated_listing')
@@ -150,6 +149,7 @@ function createObjects (data, cb) {
     upsertAddress.bind(null, address),
     upsertProperty.bind(null, property),
     upsertListing.bind(null, listing),
+    Listing.issueHitNotifications,
     Recommendation.generateForListing
   ], cb)
 }
