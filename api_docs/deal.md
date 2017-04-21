@@ -46,7 +46,8 @@ street_name           |       ✓         |                  |        ✓       
 street_suffix         |       ✓         |                  |        ✓            |
 street_address        |       ✓         |                  |        ✓            |      R
 city                  |       ✓         |                  |        ✓            |
-state                 |       ✓         |                  |        ✓            |
+state                 |       ✓         |                  |        ✓            |      R
+state_code            |       ✓         |                  |                     |
 postal_code           |       ✓         |                  |        ✓            |
 county                |       ✓         |                  |        ✓            |
 property_type         |       ✓         |                  |        ✓            |

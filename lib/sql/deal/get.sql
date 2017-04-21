@@ -22,6 +22,8 @@ WITH data AS (
     lot_number,
     subdivision_name as subdivision,
     unit_number,
+    state_code,
+    state,
     (
       SELECT ARRAY_TO_STRING(
         ARRAY[
