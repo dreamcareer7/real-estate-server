@@ -14,7 +14,8 @@ const up = [
        (subject_class = 'Contact' AND action = 'CreatedFor' AND object_class = 'User') OR
        (subject_class = 'Listing' AND action = 'PriceDropped' AND object_class = 'Room') OR
        (subject_class = 'Listing' AND action = 'StatusChanged' AND object_class = 'Room') OR
-       (subject_class = 'OpenHouse' AND action = 'Available' AND object_class = 'Listing')
+       (subject_class = 'OpenHouse' AND action = 'Available' AND object_class = 'Listing') OR
+       (subject_class = 'Listing' AND action = 'BecameAvailable' AND object_class = 'Room')
      )
    ),
    r1 AS
