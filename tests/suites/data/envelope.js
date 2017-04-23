@@ -24,7 +24,7 @@ const envelope = {
 
 module.exports = {
   auth: {
-    username: 'support@rechat.com',
+    username: 'test@rechat.com',
     password: 'aaaaaa'
   },
   envelope
