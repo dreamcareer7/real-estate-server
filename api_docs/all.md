@@ -7,7 +7,6 @@
 <!-- include(message.md) -->
 <!-- include(alert.md) -->
 <!-- include(recommendation.md) -->
-<!-- include(notification.md) -->
 <!-- include(office.md) -->
 <!-- include(agent.md) -->
 <!-- include(deal.md) -->
