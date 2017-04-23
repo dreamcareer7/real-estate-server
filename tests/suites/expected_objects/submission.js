@@ -1,4 +1,3 @@
-const v = require('./validation.js')
 const File = require('./file.js')
 
 const submission = {
