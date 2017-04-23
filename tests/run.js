@@ -68,7 +68,7 @@ function spawnProcesses (cb) {
 }
 
 function spawnSuite (suite, cb) {
-  const url = program.server ? program.server : 'http://localhost:' + config.tests.port
+  const url = program.server ? program.server : 'http://localhost:' + config.url.port
 
   const runner = fork(__dirname + '/runner.js', [suite, url])
 
@@ -167,7 +167,7 @@ function setupApp (cb) {
     })
   })
 
-  app.listen(config.tests.port, () => {
+  app.listen(config.url.port, () => {
     // Clear all jobs on test db
     redisClient.flushdb(err => {
       if (err)

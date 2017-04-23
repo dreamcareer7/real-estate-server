@@ -46,9 +46,11 @@ const authenticate = cb => {
           url
         })
       } catch (err) {
-        return cb(err)
+        console.log('Cannot authenticate using BrowseStack', err)
+        return cb(err, res)
       }
 
+      console.log('Callback URL', callback_url)
       cb(err, res)
     })
     .expectStatus(200)
