@@ -59,7 +59,7 @@ transaction_type      |       ✓         |                  |                  
 mls_number            |       ✓         |                  |                     |
 mls_area_major        |       ✓         |                  |        ✓            |
 mls_area_minor        |       ✓         |                  |        ✓            |
-photo                 |       ✓         |                  |        ✓            |
+photo                 |       ✓         |                  |                     |
 
 contexts are stored in `deal.context` object.
 For example, `street_name` of a deal can be fetched from `deal.context.street_name`.
