@@ -12,7 +12,7 @@ const run = ({url, username, password}, cb) => {
     .waitForExist('input#password')
     .setValue('input#password', password)
     .click('form button')
-    .waitForExist('form', 15000, true)
+    .waitForExist('form[name=login]', 15000, true)
     .getUrl()
     .then(url => {
       cb(null, url)
