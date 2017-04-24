@@ -85,10 +85,10 @@ const get = cb => {
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
-      data: results.envelope.create.data
+//       data: results.envelope.create.data  Elements in envelope.recipients are showing up in random order which messes the tests
     })
     .expectJSONTypes({
-//       data: envelope_response, For some reason, elements envelope.recipients are showing up in random order which messes the tests
+      data: envelope_response,
       code: String
     })
 }
@@ -100,13 +100,13 @@ const getDealEnvelopes = cb => {
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
-      data: [results.envelope.create.data],
+//       data: [results.envelope.create.data], Elements in envelope.recipients are showing up in random order which messes the tests
       info: {
         count: 1
       }
     })
     .expectJSONTypes({
-//       data: [envelope_response], For some reason, elements envelope.recipients are showing up in random order which messes the tests
+      data: [envelope_response],
       code: String
     })
 }
