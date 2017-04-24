@@ -24,11 +24,11 @@ So an envelope has the following attributes:
 
 ### Authentication
 
-::: notice
+::: warning
 Any of the endpoints in below *might* return `HTTP 412`. That would mean we do not have authentication for this user
 on Docusign or the Tokens we have for this user have been expired.
 
-As a result of this, the authentication process described below must be restarted. If successful, the origin action must be tried again.
+As a result of this, the authentication process described below must be restarted. If successful, the original action must be tried again.
 :::
 
 The process of authenticating a user is as follows:
