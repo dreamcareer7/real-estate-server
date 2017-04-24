@@ -68,6 +68,7 @@ In this example user has no Docusign authentication. Therefore will receicve a `
 
 ### Get a PDF file of a document [GET /envelopes/:id/:doc.pdf]
 
+`id` (uuid) id of the envelope
 `doc` (integer) `envelope_document.document_id` of the document
 
 <!-- include(tests/envelope/getDocumentPdf.md) -->
