@@ -22,6 +22,7 @@ program
   .option('-s, --server <server>', 'Instead of setting your own version, run tests against <server>')
   .option('-c, --concurrency <n>', 'Number of suites to run at the same time (defaults to 20)')
   .option('--curl', 'Throw curl commands (disabled ui)')
+  .option('--report', 'Use the nice plain text reporter')
   .option('--disable-response', 'When in curl mode, do not write responses to stdout')
   .option('--stop-on-fail', 'Stops on the first sight of problem')
   .option('--keep', 'Keep the server running after execution is completed')
@@ -39,6 +40,11 @@ if (program.docs) {
 if (program.curl) {
   program.disableUi = true
   require('./curl.js')(program)
+}
+
+if (program.report) {
+  program.disableUi = true
+  require('./report.js')(program)
 }
 
 if (!program.disableUi)
