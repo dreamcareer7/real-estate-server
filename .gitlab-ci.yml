@@ -21,7 +21,7 @@ tests:
    - apk update
    - apk add postgresql-client git
    - export PGPASSWORD=$POSTGRES_PASSWORD
-   - psql -h mdillon__postgis -U rechat rechat < data/minimal.sql
+   - psql -q -h mdillon__postgis -U rechat rechat < data/minimal.sql
    - npm install --no-progress --dev
    - npm install --no-progress istanbul
    - node_modules/istanbul/lib/cli.js cover --dir istanbul tests/run.js -- --curl --stop-on-fail --concurrency 1
