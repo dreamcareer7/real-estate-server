@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "node tests/run.js --concurrency 10 --report",
+    "test": "node tests/run.js --concurrency 20 --report",
     "start": "node_modules/gulp/bin/gulp.js",
     "migration": "node_modules/migratus/bin/create --template scripts/migrate_template.js ",
     "docs": "node api_docs/index.js"
