@@ -175,7 +175,8 @@ function fetch (cb) {
   // Force rets client to always query a specific listing
   // For testing purposes only
   // Client.query = '(Matrix_Unique_ID=69387105)'
-  // Client.query = '(MLSNumber=13580270)'
+  // Client.query = '(MLSNumber=11630724)'
+
   console.log('Query'.yellow, Client.query.cyan)
 
   const processResponse = function (err, data) {
