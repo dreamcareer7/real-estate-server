@@ -22,5 +22,9 @@ async.auto({
   if(err)
     console.log(err)
 
-  process.exit()
+  const job = {
+    name: 'fix_geocode'
+  }
+
+  MLSJob.insert(job, process.exit)
 })
