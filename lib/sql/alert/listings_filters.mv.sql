@@ -27,6 +27,7 @@ CREATE MATERIALIZED VIEW listings_filters AS SELECT
   properties.property_subtype,
   properties.year_built,
   properties.pool_yn,
+  properties.pets_yn,
   properties.lot_square_meters,
   properties.parking_spaces_covered_total,
   properties.architectural_style,

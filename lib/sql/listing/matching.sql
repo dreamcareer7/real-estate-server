@@ -21,7 +21,9 @@ WHERE
 
   (listing_statuses IS NULL OR listing_statuses @> ARRAY[$12::listing_status]) AND
 
-  (pool IS NULL OR pool = FALSE OR $10 = TRUE) AND
+  (pool IS NULL OR pool = $10) AND
+
+  (pets IS NULL OR pets = $31) AND
 
   (property_types    IS NULL OR property_types @> ARRAY[$5::property_type])       AND
   (property_subtypes IS NULL OR property_subtypes @> ARRAY[$6::property_subtype]) AND
