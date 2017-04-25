@@ -8,7 +8,7 @@ image: mhart/alpine-node:latest
 # Check out: http://docs.gitlab.com/ce/ci/docker/using_docker_images.html#what-is-service
 services:
   - redis:latest
-  - postgres:mdillon/postgis:9.6-alpine
+  - mdillon/postgis:9.6-alpine
 
 # This folder is cached between builds
 # http://docs.gitlab.com/ce/ci/yaml/README.html#cache
@@ -21,7 +21,7 @@ tests:
    - apk update
    - apk add postgresql-client
    - export PGPASSWORD=$POSTGRES_PASSWORD
-   - psql -h postgres -U rechat rechat < data/minimal.sql
+   - psql -h mdillon__postgis -U rechat rechat < data/minimal.sql
    - npm install --no-progress --dev
    - npm install --no-progress istanbul
    - node_modules/istanbul/lib/cli.js cover --dir istanbul tests/run.js -- --curl --stop-on-fail --concurrency 1
