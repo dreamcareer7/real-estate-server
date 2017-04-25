@@ -19,7 +19,7 @@ cache:
 tests:
   script:
    - apt-get update
-   - apt-get install postgresql-client
+   - apt-get install -y postgresql-client
    - export PGPASSWORD=$POSTGRES_PASSWORD
    - psql -q -h mdillon__postgis -U rechat rechat < data/minimal.sql
    - npm install --no-progress --dev
