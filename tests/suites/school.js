@@ -1,3 +1,4 @@
+const schools = require('./data/schools.js')
 const schools_response = require('./expected_objects/schools.js')
 
 const searchWithInvalidQuery = (cb) => {
@@ -23,12 +24,12 @@ const invalidDistrictsSearch = (cb) => {
 
 const searchByDistricts = (cb) => {
   return frisby.create('search for schools by districts')
-    .get('/schools/search?districts[]=Dallas ISD')
+    .get('/schools/search?districts[]=Alabama')
     .after(cb)
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
-      data: []
+      data: schools.schools
     })
     .expectJSONTypes({
       code: String,
@@ -45,12 +46,12 @@ const searchDistrictsWithInvalidQuery = (cb) => {
 
 const searchDistricts = (cb) => {
   return frisby.create('search for districts')
-    .get('/schools/districts/search?q[]=Dallas')
+    .get('/schools/districts/search?q[]=bb')
     .after(cb)
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
-      data: []
+      data: schools.districts
     })
     .expectJSONTypes({
       code: String,
