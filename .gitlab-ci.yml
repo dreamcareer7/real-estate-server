@@ -18,6 +18,7 @@ cache:
 
 tests:
   script:
+   - apk update
    - apk add postgresql-client
    - psql -h postgres -U rechat -W rechat rechat < data/minimal.sql
    - npm install --no-progress --dev
