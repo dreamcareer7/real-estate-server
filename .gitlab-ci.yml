@@ -18,8 +18,8 @@ cache:
 
 tests:
   script:
-   - docker ps
-   - cat data/minimal.sql | docker exec -i postgres psql -U rechat -W rechat rechat
+   - apt-get -y install postgresql-client
+   - psql -h postgres -U rechat -W rechat rechat < data/minimal.sql
    - npm install --no-progress --dev
    - npm install --no-progress istanbul
    - node_modules/istanbul/lib/cli.js cover --dir istanbul tests/run.js -- --curl --stop-on-fail --concurrency 1
