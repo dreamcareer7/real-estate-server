@@ -108,7 +108,17 @@ function upsertListing (listing, property_id, cb) {
     if (err && err.code === 'ResourceNotFound') {
       Metric.increment('mls.new_listing')
 
-      return Listing.create(listing, cb)
+      return Listing.create(listing, (err, res) => {
+        if(err)
+          return cb(err)
+
+        Listing.issueHitNotifications(res, err => {
+          if(err)
+            return cb(err)
+
+          return cb(null, res)
+        })
+      })
     }
 
     Metric.increment('mls.updated_listing')
@@ -149,7 +159,6 @@ function createObjects (data, cb) {
     upsertAddress.bind(null, address),
     upsertProperty.bind(null, property),
     upsertListing.bind(null, listing),
-    Listing.issueHitNotifications,
     Recommendation.generateForListing
   ], cb)
 }
