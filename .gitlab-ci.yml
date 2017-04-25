@@ -1,7 +1,7 @@
 # This file is a template, and might need editing before it works on your project.
 # Official framework image. Look for the different tagged releases at:
 # https://hub.docker.com/r/library/node/tags/
-image: mhart/alpine-node:latest
+image: node:latest
 
 # Pick zero or more services to be used on all builds.
 # Only needed when using a docker container to run your tests in.
@@ -18,13 +18,13 @@ cache:
 
 tests:
   script:
-   - apk update
-   - apk add postgresql-client
+   - apt-get update
+   - apt-get install -y postgresql-client
    - export PGPASSWORD=$POSTGRES_PASSWORD
-   - psql -h mdillon__postgis -U rechat rechat < data/minimal.sql
+   - psql -q -h mdillon__postgis -U rechat rechat < data/minimal.sql
    - npm install --no-progress --dev
    - npm install --no-progress istanbul
-   - node_modules/istanbul/lib/cli.js cover --dir istanbul tests/run.js -- --curl --stop-on-fail --concurrency 1
+   - node_modules/istanbul/lib/cli.js cover --dir istanbul tests/run.js -- --report --stop-on-fail --concurrency 10
   artifacts:
    paths:
    - istanbul/lcov-report
