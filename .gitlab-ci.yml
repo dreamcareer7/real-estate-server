@@ -19,7 +19,7 @@ cache:
 tests:
   script:
    - apk update
-   - apk add postgresql-client
+   - apk add postgresql-client git
    - export PGPASSWORD=$POSTGRES_PASSWORD
    - psql -h mdillon__postgis -U rechat rechat < data/minimal.sql
    - npm install --no-progress --dev
