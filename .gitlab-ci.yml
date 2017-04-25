@@ -18,7 +18,7 @@ cache:
 
 tests:
   script:
-   - apt-get -y install postgresql-client
+   - apt-get -y install postgresql-client-common
    - psql -h postgres -U rechat -W rechat rechat < data/minimal.sql
    - npm install --no-progress --dev
    - npm install --no-progress istanbul
