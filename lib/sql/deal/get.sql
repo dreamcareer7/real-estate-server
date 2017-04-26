@@ -1,7 +1,6 @@
 WITH data AS (
   SELECT
     'deal_proposed_values' as type,
-    cover_image_url as photo,
     status as listing_status,
     transaction_type,
     mls_number,
@@ -46,7 +45,15 @@ WITH data AS (
           addresses.street_suffix || ','
         ], ' ', NULL
       )
-    ) as street_address
+    ) as street_address,
+    (
+      SELECT url FROM photos
+      WHERE
+      listing_mui = listings.matrix_unique_id
+      AND photos.url IS NOT NULL
+      AND photos.deleted_at IS NULL
+      ORDER BY "order" LIMIT 1
+    ) as photo
   FROM listings
   JOIN properties ON listings.property_id = properties.id
   JOIN addresses ON properties.address_id = addresses.id
