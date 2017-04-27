@@ -1,8 +1,38 @@
 WITH c AS (
   SELECT id,
+         refs,
          (COUNT(*) OVER())::INT AS total,
          created_at,
-         updated_at
+         COALESCE
+         (
+           (
+             SELECT MAX(updated_at)
+             FROM activities
+             WHERE reference = id OR
+                   reference IN
+                   (
+                     SELECT id
+                     FROM users
+                     WHERE email IN
+                     (
+                       SELECT DISTINCT(email)
+                       FROM contacts_emails
+                       WHERE contact = ANY(refs) AND
+                             deleted_at IS NULL
+                     )
+                     UNION
+                     SELECT id
+                     FROM users
+                     WHERE phone_number IN
+                     (
+                       SELECT DISTINCT(phone_number)
+                       FROM contacts_phone_numbers
+                       WHERE contact = ANY(refs) AND
+                             deleted_at IS NULL
+                     )
+                   )
+           ), updated_at
+         ) AS updated_at
   FROM contacts
   WHERE "user" = $1 AND
         deleted_at IS NULL
