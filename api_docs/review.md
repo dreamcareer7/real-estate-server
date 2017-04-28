@@ -27,7 +27,7 @@ Each review has:
 ### Update a review [PUT /reviews/:id]
 <!-- include(tests/review/update.md) -->
 
-### A deal with reviews
+### A deal with reviews [GET /deals/:id]
 
 This is an example deal after it has reviews submitted to it.
 The reviews are stored in `deal.reviews` which is an array of review models.
