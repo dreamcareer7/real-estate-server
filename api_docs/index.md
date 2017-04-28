@@ -46,6 +46,7 @@ Although we have a page that includes [everything](/all.html).
 * [Deals](/deal.html)
 * [Forms](/form.html)
 * [Envelopes](/envelope.html)
+* [Reviews](/review.html)
 
 ## Team and account management
 
