@@ -42,7 +42,7 @@ WITH data AS (
           addresses.street_number,
           addresses.street_dir_prefix,
           addresses.street_name,
-          addresses.street_suffix || ','
+          addresses.street_suffix
         ], ' ', NULL
       )
     ) as street_address,
