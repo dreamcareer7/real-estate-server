@@ -4,5 +4,5 @@ SELECT *,
        EXTRACT(EPOCH FROM deleted_at) AS deleted_at,
        'activity' AS type
 FROM activities
-WHERE id = $1
-LIMIT 1
+JOIN unnest($1::uuid[]) WITH ORDINALITY t(aid, ord) ON activities.id = aid
+ORDER BY t.ord

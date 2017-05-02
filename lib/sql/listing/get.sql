@@ -6,21 +6,18 @@ WITH listing AS (
         EXTRACT(EPOCH FROM listings.deleted_at) AS deleted_at,
         EXTRACT(EPOCH FROM listings.list_date) AS list_date,
         EXTRACT(EPOCH FROM listings.close_date) AS close_date,
-
         (
           SELECT id FROM agents WHERE matrix_unique_id = listings.list_agent_mui LIMIT 1
         ) as list_agent,
-
         (
           CASE WHEN $2::uuid IS NULL THEN FALSE ELSE (
              SELECT count(*) > 0 FROM recommendations
              LEFT JOIN recommendations_eav ON recommendations.id = recommendations_eav.recommendation
-             WHERE recommendations.listing = $1
+             WHERE recommendations.listing = listings.id
              AND recommendations_eav.user = $2
              AND recommendations_eav.action = 'Favorited'
           ) END
         ) as favorited,
-
         (
           SELECT COALESCE(ARRAY_AGG(url ORDER BY "order"), '{}'::text[]) FROM photos
           WHERE
@@ -28,7 +25,6 @@ WITH listing AS (
           AND photos.url IS NOT NULL
           AND photos.deleted_at IS NULL
         ) as gallery_image_urls,
-
         (
           SELECT url FROM photos
           WHERE
@@ -37,17 +33,16 @@ WITH listing AS (
           AND photos.deleted_at IS NULL
           ORDER BY "order" LIMIT 1
         ) as cover_image_url,
-
         (
           SELECT json_agg(a) FROM (
             SELECT
               id,
               type as open_house_type,
               'open_house' as type,
-              EXTRACT(EPOCH FROM created_at) as created_at,
-              EXTRACT(EPOCH FROM updated_at) as updated_at,
-              EXTRACT(EPOCH FROM start_time) as start_time,
-              EXTRACT(EPOCH FROM end_time)   as end_time,
+              EXTRACT(EPOCH FROM created_at) AS created_at,
+              EXTRACT(EPOCH FROM updated_at) AS updated_at,
+              EXTRACT(EPOCH FROM start_time) AS start_time,
+              EXTRACT(EPOCH FROM end_time) AS end_time,
               description
             FROM open_houses WHERE
             start_time > NOW() AND
@@ -55,7 +50,8 @@ WITH listing AS (
           ) AS a
         ) AS open_houses
   FROM listings
-  WHERE listings.id = $1
+  JOIN unnest($1::uuid[]) WITH ORDINALITY t(lid, ord) ON listings.id = lid
+  ORDER BY t.ord
 ),
 property AS (
   SELECT 'property' AS TYPE,

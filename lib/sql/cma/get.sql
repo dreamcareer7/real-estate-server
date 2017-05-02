@@ -4,5 +4,5 @@ SELECT *,
        EXTRACT(EPOCH FROM updated_at) AS updated_at,
        EXTRACT(EPOCH FROM deleted_at) AS deleted_at
 FROM cmas
-WHERE id = $1
-LIMIT 1
+JOIN unnest($1::uuid[]) WITH ORDINALITY t(cid, ord) ON cmas.id = cid
+ORDER BY t.ord

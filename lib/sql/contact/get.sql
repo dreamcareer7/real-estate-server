@@ -110,5 +110,6 @@ SELECT id,
            ON r.c = contacts.id
          ) sub
        ) AS sub_contacts
-       FROM contacts
-       WHERE id = $1
+FROM contacts
+JOIN unnest($1::uuid[]) WITH ORDINALITY t(cid, ord) ON contacts.id = cid
+ORDER BY t.ord

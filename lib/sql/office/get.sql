@@ -1,8 +1,7 @@
-SELECT
-  id,
-  'office' as type,
-  name,
-  mls_id
+SELECT id,
+       'office' as type,
+       name,
+       mls_id
 FROM offices
-WHERE id = $1
-LIMIT 1
+JOIN unnest($1::uuid[]) WITH ORDINALITY t(oid, ord) ON offices.id = oid
+ORDER BY t.ord

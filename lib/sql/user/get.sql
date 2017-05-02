@@ -59,11 +59,9 @@ SELECT 'user' AS type,
            ) p
          ) ELSE NULL END
        ) AS contacts,
-
        (
-        SELECT count(*) > 0 FROM docusign_users WHERE "user" = $2::uuid
+        SELECT count(*) > 0 FROM docusign_users WHERE "user" = users.id
        ) as has_docusign
 FROM users
-WHERE users.id = $1 AND
-      users.deleted_at IS NULL
-LIMIT 1
+JOIN unnest($1::uuid[]) WITH ORDINALITY t(uid, ord) ON users.id = uid
+ORDER BY t.ord
