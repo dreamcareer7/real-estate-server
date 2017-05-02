@@ -6,7 +6,7 @@ const login = require('./utils/docusign.js')
 
 registerSuite('submission', ['create'])
 
-const create412 = cb => {
+const setEnvelopeDetails = envelope => {
   envelope.documents[0].revision = results.submission.create.data.last_revision
 
   envelope.deal = results.deal.create.data.id
@@ -17,6 +17,10 @@ const create412 = cb => {
 
   // Add myself as a recipient so later I can sign this as well
   envelope.recipients[1].user = results.authorize.token.data.id
+}
+
+const create412 = cb => {
+  setEnvelopeDetails(envelope)
 
   return frisby.create('create an envelope before authenticating with docusign and expect a 412')
     .post('/envelopes', envelope)
@@ -65,6 +69,8 @@ const saveToken = cb => {
 }
 
 const create = cb => {
+  setEnvelopeDetails(envelope)
+
   return frisby.create('create an envelope')
     .post('/envelopes', envelope)
     .after(cb)

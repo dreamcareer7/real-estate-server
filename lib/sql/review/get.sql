@@ -10,8 +10,12 @@ SELECT
   reviews.envelope_document,
   reviews_history.created_by as updated_by,
   reviews_history.state,
-  reviews_history.comment
+  reviews_history.comment,
+  reviews_history.id as last_revision,
+  (
+    SELECT count(*) FROM reviews_history WHERE review = $1
+  ) as revision_count
 FROM reviews
 JOIN reviews_history ON reviews.id = reviews_history.review
 WHERE reviews.id = $1
-ORDER BY reviews_history.created_at DESC LIMIT 1
+ORDER BY reviews_history.id DESC LIMIT 1
