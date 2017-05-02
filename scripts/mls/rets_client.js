@@ -232,7 +232,7 @@ function fetch (cb) {
 const raw_insert = `INSERT INTO mls_data (resource, class, matrix_unique_id, value)
   VALUES ($1, $2, $3, $4) ON CONFLICT (matrix_unique_id) DO UPDATE SET
   value = EXCLUDED.value,
-  mls_data.revision = mls_data.revision + 1
+  revision = mls_data.revision + 1
   WHERE mls_data.matrix_unique_id = $3 AND mls_data.value->>$5 < $6`
 
 const raw = (cb, results) => {
