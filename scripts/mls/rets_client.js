@@ -229,10 +229,11 @@ function fetch (cb) {
 //     client.getObjectMeta('Office', (a,b,c) => console.log(a,b,c) );
 }
 
-const raw_insert = 'INSERT INTO mls_data (resource, class, matrix_unique_id, value) \
-  VALUES ($1, $2, $3, $4) ON CONFLICT (matrix_unique_id) DO UPDATE SET \
-  value = EXCLUDED.value \
-  WHERE mls_data.matrix_unique_id = $3 AND mls_data.value->>$5 < $6'
+const raw_insert = `INSERT INTO mls_data (resource, class, matrix_unique_id, value)
+  VALUES ($1, $2, $3, $4) ON CONFLICT (matrix_unique_id) DO UPDATE SET
+  value = EXCLUDED.value,
+  revision = mls_data.revision + 1
+  WHERE mls_data.matrix_unique_id = $3 AND mls_data.value->>$5 < $6`
 
 const raw = (cb, results) => {
   const data = _u.clone(results.mls)
