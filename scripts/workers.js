@@ -113,6 +113,10 @@ const mls_listing = (job, done) => {
   Listing.create(job.data.processed, done)
 }
 
+const mls_validate_listing_photos = (job, done) => {
+  Photo.deleteMissing(job.data.listing, job.data.present, done)
+}
+
 const queues = {
   airship_transport_send_device: {
     handler: airship,
@@ -176,7 +180,12 @@ const queues = {
 
   'MLS.Listing': {
     handler: mls_listing,
-    parallel: 1
+    parallel: 10
+  },
+
+  'MLS.Listing.Photos.Validate': {
+    handler: mls_validate_listing_photos,
+    parallel: 10
   }
 }
 
