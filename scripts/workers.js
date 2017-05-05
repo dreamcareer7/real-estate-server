@@ -86,33 +86,31 @@ const sms = (job, done) => {
 }
 
 const mls_unit = (job, done) => {
-  console.log('unit')
   PropertyUnit.create(job.data.processed, done)
 }
 
 const mls_openhouse = (job, done) => {
-  console.log('openhouse')
   OpenHouse.create(job.data.processed, done)
 }
 
 const mls_room = (job, done) => {
-  console.log('room')
   PropertyRoom.create(job.data.processed, done)
 }
 
 const mls_agent = (job, done) => {
-  console.log('agent')
   Agent.create(job.data.processed, done)
 }
 
 const mls_office = (job, done) => {
-  console.log('office')
   Office.create(job.data.processed, done)
 }
 
 const mls_photo = (job, done) => {
-  console.log('photo')
   Photo.create(job.data.processed, done)
+}
+
+const mls_listing = (job, done) => {
+  Listing.create(job.data.processed, done)
 }
 
 const queues = {
@@ -174,6 +172,11 @@ const queues = {
   'MLS.Photo': {
     handler: mls_photo,
     parallel: 10
+  },
+
+  'MLS.Listing': {
+    handler: mls_listing,
+    parallel: 1
   }
 }
 
