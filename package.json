@@ -46,7 +46,7 @@
     "google-libphonenumber": "^1.0.14",
     "googlemaps": "^1.0.1",
     "intercom-client": "^2.8.0",
-    "kue": "^0.9.6",
+    "kue": "^0.11.5",
     "linger": "0.0.3",
     "mailcomposer": "^3.9.0",
     "mailgun-js": "^0.7.7",

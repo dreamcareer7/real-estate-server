@@ -85,6 +85,36 @@ const sms = (job, done) => {
   Twilio.callTwilio(job.data, done)
 }
 
+const mls_unit = (job, done) => {
+  console.log('unit')
+  PropertyUnit.create(job.data.processed, done)
+}
+
+const mls_openhouse = (job, done) => {
+  console.log('openhouse')
+  OpenHouse.create(job.data.processed, done)
+}
+
+const mls_room = (job, done) => {
+  console.log('room')
+  PropertyRoom.create(job.data.processed, done)
+}
+
+const mls_agent = (job, done) => {
+  console.log('agent')
+  Agent.create(job.data.processed, done)
+}
+
+const mls_office = (job, done) => {
+  console.log('office')
+  Office.create(job.data.processed, done)
+}
+
+const mls_photo = (job, done) => {
+  console.log('photo')
+  Photo.create(job.data.processed, done)
+}
+
 const queues = {
   airship_transport_send_device: {
     handler: airship,
@@ -114,6 +144,36 @@ const queues = {
   sms: {
     handler: sms,
     parallel: config.twilio.parallel
+  },
+
+  'MLS.Unit': {
+    handler: mls_unit,
+    parallel: 10
+  },
+
+  'MLS.Room': {
+    handler: mls_room,
+    parallel: 10
+  },
+
+  'MLS.OpenHouse': {
+    handler: mls_openhouse,
+    parallel: 10
+  },
+
+  'MLS.Agent': {
+    handler: mls_agent,
+    parallel: 10
+  },
+
+  'MLS.Office': {
+    handler: mls_office,
+    parallel: 10
+  },
+
+  'MLS.Photo': {
+    handler: mls_photo,
+    parallel: 10
   }
 }
 
