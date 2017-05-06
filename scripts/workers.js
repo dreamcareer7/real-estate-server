@@ -234,6 +234,12 @@ function reportQueueStatistics () {
 
 reportQueueStatistics()
 
+const shutdown = () => {
+  queue.shutdown(5000, process.exit)
+}
+process.once('SIGTERM', shutdown)
+process.once('SIGINT', shutdown)
+
 const sendNotifications = function () {
   getDomain({}, (err, {rollback, commit}) => {
     if (err)
