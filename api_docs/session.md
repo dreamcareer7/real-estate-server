@@ -16,11 +16,11 @@ client_version_status | meaning
 ### Create a session [POST /sessions]
 
 ::: warning
-  The concept of a session has been deprecated.
-  Please see the section below regarding handling client updates.
+The concept of a session has been deprecated.
+Please see the section below regarding handling client updates.
 
-  However, it will be included for a while to maintain backward compatility with
-  versions of Rechat that depend on it and are still in circulation.
+However, it will be included for a while to maintain backward compatility with
+versions of Rechat that depend on it and are still in circulation.
 :::
 
 When a user starts using the program, a new session must be started.
