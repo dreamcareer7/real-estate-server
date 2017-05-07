@@ -1,6 +1,7 @@
 WITH p AS
 (
-  SELECT DISTINCT ON (forms_submissions.id),
+  SELECT DISTINCT ON (forms_submissions.id)
+                     forms_submissions.id,
                      forms_data.id AS last_revision,
                      forms_data.state AS state,
                      EXTRACT(EPOCH FROM forms_submissions.created_at) AS created_at,
