@@ -1,3 +1,4 @@
 SELECT *
 FROM clients
 WHERE id = $1
+ORDER BY id DESC
