@@ -27,7 +27,6 @@ const up = [
   )`,
   'CREATE TYPE client_status AS ENUM(\'UpgradeUnavailable\', \'UpgradeAvailable\', \'UpgradeRequired\')',
   'ALTER TABLE clients ADD status client_status NOT NULL DEFAULT \'UpgradeUnavailable\'',
-  'UPDATE clients SET status = \'UpgradeRequired\'',
 ]
 
 const down = [
