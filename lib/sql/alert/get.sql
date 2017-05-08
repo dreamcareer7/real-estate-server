@@ -1,4 +1,4 @@
-SELECT *,
+SELECT alerts.*,
        'alert' AS type,
        (
          SELECT COUNT(recommendations.id)
