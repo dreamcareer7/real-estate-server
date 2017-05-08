@@ -91,7 +91,6 @@
     "aglio": "^2.2.0",
     "api-blueprint-http-formatter": "0.0.1",
     "bytes": "^2.2.0",
-    "clui": "^0.3.1",
     "copy-dir": "0.0.8",
     "eslint": "^3.5.0",
     "eslint-config-node-style-guide": "^3.0.0",
