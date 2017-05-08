@@ -57,21 +57,7 @@ function map (mls_office) {
 }
 
 const upsert = function (office, cb) {
-  Metric.increment('mls.processed_office')
-  Office.getByMUI(office.Matrix_Unique_ID, function (err, id) {
-    if (err && err.code !== 'ResourceNotFound')
-      return cb(err)
-
-    if (err && err.code === 'ResourceNotFound') {
-      Metric.increment('mls.new_offices')
-
-      Office.create(map(office), cb)
-      return
-    }
-
-    Metric.increment('mls.updated_offices')
-    Office.update(id, map(office), cb)
-  })
+  Office.create(map(office), cb)
 }
 
 function report (err) {
