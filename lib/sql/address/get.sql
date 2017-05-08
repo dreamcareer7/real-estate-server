@@ -1,4 +1,4 @@
-SELECT *,
+SELECT addresses.*,
        'address' AS TYPE,
        ST_AsGeoJSON(location) AS location,
        EXTRACT(EPOCH FROM created_at) AS created_at,
