@@ -5,10 +5,8 @@ const db = require('../lib/utils/db')
 
 const up = [
   'BEGIN',
-  'UPDATE clients SET id = uuid_generate_v1()',
-  'ALTER TABLE clients ADD PRIMARY KEY(id)',
   'ALTER TABLE users ADD last_seen_at timestamp with time zone',
-  'ALTER TABLE users ADD last_seen_by uuid REFERENCES clients(id)',
+  'ALTER TABLE users ADD last_seen_by uuid',
   'COMMIT'
 ]
 
