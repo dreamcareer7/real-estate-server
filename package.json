@@ -10,7 +10,7 @@
     "docs": "node api_docs/index.js"
   },
   "engines": {
-    "node": "6.x"
+    "node": "8.x"
   },
   "author": "",
   "license": "ISC",
