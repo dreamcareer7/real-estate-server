@@ -16,7 +16,6 @@ const up = [
   FUNCTION 4 ginarrayconsistent(internal, smallint, anyarray, integer, internal, internal, internal, internal),
   STORAGE uuid;`,
   'CREATE INDEX ON recommendations USING gin(referring_objects)'
-
 ]
 
 const down = [
