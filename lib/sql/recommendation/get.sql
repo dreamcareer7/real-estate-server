@@ -17,6 +17,9 @@ WITH r AS (
          COALESCE(COUNT(messages.id) FILTER (WHERE messages.document_url IS NOT NULL)::INT, 0) AS document_count,
          COALESCE(COUNT(messages.id) FILTER (WHERE messages.image_url IS NOT NULL)::INT, 0) AS image_count,
          COALESCE(COUNT(messages.id) FILTER (WHERE messages.video_url IS NOT NULL)::INT, 0) AS video_count,
+         (
+          SELECT ARRAY_AGG("user") FROM rooms_users WHERE room = recommendations.room
+         ) as users,
          COALESCE
          (
            COUNT(messages.id) FILTER
