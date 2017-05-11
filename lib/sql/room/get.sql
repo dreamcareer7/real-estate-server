@@ -21,7 +21,10 @@ SELECT 'room' AS TYPE,
                   END
          )
          FROM rooms_users WHERE room = rooms.id
-       ) AS notification_settings
+       ) AS notification_settings,
+       (
+         SELECT ARRAY_AGG(DISTINCT("user")) FROM rooms_users WHERE room = rooms.id
+       ) AS users
 FROM rooms
 JOIN unnest($1::uuid[]) WITH ORDINALITY t(rid, ord) ON rooms.id = rid
 ORDER BY t.ord

@@ -1,4 +1,6 @@
 SELECT 'message' AS type,
+       messages.id AS mid,
+       messages.id AS id,
        messages.*,
        (
          SELECT ARRAY_AGG(attachment)
@@ -8,9 +10,9 @@ SELECT 'message' AS type,
        (
          SELECT ARRAY_AGG("user") FROM notifications_users WHERE acked_at IS NOT NULL AND notification IN
          (
-           SELECT id FROM notifications WHERE object_class = 'Message' AND object = messages.id
+           SELECT id FROM notifications WHERE object_class = 'Message' AND object = mid
            UNION
-           SELECT notification FROM messages WHERE id = messages.id
+           SELECT notification FROM messages WHERE id = mid
          )
        ) AS acked_by,
        (
@@ -23,9 +25,9 @@ SELECT 'message' AS type,
           FROM notifications_deliveries
           WHERE notification IN
           (
-            SELECT id FROM notifications WHERE object_class = 'Message' AND object = messages.id
+            SELECT id FROM notifications WHERE object_class = 'Message' AND object = mid
             UNION
-            SELECT notification FROM messages WHERE id = messages.id
+            SELECT notification FROM messages WHERE id = mid
           )
         ) d
        ) AS deliveries,
