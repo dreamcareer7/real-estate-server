@@ -94,6 +94,23 @@ const getUserRooms = (cb) => {
     })
 }
 
+const getReferencedUserRooms = (cb) => {
+  return frisby.create('get a user\'s rooms in referenced format')
+    .addHeader('X-RECHAT-FORMAT', 'references')
+    .get('/rooms')
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      data: []
+    })
+    .expectJSONTypes({
+      code: String,
+      data: [room_response],
+      info: info_response
+    })
+}
+
 const addUser = (cb) => {
   return frisby.create('add user to a room')
     .post('/rooms/' + results.room.create.data.id + '/users', {users: [
@@ -211,6 +228,7 @@ module.exports = {
   getRoomMedia,
   getRoomMedia404,
   getUserRooms,
+  getReferencedUserRooms,
   addUser,
   addUser400,
   search,
