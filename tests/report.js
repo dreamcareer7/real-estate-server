@@ -33,11 +33,11 @@ function log() {
 function error(suite, message) {
   log(`✘ ${pad(suite, 15)} \t ${message.test.name}`.red)
   message.test.messages.forEach(message => {
-      log(`\t${message.message}`.yellow)
-      if (message.expected)
-        log(`\t\tExpected: ${JSON.stringify(message.expected)}`)
-      if (message.actual)
-        log(`\t\tActual:   ${JSON.stringify(message.actual)}`)
+    log(`\t${message.message}`.yellow)
+    if (message.expected)
+      log(`\t\tExpected: ${JSON.stringify(message.expected)}`)
+    if (message.actual)
+      log(`\t\tActual:   ${JSON.stringify(message.actual)}`)
   })
 }
 
