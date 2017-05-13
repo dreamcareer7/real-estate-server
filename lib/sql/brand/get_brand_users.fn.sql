@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION get_brand_users(id uuid) RETURNS
+CREATE OR REPLACE FUNCTION get_brand_users(uuid, uuid) RETURNS
    setof uuid
 AS
 $$
@@ -24,6 +24,16 @@ $$
     )
   )
 
-  SELECT * FROM brand_users
+  SELECT (
+    CASE WHEN $2 IS NULL THEN
+      (
+        SELECT * FROM brand_users
+      )
+    ELSE
+      (
+        SELECT * FROM brand_users
+      )
+    END
+  )
 $$
 LANGUAGE sql;
