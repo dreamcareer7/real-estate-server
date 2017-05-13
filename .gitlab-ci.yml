@@ -29,6 +29,15 @@ tests:
    paths:
    - istanbul/lcov-report
 
+build_image:
+  image: docker:git
+  services:
+  - docker:dind
+  script:
+    - docker login registry.gitlab.com
+    - docker build -t docker build -t registry.gitlab.com/rechat/server/develop .
+    - docker push docker build -t registry.gitlab.com/rechat/server:develop
+
 variables:
   POSTGRES_DB: rechat
   POSTGRES_USER: rechat
