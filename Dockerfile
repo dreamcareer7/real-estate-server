@@ -21,3 +21,5 @@ ADD package.json package.json
 RUN npm install
 
 ADD . /app
+
+EXPOSE 3078
