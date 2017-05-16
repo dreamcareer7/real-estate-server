@@ -1,7 +1,8 @@
 WITH c AS (
   SELECT
   DISTINCT ON(id)
-  clients.*
+  clients.*,
+  'client' as type
   FROM clients
   WHERE id = ANY($1::uuid[])
   ORDER BY id DESC
