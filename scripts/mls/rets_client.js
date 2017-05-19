@@ -207,7 +207,7 @@ function fetch (cb) {
     return cb(null, data)
   }
 
-  if (Client.options.offset === undefined && Client.last_run && Client.last_run.limit && Client.last_run.limit <= Client.last_run.results) {
+  if (Client.options.offset === undefined && Client.last_run && Client.last_run.limit && Client.last_run.limit <= Client.last_run.results && !Client.last_run.is_initial_completed) {
     if (!Client.last_run.offset)
       Client.last_run.offset = 0
     Client.options.offset = Client.last_run.offset + parseInt(Client.options.limit)
