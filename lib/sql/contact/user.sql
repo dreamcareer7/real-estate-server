@@ -22,14 +22,14 @@ p AS (
         contacts_phone_numbers.deleted_at IS NULL
 ),
 a AS (
-  SELECT activities.reference,
+  SELECT p.contact,
          MAX(activities.created_at) as updated_at
   FROM p
   INNER JOIN activities ON (
     activities.reference = p.contact OR
     activities.reference = p.user
   )
-  GROUP BY activities.reference
+  GROUP BY p.contact
 ),
 c AS (
   SELECT id,
@@ -37,7 +37,7 @@ c AS (
          (COUNT(*) OVER())::INT AS total,
          created_at,
          COALESCE(
-           (SELECT a.updated_at FROM a WHERE a.reference = contacts.id),
+           (SELECT a.updated_at FROM a WHERE a.contact = contacts.id),
            contacts.updated_at
          ) as updated_at
   FROM contacts
