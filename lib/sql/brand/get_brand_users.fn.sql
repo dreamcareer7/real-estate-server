@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION get_brand_users(uuid) RETURNS
+CREATE OR REPLACE FUNCTION get_brand_users(id uuid) RETURNS
    setof uuid
 AS
 $$
