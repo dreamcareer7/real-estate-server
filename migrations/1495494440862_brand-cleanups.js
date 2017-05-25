@@ -11,7 +11,7 @@ const up = [
   'BEGIN',
   'DROP TABLE brands_agents',
   users,
-  agents
+  agents,
   'COMMIT'
 ]
 
