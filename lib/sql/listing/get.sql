@@ -1,6 +1,13 @@
-WITH listing AS (
+WITH brand_agents AS (
+  SELECT propose_brand_agents($3, $2) as "user"
+)
+
+,listing AS (
   SELECT 'listing' AS TYPE,
         listings.*,
+        (
+          SELECT "user" FROM brand_agents LIMIT 1
+        ) as proposed_agent,
         EXTRACT(EPOCH FROM listings.created_at) AS created_at,
         EXTRACT(EPOCH FROM listings.updated_at) AS updated_at,
         EXTRACT(EPOCH FROM listings.deleted_at) AS deleted_at,
