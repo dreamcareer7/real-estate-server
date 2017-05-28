@@ -20,6 +20,10 @@ SELECT 'compact_listing' AS TYPE,
        (
           SELECT id FROM agents WHERE matrix_unique_id = listings.selling_agent_mui LIMIT 1
        ) as selling_agent,
+       list_agent_mls_id,
+       co_list_agent_mls_id,
+       selling_agent_mls_id,
+       co_selling_agent_mls_id,
        (
           SELECT "user" FROM brand_agents
           ORDER BY (
