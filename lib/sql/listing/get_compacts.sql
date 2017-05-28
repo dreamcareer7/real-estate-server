@@ -24,7 +24,6 @@ SELECT 'compact_listing' AS TYPE,
        co_list_agent_mls_id,
        selling_agent_mls_id,
        co_selling_agent_mls_id,
-       list_office_mls_id,
        (
           SELECT "user" FROM brand_agents
           ORDER BY (
