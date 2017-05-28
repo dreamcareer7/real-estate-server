@@ -1,12 +1,22 @@
 WITH brand_agents AS (
-  SELECT propose_brand_agents($3, $2) as "user"
+  SELECT * FROM propose_brand_agents($3, $2)
 )
 
 ,listing AS (
   SELECT 'listing' AS TYPE,
         listings.*,
         (
-          SELECT "user" FROM brand_agents LIMIT 1
+          SELECT "user" FROM brand_agents
+          ORDER BY (
+            CASE
+              WHEN listings.list_agent_mls_id       = brand_agents.mlsid THEN 4
+              WHEN listings.co_list_agent_mls_id    = brand_agents.mlsid THEN 3
+              WHEN listings.selling_agent_mls_id    = brand_agents.mlsid THEN 2
+              WHEN listings.co_selling_agent_mls_id = brand_agents.mlsid THEN 1
+              ELSE 0
+            END
+          ) DESC, is_me, has_contact, RANDOM()
+          LIMIT 1
         ) as proposed_agent,
         EXTRACT(EPOCH FROM listings.created_at) AS created_at,
         EXTRACT(EPOCH FROM listings.updated_at) AS updated_at,

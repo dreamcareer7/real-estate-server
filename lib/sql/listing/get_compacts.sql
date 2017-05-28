@@ -1,5 +1,5 @@
 WITH brand_agents AS (
-  SELECT propose_brand_agents($3, $2) as "user"
+  SELECT * FROM propose_brand_agents($3, $2)
 )
 
 SELECT 'compact_listing' AS TYPE,
@@ -21,7 +21,17 @@ SELECT 'compact_listing' AS TYPE,
           SELECT id FROM agents WHERE matrix_unique_id = listings.selling_agent_mui LIMIT 1
        ) as selling_agent,
        (
-          SELECT "user" FROM brand_agents LIMIT 1
+          SELECT "user" FROM brand_agents
+          ORDER BY (
+            CASE
+              WHEN listings.list_agent_mls_id       = brand_agents.mlsid THEN 4
+              WHEN listings.co_list_agent_mls_id    = brand_agents.mlsid THEN 3
+              WHEN listings.selling_agent_mls_id    = brand_agents.mlsid THEN 2
+              WHEN listings.co_selling_agent_mls_id = brand_agents.mlsid THEN 1
+              ELSE 0
+            END
+          ) DESC, is_me, has_contact, RANDOM()
+          LIMIT 1
        ) as proposed_agent,
        (
         CASE WHEN $2::uuid IS NULL THEN FALSE ELSE (
