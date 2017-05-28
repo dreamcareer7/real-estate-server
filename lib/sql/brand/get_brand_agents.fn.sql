@@ -5,8 +5,8 @@ CREATE OR REPLACE FUNCTION get_brand_agents(id uuid) RETURNS TABLE (
 ) AS
 $$
   SELECT
-    agents.id as agent,
     users.id as "user",
+    agents.id as agent,
     agents.mlsid as mlsid
     FROM agents
   JOIN users ON agents.id = users.agent
@@ -15,9 +15,9 @@ $$
   )
   UNION
   SELECT
-    agents.id as agent,
     users.id as "user",
-    agents.mlsid as mls_id
+    agents.id as agent,
+    agents.mlsid as mlsid
     FROM agents
   LEFT JOIN users ON agents.id = users.agent
   WHERE office_mui IN (
