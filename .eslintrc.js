@@ -49,7 +49,6 @@ const globals = [
   'Notification',
   'Message',
   'Slack',
-  'Facebook',
   'SocketServer',
   'Twilio',
   'Poster',
