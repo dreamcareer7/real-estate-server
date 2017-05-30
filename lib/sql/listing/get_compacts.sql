@@ -1,3 +1,7 @@
+WITH brand_agents AS (
+  SELECT * FROM propose_brand_agents($3, $2)
+)
+
 SELECT 'compact_listing' AS TYPE,
        listings.id AS id,
        EXTRACT(EPOCH FROM listings.created_at) AS created_at,
@@ -14,14 +18,25 @@ SELECT 'compact_listing' AS TYPE,
           SELECT id FROM agents WHERE matrix_unique_id = listings.list_agent_mui LIMIT 1
        ) as list_agent,
        (
-          SELECT id FROM offices WHERE matrix_unique_id = listings.list_office_mui LIMIT 1
-       ) as list_office,
-       (
           SELECT id FROM agents WHERE matrix_unique_id = listings.selling_agent_mui LIMIT 1
        ) as selling_agent,
+       list_agent_mls_id,
+       co_list_agent_mls_id,
+       selling_agent_mls_id,
+       co_selling_agent_mls_id,
        (
-          SELECT id FROM offices WHERE matrix_unique_id = listings.selling_office_mui LIMIT 1
-       ) as selling_office,
+          SELECT "user" FROM brand_agents
+          ORDER BY (
+            CASE
+              WHEN listings.list_agent_mls_id       = brand_agents.mlsid THEN 4
+              WHEN listings.co_list_agent_mls_id    = brand_agents.mlsid THEN 3
+              WHEN listings.selling_agent_mls_id    = brand_agents.mlsid THEN 2
+              WHEN listings.co_selling_agent_mls_id = brand_agents.mlsid THEN 1
+              ELSE 0
+            END
+          ) DESC, is_me, has_contact, RANDOM()
+          LIMIT 1
+       ) as proposed_agent,
        (
         CASE WHEN $2::uuid IS NULL THEN FALSE ELSE (
             SELECT count(*) > 0 FROM recommendations
