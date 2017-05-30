@@ -11,6 +11,8 @@ const propose = fs.readFileSync('./lib/sql/brand/propose_brand_agents.fn.sql').t
 const up = [
   'BEGIN',
   'DROP TABLE brands_agents',
+  'DROP FUNCTION IF EXISTS get_brand_agents(uuid)',
+  'DROP FUNCTION IF EXISTS get_brand_users(uuid)',
   users,
   agents,
   propose,
