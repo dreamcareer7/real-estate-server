@@ -9,8 +9,8 @@ const propose = fs.readFileSync('./lib/sql/brand/propose_brand_agents.fn.sql').t
 
 const up = [
   'BEGIN',
-  'DROP FUNCTION get_brand_agents(uuid)',
-  'DROP FUNCTION propose_brand_agents(uuid, uuid)',
+  'DROP FUNCTION IF EXISTS get_brand_agents(uuid)',
+  'DROP FUNCTION IF EXISTS propose_brand_agents(uuid, uuid)',
   agents,
   propose,
   'COMMIT'
