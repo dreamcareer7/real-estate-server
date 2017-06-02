@@ -213,14 +213,14 @@ Object.keys(queues).forEach(queue_name => {
       }
 
       debug('Executing job handler', process.domain.i)
-      const examine = err => {
+      const examine = (err, result) => {
         if (err) {
           rollback(err)
           done(err)
           return
         }
 
-        commit(done)
+        commit(done.bind(null, null, result))
       }
 
       definition.handler(job, examine)
