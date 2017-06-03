@@ -1,7 +1,7 @@
 # This file is a template, and might need editing before it works on your project.
 # Official framework image. Look for the different tagged releases at:
 # https://hub.docker.com/r/library/node/tags/
-image: node:8.0.0
+image: node:latest
 
 # Pick zero or more services to be used on all builds.
 # Only needed when using a docker container to run your tests in.
@@ -28,15 +28,6 @@ tests:
   artifacts:
    paths:
    - istanbul/lcov-report
-
-build_image:
-  image: docker:git
-  services:
-  - docker:dind
-  script:
-    - docker login registry.gitlab.com
-    - docker build -t docker build -t registry.gitlab.com/rechat/server/develop .
-    - docker push docker build -t registry.gitlab.com/rechat/server:develop
 
 variables:
   POSTGRES_DB: rechat
