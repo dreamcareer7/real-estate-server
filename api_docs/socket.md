@@ -24,3 +24,4 @@ Authenticate                             | Authenticate     | access_token
 Let others know that user started typing | User.Typing      | room_id
 Let others know that user stopped typing | User.TypingEnded | room_id
 Send a message to a room                 | Message.Send     | room_id                              | message object
+Acknowledge a notification               | Notification.ack | notification_id                      |
