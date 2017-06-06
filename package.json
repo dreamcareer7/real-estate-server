@@ -85,7 +85,8 @@
     "twilio": "^2.5.1",
     "underscore": "^1.8.3",
     "urban-airship-push": "^0.1.0",
-    "xml2js": "^0.4.17"
+    "xml2js": "^0.4.17",
+    "mock-aws-s3": "^2.5.1"
   },
   "devDependencies": {
     "aglio": "^2.2.0",
@@ -102,7 +103,6 @@
     "gulp-eslint": "^3.0.1",
     "istanbul": "^0.4.5",
     "jasmine-node": "^1.14.5",
-    "mock-aws-s3": "^2.5.1",
     "nock": "^9.0.13",
     "request-as-curl": "^0.1.0"
   }
