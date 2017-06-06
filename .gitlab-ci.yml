@@ -10,33 +10,18 @@ services:
   - redis:latest
   - mdillon/postgis:9.6-alpine
 
-# This folder is cached between builds
-# http://docs.gitlab.com/ce/ci/yaml/README.html#cache
-cache:
-  paths:
-  - node_modules/
-
 tests:
   script:
    - apt-get update
    - apt-get install -y postgresql-client
    - export PGPASSWORD=$POSTGRES_PASSWORD
    - psql -q -h mdillon__postgis -U rechat rechat < data/minimal.sql
-   - npm install --no-progress --dev
-   - npm install --no-progress istanbul
+   - npm install --no-progress --only=prod
+   - npm install --no-progress --only=dev
    - node_modules/istanbul/lib/cli.js cover --dir istanbul tests/run.js -- --report --stop-on-fail --concurrency 10
   artifacts:
    paths:
    - istanbul/lcov-report
-
-build_image:
-  image: docker:git
-  services:
-  - docker:dind
-  script:
-    - docker login registry.gitlab.com
-    - docker build -t docker build -t registry.gitlab.com/rechat/server/develop .
-    - docker push docker build -t registry.gitlab.com/rechat/server:develop
 
 variables:
   POSTGRES_DB: rechat

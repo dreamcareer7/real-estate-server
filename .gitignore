@@ -1,4 +1,5 @@
 node_modules
+package-lock.json
 docs
 lib/configs/development.js
 lib/configs/newrelic.js
