@@ -22,6 +22,7 @@ tests:
    - apt-get install -y postgresql-client
    - export PGPASSWORD=$POSTGRES_PASSWORD
    - psql -q -h mdillon__postgis -U rechat rechat < data/minimal.sql
+   - npm install --no-progress --only=prod
    - npm install --no-progress --only=dev
    - node_modules/istanbul/lib/cli.js cover --dir istanbul tests/run.js -- --report --stop-on-fail --concurrency 10
   artifacts:
