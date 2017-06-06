@@ -53,6 +53,7 @@
     "merge": "^1.2.0",
     "migratus": "^0.4.1",
     "mime": "^1.3.4",
+    "mock-aws-s3": "^2.5.1",
     "moment": "^2.13.0",
     "moment-timezone": "^0.5.5",
     "multiparty": "^4.1.1",
@@ -102,7 +103,6 @@
     "gulp-eslint": "^3.0.1",
     "istanbul": "^0.4.5",
     "jasmine-node": "^1.14.5",
-    "mock-aws-s3": "^2.5.1",
     "nock": "^9.0.13",
     "request-as-curl": "^0.1.0"
   }
