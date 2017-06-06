@@ -27,7 +27,11 @@ SELECT brands.*,
     CASE WHEN $2::uuid IS NULL THEN
       NULL
     ELSE
-      (SELECT room FROM rooms_users WHERE "user" = $2 AND reference = ('Brand/' || brands.id))
+      (
+        SELECT room FROM rooms_users
+        WHERE "user" = $2 AND reference = ('Brand/' || brands.id)
+        LIMIT 1
+      )
     END
   ) as room
 
