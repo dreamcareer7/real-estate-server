@@ -9,7 +9,8 @@ p AS (
   SELECT crefs.id AS contact,
          contacts_emails.email AS email,
          contacts_phone_numbers.phone_number AS phone_number,
-         users.id AS "user"
+         users.id AS "user",
+         users.last_seen_at AS last_seen
   FROM crefs
   LEFT JOIN contacts_emails ON
     crefs.id = contacts_emails.contact
@@ -23,7 +24,7 @@ p AS (
 ),
 a AS (
   SELECT p.contact,
-         MAX(activities.created_at) as updated_at
+         MAX(CASE WHEN p.last_seen > activities.created_at THEN p.last_seen ELSE activities.created_at END) as updated_at
   FROM p
   INNER JOIN activities ON (
     activities.reference = p.contact OR
