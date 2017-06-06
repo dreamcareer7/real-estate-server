@@ -23,7 +23,6 @@ tests:
    - export PGPASSWORD=$POSTGRES_PASSWORD
    - psql -q -h mdillon__postgis -U rechat rechat < data/minimal.sql
    - npm install --no-progress --only=dev
-   - npm install --no-progress --no-save istanbul
    - node_modules/istanbul/lib/cli.js cover --dir istanbul tests/run.js -- --report --stop-on-fail --concurrency 10
   artifacts:
    paths:
