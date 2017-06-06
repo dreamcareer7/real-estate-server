@@ -22,10 +22,4 @@ const envelope = {
   ]
 }
 
-module.exports = {
-  auth: {
-    username: 'test@rechat.com',
-    password: 'aaaaaa'
-  },
-  envelope
-}
+module.exports = envelope

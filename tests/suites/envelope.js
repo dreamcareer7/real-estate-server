@@ -1,8 +1,5 @@
-const {envelope, auth} = require('./data/envelope.js')
-const envelope_response = require('./expected_objects/envelope.js')
-
-const login = require('./utils/docusign.js')
-
+const envelope = require('./envelope/data.js')
+const envelope_response = require('./envelope/types.js')
 
 registerSuite('submission', ['create'])
 
@@ -32,38 +29,12 @@ const create412 = cb => {
     })
 }
 
-let callback_url
-
-const authenticate = cb => {
-  return frisby.create('Authenticate to docusign')
-    .get('/users/self/docusign/auth')
-    .after((err, res) => {
-      if (err)
-        return cb(err)
-
-      const url = 'https://' + res.req._headers.host + res.req.path
-
-      try {
-        callback_url = login({
-          username: auth.username,
-          password: auth.password,
-          url
-        })
-      } catch (err) {
-        console.log('Cannot authenticate using BrowserStack', err)
-        return cb(err, res)
-      }
-
-      cb(err, res)
-    })
-    .expectStatus(200)
-}
 
 const saveToken = cb => {
-  const path = require('url').parse(callback_url).path
+  const qs = 'code=eyJ0eXAiOiJNVCIsImFsZyI6IlJTMjU2Iiwia2lkIjoiNjgxODVmZjEtNGU1MS00Y2U5LWFmMWMtNjg5ODEyMjAzMzE3In0.AQkAAAABAAYABwCAam7HPKzUSAgAgPb0Dj2s1EgCAG7W7ytRDJhNtZCC_6cHr7wNACQAAAA0NjMyZTNiZC0zNTAyLTQ3MmMtOGYwYS1hZTc1NGI1ODYwZDIVAAEAAAASAAAAAAAYAAEAAAAFAAAAIACAam7HPKzUSA.SO-HzaT5ZuAbeSyaAKrTWy8Zf41ac3fKzSEPhF-EASNQQibCRaptn2w3zpN6zwhamiyYytokYNp0kfhr9M_FKr6aWBd2KqPNdCqYKUdRj1mwK31hUbz5NoWZQV0nIZ32JCvMCrDWThLXkAChpQt_xYJu9YBRSt9wOwMet2nPurY38aaIkoZbLKybOhqiZzA_cPvuud2kFfDLughBK6zOpAgcCVGtFnsV6ZntdE2Sfp0daCsmYvV1CNPfFURr7eOYcDbwd6CB4sSCXHuSLBb8ykjVoe7F6s5CL23lEVibnFKjQIKjb_8VOJ6oKk0wKji_19NcHr1nQbNsLT1Fktcydg&state={%22signature%22:%22oJ3OTil3V6FPb7iUGcsMfvhQ%2FWPLIYaZl90TA6jOCTIqTgOvWti%2FEAM9%2BQnfOSni1hk5smfPud%2Fvc62EEqsXZZBBo0wIRMu3r8Qf3iSetwNogCL2Hu6gMagSWhWJ81FKNE5ZSP%2BikT9PkHhgJH11S%2FUMJUMJcmwNApb2gdBgLdftOqxc4cSIOPdzrPcgy%2Bn%2Bvqdqu99%2BzZ76ysPWCIWksUCISf1NI%2BbP%2F1Di1QUJ74nouJGLATRWAKiYlx2Dj25u5yElfhc5n%2BEmZysEi9KJQ72L6ley5L6dyy1R5h%2BY7aHJFcw1RG0Kj%2BUm6O5pY8siKzqn55AZZk9IE%2Fe%2FVnEP6w%3D%3D%22%2C%22user_id%22:%2280a227b2-29a0-11e7-b636-e4a7a08e15d4%22}'
 
   return frisby.create('Save docusign token')
-    .get(path)
+    .get(`/docusign/auth/done?${qs}`)
     .after(cb)
     .expectStatus(200)
 }
@@ -161,7 +132,6 @@ const voidit = cb => {
 
 module.exports = {
   create412,
-  authenticate,
   saveToken,
   create,
   get,
