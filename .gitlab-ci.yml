@@ -10,12 +10,6 @@ services:
   - redis:latest
   - mdillon/postgis:9.6-alpine
 
-# This folder is cached between builds
-# http://docs.gitlab.com/ce/ci/yaml/README.html#cache
-cache:
-  paths:
-  - node_modules/
-
 tests:
   script:
    - apt-get update
