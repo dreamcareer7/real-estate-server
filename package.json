@@ -102,7 +102,6 @@
     "gulp-eslint": "^3.0.1",
     "jasmine-node": "^1.14.5",
     "nock": "^9.0.13",
-    "request-as-curl": "^0.1.0",
-    "webdriverio": "^4.7.1"
+    "request-as-curl": "^0.1.0"
   }
 }
