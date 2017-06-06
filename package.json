@@ -100,6 +100,7 @@
     "frisby": "git+https://github.com/emilsedgh/frisby.git#fix_nested",
     "gulp": "^3.9.1",
     "gulp-eslint": "^3.0.1",
+    "istanbul": "^0.4.5",
     "jasmine-node": "^1.14.5",
     "mock-aws-s3": "^2.5.1",
     "nock": "^9.0.13",
