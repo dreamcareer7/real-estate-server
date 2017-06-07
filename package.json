@@ -86,7 +86,8 @@
     "twilio": "^2.5.1",
     "underscore": "^1.8.3",
     "urban-airship-push": "^0.1.0",
-    "xml2js": "^0.4.17"
+    "xml2js": "^0.4.17",
+    "mock-aws-s3": "^2.5.1"
   },
   "devDependencies": {
     "aglio": "^2.2.0",
