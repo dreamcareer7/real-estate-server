@@ -9,7 +9,7 @@ const async = require('async')
 
 async.auto({
   list: cb => {
-    db.executeSql('SELECT matrix_unique_id FROM listings WHERE status = $1 LIMIT 100', [ 'Out Of Sync' ], (err, res) => {
+    db.executeSql('SELECT matrix_unique_id FROM listings WHERE status = $1 LIMIT 200', [ 'Out Of Sync' ], (err, res) => {
       if(err)
         return cb(err)
 
