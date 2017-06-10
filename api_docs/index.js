@@ -17,7 +17,9 @@ try {
 }
 
 if (options.tests) {
-  const c = spawn('node ' + __dirname + '/../tests/run --docs', err => {
+  const c = spawn('node ' + __dirname + '/../tests/run --docs', {
+    maxBuffer: 1024 * 1000
+  }, err => {
     if (err) {
       console.log(err)
       process.exit()
