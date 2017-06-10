@@ -21,7 +21,11 @@ module.exports = (program) => {
   })
 
   if (!program.keep)
-    Run.on('done', process.exit)
+    Run.on('done', () => {
+      // Bringing back the normal process.stdout so istanbul can throw out coverage report.
+      process.stdout.write = write
+      process.exit()
+    })
 }
 
 function log() {
