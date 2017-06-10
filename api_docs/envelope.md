@@ -48,8 +48,6 @@ In this example user has no Docusign authentication. Therefore will receicve a `
 
 ### Start authentication [GET /users/self/docusign/auth]
 
-<!-- include(tests/envelope/authenticate.md) -->
-
 ### Create Envelope [POST /envelopes]
 
 <!-- include(tests/envelope/create.md) -->
