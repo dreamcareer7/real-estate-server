@@ -28,13 +28,6 @@ const post = (cb) => {
     })
 }
 
-const post400 = (cb) => {
-  return frisby.create('expect 400 with empty model')
-    .post('/rooms/' + results.room.create.data.id + '/messages')
-    .after(cb)
-    .expectStatus(400)
-}
-
 const post404 = (cb) => {
   return frisby.create('expect 404 with invalid room id')
     .post('/rooms/' + uuid.v1() + '/messages')
@@ -67,7 +60,6 @@ const retrieve404 = (cb) => {
 
 module.exports = {
   post,
-  post400,
   post404,
   retrieve,
   retrieve404
