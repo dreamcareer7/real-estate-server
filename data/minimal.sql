@@ -3810,7 +3810,7 @@ bf0da47e-7226-11e4-905b-0024d71b10fc	1.0.3	{"type": "session", "api_base_url": "
 bf0da47e-7226-11e4-905b-0024d71b10fc	1.0.4	{"type": "session", "api_base_url": "https://api.rechat.co:443", "client_version_status": "UpgradeRequired"}	secret	iOS App - 1.0.4
 bf0da47e-7226-11e4-905b-0024d71b10fc	1.0.5	{"type": "session", "api_base_url": "https://api.rechat.co:443", "client_version_status": "UpgradeRequired"}	secret	iOS App - 1.0.5
 bf0da47e-7226-11e4-905b-0024d71b10fc	1.0.6	{"type": "session", "api_base_url": "https://api.rechat.co:443", "client_version_status": "UpgradeRequired"}	secret	iOS App - 1.0.6
-bf0da47e-7226-11e4-905b-0024d71b10fc	1.0.7	{"type": "session", "api_base_url": "https://api.rechat.co:443", "client_version_status": "UpgradeRequired"}	secret	iOS App - 1.0.7
+bf0da47e-7226-11e4-905b-0024d71b10fc	1.0.7	{"type": "session", "api_base_url": "https://api.rechat.co:443", "client_version_status": "UpgradeUnavailable"}	secret	iOS App - 1.0.7
 36e583c6-7812-11e5-9e16-f23c91c841bd	1.0.8	{"type": "session", "api_base_url": "https://api.rechat.co:443", "client_version_status": "UpgradeRequired"}	secret	iOS App - 1.0.8
 36e583c6-7812-11e5-9e16-f23c91c841bd	2.0.0	{"type": "session", "api_base_url": "https://api.rechat.co:443", "client_version_status": "UpgradeRequired"}	secret	iOS App - 2.0.0
 36e583c6-7812-11e5-9e16-f23c91c841bd	2.0.1	{"type": "session", "api_base_url": "https://api.rechat.co:443", "client_version_status": "UpgradeRequired"}	secret	iOS App - 2.0.1
