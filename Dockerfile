@@ -5,7 +5,7 @@ ENV NODE_ENV=production
 WORKDIR /app
 
 ADD package.json package.json
-RUN npm install
+RUN NODE_ENV=development npm install
 
 ADD . /app
 
