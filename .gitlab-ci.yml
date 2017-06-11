@@ -1,34 +1,18 @@
-# This file is a template, and might need editing before it works on your project.
-# Official framework image. Look for the different tagged releases at:
-# https://hub.docker.com/r/library/node/tags/
-image: node:latest
-
-cache:
-  untracked: true
-  key: "$CI_BUILD_REF_NAME"
-  paths:
-    - node_modules/
-
-# Pick zero or more services to be used on all builds.
-# Only needed when using a docker container to run your tests in.
-# Check out: http://docs.gitlab.com/ce/ci/docker/using_docker_images.html#what-is-service
+image: docker:git
 services:
-  - redis:latest
-  - mdillon/postgis:9.6-alpine
+- docker:dind
 
-tests:
-  script:
-   - apt-get update
-   - apt-get install -y postgresql-client
-   - export PGPASSWORD=$POSTGRES_PASSWORD
-   - psql -q -h mdillon__postgis -U rechat rechat < data/minimal.sql
-   - NODE_ENV=development npm install --no-progress
-   - node_modules/istanbul/lib/cli.js cover --dir istanbul tests/run.js -- --stop-on-fail --concurrency 10
-  artifacts:
-   paths:
-   - istanbul/lcov-report
+stages:
+- build
 
 variables:
-  POSTGRES_DB: rechat
-  POSTGRES_USER: rechat
-  POSTGRES_PASSWORD: rechat
+  CONTAINER_IMAGE: registry.gitlab.com/rechat/server:$CI_BUILD_REF_NAME
+
+before_script:
+  - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.example.com
+
+build:
+  stage: build
+  script:
+    - docker build -t $CONTAINER_IMAGE .
+    - docker push $CONTAINER_IMAGE
