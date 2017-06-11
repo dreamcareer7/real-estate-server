@@ -28,7 +28,7 @@ build:
 
 prepare_database:
   stage: test
-  sciprt:
+  script:
     - apt-get update
     - apt-get install -y postgresql-client
     - export PGPASSWORD=$POSTGRES_PASSWORD
