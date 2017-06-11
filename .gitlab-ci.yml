@@ -7,18 +7,19 @@ stages:
 variables:
   CONTAINER_IMAGE: registry.gitlab.com/rechat/server:$CI_BUILD_REF_NAME
 
+before_script:
+  - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
+
 build:
   stage: build
   services:
     - docker:dind
   script:
-    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
     - docker build -t $CONTAINER_IMAGE .
     - docker push $CONTAINER_IMAGE
 
 test:
   stage: test
-  image: debian:unstable
   variables:
     POSTGRES_DB: rechat
     POSTGRES_USER: rechat
@@ -27,13 +28,10 @@ test:
     - redis:latest
     - mdillon/postgis:9.6-alpine
   script:
-    - apt-get update
-    - apt-get install -y postgresql-client docker.io
+    - apk update
+    - apk add postgresql-client
     - export PGPASSWORD=$POSTGRES_PASSWORD
     - psql -q -h mdillon__postgis -U rechat rechat < data/minimal.sql
     - env > env.txt
-    - /etc/init.d/docker start
-    - /etc/init.d/docker status
-    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
     - docker pull $CONTAINER_TEST_IMAGE
-    - docker run --env-file env.txt $CONTAINER_TEST_IMAGE node_modules/istanbul/lib/cli.js cover --dir istanbul tests/run.js -- --curl --stop-on-fail --concurrency 1
+    - docker run --env-file env.txt $CONTAINER_TEST_IMAGE /app/node_modules/istanbul/lib/cli.js cover --dir istanbul tests/run.js -- --curl --stop-on-fail --concurrency 1
