@@ -33,5 +33,5 @@ test:
     - export PGPASSWORD=$POSTGRES_PASSWORD
     - psql -q -h mdillon__postgis -U rechat rechat < data/minimal.sql
     - docker pull $CONTAINER_IMAGE
-    - `env | awk -F= '{ print $1 }' | sed -e 's/^/-e /g' | tr '\n' ' '`
+    - env | awk -F= '{ print $1 }' | sed -e 's/^/-e /g' | tr '\n' ' '
     - docker run `env | awk -F= '{ print $1 }' | sed -e 's/^/-e /g' | tr '\n' ' '` $CONTAINER_IMAGE /app/node_modules/istanbul/lib/cli.js cover --dir istanbul tests/run.js -- --curl --stop-on-fail --concurrency 30
