@@ -29,6 +29,7 @@ test:
   services:
     - redis:latest
     - mdillon/postgis:9.6-alpine
+    - docker:dind
   script:
     - apk update
     - apk add postgresql-client
