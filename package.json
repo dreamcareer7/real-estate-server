@@ -89,9 +89,6 @@
     "xml2js": "^0.4.17"
   },
   "devDependencies": {
-    "aglio": "^2.2.0",
-    "aglio-theme-olio": "^1.6.3",
-    "api-blueprint-http-formatter": "0.0.1",
     "bytes": "^2.2.0",
     "copy-dir": "0.0.8",
     "eslint": "^3.5.0",
