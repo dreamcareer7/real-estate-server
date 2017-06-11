@@ -7,14 +7,12 @@ stages:
 variables:
   CONTAINER_IMAGE: registry.gitlab.com/rechat/server:$CI_BUILD_REF_NAME
 
-before_script:
-  - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
-
 build:
   stage: build
   services:
     - docker:dind
   script:
+    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
     - docker build -t $CONTAINER_IMAGE .
     - docker push $CONTAINER_IMAGE
 
@@ -34,5 +32,6 @@ test:
     - export PGPASSWORD=$POSTGRES_PASSWORD
     - psql -q -h mdillon__postgis -U rechat rechat < data/minimal.sql
     - env > env.txt
+    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
     - docker pull $CONTAINER_TEST_IMAGE
     - docker run --env-file env.txt $CONTAINER_TEST_IMAGE node_modules/istanbul/lib/cli.js cover --dir istanbul tests/run.js -- --curl --stop-on-fail --concurrency 1
