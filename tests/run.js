@@ -162,6 +162,8 @@ function setupApp (cb) {
     })
   })
 
+  require('./jobs')(app)
+
   app.listen(config.url.port, () => {
     // Clear all jobs on test db
     redisClient.flushdb(err => {
