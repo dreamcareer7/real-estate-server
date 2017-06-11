@@ -18,7 +18,7 @@ build:
 
 test:
   stage: test
-  image: debian:testing
+  image: debian:unstable
   variables:
     POSTGRES_DB: rechat
     POSTGRES_USER: rechat
