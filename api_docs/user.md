@@ -50,12 +50,6 @@ It is important to remember that shadow users _can_ use some of the Rechat's fea
 ### Unset Address [DELETE /users/self/address]
 <!-- include(tests/user/deleteAddress.md) -->
 
-### Find by email [GET /users/related/search]
-<!-- include(tests/user/searchByEmail.md) -->
-
-### Find by phone [GET /users/related/search]
-<!-- include(tests/user/searchByPhone.md) -->
-
 ### Create Phone Verification [POST /phone_verifications]
 <!-- include(tests/verification/createPhoneVerification.md) -->
 
