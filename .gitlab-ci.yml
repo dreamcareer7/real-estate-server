@@ -4,6 +4,10 @@ stages:
   - build
   - test
 
+services:
+  - docker:dind
+
+
 variables:
   CONTAINER_IMAGE: registry.gitlab.com/rechat/server:$CI_BUILD_REF_NAME
 
@@ -12,8 +16,6 @@ before_script:
 
 build:
   stage: build
-  services:
-    - docker:dind
   script:
     - docker build -t $CONTAINER_IMAGE .
     - docker push $CONTAINER_IMAGE
