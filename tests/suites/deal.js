@@ -41,6 +41,40 @@ const createHippocket = cb => {
     })
 }
 
+const addRole = cb => {
+  const role = {
+    first_name: 'Imaginary',
+    last_name: 'Lawyer',
+    email: 'imaginary_lawyer@rechat.com',
+    role: 'Lawyer'
+  }
+
+  results.deal.create.data.roles = [
+    {
+      type: 'deal_role',
+      role: role.role,
+      user: {
+        first_name: role.first_name,
+        last_name: role.last_name,
+        email: role.email
+      }
+    }
+  ]
+
+  return frisby.create('add a role to a deal')
+    .post(`/deals/${results.deal.create.data.id}/roles`, role)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      data: results.deal.create.data
+    })
+    .expectJSONTypes({
+      code: String,
+      data: deal_response
+    })
+}
+
 const getAll = (cb) => {
   return frisby.create('get user\'s deals')
     .get('/deals')
@@ -78,6 +112,7 @@ const remove = (cb) => {
 module.exports = {
   create,
   createHippocket,
+  addRole,
   get,
   getAll,
   remove
