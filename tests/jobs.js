@@ -33,12 +33,3 @@ module.exports = app => {
       })
   })
 }
-
-//   app.post('/mls/listings', (req, res) => {
-//     Listing.create(req.body, (err, result) => {
-//       if (err)
-//         return res.error(err)
-//
-//       res.json(result)
-//     })
-//   })
