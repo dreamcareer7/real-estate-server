@@ -35,7 +35,7 @@ test:
     - apk update
     - apk add postgresql-client
     - export PGPASSWORD=$POSTGRES_PASSWORD
-    #- psql -q -h db -U $POSTGRES_USER $POSTGRES_DB < data/minimal.sql
+    - psql -q -h $HOSTNAME -U $POSTGRES_USER $POSTGRES_DB < data/minimal.sql
     - export REDIS_URL="redis://redis:6379"
     - export DATABASE_URL="postgres://$POSTGRES_USER:$POSTGRES_PASSWORD@db/$POSTGRES_DB"
     - ENVS=`env | sed -n '/^[^\t]/s/=.*//p' | sed '/^$/d' | sed 's/^/-e /g' | tr '\n' ' '`
