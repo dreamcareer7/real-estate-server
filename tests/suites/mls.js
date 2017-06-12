@@ -10,8 +10,8 @@ registerSuite('room', ['create'])
 
 const saveAlert = cb => {
   const criteria = {
-    minimum_price: listing.listing.price-1,
-    maximum_price: listing.listing.price+1,
+    minimum_price: listing.listing.price - 1,
+    maximum_price: listing.listing.price + 1,
   }
 
   return frisby.create('create alert')
@@ -28,7 +28,7 @@ const addListing = (cb) => {
   return frisby.create('add a listing')
     .post('/jobs', {
       name: 'MLS.Listing',
-      data: {processed:listing}
+      data: {processed: listing}
     })
     .after(cb)
     .expectStatus(200)
@@ -51,7 +51,7 @@ const addOpenHouse = (cb) => {
   return frisby.create('add an open house')
     .post('/jobs', {
       name: 'MLS.OpenHouse',
-      data: {processed:openhouse}
+      data: {processed: openhouse}
     })
     .after(cb)
     .expectStatus(200)
@@ -63,7 +63,7 @@ const priceDrop = (cb) => {
   return frisby.create('change price')
     .post('/jobs', {
       name: 'MLS.Listing',
-      data: {processed:listing}
+      data: {processed: listing}
     })
     .after(cb)
     .expectStatus(200)
@@ -75,7 +75,7 @@ const statusChange = (cb) => {
   return frisby.create('change status')
     .post('/jobs', {
       name: 'MLS.Listing',
-      data: {processed:listing}
+      data: {processed: listing}
     })
     .after(cb)
     .expectStatus(200)
@@ -85,7 +85,7 @@ const addOffice = (cb) => {
   return frisby.create('add an office')
     .post('/jobs', {
       name: 'MLS.Office',
-      data: {processed:office}
+      data: {processed: office}
     })
     .after(cb)
     .expectStatus(200)
@@ -95,7 +95,7 @@ const addAgent = (cb) => {
   return frisby.create('add an agent')
     .post('/jobs', {
       name: 'MLS.Agent',
-      data: {processed:agent}
+      data: {processed: agent}
     })
     .after(cb)
     .expectStatus(200)
@@ -105,7 +105,7 @@ const addRoom = (cb) => {
   return frisby.create('add a room')
     .post('/jobs', {
       name: 'MLS.Room',
-      data: {processed:room}
+      data: {processed: room}
     })
     .after(cb)
     .expectStatus(200)
@@ -115,7 +115,7 @@ const addUnit = (cb) => {
   return frisby.create('add a unit')
     .post('/jobs', {
       name: 'MLS.Unit',
-      data: {processed:unit}
+      data: {processed: unit}
     })
     .after(cb)
     .expectStatus(200)
@@ -125,7 +125,7 @@ const addPhoto = (cb) => {
   return frisby.create('add a photo')
     .post('/jobs', {
       name: 'MLS.Photo',
-      data: {processed:photo}
+      data: {processed: photo}
     })
     .after(cb)
     .expectStatus(200)

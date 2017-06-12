@@ -5,7 +5,6 @@ const Domain = require('domain')
 const db = require('../lib/utils/db')
 const debug = require('debug')('rechat:workers')
 
-const config = require('../lib/config.js')
 const queue = require('../lib/utils/queue.js')
 const async = require('async')
 

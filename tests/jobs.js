@@ -24,12 +24,12 @@ module.exports = app => {
           return res.error(err)
       })
 
-      job.on('failed', (err) => {
-        console.log('Failed', err)
-      })
+    job.on('failed', (err) => {
+      console.log('Failed', err)
+    })
 
-      job.on('complete', result => {
-        res.json(result)
-      })
+    job.on('complete', result => {
+      res.json(result)
+    })
   })
 }
