@@ -26,12 +26,12 @@ test:
   services:
     - docker:dind
   script:
-    - docker run -d mdillon/postgis:9.6-alpine -e POSTGRES_DB -e POSTGRES_USER -e POSTGRES_PASSWORD --name db
-    - docker run -d redis:latest --name redis
+    - docker run -d mdillon/postgis:9.6-alpine -e POSTGRES_DB -e POSTGRES_USER -e POSTGRES_PASSWORD --name db -p 5432:5432
+    - docker run -d redis:latest --name redis -p 6379:6379
     - apk update
     - apk add postgresql-client
     - export PGPASSWORD=$POSTGRES_PASSWORD
-    - psql -q -h db -U $POSTGRES_USER $POSTGRES_DB < data/minimal.sql
+    - psql -q -U $POSTGRES_USER $POSTGRES_DB < data/minimal.sql
     - export REDIS_URL="redis://db:6379"
     - export DATABASE_URL="postgres://$POSTGRES_USER:$POSTGRES_PASSWORD@db/$POSTGRES_DB"
     - ENVS=`env | sed -n '/^[^\t]/s/=.*//p' | sed '/^$/d' | sed 's/^/-e /g' | tr '\n' ' '`
