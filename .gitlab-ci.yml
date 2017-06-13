@@ -26,10 +26,12 @@ test:
   services:
     - docker:dind
   script:
-    - env
     - docker run -d -e POSTGRES_DB -e POSTGRES_USER -e POSTGRES_PASSWORD --name db -p 5432:5432 mdillon/postgis:9.6-alpine
     - docker run -d --name redis -p 6379:6379 redis:latest
-    - docker cp data/minimal.sql db:/minimal.sql
+    - ls
+    - docker cp ./data/minimal.sql db:/minimal.sql
+    - ls
+    - docker exec -it db ls /
     - docker exec -it db psql -q -U $POSTGRES_USER $POSTGRES_DB < /minimal.sql
     - export REDIS_URL="redis://redis:6379"
     - export DATABASE_URL="postgres://$POSTGRES_USER:$POSTGRES_PASSWORD@db/$POSTGRES_DB"
