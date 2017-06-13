@@ -1,4 +1,3 @@
-require('../lib/models/index.js')()
 require('colors')
 
 const Domain = require('domain')

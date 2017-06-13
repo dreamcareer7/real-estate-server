@@ -1,3 +1,4 @@
+require('../lib/models/index.js')()
 const config = require('../lib/config')
 
 const airship = (job, done) => {
