@@ -27,7 +27,7 @@ SELECT id,
                deleted_at IS NULL
        ) AS brands,
        (
-         SELECT deal
+         SELECT ARRAY_AGG(deal)
          FROM d
          WHERE
          (
