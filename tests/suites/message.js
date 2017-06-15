@@ -2,6 +2,10 @@ const uuid = require('node-uuid')
 const message = require('./data/message.js')
 const message_response = require('./expected_objects/message.js')
 const info_response = require('./expected_objects/info.js')
+const config = require('../../lib/config')
+const sms = require('./message/sms.js')
+
+require('../../lib/models/Crypto')
 
 registerSuite('recommendation', ['feed'])
 
@@ -36,6 +40,7 @@ const post404 = (cb) => {
 }
 
 const retrieve = (cb) => {
+  delete results.message.post.data.deliveries
   return frisby.create('get messages')
     .get('/rooms/' + results.room.create.data.id + '/messages')
     .after(cb)
@@ -58,9 +63,39 @@ const retrieve404 = (cb) => {
     .expectStatus(404)
 }
 
+const emailReply = cb => {
+  const address = Crypto.encrypt(JSON.stringify({
+      room_id: results.room.create.data.id,
+      user_id: results.authorize.token.data.id
+    })) + '@' + config.email.seamless_address
+
+  const body = {
+    domain: config.mailgun.domain,
+    'stripped-text': 'Foobar',
+    recipient: address,
+    attachments: '[{"url": "https://se.api.mailgun.net/v3/domains/alpine.rechat.com/messages/eyJwIjp0cnVlLCJrIjoiMTQyMGIwNWYtZTc5ZS00YjM4LWFjODEtMjk2ZGY4ZGIzMTQxIiwicyI6ImE2YmI4YzgxOGYiLCJjIjoidGFua2IifQ==/attachments/0", "content-type": "image/jpeg", "name": "5f2a92cb-a31e-4ce8-8218-3dd6f43cf7b0.jpg", "size": 92758}, {"url": "https://se.api.mailgun.net/v3/domains/alpine.rechat.com/messages/eyJwIjp0cnVlLCJrIjoiMTQyMGIwNWYtZTc5ZS00YjM4LWFjODEtMjk2ZGY4ZGIzMTQxIiwicyI6ImE2YmI4YzgxOGYiLCJjIjoidGFua2IifQ==/attachments/1", "content-type": "image/png", "name": "profile-pic.png", "size": 260809}]'
+  }
+
+  return frisby.create('receive a reply from mailgun')
+    .post('/messages/email', body)
+    .after(cb)
+    .expectStatus(200)
+}
+
+const smsReply = cb => {
+  sms.From = '+18598161689'
+
+  return frisby.create('receive a reply from twilio')
+    .post('/messages/sms', sms, {json: false})
+    .after(cb)
+    .expectStatus(200)
+}
+
 module.exports = {
   post,
   post404,
   retrieve,
-  retrieve404
+  retrieve404,
+  emailReply,
+  smsReply
 }

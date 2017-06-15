@@ -1,0 +1,23 @@
+module.exports = {
+  ToCountry:"US",
+  MediaContentType0:"image/gif",
+  ToState:"PA",
+  SmsMessageSid:"MM120f640a61ea4b4f0d7bffbb04554084",
+  NumMedia:"1",
+  ToCity:"SPRINGDALE",
+  FromZip:"41042",
+  SmsSid:"MM120f640a61ea4b4f0d7bffbb04554084",
+  FromState:"KY",
+  SmsStatus:"received",
+  FromCity:"COVINGTON",
+  Body:"Test Message Body",
+  FromCountry:"US",
+  To:"+18587324287",
+  ToZip:"15144",
+  NumSegments:"1",
+  MessageSid:"MM120f640a61ea4b4f0d7bffbb04554084",
+  AccountSid:"ACdb3ed51e02f50f74298d38544cf352c5",
+  From: null,
+  MediaUrl0:"https://api.twilio.com/2010-04-01/Accounts/ACdb3ed51e02f50f74298d38544cf352c5/Messages/MM120f640a61ea4b4f0d7bffbb04554084/Media/MEd7d32f732186f04339b5c4b253b98539",
+  ApiVersion:"2010-04-01"
+}

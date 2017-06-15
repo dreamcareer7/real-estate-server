@@ -3,9 +3,9 @@ SELECT 'message' AS type,
        messages.id AS id,
        messages.*,
        (
-         SELECT ARRAY_AGG(attachment)
-         FROM attachments_eav
-         WHERE object = messages.id
+         SELECT ARRAY_AGG(file)
+         FROM files_relations
+         WHERE role = 'Message' AND role_id = messages.id
        ) AS attachments,
        (
          SELECT ARRAY_AGG("user") FROM notifications_users WHERE acked_at IS NOT NULL AND notification IN
