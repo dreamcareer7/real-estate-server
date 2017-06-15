@@ -51,7 +51,6 @@ const globals = [
   'Slack',
   'SocketServer',
   'Twilio',
-  'Poster',
   'Website',
   'Stripe',
   'Godaddy',
