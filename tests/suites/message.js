@@ -65,15 +65,20 @@ const retrieve404 = (cb) => {
 
 const emailReply = cb => {
   const address = Crypto.encrypt(JSON.stringify({
-      room_id: results.room.create.data.id,
-      user_id: results.authorize.token.data.id
-    })) + '@' + config.email.seamless_address
+    room_id: results.room.create.data.id,
+    user_id: results.authorize.token.data.id
+  })) + '@' + config.email.seamless_address
+
+  const u = 'https://upload.wikimedia.org/wikipedia/en/4/48/Blank.JPG'
 
   const body = {
     domain: config.mailgun.domain,
     'stripped-text': 'Foobar',
     recipient: address,
-    attachments: '[{"url": "https://se.api.mailgun.net/v3/domains/alpine.rechat.com/messages/eyJwIjp0cnVlLCJrIjoiMTQyMGIwNWYtZTc5ZS00YjM4LWFjODEtMjk2ZGY4ZGIzMTQxIiwicyI6ImE2YmI4YzgxOGYiLCJjIjoidGFua2IifQ==/attachments/0", "content-type": "image/jpeg", "name": "5f2a92cb-a31e-4ce8-8218-3dd6f43cf7b0.jpg", "size": 92758}, {"url": "https://se.api.mailgun.net/v3/domains/alpine.rechat.com/messages/eyJwIjp0cnVlLCJrIjoiMTQyMGIwNWYtZTc5ZS00YjM4LWFjODEtMjk2ZGY4ZGIzMTQxIiwicyI6ImE2YmI4YzgxOGYiLCJjIjoidGFua2IifQ==/attachments/1", "content-type": "image/png", "name": "profile-pic.png", "size": 260809}]'
+    attachments: `[
+      {"url": "${u}", "content-type": "image/jpeg", "name": "5f2a92cb-a31e-4ce8-8218-3dd6f43cf7b0.jpg", "size": 92758},
+      {"url": "${u}", "content-type": "image/png", "name": "profile-pic.png", "size": 260809}
+    ]`
   }
 
   return frisby.create('receive a reply from mailgun')
@@ -91,11 +96,19 @@ const smsReply = cb => {
     .expectStatus(200)
 }
 
+const seamless = cb => {
+  return frisby.create('send seamless email')
+    .post('/jobs', {name:'Seamless.Email'})
+    .after(cb)
+    .expectStatus(200)
+}
+
 module.exports = {
   post,
   post404,
   retrieve,
   retrieve404,
   emailReply,
-  smsReply
+  smsReply,
+  seamless
 }

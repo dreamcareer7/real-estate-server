@@ -131,6 +131,24 @@ const addPhoto = (cb) => {
     .expectStatus(200)
 }
 
+const refresher = (name, description) => {
+  return cb => {
+    return frisby.create(name)
+    .post('/jobs', {
+      name
+    })
+    .after(cb)
+    .expectStatus(200)
+  }
+}
+
+const refreshSubdivisions = refresher('Refresh.Subdivisions', 'Refresh Subdivisions')
+const refreshSchools = refresher('Refresh.Schools', 'Refresh Schools')
+const refreshListings = refresher('Refresh.Listings', 'Refresh Listings')
+const refreshCounties = refresher('Refresh.Counties', 'Refresh Counties')
+const refreshAreas = refresher('Refresh.Areas', 'Refresh Areas')
+const refreshAgents = refresher('Refresh.Agents', 'Refresh Agent Contacts')
+
 module.exports = {
   saveAlert,
   addListing,
@@ -142,5 +160,12 @@ module.exports = {
   addAgent,
   addRoom,
   addUnit,
-  addPhoto
+  addPhoto,
+
+  refreshSubdivisions,
+  refreshSchools,
+  refreshListings,
+  refreshCounties,
+  refreshAreas,
+  refreshAgents
 }

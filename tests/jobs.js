@@ -1,12 +1,14 @@
 const Queue = require('../lib/utils/queue.js')
 
-const queues = require('../scripts/queues.js')
+const queues = Object.assign(
+  require('../scripts/queues.js'),
+  require('./queues.js')
+)
 
 Object.keys(queues).forEach(queue_name => {
   const definition = queues[queue_name]
 
   const handle = (job, done) => {
-    console.log('Handling', queue_name)
     definition.handler(job, done)
   }
 

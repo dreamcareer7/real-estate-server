@@ -3,7 +3,7 @@ module.exports = {
   'email': 'shahedul@24-hourrealty.com',
   'fax': '(214) 570-0087',
   'office_mui': 999888,
-  'office_mls_id': '',
+  'office_mls_id': 'RCHT01',
   'license_number': '',
   'address': 'Mckinney Avenue',
   'care_of': '',
