@@ -1,8 +1,6 @@
 const website = require('./data/website.js')
 const website_response = require('./expected_objects/website.js')
 
-registerSuite('user', ['create'])
-
 const hostname = 'localsite'
 
 const create = (cb) => {
