@@ -5,7 +5,8 @@ const list = {
   'Refresh.Counties': Listing.refreshCounties,
   'Refresh.Areas': Listing.refreshAreas,
   'Refresh.Agents': Agent.refreshContacts,
-  'Seamless.Email': Message.sendEmailForUnread
+  'Seamless.Email': Message.sendEmailForUnread,
+  'Seamless.SMS': Notification.sendForUnread
 }
 
 const queues = {}

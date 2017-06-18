@@ -96,7 +96,7 @@ const smsReply = cb => {
     .expectStatus(200)
 }
 
-const seamless = cb => {
+const seamlessEmail = cb => {
   return frisby.create('send seamless email')
     .post('/jobs', {name:'Seamless.Email'})
     .after(cb)
@@ -110,5 +110,5 @@ module.exports = {
   retrieve404,
   emailReply,
   smsReply,
-  seamless
+  seamlessEmail
 }
