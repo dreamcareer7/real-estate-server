@@ -3,7 +3,6 @@ const office = require('./mls/office.js')
 registerSuite('mls', ['addOffice'])
 
 const getByMlsId = (cb) => {
-  console.log(office)
   return frisby.create('get an office by mls id')
     .get(`/offices/search?mlsid=${office.mls_id}`)
     .after(cb)
