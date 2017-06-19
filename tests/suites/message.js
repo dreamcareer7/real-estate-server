@@ -9,6 +9,8 @@ require('../../lib/models/Crypto')
 
 registerSuite('recommendation', ['feed'])
 
+const u = 'https://upload.wikimedia.org/wikipedia/en/4/48/Blank.JPG'
+
 const post = (cb) => {
   message.recommendation = results.recommendation.feed.data[0].id
   message.author = results.room.create.data.owner.id
@@ -69,8 +71,6 @@ const emailReply = cb => {
     user_id: results.authorize.token.data.id
   })) + '@' + config.email.seamless_address
 
-  const u = 'https://upload.wikimedia.org/wikipedia/en/4/48/Blank.JPG'
-
   const body = {
     domain: config.mailgun.domain,
     'stripped-text': 'Foobar',
@@ -89,6 +89,7 @@ const emailReply = cb => {
 
 const smsReply = cb => {
   sms.From = '+18598161689'
+  sms.MediaUrl0 = u
 
   return frisby.create('receive a reply from twilio')
     .post('/messages/sms', sms, {json: false})

@@ -18,6 +18,6 @@ module.exports = {
   MessageSid: 'MM120f640a61ea4b4f0d7bffbb04554084',
   AccountSid: 'ACdb3ed51e02f50f74298d38544cf352c5',
   From: null,
-  MediaUrl0: 'https://api.twilio.com/2010-04-01/Accounts/ACdb3ed51e02f50f74298d38544cf352c5/Messages/MM120f640a61ea4b4f0d7bffbb04554084/Media/MEd7d32f732186f04339b5c4b253b98539',
+  MediaUrl0: null,
   ApiVersion: '2010-04-01'
 }
