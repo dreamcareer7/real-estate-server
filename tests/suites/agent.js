@@ -91,7 +91,7 @@ const report = (cb) => {
 module.exports = {
   getByMlsId,
   getById,
-//   getByOffice,
+  getByOffice,
   search,
   report
 }
