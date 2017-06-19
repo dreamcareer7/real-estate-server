@@ -1,7 +1,5 @@
 const types = require('./expected_objects/payment.js')
 
-// registerSuite('user', ['create'])
-
 const add = (cb) => {
   return frisby.create('add a stripe customer')
     .post('/payments/stripe/customers', {
