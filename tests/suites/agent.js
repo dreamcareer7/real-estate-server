@@ -18,6 +18,17 @@ const getByMlsId = (cb) => {
     })
 }
 
+const getById = cb => {
+  return frisby.create('get an agent by id')
+    .get(`/agents/${results.agent.getByMlsId.data.id}`)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      data: results.agent.getByMlsId.data
+    })
+}
+
 const getByOffice = (cb) => {
   return frisby.create('get all agents of an office')
     .get(`/agents/search?officemlsid=${agent.office_mlsid}`)
@@ -79,6 +90,7 @@ const report = (cb) => {
 
 module.exports = {
   getByMlsId,
+  getById,
 //   getByOffice,
   search,
   report
