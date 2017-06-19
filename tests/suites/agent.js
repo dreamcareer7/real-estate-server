@@ -1,6 +1,6 @@
 const agent = require('./mls/agent.js')
 
-registerSuite('mls', ['addAgent', 'regreshAgents'])
+registerSuite('mls', ['addOffice', 'addAgent', 'regreshAgents'])
 
 const getByMlsId = (cb) => {
   return frisby.create('get an agent by mls id')
