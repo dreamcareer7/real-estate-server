@@ -99,7 +99,9 @@ const smsReply = cb => {
 
 const seamlessEmail = cb => {
   return frisby.create('send seamless email')
-    .post('/jobs', {name:'Seamless.Email'})
+    .post('/jobs', {
+      name: 'Seamless.Email'
+    })
     .after(cb)
     .expectStatus(200)
 }

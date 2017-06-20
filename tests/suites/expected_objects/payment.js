@@ -1,5 +1,3 @@
-const v = require('./validation.js')
-
 module.exports = {
   customer: {
     id: String,
