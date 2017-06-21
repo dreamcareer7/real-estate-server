@@ -1,5 +1,6 @@
 const listing = require('./data/listing.js')
 const listing_response = require('./expected_objects/listing.js')
+const subdivision_response = require('./expected_objects/subdivision.js')
 const uuid = require('node-uuid')
 
 const by_mui = (cb) => {
@@ -81,6 +82,22 @@ const getListing404 = (cb) => {
     .expectStatus(404)
 }
 
+const searchSubdivisions = cb => {
+  return frisby.create('search for a subdivision')
+    .get('/subdivisions/search?q=Arbor')
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      info: {
+        count: 1
+      }
+    })
+    .expectJSON({
+      data: [subdivision_response]
+    })
+}
+
 module.exports = {
   by_mui,
   by_mui404,
@@ -88,5 +105,6 @@ module.exports = {
   by_mls404,
   getListing,
   getListing404,
-  by_query
+  by_query,
+  searchSubdivisions
 }
