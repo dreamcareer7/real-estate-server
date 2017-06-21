@@ -35,7 +35,7 @@ const get = cb => {
 
 const search = cb => {
   return frisby.create('search in user alerts')
-    .get(`/alerts/search?q[]=Test`)
+    .get('/alerts/search?q[]=Test')
     .after(cb)
     .expectStatus(200)
     .expectJSON({
