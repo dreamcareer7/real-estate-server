@@ -1,4 +1,5 @@
 module.exports = {
+  'title': 'Test Title',
   'minimum_bathrooms': 1,
   'property_types': ['Residential'],
   'maximum_year_built': 2015,
