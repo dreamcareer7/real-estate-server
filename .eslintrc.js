@@ -59,7 +59,6 @@ const globals = [
   'EnvelopeDocument',
   'Activity',
   'AttachedFile',
-  'Review',
   'Submission'
 ]
 
