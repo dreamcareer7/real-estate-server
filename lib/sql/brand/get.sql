@@ -21,19 +21,7 @@ SELECT brands.*,
 
   (
     SELECT parent FROM brands_parents WHERE brand = brands.id
-  ),
-
-  (
-    CASE WHEN $2::uuid IS NULL THEN
-      NULL
-    ELSE
-      (
-        SELECT room FROM rooms_users
-        WHERE "user" = $2 AND reference = ('Brand/' || brands.id)
-        LIMIT 1
-      )
-    END
-  ) as room
+  )
 
 FROM brands
 JOIN unnest($1::uuid[]) WITH ORDINALITY t(bid, ord) ON brands.id = bid
