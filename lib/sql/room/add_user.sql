@@ -1,6 +1,1 @@
-INSERT INTO rooms_users ("user", room, reference)
-VALUES (
-  $1,
-  $2,
-  $3
-)
+INSERT INTO rooms_users ("user", room) VALUES ($1, $2)
