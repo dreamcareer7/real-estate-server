@@ -11,7 +11,9 @@ $$
     FROM agents
   JOIN users ON agents.id = users.agent
   WHERE users.id IN (
-    (SELECT "user" FROM brands_users WHERE brand = $1)
+    (SELECT DISTINCT "user" FROM brands_users
+    JOIN brands_roles ON brands_users.role = brands_roles.id
+    WHERE brands_roles.brand = $1)
   )
   UNION
   SELECT

@@ -2,7 +2,9 @@ CREATE OR REPLACE FUNCTION get_brand_users(id uuid) RETURNS
    setof uuid
 AS
 $$
-  SELECT "user" FROM brands_users WHERE brand = $1
+  SELECT "user" FROM brands_users
+  JOIN brands_roles ON brands_users.role = brands_roles.id
+  WHERE brands_roles.brand = $1
   UNION
   SELECT id FROM users WHERE agent IN (
     SELECT id FROM agents
