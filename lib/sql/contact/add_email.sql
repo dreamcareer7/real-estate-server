@@ -13,6 +13,6 @@ INSERT INTO contacts_emails
 VALUES
 (
   $1,
-  $2,
+  LOWER($2),
   $3
 )
