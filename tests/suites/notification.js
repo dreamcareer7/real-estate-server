@@ -55,16 +55,9 @@ const getNotification404 = (cb) => {
 
 const acknowledgeNotification = (cb) => {
   return frisby.create('acknowledge notification')
-    .delete('/notifications/' + results.notification.getUsersNotification.data[0].id)
+    .delete('/notifications/')
     .after(cb)
     .expectStatus(204)
-}
-
-const acknowledgeNotification404 = (cb) => {
-  return frisby.create('expect 404 with invalid notification id')
-    .delete('/notifications/' + uuid.v1())
-    .after(cb)
-    .expectStatus(404)
 }
 
 const pushNotification = (cb) => {
@@ -138,7 +131,6 @@ module.exports = {
   getNotification,
   getNotification404,
   acknowledgeNotification,
-  acknowledgeNotification404,
   pushNotification,
   cancelPushNotification,
   createRoom,
