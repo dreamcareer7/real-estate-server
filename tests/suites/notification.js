@@ -3,29 +3,7 @@ const config = require('../../lib/config.js')
 const user = require('./data/user.js')
 const room = require('./data/room.js')
 
-registerSuite('message', ['post'])
-
-const auth_params = {
-  client_id: config.tests.client_id,
-  client_secret: config.tests.client_secret,
-  username: user.email,
-  password: user.password,
-  grant_type: 'password'
-}
-
-const token = (cb) => {
-  return frisby.create('get token')
-    .post('/oauth2/token', auth_params)
-    .expectStatus(200)
-    .after((err, res, json) => {
-      const setup = frisby.globalSetup()
-
-      setup.request.headers['Authorization'] = 'Bearer ' + json.access_token
-
-      frisby.globalSetup(setup)
-      cb(err, res)
-    })
-}
+registerSuite('mls', ['saveAlert', 'addListing', 'refreshListings'])
 
 // const notification_response = require('./expected_objects/notification.js')
 // const info_response = require('./expected_objects/info.js')
@@ -126,7 +104,6 @@ const createRoom = (cb) => {
 }
 
 module.exports = {
-  token,
   getUsersNotification,
   getNotification,
   getNotification404,
