@@ -240,7 +240,8 @@ ON CONFLICT (matrix_unique_id) DO UPDATE SET
   unit_count = $77,
   year_built_details = $78,
   zoning = $79,
-  security_system_yn = $80
+  security_system_yn = $80,
+  updated_at = CLOCK_TIMESTAMP()
 
 WHERE properties.matrix_unique_id = $6
 

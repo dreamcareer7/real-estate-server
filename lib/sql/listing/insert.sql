@@ -288,7 +288,8 @@ ON CONFLICT (matrix_unique_id) DO UPDATE SET
   owner_name = $93,
   seller_type = $94,
   occupancy = $95,
-  private_remarks = $96
+  private_remarks = $96,
+  updated_at = CLOCK_TIMESTAMP()
 
 WHERE listings.matrix_unique_id = $7
 

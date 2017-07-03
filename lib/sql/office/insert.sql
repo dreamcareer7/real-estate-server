@@ -94,6 +94,7 @@ ON CONFLICT (matrix_unique_id) DO UPDATE SET
   st_postal_code = $29,
   st_postal_code_plus4 = $30,
   st_state = $31,
-  url = $32
+  url = $32,
+  updated_at = CLOCK_TIMESTAMP()
   WHERE offices.matrix_unique_id = $13
 RETURNING id
