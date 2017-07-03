@@ -123,46 +123,6 @@ const patchUserTimeZone = (cb) => {
     .expectStatus(204)
 }
 
-const searchByEmail = (cb) => {
-  return frisby.create('search users by email')
-    .get('/users/search?q[]=' + results.user.create.data.email)
-    .after(cb)
-    .expectStatus(200)
-    .expectJSON({
-      code: 'OK',
-      data: [
-        {
-          type: 'user'
-        }
-      ]
-    })
-    .expectJSONTypes({
-      code: String,
-      data: [user_response],
-      info: info_response
-    })
-}
-
-const searchByPhone = (cb) => {
-  return frisby.create('search users by phone')
-    .get('/users/search?q[]=' + encodeURIComponent(results.user.create.data.phone_number))
-    .after(cb)
-    .expectStatus(200)
-    .expectJSON({
-      code: 'OK',
-      data: [
-        {
-          type: 'user'
-        }
-      ]
-    })
-    .expectJSONTypes({
-      code: String,
-      data: [user_response],
-      info: info_response
-    })
-}
-
 const deleteAddress = (cb) => {
   return frisby.create('delete address')
     .delete('/users/self/address')
@@ -194,8 +154,6 @@ module.exports = {
   setAddress,
   setAddress400,
   patchUserTimeZone,
-  searchByEmail,
-  searchByPhone,
   deleteAddress,
   deleteUser
 }
