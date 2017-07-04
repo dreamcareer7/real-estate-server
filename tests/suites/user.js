@@ -2,7 +2,6 @@ const config = require('../../lib/config.js')
 const user = require('./data/user.js')
 const address = require('./data/address.js')
 const user_response = require('./expected_objects/user.js')
-const info_response = require('./expected_objects/info.js')
 const uuid = require('node-uuid')
 
 const password = config.tests.password
