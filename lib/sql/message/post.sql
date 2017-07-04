@@ -13,7 +13,6 @@ unarchive AS (
 )
 INSERT INTO messages(
     room,
-    message_type,
     comment,
     image_url,
     document_url,
@@ -33,6 +32,5 @@ VALUES($1,
        $7,
        $8,
        $9,
-       $10,
-       $11)
+       $10)
 RETURNING id;

@@ -94,6 +94,9 @@ A deal may also hold the following entities:
 ### Create a hippocket deal [POST /deal]
 <!-- include(tests/deal/createHippocket.md) -->
 
+### Add a role [POST /deal/:id/roles]
+<!-- include(tests/deal/addRole.md) -->
+
 ### Get a deal [GET /deal/:id]
 <!-- include(tests/deal/get.md) -->
 

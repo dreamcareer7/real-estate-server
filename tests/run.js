@@ -18,12 +18,11 @@ global.Run = new EventEmitter()
 
 program
   .usage('[options] <suite> <suite>')
-  .option('-d, --disable-ui', 'Disable UI and show debug output from the app')
   .option('-s, --server <server>', 'Instead of setting your own version, run tests against <server>')
   .option('-c, --concurrency <n>', 'Number of suites to run at the same time (defaults to 20)')
-  .option('--curl', 'Throw curl commands (disabled ui)')
+  .option('--curl', 'Throw curl commands')
   .option('--report', 'Use the nice plain text reporter')
-  .option('--disable-response', 'When in curl mode, do not write responses to stdout')
+  .option('--no-response', 'When in curl mode, do not write responses to stdout')
   .option('--stop-on-fail', 'Stops on the first sight of problem')
   .option('--keep', 'Keep the server running after execution is completed')
   .option('--docs', 'Setup REST API')
@@ -32,23 +31,13 @@ program
 if (!program.concurrency)
   program.concurrency = 1
 
-if (program.docs) {
-  program.disableUi = true
+if (program.docs)
   require('./docs.js')(program)
-}
-
-if (program.curl) {
-  program.disableUi = true
+else if (program.curl)
   require('./curl.js')(program)
-}
-
-if (program.report) {
-  program.disableUi = true
+else
   require('./report.js')(program)
-}
 
-if (!program.disableUi)
-  require('./ui.js')(program)
 
 const getSuites = function (cb) {
   if (program.args.length > 0)
@@ -172,6 +161,8 @@ function setupApp (cb) {
       process.domain.emit('error', err)
     })
   })
+
+  require('./jobs')(app)
 
   app.listen(config.url.port, () => {
     // Clear all jobs on test db

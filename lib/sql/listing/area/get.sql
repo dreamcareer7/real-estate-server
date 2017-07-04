@@ -1,8 +1,7 @@
-SELECT
-  initcap(lower(title)) as title,
-  number,
-  parent,
-  'mls_area' as type
+SELECT id,
+       INITCAP(LOWER(title)) AS title,
+       number,
+       parent,
+       'mls_area' AS type
 FROM mls_areas
-WHERE
-  number = $1 AND parent = $2
+JOIN unnest($1::text[]) WITH ORDINALITY t(aid, ord) ON mls_areas.id = aid

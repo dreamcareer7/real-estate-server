@@ -85,6 +85,5 @@ module.exports = {
   'zoning': v.optionalString,
   'security_system_yn': v.optionalBoolean,
   'deleted_at': v.optionalNumber,
-  'address': address,
-  'extra_features': v.optionalString
+  'address': address
 }

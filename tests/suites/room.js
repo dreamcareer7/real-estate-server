@@ -1,4 +1,4 @@
-const room = require('./data/room.js')
+const raw = require('./data/room.js')
 const room_response = require('./expected_objects/room.js')
 const info_response = require('./expected_objects/info.js')
 const uuid = require('node-uuid')
@@ -7,9 +7,13 @@ registerSuite('user', ['create'])
 
 const updated_room = 'updated_title'
 
+const room = JSON.parse(JSON.stringify(raw))
+delete room.emails
+delete room.phone_numbers
+
 const create = (cb) => {
   return frisby.create('create room')
-    .post('/rooms', room)
+    .post('/rooms', raw)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
@@ -54,32 +58,25 @@ const getRoom404 = (cb) => {
     .expectStatus(404)
 }
 
-const getRoomMedia = (cb) => {
-  return frisby.create('get room\'s media')
-    .get('/rooms/' + results.room.create.data.id + '/media')
+const getUserRooms = (cb) => {
+  return frisby.create('get a user\'s rooms')
+    .get('/rooms')
     .after(cb)
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
-      data: [],
-      info: {}
+      data: []
     })
     .expectJSONTypes({
       code: String,
-      data: Array,
+      data: [room_response],
       info: info_response
     })
 }
 
-const getRoomMedia404 = (cb) => {
-  return frisby.create('expect 404 with invalid room id when getting room\'s media')
-    .get('/rooms/' + uuid.v1() + '/media')
-    .after(cb)
-    .expectStatus(404)
-}
-
-const getUserRooms = (cb) => {
-  return frisby.create('get a user\'s rooms')
+const getReferencedUserRooms = (cb) => {
+  return frisby.create('get a user\'s rooms in referenced format')
+    .addHeader('X-RECHAT-FORMAT', 'references')
     .get('/rooms')
     .after(cb)
     .expectStatus(200)
@@ -208,9 +205,8 @@ module.exports = {
   create400,
   getRoom,
   getRoom404,
-  getRoomMedia,
-  getRoomMedia404,
   getUserRooms,
+  getReferencedUserRooms,
   addUser,
   addUser400,
   search,

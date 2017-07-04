@@ -21,6 +21,33 @@ const create = (cb) => {
     .expectJSONTypes('data', alert_response)
 }
 
+const get = cb => {
+  return frisby.create('get alert by id')
+    .get(`/alerts/${results.alert.create.data.id}`)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      data: criteria
+    })
+    .expectJSONTypes('data', alert_response)
+}
+
+const search = cb => {
+  return frisby.create('search in user alerts')
+    .get('/alerts/search?q[]=Test')
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      data: [criteria],
+      info: {
+        count: 1
+      }
+    })
+    .expectJSONTypes('data', [alert_response])
+}
+
 const getUserAlerts = (cb) => {
   return frisby.create('get user alerts and make sure create alert was successful')
     .get('/alerts')
@@ -166,6 +193,8 @@ const deleteAlertWorked = (cb) => {
 
 module.exports = {
   create,
+  get,
+  search,
   getUserAlerts,
   getRoomAlerts,
   patchAlert,

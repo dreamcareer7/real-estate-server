@@ -22,7 +22,6 @@ module.exports = {
   'author': user,
   'created_at': Number,
   'updated_at': Number,
-  'message_type': String,
   'image_thumbnail_url': v.optionalString,
   'deleted_at': v.optionalNumber,
   'notification': optionalNotification,

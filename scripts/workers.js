@@ -1,11 +1,9 @@
-require('../lib/models/index.js')()
 require('colors')
 
 const Domain = require('domain')
 const db = require('../lib/utils/db')
 const debug = require('debug')('rechat:workers')
 
-const config = require('../lib/config.js')
 const queue = require('../lib/utils/queue.js')
 const async = require('async')
 
@@ -61,61 +59,7 @@ const getDomain = (job, cb) => {
 // We have proper error handling here. No need for auto reports.
 Error.autoReport = false
 
-const airship = (job, done) => {
-  Notification.sendToDevice(job.data.notification, job.data.token, job.data.user_id, done)
-}
-
-const notification = (job, done) => {
-  Notification.create(job.data.notification, done)
-}
-
-const email = (job, done) => {
-  Mailgun.callMailgun(job.data, done)
-}
-
-const email_sane = (job, done) => {
-  Email.sendSane(job.data, done)
-}
-
-const ses = (job, done) => {
-  SES.callSES(job.data, done)
-}
-
-const sms = (job, done) => {
-  Twilio.callTwilio(job.data, done)
-}
-
-const queues = {
-  airship_transport_send_device: {
-    handler: airship,
-    parallel: config.airship.parallel
-  },
-
-  create_notification: {
-    handler: notification,
-    parallel: 1
-  },
-
-  email: {
-    handler: email,
-    parallel: config.email.parallel
-  },
-
-  email_sane: {
-    handler: email_sane,
-    parallel: config.email.parallel
-  },
-
-  email_ses: {
-    handler: ses,
-    parallel: config.email.parallel
-  },
-
-  sms: {
-    handler: sms,
-    parallel: config.twilio.parallel
-  }
-}
+const queues = require('./queues')
 
 Object.keys(queues).forEach(queue_name => {
   const definition = queues[queue_name]
@@ -132,14 +76,14 @@ Object.keys(queues).forEach(queue_name => {
       }
 
       debug('Executing job handler', process.domain.i)
-      const examine = err => {
+      const examine = (err, result) => {
         if (err) {
           rollback(err)
           done(err)
           return
         }
 
-        commit(done)
+        commit(done.bind(null, null, result))
       }
 
       definition.handler(job, examine)
@@ -161,6 +105,12 @@ function reportQueueStatistics () {
 }
 
 reportQueueStatistics()
+
+const shutdown = () => {
+  queue.shutdown(5000, process.exit)
+}
+process.once('SIGTERM', shutdown)
+process.once('SIGINT', shutdown)
 
 const sendNotifications = function () {
   getDomain({}, (err, {rollback, commit}) => {

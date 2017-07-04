@@ -1,4 +1,5 @@
-SELECT *,
-  'envelope_document' AS type
-
-FROM envelopes_documents WHERE id = $1
+SELECT envelopes_documents.*,
+       'envelope_document' AS type
+FROM envelopes_documents
+JOIN unnest($1::uuid[]) WITH ORDINALITY t(did, ord) ON envelopes_documents.id = did
+ORDER BY t.ord

@@ -19,21 +19,21 @@ function logger (req, res, next) {
 }
 
 module.exports = (program) => {
-  enableResponse = !program.disableResponse
+  enableResponse = program.response
   Run.on('app ready', (app) => app.use(logger))
 
   Run.on('message', (suite, message) => {
     if (message.code !== 'test done')
       return
 
-    const failures = message.test.messages
-      .filter(m => m !== 'Passed.')
+    if (message.test.failed < 1)
+      return
 
-    failures.forEach(m => {
-      console.log(m.red)
+    message.test.messages.forEach(m => {
+      console.log(m.message.red)
     })
 
-    if (failures.length > 0 && program.stopOnFail)
+    if (program.stopOnFail)
       process.exit(3)
   })
 

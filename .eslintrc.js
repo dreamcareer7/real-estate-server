@@ -17,13 +17,11 @@ const globals = [
   'Url',
   'Contact',
   'Alert',
-  'S3',
   'Email',
   'SES',
   'Mailgun',
   'MLSArea',
   'SMS',
-  'Admin',
   'Crypto',
   'ObjectUtil',
   'Verification',
@@ -37,7 +35,6 @@ const globals = [
   'Metric',
   'Socket',
   'OpenHouse',
-  'Attachment',
   'Office',
   'PropertyUnit',
   'PropertyRoom',
@@ -49,10 +46,8 @@ const globals = [
   'Notification',
   'Message',
   'Slack',
-  'Facebook',
   'SocketServer',
   'Twilio',
-  'Poster',
   'Website',
   'Stripe',
   'Godaddy',
@@ -64,7 +59,8 @@ const globals = [
   'EnvelopeDocument',
   'Activity',
   'AttachedFile',
-  'Review'
+  'Review',
+  'Submission'
 ]
 
 const global_object = {}
@@ -81,6 +77,9 @@ module.exports = {
   'env': {
     'es6': true,
     'node': true
+  },
+  'parserOptions': {
+    'ecmaVersion': 8
   },
   'extends': 'eslint:recommended',
   'rules': {

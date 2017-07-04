@@ -11,9 +11,9 @@ module.exports = (program) => {
       return
 
     if (message.test.failed > 0)
-      error(suite, message.test)
+      error(suite, message)
     else
-      pass(suite, message.test)
+      pass(suite, message)
 
 
     if (message.test.failed > 0 && program.stopOnFail)
@@ -21,7 +21,11 @@ module.exports = (program) => {
   })
 
   if (!program.keep)
-    Run.on('done', process.exit)
+    Run.on('done', () => {
+      // Bringing back the normal process.stdout so istanbul can throw out coverage report.
+      process.stdout.write = write
+      process.exit()
+    })
 }
 
 function log() {
@@ -30,12 +34,19 @@ function log() {
   write(args.join(' ') + '\n')
 }
 
-function error(suite, test) {
-  log(`✘ ${pad(suite, 15)} \t ${test.name}`.red)
+function error(suite, message) {
+  log(`✘ ${pad(suite, 15)} \t ${message.test.name}`.red)
+  message.test.messages.forEach(message => {
+    log(`\t${message.message}`.yellow)
+    if (message.expected)
+      log(`\t\tExpected: ${JSON.stringify(message.expected)}`)
+    if (message.actual)
+      log(`\t\tActual:   ${JSON.stringify(message.actual)}`)
+  })
 }
 
-function pass(suite, test) {
-  log(`✓ ${pad(suite, 15)} \t ${test.name}`.green)
+function pass(suite, message) {
+  log(`✓ ${pad(suite, 15)} \t ${message.test.name}`.green)
 }
 
 function pad(string, space) {

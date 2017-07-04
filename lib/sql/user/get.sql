@@ -3,9 +3,10 @@ SELECT 'user' AS type,
        to_char(NOW() AT TIME ZONE users.timezone, 'FMHH:MI AM - FMDay Mon DD, YYYY') AS current_time,
        (((CURRENT_TIME(0) AT TIME ZONE users.timezone)::time > '08:00:00'::time) AND
        ((CURRENT_TIME(0) AT TIME ZONE users.timezone)::time < '23:59:59'::time)) AS push_allowed,
-       EXTRACT(EPOCH FROM users.created_at) AS created_at,
-       EXTRACT(EPOCH FROM users.updated_at) AS updated_at,
-       EXTRACT(EPOCH FROM users.deleted_at) AS deleted_at,
+       EXTRACT(EPOCH FROM users.created_at)   AS created_at,
+       EXTRACT(EPOCH FROM users.updated_at)   AS updated_at,
+       EXTRACT(EPOCH FROM users.deleted_at)   AS deleted_at,
+       EXTRACT(EPOCH FROM users.last_seen_at) AS last_seen_at,
        COALESCE
        (
          profile_image_url,
@@ -59,11 +60,9 @@ SELECT 'user' AS type,
            ) p
          ) ELSE NULL END
        ) AS contacts,
-
        (
-        SELECT count(*) > 0 FROM docusign_users WHERE "user" = $2::uuid
+        SELECT count(*) > 0 FROM docusign_users WHERE "user" = users.id
        ) as has_docusign
 FROM users
-WHERE users.id = $1 AND
-      users.deleted_at IS NULL
-LIMIT 1
+JOIN unnest($1::uuid[]) WITH ORDINALITY t(uid, ord) ON users.id = uid
+ORDER BY t.ord

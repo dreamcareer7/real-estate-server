@@ -73,12 +73,11 @@ function reportData (test) {
   }
 
   results.items_.forEach((item) => {
-    if (item.failedCount < 1)
-      return
-
-    item.items_.forEach((err) => {
-      data.messages.push(err.message)
-    })
+    item.items_
+      .filter(item => !item.passed_)
+      .forEach(item => {
+        data.messages.push(item)
+      })
   })
 
   process.send({

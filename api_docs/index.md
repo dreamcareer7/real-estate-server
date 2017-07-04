@@ -4,6 +4,9 @@ Welcome. Rechat's API is broken into several small components to be readable.
 
 Although we have a page that includes [everything](/all.html).
 
+[![build status](https://gitlab.com/rechat/server/badges/testing/build.svg)](https://gitlab.com/rechat/server/commits/testing)
+[![coverage report](https://gitlab.com/rechat/server/badges/testing/coverage.svg)](https://gitlab.com/rechat/server/commits/testing)
+
 ## Basics
 
 * [Authorization](/authorize.html)

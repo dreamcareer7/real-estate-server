@@ -1,0 +1,445 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+    <head>
+        <title>DCAD: Find Property By Street Address</title>
+        <meta content="Microsoft Visual Studio.NET 7.0" name="GENERATOR" />
+        <meta content="Visual Basic 7.0" name="CODE_LANGUAGE" />
+        <meta content="JavaScript" name="vs_defaultClientScript" />
+        <meta content="http://schemas.microsoft.com/intellisense/ie5" name="vs_targetSchema" />
+        <link href="CSS/DCAD.css" type="text/css" rel="StyleSheet" />
+    </head>
+    <body text="#000000" bgcolor="#ffffff" leftmargin="0" topmargin="0">
+        <form name="Form1" method="post" action="SearchAddr.aspx" id="Form1">
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="/wEPDwULLTIwMDA3NTI2NjkPZBYCAgEPZBYMAgkPZBYCAgEPDxYCHgdWaXNpYmxlZ2RkAg8PDxYCHgRUZXh0BQZKVU5JVVNkZAIVDxAPFgYeDURhdGFUZXh0RmllbGQFCENpdHlOYW1lHg5EYXRhVmFsdWVGaWVsZAUHQ2l0eV9DZB4LXyFEYXRhQm91bmRnZBAVIQVbQUxMXTJBRERJU09OICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDJCQUxDSCBTUFJJTkdTICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDJDQVJST0xMVE9OICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDJDRURBUiBISUxMICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDJDT0NLUkVMTCBISUxMICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDJDT01CSU5FICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDJDT1BQRUxMICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDJEQUxMQVMgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDJERVNPVE8gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDJEVU5DQU5WSUxMRSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDJGQVJNRVJTIEJSQU5DSCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDJGRVJSSVMgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDJHQVJMQU5EICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDJHTEVOTiBIRUlHSFRTICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDJHUkFORCBQUkFJUklFICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDJHUkFQRVZJTkUgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDJISUdITEFORCBQQVJLICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDJIVVRDSElOUyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDJJUlZJTkcgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDJMQU5DQVNURVIgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDJMRVdJU1ZJTExFICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDJNRVNRVUlURSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDJOTyBUT1dOICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDJPVklMTEEgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDJSSUNIQVJEU09OICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDJST1dMRVRUICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDJTQUNIU0UgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDJTRUFHT1ZJTExFICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDJTVU5OWVZBTEUgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDJVTklWRVJTSVRZIFBBUksgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDJXSUxNRVIgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDJXWUxJRSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIBUhAAExATIBMwE2ATcBOQIxMAIxMgIxNQIxNgIxNwIxOAIyMAIyMgIyNAIyOAIyOQIzMAIzMQIzMgIzMwIzNAIzNwIzOAIzOQI0MAI0MgI0MwI0NQI0NgI0OAI0ORQrAyFnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dkZAItD2QWAmYPEGQPFgNmAgECAhYDEAULUkVTSURFTlRJQUwFATFnEAUKQ09NTUVSQ0lBTAUBMmcQBQNCUFAFATNnFgNmAgECAmQCLw8PFgIfAGdkZAIxD2QWAgICDzwrAAsBAA8WDB4QQ3VycmVudFBhZ2VJbmRleGYeCERhdGFLZXlzFgAeC18hSXRlbUNvdW50AgEeCVBhZ2VDb3VudAIBHhVfIURhdGFTb3VyY2VJdGVtQ291bnQCAR8AZ2QWAmYPZBYCAgIPZBYGAgEPZBYCZg8VAidBY2N0RGV0YWlsUmVzLmFzcHg/SUQ9MDAwMDAxMjA2ODUwMDAwMDARNTAyMCAgSlVOSVVTIFNUICBkAgIPDxYCHwEFMkRBTExBUyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgZGQCBQ8PFgQeCUJhY2tDb2xvcgpnHgRfIVNCAghkZBgBBR5fX0NvbnRyb2xzUmVxdWlyZVBvc3RCYWNrS2V5X18WBAUgQWNjdFR5cGVDaGVja0xpc3QxOmNoa0FjY3RUeXBlOjAFIEFjY3RUeXBlQ2hlY2tMaXN0MTpjaGtBY2N0VHlwZToxBSBBY2N0VHlwZUNoZWNrTGlzdDE6Y2hrQWNjdFR5cGU6MgUgQWNjdFR5cGVDaGVja0xpc3QxOmNoa0FjY3RUeXBlOjLkuIIZhbbb8I0lBJVlozd9/PnFlw==" />
+
+<input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="ACDF3560" />
+<input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION" value="/wEWNQKX4ra6CAL17Ij2DQLT2oiFCAKxtaLrBAK+taLrBAKItaLrBAK6taLrBAKxtZ71BAKxtcb1BAK+tZ71BAK+tcb1BALWwZ+aCgL9woDYDAKimtGeAQLYw+XqCwLXrM+EBwLWrM+EBwLVrM+EBwLSrM+EBwLRrM+EBwLPrM+EBwLXrI+HBwLXrIeHBwLXrLOHBwLXrLeHBwLXrKuHBwLXrO+EBwLWrI+HBwLWrIeHBwLWrL+HBwLWrO+EBwLWrOOEBwLVrI+HBwLVrIOHBwLVrIeHBwLVrLuHBwLVrL+HBwLVrKuHBwLVrO+EBwLVrOOEBwLUrI+HBwLUrIeHBwLUrLuHBwLUrLOHBwLUrLeHBwLUrO+EBwLUrOOEBwLmlMy7DgKV2fL7DwKMkP+WCAKF6padDAKF6oLCAwKF6u7mCjZDt9BGo6A1Q3xH/Y7XFL3uFmf9" />
+            
+<table width="100%" border="0" cellspacing="0" cellpadding="1" bgcolor="#6d81bc">
+	<tr>
+		<td width="440" align="left" valign="bottom">
+			<img id="Header1_imgHdr" src="images/dcad-title-sm.jpg" alt="Dallas Central Appraisal District" align="left" border="0" height="55" width="440" /></td>
+		<td align="right" valign="top">
+			<table border="0" cellspacing="0" cellpadding="0" bgcolor="#ffffff">
+				<tr>
+					<td width="20">
+						<img id="Header1_imgCurve" src="images/topmenuhead.gif" border="0" height="23" width="20" /></td>
+					<td><font color="#000000" size="2"><a id="Header1_Hyperlink2" href="./">Home</a>
+							&nbsp;|&nbsp;<a id="Header1_Hyperlink1" href="SearchOwner.aspx">Find&nbsp;Property</a>
+							&nbsp;|&nbsp;<a id="Header1_Hyperlink3" href="Contact.aspx">Contact Us</a>&nbsp;&nbsp;</font></td>
+				</tr>
+			</table>
+			<table width="100%" border="0" cellspacing="0" cellpadding="0">
+				<tr>
+					<td align="middle" valign="center"><p align="center"><font size="+1" face="Arial, Helvetica, sans-serif" color="#ffffff">
+								<span id="Header1_lblTitle"></span>
+							</font>
+						</p>
+					</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<br />
+
+            <table width="100%" align="center" cellspacing="10">
+                <tbody>
+                    <tr>
+                        <td valign="top" width="170"><div id="NavBar">
+<link href="../CSS/DCAD.css" rel="stylesheet" type="text/css" />
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+	<tr>
+		<td>
+			<table width="100%" border="0" cellspacing="0" cellpadding="0">
+				<tr>
+					<td width="10"><img src="images/t1.jpg" width="10" height="21" /></td>
+					<td bgcolor="#4c6aa2" class="headTitle">NAVIGATION LINKS</td>
+					<td width="10"><img src="images/t2.jpg" width="10" height="21" /></td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+	<tr>
+		<td><img src="../images/spacer.gif" alt="" width="1" height="5" /></td>
+	</tr>
+	<tr>
+		<td bgcolor="#dae2eb">
+			<table cellspacing="0" cellpadding="0" border="0">
+				<tbody style="font-size:large; font-family:Arial Black;">
+					<tr>
+						<td nowrap="nowrap" class="NavBoxLinks2"><img id="Navbox1_Image39" src="images/treeview/downright.gif" align="absmiddle" border="0" /><span class="NavLink"><a id="Navbox1_lnkAboutVideo" href="DCADVideos.aspx"> DCAD Videos</a></span></td>
+					</tr>
+					<tr>
+						<td nowrap="nowrap" class="NavBoxLinks"><img id="Navbox1_Image26" src="images/treeview/updownright.gif" align="absmiddle" border="0" /><span class="NavLink"><a id="Navbox1_Hyperlink19" href="forms/AnnualReport.pdf" target="_blank"> Annual Report</a></span></td>
+					</tr>
+					
+						<tr>
+							<td nowrap="nowrap" class="NavBoxLinks">
+								<img id="Navbox1_Panel1_Image2" src="images/treeview/downrightcollapsed.gif" align="absmiddle" border="0" /><span class="NavLink">
+								<a id="Navbox1_Panel1_HyperLink11" href="AboutUs/default.aspx"> About&nbsp;DCAD</a></span></td>
+						</tr>
+				    
+				    
+					
+					
+						<tr>
+							<td nowrap="nowrap" class="NavBoxLinks">
+								<img id="Navbox1_pnlSearchApprSel_Image8" src="images/treeview/updownrightexpanded.gif" align="absmiddle" border="0" /><span class="NavLink">
+								<a id="Navbox1_pnlSearchApprSel_HyperLink1" href="SearchOwner.aspx"> Search Appraisals</a></span></td>
+						</tr>
+						<tr>
+							<td nowrap="nowrap" class="NavBoxLinks">
+								<img id="Navbox1_pnlSearchApprSel_Image9" src="images/treeview/updown.gif" align="absmiddle" border="0" />
+								<img id="Navbox1_pnlSearchApprSel_Image33" src="images/treeview/updownright.gif" align="absmiddle" border="0" /><span class="NavLink">
+								<a id="Navbox1_pnlSearchApprSel_HyperLink22" href="SearchOwner.aspx">By Owner</a></span></td>
+						</tr>
+						<tr>
+							<td nowrap="nowrap" class="NavBoxLinks">
+								<img id="Navbox1_pnlSearchApprSel_Image10" src="images/treeview/updown.gif" align="absmiddle" border="0" />
+								<img id="Navbox1_pnlSearchApprSel_Image34" src="images/treeview/updownright.gif" align="absmiddle" border="0" /><span class="NavLink">
+								<a id="Navbox1_pnlSearchApprSel_HyperLink23" href="SearchAcct.aspx">By Account</a></span></td>
+						</tr>
+						<tr>
+							<td nowrap="nowrap" class="NavBoxLinks">
+								<img id="Navbox1_pnlSearchApprSel_Image11" src="images/treeview/updown.gif" align="absmiddle" border="0" />
+								<img id="Navbox1_pnlSearchApprSel_Image35" src="images/treeview/updownright.gif" align="absmiddle" border="0" /><span class="NavLinkSel">
+								<a id="Navbox1_pnlSearchApprSel_HyperLink24" href="SearchAddr.aspx">By Address</a></span></td>
+						</tr>
+						<tr>
+							<td nowrap="nowrap" class="NavBoxLinks">
+								<img id="Navbox1_pnlSearchApprSel_Image12" src="images/treeview/updown.gif" align="absmiddle" border="0" />
+								<img id="Navbox1_pnlSearchApprSel_Image36" src="images/treeview/upright.gif" align="absmiddle" border="0" /><span class="NavLink">
+								<a id="Navbox1_pnlSearchApprSel_HyperLink25" href="SearchBiz.aspx">By Business</a></span></td>
+						</tr>
+					
+					<tr>
+						<td nowrap="nowrap" class="NavBoxLinks"><img id="Navbox1_Image13" src="images/treeview/updownright.gif" align="absmiddle" border="0" /><span class="NavLink"><a href='https://maps.dcad.org/prd/dpm/'> Find Property on Map</a></span></td>
+					</tr>
+					<tr>
+						<td nowrap="nowrap" class="NavBoxLinks"><img id="Navbox1_Image56" src="images/treeview/updownright.gif" align="absmiddle" border="0" /><span class="NavLink"><a id="Navbox1_hrefBPP" href="http://bpprenditions.dallascad.org/"> Online BPP Rendition </a></span></td>
+					</tr>
+					<tr>
+						<td nowrap="nowrap" class="NavBoxLinks"><img id="Navbox1_taxrep" src="images/treeview/updownright.gif" align="absmiddle" border="0" /><span class="NavLink"><a id="Navbox1_hrefTaxRep" href="http://onlineprotest.dallascad.org/"> Online TaxRep Website </a></span></td>
+					</tr>
+					<tr>
+						<td nowrap="nowrap" class="NavBoxLinks"><img id="Navbox1_Image21" src="images/treeview/updownright.gif" align="absmiddle" border="0" /><span class="NavLink"><a id="Navbox1_HyperLink33" href="forms.aspx"> Forms</a></span></td>
+					</tr>
+					<tr>
+						<td nowrap="nowrap" class="NavBoxLinks"><img id="Navbox1_Image58" src="images/treeview/updownright.gif" align="absmiddle" border="0" /><span class="NavLink"><a id="Navbox1_Hyperlink39" href="DataProducts.aspx"> Data Products</a></span></td>
+					</tr>
+					<tr>
+						<td nowrap="nowrap" class="NavBoxLinks"><img id="Navbox1_Image28" src="images/treeview/updownright.gif" align="absmiddle" border="0" /><span class="NavLink"><a id="Navbox1_HyperOpenRecords" href="OpenRecords.aspx"> Open Records</a></span></td>
+					</tr>
+					<tr>
+						<td nowrap="nowrap" class="NavBoxLinks"><img id="Navbox1_Image27" src="images/treeview/updownright.gif" align="absmiddle" border="0" /><span class="NavLink"><a id="Navbox1_Hyperlink16" href="GISDataProducts.aspx"> GIS Data Products</a></span></td>
+					</tr>
+					<tr>
+						<td nowrap="nowrap" class="NavBoxLinks"><img id="Navbox1_Image15" src="images/treeview/updownright.gif" align="absmiddle" border="0" /><span class="NavLink"><a id="Navbox1_HyperLink27" href="Exemptions.aspx"> Exemptions</a></span></td>
+					</tr>
+					<tr>
+						<td nowrap="nowrap" class="NavBoxLinks"><img id="Navbox1_Image6" src="images/treeview/updownright.gif" align="absmiddle" border="0" /><span class="NavLink"><a id="Navbox1_HyperLink15" href="valueprocess.pdf" target="_blank"> Property Valuation Process</a></span></td>
+					</tr>
+					<tr>
+						<td nowrap="nowrap" class="NavBoxLinks"><img id="Navbox1_Image18" src="images/treeview/updownright.gif" align="absmiddle" border="0" /><span class="NavLink"><a id="Navbox1_HyperLink30" href="Forms/Protest_Process.pdf" target="_blank"> Protest Process</a></span></td>
+					</tr>
+					<tr>
+						<td nowrap="nowrap" class="NavBoxLinks"><img id="Navbox1_Image16" src="images/treeview/updownright.gif" align="absmiddle" border="0" /><span class="NavLink"><a id="Navbox1_HyperLink28" href="PayingTaxes.aspx"> Paying Taxes</a></span></td>
+					</tr>
+					<tr>
+						<td nowrap="nowrap" class="NavBoxLinks"><img id="Navbox1_Image25" src="images/treeview/updownright.gif" align="absmiddle" border="0" /><span class="NavLink"><a id="Navbox1_HyperLink45" href="Forms/TaxCollectionAgencies.pdf" target="_blank"> Local Tax Offices</a></span></td>
+					</tr>
+					<tr>
+						<td nowrap="nowrap" class="NavBoxLinks"><img id="Navbox1_Image17" src="images/treeview/updownright.gif" align="absmiddle" border="0" /><span class="NavLink"><a id="Navbox1_HyperLink29" href="TaxRates.aspx"> Taxing Unit Rates</a></span></td>
+					</tr>
+					<tr>
+						<td nowrap="nowrap" class="NavBoxLinks"><img id="Navbox1_Image20" src="images/treeview/updownright.gif" align="absmiddle" border="0" /><span class="NavLink"><a id="Navbox1_HyperLink32" href="FAQselect.aspx"> F.A.Q.</a></span></td>
+					</tr>
+					<tr>
+						<td nowrap="nowrap" class="NavBoxLinks"><img id="Navbox1_Image19" src="images/treeview/updownright.gif" align="absmiddle" border="0" /><span class="NavLink"><a id="Navbox1_HyperLink31" href="Calendar.aspx"> Calendar</a></span></td>
+					</tr>
+					<tr>
+						<td nowrap="nowrap" class="NavBoxLinks"><img id="Navbox1_Image14" src="images/treeview/updownright.gif" align="absmiddle" border="0" /><span class="NavLink"><a id="Navbox1_HyperLink26" href="CertifiedEVR.aspx"> Certified Value Summaries</a></span></td>
+					</tr>
+					<tr>
+						<td nowrap="nowrap" class="NavBoxLinks"><img id="Navbox1_Image60" src="images/treeview/updownright.gif" align="absmiddle" border="0" /><span class="NavLink"><a id="Navbox1_HyperLink60" href="CertCompare.aspx"> Certified Comparisons</a></span></td>
+					</tr>
+					<tr>
+						<td nowrap="nowrap" class="NavBoxLinks"><img id="Navbox1_Image32" src="images/treeview/updownright.gif" align="absmiddle" border="0" /><span class="NavLink"><a id="Navbox1_HyperLink17" href="CertificationReports.aspx"> Certification Reports</a></span></td>
+					</tr>
+					<tr>
+						<td nowrap="nowrap" class="NavBoxLinks"><img id="Navbox1_Image1" src="images/treeview/updownright.gif" align="absmiddle" border="0" /><span class="NavLink"><a id="Navbox1_HyperLink99" href="PreliminaryValue.aspx"> Preliminary Comparisons</a></span></td>
+					</tr>
+					
+					<tr>
+						<td nowrap="nowrap" class="NavBoxLinks"><img id="Navbox1_Image54" src="images/treeview/updownright.gif" align="absmiddle" border="0" /><span class="NavLink"><a id="Navbox1_Hyperlink10" href="AvgHouseVal.aspx"> Average SFR Values</a></span></td>
+					</tr>
+					<tr>
+						<td nowrap="nowrap" class="NavBoxLinks"><img id="Navbox1_Image55" src="images/treeview/updownright.gif" align="absmiddle" border="0" /><span class="NavLink"><a id="Navbox1_lnkReappraisal" href="forms/Reappraisal_Plan.pdf" target="_blank"> Reappraisal Plan</a></span></td>
+					</tr>
+					<tr>
+						<td nowrap="nowrap" class="NavBoxLinks"><img id="Navbox1_Image57" src="images/treeview/updownright.gif" align="absmiddle" border="0" /><span class="NavLink"><a id="Navbox1_Hyperlink38" href="Utilities.aspx"> Water & Electricity Usage</a></span></td>
+					</tr>
+					
+						<tr>
+							<td nowrap="nowrap" class="NavBoxLinks">
+								<img id="Navbox1_pnlBOARD_board901" src="images/treeview/updownrightcollapsed.gif" align="absmiddle" border="0" /><span class="NavLink">
+								<a id="Navbox1_pnlBOARD_lnkBoard901" href="BOARD/default.aspx"> Administration</a></span></td>
+						</tr>
+					
+					
+					
+						<tr>
+							<td nowrap="nowrap" class="NavBoxLinks">
+								<img id="Navbox1_pnlHR_Image22" src="images/treeview/updownrightcollapsed.gif" align="absmiddle" border="0" /><span class="NavLink">
+								<a id="Navbox1_pnlHR_HyperLink34" href="HR/Default.aspx"> Human Resources</a></span></td>
+						</tr>
+					
+					
+					<tr>
+						<td nowrap="nowrap" class="NavBoxLinks"><img id="Navbox1_Image23" src="images/treeview/updownright.gif" align="absmiddle" border="0" /><span class="NavLink"><a id="Navbox1_Hyperlink8" href="Links.aspx"> Links</a></span></td>
+					</tr>
+					<tr>
+						<td nowrap="nowrap" class="NavBoxLinks"><img id="Navbox1_Image24" src="images/treeview/updownright.gif" align="absmiddle" border="0" /><span class="NavLink"><a id="Navbox1_HyperLink7" href="Contact.aspx"> Contact Us</a></span></td>
+					</tr>
+					<tr>
+						<td nowrap="nowrap" class="NavBoxLinks"><img id="Navbox1_Image47" src="images/treeview/updownright.gif" align="absmiddle" border="0" /><span class="NavLink"><a id="Navbox1_Hyperlink9" href="HelpPage.aspx"> On-line Help</a></span></td>
+					</tr>
+					<tr>
+						<td nowrap="nowrap" class="NavBoxLinks"><img id="Navbox1_Image29" src="images/treeview/upright.gif" align="absmiddle" border="0" /><span class="NavLink"><a id="Navbox1_hrefMobileSite" href="http://m.dallascad.org/"> DCAD Mobile Site</a></span></td>
+					</tr>
+				</tbody>
+			</table>
+		</td>
+	</tr>
+</table>
+</div>
+                        </td>
+                        <td valign="top">
+                            <p><span id="lblPageTitle" class="PageTitle">Find Property By Street Address</span></p>
+                            <P>
+ <span class="SearchLink"><b>Search By:</b>&nbsp;&nbsp;<a href="http://www.dallascad.org/SearchOwner.aspx">Owner&nbsp;Name</a>&nbsp; &nbsp;<a href="http://www.dallascad.org/SearchAcct.aspx">Account&nbsp;Number</a>&nbsp; &nbsp;<a href="http://www.dallascad.org/SearchAddr.aspx">Street&nbsp;Address</a>&nbsp; &nbsp;<a href="http://www.dallascad.org/SearchBiz.aspx">Business&nbsp;Name</a>&nbsp; &nbsp;<a href="https://maps.dcad.org/prd/dpm/">Map</a>&nbsp; &nbsp;</span>
+</P>
+                            
+<p><span id="ufileinfo1_lblufileinfo">If you would like to access the <strong>uFile</strong> System to protest your account, please use the search function from this screen to locate your account and then select the <strong>uFile Online Protest</strong> link from the Account detail screen.</span></p>
+
+                            <table id="tblSearch" cellspacing="1" cellpadding="1" border="0">
+                                <tbody>
+                                    <tr>
+                                        <td width="650">
+                                                <table id="Table2" cellspacing="1" cellpadding="1" border="0" style="WIDTH: 392px; HEIGHT: 190px">
+                                                    <tbody>
+                                                        <tr>
+                                                            <th>
+                                                                Address<br />
+                                                                Number
+                                                            </th>
+                                                            <th>
+                                                                Direction
+                                                            </th>
+                                                            <th>
+                                                                Street Name<br />
+                                                                <font color="#ff0000" size="1">(required)</font>
+                                                            </th>
+                                                        </tr>
+                                                        <tr>
+                                                            <td align="center">
+                                                                <input name="txtAddrNum" type="text" value="5020" maxlength="7" size="7" id="txtAddrNum" />
+                                                            </td>
+                                                            <td align="center" valign="top">
+                                                                <select name="listStDir" id="listStDir">
+	<option selected="selected" value=""></option>
+	<option value="N">N</option>
+	<option value="S">S</option>
+	<option value="E">E</option>
+	<option value="W">W</option>
+	<option value="NE">NE</option>
+	<option value="NW">NW</option>
+	<option value="SE">SE</option>
+	<option value="SW">SW</option>
+
+</select></td>
+                                                            <td align="center" valign="top">
+                                                                <input name="txtStName" type="text" value="JUNIUS" maxlength="23" size="23" id="txtStName" /></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>
+                                                                Building
+                                                            </th>
+                                                            <th>
+                                                                Suite
+                                                            </th>
+                                                            <th>
+                                                                City
+                                                            </th>
+                                                        </tr>
+                                                        <tr>
+                                                            <td align="center">
+                                                                <input name="txtBldgID" type="text" maxlength="7" size="7" id="txtBldgID" />
+                                                            </td>
+                                                            <td align="center">
+                                                                <input name="txtUnitID" type="text" maxlength="7" size="7" id="txtUnitID" />
+                                                            </td>
+                                                            <td align="left" colspan="3">
+                                                                <select name="listCity" id="listCity">
+	<option value="">[ALL]</option>
+	<option value="1">ADDISON                                           </option>
+	<option value="2">BALCH SPRINGS                                     </option>
+	<option value="3">CARROLLTON                                        </option>
+	<option value="6">CEDAR HILL                                        </option>
+	<option value="7">COCKRELL HILL                                     </option>
+	<option value="9">COMBINE                                           </option>
+	<option value="10">COPPELL                                           </option>
+	<option selected="selected" value="12">DALLAS                                            </option>
+	<option value="15">DESOTO                                            </option>
+	<option value="16">DUNCANVILLE                                       </option>
+	<option value="17">FARMERS BRANCH                                    </option>
+	<option value="18">FERRIS                                            </option>
+	<option value="20">GARLAND                                           </option>
+	<option value="22">GLENN HEIGHTS                                     </option>
+	<option value="24">GRAND PRAIRIE                                     </option>
+	<option value="28">GRAPEVINE                                         </option>
+	<option value="29">HIGHLAND PARK                                     </option>
+	<option value="30">HUTCHINS                                          </option>
+	<option value="31">IRVING                                            </option>
+	<option value="32">LANCASTER                                         </option>
+	<option value="33">LEWISVILLE                                        </option>
+	<option value="34">MESQUITE                                          </option>
+	<option value="37">NO TOWN                                           </option>
+	<option value="38">OVILLA                                            </option>
+	<option value="39">RICHARDSON                                        </option>
+	<option value="40">ROWLETT                                           </option>
+	<option value="42">SACHSE                                            </option>
+	<option value="43">SEAGOVILLE                                        </option>
+	<option value="45">SUNNYVALE                                         </option>
+	<option value="46">UNIVERSITY PARK                                   </option>
+	<option value="48">WILMER                                            </option>
+	<option value="49">WYLIE                                             </option>
+
+</select>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th align="left" colspan="3">
+                                                                Address Number Range Search
+                                                            </th>
+                                                        </tr>
+                                                        <tr>
+                                                            <td align="left" colspan="2">
+                                                                <font size="1">From</font>
+                                                                <input name="txtAddrNum1" type="text" maxlength="7" size="7" id="txtAddrNum1" />
+                                                            </td>
+                                                            <td align="left" colspan="2">
+                                                                <font size="1">To</font>
+                                                                <input name="txtAddrNum2" type="text" maxlength="7" size="7" id="txtAddrNum2" />
+                                                            </td>
+                                                            <td align="right" colspan="2">
+                                                                <input type="submit" name="cmdSubmit" value="Search" onclick="javascript:WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(&quot;cmdSubmit&quot;, &quot;&quot;, true, &quot;&quot;, &quot;&quot;, false, false))" language="javascript" id="cmdSubmit" />
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            <font size="2">Hints:</font>
+                                            <ul>
+                                                <li>
+                                                    <font size="1">Do not enter the street type such as Street, Drive or Lane.</font>
+                                                </li>
+                                                <li>
+                                                    <font size="1">To find a single address, fill in one Address Number field. To find a range of addresses, fill in both.</font>
+                                                </li>
+                                                <li>
+                                                    <font size="1">If no results are found, try entering less information.</font>
+                                                </li>
+                                                <li>
+                                                    <font size="1">Use % as a wildcard. For example, %oak in the street name to find all streets with "oak" somewhere in the name.</font>
+                                                </li>
+                                                <li>
+                                                    <font size="1">If searching for a one letter street name, such as X,Y or Z street, you must add the wildcard after the letter. For Example, X%.</font>
+                                                </li>
+                                            </ul>
+                                        </td>
+                                        <td valign="top" align="center">
+                                            <table>
+                                                <tr>
+                                                    <th>
+                                                        <font size="2">Account Type</font></th>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <span id="AcctTypeCheckList1_chkAcctType"><font size="2"><input id="AcctTypeCheckList1_chkAcctType_0" type="checkbox" name="AcctTypeCheckList1:chkAcctType:0" checked="checked" /><label for="AcctTypeCheckList1_chkAcctType_0">RESIDENTIAL</label><br><input id="AcctTypeCheckList1_chkAcctType_1" type="checkbox" name="AcctTypeCheckList1:chkAcctType:1" checked="checked" /><label for="AcctTypeCheckList1_chkAcctType_1">COMMERCIAL</label><br><input id="AcctTypeCheckList1_chkAcctType_2" type="checkbox" name="AcctTypeCheckList1:chkAcctType:2" checked="checked" /><label for="AcctTypeCheckList1_chkAcctType_2">BPP</label></font></span>
+
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <table id="tblHomestead" border="0">
+	<tr align="center" valign="middle">
+		<td><font color="Blue">
+                                        The Residence Homestead Exemption Application form is available from the details page of your
+                                        account. You may search for your account by owner, by account or by address. Click the BLUE property address link
+                                        to view the details of your account. Select the link “Print Homestead Exemption Form”.
+                                    </font></td>
+	</tr>
+</table>
+                            <div>
+                                
+<P><table cellspacing="0" align="Center" rules="all" border="1" id="SearchResults1_dgResults">
+	<tr>
+		<td align="center" colspan="5"><font size="2"><span>&lt; PREV</span>&nbsp;&nbsp;&nbsp;matches 1 - 1 of 1 properties.&nbsp;&nbsp;&nbsp;&nbsp;<span>NEXT &gt;</span></font></td><td align="center" colspan="1"><font size="2">Page 1 of 1</font></td>
+	</tr><tr nowrap="nowrap" align="center">
+		<td width="3%"><font size="2">#</font></td><td width="25%"><font size="2">Property Address</font></td><td width="15%"><font size="2">City</font></td><td width="25%"><font size="2">Owner Name / Business Name</font></td><td width="15%"><font size="2">Total Value</font></td><td width="17%"><font size="2">Type</font></td>
+	</tr><tr>
+		<td align="center"><font size="2">
+					<span id="SearchResults1_dgResults__ctl3_lblRecNum">1</span>
+				</font></td><td><font size="2">
+					<a href='AcctDetailRes.aspx?ID=00000120685000000' target="_self" id="Hyperlink1">
+						5020  JUNIUS ST  
+					</a>
+				</font></td><td align="center"><font size="2">DALLAS                                            </font></td><td align="center"><font size="2">
+					<span>OSBORN ANDREW L & KARI T HOUSTON                  </span>
+				</font></td><td align="center"><font size="2">
+					<span>$438,430</span>
+				</font></td><td align="center" bgcolor="LightYellow"><font size="2">
+					<span>RESIDENTIAL</span>
+				</font></td>
+	</tr><tr>
+		<td align="center" colspan="5"><font size="2"><span>&lt; PREV</span>&nbsp;&nbsp;&nbsp;matches 1 - 1 of 1 properties.&nbsp;&nbsp;&nbsp;&nbsp;<span>NEXT &gt;</span></font></td><td align="center" colspan="1"><font size="2">Page 1 of 1</font></td>
+	</tr>
+</table></P>
+<P align="center"></P>
+
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+<HR SIZE="1">
+<font face="Arial" size="2">
+	<P align="center"><FONT size="2">©
+				<span id="Footer1_lblYear">2017</span>
+				Dallas Central Appraisal District.<br />
+			All Rights Reserved.<br />
+		</FONT><br />
+		
+	</P>
+</font>
+</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+        </form>
+    </body>
+</html>

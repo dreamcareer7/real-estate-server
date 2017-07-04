@@ -1,5 +1,7 @@
 node_modules
+package-lock.json
 docs
+istanbul
 lib/configs/development.js
 lib/configs/newrelic.js
 scripts/ntreis/timing.config.js

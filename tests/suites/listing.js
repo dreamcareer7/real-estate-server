@@ -1,5 +1,9 @@
 const listing = require('./data/listing.js')
 const listing_response = require('./expected_objects/listing.js')
+const subdivision_response = require('./expected_objects/subdivision.js')
+const county_response = require('./expected_objects/county.js')
+const area_response = require('./expected_objects/area.js')
+
 const uuid = require('node-uuid')
 
 const by_mui = (cb) => {
@@ -81,6 +85,75 @@ const getListing404 = (cb) => {
     .expectStatus(404)
 }
 
+const searchSubdivisions = cb => {
+  return frisby.create('search for a subdivision')
+    .get('/subdivisions/search?q=Arbor')
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      info: {
+        count: 1
+      }
+    })
+    .expectJSON({
+      data: [subdivision_response]
+    })
+}
+
+const searchCounties = cb => {
+  return frisby.create('search for a counry')
+    .get('/counties/search?q=Dallas')
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      info: {
+        count: 1
+      }
+    })
+    .expectJSON({
+      data: [county_response]
+    })
+}
+
+const searchMlsAreasByQuery = cb => {
+  return frisby.create('search for an mls area by query')
+    .get('/areas/search?q=Dallas Northeast')
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      data: [
+        {
+          title: 'Dallas Northeast',
+          number: 18,
+          parent: 0
+        }
+      ],
+      info: {
+        count: 1
+      }
+    })
+    .expectJSON({
+      data: [area_response]
+    })
+}
+
+const searchMlsAreasByParent = cb => {
+  return frisby.create('search for an mls area by parent')
+    .get('/areas/search?parents[]=18')
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      data: [],
+    })
+    .expectJSON({
+      data: [area_response]
+    })
+}
+
 module.exports = {
   by_mui,
   by_mui404,
@@ -88,5 +161,9 @@ module.exports = {
   by_mls404,
   getListing,
   getListing404,
-  by_query
+  by_query,
+  searchSubdivisions,
+  searchCounties,
+  searchMlsAreasByQuery,
+  searchMlsAreasByParent
 }
