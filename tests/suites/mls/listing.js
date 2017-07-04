@@ -88,7 +88,10 @@ module.exports = {
     'surface_rights': '',
     'year_built_details': 'Preowned',
     'zoning': '',
-    'security_system_yn': true
+    'security_system_yn': true,
+    'number_of_pets_allowed': 5,
+    'furnished_yn': true,
+    'fenced_yard_yn': true,
   },
   'listing': {
     'currency': 'USD',
@@ -180,6 +183,7 @@ module.exports = {
     'owner_name': 'SEE AGENT',
     'seller_type': 'Individual(s)',
     'occupancy': 'Vacant',
-    'private_remarks': 'Showings begin Friday, Dec.7th.'
+    'private_remarks': 'Showings begin Friday, Dec.7th.',
+    'application_fee_yn': true
   }
 }
