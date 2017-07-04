@@ -7,10 +7,10 @@ const listings_filters = fs.readFileSync('./lib/sql/alert/listings_filters.mv.sq
 
 const up = [
   'ALTER TABLE alerts ADD number_of_pets_allowed smallint',
-  'ALTER TABLE alerts application_fee boolean',
-  'ALTER TABLE alerts appliances boolean',
-  'ALTER TABLE alerts furnished boolean',
-  'ALTER TABLE alerts fenced_yard boolean',
+  'ALTER TABLE alerts ADD application_fee boolean',
+  'ALTER TABLE alerts ADD appliances boolean',
+  'ALTER TABLE alerts ADD furnished boolean',
+  'ALTER TABLE alerts ADD fenced_yard boolean',
 
   'ALTER TABLE listings ADD application_fee_yn boolean',
   'ALTER TABLE properties ADD furnished_yn boolean',
@@ -23,6 +23,7 @@ const up = [
   'UPDATE properties SET furnished_yn = (SELECT CASE WHEN LENGTH((value->>\'FurnishedYN\')) < 1 THEN NULL ELSE (value->>\'FurnishedYN\')::boolean END FROM mls_data WHERE matrix_unique_id = properties.matrix_unique_id)',
   'UPDATE properties SET fenced_yard_yn = (SELECT CASE WHEN LENGTH((value->>\'FencedYardYN\')) < 1 THEN NULL ELSE (value->>\'FencedYardYN\')::boolean END FROM mls_data WHERE matrix_unique_id = properties.matrix_unique_id)',
 
+  'DROP MATERIALIZED VIEW listings_filters',
   listings_filters
 ]
 
