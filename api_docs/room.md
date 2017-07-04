@@ -19,9 +19,6 @@ Other concepts of Rechat like Alerts and recommendations are heavily linked to r
 ### Get Room [GET /rooms/{id}]
 <!-- include(tests/room/getRoom.md) -->
 
-### Get Room Media [GET /rooms/{id}/media]
-<!-- include(tests/room/getRoomMedia.md) -->
-
 ### Add Users to a room [POST /rooms/{id}/users]
 You can add multiple users to a room in the same call
 <!-- include(tests/room/addUser.md) -->

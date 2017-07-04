@@ -31,7 +31,7 @@ note                  |    string       |                 | A small note for thi
 <!-- include(tests/contact/create.md) -->
 
 ### Add attributes to a contact [POST /contacts/:id/attributes]
-<!-- include(tests/contact/addAttributes.md) -->
+<!-- include(tests/contact/addAttribute.md) -->
 
 ### Deleting an attribute [DELETE /contacts/:id/attributes/:id]
 <!-- include(tests/contact/removeAttribute.md) -->
