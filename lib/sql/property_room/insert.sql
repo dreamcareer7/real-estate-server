@@ -29,5 +29,6 @@ ON CONFLICT (matrix_unique_id) DO UPDATE SET
   features = $6,
   listing_mui = $7,
   level = $8,
-  room_type = $9
+  room_type = $9,
+  updated_at = CLOCK_TIMESTAMP()
   WHERE property_rooms.matrix_unique_id = $1;

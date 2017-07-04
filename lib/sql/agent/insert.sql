@@ -36,5 +36,6 @@ ON CONFLICT (matrix_unique_id) DO UPDATE SET
   office_mlsid = $12,
   work_phone = $13,
   generational_name = $14,
-  matrix_modified_dt = $16
+  matrix_modified_dt = $16,
+  updated_at = CLOCK_TIMESTAMP()
   WHERE agents.matrix_unique_id = $15
