@@ -122,6 +122,36 @@ const patchUserTimeZone = (cb) => {
     .expectStatus(204)
 }
 
+const openiOSApp = (cb) => {
+  return frisby.create('record activity for user')
+    .post('/users/self/timeline', {
+      action: 'UserOpenedIOSApp',
+      object_class: 'ios_app',
+      object: {
+        type: 'ios_app',
+        version: '0.0.0'
+      }
+    })
+    .after(cb)
+    .expectStatus(200)
+}
+
+const getTimeline = (cb) => {
+  return frisby.create('get list of user activities (timeline)')
+    .get(`/users/${results.user.create.data.id}/timeline`)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      data: [
+        {
+        }
+      ],
+      info: {
+      }
+    })
+}
+
 const deleteAddress = (cb) => {
   return frisby.create('delete address')
     .delete('/users/self/address')
@@ -153,6 +183,8 @@ module.exports = {
   setAddress,
   setAddress400,
   patchUserTimeZone,
+  openiOSApp,
+  getTimeline,
   deleteAddress,
   deleteUser
 }

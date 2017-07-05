@@ -203,6 +203,38 @@ const removeGibberishAttribute = (cb) => {
     .expectStatus(400)
 }
 
+const addActivity = (cb) => {
+  return frisby.create('record activity for contact')
+    .post(`/contacts/${results.contact.create.data[0].id}/timeline`, {
+      action: 'UserCalledContact',
+      object_class: 'phone_call',
+      object: {
+        type: 'phone_call',
+        duration: 180
+      }
+    })
+    .after(cb)
+    .expectStatus(200)
+}
+
+const getTimeline = (cb) => {
+  return frisby.create('get list of contact activities (timeline)')
+    .get(`/contacts/${results.contact.create.data[0].id}/timeline`)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      data: [
+        {
+        }
+      ],
+      info: {
+        count: 3,
+        total: 3
+      }
+    })
+}
+
 const getContacts = (cb) => {
   results.user.create.data.type = 'compact_user'
 
@@ -317,6 +349,8 @@ module.exports = {
   addInvalidEmail,
   removeNonExistingAttribute,
   removeGibberishAttribute,
+  addActivity,
+  getTimeline,
   deleteContact,
   deleteContactWorked
 }
