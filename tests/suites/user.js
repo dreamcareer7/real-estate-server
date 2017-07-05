@@ -122,7 +122,68 @@ const patchUserTimeZone = (cb) => {
     .expectStatus(204)
 }
 
-const openiOSApp = (cb) => {
+const addInvalidActivityByAction = (cb) => {
+  return frisby.create('record an activity by invalid action')
+    .post('/users/self/timeline', {
+      action: 'BombasticActivity',
+      object_class: 'phone_call',
+      object: {
+        type: 'phone_call',
+        duration: 180
+      }
+    })
+    .after(cb)
+    .expectStatus(400)
+}
+
+const addInvalidActivityByType = (cb) => {
+  return frisby.create('record an activity by invalid type')
+    .post('/users/self/timeline', {
+      action: 'UserCalledContact',
+      object_class: 'bombastic_call',
+      object: {
+        type: 'bombastic_call',
+      }
+    })
+    .after(cb)
+    .expectStatus(400)
+}
+
+const addInvalidActivityActionMissing = (cb) => {
+  return frisby.create('record an activity when action is missing')
+    .post('/users/self/timeline', {
+      object_class: 'UserCalledContact',
+      object: {
+        type: 'phone_call',
+      }
+    })
+    .after(cb)
+    .expectStatus(400)
+}
+
+const addInvalidActivityObjectClassMissing = (cb) => {
+  return frisby.create('record an activity when object class is missing')
+    .post('/users/self/timeline', {
+      action: 'UserCalledContact',
+      object: {
+        type: 'phone_call',
+      }
+    })
+    .after(cb)
+    .expectStatus(400)
+}
+
+const addInvalidActivityObjectMissing = (cb) => {
+  return frisby.create('record an activity when object is missing')
+    .post('/users/self/timeline', {
+      action: 'UserCalledContact',
+      object_class: 'phone_call',
+    })
+    .after(cb)
+    .expectStatus(400)
+}
+
+const addActivity = (cb) => {
   return frisby.create('record activity for user')
     .post('/users/self/timeline', {
       action: 'UserOpenedIOSApp',
@@ -183,7 +244,12 @@ module.exports = {
   setAddress,
   setAddress400,
   patchUserTimeZone,
-  openiOSApp,
+  addInvalidActivityByAction,
+  addInvalidActivityByType,
+  addInvalidActivityActionMissing,
+  addInvalidActivityObjectClassMissing,
+  addInvalidActivityObjectMissing,
+  addActivity,
   getTimeline,
   deleteAddress,
   deleteUser

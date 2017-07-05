@@ -203,6 +203,99 @@ const removeGibberishAttribute = (cb) => {
     .expectStatus(400)
 }
 
+const addInvalidActivityByAction = (cb) => {
+  return frisby.create('record an activity by invalid action')
+    .post(`/contacts/${results.contact.create.data[0].id}/timeline`, {
+      action: 'BombasticActivity',
+      object_class: 'phone_call',
+      object: {
+        type: 'phone_call',
+        duration: 180
+      }
+    })
+    .after(cb)
+    .expectStatus(400)
+}
+
+const addInvalidActivityByType = (cb) => {
+  return frisby.create('record an activity by invalid type')
+    .post(`/contacts/${results.contact.create.data[0].id}/timeline`, {
+      action: 'UserCalledContact',
+      object_class: 'bombastic_call',
+      object: {
+        type: 'bombastic_call',
+      }
+    })
+    .after(cb)
+    .expectStatus(400)
+}
+
+const addInvalidActivityActionMissing = (cb) => {
+  return frisby.create('record an invalid activity when action is missing')
+    .post(`/contacts/${results.contact.create.data[0].id}/timeline`, {
+      object_class: 'UserCalledContact',
+      object: {
+        type: 'phone_call',
+      }
+    })
+    .after(cb)
+    .expectStatus(400)
+}
+
+const addInvalidActivityObjectClassMissing = (cb) => {
+  return frisby.create('record an invalid activity when object class is missing')
+    .post(`/contacts/${results.contact.create.data[0].id}/timeline`, {
+      action: 'UserCalledContact',
+      object: {
+        type: 'phone_call',
+      }
+    })
+    .after(cb)
+    .expectStatus(400)
+}
+
+const addInvalidActivityObjectMissing = (cb) => {
+  return frisby.create('record an invalid activity when object is missing')
+    .post(`/contacts/${results.contact.create.data[0].id}/timeline`, {
+      action: 'UserCalledContact',
+      object_class: 'phone_call',
+    })
+    .after(cb)
+    .expectStatus(400)
+}
+
+const addActivityToNonExistingContact = (cb) => {
+  const id = uuid.v1()
+
+  return frisby.create('recording an activity for non-existing contact')
+    .post(`/contacts/${id}/timeline`, {
+      action: 'UserCalledContact',
+      object_class: 'phone_call',
+      object: {
+        type: 'phone_call',
+        duration: 180
+      }
+    })
+    .after(cb)
+    .expectStatus(404)
+}
+
+const addActivityToGibberishContact = (cb) => {
+  const id = 123456
+
+  return frisby.create('record an activity for gibberish contact id')
+    .post(`/contacts/${id}/timeline`, {
+      action: 'UserCalledContact',
+      object_class: 'phone_call',
+      object: {
+        type: 'phone_call',
+        duration: 180
+      }
+    })
+    .after(cb)
+    .expectStatus(400)
+}
+
 const addActivity = (cb) => {
   return frisby.create('record activity for contact')
     .post(`/contacts/${results.contact.create.data[0].id}/timeline`, {
@@ -349,6 +442,13 @@ module.exports = {
   addInvalidEmail,
   removeNonExistingAttribute,
   removeGibberishAttribute,
+  addInvalidActivityByType,
+  addInvalidActivityByAction,
+  addInvalidActivityActionMissing,
+  addInvalidActivityObjectClassMissing,
+  addInvalidActivityObjectMissing,
+  addActivityToNonExistingContact,
+  addActivityToGibberishContact,
   addActivity,
   getTimeline,
   deleteContact,
