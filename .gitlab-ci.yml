@@ -7,7 +7,7 @@ stages:
 
 variables:
   CONTAINER_IMAGE: registry.gitlab.com/rechat/server:$CI_BUILD_REF_NAME
-  DOCS_IMAGE: registry.gitlab.com/rechat/docs:$CI_BUILD_REF_NAME
+  DOCS_IMAGE: registry.gitlab.com/rechat/server:$CI_BUILD_REF_NAME_docs
   POSTGRES_DB: rechat
   POSTGRES_USER: rechat
   POSTGRES_PASSWORD: rechat
