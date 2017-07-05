@@ -33,15 +33,6 @@ if (options.tests) {
 } else
   generate()
 
-const express = require('express')
-const app = express()
-
-const port = process.env.PORT || 3080
-require('http').Server(app)
-
-app.use(express.static('/tmp/rechat'))
-app.listen(port)
-
 function generate() {
   const files = fs.readdirSync('/tmp/rechat')
     .filter(filename => {
@@ -60,6 +51,7 @@ function generate() {
       return console.log('Error while generating docs', err)
 
     console.log('Done')
+    process.exit()
   }
 
   async.map(files, generateMd, done)
