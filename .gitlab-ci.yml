@@ -40,4 +40,4 @@ test:
     - docker cp html:/tmp/rechat /tmp/rechat
     - docker run -d --name docs nginx:alpine
     - docker cp /tmp/rechat docs:/usr/share/nginx/html
-    - docker push $CONTAINER_IMAGE
+    - docker push $DOCS_IMAGE
