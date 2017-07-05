@@ -7,6 +7,7 @@ stages:
 
 variables:
   CONTAINER_IMAGE: registry.gitlab.com/rechat/server:$CI_BUILD_REF_NAME
+  DOCS_IMAGE: registry.gitlab.com/rechat/docs:$CI_BUILD_REF_NAME
   POSTGRES_DB: rechat
   POSTGRES_USER: rechat
   POSTGRES_PASSWORD: rechat
@@ -39,4 +40,4 @@ test:
     - docker cp html:/tmp/rechat /tmp/rechat
     - docker run -d --name docs nginx:alpine
     - docker cp /tmp/rechat docs:/usr/share/nginx/html
-    - docker push docs
+    - docker push $CONTAINER_IMAGE
