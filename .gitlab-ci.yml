@@ -36,8 +36,4 @@ test:
     - docker cp /tmp/rechat docs:/usr/share/nginx/html
     - docker push $DOCS_IMAGE
 
-variables:
-  POSTGRES_DB: rechat
-  POSTGRES_USER: rechat
-  POSTGRES_PASSWORD: rechat
 
