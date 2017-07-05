@@ -3,6 +3,7 @@ image: docker:git
 stages:
   - build
   - test
+  - docs
 
 variables:
   CONTAINER_IMAGE: registry.gitlab.com/rechat/server:$CI_BUILD_REF_NAME
@@ -34,3 +35,8 @@ test:
     - export DATABASE_URL="postgres://$POSTGRES_USER:$POSTGRES_PASSWORD@db/$POSTGRES_DB"
     - ENVS=`env | sed -n '/^[^\t]/s/=.*//p' | sed '/^$/d' | sed 's/^/-e /g' | tr '\n' ' '`
     - docker run --link db:db --link redis:redis --link db:db $ENVS $CONTAINER_IMAGE npm run coverage
+    - docker run --name html --link db:db --link redis:redis --link db:db $ENVS $CONTAINER_IMAGE npm run docs
+    - docker cp html:/tmp/rechat /tmp/rechat
+    - docker run -d --name docs nginx:alpine
+    - docker cp /tmp/rechat docs:/usr/share/nginx/html
+    - docker push docs
