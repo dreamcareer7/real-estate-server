@@ -8,8 +8,8 @@ const listings_filters = fs.readFileSync('./lib/sql/alert/listings_filters.mv.sq
 const up = [
 
   'ALTER TABLE alerts ADD COLUMN pets boolean DEFAULT NULL',
-  'DROP MATERIALIZED VIEW listings_filters',
-  listings_filters
+//   'DROP MATERIALIZED VIEW listings_filters',
+//   listings_filters
 ]
 
 const down = [
