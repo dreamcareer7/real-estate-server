@@ -2,8 +2,8 @@
 
 const async = require('async')
 const db = require('../lib/utils/db')
-const fs = require('fs')
-const listings_filters = fs.readFileSync('./lib/sql/alert/listings_filters.mv.sql').toString()
+// const fs = require('fs')
+// const listings_filters = fs.readFileSync('./lib/sql/alert/listings_filters.mv.sql').toString()
 
 const up = [
 

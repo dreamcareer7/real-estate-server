@@ -1,6 +1,3 @@
-const config = require('../../lib/config.js')
-
-const user = require('./data/user.js')
 const room = require('./data/room.js')
 
 registerSuite('room', ['create'])
