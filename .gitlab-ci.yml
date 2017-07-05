@@ -7,7 +7,7 @@ stages:
 
 variables:
   CONTAINER_IMAGE: registry.gitlab.com/rechat/server:$CI_BUILD_REF_NAME
-  DOCS_IMAGE: registry.gitlab.com/rechat/server:$CI_BUILD_REF_NAME_docs
+  DOCS_IMAGE: registry.gitlab.com/rechat/server:docs
   POSTGRES_DB: rechat
   POSTGRES_USER: rechat
   POSTGRES_PASSWORD: rechat
@@ -17,16 +17,12 @@ before_script:
 
 build:
   stage: build
-  services:
-    - docker:dind
   script:
     - docker build -t $CONTAINER_IMAGE .
     - docker push $CONTAINER_IMAGE
 
 test:
   stage: test
-  services:
-    - docker:dind
   script:
     - docker run -d -e POSTGRES_DB -e POSTGRES_USER -e POSTGRES_PASSWORD --name db -p 5432:5432 mdillon/postgis:9.6-alpine
     - docker run -d --name redis -p 6379:6379 redis:latest
