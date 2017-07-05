@@ -51,7 +51,7 @@ function generate() {
       return console.log('Error while generating docs', err)
 
     console.log('Done')
-    process.exit()
+    process.exit(0)
   }
 
   async.map(files, generateMd, done)
