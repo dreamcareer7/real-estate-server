@@ -36,14 +36,11 @@ test:
     - docker cp html:/tmp/rechat /tmp/rechat
     - docker run -d --name docs nginx:alpine
     - docker cp /tmp/rechat docs:/usr/share/nginx/html
-    - docker save html > documentation.tar
   artifacts:
     paths:
       - documentation.tar
       - istanbul/lcov-report
 
   after_script:
-    - docker kill db
-    - docker rm db
-    - docker kill redis
-    - docker rm redis
+    - docker kill db redis html
+    - docker rm db redis html
