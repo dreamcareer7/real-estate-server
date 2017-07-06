@@ -213,6 +213,48 @@ const getTimeline = (cb) => {
     })
 }
 
+const initiatePasswordReset = (cb) => {
+  return frisby.create('initiate password reset')
+  .post('/users/reset_password', {
+    email: 'test@rechat.com'
+  })
+  .after(cb)
+  .expectStatus(204)
+}
+
+const resetPasswordByTokenEmail = (cb) => {
+  return frisby.create('reset password by token and email')
+  .patch('/users/password', {
+    email: 'test@rechat.com',
+    token: 'a',
+    password: '123456'
+  })
+  .after(cb)
+  .expectStatus(204)
+}
+
+const resetPasswordByShadowTokenEmail = (cb) => {
+  return frisby.create('reset password by shadow token and email')
+  .patch('/users/password', {
+    email: 'test@rechat.com',
+    shadow_token: '206cc0a36c8ecfa37639a4d0dc682c73',
+    password: '123456'
+  })
+  .after(cb)
+  .expectStatus(204)
+}
+
+const resetPasswordByShadowTokenPhone = (cb) => {
+  return frisby.create('reset password by shadow token and phone number')
+  .patch('/users/password', {
+    phone_number: '+4368120265807',
+    shadow_token: '206cc0a36c8ecfa37639a4d0dc682c73',
+    password: '123456'
+  })
+  .after(cb)
+  .expectStatus(204)
+}
+
 const deleteAddress = (cb) => {
   return frisby.create('delete address')
     .delete('/users/self/address')
@@ -251,6 +293,10 @@ module.exports = {
   addInvalidActivityObjectMissing,
   addActivity,
   getTimeline,
+  initiatePasswordReset,
+  resetPasswordByTokenEmail,
+  resetPasswordByShadowTokenEmail,
+  resetPasswordByShadowTokenPhone,
   deleteAddress,
   deleteUser
 }
