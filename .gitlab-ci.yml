@@ -24,10 +24,10 @@ build:
 test:
   stage: test
   script:
-    - docker run -d -e POSTGRES_DB -e POSTGRES_USER -e POSTGRES_PASSWORD -p 5432:5432 --name db mdillon/postgis:9.6-alpine
+    - docker run -d -e POSTGRES_DB -e POSTGRES_USER -e POSTGRES_PASSWORD --name db mdillon/postgis:9.6-alpine
     - docker run -d --name redis -p 63799:6379 redis:latest
     - docker cp ./data/minimal.sql db:/minimal.sql
-    - find /var/run
+    - docker exec db find /var/run
     - docker exec db sh -c "psql -U $POSTGRES_USER $POSTGRES_DB < /minimal.sql"
     - export REDIS_URL="redis://redis:6379"
     - export DATABASE_URL="postgres://$POSTGRES_USER:$POSTGRES_PASSWORD@db/$POSTGRES_DB"
