@@ -222,6 +222,15 @@ const initiatePasswordReset = (cb) => {
   .expectStatus(204)
 }
 
+const initiatePasswordResetEmailNotFound = (cb) => {
+  return frisby.create('initiate password reset for a non-existing user')
+  .post('/users/reset_password', {
+    email: 'test@rechat.comcom'
+  })
+  .after(cb)
+  .expectStatus(404)
+}
+
 const resetPasswordByTokenEmail = (cb) => {
   return frisby.create('reset password by token and email')
   .patch('/users/password', {
@@ -231,6 +240,38 @@ const resetPasswordByTokenEmail = (cb) => {
   })
   .after(cb)
   .expectStatus(204)
+}
+
+const resetPasswordByTokenEmailNoNewPassword = (cb) => {
+  return frisby.create('reset password where no new password is specified')
+  .patch('/users/password', {
+    email: 'test@rechat.com',
+    token: 'a',
+  })
+  .after(cb)
+  .expectStatus(400)
+}
+
+const resetPasswordByTokenEmailInvalidEmail = (cb) => {
+  return frisby.create('reset password by token for non-existing user')
+  .patch('/users/password', {
+    email: 'test@rechat.comcom',
+    token: 'a',
+    password: '123456'
+  })
+  .after(cb)
+  .expectStatus(404)
+}
+
+const resetPasswordByTokenEmailInvalidToken = (cb) => {
+  return frisby.create('reset password by token where token is invalid')
+  .patch('/users/password', {
+    email: 'test@rechat.com',
+    token: 'b',
+    password: '123456'
+  })
+  .after(cb)
+  .expectStatus(403)
 }
 
 const resetPasswordByShadowTokenEmail = (cb) => {
@@ -244,6 +285,28 @@ const resetPasswordByShadowTokenEmail = (cb) => {
   .expectStatus(204)
 }
 
+const resetPasswordByShadowTokenEmailInvalidEmail = (cb) => {
+  return frisby.create('reset password by shadow token and email for non-existing user')
+  .patch('/users/password', {
+    email: 'test@rechat.comcom',
+    shadow_token: '206cc0a36c8ecfa37639a4d0dc682c73',
+    password: '123456'
+  })
+  .after(cb)
+  .expectStatus(404)
+}
+
+const resetPasswordByShadowTokenEmailInvalidToken = (cb) => {
+  return frisby.create('reset password by shadow token and email where token is invalid')
+  .patch('/users/password', {
+    email: 'test@rechat.com',
+    shadow_token: 'bombastictoken',
+    password: '123456'
+  })
+  .after(cb)
+  .expectStatus(403)
+}
+
 const resetPasswordByShadowTokenPhone = (cb) => {
   return frisby.create('reset password by shadow token and phone number')
   .patch('/users/password', {
@@ -253,6 +316,28 @@ const resetPasswordByShadowTokenPhone = (cb) => {
   })
   .after(cb)
   .expectStatus(204)
+}
+
+const resetPasswordByShadowTokenPhoneInvalidToken = (cb) => {
+  return frisby.create('reset password by shadow token and phone number')
+  .patch('/users/password', {
+    phone_number: '+4368120265807',
+    shadow_token: 'bombastictoken',
+    password: '123456'
+  })
+  .after(cb)
+  .expectStatus(403)
+}
+
+const resetPasswordByShadowTokenPhoneInvalidPhone = (cb) => {
+  return frisby.create('reset password by shadow token and phone number for non-existing user')
+  .patch('/users/password', {
+    phone_number: '+4300000000000',
+    shadow_token: '206cc0a36c8ecfa37639a4d0dc682c73',
+    password: '123456'
+  })
+  .after(cb)
+  .expectStatus(404)
 }
 
 const deleteAddress = (cb) => {
@@ -293,9 +378,17 @@ module.exports = {
   addInvalidActivityObjectMissing,
   addActivity,
   getTimeline,
+  initiatePasswordResetEmailNotFound,
   initiatePasswordReset,
+  resetPasswordByTokenEmailNoNewPassword,
+  resetPasswordByTokenEmailInvalidEmail,
+  resetPasswordByTokenEmailInvalidToken,
   resetPasswordByTokenEmail,
+  resetPasswordByShadowTokenEmailInvalidEmail,
+  resetPasswordByShadowTokenEmailInvalidToken,
   resetPasswordByShadowTokenEmail,
+  resetPasswordByShadowTokenPhoneInvalidPhone,
+  resetPasswordByShadowTokenPhoneInvalidToken,
   resetPasswordByShadowTokenPhone,
   deleteAddress,
   deleteUser
