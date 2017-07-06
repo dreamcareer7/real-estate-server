@@ -39,5 +39,7 @@ test:
     - docker cp /tmp/rechat docs:/usr/share/nginx/html
     - docker push $DOCS_IMAGE
   after_script:
-    - docker kill /db
-    - docker kill /redis
+    - docker kill db
+    - docker rm db
+    - docker kill redis
+    - docker rm redis
