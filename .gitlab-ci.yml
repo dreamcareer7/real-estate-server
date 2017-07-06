@@ -24,8 +24,8 @@ build:
 test:
   stage: test
   script:
-    - docker run -d -e POSTGRES_DB -e POSTGRES_USER -e POSTGRES_PASSWORD --name db mdillon/postgis:9.6-alpine
-    - docker run -d --name redis redis:latest
+    - docker run -d -e POSTGRES_DB -e POSTGRES_USER -e POSTGRES_PASSWORD --name db -p 55432:5432 mdillon/postgis:9.6-alpine
+    - docker run -d --name redis -p 66379:6379 redis:latest
     - docker cp ./data/minimal.sql db:/minimal.sql
     - docker exec db sh -c "psql -U $POSTGRES_USER $POSTGRES_DB < /minimal.sql"
     - export REDIS_URL="redis://redis:6379"
@@ -37,3 +37,6 @@ test:
     - docker run -d --name docs nginx:alpine
     - docker cp /tmp/rechat docs:/usr/share/nginx/html
     - docker push $DOCS_IMAGE
+  after_script:
+    - docker rm /db
+    - docker rm /redis
