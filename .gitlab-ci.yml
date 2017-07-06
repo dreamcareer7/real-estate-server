@@ -24,7 +24,7 @@ test:
   stage: test
   script:
     - docker run -d -e POSTGRES_DB -e POSTGRES_USER -e POSTGRES_PASSWORD --name db mdillon/postgis:9.6-alpine
-    - sleep 5
+    - sleep 10
     - docker run -d --name redis -p 63799:6379 redis:latest
     - docker cp ./data/minimal.sql db:/minimal.sql
     - docker exec db sh -c "psql -U $POSTGRES_USER $POSTGRES_DB < /minimal.sql"
