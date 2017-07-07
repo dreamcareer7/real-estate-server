@@ -25,7 +25,7 @@ test:
   script:
     - docker run -d -e POSTGRES_DB -e POSTGRES_USER -e POSTGRES_PASSWORD --name db mdillon/postgis:9.6-alpine
     - sleep 10
-    - docker run -d --name redis -p 63799:6379 redis:latest
+    - docker run -d --name redis redis:latest
     - docker cp ./data/minimal.sql db:/minimal.sql
     - docker exec db sh -c "psql -U $POSTGRES_USER $POSTGRES_DB < /minimal.sql"
     - export REDIS_URL="redis://redis:6379"
@@ -38,8 +38,7 @@ test:
     - docker cp /tmp/rechat docs:/usr/share/nginx/html
   artifacts:
     paths:
-      - documentation.tar
-      - istanbul/lcov-report
+      - istanbul
 
   after_script:
     - docker kill db redis html
