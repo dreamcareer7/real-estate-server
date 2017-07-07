@@ -41,7 +41,9 @@ test:
       - istanbul
 
   before_script:
-    - docker kill db redis docs; docker rm db redis docs;
+    - docker kill db redis docs || true
+    - docker rm db redis docs || true
 
   after_script:
-    - docker kill db redis docs; docker rm db redis docs;
+    - docker kill db redis docs || true
+    - docker rm db redis docs || true
