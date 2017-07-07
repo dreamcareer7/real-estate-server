@@ -34,6 +34,3 @@ test:
     - export DATABASE_URL="postgres://$POSTGRES_USER:$POSTGRES_PASSWORD@db/$POSTGRES_DB"
     - ENVS=`env | sed -n '/^[^\t]/s/=.*//p' | sed '/^$/d' | sed 's/^/-e /g' | tr '\n' ' '`
     - docker run --link db:db --link redis:redis --link db:db $ENVS $CONTAINER_IMAGE npm run coverage
-  artifacts:
-    paths:
-      - istanbul
