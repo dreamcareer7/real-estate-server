@@ -40,6 +40,8 @@ test:
     paths:
       - istanbul
 
+  before_script:
+    - docker kill db redis html; docker rm db redis html
+
   after_script:
-    - docker kill db redis html
-    - docker rm db redis html
+    - docker kill db redis html; docker rm db redis html
