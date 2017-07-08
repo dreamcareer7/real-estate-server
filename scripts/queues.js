@@ -124,7 +124,7 @@ module.exports = {
 
   'MLS.Photo': {
     handler: mls_photo,
-    parallel: 10
+    parallel: 1000
   },
 
   'MLS.Listing': {
