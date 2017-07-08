@@ -99,41 +99,41 @@ module.exports = {
 
   'MLS.Unit': {
     handler: mls_unit,
-    parallel: 10
+    parallel: 100
   },
 
   'MLS.Room': {
     handler: mls_room,
-    parallel: 10
+    parallel: 100
   },
 
   'MLS.OpenHouse': {
     handler: mls_openhouse,
-    parallel: 10
+    parallel: 100
   },
 
   'MLS.Agent': {
     handler: mls_agent,
-    parallel: 10
+    parallel: 100
   },
 
   'MLS.Office': {
     handler: mls_office,
-    parallel: 10
+    parallel: 100
   },
 
   'MLS.Photo': {
     handler: mls_photo,
-    parallel: 1000
+    parallel: 100
   },
 
   'MLS.Listing': {
     handler: mls_listing,
-    parallel: 10
+    parallel: 100
   },
 
   'MLS.Listing.Photos.Validate': {
     handler: mls_validate_listing_photos,
-    parallel: 10
+    parallel: 100
   }
 }
