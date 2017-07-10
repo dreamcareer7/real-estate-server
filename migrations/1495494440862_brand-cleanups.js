@@ -13,9 +13,9 @@ const up = [
   'DROP TABLE brands_agents',
   'DROP FUNCTION IF EXISTS get_brand_agents(uuid)',
   'DROP FUNCTION IF EXISTS get_brand_users(uuid)',
-  users,
-  agents,
-  propose,
+//   users,
+//   agents,
+//   propose,
   'COMMIT'
 ]
 

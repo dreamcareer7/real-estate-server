@@ -6,6 +6,7 @@ const fs = require('fs')
 
 const brand_agents = fs.readFileSync('./lib/sql/brand/get_brand_agents.fn.sql').toString()
 const brand_users = fs.readFileSync('./lib/sql/brand/get_brand_users.fn.sql').toString()
+const propose = fs.readFileSync('./lib/sql/brand/propose_brand_agents.fn.sql').toString()
 
 const up = [
   'BEGIN',
@@ -17,6 +18,7 @@ const up = [
     tag TEXT NOT NULL,
     brand uuid NOT NULL REFERENCES brands(id),
     color CHAR(7) NOT NULL,
+    is_tab BOOLEAN NOT NULL DEFAULT FALSE,
     UNIQUE(brand, tag)
    )`,
   `CREATE TABLE brands_roles (
@@ -40,6 +42,7 @@ const up = [
   )`,
   brand_agents,
   brand_users,
+  propose,
   'COMMIT'
 ]
 

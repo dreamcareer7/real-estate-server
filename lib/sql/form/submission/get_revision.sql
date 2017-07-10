@@ -5,7 +5,6 @@ SELECT
   EXTRACT(EPOCH FROM forms_data.created_at) AS updated_at,
   forms_submissions.form AS form,
   forms_data.author AS author,
-  forms_submissions.deal AS deal,
   forms_data.values AS "values",
   forms_data.state AS state,
   'form_revision' AS type,

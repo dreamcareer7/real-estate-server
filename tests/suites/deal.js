@@ -2,6 +2,7 @@ const {deal, address, full_address} = require('./data/deal.js')
 const deal_response = require('./expected_objects/deal.js')
 
 registerSuite('listing', ['getListing'])
+registerSuite('form', ['create'])
 
 const create = (cb) => {
   const data = JSON.parse(JSON.stringify(deal))

@@ -11,8 +11,8 @@ const up = [
   'BEGIN',
   'DROP FUNCTION IF EXISTS get_brand_agents(uuid)',
   'DROP FUNCTION IF EXISTS propose_brand_agents(uuid, uuid)',
-  agents,
-  propose,
+//   agents,
+//   propose,
   'COMMIT'
 ]
 
