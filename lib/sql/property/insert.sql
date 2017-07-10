@@ -78,7 +78,9 @@ INSERT INTO properties (
   unit_count,
   year_built_details,
   zoning,
-  security_system_yn
+  security_system_yn,
+  furnished_yn,
+  fenced_yard_yn
 ) VALUES (
   $1,
   $2,
@@ -159,7 +161,9 @@ INSERT INTO properties (
   $77,
   $78,
   $79,
-  $80
+  $80,
+  $81,
+  $82
 )
 
 ON CONFLICT (matrix_unique_id) DO UPDATE SET
@@ -240,7 +244,10 @@ ON CONFLICT (matrix_unique_id) DO UPDATE SET
   unit_count = $77,
   year_built_details = $78,
   zoning = $79,
-  security_system_yn = $80
+  security_system_yn = $80,
+  furnished_yn = $81,
+  fenced_yard_yn = $82,
+  updated_at = CLOCK_TIMESTAMP()
 
 WHERE properties.matrix_unique_id = $6
 

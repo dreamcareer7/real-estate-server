@@ -2,7 +2,6 @@ const config = require('../../lib/config.js')
 const user = require('./data/user.js')
 const address = require('./data/address.js')
 const user_response = require('./expected_objects/user.js')
-const info_response = require('./expected_objects/info.js')
 const uuid = require('node-uuid')
 
 const password = config.tests.password
@@ -123,44 +122,222 @@ const patchUserTimeZone = (cb) => {
     .expectStatus(204)
 }
 
-const searchByEmail = (cb) => {
-  return frisby.create('search users by email')
-    .get('/users/search?q[]=' + results.user.create.data.email)
+const addInvalidActivityByAction = (cb) => {
+  return frisby.create('record an activity by invalid action')
+    .post('/users/self/timeline', {
+      action: 'BombasticActivity',
+      object_class: 'phone_call',
+      object: {
+        type: 'phone_call',
+        duration: 180
+      }
+    })
+    .after(cb)
+    .expectStatus(400)
+}
+
+const addInvalidActivityByType = (cb) => {
+  return frisby.create('record an activity by invalid type')
+    .post('/users/self/timeline', {
+      action: 'UserCalledContact',
+      object_class: 'bombastic_call',
+      object: {
+        type: 'bombastic_call',
+      }
+    })
+    .after(cb)
+    .expectStatus(400)
+}
+
+const addInvalidActivityActionMissing = (cb) => {
+  return frisby.create('record an activity when action is missing')
+    .post('/users/self/timeline', {
+      object_class: 'UserCalledContact',
+      object: {
+        type: 'phone_call',
+      }
+    })
+    .after(cb)
+    .expectStatus(400)
+}
+
+const addInvalidActivityObjectClassMissing = (cb) => {
+  return frisby.create('record an activity when object class is missing')
+    .post('/users/self/timeline', {
+      action: 'UserCalledContact',
+      object: {
+        type: 'phone_call',
+      }
+    })
+    .after(cb)
+    .expectStatus(400)
+}
+
+const addInvalidActivityObjectMissing = (cb) => {
+  return frisby.create('record an activity when object is missing')
+    .post('/users/self/timeline', {
+      action: 'UserCalledContact',
+      object_class: 'phone_call',
+    })
+    .after(cb)
+    .expectStatus(400)
+}
+
+const addActivity = (cb) => {
+  return frisby.create('record activity for user')
+    .post('/users/self/timeline', {
+      action: 'UserOpenedIOSApp',
+      object_class: 'ios_app',
+      object: {
+        type: 'ios_app',
+        version: '0.0.0'
+      }
+    })
+    .after(cb)
+    .expectStatus(200)
+}
+
+const getTimeline = (cb) => {
+  return frisby.create('get list of user activities (timeline)')
+    .get(`/users/${results.user.create.data.id}/timeline`)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
       data: [
         {
-          type: 'user'
         }
-      ]
-    })
-    .expectJSONTypes({
-      code: String,
-      data: [user_response],
-      info: info_response
+      ],
+      info: {
+      }
     })
 }
 
-const searchByPhone = (cb) => {
-  return frisby.create('search users by phone')
-    .get('/users/search?q[]=' + encodeURIComponent(results.user.create.data.phone_number))
-    .after(cb)
-    .expectStatus(200)
-    .expectJSON({
-      code: 'OK',
-      data: [
-        {
-          type: 'user'
-        }
-      ]
-    })
-    .expectJSONTypes({
-      code: String,
-      data: [user_response],
-      info: info_response
-    })
+const initiatePasswordReset = (cb) => {
+  return frisby.create('initiate password reset')
+  .post('/users/reset_password', {
+    email: 'test@rechat.com'
+  })
+  .after(cb)
+  .expectStatus(204)
+}
+
+const initiatePasswordResetEmailNotFound = (cb) => {
+  return frisby.create('initiate password reset for a non-existing user')
+  .post('/users/reset_password', {
+    email: 'test@rechat.comcom'
+  })
+  .after(cb)
+  .expectStatus(404)
+}
+
+const resetPasswordByTokenEmail = (cb) => {
+  return frisby.create('reset password by token and email')
+  .patch('/users/password', {
+    email: 'test@rechat.com',
+    token: 'a',
+    password: '123456'
+  })
+  .after(cb)
+  .expectStatus(204)
+}
+
+const resetPasswordByTokenEmailNoNewPassword = (cb) => {
+  return frisby.create('reset password where no new password is specified')
+  .patch('/users/password', {
+    email: 'test@rechat.com',
+    token: 'a',
+  })
+  .after(cb)
+  .expectStatus(400)
+}
+
+const resetPasswordByTokenEmailInvalidEmail = (cb) => {
+  return frisby.create('reset password by token for non-existing user')
+  .patch('/users/password', {
+    email: 'test@rechat.comcom',
+    token: 'a',
+    password: '123456'
+  })
+  .after(cb)
+  .expectStatus(404)
+}
+
+const resetPasswordByTokenEmailInvalidToken = (cb) => {
+  return frisby.create('reset password by token where token is invalid')
+  .patch('/users/password', {
+    email: 'test@rechat.com',
+    token: 'b',
+    password: '123456'
+  })
+  .after(cb)
+  .expectStatus(403)
+}
+
+const resetPasswordByShadowTokenEmail = (cb) => {
+  return frisby.create('reset password by shadow token and email')
+  .patch('/users/password', {
+    email: 'test@rechat.com',
+    shadow_token: '206cc0a36c8ecfa37639a4d0dc682c73',
+    password: '123456'
+  })
+  .after(cb)
+  .expectStatus(204)
+}
+
+const resetPasswordByShadowTokenEmailInvalidEmail = (cb) => {
+  return frisby.create('reset password by shadow token and email for non-existing user')
+  .patch('/users/password', {
+    email: 'test@rechat.comcom',
+    shadow_token: '206cc0a36c8ecfa37639a4d0dc682c73',
+    password: '123456'
+  })
+  .after(cb)
+  .expectStatus(404)
+}
+
+const resetPasswordByShadowTokenEmailInvalidToken = (cb) => {
+  return frisby.create('reset password by shadow token and email where token is invalid')
+  .patch('/users/password', {
+    email: 'test@rechat.com',
+    shadow_token: 'bombastictoken',
+    password: '123456'
+  })
+  .after(cb)
+  .expectStatus(403)
+}
+
+const resetPasswordByShadowTokenPhone = (cb) => {
+  return frisby.create('reset password by shadow token and phone number')
+  .patch('/users/password', {
+    phone_number: '+4368120265807',
+    shadow_token: '206cc0a36c8ecfa37639a4d0dc682c73',
+    password: '123456'
+  })
+  .after(cb)
+  .expectStatus(204)
+}
+
+const resetPasswordByShadowTokenPhoneInvalidToken = (cb) => {
+  return frisby.create('reset password by shadow token and phone number')
+  .patch('/users/password', {
+    phone_number: '+4368120265807',
+    shadow_token: 'bombastictoken',
+    password: '123456'
+  })
+  .after(cb)
+  .expectStatus(403)
+}
+
+const resetPasswordByShadowTokenPhoneInvalidPhone = (cb) => {
+  return frisby.create('reset password by shadow token and phone number for non-existing user')
+  .patch('/users/password', {
+    phone_number: '+4300000000000',
+    shadow_token: '206cc0a36c8ecfa37639a4d0dc682c73',
+    password: '123456'
+  })
+  .after(cb)
+  .expectStatus(404)
 }
 
 const deleteAddress = (cb) => {
@@ -194,8 +371,25 @@ module.exports = {
   setAddress,
   setAddress400,
   patchUserTimeZone,
-  searchByEmail,
-  searchByPhone,
+  addInvalidActivityByAction,
+  addInvalidActivityByType,
+  addInvalidActivityActionMissing,
+  addInvalidActivityObjectClassMissing,
+  addInvalidActivityObjectMissing,
+  addActivity,
+  getTimeline,
+  initiatePasswordResetEmailNotFound,
+  initiatePasswordReset,
+  resetPasswordByTokenEmailNoNewPassword,
+  resetPasswordByTokenEmailInvalidEmail,
+  resetPasswordByTokenEmailInvalidToken,
+  resetPasswordByTokenEmail,
+  resetPasswordByShadowTokenEmailInvalidEmail,
+  resetPasswordByShadowTokenEmailInvalidToken,
+  resetPasswordByShadowTokenEmail,
+  resetPasswordByShadowTokenPhoneInvalidPhone,
+  resetPasswordByShadowTokenPhoneInvalidToken,
+  resetPasswordByShadowTokenPhone,
   deleteAddress,
   deleteUser
 }

@@ -8,7 +8,7 @@
     "start": "node_modules/gulp/bin/gulp.js",
     "migration": "node_modules/migratus/bin/create --template scripts/migrate_template.js ",
     "docs": "node api_docs/index.js",
-    "coverage": "node_modules/istanbul/lib/cli.js cover --dir istanbul tests/run.js -- --report --stop-on-fail --concurrency 50"
+    "coverage": "node_modules/istanbul/lib/cli.js cover --dir istanbul tests/run.js -- --report --stop-on-fail --concurrency 1"
   },
   "engines": {
     "node": "8.x"
@@ -89,6 +89,7 @@
     "xml2js": "^0.4.17"
   },
   "devDependencies": {
+    "aglio": "^2.3.0",
     "bytes": "^2.2.0",
     "copy-dir": "0.0.8",
     "eslint": "^3.5.0",

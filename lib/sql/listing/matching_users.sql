@@ -25,6 +25,11 @@ WHERE
   (pool IS NULL OR pool = $10) AND
 
   (pets IS NULL OR pets = $31) AND
+  (number_of_pets_allowed IS NULL OR number_of_pets_allowed <=  $32) AND
+  (application_fee IS NULL OR application_fee = $33) AND
+  (appliances IS NULL OR appliances = $34) AND
+  (furnished IS NULL OR furnished = $35) AND
+  (fenced_yard IS NULL OR fenced_yard = $36) AND
 
   (property_types    IS NULL OR property_types @> ARRAY[$5::property_type])       AND
   (property_subtypes IS NULL OR property_subtypes @> ARRAY[$6::property_subtype]) AND

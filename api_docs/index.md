@@ -29,6 +29,10 @@ Although we have a page that includes [everything](/all.html).
 * [Rooms](/room.html)
 * [Messages](/message.html)
 
+## CRM
+
+* [Contacts](/contact.html)
+
 ## Sharing
 
 * [Alerts](/alert.html)

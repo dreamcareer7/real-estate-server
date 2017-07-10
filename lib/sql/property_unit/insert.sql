@@ -52,5 +52,6 @@ ON CONFLICT (matrix_unique_id) DO UPDATE SET
   half_bath = $14,
   beds = $15,
   units = $16,
-  square_feet = $17
+  square_feet = $17,
+  updated_at = CLOCK_TIMESTAMP()
 WHERE property_units.matrix_unique_id = $11
