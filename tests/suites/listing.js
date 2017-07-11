@@ -87,7 +87,7 @@ const getListing404 = (cb) => {
 
 const searchSubdivisions = cb => {
   return frisby.create('search for a subdivision')
-    .get('/subdivisions/search?q=Arbor')
+    .get('/subdivisions/search?q=Arbor Ri')
     .after(cb)
     .expectStatus(200)
     .expectJSON({
