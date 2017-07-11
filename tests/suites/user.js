@@ -3,13 +3,14 @@ const user = require('./data/user.js')
 const address = require('./data/address.js')
 const user_response = require('./expected_objects/user.js')
 const uuid = require('node-uuid')
-
 const password = config.tests.password
 
 const client = JSON.parse(JSON.stringify(user))
 
 client.client_id = config.tests.client_id
 client.client_secret = config.tests.client_secret
+
+registerSuite('agent', ['getByMlsId'])
 
 const create = (cb) => {
   return frisby.create('create user')
@@ -340,6 +341,49 @@ const resetPasswordByShadowTokenPhoneInvalidPhone = (cb) => {
   .expectStatus(404)
 }
 
+const upgradeToAgentWithEmail = (cb) => {
+  const agent = results.agent.getByMlsId.data
+  return frisby.create('upgrade user to agent with email')
+  .patch('/users/self/upgrade', {
+    agent: agent.id,
+    secret: agent.email,
+  })
+  .after(cb)
+  .expectStatus(200)
+}
+
+const upgradeToAgentWithPhoneNumber = (cb) => {
+  const agent = results.agent.getByMlsId.data
+  return frisby.create('upgrade user to agent with phone number')
+  .patch('/users/self/upgrade', {
+    agent: agent.id,
+    secret: agent.phone_number,
+  })
+  .after(cb)
+  .expectStatus(200)
+}
+
+const upgradeToAgentInvalidSecret = (cb) => {
+  const agent = results.agent.getByMlsId.data
+  return frisby.create('upgrade user to agent with invalid secret')
+  .patch('/users/self/upgrade', {
+    agent: agent.id,
+    secret: 'mr@bombastic.com',
+  })
+  .after(cb)
+  .expectStatus(401)
+}
+
+const upgradeToAgentSecretMissing = (cb) => {
+  const agent = results.agent.getByMlsId.data
+  return frisby.create('upgrade user to agent secret missing')
+  .patch('/users/self/upgrade', {
+    agent: agent.id
+  })
+  .after(cb)
+  .expectStatus(400)
+}
+
 const deleteAddress = (cb) => {
   return frisby.create('delete address')
     .delete('/users/self/address')
@@ -390,6 +434,10 @@ module.exports = {
   resetPasswordByShadowTokenPhoneInvalidPhone,
   resetPasswordByShadowTokenPhoneInvalidToken,
   resetPasswordByShadowTokenPhone,
+  upgradeToAgentInvalidSecret,
+  upgradeToAgentSecretMissing,
+  upgradeToAgentWithEmail,
+  upgradeToAgentWithPhoneNumber,
   deleteAddress,
   deleteUser
 }
