@@ -13,14 +13,14 @@ WHERE
   (minimum_lot_square_meters IS NULL OR minimum_lot_square_meters <= $11) AND
   (maximum_lot_square_meters IS NULL OR maximum_lot_square_meters >= $11) AND
 
-  (minimum_bedrooms  IS NULL OR minimum_bedrooms  <=  $3) AND
+  (minimum_bedrooms IS NULL OR minimum_bedrooms <= $3) AND
 
   (minimum_bathrooms IS NULL OR minimum_bathrooms <= $4) AND
 
   (minimum_year_built IS NULL OR minimum_year_built <= $9) AND
   (maximum_year_built IS NULL OR maximum_year_built >= $9) AND
 
-  (listing_statuses IS NULL OR listing_statuses @> ARRAY[$12::listing_status]) AND
+  (listing_statuses IS NULL OR listing_statuses = '{}' OR listing_statuses @> ARRAY[$12::listing_status]) AND
 
   (pool IS NULL OR pool = $10) AND
 
@@ -31,40 +31,40 @@ WHERE
   (furnished IS NULL OR furnished = $35) AND
   (fenced_yard IS NULL OR fenced_yard = $36) AND
 
-  (property_types    IS NULL OR property_types @> ARRAY[$5::property_type])       AND
-  (property_subtypes IS NULL OR property_subtypes @> ARRAY[$6::property_subtype]) AND
+  (property_types IS NULL OR property_types = '{}' OR property_types @> ARRAY[$5::property_type]) AND
+  (property_subtypes IS NULL OR property_subtypes ='{}' OR property_subtypes @> ARRAY[$6::property_subtype]) AND
 
   (points IS NULL OR ST_Within(ST_SetSRID(ST_MakePoint($7, $8), 4326), points)) AND
 
   (minimum_parking_spaces IS NULL OR minimum_parking_spaces <= $13) AND
 
-  (list_offices IS NULL OR list_offices @> ARRAY[$14]) AND
-  (list_agents  IS NULL OR list_agents @> ARRAY[$15])  AND
+  (list_offices IS NULL OR list_offices = '{}' OR list_offices @> ARRAY[$14]) AND
+  (list_agents  IS NULL OR list_agents = '{}' OR list_agents @> ARRAY[$15]) AND
 
-  (selling_offices IS NULL OR selling_offices @> ARRAY[$16]) AND
-  (selling_agents  IS NULL OR selling_agents  @> ARRAY[$17])  AND
+  (selling_offices IS NULL OR selling_offices = '{}' OR selling_offices @> ARRAY[$16]) AND
+  (selling_agents IS NULL OR selling_agents = '{}' OR selling_agents @> ARRAY[$17]) AND
 
-  (architectural_styles IS NULL OR architectural_styles @> $18) AND
+  (architectural_styles IS NULL OR architectural_styles = '{}' OR architectural_styles @> $18) AND
 
-  (counties IS NULL OR counties @> ARRAY[$19]) AND
+  (counties IS NULL OR counties = '{}' OR counties @> ARRAY[$19]) AND
 
-  (postal_codes IS NULL OR postal_codes @> ARRAY[$30]) AND
+  (postal_codes IS NULL OR postal_codes = '{}' OR postal_codes @> ARRAY[$30]) AND
 
-  (subdivisions IS NULL OR subdivisions @> ARRAY[$20]) AND
+  (subdivisions IS NULL OR subdivisions = '{}' OR subdivisions @> ARRAY[$20]) AND
 
-  (school_districts     IS NULL OR school_districts @> ARRAY[$21])    AND
+  (school_districts IS NULL OR school_districts = '{}' OR school_districts @> ARRAY[$21]) AND
 
-  (primary_schools      IS NULL OR primary_schools @> ARRAY[$22])     AND
+  (primary_schools IS NULL OR primary_schools = '{}' OR primary_schools @> ARRAY[$22]) AND
 
-  (middle_schools       IS NULL OR primary_schools @> ARRAY[$23])     AND
+  (middle_schools IS NULL OR middle_schools = '{}' OR middle_schools @> ARRAY[$23]) AND
 
-  (elementary_schools   IS NULL OR elementary_schools @> ARRAY[$24])  AND
+  (elementary_schools IS NULL OR elementary_schools = '{}' OR elementary_schools @> ARRAY[$24]) AND
 
-  (senior_high_schools  IS NULL OR senior_high_schools @> ARRAY[$25]) AND
+  (senior_high_schools IS NULL OR senior_high_schools = '{}' OR senior_high_schools @> ARRAY[$25]) AND
 
-  (junior_high_schools  IS NULL OR junior_high_schools @> ARRAY[$26]) AND
+  (junior_high_schools IS NULL OR junior_high_schools = '{}' OR junior_high_schools @> ARRAY[$26]) AND
 
-  (intermediate_schools IS NULL OR junior_high_schools @> ARRAY[$27]) AND
+  (intermediate_schools IS NULL OR intermediate_schools = '{}' OR intermediate_schools @> ARRAY[$27]) AND
 
   (mls_areas IS NULL OR
     (
