@@ -9,20 +9,24 @@ $$
     agents.id as agent,
     agents.mlsid as mlsid
     FROM agents
-  JOIN users ON agents.id = users.agent
-  WHERE users.id IN (
-    (SELECT "user" FROM brands_users WHERE brand = $1)
-  )
+    JOIN users ON agents.id = users.agent
+    WHERE users.id IN (
+      SELECT "user" FROM brands_users WHERE brand = $1
+    ) AND agents.status = 'Active'
   UNION
   SELECT
     users.id as "user",
     agents.id as agent,
     agents.mlsid as mlsid
     FROM agents
-  LEFT JOIN users ON agents.id = users.agent
-  WHERE office_mui IN (
-    SELECT matrix_unique_id FROM offices
-    WHERE id IN (SELECT office FROM brands_offices WHERE brand = $1)
-  )
+    LEFT JOIN users ON agents.id = users.agent
+    WHERE office_mui IN (
+      SELECT matrix_unique_id
+      FROM offices
+      WHERE id IN
+      (
+        SELECT office FROM brands_offices WHERE brand = $1
+      )
+    ) AND agents.status = 'Active'
 $$
 LANGUAGE sql;
