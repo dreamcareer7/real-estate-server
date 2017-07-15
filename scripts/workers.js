@@ -90,6 +90,7 @@ Object.keys(queues).forEach(queue_name => {
           return
         }
 
+        Metric.increment(`Job.${queue_name}`)
         commit(done.bind(null, null, result))
       }
 
