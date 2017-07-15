@@ -69,7 +69,7 @@ module.exports = {
 
   create_notification: {
     handler: notification,
-    parallel: 1
+    parallel: 100
   },
 
   email: {
