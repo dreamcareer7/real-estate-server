@@ -21,7 +21,8 @@ INSERT INTO messages(
     reference,
     author,
     notification,
-    mentions
+    mentions,
+    activity
 )
 VALUES($1,
        $2,
@@ -32,5 +33,7 @@ VALUES($1,
        $7,
        $8,
        $9,
-       $10)
+       $10,
+       $11
+     )
 RETURNING id;

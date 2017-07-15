@@ -20,6 +20,13 @@ const getDomain = (job, cb) => {
 
     const rollback = function (err) {
       console.log('<- Rolling back on worker'.red, domain.i, job, err)
+
+      Slack.send({
+        channel: '7-server-errors',
+        text: 'Worker Error: ' + '\n `' + err + '`',
+        emoji: ':skull:'
+      })
+
       conn.query('ROLLBACK', done)
     }
 
@@ -83,6 +90,7 @@ Object.keys(queues).forEach(queue_name => {
           return
         }
 
+        Metric.increment(`Job.${queue_name}`)
         commit(done.bind(null, null, result))
       }
 
