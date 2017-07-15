@@ -33,8 +33,8 @@ test:
     - ENVS=`env | sed -n '/^[^\t]/s/=.*//p' | sed '/^$/d' | sed 's/^/-e /g' | tr '\n' ' '`
     - docker run --link db:db --link redis:redis --link db:db $ENVS $CONTAINER_IMAGE npm run coverage
     - docker run --name html --link db:db --link redis:redis --link db:db $ENVS $CONTAINER_IMAGE npm run docs
-    - rm -rf /var/www/docs
-    - docker cp html:/tmp/rechat /var/www/docs
+    - rm -rf /var/www/docs/rechat
+    - docker cp html:/tmp/rechat /var/www/docs/rechat
   artifacts:
     paths:
       - istanbul
