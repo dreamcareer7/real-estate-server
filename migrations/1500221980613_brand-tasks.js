@@ -7,7 +7,6 @@ const up = [
   'BEGIN',
   `CREATE TYPE deal_flag AS ENUM('Buying', 'Selling')`,
   `ALTER TABLE deals ADD flags deal_flag[]`,
-  `ALTER TABLE deals ADD flags deal_flag[]`,
   `CREATE TABLE brand_tasks (
     id uuid DEFAULT uuid_generate_v1() NOT NULL PRIMARY KEY,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
