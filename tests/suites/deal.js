@@ -110,11 +110,83 @@ const remove = (cb) => {
     .expectStatus(204)
 }
 
+const addTask = cb => {
+  const task = {
+    title: 'Test Title',
+    status: 'New',
+    task_type: 'Form',
+    form: results.form.create.data.id,
+    tags: ['53771352-6752-11e7-9e0f-e4a7a08e15d4']
+  }
+
+  return frisby.create('add a task to a deal')
+    .post(`/deals/${results.deal.create.data.id}/tasks`, task)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+//       code: 'OK',
+//       data: results.deal.create.data
+    })
+    .expectJSONTypes({
+//       code: String,
+//       data: deal_response
+    })
+}
+
+const setSubmission = cb => {
+  const submission = {
+    form: results.form.create.data.id,
+    state: 'Fair',
+    values: {
+
+    }
+  }
+
+  return frisby.create('set submission for a deal')
+    .put(`/tasks/${results.deal.addTask.data.id}/submission`, submission)
+    .after(cb)
+//     .expectStatus(200)
+//     .expectJSON({
+//       code: 'OK',
+//       data: results.deal.create.data
+//     })
+//     .expectJSONTypes({
+//       code: String,
+//       data: deal_response
+//     })
+}
+
+const setReview = cb => {
+  return frisby.create('Submit a review request')
+    .put(`/tasks/${results.deal.addTask.data.id}/review`)
+    .after(cb)
+//     .expectStatus(200)
+//     .expectJSON({
+//       code: 'OK',
+//       data: results.deal.create.data
+//     })
+//     .expectJSONTypes({
+//       code: String,
+//       data: deal_response
+//     })
+}
+
+const getTask = cb => {
+  return frisby.create('get a task')
+    .get(`/tasks/${results.deal.addTask.data.id}`)
+    .after(cb)
+}
+
 module.exports = {
   create,
   createHippocket,
   addRole,
   get,
   getAll,
-  remove
+  addTask,
+  setSubmission,
+  getTask,
+  setReview,
+  getTask
+//   remove
 }

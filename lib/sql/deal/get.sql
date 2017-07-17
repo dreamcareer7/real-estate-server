@@ -7,8 +7,8 @@ SELECT deals.*,
     SELECT ARRAY_AGG(id) FROM deals_roles WHERE deal = deals.id
   ) AS roles,
   (
-    SELECT ARRAY_AGG(file) FROM files_relations WHERE role = 'Deal' AND role_id = deals.id AND deleted_at IS NULL
-  ) AS files,
+    SELECT ARRAY_AGG(id) FROM tasks WHERE deal = deals.id
+  ) as tasks,
   (
     SELECT ROW_TO_JSON(p.*) FROM
     (
