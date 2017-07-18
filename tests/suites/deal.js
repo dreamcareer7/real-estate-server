@@ -158,7 +158,9 @@ const setSubmission = cb => {
 
 const setReview = cb => {
   return frisby.create('Submit a review request')
-    .put(`/tasks/${results.deal.addTask.data.id}/review`)
+    .put(`/tasks/${results.deal.addTask.data.id}/review`, {
+      status: 'Pending'
+    })
     .after(cb)
 //     .expectStatus(200)
 //     .expectJSON({
