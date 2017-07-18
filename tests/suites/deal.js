@@ -156,6 +156,21 @@ const setSubmission = cb => {
 //     })
 }
 
+const getRevision = cb => {
+  return frisby.create('get revision data for a submission')
+    .get(`/tasks/${results.deal.addTask.data.id}/submission/${results.deal.setSubmission.data.last_revision}`)
+    .after(cb)
+//     .expectStatus(200)
+//     .expectJSON({
+//       code: 'OK',
+//       data: results.deal.create.data
+//     })
+//     .expectJSONTypes({
+//       code: String,
+//       data: deal_response
+//     })
+}
+
 const setReview = cb => {
   return frisby.create('Submit a review request')
     .put(`/tasks/${results.deal.addTask.data.id}/review`, {
@@ -187,6 +202,7 @@ module.exports = {
   getAll,
   addTask,
   setSubmission,
+  getRevision,
   getTask,
   setReview,
   getTask
