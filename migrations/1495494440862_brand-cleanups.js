@@ -3,10 +3,10 @@
 const async = require('async')
 const db = require('../lib/utils/db')
 
-const fs = require('fs')
-const users = fs.readFileSync('./lib/sql/brand/get_brand_users.fn.sql').toString()
-const agents = fs.readFileSync('./lib/sql/brand/get_brand_agents.fn.sql').toString()
-const propose = fs.readFileSync('./lib/sql/brand/propose_brand_agents.fn.sql').toString()
+// const fs = require('fs')
+// const users = fs.readFileSync('./lib/sql/brand/get_brand_users.fn.sql').toString()
+// const agents = fs.readFileSync('./lib/sql/brand/get_brand_agents.fn.sql').toString()
+// const propose = fs.readFileSync('./lib/sql/brand/propose_brand_agents.fn.sql').toString()
 
 const up = [
   'BEGIN',

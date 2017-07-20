@@ -205,6 +205,5 @@ module.exports = {
   getRevision,
   getTask,
   setReview,
-  getTask
 //   remove
 }
