@@ -60,7 +60,8 @@ const globals = [
   'Activity',
   'AttachedFile',
   'Submission',
-  'Task'
+  'Task',
+  'Review'
 ]
 
 const global_object = {}
