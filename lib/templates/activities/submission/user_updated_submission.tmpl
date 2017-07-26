@@ -1,1 +1,7 @@
-{{data.abbreviated_display_name}} updated a form
+{% if object.status === 'Fair'%}
+  {% set action = 'completed' %}
+{% else %}
+  {% set action = 'updated' %}
+{% endif %}
+
+{{data.abbreviated_display_name}} {{action}} {{object}}
