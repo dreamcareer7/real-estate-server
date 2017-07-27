@@ -1,0 +1,9 @@
+{% if object.status === 'Pending'%}
+  {% set action = 'submitted' %}
+{% elseif object.status === 'Rejected'%}
+  {% set action = 'rejected' %}
+{% elseif object.status === 'Approved'%}
+  {% set action = 'approved' %}
+{% endif %}
+
+{{data.abbreviated_display_name}} {{action}} the submission

@@ -4,16 +4,10 @@ const async = require('async')
 const db = require('../lib/utils/db')
 
 const up = [
-  'ALTER TYPE activity_type ADD VALUE \'UserUpdatedSubmission\'',
-  'ALTER TYPE notification_object_class ADD VALUE \'Submission\'',
-
-  'ALTER TYPE notification_object_class ADD VALUE \'Review\'',
-
-  'ALTER TABLE reviews_history ALTER status DROP DEFAULT'
+  'ALTER TYPE activity_type ADD VALUE \'UserUpdatedReview\'',
 ]
 
-const down = [
-]
+const down = []
 
 const runAll = (sqls, next) => {
   db.conn((err, client) => {
