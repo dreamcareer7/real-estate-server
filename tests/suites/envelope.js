@@ -1,10 +1,10 @@
 const envelope = require('./envelope/data.js')
 const envelope_response = require('./envelope/types.js')
 
-registerSuite('submission', ['create'])
+registerSuite('deal', ['create', 'createHippocket', 'addRole', 'addTask', 'setSubmission'])
 
 const setEnvelopeDetails = envelope => {
-  envelope.documents[0].revision = results.submission.create.data.last_revision
+  envelope.documents[0].revision = results.deal.setSubmission.data.last_revision
 
   envelope.deal = results.deal.create.data.id
 

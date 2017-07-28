@@ -10,8 +10,13 @@ SELECT envelopes.*,
          FROM envelopes_recipients WHERE envelopes_recipients.envelope = envelopes.id
        ) AS recipients,
        (
-         SELECT JSON_AGG(envelopes_documents ORDER BY envelopes_documents.document_id)
-         FROM envelopes_documents WHERE envelopes_documents.envelope = envelopes.id
+         WITH docs AS (
+          SELECT envelopes_documents.*, forms_data.submission as submission
+          FROM envelopes_documents JOIN forms_data ON envelopes_documents.submission_revision = forms_data.id
+          WHERE envelopes_documents.envelope = envelopes.id
+          ORDER BY envelopes_documents.document_id
+         )
+         SELECT JSON_AGG(docs.*) FROM docs
        ) AS documents,
        webhook_token
 FROM envelopes

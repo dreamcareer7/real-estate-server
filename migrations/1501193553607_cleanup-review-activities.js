@@ -5,6 +5,7 @@ const db = require('../lib/utils/db')
 
 const up = [
   'ALTER TYPE activity_type ADD VALUE \'UserUpdatedReview\'',
+  'ALTER TYPE activity_type ADD VALUE \'UserCreatedEnvelopeForSubmission\''
 ]
 
 const down = []
