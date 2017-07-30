@@ -6,7 +6,7 @@ const fs = require('fs')
 
 const brand_agents = fs.readFileSync('./lib/sql/brand/get_brand_agents.fn.sql').toString()
 const brand_users = fs.readFileSync('./lib/sql/brand/get_brand_users.fn.sql').toString()
-const propose = fs.readFileSync('./lib/sql/brand/propose_brand_agents.fn.sql').toString()
+// const propose = fs.readFileSync('./lib/sql/brand/propose_brand_agents.fn.sql').toString()
 
 const up = [
   'BEGIN',
@@ -42,7 +42,7 @@ const up = [
   )`,
   brand_agents,
   brand_users,
-  propose,
+//   propose,
   'COMMIT'
 ]
 
