@@ -1,0 +1,1 @@
+INSERT INTO brands_hostnames (brand, hostname, "default") VALUES ($1, $2, $3)

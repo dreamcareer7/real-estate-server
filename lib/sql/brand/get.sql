@@ -14,10 +14,6 @@ SELECT brands.*,
   ) AS hostnames,
 
   (
-    SELECT parent FROM brands_parents WHERE brand = brands.id
-  ),
-
-  (
     SELECT JSON_AGG(brands_tags ORDER BY "order") FROM brands_tags WHERE brand = brands.id AND deleted_at IS NULL
   ) as tags
 
