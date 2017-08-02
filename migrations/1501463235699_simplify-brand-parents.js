@@ -12,7 +12,7 @@ const up = [
   'ALTER TABLE brands ADD parent uuid REFERENCES brands(id)',
   'UPDATE brands SET parent = (SELECT parent FROM brands_parents WHERE brand = brands.id)',
   'DROP TABLE brands_parents',
-  brand_children
+  brand_children,
   'COMMIT'
 ]
 
