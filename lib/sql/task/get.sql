@@ -3,8 +3,8 @@ WITH tasks AS (
   tasks.*,
   'task' as type,
   (
-    SELECT ARRAY_AGG(tag) FROM tasks_tags WHERE task = tasks.id
-  ) as tags
+    SELECT deal FROM deals_checklists WHERE id = tasks.checklist
+  ) as deal
   FROM tasks
   WHERE id = ANY($1::uuid[])
   ORDER BY id DESC

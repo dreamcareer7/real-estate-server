@@ -1,6 +1,6 @@
 const deal = {
   context: {
-    deal_type: 'Buying'
+    deal_type: 'Selling'
   }
 }
 

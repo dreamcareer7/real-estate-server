@@ -1,1 +1,0 @@
-INSERT INTO tasks_tags (task, tag) VALUES ($1, $2)

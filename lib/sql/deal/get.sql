@@ -7,8 +7,9 @@ SELECT deals.*,
     SELECT ARRAY_AGG(id) FROM deals_roles WHERE deal = deals.id
   ) AS roles,
   (
-    SELECT ARRAY_AGG(id) FROM tasks WHERE deal = deals.id
-  ) as tasks,
+    SELECT ARRAY_AGG(id) FROM deals_checklists WHERE deal = deals.id
+  ) as checklists,
+
   (
     SELECT ROW_TO_JSON(p.*) FROM
     (

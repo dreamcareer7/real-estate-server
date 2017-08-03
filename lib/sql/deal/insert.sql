@@ -5,8 +5,6 @@ INSERT INTO deals
     $2,
     $3,
     $4,
-    (
-      SELECT brand FROM users WHERE users.id = $1
-    )
+    $5
   )
 RETURNING *

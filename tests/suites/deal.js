@@ -2,7 +2,8 @@ const {deal, address, full_address} = require('./data/deal.js')
 const deal_response = require('./expected_objects/deal.js')
 
 registerSuite('listing', ['getListing'])
-registerSuite('form', ['create'])
+// registerSuite('form', ['create'])
+registerSuite('brand', ['createParent', 'create', 'addChecklist', 'addTask'])
 
 const create = (cb) => {
   const data = JSON.parse(JSON.stringify(deal))
@@ -10,6 +11,7 @@ const create = (cb) => {
 
   return frisby.create('create a deal')
     .post('/deals', data)
+    .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
@@ -116,7 +118,8 @@ const addTask = cb => {
     status: 'New',
     task_type: 'Form',
     form: results.form.create.data.id,
-    tags: ['53771352-6752-11e7-9e0f-e4a7a08e15d4']
+    tags: ['53771352-6752-11e7-9e0f-e4a7a08e15d4'],
+    checklist: results.deal.create.data.checklists[0].id
   }
 
   return frisby.create('add a task to a deal')

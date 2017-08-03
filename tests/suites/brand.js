@@ -1,6 +1,7 @@
 const brand = require('./data/brand.js')
 
 registerSuite('mls', ['addOffice'])
+registerSuite('form', ['create'])
 
 const hostname = 'testhost'
 let office_id
@@ -69,6 +70,37 @@ const addOffice = cb => {
     })
 }
 
+const addChecklist = cb => {
+  return frisby.create('add a checklist to a brand')
+    .post(`/brands/${results.brand.create.data.id}/checklists`, {
+      title: 'Checklist 1',
+      flags: ['Selling'],
+      order: 2
+    })
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+//       data: brand
+    })
+}
+
+const addTask = cb => {
+  return frisby.create('add a task to a brand checklist')
+    .post(`/brands/checklists/${results.brand.addChecklist.data.id}/tasks`, {
+      title: 'Task 1',
+      task_type: 'Form',
+      form: results.form.create.data.id,
+      order: 1
+    })
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+//       data: brand
+    })
+}
+
 const removeOffice = cb => {
   return frisby.create('remove an office from a brand')
     .delete(`/brands/${results.brand.create.data.id}/offices/${office_id}`)
@@ -97,6 +129,8 @@ module.exports = {
   create,
   addOffice,
   addHostname,
+  addChecklist,
+  addTask,
   getByHostname,
   removeOffice,
   removeHostname
