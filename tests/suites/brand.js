@@ -1,6 +1,6 @@
 const brand = require('./data/brand.js')
 
-registerSuite('mls', ['addOffice'])
+registerSuite('office', ['add'])
 registerSuite('form', ['create'])
 
 const hostname = 'testhost'
@@ -57,7 +57,7 @@ const removeHostname = cb => {
 
 
 const addOffice = cb => {
-  office_id = results.mls.addOffice.rows[0].id
+  office_id = results.office.add.rows[0].id
   return frisby.create('add an office to a brand')
     .post(`/brands/${results.brand.create.data.id}/offices`, {
       office: office_id
