@@ -10,7 +10,7 @@ const client = JSON.parse(JSON.stringify(user))
 client.client_id = config.tests.client_id
 client.client_secret = config.tests.client_secret
 
-registerSuite('agent', ['getByMlsId'])
+registerSuite('agent', ['add', 'getByMlsId'])
 
 const create = (cb) => {
   return frisby.create('create user')

@@ -2,7 +2,6 @@ const {deal, address, full_address} = require('./data/deal.js')
 const deal_response = require('./expected_objects/deal.js')
 
 registerSuite('listing', ['getListing'])
-// registerSuite('form', ['create'])
 registerSuite('brand', ['createParent', 'create', 'addChecklist', 'addTask'])
 
 const create = (cb) => {
@@ -30,6 +29,7 @@ const createHippocket = cb => {
 
   return frisby.create('create a hippocket deal')
     .post('/deals', data)
+    .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
     .after(cb)
     .expectStatus(200)
     .expectJSON({

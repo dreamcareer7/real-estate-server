@@ -1,6 +1,14 @@
 const office = require('./mls/office.js')
 
-registerSuite('mls', ['addOffice'])
+const add = (cb) => {
+  return frisby.create('add an office')
+    .post('/jobs', {
+      name: 'MLS.Office',
+      data: {processed: office}
+    })
+    .after(cb)
+    .expectStatus(200)
+}
 
 const getByMlsId = (cb) => {
   return frisby.create('get an office by mls id')
@@ -33,6 +41,7 @@ const search = (cb) => {
 
 
 module.exports = {
+  add,
   getByMlsId,
   search,
 }
