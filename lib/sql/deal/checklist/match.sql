@@ -10,3 +10,4 @@ SELECT
   ) as tasks
 FROM brands_checklists
 WHERE brand = $1 AND flags && $2
+ORDER BY "order" ASC

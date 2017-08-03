@@ -4,7 +4,7 @@ SELECT deals_checklists.*,
   EXTRACT(EPOCH FROM updated_at) AS updated_at,
   EXTRACT(EPOCH FROM deleted_at) AS deleted_at,
   (
-    SELECT ARRAY_AGG(id) FROM tasks WHERE checklist = deals_checklists.id
+    SELECT ARRAY_AGG(id ORDER BY "order") FROM tasks WHERE checklist = deals_checklists.id
   ) AS tasks
 
 FROM deals_checklists

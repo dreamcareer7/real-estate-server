@@ -7,7 +7,7 @@ SELECT deals.*,
     SELECT ARRAY_AGG(id) FROM deals_roles WHERE deal = deals.id
   ) AS roles,
   (
-    SELECT ARRAY_AGG(id) FROM deals_checklists WHERE deal = deals.id
+    SELECT ARRAY_AGG(id ORDER BY "order") FROM deals_checklists WHERE deal = deals.id
   ) as checklists,
 
   (
