@@ -1,1 +1,1 @@
-INSERT INTO rooms_users ("user", room) VALUES ($1, $2)
+INSERT INTO rooms_users ("user", room, notification_setting) VALUES ($1, $2, $3)

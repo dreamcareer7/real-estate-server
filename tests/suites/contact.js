@@ -296,8 +296,19 @@ const addActivityToGibberishContact = (cb) => {
     .expectStatus(400)
 }
 
-const addActivity = (cb) => {
-  return frisby.create('record activity for contact')
+const addActivityObject = (cb) => {
+  return frisby.create('record activity for contact by object')
+    .post(`/contacts/${results.contact.create.data[0].id}/timeline`, {
+      action: 'UserViewedListing',
+      object_class: 'Listing',
+      object: 'b473eec8-0ebc-11e5-a03c-0a95648eeb58'
+    })
+    .after(cb)
+    .expectStatus(200)
+}
+
+const addActivityReference = (cb) => {
+  return frisby.create('record activity for contact by reference')
     .post(`/contacts/${results.contact.create.data[0].id}/timeline`, {
       action: 'UserCalledContact',
       object_class: 'phone_call',
@@ -322,8 +333,8 @@ const getTimeline = (cb) => {
         }
       ],
       info: {
-        count: 3,
-        total: 3
+        count: 4,
+        total: 4
       }
     })
 }
@@ -449,7 +460,8 @@ module.exports = {
   addInvalidActivityObjectMissing,
   addActivityToNonExistingContact,
   addActivityToGibberishContact,
-  addActivity,
+  addActivityObject,
+  addActivityReference,
   getTimeline,
   deleteContact,
   deleteContactWorked

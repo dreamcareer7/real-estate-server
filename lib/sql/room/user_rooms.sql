@@ -26,7 +26,7 @@ SELECT id,
                (
                  SELECT id FROM c
                ) AND
-               COALESCE(notifications.exclude <> $1, TRUE) AND
+               COALESCE(NOT ($1 = ANY(exclude)), TRUE) AND
                notifications_users.acked_at IS NULL
        ) AS new
 FROM c

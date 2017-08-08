@@ -6,10 +6,8 @@ WITH unhide AS (
 ),
 unarchive AS (
   UPDATE rooms_users
-  SET archived = false,
-      push_enabled = true
-  WHERE room = $1 AND
-        archived IS true
+  SET archived = false
+  WHERE room = $1
 )
 INSERT INTO messages(
     room,
