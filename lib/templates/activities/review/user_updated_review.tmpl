@@ -1,5 +1,7 @@
 {% if object.status === 'Pending'%}
   {% set action = 'submitted' %}
+{% elseif object.status === 'New'%}
+  {% set action = 'cancelled' %}
 {% elseif object.status === 'Rejected'%}
   {% set action = 'rejected' %}
 {% elseif object.status === 'Approved'%}

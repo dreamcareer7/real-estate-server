@@ -9,7 +9,7 @@ WITH reviews AS (
   FROM reviews
   JOIN reviews_history ON reviews.id = reviews_history.review
   WHERE reviews.id = ANY($1::uuid[])
-  ORDER BY reviews.id DESC, reviews_history.id DESC
+  ORDER BY reviews.id DESC, reviews_history.created_at DESC
 )
 SELECT reviews.* FROM reviews
 JOIN unnest($1::uuid[]) WITH ORDINALITY t(rid, ord) ON reviews.id = rid
