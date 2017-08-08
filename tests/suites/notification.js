@@ -93,10 +93,19 @@ const cancelPushNotification = (cb) => {
 const patchNotificationSettings = (cb) => {
   return frisby.create('update notification settings')
     .patch('/rooms/' + results.notification.createRoom.data.id + '/notifications', {
-      notification: true
+      setting: 'N_MENTIONS'
     })
     .after(cb)
     .expectStatus(200)
+}
+
+const patchNotificationSettingsInvalid = (cb) => {
+  return frisby.create('update notification settings')
+    .patch('/rooms/' + results.notification.createRoom.data.id + '/notifications', {
+      setting: 'N_BOGUS'
+    })
+    .after(cb)
+    .expectStatus(400)
 }
 
 const patchNotificationSettings404 = (cb) => {
@@ -126,5 +135,6 @@ module.exports = {
   cancelPushNotification,
   createRoom,
   patchNotificationSettings,
+  patchNotificationSettingsInvalid,
   patchNotificationSettings404
 }

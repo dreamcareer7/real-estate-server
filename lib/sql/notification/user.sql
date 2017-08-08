@@ -7,7 +7,7 @@ WITH c AS (
   WHERE notifications.deleted_at IS NULL AND
         notifications.room IS NULL AND
         notifications.specific = $1 AND
-        COALESCE(notifications.exclude <> $1, TRUE)
+        COALESCE(NOT ($1 = ANY(exclude)), TRUE)
 )
 SELECT id,
        total,

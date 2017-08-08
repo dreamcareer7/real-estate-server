@@ -1,5 +1,5 @@
 UPDATE rooms_users
 SET archived = TRUE,
-    push_enabled = FALSE
+    notification_setting = 'N_NONE'
 WHERE room = $1 AND
       "user" = $2
