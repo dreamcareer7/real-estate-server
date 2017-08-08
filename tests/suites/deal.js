@@ -191,6 +191,23 @@ const setReview = cb => {
 //     })
 }
 
+const patchAttention = cb => {
+  return frisby.create('Change the attention state of a task')
+    .patch(`/tasks/${results.deal.addTask.data.id}/needs_attention`, {
+      needs_attention: true
+    })
+    .after(cb)
+//     .expectStatus(200)
+//     .expectJSON({
+//       code: 'OK',
+//       data: results.deal.create.data
+//     })
+//     .expectJSONTypes({
+//       code: String,
+//       data: deal_response
+//     })
+}
+
 const getTask = cb => {
   return frisby.create('get a task')
     .get(`/tasks/${results.deal.addTask.data.id}`)
@@ -208,5 +225,6 @@ module.exports = {
   getRevision,
   getTask,
   setReview,
+  patchAttention
 //   remove
 }
