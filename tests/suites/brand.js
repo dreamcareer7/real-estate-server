@@ -74,7 +74,7 @@ const addChecklist = cb => {
   return frisby.create('add a checklist to a brand')
     .post(`/brands/${results.brand.create.data.id}/checklists`, {
       title: 'Checklist 1',
-      flags: ['Selling'],
+      deal_type: 'Selling',
       order: 2
     })
     .after(cb)
