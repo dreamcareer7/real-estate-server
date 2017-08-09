@@ -1,7 +1,5 @@
 const listing = require('./mls/listing.js')
-const office = require('./mls/office.js')
 const openhouse = require('./mls/openhouse.js')
-const agent = require('./mls/agent.js')
 const room = require('./mls/room.js')
 const unit = require('./mls/unit.js')
 const photo = require('./mls/photo.js')

@@ -61,7 +61,9 @@ const globals = [
   'AttachedFile',
   'Submission',
   'Task',
-  'Review'
+  'Review',
+  'DealChecklist',
+  'BrandChecklist'
 ]
 
 const global_object = {}

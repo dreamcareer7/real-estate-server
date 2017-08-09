@@ -225,6 +225,6 @@ module.exports = {
   getRevision,
   getTask,
   setReview,
-  patchAttention
-//   remove
+  patchAttention,
+  remove
 }

@@ -36,7 +36,7 @@ const up = [
      "order" smallint NOT NULL DEFAULT 1
    )`,
 
-   `CREATE TABLE brands_checklists_tasks (
+  `CREATE TABLE brands_checklists_tasks (
       id uuid DEFAULT uuid_generate_v1() NOT NULL PRIMARY KEY,
       created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
       deleted_at TIMESTAMP WITH TIME ZONE,
