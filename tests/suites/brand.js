@@ -85,6 +85,17 @@ const addChecklist = cb => {
     })
 }
 
+const getChecklists = cb => {
+  return frisby.create('get a brands checklists')
+    .get(`/brands/${results.brand.create.data.id}/checklists`)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+//       data: brand
+    })
+}
+
 const addTask = cb => {
   return frisby.create('add a task to a brand checklist')
     .post(`/brands/checklists/${results.brand.addChecklist.data.id}/tasks`, {
@@ -131,6 +142,7 @@ module.exports = {
   addHostname,
   addChecklist,
   addTask,
+  getChecklists,
   getByHostname,
   removeOffice,
   removeHostname
