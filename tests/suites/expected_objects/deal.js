@@ -2,9 +2,9 @@ const v = require('./validation.js')
 
 module.exports = {
   id: String,
+  deal_type: String,
 
   context: {
-    deal_type: String,
     legal_description: String,
     type: String
   },

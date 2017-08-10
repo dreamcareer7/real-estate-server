@@ -7,16 +7,21 @@ const up = [
   'ALTER TABLE brands_checklists DROP flags',
 
   `CREATE TYPE contract_type AS ENUM (
-    'Traditional Sale',
-    'Condo',
-    'New Build',
-    'Farm & Ranch'
+    'Resale',
+    'New Home',
+    'Lot / Land',
+    'Residential Lease',
+    'Commerical Sale',
+    'Commerical Lease'
    )`,
 
-  'ALTER TABLE brands_checklists ADD listing_type property_type NOT NULL',
+  'ALTER TABLE brands_checklists ADD deal_type deal_type',
   'ALTER TABLE brands_checklists ADD contract_type contract_type',
+  'ALTER TABLE deals ADD contract_type contract_type NOT NULL',
+  'ALTER TABLE deals ADD deal_type deal_type NOT NULL',
+  'ALTER TABLE deals DROP flags',
+  'DROP TYPE deal_flag'
 ]
-
 
 
 
