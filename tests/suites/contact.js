@@ -300,8 +300,8 @@ const addActivityObject = (cb) => {
   return frisby.create('record activity for contact by object')
     .post(`/contacts/${results.contact.create.data[0].id}/timeline`, {
       action: 'UserViewedListing',
-      object_class: 'Listing',
-      object: 'b473eec8-0ebc-11e5-a03c-0a95648eeb58'
+      object_class: 'listing',
+      object: '8a756fb4-c368-11e5-92b3-f23c91c841bd'
     })
     .after(cb)
     .expectStatus(200)
