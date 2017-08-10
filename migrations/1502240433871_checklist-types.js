@@ -5,8 +5,20 @@ const db = require('../lib/utils/db')
 
 const up = [
   'ALTER TABLE brands_checklists DROP flags',
-  'ALTER TABLE brands_checklists ADD deal_type deal_type NOT NULL',
+
+  `CREATE TYPE contract_type AS ENUM (
+    'Traditional Sale',
+    'Condo',
+    'New Build',
+    'Farm & Ranch'
+   )`,
+
+  'ALTER TABLE brands_checklists ADD listing_type property_type NOT NULL',
+  'ALTER TABLE brands_checklists ADD contract_type contract_type',
 ]
+
+
+
 
 const down = []
 

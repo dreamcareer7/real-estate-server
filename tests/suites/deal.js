@@ -105,6 +105,16 @@ const get = (cb) => {
     })
 }
 
+const addChecklist = cb => {
+  return frisby.create('add a checklist')
+    .post(`/deals/${results.deal.create.data.id}/checklists`, {
+      title: 'Checklist 1',
+      order: 1
+    })
+    .after(cb)
+    .expectStatus(200)
+}
+
 const remove = (cb) => {
   return frisby.create('delete a deal')
     .delete(`/deals/${results.deal.create.data.id}`)
@@ -118,8 +128,7 @@ const addTask = cb => {
     status: 'New',
     task_type: 'Form',
     form: results.form.create.data.id,
-    tags: ['53771352-6752-11e7-9e0f-e4a7a08e15d4'],
-    checklist: results.deal.create.data.checklists[0].id
+    checklist: results.deal.addChecklist.data.id
   }
 
   return frisby.create('add a task to a deal')
@@ -220,6 +229,7 @@ module.exports = {
   addRole,
   get,
   getAll,
+  addChecklist,
   addTask,
   setSubmission,
   getRevision,
