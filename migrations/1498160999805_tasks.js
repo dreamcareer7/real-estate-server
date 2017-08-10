@@ -4,7 +4,7 @@ const async = require('async')
 const db = require('../lib/utils/db')
 
 const up = [
-  'CREATE TYPE review_status AS ENUM(\'Pending\', \'Rejected\', \'Approved\')',
+  'CREATE TYPE review_status AS ENUM(\'Submitted\', \'Declined\', \'Approved\')',
   `CREATE TABLE reviews (
     id uuid DEFAULT uuid_generate_v1() NOT NULL PRIMARY KEY,
     created_at timestamp with time zone NOT NULL DEFAULT CLOCK_TIMESTAMP()
@@ -13,7 +13,7 @@ const up = [
   CREATE TABLE reviews_history (
     id uuid DEFAULT uuid_generate_v1() NOT NULL PRIMARY KEY,
     review uuid NOT NULL REFERENCES reviews(id),
-    status review_status NOT NULL DEFAULT \'Pending\',
+    status review_status NOT NULL DEFAULT \'Submitted\',
     created_at timestamp with time zone NOT NULL DEFAULT CLOCK_TIMESTAMP(),
     created_by uuid NOT NULL REFERENCES users(id)
   )`,

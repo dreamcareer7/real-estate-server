@@ -4,7 +4,7 @@ const async = require('async')
 const db = require('../lib/utils/db')
 
 const up = [
-  'ALTER TYPE review_status ADD VALUE \'New\''
+  'ALTER TYPE review_status ADD VALUE \'Incomplete\''
 ]
 
 const down = []

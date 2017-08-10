@@ -1,11 +1,11 @@
-{% if object.status === 'Pending'%}
+{% if object.status === 'Submitted'%}
   {% set action = 'submitted' %}
-{% elseif object.status === 'New'%}
+{% elseif object.status === 'Incompleted'%}
   {% set action = 'cancelled' %}
-{% elseif object.status === 'Rejected'%}
+{% elseif object.status === 'Declined'%}
   {% set action = 'rejected' %}
 {% elseif object.status === 'Approved'%}
   {% set action = 'approved' %}
 {% endif %}
 
-{{data.abbreviated_display_name}} {{action}} the submission
+{{data.abbreviated_display_name}} {{object.status}} the submission
