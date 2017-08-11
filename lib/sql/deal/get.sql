@@ -11,6 +11,33 @@ SELECT deals.*,
   ) as checklists,
 
   (
+    WITH checklists AS (
+      SELECT id FROM deals_checklists WHERE deal = deals.id AND deactivated_at IS NULL
+    ),
+
+    submissions AS (
+      SELECT submission FROM tasks WHERE checklist IN ( SELECT id FROM checklists )
+    ),
+
+    revisions AS (
+      SELECT
+        DISTINCT ON(id) id
+      FROM
+        forms_data
+      WHERE
+        submission IN (SELECT submission FROM submissions)
+      ORDER BY id, created_at DESC
+    )
+
+    SELECT
+      JSON_AGG(forms_data_context)
+    FROM
+      forms_data_context
+    WHERE
+      revision IN(SELECT id FROM revisions)
+  ) as form_context,
+
+  (
     SELECT ROW_TO_JSON(p.*) FROM
     (
       SELECT

@@ -150,22 +150,13 @@ const setSubmission = cb => {
     form: results.form.create.data.id,
     state: 'Fair',
     values: {
-
+      51821682: '11112 New Orleans Drive'
     }
   }
 
   return frisby.create('set submission for a deal')
     .put(`/tasks/${results.deal.addTask.data.id}/submission`, submission)
     .after(cb)
-//     .expectStatus(200)
-//     .expectJSON({
-//       code: 'OK',
-//       data: results.deal.create.data
-//     })
-//     .expectJSONTypes({
-//       code: String,
-//       data: deal_response
-//     })
 }
 
 const getRevision = cb => {
