@@ -55,6 +55,16 @@ const removeHostname = cb => {
     })
 }
 
+const getByHostname = (cb) => {
+  return frisby.create('search for a hostname')
+    .get(`/brands/search?hostname=${hostname}`)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+//       data: brand
+    })
+}
 
 const addOffice = cb => {
   office_id = results.office.add.rows[0].id
@@ -153,15 +163,33 @@ const deleteRole = cb => {
     .expectStatus(204)
 }
 
-const getByHostname = (cb) => {
-  return frisby.create('search for a hostname')
-    .get(`/brands/search?hostname=${hostname}`)
+const addMember = cb => {
+  return frisby.create('add a user to a brand role')
+    .post(`/brands/${results.brand.create.data.id}/roles/${results.brand.addRole.data.id}/members`, {
+      user: results.authorize.token.data.id
+    })
     .after(cb)
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
-//       data: brand
     })
+}
+
+const getMembers = cb => {
+  return frisby.create('get all members of a brand role')
+    .get(`/brands/${results.brand.create.data.id}/roles/${results.brand.addRole.data.id}/members`)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+    })
+}
+
+const deleteMember = cb => {
+  return frisby.create('delete a member from a role')
+    .delete(`/brands/${results.brand.create.data.id}/roles/${results.brand.addRole.data.id}/members/${results.authorize.token.data.id}`)
+    .after(cb)
+    .expectStatus(204)
 }
 
 
@@ -171,6 +199,11 @@ module.exports = {
 
   addRole,
   getRoles,
+
+  addMember,
+  getMembers,
+  deleteMember,
+
   deleteRole,
 
   addOffice,
