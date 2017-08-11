@@ -75,7 +75,7 @@ const addChecklist = cb => {
     .post(`/brands/${results.brand.create.data.id}/checklists`, {
       title: 'Checklist 1',
       deal_type: 'Buying',
-      contract_type: 'Resale',
+      property_type: 'Resale',
       order: 2
     })
     .after(cb)

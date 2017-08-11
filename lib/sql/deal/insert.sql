@@ -1,5 +1,5 @@
 INSERT INTO deals
-  (created_by, listing, context, deal_type, contract_type, brand)
+  (created_by, listing, context, deal_type, property_type, brand)
   VALUES (
     $1,
     $2,
