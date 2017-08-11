@@ -1,5 +1,6 @@
 registerSuite('user', ['create'])
 registerSuite('listing', ['by_mui'])
+registerSuite('listing', ['getListing'])
 
 const _u = require('lodash')
 const uuid = require('uuid')
@@ -301,7 +302,7 @@ const addActivityObject = (cb) => {
     .post(`/contacts/${results.contact.create.data[0].id}/timeline`, {
       action: 'UserViewedListing',
       object_class: 'listing',
-      object: '8a756fb4-c368-11e5-92b3-f23c91c841bd'
+      object: results.listing.getListing.data.id
     })
     .after(cb)
     .expectStatus(200)
@@ -316,6 +317,31 @@ const addActivityReference = (cb) => {
         type: 'phone_call',
         duration: 180
       }
+    })
+    .after(cb)
+    .expectStatus(200)
+}
+
+const addActivityToRoomObject = (cb) => {
+  return frisby.create('record activity for a room by object')
+    .post(`/rooms/${results.user.create.data.personal_room}/timeline`, {
+      action: 'UserCalledContact',
+      object_class: 'phone_call',
+      object: {
+        type: 'phone_call',
+        duration: 180
+      }
+    })
+    .after(cb)
+    .expectStatus(200)
+}
+
+const addActivityToRoomReference = (cb) => {
+  return frisby.create('record activity for a room by reference')
+    .post(`/rooms/${results.user.create.data.personal_room}/timeline`, {
+      action: 'UserViewedListing',
+      object_class: 'listing',
+      object: results.listing.getListing.data.id
     })
     .after(cb)
     .expectStatus(200)
@@ -462,6 +488,8 @@ module.exports = {
   addActivityToGibberishContact,
   addActivityObject,
   addActivityReference,
+  addActivityToRoomObject,
+  addActivityToRoomReference,
   getTimeline,
   deleteContact,
   deleteContactWorked
