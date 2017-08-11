@@ -1,7 +1,7 @@
 const envelope = require('./envelope/data.js')
 const envelope_response = require('./envelope/types.js')
 
-registerSuite('deal', ['create', 'createHippocket', 'addRole', 'addTask', 'setSubmission'])
+registerSuite('deal', ['create', 'createHippocket', 'addRole', 'addChecklist', 'addTask', 'setSubmission'])
 
 const setEnvelopeDetails = envelope => {
   envelope.documents[0].revision = results.deal.setSubmission.data.last_revision
