@@ -124,6 +124,35 @@ const removeOffice = cb => {
     })
 }
 
+const addRole = cb => {
+  return frisby.create('add a role to a brand')
+    .post(`/brands/${results.brand.create.data.id}/roles`, {
+      role: 'Admin'
+    })
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+    })
+}
+
+const getRoles = cb => {
+  return frisby.create('get all roles for a brand')
+    .get(`/brands/${results.brand.create.data.id}/roles`)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK'
+    })
+}
+
+const deleteRole = cb => {
+  return frisby.create('delete a brand role')
+    .delete(`/brands/${results.brand.create.data.id}/roles/${results.brand.addRole.data.id}`)
+    .after(cb)
+    .expectStatus(204)
+}
+
 const getByHostname = (cb) => {
   return frisby.create('search for a hostname')
     .get(`/brands/search?hostname=${hostname}`)
@@ -139,6 +168,11 @@ const getByHostname = (cb) => {
 module.exports = {
   createParent,
   create,
+
+  addRole,
+  getRoles,
+  deleteRole,
+
   addOffice,
   addHostname,
   addChecklist,
