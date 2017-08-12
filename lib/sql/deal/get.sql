@@ -30,7 +30,7 @@ SELECT deals.*,
     )
 
     SELECT
-      JSON_AGG(forms_data_context)
+      JSON_OBJECT_AGG(forms_data_context.key, forms_data_context)
     FROM
       forms_data_context
     WHERE
@@ -101,7 +101,16 @@ SELECT deals.*,
       JOIN addresses ON properties.address_id = addresses.id
       WHERE listings.id = deals.listing
     ) p
-  ) AS mls_context
+  ) AS mls_context,
+
+  (
+    SELECT
+      JSON_OBJECT_AGG(deal_context.key, deal_context.*)
+    FROM
+      deal_context
+    WHERE
+      deal = deals.id
+  ) AS deal_context
 FROM deals
 JOIN unnest($1::uuid[]) WITH ORDINALITY t(did, ord) ON deals.id = did
 ORDER BY t.ord

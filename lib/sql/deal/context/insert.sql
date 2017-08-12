@@ -1,0 +1,1 @@
+INSERT INTO deal_context (deal, created_by, key, value) VALUES ($1, $2, $3, $4)
