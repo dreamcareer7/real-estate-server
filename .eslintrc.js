@@ -63,7 +63,8 @@ const globals = [
   'Task',
   'Review',
   'DealChecklist',
-  'BrandChecklist'
+  'BrandChecklist',
+  'BrandRole'
 ]
 
 const global_object = {}
