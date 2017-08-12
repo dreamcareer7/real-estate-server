@@ -84,33 +84,3 @@ A submission include information such as:
 
 We keep track of all the changes a user makes to a single submission.
 Therefore, if the user edits his submission 10 times, we will save and keep all 11 different revisions of that submission.
-
-### Submit a submission [POST /deals/:deal/submissions]
-
-`deal` The uuid of the deal this submission should be saved in
-
-<!-- include(tests/submission/create.md) -->
-
-### Get all submissions of a deal [GET /deals/:deal/submissions]
-
-``deal` The uuid of the deal
-
-<!-- include(tests/submission/getAll.md) -->
-
-### Update a submission [PUT /forms/submissions/:id]
-
-`id` The uuid of the submission that must be updated
-
-<!-- include(tests/submission/update.md) -->
-
-### Delete a submission [DELETE /forms/submissions/:id]
-
-`id` The uuid of the submission that must be updated
-
-<!-- include(tests/submission/remove.md) -->
-
-### Delete a submission [DELETE /forms/submissions/:id]
-
-`id` The uuid of the submission that must be updated
-
-<!-- include(tests/submission/remove.md) -->
