@@ -101,7 +101,7 @@ SELECT deals.*,
       JOIN addresses ON properties.address_id = addresses.id
       WHERE listings.id = deals.listing
     ) p
-  ) AS proposed_values
+  ) AS mls_context
 FROM deals
 JOIN unnest($1::uuid[]) WITH ORDINALITY t(did, ord) ON deals.id = did
 ORDER BY t.ord
