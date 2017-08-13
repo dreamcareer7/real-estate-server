@@ -44,6 +44,26 @@ const createHippocket = cb => {
 //     })
 }
 
+const addContext = cb => {
+  const context = {
+    listing_status: 'Active',
+    year_built: 1972
+  }
+
+  return frisby.create('add some context to a deal')
+    .post(`/deals/${results.deal.create.data.id}/context`, {context})
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      data: results.deal.create.data
+    })
+    .expectJSONTypes({
+      code: String,
+      data: deal_response
+    })
+}
+
 const addRole = cb => {
   const role = {
     first_name: 'Imaginary',
@@ -217,6 +237,7 @@ const getTask = cb => {
 module.exports = {
   create,
   createHippocket,
+  addContext,
   addRole,
   get,
   getAll,
