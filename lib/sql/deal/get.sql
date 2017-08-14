@@ -104,13 +104,24 @@ SELECT deals.*,
   ) AS mls_context,
 
   (
+    WITH context AS (
+      SELECT
+        id,
+        'deal_context_item' as type,
+        created_at,
+        key,
+        value,
+        created_by
+      FROM
+        deal_context
+      WHERE
+        deal = deals.id
+    )
+
     SELECT
-      JSON_OBJECT_AGG(deal_context.key, deal_context.*)
-    FROM
-      deal_context
-    WHERE
-      deal = deals.id
-  ) AS deal_context
+      JSON_OBJECT_AGG(context.key, context.*)
+    FROM context
+  ) as deal_context
 FROM deals
 JOIN unnest($1::uuid[]) WITH ORDINALITY t(did, ord) ON deals.id = did
 ORDER BY t.ord
