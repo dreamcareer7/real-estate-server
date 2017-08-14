@@ -41,7 +41,7 @@ SELECT deals.*,
     SELECT ROW_TO_JSON(p.*) FROM
     (
       SELECT
-      'deal_proposed_values' AS type,
+      'mls_context' AS type,
       status AS listing_status,
       transaction_type,
       mls_number,
