@@ -166,7 +166,7 @@ const deleteRole = cb => {
 const addMember = cb => {
   return frisby.create('add a user to a brand role')
     .post(`/brands/${results.brand.create.data.id}/roles/${results.brand.addRole.data.id}/members`, {
-      user: results.authorize.token.data.id
+      emails: ['invited-member@boer.rechat.com']
     })
     .after(cb)
     .expectStatus(200)
