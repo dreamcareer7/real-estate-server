@@ -27,14 +27,23 @@ SELECT deals.*,
       WHERE
         submission IN (SELECT submission FROM submissions)
       ORDER BY id, created_at DESC
+    ),
+
+    c AS (
+      SELECT
+        'form_context_item' as type,
+        fc.key as key,
+        fc.value as value
+      FROM forms_data_context fc
+      JOIN
+        forms_data ON fc.revision = forms_data.id
+      WHERE forms_data.id IN (SELECT id FROM revisions)
     )
 
     SELECT
-      JSON_OBJECT_AGG(forms_data_context.key, forms_data_context)
+      JSON_OBJECT_AGG(c.key, c)
     FROM
-      forms_data_context
-    WHERE
-      revision IN(SELECT id FROM revisions)
+      c
   ) as form_context,
 
   (
