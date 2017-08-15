@@ -32,7 +32,7 @@ SELECT deals.*,
     c AS (
       SELECT
         'form_context_item' as type,
-        forms_data.created_at as created_at,
+        EXTRACT(EPOCH FROM forms_data.created_at) AS created_at,
         fc.key as key,
         fc.value as value
       FROM forms_data_context fc
