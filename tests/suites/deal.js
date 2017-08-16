@@ -148,8 +148,7 @@ const addTask = cb => {
     status: 'New',
     task_type: 'Form',
     form: results.form.create.data.id,
-    checklist: results.deal.addChecklist.data.id,
-    required: false
+    checklist: results.deal.addChecklist.data.id
   }
 
   return frisby.create('add a task to a deal')
@@ -229,14 +228,6 @@ const patchAttention = cb => {
 //     })
 }
 
-const patchRequired = cb => {
-  return frisby.create('Change the required state of a task')
-    .patch(`/tasks/${results.deal.addTask.data.id}/required`, {
-      required: true
-    })
-    .after(cb)
-}
-
 const getTask = cb => {
   return frisby.create('get a task')
     .get(`/tasks/${results.deal.addTask.data.id}`)
@@ -257,6 +248,5 @@ module.exports = {
   getTask,
   setReview,
   patchAttention,
-  patchRequired,
   remove
 }

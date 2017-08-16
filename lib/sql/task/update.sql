@@ -3,6 +3,5 @@ UPDATE tasks SET
   review = $3,
   submission = $4,
   needs_attention = $5,
-  required = $6,
   updated_at = CLOCK_TIMESTAMP()
 WHERE id = $1
