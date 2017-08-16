@@ -27,14 +27,24 @@ SELECT deals.*,
       WHERE
         submission IN (SELECT submission FROM submissions)
       ORDER BY id, created_at DESC
+    ),
+
+    c AS (
+      SELECT
+        'form_context_item' as type,
+        EXTRACT(EPOCH FROM forms_data.created_at) AS created_at,
+        fc.key as key,
+        fc.value as value
+      FROM forms_data_context fc
+      JOIN
+        forms_data ON fc.revision = forms_data.id
+      WHERE forms_data.id IN (SELECT id FROM revisions)
     )
 
     SELECT
-      JSON_OBJECT_AGG(forms_data_context.key, forms_data_context)
+      JSON_OBJECT_AGG(c.key, c)
     FROM
-      forms_data_context
-    WHERE
-      revision IN(SELECT id FROM revisions)
+      c
   ) as form_context,
 
   (
@@ -104,13 +114,24 @@ SELECT deals.*,
   ) AS mls_context,
 
   (
+    WITH context AS (
+      SELECT
+        id,
+        'deal_context_item' as type,
+        created_at,
+        key,
+        value,
+        created_by
+      FROM
+        deal_context
+      WHERE
+        deal = deals.id
+    )
+
     SELECT
-      JSON_OBJECT_AGG(deal_context.key, deal_context.*)
-    FROM
-      deal_context
-    WHERE
-      deal = deals.id
-  ) AS deal_context
+      JSON_OBJECT_AGG(context.key, context.*)
+    FROM context
+  ) as deal_context
 FROM deals
 JOIN unnest($1::uuid[]) WITH ORDINALITY t(did, ord) ON deals.id = did
 ORDER BY t.ord

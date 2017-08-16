@@ -113,7 +113,8 @@ const addTask = cb => {
       title: 'Task 1',
       task_type: 'Form',
       form: results.form.create.data.id,
-      order: 1
+      order: 1,
+      required: true
     })
     .after(cb)
     .expectStatus(200)
@@ -166,7 +167,7 @@ const deleteRole = cb => {
 const addMember = cb => {
   return frisby.create('add a user to a brand role')
     .post(`/brands/${results.brand.create.data.id}/roles/${results.brand.addRole.data.id}/members`, {
-      user: results.authorize.token.data.id
+      emails: ['invited-member@boer.rechat.com']
     })
     .after(cb)
     .expectStatus(200)

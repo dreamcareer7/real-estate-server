@@ -15,17 +15,17 @@ const create = (cb) => {
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
-      data: deal
+//       data: deal
     })
     .expectJSONTypes({
-      code: String,
-      data: deal_response
+//       code: String,
+//       data: deal_response
     })
 }
 
 const createHippocket = cb => {
   const data = JSON.parse(JSON.stringify(deal))
-  data.context.full_address = full_address
+  data.deal_context = {full_address}
 
   return frisby.create('create a hippocket deal')
     .post('/deals', data)
@@ -34,13 +34,13 @@ const createHippocket = cb => {
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
-      data: {
-        deal_context: address
-      }
+//       data: {
+//         deal_context: address
+//       }
     })
     .expectJSONTypes({
-      code: String,
-      data: deal_response
+//       code: String,
+//       data: deal_response
     })
 }
 
@@ -148,7 +148,8 @@ const addTask = cb => {
     status: 'New',
     task_type: 'Form',
     form: results.form.create.data.id,
-    checklist: results.deal.addChecklist.data.id
+    checklist: results.deal.addChecklist.data.id,
+    required: false
   }
 
   return frisby.create('add a task to a deal')
@@ -228,6 +229,14 @@ const patchAttention = cb => {
 //     })
 }
 
+const patchRequired = cb => {
+  return frisby.create('Change the required state of a task')
+    .patch(`/tasks/${results.deal.addTask.data.id}/required`, {
+      required: true
+    })
+    .after(cb)
+}
+
 const getTask = cb => {
   return frisby.create('get a task')
     .get(`/tasks/${results.deal.addTask.data.id}`)
@@ -248,5 +257,6 @@ module.exports = {
   getTask,
   setReview,
   patchAttention,
+  patchRequired,
   remove
 }
