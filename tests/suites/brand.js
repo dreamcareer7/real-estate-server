@@ -113,7 +113,8 @@ const addTask = cb => {
       title: 'Task 1',
       task_type: 'Form',
       form: results.form.create.data.id,
-      order: 1
+      order: 1,
+      required: true
     })
     .after(cb)
     .expectStatus(200)
