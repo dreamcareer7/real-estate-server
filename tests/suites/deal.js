@@ -234,6 +234,16 @@ const getTask = cb => {
     .after(cb)
 }
 
+const getBrandInbox = (cb) => {
+  return frisby.create('get brand inbox')
+    .get(`/brands/${results.brand.create.data.id}/deals/inbox`)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+    })
+}
+
 module.exports = {
   create,
   createHippocket,
@@ -248,5 +258,6 @@ module.exports = {
   getTask,
   setReview,
   patchAttention,
+  getBrandInbox,
   remove
 }
