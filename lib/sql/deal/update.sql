@@ -1,0 +1,1 @@
+UPDATE deals SET listing = $2 WHERE id = $1

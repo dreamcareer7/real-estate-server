@@ -44,6 +44,18 @@ const createHippocket = cb => {
     })
 }
 
+const patchListing = cb => {
+  return frisby.create('set a listing for a deal')
+    .patch(`/deals/${results.deal.create.data.id}/listing`, {
+      listing: results.listing.getListing.data.id
+    })
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+    })
+}
+
 const addContext = cb => {
   const context = {
     listing_status: 'Active',
@@ -247,6 +259,7 @@ const getBrandInbox = (cb) => {
 module.exports = {
   create,
   createHippocket,
+  patchListing,
   addContext,
   addRole,
   get,
