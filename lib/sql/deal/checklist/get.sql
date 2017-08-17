@@ -5,7 +5,11 @@ SELECT deals_checklists.*,
   EXTRACT(EPOCH FROM deleted_at) AS deleted_at,
   (
     SELECT ARRAY_AGG(id ORDER BY "order") FROM tasks WHERE checklist = deals_checklists.id
-  ) AS tasks
+  ) AS tasks,
+
+  (
+    SELECT form FROM brands_checklists_allowed_forms WHERE checklist = deals_checklists.origin
+  ) as allowed_forms
 
 FROM deals_checklists
 JOIN unnest($1::uuid[]) WITH ORDINALITY t(did, ord) ON deals_checklists.id = did

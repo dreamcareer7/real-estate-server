@@ -5,15 +5,19 @@ const db = require('../lib/utils/db')
 
 const up = [
   'BEGIN',
-  'ALTER TABLE brands_checklists_tasks ADD required BOOLEAN NOT NULL DEFAULT false',
-  'ALTER TABLE tasks ADD required BOOLEAN NOT NULL DEFAULT false',
+  `CREATE TABLE brands_checklists_allowed_forms (
+    id uuid DEFAULT uuid_generate_v1() NOT NULL PRIMARY KEY,
+    checklist uuid NOT NULL REFERENCES brands_checklists(id),
+    form uuid NOT NULL REFERENCES forms(id)
+  )`,
+  'ALTER TABLE deals_checklists ADD origin uuid REFERENCES brands_checklists(id)',
   'COMMIT'
 ]
 
 const down = [
   'BEGIN',
-  'ALTER TABLE brands_checklists_tasks DROP required',
-  'ALTER TABLE tasks DROP required',
+  'DROP TABLE brands_checklists_allowed_forms',
+  'ALTER TABLE deals_checklists DROP origin',
   'COMMIT'
 ]
 
