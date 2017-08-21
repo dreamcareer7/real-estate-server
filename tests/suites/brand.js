@@ -96,6 +96,13 @@ const addChecklist = cb => {
     })
 }
 
+const deleteChecklist = cb => {
+  return frisby.create('delete a checklist to a brand')
+    .delete(`/brands/${results.brand.create.data.id}/checklists/${results.brand.addChecklist.data.id}`)
+    .after(cb)
+    .expectStatus(204)
+}
+
 const getChecklists = cb => {
   return frisby.create('get a brands checklists')
     .get(`/brands/${results.brand.create.data.id}/checklists`)
@@ -109,7 +116,7 @@ const getChecklists = cb => {
 
 const addTask = cb => {
   return frisby.create('add a task to a brand checklist')
-    .post(`/brands/checklists/${results.brand.addChecklist.data.id}/tasks`, {
+    .post(`/brands/${results.brand.create.data.id}/checklists/${results.brand.addChecklist.data.id}/tasks`, {
       title: 'Task 1',
       task_type: 'Form',
       form: results.form.create.data.id,
@@ -125,7 +132,7 @@ const addTask = cb => {
 
 const addForm = cb => {
   return frisby.create('add an allowed form to a brand checklist')
-    .post(`/brands/checklists/${results.brand.addChecklist.data.id}/forms`, {
+    .post(`/brands/${results.brand.create.data.id}/checklists/${results.brand.addChecklist.data.id}/forms`, {
       form: results.form.create.data.id,
     })
     .after(cb)
@@ -134,6 +141,20 @@ const addForm = cb => {
       code: 'OK',
 //       data: brand
     })
+}
+
+const deleteTask = cb => {
+  return frisby.create('delete a task from a brand checklist')
+    .delete(`/brands/${results.brand.create.data.id}/checklists/${results.brand.addChecklist.data.id}/tasks/${results.brand.addTask.data.id}`)
+    .after(cb)
+    .expectStatus(204)
+}
+
+const deleteForm = cb => {
+  return frisby.create('delete a form from a brand checklist')
+    .delete(`/brands/${results.brand.create.data.id}/checklists/${results.brand.addChecklist.data.id}/forms/${results.form.create.data.id}`)
+    .after(cb)
+    .expectStatus(204)
 }
 
 const removeOffice = cb => {
@@ -225,6 +246,9 @@ module.exports = {
   addForm,
   addTask,
   getChecklists,
+  deleteTask,
+  deleteForm,
+  deleteChecklist,
   getByHostname,
   removeOffice,
   removeHostname

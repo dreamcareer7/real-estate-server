@@ -1,0 +1,1 @@
+DELETE FROM brands_checklists_allowed_forms WHERE checklist = $1 AND form = $2
