@@ -191,6 +191,19 @@ const setSubmission = cb => {
     .after(cb)
 }
 
+const addActivity = cb => {
+  const activity = {
+    action: 'UserViewedFile',
+    object_class: 'file',
+    object: results.deal.setSubmission.data.file.id
+  }
+
+  return frisby.create('add an activity to a task')
+    .post(`/tasks/${results.deal.addTask.data.id}/timeline`, activity)
+    .expectStatus(200)
+    .after(cb)
+}
+
 const getRevision = cb => {
   return frisby.create('get revision data for a submission')
     .get(`/tasks/${results.deal.addTask.data.id}/submission/${results.deal.setSubmission.data.last_revision}`)
@@ -267,6 +280,7 @@ module.exports = {
   addChecklist,
   addTask,
   setSubmission,
+  addActivity,
   getRevision,
   getTask,
   setReview,
