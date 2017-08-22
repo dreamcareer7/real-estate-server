@@ -86,7 +86,9 @@ const addChecklist = cb => {
       title: 'Checklist 1',
       deal_type: 'Buying',
       property_type: 'Resale',
-      order: 2
+      order: 2,
+      is_terminatable: true,
+      tab_name: 'Contract'
     })
     .after(cb)
     .expectStatus(200)

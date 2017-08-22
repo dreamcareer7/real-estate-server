@@ -9,7 +9,15 @@ SELECT deals_checklists.*,
 
   (
     SELECT form FROM brands_checklists_allowed_forms WHERE checklist = deals_checklists.origin
-  ) as allowed_forms
+  ) as allowed_forms,
+
+  (
+    SELECT is_terminatable FROM brands_checklists WHERE id = deals_checklists.origin
+  ) as is_terminatable,
+
+  (
+    SELECT tab_name FROM brands_checklists WHERE id = deals_checklists.origin
+  ) as tab_name
 
 FROM deals_checklists
 JOIN unnest($1::uuid[]) WITH ORDINALITY t(did, ord) ON deals_checklists.id = did
