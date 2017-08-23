@@ -9,6 +9,7 @@ SELECT brands_checklists.*,
       brands_checklists_tasks
     WHERE
       checklist = brands_checklists.id
+      AND deleted_at IS NULL
   ) as tasks,
 
   (
