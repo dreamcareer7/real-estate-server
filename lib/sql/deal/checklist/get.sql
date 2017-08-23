@@ -8,7 +8,7 @@ SELECT deals_checklists.*,
   ) AS tasks,
 
   (
-    SELECT form FROM brands_checklists_allowed_forms WHERE checklist = deals_checklists.origin
+    SELECT ARRAY_AGG(form) FROM brands_checklists_allowed_forms WHERE checklist = deals_checklists.origin
   ) as allowed_forms,
 
   (

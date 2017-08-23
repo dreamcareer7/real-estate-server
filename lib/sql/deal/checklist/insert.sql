@@ -1,6 +1,7 @@
 INSERT INTO deals_checklists (
   title,
   "order",
-  deal
-) VALUES ($1, $2, $3)
+  deal,
+  origin
+) VALUES ($1, $2, $3, $4)
 RETURNING id
