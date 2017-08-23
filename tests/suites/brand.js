@@ -98,6 +98,16 @@ const addChecklist = cb => {
     })
 }
 
+const updateChecklist = cb => {
+  const data = results.brand.addChecklist.data
+  data.title = 'Updated Checklist'
+
+  return frisby.create('update a checklist')
+    .put(`/brands/${results.brand.create.data.id}/checklists/${results.brand.addChecklist.data.id}`, data)
+    .after(cb)
+    .expectStatus(200)
+}
+
 const deleteChecklist = cb => {
   return frisby.create('delete a checklist to a brand')
     .delete(`/brands/${results.brand.create.data.id}/checklists/${results.brand.addChecklist.data.id}`)
@@ -245,6 +255,7 @@ module.exports = {
   addOffice,
   addHostname,
   addChecklist,
+  updateChecklist,
   addForm,
   addTask,
   getChecklists,
