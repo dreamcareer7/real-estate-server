@@ -4,7 +4,8 @@ WITH reviews AS (
   reviews.*,
   'review' as type,
   reviews_history.status as status,
-  reviews_history.created_at as updated_at,
+  EXTRACT(EPOCH FROM reviews.created_at) AS created_at,
+  EXTRACT(EPOCH FROM reviews_history.created_at) AS updated_at,
   reviews_history.created_by as updated_by
   FROM reviews
   JOIN reviews_history ON reviews.id = reviews_history.review
