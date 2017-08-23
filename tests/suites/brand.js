@@ -5,6 +5,7 @@ registerSuite('form', ['create'])
 
 const hostname = 'testhost'
 let office_id
+let brand_id
 
 const createParent = (cb) => {
   return frisby.create('create a brand')
@@ -22,17 +23,19 @@ const create = (cb) => {
 
   return frisby.create('create a child brand')
     .post('/brands', brand)
-    .after(cb)
+    .after((err, res, body) => {
+      brand_id = body.data.id
+      cb(err, res, body)
+    })
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
-//       data: brand
     })
 }
 
 const addHostname = cb => {
   return frisby.create('add hostname to a brand')
-    .post(`/brands/${results.brand.create.data.id}/hostnames`, {
+    .post(`/brands/${brand_id}/hostnames`, {
       hostname: hostname,
       is_default: true
     })
@@ -46,7 +49,7 @@ const addHostname = cb => {
 
 const removeHostname = cb => {
   return frisby.create('delete hostname of a brand')
-    .delete(`/brands/${results.brand.create.data.id}/hostnames?hostname=${hostname}`)
+    .delete(`/brands/${brand_id}/hostnames?hostname=${hostname}`)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
@@ -69,7 +72,7 @@ const getByHostname = (cb) => {
 const addOffice = cb => {
   office_id = results.office.add.rows[0].id
   return frisby.create('add an office to a brand')
-    .post(`/brands/${results.brand.create.data.id}/offices`, {
+    .post(`/brands/${brand_id}/offices`, {
       office: office_id
     })
     .after(cb)
@@ -82,7 +85,7 @@ const addOffice = cb => {
 
 const addChecklist = cb => {
   return frisby.create('add a checklist to a brand')
-    .post(`/brands/${results.brand.create.data.id}/checklists`, {
+    .post(`/brands/${brand_id}/checklists`, {
       title: 'Checklist 1',
       deal_type: 'Buying',
       property_type: 'Resale',
@@ -103,21 +106,21 @@ const updateChecklist = cb => {
   data.title = 'Updated Checklist'
 
   return frisby.create('update a checklist')
-    .put(`/brands/${results.brand.create.data.id}/checklists/${results.brand.addChecklist.data.id}`, data)
+    .put(`/brands/${brand_id}/checklists/${results.brand.addChecklist.data.id}`, data)
     .after(cb)
     .expectStatus(200)
 }
 
 const deleteChecklist = cb => {
   return frisby.create('delete a checklist to a brand')
-    .delete(`/brands/${results.brand.create.data.id}/checklists/${results.brand.addChecklist.data.id}`)
+    .delete(`/brands/${brand_id}/checklists/${results.brand.addChecklist.data.id}`)
     .after(cb)
     .expectStatus(204)
 }
 
 const getChecklists = cb => {
   return frisby.create('get a brands checklists')
-    .get(`/brands/${results.brand.create.data.id}/checklists`)
+    .get(`/brands/${brand_id}/checklists`)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
@@ -128,7 +131,7 @@ const getChecklists = cb => {
 
 const addTask = cb => {
   return frisby.create('add a task to a brand checklist')
-    .post(`/brands/${results.brand.create.data.id}/checklists/${results.brand.addChecklist.data.id}/tasks`, {
+    .post(`/brands/${brand_id}/checklists/${results.brand.addChecklist.data.id}/tasks`, {
       title: 'Task 1',
       task_type: 'Form',
       form: results.form.create.data.id,
@@ -142,9 +145,19 @@ const addTask = cb => {
     })
 }
 
+const updateTask = cb => {
+  const d = results.brand.addTask.data
+  d.title = 'Updated Task'
+
+  return frisby.create('update a task')
+    .put(`/brands/${brand_id}/checklists/${results.brand.addChecklist.data.id}/tasks/${results.brand.addTask.data.id}`, d)
+    .after(cb)
+    .expectStatus(200)
+}
+
 const addForm = cb => {
   return frisby.create('add an allowed form to a brand checklist')
-    .post(`/brands/${results.brand.create.data.id}/checklists/${results.brand.addChecklist.data.id}/forms`, {
+    .post(`/brands/${brand_id}/checklists/${results.brand.addChecklist.data.id}/forms`, {
       form: results.form.create.data.id,
     })
     .after(cb)
@@ -157,21 +170,21 @@ const addForm = cb => {
 
 const deleteTask = cb => {
   return frisby.create('delete a task from a brand checklist')
-    .delete(`/brands/${results.brand.create.data.id}/checklists/${results.brand.addChecklist.data.id}/tasks/${results.brand.addTask.data.id}`)
+    .delete(`/brands/${brand_id}/checklists/${results.brand.addChecklist.data.id}/tasks/${results.brand.addTask.data.id}`)
     .after(cb)
     .expectStatus(204)
 }
 
 const deleteForm = cb => {
   return frisby.create('delete a form from a brand checklist')
-    .delete(`/brands/${results.brand.create.data.id}/checklists/${results.brand.addChecklist.data.id}/forms/${results.form.create.data.id}`)
+    .delete(`/brands/${brand_id}/checklists/${results.brand.addChecklist.data.id}/forms/${results.form.create.data.id}`)
     .after(cb)
     .expectStatus(204)
 }
 
 const removeOffice = cb => {
   return frisby.create('remove an office from a brand')
-    .delete(`/brands/${results.brand.create.data.id}/offices/${office_id}`)
+    .delete(`/brands/${brand_id}/offices/${office_id}`)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
@@ -182,7 +195,7 @@ const removeOffice = cb => {
 
 const addRole = cb => {
   return frisby.create('add a role to a brand')
-    .post(`/brands/${results.brand.create.data.id}/roles`, {
+    .post(`/brands/${brand_id}/roles`, {
       role: 'Admin'
     })
     .after(cb)
@@ -194,7 +207,7 @@ const addRole = cb => {
 
 const getRoles = cb => {
   return frisby.create('get all roles for a brand')
-    .get(`/brands/${results.brand.create.data.id}/roles`)
+    .get(`/brands/${brand_id}/roles`)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
@@ -204,14 +217,14 @@ const getRoles = cb => {
 
 const deleteRole = cb => {
   return frisby.create('delete a brand role')
-    .delete(`/brands/${results.brand.create.data.id}/roles/${results.brand.addRole.data.id}`)
+    .delete(`/brands/${brand_id}/roles/${results.brand.addRole.data.id}`)
     .after(cb)
     .expectStatus(204)
 }
 
 const addMember = cb => {
   return frisby.create('add a user to a brand role')
-    .post(`/brands/${results.brand.create.data.id}/roles/${results.brand.addRole.data.id}/members`, {
+    .post(`/brands/${brand_id}/roles/${results.brand.addRole.data.id}/members`, {
       emails: ['invited-member@boer.rechat.com']
     })
     .after(cb)
@@ -223,7 +236,7 @@ const addMember = cb => {
 
 const getMembers = cb => {
   return frisby.create('get all members of a brand role')
-    .get(`/brands/${results.brand.create.data.id}/roles/${results.brand.addRole.data.id}/members`)
+    .get(`/brands/${brand_id}/roles/${results.brand.addRole.data.id}/members`)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
@@ -233,7 +246,7 @@ const getMembers = cb => {
 
 const deleteMember = cb => {
   return frisby.create('delete a member from a role')
-    .delete(`/brands/${results.brand.create.data.id}/roles/${results.brand.addRole.data.id}/members/${results.authorize.token.data.id}`)
+    .delete(`/brands/${brand_id}/roles/${results.brand.addRole.data.id}/members/${results.authorize.token.data.id}`)
     .after(cb)
     .expectStatus(204)
 }
@@ -258,6 +271,7 @@ module.exports = {
   updateChecklist,
   addForm,
   addTask,
+  updateTask,
   getChecklists,
   deleteTask,
   deleteForm,
