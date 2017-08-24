@@ -1,5 +1,5 @@
 SELECT
-  DISTINCT id
+  id
 FROM deals
 WHERE
   deleted_at IS NULL
