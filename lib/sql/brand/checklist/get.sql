@@ -17,7 +17,7 @@ SELECT brands_checklists.*,
       ARRAY_AGG(form)
     FROM
       brands_checklists_allowed_forms
-    WHERE checklist = brands_checklists.id
+    WHERE checklist = brands_checklists.id AND deleted_at IS NULL
   ) as allowed_forms
 
 FROM brands_checklists
