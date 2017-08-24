@@ -131,7 +131,12 @@ SELECT deals.*,
     SELECT
       JSON_OBJECT_AGG(context.key, context.*)
     FROM context
-  ) as deal_context
+  ) as deal_context,
+
+  (
+    SELECT id FROM envelopes WHERE deal = deals.id
+  ) as envelopes
+
 FROM deals
 JOIN unnest($1::uuid[]) WITH ORDINALITY t(did, ord) ON deals.id = did
 ORDER BY t.ord
