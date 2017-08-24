@@ -134,7 +134,7 @@ SELECT deals.*,
   ) as deal_context,
 
   (
-    SELECT id FROM envelopes WHERE deal = deals.id
+    SELECT ARRAY_AGG(id) FROM envelopes WHERE deal = deals.id
   ) as envelopes
 
 FROM deals
