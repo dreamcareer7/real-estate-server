@@ -108,7 +108,6 @@ const sign = cb => {
   return frisby.create('Go to "sign envelope" page')
     .get(`/envelopes/${results.envelope.create.data.id}/sign`)
     .after(cb)
-    .expectStatus(200)
 }
 
 const voidit = cb => {
