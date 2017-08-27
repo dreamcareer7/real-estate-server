@@ -8,6 +8,8 @@ let office_id
 let brand_id
 
 const createParent = (cb) => {
+  brand.name = 'Parent Brand'
+
   return frisby.create('create a brand')
     .post('/brands', brand)
     .after(cb)
@@ -20,6 +22,7 @@ const createParent = (cb) => {
 
 const create = (cb) => {
   brand.parent = results.brand.createParent.data.id
+  brand.name = 'Brand'
 
   return frisby.create('create a child brand')
     .post('/brands', brand)
