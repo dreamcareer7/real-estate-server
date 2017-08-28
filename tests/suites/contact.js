@@ -218,9 +218,36 @@ const addInvalidActivityByAction = (cb) => {
     .expectStatus(400)
 }
 
+const addInvalidActivityByActionForUser = (cb) => {
+  return frisby.create('record an activity by invalid action for a user')
+    .post('/users/self/timeline', {
+      action: 'BombasticActivity',
+      object_class: 'phone_call',
+      object: {
+        type: 'phone_call',
+        duration: 180
+      }
+    })
+    .after(cb)
+    .expectStatus(400)
+}
+
 const addInvalidActivityByType = (cb) => {
   return frisby.create('record an activity by invalid type')
     .post(`/contacts/${results.contact.create.data[0].id}/timeline`, {
+      action: 'UserCalledContact',
+      object_class: 'bombastic_call',
+      object: {
+        type: 'bombastic_call',
+      }
+    })
+    .after(cb)
+    .expectStatus(400)
+}
+
+const addInvalidActivityByTypeForUser = (cb) => {
+  return frisby.create('record an activity by invalid type for a user')
+    .post('/users/self/timeline', {
       action: 'UserCalledContact',
       object_class: 'bombastic_call',
       object: {
@@ -243,6 +270,18 @@ const addInvalidActivityActionMissing = (cb) => {
     .expectStatus(400)
 }
 
+const addInvalidActivityActionMissingForUser = (cb) => {
+  return frisby.create('record an invalid activity when action is missing for a user')
+    .post('/users/self/timeline', {
+      object_class: 'UserCalledContact',
+      object: {
+        type: 'phone_call',
+      }
+    })
+    .after(cb)
+    .expectStatus(400)
+}
+
 const addInvalidActivityObjectClassMissing = (cb) => {
   return frisby.create('record an invalid activity when object class is missing')
     .post(`/contacts/${results.contact.create.data[0].id}/timeline`, {
@@ -255,9 +294,31 @@ const addInvalidActivityObjectClassMissing = (cb) => {
     .expectStatus(400)
 }
 
+const addInvalidActivityObjectClassMissingForUser = (cb) => {
+  return frisby.create('record an invalid activity when object class is missing for a user')
+    .post('/users/self/timeline', {
+      action: 'UserCalledContact',
+      object: {
+        type: 'phone_call',
+      }
+    })
+    .after(cb)
+    .expectStatus(400)
+}
+
 const addInvalidActivityObjectMissing = (cb) => {
   return frisby.create('record an invalid activity when object is missing')
     .post(`/contacts/${results.contact.create.data[0].id}/timeline`, {
+      action: 'UserCalledContact',
+      object_class: 'phone_call',
+    })
+    .after(cb)
+    .expectStatus(400)
+}
+
+const addInvalidActivityObjectMissingForUser = (cb) => {
+  return frisby.create('record an invalid activity when object is missing for a user')
+    .post('/users/self/timeline', {
       action: 'UserCalledContact',
       object_class: 'phone_call',
     })
@@ -308,9 +369,34 @@ const addActivityObject = (cb) => {
     .expectStatus(200)
 }
 
+const addActivityObjectForUser = (cb) => {
+  return frisby.create('record activity for contact by object for a user')
+    .post('/users/self/timeline', {
+      action: 'UserViewedListing',
+      object_class: 'listing',
+      object: results.listing.getListing.data.id
+    })
+    .after(cb)
+    .expectStatus(200)
+}
+
 const addActivityReference = (cb) => {
   return frisby.create('record activity for contact by reference')
     .post(`/contacts/${results.contact.create.data[0].id}/timeline`, {
+      action: 'UserCalledContact',
+      object_class: 'phone_call',
+      object: {
+        type: 'phone_call',
+        duration: 180
+      }
+    })
+    .after(cb)
+    .expectStatus(200)
+}
+
+const addActivityReferenceForUser = (cb) => {
+  return frisby.create('record activity for contact by reference for a user')
+    .post('/users/self/timeline', {
       action: 'UserCalledContact',
       object_class: 'phone_call',
       object: {
@@ -350,6 +436,24 @@ const addActivityToRoomReference = (cb) => {
 const getTimeline = (cb) => {
   return frisby.create('get list of contact activities (timeline)')
     .get(`/contacts/${results.contact.create.data[0].id}/timeline`)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      data: [
+        {
+        }
+      ],
+      info: {
+        count: 4,
+        total: 4
+      }
+    })
+}
+
+const getTimelineForUser = (cb) => {
+  return frisby.create('get list of contact activities (timeline) for a user')
+    .get(`/users/${results.authorize.token.data.id}/timeline`)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
@@ -480,17 +584,25 @@ module.exports = {
   removeNonExistingAttribute,
   removeGibberishAttribute,
   addInvalidActivityByType,
+  addInvalidActivityByTypeForUser,
   addInvalidActivityByAction,
+  addInvalidActivityByActionForUser,
   addInvalidActivityActionMissing,
+  addInvalidActivityActionMissingForUser,
   addInvalidActivityObjectClassMissing,
+  addInvalidActivityObjectClassMissingForUser,
   addInvalidActivityObjectMissing,
+  addInvalidActivityObjectMissingForUser,
   addActivityToNonExistingContact,
   addActivityToGibberishContact,
   addActivityObject,
+  addActivityObjectForUser,
   addActivityReference,
+  addActivityReferenceForUser,
   addActivityToRoomObject,
   addActivityToRoomReference,
   getTimeline,
+  getTimelineForUser,
   deleteContact,
   deleteContactWorked
 }
