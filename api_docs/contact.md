@@ -54,4 +54,9 @@ An _Activity_ is an object, recording an event that either a specific user has d
 <!-- include(tests/contact/addActivityObject.md) -->
 
 ### Record an activity for a specific user [POST /users/self/timeline]
-<!-- include(tests/contact/)
+
+#### By Reference
+<!-- include(tests/contact/addActivityReferenceForUser.md) -->
+
+#### By Object
+<!-- include(tests/contact/addActivityObjectForUser.md) -->
