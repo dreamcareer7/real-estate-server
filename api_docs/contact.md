@@ -38,3 +38,25 @@ note                  |    string       |                 | A small note for thi
 
 ### Deleting a contact [DELETE /contacts/:id]
 <!-- include(tests/contact/deleteContact.md) -->
+
+## Timeline Activities
+An _Activity_ is an object, recording an event that either a specific user has done or a user has done on a specific contact of theirs. There are generally two types of activities. *User* activities and *Contact* activities.
+
+### Get all activities related to a contact and all users that are attached to it [GET /contacts/:id/timeline]
+<!-- include(tests/contact/getTimeline) -->
+
+### Record an activity for a specific contact [POST /contacts/:id/timeline]
+
+#### By Reference
+<!-- include(tests/contact/addActivityReference.md) -->
+
+#### By Object
+<!-- include(tests/contact/addActivityObject.md) -->
+
+### Record an activity for a specific user [POST /users/self/timeline]
+
+#### By Reference
+<!-- include(tests/contact/addActivityReferenceForUser.md) -->
+
+#### By Object
+<!-- include(tests/contact/addActivityObjectForUser.md) -->
