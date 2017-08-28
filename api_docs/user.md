@@ -59,3 +59,8 @@ It is important to remember that shadow users _can_ use some of the Rechat's fea
 ### Upgrade User to Agent [PATCH /users/self/upgrade]
 <!-- include(tests/user/upgradeToAgentWithEmail.md) -->
 <!-- include(tests/user/upgradeToAgentWithPhoneNumber.md) -->
+
+### Reset a User's Password [PATCH /users/password]
+<!-- include(tests/user/resetPasswordByTokenEmail.md) -->
+<!-- include(tests/user/resetPasswordByShadowTokenEmail.md) -->
+<!-- include(tests/user/resetPasswordByShadowTokenPhone.md) -->
