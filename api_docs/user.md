@@ -64,3 +64,9 @@ It is important to remember that shadow users _can_ use some of the Rechat's fea
 <!-- include(tests/user/resetPasswordByTokenEmail.md) -->
 <!-- include(tests/user/resetPasswordByShadowTokenEmail.md) -->
 <!-- include(tests/user/resetPasswordByShadowTokenPhone.md) -->
+
+### Verify Email
+<!-- include(tests/verification/verifyEmail.md) -->
+
+### Verify Phone Number
+<!-- include(tests/verification/verifyPhone.md) -->
