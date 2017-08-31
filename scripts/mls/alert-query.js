@@ -12,4 +12,5 @@ Alert.get(process.argv[2], (err, alert) => {
 
   const q = Alert.buildQuery(alert)
   console.log(q.toString())
+  process.exit()
 })
