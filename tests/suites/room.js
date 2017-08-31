@@ -117,7 +117,7 @@ const addUser400 = (cb) => {
 
 const search = (cb) => {
   return frisby.create('search room by email')
-    .get('/rooms/search?q[]=' + results.room.create.data.title)
+    .get('/rooms/search?q[]=' + results.room.create.data.title) //Sampleroom
     .after(cb)
     .expectStatus(200)
     .expectJSON({
@@ -129,6 +129,28 @@ const search = (cb) => {
       data: [room_response],
       info: info_response
     })
+}
+
+const searchUsers = (cb) => {
+  return frisby.create('search room by users')
+    .get('/rooms/search?users[]=' + uuid.v1())
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      data: []
+    })
+    .expectJSONTypes({
+      code: String,
+      data: []
+    })
+}
+
+const searchUsers400 = (cb) => {
+  return frisby.create('search room by users invalid input')
+    .get('/rooms/search?users=testuser') 
+    .after(cb)
+    .expectStatus(400)
 }
 
 const removeUserFromPersonal = (cb) => {
@@ -155,7 +177,7 @@ const patchRoom = (cb) => {
 }
 
 const patchRoom404 = (cb) => {
-  return frisby.create('expect 404 with invalid toom id when updating a room')
+  return frisby.create('expect 404 with invalid room id when updating a room')
     .put('/rooms/' + uuid.v1(), room)
     .after(cb)
     .expectStatus(404)
@@ -200,6 +222,13 @@ const removeUser404 = (cb) => {
     .after(cb)
 }
 
+const archiveRoom = (cb) => {
+  return frisby.create('archive a room')
+    .delete('/rooms/'+ results.room.create.data.id)
+    .expectStatus(204)
+    .after(cb)
+}
+
 module.exports = {
   create,
   create400,
@@ -210,6 +239,8 @@ module.exports = {
   addUser,
   addUser400,
   search,
+  searchUsers,
+  searchUsers400,
   patchRoom404,
   patchRoom,
   patchRoomWorked,
@@ -217,4 +248,5 @@ module.exports = {
   removeUser,
   removeUserWorked,
   removeUserFromPersonal,
+  archiveRoom
 }

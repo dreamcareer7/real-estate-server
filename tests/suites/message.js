@@ -65,14 +65,15 @@ const retrieve404 = (cb) => {
     .expectStatus(404)
 }
 
-const emailReply = cb => {
+const emailReply = (cb) => {
+  console.log('Hello')
   const address = Crypto.encrypt(JSON.stringify({
     room_id: results.room.create.data.id,
     user_id: results.authorize.token.data.id
   })) + '@' + config.email.seamless_address
 
   const body = {
-    domain: config.mailgun.domain,
+    domain: config.mailgun.domain,   //mailgun is property of config object. Contains API keys for mailgun.
     'stripped-text': 'Foobar',
     recipient: address,
     attachments: `[
@@ -82,7 +83,7 @@ const emailReply = cb => {
   }
 
   return frisby.create('receive a reply from mailgun')
-    .post('/messages/email', body)
+    .post('/messages/email', body) //POST request to /messages/email with body object sent.
     .after(cb)
     .expectStatus(200)
 }
