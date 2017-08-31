@@ -43,7 +43,7 @@ note                  |    string       |                 | A small note for thi
 An _Activity_ is an object, recording an event that either a specific user has done or a user has done on a specific contact of theirs. There are generally two types of activities. *User* activities and *Contact* activities.
 
 ### Get all activities related to a contact and all users that are attached to it [GET /contacts/:id/timeline]
-<!-- include(tests/contact/getTimeline) -->
+<!-- include(tests/contact/getTimeline.md) -->
 
 ### Record an activity for a specific contact [POST /contacts/:id/timeline]
 
