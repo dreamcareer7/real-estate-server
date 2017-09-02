@@ -3,11 +3,8 @@ SELECT
   notifications_users.user,
   EXTRACT( -- Time of the first unread notification for this user on this room.
     EPOCH FROM ((array_agg(notifications.created_at ORDER BY notifications.created_at))[1]::timestamptz)
-  ) as first_unread,
+  ) as first_unread
 
-  EXTRACT( -- Time of the last unread notification for this user on this room.
-    EPOCH FROM ((array_agg(notifications.created_at ORDER BY notifications.created_at DESC))[1]::timestamptz)
-  ) as last_unread
 FROM notifications
 JOIN notifications_users      ON notifications.id = notifications_users.notification
 FULL JOIN
