@@ -1,0 +1,75 @@
+<tr>
+  <td style="padding:0 0 30px;">
+    <table width="100%" cellpadding="0" cellspacing="0">
+      <tr>
+        <td style="border:1px solid #dce5eb; border-radius:2px; overflow:hidden;">
+          <table width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+              <td class="plr-10" bgcolor="#f8fafb" style="padding:9px 19px; border-bottom:1px solid #dce5eb;">
+                <table width="100%" cellpadding="0" cellspacing="0">
+                  <tr>
+                    <td style="padding:0 0 6px; font:12px/14px Helvetica, Arial, sans-serif; color:#9db2c3; text-transform:uppercase;">
+                      {% if room.room_type === 'Task' %}
+                        DEAL ACTIVITY
+                      {% else %}
+                        CHAT ACTIVITY
+                      {% endif %}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="font:bold 17px/20px Helvetica, Arial, sans-serif; color:#1b364d;">
+                      {% if room.title %}
+                        {{ room.title }}
+                      {% else %}
+                        {{ room.proposed_title }}
+                      {% endif %}
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+
+            <tr>
+              <td class="plr-10" style="padding:19px 19px 2px;">
+                <table width="100%" cellpadding="0" cellspacing="0">
+                  <tr>
+                    <td style="padding:0 0 6px;">
+                      <table width="100%" cellpadding="0" cellspacing="0">
+
+                        {% for group in room.grouped_messages %}
+                          {% include 'lib/html/message/message-group.html' %}
+                        {% endfor %}
+
+                      </table>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+
+            <tr>
+              <td class="plr-10" bgcolor="#f8fafb" style="padding:15px 19px; border-top:1px solid #dce5eb;">
+                <table width="100%" cellpadding="0" cellspacing="0">
+                  <tr>
+                    <td class="h-u" style="font:16px/18px Helvetica, Arial, sans-serif; color:#2196f3;">
+                      <a
+                        style="color:#2196f3; text-decoration:none;"
+                        href="mailto:{{room.replyTo}}?subject=Subject is discarded"
+                      >Reply</a>
+                    </td>
+                    <td align="right" style="line-height:1px; font-size:1px; mso-line-height-rule:at-least;">
+                      <a
+                        style="color:#2196f3; text-decoration:none;"
+                        href="mailto:{{room.replyTo}}?subject=Subject is discarded"
+                      ><img src="https://assets.rechat.com/mail/seamless/arrow.png" width="21" style="width:21px; vertical-align:top;" alt="" /></a>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </td>
+</tr>
