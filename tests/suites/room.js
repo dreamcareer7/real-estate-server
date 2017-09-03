@@ -231,6 +231,6 @@ module.exports = {
   removeUser,
   removeUserWorked,
   removeUserFromPersonal,
-  archiveRoom
+  archiveRoom,
   attachFile
 }
