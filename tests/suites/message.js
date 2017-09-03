@@ -66,7 +66,6 @@ const retrieve404 = (cb) => {
 }
 
 const emailReply = (cb) => {
-  console.log('Hello')
   const address = Crypto.encrypt(JSON.stringify({
     room_id: results.room.create.data.id,
     user_id: results.authorize.token.data.id

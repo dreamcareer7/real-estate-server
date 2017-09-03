@@ -131,27 +131,6 @@ const search = (cb) => {
     })
 }
 
-const searchUsers = (cb) => {
-  return frisby.create('search room by users')
-    .get('/rooms/search?users[]=' + uuid.v1())
-    .after(cb)
-    .expectStatus(200)
-    .expectJSON({
-      code: 'OK',
-      data: []
-    })
-    .expectJSONTypes({
-      code: String,
-      data: []
-    })
-}
-
-const searchUsers400 = (cb) => {
-  return frisby.create('search room by users invalid input')
-    .get('/rooms/search?users=testuser') 
-    .after(cb)
-    .expectStatus(400)
-}
 
 const removeUserFromPersonal = (cb) => {
   return frisby.create('remove user from his personal room')
@@ -229,6 +208,12 @@ const archiveRoom = (cb) => {
     .after(cb)
 }
 
+const attachFile = (cb) => {
+  return frisby.create('attach a file')
+    .post('/rooms/' + results.room.create.data.id + '/attachments')
+    .expectStatus(204)
+    .after(cb)
+}
 module.exports = {
   create,
   create400,
@@ -239,8 +224,6 @@ module.exports = {
   addUser,
   addUser400,
   search,
-  searchUsers,
-  searchUsers400,
   patchRoom404,
   patchRoom,
   patchRoomWorked,
@@ -249,4 +232,5 @@ module.exports = {
   removeUserWorked,
   removeUserFromPersonal,
   archiveRoom
+  attachFile
 }
