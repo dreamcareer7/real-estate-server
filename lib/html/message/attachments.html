@@ -2,29 +2,20 @@
   <tr>
     <td style="padding:0 0 12px;">
       <table cellpadding="0" cellspacing="0">
-        {% for attachment in message.attachments %}
-          {% if loop.index0 % 2 === 0 %}
-            <tr>
-          {% endif %}
-            <th class="flex" align="left" style="vertical-align:top;">
-              <table width="100%" cellpadding="0" cellspacing="0">
-                <tr>
-                  <td>
-                    <a style="text-decoration:none;" href="{{ attachment.url }}">
-                      <img src="{{ attachment.preview_url }}"
-                           width="216"
-                           style="width:216px; vertical-align:top;"
-                           alt="{{ attachment.name }}"
-                      />
-                    </a>
-                  </td>
-                </tr>
-              </table>
-            </th>
+        {% for pair in message.attachments | batch(2) %}
+          <tr>
+            {% set attachment = pair | first %}
+            {% include 'lib/html/message/attachment.html' %}
+
             <th class="flex" width="12" height="12"></th>
-          {% if loop.index0 % 2 === 0 %}
-            </tr>
-          {% endif %}
+
+            {% if pair | length > 1 %}
+              {% set attachment = pair | last %}
+              {% include 'lib/html/message/attachment.html' %}
+            {% else %}
+              <th class="flex"></th>
+            {% endif %}
+          </tr>
         {% endfor %}
       </table>
     </td>
