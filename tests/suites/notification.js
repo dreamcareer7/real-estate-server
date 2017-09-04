@@ -1,7 +1,6 @@
 const room = require('./data/room.js')
 
-registerSuite('room', ['create'])
-registerSuite('mls', ['saveAlert', 'addListing', 'refreshListings'])
+registerSuite('mls', ['saveAlert', 'addListing'])
 
 // const notification_response = require('./expected_objects/notification.js')
 // const info_response = require('./expected_objects/info.js')
@@ -92,7 +91,7 @@ const cancelPushNotification = (cb) => {
 
 const patchNotificationSettings = (cb) => {
   return frisby.create('update notification settings')
-    .patch('/rooms/' + results.notification.createRoom.data.id + '/notifications', {
+    .patch('/rooms/' + results.room.create.data.id + '/notifications', {
       setting: 'N_MENTIONS'
     })
     .after(cb)
@@ -101,7 +100,7 @@ const patchNotificationSettings = (cb) => {
 
 const patchNotificationSettingsInvalid = (cb) => {
   return frisby.create('update notification settings')
-    .patch('/rooms/' + results.notification.createRoom.data.id + '/notifications', {
+    .patch('/rooms/' + results.room.create.data.id + '/notifications', {
       setting: 'N_BOGUS'
     })
     .after(cb)
@@ -117,12 +116,6 @@ const patchNotificationSettings404 = (cb) => {
     .expectStatus(404)
 }
 
-const createRoom = (cb) => {
-  return frisby.create('create room')
-    .post('/rooms', room)
-    .after(cb)
-    .expectStatus(200)
-}
 
 module.exports = {
   getUsersNotification,
@@ -133,7 +126,6 @@ module.exports = {
   acknowledgeRoomNotification,
   pushNotification,
   cancelPushNotification,
-  createRoom,
   patchNotificationSettings,
   patchNotificationSettingsInvalid,
   patchNotificationSettings404
