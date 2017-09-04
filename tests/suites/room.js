@@ -203,7 +203,7 @@ const removeUser404 = (cb) => {
 
 const archiveRoom = (cb) => {
   return frisby.create('archive a room')
-    .delete('/rooms/'+ results.room.create.data.id)
+    .delete('/rooms/' + results.room.create.data.id)
     .expectStatus(204)
     .after(cb)
 }
