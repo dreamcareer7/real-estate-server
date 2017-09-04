@@ -1,6 +1,5 @@
 const room = require('./data/room.js')
 
-registerSuite('room', ['create'])
 registerSuite('mls', ['saveAlert', 'addListing', 'refreshListings'])
 
 // const notification_response = require('./expected_objects/notification.js')
