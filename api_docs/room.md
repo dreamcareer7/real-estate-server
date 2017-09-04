@@ -25,3 +25,6 @@ You can add multiple users to a room in the same call
 
 ### Remove user from a room [DELETE /rooms/{rid}/users/{id}]
 <!-- include(tests/room/removeUser.md) -->
+
+### Archive a room [DELETE /rooms/{rid}]
+<!-- include (tests/room/archiveRoom.md)-->
