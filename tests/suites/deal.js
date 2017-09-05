@@ -147,6 +147,18 @@ const addChecklist = cb => {
     .expectStatus(200)
 }
 
+const updateChecklist = cb => {
+  return frisby.create('updated a checklist')
+    .put(`/deals/${results.deal.create.data.id}/checklists/${results.deal.addChecklist.data.id}`, {
+      title: 'Updated Checklist 1',
+      order: 3,
+      deactivated_at: true,
+      terminated_at: true
+    })
+    .after(cb)
+    .expectStatus(200)
+}
+
 const remove = (cb) => {
   return frisby.create('delete a deal')
     .delete(`/deals/${results.deal.create.data.id}`)
@@ -278,6 +290,7 @@ module.exports = {
   get,
   getAll,
   addChecklist,
+  updateChecklist,
   addTask,
   setSubmission,
   addActivity,

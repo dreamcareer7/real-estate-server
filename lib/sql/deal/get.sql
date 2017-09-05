@@ -12,7 +12,16 @@ SELECT deals.*,
 
   (
     WITH checklists AS (
-      SELECT id FROM deals_checklists WHERE deal = deals.id AND deactivated_at IS NULL
+      SELECT id FROM deals_checklists WHERE
+      (
+        deal = deals.id AND
+
+        (
+          deactivated_at IS NULL
+          OR
+          terminated_at IS NULL
+        )
+      )
     ),
 
     submissions AS (
