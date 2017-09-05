@@ -203,6 +203,20 @@ const setSubmission = cb => {
     .after(cb)
 }
 
+const updateSubmission = cb => {
+  const submission = {
+    form: results.form.create.data.id,
+    state: 'Fair',
+    values: {
+      51821682: 'Updated 11112 New Orleans Drive'
+    }
+  }
+
+  return frisby.create('update submission for a deal')
+    .put(`/tasks/${results.deal.addTask.data.id}/submission`, submission)
+    .after(cb)
+}
+
 const addActivity = cb => {
   const activity = {
     action: 'UserViewedFile',
@@ -293,6 +307,7 @@ module.exports = {
   updateChecklist,
   addTask,
   setSubmission,
+  updateSubmission,
   addActivity,
   getRevision,
   getTask,
