@@ -22,3 +22,11 @@ Recommendation's you have marked as favorite (Loved)
 ## Recommend Manually [POST /rooms/{id}/recs]
 You can recommend (share) an item with others.
 <!-- include(tests/recommendation/recommendManually.md) -->
+
+## Mark as Read in bulk [DELETE /rooms/:id/recs/feed]
+Mark a series of recommendation as read
+<!-- include(tests/recommendation/bulkMarkAsRead.md) -->
+
+## Get Faviroted listings [GET /user/favorites]
+List of listings faviroted by a user
+<!-- include(tests/recommendation/getFavirotedListings.md) -->
