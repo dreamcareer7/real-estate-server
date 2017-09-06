@@ -8,7 +8,7 @@ Each room member will be able to discard, favorite, comment it.
 Series of recommendations you havent seen already
 <!-- include(tests/recommendation/feed.md) -->
 
-## Get Faviroted items [GET /rooms/{id}/recs/favorites]
+## Get Favorited listings on a room [GET /rooms/{id}/recs/favorites]
 Recommendation's you have marked as favorite (Loved)
 <!-- include(tests/recommendation/getFavorites.md) -->
 
@@ -27,6 +27,6 @@ You can recommend (share) an item with others.
 Mark a series of recommendation as read
 <!-- include(tests/recommendation/bulkMarkAsRead.md) -->
 
-## Get Faviroted listings [GET /user/favorites]
-List of listings faviroted by a user
+## Get Favorited listings [GET /user/favorites]
+List of listings favorited by a user
 <!-- include(tests/recommendation/getFavoritedListings.md) -->
