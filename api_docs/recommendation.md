@@ -29,4 +29,4 @@ Mark a series of recommendation as read
 
 ## Get Faviroted listings [GET /user/favorites]
 List of listings faviroted by a user
-<!-- include(tests/recommendation/getFavirotedListings.md) -->
+<!-- include(tests/recommendation/getFavoritedListings.md) -->
