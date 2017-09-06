@@ -94,6 +94,7 @@ const addChecklist = cb => {
       property_type: 'Resale',
       order: 2,
       is_terminatable: true,
+      is_deactivatable: true,
       tab_name: 'Contract'
     })
     .after(cb)

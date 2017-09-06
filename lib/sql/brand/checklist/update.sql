@@ -4,5 +4,6 @@ UPDATE brands_checklists SET
   property_type = $4,
   "order" = $5,
   is_terminatable = $6,
-  tab_name = $7
+  is_deactivatable = $7,
+  tab_name = $8
 WHERE id = $1
