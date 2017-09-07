@@ -39,6 +39,12 @@ note                  |    string       |                 | A small note for thi
 ### Deleting a contact [DELETE /contacts/:id]
 <!-- include(tests/contact/deleteContact.md) -->
 
+### Get all tags [GET /contacts/tags]
+<!-- include(tests/contact/getAllTags.md) -->
+
+### Update a contact [PATCH /contacts/:id]
+<!-- include(tests/contact/updateContact.md) -->
+
 ## Timeline Activities
 An _Activity_ is an object, recording an event that either a specific user has done or a user has done on a specific contact of theirs. There are generally two types of activities. *User* activities and *Contact* activities.
 

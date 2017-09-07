@@ -147,6 +147,18 @@ const addChecklist = cb => {
     .expectStatus(200)
 }
 
+const updateChecklist = cb => {
+  return frisby.create('updated a checklist')
+    .put(`/deals/${results.deal.create.data.id}/checklists/${results.deal.addChecklist.data.id}`, {
+      title: 'Updated Checklist 1',
+      order: 3,
+      deactivated_at: true,
+      terminated_at: true
+    })
+    .after(cb)
+    .expectStatus(200)
+}
+
 const remove = (cb) => {
   return frisby.create('delete a deal')
     .delete(`/deals/${results.deal.create.data.id}`)
@@ -187,6 +199,20 @@ const setSubmission = cb => {
   }
 
   return frisby.create('set submission for a deal')
+    .put(`/tasks/${results.deal.addTask.data.id}/submission`, submission)
+    .after(cb)
+}
+
+const updateSubmission = cb => {
+  const submission = {
+    form: results.form.create.data.id,
+    state: 'Fair',
+    values: {
+      51821682: 'Updated 11112 New Orleans Drive'
+    }
+  }
+
+  return frisby.create('update submission for a deal')
     .put(`/tasks/${results.deal.addTask.data.id}/submission`, submission)
     .after(cb)
 }
@@ -278,8 +304,10 @@ module.exports = {
   get,
   getAll,
   addChecklist,
+  updateChecklist,
   addTask,
   setSubmission,
+  updateSubmission,
   addActivity,
   getRevision,
   getTask,

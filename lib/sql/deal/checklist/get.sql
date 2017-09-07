@@ -12,6 +12,10 @@ SELECT deals_checklists.*,
   ) as allowed_forms,
 
   (
+    SELECT is_deactivatable FROM brands_checklists WHERE id = deals_checklists.origin
+  ) as is_deactivatable,
+
+  (
     SELECT is_terminatable FROM brands_checklists WHERE id = deals_checklists.origin
   ) as is_terminatable,
 

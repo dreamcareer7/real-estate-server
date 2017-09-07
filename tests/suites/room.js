@@ -203,17 +203,11 @@ const removeUser404 = (cb) => {
 
 const archiveRoom = (cb) => {
   return frisby.create('archive a room')
-    .delete('/rooms/'+ results.room.create.data.id)
+    .delete('/rooms/' + results.room.create.data.id)
     .expectStatus(204)
     .after(cb)
 }
 
-const attachFile = (cb) => {
-  return frisby.create('attach a file')
-    .post('/rooms/' + results.room.create.data.id + '/attachments')
-    .expectStatus(204)
-    .after(cb)
-}
 module.exports = {
   create,
   create400,
@@ -231,6 +225,5 @@ module.exports = {
   removeUser,
   removeUserWorked,
   removeUserFromPersonal,
-  archiveRoom,
-//   attachFile
+  archiveRoom
 }
