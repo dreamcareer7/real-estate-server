@@ -1,4 +1,4 @@
-registerSuite('user', ['create'])
+registerSuite('room', ['create'])
 registerSuite('listing', ['by_mui'])
 registerSuite('listing', ['getListing'])
 
@@ -410,7 +410,7 @@ const addActivityReferenceForUser = (cb) => {
 
 const addActivityToRoomObject = (cb) => {
   return frisby.create('record activity for a room by object')
-    .post(`/rooms/${results.user.create.data.personal_room}/timeline`, {
+    .post(`/rooms/${results.room.create.data.id}/timeline`, {
       action: 'UserCalledContact',
       object_class: 'phone_call',
       object: {
@@ -424,7 +424,7 @@ const addActivityToRoomObject = (cb) => {
 
 const addActivityToRoomReference = (cb) => {
   return frisby.create('record activity for a room by reference')
-    .post(`/rooms/${results.user.create.data.personal_room}/timeline`, {
+    .post(`/rooms/${results.room.create.data.id}/timeline`, {
       action: 'UserViewedListing',
       object_class: 'listing',
       object: results.listing.getListing.data.id
