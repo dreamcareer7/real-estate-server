@@ -17,9 +17,9 @@ SELECT deals.*,
         deal = deals.id AND
 
         (
-          deactivated_at IS NULL
-          OR
-          terminated_at IS NULL
+          deactivated_at IS NOT NULL
+          AND
+          terminated_at IS NOT NULL
         )
       )
     ),
