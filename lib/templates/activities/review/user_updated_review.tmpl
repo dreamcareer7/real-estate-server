@@ -3,7 +3,7 @@
 {% elseif object.status === 'Incompleted'%}
   {% set action = 'cancelled' %}
 {% elseif object.status === 'Declined'%}
-  {% set action = 'rejected' %}
+  {% set action = 'declined' %}
 {% elseif object.status === 'Approved'%}
   {% set action = 'approved' %}
 {% endif %}
