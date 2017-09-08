@@ -4,7 +4,12 @@ WITH tasks AS (
   'task' as type,
   (
     SELECT deal FROM deals_checklists WHERE id = tasks.checklist
-  ) as deal
+  ) as deal,
+
+  (
+    SELECT formstack_id FROM forms WHERE id = tasks.form
+  ) as formstack_id -- Fuck my life.
+
   FROM tasks
   WHERE id = ANY($1::uuid[])
   ORDER BY id DESC
