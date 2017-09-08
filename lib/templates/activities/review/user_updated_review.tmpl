@@ -1,11 +1,11 @@
 {% if object.status === 'Submitted'%}
-  {% set action = 'submitted' %}
-{% elseif object.status === 'Incompleted'%}
-  {% set action = 'cancelled' %}
+  {% set a = 'submitted' %}
+{% elseif object.status === 'Incomplete'%}
+  {% set a = 'cancelled' %}
 {% elseif object.status === 'Declined'%}
-  {% set action = 'declined' %}
+  {% set a = 'declined' %}
 {% elseif object.status === 'Approved'%}
-  {% set action = 'approved' %}
+  {% set a = 'approved' %}
 {% endif %}
 
-{{data.abbreviated_display_name}} {{action}} the submission
+{{data.abbreviated_display_name}} {{a}} the submission
