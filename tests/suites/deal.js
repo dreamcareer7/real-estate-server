@@ -137,6 +137,24 @@ const get = (cb) => {
     })
 }
 
+const offerChecklist = cb => {
+  return frisby.create('offer a checklist')
+    .post(`/deals/${results.deal.create.data.id}/checklists/offer`, {
+      checklist: {
+        title: 'Offered Checklist',
+        order: 1,
+        is_deactivated: true
+      },
+
+      conditions: {
+        deal_type:  results.brand.addChecklist.data.deal_type,
+        property_type:  results.brand.addChecklist.data.property_type,
+      }
+    })
+    .after(cb)
+    .expectStatus(200)
+}
+
 const addChecklist = cb => {
   return frisby.create('add a checklist')
     .post(`/deals/${results.deal.create.data.id}/checklists`, {
@@ -152,8 +170,8 @@ const updateChecklist = cb => {
     .put(`/deals/${results.deal.create.data.id}/checklists/${results.deal.addChecklist.data.id}`, {
       title: 'Updated Checklist 1',
       order: 3,
-      deactivated_at: true,
-      terminated_at: true
+      is_deactivated: true,
+      is_terminated: true
     })
     .after(cb)
     .expectStatus(200)
@@ -304,6 +322,7 @@ module.exports = {
   get,
   getAll,
   addChecklist,
+  offerChecklist,
   updateChecklist,
   addTask,
   setSubmission,

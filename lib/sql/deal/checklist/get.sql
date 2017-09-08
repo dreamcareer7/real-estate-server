@@ -3,6 +3,10 @@ SELECT deals_checklists.*,
   EXTRACT(EPOCH FROM created_at) AS created_at,
   EXTRACT(EPOCH FROM updated_at) AS updated_at,
   EXTRACT(EPOCH FROM deleted_at) AS deleted_at,
+
+  deactivated_at IS NOT NULL is_deactivated,
+  terminated_at  IS NOT NULL is_terminated,
+
   (
     SELECT ARRAY_AGG(id ORDER BY "order") FROM tasks WHERE checklist = deals_checklists.id
   ) AS tasks,
