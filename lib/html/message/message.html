@@ -10,7 +10,7 @@
 {% else %}
   <tr>
     <td>
-      {{ message.comment | safe }}
+      {{ message.comment | emojify | safe }}
     </td>
   </tr>
 
