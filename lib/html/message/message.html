@@ -1,12 +1,18 @@
 {% if message.notification %}
   {% if message.notification.notification_type === 'UserCreatedAlert' %}
     {% include 'lib/html/message/notifications/UserCreatedAlert.html' %}
-  {% endif %}
 
-  {% if message.notification.notification_type === 'UserSharedListing' %}
+  {% elseif message.notification.notification_type === 'UserSharedListing' %}
     {% include 'lib/html/message/notifications/UserSharedListing.html' %}
-  {% endif %}
+  {% else %}
 
+    <tr>
+      <td>
+        {{ message.comment | safe }}
+      </td>
+    </tr>
+
+  {% endif %}
 {% else %}
   <tr>
     <td>
@@ -16,4 +22,3 @@
 
   {% include 'lib/html/message/attachments.html' %}
 {% endif %}
-
