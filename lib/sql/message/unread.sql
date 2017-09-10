@@ -29,7 +29,19 @@ SELECT
   "user",
 
   JSON_AGG(
-    JSON_BUILD_OBJECT('room', u.room, 'first_unread', u.first_unread, 'last_unread', u.last_unread)
+    JSON_BUILD_OBJECT(
+      'room',
+      u.room,
+      'first_unread',
+      u.first_unread,
+      'last_unread',
+      u.last_unread,
+      'notification_setting',
+      (
+        SELECT notification_setting FROM rooms_users
+        WHERE room = u.room AND "user" = u.user
+      )
+    )
   ) as rooms
 
 FROM u
