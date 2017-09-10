@@ -147,8 +147,8 @@ const offerChecklist = cb => {
       },
 
       conditions: {
-        deal_type:  results.brand.addChecklist.data.deal_type,
-        property_type:  results.brand.addChecklist.data.property_type,
+        deal_type: results.brand.addChecklist.data.deal_type,
+        property_type: results.brand.addChecklist.data.property_type,
       }
     })
     .after(cb)
