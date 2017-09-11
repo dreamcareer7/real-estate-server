@@ -129,6 +129,20 @@ const voidit = cb => {
     })
 }
 
+// const resend = cb => {
+//   return frisby.create('resend an envelope')
+//     .post(`/envelopes/${results.envelope.create.data.id}/resend`)
+//     .after(cb)
+//     .expectStatus(200)
+// }
+//
+// const updateStatus = cb => {
+//   return frisby.create('update status')
+//     .post(`/envelopes/${results.envelope.create.data.id}/hook`)
+//     .after(cb)
+//     .expectStatus(200)
+// }
+
 module.exports = {
   create412,
   saveToken,
@@ -138,5 +152,7 @@ module.exports = {
   getPdf,
   getDocumentPdf,
   sign,
-  voidit
+  voidit,
+  // resend,
+  // updateStatus
 }
