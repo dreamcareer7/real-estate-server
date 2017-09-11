@@ -154,6 +154,12 @@ const searchMlsAreasByParent = cb => {
     })
 }
 
+// const listingInquiry = cb => {
+//   return frisby.create('Inquire listings')
+//     .post('/listings/'+ listing.id + '/inquiry')
+//     .after(cb)
+//     .expectStatus(200)
+// }
 module.exports = {
   by_mui,
   by_mui404,
@@ -165,5 +171,6 @@ module.exports = {
   searchSubdivisions,
   searchCounties,
   searchMlsAreasByQuery,
-  searchMlsAreasByParent
+  searchMlsAreasByParent,
+  //listingInquiry
 }
