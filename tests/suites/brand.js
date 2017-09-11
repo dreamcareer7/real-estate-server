@@ -36,6 +36,16 @@ const create = (cb) => {
     })
 }
 
+const byParent = (cb) => {
+  return frisby.create('get brands by their parent')
+    .get(`/brands/${results.brand.createParent.data.id}/children`)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      data: [results.brand.create.data]
+    })
+}
+
 const addHostname = cb => {
   return frisby.create('add hostname to a brand')
     .post(`/brands/${brand_id}/hostnames`, {
@@ -259,6 +269,8 @@ const deleteMember = cb => {
 module.exports = {
   createParent,
   create,
+
+  byParent,
 
   addRole,
   getRoles,
