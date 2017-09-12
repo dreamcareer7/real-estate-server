@@ -9,6 +9,7 @@ let brand_id
 
 const createParent = (cb) => {
   brand.name = 'Parent Brand'
+  brand.role = 'Admin' // We're admin of this one
 
   return frisby.create('create a brand')
     .post('/brands', brand)
@@ -16,13 +17,14 @@ const createParent = (cb) => {
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
-      data: brand
+//       data: brand
     })
 }
 
 const create = (cb) => {
   brand.parent = results.brand.createParent.data.id
   brand.name = 'Brand'
+  delete brand.role // We don't have a role in this one. But we should have access as we have access to the parent.
 
   return frisby.create('create a child brand')
     .post('/brands', brand)
