@@ -11,7 +11,11 @@ SELECT brands.*,
 
   (
     SELECT ARRAY_AGG(hostname ORDER BY "default" DESC) FROM brands_hostnames WHERE brand = brands.id
-  ) AS hostnames
+  ) AS hostnames,
+
+  (
+    SELECT ARRAY_AGG(id) FROM brands_roles WHERE brand = brands.id AND deleted_at IS NULL
+  ) as roles
 
 FROM brands
 JOIN unnest($1::uuid[]) WITH ORDINALITY t(bid, ord) ON brands.id = bid
