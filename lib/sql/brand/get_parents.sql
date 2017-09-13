@@ -1,0 +1,1 @@
+SELECT * FROM brand_parents($1) brand
