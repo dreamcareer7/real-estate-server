@@ -17,7 +17,7 @@
                     </td>
                   </tr>
                   <tr>
-                    <td style="font:bold 17px/20px Helvetica, Arial, sans-serif; color:#1b364d;">
+                    <td style="font:17px/20px Helvetica, Arial, sans-serif; color:#1b364d;">
                       {% if room.title %}
                         {{ room.title }}
                       {% else %}
@@ -32,19 +32,21 @@
             <tr>
               <td class="plr-10" style="padding:19px 19px 2px;">
                 <table width="100%" cellpadding="0" cellspacing="0">
-                  <tr>
-                    <td style="padding:0 0 6px;">
-                      <table width="100%" cellpadding="0" cellspacing="0">
-
-                        {% for group in room.grouped_messages %}
-                          {% include 'lib/html/message/message-group.html' %}
-                        {% endfor %}
-
-                      </table>
-                    </td>
-                  </tr>
+                  {% for group in room.grouped_messages %}
+                    <tr>
+                      <td style="padding:0 0 6px;">
+                        <table width="100%" cellpadding="0" cellspacing="0">
+                          {% if group.messages.length === 1 and group.messages[0].activity %}
+                            {% set message = group.messages[0] %}
+                            {% include 'lib/html/message/activity.html' %}
+                          {% else %}
+                            {% include 'lib/html/message/message-group.html' %}
+                          {% endif %}
+                        </table>
+                      </td>
+                    </tr>
+                  {% endfor %}
                 </table>
-              </td>
             </tr>
 
             <tr>
