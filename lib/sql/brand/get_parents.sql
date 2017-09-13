@@ -1,1 +1,1 @@
-SELECT * FROM brand_parents($1) brand
+SELECT * FROM brand_parents($1) parent WHERE parent IS NOT NULL
