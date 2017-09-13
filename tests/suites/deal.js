@@ -177,6 +177,13 @@ const updateChecklist = cb => {
     .expectStatus(200)
 }
 
+const removeRole = (cb) => {
+  return frisby.create('delete a role')
+    .delete(`/deals/${results.deal.create.data.id}/roles/${results.deal.addRole.data.roles[0].id}`)
+    .after(cb)
+    .expectStatus(204)
+}
+
 const remove = (cb) => {
   return frisby.create('delete a deal')
     .delete(`/deals/${results.deal.create.data.id}`)
@@ -333,5 +340,6 @@ module.exports = {
   setReview,
   patchAttention,
   getBrandInbox,
+  removeRole,
   remove
 }
