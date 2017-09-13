@@ -43,6 +43,7 @@ SELECT 'room' AS TYPE,
          SELECT ARRAY_AGG(file)
          FROM files_relations
          WHERE role = 'Room' AND role_id = rooms.id
+         AND deleted_at IS NULL
        ) AS attachments
 FROM rooms
 JOIN unnest($1::uuid[]) WITH ORDINALITY t(rid, ord) ON rooms.id = rid
