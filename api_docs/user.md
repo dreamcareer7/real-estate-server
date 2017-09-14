@@ -70,3 +70,6 @@ It is important to remember that shadow users _can_ use some of the Rechat's fea
 
 ### Verify Phone Number [PATCH /users/phone_confirmed]
 <!-- include(tests/verification/verifyPhone.md) -->
+
+### Mark User As Shadow [PATCH /users/self/is_shadow]
+<!-- include(tests/user/markAsShadow.md) -->

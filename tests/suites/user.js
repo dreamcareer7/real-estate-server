@@ -384,6 +384,40 @@ const upgradeToAgentSecretMissing = (cb) => {
   .expectStatus(400)
 }
 
+const markAsNonShadow = (cb) => {
+  return frisby.create('convert to non-shadow user')
+  .patch('/users/self/is_shadow', {
+    shadow: true
+  })
+  .after(cb)
+  .expectStatus(200)
+  .expectJSON({
+    code: 'OK',
+    data: {
+      id: results.authorize.token.data.id,
+      type: 'user',
+      is_shadow: true
+    }
+  })
+}
+
+const markAsShadow = (cb) => {
+  return frisby.create('convert to shadow user')
+  .patch('/users/self/is_shadow', {
+    shadow: false
+  })
+  .after(cb)
+  .expectStatus(200)
+  .expectJSON({
+    code: 'OK',
+    data: {
+      id: results.authorize.token.data.id,
+      type: 'user',
+      is_shadow: false
+    }
+  })
+}
+
 const deleteAddress = (cb) => {
   return frisby.create('delete address')
     .delete('/users/self/address')
@@ -438,6 +472,8 @@ module.exports = {
   upgradeToAgentSecretMissing,
   upgradeToAgentWithEmail,
   upgradeToAgentWithPhoneNumber,
+  markAsNonShadow,
+  markAsShadow,
   deleteAddress,
   deleteUser
 }
