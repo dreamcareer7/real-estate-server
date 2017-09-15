@@ -63,7 +63,15 @@ const update = (cb) => {
     .expectStatus(200)
     .expectJSONTypes({
       code: String,
-      data: user_response
+      data: user_response,
+    })
+    .expectJSON({
+      code: 'OK',
+      data: {
+        id: results.authorize.token.data.id,
+        type: 'user',
+        is_shadow: results.authorize.token.data.is_shadow
+      }
     })
 }
 
@@ -386,8 +394,8 @@ const upgradeToAgentSecretMissing = (cb) => {
 
 const markAsNonShadow = (cb) => {
   return frisby.create('convert to non-shadow user')
-  .patch('/users/self/is_shadow', {
-    shadow: true
+  .put('/users/self', {
+    is_shadow: true
   })
   .after(cb)
   .expectStatus(200)
@@ -403,8 +411,8 @@ const markAsNonShadow = (cb) => {
 
 const markAsShadow = (cb) => {
   return frisby.create('convert to shadow user')
-  .patch('/users/self/is_shadow', {
-    shadow: false
+  .put('/users/self', {
+    is_shadow: false
   })
   .after(cb)
   .expectStatus(200)
