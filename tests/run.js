@@ -88,6 +88,9 @@ const database = (req, res, next) => {
   const domain = Domain.create()
   const suite = req.headers['x-suite']
 
+  domain.add(req)
+  domain.add(res)
+
   let handled = false
   domain.on('error', (e) => {
     if (handled)

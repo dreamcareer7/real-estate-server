@@ -12,7 +12,7 @@ UPDATE deals_checklists SET
 
   terminated_at = (
     CASE
-      WHEN $5 IS FALSE THEN NULL
+      WHEN $5::boolean = false THEN NULL
       WHEN $5 IS NULL  THEN NULL
       WHEN terminated_at IS NULL AND $5 IS NOT NULL THEN CLOCK_TIMESTAMP()
     END

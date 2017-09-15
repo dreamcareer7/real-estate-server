@@ -129,12 +129,12 @@ const voidit = cb => {
     })
 }
 
-// const resend = cb => {
-//   return frisby.create('resend an envelope')
-//     .post(`/envelopes/${results.envelope.create.data.id}/resend`)
-//     .after(cb)
-//     .expectStatus(200)
-// }
+const resend = cb => {
+  return frisby.create('resend an envelope')
+    .post(`/envelopes/${results.envelope.create.data.id}/resend`)
+    .after(cb)
+    .expectStatus(200)
+}
 //
 // const updateStatus = cb => {
 //   return frisby.create('update status')
@@ -153,6 +153,6 @@ module.exports = {
   getDocumentPdf,
   sign,
   voidit,
-  // resend,
+  resend,
   // updateStatus
 }
