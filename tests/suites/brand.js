@@ -58,6 +58,18 @@ const byParent = (cb) => {
     })
 }
 
+const update = cb => {
+  const updated = {...results.brand.create.data, name: 'Updated Brand'}
+
+  return frisby.create('update brand')
+    .put(`/brands/${results.brand.create.data.id}`, updated)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      data: updated
+    })
+}
+
 const addHostname = cb => {
   return frisby.create('add hostname to a brand')
     .post(`/brands/${brand_id}/hostnames`, {
@@ -277,6 +289,12 @@ const deleteMember = cb => {
     .expectStatus(204)
 }
 
+const removeBrand = cb => {
+  return frisby.create('delete a brand')
+    .delete(`/brands/${brand_id}`)
+    .after(cb)
+    .expectStatus(204)
+}
 
 module.exports = {
   createParent,
@@ -284,6 +302,7 @@ module.exports = {
 
   get,
   byParent,
+  update,
 
   addRole,
   getRoles,
@@ -307,5 +326,7 @@ module.exports = {
   deleteChecklist,
   getByHostname,
   removeOffice,
-  removeHostname
+  removeHostname,
+
+  removeBrand
 }

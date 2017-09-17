@@ -2,17 +2,17 @@
 
 const async = require('async')
 const db = require('../lib/utils/db')
-const fn = require('fs').readFileSync('./lib/sql/brand/brand_parents.fn.sql').toString()
+// const fn = require('fs').readFileSync('./lib/sql/brand/brand_parents.fn.sql').toString()
 
 const up = [
   'BEGIN',
-  fn,
+//   fn,
   'COMMIT'
 ]
 
 const down = [
   'BEGIN',
-  'DROP FUNCTION brand_parents(id uuid)',
+//   'DROP FUNCTION brand_parents(id uuid)',
   'COMMIT'
 ]
 
