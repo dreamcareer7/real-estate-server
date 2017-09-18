@@ -3,7 +3,7 @@
 const async = require('async')
 const db = require('../lib/utils/db')
 
-const fs = require('fs')
+// const fs = require('fs')
 // const brand_children = fs.readFileSync('./lib/sql/brand/brand_children.fn.sql').toString()
 
 
