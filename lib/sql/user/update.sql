@@ -7,6 +7,6 @@ SET first_name = $1,
     cover_image_url = $6,
     brand = $7,
     updated_at = CLOCK_TIMESTAMP(),
-    fake_email = CASE WHEN email <> $3 THEN false ELSE fake_email END,
+    fake_email = CASE WHEN email IS DISTINCT FROM $3 THEN false ELSE fake_email END,
     is_shadow = $8
 WHERE id = $9

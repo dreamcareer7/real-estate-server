@@ -248,7 +248,7 @@ const resetPasswordByTokenEmail = (cb) => {
     password: '123456'
   })
   .after(cb)
-  .expectStatus(204)
+  .expectStatus(200)
 }
 
 const resetPasswordByTokenEmailNoNewPassword = (cb) => {
@@ -291,7 +291,7 @@ const resetPasswordByShadowTokenEmail = (cb) => {
     password: '123456'
   })
   .after(cb)
-  .expectStatus(204)
+  .expectStatus(200)
 }
 
 const resetPasswordByShadowTokenEmailInvalidEmail = (cb) => {
@@ -324,7 +324,7 @@ const resetPasswordByShadowTokenPhone = (cb) => {
     password: '123456'
   })
   .after(cb)
-  .expectStatus(204)
+  .expectStatus(200)
 }
 
 const resetPasswordByShadowTokenPhoneInvalidToken = (cb) => {
@@ -426,6 +426,74 @@ const markAsShadow = (cb) => {
   })
 }
 
+const testShadowUserEmailReSignup = (cb) => {
+  return frisby.create('testing signup for already existing shadow user')
+  .post('/users', {
+    client_id: config.tests.client_id,
+    client_secret: config.tests.client_secret,
+    first_name: '',
+    last_name: '',
+    password: '123456',
+    email: 'test+email@rechat.com'
+  })
+  .after(cb)
+  .expectStatus(202)
+  .expectJSON({
+    code: 'OK',
+    data: {
+      type: 'user_reference',
+      email: 'test+email@rechat.com',
+      email_confirmed: false,
+      phone_confirmed: false,
+      is_shadow: true,
+      fake_email: false
+    }
+  })
+}
+
+const resetPhoneShadowPassword = (cb) => {
+  return frisby.create('reset phone shadow user by shadow token')
+  .patch('/users/password', {
+    phone_number: '+989028202677',
+    shadow_token: 'c4ca4238a0b923820dcc509a6f75849b',
+    password: '123456'
+  })
+  .after(cb)
+  .expectStatus(200)
+  .expectJSON({
+    code: 'OK',
+    data: {
+      type: 'user',
+      phone_number: '+989028202677',
+      fake_email: true,
+      email_confirmed: false,
+      phone_confirmed: true,
+      is_shadow: true
+    }
+  })
+}
+
+const resetEmailShadowPassword = (cb) => {
+  return frisby.create('reset email shadow user by shadow token')
+  .patch('/users/password', {
+    email: 'test+email@rechat.com',
+    shadow_token: 'c4ca4238a0b923820dcc509a6f75849b',
+    password: '123456'
+  })
+  .after(cb)
+  .expectStatus(200)
+  .expectJSON({
+    code: 'OK',
+    data: {
+      type: 'user',
+      fake_email: false,
+      email_confirmed: true,
+      phone_confirmed: false,
+      is_shadow: true
+    }
+  })
+}
+
 const deleteAddress = (cb) => {
   return frisby.create('delete address')
     .delete('/users/self/address')
@@ -480,8 +548,11 @@ module.exports = {
   upgradeToAgentSecretMissing,
   upgradeToAgentWithEmail,
   upgradeToAgentWithPhoneNumber,
-  markAsNonShadow,
   markAsShadow,
+  markAsNonShadow,
+  testShadowUserEmailReSignup,
+  resetPhoneShadowPassword,
+  resetEmailShadowPassword,
   deleteAddress,
   deleteUser
 }

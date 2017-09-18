@@ -131,7 +131,6 @@ const search = (cb) => {
     })
 }
 
-
 const removeUserFromPersonal = (cb) => {
   return frisby.create('remove user from his personal room')
     .delete('/rooms/' + results.user.create.data.personal_room + '/users/' + results.authorize.token.data.id)
