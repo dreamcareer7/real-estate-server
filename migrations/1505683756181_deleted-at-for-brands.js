@@ -3,20 +3,20 @@
 const async = require('async')
 const db = require('../lib/utils/db')
 
-// const fs = require('fs')
-// const brand_children = fs.readFileSync('./lib/sql/brand/brand_children.fn.sql').toString()
-
+const brand_parents = require('fs').readFileSync('./lib/sql/brand/brand_parents.fn.sql').toString()
+const brand_children = require('fs').readFileSync('./lib/sql/brand/brand_children.fn.sql').toString()
 
 const up = [
   'BEGIN',
-  'ALTER TABLE brands ADD parent uuid REFERENCES brands(id)',
-  'UPDATE brands SET parent = (SELECT parent FROM brands_parents WHERE brand = brands.id)',
-  'DROP TABLE brands_parents',
-//   brand_children,
+  'ALTER TABLE brands ADD COLUMN deleted_at TIMESTAMP WITH TIME ZONE',
+  brand_parents,
+  brand_children,
   'COMMIT'
 ]
 
-const down = []
+const down = [
+  'ALTER TABLE brands DROP deleted_at'
+]
 
 const runAll = (sqls, next) => {
   db.conn((err, client) => {
