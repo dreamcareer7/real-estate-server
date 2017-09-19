@@ -47,4 +47,4 @@ SELECT
 FROM u
 GROUP BY "user"
 
-HAVING (array_agg(u.last_unread ORDER BY u.last_unread DESC))[1] < (NOW() - $1::interval)
+HAVING (array_agg(u.last_unread ORDER BY u.last_unread DESC))[1] < (CLOCK_TIMESTAMP() - $1::interval)
