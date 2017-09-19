@@ -110,6 +110,22 @@ const addInvalidPhoneNumber = (cb) => {
     .expectStatus(400)
 }
 
+const addPhoneNumber = (cb) => {
+  const a = {
+    type: 'phone_number',
+    phone_number: '+989028202678'
+  }
+
+  return frisby.create('add a valid phone number')
+    .post(`/contacts/${results.contact.create.data[0].id}/attributes`, {
+      attributes: [
+        a
+      ]
+    })
+    .after(cb)
+    .expectStatus(200)
+}
+
 const addInvalidEmail = (cb) => {
   const a = {
     type: 'email',
@@ -124,6 +140,22 @@ const addInvalidEmail = (cb) => {
     })
     .after(cb)
     .expectStatus(400)
+}
+
+const addEmail = (cb) => {
+  const a = {
+    type: 'email',
+    email: 'test+email2@rechat.com'
+  }
+
+  return frisby.create('add a valid email')
+    .post(`/contacts/${results.contact.create.data[0].id}/attributes`, {
+      attributes: [
+        a
+      ]
+    })
+    .after(cb)
+    .expectStatus(200)
 }
 
 const areEmailsLowered = (cb) => {
@@ -576,12 +608,57 @@ const getAllTags = (cb) => {
 }
 
 const updateContact = (cb) => {
+  const stages = results.contact.addAttribute.data.sub_contacts[0].attributes.stages
+  const phones = results.contact.addPhoneNumber.data.sub_contacts[0].attributes.phone_numbers
+  const emails = results.contact.addEmail.data.sub_contacts[0].attributes.emails
+
+  const stage = stages[stages.length - 1]
+  const phone = phones[phones.length - 1]
+  const email = emails[emails.length - 1]
+
+  stage.stage = 'Customer'
+  phone.phone_number = '+989028202679'
+  email.email = 'test+email3@rechat.com'
+
   return frisby.create('update a contact')
-    .patch('/contacts/' + results.contact.create.data[0].id)
+    .patch('/contacts/' + results.contact.create.data[0].id, {
+      attributes: [
+        stage,
+        phone,
+        email
+      ]
+    })
     .after(cb)
     .expectStatus(200)
     .expectJSON({
-      code: 'OK'
+      code: 'OK',
+      data: {
+        sub_contacts: [
+          {
+            attributes: {
+              stages: [
+                {},{},{},{},
+                {
+                  stage: 'Customer'
+                },
+                {}
+              ],
+              emails: [
+                {},{},
+                {
+                  email: 'test+email3@rechat.com'
+                }
+              ],
+              phone_numbers: [
+                {},{},
+                {
+                  phone_number: '+989028202679'
+                }
+              ]
+            }
+          }
+        ]
+      }
     })
     .expectJSONTypes({
       code: String
@@ -603,6 +680,8 @@ module.exports = {
   addInvalidAttributeValue,
   addInvalidPhoneNumber,
   addInvalidEmail,
+  addEmail,
+  addPhoneNumber,
   removeNonExistingAttribute,
   removeGibberishAttribute,
   addInvalidActivityByType,

@@ -451,6 +451,18 @@ const testShadowUserEmailReSignup = (cb) => {
   })
 }
 
+
+const resetPhoneShadowPasswordByEmail = (cb) => {
+  return frisby.create('reset phone shadow user by email')
+  .patch('/users/password', {
+    email: 'guest+foobarbaz@rechat.com',
+    shadow_token: 'c4ca4238a0b923820dcc509a6f75849b',
+    password: '123456'
+  })
+  .after(cb)
+  .expectStatus(406)
+}
+
 const resetPhoneShadowPassword = (cb) => {
   return frisby.create('reset phone shadow user by shadow token')
   .patch('/users/password', {
@@ -551,6 +563,7 @@ module.exports = {
   markAsShadow,
   markAsNonShadow,
   testShadowUserEmailReSignup,
+  resetPhoneShadowPasswordByEmail,
   resetPhoneShadowPassword,
   resetEmailShadowPassword,
   deleteAddress,
