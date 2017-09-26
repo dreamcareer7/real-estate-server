@@ -35,7 +35,7 @@ const post = (cb) => {
 }
 
 const post404 = (cb) => {
-  return frisby.create('expect 404 with invalid room id')
+  return frisby.create('expect 404 with invalid room id when creating a message')
     .post('/rooms/' + uuid.v1() + '/messages')
     .after(cb)
     .expectStatus(404)
@@ -59,7 +59,7 @@ const retrieve = (cb) => {
 }
 
 const retrieve404 = (cb) => {
-  return frisby.create('expect 404 with invalid room id')
+  return frisby.create('expect 404 with invalid room id when getting messages')
     .get('/rooms/' + uuid.v1() + '/messages')
     .after(cb)
     .expectStatus(404)

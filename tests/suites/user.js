@@ -1,3 +1,4 @@
+const _u = require('lodash')
 const config = require('../../lib/config.js')
 const user = require('./data/user.js')
 const address = require('./data/address.js')
@@ -21,6 +22,16 @@ const create = (cb) => {
       code: String,
       data: user_response
     })
+}
+
+const createWithID = (cb) => {
+  const bogus = _u.cloneDeep(client)
+  bogus.id = '123456'
+
+  return frisby.create('create user with ID')
+    .post('/users', bogus)
+    .after(cb)
+    .expectStatus(400)
 }
 
 const create401 = (cb) => {
@@ -118,7 +129,7 @@ const setAddress = (cb) => {
 }
 
 const setAddress400 = (cb) => {
-  return frisby.create('set address')
+  return frisby.create('expect 400 on invalid address')
     .put('/users/self/address')
     .after(cb)
     .expectStatus(400)
@@ -525,6 +536,7 @@ const deleteUser = (cb) => {
 }
 
 module.exports = {
+  createWithID,
   create,
   create401,
   getUser,
