@@ -66,12 +66,14 @@ SELECT 'user' AS type,
 
        (
         WITH roles AS (
-          SELECT brand, ARRAY_AGG(access) AS acl FROM
-            (
+          SELECT
+            brand,
+            ARRAY_AGG(access) AS acl,
+            'user_roles' as type
+            FROM (
               SELECT
                 DISTINCT UNNEST(brands_roles.acl) as access,
-                brands_roles.brand,
-                'user_roles' as type
+                brands_roles.brand
               FROM brands_users JOIN brands_roles ON brands_users.role = brands_roles.id
               WHERE brands_users.user = users.id
             ) roles GROUP BY brand
