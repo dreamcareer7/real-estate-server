@@ -352,7 +352,7 @@ const resetPasswordByShadowTokenPhoneInvalidToken = (cb) => {
 const resetPasswordByShadowTokenPhoneInvalidPhone = (cb) => {
   return frisby.create('reset password by shadow token and phone number for non-existing user')
   .patch('/users/password', {
-    phone_number: '+4300000000000',
+    phone_number: '+4368120265817',
     shadow_token: '206cc0a36c8ecfa37639a4d0dc682c73',
     password: '123456'
   })
