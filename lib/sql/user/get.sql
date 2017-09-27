@@ -69,7 +69,7 @@ SELECT 'user' AS type,
           SELECT
             brand,
             ARRAY_AGG(access) AS acl,
-            'user_roles' as type
+            'user_role' as type
             FROM (
               SELECT
                 DISTINCT UNNEST(brands_roles.acl) as access,
