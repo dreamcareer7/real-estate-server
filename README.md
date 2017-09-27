@@ -21,14 +21,14 @@ cd server
 npm install
 ```
 
-#### Create database
+##### Create database
 
 ```bash
 createuser --pwprompt --superuser <YOUR_DB_USERNAME>
 createdb --owner=<YOUR_DB_USERNAME> <YOUR_DB_NAME>
 ```
 
-#### Enable Postgres extensions
+##### Enable Postgres extensions
 
 Connect to your database using `psql`:
 
