@@ -97,7 +97,7 @@ const patchNotificationSettings = (cb) => {
 }
 
 const patchNotificationSettingsInvalid = (cb) => {
-  return frisby.create('update notification settings')
+  return frisby.create('update notification settings with invalid properties')
     .patch('/rooms/' + results.room.create.data.id + '/notifications', {
       setting: 'N_BOGUS'
     })

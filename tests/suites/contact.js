@@ -34,6 +34,21 @@ const create = (cb) => {
     })
 }
 
+const createWithID = (cb) => {
+  const bogus = _u.cloneDeep(contact)
+
+  bogus.id = '123456'
+
+  return frisby.create('add a contact with ID')
+    .post('/contacts', {
+      contacts: [
+        bogus
+      ]
+    })
+    .after(cb)
+    .expectStatus(400)
+}
+
 const addAttribute = (cb) => {
   const o = _u.cloneDeep(contact)
 
@@ -526,7 +541,7 @@ const getContacts = (cb) => {
 const getNonExistingContact = (cb) => {
   const id = uuid.v1()
 
-  return frisby.create('get a non existing')
+  return frisby.create('get a non existing contact')
     .get(`/contacts/${id}`)
     .after(cb)
     .expectStatus(404)
@@ -665,7 +680,26 @@ const updateContact = (cb) => {
     })
 }
 
+const updateContactProvideID = (cb) => {
+  const stages = results.contact.addAttribute.data.sub_contacts[0].attributes.stages
+
+  const stage = stages[stages.length - 1]
+
+  stage.id = '123456'
+  stage.stage = 'Customer'
+
+  return frisby.create('update a contact providing an ID')
+    .patch('/contacts/' + results.contact.create.data[0].id, {
+      attributes: [
+        stage
+      ]
+    })
+    .after(cb)
+    .expectStatus(400)
+}
+
 module.exports = {
+  createWithID,
   create,
   getContacts,
   getNonExistingContact,
@@ -707,5 +741,6 @@ module.exports = {
   deleteContact,
   deleteContactWorked,
   getAllTags,
-  updateContact
+  updateContact,
+  updateContactProvideID
 }
