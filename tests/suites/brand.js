@@ -234,7 +234,26 @@ const removeOffice = cb => {
 const addRole = cb => {
   return frisby.create('add a role to a brand')
     .post(`/brands/${brand_id}/roles`, {
-      role: 'Admin'
+      role: 'Admin',
+      acl: [
+        'deals/*'
+      ]
+    })
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+    })
+}
+
+const updateRole = cb => {
+  return frisby.create('update a role')
+    .post(`/brands/${brand_id}/roles`, {
+      role: 'Updated Role Name',
+      acl: [
+        'deals/*',
+        'admin'
+      ]
     })
     .after(cb)
     .expectStatus(200)
@@ -305,6 +324,7 @@ module.exports = {
   update,
 
   addRole,
+  updateRole,
   getRoles,
 
   addMember,
