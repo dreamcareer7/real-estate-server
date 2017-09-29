@@ -43,7 +43,9 @@ $$
   results AS (
     SELECT * FROM normal_results
     UNION
-    SELECT * FROM suggested_results WHERE (SELECT count(*) FROM normal_results) < 1
+    SELECT * FROM suggested_results WHERE
+      (SELECT count(*) FROM normal_results) < 1 /* If there are normal results, disable spell search */
+      AND $1 ~ '^\d$'                           /* If the query is numerical (eg mls number), spell checking makes no sense */
   )
 
 
