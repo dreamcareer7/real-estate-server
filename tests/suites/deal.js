@@ -320,6 +320,21 @@ const getBrandInbox = (cb) => {
     })
 }
 
+const filter = (cb) => {
+  const criteria = {
+    brand: results.brand.create.data.id,
+    query: '3030 Bryan Street'
+  }
+
+  return frisby.create('filter')
+    .post(`/deals/filter`, criteria)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+    })
+}
+
 module.exports = {
   create,
   createHippocket,
