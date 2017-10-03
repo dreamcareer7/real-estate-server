@@ -40,10 +40,12 @@ SELECT 'room' AS TYPE,
          GROUP BY rooms_users.room
        ) AS users_info,
        (
-         SELECT ARRAY_AGG(file)
+         SELECT ARRAY_AGG(files_relations.file)
          FROM files_relations
-         WHERE role = 'Room' AND role_id = rooms.id
-         AND deleted_at IS NULL
+         JOIN files ON files_relations.file = files.id
+         WHERE files_relations.role = 'Room' AND files_relations.role_id = rooms.id
+         AND files.deleted_at IS NULL
+         AND files_relations.deleted_at IS NULL
        ) AS attachments
 FROM rooms
 JOIN unnest($1::uuid[]) WITH ORDINALITY t(rid, ord) ON rooms.id = rid
