@@ -4,7 +4,8 @@ INSERT INTO activities(
   object,
   object_class,
   object_sa,
-  action
+  action,
+  is_visible
 )
 VALUES (
   $1,
@@ -12,6 +13,7 @@ VALUES (
   $3,
   $4,
   $5,
-  $6
+  $6,
+  $7
 )
 RETURNING id

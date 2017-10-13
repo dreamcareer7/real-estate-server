@@ -1,6 +1,8 @@
 const config = require('./lib/config.js')
 
-const app = require('./lib/bootstrap.js')()
+const app = require('./lib/bootstrap.js')(() => {
+  console.log(`Listening on http://localhost:${config.http.port}`)
+})
 
 // For dev only
 app.use(function (req, res, next) {
