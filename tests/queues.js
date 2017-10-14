@@ -6,7 +6,9 @@ const list = {
   'Refresh.Areas': Listing.refreshAreas,
   'Refresh.Agents': Agent.refreshContacts,
   'Seamless.Email': Message.sendEmailForUnread,
-  'Seamless.SMS': Notification.sendForUnread
+  'Seamless.SMS': Notification.sendForUnread,
+  'BrokerWolf.Members.Sync': BrokerWolf.Members.sync,
+  'BrokerWolf.Classifications.Sync': BrokerWolf.Classifications.sync
 }
 
 const queues = {}

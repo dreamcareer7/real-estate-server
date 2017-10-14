@@ -59,7 +59,8 @@ const patchListing = cb => {
 const addContext = cb => {
   const context = {
     listing_status: 'Active',
-    year_built: 1972
+    year_built: 1972,
+    closing_date: '1970/01/01'
   }
 
   return frisby.create('add some context to a deal')
@@ -320,41 +321,26 @@ const getBrandInbox = (cb) => {
     })
 }
 
-const filter = (cb) => {
-  const criteria = {
-    brand: results.brand.create.data.id,
-    query: '3030 Bryan Street'
-  }
-
-  return frisby.create('filter')
-    .post(`/deals/filter`, criteria)
-    .after(cb)
-    .expectStatus(200)
-    .expectJSON({
-      code: 'OK',
-    })
-}
-
 module.exports = {
   create,
   createHippocket,
   patchListing,
   addContext,
-  addRole,
-  get,
-  getAll,
-  addChecklist,
-  offerChecklist,
-  updateChecklist,
-  addTask,
-  setSubmission,
-  updateSubmission,
-  addActivity,
-  getRevision,
-  getTask,
-  setReview,
-  patchAttention,
-  getBrandInbox,
-  removeRole,
-  remove
+//   addRole,
+//   get,
+//   getAll,
+//   addChecklist,
+//   offerChecklist,
+//   updateChecklist,
+//   addTask,
+//   setSubmission,
+//   updateSubmission,
+//   addActivity,
+//   getRevision,
+//   getTask,
+//   setReview,
+//   patchAttention,
+//   getBrandInbox,
+//   removeRole,
+//   remove
 }
