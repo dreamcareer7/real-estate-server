@@ -11,54 +11,6 @@ SELECT deals.*,
   ) as checklists,
 
   (
-    WITH checklists AS (
-      SELECT id FROM deals_checklists WHERE
-      (
-        deal = deals.id AND
-
-        (
-          deactivated_at IS NULL
-          AND
-          terminated_at  IS NULL
-          AND
-          deleted_at     IS NULL
-        )
-      )
-    ),
-
-    submissions AS (
-      SELECT submission FROM tasks WHERE checklist IN ( SELECT id FROM checklists )
-    ),
-
-    revisions AS (
-      SELECT
-        DISTINCT ON(id) id
-      FROM
-        forms_data
-      WHERE
-        submission IN (SELECT submission FROM submissions)
-      ORDER BY id, created_at DESC
-    ),
-
-    c AS (
-      SELECT
-        'form_context_item' as type,
-        EXTRACT(EPOCH FROM forms_data.created_at) AS created_at,
-        fc.key as key,
-        fc.value as value
-      FROM forms_data_context fc
-      JOIN
-        forms_data ON fc.revision = forms_data.id
-      WHERE forms_data.id IN (SELECT id FROM revisions)
-    )
-
-    SELECT
-      JSON_OBJECT_AGG(c.key, c)
-    FROM
-      c
-  ) as form_context,
-
-  (
     SELECT ROW_TO_JSON(p.*) FROM
     (
       SELECT
@@ -127,16 +79,35 @@ SELECT deals.*,
   (
     WITH context AS (
       SELECT
-        id,
+        deal_context.id,
         'deal_context_item' as type,
-        created_at,
-        key,
-        value,
-        created_by
+        deal_context.created_at,
+        deal_context.created_by,
+        deal_context.approved,
+        deal_context.key,
+        deal_context.value,
+        deal_context.text,
+        deal_context.number,
+        deal_context.date,
+        deal_context.context_type
       FROM
         deal_context
+      LEFT JOIN forms_data ON deal_context.revision = forms_data.id
+      LEFT JOIN forms_submissions ON forms_data.submission = forms_submissions.id
+      LEFT JOIN tasks ON forms_submissions.id = tasks.submission
+      LEFT JOIN deals_checklists ON tasks.checklist = deals_checklists.id
       WHERE
-        deal = deals.id
+        deal_context.deal = deals.id
+        AND
+        (
+          deal_context.revision IS NULL
+          OR
+          (
+            deals_checklists.deactivated_at IS NULL
+              AND
+            deals_checklists.terminated_at IS NULL
+          )
+        )
     )
 
     SELECT
