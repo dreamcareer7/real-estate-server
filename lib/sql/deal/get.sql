@@ -90,7 +90,6 @@ SELECT deals.*,
         deal_context.text,
         deal_context.number,
         EXTRACT(EPOCH FROM deal_context.date) AS date,
-        deal_context.date,
         deal_context.context_type,
         forms_submissions.id as submission,
         forms_data.id as revision
