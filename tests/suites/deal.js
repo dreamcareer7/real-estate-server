@@ -63,7 +63,7 @@ const addContext = cb => {
   }
 
   return frisby.create('add some context to a deal')
-    .post(`/deals/${results.deal.create.data.id}/context`, {context})
+    .post(`/deals/${results.deal.create.data.id}/context`, {context, approved:true})
     .after(cb)
     .expectStatus(200)
     .expectJSON({

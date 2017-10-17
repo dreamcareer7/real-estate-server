@@ -79,17 +79,22 @@ SELECT deals.*,
   (
     WITH context AS (
       SELECT
+        DISTINCT ON (deal_context.key)
         deal_context.id,
         'deal_context_item' as type,
         deal_context.created_at,
         deal_context.created_by,
-        deal_context.approved,
+        deal_context.approved_by,
+        deal_context.approved_at,
         deal_context.key,
         deal_context.value,
         deal_context.text,
         deal_context.number,
+        EXTRACT(EPOCH FROM deal_context.date) AS date,
         deal_context.date,
-        deal_context.context_type
+        deal_context.context_type,
+        forms_submissions.id as submission,
+        forms_data.id as revision
       FROM
         deal_context
       LEFT JOIN forms_data ON deal_context.revision = forms_data.id
@@ -108,6 +113,9 @@ SELECT deals.*,
             deals_checklists.terminated_at IS NULL
           )
         )
+      ORDER BY
+      deal_context.key,
+      deal_context.created_at ASC
     )
 
     SELECT

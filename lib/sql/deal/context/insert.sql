@@ -3,6 +3,8 @@ INSERT INTO deal_context (
   created_by,
   context_type,
   revision,
+  approved_by,
+  approved_at,
   key,
   value,
   text,
@@ -10,12 +12,14 @@ INSERT INTO deal_context (
   date
 ) VALUES (
   $1,
-  $2,
+  $2::uuid,
   $3,
   $4,
-  $5,
+  (CASE WHEN $5::boolean IS FALSE THEN NULL ELSE $2::uuid END),
+  (CASE WHEN $5::boolean IS FALSE THEN NULL ELSE CLOCK_TIMESTAMP() END),
   $6,
-  (CASE WHEN $6 = 'Text'   THEN $6::text ELSE NULL END),
-  (CASE WHEN $6 = 'Number' THEN $6::float ELSE NULL END),
-  (CASE WHEN $6 = 'Date'   THEN $6::timestamp with time zone ELSE NULL END)
+  $7,
+  (CASE WHEN $7 = 'Text'   THEN $7::text ELSE NULL END),
+  (CASE WHEN $7 = 'Number' THEN $7::float ELSE NULL END),
+  (CASE WHEN $7 = 'Date'   THEN $7::timestamp with time zone ELSE NULL END)
 )
