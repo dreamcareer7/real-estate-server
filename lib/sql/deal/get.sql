@@ -104,7 +104,7 @@ SELECT deals.*,
           OR
           (
             deals_checklists.deactivated_at IS NULL
-              AND
+            AND
             deals_checklists.terminated_at IS NULL
           )
         )
