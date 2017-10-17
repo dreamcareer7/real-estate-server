@@ -13,7 +13,7 @@ INSERT INTO deal_context (
 ) VALUES (
   $1,
   $2::uuid,
-  $3,
+  $3::deal_context_type,
   $4,
   (CASE WHEN $5::boolean IS FALSE THEN NULL ELSE $2::uuid END),
   (CASE WHEN $5::boolean IS FALSE THEN NULL ELSE CLOCK_TIMESTAMP() END),
