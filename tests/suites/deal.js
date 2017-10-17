@@ -63,7 +63,7 @@ const addContext = cb => {
   }
 
   return frisby.create('add some context to a deal')
-    .post(`/deals/${results.deal.create.data.id}/context`, {context, approved:true})
+    .post(`/deals/${results.deal.create.data.id}/context`, {context, approved: true})
     .after(cb)
     .expectStatus(200)
     .expectJSON({
@@ -313,21 +313,6 @@ const getTask = cb => {
 const getBrandInbox = (cb) => {
   return frisby.create('get brand inbox')
     .get(`/brands/${results.brand.create.data.id}/deals/inbox`)
-    .after(cb)
-    .expectStatus(200)
-    .expectJSON({
-      code: 'OK',
-    })
-}
-
-const filter = (cb) => {
-  const criteria = {
-    brand: results.brand.create.data.id,
-    query: '3030 Bryan Street'
-  }
-
-  return frisby.create('filter')
-    .post(`/deals/filter`, criteria)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
