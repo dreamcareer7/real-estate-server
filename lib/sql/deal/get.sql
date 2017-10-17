@@ -115,7 +115,7 @@ SELECT deals.*,
         )
       ORDER BY
       deal_context.key,
-      deal_context.created_at ASC
+      deal_context.created_at DESC
     )
 
     SELECT
@@ -128,5 +128,5 @@ SELECT deals.*,
   ) as envelopes
 
 FROM deals
-JOIN unnest($1::uuid[]) WITH ORDINALITY t(did, ord) ON deals.id = did
+JOIN unnest(ARRAY['53a44400-b363-11e7-98a3-0242ac110002']::uuid[]) WITH ORDINALITY t(did, ord) ON deals.id = did
 ORDER BY t.ord
