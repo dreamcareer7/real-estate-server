@@ -19,7 +19,7 @@ INSERT INTO deal_context (
   (CASE WHEN $5::boolean IS FALSE THEN NULL ELSE CLOCK_TIMESTAMP() END),
   $6,
   $7,
-  (CASE WHEN $7 = 'Text'   THEN $7::text ELSE NULL END),
-  (CASE WHEN $7 = 'Number' THEN $7::float ELSE NULL END),
-  (CASE WHEN $7 = 'Date'   THEN $7::timestamp with time zone ELSE NULL END)
+  (CASE WHEN $3 = 'Text'   THEN $7::text ELSE NULL END),
+  (CASE WHEN $3 = 'Number' THEN $7::float ELSE NULL END),
+  (CASE WHEN $3 = 'Date'   THEN $7::timestamp with time zone ELSE NULL END)
 )
