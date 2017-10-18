@@ -63,7 +63,24 @@ const addContext = cb => {
   }
 
   return frisby.create('add some context to a deal')
-    .post(`/deals/${results.deal.create.data.id}/context`, {context, approved: true})
+    .post(`/deals/${results.deal.create.data.id}/context`, {context})
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      data: results.deal.create.data
+    })
+    .expectJSONTypes({
+      code: String,
+      data: deal_response
+    })
+}
+
+const approveContext = cb => {
+  const cid = results.deal.addContext.data.deal_context.listing_status.id
+
+  return frisby.create('approve a context item')
+    .patch(`/deals/${results.deal.create.data.id}/context/${cid}/approved`, {approved:true})
     .after(cb)
     .expectStatus(200)
     .expectJSON({
@@ -325,6 +342,7 @@ module.exports = {
   createHippocket,
   patchListing,
   addContext,
+  approveContext,
   addRole,
   get,
   getAll,
