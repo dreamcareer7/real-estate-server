@@ -131,6 +131,24 @@ const search = (cb) => {
     })
 }
 
+const searchParties = (cb) => {
+  const users = results.room.search.data[0].users
+
+  return frisby.create('search room by email')
+    .get(`/rooms/search?emails[]=${users[1].email}&emails[]=${users[2].email}&phone_numbers[]=${encodeURIComponent(users[3].phone_number)}`)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      data: [room]
+    })
+    .expectJSONTypes({
+      code: String,
+      data: [room_response],
+      info: info_response
+    })
+}
+
 const removeUserFromPersonal = (cb) => {
   return frisby.create('remove user from his personal room')
     .delete('/rooms/' + results.user.create.data.personal_room + '/users/' + results.authorize.token.data.id)

@@ -12,8 +12,11 @@ WITH p AS (
     FROM rooms_users
     WHERE "user" = $1
   )
-  AND rooms.room_type <> 'Personal'
+  AND (
+    rooms.room_type = ANY($3::room_type[])
+  )
   AND rooms.deleted_at IS NULL
+
   GROUP BY rooms_users.room,
            rooms.room_type,
            rooms.updated_at
