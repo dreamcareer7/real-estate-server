@@ -235,6 +235,7 @@ module.exports = {
   addUser,
   addUser400,
   search,
+  searchParties,
   patchRoom404,
   patchRoom,
   patchRoomWorked,
