@@ -25,7 +25,11 @@ SELECT deals_checklists.*,
 
   (
     SELECT tab_name FROM brands_checklists WHERE id = deals_checklists.origin
-  ) as tab_name
+  ) as tab_name,
+
+  (
+    SELECT deal_type FROM brands_checklists WHERE id = deals_checklists.origin
+  ) as checklist_type
 
 FROM deals_checklists
 JOIN unnest($1::uuid[]) WITH ORDINALITY t(did, ord) ON deals_checklists.id = did
