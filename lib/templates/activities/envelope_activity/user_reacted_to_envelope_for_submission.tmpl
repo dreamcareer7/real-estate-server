@@ -1,1 +1,1 @@
-{{data.abbreviated_display_name}} { "viewed" if {{object.recipient.status}} == delivered elif "signed" {{object.recipient.status}} == completed endif }} {{object.recipient.status}} "{{object.submission.title}}"
+{{data.abbreviated_display_name}} {{ "viewed" if object.recipient.status == delivered elif "signed" object.recipient.status == completed endif }} "{{object.submission.title}}"
