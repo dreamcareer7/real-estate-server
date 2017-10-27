@@ -114,7 +114,7 @@ const addRole = cb => {
   ]
 
   return frisby.create('add a role to a deal')
-    .post(`/deals/${results.deal.create.data.id}/roles`, role)
+    .post(`/deals/${results.deal.create.data.id}/roles`, { roles: [ role ] })
     .after(cb)
     .expectStatus(200)
     .expectJSON({
