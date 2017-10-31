@@ -31,10 +31,38 @@ note                  |    string       |                 | A small note for thi
 <!-- include(tests/contact/create.md) -->
 
 ### Add attributes to a contact [POST /contacts/:id/attributes]
-<!-- include(tests/contact/addAttributes.md) -->
+<!-- include(tests/contact/addAttribute.md) -->
 
 ### Deleting an attribute [DELETE /contacts/:id/attributes/:id]
 <!-- include(tests/contact/removeAttribute.md) -->
 
 ### Deleting a contact [DELETE /contacts/:id]
 <!-- include(tests/contact/deleteContact.md) -->
+
+### Get all tags [GET /contacts/tags]
+<!-- include(tests/contact/getAllTags.md) -->
+
+### Update a contact [PATCH /contacts/:id]
+<!-- include(tests/contact/updateContact.md) -->
+
+## Timeline Activities
+An _Activity_ is an object, recording an event that either a specific user has done or a user has done on a specific contact of theirs. There are generally two types of activities. *User* activities and *Contact* activities.
+
+### Get all activities [GET /contacts/:id/timeline]
+<!-- include(tests/contact/getTimeline.md) -->
+
+### Record activity Contact [POST /contacts/:id/timeline]
+
+#### By Reference
+<!-- include(tests/contact/addActivityReference.md) -->
+
+#### By Object
+<!-- include(tests/contact/addActivityObject.md) -->
+
+### Record activity User [POST /users/self/timeline]
+
+#### By Reference
+<!-- include(tests/contact/addActivityReferenceForUser.md) -->
+
+#### By Object
+<!-- include(tests/contact/addActivityObjectForUser.md) -->

@@ -55,3 +55,18 @@ It is important to remember that shadow users _can_ use some of the Rechat's fea
 
 ### Create Email Verification [POST /email_verifications]
 <!-- include(tests/verification/createEmailVerification.md) -->
+
+### Upgrade User to Agent [PATCH /users/self/upgrade]
+<!-- include(tests/user/upgradeToAgentWithEmail.md) -->
+<!-- include(tests/user/upgradeToAgentWithPhoneNumber.md) -->
+
+### Reset a User's Password [PATCH /users/password]
+<!-- include(tests/user/resetPasswordByTokenEmail.md) -->
+<!-- include(tests/user/resetPasswordByShadowTokenEmail.md) -->
+<!-- include(tests/user/resetPasswordByShadowTokenPhone.md) -->
+
+### Verify Email [PATCH /users/email_confirmed]
+<!-- include(tests/verification/verifyEmail.md) -->
+
+### Verify Phone Number [PATCH /users/phone_confirmed]
+<!-- include(tests/verification/verifyPhone.md) -->

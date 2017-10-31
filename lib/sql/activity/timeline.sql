@@ -5,6 +5,7 @@ WITH c AS (
          updated_at
   FROM activities
   WHERE reference = ANY($1) AND
+        is_visible = TRUE AND
         deleted_at IS NULL
 )
 SELECT id,

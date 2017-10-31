@@ -1,0 +1,1 @@
+INSERT INTO tasks_reviews (task, review) VALUES ($1, $2)

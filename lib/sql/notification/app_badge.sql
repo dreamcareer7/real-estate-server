@@ -22,4 +22,4 @@ WHERE
   notifications_users."user" = $1 AND
   notifications_users.acked_at IS NULL AND
   notifications.deleted_at IS NULL AND
-  COALESCE(notifications.exclude <> $1, TRUE)
+  COALESCE(NOT ($1 = ANY(exclude)), TRUE)

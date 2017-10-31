@@ -4,23 +4,24 @@ SELECT deals.*,
   EXTRACT(EPOCH FROM updated_at) AS updated_at,
   EXTRACT(EPOCH FROM deleted_at) AS deleted_at,
   (
-    SELECT ARRAY_AGG(id) FROM deals_roles WHERE deal = deals.id
+    SELECT ARRAY_AGG(id) FROM deals_roles WHERE deal = deals.id AND deleted_at IS NULL
   ) AS roles,
   (
-    SELECT ARRAY_AGG(file) FROM files_relations WHERE role = 'Deal' AND role_id = deals.id AND deleted_at IS NULL
-  ) AS files,
+    SELECT ARRAY_AGG(id ORDER BY "order") FROM deals_checklists WHERE deal = deals.id
+  ) as checklists,
+
   (
     SELECT ROW_TO_JSON(p.*) FROM
     (
       SELECT
-      'deal_proposed_values' AS type,
+      'mls_context' AS type,
       status AS listing_status,
       transaction_type,
       mls_number,
       mls_area_major,
       mls_area_minor,
       price AS list_price,
-      list_date,
+      EXTRACT(EPOCH FROM list_date) as list_date,
       property_type,
       year_built,
       city,
@@ -73,10 +74,18 @@ SELECT deals.*,
       JOIN addresses ON properties.address_id = addresses.id
       WHERE listings.id = deals.listing
     ) p
-  ) AS proposed_values,
+  ) AS mls_context,
+
   (
-    SELECT ARRAY_AGG(id) FROM reviews WHERE deal = deals.id
-  ) AS reviews
+    SELECT
+      JSON_OBJECT_AGG(context.key, context.*)
+    FROM deal_context() context WHERE context.deal = deals.id
+  ) as deal_context,
+
+  (
+    SELECT ARRAY_AGG(id) FROM envelopes WHERE deal = deals.id
+  ) as envelopes
+
 FROM deals
 JOIN unnest($1::uuid[]) WITH ORDINALITY t(did, ord) ON deals.id = did
 ORDER BY t.ord

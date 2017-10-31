@@ -1,27 +1,68 @@
-# Rechat API #
+# Rechat API
 
-## How to install ##
+### Prerequisites
 
-Assuming you already have node.js, git and postgres:
++ Git
++ Node.js version v8.x.x
++ Postgres
 
-```bash
-git clone git@bitbucket.org:rechat/server.git
-cd shortlisted-server
-npm install .
-psql rechat < lib/data/schema.sql
-vim lib/config.js
-```
-And set configuration options of your database.
+### Getting started
 
-## Run the app ##
+##### Clone the repository
 
 ```bash
-npm start
+git clone git@gitlab.com:rechat/server.git
+cd server
 ```
-port 3078
 
-## Howto Test ##
+##### Install dependencies
 
+```bash
+npm install
+```
+
+##### Create database
+
+```bash
+createuser --pwprompt --superuser <YOUR_DB_USERNAME>
+createdb --owner=<YOUR_DB_USERNAME> <YOUR_DB_NAME>
+```
+
+##### Enable Postgres extensions
+
+Connect to your database using `psql`:
+
+```bash
+psql --username=<YOUR_DB_USERNAME> <YOUR_DB_NAME>
+```
+
+Then run the following commands:
+
+```sql
+CREATE EXTENSION IF NOT EXISTS postgis;
+CREATE EXTENSION IF NOT EXISTS pg_trgm;
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+```
+
+##### Import schema into your database
+
+```bash
+psql --username=<YOUR_DB_USERNAME> <YOUR_DB_NAME> < data/minimal.sql
+```
+
+##### Set configuration options of your database
+
+```bash
+vim lib/configs/developments.js
+```
+
+### Running tests
 ```bash
 npm test
+```
+
+### Running the application
+```bash
+npm start
+//listening at port 3078
 ```

@@ -21,8 +21,8 @@ const by_mui = (cb) => {
     })
 }
 
-const by_mui404 = (cb) => {
-  return frisby.create('expect 401 with invalid mui')
+const by_mui400 = (cb) => {
+  return frisby.create('expect 400 with invalid mui')
     .get('/listings/search?mui=1')
     .after(cb)
     .expectStatus(400)
@@ -43,8 +43,8 @@ const by_mls = (cb) => {
     })
 }
 
-const by_mls404 = (cb) => {
-  return frisby.create('expect 401 with invalid mls')
+const by_mls400 = (cb) => {
+  return frisby.create('expect 400 with invalid mls')
     .get('/listings/search?mls_number=1')
     .after(cb)
     .expectStatus(400)
@@ -154,16 +154,23 @@ const searchMlsAreasByParent = cb => {
     })
 }
 
+// const listingInquiry = cb => {
+//   return frisby.create('Inquire listings')
+//     .post('/listings/'+ listing.id + '/inquiry')
+//     .after(cb)
+//     .expectStatus(200)
+// }
 module.exports = {
   by_mui,
-  by_mui404,
+  by_mui400,
   by_mls,
-  by_mls404,
+  by_mls400,
   getListing,
   getListing404,
   by_query,
   searchSubdivisions,
   searchCounties,
   searchMlsAreasByQuery,
-  searchMlsAreasByParent
+  searchMlsAreasByParent,
+  //listingInquiry
 }

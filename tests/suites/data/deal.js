@@ -1,6 +1,9 @@
 const deal = {
+  deal_type: 'Buying',
+  property_type: 'Resale',
+
   context: {
-    deal_type: 'Buying'
+
   }
 }
 

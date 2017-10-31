@@ -117,7 +117,40 @@ const addUser400 = (cb) => {
 
 const search = (cb) => {
   return frisby.create('search room by email')
-    .get('/rooms/search?q[]=' + results.room.create.data.title)
+    .get('/rooms/search?q[]=' + results.room.create.data.title) //Sampleroom
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      data: [room]
+    })
+    .expectJSONTypes({
+      code: String,
+      data: [room_response],
+      info: info_response
+    })
+}
+
+const searchParties = (cb) => {
+  const users = results.room.search.data[0].users
+
+  let url = `/rooms/search?`
+
+  // Here we have to provide emails and phone numbers for other users in the room
+
+  users.forEach(user => {
+    if (user.id === results.authorize.token.data.id)
+      return // This is me. No need to include myself in the search
+
+    if (user.phone_number)
+      url += `phone_numbers[]=${encodeURIComponent(user.phone_number)}&`
+
+    if (!user.fake_email)
+      url += `emails[]=${user.email}&`
+  })
+
+  return frisby.create('search room by parties')
+    .get(url)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
@@ -155,7 +188,7 @@ const patchRoom = (cb) => {
 }
 
 const patchRoom404 = (cb) => {
-  return frisby.create('expect 404 with invalid toom id when updating a room')
+  return frisby.create('expect 404 with invalid room id when updating a room')
     .put('/rooms/' + uuid.v1(), room)
     .after(cb)
     .expectStatus(404)
@@ -200,6 +233,13 @@ const removeUser404 = (cb) => {
     .after(cb)
 }
 
+const archiveRoom = (cb) => {
+  return frisby.create('archive a room')
+    .delete('/rooms/' + results.room.create.data.id)
+    .expectStatus(204)
+    .after(cb)
+}
+
 module.exports = {
   create,
   create400,
@@ -210,6 +250,7 @@ module.exports = {
   addUser,
   addUser400,
   search,
+  searchParties,
   patchRoom404,
   patchRoom,
   patchRoomWorked,
@@ -217,4 +258,5 @@ module.exports = {
   removeUser,
   removeUserWorked,
   removeUserFromPersonal,
+  archiveRoom
 }

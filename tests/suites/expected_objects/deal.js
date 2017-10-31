@@ -2,12 +2,8 @@ const v = require('./validation.js')
 
 module.exports = {
   id: String,
+  deal_type: String,
 
-  context: {
-    deal_type: String,
-    legal_description: String,
-    type: String
-  },
-
-  proposed_values: v.optionalObject
+  mls_context: v.optionalObject,
+  form_context: v.optionalObject
 }

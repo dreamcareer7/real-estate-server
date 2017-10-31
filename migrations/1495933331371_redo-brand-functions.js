@@ -3,16 +3,16 @@
 const async = require('async')
 const db = require('../lib/utils/db')
 
-const fs = require('fs')
-const agents = fs.readFileSync('./lib/sql/brand/get_brand_agents.fn.sql').toString()
-const propose = fs.readFileSync('./lib/sql/brand/propose_brand_agents.fn.sql').toString()
+// const fs = require('fs')
+// const agents = fs.readFileSync('./lib/sql/brand/get_brand_agents.fn.sql').toString()
+// const propose = fs.readFileSync('./lib/sql/brand/propose_brand_agents.fn.sql').toString()
 
 const up = [
   'BEGIN',
   'DROP FUNCTION IF EXISTS get_brand_agents(uuid)',
   'DROP FUNCTION IF EXISTS propose_brand_agents(uuid, uuid)',
-  agents,
-  propose,
+//   agents,
+//   propose,
   'COMMIT'
 ]
 

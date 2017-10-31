@@ -1,0 +1,1 @@
+DELETE FROM brands_users WHERE role = $1 AND "user" = $2

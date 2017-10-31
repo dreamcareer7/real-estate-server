@@ -1,5 +1,3 @@
 UPDATE users
-SET password = $2,
-    email_confirmed = true,
-    is_shadow = false
+SET password = $2
 WHERE id = $1

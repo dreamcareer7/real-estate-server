@@ -1,5 +1,6 @@
 UPDATE alerts
 SET
+    updated_at = CLOCK_TIMESTAMP(),
     minimum_price = $1,
     maximum_price = $2,
     minimum_square_meters = $3,
@@ -41,5 +42,10 @@ SET
     high_schools = $39,
     excluded_listing_ids = $40,
     postal_codes = $41,
-    pets = $42
-WHERE id = $43
+    pets = $42,
+    number_of_pets_allowed = $43,
+    application_fee = $44,
+    appliances = $45,
+    furnished = $46,
+    fenced_yard = $47
+WHERE id = $48

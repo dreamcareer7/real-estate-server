@@ -8,5 +8,6 @@ WHERE
     SELECT id FROM notifications
     WHERE room IS NULL AND
     specific = $1 AND
-    COALESCE(exclude <> $1, TRUE)
-  )
+    COALESCE(NOT ($1 = ANY(exclude)), TRUE)
+  ) AND
+  acked_at IS NULL

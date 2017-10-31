@@ -1,1 +1,0 @@
-SELECT id FROM forms_submissions WHERE deal = $1 AND deleted_at IS NULL

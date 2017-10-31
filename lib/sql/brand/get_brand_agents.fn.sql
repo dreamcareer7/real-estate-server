@@ -9,10 +9,12 @@ $$
     agents.id as agent,
     agents.mlsid as mlsid
     FROM agents
-    JOIN users ON agents.id = users.agent
-    WHERE users.id IN (
-      SELECT "user" FROM brands_users WHERE brand = $1
-    ) AND agents.status = 'Active'
+  JOIN users ON agents.id = users.agent
+  WHERE users.id IN (
+    (SELECT DISTINCT "user" FROM brands_users
+    JOIN brands_roles ON brands_users.role = brands_roles.id
+    WHERE brands_roles.brand = $1)
+  ) AND agents.status = 'Active'
   UNION
   SELECT
     users.id as "user",

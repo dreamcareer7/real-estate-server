@@ -1,0 +1,40 @@
+{% set author = group.user %}
+
+{% set created_at = group.messages[0].created_at %}
+
+{% if author %}
+  {% if author.profile_image_url %}
+    {% set profile_image_url = author.profile_image_url %}
+  {% else %}
+    {% set profile_image_url = 'https://assets.rechat.com/mail/avatar.png' %}
+  {% endif %}
+{% else %}
+  {% set profile_image_url = 'https://assets.rechat.com/mail/seamless/rebot.png' %}
+{% endif %}
+
+<tr>
+  <td width="34" valign="top">
+    <div style="background-image: url({{profile_image_url}}); background-repeat: no-repeat; background-size: cover; width: 34px; height: 34px; border-radius: 50%"></div>
+  </td>
+  <td width="10"></td>
+  <td valign="top">
+    <table width="100%" cellpadding="0" cellspacing="0">
+      <tr>
+        <td style="font:14px/16px Helvetica, Arial, sans-serif; color:#2b4a61;">
+          <b>{{ author.abbreviated_display_name }}</b>
+          <span style="font-size:12px; line-height:0; color:#a5b8c6;">{{created_at | time('llll', user.timezone)}}</span>
+        </td>
+      </tr>
+
+      <tr>
+        <td style="font:14px/24px Helvetica, Arial, sans-serif; color:#26465d;">
+          <table width="100%" cellpadding="0" cellspacing="0">
+            {% for message in group.messages %}
+              {% include 'lib/html/message/message.html' %}
+            {% endfor %}
+          </table>
+        </td>
+      </tr>
+    </table>
+  </td>
+</tr>

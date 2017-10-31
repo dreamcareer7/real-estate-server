@@ -6,10 +6,8 @@ WITH unhide AS (
 ),
 unarchive AS (
   UPDATE rooms_users
-  SET archived = false,
-      push_enabled = true
-  WHERE room = $1 AND
-        archived IS true
+  SET archived = false
+  WHERE room = $1
 )
 INSERT INTO messages(
     room,
@@ -21,7 +19,8 @@ INSERT INTO messages(
     reference,
     author,
     notification,
-    mentions
+    mentions,
+    activity
 )
 VALUES($1,
        $2,
@@ -32,5 +31,7 @@ VALUES($1,
        $7,
        $8,
        $9,
-       $10)
+       $10,
+       $11
+     )
 RETURNING id;

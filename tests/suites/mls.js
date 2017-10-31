@@ -1,7 +1,5 @@
 const listing = require('./mls/listing.js')
-const office = require('./mls/office.js')
 const openhouse = require('./mls/openhouse.js')
-const agent = require('./mls/agent.js')
 const room = require('./mls/room.js')
 const unit = require('./mls/unit.js')
 const photo = require('./mls/photo.js')
@@ -81,26 +79,6 @@ const statusChange = (cb) => {
     .expectStatus(200)
 }
 
-const addOffice = (cb) => {
-  return frisby.create('add an office')
-    .post('/jobs', {
-      name: 'MLS.Office',
-      data: {processed: office}
-    })
-    .after(cb)
-    .expectStatus(200)
-}
-
-const addAgent = (cb) => {
-  return frisby.create('add an agent')
-    .post('/jobs', {
-      name: 'MLS.Agent',
-      data: {processed: agent}
-    })
-    .after(cb)
-    .expectStatus(200)
-}
-
 const addRoom = (cb) => {
   return frisby.create('add a room')
     .post('/jobs', {
@@ -156,8 +134,6 @@ module.exports = {
   addOpenHouse,
   priceDrop,
   statusChange,
-  addOffice,
-  addAgent,
   addRoom,
   addUnit,
   addPhoto,

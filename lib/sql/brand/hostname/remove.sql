@@ -1,0 +1,1 @@
+DELETE FROM brands_hostnames WHERE brand = $1 AND LOWER(hostname) = LOWER($2)

@@ -18,8 +18,6 @@ const globals = [
   'Contact',
   'Alert',
   'Email',
-  'SES',
-  'Mailgun',
   'MLSArea',
   'SMS',
   'Crypto',
@@ -56,11 +54,14 @@ const globals = [
   'DealRole',
   'Envelope',
   'EnvelopeRecipient',
-  'EnvelopeDocument',
   'Activity',
   'AttachedFile',
+  'Submission',
+  'Task',
   'Review',
-  'Submission'
+  'DealChecklist',
+  'BrandChecklist',
+  'BrandRole'
 ]
 
 const global_object = {}
@@ -79,7 +80,10 @@ module.exports = {
     'node': true
   },
   'parserOptions': {
-    'ecmaVersion': 8
+    'ecmaVersion': 8,
+    'ecmaFeatures': {
+      'experimentalObjectRestSpread': true
+    }
   },
   'extends': 'eslint:recommended',
   'rules': {

@@ -9,7 +9,6 @@ WITH p AS
                      forms_submissions.form AS form,
                      forms_submissions.formstack_id AS formstack_id,
                      forms_data.author AS author,
-                     forms_submissions.deal AS deal,
                      forms.name AS title,
                      'form_submission' AS type,
                      (SELECT file FROM files_relations WHERE role = 'SubmissionRevision' AND role_id = forms_data.id) AS file,

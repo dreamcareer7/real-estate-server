@@ -1,10 +1,10 @@
 const envelope = require('./envelope/data.js')
 const envelope_response = require('./envelope/types.js')
 
-registerSuite('submission', ['create'])
+registerSuite('deal', ['create', 'createHippocket', 'addRole', 'addChecklist', 'addTask', 'setSubmission'])
 
 const setEnvelopeDetails = envelope => {
-  envelope.documents[0].revision = results.submission.create.data.last_revision
+  envelope.documents[0].revision = results.deal.setSubmission.data.last_revision
 
   envelope.deal = results.deal.create.data.id
 
@@ -108,7 +108,6 @@ const sign = cb => {
   return frisby.create('Go to "sign envelope" page')
     .get(`/envelopes/${results.envelope.create.data.id}/sign`)
     .after(cb)
-    .expectStatus(200)
 }
 
 const voidit = cb => {
@@ -130,6 +129,20 @@ const voidit = cb => {
     })
 }
 
+const resend = cb => {
+  return frisby.create('resend an envelope')
+    .post(`/envelopes/${results.envelope.create.data.id}/resend`)
+    .after(cb)
+    .expectStatus(200)
+}
+//
+// const updateStatus = cb => {
+//   return frisby.create('update status')
+//     .post(`/envelopes/${results.envelope.create.data.id}/hook`)
+//     .after(cb)
+//     .expectStatus(200)
+// }
+
 module.exports = {
   create412,
   saveToken,
@@ -139,5 +152,7 @@ module.exports = {
   getPdf,
   getDocumentPdf,
   sign,
-  voidit
+  voidit,
+  resend,
+  // updateStatus
 }

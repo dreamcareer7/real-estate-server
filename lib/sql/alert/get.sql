@@ -20,6 +20,7 @@ SELECT alerts.*,
          INNER JOIN recommendations
            ON photos.listing_mui = recommendations.matrix_unique_id
          WHERE ARRAY[alerts.id] <@ recommendations.referring_objects
+           AND url IS NOT NULL
          ORDER BY recommendations.updated_at DESC
          LIMIT 1
        ) as cover_image_url,

@@ -1,0 +1,1 @@
+UPDATE brands_roles SET role = $2, acl = $3::text[] WHERE id = $1

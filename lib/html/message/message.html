@@ -1,19 +1,24 @@
-<tr>
-  <td style="padding:0 0 30px;">
-    <table width="100%" cellpadding="0" cellspacing="0">
-      {% if message.notification %}
-        {% set type = message.notification.subject_class + message.notification.action + message.notification.object_class %}
-      {% endif %}
+{% if message.notification %}
+  {% if message.notification.notification_type === 'UserCreatedAlert' %}
+    {% include 'lib/html/message/notifications/UserCreatedAlert.html' %}
 
-      {% if type === 'UserCreatedAlert' or type === 'UserSharedListing' %}
-        {% include 'lib/html/message/notifications/' + type + '.html' %}
-      {% else %}
-        {% set comment = message.comment %}
-        {% set author = message.author %}
-        {% set created_at = message.created_at %}
-        {% include 'lib/html/message/comment.html' %}
-        {% include 'lib/html/message/attachments.html' %}
-      {% endif %}
-    </table>
-  </td>
-</tr>
+  {% elseif message.notification.notification_type === 'UserSharedListing' %}
+    {% include 'lib/html/message/notifications/UserSharedListing.html' %}
+  {% else %}
+
+    <tr>
+      <td>
+        {{ message.comment | safe }}
+      </td>
+    </tr>
+
+  {% endif %}
+{% else %}
+  <tr>
+    <td>
+      {{ message.comment | emojify | safe }}
+    </td>
+  </tr>
+
+  {% include 'lib/html/message/attachments.html' %}
+{% endif %}

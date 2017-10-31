@@ -9,16 +9,8 @@ const notification = (job, done) => {
   Notification.create(job.data.notification, done)
 }
 
-const email = (job, done) => {
-  Mailgun.callMailgun(job.data, done)
-}
-
 const email_sane = (job, done) => {
   Email.sendSane(job.data, done)
-}
-
-const ses = (job, done) => {
-  SES.callSES(job.data, done)
 }
 
 const sms = (job, done) => {
@@ -72,18 +64,8 @@ module.exports = {
     parallel: 100
   },
 
-  email: {
-    handler: email,
-    parallel: config.email.parallel
-  },
-
   email_sane: {
     handler: email_sane,
-    parallel: config.email.parallel
-  },
-
-  email_ses: {
-    handler: ses,
     parallel: config.email.parallel
   },
 

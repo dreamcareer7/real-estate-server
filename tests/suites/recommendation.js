@@ -177,6 +177,20 @@ const recommendManuallyWorked = (cb) => {
     })
 }
 
+const bulkMarkAsRead = (cb) => {
+  return frisby.create('mark read in bulk')
+    .delete('/rooms/' + results.room.create.data.id + '/recs/feed')
+    .after(cb)
+    .expectStatus(204)
+}
+
+const getFavoritedListings = (cb) => {
+  return frisby.create('get favorited listings')
+  .get('/user/favorites/')
+  .after(cb)
+  .expectStatus(200)
+}
+
 module.exports = {
   feed,
   getFavorites,
@@ -187,5 +201,7 @@ module.exports = {
   markAsSeen,
   markAsSeen404,
   recommendManually,
-  recommendManuallyWorked
+  recommendManuallyWorked,
+  bulkMarkAsRead,
+  getFavoritedListings
 }

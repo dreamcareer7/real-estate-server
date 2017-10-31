@@ -1,0 +1,16 @@
+<tr>
+  <td bgcolor="#f3f6f8" align="center" style="padding:8px 10px; font:14px/20px Helvetica, Arial, sans-serif; color:#738a9f;">
+    <span style="display:inline-block; vertical-align:-4px;">
+      {% if message.author %}
+        {% if message.author.profile_image_url %}
+          {% set profile_image_url = message.author.profile_image_url %}
+        {% else %}
+          {% set profile_image_url = 'https://assets.rechat.com/mail/avatar.png' %}
+        {% endif %}
+      {% else %}
+        {% set profile_image_url = 'https://assets.rechat.com/mail/seamless/rebot.png' %}
+      {% endif %}
+      <img src="{{ profile_image_url }}" width="20" style="width:20px; display:block;" alt="" />
+    </span>&nbsp;&nbsp;{{ message.comment }}
+  </td>
+</tr>

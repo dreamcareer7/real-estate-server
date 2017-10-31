@@ -1,6 +1,16 @@
 const agent = require('./mls/agent.js')
 
-registerSuite('mls', ['addOffice', 'addAgent', 'regreshAgents'])
+registerSuite('office', ['add'])
+
+const add = (cb) => {
+  return frisby.create('add an agent')
+    .post('/jobs', {
+      name: 'MLS.Agent',
+      data: {processed: agent}
+    })
+    .after(cb)
+    .expectStatus(200)
+}
 
 const getByMlsId = (cb) => {
   return frisby.create('get an agent by mls id')
@@ -89,6 +99,7 @@ const report = (cb) => {
 }
 
 module.exports = {
+  add,
   getByMlsId,
   getById,
   getByOffice,

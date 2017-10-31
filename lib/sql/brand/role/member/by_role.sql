@@ -1,0 +1,1 @@
+SELECT "user" FROM brands_users WHERE role = $1

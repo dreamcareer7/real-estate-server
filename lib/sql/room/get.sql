@@ -7,7 +7,7 @@ SELECT 'room' AS TYPE,
        ELSE
        (
          SELECT COUNT(*)::INT FROM notifications_users
-         WHERE notification IN (SELECT id FROM notifications WHERE room = rooms.id AND COALESCE(exclude <> $2::uuid, TRUE)) AND "user" = $2::uuid AND acked_at IS NULL
+         WHERE notification IN (SELECT id FROM notifications WHERE room = rooms.id AND COALESCE(NOT ($2::uuid = ANY(exclude)), TRUE)) AND "user" = $2::uuid AND acked_at IS NULL
        ) END AS new_notifications,
        (
          SELECT id FROM messages WHERE room = rooms.id ORDER BY created_at DESC LIMIT 1
@@ -15,12 +15,9 @@ SELECT 'room' AS TYPE,
        (
          SELECT json_object_agg
          (
-           "user", CASE WHEN push_enabled IS TRUE THEN
-                     '{"system_generated": true}'::json ELSE
-                     '{"system_generated": false}'::json
-                  END
+           "user", notification_setting
          )
-         FROM rooms_users WHERE room = rooms.id
+         FROM rooms_users WHERE room = rooms.id AND "user" = $2::uuid
        ) AS notification_settings,
        (
          SELECT ARRAY_AGG(DISTINCT("user")) FROM rooms_users WHERE room = rooms.id
@@ -41,7 +38,15 @@ SELECT 'room' AS TYPE,
            ON rooms_users."user" = users.id
          WHERE rooms_users.room = rooms.id
          GROUP BY rooms_users.room
-       ) AS users_info
+       ) AS users_info,
+       (
+         SELECT ARRAY_AGG(files_relations.file)
+         FROM files_relations
+         JOIN files ON files_relations.file = files.id
+         WHERE files_relations.role = 'Room' AND files_relations.role_id = rooms.id
+         AND files.deleted_at IS NULL
+         AND files_relations.deleted_at IS NULL
+       ) AS attachments
 FROM rooms
 JOIN unnest($1::uuid[]) WITH ORDINALITY t(rid, ord) ON rooms.id = rid
 ORDER BY t.ord

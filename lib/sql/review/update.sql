@@ -1,1 +1,6 @@
-INSERT INTO reviews_history (review, created_by, state, comment) VALUES ($1, $2, $3, $4)
+INSERT INTO reviews_history (review, created_by, status)
+VALUES (
+  $1,
+  $2,
+  $3
+)

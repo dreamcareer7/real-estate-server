@@ -62,7 +62,25 @@ SELECT 'user' AS type,
        ) AS contacts,
        (
         SELECT count(*) > 0 FROM docusign_users WHERE "user" = users.id
-       ) as has_docusign
+       ) as has_docusign,
+
+       (
+        WITH roles AS (
+          SELECT
+            brand,
+            ARRAY_AGG(access) AS acl,
+            'user_role' as type
+            FROM (
+              SELECT
+                DISTINCT UNNEST(brands_roles.acl) as access,
+                brands_roles.brand
+              FROM brands_users JOIN brands_roles ON brands_users.role = brands_roles.id
+              WHERE brands_users.user = users.id
+            ) roles GROUP BY brand
+        )
+
+        SELECT JSON_AGG(roles) FROM roles
+       ) as roles
 FROM users
 JOIN unnest($1::uuid[]) WITH ORDINALITY t(uid, ord) ON users.id = uid
 ORDER BY t.ord
