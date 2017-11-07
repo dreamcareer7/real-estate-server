@@ -10,9 +10,7 @@ WITH r AS (
          recommendations.hidden,
          recommendations.last_update,
          EXTRACT(EPOCH FROM recommendations.created_at) AS created_at,
-         EXTRACT(EPOCH FROM
-          MAX(recommendations_eav.created_at) FILTER (WHERE recommendations_eav.action = 'Favorited')
-         )AS updated_at,
+         EXTRACT(EPOCH FROM recommendations.updated_at) AS updated_at,
          EXTRACT(EPOCH FROM recommendations.deleted_at) AS deleted_at,
          JSON_AGG(recommendations_eav."user" ORDER BY recommendations_eav.created_at) FILTER (WHERE recommendations_eav.action = 'Favorited') AS favorited_by,
          JSON_AGG(recommendations_eav."user" ORDER BY recommendations_eav.created_at) FILTER (WHERE recommendations_eav.action = 'Read') AS read_by,

@@ -2,9 +2,9 @@ WITH recs AS (
     SELECT recommendations.id,
            recommendations.hidden,
            recommendations.created_at,
+           recommendations.updated_at,
            recommendations.referring_objects,
-           ARRAY_AGG(recommendations_eav."user") FILTER (WHERE recommendations_eav.action = 'Favorited') AS favorited_by,
-           MAX(recommendations_eav.created_at) FILTER (WHERE recommendations_eav.action = 'Favorited') AS updated_at
+           ARRAY_AGG(recommendations_eav."user") FILTER (WHERE recommendations_eav.action = 'Favorited') AS favorited_by
      FROM recommendations
      FULL JOIN recommendations_eav ON recommendations_eav.recommendation = recommendations.id
      WHERE recommendations.room = $2 AND
@@ -15,15 +15,15 @@ WITH recs AS (
               recommendations.created_at,
               recommendations.referring_objects
      HAVING
-              ARRAY_LENGTH(COALESCE(ARRAY_AGG(recommendations_eav."user") FILTER (WHERE recommendations_eav.action = 'Favorited'), '{}'), 1) > 0
+      ARRAY_LENGTH(COALESCE(ARRAY_AGG(recommendations_eav."user") FILTER (WHERE recommendations_eav.action = 'Favorited'), '{}'), 1) > 0
 )
 SELECT id,
-       (SELECT count(*) FROM recs) as total,
+       (SELECT count(*)::integer FROM recs) as total,
        LOWER($1),
        LOWER($3)
 FROM recs
-WHERE ARRAY_LENGTH(COALESCE(favorited_by, '{}'), 1) > 0
-AND CASE
+WHERE
+CASE
     WHEN $4 = 'Since_C' THEN created_at > TIMESTAMP WITH TIME ZONE 'EPOCH' + $5 * INTERVAL '1 MICROSECOND'
     WHEN $4 = 'Max_C' THEN created_at <= TIMESTAMP WITH TIME ZONE 'EPOCH' + $5 * INTERVAL '1 MICROSECOND'
     WHEN $4 = 'Since_U' THEN updated_at > TIMESTAMP WITH TIME ZONE 'EPOCH' + $5 * INTERVAL '1 MICROSECOND'
