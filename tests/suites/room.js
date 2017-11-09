@@ -134,7 +134,7 @@ const search = (cb) => {
 const searchParties = (cb) => {
   const users = results.room.search.data[0].users
 
-  let url = `/rooms/search?`
+  let url = '/rooms/search?'
 
   // Here we have to provide emails and phone numbers for other users in the room
 

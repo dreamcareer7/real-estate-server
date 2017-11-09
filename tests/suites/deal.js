@@ -80,7 +80,7 @@ const approveContext = cb => {
   const cid = results.deal.addContext.data.deal_context.listing_status.id
 
   return frisby.create('approve a context item')
-    .patch(`/deals/${results.deal.create.data.id}/context/${cid}/approved`, {approved:true})
+    .patch(`/deals/${results.deal.create.data.id}/context/${cid}/approved`, {approved: true})
     .after(cb)
     .expectStatus(200)
     .expectJSON({
