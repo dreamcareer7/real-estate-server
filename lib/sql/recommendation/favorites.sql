@@ -14,9 +14,11 @@ WITH recs AS (
               recommendations.hidden,
               recommendations.created_at,
               recommendations.referring_objects
+     HAVING
+              ARRAY_LENGTH(COALESCE(ARRAY_AGG(recommendations_eav."user") FILTER (WHERE recommendations_eav.action = 'Favorited'), '{}'), 1) > 0
 )
 SELECT id,
-       (COUNT(*) OVER())::INT AS total,
+       (SELECT count(*) FROM recs) as total,
        LOWER($1),
        LOWER($3)
 FROM recs
