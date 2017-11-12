@@ -131,6 +131,39 @@ const search = (cb) => {
     })
 }
 
+const searchParties = (cb) => {
+  const users = results.room.search.data[0].users
+
+  let url = '/rooms/search?'
+
+  // Here we have to provide emails and phone numbers for other users in the room
+
+  users.forEach(user => {
+    if (user.id === results.authorize.token.data.id)
+      return // This is me. No need to include myself in the search
+
+    if (user.phone_number)
+      url += `phone_numbers[]=${encodeURIComponent(user.phone_number)}&`
+
+    if (!user.fake_email)
+      url += `emails[]=${user.email}&`
+  })
+
+  return frisby.create('search room by parties')
+    .get(url)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      data: [room]
+    })
+    .expectJSONTypes({
+      code: String,
+      data: [room_response],
+      info: info_response
+    })
+}
+
 const removeUserFromPersonal = (cb) => {
   return frisby.create('remove user from his personal room')
     .delete('/rooms/' + results.user.create.data.personal_room + '/users/' + results.authorize.token.data.id)
@@ -217,6 +250,7 @@ module.exports = {
   addUser,
   addUser400,
   search,
+  searchParties,
   patchRoom404,
   patchRoom,
   patchRoomWorked,

@@ -11,54 +11,6 @@ SELECT deals.*,
   ) as checklists,
 
   (
-    WITH checklists AS (
-      SELECT id FROM deals_checklists WHERE
-      (
-        deal = deals.id AND
-
-        (
-          deactivated_at IS NULL
-          AND
-          terminated_at  IS NULL
-          AND
-          deleted_at     IS NULL
-        )
-      )
-    ),
-
-    submissions AS (
-      SELECT submission FROM tasks WHERE checklist IN ( SELECT id FROM checklists )
-    ),
-
-    revisions AS (
-      SELECT
-        DISTINCT ON(id) id
-      FROM
-        forms_data
-      WHERE
-        submission IN (SELECT submission FROM submissions)
-      ORDER BY id, created_at DESC
-    ),
-
-    c AS (
-      SELECT
-        'form_context_item' as type,
-        EXTRACT(EPOCH FROM forms_data.created_at) AS created_at,
-        fc.key as key,
-        fc.value as value
-      FROM forms_data_context fc
-      JOIN
-        forms_data ON fc.revision = forms_data.id
-      WHERE forms_data.id IN (SELECT id FROM revisions)
-    )
-
-    SELECT
-      JSON_OBJECT_AGG(c.key, c)
-    FROM
-      c
-  ) as form_context,
-
-  (
     SELECT ROW_TO_JSON(p.*) FROM
     (
       SELECT
@@ -69,7 +21,7 @@ SELECT deals.*,
       mls_area_major,
       mls_area_minor,
       price AS list_price,
-      list_date,
+      EXTRACT(EPOCH FROM list_date) as list_date,
       property_type,
       year_built,
       city,
@@ -125,23 +77,18 @@ SELECT deals.*,
   ) AS mls_context,
 
   (
-    WITH context AS (
+    WITH c AS (
       SELECT
-        id,
-        'deal_context_item' as type,
-        created_at,
-        key,
-        value,
-        created_by
-      FROM
-        deal_context
-      WHERE
-        deal = deals.id
+        *,
+        EXTRACT(EPOCH FROM context.created_at) AS created_at,
+        EXTRACT(EPOCH FROM context.approved_at) AS approved_at,
+        EXTRACT(EPOCH FROM context.date) AS date
+      FROM deal_context() context WHERE context.deal = deals.id
     )
 
     SELECT
-      JSON_OBJECT_AGG(context.key, context.*)
-    FROM context
+      JSON_OBJECT_AGG(c.key, c.*)
+    FROM c
   ) as deal_context,
 
   (

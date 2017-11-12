@@ -60,11 +60,28 @@ const addContext = cb => {
   const context = {
     listing_status: 'Active',
     year_built: 1972,
-    closing_date: '1970/01/01'
+    closing_date: '1980/01/01'
   }
 
   return frisby.create('add some context to a deal')
     .post(`/deals/${results.deal.create.data.id}/context`, {context})
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      data: results.deal.create.data
+    })
+    .expectJSONTypes({
+      code: String,
+      data: deal_response
+    })
+}
+
+const approveContext = cb => {
+  const cid = results.deal.addContext.data.deal_context.listing_status.id
+
+  return frisby.create('approve a context item')
+    .patch(`/deals/${results.deal.create.data.id}/context/${cid}/approved`, {approved: true})
     .after(cb)
     .expectStatus(200)
     .expectJSON({
@@ -98,7 +115,7 @@ const addRole = cb => {
   ]
 
   return frisby.create('add a role to a deal')
-    .post(`/deals/${results.deal.create.data.id}/roles`, role)
+    .post(`/deals/${results.deal.create.data.id}/roles`, { roles: [ role ] })
     .after(cb)
     .expectStatus(200)
     .expectJSON({
@@ -326,7 +343,7 @@ module.exports = {
   createHippocket,
   patchListing,
   addContext,
-//   addRole,
+//   approveContext,
 //   get,
 //   getAll,
 //   addChecklist,
