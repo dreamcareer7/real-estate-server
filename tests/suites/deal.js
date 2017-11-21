@@ -3,6 +3,8 @@ const deal_response = require('./expected_objects/deal.js')
 
 registerSuite('listing', ['getListing'])
 registerSuite('brand', ['createParent', 'create', 'addChecklist', 'addForm', 'addTask'])
+registerSuite('brokerwolf', ['syncMembers', 'syncPropertyTypes', 'mapPropertyType'])
+registerSuite('user', ['upgradeToAgentWithEmail'])
 
 const create = (cb) => {
   const data = JSON.parse(JSON.stringify(deal))
@@ -60,7 +62,8 @@ const addContext = cb => {
   const context = {
     listing_status: 'Active',
     year_built: 1972,
-    closing_date: '1980/01/01'
+    closing_date: '1980/01/01',
+    sales_price: 999999
   }
 
   return frisby.create('add some context to a deal')
@@ -69,7 +72,7 @@ const addContext = cb => {
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
-      data: results.deal.create.data
+//       data: results.deal.create.data
     })
     .expectJSONTypes({
       code: String,
@@ -96,19 +99,21 @@ const approveContext = cb => {
 
 const addRole = cb => {
   const role = {
-    first_name: 'Imaginary',
-    last_name: 'Lawyer',
-    email: 'imaginary_lawyer@rechat.com',
-    role: 'Lawyer'
+//     first_name: 'Imaginary',
+//     last_name: 'Lawyer',
+    email: 'test@rechat.com',
+    role: 'BuyerAgent',
+    commission: 10000
   }
 
   results.deal.create.data.roles = [
     {
       type: 'deal_role',
       role: role.role,
+      commission: role.commission,
       user: {
-        first_name: role.first_name,
-        last_name: role.last_name,
+//         first_name: role.first_name,
+//         last_name: role.last_name,
         email: role.email
       }
     }
@@ -120,7 +125,7 @@ const addRole = cb => {
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
-      data: results.deal.create.data
+//       data: results.deal.create.data
     })
     .expectJSONTypes({
       code: String,
@@ -342,6 +347,7 @@ module.exports = {
   create,
   createHippocket,
   patchListing,
+  addRole,
   addContext,
 //   approveContext,
 //   get,

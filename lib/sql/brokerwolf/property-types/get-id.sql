@@ -1,0 +1,1 @@
+SELECT brokerwolf_id FROM brokerwolf_property_types WHERE property_type = $1
