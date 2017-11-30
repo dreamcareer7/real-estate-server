@@ -3,7 +3,15 @@ const deal_response = require('./expected_objects/deal.js')
 
 registerSuite('listing', ['getListing'])
 registerSuite('brand', ['createParent', 'create', 'addChecklist', 'addForm', 'addTask'])
-registerSuite('brokerwolf', ['syncMembers', 'syncPropertyTypes', 'mapPropertyType'])
+registerSuite('brokerwolf', [
+  'syncMembers',
+  'syncClassifications',
+  'mapClassification',
+  'syncPropertyTypes',
+  'mapPropertyType',
+  'syncContactTypes',
+  'mapContactType'
+])
 registerSuite('user', ['upgradeToAgentWithEmail'])
 
 const create = (cb) => {
@@ -62,8 +70,12 @@ const addContext = cb => {
   const context = {
     listing_status: 'Active',
     year_built: 1972,
+    contract_date: '1979/12/01',
     closing_date: '1980/01/01',
-    sales_price: 999999
+    sales_price: 999999,
+    commission_listing: 3,
+    commission_selling: 3,
+    unit_number: '3A'
   }
 
   return frisby.create('add some context to a deal')
@@ -83,13 +95,15 @@ const addContext = cb => {
 const approveContext = cb => {
   const cid = results.deal.addContext.data.deal_context.listing_status.id
 
+  delete results.deal.addContext.data.deal_context.listing_status
+
   return frisby.create('approve a context item')
     .patch(`/deals/${results.deal.create.data.id}/context/${cid}/approved`, {approved: true})
     .after(cb)
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
-      data: results.deal.create.data
+      data: results.deal.addContext.data
     })
     .expectJSONTypes({
       code: String,
@@ -98,29 +112,46 @@ const approveContext = cb => {
 }
 
 const addRole = cb => {
-  const role = {
-//     first_name: 'Imaginary',
-//     last_name: 'Lawyer',
-    email: 'test@rechat.com',
-    role: 'BuyerAgent',
-    commission: 10000
-  }
+  const roles = [
+    {
+  //     first_name: 'Imaginary',
+  //     last_name: 'Lawyer',
+      email: 'test@rechat.com',
+      role: 'BuyerAgent',
+      commission: 10000,
+    },
+
+    {
+      first_name: 'Imaginary',
+      last_name: 'Agent',
+      email: 'test@rechat.com',
+      role: 'SellerAgent',
+      commission: 20000
+    }
+  ]
 
   results.deal.create.data.roles = [
     {
       type: 'deal_role',
-      role: role.role,
-      commission: role.commission,
+      role: roles[0].role,
+      commission: roles[0].commission,
       user: {
-//         first_name: role.first_name,
-//         last_name: role.last_name,
-        email: role.email
+        email: roles[0].email
+      }
+    },
+
+    {
+      type: 'deal_role',
+      role: roles[1].role,
+      commission: roles[1].commission,
+      user: {
+        email: roles[1].email
       }
     }
   ]
 
   return frisby.create('add a role to a deal')
-    .post(`/deals/${results.deal.create.data.id}/roles`, { roles: [ role ] })
+    .post(`/deals/${results.deal.create.data.id}/roles`, { roles })
     .after(cb)
     .expectStatus(200)
     .expectJSON({
@@ -140,7 +171,7 @@ const getAll = (cb) => {
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
-      data: [results.deal.createHippocket.data, results.deal.create.data]
+      data: [results.deal.createHippocket.data, results.deal.approveContext.data]
     })
 }
 
@@ -152,7 +183,7 @@ const get = (cb) => {
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
-      data: results.deal.create.data
+      data: results.deal.approveContext.data
     })
     .expectJSONTypes({
       code: String,
@@ -349,21 +380,21 @@ module.exports = {
   patchListing,
   addRole,
   addContext,
-//   approveContext,
-//   get,
-//   getAll,
-//   addChecklist,
-//   offerChecklist,
-//   updateChecklist,
-//   addTask,
-//   setSubmission,
-//   updateSubmission,
-//   addActivity,
-//   getRevision,
-//   getTask,
-//   setReview,
-//   patchAttention,
-//   getBrandInbox,
-//   removeRole,
-//   remove
+  approveContext,
+  get,
+  getAll,
+  addChecklist,
+  offerChecklist,
+  updateChecklist,
+  addTask,
+  setSubmission,
+  updateSubmission,
+  addActivity,
+  getRevision,
+  getTask,
+  setReview,
+  patchAttention,
+  getBrandInbox,
+  removeRole,
+  remove
 }

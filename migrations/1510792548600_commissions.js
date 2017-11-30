@@ -15,8 +15,7 @@ const up = [
     mls_id TEXT,
     board_id TEXT
   )`,
-  'ALTER TABLE brokerwolf_agents_boards ADD CONSTRAINT unique_brokerwolf_agents_board UNIQUE(agent_id, mls_id, board_id)'
-  'ALTER TABLE deals ADD brokerwolf_transaction_id TEXT UNIQUE',
+  'ALTER TABLE brokerwolf_agents_boards ADD CONSTRAINT unique_brokerwolf_agents_board UNIQUE(agent_id, mls_id, board_id)',
   'ALTER TABLE deals ADD brokerwolf_tier_id TEXT UNIQUE',
   `CREATE TABLE brokerwolf_property_types (
     property_type deal_property_type,
@@ -30,7 +29,6 @@ const down = [
   'ALTER TABLE deals_roles DROP brokerwolf_id',
   'DROP TABLE brokerwolf_agents',
   'DROP TABLE brokerwolf_agents_boards',
-  'ALTER TABLE deals DROP brokerwolf_transaction_id',
   'ALTER TABLE deals DROP brokerwolf_tier_id',
   'DROP TABLE brokerwolf_property_types'
 ]

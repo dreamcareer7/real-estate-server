@@ -16,6 +16,19 @@ const syncClassifications = (cb) => {
   .expectStatus(200)
 }
 
+const mapClassification = (cb) => {
+  return frisby.create('Map BrokerWolf Classification')
+  .post('/jobs', {
+    name: 'BrokerWolf.Classifications.map',
+    data: {
+      brokerwolf_id: results.brokerwolf.syncClassifications[0].Id,
+      ender_type: 'Buying'
+    }
+  })
+  .after(cb)
+  .expectStatus(200)
+}
+
 const syncPropertyTypes = (cb) => {
   return frisby.create('Sync BrokerWolf Property Types')
   .post('/jobs', {
@@ -38,9 +51,35 @@ const mapPropertyType = (cb) => {
   .expectStatus(200)
 }
 
+const syncContactTypes = (cb) => {
+  return frisby.create('Sync BrokerWolf Contact Types')
+  .post('/jobs', {
+    name: 'BrokerWolf.ContactTypes.Sync'
+  })
+  .after(cb)
+  .expectStatus(200)
+}
+
+const mapContactType = (cb) => {
+  return frisby.create('Map BrokerWolf Contact Type')
+  .post('/jobs', {
+    name: 'BrokerWolf.ContactTypes.map',
+    data: {
+      brokerwolf_id: results.brokerwolf.syncContactTypes[0].Id,
+      role: 'SellerAgent'
+    }
+  })
+  .after(cb)
+  .expectStatus(200)
+}
+
+
 module.exports = {
   syncMembers,
   syncClassifications,
+  mapClassification,
   syncPropertyTypes,
-  mapPropertyType
+  mapPropertyType,
+  syncContactTypes,
+  mapContactType,
 }
