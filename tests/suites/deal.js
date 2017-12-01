@@ -2,7 +2,7 @@ const {deal, full_address} = require('./data/deal.js')
 const deal_response = require('./expected_objects/deal.js')
 
 registerSuite('listing', ['getListing'])
-registerSuite('brand', ['createParent', 'create', 'addChecklist', 'addForm', 'addTask'])
+registerSuite('brand', ['createParent', 'create', 'addChecklist', 'addForm', 'addTask', 'addAnotherTask'])
 
 const create = (cb) => {
   const data = JSON.parse(JSON.stringify(deal))
@@ -231,6 +231,74 @@ const addTask = cb => {
     })
 }
 
+const addAnotherTask = cb => {
+  const anotherTask = {
+    title: 'Another Task',
+    status: 'New',
+    task_type: 'Form',
+    form: results.form.create.data.id,
+    checklist: results.deal.addChecklist.data.id
+  }
+  
+  return frisby.create('add another task to a deal')
+    .post(`/deals/${results.deal.create.data.id}/tasks`, anotherTask)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSONTypes({
+      data: {
+        id: String
+      }
+    })
+}
+
+const editTaskTitle = cb => {
+  const props = {
+    title: 'Another Task for Gholi'
+  }
+
+  return frisby.create('edit another task\'s title')
+    .patch(`/tasks/${results.deal.addAnotherTask.data.id}`, props)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      data: {
+        title: 'Another Task for Gholi'
+      }
+    })
+}
+
+const bulkEditTasks = cb => {
+  const tasks = [{
+    id: results.deal.addTask.data.id,
+    title: 'Bulk Test Title'
+  }, {
+    id: results.deal.addAnotherTask.data.id,
+    needs_attention: true
+  }]
+
+  return frisby.create('bulk edit tasks of a deal')
+    .put(`/deals/${results.deal.create.data.id}/tasks`, tasks)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      data: tasks
+    })
+}
+
+const deleteAnotherTask = cb => {
+  return frisby.create('delete another task')
+    .delete(`/tasks/${results.deal.addAnotherTask.data.id}`)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSONTypes({
+      data: {
+        deleted_at: String
+      }
+    })
+}
+
 const setSubmission = cb => {
   const submission = {
     form: results.form.create.data.id,
@@ -350,6 +418,10 @@ module.exports = {
   offerChecklist,
   updateChecklist,
   addTask,
+  addAnotherTask,
+  editTaskTitle,
+  bulkEditTasks,
+  deleteAnotherTask,
   setSubmission,
   updateSubmission,
   addActivity,
