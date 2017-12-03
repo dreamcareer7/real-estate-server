@@ -47,6 +47,8 @@ $$
         deals_checklists.terminated_at IS NULL
       )
     )
+    AND
+    tasks.deleted_at IS NULL
   ORDER BY
   deal_context.deal,
   deal_context.key,
