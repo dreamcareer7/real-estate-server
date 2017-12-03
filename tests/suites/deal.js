@@ -291,7 +291,13 @@ const deleteAnotherTask = cb => {
   return frisby.create('delete another task')
     .delete(`/tasks/${results.deal.addAnotherTask.data.id}`)
     .after(cb)
-    .expectStatus(200)
+    .expectStatus(204)
+}
+
+const makeSureAnotherTaskIsDeleted = cb => {
+  return frisby.create('make sure another task is deleted')
+    .get(`/tasks/${results.deal.addAnotherTask.data.id}`)
+    .after(cb)
     .expectJSONTypes({
       data: {
         deleted_at: String
@@ -422,6 +428,7 @@ module.exports = {
   editTaskTitle,
   bulkEditTasks,
   deleteAnotherTask,
+  makeSureAnotherTaskIsDeleted,
   setSubmission,
   updateSubmission,
   addActivity,
