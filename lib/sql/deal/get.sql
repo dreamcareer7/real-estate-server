@@ -1,12 +1,3 @@
-WITH c AS (
-  SELECT
-    *,
-    EXTRACT(EPOCH FROM context.created_at) AS created_at,
-    EXTRACT(EPOCH FROM context.approved_at) AS approved_at,
-    EXTRACT(EPOCH FROM context.date) AS date
-  FROM deal_context() context
-)
-
 SELECT deals.*,
   'deal' AS type,
   EXTRACT(EPOCH FROM created_at) AS created_at,
@@ -86,10 +77,18 @@ SELECT deals.*,
   ) AS mls_context,
 
   (
+    WITH c AS (
+      SELECT
+        *,
+        EXTRACT(EPOCH FROM context.created_at) AS created_at,
+        EXTRACT(EPOCH FROM context.approved_at) AS approved_at,
+        EXTRACT(EPOCH FROM context.date) AS date
+      FROM deal_context() context WHERE context.deal = deals.id
+    )
+
     SELECT
       JSON_OBJECT_AGG(c.key, c.*)
     FROM c
-    WHERE c.deal = deals.id
   ) as deal_context,
 
   (
