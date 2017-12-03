@@ -3,22 +3,19 @@
 const async = require('async')
 const db = require('../lib/utils/db')
 
-/* DEPRECATED MIGRATION */
-// Replaced by a later migration
-// - migrations/1512283503146_Check deleted at in deal_contexts function.js
-
-// const deal_contexts = require('fs').readFileSync('./lib/sql/deal/deal_contexts.fn.sql').toString()
-
 const up = [
   'BEGIN',
-  // deal_contexts,
+  'ALTER TABLE clients ADD CONSTRAINT clients_pkey PRIMARY KEY (id)',
+  'ALTER TABLE clients ALTER COLUMN id SET DEFAULT uuid_generate_v1()',
   'COMMIT'
 ]
 
 const down = [
-  // 'DROP FUNCTION deal_contexts()'
+  'BEGIN',
+  'ALTER TABLE clients DROP CONSTRAINT clients_pkey',
+  'ALTER TABLE clients ALTER COLUMN id DROP DEFAULT',
+  'COMMIT'
 ]
-
 
 const runAll = (sqls, next) => {
   db.conn((err, client) => {
