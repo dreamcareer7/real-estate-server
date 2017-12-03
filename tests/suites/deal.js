@@ -291,10 +291,54 @@ const deleteAnotherTask = cb => {
   return frisby.create('delete another task')
     .delete(`/tasks/${results.deal.addAnotherTask.data.id}`)
     .after(cb)
-    .expectStatus(200)
+    .expectStatus(204)
+}
+
+const makeSureAnotherTaskIsDeleted = cb => {
+  return frisby.create('make sure another task is deleted')
+    .get(`/tasks/${results.deal.addAnotherTask.data.id}`)
+    .after(cb)
     .expectJSONTypes({
       data: {
         deleted_at: String
+      }
+    })
+}
+
+const makeSureAnotherTaskIsntReturnedInDealContext = cb => {
+  process.env.DEBUG = 'rechat:db:inspect,rechat:db:profile'
+  return frisby.create('make sure deleted tasks do not appear in deal context')
+    .get(`/deals/${results.deal.create.data.id}`)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSONSchema({
+      '$schema': 'http://json-schema.org/draft-04/schema#',
+      required: ['data'],
+      type: 'object',
+      properties: {
+        data: {
+          required: ['checklists'],
+          properties: {
+            checklists: {
+              type: 'array',
+              items: {
+                type: 'object',
+                properties: {
+                  tasks: {
+                    type: 'array',
+                    items: {
+                      properties: {
+                        deleted_at: {
+                          type: 'null'
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     })
 }
@@ -422,6 +466,8 @@ module.exports = {
   editTaskTitle,
   bulkEditTasks,
   deleteAnotherTask,
+  makeSureAnotherTaskIsDeleted,
+  makeSureAnotherTaskIsntReturnedInDealContext,
   setSubmission,
   updateSubmission,
   addActivity,
