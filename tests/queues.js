@@ -1,3 +1,21 @@
+const nodeify = fn => {
+  return cb => {
+    fn().nodeify(cb)
+  }
+}
+
+const mapBrokerwolfProperty = (job, cb) => {
+  BrokerWolf.PropertyTypes.map(job.data).nodeify(cb)
+}
+
+const mapBrokerwolfClassification = (job, cb) => {
+  BrokerWolf.Classifications.map(job.data).nodeify(cb)
+}
+
+const mapBrokerwolfContact = (job, cb) => {
+  BrokerWolf.ContactTypes.map(job.data).nodeify(cb)
+}
+
 const list = {
   'Refresh.Subdivisions': Listing.refreshSubdivisions,
   'Refresh.Schools': School.refresh,
@@ -6,14 +24,24 @@ const list = {
   'Refresh.Areas': Listing.refreshAreas,
   'Refresh.Agents': Agent.refreshContacts,
   'Seamless.Email': Message.sendEmailForUnread,
-  'Seamless.SMS': Notification.sendForUnread
+  'Seamless.SMS': Notification.sendForUnread,
+  'BrokerWolf.Members.Sync': nodeify(BrokerWolf.Members.sync),
+  'BrokerWolf.Classifications.Sync': nodeify(BrokerWolf.Classifications.sync),
+  'BrokerWolf.Classifications.map': mapBrokerwolfClassification,
+  'BrokerWolf.PropertyTypes.Sync': nodeify(BrokerWolf.PropertyTypes.sync),
+  'BrokerWolf.PropertyTypes.map': mapBrokerwolfProperty,
+  'BrokerWolf.ContactTypes.Sync': nodeify(BrokerWolf.ContactTypes.sync),
+  'BrokerWolf.ContactTypes.map': mapBrokerwolfContact,
 }
 
 const queues = {}
 
 Object.keys(list).forEach(name => {
   const handler = (job, done) => {
-    list[name](done)
+    if (list[name].length === 1)
+      list[name](done)
+    else
+      list[name](job, done)
   }
 
   queues[name] = {
