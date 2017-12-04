@@ -24,6 +24,9 @@ SELECT alerts.*,
          ORDER BY recommendations.updated_at DESC
          LIMIT 1
        ) as cover_image_url,
+       (
+         SELECT ARRAY_AGG(DISTINCT("user")) FROM rooms_users WHERE room = alerts.room
+       ) AS users,
        ST_AsGeoJSON(points) AS points,
        EXTRACT(EPOCH FROM created_at) AS created_at,
        EXTRACT(EPOCH FROM updated_at) AS updated_at,
