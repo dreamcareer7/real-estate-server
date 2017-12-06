@@ -72,6 +72,7 @@ const addContext = cb => {
     year_built: 1972,
     contract_date: '1979/12/01',
     closing_date: '1980/01/01',
+    list_date: '2017/12/06',
     sales_price: 999999,
     commission_listing: 3,
     commission_selling: 3,
@@ -79,12 +80,22 @@ const addContext = cb => {
   }
 
   return frisby.create('add some context to a deal')
-    .post(`/deals/${results.deal.create.data.id}/context`, {context})
+    .post(`/deals/${results.deal.create.data.id}/context`, { context })
     .after(cb)
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
-//       data: results.deal.create.data
+      data: Object.assign({}, results.deal.create.data, {
+        brokerwolf_tier_id: undefined,
+        brokerwolf_id: undefined,
+        brokerwolf_row_version: undefined,
+        deal_context: {
+          list_date: {
+            context_type: 'Date',
+            date: 1512505800
+          }
+        }
+      })
     })
     .expectJSONTypes({
       code: String,
