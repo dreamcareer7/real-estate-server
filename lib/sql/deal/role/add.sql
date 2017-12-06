@@ -19,4 +19,6 @@ INSERT INTO deals_roles(
   $8,
   $9
 )
-ON CONFLICT DO NOTHING
+ON CONFLICT (deal, role, "user") DO UPDATE
+ SET deleted_at = NULL /* Undelete the role if its added again. See isse Applause#468 */
+WHERE deals_roles.deal = $3 AND deals_roles.role = $2 AND deals_roles.user = $4
