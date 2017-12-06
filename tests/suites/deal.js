@@ -114,16 +114,18 @@ const approveContext = cb => {
 const addRole = cb => {
   const roles = [
     {
-  //     first_name: 'Imaginary',
-  //     last_name: 'Lawyer',
       email: 'test@rechat.com',
       role: 'BuyerAgent',
       commission: 10000,
+      company_title: 'ACME',
+      legal_first_name: 'Wile',
+      legal_middle_name: 'E.',
+      legal_last_name: 'Coyote',
     },
 
     {
-      first_name: 'Imaginary',
-      last_name: 'Agent',
+      legal_first_name: 'Imaginary',
+      legal_last_name: 'Agent',
       email: 'test@rechat.com',
       role: 'SellerAgent',
       commission: 20000
@@ -135,6 +137,10 @@ const addRole = cb => {
       type: 'deal_role',
       role: roles[0].role,
       commission: roles[0].commission,
+      company_title: 'ACME',
+      legal_first_name: 'Wile',
+      legal_middle_name: 'E.',
+      legal_last_name: 'Coyote',
       user: {
         email: roles[0].email
       }
@@ -143,6 +149,8 @@ const addRole = cb => {
     {
       type: 'deal_role',
       role: roles[1].role,
+      legal_first_name: 'Imaginary',
+      legal_last_name: 'Agent',
       commission: roles[1].commission,
       user: {
         email: roles[1].email
@@ -156,7 +164,7 @@ const addRole = cb => {
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
-//       data: results.deal.create.data
+      data: results.deal.create.data
     })
     .expectJSONTypes({
       code: String,
