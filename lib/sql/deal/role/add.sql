@@ -21,6 +21,12 @@ INSERT INTO deals_roles(
   $9,
   $10
 )
-ON CONFLICT (deal, role, "user") DO UPDATE
- SET deleted_at = NULL /* Undelete the role if its added again. See isse Applause#468 */
+ON CONFLICT (deal, role, "user") DO UPDATE SET
+ deleted_at = NULL, /* Undelete the role if its added again. See isse Applause#468 */
+ company_title = $5,
+ legal_prefix = $6,
+ legal_first_name = $7,
+ legal_middle_name = $8,
+ legal_last_name = $9,
+ commission = $10
 WHERE deals_roles.deal = $3 AND deals_roles.role = $2 AND deals_roles.user = $4
