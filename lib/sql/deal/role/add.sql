@@ -3,7 +3,7 @@ INSERT INTO deals_roles(
   role,
   deal,
   "user",
-  company_title,
+  title_company,
   legal_prefix,
   legal_first_name,
   legal_middle_name,
@@ -23,7 +23,7 @@ INSERT INTO deals_roles(
 )
 ON CONFLICT (deal, role, "user") DO UPDATE SET
  deleted_at = NULL, /* Undelete the role if its added again. See isse Applause#468 */
- company_title = $5,
+ title_company = $5,
  legal_prefix = $6,
  legal_first_name = $7,
  legal_middle_name = $8,
