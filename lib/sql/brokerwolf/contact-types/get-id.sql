@@ -1,0 +1,1 @@
+SELECT brokerwolf_id FROM brokerwolf_contact_types WHERE role = $1

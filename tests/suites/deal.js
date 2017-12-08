@@ -3,6 +3,16 @@ const deal_response = require('./expected_objects/deal.js')
 
 registerSuite('listing', ['getListing'])
 registerSuite('brand', ['createParent', 'create', 'addChecklist', 'addForm', 'addTask', 'addAnotherTask'])
+registerSuite('brokerwolf', [
+  'syncMembers',
+  'syncClassifications',
+  'mapClassification',
+  'syncPropertyTypes',
+  'mapPropertyType',
+  'syncContactTypes',
+  'mapContactType'
+])
+registerSuite('user', ['upgradeToAgentWithEmail'])
 
 const create = (cb) => {
   const data = JSON.parse(JSON.stringify(deal))
@@ -59,16 +69,33 @@ const patchListing = cb => {
 const addContext = cb => {
   const context = {
     listing_status: 'Active',
-    year_built: 1972
+    year_built: 1972,
+    contract_date: '1979/12/01',
+    closing_date: '1980/01/01',
+    list_date: '2017/12/06',
+    sales_price: 999999,
+    commission_listing: 3,
+    commission_selling: 3,
+    unit_number: '3A'
   }
 
   return frisby.create('add some context to a deal')
-    .post(`/deals/${results.deal.create.data.id}/context`, {context})
+    .post(`/deals/${results.deal.create.data.id}/context`, { context })
     .after(cb)
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
-      data: results.deal.create.data
+      data: Object.assign({}, results.deal.create.data, {
+        brokerwolf_tier_id: undefined,
+        brokerwolf_id: undefined,
+        brokerwolf_row_version: undefined,
+        deal_context: {
+          list_date: {
+            context_type: 'Date',
+            date: (new Date('2017/12/06')).valueOf() / 1000
+          }
+        }
+      })
     })
     .expectJSONTypes({
       code: String,
@@ -79,13 +106,15 @@ const addContext = cb => {
 const approveContext = cb => {
   const cid = results.deal.addContext.data.deal_context.listing_status.id
 
+  delete results.deal.addContext.data.deal_context.listing_status
+
   return frisby.create('approve a context item')
     .patch(`/deals/${results.deal.create.data.id}/context/${cid}/approved`, {approved: true})
     .after(cb)
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
-      data: results.deal.create.data
+      data: results.deal.addContext.data
     })
     .expectJSONTypes({
       code: String,
@@ -94,27 +123,54 @@ const approveContext = cb => {
 }
 
 const addRole = cb => {
-  const role = {
-    first_name: 'Imaginary',
-    last_name: 'Lawyer',
-    email: 'imaginary_lawyer@rechat.com',
-    role: 'Lawyer'
-  }
+  const roles = [
+    {
+      email: 'test@rechat.com',
+      role: 'BuyerAgent',
+      commission: 10000,
+      title_company: 'ACME',
+      legal_first_name: 'Wile',
+      legal_middle_name: 'E.',
+      legal_last_name: 'Coyote',
+    },
+
+    {
+      legal_first_name: 'Imaginary',
+      legal_last_name: 'Agent',
+      email: 'test@rechat.com',
+      role: 'SellerAgent',
+      commission: 20000
+    }
+  ]
 
   results.deal.create.data.roles = [
     {
       type: 'deal_role',
-      role: role.role,
+      role: roles[0].role,
+      commission: roles[0].commission,
+      title_company: 'ACME',
+      legal_first_name: 'Wile',
+      legal_middle_name: 'E.',
+      legal_last_name: 'Coyote',
       user: {
-        first_name: role.first_name,
-        last_name: role.last_name,
-        email: role.email
+        email: roles[0].email
+      }
+    },
+
+    {
+      type: 'deal_role',
+      role: roles[1].role,
+      legal_first_name: 'Imaginary',
+      legal_last_name: 'Agent',
+      commission: roles[1].commission,
+      user: {
+        email: roles[1].email
       }
     }
   ]
 
   return frisby.create('add a role to a deal')
-    .post(`/deals/${results.deal.create.data.id}/roles`, { roles: [ role ] })
+    .post(`/deals/${results.deal.create.data.id}/roles`, { roles })
     .after(cb)
     .expectStatus(200)
     .expectJSON({
@@ -134,7 +190,7 @@ const getAll = (cb) => {
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
-      data: [results.deal.createHippocket.data, results.deal.create.data]
+      data: [results.deal.createHippocket.data, results.deal.approveContext.data]
     })
 }
 
@@ -146,7 +202,7 @@ const get = (cb) => {
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
-      data: results.deal.create.data
+      data: results.deal.approveContext.data
     })
     .expectJSONTypes({
       code: String,
@@ -453,9 +509,9 @@ module.exports = {
   create,
   createHippocket,
   patchListing,
+  addRole,
   addContext,
   approveContext,
-  addRole,
   get,
   getAll,
   addChecklist,
