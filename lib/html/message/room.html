@@ -6,8 +6,7 @@
           <table width="100%" cellpadding="0" cellspacing="0">
             <tr>
               <td class="plr-10" bgcolor="#f8fafb" style="padding:9px 19px; border-bottom:1px solid #dce5eb;">
-                <span class="overrideBlueLink">
-                  <table width="100%" cellpadding="0" cellspacing="0">
+                  <table class="overrideBlueLink" width="100%" cellpadding="0" cellspacing="0">
                       <tr>
                         <td style="padding:0 0 6px; font:12px/14px Helvetica, Arial, sans-serif; color:#9db2c3; text-transform:uppercase;">
                           {% if room.room_type === 'Task' %}
@@ -27,14 +26,12 @@
                         </td>
                       </tr>
                   </table>
-                </span>
               </td>
             </tr>
 
             <tr>
               <td class="plr-10" style="padding:19px 19px 2px;">
-                <span class="overrideBlueLink">
-                  <table width="100%" cellpadding="0" cellspacing="0">
+                  <table class="overrideBlueLink" width="100%" cellpadding="0" cellspacing="0">
                     {% for group in room.grouped_messages %}
                       <tr>
                         <td style="padding:0 0 6px;">
@@ -50,7 +47,6 @@
                       </tr>
                     {% endfor %}
                   </table>
-                </span>
             </tr>
 
             <tr>
