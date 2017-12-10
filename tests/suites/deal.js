@@ -343,7 +343,7 @@ const bulkEditTasks = cb => {
     })
 }
 
-const deleteAnotherTask = cb => {
+const removeTask = cb => {
   return frisby.create('delete another task')
     .delete(`/tasks/${results.deal.addAnotherTask.data.id}`)
     .after(cb)
@@ -531,7 +531,7 @@ module.exports = {
   addAnotherTask,
   editTaskTitle,
   bulkEditTasks,
-  deleteAnotherTask,
+  removeTask,
   makeSureAnotherTaskIsDeleted,
   makeSureAnotherTaskIsntReturnedInDealContext,
   setSubmission,

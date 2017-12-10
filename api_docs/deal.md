@@ -47,7 +47,7 @@ context items and their types.
 <!-- include(tests/deal/createHippocket.md) -->
 
 ### Delete a deal [DELETE /deals/:id]
-<!-- include(tests/deal/deleteDeal.md) -->
+<!-- include(tests/deal/remove.md) -->
 
 ### Add a role [POST /deal/:id/roles]
 <!-- include(tests/deal/addRole.md) -->
@@ -65,7 +65,7 @@ context items and their types.
 <!-- include(tests/deal/addRoles.md) -->
 
 ### Delete a role [DELETE /deals/:id/roles/:rid]
-<!-- include(tests/deal/deleteRole.md) -->
+<!-- include(tests/deal/removeRole.md) -->
 
 ### Add new checklist [POST /deals/:id/checklists]
 <!-- include(tests/deal/addChecklist.md) -->
