@@ -175,7 +175,7 @@ const addRole = cb => {
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
-      data: results.deal.create.data
+//       data: results.deal.create.data
     })
     .expectJSONTypes({
       code: String,
@@ -307,7 +307,7 @@ const addAnotherTask = cb => {
     })
 }
 
-const editTaskTitle = cb => {
+const updateTask = cb => {
   const props = {
     title: 'Another Task for Gholi'
   }
@@ -324,7 +324,7 @@ const editTaskTitle = cb => {
     })
 }
 
-const bulkEditTasks = cb => {
+const updateTasks = cb => {
   const tasks = [{
     id: results.deal.addTask.data.id,
     title: 'Bulk Test Title'
@@ -343,7 +343,7 @@ const bulkEditTasks = cb => {
     })
 }
 
-const deleteAnotherTask = cb => {
+const removeTask = cb => {
   return frisby.create('delete another task')
     .delete(`/tasks/${results.deal.addAnotherTask.data.id}`)
     .after(cb)
@@ -495,6 +495,16 @@ const getTask = cb => {
     .after(cb)
 }
 
+const getBrandDeals = (cb) => {
+  return frisby.create('get brand inbox')
+    .get(`/brands/${results.brand.create.data.id}/deals`)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+    })
+}
+
 const getBrandInbox = (cb) => {
   return frisby.create('get brand inbox')
     .get(`/brands/${results.brand.create.data.id}/deals/inbox`)
@@ -519,9 +529,9 @@ module.exports = {
   updateChecklist,
   addTask,
   addAnotherTask,
-  editTaskTitle,
-  bulkEditTasks,
-  deleteAnotherTask,
+  updateTask,
+  updateTasks,
+  removeTask,
   makeSureAnotherTaskIsDeleted,
   makeSureAnotherTaskIsntReturnedInDealContext,
   setSubmission,
@@ -532,6 +542,7 @@ module.exports = {
   setReview,
   patchAttention,
   getBrandInbox,
+  getBrandDeals,
   removeRole,
   remove
 }
