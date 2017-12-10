@@ -62,7 +62,7 @@ context items and their types.
 <!-- include(tests/deal/approveContext.md) -->
 
 ### Add roles to a deal [POST /deals/:id/roles]
-<!-- include(tests/deal/addRoles.md) -->
+<!-- include(tests/deal/addRole.md) -->
 
 ### Delete a role [DELETE /deals/:id/roles/:rid]
 <!-- include(tests/deal/removeRole.md) -->
@@ -83,7 +83,7 @@ context items and their types.
 <!-- include(tests/deal/addTask.md) -->
 
 ### Set form on a task [PUT /tasks/:task/submission]
-<!-- include(tests/deal/submit.md) -->
+<!-- include(tests/deal/setSubmission.md) -->
 
 ### Get a form revision of a task [GET /tasks/:task/submission/:revision]
 <!-- include(tests/deal/getRevision.md) -->
@@ -95,13 +95,13 @@ context items and their types.
 <!-- include(tests/deal/patchAttention.md) -->
 
 ### Update a task [PATCH /tasks/:task]
-<!-- include(tests/deal/patchTask.md) -->
+<!-- include(tests/deal/updateTask.md) -->
 
 ### Update a bunch of tasks [PUT /deals/:id/tasks]
-<!-- include(tests/deal/patchAllTasks.md) -->
+<!-- include(tests/deal/updateTasks.md) -->
 
 ### Record activity on timeline of a task [POST /tasks/:task/timeline]
-<!-- include(tests/deal/timeline.md) -->
+<!-- include(tests/deal/addActivity.md) -->
 
 ### Delete a task [DELETE /tasks/:task]
-<!-- include(tests/deal/deleteTask.md) --
+<!-- include(tests/deal/removeTask.md) --

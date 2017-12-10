@@ -307,7 +307,7 @@ const addAnotherTask = cb => {
     })
 }
 
-const editTaskTitle = cb => {
+const updateTask = cb => {
   const props = {
     title: 'Another Task for Gholi'
   }
@@ -324,7 +324,7 @@ const editTaskTitle = cb => {
     })
 }
 
-const bulkEditTasks = cb => {
+const updateTasks = cb => {
   const tasks = [{
     id: results.deal.addTask.data.id,
     title: 'Bulk Test Title'
@@ -529,8 +529,8 @@ module.exports = {
   updateChecklist,
   addTask,
   addAnotherTask,
-  editTaskTitle,
-  bulkEditTasks,
+  updateTask,
+  updateTasks,
   removeTask,
   makeSureAnotherTaskIsDeleted,
   makeSureAnotherTaskIsntReturnedInDealContext,
