@@ -104,4 +104,4 @@ context items and their types.
 <!-- include(tests/deal/addActivity.md) -->
 
 ### Delete a task [DELETE /tasks/:task]
-<!-- include(tests/deal/removeTask.md) --
+<!-- include(tests/deal/removeTask.md) -->
