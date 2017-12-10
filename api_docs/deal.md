@@ -35,10 +35,10 @@ context items and their types.
 <!-- include(tests/deal/getAll.md) -->
 
 ### Get all deals belonging to a brand [GET /brands/:brand/delals]
-<!-- include(tests/deal/brandDeals.md) -->
+<!-- include(tests/deal/getBrandDeals.md) -->
 
 ### Get all deals that need backoffice review [GET /brands/:brand/delals/inbox]
-<!-- include(tests/deal/brandInbox.md) -->
+<!-- include(tests/deal/getBrandInbox.md) -->
 
 ### Create a deal with a listing [POST /deal]
 <!-- include(tests/deal/create.md) -->
