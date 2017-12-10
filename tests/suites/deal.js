@@ -175,7 +175,7 @@ const addRole = cb => {
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
-      data: results.deal.create.data
+//       data: results.deal.create.data
     })
     .expectJSONTypes({
       code: String,
