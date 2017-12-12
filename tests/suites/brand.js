@@ -236,7 +236,7 @@ const addRole = cb => {
     .post(`/brands/${brand_id}/roles`, {
       role: 'Admin',
       acl: [
-        'deals/*'
+        'Deals'
       ]
     })
     .after(cb)
@@ -251,7 +251,7 @@ const updateRole = cb => {
     .post(`/brands/${brand_id}/roles`, {
       role: 'Updated Role Name',
       acl: [
-        'deals/*',
+        'Deals',
         'admin'
       ]
     })

@@ -2,7 +2,17 @@ const {deal, full_address} = require('./data/deal.js')
 const deal_response = require('./expected_objects/deal.js')
 
 registerSuite('listing', ['getListing'])
-registerSuite('brand', ['createParent', 'create', 'addChecklist', 'addForm', 'addTask'])
+registerSuite('brand', ['createParent', 'create', 'addChecklist', 'addForm', 'addTask', 'addAnotherTask'])
+registerSuite('brokerwolf', [
+  'syncMembers',
+  'syncClassifications',
+  'mapClassification',
+  'syncPropertyTypes',
+  'mapPropertyType',
+  'syncContactTypes',
+  'mapContactType'
+])
+registerSuite('user', ['upgradeToAgentWithEmail'])
 
 const create = (cb) => {
   const data = JSON.parse(JSON.stringify(deal))
@@ -59,16 +69,33 @@ const patchListing = cb => {
 const addContext = cb => {
   const context = {
     listing_status: 'Active',
-    year_built: 1972
+    year_built: 1972,
+    contract_date: '1979/12/01',
+    closing_date: '1980/01/01',
+    list_date: '2017/12/06',
+    sales_price: 999999,
+    commission_listing: 3,
+    commission_selling: 3,
+    unit_number: '3A'
   }
 
   return frisby.create('add some context to a deal')
-    .post(`/deals/${results.deal.create.data.id}/context`, {context})
+    .post(`/deals/${results.deal.create.data.id}/context`, { context })
     .after(cb)
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
-      data: results.deal.create.data
+      data: Object.assign({}, results.deal.create.data, {
+        brokerwolf_tier_id: undefined,
+        brokerwolf_id: undefined,
+        brokerwolf_row_version: undefined,
+        deal_context: {
+          list_date: {
+            context_type: 'Date',
+            date: (new Date('2017/12/06')).valueOf() / 1000
+          }
+        }
+      })
     })
     .expectJSONTypes({
       code: String,
@@ -79,13 +106,15 @@ const addContext = cb => {
 const approveContext = cb => {
   const cid = results.deal.addContext.data.deal_context.listing_status.id
 
+  delete results.deal.addContext.data.deal_context.listing_status
+
   return frisby.create('approve a context item')
     .patch(`/deals/${results.deal.create.data.id}/context/${cid}/approved`, {approved: true})
     .after(cb)
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
-      data: results.deal.create.data
+      data: results.deal.addContext.data
     })
     .expectJSONTypes({
       code: String,
@@ -94,32 +123,59 @@ const approveContext = cb => {
 }
 
 const addRole = cb => {
-  const role = {
-    first_name: 'Imaginary',
-    last_name: 'Lawyer',
-    email: 'imaginary_lawyer@rechat.com',
-    role: 'Lawyer'
-  }
+  const roles = [
+    {
+      email: 'test@rechat.com',
+      role: 'BuyerAgent',
+      commission: 10000,
+      title_company: 'ACME',
+      legal_first_name: 'Wile',
+      legal_middle_name: 'E.',
+      legal_last_name: 'Coyote',
+    },
+
+    {
+      legal_first_name: 'Imaginary',
+      legal_last_name: 'Agent',
+      email: 'test@rechat.com',
+      role: 'SellerAgent',
+      commission: 20000
+    }
+  ]
 
   results.deal.create.data.roles = [
     {
       type: 'deal_role',
-      role: role.role,
+      role: roles[0].role,
+      commission: roles[0].commission,
+      title_company: 'ACME',
+      legal_first_name: 'Wile',
+      legal_middle_name: 'E.',
+      legal_last_name: 'Coyote',
       user: {
-        first_name: role.first_name,
-        last_name: role.last_name,
-        email: role.email
+        email: roles[0].email
+      }
+    },
+
+    {
+      type: 'deal_role',
+      role: roles[1].role,
+      legal_first_name: 'Imaginary',
+      legal_last_name: 'Agent',
+      commission: roles[1].commission,
+      user: {
+        email: roles[1].email
       }
     }
   ]
 
   return frisby.create('add a role to a deal')
-    .post(`/deals/${results.deal.create.data.id}/roles`, { roles: [ role ] })
+    .post(`/deals/${results.deal.create.data.id}/roles`, { roles })
     .after(cb)
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
-      data: results.deal.create.data
+//       data: results.deal.create.data
     })
     .expectJSONTypes({
       code: String,
@@ -134,7 +190,7 @@ const getAll = (cb) => {
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
-      data: [results.deal.createHippocket.data, results.deal.create.data]
+      data: [results.deal.createHippocket.data, results.deal.approveContext.data]
     })
 }
 
@@ -146,7 +202,7 @@ const get = (cb) => {
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
-      data: results.deal.create.data
+      data: results.deal.approveContext.data
     })
     .expectJSONTypes({
       code: String,
@@ -228,6 +284,118 @@ const addTask = cb => {
     .expectJSONTypes({
 //       code: String,
 //       data: deal_response
+    })
+}
+
+const addAnotherTask = cb => {
+  const anotherTask = {
+    title: 'Another Task',
+    status: 'New',
+    task_type: 'Form',
+    form: results.form.create.data.id,
+    checklist: results.deal.addChecklist.data.id
+  }
+  
+  return frisby.create('add another task to a deal')
+    .post(`/deals/${results.deal.create.data.id}/tasks`, anotherTask)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSONTypes({
+      data: {
+        id: String
+      }
+    })
+}
+
+const updateTask = cb => {
+  const props = {
+    title: 'Another Task for Gholi'
+  }
+
+  return frisby.create('edit another task\'s title')
+    .patch(`/tasks/${results.deal.addAnotherTask.data.id}`, props)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      data: {
+        title: 'Another Task for Gholi'
+      }
+    })
+}
+
+const updateTasks = cb => {
+  const tasks = [{
+    id: results.deal.addTask.data.id,
+    title: 'Bulk Test Title'
+  }, {
+    id: results.deal.addAnotherTask.data.id,
+    needs_attention: true
+  }]
+
+  return frisby.create('bulk edit tasks of a deal')
+    .put(`/deals/${results.deal.create.data.id}/tasks`, tasks)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      data: tasks
+    })
+}
+
+const removeTask = cb => {
+  return frisby.create('delete another task')
+    .delete(`/tasks/${results.deal.addAnotherTask.data.id}`)
+    .after(cb)
+    .expectStatus(204)
+}
+
+const makeSureAnotherTaskIsDeleted = cb => {
+  return frisby.create('make sure another task is deleted')
+    .get(`/tasks/${results.deal.addAnotherTask.data.id}`)
+    .after(cb)
+    .expectJSONTypes({
+      data: {
+        deleted_at: String
+      }
+    })
+}
+
+const makeSureAnotherTaskIsntReturnedInDealContext = cb => {
+  process.env.DEBUG = 'rechat:db:inspect,rechat:db:profile'
+  return frisby.create('make sure deleted tasks do not appear in deal context')
+    .get(`/deals/${results.deal.create.data.id}`)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSONSchema({
+      '$schema': 'http://json-schema.org/draft-04/schema#',
+      required: ['data'],
+      type: 'object',
+      properties: {
+        data: {
+          required: ['checklists'],
+          properties: {
+            checklists: {
+              type: 'array',
+              items: {
+                type: 'object',
+                properties: {
+                  tasks: {
+                    type: 'array',
+                    items: {
+                      properties: {
+                        deleted_at: {
+                          type: 'null'
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     })
 }
 
@@ -327,6 +495,16 @@ const getTask = cb => {
     .after(cb)
 }
 
+const getBrandDeals = (cb) => {
+  return frisby.create('get brand inbox')
+    .get(`/brands/${results.brand.create.data.id}/deals`)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+    })
+}
+
 const getBrandInbox = (cb) => {
   return frisby.create('get brand inbox')
     .get(`/brands/${results.brand.create.data.id}/deals/inbox`)
@@ -341,15 +519,21 @@ module.exports = {
   create,
   createHippocket,
   patchListing,
+  addRole,
   addContext,
   approveContext,
-  addRole,
   get,
   getAll,
   addChecklist,
   offerChecklist,
   updateChecklist,
   addTask,
+  addAnotherTask,
+  updateTask,
+  updateTasks,
+  removeTask,
+  makeSureAnotherTaskIsDeleted,
+  makeSureAnotherTaskIsntReturnedInDealContext,
   setSubmission,
   updateSubmission,
   addActivity,
@@ -358,6 +542,7 @@ module.exports = {
   setReview,
   patchAttention,
   getBrandInbox,
+  getBrandDeals,
   removeRole,
   remove
 }

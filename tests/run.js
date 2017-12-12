@@ -26,6 +26,7 @@ program
   .option('--stop-on-fail', 'Stops on the first sight of problem')
   .option('--keep', 'Keep the server running after execution is completed')
   .option('--docs', 'Setup REST API')
+  .option('--commit <suite>', 'Commits the changes on specified suite after its done')
   .parse(process.argv)
 
 if (!program.concurrency)
@@ -150,10 +151,26 @@ function setupApp (cb) {
 
 //   Error.autoReport = false;
 
+  const rollback = suite => {
+    connections[suite].query('ROLLBACK', connections[suite].done)
+    delete connections[suite]
+  }
+
   if (!program.keep) {
     Run.on('suite done', (suite) => {
-      connections[suite].query('ROLLBACK', connections[suite].done)
-      delete connections[suite]
+      if (program.commit && program.commit === suite) {
+        connections[suite].query('COMMIT', err => {
+          if (err)
+            console.log('Error committing', err)
+          else
+            console.log('Committed changes')
+
+          rollback(suite)
+          return
+        })
+      }
+
+      rollback(suite)
     })
   }
 

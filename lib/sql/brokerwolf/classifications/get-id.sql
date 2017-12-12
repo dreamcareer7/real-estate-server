@@ -1,0 +1,1 @@
+SELECT brokerwolf_id FROM brokerwolf_classifications WHERE ender_type = $1

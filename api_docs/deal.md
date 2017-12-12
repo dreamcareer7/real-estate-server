@@ -19,74 +19,26 @@ A deal may consist of many different data that are gathered from different sourc
 MLS, DCAD, user-submitted-forms and the user interfaces are current data sources.
 
 ::: note
-All the contexts are considered to be optional.
+All of the contexts are considered to be optional.
 :::
 
-Here is a list of contexts we use:
+contexts are stored in `deal.deal_context` object.
+For example, `street_name` of a deal can be fetched from `deal.deal_context.street_name`.
 
-Name                  | Comes from MLS? | Comes from DCAD? | Used in forms       | Used in UI
---------------------- | :-------------: | :--------------: | :-----------------: | :---------:
-deal_type             |                 |                  |                     |      RW
-list_price            |       ✓         |                  |        ✓            |      R
-list_date             |       ✓         |                  |        ✓            |      R
-expiration_date       |       ☐         |                  |        ✓            |      R
-closing_date          |                 |                  |        ✓            |      R
-full_address          |       ✓         |                  |        ✓            |      RW
-legal_description     |                 |        ✓         |        ✓            |
-unit_number           |       ✓         |                  |        ✓            |
-building_number       |                 |                  |        ✓            |
-project_name          |                 |                  |        ✓            |
-lot_number            |       ✓         |                  |        ✓            |
-block_number          |                 |                  |        ✓            |
-subdivision           |       ✓         |                  |        ✓            |
-street_number         |       ✓         |                  |        ✓            |
-street_dir_prefix     |       ✓         |                  |        ✓            |
-street_name           |       ✓         |                  |        ✓            |
-street_suffix         |       ✓         |                  |        ✓            |
-street_address        |       ✓         |                  |        ✓            |      R
-city                  |       ✓         |                  |        ✓            |
-state                 |       ✓         |                  |        ✓            |      R
-state_code            |       ✓         |                  |                     |
-postal_code           |       ✓         |                  |        ✓            |
-county                |       ✓         |                  |        ✓            |
-property_type         |       ✓         |                  |        ✓            |
-year_built            |       ✓         |                  |        ✓            |
-seller_name           |                 |                  |                     |
-buyer_name            |                 |                  |                     |
-listing_status        |       ✓         |                  |        ✓            |      RW
-transaction_type      |       ✓         |                  |                     |
-mls_number            |       ✓         |                  |                     |
-mls_area_major        |       ✓         |                  |        ✓            |
-mls_area_minor        |       ✓         |                  |        ✓            |
-photo                 |       ✓         |                  |                     |
+[Here](https://gitlab.com/rechat/server/blob/testing/lib/models/Deal/context.js) You can find a list of all
+context items and their types.
 
-contexts are stored in `deal.context` object.
-For example, `street_name` of a deal can be fetched from `deal.context.street_name`.
+### Get a deal [GET /deal/:id]
+<!-- include(tests/deal/get.md) -->
 
-#### Proposed values
+### Get deals created by a user [GET /deals]
+<!-- include(tests/deal/getAll.md) -->
 
-Many of the contexts of a deal can be fetched from alternative data sources. When Rechat manages to find
-relevant information to a context, it stores that information as a _Proposed Value_.
+### Get all deals belonging to a brand [GET /brands/:brand/delals]
+<!-- include(tests/deal/getBrandDeals.md) -->
 
-For example if your deal is connected to an MLS listing, `deal.proposed_values.street_address` will be populated automatically.
-Therefore, whenever you try to show information of a context, you should look into both `deal.context` and `deal.proposed_values`.
-
-```javascript
-let street_address = null
-
-if (deal.context && deal.context.street_address)
-  street_address = deal.context.street_address
-else if (deal.proposed_values && deal.proposed_values.street_address)
-  street_address = deal.proposed_values.street_address
-```
-
-
-A deal may also hold the following entities:
-
-* Forms filled by users
-* Envelopes which have been sent out to be signed
-* Documents uploaded by users
-
+### Get all deals that need backoffice review [GET /brands/:brand/delals/inbox]
+<!-- include(tests/deal/getBrandInbox.md) -->
 
 ### Create a deal with a listing [POST /deal]
 <!-- include(tests/deal/create.md) -->
@@ -94,13 +46,62 @@ A deal may also hold the following entities:
 ### Create a hippocket deal [POST /deal]
 <!-- include(tests/deal/createHippocket.md) -->
 
+### Delete a deal [DELETE /deals/:id]
+<!-- include(tests/deal/remove.md) -->
+
 ### Add a role [POST /deal/:id/roles]
 <!-- include(tests/deal/addRole.md) -->
 
-### Get a deal [GET /deal/:id]
-<!-- include(tests/deal/get.md) -->
+### Set listing for a deal [PATCH /deals/:id/listing]
+<!-- include(tests/deal/patchListing.md) -->
 
-### Get user's deals [GET /deals]
-<!-- include(tests/deal/getAll.md) -->
+### Add Context to a deal [POST /deals/:id/context]
+<!-- include(tests/deal/addContext.md) -->
 
-### Attach a file [POST /deals/:id/files]
+### Set approval status for a context [PATCH /deals/:id/context/:cid/approved]
+<!-- include(tests/deal/approveContext.md) -->
+
+### Add roles to a deal [POST /deals/:id/roles]
+<!-- include(tests/deal/addRole.md) -->
+
+### Delete a role [DELETE /deals/:id/roles/:rid]
+<!-- include(tests/deal/removeRole.md) -->
+
+### Add new checklist [POST /deals/:id/checklists]
+<!-- include(tests/deal/addChecklist.md) -->
+
+### Offer a new checklist [POST /deals/:id/checklists/offer]
+<!-- include(tests/deal/offerChecklist.md) -->
+
+### Update a checklist [PUT /deals/:id/checklists/:cid]
+<!-- include(tests/deal/updateChecklist.md) -->
+
+### Get a single task [GET /tasks/:id]
+<!-- include(tests/deal/getTask.md) -->
+
+### Add a task [POST /deals/:id/tasks]
+<!-- include(tests/deal/addTask.md) -->
+
+### Set form on a task [PUT /tasks/:task/submission]
+<!-- include(tests/deal/setSubmission.md) -->
+
+### Get a form revision of a task [GET /tasks/:task/submission/:revision]
+<!-- include(tests/deal/getRevision.md) -->
+
+### Set review on a task [PUT /tasks/:task/review]
+<!-- include(tests/deal/setReview.md) -->
+
+### Set attention status on a task [PATCH /tasks/:task/needs_attention]
+<!-- include(tests/deal/patchAttention.md) -->
+
+### Update a task [PATCH /tasks/:task]
+<!-- include(tests/deal/updateTask.md) -->
+
+### Update a bunch of tasks [PUT /deals/:id/tasks]
+<!-- include(tests/deal/updateTasks.md) -->
+
+### Record activity on timeline of a task [POST /tasks/:task/timeline]
+<!-- include(tests/deal/addActivity.md) -->
+
+### Delete a task [DELETE /tasks/:task]
+<!-- include(tests/deal/removeTask.md) -->

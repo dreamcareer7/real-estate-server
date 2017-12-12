@@ -5,27 +5,14 @@ const db = require('../lib/utils/db')
 
 const up = [
   'BEGIN',
-
-  `UPDATE pg_enum
-   SET enumlabel = 'Commercial Sale'
-   WHERE
-    enumlabel = 'Commerical Sale'
-    AND enumtypid = (
-      SELECT oid FROM pg_type WHERE typname = 'deal_property_type'
-  )`,
-
-  `UPDATE pg_enum
-   SET enumlabel = 'Commercial Lease'
-   WHERE
-    enumlabel = 'Commerical Lease'
-    AND enumtypid = (
-      SELECT oid FROM pg_type WHERE typname = 'deal_property_type'
-  )`,
-
+  'ALTER TABLE tasks ADD COLUMN deleted_at TIMESTAMP WITH TIME ZONE',
   'COMMIT'
 ]
 
 const down = [
+  'BEGIN',
+  'ALTER TABLE tasks DROP deleted_at',
+  'COMMIT'
 ]
 
 const runAll = (sqls, next) => {
