@@ -18,3 +18,4 @@ jsdoc/docs
 *.bk
 *.swp
 .vscode
+scripts/setup/status.json
