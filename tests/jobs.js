@@ -9,9 +9,10 @@ module.exports = app => {
     const data = req.body.data
 
     queues[name].handler({data}, (err, result) => {
-      if (err)
-        return res.error(err)
-
+      if (err) {
+        console.log(err)
+        return res.json(err)
+      }
       res.json(result)
     })
   })

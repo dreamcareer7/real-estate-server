@@ -11,8 +11,8 @@ const up = [
     'New Home',
     'Lot / Land',
     'Residential Lease',
-    'Commerical Sale',
-    'Commerical Lease'
+    'Commercial Sale',
+    'Commercial Lease'
    )`,
 
   'ALTER TABLE brands_checklists ADD deal_type deal_type',

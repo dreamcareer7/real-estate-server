@@ -8,11 +8,17 @@ SELECT 'message' AS type,
          WHERE role = 'Message' AND role_id = messages.id
        ) AS attachments,
        (
-         SELECT ARRAY_AGG("user") FROM notifications_users WHERE acked_at IS NOT NULL AND notification IN
-         (
-           SELECT id FROM notifications WHERE object_class = 'Message' AND object = mid
-           UNION
-           SELECT notification FROM messages WHERE id = mid
+         SELECT ARRAY_AGG("user")
+         FROM notifications_users WHERE
+         acked_at IS NOT NULL
+         AND notification IN
+          (
+            SELECT id FROM notifications WHERE object_class = 'Message' AND object = mid
+            UNION
+            SELECT notification FROM messages WHERE id = mid
+          )
+         AND notifications_users.user IN( /* Filter out users who have left this room  but have an ack */
+          SELECT "user" FROM rooms_users WHERE room = messages.room
          )
        ) AS acked_by,
        (
@@ -28,6 +34,9 @@ SELECT 'message' AS type,
             SELECT id FROM notifications WHERE object_class = 'Message' AND object = mid
             UNION
             SELECT notification FROM messages WHERE id = mid
+          )
+          AND notifications_deliveries.user IN( /* Filter out users who have left this room  but have an ack */
+            SELECT "user" FROM rooms_users WHERE room = messages.room
           )
         ) d
        ) AS deliveries,

@@ -3,16 +3,20 @@
 const async = require('async')
 const db = require('../lib/utils/db')
 
-const deal_contexts = require('fs').readFileSync('./lib/sql/deal/deal_contexts.fn.sql').toString()
+/* DEPRECATED MIGRATION */
+// Replaced by a later migration
+// - migrations/1512283503146_Check deleted at in deal_contexts function.js
+
+// const deal_contexts = require('fs').readFileSync('./lib/sql/deal/deal_contexts.fn.sql').toString()
 
 const up = [
   'BEGIN',
-  deal_contexts,
+  // deal_contexts,
   'COMMIT'
 ]
 
 const down = [
-  'DROP FUNCTION deal_contexts()'
+  // 'DROP FUNCTION deal_contexts()'
 ]
 
 
