@@ -515,6 +515,21 @@ const getBrandInbox = (cb) => {
     })
 }
 
+const filter = (cb) => {
+  return frisby.create('search for a deal')
+    .post(`/deals/filter`, {
+      query: 'Imaginary'
+    })
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      info: {
+        count: 1
+      }
+    })
+}
+
 module.exports = {
   create,
   createHippocket,
@@ -543,6 +558,7 @@ module.exports = {
   patchAttention,
   getBrandInbox,
   getBrandDeals,
+  filter,
   removeRole,
   remove
 }

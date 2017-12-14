@@ -40,6 +40,9 @@ context items and their types.
 ### Get all deals that need backoffice review [GET /brands/:brand/delals/inbox]
 <!-- include(tests/deal/getBrandInbox.md) -->
 
+### Search through all deals [POST /deals/filter]
+<!-- include(tests/deal/filter.md) -->
+
 ### Create a deal with a listing [POST /deal]
 <!-- include(tests/deal/create.md) -->
 
@@ -104,4 +107,4 @@ context items and their types.
 <!-- include(tests/deal/addActivity.md) -->
 
 ### Delete a task [DELETE /tasks/:task]
-<!-- include(tests/deal/removeTask.md) --
+<!-- include(tests/deal/removeTask.md) -->
