@@ -59,7 +59,7 @@ async function main() {
   
   brand = await addOfficeToBrand(brand, office)
 
-  const agentUser = await createAndLoginAgentUser()
+  const agentUser = await createAndLoginAgentUser(brand)
   await fixUserBrand(agentUser, brand, agentAuthRequest)
   await fixUserBrand(adminUser, brand, authRequest)
   await upgradeUserToAgent(agentUser, agent)
@@ -67,8 +67,7 @@ async function main() {
   const roleDeal = await addRoleToBrand(brand, 'Deals', ['Deals'])
   await addMemberToRole(brand, roleDeal, agentUser)
 
-  const roleBackOffice = await addRoleToBrand(brand, 'BackOffice', ['BackOffice'])
-  await addMemberToRole(brand, roleBackOffice, adminUser)
+  await addBackOfficeAclToAdminRole(brand)
 }
 
 async function checkLogin(admin) {
@@ -101,7 +100,7 @@ async function checkLogin(admin) {
       if (ex.statusCode === 401)
         return loginFn()
 
-      return console.error(ex)
+      throw ex
     }
   }
 
@@ -272,11 +271,27 @@ function getBrandRoles(brand) {
   })
 }
 
-function removeBrandRole(brand, role_id) {
-  return authRequest({
-    uri: `/brands/${brand.id}/roles/${role_id}`,
-    method: 'DELETE'
+async function addBackOfficeAclToAdminRole(brand) {
+  const roles = (await getBrandRoles(brand)).data
+
+  const adminRole = roles.find(role => role.role === 'Admin')
+
+  if (adminRole.acl.includes('BackOffice')) {
+    console.log('Admin role already has BackOffice access')
+    return adminRole
+  }
+
+  const resp = await authRequest({
+    uri: `/brands/${brand.id}/roles/${adminRole.id}`,
+    method: 'PUT',
+    json: true,
+    body: Object.assign(adminRole, {
+      acl: ['*', 'BackOffice']
+    })
   })
+
+  console.log('BackOffice access added to Admin role.')
+  return resp.data
 }
 
 async function addRoleToBrand(brand, title, acl) {
@@ -321,7 +336,7 @@ async function addMemberToRole(brand, role, user) {
     return
   }
 
-  const resp = authRequest({
+  const resp = await authRequest({
     uri: `/brands/${brand.id}/roles/${role.id}/members`,
     method: 'POST',
     json: true,
