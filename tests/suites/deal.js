@@ -518,7 +518,7 @@ const getBrandInbox = (cb) => {
 const filter = (cb) => {
   return frisby.create('search for a deal')
     .post(`/deals/filter`, {
-      query: 'Unit Test'
+      query: 'Imaginary'
     })
     .after(cb)
     .expectStatus(200)
