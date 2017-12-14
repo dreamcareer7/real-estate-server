@@ -517,7 +517,7 @@ const getBrandInbox = (cb) => {
 
 const filter = (cb) => {
   return frisby.create('search for a deal')
-    .post(`/deals/filter`, {
+    .post('/deals/filter', {
       query: 'Imaginary'
     })
     .after(cb)
