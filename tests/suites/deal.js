@@ -127,7 +127,7 @@ const addRole = cb => {
     {
       email: 'test@rechat.com',
       role: 'BuyerAgent',
-      commission: 10000,
+      commission_percentage: 3,
       company_title: 'ACME',
       legal_first_name: 'Wile',
       legal_middle_name: 'E.',
@@ -139,7 +139,7 @@ const addRole = cb => {
       legal_last_name: 'Agent',
       email: 'test@rechat.com',
       role: 'SellerAgent',
-      commission: 20000
+      commission_dollar: 20000
     }
   ]
 
@@ -147,7 +147,7 @@ const addRole = cb => {
     {
       type: 'deal_role',
       role: roles[0].role,
-      commission: roles[0].commission,
+      commission_percentage: roles[0].commission_percentage,
       company_title: 'ACME',
       legal_first_name: 'Wile',
       legal_middle_name: 'E.',
@@ -162,7 +162,7 @@ const addRole = cb => {
       role: roles[1].role,
       legal_first_name: 'Imaginary',
       legal_last_name: 'Agent',
-      commission: roles[1].commission,
+      commission_dollar: roles[1].commission_dollar,
       user: {
         email: roles[1].email
       }
