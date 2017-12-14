@@ -37,6 +37,22 @@ const createHippocket = cb => {
   const data = JSON.parse(JSON.stringify(deal))
   data.deal_context = {full_address}
 
+  data.roles = [
+    {
+      legal_first_name: 'Hippocket',
+      legal_last_name: 'Seller',
+      email: 'hippocket+seller@rechat.com',
+      role: 'Seller'
+    },
+
+    {
+      legal_first_name: 'Hippocket',
+      email: 'hippocket+seller+agent@rechat.com',
+      legal_last_name: 'Seller Agent',
+      role: 'SellerAgent'
+    }
+  ]
+
   return frisby.create('create a hippocket deal')
     .post('/deals', data)
     .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
