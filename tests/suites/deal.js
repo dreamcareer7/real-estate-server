@@ -47,10 +47,17 @@ const createHippocket = cb => {
 
     {
       legal_first_name: 'Hippocket',
-      email: 'hippocket+seller+agent@rechat.com',
-      legal_last_name: 'Seller Agent',
+      email: 'hippocket+agent@rechat.com',
+      legal_last_name: 'Hip Agent',
       role: 'SellerAgent'
-    }
+    },
+
+    {
+      legal_first_name: 'Hippocket',
+      email: 'hippocket+agent@rechat.com',
+      legal_last_name: 'Hip Agent',
+      role: 'BuyerAgent'
+    },
   ]
 
   return frisby.create('create a hippocket deal')
