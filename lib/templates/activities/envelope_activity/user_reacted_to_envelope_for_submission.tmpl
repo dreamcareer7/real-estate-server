@@ -1,1 +1,10 @@
-{{data.abbreviated_display_name}} {{object.recipient.status}} "{{object.submission.title}}"
+{% if object.recipient.status == 'Delivered'%}
+  {% set reaction = 'viewed' %}
+{% elif object.recipient.status == 'Completed'%}
+  {% set reaction = 'signed' %}
+{% elif object.recipient.status == 'Declined'%}
+  {% set reaction = 'declined' %}
+{% endif %}
+
+
+{{data.abbreviated_display_name}} {{reaction}} "{{object.submission.title}}"
