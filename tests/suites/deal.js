@@ -37,6 +37,29 @@ const createHippocket = cb => {
   const data = JSON.parse(JSON.stringify(deal))
   data.deal_context = {full_address}
 
+  data.roles = [
+    {
+      legal_first_name: 'Hippocket',
+      legal_last_name: 'Seller',
+      email: 'hippocket+seller@rechat.com',
+      role: 'Seller'
+    },
+
+    {
+      legal_first_name: 'Hippocket',
+      email: 'hippocket+agent@rechat.com',
+      legal_last_name: 'Hip Agent',
+      role: 'SellerAgent'
+    },
+
+    {
+      legal_first_name: 'Hippocket',
+      email: 'hippocket+agent@rechat.com',
+      legal_last_name: 'Hip Agent',
+      role: 'BuyerAgent'
+    },
+  ]
+
   return frisby.create('create a hippocket deal')
     .post('/deals', data)
     .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
@@ -127,8 +150,8 @@ const addRole = cb => {
     {
       email: 'test@rechat.com',
       role: 'BuyerAgent',
-      commission: 10000,
-      title_company: 'ACME',
+      commission_percentage: 3,
+      company_title: 'ACME',
       legal_first_name: 'Wile',
       legal_middle_name: 'E.',
       legal_last_name: 'Coyote',
@@ -139,7 +162,7 @@ const addRole = cb => {
       legal_last_name: 'Agent',
       email: 'test@rechat.com',
       role: 'SellerAgent',
-      commission: 20000
+      commission_dollar: 20000
     }
   ]
 
@@ -147,8 +170,8 @@ const addRole = cb => {
     {
       type: 'deal_role',
       role: roles[0].role,
-      commission: roles[0].commission,
-      title_company: 'ACME',
+      commission_percentage: roles[0].commission_percentage,
+      company_title: 'ACME',
       legal_first_name: 'Wile',
       legal_middle_name: 'E.',
       legal_last_name: 'Coyote',
@@ -162,7 +185,7 @@ const addRole = cb => {
       role: roles[1].role,
       legal_first_name: 'Imaginary',
       legal_last_name: 'Agent',
-      commission: roles[1].commission,
+      commission_dollar: roles[1].commission_dollar,
       user: {
         email: roles[1].email
       }

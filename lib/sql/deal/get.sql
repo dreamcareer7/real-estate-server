@@ -4,7 +4,7 @@ SELECT deals.*,
   EXTRACT(EPOCH FROM updated_at) AS updated_at,
   EXTRACT(EPOCH FROM deleted_at) AS deleted_at,
   (
-    SELECT ARRAY_AGG(id) FROM deals_roles WHERE deal = deals.id AND deleted_at IS NULL
+    SELECT ARRAY_AGG(id ORDER BY created_at ASC) FROM deals_roles WHERE deal = deals.id AND deleted_at IS NULL
   ) AS roles,
   (
     SELECT ARRAY_AGG(id ORDER BY "order") FROM deals_checklists WHERE deal = deals.id
