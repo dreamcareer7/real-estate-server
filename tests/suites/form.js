@@ -1,9 +1,25 @@
 const form = require('./data/form.js')
 const form_response = require('./expected_objects/form.js')
+const omit = require('lodash/omit')
 
 const create = cb => {
   return frisby.create('create a form')
     .post('/forms', form)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      data: omit(form, ['fields'])
+    })
+    .expectJSONTypes({
+      code: String,
+      data: form_response
+    })
+}
+
+const getWithFields = cb => {
+  return frisby.create('get a form')
+    .get(`/forms/${results.form.create.data.id}?associations[]=form.fields`)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
@@ -17,7 +33,7 @@ const create = cb => {
 }
 
 const update = cb => {
-  const form = results.form.create.data
+  const form = results.form.getWithFields.data
   form.name = 'Updated form name'
 
   // update_at is going to change. If we dont delete this this,
@@ -32,7 +48,7 @@ const update = cb => {
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
-      data: form
+      data: omit(form, ['fields', 'updated_at'])
     })
     .expectJSONTypes({
       code: String,
@@ -87,6 +103,7 @@ const getByFSId = (cb) => {
 
 module.exports = {
   create,
+  getWithFields,
   update,
   get,
   getAll,
