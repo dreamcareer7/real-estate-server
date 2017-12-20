@@ -52,8 +52,11 @@ context items and their types.
 ### Delete a deal [DELETE /deals/:id]
 <!-- include(tests/deal/remove.md) -->
 
-### Add a role [POST /deal/:id/roles]
+### Add a bunch of roles [POST /deal/:id/roles]
 <!-- include(tests/deal/addRole.md) -->
+
+### Update a role [PUT /deal/:id/roles/:rid]
+<!-- include(tests/deal/updateRole.md) -->
 
 ### Set listing for a deal [PATCH /deals/:id/listing]
 <!-- include(tests/deal/patchListing.md) -->
