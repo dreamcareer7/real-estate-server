@@ -206,6 +206,22 @@ const addRole = cb => {
     })
 }
 
+const updateRole = cb => {
+  const name = 'Updated Legal Name'
+
+  results.deal.create.data.roles[0].legal_first_name = name
+  return frisby.create('update a role')
+    .put(`/deals/${results.deal.create.data.id}/roles/${results.deal.addRole.data.roles[0].id}`, {
+      legal_first_name: name
+    })
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+//       data: [results.deal.createHippocket.data, results.deal.approveContext.data]
+    })
+}
+
 const getAll = (cb) => {
   return frisby.create('get user\'s deals')
     .get('/deals')
@@ -558,6 +574,7 @@ module.exports = {
   createHippocket,
   patchListing,
   addRole,
+  updateRole,
   addContext,
   approveContext,
   get,
