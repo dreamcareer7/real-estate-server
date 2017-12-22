@@ -28,6 +28,9 @@ For example, `street_name` of a deal can be fetched from `deal.deal_context.stre
 [Here](https://gitlab.com/rechat/server/blob/testing/lib/models/Deal/context.js) You can find a list of all
 context items and their types.
 
+### Get a list of all possible context [GET /deal/contexts]
+<!-- include(tests/deal/getContexts.md) -->
+
 ### Get a deal [GET /deal/:id]
 <!-- include(tests/deal/get.md) -->
 

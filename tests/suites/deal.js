@@ -14,6 +14,21 @@ registerSuite('brokerwolf', [
 ])
 registerSuite('user', ['upgradeToAgentWithEmail'])
 
+const getContexts = cb => {
+  return frisby.create('get all possible context items')
+    .get('/deals/contexts')
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+//       data: deal
+    })
+    .expectJSONTypes({
+//       code: String,
+//       data: deal_response
+    })
+}
+
 const create = (cb) => {
   const data = JSON.parse(JSON.stringify(deal))
   data.listing = results.listing.getListing.data.id
@@ -570,6 +585,7 @@ const filter = (cb) => {
 }
 
 module.exports = {
+  getContexts,
   create,
   createHippocket,
   patchListing,
