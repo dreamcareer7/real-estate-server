@@ -1,5 +1,6 @@
 const {deal, full_address} = require('./data/deal.js')
 const deal_response = require('./expected_objects/deal.js')
+const omit = require('lodash/omit')
 
 registerSuite('listing', ['getListing'])
 registerSuite('brand', ['createParent', 'create', 'addChecklist', 'addForm', 'addTask', 'addAnotherTask'])
@@ -75,20 +76,55 @@ const createHippocket = cb => {
     },
   ]
 
+  const expected_object = Object.assign({}, data, {
+    deal_context: {
+      full_address: {
+        context_type: 'Text',
+        text: full_address
+      }
+    },
+
+    roles: data.roles.map(role => (Object.assign({
+      user: {
+        email: role.email
+      }
+    }, omit(role, ['email']))))
+  })
+
   return frisby.create('create a hippocket deal')
     .post('/deals', data)
     .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
     .after(cb)
     .expectStatus(200)
+    .expectJSONSchema({
+      '$schema': 'http://json-schema.org/draft-04/schema#',
+      required: ['data'],
+      type: 'object',
+      properties: {
+        data: {
+          required: ['roles'],
+          properties: {
+            deal_context: {
+              required: ['full_address']
+            },
+            roles: {
+              type: 'array',
+              minItems: 3,
+              items: {
+                properties: {
+                  user: {
+                    type: 'object'
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    })
     .expectJSON({
       code: 'OK',
-//       data: {
-//         deal_context: address
-//       }
-    })
-    .expectJSONTypes({
-//       code: String,
-//       data: deal_response
+      data: expected_object
     })
 }
 
