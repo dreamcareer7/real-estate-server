@@ -1,0 +1,41 @@
+'use strict'
+
+const async = require('async')
+const db = require('../lib/utils/db')
+
+const up = [
+  'BEGIN',
+  'ALTER TABLE deals_roles ADD email TEXT NOT NULL',
+  'ALTER TABLE deals_roles ADD phone_number TEXT',
+  'ALTER TABLE deals_roles DROP CONSTRAINT deals_roles_unique',
+  'ALTER TABLE deals_roles ALTER "user" DROP NOT NULL',
+  'ALTER TABLE envelopes_recipients DROP "user"',
+  'ALTER TABLE envelopes_recipients DROP role',
+  'ALTER TABLE envelopes_recipients ADD role uuid NOT NULL REFERENCES deals_roles(id)',
+  'COMMIT'
+]
+
+const down = [
+  'BEGIN',
+  'ALTER TABLE deals_roles DROP email',
+  'ALTER TABLE deals_roles DROP phone_number',
+  'COMMIT'
+]
+
+const runAll = (sqls, next) => {
+  db.conn((err, client) => {
+    if (err)
+      return next(err)
+
+    async.eachSeries(sqls, client.query.bind(client), next)
+  })
+}
+
+const run = (queries) => {
+  return (next) => {
+    runAll(queries, next)
+  }
+}
+
+exports.up = run(up)
+exports.down = run(down)

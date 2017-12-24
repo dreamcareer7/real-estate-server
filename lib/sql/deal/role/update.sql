@@ -3,10 +3,12 @@ UPDATE deals_roles SET
   legal_first_name = $3,
   legal_middle_name = $4,
   legal_last_name = $5,
-  company_title = $6,
-  commission_dollar = $7,
-  commission_percentage = $8,
-  brokerwolf_id = $9,
-  brokerwolf_row_version = $10
+  email = $6,
+  phone_number = $7,
+  company_title = $8,
+  commission_dollar = $9,
+  commission_percentage = $10,
+  brokerwolf_id = $11,
+  brokerwolf_row_version = $12
 
 WHERE id = $1
