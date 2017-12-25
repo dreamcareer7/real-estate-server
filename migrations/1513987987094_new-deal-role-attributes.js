@@ -12,8 +12,8 @@ const up = [
   'ALTER TABLE deals_roles ADD phone_number TEXT',
   'ALTER TABLE deals_roles DROP CONSTRAINT deals_roles_unique',
   'ALTER TABLE deals_roles ALTER "user" DROP NOT NULL',
-  'ALTER TABLE envelopes_recipients ADD role uuid REFERENCES deals_roles(id)',
   'ALTER TABLE envelopes_recipients RENAME COLUMN role TO old_role',
+  'ALTER TABLE envelopes_recipients ADD role uuid REFERENCES deals_roles(id)',
   `UPDATE envelopes_recipients SET role = (
     SELECT id FROM deals_roles WHERE
       role = envelopes_recipients.old_role
