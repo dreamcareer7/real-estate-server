@@ -5,7 +5,10 @@ const db = require('../lib/utils/db')
 
 const up = [
   'BEGIN',
-  'ALTER TABLE deals_roles ADD email TEXT NOT NULL',
+  'ALTER TABLE deals_roles ADD email TEXT',
+  `UPDATE deals_roles
+    SET email = (SELECT email FROM users WHERE id = deals_roles.user)`,
+  'ALTER TABLE deals_roles ALTER COLUMN email SET NOT NULL',
   'ALTER TABLE deals_roles ADD phone_number TEXT',
   'ALTER TABLE deals_roles DROP CONSTRAINT deals_roles_unique',
   'ALTER TABLE deals_roles ALTER "user" DROP NOT NULL',
