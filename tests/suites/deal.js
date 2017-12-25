@@ -85,9 +85,9 @@ const createHippocket = cb => {
     },
 
     roles: data.roles.map(role => (Object.assign({
-      user: {
-        email: role.email
-      }
+//       user: {
+//         email: role.email
+//       }
     }, omit(role, ['email']))))
   })
 
@@ -112,9 +112,7 @@ const createHippocket = cb => {
               minItems: 3,
               items: {
                 properties: {
-                  user: {
-                    type: 'object'
-                  }
+
                 }
               }
             }
