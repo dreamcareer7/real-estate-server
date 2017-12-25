@@ -2,7 +2,7 @@ const deal = {
   deal_type: 'Buying',
   property_type: 'Resale',
 
-  context: {
+  deal_context: {
 
   }
 }
@@ -20,4 +20,3 @@ const address = {
 }
 
 module.exports = { deal, address, full_address }
-
