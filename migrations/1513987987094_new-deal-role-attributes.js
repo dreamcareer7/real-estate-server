@@ -14,7 +14,15 @@ const up = [
   'ALTER TABLE deals_roles ALTER "user" DROP NOT NULL',
   'ALTER TABLE envelopes_recipients DROP "user"',
   'ALTER TABLE envelopes_recipients DROP role',
-  'ALTER TABLE envelopes_recipients ADD role uuid NOT NULL REFERENCES deals_roles(id)',
+  'ALTER TABLE envelopes_recipients ADD role uuid REFERENCES deals_roles(id)',
+  `UPDATE envelopes_recipients SET role = (
+    SELECT id FROM deals_roles WHERE
+      "user" = envelopes_recipients.user
+      AND deal = (
+        SELECT deal FROM envelopes WHERE id = envelopes_recipients.envelope
+      )
+  )`,
+  'ALTER TABLE envelopes_recipients ALTER role SET NOT NULL',
   'COMMIT'
 ]
 
