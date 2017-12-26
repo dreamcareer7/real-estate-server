@@ -8,12 +8,13 @@ const setEnvelopeDetails = envelope => {
 
   envelope.deal = results.deal.create.data.id
 
-  envelope.recipients[0].firstName = 'Emil'
-  envelope.recipients[0].lastName = 'Sedgh'
-  envelope.recipients[0].email = 'emil@rechat.com'
+  envelope.recipients.push({
+    role: results.deal.addRole.data.roles[0].id
+  })
 
-  // Add myself as a recipient so later I can sign this as well
-  envelope.recipients[1].user = results.authorize.token.data.id
+  envelope.recipients.push({
+    role: results.deal.addRole.data.roles[1].id
+  })
 }
 
 const create412 = cb => {

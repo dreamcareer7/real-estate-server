@@ -28,6 +28,9 @@ For example, `street_name` of a deal can be fetched from `deal.deal_context.stre
 [Here](https://gitlab.com/rechat/server/blob/testing/lib/models/Deal/context.js) You can find a list of all
 context items and their types.
 
+### Get a list of all possible context [GET /deal/contexts]
+<!-- include(tests/deal/getContexts.md) -->
+
 ### Get a deal [GET /deal/:id]
 <!-- include(tests/deal/get.md) -->
 
@@ -40,6 +43,9 @@ context items and their types.
 ### Get all deals that need backoffice review [GET /brands/:brand/delals/inbox]
 <!-- include(tests/deal/getBrandInbox.md) -->
 
+### Search through all deals [POST /deals/filter]
+<!-- include(tests/deal/filter.md) -->
+
 ### Create a deal with a listing [POST /deal]
 <!-- include(tests/deal/create.md) -->
 
@@ -49,8 +55,11 @@ context items and their types.
 ### Delete a deal [DELETE /deals/:id]
 <!-- include(tests/deal/remove.md) -->
 
-### Add a role [POST /deal/:id/roles]
+### Add a bunch of roles [POST /deal/:id/roles]
 <!-- include(tests/deal/addRole.md) -->
+
+### Update a role [PUT /deal/:id/roles/:rid]
+<!-- include(tests/deal/updateRole.md) -->
 
 ### Set listing for a deal [PATCH /deals/:id/listing]
 <!-- include(tests/deal/patchListing.md) -->
@@ -104,4 +113,4 @@ context items and their types.
 <!-- include(tests/deal/addActivity.md) -->
 
 ### Delete a task [DELETE /tasks/:task]
-<!-- include(tests/deal/removeTask.md) --
+<!-- include(tests/deal/removeTask.md) -->

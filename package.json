@@ -8,7 +8,7 @@
     "start": "node_modules/gulp/bin/gulp.js",
     "migration": "node_modules/migratus/bin/create --template scripts/migrate_template.js ",
     "docs": "node api_docs/index.js",
-    "coverage": "node_modules/istanbul/lib/cli.js cover --dir istanbul tests/run.js -- --curl --stop-on-fail --concurrency 1"
+    "coverage": "node_modules/istanbul/lib/cli.js cover --dir istanbul tests/run.js -- --curl --stop-on-fail --concurrency 20"
   },
   "engines": {
     "node": "8.x"
@@ -19,7 +19,7 @@
     "amanda": "^0.5.1",
     "async": "^1.4.2",
     "aws-cloudfront-sign": "^2.2.0",
-    "aws-sdk": "^2.117.0",
+    "aws-sdk": "^2.168.0",
     "bcrypt": "^0.8.6",
     "body-parser": "^1.18.1",
     "busboy": "^0.2.14",
@@ -27,7 +27,7 @@
     "chai-param": "^0.1.2",
     "cheerio": "^0.22.0",
     "colors": "^1.0.3",
-    "commander": "^2.11.0",
+    "commander": "^2.12.2",
     "compression": "^1.7.0",
     "convert-units": "^2.3.1",
     "datadog-metrics": "^0.2.1",
@@ -35,8 +35,8 @@
     "debug": "^2.6.3",
     "docker-names": "^1.0.0",
     "emojify.js": "^1.1.0",
-    "eslint": "^4.9.0",
     "exceljs": "^0.8.0",
+    "eslint": "^4.13.1",
     "exif-parser": "^0.1.12",
     "express": "^4.15.4",
     "forever": "^0.15.1",
@@ -51,9 +51,9 @@
     "mailgun-js": "^0.7.7",
     "merge": "^1.2.0",
     "migratus": "^0.4.1",
-    "mime": "^1.4.0",
+    "mime": "^1.6.0",
     "mock-aws-s3": "^2.6.0",
-    "moment": "^2.13.0",
+    "moment": "^2.19.4",
     "moment-timezone": "^0.5.5",
     "node-uuid": "^1.4.7",
     "numeral": "^1.5.3",
@@ -71,7 +71,8 @@
     "request-promise-native": "^1.0.5",
     "s3-upload-stream": "^1.0.7",
     "sleep": "^3.0.0",
-    "socket.io": "^1.3.7",
+    "socket.io": "^2.0.4",
+    "socket.io-redis": "^5.2.0",
     "squel": "^5.11.1",
     "stripe": "^4.25.0",
     "to-pascal-case": "^1.0.0",
@@ -94,7 +95,7 @@
     "gulp-eslint": "^3.0.1",
     "istanbul": "^1.1.0-alpha.1",
     "jasmine-node": "^1.14.5",
-    "nock": "^9.0.14",
+    "nock": "^9.1.4",
     "request-as-curl": "^0.1.0"
   }
 }

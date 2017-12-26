@@ -1,5 +1,6 @@
 const {deal, full_address} = require('./data/deal.js')
 const deal_response = require('./expected_objects/deal.js')
+const omit = require('lodash/omit')
 
 registerSuite('listing', ['getListing'])
 registerSuite('brand', ['createParent', 'create', 'addChecklist', 'addForm', 'addTask', 'addAnotherTask'])
@@ -13,6 +14,21 @@ registerSuite('brokerwolf', [
   'mapContactType'
 ])
 registerSuite('user', ['upgradeToAgentWithEmail'])
+
+const getContexts = cb => {
+  return frisby.create('get all possible context items')
+    .get('/deals/contexts')
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+//       data: deal
+    })
+    .expectJSONTypes({
+//       code: String,
+//       data: deal_response
+    })
+}
 
 const create = (cb) => {
   const data = JSON.parse(JSON.stringify(deal))
@@ -37,20 +53,76 @@ const createHippocket = cb => {
   const data = JSON.parse(JSON.stringify(deal))
   data.deal_context = {full_address}
 
+  data.roles = [
+    {
+      legal_first_name: 'Hippocket',
+      legal_last_name: 'Seller',
+      email: 'hippocket+seller@rechat.com',
+      role: 'Seller'
+    },
+
+    {
+      legal_first_name: 'Hippocket',
+      email: 'hippocket+agent@rechat.com',
+      legal_last_name: 'Hip Agent',
+      role: 'SellerAgent'
+    },
+
+    {
+      legal_first_name: 'Hippocket',
+      email: 'hippocket+agent@rechat.com',
+      legal_last_name: 'Hip Agent',
+      role: 'BuyerAgent'
+    },
+  ]
+
+  const expected_object = Object.assign({}, data, {
+    deal_context: {
+      full_address: {
+        context_type: 'Text',
+        text: full_address
+      }
+    },
+
+    roles: data.roles.map(role => (Object.assign({
+//       user: {
+//         email: role.email
+//       }
+    }, omit(role, ['email']))))
+  })
+
   return frisby.create('create a hippocket deal')
     .post('/deals', data)
     .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
     .after(cb)
     .expectStatus(200)
+    .expectJSONSchema({
+      '$schema': 'http://json-schema.org/draft-04/schema#',
+      required: ['data'],
+      type: 'object',
+      properties: {
+        data: {
+          required: ['roles'],
+          properties: {
+            deal_context: {
+              required: ['full_address']
+            },
+            roles: {
+              type: 'array',
+              minItems: 3,
+              items: {
+                properties: {
+
+                }
+              }
+            }
+          }
+        }
+      }
+    })
     .expectJSON({
       code: 'OK',
-//       data: {
-//         deal_context: address
-//       }
-    })
-    .expectJSONTypes({
-//       code: String,
-//       data: deal_response
+      data: expected_object
     })
 }
 
@@ -127,8 +199,8 @@ const addRole = cb => {
     {
       email: 'test@rechat.com',
       role: 'BuyerAgent',
-      commission: 10000,
-      title_company: 'ACME',
+      commission_percentage: 3,
+      company_title: 'ACME',
       legal_first_name: 'Wile',
       legal_middle_name: 'E.',
       legal_last_name: 'Coyote',
@@ -139,7 +211,7 @@ const addRole = cb => {
       legal_last_name: 'Agent',
       email: 'test@rechat.com',
       role: 'SellerAgent',
-      commission: 20000
+      commission_dollar: 20000
     }
   ]
 
@@ -147,8 +219,8 @@ const addRole = cb => {
     {
       type: 'deal_role',
       role: roles[0].role,
-      commission: roles[0].commission,
-      title_company: 'ACME',
+      commission_percentage: roles[0].commission_percentage,
+      company_title: 'ACME',
       legal_first_name: 'Wile',
       legal_middle_name: 'E.',
       legal_last_name: 'Coyote',
@@ -162,7 +234,7 @@ const addRole = cb => {
       role: roles[1].role,
       legal_first_name: 'Imaginary',
       legal_last_name: 'Agent',
-      commission: roles[1].commission,
+      commission_dollar: roles[1].commission_dollar,
       user: {
         email: roles[1].email
       }
@@ -180,6 +252,22 @@ const addRole = cb => {
     .expectJSONTypes({
       code: String,
       data: deal_response
+    })
+}
+
+const updateRole = cb => {
+  const name = 'Updated Legal Name'
+
+  results.deal.create.data.roles[0].legal_first_name = name
+  return frisby.create('update a role')
+    .put(`/deals/${results.deal.create.data.id}/roles/${results.deal.addRole.data.roles[0].id}`, {
+      legal_first_name: name
+    })
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+//       data: [results.deal.createHippocket.data, results.deal.approveContext.data]
     })
 }
 
@@ -515,11 +603,28 @@ const getBrandInbox = (cb) => {
     })
 }
 
+const filter = (cb) => {
+  return frisby.create('search for a deal')
+    .post('/deals/filter', {
+      query: 'Imaginary'
+    })
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      info: {
+        count: 1
+      }
+    })
+}
+
 module.exports = {
+  getContexts,
   create,
   createHippocket,
   patchListing,
   addRole,
+  updateRole,
   addContext,
   approveContext,
   get,
@@ -543,6 +648,7 @@ module.exports = {
   patchAttention,
   getBrandInbox,
   getBrandDeals,
+  filter,
   removeRole,
   remove
 }

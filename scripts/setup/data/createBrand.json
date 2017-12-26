@@ -1,0 +1,15 @@
+{
+    "method": "POST",
+    "uri": "/brands",
+    "json": true,
+    "body": {
+        "palette": {
+            "primary": "red"
+        },
+        "assets": {},
+        "messages": {},
+        "name": "Parent Brand",
+        "role": "Admin"
+    }
+  }
+  

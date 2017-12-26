@@ -12,3 +12,4 @@ RUN NODE_ENV=development npm install
 ADD . /app
 
 EXPOSE 3078
+CMD [ "npm", "start" ]
