@@ -1,6 +1,7 @@
 const {deal, full_address} = require('./data/deal.js')
 const deal_response = require('./expected_objects/deal.js')
 const omit = require('lodash/omit')
+const schemas = require('./schemas/deal')
 
 registerSuite('listing', ['getListing'])
 registerSuite('brand', ['createParent', 'create', 'addChecklist', 'addForm', 'addTask', 'addAnotherTask'])
@@ -20,14 +21,7 @@ const getContexts = cb => {
     .get('/deals/contexts')
     .after(cb)
     .expectStatus(200)
-    .expectJSON({
-      code: 'OK',
-//       data: deal
-    })
-    .expectJSONTypes({
-//       code: String,
-//       data: deal_response
-    })
+    .expectJSONSchema(schemas.getContexts)
 }
 
 const create = (cb) => {
@@ -84,11 +78,7 @@ const createHippocket = cb => {
       }
     },
 
-    roles: data.roles.map(role => (Object.assign({
-//       user: {
-//         email: role.email
-//       }
-    }, omit(role, ['email']))))
+    roles: data.roles.map(role => omit(role, ['email']))
   })
 
   return frisby.create('create a hippocket deal')
@@ -96,30 +86,7 @@ const createHippocket = cb => {
     .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
     .after(cb)
     .expectStatus(200)
-    .expectJSONSchema({
-      '$schema': 'http://json-schema.org/draft-04/schema#',
-      required: ['data'],
-      type: 'object',
-      properties: {
-        data: {
-          required: ['roles'],
-          properties: {
-            deal_context: {
-              required: ['full_address']
-            },
-            roles: {
-              type: 'array',
-              minItems: 3,
-              items: {
-                properties: {
-
-                }
-              }
-            }
-          }
-        }
-      }
-    })
+    .expectJSONSchema(schemas.createHippocket)
     .expectJSON({
       code: 'OK',
       data: expected_object
@@ -450,41 +417,11 @@ const makeSureAnotherTaskIsDeleted = cb => {
 }
 
 const makeSureAnotherTaskIsntReturnedInDealContext = cb => {
-  process.env.DEBUG = 'rechat:db:inspect,rechat:db:profile'
   return frisby.create('make sure deleted tasks do not appear in deal context')
     .get(`/deals/${results.deal.create.data.id}`)
     .after(cb)
     .expectStatus(200)
-    .expectJSONSchema({
-      '$schema': 'http://json-schema.org/draft-04/schema#',
-      required: ['data'],
-      type: 'object',
-      properties: {
-        data: {
-          required: ['checklists'],
-          properties: {
-            checklists: {
-              type: 'array',
-              items: {
-                type: 'object',
-                properties: {
-                  tasks: {
-                    type: 'array',
-                    items: {
-                      properties: {
-                        deleted_at: {
-                          type: 'null'
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    })
+    .expectJSONSchema(schemas.makeSureAnotherTaskIsntReturnedInDealContext)
 }
 
 const setSubmission = cb => {
