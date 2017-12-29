@@ -360,7 +360,8 @@ const addTask = cb => {
     status: 'New',
     task_type: 'Form',
     form: results.form.create.data.id,
-    checklist: results.deal.addChecklist.data.id
+    checklist: results.deal.addChecklist.data.id,
+    is_deletable: true
   }
 
   return frisby.create('add a task to a deal')
