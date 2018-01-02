@@ -1,19 +1,11 @@
-module.exports = {
-  '$schema': 'http://json-schema.org/draft-04/schema#',
-  required: ['data'],
-  type: 'object',
-  properties: {
-    data: {
-      type: 'array',
-      items: {
-        required: ['name', 'type'],
-        properties: {
-          property_type: {
-            type: 'array',
-            minItems: 1
-          }
-        }
-      }
-    }
-  }
-}
+const H = require('../jsonSchemaHelper')
+
+module.exports = H.schemaArray({
+  items: H.Object({
+    name: H.Required(H.String),
+    type: H.Required(H.String),
+    property_type: H.Array({
+      minItems: 1
+    })
+  })
+})
