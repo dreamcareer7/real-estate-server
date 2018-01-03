@@ -45,7 +45,10 @@ SELECT deals.*,
             addresses.street_dir_prefix,
             addresses.street_name,
             addresses.street_suffix,
-            '#' || addresses.unit_number || ',',
+            CASE
+              WHEN addresses.unit_number IS NULL THEN NULL
+              WHEN addresses.unit_number = '' THEN NULL
+              ELSE '#' || addresses.unit_number || ',' END,
             addresses.city || ',',
             addresses.state_code,
             addresses.postal_code
