@@ -93,7 +93,19 @@ SELECT deals.*,
 
   (
     SELECT ARRAY_AGG(id) FROM envelopes WHERE deal = deals.id
-  ) as envelopes
+  ) as envelopes,
+
+  CASE WHEN $2::uuid IS NULL THEN
+    0
+  ELSE
+  (
+    SELECT COUNT(*)::INT FROM get_new_notifications(
+      (
+        SELECT ARRAY_AGG(room) FROM tasks WHERE checklist IN (SELECT id FROM deals_checklists WHERE deal = deals.id)
+      ), $2
+    )
+  )
+  END AS new_notifications
 
 FROM deals
 JOIN unnest($1::uuid[]) WITH ORDINALITY t(did, ord) ON deals.id = did
