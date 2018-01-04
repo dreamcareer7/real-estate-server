@@ -406,7 +406,7 @@ const makeSureAnotherTaskIsDeleted = cb => {
 
 const makeSureAnotherTaskIsntReturnedInDealContext = cb => {
   return frisby.create('make sure deleted tasks do not appear in deal context')
-    .get(`/deals/${results.deal.create.data.id}`)
+    .get(`/deals/${results.deal.create.data.id}?associations=deal.checklists`)
     .after(cb)
     .expectStatus(200)
     .expectJSONSchema(schemas.makeSureAnotherTaskIsntReturnedInDealContext)
