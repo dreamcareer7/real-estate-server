@@ -41,13 +41,17 @@ SELECT deals.*,
         SELECT ARRAY_TO_STRING
         (
           ARRAY[
-          addresses.street_number,
-          addresses.street_dir_prefix,
-          addresses.street_name,
-          addresses.street_suffix || ',',
-          addresses.city || ',',
-          addresses.state_code,
-          addresses.postal_code
+            addresses.street_number,
+            addresses.street_dir_prefix,
+            addresses.street_name,
+            addresses.street_suffix,
+            CASE
+              WHEN addresses.unit_number IS NULL THEN NULL
+              WHEN addresses.unit_number = '' THEN NULL
+              ELSE '#' || addresses.unit_number || ',' END,
+            addresses.city || ',',
+            addresses.state_code,
+            addresses.postal_code
           ], ' ', NULL
         )
       ) AS full_address,
