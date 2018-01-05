@@ -4,7 +4,8 @@
 
 + Git
 + Node.js version v8.x.x
-+ Postgres
++ Postgres >= 9.6
++ Postgis
 
 ### Getting started
 

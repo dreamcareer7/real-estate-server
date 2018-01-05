@@ -7,19 +7,7 @@ const envelope = {
       revision: null
     }
   ],
-  recipients: [
-    {
-      firstName: null,
-      lastName: null,
-      email: null,
-      role: 'Buyer'
-    },
-
-    {
-      role: 'Seller',
-      user: null
-    }
-  ]
+  recipients: []
 }
 
 module.exports = envelope

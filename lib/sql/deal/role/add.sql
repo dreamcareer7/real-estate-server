@@ -1,4 +1,4 @@
-INSERT INTO deals_roles(
+INSERT INTO deals_roles (
   created_by,
   role,
   deal,
@@ -8,28 +8,24 @@ INSERT INTO deals_roles(
   legal_first_name,
   legal_middle_name,
   legal_last_name,
+  email,
+  phone_number,
   commission_dollar,
   commission_percentage
 ) VALUES (
   $1,
   $2,
   $3,
-  $4,
+  COALESCE($4, (
+    SELECT id FROM users WHERE LOWER(email) = LOWER($10)
+  )),
   $5,
   $6,
   $7,
   $8,
   $9,
   $10,
-  $11
+  $11,
+  $12,
+  $13
 )
-ON CONFLICT (deal, role, "user") DO UPDATE SET
- deleted_at = NULL, /* Undelete the role if its added again. See isse Applause#468 */
- company_title = $5,
- legal_prefix = $6,
- legal_first_name = $7,
- legal_middle_name = $8,
- legal_last_name = $9,
- commission_dollar = $10,
- commission_percentage = $11
-WHERE deals_roles.deal = $3 AND deals_roles.role = $2 AND deals_roles.user = $4
