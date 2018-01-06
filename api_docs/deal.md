@@ -62,10 +62,10 @@ Condition                              | Bit
 ### Get deals created by a user [GET /deals]
 <!-- include(tests/deal/getAll.md) -->
 
-### Get all deals belonging to a brand [GET /brands/:brand/delals]
+### Get all deals belonging to a brand [GET /brands/:brand/deals]
 <!-- include(tests/deal/getBrandDeals.md) -->
 
-### Get all deals that need backoffice review [GET /brands/:brand/delals/inbox]
+### Get all deals that need backoffice review [GET /brands/:brand/deals/inbox]
 <!-- include(tests/deal/getBrandInbox.md) -->
 
 ### Search through all deals [POST /deals/filter]
