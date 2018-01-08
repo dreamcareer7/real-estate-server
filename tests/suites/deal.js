@@ -192,11 +192,9 @@ const addRole = cb => {
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
-      data: results.deal.create.data
     })
     .expectJSONTypes({
       code: String,
-      data: deal_response
     })
 }
 
@@ -205,7 +203,7 @@ const updateRole = cb => {
 
   results.deal.create.data.roles[0].legal_first_name = name
   return frisby.create('update a role')
-    .put(`/deals/${results.deal.create.data.id}/roles/${results.deal.addRole.data.roles[0].id}`, {
+    .put(`/deals/${results.deal.create.data.id}/roles/${results.deal.addRole.data[0].id}`, {
       legal_first_name: name
     })
     .after(cb)
@@ -294,7 +292,7 @@ const updateChecklist = cb => {
 
 const removeRole = (cb) => {
   return frisby.create('delete a role')
-    .delete(`/deals/${results.deal.create.data.id}/roles/${results.deal.addRole.data.roles[0].id}`)
+    .delete(`/deals/${results.deal.create.data.id}/roles/${results.deal.addRole.data[0].id}`)
     .after(cb)
     .expectStatus(204)
 }
