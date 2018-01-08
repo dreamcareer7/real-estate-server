@@ -192,11 +192,9 @@ const addRole = cb => {
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
-      data: results.deal.create.data
     })
     .expectJSONTypes({
       code: String,
-      data: deal_response
     })
 }
 
@@ -205,7 +203,7 @@ const updateRole = cb => {
 
   results.deal.create.data.roles[0].legal_first_name = name
   return frisby.create('update a role')
-    .put(`/deals/${results.deal.create.data.id}/roles/${results.deal.addRole.data.roles[0].id}`, {
+    .put(`/deals/${results.deal.create.data.id}/roles/${results.deal.addRole.data[0].id}`, {
       legal_first_name: name
     })
     .after(cb)
@@ -294,7 +292,7 @@ const updateChecklist = cb => {
 
 const removeRole = (cb) => {
   return frisby.create('delete a role')
-    .delete(`/deals/${results.deal.create.data.id}/roles/${results.deal.addRole.data.roles[0].id}`)
+    .delete(`/deals/${results.deal.create.data.id}/roles/${results.deal.addRole.data[0].id}`)
     .after(cb)
     .expectStatus(204)
 }
@@ -312,7 +310,8 @@ const addTask = cb => {
     status: 'New',
     task_type: 'Form',
     form: results.form.create.data.id,
-    checklist: results.deal.addChecklist.data.id
+    checklist: results.deal.addChecklist.data.id,
+    is_deletable: true
   }
 
   return frisby.create('add a task to a deal')
@@ -405,7 +404,7 @@ const makeSureAnotherTaskIsDeleted = cb => {
 
 const makeSureAnotherTaskIsntReturnedInDealContext = cb => {
   return frisby.create('make sure deleted tasks do not appear in deal context')
-    .get(`/deals/${results.deal.create.data.id}`)
+    .get(`/deals/${results.deal.create.data.id}?associations=deal.checklists`)
     .after(cb)
     .expectStatus(200)
     .expectJSONSchema(schemas.makeSureAnotherTaskIsntReturnedInDealContext)

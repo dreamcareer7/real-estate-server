@@ -9,11 +9,11 @@ const setEnvelopeDetails = envelope => {
   envelope.deal = results.deal.create.data.id
 
   envelope.recipients.push({
-    role: results.deal.addRole.data.roles[0].id
+    role: results.deal.addRole.data[0].id
   })
 
   envelope.recipients.push({
-    role: results.deal.addRole.data.roles[1].id
+    role: results.deal.addRole.data[1].id
   })
 }
 
