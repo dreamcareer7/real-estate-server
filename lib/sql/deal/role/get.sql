@@ -8,7 +8,7 @@ SELECT deals_roles.*,
         WHERE role = deals_roles.role
        ) as brokerwolf_contact_type
 FROM deals_roles
-JOIN users ON deals_roles.user = users.id
+LEFT JOIN users  ON deals_roles.user = users.id
 LEFT JOIN agents ON users.agent = agents.id
 LEFT JOIN brokerwolf_agents_boards bw ON agents.mlsid = bw.mls_id
 JOIN unnest($1::uuid[]) WITH ORDINALITY t(rid, ord) ON deals_roles.id = rid

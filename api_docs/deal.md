@@ -29,6 +29,31 @@ For example, `street_name` of a deal can be fetched from `deal.deal_context.stre
 context items and their types.
 
 ### Get a list of all possible context [GET /deal/contexts]
+
+Gives you a list of all usable context items.
+Each context item has:
+
+* `data_type` `(Required)` `Date|Number|String`
+* `name`      `(Required)`  Name of the data type (eg _list_date_) (Used internally)
+* `label`                   Label to show to users (eg _List Starting Date_)
+* `required`                A Bit flag set representing the cases in which this item is required
+* `optional`                A Bit flag set representing the cases in which this item is asked but not required
+* `show_on_fact_sheet`      A Bit flag set representing the cases in which this context is shown on fact sheet
+* `section`                 Which section of fact sheet this should appear on `CriticalDates|Listing|CDA`
+
+Items based on bit flags use the following constants to determine whether they should show up:
+
+Condition                              | Bit
+---------------------------------------|-----
+`deal_type === 'Selling'`              | `1`
+`deal_type === 'Buying'`               | `2`
+`property_type === 'Resale'`           | `128`
+`property_type === 'NewHome'`          | `256`
+`property_type === 'Lot'`              | `512`
+`property_type === 'CommercialSale'`   | `1024`
+`property_type === 'ResidentialLease'` | `2048`
+`property_type === 'CommercialLease'`  | `4096`
+
 <!-- include(tests/deal/getContexts.md) -->
 
 ### Get a deal [GET /deal/:id]
@@ -37,10 +62,10 @@ context items and their types.
 ### Get deals created by a user [GET /deals]
 <!-- include(tests/deal/getAll.md) -->
 
-### Get all deals belonging to a brand [GET /brands/:brand/delals]
+### Get all deals belonging to a brand [GET /brands/:brand/deals]
 <!-- include(tests/deal/getBrandDeals.md) -->
 
-### Get all deals that need backoffice review [GET /brands/:brand/delals/inbox]
+### Get all deals that need backoffice review [GET /brands/:brand/deals/inbox]
 <!-- include(tests/deal/getBrandInbox.md) -->
 
 ### Search through all deals [POST /deals/filter]

@@ -1,6 +1,7 @@
 const {deal, full_address} = require('./data/deal.js')
 const deal_response = require('./expected_objects/deal.js')
 const omit = require('lodash/omit')
+const schemas = require('./schemas/deal')
 
 registerSuite('listing', ['getListing'])
 registerSuite('brand', ['createParent', 'create', 'addChecklist', 'addForm', 'addTask', 'addAnotherTask'])
@@ -20,14 +21,7 @@ const getContexts = cb => {
     .get('/deals/contexts')
     .after(cb)
     .expectStatus(200)
-    .expectJSON({
-      code: 'OK',
-//       data: deal
-    })
-    .expectJSONTypes({
-//       code: String,
-//       data: deal_response
-    })
+    .expectJSONSchema(schemas.getContexts)
 }
 
 const create = (cb) => {
@@ -41,11 +35,7 @@ const create = (cb) => {
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
-//       data: deal
-    })
-    .expectJSONTypes({
-//       code: String,
-//       data: deal_response
+      data: data
     })
 }
 
@@ -84,11 +74,7 @@ const createHippocket = cb => {
       }
     },
 
-    roles: data.roles.map(role => (Object.assign({
-      user: {
-        email: role.email
-      }
-    }, omit(role, ['email']))))
+    roles: data.roles.map(role => omit(role, ['email']))
   })
 
   return frisby.create('create a hippocket deal')
@@ -96,32 +82,7 @@ const createHippocket = cb => {
     .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
     .after(cb)
     .expectStatus(200)
-    .expectJSONSchema({
-      '$schema': 'http://json-schema.org/draft-04/schema#',
-      required: ['data'],
-      type: 'object',
-      properties: {
-        data: {
-          required: ['roles'],
-          properties: {
-            deal_context: {
-              required: ['full_address']
-            },
-            roles: {
-              type: 'array',
-              minItems: 3,
-              items: {
-                properties: {
-                  user: {
-                    type: 'object'
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    })
+    .expectJSONSchema(schemas.createHippocket)
     .expectJSON({
       code: 'OK',
       data: expected_object
@@ -129,14 +90,18 @@ const createHippocket = cb => {
 }
 
 const patchListing = cb => {
+  const patch = {
+    listing: results.listing.getListing.data.id
+  }
+  const expected_object = Object.assign({}, results.deal.create.data, patch)
+
   return frisby.create('set a listing for a deal')
-    .patch(`/deals/${results.deal.create.data.id}/listing`, {
-      listing: results.listing.getListing.data.id
-    })
+    .patch(`/deals/${results.deal.create.data.id}/listing`, patch)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
+      data: expected_object
     })
 }
 
@@ -153,28 +118,28 @@ const addContext = cb => {
     unit_number: '3A'
   }
 
+  const expected_object = Object.assign({}, omit(results.deal.create.data, [
+    'brokerwolf_tier_id',
+    'brokerwolf_id',
+    'brokerwolf_row_version',
+  ]), {
+    deal_context: {
+      list_date: {
+        context_type: 'Date',
+        date: (new Date('2017/12/06')).valueOf() / 1000
+      }
+    }
+  })
+
   return frisby.create('add some context to a deal')
     .post(`/deals/${results.deal.create.data.id}/context`, { context })
     .after(cb)
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
-      data: Object.assign({}, results.deal.create.data, {
-        brokerwolf_tier_id: undefined,
-        brokerwolf_id: undefined,
-        brokerwolf_row_version: undefined,
-        deal_context: {
-          list_date: {
-            context_type: 'Date',
-            date: (new Date('2017/12/06')).valueOf() / 1000
-          }
-        }
-      })
+      data: expected_object
     })
-    .expectJSONTypes({
-      code: String,
-      data: deal_response
-    })
+    .expectJSONSchema(schemas.addContext)
 }
 
 const approveContext = cb => {
@@ -190,10 +155,7 @@ const approveContext = cb => {
       code: 'OK',
       data: results.deal.addContext.data
     })
-    .expectJSONTypes({
-      code: String,
-      data: deal_response
-    })
+    .expectJSONSchema(schemas.approveContext)
 }
 
 const addRole = cb => {
@@ -217,31 +179,12 @@ const addRole = cb => {
     }
   ]
 
-  results.deal.create.data.roles = [
-    {
-      type: 'deal_role',
-      role: roles[0].role,
-      commission_percentage: roles[0].commission_percentage,
-      company_title: 'ACME',
-      legal_first_name: 'Wile',
-      legal_middle_name: 'E.',
-      legal_last_name: 'Coyote',
-      user: {
-        email: roles[0].email
-      }
-    },
-
-    {
-      type: 'deal_role',
-      role: roles[1].role,
-      legal_first_name: 'Imaginary',
-      legal_last_name: 'Agent',
-      commission_dollar: roles[1].commission_dollar,
-      user: {
-        email: roles[1].email
-      }
+  results.deal.create.data.roles = roles.map(role => ({
+    ...omit(role, 'email'),
+    user: {
+      email: role.email
     }
-  ]
+  }))
 
   return frisby.create('add a role to a deal')
     .post(`/deals/${results.deal.create.data.id}/roles`, { roles })
@@ -249,11 +192,9 @@ const addRole = cb => {
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
-//       data: results.deal.create.data
     })
     .expectJSONTypes({
       code: String,
-      data: deal_response
     })
 }
 
@@ -262,14 +203,14 @@ const updateRole = cb => {
 
   results.deal.create.data.roles[0].legal_first_name = name
   return frisby.create('update a role')
-    .put(`/deals/${results.deal.create.data.id}/roles/${results.deal.addRole.data.roles[0].id}`, {
+    .put(`/deals/${results.deal.create.data.id}/roles/${results.deal.addRole.data[0].id}`, {
       legal_first_name: name
     })
     .after(cb)
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
-//       data: [results.deal.createHippocket.data, results.deal.approveContext.data]
+      data: results.deal.create.data.roles[0]
     })
 }
 
@@ -301,13 +242,15 @@ const get = (cb) => {
 }
 
 const offerChecklist = cb => {
+  const checklist = {
+    title: 'Offered Checklist',
+    order: 1,
+    is_deactivated: true
+  }
+
   return frisby.create('offer a checklist')
     .post(`/deals/${results.deal.create.data.id}/checklists/offer`, {
-      checklist: {
-        title: 'Offered Checklist',
-        order: 1,
-        is_deactivated: true
-      },
+      checklist,
 
       conditions: {
         deal_type: results.brand.addChecklist.data.deal_type,
@@ -316,6 +259,13 @@ const offerChecklist = cb => {
     })
     .after(cb)
     .expectStatus(200)
+    .expectJSON({
+      data: {
+        ...checklist,
+        is_terminated: false
+      }
+    })
+    .expectJSONSchema(schemas.offerChecklist)
 }
 
 const addChecklist = cb => {
@@ -342,7 +292,7 @@ const updateChecklist = cb => {
 
 const removeRole = (cb) => {
   return frisby.create('delete a role')
-    .delete(`/deals/${results.deal.create.data.id}/roles/${results.deal.addRole.data.roles[0].id}`)
+    .delete(`/deals/${results.deal.create.data.id}/roles/${results.deal.addRole.data[0].id}`)
     .after(cb)
     .expectStatus(204)
 }
@@ -360,7 +310,8 @@ const addTask = cb => {
     status: 'New',
     task_type: 'Form',
     form: results.form.create.data.id,
-    checklist: results.deal.addChecklist.data.id
+    checklist: results.deal.addChecklist.data.id,
+    is_deletable: true
   }
 
   return frisby.create('add a task to a deal')
@@ -452,41 +403,11 @@ const makeSureAnotherTaskIsDeleted = cb => {
 }
 
 const makeSureAnotherTaskIsntReturnedInDealContext = cb => {
-  process.env.DEBUG = 'rechat:db:inspect,rechat:db:profile'
   return frisby.create('make sure deleted tasks do not appear in deal context')
-    .get(`/deals/${results.deal.create.data.id}`)
+    .get(`/deals/${results.deal.create.data.id}?associations=deal.checklists`)
     .after(cb)
     .expectStatus(200)
-    .expectJSONSchema({
-      '$schema': 'http://json-schema.org/draft-04/schema#',
-      required: ['data'],
-      type: 'object',
-      properties: {
-        data: {
-          required: ['checklists'],
-          properties: {
-            checklists: {
-              type: 'array',
-              items: {
-                type: 'object',
-                properties: {
-                  tasks: {
-                    type: 'array',
-                    items: {
-                      properties: {
-                        deleted_at: {
-                          type: 'null'
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    })
+    .expectJSONSchema(schemas.makeSureAnotherTaskIsntReturnedInDealContext)
 }
 
 const setSubmission = cb => {
