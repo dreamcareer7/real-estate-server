@@ -40,6 +40,7 @@ Each context item has:
 * `optional`                A Bit flag set representing the cases in which this item is asked but not required
 * `show_on_fact_sheet`      A Bit flag set representing the cases in which this context is shown on fact sheet
 * `section`                 Which section of fact sheet this should appear on `CriticalDates|Listing|CDA`
+* `needs_approval`          A boolean which determines if this context needs back office approval or not
 
 Items based on bit flags use the following constants to determine whether they should show up:
 
@@ -55,7 +56,7 @@ Condition                              | Bit
 `property_type === 'CommercialLease'`  | `4096`
 _There is an active offer_ *           | `131072`
 
-If the deal type is selling and there is an active checklist with `checklist_type === 'Buying`
+If the deal type is selling and there is an active checklist with `checklist_type === 'Buying'`
 then we consider that deal to have an active offer.
 
 <!-- include(tests/deal/getContexts.md) -->
