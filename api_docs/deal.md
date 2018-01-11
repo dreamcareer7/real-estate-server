@@ -36,10 +36,11 @@ Each context item has:
 * `data_type` `(Required)` `Date|Number|String`
 * `name`      `(Required)`  Name of the data type (eg _list_date_) (Used internally)
 * `label`                   Label to show to users (eg _List Starting Date_)
+* `short_label`             Abbreviate version of the label
+* `section`                 Which section of fact sheet this should appear on `CriticalDates|Listing|CDA`
 * `required`                A Bit flag set representing the cases in which this item is required
 * `optional`                A Bit flag set representing the cases in which this item is asked but not required
 * `show_on_fact_sheet`      A Bit flag set representing the cases in which this context is shown on fact sheet
-* `section`                 Which section of fact sheet this should appear on `CriticalDates|Listing|CDA`
 * `needs_approval`          A boolean which determines if this context needs back office approval or not
 
 Items based on bit flags use the following constants to determine whether they should show up:
