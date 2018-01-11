@@ -28,7 +28,7 @@ For example, `street_name` of a deal can be fetched from `deal.deal_context.stre
 [Here](https://gitlab.com/rechat/server/blob/testing/lib/models/Deal/context.js) You can find a list of all
 context items and their types.
 
-### Get a list of all possible context [GET /deal/contexts]
+### Get a list of all possible context [GET /deals/contexts]
 
 Gives you a list of all usable context items.
 Each context item has:
@@ -56,7 +56,7 @@ Condition                              | Bit
 
 <!-- include(tests/deal/getContexts.md) -->
 
-### Get a deal [GET /deal/:id]
+### Get a deal [GET /deals/:id]
 <!-- include(tests/deal/get.md) -->
 
 ### Get deals created by a user [GET /deals]
@@ -71,19 +71,19 @@ Condition                              | Bit
 ### Search through all deals [POST /deals/filter]
 <!-- include(tests/deal/filter.md) -->
 
-### Create a deal with a listing [POST /deal]
+### Create a deal with a listing [POST /deals]
 <!-- include(tests/deal/create.md) -->
 
-### Create a hippocket deal [POST /deal]
+### Create a hippocket deal [POST /deals]
 <!-- include(tests/deal/createHippocket.md) -->
 
 ### Delete a deal [DELETE /deals/:id]
 <!-- include(tests/deal/remove.md) -->
 
-### Add a bunch of roles [POST /deal/:id/roles]
+### Add a bunch of roles [POST /deals/:id/roles]
 <!-- include(tests/deal/addRole.md) -->
 
-### Update a role [PUT /deal/:id/roles/:rid]
+### Update a role [PUT /deals/:id/roles/:rid]
 <!-- include(tests/deal/updateRole.md) -->
 
 ### Set listing for a deal [PATCH /deals/:id/listing]
