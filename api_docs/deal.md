@@ -53,6 +53,10 @@ Condition                              | Bit
 `property_type === 'CommercialSale'`   | `1024`
 `property_type === 'ResidentialLease'` | `2048`
 `property_type === 'CommercialLease'`  | `4096`
+_There is an active offer_ *           | `131072`
+
+If the deal type is selling and there is an active checklist with `checklist_type === 'Buying`
+then we consider that deal to have an active offer.
 
 <!-- include(tests/deal/getContexts.md) -->
 
