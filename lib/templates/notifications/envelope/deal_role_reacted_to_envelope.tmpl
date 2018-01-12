@@ -10,4 +10,4 @@
   {% set reaction = 'voided' %}
 {% endif %}
 
-{{subjects[0] | name}} {{reaction}} your documents.
+{{subjects[0].legal_first_name}} {{subjects[0].legal_last_name}} {{reaction}} your documents.
