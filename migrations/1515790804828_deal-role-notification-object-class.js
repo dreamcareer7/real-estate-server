@@ -5,7 +5,7 @@ const db = require('../lib/utils/db')
 
 const up = [
   `ALTER TYPE notification_object_class
-     ADD VALUE 'EnvelopeRecipient'`
+     ADD VALUE 'DealRole'`
 ]
 
 const down = []
