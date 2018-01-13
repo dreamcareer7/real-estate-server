@@ -2,5 +2,6 @@
   "strict": "true",
   "smarttabs": "true",
   "esversion": 6,
-  "maxerr": 1000
+  "maxerr": 1000,
+  "SwitchCase": 2
 }
