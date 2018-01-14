@@ -125,7 +125,7 @@ SELECT deals.*,
 
   (
     SELECT
-      count(*)
+      COUNT(*)::INT
     FROM tasks
     JOIN deals_checklists  ON tasks.checklist = deals_checklists.id
     WHERE
