@@ -113,7 +113,7 @@ SELECT deals.*,
 
   (
     SELECT
-      DISTINCT brands_checklists.tab_name
+      ARRAY_AGG(DISTINCT brands_checklists.tab_name)
     FROM tasks
     JOIN deals_checklists  ON tasks.checklist = deals_checklists.id
     JOIN brands_checklists ON deals_checklists.origin = brands_checklists.id
