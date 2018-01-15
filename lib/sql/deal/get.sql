@@ -109,7 +109,32 @@ SELECT deals.*,
       ), $2
     )
   )
-  END AS new_notifications
+  END AS new_notifications,
+
+  (
+    SELECT
+      ARRAY_AGG(DISTINCT brands_checklists.tab_name)
+    FROM tasks
+    JOIN deals_checklists  ON tasks.checklist = deals_checklists.id
+    JOIN brands_checklists ON deals_checklists.origin = brands_checklists.id
+    WHERE
+      deals_checklists.deal = deals.id
+      AND tasks.needs_attention IS TRUE
+      AND tasks.deleted_at IS NULL
+  ) as inboxes,
+
+  (
+    SELECT
+      COUNT(*)::INT
+    FROM tasks
+    JOIN deals_checklists  ON tasks.checklist = deals_checklists.id
+    WHERE
+      deals_checklists.deal = deals.id
+      AND deals_checklists.terminated_at  IS NULL
+      AND deals_checklists.deactivated_at IS NULL
+      AND tasks.needs_attention IS TRUE
+      AND tasks.deleted_at IS NULL
+  ) as need_attentions
 
 FROM deals
 JOIN unnest($1::uuid[]) WITH ORDINALITY t(did, ord) ON deals.id = did
