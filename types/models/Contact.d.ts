@@ -1,11 +1,27 @@
-declare interface IContact extends IModel {
+declare interface IContactBase extends IModel {
+  merged: boolean;
   ios_address_book_id?: String;
   android_address_book_id?: String;
+}
 
-  attributes: IContactAttribute[];
+declare interface IParentContact extends IContactBase {
   users?: IUser[];
   brands?: IBrand[];
   deals?: IDeal[];
+  sub_contacts: IContact[];
+
+  type: 'contact';
+}
+
+declare interface IContact extends IContactBase {
+  deleted_at?: number | null;
+  type: 'sub_contact';
+  user: UUID;
+
+  attributes: Map<IContactAttribute[]>;
+  emails: IContactEmailAttribute[];
+  phone_numbers: IContactPhoneAttribute[];
+  refs: UUID[];
 }
 
 declare type EAttributeTypes = 
@@ -38,30 +54,30 @@ declare interface IContactAttributeInput {
   attribute: any;
 }
 
-declare interface IContactEmailAttributeInput {
+declare interface IContactEmailAttribute extends IModel {
   type: 'email';
   email: String;
 }
 
-declare interface IContactPhoneAttributeInput {
+declare interface IContactPhoneAttribute extends IModel {
   type: 'phone_number';
   phone_number: String;
 }
 
 type PatchableFields = Pick<
-  IContact,
+  IParentContact,
   "ios_address_book_id" | "android_address_book_id"
 >;
 
 declare namespace Contact {
-  function extractNameInfo(contact: IContact): String[];
-  function getDisplayName(contact: IContact): String;
-  function getAbbreviatedDisplayName(contact: IContact): String;
+  function extractNameInfo(contact: IParentContact): String[];
+  function getDisplayName(contact: IParentContact): String;
+  function getAbbreviatedDisplayName(contact: IParentContact): String;
 
-  function getForUser(user_id: UUID, paging: any, cb: Callback<IContact[]>): void;
-  function get(contact_id: UUID, cb: Callback<IContact>): void;
-  function getAll(contact_ids: UUID[], cb: Callback<IContact[]>): void;
-  function add(user_id: UUID, contact: IContact, cb: Callback<IContact>): void;
+  function getForUser(user_id: UUID, paging: any, cb: Callback<IParentContact[]>): void;
+  function get(contact_id: UUID, cb: Callback<IParentContact>): void;
+  function getAll(contact_ids: UUID[], cb: Callback<IParentContact[]>): void;
+  function add(user_id: UUID, contact: IContact, cb: Callback<IParentContact>): void;
   function remove(contact_id: UUID, cb: Callback<void>): void;
   function patch(
     contact_id: UUID,
@@ -73,15 +89,15 @@ declare namespace Contact {
     user_id: UUID,
     attribute_id: UUID,
     attribute_type: EAttributeTypes,
-    attribute: IContactAttributeInput | IContactEmailAttributeInput | IContactPhoneAttributeInput,
-    cb: Callback<IContact>
+    attribute: IContactAttributeInput | IContactEmailAttribute | IContactPhoneAttribute,
+    cb: Callback<IParentContact>
   ): void;
   function addAttribute(
     contact_id: UUID,
     user_id: UUID,
     attribute_type: EAttributeTypes,
     attribute: IContactAttributeInput,
-    cb: Callback<IContact>
+    cb: Callback<IParentContact>
   ): void;
   function deleteAttribute(
     contact_id: UUID,
@@ -95,15 +111,28 @@ declare namespace Contact {
     attribute_id: UUID,
     cb: Callback<IContactAttribute>
   ): void;
-  function getByTags(user_id: UUID, tags: String[], cb: Callback<IContact>): void;
+  function getByTags(user_id: UUID, tags: String[], cb: Callback<IParentContact>): void;
   function stringSearch(
     user_id: UUID,
     terms: String[],
     limit: number,
-    cb: Callback<IContact[]>
+    cb: Callback<IParentContact[]>
   ): void;
   function getAllTags(user_id: UUID, cb: Callback<String[]>): void;
   function setRefs(contact_id: UUID, refs: UUID[], cb: Callback<void>): void;
+
+  type TOverride = Record<'source_type' | 'brand', String>;
+
+  function isConnected(user_id: UUID, peer_id: UUID, cb: Callback<boolean>): void;
+  function connect(user_id: UUID, peer_id: UUID, override: TOverride, cb: Callback<void>): void;
+  function join(user_id: UUID, peer_id: UUID, override: TOverride, cb: Callback<IParentContact>): void;
+  function convertUser(user: IUser, override: TOverride): IContact;
+
+  function publicize(model: IContact): IContact;
+
+  function emit(event: string | symbol, ...args: any[]): boolean;
+
+  let associations: Map<IModelAssociation>;
 }
 
 declare namespace Orm {
