@@ -500,6 +500,17 @@ const patchAttention = cb => {
 //     })
 }
 
+const postMessage = cb => {
+  const message = {
+    comment: 'Comment'
+  }
+
+  return frisby.create('Post a message to the task room')
+    .post(`/tasks/${results.deal.addTask.data.id}/messages`, message)
+    .after(cb)
+    .expectStatus(200)
+}
+
 const getTask = cb => {
   return frisby.create('get a task')
     .get(`/tasks/${results.deal.addTask.data.id}`)
@@ -569,6 +580,7 @@ module.exports = {
   getTask,
   setReview,
   patchAttention,
+  postMessage,
   getBrandInbox,
   getBrandDeals,
   filter,
