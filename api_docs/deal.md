@@ -143,5 +143,8 @@ then we consider that deal to have an active offer.
 ### Record activity on timeline of a task [POST /tasks/:task/timeline]
 <!-- include(tests/deal/addActivity.md) -->
 
+### Post message to a task room [POST /tasks/:task/messages]
+<!-- include(tests/deal/postMessage.md) -->
+
 ### Delete a task [DELETE /tasks/:task]
 <!-- include(tests/deal/removeTask.md) -->
