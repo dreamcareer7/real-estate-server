@@ -33,8 +33,10 @@ declare type EAttributeTypes =
   "profile_image_url" |
   "cover_image_url" |
   "company" |
+  "job_title" |
   "stage" |
   "address" |
+  "website" |
   "source_type" |
   "brand" |
   "note" |

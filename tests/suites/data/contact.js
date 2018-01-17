@@ -15,8 +15,12 @@ module.exports = {
     names: [
       {
         type: 'name',
+        prefix: 'Dr.',
         first_name: 'John',
-        last_name: 'Doe'
+        middle_name: 'M.',
+        last_name: 'Doe',
+        nickname: 'Johnny',
+        legal_middle_name: 'Michael'
       }
     ],
     tags: [
@@ -109,6 +113,18 @@ module.exports = {
       {
         type: 'note',
         note: 'This is a sample note'
+      }
+    ],
+    job_titles: [
+      {
+        type: 'job_title',
+        job_title: 'Contact Test Subject'
+      }
+    ],
+    websites: [
+      {
+        type: 'website',
+        website: 'http://www.gholi.com'
       }
     ]
   }
