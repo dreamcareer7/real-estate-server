@@ -8,11 +8,15 @@ INSERT INTO contacts_emails
 (
   contact,
   email,
-  data
+  data,
+  label,
+  is_primary
 )
 VALUES
 (
   $1,
   LOWER($2),
-  $3
+  $3,
+  $4,
+  $5
 )

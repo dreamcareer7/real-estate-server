@@ -8,11 +8,15 @@ INSERT INTO contacts_phone_numbers
 (
   contact,
   phone_number,
-  data
+  data,
+  label,
+  is_primary
 )
 VALUES
 (
   $1,
   $2,
-  $3
+  $3,
+  $4,
+  $5
 )
