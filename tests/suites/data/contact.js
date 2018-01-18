@@ -3,13 +3,16 @@ module.exports = {
     emails: [
       {
         type: 'email',
-        email: 'john@doe.org'
+        email: 'john@doe.org',
+        label: 'Work',
+        is_primary: true
       }
     ],
     phone_numbers: [
       {
         type: 'phone_number',
-        phone_number: '+989124834198'
+        phone_number: '+989124834198',
+        label: 'Mobile'
       }
     ],
     names: [
@@ -88,7 +91,9 @@ module.exports = {
           state: 'Texas',
           country: 'US',
           postal_code: '72890'
-        }
+        },
+        is_primary: true,
+        label: 'Office'
       }
     ],
     source_types: [
@@ -123,6 +128,7 @@ module.exports = {
     ],
     websites: [
       {
+        label: 'Personal',
         type: 'website',
         website: 'http://www.gholi.com'
       }

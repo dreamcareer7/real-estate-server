@@ -18,7 +18,7 @@ declare interface IContact extends IContactBase {
   type: 'sub_contact';
   user: UUID;
 
-  attributes: Map<IContactAttribute[]>;
+  attributes: StringMap<IContactAttribute[]>;
   emails: IContactEmailAttribute[];
   phone_numbers: IContactPhoneAttribute[];
   refs: UUID[];
@@ -47,21 +47,17 @@ declare interface IContactAttribute {
   created_at: number;
   updated_at?: number;
   type: EAttributeTypes;
-  value: any;
+
+  label?: String;
+  is_primary: boolean;
 }
 
-// FIXME: Not sure of the type here
-declare interface IContactAttributeInput {
-  type: EAttributeTypes;
-  attribute: any;
-}
-
-declare interface IContactEmailAttribute extends IModel {
+declare interface IContactEmailAttribute extends IContactAttribute {
   type: 'email';
   email: String;
 }
 
-declare interface IContactPhoneAttribute extends IModel {
+declare interface IContactPhoneAttribute extends IContactAttribute {
   type: 'phone_number';
   phone_number: String;
 }
@@ -91,14 +87,14 @@ declare namespace Contact {
     user_id: UUID,
     attribute_id: UUID,
     attribute_type: EAttributeTypes,
-    attribute: IContactAttributeInput | IContactEmailAttribute | IContactPhoneAttribute,
+    attribute: IContactAttribute | IContactEmailAttribute | IContactPhoneAttribute,
     cb: Callback<IParentContact>
   ): void;
   function addAttribute(
     contact_id: UUID,
     user_id: UUID,
     attribute_type: EAttributeTypes,
-    attribute: IContactAttributeInput,
+    attribute: IContactAttribute,
     cb: Callback<IParentContact>
   ): void;
   function deleteAttribute(
@@ -134,7 +130,7 @@ declare namespace Contact {
 
   function emit(event: string | symbol, ...args: any[]): boolean;
 
-  let associations: Map<IModelAssociation>;
+  let associations: StringMap<IModelAssociation>;
 }
 
 declare namespace Orm {

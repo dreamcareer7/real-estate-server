@@ -8,11 +8,15 @@ INSERT INTO contacts_attributes
 (
   contact,
   attribute_type,
-  attribute
+  attribute,
+  label,
+  is_primary
 )
 VALUES
 (
   $1,
   $2,
-  $3
+  $3,
+  $4,
+  $5
 )
