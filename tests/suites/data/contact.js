@@ -12,7 +12,8 @@ module.exports = {
       {
         type: 'phone_number',
         phone_number: '+989124834198',
-        label: 'Mobile'
+        label: 'Mobile',
+        is_primary: true
       }
     ],
     names: [
