@@ -71,7 +71,9 @@ SELECT id,
                    'id', id,
                    'type', attribute_type,
                    'created_at', EXTRACT(EPOCH FROM created_at),
-                   'updated_at', EXTRACT(EPOCH FROM updated_at)
+                   'updated_at', EXTRACT(EPOCH FROM updated_at),
+                   'label', label,
+                   'is_primary', is_primary
                  ) ORDER BY created_at
                ) AS value
                FROM contacts_attributes
@@ -92,7 +94,9 @@ SELECT id,
                  'type', 'email',
                  'email', email,
                  'created_at', EXTRACT(EPOCH FROM created_at),
-                 'updated_at', EXTRACT(EPOCH FROM updated_at)
+                 'updated_at', EXTRACT(EPOCH FROM updated_at),
+                 'label', label,
+                 'is_primary', is_primary
                ) ORDER BY created_at
              )
              FROM contacts_emails
@@ -108,7 +112,9 @@ SELECT id,
                  'type', 'phone_number',
                  'phone_number', phone_number,
                  'created_at', EXTRACT(EPOCH FROM created_at),
-                 'updated_at', EXTRACT(EPOCH FROM updated_at)
+                 'updated_at', EXTRACT(EPOCH FROM updated_at),
+                 'label', label,
+                 'is_primary', is_primary
                ) ORDER BY created_at
              )
              FROM contacts_phone_numbers

@@ -69,6 +69,9 @@ then we consider that deal to have an active offer.
 <!-- include(tests/deal/getAll.md) -->
 
 ### Get all deals belonging to a brand [GET /brands/:brand/deals]
+
+`deleted` (Boolean) If you want the archived deals to be returned or not
+
 <!-- include(tests/deal/getBrandDeals.md) -->
 
 ### Get all deals that need backoffice review [GET /brands/:brand/deals/inbox]
