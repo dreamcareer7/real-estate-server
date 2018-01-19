@@ -107,7 +107,7 @@ const getDocumentPdf = cb => {
 
 const sign = cb => {
   return frisby.create('Go to "sign envelope" page')
-    .get(`/envelopes/${results.envelope.create.data.id}/sign`)
+    .get(`/envelopes/${results.envelope.create.data.id}/sign/${results.envelope.create.data.recipients[0].id}`)
     .after(cb)
 }
 
