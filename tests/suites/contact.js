@@ -128,7 +128,8 @@ const addInvalidPhoneNumber = (cb) => {
 const addPhoneNumber = (cb) => {
   const a = {
     type: 'phone_number',
-    phone_number: '+989028202678'
+    phone_number: '+989028202678',
+    is_primary: true
   }
 
   return frisby.create('add a valid phone number')
@@ -139,6 +140,19 @@ const addPhoneNumber = (cb) => {
     })
     .after(cb)
     .expectStatus(200)
+    .expectJSON({
+      data: {
+        sub_contacts: [{
+          attributes: {
+            phone_numbers: [
+              Object.assign({}, contact.attributes.phone_numbers[0], { is_primary: false }),
+              {is_primary: false},
+              a
+            ]
+          }
+        }]
+      }
+    })
 }
 
 const addInvalidEmail = (cb) => {
