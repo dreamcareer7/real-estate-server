@@ -28,7 +28,7 @@ For example, `street_name` of a deal can be fetched from `deal.deal_context.stre
 [Here](https://gitlab.com/rechat/server/blob/testing/lib/models/Deal/context.js) You can find a list of all
 context items and their types.
 
-### Get a list of all possible context [GET /deal/contexts]
+### Get a list of all possible context [GET /deals/contexts]
 
 Gives you a list of all usable context items.
 Each context item has:
@@ -36,10 +36,12 @@ Each context item has:
 * `data_type` `(Required)` `Date|Number|String`
 * `name`      `(Required)`  Name of the data type (eg _list_date_) (Used internally)
 * `label`                   Label to show to users (eg _List Starting Date_)
+* `short_label`             Abbreviate version of the label
+* `section`                 Which section of fact sheet this should appear on `CriticalDates|Listing|CDA`
 * `required`                A Bit flag set representing the cases in which this item is required
 * `optional`                A Bit flag set representing the cases in which this item is asked but not required
 * `show_on_fact_sheet`      A Bit flag set representing the cases in which this context is shown on fact sheet
-* `section`                 Which section of fact sheet this should appear on `CriticalDates|Listing|CDA`
+* `needs_approval`          A boolean which determines if this context needs back office approval or not
 
 Items based on bit flags use the following constants to determine whether they should show up:
 
@@ -53,16 +55,23 @@ Condition                              | Bit
 `property_type === 'CommercialSale'`   | `1024`
 `property_type === 'ResidentialLease'` | `2048`
 `property_type === 'CommercialLease'`  | `4096`
+_There is an active offer_ *           | `131072`
+
+If the deal type is selling and there is an active checklist with `checklist_type === 'Buying'`
+then we consider that deal to have an active offer.
 
 <!-- include(tests/deal/getContexts.md) -->
 
-### Get a deal [GET /deal/:id]
+### Get a deal [GET /deals/:id]
 <!-- include(tests/deal/get.md) -->
 
 ### Get deals created by a user [GET /deals]
 <!-- include(tests/deal/getAll.md) -->
 
 ### Get all deals belonging to a brand [GET /brands/:brand/deals]
+
+`deleted` (Boolean) If you want the archived deals to be returned or not
+
 <!-- include(tests/deal/getBrandDeals.md) -->
 
 ### Get all deals that need backoffice review [GET /brands/:brand/deals/inbox]
@@ -71,19 +80,19 @@ Condition                              | Bit
 ### Search through all deals [POST /deals/filter]
 <!-- include(tests/deal/filter.md) -->
 
-### Create a deal with a listing [POST /deal]
+### Create a deal with a listing [POST /deals]
 <!-- include(tests/deal/create.md) -->
 
-### Create a hippocket deal [POST /deal]
+### Create a hippocket deal [POST /deals]
 <!-- include(tests/deal/createHippocket.md) -->
 
 ### Delete a deal [DELETE /deals/:id]
 <!-- include(tests/deal/remove.md) -->
 
-### Add a bunch of roles [POST /deal/:id/roles]
+### Add a bunch of roles [POST /deals/:id/roles]
 <!-- include(tests/deal/addRole.md) -->
 
-### Update a role [PUT /deal/:id/roles/:rid]
+### Update a role [PUT /deals/:id/roles/:rid]
 <!-- include(tests/deal/updateRole.md) -->
 
 ### Set listing for a deal [PATCH /deals/:id/listing]
@@ -136,6 +145,9 @@ Condition                              | Bit
 
 ### Record activity on timeline of a task [POST /tasks/:task/timeline]
 <!-- include(tests/deal/addActivity.md) -->
+
+### Post message to a task room [POST /tasks/:task/messages]
+<!-- include(tests/deal/postMessage.md) -->
 
 ### Delete a task [DELETE /tasks/:task]
 <!-- include(tests/deal/removeTask.md) -->

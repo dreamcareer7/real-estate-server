@@ -120,6 +120,8 @@ const shutdown = () => {
 process.once('SIGTERM', shutdown)
 process.once('SIGINT', shutdown)
 
+setTimeout(shutdown, 1000 * 60 * 3) // Restart every 3 minutes
+
 const sendNotifications = function () {
   getDomain({}, (err, {rollback, commit}) => {
     if (err)

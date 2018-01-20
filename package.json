@@ -11,7 +11,7 @@
     "coverage": "node_modules/istanbul/lib/cli.js cover --dir istanbul tests/run.js -- --curl --stop-on-fail --concurrency 20"
   },
   "engines": {
-    "node": "8.x"
+    "node": "9.x"
   },
   "author": "",
   "license": "ISC",
@@ -36,6 +36,7 @@
     "docker-names": "^1.0.0",
     "emojify.js": "^1.1.0",
     "eslint": "^4.13.1",
+    "exceljs": "^0.8.1",
     "exif-parser": "^0.1.12",
     "express": "^4.15.4",
     "forever": "^0.15.1",
@@ -83,6 +84,7 @@
     "xml2js": "^0.4.19"
   },
   "devDependencies": {
+    "@types/node": "^9.3.0",
     "aglio": "^2.3.0",
     "bytes": "^2.5.0",
     "copy-dir": "0.0.8",
