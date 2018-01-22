@@ -11,7 +11,7 @@ app.use(function (req, res, next) {
   next()
 })
 
-require('./lib/utils/atomic.js')(app)
 require('./lib/utils/logger.js')(app)
+require('./lib/utils/atomic.js')(app)
 
 app.listen(config.http.port)
