@@ -21,6 +21,7 @@
     "aws-cloudfront-sign": "^2.2.0",
     "aws-sdk": "^2.168.0",
     "bcrypt": "^0.8.6",
+    "blocked": "^1.2.1",
     "body-parser": "^1.18.1",
     "busboy": "^0.2.14",
     "chai": "^3.5.0",
