@@ -52,6 +52,28 @@ declare interface IContactAttribute {
   is_primary: boolean;
 }
 
+declare interface IContactNameAttribute extends IContactAttribute {
+  type: 'name';
+  title: String;
+  first_name: String;
+  middle_name: String;
+  last_name: String;
+  nickname: String;
+  legal_prefix: String;
+  legal_first_name: String;
+  legal_middle_name: String;
+  legal_last_name: String;
+}
+
+declare interface IContactAddressAttribute extends IContactAttribute {
+  type: 'address';
+  street_name: String;
+  city: String;
+  state: String;
+  country: String;
+  postal_code: String;
+}
+
 declare interface IContactEmailAttribute extends IContactAttribute {
   type: 'email';
   email: String;

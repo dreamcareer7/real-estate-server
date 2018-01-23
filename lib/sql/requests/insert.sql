@@ -7,9 +7,10 @@ INSERT INTO http_requests
   response,
   client,
   user_id,
-  queries
+  queries,
+  route
 )
 VALUES
 (
-  $1,$2,$3,$4,$5,$6,$7,$8
+  $1,$2,$3,$4,$5,$6,$7,$8,$9
 )

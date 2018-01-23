@@ -519,7 +519,7 @@ const getTask = cb => {
 
 const getBrandDeals = (cb) => {
   return frisby.create('get brand inbox')
-    .get(`/brands/${results.brand.create.data.id}/deals?deleted=true`)
+    .get(`/brands/${results.brand.create.data.id}/deals`)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
