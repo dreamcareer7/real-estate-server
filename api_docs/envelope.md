@@ -71,13 +71,13 @@ In this example user has no Docusign authentication. Therefore will receicve a `
 
 <!-- include(tests/envelope/getDocumentPdf.md) -->
 
-### Sign an Envelope [GET /envelopes/:id:/sign]
+### Sign an Envelope [GET /envelopes/:id:/sign/:recipient]
 
 If the current user is among `envelope.recipients`, it means he should be able to sign it as well.
 
 The process of signing is as follows:
 
-1. User's browser will be opened to `/envelopes/:id/sign`
+1. User's browser will be opened to `/envelopes/:id/sign/:recipient`
 2. User's browser will be redirected to a page on Docusign where he can sign the document
 3. User's browser will be sent back to Rechat
 4. Rechat updates the Envelope information

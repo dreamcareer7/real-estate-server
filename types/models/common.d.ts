@@ -7,6 +7,6 @@ declare interface IModelAssociation {
     model: String;
 }
 
-declare interface Map<T> {
+declare interface StringMap<T> {
     [key: string]: T;
 }
