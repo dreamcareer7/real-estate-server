@@ -601,7 +601,29 @@ const getByTag = (cb) => {
     .after(cb)
     .expectStatus(200)
     .expectJSON({
-      code: 'OK'
+      code: 'OK',
+      info: {
+        count: 1
+      }
+    })
+}
+
+const getByAttribute = cb => {
+  return frisby.create('filter contacts by attribute')
+    .post('/contacts/filter', {
+      attribute: 'company',
+      values: [
+        'Google',
+        'Rechat'
+      ]
+    })
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      info: {
+        count: 1
+      }
     })
 }
 
@@ -719,6 +741,7 @@ module.exports = {
   getNonExistingContact,
   getGibberishContact,
   getByTag,
+  getByAttribute,
   search,
   addAttribute,
   removeAttribute,
