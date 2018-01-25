@@ -11,7 +11,6 @@ $$
       OR
       address ILIKE '%' || $1 || '%'
       OR mls_number = $1
-    LIMIT 75
   ),
 
   -- From here we will try to come up with suggestions (of misspellings) in a few different steps --
@@ -37,7 +36,6 @@ $$
     SELECT id FROM listings_filters
     WHERE
       to_tsvector('english', address) @@ plainto_tsquery('english', array_to_string( (SELECT * FROM suggested_parts), ' ') )
-    LIMIT 75
   ),
 
   results AS (
