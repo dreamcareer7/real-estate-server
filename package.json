@@ -33,6 +33,7 @@
     "datadog-metrics": "^0.2.1",
     "deasync": "^0.1.0",
     "debug": "^2.6.3",
+    "deep-diff": "^0.3.8",
     "docker-names": "^1.0.0",
     "emojify.js": "^1.1.0",
     "eslint": "^4.13.1",
@@ -45,7 +46,6 @@
     "google-libphonenumber": "^3.0.6",
     "googlemaps": "^1.0.1",
     "intercom-client": "^2.8.8",
-    "joi": "^13.1.0",
     "kue": "^0.11.5",
     "linger": "0.0.3",
     "lodash": "^4.17.4",
@@ -98,6 +98,7 @@
     "istanbul": "^1.1.0-alpha.1",
     "jasmine-node": "^1.14.5",
     "nock": "^9.1.4",
+    "prettyjson": "^1.2.1",
     "request-as-curl": "^0.1.0"
   }
 }
