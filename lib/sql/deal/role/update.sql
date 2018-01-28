@@ -12,6 +12,7 @@ UPDATE deals_roles SET
   commission_dollar = $10,
   commission_percentage = $11,
   brokerwolf_id = $12,
-  brokerwolf_row_version = $13
+  brokerwolf_row_version = $13,
+  role = $14
 
 WHERE id = $1

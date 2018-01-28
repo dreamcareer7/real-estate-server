@@ -9,7 +9,8 @@ WITH verification AS (
 ),
 verified AS (
     UPDATE users
-    SET email_confirmed = TRUE
+    SET email_confirmed = TRUE,
+        updated_at = CLOCK_TIMESTAMP()
     WHERE email = (SELECT email FROM verification)
 )
 DELETE FROM email_verifications WHERE email = (SELECT email FROM verification)

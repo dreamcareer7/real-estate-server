@@ -30,6 +30,7 @@
     "commander": "^2.12.2",
     "compression": "^1.7.0",
     "convert-units": "^2.3.1",
+    "csv-parse": "^2.0.0",
     "datadog-metrics": "^0.2.1",
     "deasync": "^0.1.0",
     "debug": "^2.6.3",
