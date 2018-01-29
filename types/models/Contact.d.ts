@@ -54,6 +54,28 @@ declare interface IContactAttribute {
   is_primary: boolean;
 }
 
+declare interface IContactNameAttribute extends IContactAttribute {
+  type: 'name';
+  title: String;
+  first_name: String;
+  middle_name: String;
+  last_name: String;
+  nickname: String;
+  legal_prefix: String;
+  legal_first_name: String;
+  legal_middle_name: String;
+  legal_last_name: String;
+}
+
+declare interface IContactAddressAttribute extends IContactAttribute {
+  type: 'address';
+  street_name: String;
+  city: String;
+  state: String;
+  country: String;
+  postal_code: String;
+}
+
 declare interface IContactEmailAttribute extends IContactAttribute {
   type: "email";
   email: String;
@@ -68,6 +90,15 @@ type PatchableFields = Pick<
   IParentContact,
   "ios_address_book_id" | "android_address_book_id"
 >;
+
+declare interface IAddContactOptions {
+  /** Return {ParentContact} object or just id */
+  get?: boolean;
+  /** Continute on add attribute error */
+  relax?: boolean;
+  /** Add activity record? */
+  activity?: boolean;
+}
 
 declare namespace Contact {
   function extractNameInfo(contact: IParentContact): String[];
@@ -84,8 +115,8 @@ declare namespace Contact {
   function add(
     user_id: UUID,
     contact: IContact,
-    cb: Callback<IParentContact>
-  ): void;
+    options?: IAddContactOptions
+  ): Promise<IParentContact>;
   function remove(contact_id: UUID, cb: Callback<void>): void;
   function patch(
     contact_id: UUID,
@@ -106,7 +137,6 @@ declare namespace Contact {
   function addAttribute(
     contact_id: UUID,
     user_id: UUID,
-    attribute_type: EAttributeTypes,
     attribute: IContactAttribute,
     cb: Callback<IParentContact>
   ): void;

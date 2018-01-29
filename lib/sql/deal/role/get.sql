@@ -2,6 +2,16 @@ SELECT deals_roles.*,
        'deal_role' AS type,
        EXTRACT(EPOCH FROM deals_roles.created_at) AS created_at,
        EXTRACT(EPOCH FROM deals_roles.updated_at) AS updated_at,
+
+       ARRAY_TO_STRING(
+        ARRAY[
+          deals_roles.legal_prefix,
+          deals_roles.legal_first_name,
+          deals_roles.legal_middle_name,
+          deals_roles.legal_last_name
+        ], ' ', NULL
+      ) as legal_full_name,
+
        bw.agent_id as agent_brokerwolf_id,
        (
         SELECT brokerwolf_id FROM brokerwolf_contact_types
