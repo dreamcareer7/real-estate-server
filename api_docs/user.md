@@ -29,6 +29,9 @@ It is important to remember that shadow users _can_ use some of the Rechat's fea
 ### Get User [GET /users/{id}]
 <!-- include(tests/user/getUser.md) -->
 
+### Get User Roles [GET /users/self/roles]
+<!-- include(tests/user/getUserRoles.md) -->
+
 ### Update User [PUT /users/{id}]
 <!-- include(tests/user/update.md) -->
 
