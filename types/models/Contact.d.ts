@@ -91,6 +91,15 @@ type PatchableFields = Pick<
   "ios_address_book_id" | "android_address_book_id"
 >;
 
+declare interface IAddContactOptions {
+  /** Return {ParentContact} object or just id */
+  get?: boolean;
+  /** Continute on add attribute error */
+  relax?: boolean;
+  /** Add activity record? */
+  activity?: boolean;
+}
+
 declare namespace Contact {
   function extractNameInfo(contact: IParentContact): String[];
   function getDisplayName(contact: IParentContact): String;
@@ -106,8 +115,8 @@ declare namespace Contact {
   function add(
     user_id: UUID,
     contact: IContact,
-    cb: Callback<IParentContact>
-  ): void;
+    options?: IAddContactOptions
+  ): Promise<IParentContact>;
   function remove(contact_id: UUID, cb: Callback<void>): void;
   function patch(
     contact_id: UUID,
@@ -128,7 +137,6 @@ declare namespace Contact {
   function addAttribute(
     contact_id: UUID,
     user_id: UUID,
-    attribute_type: EAttributeTypes,
     attribute: IContactAttribute,
     cb: Callback<IParentContact>
   ): void;
