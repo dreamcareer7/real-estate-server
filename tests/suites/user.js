@@ -56,6 +56,13 @@ const getUser = (cb) => {
     })
 }
 
+const getUserRoles = (cb) => {
+  return frisby.create('get user roles across different brands')
+    .get('/users/self/roles')
+    .after(cb)
+    .expectStatus(200)
+}
+
 const getUser404 = (cb) => {
   return frisby.create('expect 404 with invalid user id when getting a user')
     .get('/users/' + uuid.v1())
@@ -540,6 +547,7 @@ module.exports = {
   create,
   create401,
   getUser,
+  getUserRoles,
   getUser404,
   update,
   changePassword,
