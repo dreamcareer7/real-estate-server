@@ -1,5 +1,5 @@
 SELECT
-  (user || '_' || brand) as id,
+  ("user" || '_' || brand) as id,
   brand,
   ARRAY_AGG(access) AS acl,
   'user_role' as type
