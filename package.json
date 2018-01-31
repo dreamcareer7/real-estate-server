@@ -20,6 +20,7 @@
     "async": "^1.4.2",
     "aws-cloudfront-sign": "^2.2.0",
     "aws-sdk": "^2.168.0",
+    "base64url": "^2.0.0",
     "bcrypt": "^0.8.6",
     "body-parser": "^1.18.1",
     "busboy": "^0.2.14",
@@ -98,6 +99,7 @@
     "istanbul": "^1.1.0-alpha.1",
     "jasmine-node": "^1.14.5",
     "nock": "^9.1.4",
+    "prettyjson": "^1.2.1",
     "request-as-curl": "^0.1.0"
   }
 }
