@@ -8,7 +8,7 @@ declare interface ITask {
   description: string;
   due_date: number;
   status: "PENDING" | "DONE";
-  task_type: "Call", "Message", "Todo";
+  task_type: "Call" | "Message" | "Todo";
 
   reminders: IReminder[];
 
