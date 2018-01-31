@@ -1,4 +1,5 @@
 SELECT
+  ($1 || '_' || brand) as id,
   brand,
   ARRAY_AGG(access) AS acl,
   'user_role' as type
