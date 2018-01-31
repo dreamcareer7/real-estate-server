@@ -10,3 +10,8 @@ declare interface IModelAssociation {
 declare interface StringMap<T> {
     [key: string]: T;
 }
+
+declare interface PaginationOptions {
+    start?: number;
+    size?: number;
+}
