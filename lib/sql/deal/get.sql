@@ -134,7 +134,26 @@ SELECT deals.*,
       AND deals_checklists.deactivated_at IS NULL
       AND tasks.needs_attention IS TRUE
       AND tasks.deleted_at IS NULL
-  ) as need_attentions
+  ) as need_attentions,
+
+  (
+    SELECT count(*) > 0 FROM deals_checklists
+    JOIN brands_checklists ON deals_checklists.origin = brands_checklists.id
+    WHERE
+      deals_checklists.deal = deals.id
+      AND deals_checklists.deactivated_at IS NULL
+      AND deals_checklists.terminated_at  IS NULL
+      AND brands_checklists.deal_type = 'Buying'
+  ) as has_active_offer,
+
+  (
+    SELECT ARRAY_AGG(files_relations.file)
+    FROM files_relations
+    JOIN files ON files_relations.file = files.id
+    WHERE files_relations.role = 'Deal' AND files_relations.role_id = deals.id
+    AND files.deleted_at IS NULL
+    AND files_relations.deleted_at IS NULL
+  ) AS files
 
 FROM deals
 JOIN unnest($1::uuid[]) WITH ORDINALITY t(did, ord) ON deals.id = did
