@@ -9,6 +9,8 @@ const info_response = require('./expected_objects/info.js')
 const contact = require('./data/contact.js')
 
 const create = (cb) => {
+  const name = contact.attributes.names[0]
+
   return frisby.create('add a contact')
     .post('/contacts', {
       contacts: [
@@ -23,7 +25,10 @@ const create = (cb) => {
         {
           sub_contacts: [
             contact
-          ]
+          ],
+          summary: {
+            legal_full_name: name.title + ' ' + name.first_name + ' ' + name.legal_middle_name + ' ' + name.last_name
+          }
         }
       ]
     })

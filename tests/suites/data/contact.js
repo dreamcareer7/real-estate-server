@@ -19,7 +19,7 @@ module.exports = {
     names: [
       {
         type: 'name',
-        prefix: 'Dr.',
+        title: 'Dr.',
         first_name: 'John',
         middle_name: 'M.',
         last_name: 'Doe',
