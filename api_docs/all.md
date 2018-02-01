@@ -2,6 +2,7 @@
 <!-- include(session.md) -->
 <!-- include(user.md) -->
 <!-- include(contact.md) -->
+<!-- include(task.md) -->
 <!-- include(listing.md) -->
 <!-- include(room.md) -->
 <!-- include(message.md) -->

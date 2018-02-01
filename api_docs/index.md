@@ -32,6 +32,7 @@ Although we have a page that includes [everything](/all.html).
 ## CRM
 
 * [Contacts](/contact.html)
+* [Tasks](/tasks.html)
 
 ## Sharing
 
