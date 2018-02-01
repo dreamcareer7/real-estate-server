@@ -41,7 +41,11 @@ const create = (cb) => {
 
 const createHippocket = cb => {
   const data = JSON.parse(JSON.stringify(deal))
-  data.deal_context = {full_address}
+  data.deal_context = {
+    full_address: {
+      value: full_address
+    }
+  }
 
   data.roles = [
     {
@@ -107,15 +111,33 @@ const patchListing = cb => {
 
 const addContext = cb => {
   const context = {
-    listing_status: 'Active',
-    year_built: 1972,
-    contract_date: '1979/12/01',
-    closing_date: '1980/01/01',
-    list_date: '2017/12/06',
-    sales_price: 999999,
-    commission_listing: 3,
-    commission_selling: 3,
-    unit_number: '3A'
+    listing_status: {
+      value: 'Active'
+    },
+    year_built: {
+      value: 1972
+    },
+    contract_date: {
+      value: '1979/12/01'
+    },
+    closing_date: {
+      value: '1980/01/01'
+    },
+    list_date: {
+      value: '2017/12/06'
+    },
+    sales_price: {
+      value: 999999
+    },
+    commission_listing: {
+      value: 3
+    },
+    commission_selling: {
+      value: 3
+    },
+    unit_number: {
+      value: '3A'
+    }
   }
 
   const expected_object = Object.assign({}, omit(results.deal.create.data, [

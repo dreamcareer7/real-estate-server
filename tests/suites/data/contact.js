@@ -31,6 +31,10 @@ module.exports = {
       {
         type: 'tag',
         tag: 'New'
+      },
+      {
+        type: 'tag',
+        tag: 'foo'
       }
     ],
     stages: [

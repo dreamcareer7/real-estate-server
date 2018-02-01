@@ -14,11 +14,12 @@ WITH c AS
                  contacts_phone_numbers.deleted_at IS NULL
          ) AS phone_numbers,
          (
-           SELECT ARRAY_TO_STRING(ARRAY_AGG(((contacts_attributes.attribute)->>'first_name')::text || ' ' || ((contacts_attributes.attribute)->>'last_name')::text), ' ')
-           FROM contacts_attributes
+           SELECT ARRAY_TO_STRING(ARRAY_AGG(attributes_kv.value), ' ')
+           FROM contacts_attributes, jsonb_each_text(contacts_attributes.attribute) attributes_kv
            WHERE contacts_attributes.contact = contacts.id AND
                  contacts_attributes.attribute_type = 'name' AND
                  contacts_attributes.attribute IS NOT NULL AND
+                 attributes_kv.key <> ALL(ARRAY['type', 'title', 'legal_prefix']) AND
                  contacts_attributes.deleted_at IS NULL
          ) AS names
   FROM contacts

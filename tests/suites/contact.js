@@ -574,7 +574,7 @@ const search = (cb) => {
   results.user.create.data.type = 'compact_user'
 
   return frisby.create('search contacts and see if the one we added is there')
-    .get('/contacts/search?q[]=' + results.user.create.data.first_name)
+    .get('/contacts/search?q[]=' + contact.attributes.names[0].legal_middle_name)
     .after(cb)
     .expectStatus(200)
     .expectJSONLength('data', 1)
@@ -601,7 +601,29 @@ const getByTag = (cb) => {
     .after(cb)
     .expectStatus(200)
     .expectJSON({
-      code: 'OK'
+      code: 'OK',
+      info: {
+        count: 1
+      }
+    })
+}
+
+const getByAttribute = cb => {
+  return frisby.create('filter contacts by attribute')
+    .post('/contacts/filter', {
+      attribute: 'company',
+      values: [
+        'Google',
+        'Rechat'
+      ]
+    })
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      info: {
+        count: 1
+      }
     })
 }
 
@@ -719,6 +741,7 @@ module.exports = {
   getNonExistingContact,
   getGibberishContact,
   getByTag,
+  getByAttribute,
   search,
   addAttribute,
   removeAttribute,
