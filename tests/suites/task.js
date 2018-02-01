@@ -13,6 +13,18 @@ function create(cb) {
     })
 }
 
+function createWithInvalidData(cb) {
+  const data = Object.assign({}, task, {
+    contact: '123123'
+  })
+  delete data.title
+
+  return frisby.create('create a task fails with invalid')
+    .post('/crm/tasks', data)
+    .after(cb)
+    .expectStatus(400)
+}
+
 function getForUser(cb) {
   return frisby.create('get list of assigned tasks')
     .get('/crm/tasks')
@@ -37,6 +49,17 @@ function update(cb) {
     })
 }
 
+function updateWithInvalidData(cb) {
+  const data = Object.assign({}, task, {
+    contact: '123123'
+  })
+
+  return frisby.create('update task fails with invalid contact id')
+    .put(`/crm/tasks/${results.task.create.data.id}/?associations[]=crm_task.contact`, data)
+    .after(cb)
+    .expectStatus(400)
+}
+
 function getAllDoesntIgnoreFilters(cb) {
   return frisby.create('make sure filters are not ignored')
     .get(`/crm/tasks/?contact=${uuid.v4()}`)
@@ -51,6 +74,13 @@ function filterByContact(cb) {
     .after(cb)
     .expectStatus(200)
     .expectJSONLength('data', 1)
+}
+
+function filterByInvalidDealId(cb) {
+  return frisby.create('filtering tasks fails with an invalid deal id')
+    .get('/crm/tasks/?deal=123456')
+    .after(cb)
+    .expectStatus(400)
 }
 
 function remove(cb) {
@@ -70,10 +100,13 @@ function makeSureTaskIsDeleted(cb) {
 
 module.exports = {
   create,
+  createWithInvalidData,
   getForUser,
   update,
+  updateWithInvalidData,
   getAllDoesntIgnoreFilters,
   filterByContact,
+  filterByInvalidDealId,
   remove,
   makeSureTaskIsDeleted,
 }
