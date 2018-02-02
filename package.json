@@ -34,7 +34,7 @@
     "csv-parse": "^2.0.0",
     "datadog-metrics": "^0.2.1",
     "deasync": "^0.1.0",
-    "debug": "^2.6.3",
+    "debug": "^2.6.9",
     "docker-names": "^1.0.0",
     "emojify.js": "^1.1.0",
     "eslint": "^4.13.1",
