@@ -65,7 +65,7 @@
     "passport-http-bearer": "^1.0.1",
     "passport-oauth2-client-password": "^0.1.2",
     "password-generator": "^2.0.2",
-    "pg": "^7.3.0",
+    "pg": "^7.4.1",
     "pluralize": "^3.1.0",
     "redis": "^2.8.0",
     "request": "^2.49.0",
