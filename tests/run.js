@@ -6,6 +6,7 @@ require('colors')
 const fs = require('fs')
 const program = require('commander')
 const config = require('../lib/config.js')
+const migrate = require('../lib/utils/migrate')
 const fork = require('child_process').fork
 const async = require('async')
 const EventEmitter = require('events')
@@ -157,22 +158,24 @@ app.on('after loading routes', () => {
 Run.emit('app ready', app)
 
 const setupApp = cb => {
-  start(config.url.port, () => {
-    // Clear all jobs on test db
-    redisClient.flushdb(err => {
-      if (err)
-        console.log(err)
+  migrate(() => {
+    start(config.url.port, () => {
+      // Clear all jobs on test db
+      redisClient.flushdb(err => {
+        if (err)
+          console.log(err)
 
-      Notification.schedule = function (notification, cb) {
-        if (!notification.delay)
-          notification.delay = 0
+        Notification.schedule = function (notification, cb) {
+          if (!notification.delay)
+            notification.delay = 0
 
-        setTimeout(function () {
-          Notification.create(notification, cb)
-        }, notification.delay)
-      }
+          setTimeout(function () {
+            Notification.create(notification, cb)
+          }, notification.delay)
+        }
 
-      cb()
+        cb()
+      })
     })
   })
 
