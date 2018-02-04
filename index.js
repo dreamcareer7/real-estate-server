@@ -16,6 +16,8 @@ require('./lib/utils/atomic.js')(app)
 
 const cluster = () => {
   throng({
+    workers: config.cluster.workers,
+
     start: id => {
       start(config.http.port)
       console.log(`Listening (${id}) on http://localhost:${config.http.port}`)
