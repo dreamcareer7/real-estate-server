@@ -6,6 +6,7 @@ require('colors')
 const fs = require('fs')
 const program = require('commander')
 const config = require('../lib/config.js')
+const migrate = require('../lib/utils/migrate')
 const fork = require('child_process').fork
 const async = require('async')
 const EventEmitter = require('events')
@@ -82,6 +83,7 @@ function spawnSuite (suite, cb) {
 
 const Domain = require('domain')
 const db = require('../lib/utils/db')
+const {app, start} = require('../lib/bootstrap.js')
 
 const connections = {}
 
@@ -145,11 +147,37 @@ const database = (req, res, next) => {
   })
 }
 
-function setupApp (cb) {
-  const app = require('../lib/bootstrap.js')()
-  app.use(database)
+app.use(database)
 
-//   Error.autoReport = false;
+app.on('after loading routes', () => {
+  app.use((err, req, res, next) => {
+    process.domain.emit('error', err)
+  })
+})
+
+Run.emit('app ready', app)
+
+const setupApp = cb => {
+  migrate(() => {
+    start(config.url.port, () => {
+      // Clear all jobs on test db
+      redisClient.flushdb(err => {
+        if (err)
+          console.log(err)
+
+        Notification.schedule = function (notification, cb) {
+          if (!notification.delay)
+            notification.delay = 0
+
+          setTimeout(function () {
+            Notification.create(notification, cb)
+          }, notification.delay)
+        }
+
+        cb()
+      })
+    })
+  })
 
   const rollback = suite => {
     connections[suite].query('ROLLBACK', connections[suite].done)
@@ -174,34 +202,7 @@ function setupApp (cb) {
     })
   }
 
-  Run.emit('app ready', app)
-
-  app.on('after loading routes', () => {
-    app.use((err, req, res, next) => {
-      process.domain.emit('error', err)
-    })
-  })
-
   require('./jobs')(app)
-
-  app.listen(config.url.port, () => {
-    // Clear all jobs on test db
-    redisClient.flushdb(err => {
-      if (err)
-        console.log(err)
-
-      Notification.schedule = function (notification, cb) {
-        if (!notification.delay)
-          notification.delay = 0
-
-        setTimeout(function () {
-          Notification.create(notification, cb)
-        }, notification.delay)
-      }
-
-      cb()
-    })
-  })
 }
 
 const steps = []
