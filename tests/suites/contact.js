@@ -114,6 +114,22 @@ const addInvalidAttributeValue = (cb) => {
     .expectStatus(400)
 }
 
+const addNullAttributeValue = cb => {
+  const a = {
+    type: 'birthday',
+    birthday: null
+  }
+
+  return frisby.create('add a null attribute value')
+    .post(`/contacts/${results.contact.create.data[0].id}/attributes`, {
+      attributes: [
+        a
+      ]
+    })
+    .after(cb)
+    .expectStatus(400)
+}
+
 const addInvalidPhoneNumber = (cb) => {
   const a = {
     type: 'phone_number',
@@ -754,6 +770,7 @@ module.exports = {
   arePhoneNumbersProper,
   addInvalidAttribute,
   addInvalidAttributeValue,
+  addNullAttributeValue,
   addInvalidPhoneNumber,
   addInvalidEmail,
   addEmail,
