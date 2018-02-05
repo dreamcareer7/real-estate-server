@@ -100,10 +100,20 @@ declare interface IAddContactOptions {
   activity?: boolean;
 }
 
+declare interface IContactSummary {
+  display_name: String;
+  abbreviated_display_name: String;
+  legal_full_name: String;
+  email: String;
+  phone_number: String;
+}
+
 declare namespace Contact {
   function extractNameInfo(contact: IParentContact): String[];
   function getDisplayName(contact: IParentContact): String;
   function getAbbreviatedDisplayName(contact: IParentContact): String;
+  function summarize(contact: IParentContact): IContactSummary;
+  function getLegalFullName(contact: IParentContact): String;
 
   function getForUser(
     user_id: UUID,

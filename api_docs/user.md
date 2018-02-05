@@ -35,7 +35,7 @@ It is important to remember that shadow users _can_ use some of the Rechat's fea
 ### Update User [PUT /users/{id}]
 <!-- include(tests/user/update.md) -->
 
-### Delete User [DELETE /users/{id}]
+### Delete User [DELETE /users/self]
 <!-- include(tests/user/deleteUser.md) -->
 
 ### Change Password [PATCH /users/self/password]
@@ -73,3 +73,6 @@ It is important to remember that shadow users _can_ use some of the Rechat's fea
 
 ### Verify Phone Number [PATCH /users/phone_confirmed]
 <!-- include(tests/verification/verifyPhone.md) -->
+
+### Add activity [POST /users/self/timeline]
+<!-- include(tests/user/addActivity.md) -->

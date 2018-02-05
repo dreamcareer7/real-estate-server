@@ -9,6 +9,8 @@ const info_response = require('./expected_objects/info.js')
 const contact = require('./data/contact.js')
 
 const create = (cb) => {
+  const name = contact.attributes.names[0]
+
   return frisby.create('add a contact')
     .post('/contacts', {
       contacts: [
@@ -23,7 +25,10 @@ const create = (cb) => {
         {
           sub_contacts: [
             contact
-          ]
+          ],
+          summary: {
+            legal_full_name: name.title + ' ' + name.first_name + ' ' + name.legal_middle_name + ' ' + name.last_name
+          }
         }
       ]
     })
@@ -100,6 +105,22 @@ const addInvalidAttributeValue = (cb) => {
   }
 
   return frisby.create('add an invalid attribute value')
+    .post(`/contacts/${results.contact.create.data[0].id}/attributes`, {
+      attributes: [
+        a
+      ]
+    })
+    .after(cb)
+    .expectStatus(400)
+}
+
+const addNullAttributeValue = cb => {
+  const a = {
+    type: 'birthday',
+    birthday: null
+  }
+
+  return frisby.create('add a null attribute value')
     .post(`/contacts/${results.contact.create.data[0].id}/attributes`, {
       attributes: [
         a
@@ -749,6 +770,7 @@ module.exports = {
   arePhoneNumbersProper,
   addInvalidAttribute,
   addInvalidAttributeValue,
+  addNullAttributeValue,
   addInvalidPhoneNumber,
   addInvalidEmail,
   addEmail,
