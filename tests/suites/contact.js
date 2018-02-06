@@ -150,6 +150,7 @@ const addPhoneNumber = (cb) => {
   const a = {
     type: 'phone_number',
     phone_number: '+989028202678',
+    label: 'mobile',
     is_primary: true
   }
 
@@ -195,6 +196,7 @@ const addInvalidEmail = (cb) => {
 const addEmail = (cb) => {
   const a = {
     type: 'email',
+    label: 'Personal',
     email: 'test+email2@rechat.com'
   }
 
@@ -690,7 +692,10 @@ const updateContact = (cb) => {
 
   stage.stage = 'Customer'
   phone.phone_number = '+989028202679'
+  phone.label = 'Home-Line1'
+  phone.is_primary = true
   email.email = 'test+email3@rechat.com'
+  emails[0].is_primary = true
 
   return frisby.create('update a contact')
     .patch('/contacts/' + results.contact.create.data[0].id, {
@@ -724,6 +729,7 @@ const updateContact = (cb) => {
               phone_numbers: [
                 {},{},
                 {
+                  label: 'Home-Line1',
                   phone_number: '+989028202679'
                 }
               ]
