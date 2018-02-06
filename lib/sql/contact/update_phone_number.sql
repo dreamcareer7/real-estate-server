@@ -7,9 +7,9 @@ WITH u AS
 ua AS
 (
   UPDATE contacts_phone_numbers
-  SET is_primary = CASE WHEN $5 = True THEN False ELSE is_primary END,
+  SET is_primary = CASE WHEN $6 = True THEN False ELSE is_primary END,
       updated_at = CLOCK_TIMESTAMP()
-  WHERE id <> $2 AND is_primary <> CASE WHEN $5 = True THEN False ELSE is_primary END
+  WHERE id <> $2 AND is_primary <> CASE WHEN $6 = True THEN False ELSE is_primary END
 )
 UPDATE contacts_phone_numbers
 SET phone_number = $3,
