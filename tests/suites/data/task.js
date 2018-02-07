@@ -7,7 +7,19 @@ const task = {
   task_type: 'Todo'
 }
 
+const fixed_reminder = {
+  is_relative: false,
+  timestamp: task.due_date + 3600 * 1000
+}
+
+const relative_reminder = {
+  is_relative: true,
+  time: 1800
+}
+
 module.exports = {
   due_date,
-  task
+  task,
+  fixed_reminder,
+  relative_reminder,
 }

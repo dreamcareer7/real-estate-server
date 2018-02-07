@@ -1,5 +1,6 @@
 SELECT
-  reminders.*
+  reminders.*,
+  'reminder' as type
 FROM
   reminders
 JOIN unnest($1::uuid[]) WITH ORDINALITY t(did, ord) ON reminders.id = did

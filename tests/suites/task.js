@@ -1,7 +1,18 @@
 const uuid = require('node-uuid')
-const { task } = require('./data/task')
+const { task, fixed_reminder, relative_reminder } = require('./data/task')
 
 registerSuite('contact', ['create'])
+
+function fixResponseTaskToInput(task) {
+  if (task.contact)
+    task.contact = task.contact.id
+  if (task.deal)
+    task.deal = task.deal.id
+  if (task.listing)
+    task.listing = task.listing.id
+  if (task.assignee)
+    delete task.assignee
+}
 
 function create(cb) {
   return frisby.create('create a task')
@@ -33,11 +44,13 @@ function getForUser(cb) {
     .expectJSONLength('data', 1)
 }
 
-function update(cb) {
+function updateContact(cb) {
+  const data = Object.assign({}, results.task.create.data, {
+    contact: results.contact.create.data[0].id
+  })
+
   return frisby.create('update task contact')
-    .put(`/crm/tasks/${results.task.create.data.id}/?associations[]=crm_task.contact`, Object.assign({
-      contact: results.contact.create.data[0].id
-    }, task))
+    .put(`/crm/tasks/${results.task.create.data.id}/?associations[]=crm_task.contact`, data)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
@@ -58,6 +71,45 @@ function updateWithInvalidData(cb) {
     .put(`/crm/tasks/${results.task.create.data.id}/?associations[]=crm_task.contact`, data)
     .after(cb)
     .expectStatus(400)
+}
+
+function addFixedReminder(cb) {
+  const data = Object.assign({}, results.task.updateContact.data, {
+    reminders: [fixed_reminder]
+  })
+
+  fixResponseTaskToInput(data)
+
+  return frisby.create('add a fixed reminder')
+    .put(`/crm/tasks/${results.task.create.data.id}/?associations[]=crm_task.reminders`, data)
+    .after(cb)
+    .expectStatus(200)
+}
+
+function createAnotherTaskWithRelativeReminder(cb) {
+  const data = Object.assign({}, task, {
+    reminders: [relative_reminder]
+  })
+
+  return frisby.create('create a task with a relative reminder')
+    .post('/crm/tasks?associations[]=crm_task.reminders', data)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      data: Object.assign({}, data, {
+        reminders: [{
+          timestamp: data.due_date + relative_reminder.time * 1000
+        }]
+      })
+    })
+}
+
+function getAllReturnsAll(cb) {
+  return frisby.create('make sure we get everything without filters')
+    .get('/crm/tasks')
+    .after(cb)
+    .expectStatus(200)
+    .expectJSONLength('data', 2)
 }
 
 function getAllDoesntIgnoreFilters(cb) {
@@ -95,15 +147,18 @@ function makeSureTaskIsDeleted(cb) {
     .get('/crm/tasks')
     .after(cb)
     .expectStatus(200)
-    .expectJSONLength('data', 0)
+    .expectJSONLength('data', results.task.getAllReturnsAll.data.length - 1)
 }
 
 module.exports = {
   create,
   createWithInvalidData,
   getForUser,
-  update,
+  updateContact,
   updateWithInvalidData,
+  createAnotherTaskWithRelativeReminder,
+  addFixedReminder,
+  getAllReturnsAll,
   getAllDoesntIgnoreFilters,
   filterByContact,
   filterByInvalidDealId,
