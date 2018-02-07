@@ -210,5 +210,5 @@ declare namespace Contact {
 }
 
 declare namespace Orm {
-  function register(type: string, model_name: string);
+  function register(type: string, model_name: string, model?: any);
 }

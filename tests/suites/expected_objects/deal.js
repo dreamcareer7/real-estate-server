@@ -5,5 +5,4 @@ module.exports = {
   deal_type: String,
 
   mls_context: v.optionalObject,
-  form_context: v.optionalObject
 }
