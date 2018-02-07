@@ -122,7 +122,7 @@ function getAllDoesntIgnoreFilters(cb) {
 
 function filterByContact(cb) {
   return frisby.create('get tasks related to a contact')
-    .get(`/crm/tasks/?contact=${results.contact.create.data[0].id}&start=0&size=10`)
+    .get(`/crm/tasks/?contact=${results.contact.create.data[0].id}&start=0&limit=10`)
     .after(cb)
     .expectStatus(200)
     .expectJSONLength('data', 1)
