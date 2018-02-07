@@ -4,7 +4,6 @@ const task = {
   title: 'Hello, Task World!',
   description: 'This is a test task.',
   due_date: due_date.getTime(),
-  status: 'PENDING',
   task_type: 'Todo'
 }
 
