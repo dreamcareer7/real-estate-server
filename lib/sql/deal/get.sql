@@ -83,7 +83,13 @@ SELECT deals.*,
   (
     WITH c AS (
       SELECT
-        *,
+        id,
+        type,
+        key,
+        text,
+        number,
+        date,
+        context_type,
         EXTRACT(EPOCH FROM context.created_at) AS created_at,
         EXTRACT(EPOCH FROM context.approved_at) AS approved_at,
         EXTRACT(EPOCH FROM context.date) AS date
