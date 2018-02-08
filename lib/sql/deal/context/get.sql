@@ -3,7 +3,7 @@ SELECT
   'deal_context_item'::text as type,
   EXTRACT(EPOCH FROM context.created_at) AS created_at,
   EXTRACT(EPOCH FROM context.approved_at) AS approved_at,
-  EXTRACT(EPOCH FROM context.date) AS date
+  EXTRACT(EPOCH FROM context.date) AS date,
   deal_context.created_by,
   deal_context.approved_by,
   deal_context.key,
