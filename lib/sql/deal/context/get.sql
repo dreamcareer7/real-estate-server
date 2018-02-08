@@ -1,9 +1,9 @@
 SELECT
   deal_context.id,
   'deal_context_item'::text as type,
-  EXTRACT(EPOCH FROM created_at) AS created_at,
-  EXTRACT(EPOCH FROM approved_at) AS approved_at,
-  EXTRACT(EPOCH FROM date) AS date,
+  EXTRACT(EPOCH FROM deal_context.created_at) AS created_at,
+  EXTRACT(EPOCH FROM deal_context.approved_at) AS approved_at,
+  EXTRACT(EPOCH FROM deal_context.date) AS date,
   deal_context.created_by,
   deal_context.approved_by,
   deal_context.key,
