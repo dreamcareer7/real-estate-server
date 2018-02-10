@@ -51,6 +51,7 @@ const globals = [
   'Godaddy',
   'Form',
   'Deal',
+  'DealContext',
   'DealRole',
   'Envelope',
   'EnvelopeRecipient',

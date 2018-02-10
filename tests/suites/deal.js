@@ -460,6 +460,12 @@ const updateSubmission = cb => {
     .after(cb)
 }
 
+const getContextHistory = cb => {
+  return frisby.create('get context history on a deal')
+    .get(`/deals/${results.deal.create.data.id}/context/full_address`)
+    .after(cb)
+}
+
 const addActivity = cb => {
   const activity = {
     action: 'UserViewedFile',
@@ -597,6 +603,7 @@ module.exports = {
   makeSureAnotherTaskIsntReturnedInDealContext,
   setSubmission,
   updateSubmission,
+  getContextHistory,
   addActivity,
   getRevision,
   getTask,
