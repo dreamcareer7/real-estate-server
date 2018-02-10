@@ -9,6 +9,8 @@ const info_response = require('./expected_objects/info.js')
 const contact = require('./data/contact.js')
 
 const create = (cb) => {
+  const name = contact.attributes.names[0]
+
   return frisby.create('add a contact')
     .post('/contacts', {
       contacts: [
@@ -23,7 +25,10 @@ const create = (cb) => {
         {
           sub_contacts: [
             contact
-          ]
+          ],
+          summary: {
+            legal_full_name: name.title + ' ' + name.first_name + ' ' + name.legal_middle_name + ' ' + name.last_name
+          }
         }
       ]
     })
@@ -109,6 +114,22 @@ const addInvalidAttributeValue = (cb) => {
     .expectStatus(400)
 }
 
+const addNullAttributeValue = cb => {
+  const a = {
+    type: 'birthday',
+    birthday: null
+  }
+
+  return frisby.create('add a null attribute value')
+    .post(`/contacts/${results.contact.create.data[0].id}/attributes`, {
+      attributes: [
+        a
+      ]
+    })
+    .after(cb)
+    .expectStatus(400)
+}
+
 const addInvalidPhoneNumber = (cb) => {
   const a = {
     type: 'phone_number',
@@ -128,7 +149,9 @@ const addInvalidPhoneNumber = (cb) => {
 const addPhoneNumber = (cb) => {
   const a = {
     type: 'phone_number',
-    phone_number: '+989028202678'
+    phone_number: '+989028202678',
+    label: 'mobile',
+    is_primary: true
   }
 
   return frisby.create('add a valid phone number')
@@ -139,6 +162,19 @@ const addPhoneNumber = (cb) => {
     })
     .after(cb)
     .expectStatus(200)
+    .expectJSON({
+      data: {
+        sub_contacts: [{
+          attributes: {
+            phone_numbers: [
+              Object.assign({}, contact.attributes.phone_numbers[0], { is_primary: false }),
+              {is_primary: false},
+              a
+            ]
+          }
+        }]
+      }
+    })
 }
 
 const addInvalidEmail = (cb) => {
@@ -160,6 +196,7 @@ const addInvalidEmail = (cb) => {
 const addEmail = (cb) => {
   const a = {
     type: 'email',
+    label: 'Personal',
     email: 'test+email2@rechat.com'
   }
 
@@ -560,7 +597,7 @@ const search = (cb) => {
   results.user.create.data.type = 'compact_user'
 
   return frisby.create('search contacts and see if the one we added is there')
-    .get('/contacts/search?q[]=' + results.user.create.data.first_name)
+    .get('/contacts/search?q[]=' + contact.attributes.names[0].legal_middle_name)
     .after(cb)
     .expectStatus(200)
     .expectJSONLength('data', 1)
@@ -587,7 +624,29 @@ const getByTag = (cb) => {
     .after(cb)
     .expectStatus(200)
     .expectJSON({
-      code: 'OK'
+      code: 'OK',
+      info: {
+        count: 1
+      }
+    })
+}
+
+const getByAttribute = cb => {
+  return frisby.create('filter contacts by attribute')
+    .post('/contacts/filter', {
+      attribute: 'company',
+      values: [
+        'Google',
+        'Rechat'
+      ]
+    })
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      info: {
+        count: 1
+      }
     })
 }
 
@@ -633,7 +692,10 @@ const updateContact = (cb) => {
 
   stage.stage = 'Customer'
   phone.phone_number = '+989028202679'
+  phone.label = 'Home-Line1'
+  phone.is_primary = true
   email.email = 'test+email3@rechat.com'
+  emails[0].is_primary = true
 
   return frisby.create('update a contact')
     .patch('/contacts/' + results.contact.create.data[0].id, {
@@ -667,6 +729,7 @@ const updateContact = (cb) => {
               phone_numbers: [
                 {},{},
                 {
+                  label: 'Home-Line1',
                   phone_number: '+989028202679'
                 }
               ]
@@ -705,6 +768,7 @@ module.exports = {
   getNonExistingContact,
   getGibberishContact,
   getByTag,
+  getByAttribute,
   search,
   addAttribute,
   removeAttribute,
@@ -712,6 +776,7 @@ module.exports = {
   arePhoneNumbersProper,
   addInvalidAttribute,
   addInvalidAttributeValue,
+  addNullAttributeValue,
   addInvalidPhoneNumber,
   addInvalidEmail,
   addEmail,

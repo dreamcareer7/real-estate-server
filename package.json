@@ -11,7 +11,7 @@
     "coverage": "node_modules/istanbul/lib/cli.js cover --dir istanbul tests/run.js -- --curl --stop-on-fail --concurrency 20"
   },
   "engines": {
-    "node": "8.x"
+    "node": "9.x"
   },
   "author": "",
   "license": "ISC",
@@ -20,6 +20,7 @@
     "async": "^1.4.2",
     "aws-cloudfront-sign": "^2.2.0",
     "aws-sdk": "^2.168.0",
+    "base64url": "^2.0.0",
     "bcrypt": "^0.8.6",
     "body-parser": "^1.18.1",
     "busboy": "^0.2.14",
@@ -30,12 +31,14 @@
     "commander": "^2.12.2",
     "compression": "^1.7.0",
     "convert-units": "^2.3.1",
+    "csv-parse": "^2.0.0",
     "datadog-metrics": "^0.2.1",
     "deasync": "^0.1.0",
-    "debug": "^2.6.3",
+    "debug": "^3.1.0",
     "docker-names": "^1.0.0",
     "emojify.js": "^1.1.0",
     "eslint": "^4.13.1",
+    "exceljs": "^0.8.1",
     "exif-parser": "^0.1.12",
     "express": "^4.15.4",
     "forever": "^0.15.1",
@@ -62,7 +65,7 @@
     "passport-http-bearer": "^1.0.1",
     "passport-oauth2-client-password": "^0.1.2",
     "password-generator": "^2.0.2",
-    "pg": "^7.3.0",
+    "pg": "^7.4.1",
     "pluralize": "^3.1.0",
     "redis": "^2.8.0",
     "request": "^2.49.0",
@@ -74,6 +77,7 @@
     "socket.io-redis": "^5.2.0",
     "squel": "^5.11.1",
     "stripe": "^4.25.0",
+    "throng": "^4.0.0",
     "to-pascal-case": "^1.0.0",
     "to-snake-case": "^1.0.0",
     "twilio": "^2.5.1",
@@ -82,6 +86,7 @@
     "xml2js": "^0.4.19"
   },
   "devDependencies": {
+    "@types/node": "^9.3.0",
     "aglio": "^2.3.0",
     "bytes": "^2.5.0",
     "copy-dir": "0.0.8",
@@ -95,6 +100,7 @@
     "istanbul": "^1.1.0-alpha.1",
     "jasmine-node": "^1.14.5",
     "nock": "^9.1.4",
+    "prettyjson": "^1.2.1",
     "request-as-curl": "^0.1.0"
   }
 }

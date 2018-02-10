@@ -5,10 +5,10 @@ SELECT 'room' AS TYPE,
        EXTRACT(EPOCH FROM deleted_at) AS deleted_at,
        CASE WHEN $2::uuid IS NULL THEN 0
        ELSE
-       (
-         SELECT COUNT(*)::INT FROM notifications_users
-         WHERE notification IN (SELECT id FROM notifications WHERE room = rooms.id AND COALESCE(NOT ($2::uuid = ANY(exclude)), TRUE)) AND "user" = $2::uuid AND acked_at IS NULL
-       ) END AS new_notifications,
+        (
+          SELECT COUNT(*)::INT FROM get_new_notifications(ARRAY[rooms.id], $2)
+        )
+       END AS new_notifications,
        (
          SELECT id FROM messages WHERE room = rooms.id ORDER BY created_at DESC LIMIT 1
        ) AS latest_message,

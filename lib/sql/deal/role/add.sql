@@ -29,3 +29,5 @@ INSERT INTO deals_roles (
   $12,
   $13
 )
+
+RETURNING id

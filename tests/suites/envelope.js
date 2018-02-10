@@ -9,11 +9,11 @@ const setEnvelopeDetails = envelope => {
   envelope.deal = results.deal.create.data.id
 
   envelope.recipients.push({
-    role: results.deal.addRole.data.roles[0].id
+    role: results.deal.addRole.data[0].id
   })
 
   envelope.recipients.push({
-    role: results.deal.addRole.data.roles[1].id
+    role: results.deal.addRole.data[1].id
   })
 }
 
@@ -107,7 +107,7 @@ const getDocumentPdf = cb => {
 
 const sign = cb => {
   return frisby.create('Go to "sign envelope" page')
-    .get(`/envelopes/${results.envelope.create.data.id}/sign`)
+    .get(`/envelopes/${results.envelope.create.data.id}/sign/${results.envelope.create.data.recipients[0].id}`)
     .after(cb)
 }
 

@@ -62,7 +62,8 @@ const globals = [
   'DealChecklist',
   'BrandChecklist',
   'BrandRole',
-  'BrokerWolf'
+  'BrokerWolf',
+  'UserRole'
 ]
 
 const global_object = {}
@@ -90,7 +91,8 @@ module.exports = {
   'rules': {
     'indent': [
       'error',
-      2
+      2,
+      {"SwitchCase": 1}
     ],
     'linebreak-style': [
       'error',

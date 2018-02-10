@@ -1,6 +1,7 @@
 WITH verified AS (
     UPDATE users
-    SET phone_confirmed = TRUE
+    SET phone_confirmed = TRUE,
+        updated_at = CLOCK_TIMESTAMP()
     WHERE phone_number = $2 AND
     EXISTS (
         SELECT id
