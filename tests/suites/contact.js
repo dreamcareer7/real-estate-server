@@ -761,6 +761,14 @@ const updateContactProvideID = (cb) => {
     .expectStatus(400)
 }
 
+const downloadOutlookCSV = done => {
+  return frisby.create('download contacts as Outlook CSV')
+    .get('/contacts/outlook.csv')
+    .after(done)
+    .expectStatus(200)
+    .expectHeader('content-disposition', 'attachment; filename="contacts.csv"')
+}
+
 module.exports = {
   createWithID,
   create,
@@ -807,5 +815,6 @@ module.exports = {
   deleteContactWorked,
   getAllTags,
   updateContact,
-  updateContactProvideID
+  updateContactProvideID,
+  downloadOutlookCSV
 }
