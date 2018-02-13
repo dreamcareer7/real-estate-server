@@ -8,7 +8,12 @@ SELECT deals_checklists.*,
   terminated_at  IS NOT NULL is_terminated,
 
   (
-    SELECT ARRAY_AGG(id ORDER BY "order") FROM tasks WHERE checklist = deals_checklists.id AND tasks.deleted_at IS NULL
+    SELECT
+      ARRAY_AGG(id ORDER BY tasks.created_at)
+    FROM tasks
+    WHERE
+      checklist = deals_checklists.id
+      AND tasks.deleted_at IS NULL
   ) AS tasks,
 
   (
