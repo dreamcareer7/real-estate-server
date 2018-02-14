@@ -1,0 +1,1 @@
+SELECT DISTINCT "room" FROM rooms_users WHERE "user" = $1

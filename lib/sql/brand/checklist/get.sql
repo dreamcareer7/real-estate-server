@@ -4,7 +4,7 @@ SELECT brands_checklists.*,
 
   (
     SELECT
-      JSON_AGG(brands_checklists_tasks)
+      JSON_AGG(brands_checklists_tasks ORDER BY "order")
     FROM
       brands_checklists_tasks
     WHERE

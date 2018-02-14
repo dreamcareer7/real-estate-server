@@ -83,7 +83,13 @@ SELECT deals.*,
   (
     WITH c AS (
       SELECT
-        *,
+        id,
+        type,
+        key,
+        text,
+        number,
+        date,
+        context_type,
         EXTRACT(EPOCH FROM context.created_at) AS created_at,
         EXTRACT(EPOCH FROM context.approved_at) AS approved_at,
         EXTRACT(EPOCH FROM context.date) AS date
@@ -119,7 +125,7 @@ SELECT deals.*,
     JOIN brands_checklists ON deals_checklists.origin = brands_checklists.id
     WHERE
       deals_checklists.deal = deals.id
-      AND tasks.needs_attention IS TRUE
+      AND tasks.attention_requested_at IS NOT NULL
       AND tasks.deleted_at IS NULL
   ) as inboxes,
 
@@ -132,9 +138,22 @@ SELECT deals.*,
       deals_checklists.deal = deals.id
       AND deals_checklists.terminated_at  IS NULL
       AND deals_checklists.deactivated_at IS NULL
-      AND tasks.needs_attention IS TRUE
+      AND tasks.attention_requested_at IS NOt NULL
       AND tasks.deleted_at IS NULL
-  ) as need_attentions,
+  ) as attention_requests,
+
+  (
+    SELECT
+      EXTRACT(EPOCH FROM MIN(attention_requested_at))
+    FROM tasks
+    JOIN deals_checklists  ON tasks.checklist = deals_checklists.id
+    WHERE
+      deals_checklists.deal = deals.id
+      AND deals_checklists.terminated_at  IS NULL
+      AND deals_checklists.deactivated_at IS NULL
+      AND tasks.attention_requested_at IS NOT NULL
+      AND tasks.deleted_at IS NULL
+  ) as attention_requested_at,
 
   (
     SELECT count(*) > 0 FROM deals_checklists
