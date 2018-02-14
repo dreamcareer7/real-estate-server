@@ -8,6 +8,8 @@ registerSuite('room', ['create'])
 
 const saveAlert = cb => {
   const criteria = {
+    property_types: ['Residential'],
+    property_subtypes: ['RES-Condo', 'RES-Farm/Ranch', 'RES-Half Duplex', 'RES-Townhouse', 'RES-Single Family'],
     minimum_price: listing.listing.price - 1,
     maximum_price: listing.listing.price + 1,
   }
