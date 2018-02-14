@@ -393,7 +393,7 @@ const updateTasks = cb => {
     title: 'Bulk Test Title'
   }, {
     id: results.deal.addAnotherTask.data.id,
-    needs_attention: true
+    attention_requested: true
   }]
 
   return frisby.create('bulk edit tasks of a deal')
@@ -513,8 +513,8 @@ const setReview = cb => {
 
 const patchAttention = cb => {
   return frisby.create('Change the attention state of a task')
-    .patch(`/tasks/${results.deal.addTask.data.id}/needs_attention`, {
-      needs_attention: true
+    .patch(`/tasks/${results.deal.addTask.data.id}/attention_requested`, {
+      attention_requested: true
     })
     .after(cb)
 //     .expectStatus(200)
