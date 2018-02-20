@@ -10,5 +10,9 @@ SELECT
     FROM users
     JOIN brands_users ON users.id = brands_users.user
     JOIN brands_roles ON brands_users.role = brands_roles.id
-    WHERE users.id = $1
+    JOIN brands ON brands_roles.brand = brands.id
+    WHERE
+      users.id = $1
+      AND brands_roles.deleted_at IS NULL
+      AND brands.deleted_at IS NULL
   ) roles GROUP BY brand

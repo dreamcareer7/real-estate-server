@@ -7,6 +7,7 @@ const uuid = require('uuid')
 const contact_response = require('./expected_objects/contact.js')
 const info_response = require('./expected_objects/info.js')
 const contact = require('./data/contact.js')
+const manyContacts = require('./data/manyContacts.js')
 
 const create = (cb) => {
   const name = contact.attributes.names[0]
@@ -37,6 +38,14 @@ const create = (cb) => {
       data: [contact_response],
       info: info_response
     })
+}
+
+const createManyContacts = (cb) => {
+  return frisby.create('add many contacts')
+    .post('/contacts', manyContacts)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSONLength('data', manyContacts.contacts.length)
 }
 
 const createWithID = (cb) => {
@@ -761,6 +770,14 @@ const updateContactProvideID = (cb) => {
     .expectStatus(400)
 }
 
+const downloadOutlookCSV = done => {
+  return frisby.create('download contacts as Outlook CSV')
+    .get('/contacts/outlook.csv')
+    .after(done)
+    .expectStatus(200)
+    .expectHeader('content-disposition', 'attachment; filename="contacts.csv"')
+}
+
 module.exports = {
   createWithID,
   create,
@@ -807,5 +824,7 @@ module.exports = {
   deleteContactWorked,
   getAllTags,
   updateContact,
-  updateContactProvideID
+  updateContactProvideID,
+  downloadOutlookCSV,
+  createManyContacts
 }

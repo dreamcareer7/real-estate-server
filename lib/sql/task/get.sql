@@ -8,7 +8,11 @@ WITH tasks AS (
 
   (
     SELECT formstack_id FROM forms WHERE id = tasks.form
-  ) as formstack_id -- Fuck my life.
+  ) as formstack_id, -- Fuck my life.
+
+  (
+    attention_requested_at IS NOT NULL
+  ) as attention_requested
 
   FROM tasks
   WHERE id = ANY($1::uuid[])

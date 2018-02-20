@@ -134,7 +134,7 @@ then we consider that deal to have an active offer.
 ### Set review on a task [PUT /tasks/:task/review]
 <!-- include(tests/deal/setReview.md) -->
 
-### Set attention status on a task [PATCH /tasks/:task/needs_attention]
+### Set attention status on a task [PATCH /tasks/:task/attention_requested]
 <!-- include(tests/deal/patchAttention.md) -->
 
 ### Update a task [PATCH /tasks/:task]

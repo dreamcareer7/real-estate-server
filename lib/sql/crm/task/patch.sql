@@ -8,7 +8,8 @@ SET
     task_type=$7,
     contact=$8,
     deal=$9,
-    listing=$10
+    listing=$10,
+    updated_at=now()
 WHERE
     id = $1
     AND assignee = $2

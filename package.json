@@ -55,7 +55,7 @@
     "mailgun-js": "^0.7.7",
     "merge": "^1.2.0",
     "migratus": "^0.4.1",
-    "mime": "^1.6.0",
+    "mime": "^2.2.0",
     "mock-aws-s3": "^2.6.0",
     "moment": "^2.19.4",
     "moment-timezone": "^0.5.5",
