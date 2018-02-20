@@ -8,7 +8,8 @@
     "start": "node_modules/gulp/bin/gulp.js",
     "migration": "node_modules/migratus/bin/create --template scripts/migrate_template.js ",
     "docs": "node api_docs/index.js",
-    "coverage": "node_modules/istanbul/lib/cli.js cover --dir istanbul tests/run.js -- --curl --stop-on-fail --concurrency 20"
+    "coverage": "node_modules/istanbul/lib/cli.js cover --dir istanbul tests/run.js -- --curl --stop-on-fail --concurrency 20",
+    "unit": "./node_modules/.bin/intern"
   },
   "engines": {
     "node": "9.x"
@@ -47,6 +48,7 @@
     "google-libphonenumber": "^3.0.6",
     "googlemaps": "^1.0.1",
     "intercom-client": "^2.8.8",
+    "intern": "^4.0.0-rc.1",
     "kue": "^0.11.5",
     "linger": "0.0.3",
     "lodash": "^4.17.4",
