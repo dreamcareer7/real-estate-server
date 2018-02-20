@@ -45,7 +45,7 @@
     "forever": "^0.15.1",
     "formstack-web-api-node": "^0.1.0",
     "godaddy": "^0.2.1",
-    "google-libphonenumber": "^3.0.6",
+    "google-libphonenumber": "^3.0.12",
     "googlemaps": "^1.0.1",
     "intercom-client": "^2.8.8",
     "intern": "^4.0.0-rc.1",
