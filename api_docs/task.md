@@ -37,8 +37,14 @@ A _Task_ is an object, assigned to a user to do some job and has a certain due d
 ### Create a new task [POST /crm/tasks]
 <!-- include(tests/task/create.md) -->
 
-### Deleting a task [DELETE /crm/tasks/:id]
-<!-- include(tests/task/remove.md) -->
+### Create a new task with relative reminder [POST /crm/tasks]
+<!-- include(tests/task/createAnotherTaskWithRelativeReminder.md) -->
+
+### Update a task, add a fixed reminder [PUT /crm/tasks/:id]
+<!-- include(tests/task/addFixedReminder.md) -->
 
 ### Update a task [PUT /crm/tasks/:id]
 <!-- include(tests/task/updateContact.md) -->
+
+### Deleting a task [DELETE /crm/tasks/:id]
+<!-- include(tests/task/remove.md) -->
