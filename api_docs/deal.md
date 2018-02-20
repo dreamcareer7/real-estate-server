@@ -101,6 +101,9 @@ then we consider that deal to have an active offer.
 ### Set approval status for a context [PATCH /deals/:id/context/:cid/approved]
 <!-- include(tests/deal/approveContext.md) -->
 
+### Get history for a deal context on a deal [GET /deals/:id/context/:cname]
+<!-- include(tests/deal/getContextHistory.md) -->
+
 ### Add roles to a deal [POST /deals/:id/roles]
 <!-- include(tests/deal/addRole.md) -->
 
@@ -131,7 +134,7 @@ then we consider that deal to have an active offer.
 ### Set review on a task [PUT /tasks/:task/review]
 <!-- include(tests/deal/setReview.md) -->
 
-### Set attention status on a task [PATCH /tasks/:task/needs_attention]
+### Set attention status on a task [PATCH /tasks/:task/attention_requested]
 <!-- include(tests/deal/patchAttention.md) -->
 
 ### Update a task [PATCH /tasks/:task]

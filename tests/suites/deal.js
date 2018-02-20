@@ -393,7 +393,7 @@ const updateTasks = cb => {
     title: 'Bulk Test Title'
   }, {
     id: results.deal.addAnotherTask.data.id,
-    needs_attention: true
+    attention_requested: true
   }]
 
   return frisby.create('bulk edit tasks of a deal')
@@ -460,6 +460,12 @@ const updateSubmission = cb => {
     .after(cb)
 }
 
+const getContextHistory = cb => {
+  return frisby.create('get context history on a deal')
+    .get(`/deals/${results.deal.create.data.id}/context/full_address`)
+    .after(cb)
+}
+
 const addActivity = cb => {
   const activity = {
     action: 'UserViewedFile',
@@ -507,8 +513,8 @@ const setReview = cb => {
 
 const patchAttention = cb => {
   return frisby.create('Change the attention state of a task')
-    .patch(`/tasks/${results.deal.addTask.data.id}/needs_attention`, {
-      needs_attention: true
+    .patch(`/tasks/${results.deal.addTask.data.id}/attention_requested`, {
+      attention_requested: true
     })
     .after(cb)
 //     .expectStatus(200)
@@ -597,6 +603,7 @@ module.exports = {
   makeSureAnotherTaskIsntReturnedInDealContext,
   setSubmission,
   updateSubmission,
+  getContextHistory,
   addActivity,
   getRevision,
   getTask,

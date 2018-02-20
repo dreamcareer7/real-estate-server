@@ -7,6 +7,7 @@ const uuid = require('uuid')
 const contact_response = require('./expected_objects/contact.js')
 const info_response = require('./expected_objects/info.js')
 const contact = require('./data/contact.js')
+const manyContacts = require('./data/manyContacts.js')
 
 const create = (cb) => {
   const name = contact.attributes.names[0]
@@ -37,6 +38,14 @@ const create = (cb) => {
       data: [contact_response],
       info: info_response
     })
+}
+
+const createManyContacts = (cb) => {
+  return frisby.create('add many contacts')
+    .post('/contacts', manyContacts)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSONLength('data', manyContacts.contacts.length)
 }
 
 const createWithID = (cb) => {
@@ -150,6 +159,7 @@ const addPhoneNumber = (cb) => {
   const a = {
     type: 'phone_number',
     phone_number: '+989028202678',
+    label: 'mobile',
     is_primary: true
   }
 
@@ -195,6 +205,7 @@ const addInvalidEmail = (cb) => {
 const addEmail = (cb) => {
   const a = {
     type: 'email',
+    label: 'Personal',
     email: 'test+email2@rechat.com'
   }
 
@@ -690,7 +701,10 @@ const updateContact = (cb) => {
 
   stage.stage = 'Customer'
   phone.phone_number = '+989028202679'
+  phone.label = 'Home-Line1'
+  phone.is_primary = true
   email.email = 'test+email3@rechat.com'
+  emails[0].is_primary = true
 
   return frisby.create('update a contact')
     .patch('/contacts/' + results.contact.create.data[0].id, {
@@ -724,6 +738,7 @@ const updateContact = (cb) => {
               phone_numbers: [
                 {},{},
                 {
+                  label: 'Home-Line1',
                   phone_number: '+989028202679'
                 }
               ]
@@ -753,6 +768,14 @@ const updateContactProvideID = (cb) => {
     })
     .after(cb)
     .expectStatus(400)
+}
+
+const downloadOutlookCSV = done => {
+  return frisby.create('download contacts as Outlook CSV')
+    .get('/contacts/outlook.csv')
+    .after(done)
+    .expectStatus(200)
+    .expectHeader('content-disposition', 'attachment; filename="contacts.csv"')
 }
 
 module.exports = {
@@ -801,5 +824,7 @@ module.exports = {
   deleteContactWorked,
   getAllTags,
   updateContact,
-  updateContactProvideID
+  updateContactProvideID,
+  downloadOutlookCSV,
+  createManyContacts
 }

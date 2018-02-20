@@ -144,7 +144,8 @@ const markAsSeen404 = (cb) => {
 const recommendManually = (cb) => {
   return frisby.create('recommend manually')
     .post('/rooms/' + results.room.create.data.id + '/recs', {
-      mls_number: results.recommendation.markAsSeen.data.listing.mls_number
+      mls_number: results.recommendation.markAsSeen.data.listing.mls_number,
+      notification: true
     })
     .after(cb)
     .expectStatus(200)
