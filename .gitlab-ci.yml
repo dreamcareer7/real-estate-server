@@ -34,7 +34,7 @@ test:
     - docker run --link db:db --link redis:redis --link db:db $ENVS $CONTAINER_IMAGE npm run coverage
     - docker run --name html --link db:db --link redis:redis --link db:db $ENVS $CONTAINER_IMAGE npm run docs
     - rm -rf /var/www/docs/rechat/$CI_COMMIT_REF_NAME
-    - docker cp html:/tmp/rechat/$CI_COMMIT_REF_NAME /var/www/docs/rechat/$CI_COMMIT_REF_NAME
+    - docker cp html:/tmp/rechat /var/www/docs/rechat/$CI_COMMIT_REF_NAME
   artifacts:
     paths:
       - istanbul
