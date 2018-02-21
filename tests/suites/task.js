@@ -98,7 +98,7 @@ function createAnotherTaskWithRelativeReminder(cb) {
     .expectJSON({
       data: Object.assign({}, data, {
         reminders: [{
-          timestamp: data.due_date + relative_reminder.time * 1000
+          timestamp: data.due_date - relative_reminder.time
         }]
       })
     })

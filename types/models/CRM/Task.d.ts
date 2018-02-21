@@ -10,7 +10,7 @@ declare interface ITask {
   id?: UUID;
   title: string;
   description: string;
-  due_date: Date;
+  due_date: number;
   status: TTaskStatus;
   task_type: TTaskType;
 
@@ -30,7 +30,7 @@ declare interface ITaskInput {
   status: TTaskStatus;
   task_type: TTaskType;
 
-  reminders: IReminder[];
+  reminders: IReminderInput[];
 
   assignee: UUID;
   contact: UUID;
