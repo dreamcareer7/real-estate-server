@@ -7,6 +7,8 @@ const debug = require('debug')('rechat:workers')
 const queue = require('../lib/utils/queue.js')
 const async = require('async')
 
+const Task = require('../lib/models/CRM/Task.js')
+
 let i = 0
 
 const getDomain = (job, cb) => {
@@ -130,6 +132,7 @@ const sendNotifications = function () {
     async.series([
       Notification.sendForUnread,
       Message.sendEmailForUnread,
+      (cb) => Task.sendReminderNotifications().nodeify(),
     ], err => {
       if (err)
         return rollback(err)

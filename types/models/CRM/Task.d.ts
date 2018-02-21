@@ -7,13 +7,30 @@ declare type TTaskStatus = "PENDING" | "DONE";
 declare type TTaskType = "Call" | "Message" | "Todo";
 
 declare interface ITask {
+  id?: UUID;
   title: string;
   description: string;
   due_date: number;
   status: TTaskStatus;
   task_type: TTaskType;
 
-  reminders: IReminder[];
+  reminders: UUID[];
+
+  assignee: UUID;
+  contact: UUID;
+  deal: UUID;
+  listing: UUID;
+}
+
+declare interface ITaskInput {
+  id?: UUID;
+  title: string;
+  description: string;
+  due_date: number;
+  status: TTaskStatus;
+  task_type: TTaskType;
+
+  reminders: IReminderInput[];
 
   assignee: UUID;
   contact: UUID;
