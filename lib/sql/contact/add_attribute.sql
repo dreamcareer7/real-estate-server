@@ -8,7 +8,7 @@ WITH u AS
   UPDATE contacts_attributes
   SET is_primary = CASE WHEN $5 = True THEN False ELSE is_primary END,
       updated_at = CLOCK_TIMESTAMP()
-  WHERE is_primary <> CASE WHEN $5 = True THEN False ELSE is_primary END
+  WHERE attribute_type = $2 AND is_primary <> CASE WHEN $5 = True THEN False ELSE is_primary END
 )
 INSERT INTO contacts_attributes
 (
