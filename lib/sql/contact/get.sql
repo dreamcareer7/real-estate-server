@@ -17,16 +17,21 @@ SELECT id,
        (
          SELECT ARRAY_AGG(deal)
          FROM deals_roles
+         JOIN deals ON deals.id = deals_roles.deal
          WHERE
-         deals_roles.user IN(
-          SELECT "user" FROM get_contact_users(contacts.id)
-         )
-         OR
-         deals_roles.email IN(
-          SELECT email FROM contacts_emails
-          WHERE contacts.id = contacts_emails.contact
-          AND contacts_emails.deleted_at IS NULL
-         )
+         user_has_brand_access(contacts.user, deals.brand) = TRUE
+         AND
+         (
+          deals_roles.user IN(
+            SELECT "user" FROM get_contact_users(contacts.id)
+          )
+          OR
+          deals_roles.email IN(
+            SELECT email FROM contacts_emails
+            WHERE contacts.id = contacts_emails.contact
+            AND contacts_emails.deleted_at IS NULL
+          )
+        )
        ) AS deals,
        CASE WHEN COALESCE(ARRAY_LENGTH(refs::uuid[], 1), 0) > 1 THEN TRUE ELSE FALSE END AS merged,
        (
