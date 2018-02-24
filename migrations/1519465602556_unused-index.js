@@ -4,7 +4,7 @@ const async = require('async')
 const db = require('../lib/utils/db')
 
 const up = [
-  'DROP INDEX mls_data_created_at_idx'
+  'DROP INDEX IF EXISTS mls_data_created_at_idx'
 ]
 
 const down = []
