@@ -9,7 +9,9 @@
     "migration": "node_modules/migratus/bin/create --template scripts/migrate_template.js ",
     "docs": "node api_docs/index.js",
     "coverage": "node_modules/istanbul/lib/cli.js cover --dir istanbul tests/run.js -- --curl --stop-on-fail --concurrency 20",
-    "unit": "./node_modules/.bin/intern"
+    "unit": "./node_modules/.bin/intern",
+    "db:upgrade": "node ./scripts/migrate.js",
+    "heroku-postbuild": "npm run db:upgrade"
   },
   "engines": {
     "node": "9.x"
@@ -69,6 +71,7 @@
     "password-generator": "^2.0.2",
     "pg": "^7.4.1",
     "pluralize": "^3.1.0",
+    "raven": "^2.4.1",
     "redis": "^2.8.0",
     "request": "^2.49.0",
     "request-as-curl": "^0.1.0",

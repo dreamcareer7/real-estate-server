@@ -18,23 +18,23 @@ is_primary  | boolean   | Marks an attribute as primary. Used in certain cases
 
 #### Attribute types
 
-Name                  | Type                | Deep Validation | Description
---------------------- | :-----------------: | :--------------:| ----------
-email                 |    string           |       ✓         | Holds an email address
-phone_number          |    string           |       ✓         | Holds a phone number
-name                  |    NameAttribute    |                 | Name and legal name details
-birthday              |    date             |                 | A date for a birthday
-tag                   |    string           |                 | A string describing a contact category
-profile_image_url     |    url              |       ✓         | A url pointing to profile image of this contact
-cover_image_url       |    url              |       ✓         | A url pointing to cover image of this contact
-company               |    string           |                 | A string indicating a company name
-stage                 |    string           |       ✓         | Stage of this contact
-website               |    string           |                 | Any url related to the contact
-job_title             |    string           |                 | Contact's job title/position in company
-address               |    AddressAttribute |                 | An address for this contact
-source_type           |    string           |       ✓         | Source type of this contact
-note                  |    string           |                 | A small note for this contact
-relation              |  RelationAttribute  |                 | Marks relation between this contact and another
+Name                  | Type              | Deep Validation | Description
+--------------------- | :---------------: | :--------------:| ----------
+email                 |  string           |       ✓         | Holds an email address
+phone_number          |  string           |       ✓         | Holds a phone number
+name                  |  NameAttribute    |                 | Name and legal name details
+birthday              |  date             |                 | A date for a birthday
+tag                   |  string           |                 | A string describing a contact category
+profile_image_url     |  url              |       ✓         | A url pointing to profile image of this contact
+cover_image_url       |  url              |       ✓         | A url pointing to cover image of this contact
+company               |  string           |                 | A string indicating a company name
+stage                 |  string           |       ✓         | Stage of this contact
+website               |  string           |                 | Any url related to the contact
+job_title             |  string           |                 | Contact's job title/position in company
+address               |  AddressAttribute |                 | An address for this contact
+source_type           |  string           |       ✓         | Source type of this contact
+note                  |  string           |                 | A small note for this contact
+relation              |  UUID             |                 | Marks relation between this contact and another
 
 #### NameAttribute object
 
@@ -60,12 +60,16 @@ state               | string |
 country             | string |
 postal_code         | string |
 
-#### RelationAttribute object
+#### SourceType possible values
 
-Fields   | Type   |
----------|:------:|
-relation | string |
-contact  | uuid   |
+Values            |
+------------------|
+BrokerageWidget   |
+IOSAddressBook    |
+SharesRoom        |
+ExplicitlyCreated |
+External/Outlook  |
+CSV               |
 
 ### Get all user contacts [GET /contacts]
 <!-- include(tests/contact/getContacts.md) -->
