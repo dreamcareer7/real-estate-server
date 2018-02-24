@@ -61,7 +61,7 @@ module.exports = {
 
   create_notification: {
     handler: notification,
-    parallel: 100
+    parallel: 50
   },
 
   email_sane: {
@@ -81,41 +81,41 @@ module.exports = {
 
   'MLS.Unit': {
     handler: mls_unit,
-    parallel: 100
+    parallel: 50
   },
 
   'MLS.Room': {
     handler: mls_room,
-    parallel: 100
+    parallel: 50
   },
 
   'MLS.OpenHouse': {
     handler: mls_openhouse,
-    parallel: 100
+    parallel: 50
   },
 
   'MLS.Agent': {
     handler: mls_agent,
-    parallel: 100
+    parallel: 50
   },
 
   'MLS.Office': {
     handler: mls_office,
-    parallel: 100
+    parallel: 50
   },
 
   'MLS.Photo': {
     handler: mls_photo,
-    parallel: 100
+    parallel: 50
   },
 
   'MLS.Listing': {
     handler: mls_listing,
-    parallel: 100
+    parallel: 50
   },
 
   'MLS.Listing.Photos.Validate': {
     handler: mls_validate_listing_photos,
-    parallel: 100
+    parallel: 50
   }
 }
