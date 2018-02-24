@@ -63,6 +63,5 @@ FROM properties
 WHERE LENGTH(senior_high_school_name) > 0
 GROUP BY name, district;
 
-CREATE UNIQUE INDEX schools_unique ON schools(name, district, school_type);
 CREATE INDEX school_name_gin ON schools USING gin (name gin_trgm_ops);
 CREATE INDEX school_district_gin ON schools USING gin (district gin_trgm_ops);

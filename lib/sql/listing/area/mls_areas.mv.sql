@@ -24,11 +24,10 @@ joined AS (
 )
 
 SELECT
-  DISTINCT (
+  (
     '[' || number || ',' || parent || ']'
   ) as id,
 * FROM joined;
 
-CREATE UNIQUE INDEX mls_areas_id ON mls_areas(id);
 CREATE INDEX mls_areas_title_gin ON mls_areas USING gin (title gin_trgm_ops);
 CREATE INDEX mls_areas_parent    ON mls_areas (parent);
