@@ -6,4 +6,5 @@ FROM properties
 GROUP BY title
 ORDER BY title;
 
+CREATE UNIQUE INDEX subdivisions_title ON subdivisions(title);
 CREATE INDEX subdivision_title_gin ON subdivisions USING gin (title gin_trgm_ops);
