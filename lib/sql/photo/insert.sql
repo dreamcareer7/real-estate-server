@@ -18,8 +18,7 @@ ON CONFLICT (matrix_unique_id) DO UPDATE SET
   url = $4,
   "order" = $5,
   exif = $6,
-  revision = photos.revision + 1,
-  processed_at = CLOCK_TIMESTAMP()
+  revision = photos.revision + 1
 
 WHERE photos.matrix_unique_id = $1
 
