@@ -17,9 +17,7 @@ declare interface ITask {
   reminders: UUID[];
 
   assignee: UUID;
-  contact: UUID;
-  deal: UUID;
-  listing: UUID;
+  associations?: ICrmAssociation[];
 }
 
 declare interface ITaskInput {
@@ -31,18 +29,13 @@ declare interface ITaskInput {
   task_type: TTaskType;
 
   reminders: IReminderInput[];
+  associations?: ICrmAssociationInput[];
 
   assignee: UUID;
-  contact: UUID;
-  deal: UUID;
-  listing: UUID;
 }
 
-declare interface ITaskFilters {
+declare interface ITaskFilters extends IAssociationFilters {
   assignee?: UUID;
-  contact?: UUID;
-  deal?: UUID;
-  listing?: UUID;
   status?: TTaskStatus;
   task_type?: TTaskType;
   due_gte?: number;

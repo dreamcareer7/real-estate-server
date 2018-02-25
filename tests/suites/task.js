@@ -2,6 +2,7 @@ const uuid = require('node-uuid')
 const { task, fixed_reminder, relative_reminder } = require('./data/task')
 
 registerSuite('contact', ['create'])
+registerSuite('listing', ['by_mui'])
 
 function fixResponseTaskToInput(task) {
   if (task.contact)
@@ -15,18 +16,34 @@ function fixResponseTaskToInput(task) {
 }
 
 function create(cb) {
+  const data = Object.assign({}, task, {
+    associations: [{
+      association_type: 'listing',
+      listing: results.listing.by_mui.data.id
+    }]
+  })
+
+  const expected = Object.assign({}, data, {
+    associations: [{
+      association_type: 'listing'
+    }]
+  })
+
   return frisby.create('create a task')
-    .post('/crm/tasks', task)
+    .post('/crm/tasks?associations[]=crm_task.associations', data)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
-      data: task
+      data: expected
     })
 }
 
 function createWithInvalidData(cb) {
   const data = Object.assign({}, task, {
-    contact: '123123'
+    associations: [{
+      association_type: 'contact',
+      contact: '123123'
+    }]
   })
   delete data.title
 
@@ -38,43 +55,74 @@ function createWithInvalidData(cb) {
 
 function getForUser(cb) {
   return frisby.create('get list of assigned tasks')
-    .get('/crm/tasks')
+    .get('/crm/tasks/')
     .after(cb)
     .expectStatus(200)
     .expectJSONLength('data', 1)
 }
 
-function updateContact(cb) {
-  const data = Object.assign({}, results.task.create.data, {
-    contact: results.contact.create.data[0].id
-  })
-
-  return frisby.create('update task contact')
-    .put(`/crm/tasks/${results.task.create.data.id}/?associations[]=crm_task.contact`, data)
+function updateTask(cb) {
+  return frisby.create('update status of a task')
+    .put('/crm/tasks/' + results.task.create.data.id, Object.assign({}, task, {
+      status: 'DONE'
+    }))
     .after(cb)
     .expectStatus(200)
     .expectJSON({
       data: {
-        contact: {
-          id: results.contact.create.data[0].id
-        }
+        status: 'DONE'
       }
     })
 }
 
-function updateWithInvalidData(cb) {
-  const data = Object.assign({}, task, {
-    contact: '123123'
-  })
+function addContactAssociation(cb) {
+  const data = {
+    association_type: 'contact',
+    contact: results.contact.create.data[0].id
+  }
 
-  return frisby.create('update task fails with invalid contact id')
-    .put(`/crm/tasks/${results.task.create.data.id}/?associations[]=crm_task.contact`, data)
+  return frisby.create('add a contact association')
+    .post(`/crm/tasks/${results.task.create.data.id}/associations?associations[]=crm_task.associations`, data)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      data: {
+        associations: results.task.create.data.associations.concat([{
+          association_type: 'contact',
+          crm_task: results.task.create.data.id
+        }])
+      }
+    })
+}
+
+function addInvalidAssociation(cb) {
+  const data = {
+    association_type: 'contact',
+    contact: '123123'
+  }
+
+  return frisby.create('add association fails with invalid contact id')
+    .post(`/crm/tasks/${results.task.create.data.id}/associations?associations[]=crm_task.associations`, data)
     .after(cb)
     .expectStatus(400)
 }
 
+function removeContactAssociation(cb) {
+  const task_id = results.task.create.data.id
+  const association_id = results.task.addContactAssociation.data.associations.find(a => a.association_type === 'contact').id
+  return frisby.create('delete the contact association from task')
+    .delete(`/crm/tasks/${task_id}/associations/${association_id}?associations[]=crm_task.associations`)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      data: {
+        associations: results.task.create.data.associations.filter(a => a.association_type === 'listing')
+      }
+    })
+}
+
 function addFixedReminder(cb) {
-  const data = Object.assign({}, results.task.updateContact.data, {
+  const data = Object.assign({}, results.task.updateTask.data, {
     reminders: [fixed_reminder]
   })
 
@@ -106,7 +154,7 @@ function createAnotherTaskWithRelativeReminder(cb) {
 
 function getAllReturnsAll(cb) {
   return frisby.create('make sure we get everything without filters')
-    .get('/crm/tasks')
+    .get('/crm/tasks?associations[]=crm_task.associations')
     .after(cb)
     .expectStatus(200)
     .expectJSONLength('data', 2)
@@ -122,7 +170,7 @@ function getAllDoesntIgnoreFilters(cb) {
 
 function filterByContact(cb) {
   return frisby.create('get tasks related to a contact')
-    .get(`/crm/tasks/?contact=${results.contact.create.data[0].id}&start=0&limit=10`)
+    .get(`/crm/tasks/?contact=${results.contact.create.data[0].id}&start=0&limit=10&associations[]=crm_task.associations`)
     .after(cb)
     .expectStatus(200)
     .expectJSONLength('data', 1)
@@ -154,14 +202,16 @@ module.exports = {
   create,
   createWithInvalidData,
   getForUser,
-  updateContact,
-  updateWithInvalidData,
+  updateTask,
+  addContactAssociation,
+  addInvalidAssociation,
   createAnotherTaskWithRelativeReminder,
   addFixedReminder,
   getAllReturnsAll,
   getAllDoesntIgnoreFilters,
   filterByContact,
   filterByInvalidDealId,
+  removeContactAssociation,
   remove,
   makeSureTaskIsDeleted,
 }
