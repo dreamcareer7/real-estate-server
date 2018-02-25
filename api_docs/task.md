@@ -52,7 +52,7 @@ Reminders can be specified when creating the task.
 <!-- include(tests/task/createAnotherTaskWithRelativeReminder.md) -->
 
 ### Update a task [PUT /crm/tasks/:id]
-<!-- include(tests/task/updateContact.md) -->
+<!-- include(tests/task/updateTask.md) -->
 
 ### Update a task, add a fixed reminder [PUT /crm/tasks/:id]
 
