@@ -9,7 +9,7 @@ ua AS
   UPDATE contacts_attributes
   SET is_primary = CASE WHEN $6 = True THEN False ELSE is_primary END,
       updated_at = CLOCK_TIMESTAMP()
-  WHERE id <> $2 AND is_primary <> CASE WHEN $6 = True THEN False ELSE is_primary END
+  WHERE attribute_type = $3 AND id <> $2 AND is_primary <> CASE WHEN $6 = True THEN False ELSE is_primary END
 )
 UPDATE contacts_attributes
 SET attribute_type = $3,
