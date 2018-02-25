@@ -89,6 +89,7 @@
   },
   "devDependencies": {
     "@types/node": "^9.3.0",
+    "@types/pg": "^7.4.4",
     "aglio": "^2.3.0",
     "bytes": "^2.5.0",
     "copy-dir": "0.0.8",
