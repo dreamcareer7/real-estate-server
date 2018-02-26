@@ -4,6 +4,7 @@ const async = require('async')
 const db = require('../lib/utils/db')
 
 const up = [
+  'UPDATE crm_tasks SET updated_at = created_at WHERE updated_at IS NULL',
   'ALTER TABLE crm_tasks ALTER COLUMN updated_at SET NOT NULL',
   'ALTER TABLE crm_tasks ALTER COLUMN updated_at SET DEFAULT now()',
 ]
