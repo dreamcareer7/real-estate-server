@@ -14,9 +14,10 @@ A _Task_ is an object, assigned to a user to do some job and has a certain due d
 | due_date     | Timestamp     | ✓         | Should be UTC timestamp in ms.   |
 | assignee     | User UUID     |           | Unused. Set to the creator user. |
 | associations | Association[] |           | A related listing                |
-| status       | String Enum   | ✓         | Pending, Done, ...               |
-| task_type    | String Enum   | ✓         | Call, Message, To Do, ...        |
+| status       | String Enum   | ✓         | `PENDING`, `DONE`                |
+| task_type    | String Enum   | ✓         | `Call`, `Message`, `Todo`        |
 | reminders    | Reminder[]    |           |                                  |
+| type         | String        |           | `crm_task`                       |
 
 #### Reminder
 
@@ -25,16 +26,18 @@ A _Task_ is an object, assigned to a user to do some job and has a certain due d
 | time        | number    |           | Time offset from Task's `due_date`                                              |
 | timestamp   | timestamp |           | Fixed timestamp for the reminder                                                |
 | is_relative | boolean   | ✓         | If true, `timestamp` is calculated based on `time` offset and Task's `due_date` |
+| type        | string    |           | `reminder`                                                                      |
 
 #### Association
 
-| Field            | Type      | Required? | Notes                            |
-|------------------|-----------|:---------:|----------------------------------|
-| crm_task         | UUID      |           | Parent Task Id                   |
-| listing          | UUID      |           | Associated listing id            |
-| contact          | UUID      |           | Associated contact id            |
-| deal             | UUID      |           | Associated deal id               |
-| association_type | UUID      | ✓         | `deal` or `contact` or `listing` |
+| Field            | Type        | Required? | Notes                            |
+|------------------|-------------|:---------:|----------------------------------|
+| crm_task         | UUID        |           | Parent Task Id                   |
+| listing          | UUID        |           | Associated listing id            |
+| contact          | UUID        |           | Associated contact id            |
+| deal             | UUID        |           | Associated deal id               |
+| association_type | String Enum | ✓         | `deal` or `contact` or `listing` |
+| type             | String      |           | `crm_association`                |
 
 ### Get tasks [GET /crm/tasks]
 <!-- include(tests/task/getForUser.md) -->
