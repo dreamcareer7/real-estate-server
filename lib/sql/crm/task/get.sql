@@ -10,12 +10,14 @@ SELECT
     task_type,
     assignee,
     (
-        SELECT id FROM contacts WHERE id = crm_tasks.contact AND "user" = $2::uuid
-    ) as contact,
-    (
-        SELECT id FROM deals WHERE id = crm_tasks.deal AND brand IN (SELECT user_brands($2::uuid))
-    ) as deal,
-    listing,
+        SELECT
+            ARRAY_AGG(id ORDER BY "created_at")
+        FROM
+            crm_associations
+        WHERE
+            crm_task = crm_tasks.id
+            AND deleted_at IS NULL
+    ) as associations,
     (
         SELECT
             ARRAY_AGG(id ORDER BY "created_at")
