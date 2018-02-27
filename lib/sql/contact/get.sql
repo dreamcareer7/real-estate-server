@@ -1,15 +1,3 @@
-WITH d AS
-(
-  SELECT deals_roles.deal,
-         deals.created_by,
-         ARRAY_AGG(deals_roles."user") AS roles
-  FROM deals
-  INNER JOIN deals_roles
-    ON deals_roles.deal = deals.id
-  GROUP BY deals_roles.deal,
-           deals.created_by
-)
-
 SELECT id,
        'contact' AS type,
        EXTRACT(EPOCH FROM contacts.created_at) AS created_at,
@@ -28,26 +16,24 @@ SELECT id,
        ) AS brands,
        (
          SELECT ARRAY_AGG(deal)
-         FROM d
+         FROM deals_roles
+         -- TODO: SECURITY
+         -- There's a security bug in here. We should be careful as
+         -- this query returns deals that user doesn't have access to
          WHERE
-         (
-           (
-             CASE WHEN $2::uuid IS NOT NULL THEN
-             (
-               (d.created_by = $2::uuid) AND
-               (SELECT (SELECT ARRAY_AGG("user") FROM get_contact_users(contacts.id)) && d.roles)
-             )
-             ELSE FALSE END
-           ) OR
-           (
-             CASE WHEN $2::uuid IS NOT NULL THEN
-             (
-               (ARRAY[$2::uuid]::uuid[] <@ d.roles) AND
-               (SELECT (SELECT ARRAY_AGG("user") FROM get_contact_users(contacts.id)) && d.roles)
-             )
-             ELSE FALSE END
-           )
-         )
+          deals_roles.deleted_at IS NULL
+          AND
+          (
+            deals_roles.user IN(
+              SELECT "user" FROM get_contact_users(contacts.id)
+            )
+            OR
+            LOWER(deals_roles.email) IN(
+              SELECT LOWER(email) FROM contacts_emails
+              WHERE contacts.id = contacts_emails.contact
+              AND contacts_emails.deleted_at IS NULL
+            )
+          )
        ) AS deals,
        CASE WHEN COALESCE(ARRAY_LENGTH(refs::uuid[], 1), 0) > 1 THEN TRUE ELSE FALSE END AS merged,
        (

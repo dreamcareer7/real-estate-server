@@ -3,8 +3,12 @@
 const async = require('async')
 const db = require('../lib/utils/db')
 
+const fn = require('fs').readFileSync('./lib/sql/brand/role/user_has_brand_access.fn.sql').toString()
+
 const up = [
-  'DROP INDEX IF EXISTS mls_data_created_at_idx'
+  'BEGIN',
+  fn,
+  'COMMIT'
 ]
 
 const down = []
