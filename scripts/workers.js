@@ -6,6 +6,7 @@ const debug = require('debug')('rechat:workers')
 
 const queue = require('../lib/utils/queue.js')
 const async = require('async')
+const Raven = require('raven')
 
 const Task = require('../lib/models/CRM/Task.js')
 
@@ -54,6 +55,11 @@ const getDomain = (job, cb) => {
     })
 
     domain.on('error', function (e) {
+      if (e && !e.skip_sentry) {
+        debug('Reporting error to Sentry...')
+        Raven.captureException(e)
+      }
+
       delete e.domain
       delete e.domainThrown
       delete e.domainEmitter
