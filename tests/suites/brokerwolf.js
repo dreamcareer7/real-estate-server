@@ -44,7 +44,7 @@ const mapPropertyType = (cb) => {
     name: 'BrokerWolf.PropertyTypes.map',
     data: {
       brokerwolf_id: results.brokerwolf.syncPropertyTypes[0].Id,
-      property_type: 'Resale'
+      property_types: ['Resale']
     }
   })
   .after(cb)
@@ -66,7 +66,7 @@ const mapContactType = (cb) => {
     name: 'BrokerWolf.ContactTypes.map',
     data: {
       brokerwolf_id: results.brokerwolf.syncContactTypes[0].Id,
-      role: 'SellerAgent'
+      role: ['SellerAgent']
     }
   })
   .after(cb)

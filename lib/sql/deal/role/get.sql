@@ -15,7 +15,7 @@ SELECT deals_roles.*,
        bw.agent_id as agent_brokerwolf_id,
        (
         SELECT brokerwolf_id FROM brokerwolf_contact_types
-        WHERE role = deals_roles.role
+        WHERE roles @> ARRAY[deals_roles.role] AND roles IS NOT NULL
        ) as brokerwolf_contact_type
 FROM deals_roles
 LEFT JOIN users  ON deals_roles.user = users.id
