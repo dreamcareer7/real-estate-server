@@ -1,11 +1,14 @@
 require('colors')
 
+const config = require('../lib/config.js')
 const Domain = require('domain')
 const db = require('../lib/utils/db')
 const debug = require('debug')('rechat:workers')
 
 const queue = require('../lib/utils/queue.js')
 const async = require('async')
+
+Raven.config(config.sentry).install()
 
 const Task = require('../lib/models/CRM/Task.js')
 
