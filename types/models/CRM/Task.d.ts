@@ -7,25 +7,35 @@ declare type TTaskStatus = "PENDING" | "DONE";
 declare type TTaskType = "Call" | "Message" | "Todo";
 
 declare interface ITask {
+  id?: UUID;
   title: string;
   description: string;
   due_date: number;
   status: TTaskStatus;
   task_type: TTaskType;
 
-  reminders: IReminder[];
+  reminders: UUID[];
 
   assignee: UUID;
-  contact: UUID;
-  deal: UUID;
-  listing: UUID;
+  associations?: ICrmAssociation[];
 }
 
-declare interface ITaskFilters {
+declare interface ITaskInput {
+  id?: UUID;
+  title: string;
+  description: string;
+  due_date: number;
+  status: TTaskStatus;
+  task_type: TTaskType;
+
+  reminders: IReminderInput[];
+  associations?: ICrmAssociationInput[];
+
+  assignee: UUID;
+}
+
+declare interface ITaskFilters extends IAssociationFilters {
   assignee?: UUID;
-  contact?: UUID;
-  deal?: UUID;
-  listing?: UUID;
   status?: TTaskStatus;
   task_type?: TTaskType;
   due_gte?: number;

@@ -1,5 +1,5 @@
 const fs = require('fs')
-const _ = require('underscore')
+const _ = require('lodash')
 const copy = require('copy-dir')
 
 copy.sync(__dirname + '/../api_docs/', '/tmp/rechat')
@@ -35,20 +35,20 @@ Run.on('suite done', (suite) => {
   console.log('✓ ' + suite + '\n')
 })
 
-function findParams (url, params, qs) {
+function findParams (url, params, qs, docs) {
   const res = {}
 
   if (params)
     Object.keys(params).forEach((param_name) => {
-      res[param_name] = params[param_name]
+      res[param_name] = { example: params[param_name] }
     })
 
   if (qs)
     Object.keys(qs).forEach((q) => {
-      res[q] = qs[q]
+      res[q] = { example: qs[q] }
     })
-
-  return res
+  
+  return _.merge({}, docs, res)
 }
 
 function generate () {
@@ -56,7 +56,16 @@ function generate () {
     const suite = call.req.headers['x-suite']
     const test = call.req.headers['x-test-name']
 
-    const md = generateTest(call)
+    let doc_override
+
+    try {
+      doc_override = require(`./docs/${suite}.js`)
+    }
+    catch (ex) {
+      doc_override = {}
+    }
+
+    const md = generateTest(call, doc_override)
     try {
       fs.mkdirSync('/tmp/rechat/tests/' + suite)
     } catch (e) {
@@ -69,11 +78,11 @@ function generate () {
   process.exit()
 }
 
-function generateTest (call) {
-  return bf(cleanup(call.req, call.res, call.data))
+function generateTest (call, doc_override) {
+  return bf(cleanup(call.req, call.res, call.data, doc_override))
 }
 
-function cleanup (req, res, data) {
+function cleanup (req, res, data, doc_override) {
   const reqHeaders = _.clone(req.headers)
   const resHeaders = _.clone(res._headers);
 
@@ -96,11 +105,18 @@ function cleanup (req, res, data) {
     'content-length'
   ].map((h) => delete resHeaders[h])
 
+  const route_path = req.route ? req.route.path : null
+  if (!req.route) {
+    console.log(`Check ${req.headers['x-suite']} ${req.headers['x-test-name']}`.red)
+  }
+
+  const case_doc_override = _.get(doc_override, [`${req.method} ${route_path}`, 'params'])
+
   return {
     request: {
       method: req.method,
       headers: reqHeaders,
-      query: findParams(req.url, req.params, req.query),
+      query: findParams(req.url, req.params, req.query, case_doc_override),
       body: req.body ? JSON.stringify(req.body) : ''
     },
     response: {
@@ -122,9 +138,38 @@ function bf(pair) {
   if (req.query) {
     output += '+ Parameters' + newline
 
-    Object.keys(req.query).map(name => {
-      output += indent + '+ ' + name + ': `' + req.query[name] + '`' + newline
-    })
+    for (const name in req.query) {
+      output += indent + '+ ' + name
+
+      const example = req.query[name].example
+      if (example)
+        output += ': `' + example + '`'
+      
+      let type = req.query[name].type || 'string'
+      if (req.query[name].enum)
+        type = `enum[${type}]`
+
+      const required = req.query[name].required === false ? 'optional' : 'required'
+      output += ` (${type}, ${required})`
+
+      const description = req.query[name].description
+      if (description)
+        output += ' - ' + description + newline
+      
+      const default_value = req.query[name].default
+      if (default_value)
+        output += newline + indent + indent + '+ Default: `' + default_value + '`'
+      
+      if (Array.isArray(req.query[name].enum)) {
+        output += newline + indent + indent + '+ Members:'
+        for (const enum_item of req.query[name].enum) {
+          output += newline + indent + indent + indent + '+ `' + enum_item + '`'
+        }
+      }
+
+      if (!_.endsWith(output, newline))
+        output += newline
+    }
   }
 
   if (req.body !== '{}') {

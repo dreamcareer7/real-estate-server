@@ -9,6 +9,7 @@
     "migration": "node_modules/migratus/bin/create --template scripts/migrate_template.js ",
     "docs": "node api_docs/index.js",
     "coverage": "node_modules/istanbul/lib/cli.js cover --dir istanbul tests/run.js -- --curl --stop-on-fail --concurrency 20",
+    "unit": "./node_modules/.bin/intern",
     "db:upgrade": "node ./scripts/migrate.js",
     "heroku-postbuild": "npm run db:upgrade"
   },
@@ -49,6 +50,7 @@
     "google-libphonenumber": "^3.0.12",
     "googlemaps": "^1.0.1",
     "intercom-client": "^2.8.8",
+    "intern": "^4.0.0-rc.1",
     "kue": "^0.11.5",
     "lodash": "^4.17.4",
     "mailgun-js": "^0.7.7",
@@ -88,6 +90,7 @@
     "xml2js": "^0.4.19"
   },
   "devDependencies": {
+    "@types/lodash": "^4.14.104",
     "@types/node": "^9.3.0",
     "@types/pg": "^7.4.4",
     "aglio": "^2.3.0",

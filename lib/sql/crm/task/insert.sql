@@ -5,10 +5,7 @@ INSERT INTO crm_tasks (
     description,
     due_date,
     status,
-    task_type,
-    contact,
-    deal,
-    listing
+    task_type
 )
 VALUES (
     $1,
@@ -17,9 +14,6 @@ VALUES (
     $4,
     $5,
     $6,
-    $7,
-    $8,
-    $9,
-    $10
+    $7
 )
 RETURNING id

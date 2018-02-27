@@ -13,6 +13,6 @@ declare interface StringMap<T> {
 
 declare interface PaginationOptions {
     start?: number;
-    size?: number;
+    limit?: number;
     order?: string;
 }

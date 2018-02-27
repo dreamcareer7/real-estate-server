@@ -1,6 +1,7 @@
 node_modules
 package-lock.json
 docs
+!tests/docs
 istanbul
 lib/configs/development.js
 lib/configs/newrelic.js
