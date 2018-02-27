@@ -3,7 +3,6 @@ const db = require('../lib/utils/db')
 const deasync = require('deasync')
 require('colors')
 require('../lib/models/index.js')()
-const Raven = require('raven')
 
 const domain = Domain.create()
 
@@ -14,11 +13,6 @@ domain.jobs.push = job => Job.handle([job], () => {})
 domain.enter()
 
 process.on('uncaughtException', (e) => {
-  if (e && !e.skip_sentry) {
-    debug('Reporting error to Sentry...')
-    Raven.captureException(e)
-  }
-
   delete e.domain
   delete e.domainThrown
   delete e.domainEmitter
