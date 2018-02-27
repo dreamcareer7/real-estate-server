@@ -208,7 +208,3 @@ declare namespace Contact {
 
   let associations: StringMap<IModelAssociation>;
 }
-
-declare namespace Orm {
-  function register(type: string, model_name: string, model?: any);
-}
