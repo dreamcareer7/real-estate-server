@@ -63,6 +63,12 @@ All reminders should be sent when requesting an update. New ones will be added a
 
 <!-- include(tests/task/addFixedReminder.md) -->
 
+### Get all associated records [GET /crm/tasks/:id/associations]
+
+You don't need to pass `associations` for `crm_association` model in query args.
+
+<!-- include(tests/task/fetchAssociations.md) -->
+
 ### Add an associated record [POST /crm/tasks/:id/associations]
 <!-- include(tests/task/addContactAssociation.md) -->
 

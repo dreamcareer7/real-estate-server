@@ -95,6 +95,30 @@ function addContactAssociation(cb) {
     })
 }
 
+function fetchAssociations(cb) {
+  return frisby.create('fetch actual associated objects')
+    .get(`/crm/tasks/${results.task.create.data.id}/associations`)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      data: [{
+        type: 'crm_association',
+        crm_task: results.task.create.data.id,
+        association_type: 'listing',
+        listing: {
+          id: results.listing.by_mui.data.id
+        }
+      }, {
+        type: 'crm_association',
+        crm_task: results.task.create.data.id,
+        association_type: 'contact',
+        contact: {
+          id: results.contact.create.data[0].id
+        }
+      }]
+    })
+}
+
 function addInvalidAssociation(cb) {
   const data = {
     association_type: 'contact',
@@ -204,6 +228,7 @@ module.exports = {
   getForUser,
   updateTask,
   addContactAssociation,
+  fetchAssociations,
   addInvalidAssociation,
   createAnotherTaskWithRelativeReminder,
   addFixedReminder,
