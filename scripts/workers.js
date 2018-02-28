@@ -15,6 +15,17 @@ const Task = require('../lib/models/CRM/Task.js')
 
 let i = 0
 
+process.on('unhandledRejection', (err, promise) => {
+  console.trace('Unhanled Rejection on request', promise)
+  console.log('-----')
+  console.log(err)
+
+  if (err && !err.skip_sentry) {
+    debug('Reporting error to Sentry...')
+    Raven.captureException(err)
+  }
+})
+
 const getDomain = (job, cb) => {
   db.conn(function (err, conn, done) {
     if (err)
@@ -135,7 +146,7 @@ setTimeout(shutdown, 1000 * 60 * 3) // Restart every 3 minutes
 
 const sendNotifications = function () {
   getDomain({}, (err, {rollback, commit} = {}) => {
-    if (err)
+    if (err)      
       return rollback(err)
 
     async.series([
