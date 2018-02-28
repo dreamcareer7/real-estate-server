@@ -1,1 +1,1 @@
-SELECT brokerwolf_id FROM brokerwolf_property_types WHERE property_type = $1
+SELECT brokerwolf_id FROM brokerwolf_property_types WHERE property_type = ANY($1)

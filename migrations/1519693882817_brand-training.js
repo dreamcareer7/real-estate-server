@@ -4,10 +4,16 @@ const async = require('async')
 const db = require('../lib/utils/db')
 
 const up = [
-  'DROP INDEX IF EXISTS mls_data_created_at_idx'
+  'BEGIN',
+  'ALTER TABLE brands ADD training BOOLEAN NOT NULL DEFAULT false',
+  'COMMIT'
 ]
 
-const down = []
+const down = [
+  'BEGIN',
+  'ALTER TABLE brands DROP training',
+  'COMMIT'
+]
 
 const runAll = (sqls, next) => {
   db.conn((err, client) => {
