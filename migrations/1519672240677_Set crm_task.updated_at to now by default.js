@@ -4,14 +4,18 @@ const async = require('async')
 const db = require('../lib/utils/db')
 
 const up = [
+  'BEGIN',
   'UPDATE crm_tasks SET updated_at = created_at WHERE updated_at IS NULL',
   'ALTER TABLE crm_tasks ALTER COLUMN updated_at SET NOT NULL',
   'ALTER TABLE crm_tasks ALTER COLUMN updated_at SET DEFAULT now()',
+  'COMMIT'
 ]
 
 const down = [
+  'BEGIN',
   'ALTER TABLE crm_tasks ALTER COLUMN updated_at DROP DEFAULT',
   'ALTER TABLE crm_tasks ALTER COLUMN updated_at DROP NOT NULL',
+  'COMMIT'
 ]
 
 const runAll = (sqls, next) => {
