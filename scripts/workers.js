@@ -141,7 +141,7 @@ const sendNotifications = function () {
     async.series([
       Notification.sendForUnread,
       Message.sendEmailForUnread,
-      (cb) => Task.sendReminderNotifications().nodeify(),
+      (cb) => Task.sendReminderNotifications().nodeify(cb),
     ], err => {
       if (err)
         return rollback(err)
