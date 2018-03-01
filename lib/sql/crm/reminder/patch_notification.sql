@@ -3,5 +3,5 @@ UPDATE
 SET
   notification = $2
 WHERE
-  AND id = $1
-  AND deleted_at = NULL
+  id = $1
+  AND deleted_at IS NULL

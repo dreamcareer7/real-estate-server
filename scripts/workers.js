@@ -1,15 +1,30 @@
 require('colors')
 
+const config = require('../lib/config.js')
 const Domain = require('domain')
 const db = require('../lib/utils/db')
 const debug = require('debug')('rechat:workers')
 
 const queue = require('../lib/utils/queue.js')
 const async = require('async')
+const Raven = require('raven')
+
+Raven.config(config.sentry).install()
 
 const Task = require('../lib/models/CRM/Task.js')
 
 let i = 0
+
+process.on('unhandledRejection', (err, promise) => {
+  console.trace('Unhanled Rejection on request', promise)
+  console.log('-----')
+  console.log(err)
+
+  if (err && !err.skip_sentry) {
+    debug('Reporting error to Sentry...')
+    Raven.captureException(err)
+  }
+})
 
 const getDomain = (job, cb) => {
   db.conn(function (err, conn, done) {
@@ -54,6 +69,11 @@ const getDomain = (job, cb) => {
     })
 
     domain.on('error', function (e) {
+      if (e && !e.skip_sentry) {
+        debug('Reporting error to Sentry...')
+        Raven.captureException(e)
+      }
+
       delete e.domain
       delete e.domainThrown
       delete e.domainEmitter
@@ -126,13 +146,13 @@ setTimeout(shutdown, 1000 * 60 * 3) // Restart every 3 minutes
 
 const sendNotifications = function () {
   getDomain({}, (err, {rollback, commit} = {}) => {
-    if (err)
+    if (err)      
       return rollback(err)
 
     async.series([
       Notification.sendForUnread,
       Message.sendEmailForUnread,
-      (cb) => Task.sendReminderNotifications().nodeify(),
+      (cb) => Task.sendReminderNotifications().nodeify(cb),
     ], err => {
       if (err)
         return rollback(err)

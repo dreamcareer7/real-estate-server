@@ -55,7 +55,7 @@
     "lodash": "^4.17.4",
     "mailgun-js": "^0.7.7",
     "merge": "^1.2.0",
-    "migratus": "^0.4.1",
+    "migratus": "^0.4.2",
     "mime": "^2.2.0",
     "mock-aws-s3": "^2.6.0",
     "moment": "^2.19.4",
