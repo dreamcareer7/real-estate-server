@@ -11,7 +11,10 @@ const runAll = (sqls, next) => {
     if (err)
       return next(err)
 
-    async.eachSeries(sqls, client.query.bind(client), next)
+    async.eachSeries(sqls, client.query.bind(client), err => {
+      client.release()
+      next(err)
+    })
   })
 }
 
