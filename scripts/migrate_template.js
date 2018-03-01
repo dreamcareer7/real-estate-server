@@ -20,11 +20,14 @@ const down = [
 ]
 
 const runAll = (sqls, next) => {
-  db.conn((err, client) => {
+  db.conn((err, client, release) => {
     if (err)
       return next(err)
 
-    async.eachSeries(sqls, client.query.bind(client), next)
+    async.eachSeries(sqls, client.query.bind(client), err => {
+      release()
+      next(err)
+    })
   })
 }
 
