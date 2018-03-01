@@ -7,7 +7,7 @@ declare type TTaskStatus = "PENDING" | "DONE";
 declare type TTaskType = "Call" | "Message" | "Todo";
 
 declare interface ITask {
-  id?: UUID;
+  id: UUID;
   title: string;
   description: string;
   due_date: number;

@@ -11,6 +11,7 @@ const Raven = require('raven')
 
 Raven.config(config.sentry).install()
 
+const Notification = require('../lib/models/Notification.js')
 const Task = require('../lib/models/CRM/Task.js')
 
 let i = 0
@@ -144,6 +145,10 @@ process.once('SIGINT', shutdown)
 
 setTimeout(shutdown, 1000 * 60 * 3) // Restart every 3 minutes
 
+function nodeifyFn(fn) {
+  return (cb) => fn().nodeify(cb)
+}
+
 const sendNotifications = function () {
   getDomain({}, (err, {rollback, commit} = {}) => {
     if (err)      
@@ -152,7 +157,8 @@ const sendNotifications = function () {
     async.series([
       Notification.sendForUnread,
       Message.sendEmailForUnread,
-      (cb) => Task.sendReminderNotifications().nodeify(cb),
+      nodeifyFn(Task.sendReminderNotifications),
+      nodeifyFn(Task.sendTaskDueNotifications),
     ], err => {
       if (err)
         return rollback(err)
