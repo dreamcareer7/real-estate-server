@@ -1,1 +1,1 @@
-SELECT brokerwolf_id FROM brokerwolf_contact_types WHERE roles @> ARRAY[$1]
+SELECT brokerwolf_id FROM brokerwolf_contact_types WHERE roles @> ARRAY[$1]::deal_role[]

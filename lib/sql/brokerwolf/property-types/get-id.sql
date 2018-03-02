@@ -1,1 +1,1 @@
-SELECT brokerwolf_id FROM brokerwolf_property_types WHERE property_types @> ARRAY[$1]
+SELECT brokerwolf_id FROM brokerwolf_property_types WHERE property_types @> ARRAY[$1]::deal_property_type[]
