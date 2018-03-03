@@ -97,7 +97,7 @@ function addContactAssociation(cb) {
 
 function fetchAssociations(cb) {
   return frisby.create('fetch actual associated objects')
-    .get(`/crm/tasks/${results.task.create.data.id}/associations`)
+    .get(`/crm/tasks/${results.task.create.data.id}/associations?associations[]=crm_association.listing&associations[]=crm_association.contact`)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
@@ -106,6 +106,7 @@ function fetchAssociations(cb) {
         crm_task: results.task.create.data.id,
         association_type: 'listing',
         listing: {
+          type: 'listing',
           id: results.listing.by_mui.data.id
         }
       }, {
@@ -113,7 +114,10 @@ function fetchAssociations(cb) {
         crm_task: results.task.create.data.id,
         association_type: 'contact',
         contact: {
-          id: results.contact.create.data[0].id
+          id: results.contact.create.data[0].id,
+          type: 'contact',
+          users: undefined,
+          deals: undefined
         }
       }]
     })
