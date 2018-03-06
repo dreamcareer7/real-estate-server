@@ -187,6 +187,13 @@ function getAllReturnsAll(cb) {
     .expectJSONLength('data', 2)
 }
 
+function getSingleTask(cb) {
+  return frisby.create('make sure we get everything without filters')
+    .get(`/crm/tasks/${results.task.create.data.id}?associations[]=crm_task.associations`)
+    .after(cb)
+    .expectStatus(200)
+}
+
 function getAllDoesntIgnoreFilters(cb) {
   return frisby.create('make sure filters are not ignored')
     .get(`/crm/tasks/?contact=${uuid.v4()}`)
@@ -237,6 +244,7 @@ module.exports = {
   addFixedReminder,
   getAllReturnsAll,
   getAllDoesntIgnoreFilters,
+  getSingleTask,
   filterByContact,
   filterByInvalidDealId,
   removeContactAssociation,
