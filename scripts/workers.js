@@ -12,7 +12,7 @@ const Raven = require('raven')
 Raven.config(config.sentry).install()
 
 const Notification = require('../lib/models/Notification.js')
-const Task = require('../lib/models/CRM/Task.js')
+const TaskWorker = require('../lib/models/CRM/Task/worker')
 
 let i = 0
 
@@ -157,8 +157,8 @@ const sendNotifications = function () {
     async.series([
       Notification.sendForUnread,
       Message.sendEmailForUnread,
-      nodeifyFn(Task.sendReminderNotifications),
-      nodeifyFn(Task.sendTaskDueNotifications),
+      nodeifyFn(TaskWorker.sendReminderNotifications),
+      nodeifyFn(TaskWorker.sendTaskDueNotifications),
     ], err => {
       if (err)
         return rollback(err)

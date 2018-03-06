@@ -5,7 +5,7 @@ interface ITypedRef {
 
 declare type TTaskStatus = "PENDING" | "DONE";
 declare type TTaskType = "Call" | "Message" | "Todo";
-
+declare type TAccessActions = "read" | "update" | "delete"
 declare interface ITask {
   id: UUID;
   title: string;
