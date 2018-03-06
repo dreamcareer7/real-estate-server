@@ -82,15 +82,16 @@ function addContactAssociation(cb) {
   }
 
   return frisby.create('add a contact association')
-    .post(`/crm/tasks/${results.task.create.data.id}/associations?associations[]=crm_task.associations`, data)
+    .post(`/crm/tasks/${results.task.create.data.id}/associations?associations[]=crm_association.contact`, data)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
       data: {
-        associations: results.task.create.data.associations.concat([{
-          association_type: 'contact',
-          crm_task: results.task.create.data.id
-        }])
+        association_type: 'contact',
+        crm_task: results.task.create.data.id,
+        contact: {
+          id: results.contact.create.data[0].id
+        }
       }
     })
 }
@@ -137,16 +138,11 @@ function addInvalidAssociation(cb) {
 
 function removeContactAssociation(cb) {
   const task_id = results.task.create.data.id
-  const association_id = results.task.addContactAssociation.data.associations.find(a => a.association_type === 'contact').id
+  const association_id = results.task.addContactAssociation.data.id
   return frisby.create('delete the contact association from task')
     .delete(`/crm/tasks/${task_id}/associations/${association_id}?associations[]=crm_task.associations`)
     .after(cb)
-    .expectStatus(200)
-    .expectJSON({
-      data: {
-        associations: results.task.create.data.associations.filter(a => a.association_type === 'listing')
-      }
-    })
+    .expectStatus(204)
 }
 
 function addFixedReminder(cb) {
