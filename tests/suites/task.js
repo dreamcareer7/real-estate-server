@@ -26,7 +26,10 @@ function create(cb) {
   const expected = Object.assign({}, data, {
     associations: [{
       association_type: 'listing'
-    }]
+    }],
+    listings: [
+      results.listing.by_mui.data.id
+    ]
   })
 
   return frisby.create('create a task')

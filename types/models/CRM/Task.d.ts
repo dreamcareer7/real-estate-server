@@ -14,6 +14,10 @@ declare interface ITask {
   status: TTaskStatus;
   task_type: TTaskType;
 
+  contacts: UUID[];
+  deals: UUID[];
+  listings: UUID[];
+
   reminders: UUID[];
 
   assignee: UUID;
