@@ -1,5 +1,7 @@
+const config = require('../../lib/config.js')
 const uuid = require('node-uuid')
 const { task, fixed_reminder, relative_reminder } = require('./data/task')
+const anotherUser = require('./data/user')
 
 registerSuite('contact', ['create'])
 registerSuite('listing', ['by_mui'])
@@ -42,6 +44,18 @@ function create(cb) {
 }
 
 function createWithInvalidData(cb) {
+  const data = Object.assign({
+    title: 'Invalid task',
+    due_date: Date.now() + 3600
+  })
+
+  return frisby.create('create a task fails without all required fields')
+    .post('/crm/tasks', data)
+    .after(cb)
+    .expectStatus(400)
+}
+
+function createWithInvalidAssociationId(cb) {
   const data = Object.assign({}, task, {
     associations: [{
       association_type: 'contact',
@@ -50,7 +64,7 @@ function createWithInvalidData(cb) {
   })
   delete data.title
 
-  return frisby.create('create a task fails with invalid')
+  return frisby.create('create a task fails with invalid contact id')
     .post('/crm/tasks', data)
     .after(cb)
     .expectStatus(400)
@@ -163,6 +177,7 @@ function addFixedReminder(cb) {
 
 function createAnotherTaskWithRelativeReminder(cb) {
   const data = Object.assign({}, task, {
+    title: 'Task with relative reminder',
     reminders: [relative_reminder]
   })
 
@@ -187,8 +202,19 @@ function getAllReturnsAll(cb) {
     .expectJSONLength('data', 2)
 }
 
+function orderWorks(cb) {
+  return frisby.create('make sure order by due_date works')
+    .get('/crm/tasks?order=-due_date')
+    .after((err, res, json) => {
+      if (err)
+        return cb(err)
+      cb(undefined, res, json)
+    })
+    .expectStatus(200)
+}
+
 function getSingleTask(cb) {
-  return frisby.create('make sure we get everything without filters')
+  return frisby.create('make sure get a single task by id works')
     .get(`/crm/tasks/${results.task.create.data.id}?associations[]=crm_task.associations`)
     .after(cb)
     .expectStatus(200)
@@ -217,6 +243,30 @@ function filterByInvalidDealId(cb) {
     .expectStatus(400)
 }
 
+const loginAsAnotherUser = (cb) => {
+  const auth_params = {
+    client_id: config.tests.client_id,
+    client_secret: config.tests.client_secret,
+    username: anotherUser.email,
+    password: anotherUser.password,
+    grant_type: 'password'
+  }
+
+  return frisby.create('login as another user')
+    .post('/oauth2/token', auth_params)
+    .after(cb)
+    .expectStatus(200)
+}
+
+function anotherUserCantAccessCreatedTasks(cb) {
+  return frisby.create('another user cannot access tasks for the original user')
+    .get('/crm/tasks?associations[]=crm_task.associations')
+    .addHeader('Authorization', 'Bearer ' + results.task.loginAsAnotherUser.access_token)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSONLength('data', 0)
+}
+
 function remove(cb) {
   return frisby.create('delete a task')
     .delete(`/crm/tasks/${results.task.create.data.id}`)
@@ -235,6 +285,7 @@ function makeSureTaskIsDeleted(cb) {
 module.exports = {
   create,
   createWithInvalidData,
+  createWithInvalidAssociationId,
   getForUser,
   updateTask,
   addContactAssociation,
@@ -243,10 +294,13 @@ module.exports = {
   createAnotherTaskWithRelativeReminder,
   addFixedReminder,
   getAllReturnsAll,
+  orderWorks,
   getAllDoesntIgnoreFilters,
   getSingleTask,
   filterByContact,
   filterByInvalidDealId,
+  loginAsAnotherUser,
+  anotherUserCantAccessCreatedTasks,
   removeContactAssociation,
   remove,
   makeSureTaskIsDeleted,
