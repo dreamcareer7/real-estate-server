@@ -1,6 +1,12 @@
 module.exports = {
   'GET /crm/tasks': {
     params: {
+      q: {
+        type: 'string',
+        required: false,
+        description: 'String search in title and description',
+        example: 'Hello World'
+      },
       assignee: {
         type: 'string',
         required: false,

@@ -220,6 +220,31 @@ function getAllDoesntIgnoreFilters(cb) {
     .expectJSONLength('data', 0)
 }
 
+function stringFilter(cb) {
+  return frisby.create('string search in tasks')
+    .get(`/crm/tasks/?q=Hello World&start=0&limit=10&associations[]=crm_task.associations`)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      data: [{
+        id: results.task.create.data.id,
+        title: task.title
+      }]
+    })
+    .expectJSONLength('data', 1)
+}
+
+function stringFilterReturnsEmptyWhenNoResults(cb) {
+  return frisby.create('string search in tasks returns empty array when no tasks are found')
+    .get(`/crm/tasks/?q=Goodbye&start=0&limit=10&associations[]=crm_task.associations`)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      data: []
+    })
+    .expectJSONLength('data', 0)
+}
+
 function filterByContact(cb) {
   return frisby.create('get tasks related to a contact')
     .get(`/crm/tasks/?contact=${results.contact.create.data[0].id}&start=0&limit=10&associations[]=crm_task.associations`)
@@ -355,6 +380,8 @@ module.exports = {
   orderWorks,
   getAllDoesntIgnoreFilters,
   getSingleTask,
+  stringFilter,
+  stringFilterReturnsEmptyWhenNoResults,
   filterByContact,
   filterByInvalidDealId,
   loginAsAnotherUser,

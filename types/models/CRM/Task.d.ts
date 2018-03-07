@@ -39,6 +39,7 @@ declare interface ITaskInput {
 }
 
 declare interface ITaskFilters extends IAssociationFilters {
+  q?: string;
   assignee?: UUID;
   status?: TTaskStatus;
   task_type?: TTaskType;
