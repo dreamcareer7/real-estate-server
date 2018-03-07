@@ -31,6 +31,4 @@ SELECT
 FROM
     crm_tasks
 JOIN unnest($1::uuid[]) WITH ORDINALITY t(did, ord) ON crm_tasks.id = did
-WHERE
-    deleted_at IS NULL
 ORDER BY t.ord
