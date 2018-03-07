@@ -164,7 +164,8 @@ function removeContactAssociation(cb) {
 
 function addFixedReminder(cb) {
   const data = Object.assign({}, results.task.updateTask.data, {
-    reminders: [fixed_reminder]
+    reminders: [fixed_reminder],
+    description: undefined
   })
 
   fixResponseTaskToInput(data)
