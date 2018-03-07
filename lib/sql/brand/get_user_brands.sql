@@ -1,0 +1,1 @@
+SELECT user_brands($1) as id;
