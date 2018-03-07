@@ -191,6 +191,11 @@ function getAllReturnsAll(cb) {
     .get('/crm/tasks?associations[]=crm_task.associations')
     .after(cb)
     .expectStatus(200)
+    .expectJSON({
+      info: {
+        total: 2
+      }
+    })
     .expectJSONLength('data', 2)
 }
 
@@ -201,6 +206,11 @@ function orderWorks(cb) {
       if (err)
         return cb(err)
       cb(undefined, res, json)
+    })
+    .expectJSON({
+      info: {
+        total: 2
+      }
     })
     .expectStatus(200)
 }
@@ -217,6 +227,11 @@ function getAllDoesntIgnoreFilters(cb) {
     .get(`/crm/tasks/?contact=${uuid.v4()}`)
     .after(cb)
     .expectStatus(200)
+    .expectJSON({
+      info: {
+        total: 0
+      }
+    })
     .expectJSONLength('data', 0)
 }
 
@@ -240,7 +255,10 @@ function stringFilterReturnsEmptyWhenNoResults(cb) {
     .after(cb)
     .expectStatus(200)
     .expectJSON({
-      data: []
+      data: [],
+      info: {
+        total: 0
+      }
     })
     .expectJSONLength('data', 0)
 }
@@ -250,6 +268,11 @@ function filterByContact(cb) {
     .get(`/crm/tasks/?contact=${results.contact.create.data[0].id}&start=0&limit=10&associations[]=crm_task.associations`)
     .after(cb)
     .expectStatus(200)
+    .expectJSON({
+      info: {
+        total: 1
+      }
+    })
     .expectJSONLength('data', 1)
 }
 
