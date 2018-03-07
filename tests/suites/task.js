@@ -219,6 +219,11 @@ function getSingleTask(cb) {
   return frisby.create('make sure get a single task by id works')
     .get(`/crm/tasks/${results.task.create.data.id}?associations[]=crm_task.associations`)
     .after(cb)
+    .expectJSON({
+      data: {
+        id: results.task.create.data.id
+      }
+    })
     .expectStatus(200)
 }
 
@@ -233,6 +238,19 @@ function getAllDoesntIgnoreFilters(cb) {
       }
     })
     .expectJSONLength('data', 0)
+}
+
+function filterByDueDate(cb) {
+  return frisby.create('string search in tasks')
+    .get(`/crm/tasks/search/?due_gte=${results.task.create.data.created_at - 1}`)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      info: {
+        total: 2
+      }
+    })
+    .expectJSONLength('data', 2)
 }
 
 function stringFilter(cb) {
@@ -401,6 +419,7 @@ module.exports = {
   addFixedReminder,
   getAllReturnsAll,
   orderWorks,
+  filterByDueDate,
   getAllDoesntIgnoreFilters,
   getSingleTask,
   stringFilter,
