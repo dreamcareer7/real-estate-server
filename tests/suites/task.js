@@ -267,6 +267,20 @@ function stringFilter(cb) {
     .expectJSONLength('data', 1)
 }
 
+function stringFilterAcceptsMultipleQ(cb) {
+  return frisby.create('string search accepts multiple q arguments')
+    .get('/crm/tasks/search/?q[]=Hello&q[]=World&start=0&limit=10&associations[]=crm_task.associations')
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      data: [{
+        id: results.task.create.data.id,
+        title: task.title
+      }]
+    })
+    .expectJSONLength('data', 1)
+}
+
 function stringFilterReturnsEmptyWhenNoResults(cb) {
   return frisby.create('string search in tasks returns empty array when no tasks are found')
     .get(`/crm/tasks/search/?q=Goodbye&start=0&limit=10&associations[]=crm_task.associations`)
@@ -423,6 +437,7 @@ module.exports = {
   getAllDoesntIgnoreFilters,
   getSingleTask,
   stringFilter,
+  stringFilterAcceptsMultipleQ,
   stringFilterReturnsEmptyWhenNoResults,
   filterByContact,
   filterByInvalidDealId,
