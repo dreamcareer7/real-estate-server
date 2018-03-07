@@ -51,7 +51,7 @@ Depending on the `association_type` value, one of `deal`, `contact` or `listing`
 ### Get a task by id [GET /crm/tasks/:id]
 <!-- include(tests/task/getSingleTask.md) -->
 
-### Filter tasks [GET /crm/tasks]
+### Filter tasks [GET /crm/tasks/search]
 <!-- include(tests/task/filterByContact.md) -->
 
 ### Create a new task [POST /crm/tasks]

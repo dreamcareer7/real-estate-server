@@ -224,7 +224,7 @@ function getSingleTask(cb) {
 
 function getAllDoesntIgnoreFilters(cb) {
   return frisby.create('make sure filters are not ignored')
-    .get(`/crm/tasks/?contact=${uuid.v4()}`)
+    .get(`/crm/tasks/search/?contact=${uuid.v4()}`)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
@@ -237,7 +237,7 @@ function getAllDoesntIgnoreFilters(cb) {
 
 function stringFilter(cb) {
   return frisby.create('string search in tasks')
-    .get(`/crm/tasks/?q=Hello World&start=0&limit=10&associations[]=crm_task.associations`)
+    .get(`/crm/tasks/search/?q=Hello World&start=0&limit=10&associations[]=crm_task.associations`)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
@@ -251,7 +251,7 @@ function stringFilter(cb) {
 
 function stringFilterReturnsEmptyWhenNoResults(cb) {
   return frisby.create('string search in tasks returns empty array when no tasks are found')
-    .get(`/crm/tasks/?q=Goodbye&start=0&limit=10&associations[]=crm_task.associations`)
+    .get(`/crm/tasks/search/?q=Goodbye&start=0&limit=10&associations[]=crm_task.associations`)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
@@ -265,7 +265,7 @@ function stringFilterReturnsEmptyWhenNoResults(cb) {
 
 function filterByContact(cb) {
   return frisby.create('get tasks related to a contact')
-    .get(`/crm/tasks/?contact=${results.contact.create.data[0].id}&start=0&limit=10&associations[]=crm_task.associations`)
+    .get(`/crm/tasks/search/?contact=${results.contact.create.data[0].id}&start=0&limit=10&associations[]=crm_task.associations`)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
@@ -278,7 +278,7 @@ function filterByContact(cb) {
 
 function filterByInvalidDealId(cb) {
   return frisby.create('filtering tasks fails with an invalid deal id')
-    .get('/crm/tasks/?deal=123456')
+    .get('/crm/tasks/search/?deal=123456')
     .after(cb)
     .expectStatus(400)
 }
