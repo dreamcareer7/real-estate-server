@@ -1,6 +1,35 @@
 module.exports = {
   'GET /crm/tasks': {
+    start: {
+      type: 'number',
+      required: false,
+      default: 0
+    },
+    limit: {
+      type: 'number',
+      required: false,
+      default: 10
+    },
+    order: {
+      type: 'string',
+      required: false,
+      enum: [
+        'due_date',
+        'created_at',
+        'updated_at'
+      ],
+      example: '-due_date',
+      description: 'Put a minus sign before field name for descending order'
+    }
+  },
+  'GET /crm/tasks/search': {
     params: {
+      q: {
+        type: 'string',
+        required: false,
+        description: 'String search in title and description',
+        example: 'Hello World'
+      },
       assignee: {
         type: 'string',
         required: false,
@@ -51,6 +80,17 @@ module.exports = {
         required: false,
         default: 10
       },
+      order: {
+        type: 'string',
+        required: false,
+        enum: [
+          'due_date',
+          'created_at',
+          'updated_at'
+        ],
+        example: '-due_date',
+        description: 'Put a minus sign before field name for descending order'
+      }
     }
   }
 }

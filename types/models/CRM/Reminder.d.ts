@@ -15,7 +15,7 @@ interface IFixedReminder {
 declare type IReminderInput = IRelativeReminder | IFixedReminder;
 
 declare interface IReminder {
-  id?: UUID;
+  id: UUID;
 
   time?: number;
   timestamp?: number;

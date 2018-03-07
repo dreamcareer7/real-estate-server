@@ -16,3 +16,8 @@ declare interface PaginationOptions {
     limit?: number;
     order?: string;
 }
+
+declare interface IIdCollectionResponse {
+    total: number;
+    ids: UUID[];
+}
