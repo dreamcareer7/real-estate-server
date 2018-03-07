@@ -153,15 +153,6 @@ function addInvalidAssociation(cb) {
     .expectStatus(400)
 }
 
-function removeContactAssociation(cb) {
-  const task_id = results.task.create.data.id
-  const association_id = results.task.addContactAssociation.data.id
-  return frisby.create('delete the contact association from task')
-    .delete(`/crm/tasks/${task_id}/associations/${association_id}?associations[]=crm_task.associations`)
-    .after(cb)
-    .expectStatus(204)
-}
-
 function addFixedReminder(cb) {
   const data = Object.assign({}, results.task.updateTask.data, {
     reminders: [fixed_reminder],
@@ -268,6 +259,72 @@ function anotherUserCantAccessCreatedTasks(cb) {
     .expectJSONLength('data', 0)
 }
 
+function anotherUserCantAccessTaskById(cb) {
+  return frisby.create('another user cannot access a single task by id')
+    .get(`/crm/tasks/${results.task.create.data.id}?associations[]=crm_task.associations`)
+    .addHeader('Authorization', 'Bearer ' + results.task.loginAsAnotherUser.access_token)
+    .after(cb)
+    .expectStatus(404)
+}
+
+function anotherUserCantFetchAssociations(cb) {
+  return frisby.create('another user cannot fetch task associations')
+    .get(`/crm/tasks/${results.task.create.data.id}/associations?associations[]=crm_association.listing&associations[]=crm_association.contact`)
+    .addHeader('Authorization', 'Bearer ' + results.task.loginAsAnotherUser.access_token)
+    .after(cb)
+    .expectStatus(404)
+}
+
+function anotherUserCantEditCreatedTasks(cb) {
+  return frisby.create('another user cannot update tasks for the original user')
+    .put('/crm/tasks/' + results.task.create.data.id, Object.assign({}, task, {
+      status: 'PENDING'
+    }))
+    .addHeader('Authorization', 'Bearer ' + results.task.loginAsAnotherUser.access_token)
+    .after(cb)
+    .expectStatus(404)
+}
+
+function anotherUserCantAddContactAssociation(cb) {
+  const data = {
+    association_type: 'contact',
+    contact: results.contact.create.data[0].id
+  }
+
+  return frisby.create('another user cannot add a contact association')
+    .post(`/crm/tasks/${results.task.create.data.id}/associations?associations[]=crm_association.contact`, data)
+    .addHeader('Authorization', 'Bearer ' + results.task.loginAsAnotherUser.access_token)
+    .after(cb)
+    .expectStatus(404)
+}
+
+function anotherUserCantRemoveCreatedTasks(cb) {
+  return frisby.create('another user cannot remove tasks for the original user')
+    .delete(`/crm/tasks/${results.task.create.data.id}`)
+    .addHeader('Authorization', 'Bearer ' + results.task.loginAsAnotherUser.access_token)
+    .after(cb)
+    .expectStatus(404)
+}
+
+function anotherUserCantRemoveContactAssociation(cb) {
+  const task_id = results.task.create.data.id
+  const association_id = results.task.addContactAssociation.data.id
+  return frisby.create('another user cannot delete the contact association from task')
+    .delete(`/crm/tasks/${task_id}/associations/${association_id}?associations[]=crm_task.associations`)
+    .addHeader('Authorization', 'Bearer ' + results.task.loginAsAnotherUser.access_token)
+    .after(cb)
+    .expectStatus(404)
+}
+
+function removeContactAssociation(cb) {
+  const task_id = results.task.create.data.id
+  const association_id = results.task.addContactAssociation.data.id
+  return frisby.create('delete the contact association from task')
+    .delete(`/crm/tasks/${task_id}/associations/${association_id}?associations[]=crm_task.associations`)
+    .after(cb)
+    .expectStatus(204)
+}
+
 function remove(cb) {
   return frisby.create('delete a task')
     .delete(`/crm/tasks/${results.task.create.data.id}`)
@@ -302,6 +359,12 @@ module.exports = {
   filterByInvalidDealId,
   loginAsAnotherUser,
   anotherUserCantAccessCreatedTasks,
+  anotherUserCantAccessTaskById,
+  anotherUserCantFetchAssociations,
+  anotherUserCantEditCreatedTasks,
+  anotherUserCantAddContactAssociation,
+  anotherUserCantRemoveCreatedTasks,
+  anotherUserCantRemoveContactAssociation,
   removeContactAssociation,
   remove,
   makeSureTaskIsDeleted,
