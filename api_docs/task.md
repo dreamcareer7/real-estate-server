@@ -7,19 +7,23 @@ A _Task_ is an object, assigned to a user to do some job and has a certain due d
 
 #### Task
 
+Default value for `status` is `PENDING`
+
 | Field        | Type          | Required? | Notes                            |
 |--------------|---------------|:---------:|----------------------------------|
 | title        | String        | ✓         |                                  |
-| description  | String        | ✓         |                                  |
+| description  | String        |           |                                  |
 | due_date     | Timestamp     | ✓         | Should be UTC timestamp in ms.   |
 | assignee     | User UUID     |           | Unused. Set to the creator user. |
 | associations | Association[] |           | A related listing                |
-| status       | String Enum   | ✓         | `PENDING`, `DONE`                |
+| status       | String Enum   |           | `PENDING`, `DONE`                |
 | task_type    | String Enum   | ✓         | `Call`, `Message`, `Todo`        |
 | reminders    | Reminder[]    |           |                                  |
 | type         | String        |           | `crm_task`                       |
 
 #### Reminder
+
+Depending on the `is_relative` value, one of `time` or `timestamp` fields is also required.
 
 | Field       | Type      | Required? | Notes                                                                           |
 |-------------|-----------|:---------:|---------------------------------------------------------------------------------|
@@ -29,6 +33,8 @@ A _Task_ is an object, assigned to a user to do some job and has a certain due d
 | type        | string    |           | `reminder`                                                                      |
 
 #### Association
+
+Depending on the `association_type` value, one of `deal`, `contact` or `listing` is also required.
 
 | Field            | Type        | Required? | Notes                            |
 |------------------|-------------|:---------:|----------------------------------|
@@ -42,7 +48,10 @@ A _Task_ is an object, assigned to a user to do some job and has a certain due d
 ### Get tasks [GET /crm/tasks]
 <!-- include(tests/task/getForUser.md) -->
 
-### Filter tasks [GET /crm/tasks]
+### Get a task by id [GET /crm/tasks/:id]
+<!-- include(tests/task/getSingleTask.md) -->
+
+### Filter tasks [GET /crm/tasks/search]
 <!-- include(tests/task/filterByContact.md) -->
 
 ### Create a new task [POST /crm/tasks]
@@ -62,6 +71,12 @@ Reminders can be specified when creating the task.
 All reminders should be sent when requesting an update. New ones will be added and omitted ones are deleted.
 
 <!-- include(tests/task/addFixedReminder.md) -->
+
+### Get all associated records [GET /crm/tasks/:id/associations]
+
+You don't need to pass `associations` for `crm_association` model in query args.
+
+<!-- include(tests/task/fetchAssociations.md) -->
 
 ### Add an associated record [POST /crm/tasks/:id/associations]
 <!-- include(tests/task/addContactAssociation.md) -->
