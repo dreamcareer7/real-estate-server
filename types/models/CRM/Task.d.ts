@@ -20,6 +20,7 @@ declare interface ITask {
 
   reminders: UUID[];
 
+  notification?: UUID;
   assignee: UUID;
   associations?: ICrmAssociation[];
 }
