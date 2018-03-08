@@ -255,7 +255,7 @@ function filterByDueDate(cb) {
 
 function stringFilter(cb) {
   return frisby.create('string search in tasks')
-    .get(`/crm/tasks/search/?q=Hello World&start=0&limit=10&associations[]=crm_task.associations`)
+    .get('/crm/tasks/search/?q=Hello World&start=0&limit=10&associations[]=crm_task.associations')
     .after(cb)
     .expectStatus(200)
     .expectJSON({
@@ -283,7 +283,7 @@ function stringFilterAcceptsMultipleQ(cb) {
 
 function stringFilterReturnsEmptyWhenNoResults(cb) {
   return frisby.create('string search in tasks returns empty array when no tasks are found')
-    .get(`/crm/tasks/search/?q=Goodbye&start=0&limit=10&associations[]=crm_task.associations`)
+    .get('/crm/tasks/search/?q=Goodbye&start=0&limit=10&associations[]=crm_task.associations')
     .after(cb)
     .expectStatus(200)
     .expectJSON({
