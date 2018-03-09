@@ -33,6 +33,13 @@ const seenNotification = (cb) => {
     .expectStatus(204)
 }
 
+const ackSingleNotification = (cb) => {
+  return frisby.create('acknowledge a single notification')
+    .delete(`/notifications/${results.notification.getUsersNotification.data[0].id}`)
+    .after(cb)
+    .expectStatus(204)
+}
+
 const acknowledgeNotification = (cb) => {
   return frisby.create('acknowledge notification')
     .delete('/notifications/')
@@ -120,6 +127,7 @@ module.exports = {
   getNotification,
   getNotification404,
   seenNotification,
+  ackSingleNotification,
   acknowledgeNotification,
   acknowledgeRoomNotification,
   pushNotification,
