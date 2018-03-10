@@ -23,14 +23,11 @@ Default value for `status` is `PENDING`
 
 #### Reminder
 
-Depending on the `is_relative` value, one of `time` or `timestamp` fields is also required.
-
-| Field       | Type      | Required? | Notes                                                                           |
-|-------------|-----------|:---------:|---------------------------------------------------------------------------------|
-| time        | number    |           | Time offset from Task's `due_date`                                              |
-| timestamp   | timestamp |           | Fixed timestamp for the reminder                                                |
-| is_relative | boolean   | ✓         | If true, `timestamp` is calculated based on `time` offset and Task's `due_date` |
-| type        | string    |           | `reminder`                                                                      |
+| Field       | Type      | Required? | Notes                                               |
+|-------------|-----------|:---------:|-----------------------------------------------------|
+| timestamp   | timestamp | ✓         | Fixed timestamp for the reminder                    |
+| is_relative | boolean   | ✓         | Whether the reminder is relative to task's due date |
+| type        | string    |           | `reminder`                                          |
 
 #### Association
 

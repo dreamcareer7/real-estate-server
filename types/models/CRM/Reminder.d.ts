@@ -1,18 +1,9 @@
-interface IRelativeReminder {
-  id?: UUID;
-
-  time: number;
-  is_relative: true;
-}
-
-interface IFixedReminder {
+interface IReminderInput {
   id?: UUID;
 
   timestamp: number;
-  is_relative: false;
+  is_relative: true;
 }
-
-declare type IReminderInput = IRelativeReminder | IFixedReminder;
 
 declare interface IReminder {
   id: UUID;

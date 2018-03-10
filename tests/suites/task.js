@@ -180,7 +180,7 @@ function createAnotherTaskWithRelativeReminder(cb) {
     .expectJSON({
       data: Object.assign({}, data, {
         reminders: [{
-          timestamp: data.due_date - relative_reminder.time
+          timestamp: relative_reminder.timestamp
         }]
       })
     })
