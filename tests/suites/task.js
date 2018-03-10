@@ -156,14 +156,46 @@ function addInvalidAssociation(cb) {
 function addFixedReminder(cb) {
   const data = Object.assign({}, results.task.updateTask.data, {
     reminders: [fixed_reminder],
-    description: undefined
   })
+  delete data.description
 
   fixResponseTaskToInput(data)
 
   return frisby.create('add a fixed reminder')
     .put(`/crm/tasks/${results.task.create.data.id}/?associations[]=crm_task.reminders`, data)
     .after(cb)
+    .expectJSON({
+      data: {
+        reminders: [fixed_reminder],
+        description: undefined
+      }
+    })
+    .expectStatus(200)
+}
+
+function updateFixedReminder(cb) {
+  const oldReminder = results.task.addFixedReminder.data.reminders[0]
+  const reminder = Object.assign({
+    id: oldReminder.id,
+    is_relative: oldReminder.is_relative,
+    timestamp: new Date().getTime() / 1000 + 3600 * 24
+  })
+
+  const data = Object.assign({}, results.task.addFixedReminder.data, {
+    reminders: [reminder],
+  })
+  delete data.description
+
+  fixResponseTaskToInput(data)
+
+  return frisby.create('update the fixed reminder')
+    .put(`/crm/tasks/${results.task.create.data.id}/?associations[]=crm_task.reminders`, data)
+    .after(cb)
+    .expectJSON({
+      data: {
+        reminders: [reminder],
+      }
+    })
     .expectStatus(200)
 }
 
@@ -431,6 +463,7 @@ module.exports = {
   addInvalidAssociation,
   createAnotherTaskWithRelativeReminder,
   addFixedReminder,
+  updateFixedReminder,
   getAllReturnsAll,
   orderWorks,
   filterByDueDate,
