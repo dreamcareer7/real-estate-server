@@ -4,7 +4,6 @@ CREATE TABLE IF NOT EXISTS reminders (
     updated_at timestamptz NOT NULL DEFAULT NOW(),
     deleted_at timestamptz,
 
-    "time" int,
     is_relative boolean,
     "timestamp" timestamptz,
 
