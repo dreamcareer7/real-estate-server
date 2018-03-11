@@ -47,3 +47,9 @@ declare interface ITaskFilters extends IAssociationFilters {
   due_gte?: number;
   due_lte?: number;
 }
+
+declare interface IUnreadTaskNotification {
+  notification: UUID;
+  task: ITask;
+  user: IUser;
+}
