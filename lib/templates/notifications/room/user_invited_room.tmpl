@@ -2,8 +2,8 @@
 {% if target_user.id == auxiliary_object.id and transport == "SMS" %}
  {{subjects[0] | name}} has invited you to collaborate with them on Rechat. Install the app from the link below, or just reply back to this message to talk to them.
 {% elif target_user.id == auxiliary_object.id %}
- {{subjects[0] | name}} has invited you to join {% include 'lib/templates/notifications/logic/room_title_only.tmpl' %}.
+ {{subjects[0] | name}} has invited you to join.
 {% else %}
- {{subjects[0] | name}} invited {{misc.who(target_user, auxiliary_object)}} to join {% include 'lib/templates/notifications/logic/room_title_only.tmpl' %}.
+ {{subjects[0] | name}} invited {{misc.who(target_user, auxiliary_object)}} to join.
 {% endif %}
 {% if transport == "SMS" %} {{branch}}.{% endif %}
