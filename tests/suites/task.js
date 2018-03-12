@@ -156,14 +156,46 @@ function addInvalidAssociation(cb) {
 function addFixedReminder(cb) {
   const data = Object.assign({}, results.task.updateTask.data, {
     reminders: [fixed_reminder],
-    description: undefined
   })
+  delete data.description
 
   fixResponseTaskToInput(data)
 
   return frisby.create('add a fixed reminder')
     .put(`/crm/tasks/${results.task.create.data.id}/?associations[]=crm_task.reminders`, data)
     .after(cb)
+    .expectJSON({
+      data: {
+        reminders: [fixed_reminder],
+        description: undefined
+      }
+    })
+    .expectStatus(200)
+}
+
+function updateFixedReminder(cb) {
+  const oldReminder = results.task.addFixedReminder.data.reminders[0]
+  const reminder = Object.assign({
+    id: oldReminder.id,
+    is_relative: oldReminder.is_relative,
+    timestamp: new Date().getTime() / 1000 + 3600 * 24
+  })
+
+  const data = Object.assign({}, results.task.addFixedReminder.data, {
+    reminders: [reminder],
+  })
+  delete data.description
+
+  fixResponseTaskToInput(data)
+
+  return frisby.create('update the fixed reminder')
+    .put(`/crm/tasks/${results.task.create.data.id}/?associations[]=crm_task.reminders`, data)
+    .after(cb)
+    .expectJSON({
+      data: {
+        reminders: [reminder],
+      }
+    })
     .expectStatus(200)
 }
 
@@ -180,7 +212,7 @@ function createAnotherTaskWithRelativeReminder(cb) {
     .expectJSON({
       data: Object.assign({}, data, {
         reminders: [{
-          timestamp: data.due_date - relative_reminder.time
+          timestamp: relative_reminder.timestamp
         }]
       })
     })
@@ -255,7 +287,7 @@ function filterByDueDate(cb) {
 
 function stringFilter(cb) {
   return frisby.create('string search in tasks')
-    .get(`/crm/tasks/search/?q=Hello World&start=0&limit=10&associations[]=crm_task.associations`)
+    .get('/crm/tasks/search/?q=Hello World&start=0&limit=10&associations[]=crm_task.associations')
     .after(cb)
     .expectStatus(200)
     .expectJSON({
@@ -283,7 +315,7 @@ function stringFilterAcceptsMultipleQ(cb) {
 
 function stringFilterReturnsEmptyWhenNoResults(cb) {
   return frisby.create('string search in tasks returns empty array when no tasks are found')
-    .get(`/crm/tasks/search/?q=Goodbye&start=0&limit=10&associations[]=crm_task.associations`)
+    .get('/crm/tasks/search/?q=Goodbye&start=0&limit=10&associations[]=crm_task.associations')
     .after(cb)
     .expectStatus(200)
     .expectJSON({
@@ -431,6 +463,7 @@ module.exports = {
   addInvalidAssociation,
   createAnotherTaskWithRelativeReminder,
   addFixedReminder,
+  updateFixedReminder,
   getAllReturnsAll,
   orderWorks,
   filterByDueDate,

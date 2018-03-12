@@ -8,12 +8,12 @@ const task = {
 
 const fixed_reminder = {
   is_relative: false,
-  timestamp: task.due_date + 3600
+  timestamp: task.due_date - 3600
 }
 
 const relative_reminder = {
   is_relative: true,
-  time: 1800
+  timestamp: task.due_date - 7200
 }
 
 module.exports = {
