@@ -19,14 +19,13 @@ SELECT
             AND deleted_at IS NULL
     ) as associations,
     (
-        SELECT ARRAY_AGG(files_relations.file)
-        FROM files_relations
-        JOIN files
-            ON files_relations.file = files.id
-        WHERE files_relations.role = 'CrmTask'
-                AND files_relations.role_id = crm_tasks.id
-                AND files.deleted_at IS NULL
-                AND files_relations.deleted_at IS NULL 
+        SELECT
+            ARRAY_AGG(id)
+        FROM
+            role_files
+        WHERE
+            "role" = 'CrmTask'
+            AND role_id = crm_tasks.id
     ) as files,
     (
         SELECT
