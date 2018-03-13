@@ -19,6 +19,16 @@ SELECT
             AND deleted_at IS NULL
     ) as associations,
     (
+        SELECT ARRAY_AGG(files_relations.file)
+        FROM files_relations
+        JOIN files
+            ON files_relations.file = files.id
+        WHERE files_relations.role = 'CrmTask'
+                AND files_relations.role_id = crm_tasks.id
+                AND files.deleted_at IS NULL
+                AND files_relations.deleted_at IS NULL 
+    ) as files,
+    (
         SELECT
             ARRAY_AGG(id ORDER BY "created_at")
         FROM
@@ -31,6 +41,4 @@ SELECT
 FROM
     crm_tasks
 JOIN unnest($1::uuid[]) WITH ORDINALITY t(did, ord) ON crm_tasks.id = did
-WHERE
-    deleted_at IS NULL
 ORDER BY t.ord

@@ -11,7 +11,12 @@ const Raven = require('raven')
 
 Raven.config(config.sentry).install()
 
-const Task = require('../lib/models/CRM/Task.js')
+const Job = require('../lib/models/Job')
+const Metric = require('../lib/models/Metric')
+const Slack = require('../lib/models/Slack')
+
+const Notification = require('../lib/models/Notification')
+const TaskWorker = require('../lib/models/CRM/Task/worker')
 
 let i = 0
 
@@ -144,15 +149,27 @@ process.once('SIGINT', shutdown)
 
 setTimeout(shutdown, 1000 * 60 * 3) // Restart every 3 minutes
 
+function nodeifyFn(fn) {
+  return (cb) => fn().nodeify(cb)
+}
+
 const sendNotifications = function () {
   getDomain({}, (err, {rollback, commit} = {}) => {
-    if (err)      
-      return rollback(err)
+    if (err) {
+      if (!err.skip_sentry) {
+        debug('Reporting error to Sentry...')
+        Raven.captureException(err)
+      }
+
+      if (typeof rollback === 'function')
+        return rollback(err)
+    }
 
     async.series([
       Notification.sendForUnread,
       Message.sendEmailForUnread,
-      (cb) => Task.sendReminderNotifications().nodeify(cb),
+      nodeifyFn(TaskWorker.sendReminderNotifications),
+      nodeifyFn(TaskWorker.sendTaskDueNotifications),
     ], err => {
       if (err)
         return rollback(err)

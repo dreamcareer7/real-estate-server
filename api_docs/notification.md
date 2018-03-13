@@ -19,3 +19,6 @@ to users so that they can be on top of everything.
 
 ### Acknowledge all personal notifications and reset the badge count [DELETE /notifications]
 <!-- include(tests/notification/acknowledgeNotification.md) -->
+
+### Acknowledge single personal notifications and decrease the badge count [DELETE /notifications/:id]
+<!-- include(tests/notification/ackSingleNotification.md) -->

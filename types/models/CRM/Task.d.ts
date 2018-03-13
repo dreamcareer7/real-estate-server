@@ -5,17 +5,22 @@ interface ITypedRef {
 
 declare type TTaskStatus = "PENDING" | "DONE";
 declare type TTaskType = "Call" | "Message" | "Todo";
-
+declare type TAccessActions = "read" | "update" | "delete"
 declare interface ITask {
-  id?: UUID;
+  id: UUID;
   title: string;
   description: string;
   due_date: number;
   status: TTaskStatus;
   task_type: TTaskType;
 
+  contacts: UUID[];
+  deals: UUID[];
+  listings: UUID[];
+
   reminders: UUID[];
 
+  notification?: UUID;
   assignee: UUID;
   associations?: ICrmAssociation[];
 }
@@ -35,6 +40,7 @@ declare interface ITaskInput {
 }
 
 declare interface ITaskFilters extends IAssociationFilters {
+  q?: string;
   assignee?: UUID;
   status?: TTaskStatus;
   task_type?: TTaskType;
