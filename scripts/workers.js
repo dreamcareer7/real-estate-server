@@ -147,7 +147,7 @@ const shutdown = () => {
 process.once('SIGTERM', shutdown)
 process.once('SIGINT', shutdown)
 
-setTimeout(shutdown, 1000 * 60 * 3) // Restart every 3 minutes
+setTimeout(shutdown, 1000 * 60 * 10) // Restart every 3 minutes
 
 function nodeifyFn(fn) {
   return (cb) => fn().nodeify(cb)
