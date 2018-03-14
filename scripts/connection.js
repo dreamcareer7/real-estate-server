@@ -15,7 +15,7 @@ domain.enter()
 
 process.on('uncaughtException', (e) => {
   if (e && !e.skip_sentry) {
-    debug('Reporting error to Sentry...')
+    console.log('Reporting error to Sentry...')
     Raven.captureException(e)
   }
 
