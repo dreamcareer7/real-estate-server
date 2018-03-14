@@ -8,8 +8,7 @@ SELECT
 FROM
   unread_notifications
 WHERE
-  specific = $1
-  AND created_at >= NOW() - $1
+  created_at >= NOW() - $1
   AND object_class = 'CrmTask'::notification_object_class
   AND (
     subject_class = 'CrmTask'::notification_object_class
