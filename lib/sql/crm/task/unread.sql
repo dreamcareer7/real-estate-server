@@ -2,7 +2,7 @@ SELECT
   id,
   "object",
   'CrmTask' as object_class,
-  "subject" as "user",
+  "user" as "subject",
   'User' as subject_class,
   'notification' as "type"
 FROM
