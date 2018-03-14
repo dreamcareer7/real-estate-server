@@ -1,9 +1,9 @@
+const intern = require('intern')
 const { registerSuite } = intern.getInterface('object')
-const {expect} =  intern.getPlugin('chai')
+const {expect} = intern.getPlugin('chai')
 const gData = require('./data')
 const diff = require('../../../lib/models/MSGraph/find-diff')
 const dHelper = require('../../../lib/models/MSGraph/msgraph-data-helper')
-const _ = require('lodash')
 
 let converted
 
