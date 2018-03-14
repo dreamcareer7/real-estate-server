@@ -1,4 +1,4 @@
-type TCreateError = (spec: Error, details?: object | string) => Error;
+type TCreateError = (spec: Error | string, details?: object | string) => Error;
 
 declare interface ErrorConstructor {
   create: TCreateError;

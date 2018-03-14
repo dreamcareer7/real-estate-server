@@ -5,5 +5,6 @@ declare module "domain" {
     jobs: any[];
     i: number;
     db: Client;
+    brand: IBrand;
   }
 }

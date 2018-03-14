@@ -1,5 +1,6 @@
 INSERT INTO crm_tasks (
     created_by,
+    brand,
     assignee,
     title,
     description,
@@ -14,6 +15,7 @@ VALUES (
     $4,
     $5,
     $6,
-    $7
+    $7,
+    $8
 )
 RETURNING id

@@ -36,6 +36,8 @@ SELECT
             task = crm_tasks.id
             AND deleted_at IS NULL
     ) as reminders,
+    brand,
+    created_by,
     'crm_task' as "type"
 FROM
     crm_tasks
