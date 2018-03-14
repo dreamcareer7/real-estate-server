@@ -1,9 +1,14 @@
-WITH ta as (
-  SELECT crm_task, activity
+WITH aa as (
+  SELECT activity
   FROM crm_associations
-  WHERE contact = ANY($1) AND deleted_at IS NULL
+  WHERE contact = ANY($1) AND activity IS NOT NULL AND deleted_at IS NULL
+),
+ta as (
+  SELECT crm_task
+  FROM crm_associations
+  WHERE contact = ANY($1) AND crm_task IS NOT NULL AND deleted_at IS NULL
 )
-SELECT * FROM (
+SELECT *, (count(*) over())::INT as total FROM (
   (
     SELECT id, due_date as "timestamp", 'crm_task' as "type"
     FROM crm_tasks
@@ -13,7 +18,7 @@ SELECT * FROM (
   (
     SELECT id, created_at as "timestamp", 'activity' as "type"
     FROM activities
-    WHERE (reference = ANY($1) OR id = ANY(SELECT activity FROM ta))
+    WHERE (reference = ANY($1) OR id = ANY(SELECT activity FROM aa))
           AND is_visible = TRUE
           AND deleted_at IS NULL
   )

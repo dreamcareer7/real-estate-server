@@ -14,15 +14,18 @@ declare interface ITask {
   status: TTaskStatus;
   task_type: TTaskType;
 
+  notification?: UUID;
+  assignee: UUID;
+  brand: UUID;
+  created_by: UUID;
+
   contacts: UUID[];
   deals: UUID[];
   listings: UUID[];
 
   reminders: UUID[];
-
-  notification?: UUID;
-  assignee: UUID;
   associations?: ICrmAssociation[];
+  files?: any[];
 }
 
 declare interface ITaskInput {
@@ -46,4 +49,10 @@ declare interface ITaskFilters extends IAssociationFilters {
   task_type?: TTaskType;
   due_gte?: number;
   due_lte?: number;
+}
+
+declare interface IUnreadTaskNotification {
+  notification: UUID;
+  task: ITask;
+  user: IUser;
 }
