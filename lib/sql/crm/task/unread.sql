@@ -1,8 +1,10 @@
 SELECT
-  id as "notification",
-  "object" as task,
-  'unread_task_notification' as "type",
-  "user"
+  id,
+  "object",
+  'CrmTask' as object_class,
+  "subject" as "user",
+  'User' as subject_class,
+  'notification' as "type"
 FROM
   unread_notifications
 WHERE
