@@ -8,7 +8,7 @@ ta as (
   FROM crm_associations
   WHERE contact = ANY($1) AND crm_task IS NOT NULL AND deleted_at IS NULL
 )
-SELECT *, count(*) over() as total FROM (
+SELECT *, (count(*) over())::INT as total FROM (
   (
     SELECT id, due_date as "timestamp", 'crm_task' as "type"
     FROM crm_tasks
