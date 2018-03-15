@@ -6,7 +6,7 @@ declare interface INotificationInput {
   exclude?: UUID[];
   specific?: UUID;
 
-  message: string;
+  message?: string;
   image_url?: string
 
   notified_user?: UUID;
