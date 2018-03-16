@@ -5,7 +5,9 @@ const config = require('./lib/config.js')
 
 const {app, start} = require('./lib/bootstrap.js')
 
-Raven.config(config.sentry).install()
+Raven.config(config.sentry, {
+  release: process.env.SOURCE_VERSION
+}).install()
 
 app.use(Raven.requestHandler())
 
