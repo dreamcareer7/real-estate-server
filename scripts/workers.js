@@ -9,7 +9,10 @@ const queue = require('../lib/utils/queue.js')
 const async = require('async')
 const Raven = require('raven')
 
-Raven.config(config.sentry).install()
+Raven.config(config.sentry, {
+  release: process.env.SOURCE_VERSION,
+  environment: 'workers'
+}).install()
 
 const Job = require('../lib/models/Job')
 const Metric = require('../lib/models/Metric')
