@@ -23,5 +23,10 @@ SELECT *, (count(*) over())::INT as total FROM (
           AND deleted_at IS NULL
   )
 ) as activ
+WHERE CASE
+  WHEN $2::float IS NOT NULL THEN
+    activ."timestamp" <= to_timestamp($2)
+  ELSE True
+END
 ORDER BY activ."timestamp" DESC
-LIMIT $2
+LIMIT $3
