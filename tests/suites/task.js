@@ -334,8 +334,8 @@ function getAllDoesntIgnoreFilters(cb) {
 }
 
 function filterByDueDate(cb) {
-  return frisby.create('string search in tasks')
-    .get(`/crm/tasks/search/?due_gte=${results.task.create.data.created_at - 1}`)
+  return frisby.create('filter tasks by due date')
+    .get(`/crm/tasks/search/?due_gte=${results.task.create.data.created_at - 2}`)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
@@ -348,7 +348,7 @@ function filterByDueDate(cb) {
 
 function stringFilter(cb) {
   return frisby.create('string search in tasks')
-    .get('/crm/tasks/search/?q=Hello World&start=0&limit=10&associations[]=crm_task.associations')
+    .get('/crm/tasks/search/?q[]=Hello&start=0&limit=10&associations[]=crm_task.associations')
     .after(cb)
     .expectStatus(200)
     .expectJSON({
@@ -363,6 +363,20 @@ function stringFilter(cb) {
 function stringFilterAcceptsMultipleQ(cb) {
   return frisby.create('string search accepts multiple q arguments')
     .get('/crm/tasks/search/?q[]=Hello&q[]=World&start=0&limit=10&associations[]=crm_task.associations')
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      data: [{
+        id: results.task.create.data.id,
+        title: task.title
+      }]
+    })
+    .expectJSONLength('data', 1)
+}
+
+function substringFilter(cb) {
+  return frisby.create('partial string search in tasks')
+    .get('/crm/tasks/search/?q[]=Wor&start=0&limit=10&associations[]=crm_task.associations')
     .after(cb)
     .expectStatus(200)
     .expectJSON({
@@ -611,6 +625,7 @@ module.exports = {
   getSingleTask,
   stringFilter,
   stringFilterAcceptsMultipleQ,
+  substringFilter,
   stringFilterReturnsEmptyWhenNoResults,
   filterByContact,
   filterByInvalidDealId,
