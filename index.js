@@ -1,8 +1,13 @@
+const Raven = require('raven')
 const throng = require('throng')
 const migrate = require('./lib/utils/migrate.js')
 const config = require('./lib/config.js')
 
 const {app, start} = require('./lib/bootstrap.js')
+
+Raven.config(config.sentry).install()
+
+app.use(Raven.requestHandler())
 
 // For dev only
 app.use(function (req, res, next) {
