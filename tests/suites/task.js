@@ -7,7 +7,7 @@ const config = require('../../lib/config.js')
 const { task, fixed_reminder, relative_reminder } = require('./data/task')
 const anotherUser = require('./data/user')
 
-registerSuite('contact', ['create'])
+registerSuite('contact', ['create', 'createManyContacts'])
 registerSuite('listing', ['by_mui'])
 
 function fixResponseTaskToInput(task) {
@@ -117,6 +117,36 @@ function addContactAssociation(cb) {
     })
 }
 
+function addBulkContactAssociations(cb) {
+  const data = [{
+    association_type: 'contact',
+    contact: results.contact.createManyContacts.data[0]
+  }, {
+    association_type: 'contact',
+    contact: results.contact.createManyContacts.data[1]
+  }]
+
+  return frisby.create('add multiple contact associations')
+    .post(`/crm/tasks/${results.task.create.data.id}/associations/bulk?associations[]=crm_association.contact`, data)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      data: [{
+        association_type: 'contact',
+        crm_task: results.task.create.data.id,
+        contact: {
+          id: results.contact.createManyContacts.data[0]
+        }
+      }, {
+        association_type: 'contact',
+        crm_task: results.task.create.data.id,
+        contact: {
+          id: results.contact.createManyContacts.data[1]
+        }
+      }]
+    })
+}
+
 function fetchAssociations(cb) {
   return frisby.create('fetch actual associated objects')
     .get(`/crm/tasks/${results.task.create.data.id}/associations?associations[]=crm_association.listing&associations[]=crm_association.contact`)
@@ -137,6 +167,26 @@ function fetchAssociations(cb) {
         association_type: 'contact',
         contact: {
           id: results.contact.create.data[0].id,
+          type: 'contact',
+          users: undefined,
+          deals: undefined
+        }
+      }, {
+        type: 'crm_association',
+        crm_task: results.task.create.data.id,
+        association_type: 'contact',
+        contact: {
+          id: results.contact.createManyContacts.data[0],
+          type: 'contact',
+          users: undefined,
+          deals: undefined
+        }
+      }, {
+        type: 'crm_association',
+        crm_task: results.task.create.data.id,
+        association_type: 'contact',
+        contact: {
+          id: results.contact.createManyContacts.data[1],
           type: 'contact',
           users: undefined,
           deals: undefined
@@ -582,7 +632,29 @@ function removeContactAssociation(cb) {
   const task_id = results.task.create.data.id
   const association_id = results.task.addContactAssociation.data.id
   return frisby.create('delete the contact association from task')
-    .delete(`/crm/tasks/${task_id}/associations/${association_id}?associations[]=crm_task.associations`)
+    .delete(`/crm/tasks/${task_id}/associations/${association_id}`)
+    .after(cb)
+    .expectStatus(204)
+}
+
+function removeAssociationReturns404OnNotFound(cb) {
+  const task_id = results.task.create.data.id
+  const association_id = uuid.v4()
+  return frisby.create('delete a non-existing association returns 404')
+    .delete(`/crm/tasks/${task_id}/associations/${association_id}`)
+    .after(cb)
+    .expectStatus(404)
+}
+
+function bulkRemoveAssociations(cb) {
+  const task_id = results.task.create.data.id
+  const ids = [
+    results.contact.createManyContacts.data[0],
+    results.contact.createManyContacts.data[1]
+  ]
+
+  return frisby.create('delete multiple associations from task')
+    .delete(`/crm/tasks/${task_id}/associations?ids[]=${ids[0]}&ids[]=${ids[1]}`)
     .after(cb)
     .expectStatus(204)
 }
@@ -609,6 +681,7 @@ module.exports = {
   getForUser,
   updateTask,
   addContactAssociation,
+  addBulkContactAssociations,
   fetchAssociations,
   addInvalidAssociation,
   createAnotherTaskWithRelativeReminder,
@@ -641,7 +714,9 @@ module.exports = {
   anotherUserCantFetchAttachments,
   anotherUserCantRemoveAttachment,
   removeAttachment,
+  removeAssociationReturns404OnNotFound,
   removeContactAssociation,
+  bulkRemoveAssociations,
   remove,
   makeSureTaskIsDeleted,
 }
