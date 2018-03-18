@@ -13,21 +13,25 @@ domain.jobs = []
 domain.jobs.push = job => Job.handle([job], () => {})
 domain.enter()
 
-process.on('uncaughtException', (e) => {
-  if (e && !e.skip_sentry) {
-    console.log('Reporting error to Sentry...')
-    Raven.captureException(e)
+function errorHandler(type) {
+  return (e) => {
+    if (e && !e.skip_sentry) {
+      console.log('Reporting error to Sentry...')
+      Raven.captureException(e)
+    }
+  
+    delete e.domain
+    delete e.domainThrown
+    delete e.domainEmitter
+    delete e.domainBound
+  
+    console.log(e, e.stack)
+    Slack.send({
+      channel: '7-server-errors',
+      text: type + ': ' + '\n `' + e + '`',
+      emoji: ':skull:'
+    }, process.exit)
   }
-
-  delete e.domain
-  delete e.domainThrown
-  delete e.domainEmitter
-  delete e.domainBound
-
-  console.log(e, e.stack)
-  Slack.send({
-    channel: '7-server-errors',
-    text: 'Uncaught exception: ' + '\n `' + e + '`',
-    emoji: ':skull:'
-  }, process.exit)
-})
+}
+process.on('uncaughtException', errorHandler('Uncaught exception'))
+process.on('unhandledRejection', errorHandler('Unhandled rejection'))

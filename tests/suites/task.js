@@ -1,5 +1,9 @@
-const config = require('../../lib/config.js')
+const fs = require('fs')
+const path = require('path')
 const uuid = require('node-uuid')
+const FormData = require('form-data')
+
+const config = require('../../lib/config.js')
 const { task, fixed_reminder, relative_reminder } = require('./data/task')
 const anotherUser = require('./data/user')
 
@@ -199,6 +203,63 @@ function updateFixedReminder(cb) {
     .expectStatus(200)
 }
 
+function attachFile(cb) {
+  const task_id = results.task.create.data.id
+  const logo = fs.createReadStream(path.resolve(__dirname, 'data/logo.png'))
+
+  const data = new FormData()
+  data.append('file', logo)
+
+  return frisby
+    .create('attach file to a task')
+    .post(`/crm/tasks/${task_id}/files?associations[]=crm_task.files`, {
+      file: logo
+    }, {
+      json: false,
+      form: true
+    })
+    .addHeader('content-type', 'multipart/form-data')
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK'
+    })
+}
+
+function fetchTaskWithAttachments(cb) {
+  const task_id = results.task.create.data.id
+
+  return frisby
+    .create('get task with attachmets')
+    .get(`/crm/tasks/${task_id}?associations[]=crm_task.files`)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      data: {
+        files: [{
+          name: 'logo.png'
+        }]
+      }
+    })
+}
+
+function fetchAttachments(cb) {
+  const task_id = results.task.create.data.id
+  
+  return frisby
+    .create('get task attachmets')
+    .get(`/crm/tasks/${task_id}/files`)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      data: [{
+        name: 'logo.png'
+      }]
+    })
+}
+
 function createAnotherTaskWithRelativeReminder(cb) {
   const data = Object.assign({}, task, {
     title: 'Task with relative reminder',
@@ -273,8 +334,8 @@ function getAllDoesntIgnoreFilters(cb) {
 }
 
 function filterByDueDate(cb) {
-  return frisby.create('string search in tasks')
-    .get(`/crm/tasks/search/?due_gte=${results.task.create.data.created_at - 1}`)
+  return frisby.create('filter tasks by due date')
+    .get(`/crm/tasks/search/?due_gte=${results.task.create.data.created_at - 2}`)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
@@ -287,7 +348,7 @@ function filterByDueDate(cb) {
 
 function stringFilter(cb) {
   return frisby.create('string search in tasks')
-    .get('/crm/tasks/search/?q=Hello World&start=0&limit=10&associations[]=crm_task.associations')
+    .get('/crm/tasks/search/?q[]=Hello&start=0&limit=10&associations[]=crm_task.associations')
     .after(cb)
     .expectStatus(200)
     .expectJSON({
@@ -302,6 +363,20 @@ function stringFilter(cb) {
 function stringFilterAcceptsMultipleQ(cb) {
   return frisby.create('string search accepts multiple q arguments')
     .get('/crm/tasks/search/?q[]=Hello&q[]=World&start=0&limit=10&associations[]=crm_task.associations')
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      data: [{
+        id: results.task.create.data.id,
+        title: task.title
+      }]
+    })
+    .expectJSONLength('data', 1)
+}
+
+function substringFilter(cb) {
+  return frisby.create('partial string search in tasks')
+    .get('/crm/tasks/search/?q[]=Wor&start=0&limit=10&associations[]=crm_task.associations')
     .after(cb)
     .expectStatus(200)
     .expectJSON({
@@ -428,6 +503,81 @@ function anotherUserCantRemoveContactAssociation(cb) {
     .expectStatus(404)
 }
 
+
+function anotherUserCantAttachFile(cb) {
+  const task_id = results.task.create.data.id
+  const logo = fs.createReadStream(path.resolve(__dirname, 'data/logo.png'))
+
+  const data = new FormData()
+  data.append('file', logo)
+
+  return frisby
+    .create('another user cannot attach a file to a task')
+    .post(`/crm/tasks/${task_id}/files?associations[]=crm_task.files`, {
+      file: logo
+    }, {
+      json: false,
+      form: true
+    })
+    .addHeader('Authorization', 'Bearer ' + results.task.loginAsAnotherUser.access_token)
+    .addHeader('content-type', 'multipart/form-data')
+    .after(cb)
+    .expectStatus(404)
+}
+
+function anotherUserCantFetchAttachments(cb) {
+  const task_id = results.task.create.data.id
+  
+  return frisby
+    .create('another user cannot get task attachmets')
+    .get(`/crm/tasks/${task_id}/files`)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      data: [{
+        name: 'logo.png'
+      }]
+    })
+}
+
+function anotherUserCantRemoveAttachment(cb) {
+  const task_id = results.task.create.data.id
+  const file_id = results.task.fetchAttachments.data[0].id
+
+  return frisby
+    .create('another user cannot remove a task attachment')
+    .delete(`/crm/tasks/${task_id}/files/${file_id}`)
+    .addHeader('Authorization', 'Bearer ' + results.task.loginAsAnotherUser.access_token)
+    .after(cb)
+    .expectStatus(404)
+}
+
+function removeAttachment(cb) {
+  const task_id = results.task.create.data.id
+  const file_id = results.task.fetchAttachments.data[0].id
+
+  return frisby
+    .create('remove a task attachment')
+    .delete(`/crm/tasks/${task_id}/files/${file_id}`)
+    .after(cb)
+    .expectStatus(204)
+}
+
+function makeSureAttachmentIsRemoved(cb) {
+  const task_id = results.task.create.data.id
+  
+  return frisby
+    .create('make sure attachment is remove')
+    .get(`/crm/tasks/${task_id}/files`)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      data: []
+    })
+}
+
 function removeContactAssociation(cb) {
   const task_id = results.task.create.data.id
   const association_id = results.task.addContactAssociation.data.id
@@ -464,6 +614,10 @@ module.exports = {
   createAnotherTaskWithRelativeReminder,
   addFixedReminder,
   updateFixedReminder,
+  attachFile,
+  fetchTaskWithAttachments,
+  fetchAttachments,
+  makeSureAttachmentIsRemoved,
   getAllReturnsAll,
   orderWorks,
   filterByDueDate,
@@ -471,6 +625,7 @@ module.exports = {
   getSingleTask,
   stringFilter,
   stringFilterAcceptsMultipleQ,
+  substringFilter,
   stringFilterReturnsEmptyWhenNoResults,
   filterByContact,
   filterByInvalidDealId,
@@ -482,6 +637,10 @@ module.exports = {
   anotherUserCantAddContactAssociation,
   anotherUserCantRemoveCreatedTasks,
   anotherUserCantRemoveContactAssociation,
+  anotherUserCantAttachFile,
+  anotherUserCantFetchAttachments,
+  anotherUserCantRemoveAttachment,
+  removeAttachment,
   removeContactAssociation,
   remove,
   makeSureTaskIsDeleted,
