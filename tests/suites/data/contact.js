@@ -1,4 +1,4 @@
-module.exports = {
+const contact = {
   attributes: {
     emails: [
       {
@@ -139,4 +139,18 @@ module.exports = {
       }
     ]
   }
+}
+
+const companyContact = {
+  attributes: {
+    companies: [{
+      type: 'company',
+      company: 'ACME Corporation'
+    }]
+  }
+}
+
+module.exports = {
+  contact,
+  companyContact,
 }
