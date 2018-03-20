@@ -166,12 +166,13 @@ SELECT deals.*,
   ) as has_active_offer,
 
   (
-    SELECT ARRAY_AGG(files_relations.file)
-    FROM files_relations
-    JOIN files ON files_relations.file = files.id
-    WHERE files_relations.role = 'Deal' AND files_relations.role_id = deals.id
-    AND files.deleted_at IS NULL
-    AND files_relations.deleted_at IS NULL
+    SELECT
+      ARRAY_AGG(id)
+    FROM
+      role_files
+    WHERE
+      "role" = 'Deal'
+      AND role_id = deals.id
   ) AS files
 
 FROM deals

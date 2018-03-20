@@ -53,6 +53,15 @@ const mls_validate_listing_photos = (job, done) => {
   Photo.deleteMissing(job.data.listing, job.data.present, done)
 }
 
+const sync_brokerwolf = (job, done) => {
+  Deal.get(job.data.id, (err, deal) => {
+    if (err)
+      return done(err)
+
+    Deal.BrokerWolf.sync(deal).nodeify(done)
+  })
+}
+
 module.exports = {
   airship_transport_send_device: {
     handler: airship,
@@ -117,5 +126,10 @@ module.exports = {
   'MLS.Listing.Photos.Validate': {
     handler: mls_validate_listing_photos,
     parallel: 50
+  },
+
+  'sync_brokerwolf': {
+    handler: sync_brokerwolf,
+    parallel: 1
   }
 }

@@ -9,7 +9,10 @@ const queue = require('../lib/utils/queue.js')
 const async = require('async')
 const Raven = require('raven')
 
-Raven.config(config.sentry).install()
+Raven.config(config.sentry, {
+  release: process.env.SOURCE_VERSION,
+  environment: 'workers'
+}).install()
 
 const Job = require('../lib/models/Job')
 const Metric = require('../lib/models/Metric')
@@ -147,7 +150,7 @@ const shutdown = () => {
 process.once('SIGTERM', shutdown)
 process.once('SIGINT', shutdown)
 
-setTimeout(shutdown, 1000 * 60 * 3) // Restart every 3 minutes
+setTimeout(shutdown, 1000 * 60 * 10) // Restart every 3 minutes
 
 function nodeifyFn(fn) {
   return (cb) => fn().nodeify(cb)
@@ -168,8 +171,7 @@ const sendNotifications = function () {
     async.series([
       Notification.sendForUnread,
       Message.sendEmailForUnread,
-      nodeifyFn(TaskWorker.sendReminderNotifications),
-      nodeifyFn(TaskWorker.sendTaskDueNotifications),
+      nodeifyFn(TaskWorker.sendNotifications),
     ], err => {
       if (err)
         return rollback(err)
