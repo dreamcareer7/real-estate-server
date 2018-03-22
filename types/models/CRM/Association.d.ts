@@ -55,3 +55,9 @@ declare interface ICrmAssociation {
   contact?: UUID;
   listing?: UUID;
 }
+
+declare interface ICrmAssociationsCategorized {
+  deals: UUID[];
+  contacts: UUID[];
+  listings: UUID[];
+}

@@ -4,5 +4,4 @@ SET
     deleted_at = CLOCK_TIMESTAMP()
 WHERE
     id = $1
-    AND assignee = $2
     AND deleted_at IS NULL
