@@ -1,3 +1,3 @@
 INSERT INTO envelopes_recipients
-(envelope, role, status) VALUES ($1, $2, 'Sent')
+(envelope, role, "order", status) VALUES ($1, $2, $3, 'Created')
 RETURNING id
