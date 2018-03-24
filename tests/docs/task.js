@@ -1,4 +1,11 @@
 module.exports = {
+  global: {
+    associations: {
+      type: 'array',
+      required: false,
+      forced: false
+    }
+  },
   'GET /crm/tasks': {
     start: {
       type: 'number',
@@ -91,6 +98,12 @@ module.exports = {
         example: '-due_date',
         description: 'Put a minus sign before field name for descending order'
       }
+    }
+  },
+  'DELETE /crm/tasks/:id/associations': {
+    ids: {
+      type: 'array',
+      required: true
     }
   }
 }

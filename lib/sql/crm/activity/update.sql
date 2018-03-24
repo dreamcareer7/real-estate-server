@@ -1,11 +1,11 @@
 UPDATE
-    crm_tasks
+    crm_activities
 SET
     title=$2,
-    description=$3,
-    due_date=$4,
-    status=$5,
-    task_type=$6,
+    "description"=$3,
+    "timestamp"=$4,
+    activity_type=$5,
+    outcome=$6,
     searchable_field=COALESCE($2, '') || ' ' || COALESCE($3, ''),
     updated_at=now()
 WHERE

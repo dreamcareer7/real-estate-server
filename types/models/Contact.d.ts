@@ -5,7 +5,7 @@ declare interface IContactBase extends IModel {
 }
 
 declare interface IParentContact extends IContactBase {
-  users?: IUser[];
+  users?: UUID[];
   brands?: IBrand[];
   deals?: IDeal[];
   sub_contacts: IContact[];

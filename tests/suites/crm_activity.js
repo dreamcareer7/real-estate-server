@@ -4,25 +4,25 @@ const uuid = require('node-uuid')
 const FormData = require('form-data')
 
 const config = require('../../lib/config.js')
-const { task, fixed_reminder, relative_reminder } = require('./data/task')
+const { activity } = require('./data/crm_activity')
 const anotherUser = require('./data/user')
 
 registerSuite('contact', ['create', 'createManyContacts'])
 registerSuite('listing', ['by_mui'])
 
-function fixResponseTaskToInput(task) {
-  if (task.contact)
-    task.contact = task.contact.id
-  if (task.deal)
-    task.deal = task.deal.id
-  if (task.listing)
-    task.listing = task.listing.id
-  if (task.assignee)
-    delete task.assignee
+function fixResponseActivityToInput(activity) {
+  if (activity.contact)
+    activity.contact = activity.contact.id
+  if (activity.deal)
+    activity.deal = activity.deal.id
+  if (activity.listing)
+    activity.listing = activity.listing.id
+  if (activity.assignee)
+    delete activity.assignee
 }
 
 function create(cb) {
-  const data = Object.assign({}, task, {
+  const data = Object.assign({}, activity, {
     associations: [{
       association_type: 'listing',
       listing: results.listing.by_mui.data.id
@@ -38,8 +38,8 @@ function create(cb) {
     ]
   })
 
-  return frisby.create('create a task')
-    .post('/crm/tasks?associations[]=crm_task.associations', data)
+  return frisby.create('create an activity')
+    .post('/crm/activities?associations[]=crm_activity.associations', data)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
@@ -49,18 +49,18 @@ function create(cb) {
 
 function createWithInvalidData(cb) {
   const data = Object.assign({
-    title: 'Invalid task',
-    due_date: Date.now() + 3600
+    title: 'Invalid activity',
+    timestamp: Date.now() + 3600
   })
 
-  return frisby.create('create a task fails without all required fields')
-    .post('/crm/tasks', data)
+  return frisby.create('create an activity fails without all required fields')
+    .post('/crm/activities', data)
     .after(cb)
     .expectStatus(400)
 }
 
 function createWithInvalidAssociationId(cb) {
-  const data = Object.assign({}, task, {
+  const data = Object.assign({}, activity, {
     associations: [{
       association_type: 'contact',
       contact: '123123'
@@ -68,30 +68,33 @@ function createWithInvalidAssociationId(cb) {
   })
   delete data.title
 
-  return frisby.create('create a task fails with invalid contact id')
-    .post('/crm/tasks', data)
+  return frisby.create('create an activity fails with invalid contact id')
+    .post('/crm/activities', data)
     .after(cb)
     .expectStatus(400)
 }
 
 function getForUser(cb) {
-  return frisby.create('get list of assigned tasks')
-    .get('/crm/tasks/')
+  return frisby.create('get list of activity logs')
+    .get('/crm/activities/')
     .after(cb)
     .expectStatus(200)
     .expectJSONLength('data', 1)
 }
 
-function updateTask(cb) {
-  return frisby.create('update status of a task')
-    .put('/crm/tasks/' + results.task.create.data.id, Object.assign({}, task, {
-      status: 'DONE'
+function updateActivity(cb) {
+  const new_timestamp = new Date().getTime() / 1000 - 3600
+  return frisby.create('update timestamp of an activity')
+    .put('/crm/activities/' + results.crm_activity.create.data.id, Object.assign({}, activity, {
+      timestamp: new_timestamp,
+      outcome: 'Wrong number'
     }))
     .after(cb)
     .expectStatus(200)
     .expectJSON({
       data: {
-        status: 'DONE'
+        timestamp: new_timestamp,
+        outcome: 'Wrong number'
       }
     })
 }
@@ -103,13 +106,13 @@ function addContactAssociation(cb) {
   }
 
   return frisby.create('add a contact association')
-    .post(`/crm/tasks/${results.task.create.data.id}/associations?associations[]=crm_association.contact`, data)
+    .post(`/crm/activities/${results.crm_activity.create.data.id}/associations?associations[]=crm_association.contact`, data)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
       data: {
         association_type: 'contact',
-        crm_task: results.task.create.data.id,
+        crm_activity: results.crm_activity.create.data.id,
         contact: {
           id: results.contact.create.data[0].id
         }
@@ -127,19 +130,19 @@ function addBulkContactAssociations(cb) {
   }]
 
   return frisby.create('add multiple contact associations')
-    .post(`/crm/tasks/${results.task.create.data.id}/associations/bulk?associations[]=crm_association.contact`, data)
+    .post(`/crm/activities/${results.crm_activity.create.data.id}/associations/bulk?associations[]=crm_association.contact`, data)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
       data: [{
         association_type: 'contact',
-        crm_task: results.task.create.data.id,
+        crm_activity: results.crm_activity.create.data.id,
         contact: {
           id: results.contact.createManyContacts.data[0]
         }
       }, {
         association_type: 'contact',
-        crm_task: results.task.create.data.id,
+        crm_activity: results.crm_activity.create.data.id,
         contact: {
           id: results.contact.createManyContacts.data[1]
         }
@@ -149,13 +152,13 @@ function addBulkContactAssociations(cb) {
 
 function fetchAssociations(cb) {
   return frisby.create('fetch actual associated objects')
-    .get(`/crm/tasks/${results.task.create.data.id}/associations?associations[]=crm_association.listing&associations[]=crm_association.contact`)
+    .get(`/crm/activities/${results.crm_activity.create.data.id}/associations?associations[]=crm_association.listing&associations[]=crm_association.contact`)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
       data: [{
         type: 'crm_association',
-        crm_task: results.task.create.data.id,
+        crm_activity: results.crm_activity.create.data.id,
         association_type: 'listing',
         listing: {
           type: 'listing',
@@ -163,7 +166,7 @@ function fetchAssociations(cb) {
         }
       }, {
         type: 'crm_association',
-        crm_task: results.task.create.data.id,
+        crm_activity: results.crm_activity.create.data.id,
         association_type: 'contact',
         contact: {
           id: results.contact.create.data[0].id,
@@ -173,7 +176,7 @@ function fetchAssociations(cb) {
         }
       }, {
         type: 'crm_association',
-        crm_task: results.task.create.data.id,
+        crm_activity: results.crm_activity.create.data.id,
         association_type: 'contact',
         contact: {
           id: results.contact.createManyContacts.data[0],
@@ -183,7 +186,7 @@ function fetchAssociations(cb) {
         }
       }, {
         type: 'crm_association',
-        crm_task: results.task.create.data.id,
+        crm_activity: results.crm_activity.create.data.id,
         association_type: 'contact',
         contact: {
           id: results.contact.createManyContacts.data[1],
@@ -202,67 +205,38 @@ function addInvalidAssociation(cb) {
   }
 
   return frisby.create('add association fails with invalid contact id')
-    .post(`/crm/tasks/${results.task.create.data.id}/associations?associations[]=crm_task.associations`, data)
+    .post(`/crm/activities/${results.crm_activity.create.data.id}/associations?associations[]=crm_activity.associations`, data)
     .after(cb)
     .expectStatus(400)
 }
 
-function addFixedReminder(cb) {
-  const data = Object.assign({}, results.task.updateTask.data, {
-    reminders: [fixed_reminder],
-  })
+function unsetDescription(cb) {
+  const data = Object.assign({}, results.crm_activity.updateActivity.data)
   delete data.description
 
-  fixResponseTaskToInput(data)
+  fixResponseActivityToInput(data)
 
-  return frisby.create('add a fixed reminder')
-    .put(`/crm/tasks/${results.task.create.data.id}/?associations[]=crm_task.reminders`, data)
+  return frisby.create('unset activity description')
+    .put(`/crm/activities/${results.crm_activity.create.data.id}`, data)
     .after(cb)
     .expectJSON({
       data: {
-        reminders: [fixed_reminder],
         description: undefined
       }
     })
     .expectStatus(200)
 }
 
-function updateFixedReminder(cb) {
-  const oldReminder = results.task.addFixedReminder.data.reminders[0]
-  const reminder = Object.assign({
-    id: oldReminder.id,
-    is_relative: oldReminder.is_relative,
-    timestamp: new Date().getTime() / 1000 + 3600 * 24
-  })
-
-  const data = Object.assign({}, results.task.addFixedReminder.data, {
-    reminders: [reminder],
-  })
-  delete data.description
-
-  fixResponseTaskToInput(data)
-
-  return frisby.create('update the fixed reminder')
-    .put(`/crm/tasks/${results.task.create.data.id}/?associations[]=crm_task.reminders`, data)
-    .after(cb)
-    .expectJSON({
-      data: {
-        reminders: [reminder],
-      }
-    })
-    .expectStatus(200)
-}
-
 function attachFile(cb) {
-  const task_id = results.task.create.data.id
+  const activity_id = results.crm_activity.create.data.id
   const logo = fs.createReadStream(path.resolve(__dirname, 'data/logo.png'))
 
   const data = new FormData()
   data.append('file', logo)
 
   return frisby
-    .create('attach file to a task')
-    .post(`/crm/tasks/${task_id}/files?associations[]=crm_task.files`, {
+    .create('attach file to an activity')
+    .post(`/crm/activities/${activity_id}/files?associations[]=crm_activity.files`, {
       file: logo
     }, {
       json: false,
@@ -276,12 +250,12 @@ function attachFile(cb) {
     })
 }
 
-function fetchTaskWithAttachments(cb) {
-  const task_id = results.task.create.data.id
+function fetchActivityWithAttachments(cb) {
+  const activity_id = results.crm_activity.create.data.id
 
   return frisby
-    .create('get task with attachmets')
-    .get(`/crm/tasks/${task_id}?associations[]=crm_task.files`)
+    .create('get activity with attachments')
+    .get(`/crm/activities/${activity_id}?associations[]=crm_activity.files`)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
@@ -295,11 +269,11 @@ function fetchTaskWithAttachments(cb) {
 }
 
 function fetchAttachments(cb) {
-  const task_id = results.task.create.data.id
+  const activity_id = results.crm_activity.create.data.id
   
   return frisby
-    .create('get task attachmets')
-    .get(`/crm/tasks/${task_id}/files`)
+    .create('get activity attachmets')
+    .get(`/crm/activities/${activity_id}/files`)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
@@ -310,28 +284,23 @@ function fetchAttachments(cb) {
     })
 }
 
-function createAnotherTaskWithRelativeReminder(cb) {
-  const data = Object.assign({}, task, {
-    title: 'Task with relative reminder',
-    reminders: [relative_reminder]
+function createAnotherActivity(cb) {
+  const data = Object.assign({}, activity, {
+    title: 'Another activity log',
   })
 
-  return frisby.create('create a task with a relative reminder')
-    .post('/crm/tasks?associations[]=crm_task.reminders', data)
+  return frisby.create('create another activity')
+    .post('/crm/activities', data)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
-      data: Object.assign({}, data, {
-        reminders: [{
-          timestamp: relative_reminder.timestamp
-        }]
-      })
+      data
     })
 }
 
 function getAllReturnsAll(cb) {
   return frisby.create('make sure we get everything without filters')
-    .get('/crm/tasks?associations[]=crm_task.associations')
+    .get('/crm/activities?associations[]=crm_activity.associations')
     .after(cb)
     .expectStatus(200)
     .expectJSON({
@@ -343,8 +312,8 @@ function getAllReturnsAll(cb) {
 }
 
 function orderWorks(cb) {
-  return frisby.create('make sure order by due_date works')
-    .get('/crm/tasks?order=-due_date')
+  return frisby.create('make sure order by timestamp works')
+    .get('/crm/activities?order=-timestamp')
     .after((err, res, json) => {
       if (err)
         return cb(err)
@@ -358,13 +327,13 @@ function orderWorks(cb) {
     .expectStatus(200)
 }
 
-function getSingleTask(cb) {
-  return frisby.create('make sure get a single task by id works')
-    .get(`/crm/tasks/${results.task.create.data.id}?associations[]=crm_task.associations`)
+function getSingleActivity(cb) {
+  return frisby.create('make sure get a single activity by id works')
+    .get(`/crm/activities/${results.crm_activity.create.data.id}?associations[]=crm_activity.associations`)
     .after(cb)
     .expectJSON({
       data: {
-        id: results.task.create.data.id
+        id: results.crm_activity.create.data.id
       }
     })
     .expectStatus(200)
@@ -372,7 +341,7 @@ function getSingleTask(cb) {
 
 function getAllDoesntIgnoreFilters(cb) {
   return frisby.create('make sure filters are not ignored')
-    .get(`/crm/tasks/search/?contact=${uuid.v4()}`)
+    .get(`/crm/activities/search/?contact=${uuid.v4()}`)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
@@ -384,8 +353,8 @@ function getAllDoesntIgnoreFilters(cb) {
 }
 
 function filterByDueDate(cb) {
-  return frisby.create('filter tasks by due date')
-    .get(`/crm/tasks/search/?due_gte=${results.task.create.data.created_at - 2}`)
+  return frisby.create('filter activities by due date')
+    .get(`/crm/activities/search/?due_gte=${results.crm_activity.create.data.created_at - 2}`)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
@@ -397,14 +366,14 @@ function filterByDueDate(cb) {
 }
 
 function stringFilter(cb) {
-  return frisby.create('string search in tasks')
-    .get('/crm/tasks/search/?q[]=Hello&start=0&limit=10&associations[]=crm_task.associations')
+  return frisby.create('string search in activities')
+    .get('/crm/activities/search/?q[]=Hello&start=0&limit=10&associations[]=crm_activity.associations')
     .after(cb)
     .expectStatus(200)
     .expectJSON({
       data: [{
-        id: results.task.create.data.id,
-        title: task.title
+        id: results.crm_activity.create.data.id,
+        title: activity.title
       }]
     })
     .expectJSONLength('data', 1)
@@ -412,35 +381,35 @@ function stringFilter(cb) {
 
 function stringFilterAcceptsMultipleQ(cb) {
   return frisby.create('string search accepts multiple q arguments')
-    .get('/crm/tasks/search/?q[]=Hello&q[]=World&start=0&limit=10&associations[]=crm_task.associations')
+    .get('/crm/activities/search/?q[]=Hello&q[]=World&start=0&limit=10&associations[]=crm_activity.associations')
     .after(cb)
     .expectStatus(200)
     .expectJSON({
       data: [{
-        id: results.task.create.data.id,
-        title: task.title
+        id: results.crm_activity.create.data.id,
+        title: activity.title
       }]
     })
     .expectJSONLength('data', 1)
 }
 
 function substringFilter(cb) {
-  return frisby.create('partial string search in tasks')
-    .get('/crm/tasks/search/?q[]=Wor&start=0&limit=10&associations[]=crm_task.associations')
+  return frisby.create('partial string search in activities')
+    .get('/crm/activities/search/?q[]=Wor&start=0&limit=10&associations[]=crm_activity.associations')
     .after(cb)
     .expectStatus(200)
     .expectJSON({
       data: [{
-        id: results.task.create.data.id,
-        title: task.title
+        id: results.crm_activity.create.data.id,
+        title: activity.title
       }]
     })
     .expectJSONLength('data', 1)
 }
 
 function stringFilterReturnsEmptyWhenNoResults(cb) {
-  return frisby.create('string search in tasks returns empty array when no tasks are found')
-    .get('/crm/tasks/search/?q=Goodbye&start=0&limit=10&associations[]=crm_task.associations')
+  return frisby.create('string search in activities returns empty array when no activities are found')
+    .get('/crm/activities/search/?q=Goodbye&start=0&limit=10&associations[]=crm_activity.associations')
     .after(cb)
     .expectStatus(200)
     .expectJSON({
@@ -453,8 +422,8 @@ function stringFilterReturnsEmptyWhenNoResults(cb) {
 }
 
 function filterByContact(cb) {
-  return frisby.create('get tasks related to a contact')
-    .get(`/crm/tasks/search/?contact=${results.contact.create.data[0].id}&start=0&limit=10&associations[]=crm_task.associations`)
+  return frisby.create('get activities related to a contact')
+    .get(`/crm/activities/search/?contact=${results.contact.create.data[0].id}&start=0&limit=10&associations[]=crm_activity.associations`)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
@@ -466,8 +435,8 @@ function filterByContact(cb) {
 }
 
 function filterByInvalidDealId(cb) {
-  return frisby.create('filtering tasks fails with an invalid deal id')
-    .get('/crm/tasks/search/?deal=123456')
+  return frisby.create('filtering activities fails with an invalid deal id')
+    .get('/crm/activities/search/?deal=123456')
     .after(cb)
     .expectStatus(400)
 }
@@ -487,37 +456,37 @@ const loginAsAnotherUser = (cb) => {
     .expectStatus(200)
 }
 
-function anotherUserCantAccessCreatedTasks(cb) {
-  return frisby.create('another user cannot access tasks for the original user')
-    .get('/crm/tasks?associations[]=crm_task.associations')
-    .addHeader('Authorization', 'Bearer ' + results.task.loginAsAnotherUser.access_token)
+function anotherUserCantAccessCreatedActivities(cb) {
+  return frisby.create('another user cannot access activities for the original user')
+    .get('/crm/activities?associations[]=crm_activity.associations')
+    .addHeader('Authorization', 'Bearer ' + results.crm_activity.loginAsAnotherUser.access_token)
     .after(cb)
     .expectStatus(200)
     .expectJSONLength('data', 0)
 }
 
-function anotherUserCantAccessTaskById(cb) {
-  return frisby.create('another user cannot access a single task by id')
-    .get(`/crm/tasks/${results.task.create.data.id}?associations[]=crm_task.associations`)
-    .addHeader('Authorization', 'Bearer ' + results.task.loginAsAnotherUser.access_token)
+function anotherUserCantAccessActivityById(cb) {
+  return frisby.create('another user cannot access a single activity by id')
+    .get(`/crm/activities/${results.crm_activity.create.data.id}?associations[]=crm_activity.associations`)
+    .addHeader('Authorization', 'Bearer ' + results.crm_activity.loginAsAnotherUser.access_token)
     .after(cb)
     .expectStatus(404)
 }
 
 function anotherUserCantFetchAssociations(cb) {
-  return frisby.create('another user cannot fetch task associations')
-    .get(`/crm/tasks/${results.task.create.data.id}/associations?associations[]=crm_association.listing&associations[]=crm_association.contact`)
-    .addHeader('Authorization', 'Bearer ' + results.task.loginAsAnotherUser.access_token)
+  return frisby.create('another user cannot fetch activity associations')
+    .get(`/crm/activities/${results.crm_activity.create.data.id}/associations?associations[]=crm_association.listing&associations[]=crm_association.contact`)
+    .addHeader('Authorization', 'Bearer ' + results.crm_activity.loginAsAnotherUser.access_token)
     .after(cb)
     .expectStatus(404)
 }
 
-function anotherUserCantEditCreatedTasks(cb) {
-  return frisby.create('another user cannot update tasks for the original user')
-    .put('/crm/tasks/' + results.task.create.data.id, Object.assign({}, task, {
-      status: 'PENDING'
+function anotherUserCantEditCreatedActivities(cb) {
+  return frisby.create('another user cannot update activities for the original user')
+    .put('/crm/activities/' + results.crm_activity.create.data.id, Object.assign({}, activity, {
+      timestamp: new Date().getTime() / 1000
     }))
-    .addHeader('Authorization', 'Bearer ' + results.task.loginAsAnotherUser.access_token)
+    .addHeader('Authorization', 'Bearer ' + results.crm_activity.loginAsAnotherUser.access_token)
     .after(cb)
     .expectStatus(404)
 }
@@ -529,58 +498,58 @@ function anotherUserCantAddContactAssociation(cb) {
   }
 
   return frisby.create('another user cannot add a contact association')
-    .post(`/crm/tasks/${results.task.create.data.id}/associations?associations[]=crm_association.contact`, data)
-    .addHeader('Authorization', 'Bearer ' + results.task.loginAsAnotherUser.access_token)
+    .post(`/crm/activities/${results.crm_activity.create.data.id}/associations?associations[]=crm_association.contact`, data)
+    .addHeader('Authorization', 'Bearer ' + results.crm_activity.loginAsAnotherUser.access_token)
     .after(cb)
     .expectStatus(404)
 }
 
-function anotherUserCantRemoveCreatedTasks(cb) {
-  return frisby.create('another user cannot remove tasks for the original user')
-    .delete(`/crm/tasks/${results.task.create.data.id}`)
-    .addHeader('Authorization', 'Bearer ' + results.task.loginAsAnotherUser.access_token)
+function anotherUserCantRemoveCreatedActivities(cb) {
+  return frisby.create('another user cannot remove activities for the original user')
+    .delete(`/crm/activities/${results.crm_activity.create.data.id}`)
+    .addHeader('Authorization', 'Bearer ' + results.crm_activity.loginAsAnotherUser.access_token)
     .after(cb)
     .expectStatus(404)
 }
 
 function anotherUserCantRemoveContactAssociation(cb) {
-  const task_id = results.task.create.data.id
-  const association_id = results.task.addContactAssociation.data.id
-  return frisby.create('another user cannot delete the contact association from task')
-    .delete(`/crm/tasks/${task_id}/associations/${association_id}?associations[]=crm_task.associations`)
-    .addHeader('Authorization', 'Bearer ' + results.task.loginAsAnotherUser.access_token)
+  const activity_id = results.crm_activity.create.data.id
+  const association_id = results.crm_activity.addContactAssociation.data.id
+  return frisby.create('another user cannot delete the contact association from activity')
+    .delete(`/crm/activities/${activity_id}/associations/${association_id}?associations[]=crm_activity.associations`)
+    .addHeader('Authorization', 'Bearer ' + results.crm_activity.loginAsAnotherUser.access_token)
     .after(cb)
     .expectStatus(404)
 }
 
 
 function anotherUserCantAttachFile(cb) {
-  const task_id = results.task.create.data.id
+  const activity_id = results.crm_activity.create.data.id
   const logo = fs.createReadStream(path.resolve(__dirname, 'data/logo.png'))
 
   const data = new FormData()
   data.append('file', logo)
 
   return frisby
-    .create('another user cannot attach a file to a task')
-    .post(`/crm/tasks/${task_id}/files?associations[]=crm_task.files`, {
+    .create('another user cannot attach a file to an activity')
+    .post(`/crm/activities/${activity_id}/files?associations[]=crm_activity.files`, {
       file: logo
     }, {
       json: false,
       form: true
     })
-    .addHeader('Authorization', 'Bearer ' + results.task.loginAsAnotherUser.access_token)
+    .addHeader('Authorization', 'Bearer ' + results.crm_activity.loginAsAnotherUser.access_token)
     .addHeader('content-type', 'multipart/form-data')
     .after(cb)
     .expectStatus(404)
 }
 
 function anotherUserCantFetchAttachments(cb) {
-  const task_id = results.task.create.data.id
+  const activity_id = results.crm_activity.create.data.id
   
   return frisby
-    .create('another user cannot get task attachmets')
-    .get(`/crm/tasks/${task_id}/files`)
+    .create('another user cannot get activity attachmets')
+    .get(`/crm/activities/${activity_id}/files`)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
@@ -592,34 +561,34 @@ function anotherUserCantFetchAttachments(cb) {
 }
 
 function anotherUserCantRemoveAttachment(cb) {
-  const task_id = results.task.create.data.id
-  const file_id = results.task.fetchAttachments.data[0].id
+  const activity_id = results.crm_activity.create.data.id
+  const file_id = results.crm_activity.fetchAttachments.data[0].id
 
   return frisby
-    .create('another user cannot remove a task attachment')
-    .delete(`/crm/tasks/${task_id}/files/${file_id}`)
-    .addHeader('Authorization', 'Bearer ' + results.task.loginAsAnotherUser.access_token)
+    .create('another user cannot remove an activity attachment')
+    .delete(`/crm/activities/${activity_id}/files/${file_id}`)
+    .addHeader('Authorization', 'Bearer ' + results.crm_activity.loginAsAnotherUser.access_token)
     .after(cb)
     .expectStatus(404)
 }
 
 function removeAttachment(cb) {
-  const task_id = results.task.create.data.id
-  const file_id = results.task.fetchAttachments.data[0].id
+  const activity_id = results.crm_activity.create.data.id
+  const file_id = results.crm_activity.fetchAttachments.data[0].id
 
   return frisby
-    .create('remove a task attachment')
-    .delete(`/crm/tasks/${task_id}/files/${file_id}`)
+    .create('remove an activity attachment')
+    .delete(`/crm/activities/${activity_id}/files/${file_id}`)
     .after(cb)
     .expectStatus(204)
 }
 
 function makeSureAttachmentIsRemoved(cb) {
-  const task_id = results.task.create.data.id
+  const activity_id = results.crm_activity.create.data.id
   
   return frisby
     .create('make sure attachment is remove')
-    .get(`/crm/tasks/${task_id}/files`)
+    .get(`/crm/activities/${activity_id}/files`)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
@@ -629,49 +598,49 @@ function makeSureAttachmentIsRemoved(cb) {
 }
 
 function removeContactAssociation(cb) {
-  const task_id = results.task.create.data.id
-  const association_id = results.task.addContactAssociation.data.id
-  return frisby.create('delete the contact association from task')
-    .delete(`/crm/tasks/${task_id}/associations/${association_id}`)
+  const activity_id = results.crm_activity.create.data.id
+  const association_id = results.crm_activity.addContactAssociation.data.id
+  return frisby.create('delete the contact association from activity')
+    .delete(`/crm/activities/${activity_id}/associations/${association_id}`)
     .after(cb)
     .expectStatus(204)
 }
 
 function removeAssociationReturns404OnNotFound(cb) {
-  const task_id = results.task.create.data.id
+  const activity_id = results.crm_activity.create.data.id
   const association_id = uuid.v4()
   return frisby.create('delete a non-existing association returns 404')
-    .delete(`/crm/tasks/${task_id}/associations/${association_id}`)
+    .delete(`/crm/activities/${activity_id}/associations/${association_id}`)
     .after(cb)
     .expectStatus(404)
 }
 
 function bulkRemoveAssociations(cb) {
-  const task_id = results.task.create.data.id
+  const activity_id = results.crm_activity.create.data.id
   const ids = [
     results.contact.createManyContacts.data[0],
     results.contact.createManyContacts.data[1]
   ]
 
-  return frisby.create('delete multiple associations from task')
-    .delete(`/crm/tasks/${task_id}/associations?ids[]=${ids[0]}&ids[]=${ids[1]}`)
+  return frisby.create('delete multiple associations from activity')
+    .delete(`/crm/activities/${activity_id}/associations?ids[]=${ids[0]}&ids[]=${ids[1]}`)
     .after(cb)
     .expectStatus(204)
 }
 
 function remove(cb) {
-  return frisby.create('delete a task')
-    .delete(`/crm/tasks/${results.task.create.data.id}`)
+  return frisby.create('delete an activity')
+    .delete(`/crm/activities/${results.crm_activity.create.data.id}`)
     .after(cb)
     .expectStatus(204)
 }
 
-function makeSureTaskIsDeleted(cb) {
-  return frisby.create('make sure task is deleted')
-    .get('/crm/tasks')
+function makeSureActivityIsDeleted(cb) {
+  return frisby.create('make sure activity is deleted')
+    .get('/crm/activities')
     .after(cb)
     .expectStatus(200)
-    .expectJSONLength('data', results.task.getAllReturnsAll.data.length - 1)
+    .expectJSONLength('data', results.crm_activity.getAllReturnsAll.data.length - 1)
 }
 
 module.exports = {
@@ -679,23 +648,22 @@ module.exports = {
   createWithInvalidData,
   createWithInvalidAssociationId,
   getForUser,
-  updateTask,
+  updateActivity,
   addContactAssociation,
   addBulkContactAssociations,
   fetchAssociations,
   addInvalidAssociation,
-  createAnotherTaskWithRelativeReminder,
-  addFixedReminder,
-  updateFixedReminder,
+  createAnotherActivity,
+  unsetDescription,
   attachFile,
-  fetchTaskWithAttachments,
+  fetchActivityWithAttachments,
   fetchAttachments,
   makeSureAttachmentIsRemoved,
   getAllReturnsAll,
   orderWorks,
   filterByDueDate,
   getAllDoesntIgnoreFilters,
-  getSingleTask,
+  getSingleActivity,
   stringFilter,
   stringFilterAcceptsMultipleQ,
   substringFilter,
@@ -703,12 +671,12 @@ module.exports = {
   filterByContact,
   filterByInvalidDealId,
   loginAsAnotherUser,
-  anotherUserCantAccessCreatedTasks,
-  anotherUserCantAccessTaskById,
+  anotherUserCantAccessCreatedActivities,
+  anotherUserCantAccessActivityById,
   anotherUserCantFetchAssociations,
-  anotherUserCantEditCreatedTasks,
+  anotherUserCantEditCreatedActivities,
   anotherUserCantAddContactAssociation,
-  anotherUserCantRemoveCreatedTasks,
+  anotherUserCantRemoveCreatedActivities,
   anotherUserCantRemoveContactAssociation,
   anotherUserCantAttachFile,
   anotherUserCantFetchAttachments,
@@ -718,5 +686,5 @@ module.exports = {
   removeContactAssociation,
   bulkRemoveAssociations,
   remove,
-  makeSureTaskIsDeleted,
+  makeSureActivityIsDeleted,
 }

@@ -1,7 +1,7 @@
 UPDATE
-    crm_tasks
+    crm_activities
 SET
-    deleted_at = CLOCK_TIMESTAMP()
+    deleted_at = now()
 WHERE
     id = $1
     AND deleted_at IS NULL
