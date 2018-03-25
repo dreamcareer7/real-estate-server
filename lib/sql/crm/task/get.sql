@@ -19,13 +19,7 @@ SELECT
             AND deleted_at IS NULL
     ) as associations,
     (
-        SELECT
-            ARRAY_AGG(id)
-        FROM
-            role_files
-        WHERE
-            "role" = 'CrmTask'
-            AND role_id = crm_tasks.id
+        get_files_by_role('CrmTask', crm_tasks.id)
     ) as files,
     (
         SELECT

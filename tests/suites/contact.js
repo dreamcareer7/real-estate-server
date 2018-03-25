@@ -808,6 +808,7 @@ const downloadOutlookCSV = done => {
 module.exports = {
   createWithID,
   create,
+  createManyContacts,
   createCompanyContact,
   getContacts,
   getNonExistingContact,
@@ -853,6 +854,5 @@ module.exports = {
   getAllTags,
   updateContact,
   updateContactProvideID,
-  downloadOutlookCSV,
-  createManyContacts
+  downloadOutlookCSV
 }

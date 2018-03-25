@@ -1,4 +1,4 @@
-declare interface INotification {
+declare interface INotificationInput {
   id?: UUID;
 
   action: string;
@@ -14,21 +14,23 @@ declare interface INotification {
   recommendation?: UUID;
 
   subject_class?: string;
-  subject?: any;
+  subject?: UUID;
+  subjects?: any[];
 
   object_class: string;
-  object: any;
+  object?: UUID;
+  objects?: any[];
 
   extra_object_class?: string;
   extra_subject_class?: string;
 
-  auxiliary_object?: any;
+  auxiliary_object?: UUID;
   auxiliary_object_class?: string;
-  auxiliary_subject?: any;
+  auxiliary_subject?: UUID;
   auxiliary_subject_class?: string;
 }
 
-declare interface INotificationInput {
+declare interface INotification {
   id?: UUID;
 
   action: string;
@@ -43,12 +45,13 @@ declare interface INotificationInput {
   room?: UUID;
   recommendation?: UUID;
 
-
   subject_class?: string;
   subject?: UUID;
+  subjects: any[];
 
   object_class: string;
   object: UUID;
+  objects: any[];
 
   extra_object_class?: string;
   extra_subject_class?: string;

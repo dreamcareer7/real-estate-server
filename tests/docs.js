@@ -110,13 +110,30 @@ function cleanup (req, res, data, doc_override) {
     console.log(`Check ${req.headers['x-suite']} ${req.headers['x-test-name']}`.red)
   }
 
-  const case_doc_override = _.get(doc_override, [`${req.method} ${route_path}`, 'params'])
+  const global_override = {}
+  for (const k in doc_override.global) {
+    if (doc_override.global[k].forced)
+      global_override[k] = doc_override.global[k]
+  }
+
+  const case_doc_override = Object.assign(
+    {},
+    global_override,
+    _.get(doc_override, [`${req.method} ${route_path}`, 'params'])
+  )
+
+  const query = findParams(req.url, req.params, req.query, case_doc_override)
+
+  for (const k in doc_override.global) {
+    if (!doc_override.global[k].forced && query.hasOwnProperty(k))
+      Object.assign(query[k], doc_override.global[k])
+  }
 
   return {
     request: {
       method: req.method,
       headers: reqHeaders,
-      query: findParams(req.url, req.params, req.query, case_doc_override),
+      query: query,
       body: req.body ? JSON.stringify(req.body) : ''
     },
     response: {
