@@ -39,6 +39,7 @@ CREATE MATERIALIZED VIEW listings_filters AS SELECT
   properties.junior_high_school_name,
   properties.middle_school_name,
   properties.primary_school_name,
+  properties.high_school_name,
   properties.senior_high_school_name,
   properties.appliances_yn,
   properties.furnished_yn,
