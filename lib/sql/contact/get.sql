@@ -1,5 +1,5 @@
 WITH my_brands AS (
-  SELECT user_brands($2::uuid)
+  SELECT user_brands($2::uuid) AS brand
 )
 
 SELECT id,
