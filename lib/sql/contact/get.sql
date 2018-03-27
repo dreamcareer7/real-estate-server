@@ -1,7 +1,5 @@
-WITH my_deals AS (
-  SELECT DISTINCT id FROM deals_roles
-  WHERE "user" = $2
-        AND deleted_at IS NULL
+WITH my_brands AS (
+  SELECT user_brands($2::uuid)
 )
 
 SELECT id,
@@ -25,8 +23,9 @@ SELECT id,
         ELSE (
           SELECT ARRAY_AGG(deal)
           FROM deals_roles
+          JOIN deals ON deals_roles.deal = deals.id
           WHERE
-            deals_roles.deal IN(SELECT deal FROM my_deals)
+            deals.brand IN (SELECT brand FROM my_brands)
 
             AND deals_roles.deleted_at IS NULL
 
