@@ -8,4 +8,4 @@ INSERT INTO search_filters (
     $2,
     $3,
     $4
-)
+) RETURNING id
