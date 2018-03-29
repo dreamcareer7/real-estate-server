@@ -7,13 +7,11 @@ CREATE TABLE IF NOT EXISTS crm_activities (
   updated_at timestamptz NOT NULL DEFAULT NOW(),
   deleted_at timestamptz,
 
-  title text not null,
   "description" text,
-  searchable_field text,
   "activity_type" text not null,
   outcome text,
   "timestamp" timestamptz not null
 )
 
 CREATE INDEX crm_activities_created_by_idx ON crm_activities (created_by)
-CREATE INDEX crm_activities_trgm_idx ON crm_activities USING gin (searchable_field gin_trgm_ops)
+CREATE INDEX crm_activities_trgm_idx ON crm_activities USING gin (description gin_trgm_ops)

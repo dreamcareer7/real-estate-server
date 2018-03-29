@@ -49,7 +49,6 @@ function create(cb) {
 
 function createWithInvalidData(cb) {
   const data = Object.assign({
-    title: 'Invalid activity',
     timestamp: Date.now() + 3600
   })
 
@@ -66,7 +65,6 @@ function createWithInvalidAssociationId(cb) {
       contact: '123123'
     }]
   })
-  delete data.title
 
   return frisby.create('create an activity fails with invalid contact id')
     .post('/crm/activities', data)
@@ -286,7 +284,7 @@ function fetchAttachments(cb) {
 
 function createAnotherActivity(cb) {
   const data = Object.assign({}, activity, {
-    title: 'Another activity log',
+    description: 'Another activity log',
   })
 
   return frisby.create('create another activity')
@@ -373,7 +371,7 @@ function stringFilter(cb) {
     .expectJSON({
       data: [{
         id: results.crm_activity.create.data.id,
-        title: activity.title
+        description: activity.description
       }]
     })
     .expectJSONLength('data', 1)
@@ -387,7 +385,7 @@ function stringFilterAcceptsMultipleQ(cb) {
     .expectJSON({
       data: [{
         id: results.crm_activity.create.data.id,
-        title: activity.title
+        description: activity.description
       }]
     })
     .expectJSONLength('data', 1)
@@ -401,7 +399,7 @@ function substringFilter(cb) {
     .expectJSON({
       data: [{
         id: results.crm_activity.create.data.id,
-        title: activity.title
+        description: activity.description
       }]
     })
     .expectJSONLength('data', 1)
@@ -654,7 +652,6 @@ module.exports = {
   fetchAssociations,
   addInvalidAssociation,
   createAnotherActivity,
-  unsetDescription,
   attachFile,
   fetchActivityWithAttachments,
   fetchAttachments,
@@ -670,6 +667,7 @@ module.exports = {
   stringFilterReturnsEmptyWhenNoResults,
   filterByContact,
   filterByInvalidDealId,
+  unsetDescription,
   loginAsAnotherUser,
   anotherUserCantAccessCreatedActivities,
   anotherUserCantAccessActivityById,
