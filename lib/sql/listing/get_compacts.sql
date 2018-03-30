@@ -34,7 +34,7 @@ SELECT 'compact_listing' AS TYPE,
               WHEN listings.co_selling_agent_mls_id = brand_agents.mlsid THEN 1
               ELSE 0
             END
-          ) DESC, is_me, has_contact, RANDOM()
+          ) DESC, is_me DESC, has_contact DESC, RANDOM()
           LIMIT 1
        ) as proposed_agent,
        (
