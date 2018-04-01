@@ -8,10 +8,10 @@ const up = [
   id uuid primary key not null DEFAULT public.uuid_generate_v1(),
   user_id uuid not null references users(id),
   filters jsonb not null,
-  name text,
-  is_pinned boolean,
-  created_at timestamp with time zone DEFAULT clock_timestamp(),
-  updated_at timestamp with time zone DEFAULT clock_timestamp(),
+  name text not null,
+  is_pinned boolean not null,
+  created_at timestamp with time zone not null DEFAULT clock_timestamp() ,
+  updated_at timestamp with time zone not null DEFAULT clock_timestamp(),
   deleted_at timestamp with time zone
   )`
 ]
