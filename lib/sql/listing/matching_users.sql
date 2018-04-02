@@ -60,6 +60,8 @@ WHERE
 
   (elementary_schools IS NULL OR elementary_schools = '{}' OR elementary_schools @> ARRAY[$24]) AND
 
+  (high_schools IS NULL OR high_schools = '{}' OR high_schools @> ARRAY[$37]) AND
+
   (senior_high_schools IS NULL OR senior_high_schools = '{}' OR senior_high_schools @> ARRAY[$25]) AND
 
   (junior_high_schools IS NULL OR junior_high_schools = '{}' OR junior_high_schools @> ARRAY[$26]) AND
