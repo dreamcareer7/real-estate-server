@@ -59,7 +59,7 @@
     "mime": "^2.2.0",
     "mock-aws-s3": "^2.6.0",
     "moment": "^2.19.4",
-    "moment-timezone": "^0.5.5",
+    "moment-timezone": "^0.5.14",
     "node-uuid": "^1.4.7",
     "numeral": "^1.5.3",
     "nunjucks": "^2.5.2",
