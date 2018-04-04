@@ -1,3 +1,7 @@
+WITH my_brands AS (
+  SELECT user_brands($2::uuid) AS brand
+)
+
 SELECT id,
        'contact' AS type,
        EXTRACT(EPOCH FROM contacts.created_at) AS created_at,
@@ -15,25 +19,36 @@ SELECT id,
                deleted_at IS NULL
        ) AS brands,
        (
-         SELECT ARRAY_AGG(deal)
-         FROM deals_roles
-         -- TODO: SECURITY
-         -- There's a security bug in here. We should be careful as
-         -- this query returns deals that user doesn't have access to
-         WHERE
-          deals_roles.deleted_at IS NULL
-          AND
-          (
-            deals_roles.user IN(
-              SELECT "user" FROM get_contact_users(contacts.id)
-            )
-            OR
-            LOWER(deals_roles.email) IN(
-              SELECT LOWER(email) FROM contacts_emails
-              WHERE contacts.id = contacts_emails.contact
-              AND contacts_emails.deleted_at IS NULL
+        CASE WHEN $2 IS NULL THEN NULL
+        ELSE (
+          SELECT ARRAY_AGG(deal)
+          FROM deals_roles
+          JOIN deals ON deals_roles.deal = deals.id
+          WHERE
+            deals.brand IN (SELECT brand FROM my_brands)
+
+            AND deals_roles.deleted_at IS NULL
+
+            AND
+            (
+              deals_roles.user IN(
+                SELECT "user" FROM get_contact_users(contacts.id)
+              )
+              OR
+              LOWER(deals_roles.email) IN(
+                SELECT LOWER(email) FROM contacts_emails
+                WHERE contacts.id = contacts_emails.contact
+                AND contacts_emails.deleted_at IS NULL
+              )
+              OR
+                deals_roles.phone_number IN(
+                SELECT phone_number FROM contacts_phone_numbers
+                WHERE contacts.id = contacts_phone_numbers.contact
+                AND contacts_phone_numbers.deleted_at IS NULL
+              )
             )
           )
+        END
        ) AS deals,
        CASE WHEN COALESCE(ARRAY_LENGTH(refs::uuid[], 1), 0) > 1 THEN TRUE ELSE FALSE END AS merged,
        (

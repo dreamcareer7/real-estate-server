@@ -628,6 +628,27 @@ function makeSureAttachmentIsRemoved(cb) {
     })
 }
 
+function removeReminder(cb) {
+  const task_id = results.task.createAnotherTaskWithRelativeReminder.data.id
+  const data = {
+    ...results.task.createAnotherTaskWithRelativeReminder.data,
+    description: undefined,
+    reminders: []
+  }
+
+
+  return frisby
+    .create('Remove reminders on a task')
+    .put(`/crm/tasks/${task_id}?associations[]=crm_task.reminders`, data)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      data: {
+        reminders: null
+      }
+    })
+}
+
 function removeContactAssociation(cb) {
   const task_id = results.task.create.data.id
   const association_id = results.task.addContactAssociation.data.id
@@ -714,6 +735,7 @@ module.exports = {
   anotherUserCantFetchAttachments,
   anotherUserCantRemoveAttachment,
   removeAttachment,
+  removeReminder,
   removeAssociationReturns404OnNotFound,
   removeContactAssociation,
   bulkRemoveAssociations,

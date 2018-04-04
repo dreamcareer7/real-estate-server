@@ -1,7 +1,7 @@
 INSERT INTO crm_associations (
     association_type,
     crm_task,
-    activity,
+    crm_activity,
     -- contact_note,
     contact,
     deal,

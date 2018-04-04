@@ -30,7 +30,7 @@ SELECT
   association_type,
   crm_task,
   -- contact_note,
-  activity,
+  crm_activity,
   deal,
   contact,
   listing,

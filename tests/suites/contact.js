@@ -6,7 +6,7 @@ const _u = require('lodash')
 const uuid = require('uuid')
 const contact_response = require('./expected_objects/contact.js')
 const info_response = require('./expected_objects/info.js')
-const contact = require('./data/contact.js')
+const { contact, companyContact } = require('./data/contact.js')
 const manyContacts = require('./data/manyContacts.js')
 
 const create = (cb) => {
@@ -28,7 +28,34 @@ const create = (cb) => {
             contact
           ],
           summary: {
-            legal_full_name: name.title + ' ' + name.first_name + ' ' + name.legal_middle_name + ' ' + name.last_name
+            display_name: name.first_name + ' ' + name.last_name
+          }
+        }
+      ]
+    })
+    .expectJSONTypes({
+      code: String,
+      data: [contact_response],
+      info: info_response
+    })
+}
+
+const createCompanyContact = cb => {
+  const company_name = companyContact.attributes.companies[0].company
+  return frisby.create('add a company contact')
+    .post('/contacts', {
+      contacts: [
+        companyContact
+      ]
+    })
+    .after(cb)
+    .expectStatus(200)
+    .expectJSONLength('data', 1)
+    .expectJSON({
+      data: [
+        {
+          summary: {
+            display_name: company_name
           }
         }
       ]
@@ -782,6 +809,7 @@ module.exports = {
   createWithID,
   create,
   createManyContacts,
+  createCompanyContact,
   getContacts,
   getNonExistingContact,
   getGibberishContact,
