@@ -113,7 +113,6 @@ declare namespace Contact {
   function getDisplayName(contact: IParentContact): String;
   function getAbbreviatedDisplayName(contact: IParentContact): String;
   function summarize(contact: IParentContact): IContactSummary;
-  function getLegalFullName(contact: IParentContact): String;
 
   function getForUser(
     user_id: UUID,
