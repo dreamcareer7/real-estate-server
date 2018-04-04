@@ -20,3 +20,4 @@ jsdoc/docs
 *.swp
 .vscode
 scripts/setup/status.json
+.env

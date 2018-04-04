@@ -6,7 +6,7 @@ interface ITypedRef {
 declare type TTaskStatus = "PENDING" | "DONE";
 declare type TTaskType = "Call" | "Message" | "Todo";
 declare type TAccessActions = "read" | "update" | "delete"
-declare interface ITask {
+declare interface ITask extends ICrmAssociationsCategorized {
   id: UUID;
   title: string;
   description: string;
@@ -18,10 +18,6 @@ declare interface ITask {
   assignee: UUID;
   brand: UUID;
   created_by: UUID;
-
-  contacts: UUID[];
-  deals: UUID[];
-  listings: UUID[];
 
   reminders: UUID[];
   associations?: ICrmAssociation[];
