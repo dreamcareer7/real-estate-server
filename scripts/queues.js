@@ -62,6 +62,10 @@ const sync_brokerwolf = (job, done) => {
   })
 }
 
+const deal_email = (job, done) => {
+  Deal.Email.accept(job.data.incoming).nodeify(done)
+}
+
 module.exports = {
   airship_transport_send_device: {
     handler: airship,
@@ -131,5 +135,10 @@ module.exports = {
   'sync_brokerwolf': {
     handler: sync_brokerwolf,
     parallel: 1
+  },
+
+  'deal_email': {
+    handler: deal_email,
+    parallel: 5
   }
 }
