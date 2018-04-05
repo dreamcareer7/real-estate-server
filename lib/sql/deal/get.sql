@@ -48,7 +48,7 @@ SELECT deals.*,
             CASE
               WHEN addresses.unit_number IS NULL THEN NULL
               WHEN addresses.unit_number = '' THEN NULL
-              ELSE '#' || addresses.unit_number || ',' END,
+              ELSE 'Unit ' || addresses.unit_number || ',' END,
             addresses.city || ',',
             addresses.state_code,
             addresses.postal_code

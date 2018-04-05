@@ -169,7 +169,8 @@ declare namespace Contact {
   function getByAttribute(
     user_id: UUID,
     attribute: String,
-    values: any[]
+    values: any[],
+    includeDeleted: boolean
   ): Promise<IParentContact[]>;
   function stringSearch(
     user_id: UUID,
