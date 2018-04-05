@@ -465,6 +465,17 @@ const getTimeline = (cb) => {
     })
 }
 
+const getAllTags = (cb) => {
+  return frisby.create('get all Tags')
+    .get('/contacts/tags')
+    .after(cb)
+    .expectStatus(200)
+    .expectJSONLength('data', 2)
+    .expectJSON({
+      code: 'OK'
+    })
+}
+
 module.exports = {
   getAttributeDefs,
   create,
@@ -485,6 +496,7 @@ module.exports = {
   arePhoneNumbersProper,
   updateContact,
   getTimeline,
+  getAllTags,
   removeAttribute,
   removeNonExistingAttribute,
   removeGibberishAttribute,
