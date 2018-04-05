@@ -17,8 +17,7 @@ const up = [
   `UPDATE
     contacts
   SET
-    created_by = "user",
-    parent = id`,
+    created_by = "user"`,
 
   `ALTER TABLE contacts
     ALTER COLUMN created_by SET NOT NULL`,
