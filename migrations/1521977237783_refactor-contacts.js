@@ -32,15 +32,6 @@ const up = [
   `UPDATE
     contacts_attributes
   SET
-    created_by = contacts."user"
-  FROM
-    contacts
-  WHERE
-    contacts_attributes.contact = contacts.id`,
-
-  `UPDATE
-    contacts_attributes
-  SET
     "text" = attribute->>attribute_type
   WHERE
     attribute_type NOT IN ('name', 'address', 'birthday', 'last_modified_on_source')`,
@@ -129,6 +120,15 @@ const up = [
 
   'DROP TABLE contacts_emails',
   'DROP TABLE contacts_phone_numbers',
+
+  `UPDATE
+    contacts_attributes
+  SET
+    created_by = contacts."user"
+  FROM
+    contacts
+  WHERE
+    contacts_attributes.contact = contacts.id`,
 
   `ALTER TABLE contacts_attributes
     DROP COLUMN attribute,
