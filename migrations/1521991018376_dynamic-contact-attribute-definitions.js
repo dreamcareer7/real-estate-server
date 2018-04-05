@@ -65,6 +65,7 @@ const up = [
     contacts_attribute_defs as cad
   WHERE
     contacts_attributes.attribute_type = cad.name`,
+  'DELETE FROM contacts_attributes WHERE attribute_def IS NULL',
   `ALTER TABLE contacts_attributes
     DROP COLUMN attribute_type,
     ALTER COLUMN attribute_def SET NOT NULL`,
