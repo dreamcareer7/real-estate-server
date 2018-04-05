@@ -1,12 +1,10 @@
 UPDATE
     crm_activities
 SET
-    title=$2,
-    "description"=$3,
-    "timestamp"=$4,
-    activity_type=$5,
-    outcome=$6,
-    searchable_field=COALESCE($2, '') || ' ' || COALESCE($3, ''),
+    "description"=$2,
+    "timestamp"=$3,
+    activity_type=$4,
+    outcome=$5,
     updated_at=now()
 WHERE
     id = $1
