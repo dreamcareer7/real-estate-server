@@ -4,14 +4,21 @@ const async = require('async')
 const db = require('../lib/utils/db')
 const fs = require('fs')
 
-const fn = fs.readFileSync(__dirname + '/../lib/sql/contact/functions/delete_contacts_for_user.fn.sql', 'utf-8')
+const read_access = fs.readFileSync(__dirname + '/../lib/sql/contact/functions/read_access.fn.sql', 'utf-8')
+const write_access = fs.readFileSync(__dirname + '/../lib/sql/contact/functions/write_access.fn.sql', 'utf-8')
 
 const up = [
-  fn,
+  'BEGIN',
+  read_access,
+  write_access,
+  'COMMIT'
 ]
 
 const down = [
-  'DROP FUNCTION delete_contacts_for_user(text)',
+  'BEGIN',
+  'DROP FUNCTION check_contact_read_access(contacts, uuid)',
+  'DROP FUNCTION check_contact_write_access(contacts, uuid)',
+  'COMMIT'
 ]
 
 const runAll = (sqls, next) => {

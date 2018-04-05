@@ -11,7 +11,6 @@ const up = [
 ]
 
 const down = [
-  'DROP FUNCTION delete_contacts_for_user(text)',
 ]
 
 const runAll = (sqls, next) => {

@@ -79,7 +79,7 @@
     "sleep": "^3.0.0",
     "socket.io": "^2.0.4",
     "socket.io-redis": "^5.2.0",
-    "squel": "^5.11.1",
+    "squel": "^5.12.1",
     "stripe": "^4.25.0",
     "throng": "^4.0.0",
     "to-pascal-case": "^1.0.0",
@@ -108,6 +108,7 @@
     "jasmine-node": "^1.14.5",
     "nock": "^9.1.4",
     "prettyjson": "^1.2.1",
-    "request-as-curl": "^0.1.0"
+    "request-as-curl": "^0.1.0",
+    "typescript": "^2.8.1"
   }
 }

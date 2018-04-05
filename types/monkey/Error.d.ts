@@ -1,23 +1,23 @@
-type TCreateError = (spec: Error | string, details?: object | string) => Error;
-
+type TCreateError = (spec: Error, details?: object | string) => Error;
+type TBoundCreateError = (details?: object | string) => Error;
 declare interface ErrorConstructor {
   create: TCreateError;
 
-  Validation: TCreateError;
-  Database: TCreateError;
-  Unauthorized: TCreateError;
-  ResourceNotFound: TCreateError;
-  Forbidden: TCreateError;
-  Conflict: TCreateError;
-  FileSystem: TCreateError;
-  Amazon: TCreateError;
-  Branch: TCreateError;
-  BadRequest: TCreateError;
-  Generic: TCreateError;
-  MethodNotAllowed: TCreateError;
-  PreconditionFailed: TCreateError;
-  NotImplemented: TCreateError;
-  NotAcceptable: TCreateError;
+  Validation: TBoundCreateError;
+  Database: TBoundCreateError;
+  Unauthorized: TBoundCreateError;
+  ResourceNotFound: TBoundCreateError;
+  Forbidden: TBoundCreateError;
+  Conflict: TBoundCreateError;
+  FileSystem: TBoundCreateError;
+  Amazon: TBoundCreateError;
+  Branch: TBoundCreateError;
+  BadRequest: TBoundCreateError;
+  Generic: TBoundCreateError;
+  MethodNotAllowed: TBoundCreateError;
+  PreconditionFailed: TBoundCreateError;
+  NotImplemented: TBoundCreateError;
+  NotAcceptable: TBoundCreateError;
 
   autoReport: boolean;
 }
