@@ -45,17 +45,18 @@ Each context item has:
 
 Items based on bit flags use the following constants to determine whether they should show up:
 
-Condition                              | Bit
----------------------------------------|-----
-`deal_type === 'Selling'`              | `1`
-`deal_type === 'Buying'`               | `2`
-`property_type === 'Resale'`           | `128`
-`property_type === 'NewHome'`          | `256`
-`property_type === 'Lot'`              | `512`
-`property_type === 'CommercialSale'`   | `1024`
-`property_type === 'ResidentialLease'` | `2048`
-`property_type === 'CommercialLease'`  | `4096`
-_There is an active offer_ *           | `131072`
+Condition                                | Bit
+-----------------------------------------|-----
+`deal_type === 'Selling'`                | `1`
+`deal_type === 'Buying'`                 | `2`
+`property_type === 'Resale'`             | `128`
+`property_type === 'NewHome'`            | `256`
+`property_type === 'Lot'`                | `512`
+`property_type === 'CommercialSale'`     | `1024`
+`property_type === 'ResidentialLease'`   | `2048`
+`property_type === 'CommercialLease'`    | `4096`
+_There is an active offer_ *             | `131072`
+Should not show up on "Add Offer" dialog | `262144`
 
 If the deal type is selling and there is an active checklist with `checklist_type === 'Buying'`
 then we consider that deal to have an active offer.
