@@ -125,7 +125,7 @@ CSV               |
 ### Add attributes to a contact [POST /contacts/:id/attributes]
 <!-- include(tests/contact/addAttribute.md) -->
 
-### Deleting an attribute [DELETE /contacts/:id/attributes/:id]
+### Deleting an attribute [DELETE /contacts/:id/attributes/:attribute_id]
 <!-- include(tests/contact/removeAttribute.md) -->
 
 ## Timeline Activities
