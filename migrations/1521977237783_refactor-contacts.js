@@ -111,7 +111,18 @@ const up = [
     jsonb_each_text(attribute) as addresses
   WHERE
     attribute_type = 'address'
-    AND addresses.key IN ('state', 'city', 'postal_code', 'country', 'zip_code', 'street_name')
+    AND addresses.key IN (
+      'state',
+      'city',
+      'postal_code',
+      'country',
+      'zip_code',
+      'street_name',
+      'street_number',
+      'street_prefix',
+      'street_suffix',
+      'unit_number'
+    )
     AND char_length(addresses.value) > 0`,
 
   `DELETE FROM contacts_attributes
