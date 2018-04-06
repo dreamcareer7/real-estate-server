@@ -14,7 +14,8 @@ SELECT
   show,
   editable,
   "user",
-  brand
+  brand,
+  'contact_attribute_def' as "type"
 FROM
   contacts_attribute_defs
   JOIN unnest($1::uuid[]) WITH ORDINALITY t(cid, ord) ON contacts_attribute_defs.id = cid
