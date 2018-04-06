@@ -57,6 +57,11 @@ declare interface IContactAttribute {
 declare interface IContactAttributeInput {
   attribute_def: UUID;
 
+  id?: UUID;
+  created_by?: UUID;
+  user?: UUID;
+  contact?: UUID;
+
   text?: string;
   number?: number;
   date?: number;
@@ -79,4 +84,16 @@ declare interface IContactSummary {
   abbreviated_display_name: String;
   email: String;
   phone_number: String;
+}
+
+declare interface IContactAttributeFilter {
+  attribute_def: UUID;
+  text?: string;
+  date?: number;
+  number?: number;
+}
+
+declare interface IContactFilterOptions {
+  updated_gte?: number;
+  updated_lte?: number;
 }
