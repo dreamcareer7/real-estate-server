@@ -98,6 +98,19 @@ const getContacts = cb => {
     .expectJSONLength('data', manyContacts.length + 2)
 }
 
+const getSingleContact = cb => {
+  const id = results.contact.create.data[0].id
+
+  return frisby
+    .create('get a single contact')
+    .get(`/contacts/${id}`)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      data: results.contact.create.data[0]
+    })
+}
+
 const getNonExistingContact = cb => {
   const id = uuid.v4()
 
@@ -383,7 +396,20 @@ const removeGibberishAttribute = cb => {
 const deleteContact = cb => {
   return frisby
     .create('delete a contact')
-    .delete('/contacts/?ids[]=' + results.contact.create.data[0].id)
+    .delete('/contacts/' + results.contact.create.data[0].id)
+    .expectStatus(204)
+    .after(cb)
+}
+
+const deleteManyContacts = cb => {
+  const ids = _(results.contact.createManyContacts.data)
+    .take(2)
+    .map(cid => `ids[]=${cid}`)
+    .join('&')
+
+  return frisby
+    .create('delete multiple contacts')
+    .delete('/contacts/?' + ids)
     .expectStatus(204)
     .after(cb)
 }
@@ -399,7 +425,7 @@ const deleteContactWorked = cb => {
     .expectJSON({
       code: 'OK',
       info: {
-        count: before_count - 1
+        count: before_count - 3
       }
     })
 }
@@ -451,6 +477,35 @@ const updateContact = cb => {
     .expectStatus(200)
 }
 
+const updateManyContacts = cb => {
+  const contacts = results.contact.createManyContacts.data.map(cid => {
+    return {
+      id: cid,
+      attributes: [{
+        attribute_def: defs.tag.id,
+        text: 'ManyContacts'
+      }]
+    }
+  })
+  return frisby
+    .create('add a tag attribute to many contacts')
+    .patch('/contacts', {
+      contacts
+    })
+    .after((err, res, json) => {
+      for (const contact of json.data) {
+        const tags = contact.sub_contacts[0].attributes
+          .filter(a => a.attribute_def === defs.tag.id)
+          .map(a => a.text)
+
+        if (!tags.includes('ManyContacts')) throw 'Tag attributes are not added.'
+      }
+
+      cb(err, res, json)
+    })
+    .expectStatus(200)
+}
+
 const getTimeline = (cb) => {
   return frisby.create('get list of contact activities (timeline)')
     .get(`/contacts/${results.contact.create.data[0].id}/timeline`)
@@ -470,7 +525,7 @@ const getAllTags = (cb) => {
     .get('/contacts/tags')
     .after(cb)
     .expectStatus(200)
-    .expectJSONLength('data', 2)
+    .expectJSONLength('data', 3)
     .expectJSON({
       code: 'OK'
     })
@@ -482,6 +537,7 @@ module.exports = {
   createManyContacts,
   createCompanyContact,
   getContacts,
+  getSingleContact,
   getNonExistingContact,
   getGibberishContact,
   filterContacts,
@@ -495,11 +551,13 @@ module.exports = {
   areEmailsLowered,
   arePhoneNumbersProper,
   updateContact,
+  updateManyContacts,
   getTimeline,
   getAllTags,
   removeAttribute,
   removeNonExistingAttribute,
   removeGibberishAttribute,
   deleteContact,
+  deleteManyContacts,
   deleteContactWorked,
 }

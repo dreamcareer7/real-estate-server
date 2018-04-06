@@ -92,32 +92,41 @@ ExplicitlyCreated |
 External/Outlook  |
 CSV               |
 
+### Get all attribute definitions [GET /contacts/attribute_defs]
+<!-- include(tests/contact/getAttributeDefs.md) -->
+
 ### Get all user contacts [GET /contacts]
 <!-- include(tests/contact/getContacts.md) -->
 
-### Get all attribute definitions [GET /contacts/attribute_defs]
-<!-- include(tests/contact/getAttributeDefs.md) -->
+### Create a new contact [POST /contacts]
+<!-- include(tests/contact/create.md) -->
+
+### Update multiple contacts [PATCH /contacts]
+<!-- include(tests/contact/updateManyContacts.md) -->
+
+### Delete multiple contacts [DELETE /contacts]
+<!-- include(tests/contact/deleteManyContacts.md) -->
 
 ### Filter contacts by attributes [POST /contacts/filter]
 <!-- include(tests/contact/filterContacts.md) -->
 
-### Create a new contact [POST /contacts]
-<!-- include(tests/contact/create.md) -->
+### Get all tags [GET /contacts/tags]
+<!-- include(tests/contact/getAllTags.md) -->
+
+### Get a contact [GET /contacts/:id]
+<!-- include(tests/contact/getSingleContact.md) -->
+
+### Update a contact [PATCH /contacts/:id]
+<!-- include(tests/contact/updateContact.md) -->
+
+### Deleting a contact [DELETE /contacts/:id]
+<!-- include(tests/contact/deleteContact.md) -->
 
 ### Add attributes to a contact [POST /contacts/:id/attributes]
 <!-- include(tests/contact/addAttribute.md) -->
 
 ### Deleting an attribute [DELETE /contacts/:id/attributes/:id]
 <!-- include(tests/contact/removeAttribute.md) -->
-
-### Deleting a contact [DELETE /contacts/:id]
-<!-- include(tests/contact/deleteContact.md) -->
-
-### Update a contact [PATCH /contacts/:id]
-<!-- include(tests/contact/updateContact.md) -->
-
-### Get all tags [GET /contacts/tags]
-<!-- include(tests/contact/getAllTags.md) -->
 
 ## Timeline Activities
 An _Activity_ is an object, recording an event that either a specific user has done or a user has done on a specific contact of theirs. There are generally two types of activities. *User* activities and *Contact* activities.
