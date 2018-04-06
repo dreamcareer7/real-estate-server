@@ -11,7 +11,8 @@ SELECT
   "name" as attribute_type,
   "text",
   EXTRACT(EPOCH FROM "date") AS "date",
-  "number"
+  "number",
+  'contact_attribute' as "type"
 FROM
   contacts_attributes_with_name
   JOIN unnest($1::uuid[]) WITH ORDINALITY t(cid, ord) ON id = cid
