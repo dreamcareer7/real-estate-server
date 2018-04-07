@@ -422,11 +422,9 @@ const deleteContactWorked = cb => {
     .get('/contacts')
     .after(cb)
     .expectStatus(200)
+    .expectJSONLength('data', before_count - 3 - 2)
     .expectJSON({
       code: 'OK',
-      info: {
-        count: before_count - 3 - 1
-      }
     })
 }
 
