@@ -128,6 +128,9 @@ CSV               |
 ### Deleting an attribute [DELETE /contacts/:id/attributes/:attribute_id]
 <!-- include(tests/contact/removeAttribute.md) -->
 
+### Merge contacts [POST /contacts/:id/merge]
+<!-- include(tests/contact/mergeContacts.md) -->
+
 ## Timeline Activities
 An _Activity_ is an object, recording an event that either a specific user has done or a user has done on a specific contact of theirs. There are generally two types of activities. *User* activities and *Contact* activities.
 

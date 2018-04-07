@@ -403,7 +403,7 @@ const deleteContact = cb => {
 
 const deleteManyContacts = cb => {
   const ids = _(results.contact.createManyContacts.data)
-    .take(2)
+    .takeRight(2)
     .map(cid => `ids[]=${cid}`)
     .join('&')
 
@@ -425,7 +425,7 @@ const deleteContactWorked = cb => {
     .expectJSON({
       code: 'OK',
       info: {
-        count: before_count - 3
+        count: before_count - 3 - 1
       }
     })
 }
@@ -531,6 +531,31 @@ const getAllTags = (cb) => {
     })
 }
 
+const mergeContacts = cb => {
+  const sub_contacts = _.take(results.contact.createManyContacts.data, 2)
+  const parent_id = results.contact.createManyContacts.data[2]
+
+  return frisby.create('merge contacts')
+    .post(`/contacts/${parent_id}/merge`, {
+      sub_contacts
+    })
+    .after((err, res, json) => {
+      const scs = json.data.sub_contacts.map(sc => sc.id)
+      for (const id of sub_contacts) {
+        if (!scs.includes(id))
+          throw 'Contacts are not merged.'
+      }
+      cb(err, res, json)
+    })
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      data: {
+        id: parent_id
+      }
+    })
+}
+
 module.exports = {
   getAttributeDefs,
   create,
@@ -557,6 +582,7 @@ module.exports = {
   removeAttribute,
   removeNonExistingAttribute,
   removeGibberishAttribute,
+  mergeContacts,
   deleteContact,
   deleteManyContacts,
   deleteContactWorked,
