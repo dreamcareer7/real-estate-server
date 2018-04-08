@@ -22,13 +22,13 @@ const sync = async () => {
 
   const tr = await request(req)
 
-  console.log(require('util').inspect(tr, {depth:10}))
+  console.log(require('util').inspect(tr, {depth: 10}))
 
   process.exit()
 }
 
 sync()
-.catch(e => {
-  console.log(e)
-  process.exit()
-})
+  .catch(e => {
+    console.log(e)
+    process.exit()
+  })
