@@ -50,6 +50,7 @@ declare interface IContactAttribute {
   number: number;
   date: number;
 
+  index?: number;
   label?: String;
   is_primary: boolean;
 }
@@ -66,6 +67,7 @@ declare interface IContactAttributeInput {
   number?: number;
   date?: number;
 
+  index?: number;
   label?: String;
   is_primary?: boolean;
 }
