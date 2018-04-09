@@ -7,6 +7,7 @@ SELECT
   EXTRACT(EPOCH FROM deleted_at) AS deleted_at,
   label,
   is_primary,
+  index,
   created_by,
   "name" as attribute_type,
   "text",
