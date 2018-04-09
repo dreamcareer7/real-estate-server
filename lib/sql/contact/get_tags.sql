@@ -1,7 +1,8 @@
 SELECT
-  cattrs.id as id,
-  'tag' as "type",
-  cattrs.text AS tag,
+  cattrs.id,
+  'contact_attribute' as "type",
+  'tag' as "attribute_type",
+  cattrs.text,
   EXTRACT(EPOCH FROM cattrs.created_at) AS created_at,
   EXTRACT(EPOCH FROM cattrs.updated_at) AS updated_at
 FROM
