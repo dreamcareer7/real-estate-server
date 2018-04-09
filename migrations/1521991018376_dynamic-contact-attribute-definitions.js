@@ -61,7 +61,7 @@ const up = [
     ('zip_code', 'text', 'Zip Code', 'Addresses', false, true, false, true, true),
     ('source_type', 'text', 'Original Source', 'Details', false, true, true, true, false),
     ('source_id', 'text', 'Id on source', 'Details', false, true, true, false, false),
-    ('last_modified_on_source', 'text', 'Last modified on source', 'Details', false, true, true, false, false)`,
+    ('last_modified_on_source', 'date', 'Last modified on source', 'Details', false, true, true, false, false)`,
   `UPDATE
     contacts_attributes
   SET
