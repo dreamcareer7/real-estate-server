@@ -6,8 +6,10 @@
 {% set created_at = message.notification.created_at %}
 
 <tr>
-  <td style="font:bold 14px/16px Helvetica, Arial, sans-serif; color:#9db2c3;">
-    Shared a listing:
+  <td>
+    <a href="{{message.notification.branch_link}}" style="font:bold 14px/16px Helvetica, Arial, sans-serif; color:#9db2c3; text-decoration: none;">
+      Shared a listing:
+    </a>
   </td>
 </tr>
 <tr>
@@ -37,18 +39,24 @@
                               </td>
                             </tr>
                             <tr>
-                              <td style="padding:0 0 14px; font:bold 21px/22px Helvetica, Arial, sans-serif; color:#fff;">
-                                {{address.street_number}} {{address.street_prefix}} {{address.street_name}} {{address.street_suffix}}
+                              <td style="padding:0 0 14px;">
+                                <a href="{{message.notification.branch_link}}" style="font:bold 21px/22px Helvetica, Arial, sans-serif; color:#fff; text-decoration:none;">
+                                  {{address.street_number}} {{address.street_prefix}} {{address.street_name}} {{address.street_suffix}}
+                                </a>
                               </td>
                             </tr>
                             <tr>
-                              <td style="padding:0 0 5px; font:bold 17px/18px Helvetica, Arial, sans-serif; color:#fff;">
-                                {{listing | listing_price}}
+                              <td style="padding:0 0 5px;">
+                                <a href="{{message.notification.branch_link}}" style="font:bold 21px/22px Helvetica, Arial, sans-serif; color:#fff; text-decoration:none;">
+                                  {{listing | listing_price}}
+                                </a>
                               </td>
                             </tr>
                             <tr>
-                              <td style="padding:0 0 13px; font:15px/16px Helvetica, Arial, sans-serif; color:#fff;">
-                              {{property.bedroom_count}} beds, {{property.bathroom_count}} baths, {{property.square_meters | square_feet}}
+                              <td style="padding:0 0 13px;">
+                                <a href="{{message.notification.branch_link}}" style="font:15px/16px Helvetica, Arial, sans-serif; color:#fff; text-decoration:none;">
+                                  {{property.bedroom_count}} beds, {{property.bathroom_count}} baths, {{property.square_meters | square_feet}}
+                                </a>
                               </td>
                             </tr>
                           </table>
