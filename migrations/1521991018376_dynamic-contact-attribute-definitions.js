@@ -62,6 +62,7 @@ const up = [
     ('source_type', 'text', 'Original Source', 'Details', false, true, true, true, false),
     ('source_id', 'text', 'Id on source', 'Details', false, true, true, false, false),
     ('last_modified_on_source', 'date', 'Last modified on source', 'Details', false, true, true, false, false)`,
+  
   `UPDATE
     contacts_attributes
   SET
@@ -70,16 +71,21 @@ const up = [
     contacts_attribute_defs as cad
   WHERE
     contacts_attributes.attribute_type = cad.name`,
+
   'DELETE FROM contacts_attributes WHERE attribute_def IS NULL',
+
   `ALTER TABLE contacts_attributes
     DROP COLUMN attribute_type,
-    ALTER COLUMN attribute_def SET NOT NULL`,
+    ALTER COLUMN attribute_def SET NOT NULL,
+    ADD CONSTRAINT unique_index_for_contact_attribute_cst UNIQUE (contact, attribute_def, index)`,
   'COMMIT'
 ]
 
 const down = [
   'BEGIN',
-  'ALTER TABLE contacts_attributes ADD COLUMN attribute_type text NOT NULL',
+  `ALTER TABLE contacts_attributes
+    DROP CONSTRAINT unique_index_for_contact_attribute_cst,
+    ADD COLUMN attribute_type text NOT NULL`,
   `UPDATE
     contacts_attributes
   SET

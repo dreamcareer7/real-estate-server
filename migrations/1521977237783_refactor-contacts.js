@@ -23,6 +23,7 @@ const up = [
     ALTER COLUMN created_by SET NOT NULL`,
 
   `ALTER TABLE contacts_attributes
+    ADD COLUMN "index" int2,
     ADD COLUMN "text" text,
     ADD COLUMN "date" timestamptz,
     ADD COLUMN "number" double precision,
@@ -76,8 +77,21 @@ const up = [
     AND (attribute->>attribute_type)::float <= extract(epoch from now())
     AND deleted_at IS NULL`,
 
+  `UPDATE contacts_attributes
+    SET index = uv.ord
+    FROM (
+      WITH ua AS (
+        SELECT array_agg(id) as attrs
+        FROM contacts_attributes
+        GROUP BY contact, attribute_type
+      )
+      SELECT cid, ord FROM ua, unnest(ua.attrs) WITH ORDINALITY t(cid, ord)
+    ) AS uv
+    WHERE
+      contacts_attributes.id = uv.cid`,
+
   `INSERT INTO contacts_attributes
-    (contact, "text", created_at, updated_at, deleted_at, label, is_primary, attribute_type)
+    (contact, "text", created_at, updated_at, deleted_at, label, index, is_primary, attribute_type)
   SELECT
     contact,
     names.value,
@@ -85,6 +99,7 @@ const up = [
     updated_at,
     deleted_at,
     label,
+    index,
     is_primary,
     names.key
   FROM
@@ -96,7 +111,7 @@ const up = [
     AND char_length(names.value) > 0`,
 
   `INSERT INTO contacts_attributes
-    (contact, "text", created_at, updated_at, deleted_at, label, is_primary, attribute_type)
+    (contact, "text", created_at, updated_at, deleted_at, label, index, is_primary, attribute_type)
   SELECT
     contact,
     addresses.value,
@@ -104,6 +119,7 @@ const up = [
     updated_at,
     deleted_at,
     label,
+    index,
     is_primary,
     addresses.key
   FROM
