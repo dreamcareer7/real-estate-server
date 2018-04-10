@@ -8,6 +8,7 @@ const contact_response = require('./expected_objects/contact.js')
 const info_response = require('./expected_objects/info.js')
 const { contact, companyContact } = require('./data/contact.js')
 const manyContacts = require('./data/manyContacts.js')
+const moment = require('moment')
 
 const create = (cb) => {
   const name = contact.attributes.names[0]
@@ -802,7 +803,7 @@ const downloadOutlookCSV = done => {
     .get('/contacts/outlook.csv')
     .after(done)
     .expectStatus(200)
-    .expectHeader('content-disposition', 'attachment; filename="contacts.csv"')
+    .expectHeader('content-disposition', `attachment; filename="Rechat_${moment().format('MM_DD_YY')}.csv"`)
 }
 
 module.exports = {
