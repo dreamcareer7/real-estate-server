@@ -3,8 +3,11 @@
 const async = require('async')
 const db = require('../lib/utils/db')
 
+const mv = require('fs').readFileSync(__dirname + '/../lib/sql/listing/area/mls_areas.mv.sql').toString()
+
 const up = [
-  'UPDATE alerts SET architectural_styles = NULL WHERE architectural_styles = \'{Southwestern,Ranch,Spanish,A-Frame,"Mid-Centry Modern",Prairie,"Studio Apartment",Contemporary/Modern,"Split Level",Victorian,Traditional,Mediterranean,Colonial,Oriental,Loft,French,Tudor}\''
+  'DROP MATERIALIZED VIEW mls_areas',
+  mv
 ]
 
 const down = []

@@ -4,7 +4,7 @@ const async = require('async')
 const db = require('../lib/utils/db')
 
 const up = [
-  `DELETE FROM alerts WHERE architectural_styles = '{Southwestern,Ranch,Spanish,A-Frame,"Mid-Centry Modern",Prairie,"Studio Apartment",Contemporary/Modern,"Split Level",Victorian,Traditional,Mediterranean,Colonial,Oriental,Loft,French,Tudor}'`
+  'DELETE FROM alerts WHERE architectural_styles = \'{Southwestern,Ranch,Spanish,A-Frame,"Mid-Centry Modern",Prairie,"Studio Apartment",Contemporary/Modern,"Split Level",Victorian,Traditional,Mediterranean,Colonial,Oriental,Loft,French,Tudor}\''
 ]
 
 const down = []

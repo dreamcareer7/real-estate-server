@@ -18,9 +18,9 @@ minors AS (
 ),
 
 joined AS (
-  SELECT * FROM majors
+  SELECT * FROM majors WHERE number IS NOT NULL
   UNION
-  SELECT * FROM minors
+  SELECT * FROM minors WHERE number IS NOT NULL
 )
 
 SELECT

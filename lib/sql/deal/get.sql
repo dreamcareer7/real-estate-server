@@ -111,7 +111,9 @@ SELECT deals.*,
   (
     SELECT COUNT(*)::INT FROM get_new_notifications(
       (
-        SELECT ARRAY_AGG(room) FROM tasks WHERE checklist IN (SELECT id FROM deals_checklists WHERE deal = deals.id)
+        SELECT ARRAY_AGG(room) FROM tasks
+        WHERE checklist IN (SELECT id FROM deals_checklists WHERE deal = deals.id)
+        AND deleted_at IS NULL
       ), $2
     )
   )

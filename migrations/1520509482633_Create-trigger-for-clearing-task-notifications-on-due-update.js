@@ -26,7 +26,7 @@ const up = [
 
 const down = [
   'BEGIN',
-  'DROP TRIGGER clear_crm_task_notifications_on_due_update',
+  'DROP TRIGGER clear_crm_task_notifications_on_due_update ON crm_tasks',
   'DROP FUNCTION clear_task_notifications',
   'COMMIT'
 ]
