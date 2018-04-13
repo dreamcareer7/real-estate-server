@@ -4,6 +4,8 @@
   {% set reaction = 'signed' %}
 {% elif object.recipient.status == 'Declined'%}
   {% set reaction = 'declined' %}
+{% elif object.recipient.status == 'sent'%}
+  {% set reaction = 'sent' %}
 {% endif %}
 
 

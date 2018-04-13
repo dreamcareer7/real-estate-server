@@ -5,7 +5,10 @@ const db = require('../lib/utils/db')
 
 const up = [
   `ALTER TYPE reference_type
-    ADD VALUE 'DealRole'`
+    ADD VALUE 'DealRole'`,
+
+  `ALTER TYPE activity_type
+    ADD VALUE 'DealRoleReactedToEnvelopeForSubmission'`
 ]
 
 const down = []
