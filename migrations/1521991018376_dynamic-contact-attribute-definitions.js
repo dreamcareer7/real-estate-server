@@ -48,7 +48,7 @@ const up = [
     ('company', 'text', 'Company', 'Details', false, true, true, true, true),
     ('job_title', 'text', 'Job Title', 'Details', false, true, true, true, true),
     ('website', 'text', 'Website', 'Details', false, true, false, true, true),
-    ('stage', 'text', 'Stage', 'Stage', false, true, false, true, true),
+    ('stage', 'text', 'Stage', 'Stage', false, true, true, true, true),
     ('street_name', 'text', 'Street Name', 'Addresses', false, true, false, true, true),
     ('street_number', 'text', 'Street Number', 'Addresses', false, true, false, true, true),
     ('street_prefix', 'text', 'Street Prefix', 'Addresses', false, true, false, true, true),
