@@ -144,6 +144,7 @@ const addContext = cb => {
     'brokerwolf_tier_id',
     'brokerwolf_id',
     'brokerwolf_row_version',
+    'email'
   ]), {
     deal_context: {
       list_date: {
