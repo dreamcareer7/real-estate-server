@@ -4,4 +4,4 @@
   {% set action = 'updated' %}
 {% endif %}
 
-{{data.abbreviated_display_name}} {{action}} form "{{object.title | sage}}"
+{{data.abbreviated_display_name}} {{action}} form "{{object.title | safe}}"
