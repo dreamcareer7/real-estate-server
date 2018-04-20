@@ -8,13 +8,13 @@ $$
     users.id as "user",
     agents.id as agent,
     agents.mlsid as mlsid
-    FROM agents
-  JOIN users ON agents.id = users.agent
+    FROM users
+  LEFT JOIN agents ON users.agent = agents.id
   WHERE users.id IN (
     (SELECT DISTINCT "user" FROM brands_users
     JOIN brands_roles ON brands_users.role = brands_roles.id
     WHERE brands_roles.brand = $1)
-  ) AND agents.status = 'Active'
+  ) AND users.user_type = 'Agent'
   UNION
   SELECT
     users.id as "user",
