@@ -180,7 +180,7 @@ module.exports = {
       'error'
     ],
     'no-case-declarations': [
-      'error'
+      'off'
     ],
     'no-else-return': [
       'error'

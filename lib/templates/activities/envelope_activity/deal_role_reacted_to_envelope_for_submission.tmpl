@@ -4,7 +4,9 @@
   {% set reaction = 'signed' %}
 {% elif object.recipient.status == 'Declined'%}
   {% set reaction = 'declined' %}
+{% elif object.recipient.status == 'sent'%}
+  {% set reaction = 'sent' %}
 {% endif %}
 
 
-{{data.abbreviated_display_name}} {{reaction}} "{{object.submission.title}}"
+{{data.legal_full_name}} {{reaction}} "{{object.submission.title}}"
