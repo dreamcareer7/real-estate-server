@@ -1,5 +1,8 @@
 WITH cusers AS (
   SELECT * FROM get_users_for_contacts($1::uuid[])
+),
+cdeals AS (
+  SELECT * FROM get_deals_with_contacts($2::uuid, $1::uuid[])
 )
 SELECT
   c1.id,
@@ -12,7 +15,7 @@ SELECT
   c1.brand,
   coalesce(c1.parent, c1.id) as parent,
   (SELECT array_agg(user_id) FROM cusers WHERE contact_id = c1.id) as users,
-  get_deals_with_contact($2::uuid, c1.id) as deals
+  (SELECT array_agg(deal) FROM cdeals WHERE contact = c1.id) as deals
 FROM
   contacts c1,
   contacts c2

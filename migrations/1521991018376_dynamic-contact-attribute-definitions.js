@@ -45,10 +45,10 @@ const up = [
     ('note', 'text', 'Note', 'Notes', false, true, false, true, true),
     ('profile_image_url', 'text', 'Profile Picture URL', 'Header', false, true, true, true, true),
     ('cover_image_url', 'text', 'Cover Image URL', 'Header', false, true, true, true, true),
-    ('company', 'text', 'Company', 'Details', false, true, true, true, true),
+    ('company', 'text', 'Company', 'Details', false, true, false, true, true),
     ('job_title', 'text', 'Job Title', 'Details', false, true, true, true, true),
     ('website', 'text', 'Website', 'Details', false, true, false, true, true),
-    ('stage', 'text', 'Stage', 'Stage', false, true, false, true, true),
+    ('stage', 'text', 'Stage', 'Stage', false, true, true, true, true),
     ('street_name', 'text', 'Street Name', 'Addresses', false, true, false, true, true),
     ('street_number', 'text', 'Street Number', 'Addresses', false, true, false, true, true),
     ('street_prefix', 'text', 'Street Prefix', 'Addresses', false, true, false, true, true),
@@ -59,7 +59,8 @@ const up = [
     ('country', 'text', 'Country', 'Addresses', false, true, false, false, true),
     ('postal_code', 'text', 'Postal Code', 'Addresses', false, true, false, true, true),
     ('zip_code', 'text', 'Zip Code', 'Addresses', false, true, false, true, true),
-    ('source_type', 'text', 'Original Source', 'Details', false, true, true, true, false),
+    ('source', 'text', 'Source', 'Details', false, true, true, true, true),
+    ('source_type', 'text', 'Origin', 'Details', false, true, true, true, false),
     ('source_id', 'text', 'Id on source', 'Details', false, true, true, false, false),
     ('last_modified_on_source', 'date', 'Last modified on source', 'Details', false, true, true, false, false)`,
   
@@ -77,7 +78,7 @@ const up = [
   `ALTER TABLE contacts_attributes
     DROP COLUMN attribute_type,
     ALTER COLUMN attribute_def SET NOT NULL,
-    ADD CONSTRAINT unique_index_for_contact_attribute_cst UNIQUE (contact, attribute_def, index)`,
+    ADD CONSTRAINT unique_index_for_contact_attribute_cst UNIQUE (contact, attribute_def, index, deleted_at)`,
   'COMMIT'
 ]
 

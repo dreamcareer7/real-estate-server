@@ -20,7 +20,7 @@ AS $$
         INNER JOIN users
           ON users.email = contacts_attributes.text
       WHERE contacts_attributes.deleted_at IS NULL
-        AND contacts_attributes.attribute_def = '0aa03800-e740-4a04-90ea-c43f9581d2f9'
+        AND contacts_attributes.attribute_def = email_attr
         AND contacts_attributes.contact = ANY(contact_ids)
     )
     UNION (
@@ -30,7 +30,7 @@ AS $$
         INNER JOIN users
           ON users.phone_number = contacts_attributes.text
       WHERE contacts_attributes.deleted_at IS NULL
-        AND contacts_attributes.attribute_def = '26467c16-84f4-42fe-b518-b37d21cb275d'
+        AND contacts_attributes.attribute_def = phone_attr
         AND contacts_attributes.contact = ANY(contact_ids)
     );
   END;

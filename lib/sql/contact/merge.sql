@@ -7,11 +7,14 @@ WITH sub_contacts AS (
     unnest($1::uuid[])
     WITH ORDINALITY t(cid, ord)
     ON c2_id = cid
+), update_parent AS (
+  UPDATE contacts SET updated_at = now() WHERE id = $2
 )
 UPDATE
   contacts
 SET
-  parent = $2
+  parent = $2,
+  updated_at = now()
 FROM
   sub_contacts
 WHERE

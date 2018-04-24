@@ -402,14 +402,11 @@ const deleteContact = cb => {
 }
 
 const deleteManyContacts = cb => {
-  const ids = _(results.contact.createManyContacts.data)
-    .takeRight(2)
-    .map(cid => `ids[]=${cid}`)
-    .join('&')
+  const ids = _.takeRight(results.contact.createManyContacts.data, 2)
 
   return frisby
     .create('delete multiple contacts')
-    .delete('/contacts/?' + ids)
+    .delete('/contacts', { ids })
     .expectStatus(204)
     .after(cb)
 }
