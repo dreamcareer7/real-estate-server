@@ -41,6 +41,7 @@ const up = [
     ('last_name', 'text', 'Last Name', 'Names', false, true, true, true, true),
     ('nickname', 'text', 'Nickname', 'Names', false, true, true, true, true),
     ('birthday', 'date', 'Birthday', 'Details', false, true, true, true, true),
+    ('important_date', 'date', 'Important Dates', 'Details', false, true, true, true, true),
     ('tag', 'text', 'Tag', 'Tags', false, true, false, true, true),
     ('note', 'text', 'Note', 'Notes', false, true, false, true, true),
     ('profile_image_url', 'text', 'Profile Picture URL', 'Header', false, true, true, true, true),
@@ -76,15 +77,13 @@ const up = [
 
   `ALTER TABLE contacts_attributes
     DROP COLUMN attribute_type,
-    ALTER COLUMN attribute_def SET NOT NULL,
-    ADD CONSTRAINT unique_index_for_contact_attribute_cst UNIQUE (contact, attribute_def, index, deleted_at)`,
+    ALTER COLUMN attribute_def SET NOT NULL`,
   'COMMIT'
 ]
 
 const down = [
   'BEGIN',
   `ALTER TABLE contacts_attributes
-    DROP CONSTRAINT unique_index_for_contact_attribute_cst,
     ADD COLUMN attribute_type text NOT NULL`,
   `UPDATE
     contacts_attributes
