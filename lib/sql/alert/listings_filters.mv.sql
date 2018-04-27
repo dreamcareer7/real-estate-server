@@ -48,20 +48,28 @@ CREATE MATERIALIZED VIEW listings_filters AS SELECT
   addresses.location,
   addresses.county_or_parish,
   addresses.postal_code,
-  (
-    addresses.title || ' ' ||
-    addresses.subtitle || ' ' ||
-    addresses.street_number || ' ' ||
-    addresses.street_dir_prefix || ' ' ||
-    addresses.street_name || ' ' ||
-    addresses.street_suffix || ' ' ||
-    addresses.street_dir_suffix || ' ' ||
-    addresses.city || ' ' ||
-    addresses.state || ' ' ||
-    addresses.state_code || ' ' ||
-    addresses.postal_code || ' ' ||
-    addresses.country::text || ' ' ||
-    addresses.country_code::text
+  ARRAY_TO_STRING(
+    ARRAY[
+      addresses.title,
+      addresses.subtitle,
+      addresses.street_number,
+      addresses.street_dir_prefix,
+      addresses.street_name,
+      addresses.street_suffix,
+      addresses.street_dir_suffix,
+      addresses.city,
+      addresses.state,
+      addresses.state_code,
+      addresses.postal_code,
+      addresses.country::text,
+      addresses.country_code::text,
+      (
+        CASE WHEN addresses.unit_number = '' THEN NULL
+        ELSE
+        'Unit ' || addresses.unit_number
+        END
+      )
+    ], ' ', NULL
   ) as address
 FROM listings
 JOIN
