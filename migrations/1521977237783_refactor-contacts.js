@@ -141,6 +141,13 @@ const up = [
     )
     AND char_length(addresses.value) > 0`,
 
+  `UPDATE
+    contacts_attributes
+  SET
+    attribute_type = 'postal_code'
+  WHERE
+    attribute_type = 'zip_code'`,
+
   `DELETE FROM contacts_attributes
     WHERE attribute_type IN ('name', 'address')`,
 

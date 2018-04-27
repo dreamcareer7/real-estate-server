@@ -58,7 +58,6 @@ const up = [
     ('state', 'text', 'State', 'Addresses', false, true, false, true, true),
     ('country', 'text', 'Country', 'Addresses', false, true, false, false, true),
     ('postal_code', 'text', 'Postal Code', 'Addresses', false, true, false, true, true),
-    ('zip_code', 'text', 'Zip Code', 'Addresses', false, true, false, true, true),
     ('source', 'text', 'Source', 'Details', false, true, true, true, true),
     ('source_type', 'text', 'Origin', 'Details', false, true, true, true, false),
     ('source_id', 'text', 'Id on source', 'Details', false, true, true, false, false),
