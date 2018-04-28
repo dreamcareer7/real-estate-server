@@ -13,6 +13,8 @@ SELECT
   singular,
   show,
   editable,
+  has_label,
+  labels,
   "user",
   brand,
   'contact_attribute_def' as "type"
