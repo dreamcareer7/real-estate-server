@@ -1,20 +1,29 @@
 declare interface IContactAttributeDefInput {
-  id: UUID;
+  name: string;
   data_type: 'number' | 'text' | 'date';
   section?: string;
   label: string;
   required?: boolean;
   singular?: boolean;
+  searchable?: boolean;
+  has_label?: boolean;
+  labels?: string[];
 }
 
 declare interface IContactAttributeDef {
   id: UUID;
-  name?: string;
+  name: string;
   data_type: 'number' | 'text' | 'date';
   section?: string;
   global: boolean;
   show: boolean;
   editable: boolean;
+  singular: boolean;
+  searchable: boolean;
+  has_label: boolean;
+  labels: string[] | null;
+  user?: UUID;
+  brand?: UUID;
 }
 
 declare interface IParentContact extends IModel {
