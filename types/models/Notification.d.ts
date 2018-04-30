@@ -39,6 +39,7 @@ declare interface INotification {
   specific?: UUID;
 
   message: string;
+  title: string;
   image_url?: string
 
   notified_user?: UUID;
