@@ -509,8 +509,8 @@ const getTimeline = (cb) => {
     .expectJSON({
       code: 'OK',
       info: {
-        count: 1,
-        total: 1
+        count: 0,
+        total: 0
       }
     })
 }
