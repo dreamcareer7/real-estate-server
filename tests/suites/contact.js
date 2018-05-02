@@ -13,6 +13,21 @@ function _fixContactAttributeDefs(contact) {
   }
 }
 
+function _fixContactAttributeDefsInResponse(contact) {
+  return {
+    ...contact,
+    attributes: contact.attributes.map(attr => {
+      if (typeof attr.attribute_def === 'string')
+        return {
+          ...attr,
+          attribute_def: { id: attr.attribute_def }
+        }
+
+      return attr
+    })
+  }
+}
+
 function getAttributeDefs(cb) {
   return frisby
     .create('get all attribute defs, global or user-defined')
@@ -39,7 +54,7 @@ function create(cb) {
 
   return frisby
     .create('add a contact')
-    .post('/contacts?get=true&relax=false&activity=true', {
+    .post('/contacts?get=true&relax=false&activity=true&associations[]=contact_attribute.attribute_def&associations[]=contact.sub_contacts&associations[]=contact.summary', {
       contacts: [contact]
     })
     .after(cb)
@@ -48,7 +63,7 @@ function create(cb) {
     .expectJSON({
       data: [
         {
-          sub_contacts: [contact],
+          sub_contacts: [_fixContactAttributeDefsInResponse(contact)],
           summary: {
             display_name: name
           }
@@ -61,7 +76,7 @@ const createCompanyContact = cb => {
   const company_name = companyContact.attributes[0].text
   return frisby
     .create('add a company contact')
-    .post('/contacts?get=true&relax=false&activity=true', {
+    .post('/contacts?get=true&relax=false&activity=true&associations[]=contact.summary', {
       contacts: [companyContact]
     })
     .after(cb)
@@ -103,7 +118,7 @@ const getSingleContact = cb => {
 
   return frisby
     .create('get a single contact')
-    .get(`/contacts/${id}`)
+    .get(`/contacts/${id}?associations[]=contact_attribute.attribute_def&associations[]=contact.sub_contacts&associations[]=contact.summary `)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
@@ -181,11 +196,14 @@ const addAttribute = cb => {
 
   return frisby
     .create('add a new attribute')
-    .post(`/contacts/${results.contact.create.data[0].id}/attributes`, {
+    .post(`/contacts/${results.contact.create.data[0].id}/attributes?associations[]=contact_attribute.attribute_def&associations[]=contact.sub_contacts`, {
       attributes: [a]
     })
     .after((err, res, json) => {
-      if (_.find(json.data.sub_contacts[0].attributes, a))
+      if (_.find(json.data.sub_contacts[0].attributes, {
+        attribute_type: 'stage',
+        text: a.text
+      }))
         return cb(err, res, json)
 
       throw 'Attribute is not added!'
@@ -263,11 +281,16 @@ const addPhoneNumber = cb => {
 
   return frisby
     .create('add a valid phone number')
-    .post(`/contacts/${results.contact.create.data[0].id}/attributes`, {
+    .post(`/contacts/${results.contact.create.data[0].id}/attributes?associations[]=contact.sub_contacts`, {
       attributes: [a]
     })
     .after((err, res, json) => {
-      if (_.find(json.data.sub_contacts[0].attributes, a))
+      if (_.find(json.data.sub_contacts[0].attributes, {
+        text: a.text,
+        label: a.label,
+        is_primary: a.is_primary,
+        attribute_type: 'phone_number'
+      }))
         return cb(err, res, json)
 
       throw 'Phone number is not added!'
@@ -284,11 +307,15 @@ const addEmail = cb => {
 
   return frisby
     .create('add a valid email')
-    .post(`/contacts/${results.contact.addPhoneNumber.data.id}/attributes`, {
+    .post(`/contacts/${results.contact.addPhoneNumber.data.id}/attributes?associations[]=contact.sub_contacts`, {
       attributes: [a]
     })
     .after((err, res, json) => {
-      if (_.find(json.data.sub_contacts[0].attributes, a))
+      if (_.find(json.data.sub_contacts[0].attributes, {
+        text: a.text,
+        label: a.label,
+        attribute_type: 'email'
+      }))
         return cb(err, res, json)
 
       throw 'Email is not added!'
@@ -299,7 +326,7 @@ const addEmail = cb => {
 const areEmailsLowered = cb => {
   return frisby
     .create('are emails lowered')
-    .post(`/contacts/${results.contact.create.data[0].id}/attributes`, {
+    .post(`/contacts/${results.contact.create.data[0].id}/attributes?associations[]=contact.sub_contacts`, {
       attributes: [
         {
           attribute_def: defs['email'].id,
@@ -324,7 +351,7 @@ const areEmailsLowered = cb => {
 const arePhoneNumbersProper = cb => {
   return frisby
     .create('are phone numbers proper')
-    .post(`/contacts/${results.contact.create.data[0].id}/attributes`, {
+    .post(`/contacts/${results.contact.create.data[0].id}/attributes?associations[]=contact.sub_contacts`, {
       attributes: [
         {
           attribute_def: defs['phone_number'].id,
@@ -355,7 +382,7 @@ const removeAttribute = cb => {
   return frisby
     .create('remove the latest added attribute')
     .delete(
-      `/contacts/${results.contact.create.data[0].id}/attributes/${attr_id}`
+      `/contacts/${results.contact.create.data[0].id}/attributes/${attr_id}?associations[]=contact.sub_contacts`
     )
     .after((err, res, json) => {
       const phone = _.findLast(json.data.sub_contacts[0].attributes, {
@@ -443,6 +470,10 @@ const updateContact = cb => {
   const phone = phones[phones.length - 1]
   const email = emails[emails.length - 1]
 
+  delete stage.attribute_def
+  delete phone.attribute_def
+  delete email.attribute_def
+
   stage.text = 'Customer'
   phone.text = '+989028202679'
   phone.label = 'Home-Line1'
@@ -456,7 +487,7 @@ const updateContact = cb => {
 
   return frisby
     .create('update a contact')
-    .patch('/contacts/' + results.contact.create.data[0].id, {
+    .patch('/contacts/' + results.contact.create.data[0].id + '?associations[]=contact.sub_contacts', {
       attributes: [stage, phone, email]
     })
     .after((err, res, json) => {
@@ -484,13 +515,13 @@ const updateManyContacts = cb => {
   })
   return frisby
     .create('add a tag attribute to many contacts')
-    .patch('/contacts', {
+    .patch('/contacts?associations[]=contact.sub_contacts', {
       contacts
     })
     .after((err, res, json) => {
       for (const contact of json.data) {
         const tags = contact.sub_contacts[0].attributes
-          .filter(a => a.attribute_def === defs.tag.id)
+          .filter(a => a.attribute_type === defs.tag.name)
           .map(a => a.text)
 
         if (!tags.includes('ManyContacts')) throw 'Tag attributes are not added.'
@@ -531,7 +562,7 @@ const mergeContacts = cb => {
   const parent_id = results.contact.createManyContacts.data[2]
 
   return frisby.create('merge contacts')
-    .post(`/contacts/${parent_id}/merge`, {
+    .post(`/contacts/${parent_id}/merge?associations[]=contact.sub_contacts`, {
       sub_contacts
     })
     .after((err, res, json) => {
