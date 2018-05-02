@@ -1,6 +1,10 @@
 WITH all_contacts AS (
   SELECT
-    c1.id, c2.id AS parent
+    c1.id,
+    c2.id AS parent,
+    array_agg(c1.id) OVER (PARTITION BY c2.id) AS sub_contacts,
+    first_value(c1.created_at) OVER (PARTITION BY c2.id ORDER BY c1.created_at) AS created_at,
+    last_value (c1.updated_at) OVER (PARTITION BY c2.id ORDER BY c1.updated_at) AS updated_at
   FROM
     contacts c1,
     contacts c2
@@ -12,7 +16,9 @@ WITH all_contacts AS (
 )
 SELECT
   parent AS id,
-  array_agg(id) AS sub_contacts,
+  sub_contacts,
+  extract(epoch FROM created_at) as created_at,
+  extract(epoch FROM updated_at) as updated_at,
   parent AS summary,
   'contact' as type
 FROM
@@ -20,5 +26,4 @@ FROM
   JOIN
     unnest($1::uuid[])
     WITH ORDINALITY t(cid, ord)
-    ON parent = cid
-GROUP BY parent
+    ON id = cid;

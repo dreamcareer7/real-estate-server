@@ -443,7 +443,7 @@ const deleteContactWorked = cb => {
 
   return frisby
     .create('get list of contacts and make sure delete contact was successful')
-    .get('/contacts')
+    .get('/contacts?associations[]=contact.sub_contacts')
     .after(cb)
     .expectStatus(200)
     .expectJSONLength('data', before_count - 3 - 2)
