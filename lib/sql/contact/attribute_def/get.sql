@@ -13,8 +13,10 @@ SELECT
   singular,
   show,
   editable,
+  searchable,
   has_label,
   labels,
+  enum_values,
   "user",
   brand,
   'contact_attribute_def' as "type"

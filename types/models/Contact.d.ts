@@ -8,6 +8,7 @@ declare interface IContactAttributeDefInput {
   searchable?: boolean;
   has_label?: boolean;
   labels?: string[];
+  enum_values?: string[];
 }
 
 declare interface IContactAttributeDef {
@@ -22,15 +23,14 @@ declare interface IContactAttributeDef {
   searchable: boolean;
   has_label: boolean;
   labels: string[] | null;
+  enum_values?: string[];
   user?: UUID;
   brand?: UUID;
 }
 
 declare interface IParentContact extends IModel {
-  users?: UUID[];
-  brands?: IBrand[];
-  deals?: IDeal[];
   sub_contacts: IContact[];
+  summary?: Record<string, string>;
   merged: boolean;
 }
 
@@ -51,6 +51,9 @@ declare interface IContact extends IContactBase {
   user: UUID;
   parent: UUID;
   attributes: IContactAttribute[];
+
+  users?: UUID[];
+  deals?: IDeal[];
 }
 
 declare interface IContactAttribute {
