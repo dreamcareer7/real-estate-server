@@ -57,13 +57,19 @@ function create(cb) {
     .post('/contacts?get=true&relax=false&activity=true&associations[]=contact_attribute.attribute_def&associations[]=contact.sub_contacts&associations[]=contact.summary', {
       contacts: [contact]
     })
-    .after(cb)
+    .after((err, res, json) => {
+      for (const attr of contact.attributes) {
+        if (!json.data[0].sub_contacts[0].attributes.find(a => a.attribute_def.id === attr.attribute_def))
+          throw `Attribute ${attr.type} is not added to the contact.`
+      }
+
+      cb(err, res, json)
+    })
     .expectStatus(200)
     .expectJSONLength('data', 1)
     .expectJSON({
       data: [
         {
-          sub_contacts: [_fixContactAttributeDefsInResponse(contact)],
           summary: {
             display_name: name
           }
@@ -336,12 +342,10 @@ const areEmailsLowered = cb => {
     })
     .expectStatus(200)
     .after((err, res, json) => {
-      const email = _(json.data.sub_contacts[0].attributes)
-        .filter({ attribute_type: 'email' })
-        .sortBy('created_at')
-        .last().text
-
-      if (email !== 'bombasticemail@mrbombastic.org')
+      if (!_.find(json.data.sub_contacts[0].attributes, {
+        attribute_type: 'email',
+        text: 'bombasticemail@mrbombastic.org'
+      }))
         throw 'Email is not lowered'
 
       cb(err, res, json)
@@ -361,11 +365,12 @@ const arePhoneNumbersProper = cb => {
     })
     .expectStatus(200)
     .after((err, res, json) => {
-      const phone = _.findLast(json.data.sub_contacts[0].attributes, {
-        attribute_type: 'phone_number'
+      const phone = _.find(json.data.sub_contacts[0].attributes, {
+        attribute_type: 'phone_number',
+        text: '+19729711191'
       }).text
 
-      if (phone !== '+19729711191') throw 'Phone number is not properly saved'
+      if (!phone) throw 'Phone number is not properly saved'
 
       cb(err, res, json)
     })
