@@ -93,7 +93,7 @@ SELECT deals.*,
         EXTRACT(EPOCH FROM context.created_at) AS created_at,
         EXTRACT(EPOCH FROM context.approved_at) AS approved_at,
         EXTRACT(EPOCH FROM context.date) AS date
-      FROM deal_context() context WHERE context.deal = deals.id
+      FROM current_deal_context context WHERE context.deal = deals.id
     )
 
     SELECT
