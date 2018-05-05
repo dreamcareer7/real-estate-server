@@ -67,4 +67,5 @@ ORDER BY
         WHEN 'Init_C' THEN created_at
         WHEN 'Init_U' THEN updated_at
     END DESC
+OFFSET $5
 LIMIT $4
