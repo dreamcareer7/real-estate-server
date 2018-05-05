@@ -1,4 +1,7 @@
-WITH a_ids AS (
+WITH ub AS (
+  SELECT brand FROM user_brands($2)
+),
+a_ids AS (
   (
     SELECT
       crm_associations.*
@@ -10,7 +13,7 @@ WITH a_ids AS (
       crm_associations.deal = deals.id
     WHERE 
       association_type = 'deal'
-      AND EXISTS (SELECT ub.brand FROM user_brands($2) ub WHERE ub.brand = brand)
+      AND EXISTS (SELECT brand FROM ub WHERE ub.brand = brand)
   )
   UNION
   (
