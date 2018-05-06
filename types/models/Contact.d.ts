@@ -118,6 +118,7 @@ declare interface IContactAttributeFilter {
 }
 
 declare interface IContactFilterOptions {
+  q?: string[];
   updated_gte?: number;
   updated_lte?: number;
 }

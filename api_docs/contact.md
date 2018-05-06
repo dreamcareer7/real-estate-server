@@ -133,6 +133,9 @@ Updates multiple contacts and their attributes. If attributes have `id`, they ar
 ### Delete multiple contacts [DELETE /contacts]
 <!-- include(tests/contact/deleteManyContacts.md) -->
 
+### Search in contacts by query term [POST /contacts/filter]
+<!-- include(tests/contact/stringSearch.md) -->
+
 ### Filter contacts by attributes [POST /contacts/filter]
 <!-- include(tests/contact/filterContacts.md) -->
 

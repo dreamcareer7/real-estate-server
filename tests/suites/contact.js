@@ -174,6 +174,20 @@ const filterContacts = cb => {
     .expectStatus(200)
 }
 
+const stringSearch = cb => {
+  return frisby
+    .create('search in contacts by search terms')
+    .post('/contacts/filter?q[]=' + encodeURIComponent('kate-bell@mac.com'))
+    .after(cb)
+    .expectJSONLength('data', 1)
+    .expectJSON({
+      data: [{
+        id: results.contact.createManyContacts.data[0].id
+      }]
+    })
+    .expectStatus(200)
+}
+
 const filterOnNonExistentAttributeDef = cb => {
   return frisby
     .create('filter contacts by a non-existing attribute def returns empty')
@@ -597,6 +611,7 @@ module.exports = {
   getNonExistingContact,
   getGibberishContact,
   filterContacts,
+  stringSearch,
   filterOnNonExistentAttributeDef,
   addAttribute,
   addInvalidAttribute,
