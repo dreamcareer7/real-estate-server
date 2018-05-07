@@ -1,4 +1,3 @@
-WITH new_alerts AS(
 INSERT INTO alerts(
         minimum_price,
         maximum_price,
@@ -50,9 +49,4 @@ INSERT INTO alerts(
         furnished,
         fenced_yard
     )
-VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, ST_SetSRID(ST_GeomFromText($12::text), 4326), $13, $14, $15, $16, $17, $18, $19, to_timestamp($20), $21, $22, $23, $24, $25, $26, $27, $28, $29, $30, $31, $32, $33, $34, $35, $36, $37, $38, $39, $40, $41, $42, $43, $44, $45, $46, $47, $48, $49) RETURNING id, room
-),
-alert_settings AS (
-    INSERT INTO user_alert_settings (SELECT "user", new_alerts.id, 'Enabled' from new_alerts INNER JOIN rooms_users using(room))
-)
-SELECT id from new_alerts
+VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, ST_SetSRID(ST_GeomFromText($12::text), 4326), $13, $14, $15, $16, $17, $18, $19, to_timestamp($20), $21, $22, $23, $24, $25, $26, $27, $28, $29, $30, $31, $32, $33, $34, $35, $36, $37, $38, $39, $40, $41, $42, $43, $44, $45, $46, $47, $48, $49) RETURNING id;
