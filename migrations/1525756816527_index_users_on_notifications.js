@@ -11,7 +11,7 @@ const up = [
 
 const down = [
   'BEGIN',
-  'DROP INDEX idx_notifications_users',
+  'DROP INDEX idx_user_on_notifications',
   'COMMIT'
 ]
 
