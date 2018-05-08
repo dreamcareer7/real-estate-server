@@ -4,7 +4,7 @@ const async = require('async')
 const db = require('../lib/utils/db')
 const fs = require('fs')
 
-const fn = fs.readFileSync(__dirname + '/../lib/sql/contact/delete_contacts_for_user.fn.sql', 'utf-8')
+const fn = fs.readFileSync(__dirname + '/../lib/sql/contact/functions/delete_contacts_for_user.fn.sql', 'utf-8')
 
 const up = [
   fn,

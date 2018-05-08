@@ -23,7 +23,7 @@ WITH timeline_content AS (
     SELECT id, created_at as "timestamp", 'activity' as "type"
     FROM activities
     WHERE (reference = ANY($1))
-          AND is_visible = TRUE
+          AND is_visible IS True
           AND deleted_at IS NULL
   )
 )

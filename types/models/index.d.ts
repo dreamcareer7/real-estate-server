@@ -1,5 +1,4 @@
 /// <reference path="common.d.ts" />
-/// <reference path="ObjectUtil.d.ts" />
 /// <reference path="Orm.d.ts" />
 /// <reference path="Agent.d.ts" />
 /// <reference path="User.d.ts" />
