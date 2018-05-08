@@ -1,4 +1,10 @@
 UPDATE notifications_users
-SET seen_at = CLOCK_TIMESTAMP()
+SET seen_at = NOW()
 WHERE "user" = $1 AND
-      (notification = ANY($2::uuid[]) AND NOT $3) OR $3
+      CASE
+            WHEN $2::uuid[] IS NULL THEN
+                  TRUE
+            ELSE
+                  notification = ANY($2::uuid[])
+            END 
+
