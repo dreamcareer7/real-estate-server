@@ -15,7 +15,8 @@ const up = [
     ('email', true),
     ('website', true),
     ('street_name', true),
-    ('city', true)
+    ('city', true),
+    ('postal_code', true)
   )
   UPDATE
     contacts_attribute_defs
