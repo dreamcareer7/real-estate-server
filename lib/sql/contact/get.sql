@@ -21,7 +21,6 @@ SELECT
   extract(epoch FROM created_at) as created_at,
   extract(epoch FROM updated_at) as updated_at,
   parent AS summary,
-  searchable_field,
   'contact' as type
 FROM
   all_contacts
