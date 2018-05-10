@@ -66,15 +66,20 @@ const up = [
 
   `UPDATE contacts_attributes
     SET "date" = to_timestamp((attribute->>attribute_type)::float / 1000)
-  where
-    (attribute->>attribute_type)::float > extract(epoch from now())
-    AND attribute_type = 'last_modified_on_source'`,
+  WHERE
+    (
+      (attribute->>attribute_type)::float > extract(epoch from now())
+      OR
+      (attribute->>attribute_type)::float < extract(epoch from timestamptz '1900-01-01')
+    )
+    AND (attribute_type = 'birthday' OR attribute_type = 'last_modified_on_source')`,
 
   `UPDATE contacts_attributes
     SET "date" = to_timestamp((attribute->>attribute_type)::float)
   WHERE
-    attribute_type = 'birthday' OR attribute_type = 'last_modified_on_source'
+    (attribute_type = 'birthday' OR attribute_type = 'last_modified_on_source')
     AND (attribute->>attribute_type)::float <= extract(epoch from now())
+    AND (attribute->>attribute_type)::float >= extract(epoch from timestamptz '1900-01-01')
     AND deleted_at IS NULL`,
 
   `UPDATE contacts_attributes
