@@ -9,5 +9,6 @@ AS $$
       deleted_at = NOW()
     WHERE
       deal = NEW.id;
+    RETURN NEW;
   END;
 $$

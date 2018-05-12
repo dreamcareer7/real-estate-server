@@ -9,5 +9,6 @@ AS $$
       deleted_at = NOW()
     WHERE
       contact = NEW.id;
+    RETURN NEW;
   END;
 $$
