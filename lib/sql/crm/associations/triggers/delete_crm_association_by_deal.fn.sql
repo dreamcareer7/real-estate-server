@@ -1,4 +1,4 @@
-CREATE FUNCTION delete_crm_association_by_deal ()
+CREATE OR REPLACE FUNCTION delete_crm_association_by_deal ()
   RETURNS trigger
   LANGUAGE plpgsql
 AS $$
