@@ -1,0 +1,1 @@
+SELECT * FROM delete_contact_attribute_def($1::uuid);

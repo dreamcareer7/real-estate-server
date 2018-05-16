@@ -1,4 +1,4 @@
-CREATE FUNCTION delete_crm_association_by_contact ()
+CREATE OR REPLACE FUNCTION delete_crm_association_by_contact ()
   RETURNS trigger
   LANGUAGE plpgsql
 AS $$
@@ -9,5 +9,6 @@ AS $$
       deleted_at = NOW()
     WHERE
       contact = NEW.id;
+    RETURN NEW;
   END;
 $$
