@@ -318,6 +318,40 @@ const getAgents = cb => {
     })
 }
 
+const setTemplate = cb => {
+  const submission = {
+    state: 'Fair',
+    values: {
+      51821682: '11112 New Orleans Drive'
+    }
+  }
+
+  return frisby.create('save a form template')
+    .post(`/brands/${brand_id}/templates/${results.form.create.data.id}`, submission)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+    })
+}
+
+const setTemplateAgain = cb => {
+  const submission = {
+    state: 'Fair',
+    values: {
+      51821682: 'Updated 11112 New Orleans Drive'
+    }
+  }
+
+  return frisby.create('save a form template')
+    .post(`/brands/${brand_id}/templates/${results.form.create.data.id}`, submission)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+    })
+}
+
 const removeBrand = cb => {
   return frisby.create('delete a brand')
     .delete(`/brands/${brand_id}`)
@@ -360,6 +394,9 @@ module.exports = {
   getByHostname,
   removeOffice,
   removeHostname,
+
+  setTemplate,
+  setTemplateAgain,
 
   removeBrand
 }
