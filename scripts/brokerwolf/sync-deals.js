@@ -34,7 +34,7 @@ const run = async () => {
   console.log('\n\n\n\n\n\nSuccessful')
 
   for(const deal of success) {
-    console.log(Deal.getContext(deal, 'full_address'))
+    console.log(deal.id, Deal.getContext(deal, 'full_address'))
   }
 
   console.log('Error')
