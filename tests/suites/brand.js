@@ -343,8 +343,18 @@ const setTemplateAgain = cb => {
     }
   }
 
-  return frisby.create('save a form template')
+  return frisby.create('save a form template again (upsert)')
     .post(`/brands/${brand_id}/templates/${results.form.create.data.id}`, submission)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+    })
+}
+
+const getTemplates = cb => {
+  return frisby.create('get all templates for a brand (and its parents)')
+    .get(`/brands/${brand_id}/templates/${results.form.create.data.id}`)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
@@ -397,6 +407,7 @@ module.exports = {
 
   setTemplate,
   setTemplateAgain,
+  getTemplates,
 
   removeBrand
 }
