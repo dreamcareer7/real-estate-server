@@ -11,6 +11,8 @@ const trigger_delete_crm_association_after_delete_contact = fs.readFileSync(__di
 
 const up = [
   'BEGIN',
+  'DROP TRIGGER IF EXISTS delete_crm_association_after_delete_deal ON crm_associations',
+  'DROP TRIGGER IF EXISTS delete_crm_association_after_delete_contact ON crm_associations',
   fn_delete_crm_association_by_deal,
   fn_delete_crm_association_by_contact,
   trigger_delete_crm_association_after_delete_deal,
@@ -19,12 +21,6 @@ const up = [
 ]
 
 const down = [
-  'BEGIN',
-  'DROP TRIGGER delete_crm_association_after_delete_deal ON crm_associations',
-  'DROP TRIGGER delete_crm_association_after_delete_contact ON crm_associations',
-  'DROP FUNCTION delete_crm_association_by_deal',
-  'DROP FUNCTION delete_crm_association_by_contact',
-  'COMMIT'
 ]
 
 const runAll = (sqls, next) => {

@@ -12,8 +12,8 @@ WITH all_contacts AS (
   WHERE
     coalesce(c2.parent, c2.id) = coalesce(c1.parent, c1.id)
     AND c2.id = ANY($1::uuid[])
-    AND c1.deleted_at IS NULL
-    AND c2.deleted_at IS NULL
+    AND (c1.id = c2.id OR c1.deleted_at IS NULL)
+    -- AND c2.deleted_at IS NULL
 )
 SELECT
   parent AS id,
