@@ -10,6 +10,8 @@ SELECT
   EXTRACT(EPOCH FROM created_at) AS created_at,
   EXTRACT(EPOCH FROM updated_at) AS updated_at,
   EXTRACT(EPOCH FROM deleted_at) AS deleted_at,
+  ios_address_book_id,
+  android_address_book_id,
   created_by,
   "user",
   brand,
