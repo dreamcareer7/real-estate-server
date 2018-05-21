@@ -110,6 +110,16 @@ const createManyContacts = cb => {
     .expectJSONLength('data', manyContacts.length)
 }
 
+const createEmptyContactFails = cb => {
+  return frisby
+    .create('creating an empty contact fails')
+    .post('/contacts', {
+      contacts: [{}]
+    })
+    .after(cb)
+    .expectStatus(400)
+}
+
 const getContacts = cb => {
   return frisby
     .create('get list of contacts and see if the ones we added is there')
@@ -606,6 +616,7 @@ module.exports = {
   create,
   createManyContacts,
   createCompanyContact,
+  createEmptyContactFails,
   getContacts,
   getSingleContact,
   getNonExistingContact,

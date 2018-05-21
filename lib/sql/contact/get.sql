@@ -21,6 +21,7 @@ SELECT
   extract(epoch FROM created_at) as created_at,
   extract(epoch FROM updated_at) as updated_at,
   parent AS summary,
+  (array_length(sub_contacts, 1) > 1)::boolean AS merged,
   'contact' as type
 FROM
   all_contacts
