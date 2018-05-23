@@ -7,8 +7,7 @@ SELECT deals.*,
     SELECT ARRAY_AGG(id ORDER BY created_at ASC) FROM deals_roles WHERE deal = deals.id AND deleted_at IS NULL
   ) AS roles,
   (
-    SELECT ARRAY_AGG(id ORDER BY "order") FROM deals_checklists
-    WHERE deal = deals.id AND deleted_at IS NULL
+    SELECT ARRAY_AGG(id ORDER BY "order") FROM deals_checklists WHERE deal = deals.id
   ) as checklists,
 
   (
@@ -128,7 +127,6 @@ SELECT deals.*,
     JOIN brands_checklists ON deals_checklists.origin = brands_checklists.id
     WHERE
       deals_checklists.deal = deals.id
-      AND deals_checklists.deleted_at IS NOT NULL
       AND tasks.attention_requested_at IS NOT NULL
       AND tasks.deleted_at IS NULL
   ) as inboxes,
@@ -142,7 +140,6 @@ SELECT deals.*,
       deals_checklists.deal = deals.id
       AND deals_checklists.terminated_at  IS NULL
       AND deals_checklists.deactivated_at IS NULL
-      AND deals_checklists.deleted_at IS NULL
       AND tasks.attention_requested_at IS NOt NULL
       AND tasks.deleted_at IS NULL
   ) as attention_requests,
@@ -156,7 +153,6 @@ SELECT deals.*,
       deals_checklists.deal = deals.id
       AND deals_checklists.terminated_at  IS NULL
       AND deals_checklists.deactivated_at IS NULL
-      AND deals_checklists.deleted_at IS NULL
       AND tasks.attention_requested_at IS NOT NULL
       AND tasks.deleted_at IS NULL
   ) as attention_requested_at,
@@ -168,7 +164,6 @@ SELECT deals.*,
       deals_checklists.deal = deals.id
       AND deals_checklists.deactivated_at IS NULL
       AND deals_checklists.terminated_at  IS NULL
-      AND deals_checklists.deleted_at IS NULL
       AND brands_checklists.deal_type = 'Buying'
   ) as has_active_offer,
 
