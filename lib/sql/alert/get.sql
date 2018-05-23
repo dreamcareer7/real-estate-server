@@ -1,6 +1,5 @@
 SELECT alerts.*,
        'alert' AS type,
-       alerts.id as alert_setting,
        (
          SELECT COUNT(recommendations.id)
          FROM recommendations
