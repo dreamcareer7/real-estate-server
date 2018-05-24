@@ -6,13 +6,16 @@ WITH dca AS (
   WHERE
     contact = $1
     AND id = $2
+  RETURNING id
+), usfc AS (
+  UPDATE
+    contacts
+  SET
+    updated_at = now(),
+    searchable_field = sfc.searchable_field
+  FROM
+    get_searchable_field_for_contacts(ARRAY[$1::uuid]) sfc
+  WHERE
+    id = sfc.contact
 )
-UPDATE
-  contacts
-SET
-  updated_at = now(),
-  searchable_field = sfc.searchable_field
-FROM
-  get_searchable_field_for_contacts(ARRAY[$1::uuid]) sfc
-WHERE
-  id = sfc.contact
+SELECT * FROM dca
