@@ -1,19 +1,18 @@
-WITH uc AS (
+WITH dca AS (
   UPDATE
-    contacts
+    contacts_attributes
   SET
-    updated_at = now(),
-    searchable_field = sfc.searchable_field
-  FROM
-    get_searchable_field_for_contacts(ARRAY[$1::uuid]) sfc
+    deleted_at = now()
   WHERE
-    id = sfc.contact
+    contact = $1
+    AND id = $2
 )
 UPDATE
-  contacts_attributes
+  contacts
 SET
-  deleted_at = now()
+  updated_at = now(),
+  searchable_field = sfc.searchable_field
+FROM
+  get_searchable_field_for_contacts(ARRAY[$1::uuid]) sfc
 WHERE
-  contact = $1
-  AND id = $2
-RETURNING id
+  id = sfc.contact
