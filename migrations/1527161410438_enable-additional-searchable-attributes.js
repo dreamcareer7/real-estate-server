@@ -18,10 +18,73 @@ const up = [
       'note',
       'state'
     ])`,
+
+  `WITH csf AS (
+    SELECT
+      contact, array_to_string(array_agg(text), ' ') as searchable_field
+    FROM
+      contacts_attributes
+      JOIN contacts_attribute_defs ON contacts_attributes.attribute_def = contacts_attribute_defs.id
+    WHERE
+      searchable IS True
+      AND data_type = 'text'
+      AND contacts_attributes.deleted_at IS NULL
+      AND contacts_attribute_defs.deleted_at IS NULL
+    GROUP BY
+      contact
+  )
+  UPDATE
+    contacts
+  SET
+    searchable_field = csf.searchable_field
+  FROM
+    csf
+  WHERE
+    contacts.id = csf.contact`,
+
   'COMMIT'
 ]
 
 const down = [
+  'BEGIN',
+  `UPDATE
+    contacts_attribute_defs
+  SET
+    searchable = False
+  WHERE
+    name = ANY(ARRAY[
+      'tag',
+      'source',
+      'job_title',
+      'company',
+      'note',
+      'state'
+    ])`,
+
+  `WITH csf AS (
+    SELECT
+      contact, array_to_string(array_agg(text), ' ') as searchable_field
+    FROM
+      contacts_attributes
+      JOIN contacts_attribute_defs ON contacts_attributes.attribute_def = contacts_attribute_defs.id
+    WHERE
+      searchable IS True
+      AND data_type = 'text'
+      AND contacts_attributes.deleted_at IS NULL
+      AND contacts_attribute_defs.deleted_at IS NULL
+    GROUP BY
+      contact
+  )
+  UPDATE
+    contacts
+  SET
+    searchable_field = csf.searchable_field
+  FROM
+    csf
+  WHERE
+    contacts.id = csf.contact`,
+
+  'COMMIT'
 ]
 
 const runAll = (sqls, next) => {
