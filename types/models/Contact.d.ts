@@ -1,95 +1,98 @@
-declare interface IContactBase extends IModel {
-  merged: boolean;
-  ios_address_book_id?: String;
-  android_address_book_id?: String;
+declare interface IContactAttributeDefInput {
+  name: string;
+  data_type: 'number' | 'text' | 'date';
+  section?: string;
+  label: string;
+  required?: boolean;
+  singular?: boolean;
+  searchable?: boolean;
+  has_label?: boolean;
+  labels?: string[];
+  enum_values?: string[];
 }
 
-declare interface IParentContact extends IContactBase {
-  users?: UUID[];
-  brands?: IBrand[];
-  deals?: IDeal[];
-  sub_contacts: IContact[];
+declare interface IContactAttributeDef {
+  id: UUID;
+  name: string;
+  data_type: 'number' | 'text' | 'date';
+  section?: string;
+  global: boolean;
+  show: boolean;
+  editable: boolean;
+  singular: boolean;
+  searchable: boolean;
+  has_label: boolean;
+  labels: string[] | null;
+  enum_values?: string[];
+  user?: UUID;
+  brand?: UUID;
+}
 
-  type: "contact";
+declare interface IParentContact extends IModel {
+  sub_contacts: IContact[];
+  summary?: Record<string, string>;
+  merged: boolean;
+}
+
+declare interface IContactBase {
+  ios_address_book_id?: string;
+  android_address_book_id?: string;
+}
+
+declare interface IContactInput extends IContactBase {
+  id?: UUID;
+  attributes: IContactAttributeInput[];
 }
 
 declare interface IContact extends IContactBase {
+  id: UUID;
   deleted_at?: number | null;
   type: "sub_contact";
   user: UUID;
+  parent: UUID;
+  attributes: IContactAttribute[];
 
-  attributes: StringMap<IContactAttribute[]>;
-  emails: IContactEmailAttribute[];
-  phone_numbers: IContactPhoneAttribute[];
-  refs: UUID[];
+  users?: UUID[];
+  deals?: IDeal[];
 }
-
-declare type EAttributeTypes =
-  | "phone_number"
-  | "email"
-  | "name"
-  | "birthday"
-  | "tag"
-  | "profile_image_url"
-  | "cover_image_url"
-  | "company"
-  | "job_title"
-  | "stage"
-  | "address"
-  | "website"
-  | "source_type"
-  | "source_id"
-  | "last_modified_on_source"
-  | "brand"
-  | "note"
-  | "relation";
 
 declare interface IContactAttribute {
   id: UUID;
   created_at: number;
-  updated_at?: number;
-  type: EAttributeTypes;
+  updated_at: number;
+  deleted_at?: number;
 
+  created_by: UUID;
+  user: UUID;
+  contact: UUID;
+
+  attribute_def: UUID;
+
+  text: string;
+  number: number;
+  date: number;
+
+  index?: number;
   label?: String;
   is_primary: boolean;
 }
 
-declare interface IContactNameAttribute extends IContactAttribute {
-  type: 'name';
-  title: String;
-  first_name: String;
-  middle_name: String;
-  last_name: String;
-  nickname: String;
-  legal_prefix: String;
-  legal_first_name: String;
-  legal_middle_name: String;
-  legal_last_name: String;
-}
+declare interface IContactAttributeInput {
+  attribute_def: UUID;
 
-declare interface IContactAddressAttribute extends IContactAttribute {
-  type: 'address';
-  street_name: String;
-  city: String;
-  state: String;
-  country: String;
-  postal_code: String;
-}
+  id?: UUID;
+  created_by?: UUID;
+  user?: UUID;
+  contact?: UUID;
 
-declare interface IContactEmailAttribute extends IContactAttribute {
-  type: "email";
-  email: String;
-}
+  text?: string;
+  number?: number;
+  date?: number;
 
-declare interface IContactPhoneAttribute extends IContactAttribute {
-  type: "phone_number";
-  phone_number: String;
+  index?: number;
+  label?: String;
+  is_primary?: boolean;
 }
-
-type PatchableFields = Pick<
-  IParentContact,
-  "ios_address_book_id" | "android_address_book_id"
->;
 
 declare interface IAddContactOptions {
   /** Return {ParentContact} object or just id */
@@ -103,108 +106,19 @@ declare interface IAddContactOptions {
 declare interface IContactSummary {
   display_name: String;
   abbreviated_display_name: String;
-  legal_full_name: String;
   email: String;
   phone_number: String;
 }
 
-declare namespace Contact {
-  function extractNameInfo(contact: IParentContact): String[];
-  function getDisplayName(contact: IParentContact): String;
-  function getAbbreviatedDisplayName(contact: IParentContact): String;
-  function summarize(contact: IParentContact): IContactSummary;
+declare interface IContactAttributeFilter {
+  attribute_def: UUID;
+  text?: string;
+  date?: number;
+  number?: number;
+}
 
-  function getForUser(
-    user_id: UUID,
-    paging: any,
-    cb: Callback<IParentContact[]>
-  ): void;
-  function get(contact_id: UUID, cb: Callback<IParentContact>): void;
-  function getAll(contact_ids: UUID[], cb: Callback<IParentContact[]>): void;
-  function add(
-    user_id: UUID,
-    contact: IContact,
-    options?: IAddContactOptions
-  ): Promise<IParentContact>;
-  function remove(contact_id: UUID, cb: Callback<void>): void;
-  function patch(
-    contact_id: UUID,
-    params: PatchableFields,
-    cb: Callback<void>
-  ): void;
-  function patchAttribute(
-    contact_id: UUID,
-    user_id: UUID,
-    attribute_id: UUID,
-    attribute_type: EAttributeTypes,
-    attribute:
-      | IContactAttribute
-      | IContactEmailAttribute
-      | IContactPhoneAttribute,
-    cb: Callback<IParentContact>
-  ): void;
-  function addAttribute(
-    contact_id: UUID,
-    user_id: UUID,
-    attribute: IContactAttribute,
-    cb: Callback<IParentContact>
-  ): void;
-  function deleteAttribute(
-    contact_id: UUID,
-    user_id: UUID,
-    attribute_id: UUID,
-    cb: Callback<void>
-  ): void;
-  function getAttribute(
-    contact_id: UUID,
-    user_id: UUID,
-    attribute_id: UUID,
-    cb: Callback<IContactAttribute>
-  ): void;
-  function getByTags(
-    user_id: UUID,
-    tags: String[],
-    cb: Callback<IParentContact>
-  ): void;
-  function getByAttribute(
-    user_id: UUID,
-    attribute: String,
-    values: any[],
-    includeDeleted: boolean
-  ): Promise<IParentContact[]>;
-  function stringSearch(
-    user_id: UUID,
-    terms: String[],
-    limit: number,
-    cb: Callback<IParentContact[]>
-  ): void;
-  function getAllTags(user_id: UUID, cb: Callback<String[]>): void;
-  function setRefs(contact_id: UUID, refs: UUID[], cb: Callback<void>): void;
-
-  type TOverride = Record<"source_type" | "brand", String>;
-
-  function isConnected(
-    user_id: UUID,
-    peer_id: UUID,
-    cb: Callback<boolean>
-  ): void;
-  function connect(
-    user_id: UUID,
-    peer_id: UUID,
-    override: TOverride,
-    cb: Callback<void>
-  ): void;
-  function join(
-    user_id: UUID,
-    peer_id: UUID,
-    override: TOverride,
-    cb: Callback<IParentContact>
-  ): void;
-  function convertUser(user: IUser, override: TOverride): IContact;
-
-  function publicize(model: IContact): IContact;
-
-  function emit(event: string | symbol, ...args: any[]): boolean;
-
-  let associations: StringMap<IModelAssociation>;
+declare interface IContactFilterOptions {
+  q?: string[];
+  updated_gte?: number;
+  updated_lte?: number;
 }

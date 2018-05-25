@@ -29,35 +29,30 @@ SELECT 'user' AS type,
        ) as cover_image_url,
        (
          CASE WHEN $2::uuid IS NOT NULL THEN (
-           WITH c AS
-           (
-             SELECT id
-             FROM contacts
-             WHERE "user" = $2::uuid AND
-             deleted_at IS NULL
-           ),
-           ce AS
-           (
-             SELECT contact
-             FROM contacts_emails
-             WHERE contact IN (SELECT id FROM c) AND
-             email = users.email AND
-             deleted_at IS NULL
-           ),
-           cp AS
-           (
-             SELECT contact
-             FROM contacts_phone_numbers
-             WHERE contact IN (SELECT id FROM c) AND
-             phone_number = users.phone_number AND
-             deleted_at IS NULL
-           )
-           SELECT ARRAY_AGG(DISTINCT(contact)) FROM
-           (
-             SELECT contact FROM ce
-             UNION ALL
-             SELECT contact FROM cp
-           ) p
+          SELECT
+            ARRAY_AGG(DISTINCT(contacts.id))
+          FROM
+            contacts
+          INNER JOIN contacts_attributes
+            ON
+              contacts_attributes.contact = contacts.id
+          INNER JOIN contacts_attribute_defs
+            ON
+              contacts_attributes.attribute_def = contacts_attribute_defs.id
+          WHERE
+            contacts."user" = $2::uuid
+          AND contacts.deleted_at IS NULL
+          AND contacts_attributes.deleted_at IS NULL
+          AND (
+            (
+              contacts_attributes."text" = users.email
+              AND contacts_attribute_defs.name = 'email'
+            )
+            OR (
+              contacts_attributes."text" = users.phone_number
+              AND contacts_attribute_defs.name = 'phone_number'
+            )
+          )
          ) ELSE NULL END
        ) AS contacts,
        (

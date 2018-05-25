@@ -1,3 +1,4 @@
+const _ = require('lodash')
 const fs = require('fs')
 const path = require('path')
 const uuid = require('node-uuid')
@@ -7,7 +8,8 @@ const config = require('../../lib/config.js')
 const { activity } = require('./data/crm_activity')
 const anotherUser = require('./data/user')
 
-registerSuite('contact', ['create', 'createManyContacts'])
+registerSuite('user', ['create', 'upgradeToAgentWithEmail', 'markAsNonShadow'])
+registerSuite('contact', ['getAttributeDefs', 'create', 'createManyContacts'])
 registerSuite('listing', ['by_mui'])
 
 function fixResponseActivityToInput(activity) {
@@ -115,6 +117,28 @@ function addContactAssociation(cb) {
           id: results.contact.create.data[0].id
         }
       }
+    })
+}
+
+function checkContactTimeline(cb) {
+  const contact_id = results.contact.create.data[0].id
+  const updated_activity = _.omit(results.crm_activity.updateActivity.data, [
+    'created_at',
+    'updated_at',
+  ])
+
+  return frisby.create('associated activity appears in contact timeline')
+    .get(`/contacts/${contact_id}/timeline`)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      data: [
+        {
+          action: 'UserSignedUp',
+          type: 'activity'
+        },
+        updateActivity
+      ]
     })
 }
 
@@ -648,6 +672,7 @@ module.exports = {
   getForUser,
   updateActivity,
   addContactAssociation,
+  checkContactTimeline,
   addBulkContactAssociations,
   fetchAssociations,
   addInvalidAssociation,

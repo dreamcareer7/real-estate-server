@@ -7,7 +7,8 @@ const config = require('../../lib/config.js')
 const { task, fixed_reminder, relative_reminder } = require('./data/task')
 const anotherUser = require('./data/user')
 
-registerSuite('contact', ['create', 'createManyContacts'])
+registerSuite('user', ['create', 'upgradeToAgentWithEmail', 'markAsNonShadow'])
+registerSuite('contact', ['getAttributeDefs', 'create', 'createManyContacts'])
 registerSuite('listing', ['by_mui'])
 
 function fixResponseTaskToInput(task) {

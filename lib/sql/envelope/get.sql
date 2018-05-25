@@ -12,7 +12,7 @@ SELECT envelopes.*,
        (
          WITH docs AS (
           SELECT envelopes_documents.*, forms_data.submission as submission
-          FROM envelopes_documents JOIN forms_data ON envelopes_documents.submission_revision = forms_data.id
+          FROM envelopes_documents FULL JOIN forms_data ON envelopes_documents.submission_revision = forms_data.id
           WHERE envelopes_documents.envelope = envelopes.id
           ORDER BY envelopes_documents.document_id
          )
