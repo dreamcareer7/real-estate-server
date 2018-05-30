@@ -82,7 +82,7 @@ function listAllFilters(cb) {
       code: 'OK'
     })
     .expectJSONTypes({
-      data: Array
+      data: Object
     })
 }
 
