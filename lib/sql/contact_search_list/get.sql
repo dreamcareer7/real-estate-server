@@ -3,5 +3,5 @@ SELECT
     filters,
     name,
     is_pinned
-FROM search_filters
+FROM contact_search_lists
 WHERE id IN (SELECT UNNEST($1::uuid[]))
