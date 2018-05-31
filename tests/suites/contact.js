@@ -184,6 +184,47 @@ const filterContacts = cb => {
     .expectStatus(200)
 }
 
+const filterContactsHavingTwoTags = cb => {
+  return frisby
+    .create('filter by contact attributes using all operator')
+    .post('/contacts/filter', {
+      filter: [{
+        attribute_def: defs.tag.id,
+        value: 'New'
+      }, {
+        attribute_def: defs.tag.id,
+        value: 'foo'
+      }]
+    })
+    .after(cb)
+    .expectJSONLength('data', 1)
+    .expectJSON({
+      data: [{
+        id: results.contact.create.data[0].id
+      }]
+    })
+    .expectStatus(200)
+}
+
+const invertedFilter = cb => {
+  return frisby
+    .create('filter by contact attributes using invert option')
+    .post('/contacts/filter', {
+      filter: [{
+        attribute_def: defs.tag.id,
+        value: 'New',
+        invert: true
+      }, {
+        attribute_def: defs.tag.id,
+        value: 'foo',
+        invert: true
+      }]
+    })
+    .after(cb)
+    .expectJSONLength('data', manyContacts.length + 1)
+    .expectStatus(200)
+}
+
 const stringSearch = cb => {
   return frisby
     .create('search in contacts by search terms')
@@ -618,6 +659,8 @@ module.exports = {
   getNonExistingContact,
   getGibberishContact,
   filterContacts,
+  filterContactsHavingTwoTags,
+  invertedFilter,
   stringSearch,
   filterOnNonExistentAttributeDef,
   addAttribute,
