@@ -112,9 +112,9 @@ declare interface IContactSummary {
 
 declare interface IContactAttributeFilter {
   attribute_def: UUID;
-  text?: string;
-  date?: number;
-  number?: number;
+  operator: 'eq' | 'lte' | 'gte' | 'between' | 'any' | 'all',
+  value: any;
+  invert?: boolean;
 }
 
 declare interface IContactFilterOptions {
