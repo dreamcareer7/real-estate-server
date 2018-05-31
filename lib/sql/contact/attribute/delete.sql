@@ -1,4 +1,13 @@
-WITH uc AS (
+WITH dca AS (
+  UPDATE
+    contacts_attributes
+  SET
+    deleted_at = now()
+  WHERE
+    contact = $1
+    AND id = $2
+  RETURNING id
+), usfc AS (
   UPDATE
     contacts
   SET
@@ -9,11 +18,4 @@ WITH uc AS (
   WHERE
     id = sfc.contact
 )
-UPDATE
-  contacts_attributes
-SET
-  deleted_at = now()
-WHERE
-  contact = $1
-  AND id = $2
-RETURNING id
+SELECT * FROM dca

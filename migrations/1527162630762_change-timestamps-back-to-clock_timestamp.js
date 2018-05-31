@@ -5,18 +5,23 @@ const db = require('../lib/utils/db')
 
 const up = [
   'BEGIN',
-  ` 
-  INSERT INTO user_alert_settings (SELECT u.id as "user", a.id, 'Enabled' FROM alerts a 
-    INNER JOIN rooms_users ru USING(room)
-    INNER JOIN users u ON (ru."user" = u.id) 
-  )
-  `
-  ,
+  `ALTER TABLE contacts
+    ALTER created_at SET DEFAULT clock_timestamp(),
+    ALTER updated_at SET DEFAULT clock_timestamp()`,
+  `ALTER TABLE contacts_attributes
+    ALTER created_at SET DEFAULT clock_timestamp(),
+    ALTER updated_at SET DEFAULT clock_timestamp()`,
   'COMMIT'
 ]
 
 const down = [
   'BEGIN',
+  `ALTER TABLE contacts
+    ALTER created_at SET DEFAULT now(),
+    ALTER updated_at SET DEFAULT now()`,
+  `ALTER TABLE contacts_attributes
+    ALTER created_at SET DEFAULT now(),
+    ALTER updated_at SET DEFAULT now()`,
   'COMMIT'
 ]
 
