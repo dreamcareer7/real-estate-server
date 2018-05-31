@@ -168,10 +168,10 @@ const filterContacts = cb => {
     .post('/contacts/filter', {
       filter: [{
         attribute_def: defs.tag.id,
-        text: 'New'
+        value: 'New'
       }, {
         attribute_def: defs.company.id,
-        text: 'Rechat'
+        value: 'Rechat'
       }]
     })
     .after(cb)
@@ -211,11 +211,7 @@ const filterOnNonExistentAttributeDef = cb => {
       }]
     })
     .after(cb)
-    .expectJSONLength('data', 0)
-    .expectJSON({
-      data: []
-    })
-    .expectStatus(200)
+    .expectStatus(400)
 }
 
 const addAttribute = cb => {
