@@ -33,6 +33,7 @@ Although we have a page that includes [everything](/all.html).
 
 * [Activity Log](crm_activity.html)
 * [Contacts](contact.html)
+* [Contact Lists](contact_list.html)
 * [Tasks](task.html)
 
 ## Sharing
