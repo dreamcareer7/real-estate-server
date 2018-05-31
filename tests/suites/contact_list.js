@@ -1,13 +1,11 @@
 function create (cb) {
   return frisby.create('create contact search list')
-    .post('/contact-search-lists', {
+    .post('/contact/list', {
       filters: [
         {
-          'collection': 'contacts',
-          'property': 'tag',
-          'type': 'enum',
+          'attribute_def': '24171fd0-7994-43fc-a1cb-adcb726429b5',
           'values': ['cool', 'great'],
-          'operator': 'matchAll'
+          'operator': 'all'
         }
       ],
       'name': 'Wow list',
@@ -24,19 +22,16 @@ function create (cb) {
       code: String,
       data: String
     })
-    
 }
 
 function update(cb) {
   return frisby.create('update contact search list')
-    .put('/contact-search-lists/' + results.contact_search_list.create.data, {
+    .put('/contact/list/' + results.contact_list.create.data, {
       filters: [
         {
-          'collection': 'contacts',
-          'property': 'tag',
-          'type': 'enum',
+          'attribute_def': '24171fd0-7994-43fc-a1cb-adcb726429b5',
           'values': ['cool', 'great'],
-          'operator': 'matchAll'
+          'operator': 'all'
         }
       ],
       'name': 'Wow list',
@@ -55,7 +50,7 @@ function update(cb) {
 
 function listForUser(cb) {
   return frisby.create('list for user')
-    .get('/contact-search-lists')
+    .get('/contact/list')
     .after(cb)
     .expectStatus(200)
     .expectJSON({
@@ -68,14 +63,14 @@ function listForUser(cb) {
 
 function deleteIt(cb) {
   return frisby.create('delete contact search list')
-    .delete(`/contact-search-lists/${results.contact_search_list.create.data}`)
+    .delete(`/contact/list/${results.contact_list.create.data}`)
     .after(cb)
-    .expectStatus(200)
+    .expectStatus(204)
 }
 
 function listAllFilters(cb) {
   return frisby.create('list all availabe filters')
-    .get('/contact-search-lists/options')
+    .get('/contact/list/options')
     .after(cb)
     .expectStatus(200)
     .expectJSON({
