@@ -1,4 +1,4 @@
 {% set title = room.title or room.proposed_title %}
 {% if title and transport != "SMS" %}[{{title}}] {% endif %}
-{% if room.title != "Direct" %}{{subjects[0] | name}}: {% endif %}{{objects[0].comment | safe}}
+{% if room.room_type != "Direct" %}{{subjects[0] | name}}: {% endif %}{{objects[0].comment | safe}}
 {% if transport == "SMS" %} {{branch}}.{% endif %}
