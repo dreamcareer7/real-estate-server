@@ -1,6 +1,6 @@
 function create (cb) {
   return frisby.create('create contact search list')
-    .post('/contact/list', {
+    .post('/contacts/lists', {
       filters: [
         {
           'attribute_def': '24171fd0-7994-43fc-a1cb-adcb726429b5',
@@ -26,7 +26,7 @@ function create (cb) {
 
 function update(cb) {
   return frisby.create('update contact search list')
-    .put('/contact/list/' + results.contact_list.create.data, {
+    .put('/contacts/lists/' + results.contact_list.create.data, {
       filters: [
         {
           'attribute_def': '24171fd0-7994-43fc-a1cb-adcb726429b5',
@@ -50,7 +50,7 @@ function update(cb) {
 
 function listForUser(cb) {
   return frisby.create('list for user')
-    .get('/contact/list')
+    .get('/contacts/lists')
     .after(cb)
     .expectStatus(200)
     .expectJSON({
@@ -63,14 +63,14 @@ function listForUser(cb) {
 
 function deleteIt(cb) {
   return frisby.create('delete contact search list')
-    .delete(`/contact/list/${results.contact_list.create.data}`)
+    .delete(`/contacts/lists/${results.contact_list.create.data}`)
     .after(cb)
     .expectStatus(204)
 }
 
 function listAllFilters(cb) {
   return frisby.create('list all availabe filters')
-    .get('/contact/list/options')
+    .get('/contacts/lists/options')
     .after(cb)
     .expectStatus(200)
     .expectJSON({
