@@ -12,7 +12,7 @@ function create (cb) {
         }
       ],
       'name': 'Wow list',
-      'isPinned': true
+      'is_pinned': true
     })
     .after((err, response, body) => {
       cb(err, response, body)
@@ -41,7 +41,7 @@ function update(cb) {
         }
       ],
       'name': 'Wow list',
-      'isPinned': false
+      'is_pinned': false
     })
     .after(cb)
     .expectStatus(200)
