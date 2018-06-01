@@ -4,8 +4,11 @@ function create (cb) {
       filters: [
         {
           'attribute_def': '24171fd0-7994-43fc-a1cb-adcb726429b5',
-          'values': ['cool', 'great'],
-          'operator': 'all'
+          'value': 'cool'
+        },
+        {
+          'attribute_def': '24171fd0-7994-43fc-a1cb-adcb726429b5',
+          'value': 'great'
         }
       ],
       'name': 'Wow list',
@@ -30,8 +33,11 @@ function update(cb) {
       filters: [
         {
           'attribute_def': '24171fd0-7994-43fc-a1cb-adcb726429b5',
-          'values': ['cool', 'great'],
-          'operator': 'all'
+          'value': 'cool'
+        },
+        {
+          'attribute_def': '24171fd0-7994-43fc-a1cb-adcb726429b5',
+          'value': 'great'
         }
       ],
       'name': 'Wow list',
