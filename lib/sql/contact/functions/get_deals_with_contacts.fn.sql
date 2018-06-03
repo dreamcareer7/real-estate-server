@@ -20,6 +20,7 @@ AS $$
       FROM contacts_attributes AS ca
       WHERE
         attribute_def = email_attr
+        AND text <> ''
         AND deleted_at IS NULL
         AND ca.contact = ANY(contact_ids);
 
@@ -27,6 +28,7 @@ AS $$
       FROM contacts_attributes AS ca
       WHERE
         attribute_def = phone_attr
+        AND text <> ''
         AND deleted_at IS NULL
         AND ca.contact = ANY(contact_ids);
 
@@ -66,6 +68,7 @@ AS $$
         INNER JOIN roles_with_deals
           ON roles_with_deals.email = contacts_attributes.text
       WHERE contacts_attributes.deleted_at IS NULL
+        AND contacts_attributes.text <> ''
         AND contacts_attributes.attribute_def = email_attr
         AND contacts_attributes.contact = ANY(contact_ids)
     )
@@ -78,6 +81,7 @@ AS $$
         INNER JOIN roles_with_deals
           ON roles_with_deals.phone_number = contacts_attributes.text
       WHERE contacts_attributes.deleted_at IS NULL
+        AND contacts_attributes.text <> ''
         AND contacts_attributes.attribute_def = phone_attr
         AND contacts_attributes.contact = ANY(contact_ids)
     );
