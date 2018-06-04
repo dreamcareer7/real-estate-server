@@ -139,6 +139,12 @@ Updates multiple contacts and their attributes. If attributes have `id`, they ar
 ### Filter contacts by attributes [POST /contacts/filter]
 <!-- include(tests/contact/filterContacts.md) -->
 
+### Filter contacts by multiple tags [POST /contacts/filter]
+<!-- include(tests/contact/filterContactsHavingTwoTags.md) -->
+
+### Filter contacts not having attributes [POST /contacts/filter]
+<!-- include(tests/contact/invertedFilter.md) -->
+
 ### Get all tags [GET /contacts/tags]
 <!-- include(tests/contact/getAllTags.md) -->
 
