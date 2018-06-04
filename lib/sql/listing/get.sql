@@ -1,7 +1,11 @@
 WITH brand_agents AS (
   SELECT * FROM propose_brand_agents($3, $2)
+),
+listing_settings AS (
+  SELECT id, listing from user_listing_notification_settings 
+  WHERE "user" = $2 AND
+  listing = ANY($1)
 )
-
 ,listing AS (
   SELECT 'listing' AS TYPE,
         listings.*,
@@ -96,5 +100,7 @@ property_object AS (
   JOIN address ON property.matrix_unique_id = address.matrix_unique_id
 )
 
-SELECT listing.*, row_to_json(property_object) as property FROM listing
+SELECT listing.*, row_to_json(property_object) as property, listing_settings.id as user_listing_notification_setting
+FROM listing
+LEFT JOIN listing_settings ON (listing_settings.listing = listing.id)
 JOIN property_object ON listing.property_id = property_object.id

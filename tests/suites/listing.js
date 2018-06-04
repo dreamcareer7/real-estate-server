@@ -154,6 +154,27 @@ const searchMlsAreasByParent = cb => {
     })
 }
 
+function updateListingSetting(cb) {
+  return frisby.create('Update listing setting')
+    .patch('/listings/' + listing.id + '/status', {
+      status: ['ListingStatusChange', 'ListingPriceDrop', 'ListingOpenHouse']
+    })
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+    })
+}
+
+function invalidUpdateListingSetting(cb) {
+  return frisby.create('Update listing setting with invalid status should not work')
+    .patch('/listings/' + listing.id + '/status', {
+      status: ['ListingStatusChangesssss', 'ListingPriceDrop', 'ListingOpenHouse']
+    })
+    .after(cb)
+    .expectStatus(500)
+}
+
 // const listingInquiry = cb => {
 //   return frisby.create('Inquire listings')
 //     .post('/listings/'+ listing.id + '/inquiry')
@@ -172,5 +193,7 @@ module.exports = {
   searchCounties,
   searchMlsAreasByQuery,
   searchMlsAreasByParent,
+  updateListingSetting,
+  invalidUpdateListingSetting
   //listingInquiry
 }
