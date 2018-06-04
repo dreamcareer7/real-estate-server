@@ -60,7 +60,12 @@ function listForUser(cb) {
     .after(cb)
     .expectStatus(200)
     .expectJSON({
-      code: 'OK'
+      code: 'OK',
+      data: [{
+        filters: [{
+          type: 'contact_list_filter'
+        }]
+      }]
     })
     .expectJSONTypes({
       data: Array
