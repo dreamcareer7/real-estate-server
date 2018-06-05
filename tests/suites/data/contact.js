@@ -83,7 +83,7 @@ const contact = {
       label: 'Office'
     },
     {
-      type: 'zip_code',
+      type: 'postal_code',
       text: '72890',
       is_primary: true,
       label: 'Office'

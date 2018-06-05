@@ -34,7 +34,7 @@ module.exports = [
         text: '165 Davis Street'
       },
       {
-        type: 'zip_code',
+        type: 'postal_code',
         text: '94010'
       },
       {
@@ -79,7 +79,7 @@ module.exports = [
         text: '332 Laguna Street'
       },
       {
-        type: 'zip_code',
+        type: 'postal_code',
         text: '94925'
       },
       {
@@ -136,7 +136,7 @@ module.exports = [
         text: '3494 Kuhl Avenue'
       },
       {
-        type: 'zip_code',
+        type: 'postal_code',
         text: '30303'
       },
       {
@@ -185,7 +185,7 @@ module.exports = [
         text: '1001  Leavenworth Street'
       },
       {
-        type: 'zip_code',
+        type: 'postal_code',
         text: '94965'
       },
       {
@@ -226,7 +226,7 @@ module.exports = [
         text: '1741 Kearny Street'
       },
       {
-        type: 'zip_code',
+        type: 'postal_code',
         text: '94901'
       },
       {
@@ -267,7 +267,7 @@ module.exports = [
         text: '1747 Steuart Street'
       },
       {
-        type: 'zip_code',
+        type: 'postal_code',
         text: '94920'
       },
       {
@@ -304,7 +304,7 @@ module.exports = [
         text: '50 Park'
       },
       {
-        type: 'zip_code',
+        type: 'postal_code',
         text: ''
       },
       {
