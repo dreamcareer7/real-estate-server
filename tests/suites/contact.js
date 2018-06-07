@@ -390,6 +390,20 @@ const addEmail = cb => {
     .expectStatus(200)
 }
 
+const searchByAddedEmail = cb => {
+  return frisby
+    .create('search in contacts for the added email')
+    .post('/contacts/filter?q[]=' + encodeURIComponent('test+email2@rechat.com'))
+    .after(cb)
+    .expectJSONLength('data', 1)
+    .expectJSON({
+      data: [{
+        id: results.contact.addPhoneNumber.data.id
+      }]
+    })
+    .expectStatus(200)
+}
+
 const areEmailsLowered = cb => {
   return frisby
     .create('are emails lowered')
@@ -458,6 +472,35 @@ const removeAttribute = cb => {
       if (phone) throw 'Attribute is not removed.'
 
       cb(err, res, json)
+    })
+    .expectStatus(200)
+}
+
+const removeEmail = cb => {
+  const attr_id = _.findLast(
+    results.contact.addEmail.data.sub_contacts[0].attributes,
+    {
+      attribute_type: 'email'
+    }
+  ).id
+
+  return frisby
+    .create('remove the latest added email')
+    .after(cb)
+    .delete(
+      `/contacts/${results.contact.addEmail.data.id}/attributes/${attr_id}`
+    )
+    .expectStatus(200)
+}
+
+const searchByRemovedEmail = cb => {
+  return frisby
+    .create('search in contacts for the removed email returns empty')
+    .post('/contacts/filter?q[]=' + encodeURIComponent('test+email2@rechat.com'))
+    .after(cb)
+    .expectJSONLength('data', 0)
+    .expectJSON({
+      data: []
     })
     .expectStatus(200)
 }
@@ -669,6 +712,7 @@ module.exports = {
   addInvalidPhoneNumber,
   addPhoneNumber,
   addEmail,
+  searchByAddedEmail,
   areEmailsLowered,
   arePhoneNumbersProper,
   updateContact,
@@ -676,6 +720,8 @@ module.exports = {
   getTimeline,
   getAllTags,
   removeAttribute,
+  removeEmail,
+  searchByRemovedEmail,
   removeNonExistingAttribute,
   removeGibberishAttribute,
   mergeContacts,
