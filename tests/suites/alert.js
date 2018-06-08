@@ -191,6 +191,27 @@ const deleteAlertWorked = (cb) => {
     .expectJSONLength('data', 0)
 }
 
+function updateAlertSetting(cb) {
+  return frisby.create('Update alert setting')
+    .patch('/alerts/' + results.alert.create.data.id + '/status', {
+      status: ['AlertHit', 'AlertOpenHouse', 'AlertStatusChange', 'AlertPriceDrop']
+    })
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+    })
+}
+
+function invalidUpdateAlertSetting(cb) {
+  return frisby.create('Update alert setting with invalid status should not work')
+    .patch('/alerts/' + results.alert.create.data.id + '/status', {
+      status: ['AlertHittt', 'AlertOpenHouse', 'AlertStatusChange', 'AlertPriceDrop']
+    })
+    .after(cb)
+    .expectStatus(500)
+}
+
 module.exports = {
   create,
   get,
@@ -203,5 +224,7 @@ module.exports = {
   virtual,
   deleteAlert404,
   deleteAlert,
-  deleteAlertWorked
+  deleteAlertWorked,
+  updateAlertSetting,
+  invalidUpdateAlertSetting
 }

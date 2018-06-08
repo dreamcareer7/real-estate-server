@@ -1,5 +1,5 @@
-INSERT INTO search_filters (
-    user_id,
+INSERT INTO contact_search_lists (
+    "user",
     filters,
     name,
     is_pinned

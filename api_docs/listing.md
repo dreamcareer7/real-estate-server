@@ -33,3 +33,6 @@ However, each `listing` object has a `property` object inside.
 
 ### Get by ID [GET /listings/{id}]
 <!-- include(tests/listing/getListing.md) -->
+
+### Update/Add listing setting status [PATCH /listings/{id}/status]
+<!-- include(tests/listing/updateListingSetting.md) -->

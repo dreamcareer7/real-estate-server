@@ -29,3 +29,6 @@ that listing will be recommended to users on that chat room.
 This is called a `Virtual Alert` as it shares all the characteristics of an alert, except that its not saved and the results are
 returned immediately.
 <!-- include(tests/alert/virtual.md) -->
+
+### Update Alert setting status [PATCH /alerts/{id}/status]
+<!-- include(tests/alert/updateAlertSetting.md) -->

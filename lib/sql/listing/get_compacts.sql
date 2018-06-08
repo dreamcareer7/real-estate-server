@@ -1,5 +1,10 @@
 WITH brand_agents AS (
   SELECT * FROM propose_brand_agents($3, $2)
+),
+listing_settings AS (
+  SELECT id, listing from user_listing_notification_settings 
+  WHERE "user" = $2 AND
+  listing = ANY($1)
 )
 
 SELECT 'compact_listing' AS TYPE,
@@ -106,8 +111,11 @@ SELECT 'compact_listing' AS TYPE,
           'lot_size_area', properties.lot_size_area,
           'created_at', EXTRACT(EPOCH FROM properties.created_at),
           'updated_at', EXTRACT(EPOCH FROM properties.updated_at)
-       ) AS compact_property
+       ) AS compact_property,
+       listing_settings.id as user_listing_notification_setting
+
 FROM listings
+LEFT JOIN listing_settings ON (listing_settings.listing = listings.id)
 JOIN properties ON listings.property_id = properties.id
 JOIN addresses ON properties.address_id = addresses.id
 JOIN unnest($1::uuid[]) WITH ORDINALITY t(lid, ord) ON listings.id = lid
