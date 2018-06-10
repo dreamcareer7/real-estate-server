@@ -1,25 +1,21 @@
 'use strict'
 
 const async = require('async')
-const fs = require('fs')
 const db = require('../lib/utils/db')
-
-const analytics_deals = fs.readFileSync(__dirname + '/../lib/sql/analytics/olap/deals.view.sql', 'utf-8')
-const deals_with_rejected_submissions = fs.readFileSync(__dirname + '/../lib/sql/analytics/olap/deals_with_rejected_submissions.view.sql', 'utf-8')
+const fs = require('fs')
+const calendar_view = fs.readFileSync(__dirname + '/../lib/sql/analytics/calendar/calendar.view.sql', 'utf-8')
 
 const up = [
   'BEGIN',
-  'CREATE SCHEMA IF NOT EXISTS analytics',
-  deals_with_rejected_submissions,
-  analytics_deals,
+  'CREATE INDEX contacts_attributes_date_idx ON contacts_attributes("date") WHERE deleted_at IS NULL',
+  calendar_view,
   'COMMIT'
 ]
 
 const down = [
   'BEGIN',
-  'DROP VIEW analytics.deals',
-  'DROP VIEW deals_with_rejected_submissions',
-  'DROP SCHEMA analytics',
+  'DROP VIEW IF EXISTS analytics.calendar',
+  'DROP INDEX contacts_attributes_date_idx',
   'COMMIT'
 ]
 
