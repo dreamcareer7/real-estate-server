@@ -1,7 +1,8 @@
 CREATE OR REPLACE VIEW analytics.calendar AS (
   SELECT
     id,
-    'crm_task' AS event_type,
+    'crm_task' AS object_type,
+    task_type AS event_type,
     due_date AS "timestamp",
     False AS recurring,
     title,
@@ -19,10 +20,11 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
   (
     SELECT
       current_deal_context.id,
-      'deal_context' AS event_type,
+      'deal_context' AS object_type,
+      "key" AS event_type,
       "date" AS "timestamp",
       False AS recurring,
-      "key" AS title,
+      NULL AS title,
       NULL::uuid AS crm_task,
       deal,
       NULL::uuid AS contact,
@@ -40,13 +42,14 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
   (
     SELECT
       contacts_attributes.id,
-      'contact_attribute' AS event_type,
-      "date" AS "timestamp",
-      True AS recurring,
+      'contact_attribute' AS object_type,
       (CASE
         WHEN name = 'birthday' THEN 'Birthday'
         ELSE COALESCE(contacts_attributes.label, 'Important Date')
-      END) AS title,
+      END) AS event_type,
+      "date" AS "timestamp",
+      True AS recurring,
+      NULL AS title,
       NULL::uuid AS crm_task,
       NULL::uuid AS deal,
       contact,
