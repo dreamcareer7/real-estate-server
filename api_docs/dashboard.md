@@ -15,7 +15,8 @@ Field       | Type         | Description
 ------------|:------------:|-----------------------------------------------------------------------------------
 id          | uuid         | Id of the underlying event-like object
 object_type | Enum         | Type of the underlying object. `crm_task` or `deal_context` or `contact_attribute`
-event_type  | String       | Type of the event. Can be used directly in the UI.
+event_type  | String       | Type of the event. Used to infer icons on calendar events.
+type_label  | String       | Label used for type column in the Web UI.
 timestamp   | number       | The exact timestamp of the event. In case of recurring events, the original user input is returned.
 recurring   | String       | Whether this a recurring event or not. Currently only applies to `birthday` and `important_date`
 title       | String       | **Reserved** Currently unused.
