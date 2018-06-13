@@ -42,30 +42,76 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
   )
   UNION ALL
   (
+    WITH cevents AS (
+      SELECT
+        contacts_attributes.id,
+        'contact_attribute' AS object_type,
+        contacts_attribute_defs.name AS event_type,
+        (CASE
+          WHEN name = 'birthday' THEN 'Birthday'
+          ELSE COALESCE(contacts_attributes.label, 'Important Date')
+        END) AS type_label,
+        "date" AS "timestamp",
+        True AS recurring,
+        NULL AS title,
+        NULL::uuid AS crm_task,
+        NULL::uuid AS deal,
+        contact,
+        contacts."user",
+        contacts.brand
+      FROM
+        contacts
+        JOIN contacts_attributes
+          ON contacts.id = contacts_attributes.contact
+        JOIN contacts_attribute_defs
+          ON contacts_attributes.attribute_def = contacts_attribute_defs.id
+      WHERE
+        contacts.deleted_at IS NULL
+        AND contacts_attributes.deleted_at IS NULL
+        AND name = 'birthday' OR name = 'important_date'
+    ),
+    cevids AS (
+      SELECT array_agg(contact) ids FROM cevents
+    ),
+    csummaries AS (
+      SELECT
+        cs.*,
+        COALESCE(
+          CASE WHEN first_name IS NOT NULL AND last_name IS NOT NULL THEN first_name || ' ' || last_name ELSE NULL END,
+          nickname,
+          first_name,
+          last_name,
+          company,
+          email,
+          phone_number,
+          'Guest'
+        ) AS display_name,
+        COALESCE(
+          nickname,
+          first_name,
+          company,
+          email,
+          phone_number,
+          'Guest'
+        ) AS abbreviated_display_name
+      FROM
+        cevids,
+        get_contact_summaries(cevids.ids) cs
+    )
     SELECT
-      contacts_attributes.id,
-      'contact_attribute' AS object_type,
-      contacts_attribute_defs.name AS event_type,
-      (CASE
-        WHEN name = 'birthday' THEN 'Birthday'
-        ELSE COALESCE(contacts_attributes.label, 'Important Date')
-      END) AS type_label,
-      "date" AS "timestamp",
-      True AS recurring,
-      NULL AS title,
-      NULL::uuid AS crm_task,
-      NULL::uuid AS deal,
+      cevents.id,
+      object_type,
+      event_type,
+      type_label,
+      "timestamp",
+      recurring,
+      csummaries.display_name AS title,
+      crm_task,
+      deal,
       contact,
-      contacts."user",
-      contacts.brand
+      "user",
+      brand
     FROM
-      contacts
-      JOIN contacts_attributes
-        ON contacts.id = contacts_attributes.contact
-      JOIN contacts_attribute_defs
-        ON contacts_attributes.attribute_def = contacts_attribute_defs.id
-    WHERE
-      contacts.deleted_at IS NULL
-      AND contacts_attributes.deleted_at IS NULL
-      AND name = 'birthday' OR name = 'important_date'
+      cevents
+      JOIN csummaries ON cevents.contact = csummaries.id
   )
