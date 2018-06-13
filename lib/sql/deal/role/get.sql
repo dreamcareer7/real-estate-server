@@ -31,6 +31,20 @@ SELECT deals_roles.*,
 FROM deals_roles
 LEFT JOIN users  ON deals_roles.user = users.id
 LEFT JOIN agents ON users.agent = agents.id
-LEFT JOIN brokerwolf_agents_boards bw ON agents.mlsid = bw.mls_id
+LEFT JOIN brokerwolf_agents_boards bw ON (
+  agents.mlsid = bw.mls_id
+  OR
+  /*
+  * In some cases, for example, the agent being a commercial one
+  * they don't have NTREIS accounts.
+  * We still need to make the connection.
+  * We use email address.
+  * So the email address needs to be added to WolfConnect
+  */
+  (
+    users.email = bw.mls_id
+    AND users.email_confirmed IS TRUE
+  )
+)
 JOIN unnest($1::uuid[]) WITH ORDINALITY t(rid, ord) ON deals_roles.id = rid
 ORDER BY t.ord
