@@ -1,7 +1,5 @@
 CREATE OR REPLACE FUNCTION get_contact_display_name(contact_id uuid)
-RETURNS TABLE (
-  display_name text
-)
+RETURNS text
 LANGUAGE SQL
 STABLE
 AS $function$
