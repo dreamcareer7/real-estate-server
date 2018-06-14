@@ -20,6 +20,11 @@ const up = [
 ]
 
 const down = [
+  'BEGIN',
+  'DROP VIEW IF EXISTS analytics.calendar',
+  'DROP FUNCTION IF EXISTS get_contact_display_name(uuid)',
+  'DROP FUNCTION IF EXISTS get_deal_display_title(uuid)',
+  'COMMIT'
 ]
 
 const runAll = (sqls, next) => {

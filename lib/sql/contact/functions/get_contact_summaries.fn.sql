@@ -14,7 +14,6 @@ RETURNS TABLE (
   cover_image_url text,
   job_title text,
   source_type text,
-  source_id text,
   stage text,
   source text
 )
@@ -30,7 +29,7 @@ AS $function$
       WITH contact_ids(id) AS ( VALUES $ctsql$ || cid_values || $ctsql$ )
       SELECT DISTINCT ON (contacts.id, contacts_attributes.attribute_def)
         contacts.id,
-        contacts_attribute_defs.name,
+        contacts_attributes.attribute_type,
         COALESCE(
           contacts_attributes.text,
           contacts_attributes.number::text,
@@ -39,13 +38,27 @@ AS $function$
       FROM
         contacts
         JOIN contacts_attributes ON contacts_attributes.contact = contacts.id
-        JOIN contacts_attribute_defs ON contacts_attributes.attribute_def = contacts_attribute_defs.id
         JOIN contact_ids ON contacts.id = contact_ids.id::uuid
       WHERE
         contacts_attributes.deleted_at IS NULL
         AND contacts.deleted_at IS NULL
-        AND global IS True
-        AND (singular IS TRUE OR name = 'email' OR name = 'phone_number' OR name = 'company')
+        AND attribute_type = ANY(VALUES
+          ('title'),
+          ('first_name'),
+          ('middle_name'),
+          ('last_name'),
+          ('nickname'),
+          ('email'),
+          ('phone_number'),
+          ('company'),
+          ('birthday'),
+          ('profile_image_url'),
+          ('cover_image_url'),
+          ('job_title'),
+          ('source_type'),
+          ('stage'),
+          ('source')
+        )
       ORDER BY
         contacts.id,
         contacts_attributes.attribute_def,
@@ -68,7 +81,6 @@ AS $function$
       contacts_summaries.cover_image_url,
       contacts_summaries.job_title,
       contacts_summaries.source_type,
-      contacts_summaries.source_id,
       contacts_summaries.stage,
       contacts_summaries.source
     FROM
@@ -88,8 +100,6 @@ AS $function$
         ('cover_image_url'),
         ('job_title'),
         ('source_type'),
-        ('source_id'),
-        ('last_modified_on_source'),
         ('stage'),
         ('source')
     $$) AS contacts_summaries(
@@ -107,8 +117,6 @@ AS $function$
       cover_image_url text,
       job_title text,
       source_type text,
-      source_id text,
-      last_modified_on_source timestamptz,
       stage text,
       source text
     ) ON cids.id = contacts_summaries.cid;
