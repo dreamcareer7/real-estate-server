@@ -10,6 +10,7 @@ const get_contact_display_name = fs.readFileSync(__dirname + '/../lib/sql/contac
 const up = [
   'BEGIN',
   'DROP VIEW IF EXISTS analytics.calendar',
+  'DROP FUNCTION IF EXISTS get_contact_display_name(uuid)',
   get_contact_display_name,
   calendar_view,
   'COMMIT'
