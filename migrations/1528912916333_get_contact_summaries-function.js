@@ -3,19 +3,18 @@
 const async = require('async')
 const db = require('../lib/utils/db')
 const fs = require('fs')
-const calendar_view = fs.readFileSync(__dirname + '/../lib/sql/analytics/calendar/calendar.view.sql', 'utf-8')
+
+const get_contact_summaries = fs.readFileSync(__dirname + '/../lib/sql/contact/functions/get_contact_summaries.fn.sql', 'utf-8')
 
 const up = [
   'BEGIN',
-  'CREATE INDEX contacts_attributes_date_idx ON contacts_attributes("date") WHERE deleted_at IS NULL',
-  calendar_view,
+  get_contact_summaries,
   'COMMIT'
 ]
 
 const down = [
   'BEGIN',
-  'DROP VIEW IF EXISTS analytics.calendar',
-  'DROP INDEX contacts_attributes_date_idx',
+  'DROP FUNCTION get_contact_summaries(uuid[])',
   'COMMIT'
 ]
 

@@ -52,7 +52,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       END) AS type_label,
       "date" AS "timestamp",
       True AS recurring,
-      NULL AS title,
+      cdn.display_name AS title,
       NULL::uuid AS crm_task,
       NULL::uuid AS deal,
       contact,
@@ -60,6 +60,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       contacts.brand
     FROM
       contacts
+      JOIN LATERAL get_contact_display_name(contacts.id) cdn ON True
       JOIN contacts_attributes
         ON contacts.id = contacts_attributes.contact
       JOIN contacts_attribute_defs
