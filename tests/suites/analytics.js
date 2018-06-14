@@ -46,7 +46,7 @@ function getCalendar(cb) {
   const high = moment().add(2, 'day').startOf('day').unix()
   return frisby
     .create('get calendar events')
-    .get(`/calendar?low=${low}&high=${high}&associations[]=calendar_event.deal&associations[]=calendar_event.contact&associations[]=calendar_event.crm_task&associations[]=contact.summary`, {
+    .get(`/calendar?low=${low}&high=${high}`, {
       contacts
     })
     .after(cb)
