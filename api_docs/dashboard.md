@@ -24,5 +24,36 @@ crm_task    | CrmTask      | Related crm_task object
 deal        | Deal         | Related deal object
 contact     | Contact      | related contact object
 
+Possible values for `event_type` field are:
+
+* If `object_type` = `crm_task`:
+  * `Call`
+  * `Message`
+  * `Todo`
+  * `Closing`
+  * `Inspection`
+  * `Tour`
+  * `Listing appointment`
+  * `Follow up`
+  * `Open House`
+* If `object_type` = `deal_context`:
+  * `list_date`
+  * `expiration_date`
+  * `contract_date`
+  * `inspection_date`
+  * `option_period`
+  * `financing_due`
+  * `title_due`
+  * `t47_due`
+  * `closing_date`
+  * `possession_date`
+  * `lease_executed`
+  * `lease_application_date`
+  * `lease_begin`
+  * `lease_end`
+* If `object_type` = `contact_attribute`:
+  * `birthday`
+  * `important_date`
+
 ### Get Calendar events [GET /calendar]
 <!-- include(tests/analytics/getCalendar.md) -->
