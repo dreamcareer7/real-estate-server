@@ -7,16 +7,16 @@ AS $$
   WHERE
     email IN (
       SELECT "text"
-      FROM contacts_attributes_with_name
+      FROM contacts_attributes
       WHERE
         contact = contact_id
-        AND "name" = 'email'
+        AND attribute_type = 'email'
     )
     OR phone_number IN (
       SELECT "text"
-      FROM contacts_attributes_with_name
+      FROM contacts_attributes
       WHERE
         contact = contact_id
-        AND "name" = 'phone_number'
+        AND attribute_type = 'phone_number'
     )
-$$;
+$$
