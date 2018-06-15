@@ -7,6 +7,9 @@ SELECT 'user' AS type,
        EXTRACT(EPOCH FROM users.updated_at)   AS updated_at,
        EXTRACT(EPOCH FROM users.deleted_at)   AS deleted_at,
        EXTRACT(EPOCH FROM users.last_seen_at) AS last_seen_at,
+       (
+        SELECT client_type FROM clients WHERE id = users.last_seen_by
+       ) as last_seen_type,
        COALESCE
        (
          profile_image_url,
