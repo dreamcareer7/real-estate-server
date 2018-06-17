@@ -1,5 +1,6 @@
 require('../lib/models/index.js')()
 const config = require('../lib/config')
+const { import: contact_import } = require('../lib/models/Contact/worker')
 
 const airship = (job, done) => {
   Notification.sendToDevice(job.data.notification, job.data.token, job.data.user_id, done)
@@ -140,5 +141,10 @@ module.exports = {
   'deal_email': {
     handler: deal_email,
     parallel: 5
+  },
+
+  contact_import: {
+    handler: contact_import,
+    parallel: 2
   }
 }
