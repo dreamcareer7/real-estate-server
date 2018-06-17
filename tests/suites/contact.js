@@ -691,6 +691,22 @@ const mergeContacts = cb => {
     })
 }
 
+const exportByFilter = cb => {
+  return frisby
+    .create('filter contacts by attribute values')
+    .post('/contacts/outlook.csv', {
+      filter: [{
+        attribute_def: defs.tag.id,
+        value: 'New'
+      }, {
+        attribute_def: defs.company.id,
+        value: 'Rechat'
+      }]
+    })
+    .after(cb)
+    .expectHeaderToMatch("Content-Disposition", 'rechat')
+    .expectStatus(200)
+}
 module.exports = {
   getAttributeDefs,
   create,
@@ -728,4 +744,5 @@ module.exports = {
   deleteContact,
   deleteManyContacts,
   deleteContactWorked,
+  exportByFilter
 }
