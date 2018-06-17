@@ -1,6 +1,9 @@
 require('../lib/models/index.js')()
 const config = require('../lib/config')
-const { import: contact_import } = require('../lib/models/Contact/worker')
+const {
+  import_csv: contact_import_csv,
+  import_json: contact_import_json
+} = require('../lib/models/Contact/worker')
 
 const airship = (job, done) => {
   Notification.sendToDevice(job.data.notification, job.data.token, job.data.user_id, done)
@@ -143,8 +146,13 @@ module.exports = {
     parallel: 5
   },
 
-  contact_import: {
-    handler: contact_import,
+  contact_import_csv: {
+    handler: contact_import_csv,
+    parallel: 2
+  },
+
+  contact_import_json: {
+    handler: contact_import_json,
     parallel: 2
   }
 }
