@@ -24,6 +24,8 @@ CREATE OR REPLACE VIEW analytics.deals AS
         SELECT
           ctx.*,
           real_deals.deal_type,
+          real_deals.property_type,
+          real_deals.listing,
           real_deals.brand
         FROM
           current_deal_context as ctx
@@ -51,12 +53,17 @@ CREATE OR REPLACE VIEW analytics.deals AS
           'listing_status'
         )
       )
-      SELECT id, deal_type, brand, "key", "value"
-      FROM  (
-        SELECT ctx.deal AS id, ctx.deal_type, ctx.brand, ctx.key, COALESCE(ctx.text, ctx.number::text, ctx.date::text) as "value"
-        FROM   contexts AS ctx
-      ) sub
-      ORDER  BY id
+      SELECT
+        ctx.deal AS id,
+        ctx.deal_type,
+        ctx.property_type,
+        ctx.listing,
+        ctx.brand,
+        ctx.key,
+        COALESCE(ctx.text, ctx.number::text, ctx.date::text) as "value"
+      FROM
+        contexts AS ctx
+      ORDER BY ctx.deal
     $$, $$ VALUES
       ('full_address'),
       ('sales_price'),
@@ -80,6 +87,8 @@ CREATE OR REPLACE VIEW analytics.deals AS
     $$) t(
       id uuid,
       deal_type deal_type,
+      property_type deal_property_type,
+      listing uuid,
       brand uuid,
       full_address text,
       sales_price double precision,
@@ -104,6 +113,8 @@ CREATE OR REPLACE VIEW analytics.deals AS
   )
   SELECT ct.id,
     ct.deal_type,
+    ct.property_type,
+    ct.listing,
     ct.brand,
     ct.full_address,
     ct.sales_price,
@@ -128,8 +139,6 @@ CREATE OR REPLACE VIEW analytics.deals AS
     ct.lease_begin,
     ct.lease_end,
     ct.year_built,
-    ct.listing_status,
-    (dwrs.id IS NOT NULL) AS has_rejection
+    ct.listing_status
   FROM
     ct
-    LEFT JOIN deals_with_rejected_submissions dwrs USING (id)
