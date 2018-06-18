@@ -48,10 +48,13 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       contacts_attributes.id,
       'contact_attribute' AS object_type,
       attribute_type AS event_type,
-      COALESCE(contacts_attributes.label, 'Important Date') AS type_label,
+      (CASE
+        WHEN attribute_type = 'birthday' THEN 'Birthday'
+        ELSE COALESCE(contacts_attributes.label, 'Important Date')
+      END) AS type_label,
       "date" AS "timestamp",
       True AS recurring,
-      get_contact_display_name(contacts.id) AS title,
+      get_contact_display_name(COALESCE(contacts.parent, contacts.id)) AS title,
       NULL::uuid AS crm_task,
       NULL::uuid AS deal,
       contact,
@@ -65,32 +68,5 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
     WHERE
       contacts.deleted_at IS NULL
       AND contacts_attributes.deleted_at IS NULL
-      AND attribute_type = 'important_date'
-  )
-  UNION ALL
-  (
-    SELECT DISTINCT ON (contacts.id)
-      contacts_attributes.id,
-      'contact_attribute' AS object_type,
-      attribute_type AS event_type,
-      'Birthday' AS type_label,
-      "date" AS "timestamp",
-      True AS recurring,
-      get_contact_display_name(contacts.id) AS title,
-      NULL::uuid AS crm_task,
-      NULL::uuid AS deal,
-      contact,
-      contacts."user",
-      contacts.brand
-    FROM
-      contacts
-      JOIN contacts_attributes
-        ON contacts.id = contacts_attributes.contact
-    WHERE
-      contacts.deleted_at IS NULL
-      AND contacts_attributes.deleted_at IS NULL
-      AND attribute_type = 'birthday'
-    ORDER BY
-      contacts.id,
-      contacts_attributes.updated_at DESC
+      AND (attribute_type = 'important_date' OR attribute_type = 'birthday')
   )
