@@ -11,7 +11,8 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
     NULL::uuid AS deal,
     NULL::uuid AS contact,
     assignee AS "user",
-    brand
+    brand,
+    status
   FROM
     crm_tasks
   WHERE
@@ -31,7 +32,8 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       deal,
       NULL::uuid AS contact,
       NULL::uuid AS "user",
-      brand
+      brand,
+      NULL::text AS status
     FROM
       current_deal_context
       JOIN deals
@@ -57,7 +59,8 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       NULL::uuid AS deal,
       contact,
       contacts."user",
-      contacts.brand
+      contacts.brand,
+      NULL::text AS status
     FROM
       contacts
       JOIN contacts_attributes
