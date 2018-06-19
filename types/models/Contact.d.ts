@@ -80,7 +80,7 @@ declare interface IContactAttribute {
 
 declare interface IContactAttributeInput {
   attribute_def: UUID;
-  attribute_type: string;
+  attribute_type?: string;
 
   id?: UUID;
   created_by?: UUID;
@@ -123,4 +123,10 @@ declare interface IContactFilterOptions {
   q?: string[];
   updated_gte?: number;
   updated_lte?: number;
+}
+
+declare interface ICSVImporterMappedField {
+  label?: string;
+  attribute_def: UUID;
+  index?: number;
 }
