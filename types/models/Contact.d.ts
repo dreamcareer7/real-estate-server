@@ -127,6 +127,6 @@ declare interface IContactFilterOptions {
 
 declare interface ICSVImporterMappedField {
   label?: string;
-  def_id: UUID;
+  attribute_def: UUID;
   index?: number;
 }
