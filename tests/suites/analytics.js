@@ -37,10 +37,6 @@ function createContacts(cb) {
     .expectStatus(200)
 }
 
-function createDeals(cb) {
-  
-}
-
 function getCalendar(cb) {
   const low = moment().subtract(1, 'day').startOf('day').unix()
   const high = moment().add(2, 'day').startOf('day').unix()

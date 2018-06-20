@@ -7,6 +7,7 @@ module.exports = {
     'registerSuite': false,
     'results': false,
     'Run': false,
-    'expect': false
+    'expect': false,
+    'intern': false,
   }
 };

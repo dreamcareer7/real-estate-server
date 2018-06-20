@@ -13,21 +13,6 @@ function _fixContactAttributeDefs(contact) {
   }
 }
 
-function _fixContactAttributeDefsInResponse(contact) {
-  return {
-    ...contact,
-    attributes: contact.attributes.map(attr => {
-      if (typeof attr.attribute_def === 'string')
-        return {
-          ...attr,
-          attribute_def: { id: attr.attribute_def }
-        }
-
-      return attr
-    })
-  }
-}
-
 function getAttributeDefs(cb) {
   return frisby
     .create('get all attribute defs, global or user-defined')
@@ -704,7 +689,7 @@ const exportByFilter = cb => {
       }]
     })
     .after(cb)
-    .expectHeaderToMatch("Content-Disposition", 'rechat')
+    .expectHeaderToMatch('Content-Disposition', 'rechat')
     .expectStatus(200)
 }
 module.exports = {
@@ -724,6 +709,7 @@ module.exports = {
   filterOnNonExistentAttributeDef,
   addAttribute,
   addInvalidAttribute,
+  addInvalidAttributeValue,
   addNullAttributeValue,
   addInvalidPhoneNumber,
   addPhoneNumber,

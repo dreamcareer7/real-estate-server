@@ -21,4 +21,5 @@ const deals = [{
 
 module.exports = {
   contacts,
+  deals,
 }

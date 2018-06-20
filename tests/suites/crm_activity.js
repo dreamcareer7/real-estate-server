@@ -137,7 +137,7 @@ function checkContactTimeline(cb) {
           action: 'UserSignedUp',
           type: 'activity'
         },
-        updateActivity
+        updated_activity
       ]
     })
 }
