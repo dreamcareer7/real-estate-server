@@ -498,7 +498,7 @@ const getRevision = cb => {
 const setReview = cb => {
   return frisby.create('Submit a review request')
     .put(`/tasks/${results.deal.addTask.data.id}/review`, {
-      status: 'Submitted'
+      status: 'Declined'
     })
     .after(cb)
 //     .expectStatus(200)
@@ -510,6 +510,16 @@ const setReview = cb => {
 //       code: String,
 //       data: deal_response
 //     })
+}
+
+const sendNotifications = (cb) => {
+  return frisby.create('Send Task Review Notifications')
+  .post('/jobs', {
+    name: 'Task.sendNotifications',
+    data: {}
+  })
+  .after(cb)
+  .expectStatus(200)
 }
 
 const patchAttention = cb => {
@@ -609,6 +619,7 @@ module.exports = {
   getRevision,
   getTask,
   setReview,
+  sendNotifications,
   patchAttention,
   postMessage,
   getBrandInbox,
