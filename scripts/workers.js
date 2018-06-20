@@ -19,7 +19,7 @@ const Metric = require('../lib/models/Metric')
 const Slack = require('../lib/models/Slack')
 
 const Notification = require('../lib/models/Notification')
-const TaskWorker = require('../lib/models/CRM/Task/worker')
+const CrmTaskWorker = require('../lib/models/CRM/Task/worker')
 
 let i = 0
 
@@ -169,9 +169,9 @@ const sendNotifications = function () {
     }
 
     async.series([
-      Notification.sendForUnread,
+      // Notification.sendForUnread,
       Message.sendEmailForUnread,
-      nodeifyFn(TaskWorker.sendNotifications),
+      nodeifyFn(CrmTaskWorker.sendNotifications),
       nodeifyFn(Task.sendNotifications),
     ], err => {
       if (err)
