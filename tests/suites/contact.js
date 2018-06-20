@@ -13,21 +13,6 @@ function _fixContactAttributeDefs(contact) {
   }
 }
 
-function _fixContactAttributeDefsInResponse(contact) {
-  return {
-    ...contact,
-    attributes: contact.attributes.map(attr => {
-      if (typeof attr.attribute_def === 'string')
-        return {
-          ...attr,
-          attribute_def: { id: attr.attribute_def }
-        }
-
-      return attr
-    })
-  }
-}
-
 function getAttributeDefs(cb) {
   return frisby
     .create('get all attribute defs, global or user-defined')
@@ -286,21 +271,6 @@ const addInvalidAttribute = cb => {
 
   return frisby
     .create('add an invalid attribute')
-    .post(`/contacts/${results.contact.create.data[0].id}/attributes`, {
-      attributes: [a]
-    })
-    .after(cb)
-    .expectStatus(400)
-}
-
-const addInvalidAttributeValue = cb => {
-  const a = {
-    attribute_def: defs['stage'].id,
-    text: 'BombasticStage'
-  }
-
-  return frisby
-    .create('add an invalid attribute value')
     .post(`/contacts/${results.contact.create.data[0].id}/attributes`, {
       attributes: [a]
     })
@@ -704,7 +674,7 @@ const exportByFilter = cb => {
       }]
     })
     .after(cb)
-    .expectHeaderToMatch("Content-Disposition", 'rechat')
+    .expectHeaderToMatch('Content-Disposition', 'rechat')
     .expectStatus(200)
 }
 module.exports = {
