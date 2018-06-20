@@ -278,21 +278,6 @@ const addInvalidAttribute = cb => {
     .expectStatus(400)
 }
 
-const addInvalidAttributeValue = cb => {
-  const a = {
-    attribute_def: defs['stage'].id,
-    text: 'BombasticStage'
-  }
-
-  return frisby
-    .create('add an invalid attribute value')
-    .post(`/contacts/${results.contact.create.data[0].id}/attributes`, {
-      attributes: [a]
-    })
-    .after(cb)
-    .expectStatus(400)
-}
-
 const addNullAttributeValue = cb => {
   const a = {
     attribute_def: defs['birthday'].id,
@@ -709,7 +694,6 @@ module.exports = {
   filterOnNonExistentAttributeDef,
   addAttribute,
   addInvalidAttribute,
-  addInvalidAttributeValue,
   addNullAttributeValue,
   addInvalidPhoneNumber,
   addPhoneNumber,
