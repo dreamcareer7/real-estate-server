@@ -5,8 +5,7 @@
 -- Also if 30 minutes is passed and we still have not pushed them (for whatever issue), give up, its too late.
 
 SELECT
-  notifications_users."user",
-  ARRAY_AGG(notifications_users.notification) as notifications
+  notifications_users.*
 FROM notifications_users
 LEFT OUTER JOIN notifications_deliveries
   ON notifications_users.notification = notifications_deliveries.notification
@@ -16,4 +15,4 @@ WHERE
   notifications_users.acked_at IS NULL
   AND notifications_users.created_at < (NOW() - '20 second'::interval)
   AND notifications_users.created_at > (NOW() - '30 minute'::interval)
-GROUP BY notifications_users."user"
+ORDER BY notifications_users.created_at
