@@ -169,7 +169,7 @@ const sendNotifications = function () {
     }
 
     async.series([
-      Notification.sendForUnread,
+      // Notification.sendForUnread,
       Message.sendEmailForUnread,
       nodeifyFn(CrmTaskWorker.sendNotifications),
       nodeifyFn(Task.sendNotifications),
