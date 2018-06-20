@@ -172,6 +172,7 @@ const sendNotifications = function () {
       Notification.sendForUnread,
       Message.sendEmailForUnread,
       nodeifyFn(TaskWorker.sendNotifications),
+      nodeifyFn(Task.sendNotifications),
     ], err => {
       if (err)
         return rollback(err)
