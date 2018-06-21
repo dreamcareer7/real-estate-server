@@ -63,7 +63,7 @@ declare interface IContactAttribute {
   deleted_at?: number;
 
   created_by: UUID;
-  user: UUID;
+  brand: UUID;
   contact: UUID;
 
   attribute_def: UUID;

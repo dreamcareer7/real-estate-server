@@ -2,6 +2,7 @@ const _ = require('lodash')
 const uuid = require('uuid')
 const { contact, companyContact } = require('./data/contact.js')
 const manyContacts = require('./data/manyContacts.js')
+const brand = require('./data/brand.js')
 
 let defs
 const contactAttributes = _.groupBy(contact.attributes, 'type')
@@ -11,6 +12,40 @@ function _fixContactAttributeDefs(contact) {
     attr.attribute_def = defs[attr.type].id
     delete attr.type
   }
+}
+
+const brnadCreateParent = (cb) => {
+  brand.name = 'Parent Brand'
+  brand.role = 'Admin' // We're admin of this one
+
+  return frisby.create('create a brand')
+    .post('/brands', brand)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+    })
+}
+
+const brandCreate = (cb) => {
+  brand.parent = results.contact.brnadCreateParent.data.id
+  brand.name = 'Brand'
+  delete brand.role // We don't have a role in this one. But we should have access as we have access to the parent.
+
+  return frisby.create('create a child brand')
+    .post('/brands', brand)
+    .after((err, res, body) => {
+      const setup = frisby.globalSetup()
+
+      setup.request.headers['X-RECHAT-BRAND'] = body.data.id
+
+      frisby.globalSetup(setup)
+      cb(err, res, body)
+    })
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+    })
 }
 
 function getAttributeDefs(cb) {
@@ -678,6 +713,8 @@ const exportByFilter = cb => {
     .expectStatus(200)
 }
 module.exports = {
+  brnadCreateParent,
+  brandCreate,
   getAttributeDefs,
   create,
   createManyContacts,
