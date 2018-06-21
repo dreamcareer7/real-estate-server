@@ -107,10 +107,17 @@ SELECT deals.*,
   ) as envelopes,
 
   CASE WHEN $2::uuid IS NULL THEN
-    0
+    NULL
   ELSE
   (
-    SELECT count(*)::int FROM new_notifications nn
+    SELECT JSON_AGG(
+      JSON_BUILD_OBJECT
+        (
+          'id', id,
+          'type', (subject_class::text || action || object_class::text),
+          'room', room
+        )
+      ) FROM new_notifications nn
     WHERE nn.user = $2
     AND (
       (
