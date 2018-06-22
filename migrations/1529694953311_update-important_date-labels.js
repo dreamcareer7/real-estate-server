@@ -8,7 +8,7 @@ const up = [
   `UPDATE
     contacts_attribute_defs
   SET
-    labels = '{"New Home","Work Anniversary","Wedding Anniversary","Graduation Anniversary",Newborn,"New Pet"}'::text[]
+    labels = '{"New Home","Work Anniversary","Wedding Anniversary","Graduation Anniversary",Child,"Pet"}'::text[]
   WHERE
     name = 'important_date'`,
   'COMMIT'
