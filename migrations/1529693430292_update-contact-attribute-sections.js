@@ -26,6 +26,13 @@ const up = [
   WHERE
     name = 'company' OR name = 'job_title' OR name = 'stage'
   `,
+  `UPDATE
+    contacts_attribute_defs
+  SET
+    section = 'Dates'
+  WHERE
+    name = 'birthday' OR name = 'important_date'
+  `,
   'COMMIT'
 ]
 
