@@ -9,13 +9,15 @@ FROM
   analytics.calendar
 WHERE
   (
-    "user" IS NULL
-    OR "user" = $1::uuid
-  )
-  AND
-  (
-    brand IS NULL
-    OR "brand" = ANY(SELECT brand FROM ub)
+    (
+      "user" IS NULL
+      AND "brand" = ANY(SELECT brand FROM ub)
+    )
+    OR
+    (
+      brand IS NULL
+      AND "user" = $1::uuid
+    )
   )
   AND (CASE
     WHEN "recurring" IS True THEN (

@@ -1,13 +1,15 @@
 require('colors')
-
-const config = require('../lib/config.js')
+const kue = require('kue')
 const Domain = require('domain')
-const db = require('../lib/utils/db')
-const debug = require('debug')('rechat:workers')
-
-const queue = require('../lib/utils/queue.js')
 const async = require('async')
 const Raven = require('raven')
+const debug = require('debug')('rechat:workers')
+
+const config = require('../lib/config.js')
+const db = require('../lib/utils/db')
+const promisify = require('../lib/utils/promisify.js')
+
+const queue = require('../lib/utils/queue.js')
 
 Raven.config(config.sentry, {
   release: process.env.SOURCE_VERSION,
@@ -188,3 +190,20 @@ const sendNotifications = function () {
 }
 
 sendNotifications()
+
+async function cleanupKueJobs() {
+  const jobs = await promisify(kue.Job.rangeByState)('complete', 0, 10000, 'asc')
+
+  if (jobs.length > 0)
+    console.log('-> (Jobs) Cleaning up ' + jobs.length + ' completed jobs.')
+
+  for (const job of jobs) {
+    if (parseInt(job.toJSON().started_at) <= Date.now() - 60 * 60 * 1000) {
+      await promisify(job.remove.bind(job))()
+    }
+  }
+
+  setTimeout(cleanupKueJobs, 1 * 60 * 1000)
+}
+
+cleanupKueJobs()

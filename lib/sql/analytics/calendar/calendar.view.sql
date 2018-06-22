@@ -11,7 +11,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
     NULL::uuid AS deal,
     NULL::uuid AS contact,
     assignee AS "user",
-    brand,
+    NULL AS brand,
     status
   FROM
     crm_tasks
