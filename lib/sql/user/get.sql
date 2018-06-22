@@ -39,9 +39,6 @@ SELECT 'user' AS type,
           INNER JOIN contacts_attributes
             ON
               contacts_attributes.contact = contacts.id
-          INNER JOIN contacts_attribute_defs
-            ON
-              contacts_attributes.attribute_def = contacts_attribute_defs.id
           WHERE
             contacts."user" = $2::uuid
           AND contacts.deleted_at IS NULL
@@ -49,11 +46,11 @@ SELECT 'user' AS type,
           AND (
             (
               contacts_attributes."text" = users.email
-              AND contacts_attribute_defs.name = 'email'
+              AND contacts_attributes.attribute_type = 'email'
             )
             OR (
               contacts_attributes."text" = users.phone_number
-              AND contacts_attribute_defs.name = 'phone_number'
+              AND contacts_attributes.attribute_type = 'phone_number'
             )
           )
          ) ELSE NULL END
