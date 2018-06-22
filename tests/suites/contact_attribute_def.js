@@ -1,5 +1,3 @@
-const _ = require('lodash')
-
 registerSuite('contact', ['getAttributeDefs', 'create', 'createManyContacts'])
 
 function create(cb) {
