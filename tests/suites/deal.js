@@ -93,6 +93,30 @@ const createHippocket = cb => {
     })
 }
 
+const createAddressless = cb => {
+  const data = JSON.parse(JSON.stringify(deal))
+
+  data.roles = [
+    {
+      legal_first_name: 'Buyer Name',
+      email: 'addressless+buyer@rechat.com',
+      legal_last_name: 'Buyer Last Name',
+      role: 'Buyer'
+    },
+  ]
+
+  return frisby.create('create a deal with no address and observe title')
+    .post('/deals', data)
+    .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
+    .after(cb)
+    .expectStatus(200)
+//     .expectJSONSchema(schemas.createHippocket)
+//     .expectJSON({
+//       code: 'OK',
+//       data: expected_object
+//     })
+}
+
 const patchListing = cb => {
   const patch = {
     listing: results.listing.getListing.data.id
@@ -244,7 +268,11 @@ const getAll = (cb) => {
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
-      data: [results.deal.createHippocket.data, results.deal.approveContext.data]
+      data: [
+        results.deal.createAddressless.data,
+        results.deal.createHippocket.data,
+        results.deal.approveContext.data
+      ]
     })
 }
 
@@ -595,6 +623,7 @@ module.exports = {
   getContexts,
   create,
   createHippocket,
+  createAddressless,
   patchListing,
   addRole,
   updateRole,
