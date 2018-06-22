@@ -24,7 +24,7 @@ const up = [
   SET
     section = 'Details'
   WHERE
-    name = 'company' OR name = 'job_title'
+    name = 'company' OR name = 'job_title' OR name = 'stage'
   `,
   'COMMIT'
 ]
