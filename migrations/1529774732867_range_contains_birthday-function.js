@@ -5,7 +5,7 @@ const fs = require('fs')
 
 const db = require('../lib/utils/db')
 
-const range_contains_birthday = fs.readFileSync(__dirname + '/../lib/sql/analytics/calendar/range_contains_birthday.fn.sql')
+const range_contains_birthday = fs.readFileSync(__dirname + '/../lib/sql/analytics/calendar/range_contains_birthday.fn.sql', 'utf-8')
 const up = [
   'BEGIN',
   range_contains_birthday,
