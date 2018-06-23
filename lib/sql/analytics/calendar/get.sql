@@ -3,6 +3,7 @@ WITH ub AS (
 )
 SELECT
   *,
+  "timestamp" AS timestamp_readable,
   extract(epoch from "timestamp") AS "timestamp",
   'calendar_event' AS type
 FROM
