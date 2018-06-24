@@ -2,7 +2,7 @@ WITH all_contacts AS (
   SELECT
     c1.id,
     c2.id AS parent,
-    c1.searchable_field,
+    c1.display_name,
     array_agg(c1.id) OVER (PARTITION BY c2.id) AS sub_contacts,
     first_value(c1.created_at) OVER (PARTITION BY c2.id ORDER BY c1.created_at) AS created_at,
     last_value (c1.updated_at) OVER (PARTITION BY c2.id ORDER BY c1.updated_at) AS updated_at
@@ -17,6 +17,7 @@ WITH all_contacts AS (
 )
 SELECT
   parent AS id,
+  display_name,
   sub_contacts,
   extract(epoch FROM created_at) as created_at,
   extract(epoch FROM updated_at) as updated_at,
