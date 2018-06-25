@@ -8,7 +8,7 @@ WHERE
   -- Otherwise, clear all notifications belonging to this user
   AND (
     (
-      $2 IS NULL
+      $2::uuid[] IS NULL
       AND notification IN
       (
         SELECT id FROM notifications
@@ -19,7 +19,7 @@ WHERE
     )
     OR
     (
-      $2 IS NOT NULL
+      $2::uuid[] IS NOT NULL
       AND notification = ANY($2::uuid[])
     )
   )
