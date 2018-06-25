@@ -13,7 +13,7 @@ const airship = (job, done) => {
     token
   } = job.data
 
-  Notification.sendToDevice(notification_user, token, user_id, done)
+  Notification.sendToDevice(notification_user, notification, token, user_id, done)
 }
 
 const notification = (job, done) => {
