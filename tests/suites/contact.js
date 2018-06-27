@@ -1,4 +1,5 @@
 const _ = require('lodash')
+const moment = require('moment')
 const uuid = require('uuid')
 const { contact, companyContact } = require('./data/contact.js')
 const manyContacts = require('./data/manyContacts.js')
@@ -328,21 +329,6 @@ const addNullAttributeValue = cb => {
     .expectStatus(400)
 }
 
-const addInvalidPhoneNumber = cb => {
-  const a = {
-    attribute_def: defs['phone_number'].id,
-    text: '+123456'
-  }
-
-  return frisby
-    .create('add an invalid phone number')
-    .post(`/contacts/${results.contact.create.data[0].id}/attributes`, {
-      attributes: [a]
-    })
-    .after(cb)
-    .expectStatus(400)
-}
-
 const addPhoneNumber = cb => {
   const a = {
     attribute_def: defs['phone_number'].id,
@@ -427,30 +413,6 @@ const areEmailsLowered = cb => {
         text: 'bombasticemail@mrbombastic.org'
       }))
         throw 'Email is not lowered'
-
-      cb(err, res, json)
-    })
-}
-
-const arePhoneNumbersProper = cb => {
-  return frisby
-    .create('are phone numbers proper')
-    .post(`/contacts/${results.contact.create.data[0].id}/attributes?associations[]=contact.sub_contacts`, {
-      attributes: [
-        {
-          attribute_def: defs['phone_number'].id,
-          text: '09729711191'
-        }
-      ]
-    })
-    .expectStatus(200)
-    .after((err, res, json) => {
-      const phone = _.find(json.data.sub_contacts[0].attributes, {
-        attribute_type: 'phone_number',
-        text: '+19729711191'
-      }).text
-
-      if (!phone) throw 'Phone number is not properly saved'
 
       cb(err, res, json)
     })
@@ -618,31 +580,45 @@ const updateContact = cb => {
 }
 
 const updateManyContacts = cb => {
-  const contacts = results.contact.createManyContacts.data.map(cid => {
-    return {
-      id: cid,
+  return frisby
+    .create('add a tag attribute to many contacts')
+    .patch('/contacts?associations[]=contact.sub_contacts', {
+      ids: results.contact.createManyContacts.data,
       attributes: [{
         attribute_def: defs.tag.id,
         text: 'ManyContacts'
       }]
-    }
-  })
+    })
+    .after(cb)
+    .expectStatus(204)
+}
+
+function makeSureManyContactsTagIsAdded(cb) {
   return frisby
-    .create('add a tag attribute to many contacts')
-    .patch('/contacts?associations[]=contact.sub_contacts', {
-      contacts
+    .create('make sure ManyContacts tag is added to all')
+    .post('/contacts/filter', {
+      filter: [{
+        attribute_def: defs.tag.id,
+        value: 'ManyContacts'
+      }]
     })
-    .after((err, res, json) => {
-      for (const contact of json.data) {
-        const tags = contact.sub_contacts[0].attributes
-          .filter(a => a.attribute_type === defs.tag.name)
-          .map(a => a.text)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSONLength('data', manyContacts.length)
+}
 
-        if (!tags.includes('ManyContacts')) throw 'Tag attributes are not added.'
-      }
-
-      cb(err, res, json)
+function createManyContactsList(cb) {
+  return frisby.create('create many contacts list')
+    .post('/contacts/lists', {
+      filters: [
+        {
+          attribute_def: defs.tag.id,
+          value: 'ManyContacts'
+        }
+      ],
+      'name': 'Many Contacts'
     })
+    .after(cb)
     .expectStatus(200)
 }
 
@@ -698,20 +674,19 @@ const mergeContacts = cb => {
 
 const exportByFilter = cb => {
   return frisby
-    .create('filter contacts by attribute values')
+    .create('export contacts by filter and list id')
     .post('/contacts/outlook.csv', {
+      lists: [results.contact.createManyContactsList.data],
       filter: [{
-        attribute_def: defs.tag.id,
-        value: 'New'
-      }, {
         attribute_def: defs.company.id,
         value: 'Rechat'
       }]
     })
     .after(cb)
-    .expectHeaderToMatch('Content-Disposition', 'rechat')
+    .expectHeaderToMatch('Content-Disposition', `rechat_${moment().format('MM_DD_YY')}.csv`)
     .expectStatus(200)
 }
+
 module.exports = {
   brnadCreateParent,
   brandCreate,
@@ -732,14 +707,14 @@ module.exports = {
   addAttribute,
   addInvalidAttribute,
   addNullAttributeValue,
-  addInvalidPhoneNumber,
   addPhoneNumber,
   addEmail,
   searchByAddedEmail,
   areEmailsLowered,
-  arePhoneNumbersProper,
   updateContact,
   updateManyContacts,
+  makeSureManyContactsTagIsAdded,
+  createManyContactsList,
   getTimeline,
   getAllTags,
   removeAttribute,

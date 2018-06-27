@@ -3,5 +3,6 @@ UPDATE
 SET
   deleted_at = now()
 WHERE
-  id = ANY($1::uuid[])
-RETURNING contact
+  contact = $1
+  AND id = $2
+RETURNING id

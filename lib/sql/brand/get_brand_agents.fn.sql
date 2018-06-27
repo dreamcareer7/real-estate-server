@@ -13,7 +13,9 @@ $$
   WHERE users.id IN (
     (SELECT DISTINCT "user" FROM brands_users
     JOIN brands_roles ON brands_users.role = brands_roles.id
-    WHERE brands_roles.brand = $1)
+    WHERE brands_roles.brand IN(
+      SELECT brand_children($1)
+    ))
   ) AND users.user_type = 'Agent'
   UNION
   SELECT
