@@ -4,6 +4,8 @@ const moment = require('moment')
 let { contacts } = require('./data/calendar')
 let defs
 
+registerSuite('contact', ['brandCreateParent', 'brandCreate'])
+
 function prepareContactRequest(defs) {
   contacts = contacts.map(c => ({
     attributes: Object.keys(c).map(a => ({

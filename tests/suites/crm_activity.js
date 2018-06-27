@@ -9,7 +9,7 @@ const { activity } = require('./data/crm_activity')
 const anotherUser = require('./data/user')
 
 registerSuite('user', ['create', 'upgradeToAgentWithEmail', 'markAsNonShadow'])
-registerSuite('contact', ['getAttributeDefs', 'create', 'createManyContacts'])
+registerSuite('contact', ['brandCreateParent', 'brandCreate', 'getAttributeDefs', 'create', 'createManyContacts'])
 registerSuite('listing', ['by_mui'])
 
 function fixResponseActivityToInput(activity) {
