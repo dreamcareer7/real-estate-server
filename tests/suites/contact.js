@@ -15,7 +15,7 @@ function _fixContactAttributeDefs(contact) {
   }
 }
 
-const brnadCreateParent = (cb) => {
+const brandCreateParent = (cb) => {
   brand.name = 'Parent Brand'
   brand.role = 'Admin' // We're admin of this one
 
@@ -29,7 +29,7 @@ const brnadCreateParent = (cb) => {
 }
 
 const brandCreate = (cb) => {
-  brand.parent = results.contact.brnadCreateParent.data.id
+  brand.parent = results.contact.brandCreateParent.data.id
   brand.name = 'Brand'
   delete brand.role // We don't have a role in this one. But we should have access as we have access to the parent.
 
@@ -688,7 +688,7 @@ const exportByFilter = cb => {
 }
 
 module.exports = {
-  brnadCreateParent,
+  brandCreateParent,
   brandCreate,
   getAttributeDefs,
   create,
