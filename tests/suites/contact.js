@@ -294,21 +294,6 @@ const addNullAttributeValue = cb => {
     .expectStatus(400)
 }
 
-const addInvalidPhoneNumber = cb => {
-  const a = {
-    attribute_def: defs['phone_number'].id,
-    text: '+123456'
-  }
-
-  return frisby
-    .create('add an invalid phone number')
-    .post(`/contacts/${results.contact.create.data[0].id}/attributes`, {
-      attributes: [a]
-    })
-    .after(cb)
-    .expectStatus(400)
-}
-
 const addPhoneNumber = cb => {
   const a = {
     attribute_def: defs['phone_number'].id,
@@ -393,30 +378,6 @@ const areEmailsLowered = cb => {
         text: 'bombasticemail@mrbombastic.org'
       }))
         throw 'Email is not lowered'
-
-      cb(err, res, json)
-    })
-}
-
-const arePhoneNumbersProper = cb => {
-  return frisby
-    .create('are phone numbers proper')
-    .post(`/contacts/${results.contact.create.data[0].id}/attributes?associations[]=contact.sub_contacts`, {
-      attributes: [
-        {
-          attribute_def: defs['phone_number'].id,
-          text: '09729711191'
-        }
-      ]
-    })
-    .expectStatus(200)
-    .after((err, res, json) => {
-      const phone = _.find(json.data.sub_contacts[0].attributes, {
-        attribute_type: 'phone_number',
-        text: '+19729711191'
-      }).text
-
-      if (!phone) throw 'Phone number is not properly saved'
 
       cb(err, res, json)
     })
@@ -709,12 +670,10 @@ module.exports = {
   addAttribute,
   addInvalidAttribute,
   addNullAttributeValue,
-  addInvalidPhoneNumber,
   addPhoneNumber,
   addEmail,
   searchByAddedEmail,
   areEmailsLowered,
-  arePhoneNumbersProper,
   updateContact,
   updateManyContacts,
   makeSureManyContactsTagIsAdded,
