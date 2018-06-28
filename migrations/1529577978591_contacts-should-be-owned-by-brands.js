@@ -5,13 +5,13 @@ const db = require('../lib/utils/db')
 
 const up = [
   'BEGIN',
-  'ALTER TABLE contacts ALTER COLUMN "user" DROP NOT NULL, ALTER COLUMN brand SET NOT NULL',
+  'ALTER TABLE contacts ALTER COLUMN "user" DROP NOT NULL',
   'COMMIT'
 ]
 
 const down = [
   'BEGIN',
-  'ALTER TABLE contacts ALTER COLUMN brand DROP NOT NULL, ALTER COLUMN "user" SET NOT NULL',
+  'ALTER TABLE contacts ALTER COLUMN "user" SET NOT NULL',
   'COMMIT'
 ]
 
