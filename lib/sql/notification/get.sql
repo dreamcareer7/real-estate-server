@@ -15,7 +15,7 @@ SELECT 'notification' AS type,
 
        CASE WHEN $2::uuid IS NULL THEN notifications.message
        ELSE (
-         COALESCE(notifications.message, (
+         COALESCE(NULLIF(notifications.message, ''), (
           SELECT message FROM notifications_users
           WHERE notification = notifications.id AND "user" = $2
          ))

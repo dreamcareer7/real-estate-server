@@ -115,7 +115,8 @@ SELECT deals.*,
         (
           'id', id,
           'type', (subject_class::text || action || object_class::text),
-          'room', room
+          'room', room,
+          'type', 'notification_summary'
         )
       ) FROM new_notifications nn
     WHERE nn.user = $2

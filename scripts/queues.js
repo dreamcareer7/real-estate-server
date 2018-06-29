@@ -6,7 +6,14 @@ const {
 } = require('../lib/models/Contact/worker')
 
 const airship = (job, done) => {
-  Notification.sendToDevice(job.data.notification, job.data.token, job.data.user_id, done)
+  const {
+    notification_user,
+    notification,
+    user_id,
+    token
+  } = job.data
+
+  Notification.sendToDevice(notification_user, notification, token, user_id, done)
 }
 
 const notification = (job, done) => {
