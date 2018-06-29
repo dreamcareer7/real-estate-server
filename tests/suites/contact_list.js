@@ -14,9 +14,7 @@ function create (cb) {
       'name': 'Wow list',
       'is_pinned': true
     })
-    .after((err, response, body) => {
-      cb(err, response, body)
-    })
+    .after(cb)
     .expectStatus(200)
     .expectJSON({
       code: 'OK'
