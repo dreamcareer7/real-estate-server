@@ -15,7 +15,8 @@ RETURNS TABLE (
   job_title text,
   source_type text,
   stage text,
-  source text
+  source text,
+  tags text[]
 )
 LANGUAGE plpgsql
 AS $function$
@@ -82,9 +83,23 @@ AS $function$
       contacts_summaries.job_title,
       contacts_summaries.source_type,
       contacts_summaries.stage,
-      contacts_summaries.source
+      contacts_summaries.source,
+      ctags.tags
     FROM
       unnest(contact_ids) AS cids(id)
+      LEFT JOIN (
+        SELECT
+          contact AS id,
+          array_agg(text) AS tags
+        FROM
+          contacts_attributes
+        WHERE
+          contacts_attributes.deleted_at IS NULL
+          AND attribute_type = 'tag'
+          AND contact = ANY(contact_ids)
+        GROUP BY
+          contact
+      ) AS ctags USING (id)
       LEFT JOIN crosstab(crosstab_sql, $$
       VALUES
         ('title'),
