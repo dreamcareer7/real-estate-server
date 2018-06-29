@@ -90,7 +90,7 @@ AS $function$
       LEFT JOIN (
         SELECT
           contact AS id,
-          array_agg(text) AS tags
+          array_agg(text ORDER BY created_at) AS tags
         FROM
           contacts_attributes
         WHERE
