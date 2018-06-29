@@ -6,7 +6,9 @@ SELECT 'room' AS TYPE,
        CASE WHEN $2::uuid IS NULL THEN 0
        ELSE
         (
-          SELECT COUNT(*)::INT FROM get_new_notifications(ARRAY[rooms.id], $2)
+          SELECT COUNT(*)::INT FROM new_notifications
+          WHERE new_notifications.room = ANY(ARRAY[rooms.id])
+          AND   new_notifications.user = $2
         )
        END AS new_notifications,
        (

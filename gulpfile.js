@@ -29,6 +29,8 @@ gulp.task('default', ['lint', 'server'], function () {})
 
 const watcher = gulp.watch('lib/**/*', ['server'])
 watcher.on('change', function(event) {
+  process.stdout.write('\033c')
+
   if(event.path.split('.').pop() === 'js')
     lintFile(event.path)
 })
