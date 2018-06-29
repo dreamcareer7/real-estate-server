@@ -192,15 +192,14 @@ const sendNotifications = function () {
 sendNotifications()
 
 async function cleanupKueJobs() {
-  const jobs = await promisify(kue.Job.rangeByState)('complete', 0, 10000, 'asc')
+  const jobs = (await promisify(kue.Job.rangeByState)('complete', 0, 10000, 'asc'))
+    .filter(job => parseInt(job.toJSON().started_at) <= Date.now() - 60 * 60 * 1000)
 
   if (jobs.length > 0)
     console.log('-> (Jobs) Cleaning up ' + jobs.length + ' completed jobs.')
 
   for (const job of jobs) {
-    if (parseInt(job.toJSON().started_at) <= Date.now() - 60 * 60 * 1000) {
-      await promisify(job.remove.bind(job))()
-    }
+    await promisify(job.remove.bind(job))()
   }
 
   setTimeout(cleanupKueJobs, 1 * 60 * 1000)
