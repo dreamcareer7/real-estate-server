@@ -4,16 +4,30 @@ WITH ub AS (
 a_ids AS (
   (
     SELECT
-      crm_associations.*
+      crm_associations.id,
+      deals.brand,
+      NULL::uuid AS "user"
     FROM
       crm_associations
-    INNER JOIN
-      deals
-    ON
-      crm_associations.deal = deals.id
+    JOIN deals
+      ON crm_associations.deal = deals.id
+    JOIN ub USING (brand)
     WHERE 
       association_type = 'deal'
-      AND EXISTS (SELECT brand FROM ub WHERE ub.brand = brand)
+  )
+  UNION
+  (
+    SELECT
+      crm_associations.id,
+      contacts.brand,
+      NULL::uuid AS "user"
+    FROM
+      crm_associations
+    JOIN contacts
+      ON crm_associations.contact = contacts.id
+    JOIN ub USING (brand)
+    WHERE 
+      association_type = 'contact'
   )
   UNION
   (
@@ -22,7 +36,7 @@ a_ids AS (
     FROM
       crm_associations
     WHERE
-      association_type <> 'deal'
+      association_type = 'listing'
   )
 )
 SELECT

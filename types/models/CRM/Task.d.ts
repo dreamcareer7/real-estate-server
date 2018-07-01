@@ -36,11 +36,14 @@ declare interface ITaskInput {
   associations?: ICrmAssociationInput[];
 
   assignee: UUID;
+  brand?: UUID;
 }
 
 declare interface ITaskFilters extends IAssociationFilters {
   q?: string;
   assignee?: UUID;
+  user?: UUID;
+  brand?: UUID;
   status?: TTaskStatus;
   task_type?: TTaskType;
   due_gte?: number;
