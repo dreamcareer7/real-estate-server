@@ -1,8 +1,7 @@
 require('../lib/models/index.js')()
 const config = require('../lib/config')
 const {
-  import_csv: contact_import_csv,
-  import_json: contact_import_json
+  contact_import
 } = require('../lib/models/Contact/worker')
 
 const airship = (job, done) => {
@@ -153,13 +152,8 @@ module.exports = {
     parallel: 5
   },
 
-  contact_import_csv: {
-    handler: contact_import_csv,
-    parallel: 2
-  },
-
-  contact_import_json: {
-    handler: contact_import_json,
-    parallel: 2
+  contact_import: {
+    handler: contact_import,
+    parallel: 4
   }
 }
