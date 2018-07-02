@@ -5,8 +5,12 @@ WITH c AS (
          updated_at
   FROM notifications
   WHERE notifications.deleted_at IS NULL AND
+        notifications.subject_class != 'Deal' AND
+
+        -- Exclude deal relates ones, they will show up on the deal
         notifications.room IS NULL AND
-        notifications.subject_class != 'Deal' AND -- Exclude deal relates ones, they will show up on the deal
+        notifications.auxiliary_object_class != 'Deal' AND
+
         notifications.specific = $1 AND
         COALESCE(NOT ($1 = ANY(exclude)), TRUE)
 )
