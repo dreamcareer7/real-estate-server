@@ -8,8 +8,11 @@ WITH c AS (
         notifications.room IS NULL AND
 
         -- Exclude deal relates ones, they will show up on the deal
-        notifications.subject_class != 'Deal' AND
-        notifications.auxiliary_object_class != 'Deal' AND
+        notifications.subject_class <> 'Deal' AND
+        (
+          notifications.auxiliary_object_class IS NULL
+          OR notifications.auxiliary_object_class <> 'Deal'
+        ) AND
 
         notifications.specific = $1 AND
         COALESCE(NOT ($1 = ANY(exclude)), TRUE)
