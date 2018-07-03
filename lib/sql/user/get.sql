@@ -31,31 +31,6 @@ SELECT 'user' AS type,
          )
        ) as cover_image_url,
        (
-         CASE WHEN $2::uuid IS NOT NULL THEN (
-          SELECT
-            ARRAY_AGG(DISTINCT(contacts.id))
-          FROM
-            contacts
-          INNER JOIN contacts_attributes
-            ON
-              contacts_attributes.contact = contacts.id
-          WHERE
-            contacts."user" = $2::uuid
-          AND contacts.deleted_at IS NULL
-          AND contacts_attributes.deleted_at IS NULL
-          AND (
-            (
-              contacts_attributes."text" = users.email
-              AND contacts_attributes.attribute_type = 'email'
-            )
-            OR (
-              contacts_attributes."text" = users.phone_number
-              AND contacts_attributes.attribute_type = 'phone_number'
-            )
-          )
-         ) ELSE NULL END
-       ) AS contacts,
-       (
         SELECT count(*) > 0 FROM docusign_users WHERE "user" = users.id
        ) as has_docusign
 FROM users
