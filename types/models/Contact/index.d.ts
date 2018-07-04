@@ -123,6 +123,8 @@ declare interface IContactFilterOptions {
   q?: string[];
   updated_gte?: number;
   updated_lte?: number;
+  ids?: UUID[];
+  list?: UUID;
 }
 
 declare interface ICSVImporterMappedField {
