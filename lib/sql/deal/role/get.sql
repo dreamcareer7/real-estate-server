@@ -2,6 +2,7 @@ SELECT deals_roles.*,
        'deal_role' AS type,
        EXTRACT(EPOCH FROM deals_roles.created_at) AS created_at,
        EXTRACT(EPOCH FROM deals_roles.updated_at) AS updated_at,
+       agents.mlsid as mlsid,
 
        (
         CASE WHEN

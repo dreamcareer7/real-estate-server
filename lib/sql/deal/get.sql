@@ -114,7 +114,7 @@ SELECT deals.*,
       JSON_BUILD_OBJECT
         (
           'id', id,
-          'type', (subject_class::text || action || object_class::text),
+          'notification_type', (subject_class::text || action || object_class::text),
           'room', room,
           'type', 'notification_summary'
         )
@@ -139,11 +139,11 @@ SELECT deals.*,
         nn.subject = deals.id
       )
     )
-    AND nn.room NOT IN(
+    AND (nn.room IS NULL OR nn.room NOT IN(
       SELECT room FROM tasks
         WHERE checklist IN (SELECT id FROM deals_checklists WHERE deal = deals.id)
         AND deleted_at IS NOT NULL
-    )
+    ))
   )
   END AS new_notifications,
 
