@@ -4,6 +4,7 @@ SELECT
   EXTRACT(EPOCH FROM updated_at) AS updated_at,
   EXTRACT(EPOCH FROM deleted_at) AS deleted_at,
   filters,
+  query,
   name,
   is_pinned,
   'contact_list' AS "type"
