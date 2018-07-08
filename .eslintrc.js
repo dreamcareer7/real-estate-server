@@ -2,7 +2,7 @@ const globals = [
   'Error',
   'Orm',
   'Job',
-  'Template',
+//   'Template',
   'Address',
   'User',
   'CompactUser',
