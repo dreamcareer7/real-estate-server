@@ -14,7 +14,7 @@ const up = [
     ratio FLOAT,
     brand uuid NOT NULL,
     template TEXT NOT NULL,
-    template_type brand_marketing_template NOT NULL
+    template_type template_type NOT NULL
   )`,
   'COMMIT'
 ]
