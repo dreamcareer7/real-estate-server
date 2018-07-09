@@ -318,7 +318,7 @@ const getAgents = cb => {
     })
 }
 
-const setTemplate = cb => {
+const setFormTemplate = cb => {
   const submission = {
     state: 'Fair',
     values: {
@@ -327,7 +327,7 @@ const setTemplate = cb => {
   }
 
   return frisby.create('save a form template')
-    .post(`/brands/${brand_id}/templates/${results.form.create.data.id}`, submission)
+    .post(`/brands/${brand_id}/form-templates/${results.form.create.data.id}`, submission)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
@@ -335,7 +335,7 @@ const setTemplate = cb => {
     })
 }
 
-const setTemplateAgain = cb => {
+const setFormTemplateAgain = cb => {
   const submission = {
     state: 'Fair',
     values: {
@@ -344,7 +344,7 @@ const setTemplateAgain = cb => {
   }
 
   return frisby.create('save a form template again (upsert)')
-    .post(`/brands/${brand_id}/templates/${results.form.create.data.id}`, submission)
+    .post(`/brands/${brand_id}/form-templates/${results.form.create.data.id}`, submission)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
@@ -352,9 +352,9 @@ const setTemplateAgain = cb => {
     })
 }
 
-const getTemplates = cb => {
+const getFormTemplates = cb => {
   return frisby.create('get all templates for a brand (and its parents)')
-    .get(`/brands/${brand_id}/templates/${results.form.create.data.id}`)
+    .get(`/brands/${brand_id}/form-templates/${results.form.create.data.id}`)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
@@ -405,9 +405,9 @@ module.exports = {
   removeOffice,
   removeHostname,
 
-  setTemplate,
-  setTemplateAgain,
-  getTemplates,
+  setFormTemplate,
+  setFormTemplateAgain,
+  getFormTemplates,
 
   removeBrand
 }
