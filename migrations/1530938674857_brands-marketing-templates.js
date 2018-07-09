@@ -5,13 +5,13 @@ const db = require('../lib/utils/db')
 
 const up = [
   'BEGIN',
-  `CREATE TYPE brand_marketing_template
+  `CREATE TYPE template_type
    AS ENUM('ListingPostcard')`,
-  `CREATE TABLE brands_marketing_templates (
+  `CREATE TABLE templates (
     id uuid DEFAULT public.uuid_generate_v1() NOT NULL,
     created_at timestamp with time zone DEFAULT clock_timestamp() NOT NULL,
     name TEXT NOT NULL,
-    ratio SMALLINT,
+    ratio FLOAT,
     brand uuid NOT NULL,
     template TEXT NOT NULL,
     template_type brand_marketing_template NOT NULL
@@ -21,8 +21,8 @@ const up = [
 
 const down = [
   'BEGIN',
-  'DROP TYPE brand_marketing_template',
-  'DROP TABLE brand_marketing_templates',
+  'DROP TABLE templates',
+  'DROP TYPE template_type',
   'COMMIT'
 ]
 

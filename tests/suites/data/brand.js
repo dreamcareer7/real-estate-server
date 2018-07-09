@@ -5,5 +5,10 @@ module.exports = {
 
   assets: {},
 
-  messages: {}
+  messages: {},
+
+  role: {
+    role: 'Default',
+    acl: []
+  }
 }
