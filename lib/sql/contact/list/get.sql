@@ -17,6 +17,7 @@ SELECT
   EXTRACT(EPOCH FROM deleted_at) AS deleted_at,
   "user",
   filters,
+  query,
   name,
   is_pinned,
   COALESCE(member_count::int, 0) AS member_count,
