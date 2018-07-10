@@ -2,6 +2,7 @@ declare interface IContactList {
   id: UUID;
   name: string;
   filters: IContactAttributeFilter[];
+  query: string;
   is_pinned: boolean;
   user: UUID;
 }
