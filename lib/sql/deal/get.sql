@@ -107,16 +107,43 @@ SELECT deals.*,
   ) as envelopes,
 
   CASE WHEN $2::uuid IS NULL THEN
-    0
+    NULL
   ELSE
   (
-    SELECT COUNT(*)::INT FROM get_new_notifications(
+    SELECT JSON_AGG(
+      JSON_BUILD_OBJECT
+        (
+          'id', id,
+          'notification_type', (subject_class::text || action || object_class::text),
+          'room', room,
+          'type', 'notification_summary'
+        )
+      ) FROM new_notifications nn
+    WHERE nn.user = $2
+    AND (
       (
-        SELECT ARRAY_AGG(room) FROM tasks
-        WHERE checklist IN (SELECT id FROM deals_checklists WHERE deal = deals.id)
-        AND deleted_at IS NULL
-      ), $2
+        nn.auxiliary_object_class = 'Deal'
+        AND
+        nn.auxiliary_object = deals.id
+      )
+      OR
+      (
+        nn.auxiliary_subject_class = 'Deal'
+        AND
+        nn.auxiliary_subject = deals.id
+      )
+      OR
+      (
+        nn.subject_class = 'Deal'
+        AND
+        nn.subject = deals.id
+      )
     )
+    AND (nn.room IS NULL OR nn.room NOT IN(
+      SELECT room FROM tasks
+        WHERE checklist IN (SELECT id FROM deals_checklists WHERE deal = deals.id)
+        AND deleted_at IS NOT NULL
+    ))
   )
   END AS new_notifications,
 

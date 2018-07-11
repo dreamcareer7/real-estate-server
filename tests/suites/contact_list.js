@@ -11,6 +11,7 @@ function create (cb) {
           'value': 'great'
         }
       ],
+      query: 'Wow',
       'name': 'Wow list',
       'is_pinned': true
     })
@@ -38,6 +39,7 @@ function update(cb) {
           'value': 'great'
         }
       ],
+      query: 'OMG',
       'name': 'Wow list',
       'is_pinned': false
     })
@@ -62,7 +64,8 @@ function listForUser(cb) {
       data: [{
         filters: [{
           type: 'contact_list_filter'
-        }]
+        }],
+        query: 'OMG'
       }]
     })
     .expectJSONTypes({

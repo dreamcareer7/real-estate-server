@@ -3,8 +3,8 @@ package-lock.json
 docs
 !tests/docs
 istanbul
-lib/configs/development.js
-lib/configs/newrelic.js
+lib/configs/*
+lib/configs/base.js
 scripts/ntreis/timing.config.js
 scripts/announcements/announcement.html
 scripts/announcements/announcement.asc

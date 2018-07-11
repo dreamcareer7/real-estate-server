@@ -11,7 +11,16 @@ SELECT 'notification' AS type,
            NOT EXISTS(SELECT id FROM notifications_users WHERE notification = notifications.id AND "user" = $2::uuid) OR
            EXISTS(SELECT id FROM notifications_users WHERE notification = notifications.id AND "user" = $2::uuid AND seen_at IS NOT NULL)
          )
-       ) END AS seen
+       ) END AS seen,
+
+       CASE WHEN $2::uuid IS NULL THEN notifications.message
+       ELSE (
+         COALESCE(NULLIF(notifications.message, ''), (
+          SELECT message FROM notifications_users
+          WHERE notification = notifications.id AND "user" = $2
+         ))
+       ) END AS message
+
 FROM notifications
 JOIN unnest($1::uuid[]) WITH ORDINALITY t(nid, ord) ON notifications.id = nid
 ORDER BY t.ord

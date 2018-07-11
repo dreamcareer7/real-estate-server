@@ -16,6 +16,10 @@ const mapBrokerwolfContact = (job, cb) => {
   BrokerWolf.ContactTypes.map(job.data).nodeify(cb)
 }
 
+const sendTaskNotifications = (job, cb) => {
+  Task.sendNotifications().nodeify(cb)
+}
+
 const list = {
   'Refresh.Subdivisions': Listing.refreshSubdivisions,
   'Refresh.Schools': School.refresh,
@@ -32,6 +36,7 @@ const list = {
   'BrokerWolf.PropertyTypes.map': mapBrokerwolfProperty,
   'BrokerWolf.ContactTypes.Sync': nodeify(BrokerWolf.ContactTypes.sync),
   'BrokerWolf.ContactTypes.map': mapBrokerwolfContact,
+  'Task.sendNotifications': sendTaskNotifications
 }
 
 const queues = {}
