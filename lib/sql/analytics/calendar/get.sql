@@ -1,5 +1,5 @@
 WITH ub AS (
-  SELECT brand FROM user_brands($1) WHERE CASE $2::uuid IS NULL THEN TRUE ELSE brand = $2::uuid END
+  SELECT brand FROM user_brands($1) WHERE CASE WHEN $2::uuid IS NULL THEN TRUE ELSE brand = $2::uuid END
 )
 SELECT
   *,
