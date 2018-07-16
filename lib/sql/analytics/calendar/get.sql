@@ -1,5 +1,5 @@
 WITH ub AS (
-  SELECT brand FROM user_brands($1) WHERE brand = $2::uuid
+  SELECT brand FROM user_brands($1) WHERE CASE $2::uuid IS NULL THEN TRUE ELSE brand = $2::uuid END
 )
 SELECT
   *,
@@ -25,4 +25,8 @@ WHERE
       range_contains_birthday(to_timestamp($3), to_timestamp($4), "timestamp")
     ELSE
       "timestamp" BETWEEN to_timestamp($3) AND to_timestamp($4)
+  END)
+  AND (CASE
+    WHEN $5::text[] IS NULL THEN TRUE
+    ELSE event_type = ANY($5::text[])
   END)
