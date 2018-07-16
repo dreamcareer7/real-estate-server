@@ -2,7 +2,9 @@ const template = `TEMPLATE BODY`
 
 module.exports = {
   name: 'Test Template',
-  ratio: 1.4,
+  width: 600,
+  height: 300,
+  thumbnail: 'thumbnail-url',
   brand: null,
   template_type: 'ListingPostcard',
   template
