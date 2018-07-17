@@ -20,8 +20,8 @@ const notification = (job, done) => {
   Notification.create(job.data.notification, done)
 }
 
-const email_sane = (job, done) => {
-  Email.sendSane(job.data, done)
+const email = (job, done) => {
+  Email.send(job.data, done)
 }
 
 const sms = (job, done) => {
@@ -88,8 +88,8 @@ module.exports = {
     parallel: 50
   },
 
-  email_sane: {
-    handler: email_sane,
+  email: {
+    handler: email,
     parallel: config.email.parallel
   },
 
