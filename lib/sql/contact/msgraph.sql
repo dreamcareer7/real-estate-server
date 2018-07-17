@@ -13,7 +13,7 @@ WITH outlook_contact_ids AS (
 SELECT
   contacts.id,
   contacts_attributes.text AS source_id,
-  (contacts.updated_at <> contacts.created_at) AS is_changed
+  (contacts.updated_at <> contacts.created_at OR contacts.deleted_at IS NOT NULL) AS is_changed
 FROM outlook_contact_ids
   JOIN contacts USING (id)
   JOIN contacts_attributes ON contacts.id = contacts_attributes.contact
