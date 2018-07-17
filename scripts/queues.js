@@ -21,7 +21,7 @@ const notification = (job, done) => {
 }
 
 const email = (job, done) => {
-  Email.send(job.data, done)
+  Email.send(job.data).nodeify(done)
 }
 
 const sms = (job, done) => {
