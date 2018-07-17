@@ -1,4 +1,4 @@
-const template = `TEMPLATE BODY`
+const template = 'TEMPLATE BODY'
 
 module.exports = {
   name: 'Test Template',
