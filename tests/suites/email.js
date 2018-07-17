@@ -6,7 +6,7 @@ const email = {
   subject: 'Email Subject'
 }
 
-const mailgun_id = '<1234.1234@rechat.com>'
+const mailgun_id = '1234.1234@rechat.com'
 
 const send = (cb) => {
   return frisby.create('Send an email')
@@ -24,7 +24,7 @@ const storeId = (cb) => {
     name: 'Email.storeId',
     data: {
       email: results.email.send.id,
-      mailgun_id
+      mailgun_id: `<${mailgun_id}>`
     }
   })
   .after(cb)
