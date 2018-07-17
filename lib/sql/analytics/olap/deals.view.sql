@@ -51,7 +51,8 @@ CREATE OR REPLACE VIEW analytics.deals AS
           real_deals.deal_type,
           real_deals.property_type,
           real_deals.listing,
-          real_deals.brand
+          real_deals.brand,
+          real_deals.title
         FROM
           deals_roles
           JOIN real_deals
@@ -68,7 +69,8 @@ CREATE OR REPLACE VIEW analytics.deals AS
           real_deals.deal_type,
           real_deals.property_type,
           real_deals.listing,
-          real_deals.brand
+          real_deals.brand,
+          real_deals.title
         FROM
           current_deal_context as ctx
           INNER JOIN real_deals
@@ -104,6 +106,7 @@ CREATE OR REPLACE VIEW analytics.deals AS
             ctx.property_type,
             ctx.listing,
             ctx.brand,
+            ctx.title,
             ctx.key,
             COALESCE(ctx.text, ctx.number::text, ctx.date::text) as "value"
           FROM
@@ -116,6 +119,7 @@ CREATE OR REPLACE VIEW analytics.deals AS
             roles.property_type,
             roles.listing,
             roles.brand,
+            roles.title,
             roles.role,
             legal_full_name as "value"
           FROM
@@ -157,6 +161,7 @@ CREATE OR REPLACE VIEW analytics.deals AS
       property_type deal_property_type,
       listing uuid,
       brand uuid,
+      title text,
       full_address text,
       list_price double precision,
       sales_price double precision,
@@ -186,6 +191,7 @@ CREATE OR REPLACE VIEW analytics.deals AS
     ct.property_type,
     ct.listing,
     ct.brand,
+    ct.title,
     bo.branch_title,
     ct.full_address,
     ct.list_price,
