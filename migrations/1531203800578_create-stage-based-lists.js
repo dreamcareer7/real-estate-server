@@ -6,8 +6,8 @@ const db = require('../lib/utils/db')
 const up = [
   'BEGIN',
   `WITH lists(name, filters, is_pinned) AS (VALUES
-    ('Warm List', '[{"attribute_type": "stage", "values": "Warm"}]'::jsonb, false),
-    ('Hot List', '[{"attribute_type": "stage", "values": "Hot"}]'::jsonb, false)
+    ('Warm List', '[{"attribute_type": "stage", "value": "Warm List"}]'::jsonb, false),
+    ('Hot List', '[{"attribute_type": "stage", "value": "Hot List"}]'::jsonb, false)
   )
   INSERT INTO contact_search_lists
     ("user", name, filters, is_pinned)
