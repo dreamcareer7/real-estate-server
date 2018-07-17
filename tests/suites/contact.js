@@ -686,6 +686,23 @@ const exportByFilter = cb => {
     .expectStatus(200)
 }
 
+const sendEmails = cb => {
+  const emails = [{
+    subject: 'Email Subject',
+    to: 'recipient@rechat.com',
+    html: '<div>HTML Body</div>',
+    text: 'Text Body',
+  }]
+
+  return frisby
+    .create('send emails to contacts')
+    .post('/contacts/emails', {
+      emails
+    })
+    .after(cb)
+    .expectStatus(200)
+}
+
 module.exports = {
   getAttributeDefs,
   create,
@@ -726,5 +743,6 @@ module.exports = {
   deleteContact,
   deleteManyContacts,
   deleteContactWorked,
-  exportByFilter
+  exportByFilter,
+  sendEmails
 }
