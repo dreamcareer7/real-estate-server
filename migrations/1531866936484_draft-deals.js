@@ -5,7 +5,7 @@ const db = require('../lib/utils/db')
 
 const up = [
   'BEGIN',
-  'ALTER TABLE deals ADD is_draft BOOLEAN DEFAULT FALSE',
+  'ALTER TABLE deals ADD is_draft BOOLEAN NOT NULL DEFAULT FALSE',
   'COMMIT'
 ]
 
