@@ -23,6 +23,10 @@ SELECT
   (CASE WHEN $3 = 'Text'   THEN $7::text ELSE NULL END),
   (CASE WHEN $3 = 'Number' THEN $7::float ELSE NULL END),
   (CASE WHEN $3 = 'Date'   THEN $7::timestamp with time zone ELSE NULL END)
+  -- We don't want to re-save a context value if it's unchanged.
+  -- Because that would mean we will lose some history (approvals, origins, etc)
+  -- If we re-insert it.
+  -- issue #1111 is an example
 WHERE (
   SELECT count(*) < 1 FROM current_deal_context
   WHERE
