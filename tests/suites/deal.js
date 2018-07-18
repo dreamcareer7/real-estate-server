@@ -133,6 +133,25 @@ const patchListing = cb => {
     })
 }
 
+const patchDraft = cb => {
+  const patch = {
+    is_draft: false
+  }
+
+  results.deal.create.data.is_draft = false
+
+  const expected_object = Object.assign({}, results.deal.create.data, patch)
+
+  return frisby.create('publish a deal to live mode')
+    .patch(`/deals/${results.deal.create.data.id}/draft`, patch)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      data: expected_object
+    })
+}
+
 const addContext = cb => {
   const context = {
     listing_status: {
@@ -625,6 +644,7 @@ module.exports = {
   createHippocket,
   createAddressless,
   patchListing,
+  patchDraft,
   addRole,
   updateRole,
   addContext,
