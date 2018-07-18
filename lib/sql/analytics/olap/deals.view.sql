@@ -17,6 +17,7 @@ CREATE OR REPLACE VIEW analytics.deals AS
             WHERE
               training IS TRUE
           )
+          AND deals.is_draft IS NOT TRUE
           AND brands.deleted_at IS NULL
           AND deals.deleted_at IS NULL
       ),
