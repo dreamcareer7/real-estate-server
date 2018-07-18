@@ -10,7 +10,8 @@ INSERT INTO deal_context (
   text,
   number,
   date
-) VALUES (
+)
+SELECT
   $1,
   $2::uuid,
   $3::deal_context_type,
@@ -22,4 +23,12 @@ INSERT INTO deal_context (
   (CASE WHEN $3 = 'Text'   THEN $7::text ELSE NULL END),
   (CASE WHEN $3 = 'Number' THEN $7::float ELSE NULL END),
   (CASE WHEN $3 = 'Date'   THEN $7::timestamp with time zone ELSE NULL END)
+WHERE (
+  SELECT count(*) < 1 FROM current_deal_context
+  WHERE
+  deal       = $1
+  AND key    = $7
+  AND text   = (CASE WHEN $3 = 'Text'   THEN $7::text ELSE NULL END)
+  AND number = (CASE WHEN $3 = 'Number' THEN $7::float ELSE NULL END)
+  AND date   = (CASE WHEN $3 = 'Date'   THEN $7::timestamp with time zone ELSE NULL END)
 )
