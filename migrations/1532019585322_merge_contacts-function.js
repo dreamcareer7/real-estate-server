@@ -5,7 +5,7 @@ const async = require('async')
 const db = require('../lib/utils/db')
 
 const merge_contacts = fs.readFileSync(
-  __dirname + '/../lib/sql/contact/merge_contacts.fn.sql',
+  __dirname + '/../lib/sql/contact/functions/merge_contacts.fn.sql',
   'utf-8'
 )
 
