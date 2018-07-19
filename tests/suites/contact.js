@@ -620,14 +620,15 @@ const mergeContacts = cb => {
     .post(`/contacts/${parent_id}/merge?associations[]=contact.sub_contacts`, {
       sub_contacts
     })
-    .after((err, res, json) => {
-      const scs = json.data.sub_contacts.map(sc => sc.id)
-      for (const id of sub_contacts) {
-        if (!scs.includes(id))
-          throw 'Contacts are not merged.'
-      }
-      cb(err, res, json)
-    })
+    // .after((err, res, json) => {
+    //   const scs = json.data.sub_contacts.map(sc => sc.id)
+    //   for (const id of sub_contacts) {
+    //     if (!scs.includes(id))
+    //       throw 'Contacts are not merged.'
+    //   }
+    //   cb(err, res, json)
+    // })
+    .after(cb)
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
