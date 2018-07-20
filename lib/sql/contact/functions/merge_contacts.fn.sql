@@ -56,8 +56,19 @@ AS $$
         attrs
       WHERE
         data_type = 'text'
+        AND section <> 'Addresses'
       ORDER BY
         attribute_def, text, index, label, is_parent_attr desc
+    )
+    UNION ALL
+    (
+      SELECT
+        id, index_offset
+      FROM
+        attrs
+      WHERE
+        data_type = 'text'
+        AND section = 'Addresses'
     )
     UNION ALL
     (
