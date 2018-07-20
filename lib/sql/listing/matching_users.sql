@@ -1,4 +1,4 @@
-SELECT rooms_users."user" AS id, alerts.id as alert_id
+SELECT DISTINCT(rooms_users."user") AS id
 FROM alerts
 INNER JOIN rooms_users
   ON alerts.room = rooms_users.room
