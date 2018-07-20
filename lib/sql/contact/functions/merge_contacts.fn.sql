@@ -18,7 +18,7 @@ AS $$
   index_space AS (
     SELECT
       contact,
-      SUM(max_index) OVER (w) - COALESCE(LAG(max_index) OVER (w), max_index) AS index_offset
+      SUM(max_index) OVER (w) - COALESCE(LAG(max_index) OVER (w), max_index) + row_number() OVER (w) - 1 AS index_offset
     FROM
       max_indices
     WINDOW w AS (ORDER BY is_parent DESC, contact)
