@@ -33,8 +33,10 @@ AS $$
       ca.number,
       ca.index,
       ca.label,
+      ca.is_primary,
       ca.attribute_def,
       cad.data_type,
+      cad.section,
       (ca.contact = parent) AS is_parent_attr
     FROM
       contacts_attributes AS ca
@@ -51,7 +53,7 @@ AS $$
   attrs_to_keep AS (
     (
       SELECT DISTINCT ON (attribute_def, text, index, label)
-        id, index_offset
+        id, index_offset, SUM(is_primary::int) OVER (ORDER BY attribute_def, text, index, label, is_parent_attr desc) > 0 AS is_primary
       FROM
         attrs
       WHERE
@@ -63,7 +65,7 @@ AS $$
     UNION ALL
     (
       SELECT
-        id, index_offset
+        id, index_offset, (is_parent_attr AND is_primary) AS is_primary
       FROM
         attrs
       WHERE
@@ -73,7 +75,7 @@ AS $$
     UNION ALL
     (
       SELECT DISTINCT ON (attribute_def, date, index, label)
-        id, index_offset
+        id, index_offset, SUM(is_primary::int) OVER (ORDER BY attribute_def, text, index, label, is_parent_attr desc) > 0 AS is_primary
       FROM
         attrs
       WHERE
@@ -84,7 +86,7 @@ AS $$
     UNION ALL
     (
       SELECT DISTINCT ON (attribute_def, number, index, label)
-        id, index_offset
+        id, index_offset, SUM(is_primary::int) OVER (ORDER BY attribute_def, text, index, label, is_parent_attr desc) > 0 AS is_primary
       FROM
         attrs
       WHERE
@@ -97,7 +99,8 @@ AS $$
     contacts_attributes AS ca
   SET
     contact = parent,
-    index = index + atk.index_offset
+    index = index + atk.index_offset,
+    is_primary = atk.is_primary
   FROM
     attrs_to_keep AS atk
   WHERE
