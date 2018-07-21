@@ -2,6 +2,7 @@ SELECT
   *,
   COALESCE(
     CASE WHEN first_name IS NOT NULL AND last_name IS NOT NULL THEN first_name || ' ' || last_name ELSE NULL END,
+    marketing_name,
     nickname,
     first_name,
     last_name,
