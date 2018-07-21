@@ -25,17 +25,17 @@ Object.keys(definitions).forEach(queue_name => {
 
 function processLastRuns (queue, tasks) {
   tasks
-  .filter(task => {
-    if (!task.run)
-      return true // Was never executed.
+    .filter(task => {
+      if (!task.run)
+        return true // Was never executed.
 
-    const elapsed = (new Date()).getTime() - task.run.created_at.getTime()
+      const elapsed = (new Date()).getTime() - task.run.created_at.getTime()
 
-    return elapsed >= task.definition.interval
-  })
-  .forEach(task => {
-    queues[task.definition.queue].push(task.definition, task.definition.priority)
-  })
+      return elapsed >= task.definition.interval
+    })
+    .forEach(task => {
+      queues[task.definition.queue].push(task.definition, task.definition.priority)
+    })
 
   if (queues[queue].length() < 1) {
     setTimeout(schedule.bind(null, queue), 5 * 1000)

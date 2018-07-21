@@ -389,12 +389,12 @@ const addTask = cb => {
     .after(cb)
     .expectStatus(200)
     .expectJSON({
-//       code: 'OK',
-//       data: results.deal.create.data
+      //       code: 'OK',
+      //       data: results.deal.create.data
     })
     .expectJSONTypes({
-//       code: String,
-//       data: deal_response
+      //       code: String,
+      //       data: deal_response
     })
 }
 
@@ -561,12 +561,12 @@ const setReview = cb => {
 
 const sendNotifications = (cb) => {
   return frisby.create('Send Task Review Notifications')
-  .post('/jobs', {
-    name: 'Task.sendNotifications',
-    data: {}
-  })
-  .after(cb)
-  .expectStatus(200)
+    .post('/jobs', {
+      name: 'Task.sendNotifications',
+      data: {}
+    })
+    .after(cb)
+    .expectStatus(200)
 }
 
 const patchAttention = cb => {

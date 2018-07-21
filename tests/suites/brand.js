@@ -17,7 +17,7 @@ const createParent = (cb) => {
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
-//       data: brand
+      //       data: brand
     })
 }
 
@@ -80,7 +80,7 @@ const addHostname = cb => {
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
-//       data: brand
+      //       data: brand
     })
 }
 
@@ -91,7 +91,7 @@ const removeHostname = cb => {
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
-//       data: brand
+      //       data: brand
     })
 }
 
@@ -102,7 +102,7 @@ const getByHostname = (cb) => {
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
-//       data: brand
+      //       data: brand
     })
 }
 
@@ -116,7 +116,7 @@ const addOffice = cb => {
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
-//       data: brand
+      //       data: brand
     })
 }
 
@@ -135,7 +135,7 @@ const addChecklist = cb => {
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
-//       data: brand
+      //       data: brand
     })
 }
 
@@ -163,7 +163,7 @@ const getChecklists = cb => {
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
-//       data: brand
+      //       data: brand
     })
 }
 
@@ -179,7 +179,7 @@ const addTask = cb => {
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
-//       data: brand
+      //       data: brand
     })
 }
 
@@ -202,7 +202,7 @@ const addForm = cb => {
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
-//       data: brand
+      //       data: brand
     })
 }
 
@@ -227,7 +227,7 @@ const removeOffice = cb => {
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
-//       data: brand
+      //       data: brand
     })
 }
 

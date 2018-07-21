@@ -62,7 +62,7 @@ function generateMd(docName, cb) {
 
   aglio.render(md, {
     theme: options.theme || 'olio',
-//     themeTemplate:'triple',
+    //     themeTemplate:'triple',
     themeFullWidth: true,
     includePath: '/tmp/rechat'
   }, (err, html) => {

@@ -42,14 +42,14 @@ const prepareTasks = function () {
       results[suite] = {}
 
     Object.keys(fns)
-    .filter((name) => (!tests || tests.indexOf(name) > -1))
-    .map((name) => {
-      frisbies.push({
-        suite: suite,
-        name: name,
-        fn: fns[name]
+      .filter((name) => (!tests || tests.indexOf(name) > -1))
+      .map((name) => {
+        frisbies.push({
+          suite: suite,
+          name: name,
+          fn: fns[name]
+        })
       })
-    })
 
     return fns
   }

@@ -187,9 +187,9 @@ const bulkMarkAsRead = (cb) => {
 
 const getFavoritedListings = (cb) => {
   return frisby.create('get favorited listings')
-  .get('/user/favorites/')
-  .after(cb)
-  .expectStatus(200)
+    .get('/user/favorites/')
+    .after(cb)
+    .expectStatus(200)
 }
 
 module.exports = {

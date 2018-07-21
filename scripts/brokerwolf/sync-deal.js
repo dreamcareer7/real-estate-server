@@ -11,7 +11,7 @@ const sync = async () => {
 }
 
 sync()
-.catch(e => {
-  console.log(e)
-  process.exit()
-})
+  .catch(e => {
+    console.log(e)
+    process.exit()
+  })

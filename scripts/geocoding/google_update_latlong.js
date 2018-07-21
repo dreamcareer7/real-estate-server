@@ -12,34 +12,34 @@ Address.getBatchOfAddressesWithoutLatLongGoogle(config.google.address_batch_size
 
   const startTime = (new Date()).getTime()
   async.mapLimit(address_ids,
-                 config.google.concurrency,
-                 function (r, cb) {
-                   return Address.updateGeoFromGoogle(r, cb)
-                 },
-                 function (err, results) {
-                   if (err) {
-                     console.log(err)
-                     return
-                   }
+    config.google.concurrency,
+    function (r, cb) {
+      return Address.updateGeoFromGoogle(r, cb)
+    },
+    function (err, results) {
+      if (err) {
+        console.log(err)
+        return
+      }
 
-                   const endTime = (new Date()).getTime()
-                   const elapsed = (endTime - startTime) / 1000
-                   const remaining = parseInt(config.google.pause - elapsed)
+      const endTime = (new Date()).getTime()
+      const elapsed = (endTime - startTime) / 1000
+      const remaining = parseInt(config.google.pause - elapsed)
 
-                   results = results.filter(Boolean)
-                   async.map(results, Address.reschedule, function (err, ok) {
-                     if (err)
-                       console.log('Error rescheduling addresses')
+      results = results.filter(Boolean)
+      async.map(results, Address.reschedule, function (err, ok) {
+        if (err)
+          console.log('Error rescheduling addresses')
 
-                     if (remaining > 0) {
-                       console.log('Pausing for'.yellow,
-                                   remaining,
-                                   'seconds before termination to meet Google\'s limit on daily requests...'.yellow)
-                       sleep.sleep(remaining)
-                       process.exit(0)
-                     } else {
-                       process.exit(0)
-                     }
-                   })
-                 })
+        if (remaining > 0) {
+          console.log('Pausing for'.yellow,
+            remaining,
+            'seconds before termination to meet Google\'s limit on daily requests...'.yellow)
+          sleep.sleep(remaining)
+          process.exit(0)
+        } else {
+          process.exit(0)
+        }
+      })
+    })
 })
