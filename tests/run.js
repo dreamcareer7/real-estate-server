@@ -35,7 +35,8 @@ if (!program.concurrency)
 
 if (program.docs)
   require('./docs.js')(program)
-else if (program.curl)
+
+if (program.curl)
   require('./curl.js')(program)
 else
   require('./report.js')(program)
