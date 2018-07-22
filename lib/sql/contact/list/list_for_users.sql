@@ -7,4 +7,4 @@ WHERE
   deleted_at IS NULL
 ORDER BY
   is_pinned DESC,
-  created_at DESC
+  created_at

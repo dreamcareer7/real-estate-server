@@ -10,10 +10,10 @@ module.exports = {
     {'longitude': -96.81209123557, 'latitude': 32.75309231036},
     {'longitude': -96.81209123557, 'latitude': 32.79826628172}
   ],
-  'property_subtypes': ['RES-Single Family', 'RES-Half Duplex', 'RES-Farm\/Ranch', 'RES-Condo', 'RES-Townhouse'],
+  'property_subtypes': ['RES-Single Family', 'RES-Half Duplex', 'RES-Farm/Ranch', 'RES-Condo', 'RES-Townhouse'],
   'open_house': false,
   'pool': true,
-//   'pets': true,
+  //   'pets': true,
   'postal_codes': ['75219']
 }
 

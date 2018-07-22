@@ -14,7 +14,7 @@ const calls = []
 
 function logger (req, res, next) {
   if (req.headers['x-suite'] !== req.headers['x-original-suite'])
-    return next()  // Dont document dependencies.
+    return next() // Dont document dependencies.
 
   const end = res.end
 
@@ -191,11 +191,11 @@ function bf(pair) {
 
   if (req.body !== '{}') {
     output += '+ Request' + newline
-//   output += indent + "+ Headers" + newline;
-//   output += newline;
-//   Object.keys(req['headers']).forEach(function(key) {
-//     return output += indent + indent + indent + key + ":" + req['headers'][key] + newline;
-//   });
+    //   output += indent + "+ Headers" + newline;
+    //   output += newline;
+    //   Object.keys(req['headers']).forEach(function(key) {
+    //     return output += indent + indent + indent + key + ":" + req['headers'][key] + newline;
+    //   });
 
     req['body'].split('\n').forEach(function (line) {
       output += indent + indent + indent + line + newline
@@ -204,11 +204,11 @@ function bf(pair) {
     output += newline
   }
   output += '+ Response' + ' ' + res['statusCode'] + newline
-//   output += indent + "+ Headers" + newline;
-//   output += newline;
-//   Object.keys(res['headers']).forEach(function(key) {
-//     return output += indent + indent + indent + key + ":" + res['headers'][key] + newline;
-//   });
+  //   output += indent + "+ Headers" + newline;
+  //   output += newline;
+  //   Object.keys(res['headers']).forEach(function(key) {
+  //     return output += indent + indent + indent + key + ":" + res['headers'][key] + newline;
+  //   });
   res['body'].split('\n').forEach(function (line) {
     output += indent + indent + indent + line + newline
     return output

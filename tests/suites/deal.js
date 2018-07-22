@@ -133,6 +133,25 @@ const patchListing = cb => {
     })
 }
 
+const patchDraft = cb => {
+  const patch = {
+    is_draft: false
+  }
+
+  results.deal.create.data.is_draft = false
+
+  const expected_object = Object.assign({}, results.deal.create.data, patch)
+
+  return frisby.create('publish a deal to live mode')
+    .patch(`/deals/${results.deal.create.data.id}/draft`, patch)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      data: expected_object
+    })
+}
+
 const addContext = cb => {
   const context = {
     listing_status: {
@@ -370,12 +389,12 @@ const addTask = cb => {
     .after(cb)
     .expectStatus(200)
     .expectJSON({
-//       code: 'OK',
-//       data: results.deal.create.data
+      //       code: 'OK',
+      //       data: results.deal.create.data
     })
     .expectJSONTypes({
-//       code: String,
-//       data: deal_response
+      //       code: String,
+      //       data: deal_response
     })
 }
 
@@ -542,12 +561,12 @@ const setReview = cb => {
 
 const sendNotifications = (cb) => {
   return frisby.create('Send Task Review Notifications')
-  .post('/jobs', {
-    name: 'Task.sendNotifications',
-    data: {}
-  })
-  .after(cb)
-  .expectStatus(200)
+    .post('/jobs', {
+      name: 'Task.sendNotifications',
+      data: {}
+    })
+    .after(cb)
+    .expectStatus(200)
 }
 
 const patchAttention = cb => {
@@ -625,6 +644,7 @@ module.exports = {
   createHippocket,
   createAddressless,
   patchListing,
+  patchDraft,
   addRole,
   updateRole,
   addContext,
