@@ -83,7 +83,9 @@ module.exports = {
     'node': true
   },
   'parserOptions': {
-    'ecmaVersion': 8,
+    'ecmaVersion': 10,
+    'ecmaFeatures': {
+    }
   },
   'extends': 'eslint:recommended',
   'rules': {
