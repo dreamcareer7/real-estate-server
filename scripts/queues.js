@@ -25,7 +25,7 @@ const email = (job, done) => {
 }
 
 const sms = (job, done) => {
-  Twilio.callTwilio(job.data, done)
+  SMS.callTwilio(job.data, done)
 }
 
 const saveLastSeen = (job, done) => {
