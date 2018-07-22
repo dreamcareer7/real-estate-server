@@ -1,48 +1,94 @@
-image: docker:git
-
-stages:
-  - build
-  - test
-  - docs
+image: node:10-alpine
 
 variables:
-  CONTAINER_IMAGE: registry.gitlab.com/rechat/server:$CI_COMMIT_REF_NAME
+  ENV: development
   POSTGRES_DB: rechat
   POSTGRES_USER: rechat
   POSTGRES_PASSWORD: rechat
+  DATABASE_URL: "postgres://$POSTGRES_USER:$POSTGRES_PASSWORD@postgres/$POSTGRES_DB"
+  REDIS_URL: "redis://redis:6379"
 
-before_script:
-  - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
-
-build:
+modules:
   stage: build
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+      - node_modules/
+  before_script:
+    - apk --no-cache --update add git python build-base
   script:
-    - docker build -t $CONTAINER_IMAGE .
-    - docker push $CONTAINER_IMAGE
+    - NODE_ENV="$ENV" npm install
+  tags:
+    - docker
 
-test:
-  stage: test
+modules:docs:
+  stage: build
+  image: node:9-alpine
+  cache:
+    key: docs
+    paths:
+      - node_modules/
+  before_script:
+    - apk --no-cache --update add git python build-base
   script:
-    - docker run -d -e POSTGRES_DB -e POSTGRES_USER -e POSTGRES_PASSWORD --name db mdillon/postgis:10-alpine
-    - sleep 20
-    - docker run -d --name redis redis:latest
-    - docker cp ./data/minimal.sql db:/minimal.sql
-    - docker exec db sh -c "psql -U $POSTGRES_USER $POSTGRES_DB < /minimal.sql"
-    - export REDIS_URL="redis://redis:6379"
-    - export DATABASE_URL="postgres://$POSTGRES_USER:$POSTGRES_PASSWORD@db/$POSTGRES_DB"
-    - ENVS=`env | sed -n '/^[^\t]/s/=.*//p' | sed '/^$/d' | sed 's/^/-e /g' | tr '\n' ' '`
-    - docker run --link db:db --link redis:redis --link db:db $ENVS $CONTAINER_IMAGE npm run coverage
-    - docker run --name html --link db:db --link redis:redis --link db:db $ENVS $CONTAINER_IMAGE npm run docs
-    - rm -rf /var/www/docs/rechat/$CI_COMMIT_REF_NAME
-    - docker cp html:/tmp/rechat /var/www/docs/rechat/$CI_COMMIT_REF_NAME
+    - npm install async aglio commander
+  tags:
+    - docker
+
+lint:
+  stage: test
+  dependencies:
+    - modules
+  script: npx eslint .
+  tags:
+    - docker
+
+coverage:
+  stage: test
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+      - node_modules/
+    policy: pull
+  dependencies:
+    - modules
+  services:
+    - alias: postgres
+      name: mdillon/postgis:10-alpine
+    - alias: redis
+      name: redis:latest
+  before_script:
+    - apk --no-cache --update add postgresql-client
+    - export PGPASSWORD=$POSTGRES_PASSWORD
+    - psql -h "postgres" -U "$POSTGRES_USER" "$POSTGRES_DB" < ./data/minimal.sql
+  script:
+    - npm run coverage
+  coverage: '/Lines\s+:\s([\d\.]+)/'
   artifacts:
     paths:
       - istanbul
+      - docs
+  tags:
+    - docker
 
-  before_script:
-    - docker kill db redis html || true
-    - docker rm   db redis html || true
-
+docs:
+  stage: deploy
+  image: node:9-alpine
+  dependencies:
+    - modules:docs
+    - coverage
+  cache:
+    key: docs
+    paths:
+      - node_modules/
+    policy: pull
+  script:
+    - node api_docs/index.js -o
   after_script:
-    - docker kill db redis html || true
-    - docker rm   db redis html || true
+    - apk --no-cache --update add ca-certificates wget
+    - wget https://dl.minio.io/client/mc/release/linux-amd64/mc
+    - chmod +x mc
+    - ./mc config host add rechat https://minio.rechat.com "$MINIO_ACCESS_KEY" "$MINIO_SECRET_KEY"
+    - ./mc cp --recursive docs/ rechat/docs/$CI_COMMIT_REF_NAME
+  tags:
+    - docker

@@ -15,7 +15,6 @@ SELECT
   created_by,
   "user",
   brand,
-  coalesce(parent, id) as parent,
   (SELECT
     array_agg(contacts_attributes.id ORDER BY created_at)
   FROM
