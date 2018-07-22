@@ -25,14 +25,15 @@ process.on('exit', () => {
     node.kill()
 })
 
-gulp.task('default', ['lint', 'server'], function () {})
+gulp.task('default', gulp.parallel('lint', 'server', function () {}))
 
-const watcher = gulp.watch('lib/**/*', ['server'])
-watcher.on('change', function(event) {
+const watcher = gulp.watch('lib/**/*', gulp.parallel('server'))
+
+watcher.on('change', function(path) {
   process.stdout.write('\033c')
 
-  if(event.path.split('.').pop() === 'js')
-    lintFile(event.path)
+  if(path.split('.').pop() === 'js')
+    lintFile(path)
 })
 
 const CLIEngine = require('eslint').CLIEngine
