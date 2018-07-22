@@ -1,21 +1,8 @@
-WITH sub_contacts AS (
-  SELECT
-    id
-  FROM
-    contacts
-  WHERE
-    id = $1::uuid
-    OR (parent = $1::uuid AND deleted_at IS NULL)
-),
-cusers AS (
-  WITH sc AS (
-    SELECT array_agg(sub_contacts.id) AS sub_contacts FROM sub_contacts
-  )
+WITH cusers AS (
   SELECT
     user_id AS id
   FROM
-    sc,
-    get_users_for_contacts(sc.sub_contacts)
+    get_users_for_contacts(ARRAY[$1::uuid])
 ),
 timeline_content AS (
   (
@@ -23,7 +10,7 @@ timeline_content AS (
     FROM crm_tasks
     INNER JOIN crm_associations ON crm_tasks.id = crm_associations.crm_task
     WHERE
-      contact = ANY(SELECT id FROM sub_contacts)
+      contact = $1::uuid
       AND crm_associations.deleted_at IS NULL
       AND crm_tasks.deleted_at IS NULL
   )
@@ -33,7 +20,7 @@ timeline_content AS (
     FROM crm_activities
     INNER JOIN crm_associations ON crm_activities.id = crm_associations.crm_activity
     WHERE
-      contact = ANY(SELECT id FROM sub_contacts)
+      contact = $1::uuid
       AND crm_associations.deleted_at IS NULL
       AND crm_activities.deleted_at IS NULL
   )
