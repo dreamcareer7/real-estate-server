@@ -1,7 +1,8 @@
 require('../lib/models/index.js')()
 const config = require('../lib/config')
 const {
-  contact_import
+  contact_import,
+  contact_data_pipeline
 } = require('../lib/models/Contact/worker')
 
 const airship = (job, done) => {
@@ -19,8 +20,8 @@ const notification = (job, done) => {
   Notification.create(job.data.notification, done)
 }
 
-const email_sane = (job, done) => {
-  Email.sendSane(job.data, done)
+const email = (job, done) => {
+  Email.send(job.data).nodeify(done)
 }
 
 const sms = (job, done) => {
@@ -87,8 +88,8 @@ module.exports = {
     parallel: 50
   },
 
-  email_sane: {
-    handler: email_sane,
+  email: {
+    handler: email,
     parallel: config.email.parallel
   },
 
@@ -154,6 +155,11 @@ module.exports = {
 
   contact_import: {
     handler: contact_import,
+    parallel: 4
+  },
+
+  contact_data_pipeline: {
+    handler: contact_data_pipeline,
     parallel: 4
   }
 }

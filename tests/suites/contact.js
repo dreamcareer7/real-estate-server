@@ -484,7 +484,7 @@ const deleteContactWorked = cb => {
 
   return frisby
     .create('get list of contacts and make sure delete contact was successful')
-    .get('/contacts?associations[]=contact.sub_contacts')
+    .get('/contacts?associations[]=contact.sub_contacts&associations[]=contact.lists')
     .after(cb)
     .expectStatus(200)
     .expectJSONLength('data', before_count - 3 - 2)
@@ -587,6 +587,40 @@ function createManyContactsList(cb) {
     .expectStatus(200)
 }
 
+function syncListMembers(cb) {
+  return frisby.create('sync members of many contacts list')
+    .post('/jobs', {
+      name: 'contact_data_pipeline',
+      data: {
+        type: 'update_list_memberships',
+        list_id: results.contact.createManyContactsList.data
+      }
+    })
+    .after(cb)
+    .expectStatus(200)
+}
+
+function getManyContactsList(cb) {
+  return frisby.create('create many contacts list')
+    .get('/contacts/lists/' + results.contact.createManyContactsList.data)
+    .after(cb)
+    .expectJSON({
+      data: {
+        member_count: manyContacts.length
+      }
+    })
+    .expectStatus(200)
+}
+
+function getContactsInManyContactsList(cb) {
+  return frisby
+    .create('get list of contacts in many contacts list')
+    .get('/contacts?list=' + results.contact.createManyContactsList.data)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSONLength('data', manyContacts.length)
+}
+
 const getTimeline = (cb) => {
   return frisby.create('get list of contact activities (timeline)')
     .get(`/contacts/${results.contact.create.data[0].id}/timeline`)
@@ -653,6 +687,23 @@ const exportByFilter = cb => {
     .expectStatus(200)
 }
 
+const sendEmails = cb => {
+  const emails = [{
+    subject: 'Email Subject',
+    to: 'recipient@rechat.com',
+    html: '<div>HTML Body</div>',
+    text: 'Text Body',
+  }]
+
+  return frisby
+    .create('send emails to contacts')
+    .post('/contacts/emails', {
+      emails
+    })
+    .after(cb)
+    .expectStatus(200)
+}
+
 module.exports = {
   getAttributeDefs,
   create,
@@ -679,6 +730,9 @@ module.exports = {
   updateManyContacts,
   makeSureManyContactsTagIsAdded,
   createManyContactsList,
+  syncListMembers,
+  getManyContactsList,
+  getContactsInManyContactsList,
   getTimeline,
   getAllTags,
   removeAttribute,
@@ -690,5 +744,6 @@ module.exports = {
   deleteContact,
   deleteManyContacts,
   deleteContactWorked,
-  exportByFilter
+  exportByFilter,
+  sendEmails
 }

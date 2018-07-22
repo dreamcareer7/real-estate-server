@@ -1,0 +1,1 @@
+UPDATE emails SET mailgun_id = $2 WHERE id = $1
