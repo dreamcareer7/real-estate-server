@@ -2,10 +2,10 @@ const fs = require('fs')
 const _ = require('lodash')
 const copy = require('copy-dir')
 
-copy.sync(__dirname + '/../api_docs/', '/tmp/rechat')
+copy.sync(__dirname + '/../api_docs/', 'docs')
 
 try {
-  fs.mkdirSync('/tmp/rechat/tests')
+  fs.mkdirSync('docs/tests')
 } catch (e) {
   // Dont do anything if it already exists. We're good.
 }
@@ -47,7 +47,7 @@ function findParams (url, params, qs, docs) {
     Object.keys(qs).forEach((q) => {
       res[q] = { example: qs[q] }
     })
-  
+
   return _.merge({}, docs, res)
 }
 
@@ -67,12 +67,12 @@ function generate () {
 
     const md = generateTest(call, doc_override)
     try {
-      fs.mkdirSync('/tmp/rechat/tests/' + suite)
+      fs.mkdirSync('docs/tests/' + suite)
     } catch (e) {
       // If directory exists, we're all good. Don't need to do anything.
     }
 
-    fs.writeFileSync('/tmp/rechat/tests/' + suite + '/' + test + '.md', md)
+    fs.writeFileSync('docs/tests/' + suite + '/' + test + '.md', md)
   })
 
   process.exit()
@@ -161,7 +161,7 @@ function bf(pair) {
       const example = req.query[name].example
       if (example)
         output += ': `' + example + '`'
-      
+
       let type = req.query[name].type || 'string'
       if (req.query[name].enum)
         type = `enum[${type}]`
@@ -172,11 +172,11 @@ function bf(pair) {
       const description = req.query[name].description
       if (description)
         output += ' - ' + description + newline
-      
+
       const default_value = req.query[name].default
       if (default_value)
         output += newline + indent + indent + '+ Default: `' + default_value + '`'
-      
+
       if (Array.isArray(req.query[name].enum)) {
         output += newline + indent + indent + '+ Members:'
         for (const enum_item of req.query[name].enum) {
