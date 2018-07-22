@@ -83,7 +83,7 @@ module.exports = {
     'node': true
   },
   'parserOptions': {
-    'ecmaVersion': 10,
+    'ecmaVersion': 9,
     'ecmaFeatures': {
     }
   },
