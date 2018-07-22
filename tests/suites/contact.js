@@ -5,12 +5,12 @@ const { contact, companyContact } = require('./data/contact.js')
 const manyContacts = require('./data/manyContacts.js')
 
 let defs
-const contactAttributes = _.groupBy(contact.attributes, 'type')
+const contactAttributes = _.groupBy(contact.attributes, 'attribute_type')
 
 function _fixContactAttributeDefs(contact) {
   for (const attr of contact.attributes) {
-    attr.attribute_def = defs[attr.type].id
-    delete attr.type
+    attr.attribute_def = defs[attr.attribute_type].id
+    delete attr.attribute_type
   }
 }
 
