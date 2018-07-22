@@ -2,7 +2,6 @@ require('../connection.js')
 
 const async = require('async')
 const config = require('../../lib/config.js')
-const sleep = require('sleep')
 
 Address.getBatchOfAddressesWithoutLatLongGoogle(config.google.address_batch_size, function (err, address_ids) {
   if (err) {
@@ -35,8 +34,7 @@ Address.getBatchOfAddressesWithoutLatLongGoogle(config.google.address_batch_size
           console.log('Pausing for'.yellow,
             remaining,
             'seconds before termination to meet Google\'s limit on daily requests...'.yellow)
-          sleep.sleep(remaining)
-          process.exit(0)
+          setTimeout(remaining, process.exit)
         } else {
           process.exit(0)
         }

@@ -80,7 +80,6 @@
     "request-promise-native": "^1.0.5",
     "s3-download-stream": "^1.1.1",
     "s3-upload-stream": "^1.0.7",
-    "sleep": "^3.0.0",
     "socket.io": "^2.0.4",
     "socket.io-redis": "^5.2.0",
     "squel": "^5.12.1",
