@@ -23,7 +23,7 @@
     "async": "^1.4.2",
     "aws-cloudfront-sign": "^2.2.0",
     "aws-sdk": "^2.168.0",
-    "base64url": "^2.0.0",
+    "base64url": "^3.0.0",
     "bcrypt": "^0.8.6",
     "body-parser": "^1.18.1",
     "busboy": "^0.2.14",
