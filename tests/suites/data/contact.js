@@ -1,108 +1,108 @@
 const contact = {
   attributes: [
     {
-      type: 'email',
+      attribute_type: 'email',
       text: 'john@doe.org',
       label: 'Work',
       is_primary: true
     },
     {
-      type: 'phone_number',
+      attribute_type: 'phone_number',
       text: '+989124834198',
       label: 'Mobile',
       is_primary: true
     },
     {
-      type: 'first_name',
+      attribute_type: 'first_name',
       text: 'John'
     },
     {
-      type: 'middle_name',
+      attribute_type: 'middle_name',
       text: 'M.'
     },
     {
-      type: 'last_name',
+      attribute_type: 'last_name',
       text: 'Doe'
     },
     {
-      type: 'nickname',
+      attribute_type: 'nickname',
       text: 'Johnny'
     },
     {
-      type: 'tag',
+      attribute_type: 'tag',
       text: 'New'
     },
     {
-      type: 'tag',
+      attribute_type: 'tag',
       text: 'foo'
     },
     {
-      type: 'stage',
+      attribute_type: 'stage',
       text: 'Contact'
     },
     {
-      type: 'birthday',
+      attribute_type: 'birthday',
       date: 1000000
     },
     {
-      type: 'profile_image_url',
+      attribute_type: 'profile_image_url',
       text:
         'https://inomics.com/sites/default/files/pictures/picture-95970-1460131169.png'
     },
     {
-      type: 'cover_image_url',
+      attribute_type: 'cover_image_url',
       text:
         'https://inomics.com/sites/default/files/pictures/picture-95970-1460131169.png'
     },
     {
-      type: 'company',
+      attribute_type: 'company',
       text: 'Rechat'
     },
     {
-      type: 'street_name',
+      attribute_type: 'street_name',
       text: 'Street',
       is_primary: true,
       label: 'Office'
     },
     {
-      type: 'city',
+      attribute_type: 'city',
       text: 'Dallas',
       is_primary: true,
       label: 'Office'
     },
     {
-      type: 'state',
+      attribute_type: 'state',
       text: 'Texas',
       is_primary: true,
       label: 'Office'
     },
     {
-      type: 'country',
+      attribute_type: 'country',
       text: 'US',
       is_primary: true,
       label: 'Office'
     },
     {
-      type: 'postal_code',
+      attribute_type: 'postal_code',
       text: '72890',
       is_primary: true,
       label: 'Office'
     },
     {
-      type: 'source_type',
+      attribute_type: 'source_type',
       text: 'ExplicitlyCreated'
     },
     {
-      type: 'note',
+      attribute_type: 'note',
       text: 'This is a sample note'
     },
     {
-      type: 'job_title',
+      attribute_type: 'job_title',
       text: 'Contact Test Subject'
     },
     {
       label: 'Personal',
-      type: 'website',
+      attribute_type: 'website',
       text: 'http://www.gholi.com'
     }
   ]
@@ -111,7 +111,7 @@ const contact = {
 const companyContact = {
   attributes: [
     {
-      type: 'company',
+      attribute_type: 'company',
       text: 'ACME Corporation'
     }
   ]
