@@ -31,7 +31,7 @@ Although we have a page that includes [everything](/all.html).
 
 ## CRM
 
-* [Activity Log](crm_activity.html)
+* [Touches](touches.html)
 * [Contacts](contact.html)
 * [Contact Lists](contact_list.html)
 * [Dashboard](dashboard.html)
