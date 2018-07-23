@@ -4,7 +4,6 @@ const Domain = require('domain')
 const async = require('async')
 const debug = require('debug')('rechat:workers')
 
-const config = require('../lib/config.js')
 const db = require('../lib/utils/db')
 const promisify = require('../lib/utils/promisify.js')
 
