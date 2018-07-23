@@ -7,37 +7,16 @@ declare interface IAssociationFilters {
   listing?: UUID;
 }
 
-declare interface ICrmDealAssociationInput {
-  association_type: "deal";
+declare interface ICrmAssociationInput {
+  association_type: "listing" | "deal" | "contact";
+  listing: UUID;
   deal: UUID;
-
-  crm_task?: UUID;
-  crm_activity?: UUID;
-  contact_note?: UUID;
-}
-
-declare interface ICrmContactAssociationInput {
-  association_type: "contact";
   contact: UUID;
 
-  crm_task?: UUID;
-  crm_activity?: UUID;
-  contact_note?: UUID;
+  crm_task: UUID;
+  crm_activity: UUID;
+  contact_note: UUID;
 }
-
-declare interface ICrmListingAssociationInput {
-  association_type: "listing";
-  listing: UUID;
-
-  crm_task?: UUID;
-  crm_activity?: UUID;
-  contact_note?: UUID;
-}
-
-declare type ICrmAssociationInput =
-  ICrmContactAssociationInput
-  | ICrmDealAssociationInput
-  | ICrmListingAssociationInput;
 
 declare interface ICrmAssociation {
   id?: UUID;
@@ -47,13 +26,13 @@ declare interface ICrmAssociation {
 
   association_type: TCrmAssoicationType;
 
-  crm_task?: UUID;
-  crm_activity?: UUID;
-  contact_note?: UUID;
+  crm_task: UUID;
+  crm_activity: UUID;
+  contact_note: UUID;
 
-  deal?: UUID;
-  contact?: UUID;
-  listing?: UUID;
+  deal: UUID;
+  contact: UUID;
+  listing: UUID;
 }
 
 declare interface ICrmAssociationsCategorized {
