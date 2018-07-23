@@ -2,7 +2,6 @@ require('colors')
 const kue = require('kue')
 const Domain = require('domain')
 const async = require('async')
-const Raven = require('raven')
 const debug = require('debug')('rechat:workers')
 
 const config = require('../lib/config.js')
@@ -10,11 +9,6 @@ const db = require('../lib/utils/db')
 const promisify = require('../lib/utils/promisify.js')
 
 const queue = require('../lib/utils/queue.js')
-
-Raven.config(config.sentry, {
-  release: process.env.SOURCE_VERSION,
-  environment: 'workers'
-}).install()
 
 const Job = require('../lib/models/Job')
 const Metric = require('../lib/models/Metric')
@@ -31,11 +25,6 @@ process.on('unhandledRejection', (err, promise) => {
   console.trace('Unhanled Rejection on request', promise)
   console.log('-----')
   console.log(err)
-
-  if (err && !err.skip_sentry) {
-    debug('Reporting error to Sentry...')
-    Raven.captureException(err)
-  }
 })
 
 const getDomain = (job, cb) => {
@@ -81,11 +70,6 @@ const getDomain = (job, cb) => {
     })
 
     domain.on('error', function (e) {
-      if (e && !e.skip_sentry) {
-        debug('Reporting error to Sentry...')
-        Raven.captureException(e)
-      }
-
       delete e.domain
       delete e.domainThrown
       delete e.domainEmitter
@@ -163,13 +147,10 @@ function nodeifyFn(fn) {
 const sendNotifications = function () {
   getDomain({}, (err, {rollback, commit} = {}) => {
     if (err) {
-      if (!err.skip_sentry) {
-        debug('Reporting error to Sentry...')
-        Raven.captureException(err)
-      }
-
       if (typeof rollback === 'function')
-        return rollback(err)
+        rollback(err)
+
+      return
     }
 
     async.series([

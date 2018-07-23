@@ -3,7 +3,6 @@ const db = require('../lib/utils/db')
 const deasync = require('deasync')
 require('colors')
 require('../lib/models/index.js')()
-const Raven = require('raven')
 
 const domain = Domain.create()
 
@@ -15,11 +14,6 @@ domain.enter()
 
 function errorHandler(type) {
   return (e) => {
-    if (e && !e.skip_sentry) {
-      console.log('Reporting error to Sentry...')
-      Raven.captureException(e)
-    }
-  
     delete e.domain
     delete e.domainThrown
     delete e.domainEmitter
