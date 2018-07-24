@@ -16,7 +16,10 @@ const Slack = require('../lib/models/Slack')
 const Notification = require('../lib/models/Notification')
 const CrmTaskWorker = require('../lib/models/CRM/Task/worker')
 const attachContactEvents = require('../lib/models/Contact/events')
+const attachTouchEventHandler = require('../lib/models/CRM/Touch/events')
+
 attachContactEvents()
+attachTouchEventHandler()
 
 let i = 0
 

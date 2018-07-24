@@ -4,6 +4,7 @@ const {
   contact_import,
   contact_data_pipeline
 } = require('../lib/models/Contact/worker')
+const touches_handler = require('../lib/models/CRM/Touch/worker')
 
 const airship = (job, done) => {
   const {
@@ -161,5 +162,10 @@ module.exports = {
   contact_data_pipeline: {
     handler: contact_data_pipeline,
     parallel: 4
+  },
+
+  touches: {
+    handler: touches_handler,
+    parallel: 15
   }
 }
