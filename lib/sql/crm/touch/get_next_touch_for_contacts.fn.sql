@@ -7,7 +7,7 @@ LANGUAGE SQL
 AS $$
   SELECT
     contacts.id,
-    MIN(COALESCE(last_touch, NOW()) + (touch_frequency || ' day')::interval) AS next_touch
+    MIN(COALESCE(last_touch, NOW()) + (touch_freq || ' day')::interval) AS next_touch
   FROM
     contacts
     JOIN contact_lists_members AS clm
