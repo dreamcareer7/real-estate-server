@@ -16,13 +16,13 @@ timeline_content AS (
   )
   UNION ALL
   (
-    SELECT crm_activities.id, "timestamp", 'crm_activity' as "type"
-    FROM crm_activities
-    INNER JOIN crm_associations ON crm_activities.id = crm_associations.crm_activity
+    SELECT touches.id, "timestamp", 'touch' as "type"
+    FROM touches
+    INNER JOIN crm_associations ON touches.id = crm_associations.touch
     WHERE
       contact = $1::uuid
       AND crm_associations.deleted_at IS NULL
-      AND crm_activities.deleted_at IS NULL
+      AND touches.deleted_at IS NULL
   )
   UNION ALL
   (
