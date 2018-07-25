@@ -5,19 +5,17 @@ const db = require('../lib/utils/db')
 
 const up = [
   'BEGIN',
-  `ALTER TABLE contacts
-    ADD COLUMN IF NOT EXISTS last_touch timestamptz,
-    ADD COLUMN IF NOT EXISTS next_touch timestamptz`,
-  `ALTER TABLE contact_search_lists
-    DROP COLUMN IF EXISTS touch_freq,
-    ADD COLUMN touch_freq int`,
+  'DO SOMETHING',
+  'DO SOMETHING ELSE',
+  'EVEN DO MORE',
   'COMMIT'
 ]
 
 const down = [
   'BEGIN',
-  'ALTER TABLE contacts DROP COLUMN last_touch, DROP COLUMN next_touch',
-  'ALTER TABLE contact_search_lists DROP COLUMN touch_freq',
+  'UNDO SOMETHING',
+  'UNDO SOMETHING ELSE',
+  'UNDO EVEN MORE',
   'COMMIT'
 ]
 
