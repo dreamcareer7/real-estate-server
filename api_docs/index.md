@@ -31,7 +31,7 @@ Although we have a page that includes [everything](/all.html).
 
 ## CRM
 
-* [Touches](touches.html)
+* [Touches](touch.html)
 * [Contacts](contact.html)
 * [Contact Lists](contact_list.html)
 * [Dashboard](dashboard.html)
