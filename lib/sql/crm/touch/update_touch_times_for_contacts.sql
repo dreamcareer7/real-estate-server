@@ -2,9 +2,9 @@ WITH ult AS (
   UPDATE
     contacts
   SET
-    last_touch = lt.last_touch
+    last_touch = ltc.last_touch
   FROM
-    get_last_touch_for_contacts(
+    (
       SELECT
         array_agg(contact) AS ids
       FROM
@@ -12,9 +12,10 @@ WITH ult AS (
       WHERE
         touch = $1::uuid
         AND deleted_at IS NULL
-    ) as ltc
+    ) AS cids,
+    get_last_touch_for_contacts(cids.ids) as ltc
   WHERE
-    contacts.id = lt.contact
+    contacts.id = ltc.contact
   RETURNING
     contacts.id
 ),
@@ -22,16 +23,17 @@ unt AS (
   UPDATE
     contacts
   SET
-    next_touch = nt.next_touch
+    next_touch = ntc.next_touch
   FROM
-    get_next_touch_for_contacts(
+    (
       SELECT
         array_agg(id) AS ids
       FROM
         ult
-    ) AS ntc
+    ) AS cids,
+    get_next_touch_for_contacts(cids.ids) AS ntc
   WHERE
-    nt.contact = contacts.id
+    ntc.contact = contacts.id
   RETURNING
     contacts.id
 )
