@@ -5,18 +5,13 @@ const db = require('../lib/utils/db')
 
 const up = [
   'BEGIN',
-  'DO SOMETHING',
-  'DO SOMETHING ELSE',
-  'EVEN DO MORE',
+  `ALTER TABLE contact_search_lists
+    DROP COLUMN IF EXISTS touch_freq,
+    ADD COLUMN touch_freq int`,
   'COMMIT'
 ]
 
 const down = [
-  'BEGIN',
-  'UNDO SOMETHING',
-  'UNDO SOMETHING ELSE',
-  'UNDO EVEN MORE',
-  'COMMIT'
 ]
 
 const runAll = (sqls, next) => {
