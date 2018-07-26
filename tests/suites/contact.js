@@ -581,7 +581,8 @@ function createManyContactsList(cb) {
           value: 'ManyContacts'
         }
       ],
-      'name': 'Many Contacts'
+      'name': 'Many Contacts',
+      touch_freq: 7
     })
     .after(cb)
     .expectStatus(200)
@@ -594,6 +595,19 @@ function syncListMembers(cb) {
       data: {
         type: 'update_list_memberships',
         list_id: results.contact.createManyContactsList.data
+      }
+    })
+    .after(cb)
+    .expectStatus(200)
+}
+
+function updateNextTouchOnManyContacts(cb) {
+  return frisby.create('update next_touch on many contacts')
+    .post('/jobs', {
+      name: 'touches',
+      data: {
+        type: 'update_next_touch',
+        contacts: results.contact.createManyContacts.data
       }
     })
     .after(cb)
@@ -616,7 +630,54 @@ function getContactsInManyContactsList(cb) {
   return frisby
     .create('get list of contacts in many contacts list')
     .get('/contacts?list=' + results.contact.createManyContactsList.data)
+    .after((err, res, json) => {
+      if (!json.data.every(c => Boolean(c.next_touch)))
+        throw 'Next touch is not set on ManyContacts list members'
+      cb(err, res, json)
+    })
+    .expectStatus(200)
+    .expectJSONLength('data', manyContacts.length)
+}
+
+function unsetTouchFreqOnManyContactsList(cb) {
+  return frisby.create('unset touch frequency of many contacts list')
+    .put('/contacts/lists/' + results.contact.createManyContactsList.data, {
+      filters: [
+        {
+          attribute_def: defs.tag.id,
+          value: 'ManyContacts'
+        }
+      ],
+      'name': 'Many Contacts',
+      touch_freq: null,
+      is_pinned: false
+    })
     .after(cb)
+    .expectStatus(200)
+}
+
+function updateNextTouchOnManyContactsListMembers(cb) {
+  return frisby.create('update next_touch on many contacts list members again')
+    .post('/jobs', {
+      name: 'touches',
+      data: {
+        type: 'update_next_touch_for_list_members',
+        list: results.contact.createManyContactsList.data
+      }
+    })
+    .after(cb)
+    .expectStatus(200)
+}
+
+function checkIfNextTouchIsNull(cb) {
+  return frisby
+    .create('check if next_touch is cleared on many contacts')
+    .get('/contacts?list=' + results.contact.createManyContactsList.data)
+    .after((err, res, json) => {
+      if (json.data.some(c => Boolean(c.next_touch)))
+        throw 'Next touch is not null on ManyContacts list members'
+      cb(err, res, json)
+    })
     .expectStatus(200)
     .expectJSONLength('data', manyContacts.length)
 }
@@ -731,8 +792,12 @@ module.exports = {
   makeSureManyContactsTagIsAdded,
   createManyContactsList,
   syncListMembers,
+  updateNextTouchOnManyContacts,
   getManyContactsList,
   getContactsInManyContactsList,
+  unsetTouchFreqOnManyContactsList,
+  updateNextTouchOnManyContactsListMembers,
+  checkIfNextTouchIsNull,
   getTimeline,
   getAllTags,
   removeAttribute,
