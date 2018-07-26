@@ -16,12 +16,14 @@ WITH lists AS (
 SELECT
   id,
   display_name,
+  extract(epoch FROM last_touch) AS last_touch,
+  extract(epoch FROM next_touch) AS next_touch,
+  id AS summary,
+  lists,
   ARRAY[id] AS sub_contacts,
   extract(epoch FROM created_at) as created_at,
   extract(epoch FROM updated_at) as updated_at,
   extract(epoch FROM deleted_at) as deleted_at,
-  id AS summary,
-  lists,
   'contact' as type
 FROM
   contacts

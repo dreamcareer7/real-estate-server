@@ -1,5 +1,5 @@
 UPDATE
-    crm_activities
+    touches
 SET
     "description"=$2,
     "timestamp"=$3,

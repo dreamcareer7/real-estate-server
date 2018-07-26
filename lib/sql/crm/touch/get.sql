@@ -13,14 +13,14 @@ SELECT
     FROM
       crm_associations
     WHERE
-      crm_activity = crm_activities.id
+      touch = touches.id
       AND deleted_at IS NULL
   ) as associations,
-  get_files_by_role('CrmActivity', crm_activities.id) as files,
+  get_files_by_role('Touch', touches.id) as files,
   brand,
   created_by,
-  'crm_activity' as "type"
+  'touch' as "type"
 FROM
-  crm_activities
-JOIN unnest($1::uuid[]) WITH ORDINALITY t(did, ord) ON crm_activities.id = did
+  touches
+JOIN unnest($1::uuid[]) WITH ORDINALITY t(did, ord) ON touches.id = did
 ORDER BY t.ord

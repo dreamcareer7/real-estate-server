@@ -1,5 +1,5 @@
 UPDATE
-    crm_activities
+    touches
 SET
     deleted_at = now()
 WHERE

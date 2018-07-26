@@ -1,4 +1,4 @@
-INSERT INTO crm_activities (
+INSERT INTO touches (
     created_by,
     brand,
     "description",

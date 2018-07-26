@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS crm_activities (
+CREATE TABLE IF NOT EXISTS touches (
   id uuid PRIMARY KEY NOT NULL DEFAULT uuid_generate_v4(),
   created_by uuid NOT NULL REFERENCES users(id),
   brand uuid REFERENCES brands(id),
@@ -13,5 +13,5 @@ CREATE TABLE IF NOT EXISTS crm_activities (
   "timestamp" timestamptz not null
 )
 
-CREATE INDEX crm_activities_created_by_idx ON crm_activities (created_by)
-CREATE INDEX crm_activities_trgm_idx ON crm_activities USING gin (description gin_trgm_ops)
+CREATE INDEX touches_created_by_idx ON touches (created_by)
+CREATE INDEX touches_trgm_idx ON touches USING gin (description gin_trgm_ops)
