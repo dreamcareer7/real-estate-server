@@ -225,6 +225,22 @@ const stringSearch = cb => {
     .expectStatus(200)
 }
 
+const stringSearchInBody = cb => {
+  return frisby
+    .create('search in contacts by search terms sent in request body')
+    .post('/contacts/filter', {
+      query: 'kate-bell@mac.com'
+    })
+    .after(cb)
+    .expectJSONLength('data', 1)
+    .expectJSON({
+      data: [{
+        id: results.contact.createManyContacts.data[0].id
+      }]
+    })
+    .expectStatus(200)
+}
+
 const filterOnNonExistentAttributeDef = cb => {
   return frisby
     .create('filter contacts by a non-existing attribute def returns empty')
@@ -779,6 +795,7 @@ module.exports = {
   filterContactsHavingTwoTags,
   invertedFilter,
   stringSearch,
+  stringSearchInBody,
   filterOnNonExistentAttributeDef,
   addAttribute,
   addInvalidAttribute,
