@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS crm_associations (
   deleted_at timestamptz,
   association_type crm_association_type NOT NULL,
   crm_task uuid REFERENCES crm_tasks(id),
-  crm_activity uuid REFERENCES crm_activities(id),
+  touch uuid REFERENCES crm_activities(id),
   -- contact_note uuid REFERENCES contacts_notes(id),
   deal uuid NOT NULL REFERENCES deals(id),
   contact uuid NOT NULL REFERENCES contacts(id),

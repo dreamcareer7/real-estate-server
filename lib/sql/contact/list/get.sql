@@ -20,6 +20,7 @@ SELECT
   query,
   name,
   is_pinned,
+  touch_freq,
   COALESCE(member_count::int, 0) AS member_count,
   'contact_list' AS "type"
 FROM
