@@ -1,4 +1,5 @@
-CREATE OR REPLACE FUNCTION merge_contacts(parent uuid, children uuid[]) RETURNS void
+CREATE OR REPLACE FUNCTION merge_contacts(parent uuid, children uuid[])
+RETURNS setof uuid
 LANGUAGE SQL
 AS $$
   /* Take care of non-singular attributes first */
@@ -23,6 +24,22 @@ AS $$
       max_indices
     WINDOW w AS (ORDER BY is_parent DESC, contact)
   ),
+  attr_primary AS (
+    SELECT DISTINCT ON (attribute_def)
+      id,
+      attribute_type,
+      is_primary
+    FROM
+      contacts_attributes
+    WHERE
+      contact = ANY(array_prepend(parent, children))
+      AND deleted_at IS NULL
+      AND is_primary IS TRUE
+    ORDER BY
+      attribute_def,
+      (contact = parent) desc,
+      is_primary desc
+  ),
   attrs AS (
     SELECT
       ca.id,
@@ -33,7 +50,7 @@ AS $$
       ca.number,
       ca.index,
       ca.label,
-      ca.is_primary,
+      COALESCE(attr_primary.is_primary, FALSE) AS is_primary,
       ca.attribute_def,
       cad.data_type,
       cad.section,
@@ -44,6 +61,8 @@ AS $$
         ON ca.attribute_def = cad.id
       JOIN index_space AS isp
         USING (contact)
+      LEFT JOIN attr_primary
+        ON attr_primary.id = ca.id
     WHERE
       ca.deleted_at IS NULL
       AND cad.deleted_at IS NULL
@@ -52,20 +71,20 @@ AS $$
   ),
   attrs_to_keep AS (
     (
-      SELECT DISTINCT ON (attribute_def, text, index, label)
-        id, index_offset, SUM(is_primary::int) OVER (ORDER BY attribute_def, text, index, label, is_parent_attr desc) > 0 AS is_primary
+      SELECT DISTINCT ON (attribute_def, lower(text), index, label)
+        id, index_offset, is_primary
       FROM
         attrs
       WHERE
         data_type = 'text'
         AND section <> 'Addresses'
       ORDER BY
-        attribute_def, text, index, label, is_parent_attr desc
+        attribute_def, lower(text), index, label, is_parent_attr desc, is_primary desc
     )
     UNION ALL
     (
       SELECT
-        id, index_offset, (is_parent_attr AND is_primary) AS is_primary
+        id, index_offset, is_primary
       FROM
         attrs
       WHERE
@@ -75,24 +94,24 @@ AS $$
     UNION ALL
     (
       SELECT DISTINCT ON (attribute_def, date, index, label)
-        id, index_offset, SUM(is_primary::int) OVER (ORDER BY attribute_def, text, index, label, is_parent_attr desc) > 0 AS is_primary
+        id, index_offset, is_primary
       FROM
         attrs
       WHERE
         data_type = 'date'
       ORDER BY
-        attribute_def, date, index, label, is_parent_attr desc
+        attribute_def, date, index, label, is_parent_attr desc, is_primary desc
     )
     UNION ALL
     (
       SELECT DISTINCT ON (attribute_def, number, index, label)
-        id, index_offset, SUM(is_primary::int) OVER (ORDER BY attribute_def, text, index, label, is_parent_attr desc) > 0 AS is_primary
+        id, index_offset, is_primary
       FROM
         attrs
       WHERE
         data_type = 'number'
       ORDER BY
-        attribute_def, number, index, label, is_parent_attr desc
+        attribute_def, number, index, label, is_parent_attr desc, is_primary desc
     )
   )
   UPDATE
@@ -154,5 +173,8 @@ AS $$
   SET
     deleted_at = NOW()
   WHERE
-    id = ANY(children);
+    id = ANY(children)
+    AND deleted_at IS NULL
+  RETURNING
+    id;
 $$

@@ -11,6 +11,7 @@ const merge_contacts = fs.readFileSync(
 
 const up = [
   'BEGIN',
+  'DROP FUNCTION IF EXISTS merge_contacts(uuid, uuid[])',
   merge_contacts,
   'COMMIT'
 ]

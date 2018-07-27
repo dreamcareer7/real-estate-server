@@ -80,7 +80,7 @@ declare interface IContactAttribute {
 
 declare interface IContactAttributeInput {
   attribute_def: UUID;
-  attribute_type?: string;
+  attribute_type: string;
 
   id?: UUID;
   created_by?: UUID;
