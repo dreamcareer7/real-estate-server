@@ -27,30 +27,29 @@ function create (cb) {
 }
 
 function update(cb) {
+  const update = {
+    filters: [
+      {
+        'attribute_def': '24171fd0-7994-43fc-a1cb-adcb726429b5',
+        'value': 'cool'
+      },
+      {
+        'attribute_def': '24171fd0-7994-43fc-a1cb-adcb726429b5',
+        'value': 'great'
+      }
+    ],
+    query: 'OMG',
+    name: 'Wow list',
+    is_pinned: false
+  }
+
   return frisby.create('update contact search list')
-    .put('/contacts/lists/' + results.contact_list.create.data, {
-      filters: [
-        {
-          'attribute_def': '24171fd0-7994-43fc-a1cb-adcb726429b5',
-          'value': 'cool'
-        },
-        {
-          'attribute_def': '24171fd0-7994-43fc-a1cb-adcb726429b5',
-          'value': 'great'
-        }
-      ],
-      query: 'OMG',
-      'name': 'Wow list',
-      'is_pinned': false
-    })
+    .put('/contacts/lists/' + results.contact_list.create.data, update)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
-      code: 'OK'
-    })
-    .expectJSONTypes({
-      code: String,
-      data: Array
+      code: 'OK',
+      data: update
     })
 }
 

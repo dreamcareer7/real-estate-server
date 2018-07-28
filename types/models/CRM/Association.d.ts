@@ -1,5 +1,5 @@
 declare type TCrmAssoicationType = 'deal' | 'contact' | 'listing';
-declare type TCrmAssociationParentType = 'crm_task' | 'crm_activity' | 'contact_note';
+declare type TCrmAssociationParentType = 'crm_task' | 'touch' | 'contact_note';
 
 declare interface IAssociationFilters {
   deal?: UUID;
@@ -14,7 +14,7 @@ declare interface ICrmAssociationInput {
   contact: UUID;
 
   crm_task: UUID;
-  crm_activity: UUID;
+  touch: UUID;
   contact_note: UUID;
 }
 
@@ -27,7 +27,7 @@ declare interface ICrmAssociation {
   association_type: TCrmAssoicationType;
 
   crm_task: UUID;
-  crm_activity: UUID;
+  touch: UUID;
   contact_note: UUID;
 
   deal: UUID;

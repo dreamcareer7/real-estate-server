@@ -146,7 +146,12 @@ const patchUserTimeZone = (cb) => {
   return frisby.create('change timezone setting for a user')
     .patch('/users/self/timezone', {time_zone: results.user.create.data.timezone})
     .after(cb)
-    .expectStatus(204)
+    .expectJSON({
+      data: {
+        timezone: results.user.create.data.timezone
+      }
+    })
+    .expectStatus(200)
 }
 
 const addInvalidActivityByAction = (cb) => {

@@ -11,4 +11,6 @@ FROM
     ON contacts.id = cattrs.contact
 WHERE
   check_contact_read_access(contacts, $1)
-  AND cattrs.attribute_type = 'tag';
+  AND cattrs.attribute_type = 'tag'
+ORDER BY
+  cattrs.text
