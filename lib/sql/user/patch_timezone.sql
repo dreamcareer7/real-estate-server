@@ -1,4 +1,4 @@
 UPDATE users
 SET timezone = $2,
-    updated_at = CLOCK_TIMESTAMP()
+    updated_at = now()
 WHERE id = $1

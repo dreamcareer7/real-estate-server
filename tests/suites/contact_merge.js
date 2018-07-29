@@ -56,14 +56,15 @@ const subcontactAddressIsPrimaryIsIgnored = cb => {
     })
     .after((err, res, json) => {
       let last = []
-      if (json.data.sub_contacts[0].attributes.some(a => {
-        last = [
-          a.attribute_type,
-          a.index,
-          a.is_primary
-        ]
-        return is_primary_address_field(a)
-      })) {
+      if (!Object.values(_.groupBy(json.data.sub_contacts[0].attributes, 'index'))
+        .some(g => g.every(a => {
+          last = [
+            a.attribute_type,
+            a.index,
+            a.is_primary
+          ]
+          return is_primary_address_field(a)
+        }))) {
         throw `is_primary is ${last[2]} for ${last[0]} attribute #${last[1]}`
       }
       cb(err, res, json)
