@@ -24,9 +24,7 @@ attachTouchEventHandler()
 let i = 0
 
 process.on('unhandledRejection', (err, promise) => {
-  console.trace('Unhanled Rejection on request', promise)
-  console.log('-----')
-  console.log(err)
+  Context.trace('Unhanled Rejection on request', err)
 })
 
 const getDomain = (job, cb) => {
@@ -35,11 +33,10 @@ const getDomain = (job, cb) => {
       return cb(Error.Database(err))
 
     const domain = Domain.create()
-    domain.i = ++i
-    debug('Started domain', domain.i, job)
+    domain.id = ++i
 
     const rollback = function (err) {
-      console.log('<- Rolling back on worker'.red, domain.i, job, err)
+      Context.trace('<- Rolling back on worker'.red, job, err)
 
       Slack.send({
         channel: '7-server-errors',
@@ -77,7 +74,7 @@ const getDomain = (job, cb) => {
       delete e.domainEmitter
       delete e.domainBound
 
-      console.log('⚠ Panic:'.yellow, domain.i, e, e.stack)
+      Context.log('⚠ Panic:'.yellow, e, e.stack)
       rollback(e.message)
     })
   })
@@ -97,12 +94,11 @@ Object.keys(queues).forEach(queue_name => {
     // eslint-disable-next-line
     getDomain(job.data, (err, {rollback, commit} = {}) => {
       if (err) {
-        console.log('Error getting domain', err)
+        Context.log('Error getting domain', err)
         done(err)
         return
       }
 
-      debug('Executing job handler', process.domain.i)
       const examine = (err, result) => {
         if (err) {
           rollback(err)
@@ -166,7 +162,7 @@ const sendNotifications = function () {
 
       commit(err => {
         if (err)
-          console.log('Error committing', err)
+          Context.log('Error committing', err)
 
         setTimeout(sendNotifications, 5000)
       })

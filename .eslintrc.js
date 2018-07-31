@@ -1,4 +1,5 @@
 const globals = [
+  'Context',
   'Error',
   'Orm',
   'Job',
