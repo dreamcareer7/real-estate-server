@@ -28,7 +28,7 @@ process.on('unhandledRejection', (err, promise) => {
 
 const getDomain = (job, cb) => {
   const domain = Domain.create()
-  domain.id = ++i
+  domain.id = (++i).toString()
 
   db.conn(function (err, conn, done) {
     if (err)
