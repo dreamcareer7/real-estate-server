@@ -2,7 +2,6 @@ require('colors')
 const kue = require('kue')
 const Domain = require('domain')
 const async = require('async')
-const debug = require('debug')('rechat:workers')
 
 const db = require('../lib/utils/db')
 const promisify = require('../lib/utils/promisify.js')
@@ -28,12 +27,12 @@ process.on('unhandledRejection', (err, promise) => {
 })
 
 const getDomain = (job, cb) => {
+  const domain = Domain.create()
+  domain.id = ++i
+
   db.conn(function (err, conn, done) {
     if (err)
       return cb(Error.Database(err))
-
-    const domain = Domain.create()
-    domain.id = ++i
 
     const rollback = function (err) {
       Context.trace('<- Rolling back on worker'.red, job, err)
@@ -49,7 +48,6 @@ const getDomain = (job, cb) => {
 
     const commit = cb => {
       conn.query('COMMIT', function () {
-        debug('Commited transaction'.green, domain.i, job)
         done()
         Job.handle(domain.jobs, cb)
       })
@@ -63,7 +61,6 @@ const getDomain = (job, cb) => {
       domain.jobs = []
 
       domain.run(() => {
-        debug('Entered domain', domain.i, process.domain.i)
         cb(null, {rollback,commit})
       })
     })
@@ -89,8 +86,6 @@ Object.keys(queues).forEach(queue_name => {
   const definition = queues[queue_name]
 
   const handler = (job, done) => {
-    debug('Picking Job', queue_name)
-
     // eslint-disable-next-line
     getDomain(job.data, (err, {rollback, commit} = {}) => {
       if (err) {
