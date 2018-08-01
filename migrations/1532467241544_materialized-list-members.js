@@ -1,7 +1,6 @@
 const _ = require('lodash')
 
 const db = require('../lib/utils/db')
-const Domain = require('domain')
 require('../lib/models')()
 
 const ContactList = require('../lib/models/Contact/list')
@@ -21,9 +20,11 @@ const sql = async (sql, args) => {
 const run = async () => {
   const { client: conn, release } = await getDb()
 
-  const domain = Domain.create()
-  domain.db = conn
-  domain.enter()
+  const context = Context.create()
+  context.set({
+    db: conn
+  })
+  context.enter()
 
   await sql('BEGIN')
 

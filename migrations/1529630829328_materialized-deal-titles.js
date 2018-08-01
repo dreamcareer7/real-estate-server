@@ -1,6 +1,5 @@
 const db = require('../lib/utils/db')
 const promisify = require('../lib/utils/promisify')
-const Domain = require('domain')
 require('../lib/models')()
 
 const sql = async (sql, args) => {
@@ -17,9 +16,11 @@ const sql = async (sql, args) => {
 const run = async () => {
   const conn = await getDb()
 
-  const domain = Domain.create()
-  domain.db = conn
-  domain.enter()
+  const context = Context.create()
+  Context.set({
+    db: conn
+  })
+  contextomain.enter()
 
   await sql('BEGIN')
 
