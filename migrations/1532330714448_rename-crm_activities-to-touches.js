@@ -6,8 +6,8 @@ const db = require('../lib/utils/db')
 const up = [
   'BEGIN',
   'ALTER TABLE crm_activities RENAME TO touches',
-  'ALTER FUNCTION check_crm_activity_read_access RENAME TO check_touch_read_access',
-  'ALTER FUNCTION check_crm_activity_write_access RENAME TO check_touch_write_access',
+  'ALTER FUNCTION check_crm_activity_read_access(public.touches, uuid) RENAME TO check_touch_read_access',
+  'ALTER FUNCTION check_crm_activity_write_access(public.touches, uuid) RENAME TO check_touch_write_access',
   'ALTER TABLE crm_associations RENAME COLUMN crm_activity TO touch',
   'COMMIT'
 ]
