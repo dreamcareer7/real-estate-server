@@ -20,7 +20,7 @@ const run = async () => {
   Context.set({
     db: conn
   })
-  contextomain.enter()
+  context.enter()
 
   await sql('BEGIN')
 
