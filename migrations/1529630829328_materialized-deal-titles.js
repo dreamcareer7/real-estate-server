@@ -17,7 +17,7 @@ const run = async () => {
   const conn = await getDb()
 
   const context = Context.create()
-  Context.set({
+  context.set({
     db: conn
   })
   context.enter()
