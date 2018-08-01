@@ -1,6 +1,5 @@
 require('colors')
 const kue = require('kue')
-const Domain = require('domain')
 const async = require('async')
 
 const db = require('../lib/utils/db')
@@ -26,9 +25,12 @@ process.on('unhandledRejection', (err, promise) => {
   Context.trace('Unhanled Rejection on request', err)
 })
 
-const getDomain = (job, cb) => {
-  const domain = Domain.create()
-  domain.id = (++i).toString()
+const prepareContext = (job, cb) => {
+  const context = Context.create({
+    id: (++i).toString()
+  })
+
+  context.enter()
 
   db.conn(function (err, conn, done) {
     if (err)
@@ -49,7 +51,8 @@ const getDomain = (job, cb) => {
     const commit = cb => {
       conn.query('COMMIT', function () {
         done()
-        Job.handle(domain.jobs, cb)
+        const jobs = context.get('jobs')
+        Job.handle(jobs, cb)
       })
     }
 
@@ -57,15 +60,17 @@ const getDomain = (job, cb) => {
       if (err)
         return cb(Error.Database(err))
 
-      domain.db = conn
-      domain.jobs = []
+      context.set({
+        db: conn,
+        jobs: []
+      })
 
-      domain.run(() => {
+      context.run(() => {
         cb(null, {rollback,commit})
       })
     })
 
-    domain.on('error', function (e) {
+    context.on('error', function (e) {
       delete e.domain
       delete e.domainThrown
       delete e.domainEmitter
@@ -87,9 +92,9 @@ Object.keys(queues).forEach(queue_name => {
 
   const handler = (job, done) => {
     // eslint-disable-next-line
-    getDomain(job.data, (err, {rollback, commit} = {}) => {
+    prepareContext(job.data, (err, {rollback, commit} = {}) => {
       if (err) {
-        Context.log('Error getting domain', err)
+        Context.log('Error preparing context', err)
         done(err)
         return
       }
@@ -138,7 +143,7 @@ function nodeifyFn(fn) {
 }
 
 const sendNotifications = function () {
-  getDomain({}, (err, {rollback, commit} = {}) => {
+  prepareContext({}, (err, {rollback, commit} = {}) => {
     if (err) {
       if (typeof rollback === 'function')
         rollback(err)
