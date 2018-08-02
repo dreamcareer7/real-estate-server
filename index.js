@@ -1,8 +1,11 @@
 const throng = require('throng')
 const migrate = require('./lib/utils/migrate.js')
+const db = require('./lib/utils/db.js')
 const config = require('./lib/config.js')
 
 const {app, start} = require('./lib/bootstrap.js')
+
+db.enableLogging(true)
 
 // For dev only
 app.use(function (req, res, next) {
