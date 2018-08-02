@@ -1,5 +1,6 @@
 WITH brand_agents AS (
   SELECT * FROM propose_brand_agents($3, $2)
+  WHERE $4::text[] @> ARRAY['listing.proposed_agent']
 ),
 listing_settings AS (
   SELECT id, listing from user_listing_notification_settings 
