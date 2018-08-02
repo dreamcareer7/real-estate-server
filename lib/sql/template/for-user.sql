@@ -7,3 +7,4 @@ WITH user_brands AS (
 
 SELECT id FROM templates
 WHERE brand IN(SELECT brand FROM user_brands)
+ORDER BY name ASC
