@@ -25,9 +25,10 @@ process.on('unhandledRejection', (err, promise) => {
   Context.trace('Unhanled Rejection on request', err)
 })
 
-const prepareContext = (job, cb) => {
+const prepareContext = (c, cb) => {
+  console.log(job)
   const context = Context.create({
-    id: (++i).toString()
+    ...c
   })
 
   context.enter()
@@ -37,7 +38,7 @@ const prepareContext = (job, cb) => {
       return cb(Error.Database(err))
 
     const rollback = function (err) {
-      Context.trace('<- Rolling back on worker'.red, job, err)
+      Context.trace('<- Rolling back on worker'.red, err)
 
       Slack.send({
         channel: '7-server-errors',
@@ -92,7 +93,9 @@ Object.keys(queues).forEach(queue_name => {
 
   const handler = (job, done) => {
     // eslint-disable-next-line
-    prepareContext(job.data, (err, {rollback, commit} = {}) => {
+    prepareContext({
+      id: `job-${queue_name}-${job.id}`
+    }, (err, {rollback, commit} = {}) => {
       if (err) {
         Context.log('Error preparing context', err)
         done(err)
@@ -143,7 +146,9 @@ function nodeifyFn(fn) {
 }
 
 const sendNotifications = function () {
-  prepareContext({}, (err, {rollback, commit} = {}) => {
+  prepareContext({
+    id: 'worker-notifications
+  }, (err, {rollback, commit} = {}) => {
     if (err) {
       if (typeof rollback === 'function')
         rollback(err)
