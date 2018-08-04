@@ -147,7 +147,7 @@ function nodeifyFn(fn) {
 
 const sendNotifications = function () {
   prepareContext({
-    id: 'worker-notifications
+    id: 'worker-notifications'
   }, (err, {rollback, commit} = {}) => {
     if (err) {
       if (typeof rollback === 'function')
