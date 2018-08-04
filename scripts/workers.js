@@ -19,8 +19,6 @@ const attachTouchEventHandler = require('../lib/models/CRM/Touch/events')
 attachContactEvents()
 attachTouchEventHandler()
 
-let i = 0
-
 process.on('unhandledRejection', (err, promise) => {
   Context.trace('Unhanled Rejection on request', err)
 })
