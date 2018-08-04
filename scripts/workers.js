@@ -26,7 +26,6 @@ process.on('unhandledRejection', (err, promise) => {
 })
 
 const prepareContext = (c, cb) => {
-  console.log(job)
   const context = Context.create({
     ...c
   })
