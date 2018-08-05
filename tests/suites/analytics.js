@@ -49,8 +49,45 @@ function getCalendar(cb) {
     .expectStatus(200)
 }
 
+function getCalendarFeedUrl(cb) {
+  return frisby
+    .create('get url for calendar feed')
+    .get('/calendar/feed?types[]=birthday')
+    .after((err, res) => {
+      if (err) {
+        return cb(err)
+      }
+      results.analytics = results.analytics || {}
+      results.analytics.getCalendarFeedUrl = res.body.data
+      return cb(null, res)
+    })
+    .expectStatus(200)
+}
+
+function getCalendarFeed(cb) {
+  const url = results.analytics.getCalendarFeedUrl.data.replace(/^.*calendar\//, '/calendar/')
+  
+  return frisby
+    .create('get calendar feed')
+    .get(url)
+    .after(cb)
+    .expectStatus(200)
+}
+
+function getCalendarFeedSetting(cb) {
+  
+  return frisby
+    .create('get calendar feed')
+    .get('/calendar/feed/setting')
+    .after(cb)
+    .expectStatus(200)
+}
+
 module.exports = {
   getAttributeDefs,
   createContacts,
   getCalendar,
+  getCalendarFeedUrl,
+  getCalendarFeed,
+  getCalendarFeedSetting
 }

@@ -5,12 +5,15 @@ const db = require('../lib/utils/db')
 const fs = require('fs')
 const path = require('path')
 
-const sql_path = path.resolve(__dirname, '../lib/sql/crm/touch/get_last_touch_for_contacts.fn.sql')
-const get_last_touch_for_contacts = fs.readFileSync(sql_path, 'utf-8')
 
 const up = [
   'BEGIN',
-  get_last_touch_for_contacts,
+  `ALTER TABLE calendar_feed_settings
+  drop constraint calendar_feed_settings_selected_brand_fkey;
+  alter table calendar_feed_settings
+  add constraint calendar_feed_settings_selected_brand_fkey
+  foreign key (selected_brand)
+  references brands (id)`,
   'COMMIT'
 ]
 
@@ -24,7 +27,7 @@ const runAll = (sqls, next) => {
   db.conn((err, client, release) => {
     if (err)
       return next(err)
-
+    
     async.eachSeries(sqls, client.query.bind(client), err => {
       release()
       next(err)

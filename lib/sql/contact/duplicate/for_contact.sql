@@ -1,4 +1,13 @@
-WITH duplicate_attrs AS (
+WITH attrs AS (
+  SELECT
+    text
+  FROM
+    contacts_attributes AS ca
+  WHERE
+    ca.deleted_at IS NULL
+    AND attribute_type IN ('email', 'phone_number')
+    AND contact = $2::uuid
+), duplicate_attrs AS (
   SELECT
     text, array_agg(contact) ids
   FROM
@@ -8,9 +17,8 @@ WITH duplicate_attrs AS (
   WHERE
     contacts.deleted_at IS NULL
     AND ca.deleted_at IS NULL
-    AND attribute_type IN ('email', 'phone_number')
+    AND text IN (SELECT text FROM attrs)
     AND "user" = $1::uuid
-    AND contact = $2::uuid
   GROUP BY
     text
 ), duplicate_clusters AS (
