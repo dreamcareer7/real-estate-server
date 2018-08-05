@@ -92,7 +92,40 @@ address AS (
         END
        ) as location,
        EXTRACT(EPOCH FROM addresses.created_at) AS created_at,
-       EXTRACT(EPOCH FROM addresses.updated_at) AS updated_at
+       EXTRACT(EPOCH FROM addresses.updated_at) AS updated_at,
+       (
+        SELECT ARRAY_TO_STRING
+        (
+          ARRAY[
+            addresses.street_number,
+            addresses.street_dir_prefix,
+            addresses.street_name,
+            addresses.street_suffix,
+            CASE
+              WHEN addresses.unit_number IS NULL THEN NULL
+              WHEN addresses.unit_number = '' THEN NULL
+              ELSE 'Unit ' || addresses.unit_number || ',' END,
+            addresses.city || ',',
+            addresses.state_code,
+            addresses.postal_code
+          ], ' ', NULL
+        )
+      ) AS full_address,
+      (
+        SELECT ARRAY_TO_STRING
+        (
+          ARRAY[
+            addresses.street_number,
+            addresses.street_dir_prefix,
+            addresses.street_name,
+            addresses.street_suffix,
+            CASE
+              WHEN addresses.unit_number IS NULL THEN NULL
+              WHEN addresses.unit_number = '' THEN NULL
+              ELSE 'Unit ' || addresses.unit_number || ',' END
+          ], ' ', NULL
+        )
+      ) AS street_address
   FROM addresses
   JOIN listing ON listing.matrix_unique_id = addresses.matrix_unique_id
 ),
