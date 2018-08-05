@@ -2,9 +2,6 @@
 
 const async = require('async')
 const db = require('../lib/utils/db')
-const fs = require('fs')
-const path = require('path')
-
 
 const up = [
   'BEGIN',
