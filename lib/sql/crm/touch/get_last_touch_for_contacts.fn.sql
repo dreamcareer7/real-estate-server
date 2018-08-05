@@ -5,19 +5,15 @@ RETURNS TABLE (
 )
 LANGUAGE SQL
 AS $$
-  SELECT DISTINCT ON (clm.contact)
-    clm.contact,
+  SELECT DISTINCT ON (ca.contact)
+    ca.contact,
     touches.timestamp AS last_touch
   FROM
     touches
     JOIN crm_associations AS ca
       ON ca.touch = touches.id
-    JOIN contact_lists_members AS clm
-      ON clm.contact = ca.contact
-    JOIN contact_search_lists AS csl
-      ON csl.id = clm.list
   WHERE
-    clm.contact = ANY($1)
+    ca.contact = ANY($1)
   ORDER BY
-    clm.contact, touches.timestamp desc
+    ca.contact, touches.timestamp desc
 $$
