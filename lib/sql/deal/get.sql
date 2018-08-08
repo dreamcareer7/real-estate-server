@@ -62,7 +62,12 @@ SELECT deals.*,
           addresses.street_number,
           addresses.street_dir_prefix,
           addresses.street_name,
-          addresses.street_suffix
+          addresses.street_suffix,
+          CASE
+            WHEN addresses.unit_number IS NULL THEN NULL
+            WHEN addresses.unit_number = '' THEN NULL
+            ELSE 'Unit ' || addresses.unit_number
+          END
           ], ' ', NULL
         )
       ) AS street_address,

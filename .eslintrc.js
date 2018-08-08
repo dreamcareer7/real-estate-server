@@ -1,4 +1,5 @@
 const globals = [
+  'Context',
   'Error',
   'Orm',
   'Job',
@@ -54,6 +55,7 @@ const globals = [
   'DealRole',
   'Envelope',
   'EnvelopeRecipient',
+  'EnvelopeDocument',
   'Activity',
   'AttachedFile',
   'Submission',

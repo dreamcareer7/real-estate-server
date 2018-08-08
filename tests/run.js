@@ -82,21 +82,20 @@ function spawnSuite (suite, cb) {
   })
 }
 
-const Domain = require('domain')
 const db = require('../lib/utils/db')
 const {app, start} = require('../lib/bootstrap.js')
 
 const connections = {}
 
 const database = (req, res, next) => {
-  const domain = Domain.create()
+  const context = Context.create()
   const suite = req.headers['x-suite']
 
-  domain.add(req)
-  domain.add(res)
+  context.watchOver(req)
+  context.watchOver(res)
 
   let handled = false
-  domain.on('error', (e) => {
+  context.on('error', (e) => {
     if (handled)
       return
     handled = true
@@ -125,10 +124,14 @@ const database = (req, res, next) => {
   })
 
   if (connections[suite]) {
-    domain.db = connections[suite]
-    domain.jobs = []
-    domain.jobs.push = job => job.save()
-    domain.run(next)
+    const jobs = []
+    jobs.push = job => job.save()
+
+    context.set({
+      db: connections[suite],
+      jobs
+    })
+    context.run(next)
     return
   }
 
@@ -142,8 +145,10 @@ const database = (req, res, next) => {
         return res.error(err)
 
       connections[suite] = conn
-      domain.db = conn
-      domain.run(next)
+      context.set({
+        db: conn
+      })
+      context.run(next)
     })
   })
 }
@@ -152,7 +157,7 @@ app.use(database)
 
 app.on('after loading routes', () => {
   app.use((err, req, res, next) => {
-    process.domain.emit('error', err)
+    Context.getActive().emit('error', err)
   })
 })
 

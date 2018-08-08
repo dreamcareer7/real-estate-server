@@ -2,21 +2,22 @@
 
 const async = require('async')
 const db = require('../lib/utils/db')
-const fs = require('fs')
-const path = require('path')
-
-const sql_path = path.resolve(__dirname, '../lib/sql/crm/touch/get_last_touch_for_contacts.fn.sql')
-const get_last_touch_for_contacts = fs.readFileSync(sql_path, 'utf-8')
 
 const up = [
   'BEGIN',
-  get_last_touch_for_contacts,
+  `CREATE TABLE envelopes_documents_revisions (
+    id uuid DEFAULT uuid_generate_v4() NOT NULL PRIMARY KEY,
+    created_at timestamp without time zone DEFAULT clock_timestamp() NOT NULL ,
+    file uuid NOT NULL REFERENCES files(id),
+    envelope_document uuid NOT NULL REFERENCES envelopes_documents(id)
+  )`,
+  'CREATE INDEX envelopes_documents_revisions_envelope_document ON envelopes_documents_revisions (envelope_document)',
   'COMMIT'
 ]
 
 const down = [
   'BEGIN',
-  'DROP FUNCTION get_last_touch_for_contacts(uuid[])',
+  'DROP TABLE envelopes_documents_revisions',
   'COMMIT'
 ]
 
