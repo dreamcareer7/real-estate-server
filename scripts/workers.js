@@ -90,9 +90,8 @@ Object.keys(queues).forEach(queue_name => {
 
   const handler = (job, done) => {
     // eslint-disable-next-line
-    prepareContext({
-      id: `job-${queue_name}-${job.id}`
-    }, (err, {rollback, commit} = {}) => {
+    const id = `job-${queue_name}-${job.data.type ? (job.data.type + '-') : ''}${job.id}`
+    prepareContext({ id }, (err, {rollback, commit} = {}) => {
       if (err) {
         Context.log('Error preparing context', err)
         done(err)

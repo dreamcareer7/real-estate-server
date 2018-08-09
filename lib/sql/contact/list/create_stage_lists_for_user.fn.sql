@@ -18,7 +18,7 @@ AS $function$
     SELECT
       cad.id AS attribute_def,
       false AS invert,
-      'iOS' AS value
+      'IOSAddressBook' AS value
     FROM
       contacts_attribute_defs AS cad
     WHERE
