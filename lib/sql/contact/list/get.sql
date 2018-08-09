@@ -30,3 +30,5 @@ FROM
     WITH ORDINALITY t(cid, ord)
     ON contact_search_lists.id = cid
   LEFT JOIN counts USING(id)
+ORDER BY
+  t.ord
