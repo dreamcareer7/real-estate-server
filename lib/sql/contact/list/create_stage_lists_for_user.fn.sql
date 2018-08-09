@@ -12,6 +12,17 @@ AS $function$
       CROSS JOIN unnest('{General,"Warm List", "Hot List", "Past Client"}'::text[]) AS t(title)
     WHERE
       cad.name = 'stage'
+
+    UNION ALL
+
+    SELECT
+      cad.id AS attribute_def,
+      false AS invert,
+      'iOS' AS value
+    FROM
+      contacts_attribute_defs AS cad
+    WHERE
+      cad.name = 'source_type'
   )
   INSERT INTO contact_search_lists
     ("user", created_at, name, filters, is_pinned)
@@ -19,7 +30,7 @@ AS $function$
     $1::uuid AS "user",
     now() - (row_number() over ()) * '1 seconds'::interval AS created_at,
     j.value AS name,
-    row_to_json(j.*) AS filters,
+    '[]'::jsonb || to_jsonb(j.*) AS filters,
     false AS is_pinned
   FROM
     j
