@@ -25,8 +25,8 @@ AS $function$
 
     SELECT
       $1::uuid AS "user",
-      now() - (5 - row_number() over ()) * '1 seconds'::interval AS created_at,
-      j.value AS name,
+      now() AS created_at,
+      'iOS' AS name,
       '[]'::jsonb || to_jsonb(j.*) AS filters,
       true AS is_pinned
     FROM (
