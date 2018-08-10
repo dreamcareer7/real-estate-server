@@ -1,3 +1,38 @@
+function createDefaultLists(cb) {
+  return frisby.create('create default lists for user')
+    .post('/jobs', {
+      name: 'contact_data_pipeline',
+      data: {
+        type: 'create_default_lists',
+        user_id: results.authorize.token.data.id
+      }
+    })
+    .after(cb)
+    .expectStatus(200)
+}
+
+function checkDefaultLists(cb) {
+  return frisby.create('check if default lists are created in the right order')
+    .get('/contacts/lists')
+    .after(cb)
+    .expectStatus(200)
+    .expectJSONLength('data', 5)
+    .expectJSON({
+      code: 'OK',
+      data: [{
+        name: 'General'
+      }, {
+        name: 'Warm List'
+      }, {
+        name: 'Hot List'
+      }, {
+        name: 'Past Client'
+      }, {
+        name: 'iOS'
+      }]
+    })
+}
+
 function create (cb) {
   return frisby.create('create contact search list')
     .post('/contacts/lists', {
@@ -56,20 +91,12 @@ function update(cb) {
 function listForUser(cb) {
   return frisby.create('list for user')
     .get('/contacts/lists')
-    .after(cb)
+    .after((err, res, json) => {
+      if (!(json.data[json.data.length - 1].name === 'Wow list'))
+        throw 'Wow list not found!'
+      cb(err, res, json)
+    })
     .expectStatus(200)
-    .expectJSON({
-      code: 'OK',
-      data: [{
-        filters: [{
-          type: 'contact_list_filter'
-        }],
-        query: 'OMG'
-      }]
-    })
-    .expectJSONTypes({
-      data: Array
-    })
 }
 
 function deleteIt(cb) {
@@ -93,6 +120,8 @@ function listAllFilters(cb) {
 }
 
 module.exports = {
+  createDefaultLists,
+  checkDefaultLists,
   create,
   update,
   listForUser,
