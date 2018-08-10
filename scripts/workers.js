@@ -37,12 +37,6 @@ const prepareContext = (c, cb) => {
     const rollback = function (err) {
       Context.trace('<- Rolling back on worker'.red, err)
 
-      Slack.send({
-        channel: '7-server-errors',
-        text: 'Worker Error: ' + '\n `' + err + '`',
-        emoji: ':skull:'
-      })
-
       conn.query('ROLLBACK', done)
     }
 
@@ -114,6 +108,14 @@ Object.keys(queues).forEach(queue_name => {
   }
 
   queue.process(queue_name, definition.parallel, handler)
+
+  queue.on('job failed', err => {
+    Slack.send({
+      channel: '7-server-errors',
+      text: `Queue (${queue_name}) Error: ${err}`,
+      emoji: ':skull:'
+    })
+  })
 })
 
 setInterval(reportQueueStatistics, 10000)
