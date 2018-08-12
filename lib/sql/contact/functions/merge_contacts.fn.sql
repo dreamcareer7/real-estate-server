@@ -7,7 +7,8 @@ AS $$
     SELECT
       contact,
       (contact = parent) AS is_parent,
-      MAX(index) AS max_index
+      MAX(index) AS max_index,
+      MIN(index) AS min_index
     FROM
       contacts_attributes
     WHERE
@@ -19,7 +20,12 @@ AS $$
   index_space AS (
     SELECT
       contact,
-      SUM(max_index) OVER (w) - COALESCE(LAG(max_index) OVER (w), max_index) + row_number() OVER (w) - 1 AS index_offset
+      CASE
+        WHEN is_parent IS TRUE THEN
+          0
+        ELSE
+          SUM(max_index) OVER (w) - max_index - SUM(min_index) OVER (w) + first_value(min_index) OVER (w) + row_number() OVER (w) - 1
+      END AS index_offset
     FROM
       max_indices
     WINDOW w AS (ORDER BY is_parent DESC, contact)
