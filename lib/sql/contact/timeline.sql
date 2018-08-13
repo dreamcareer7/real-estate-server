@@ -28,9 +28,13 @@ timeline_content AS (
   (
     SELECT id, created_at as "timestamp", 'activity' as "type"
     FROM activities
-    WHERE (reference = ANY(SELECT id FROM cusers))
-          AND is_visible IS True
-          AND deleted_at IS NULL
+    WHERE 
+      (
+        (reference = ANY(SELECT id FROM cusers) AND reference_type = 'User')
+        OR (reference = $1::uuid AND reference_type = 'Contact')
+      )
+      AND is_visible IS True
+      AND deleted_at IS NULL
   )
 ),
 with_total AS (

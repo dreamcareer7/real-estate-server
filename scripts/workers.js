@@ -37,12 +37,6 @@ const prepareContext = (c, cb) => {
     const rollback = function (err) {
       Context.trace('<- Rolling back on worker'.red, err)
 
-      Slack.send({
-        channel: '7-server-errors',
-        text: 'Worker Error: ' + '\n `' + err + '`',
-        emoji: ':skull:'
-      })
-
       conn.query('ROLLBACK', done)
     }
 
@@ -90,9 +84,8 @@ Object.keys(queues).forEach(queue_name => {
 
   const handler = (job, done) => {
     // eslint-disable-next-line
-    prepareContext({
-      id: `job-${queue_name}-${job.id}`
-    }, (err, {rollback, commit} = {}) => {
+    const id = `job-${queue_name}-${job.data.type ? (job.data.type + '-') : ''}${job.id}`
+    prepareContext({ id }, (err, {rollback, commit} = {}) => {
       if (err) {
         Context.log('Error preparing context', err)
         done(err)
@@ -115,6 +108,14 @@ Object.keys(queues).forEach(queue_name => {
   }
 
   queue.process(queue_name, definition.parallel, handler)
+
+  queue.on('job failed', err => {
+    Slack.send({
+      channel: '7-server-errors',
+      text: `Queue (${queue_name}) Error: ${err}`,
+      emoji: ':skull:'
+    })
+  })
 })
 
 setInterval(reportQueueStatistics, 10000)

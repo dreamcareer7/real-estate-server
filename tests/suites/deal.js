@@ -604,13 +604,20 @@ const getTask = cb => {
 }
 
 const getBrandDeals = (cb) => {
-  return frisby.create('get brand inbox')
+  return frisby.create('get brand deals')
     .get(`/brands/${results.brand.create.data.id}/deals`)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
     })
+}
+
+const getBrandXls = (cb) => {
+  return frisby.create('get brand deals in excel')
+    .get(`/brands/${results.brand.create.data.id}/deals.xlsx`)
+    .after(cb)
+    .expectStatus(200)
 }
 
 const getBrandInbox = (cb) => {
@@ -673,6 +680,7 @@ module.exports = {
   postMessage,
   getBrandInbox,
   getBrandDeals,
+  getBrandXls,
   filter,
   removeRole,
   remove
