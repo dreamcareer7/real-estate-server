@@ -113,7 +113,7 @@ Object.keys(queues).forEach(queue_name => {
 queue.on('job failed', (id, err) => {
   Slack.send({
     channel: '7-server-errors',
-    text: `Worker Error: \`${err}\``,
+    text: `Job Error (${id}): \`${err}\``,
     emoji: ':skull:'
   })
 })
