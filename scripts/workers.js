@@ -111,14 +111,10 @@ Object.keys(queues).forEach(queue_name => {
 })
 
 queue.on('job failed', (id, err) => {
-  kue.Job.get(id, (err, job) => {
-    const name = job ? `${id} - ${job.data.type}` : id
-
-    Slack.send({
-      channel: '7-server-errors',
-      text: `Job Error ${name}: \`${err}\``,
-      emoji: ':skull:'
-    })
+  Slack.send({
+    channel: '7-server-errors',
+    text: `Job Error (${id}): \`${err}\``,
+    emoji: ':skull:'
   })
 })
 
