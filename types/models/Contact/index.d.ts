@@ -134,3 +134,15 @@ declare interface ICSVImporterMappedField {
   attribute_type?: string;
   index?: number;
 }
+
+declare interface IContactDuplicateCluster {
+  cluster: number;
+  contacts: IParentContact[];
+  type: 'contact_duplicate';
+  total: number;
+}
+
+declare interface IContactDuplicateClusterInput {
+  parent: UUID;
+  sub_contacts: UUID[];
+}

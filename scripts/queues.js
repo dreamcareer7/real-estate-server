@@ -2,7 +2,8 @@ require('../lib/models/index.js')()
 const config = require('../lib/config')
 const {
   contact_import,
-  contact_data_pipeline
+  contact_lists,
+  contact_duplicates,
 } = require('../lib/models/Contact/worker')
 const touches_handler = require('../lib/models/CRM/Touch/worker')
 
@@ -159,13 +160,18 @@ module.exports = {
     parallel: 4
   },
 
-  contact_data_pipeline: {
-    handler: contact_data_pipeline,
-    parallel: 4
+  contact_lists: {
+    handler: contact_lists,
+    parallel: 8
+  },
+
+  contact_duplicates: {
+    handler: contact_duplicates,
+    parallel: 8
   },
 
   touches: {
     handler: touches_handler,
-    parallel: 15
+    parallel: 8
   }
 }
