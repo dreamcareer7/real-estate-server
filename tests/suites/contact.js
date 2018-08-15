@@ -607,7 +607,7 @@ function createManyContactsList(cb) {
 function syncListMembers(cb) {
   return frisby.create('sync members of many contacts list')
     .post('/jobs', {
-      name: 'contact_data_pipeline',
+      name: 'contact_lists',
       data: {
         type: 'update_list_memberships',
         list_id: results.contact.createManyContactsList.data
