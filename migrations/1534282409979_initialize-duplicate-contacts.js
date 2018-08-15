@@ -49,7 +49,7 @@ const run = async () => {
     await sql('SELECT update_duplicate_pairs_for_user($1::uuid)', [users[i].id])
     const res = await sql('SELECT update_duplicate_clusters_for_user($1::uuid) AS duplicate_count', [users[i].id])
 
-    Context.log(`${++i}/${users.length} ${users[i].name}: ${res.rows[0].duplicate_count.toString().bold.white} duplicate clusters`)
+    Context.log(`${i + 1}/${users.length} ${users[i].name}: ${res.rows[0].duplicate_count.toString().bold.white} duplicate clusters`)
   }
 
   await sql('COMMIT')
