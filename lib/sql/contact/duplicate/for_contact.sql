@@ -1,36 +1,21 @@
-WITH attrs AS (
+WITH cluster_id AS (
+  SELECT cluster FROM contacts_duplicate_clusters WHERE contact = $2::uuid LIMIT 1
+),
+cluster_members AS (
   SELECT
-    text
+    array_agg(id) AS contacts
   FROM
-    contacts_attributes AS ca
-  WHERE
-    ca.deleted_at IS NULL
-    AND attribute_type IN ('email', 'phone_number')
-    AND contact = $2::uuid
-), duplicate_attrs AS (
-  SELECT
-    text, array_agg(contact) ids
-  FROM
-    contacts_attributes AS ca
+    contacts_duplicate_clusters
     JOIN contacts
-      ON ca.contact = contacts.id
+      ON contact = contacts.id
   WHERE
-    contacts.deleted_at IS NULL
-    AND ca.deleted_at IS NULL
-    AND text IN (SELECT text FROM attrs)
-    AND "user" = $1::uuid
-  GROUP BY
-    text
-), duplicate_clusters AS (
-  SELECT
-    ids
-  FROM
-    duplicate_attrs
-  WHERE
-    ARRAY_LENGTH(ids, 1) > 1
+    check_contact_read_access(contacts.*, $1::uuid)
+    AND deleted_at IS NULL
+    AND cluster = (SELECT cluster FROM cluster_id LIMIT 1)
 )
-SELECT DISTINCT
-  a, b
+SELECT
+  (SELECT cluster FROM cluster_id LIMIT 1) AS id,
+  contacts,
+  'contact_duplicate' AS "type"
 FROM
-  duplicate_attrs,
-  compute_combinations(ids)
+  cluster_members

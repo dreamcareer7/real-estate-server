@@ -564,11 +564,13 @@ const updateManyContacts = cb => {
   return frisby
     .create('add a tag attribute to many contacts')
     .patch('/contacts?get=true&associations[]=contact.sub_contacts', {
-      ids: results.contact.createManyContacts.data,
-      attributes: [{
-        attribute_def: defs.tag.id,
-        text: 'ManyContacts'
-      }]
+      contacts: results.contact.createManyContacts.data.map(id => ({
+        id,
+        attributes: [{
+          attribute_def: defs.tag.id,
+          text: 'ManyContacts'
+        }]
+      }))
     })
     .after(cb)
     .expectStatus(200)
@@ -607,7 +609,7 @@ function createManyContactsList(cb) {
 function syncListMembers(cb) {
   return frisby.create('sync members of many contacts list')
     .post('/jobs', {
-      name: 'contact_data_pipeline',
+      name: 'contact_lists',
       data: {
         type: 'update_list_memberships',
         list_id: results.contact.createManyContactsList.data

@@ -1,7 +1,7 @@
 function createDefaultLists(cb) {
   return frisby.create('create default lists for user')
     .post('/jobs', {
-      name: 'contact_data_pipeline',
+      name: 'contact_lists',
       data: {
         type: 'create_default_lists',
         user_id: results.authorize.token.data.id
