@@ -21,6 +21,21 @@ const create = (cb) => {
     .expectJSONTypes('data', alert_response)
 }
 
+const feed = (cb) => {
+  return frisby.create('get feed')
+    .get('/rooms/' + results.room.create.data.id + '/recs/feed')
+    .after((err, res, json) => {
+      const c = new Set(json.data.map(r => r.created_at))
+      const u = new Set(json.data.map(r => r.updated_at))
+
+      if (Math.min(c.size, u.size) < json.data.length)
+        throw 'Recommendation date timestamps are equal!'
+
+      cb(err, res, json)
+    })
+    .expectStatus(200)
+}
+
 const get = cb => {
   return frisby.create('get alert by id')
     .get(`/alerts/${results.alert.create.data.id}`)
@@ -214,6 +229,7 @@ function invalidUpdateAlertSetting(cb) {
 
 module.exports = {
   create,
+  feed,
   get,
   search,
   getUserAlerts,
