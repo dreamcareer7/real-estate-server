@@ -133,10 +133,6 @@ function checkContactTimeline(cb) {
     .expectStatus(200)
     .expectJSON({
       data: [
-        {
-          action: 'UserSignedUp',
-          type: 'activity'
-        },
         updated_touch
       ]
     })
