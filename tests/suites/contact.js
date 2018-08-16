@@ -564,11 +564,13 @@ const updateManyContacts = cb => {
   return frisby
     .create('add a tag attribute to many contacts')
     .patch('/contacts?get=true&associations[]=contact.sub_contacts', {
-      ids: results.contact.createManyContacts.data,
-      attributes: [{
-        attribute_def: defs.tag.id,
-        text: 'ManyContacts'
-      }]
+      contacts: results.contact.createManyContacts.data.map(id => ({
+        id,
+        attributes: [{
+          attribute_def: defs.tag.id,
+          text: 'ManyContacts'
+        }]
+      }))
     })
     .after(cb)
     .expectStatus(200)
