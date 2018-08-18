@@ -486,7 +486,7 @@ const deleteContact = cb => {
 }
 
 const deleteManyContacts = cb => {
-  const ids = _.takeRight(results.contact.createManyContacts.data, 2)
+  const ids = results.contact.getDuplicateClusters.data.map(cl => cl.contacts[0].id)
 
   return frisby
     .create('delete multiple contacts')
@@ -503,7 +503,7 @@ const deleteContactWorked = cb => {
     .get('/contacts?associations[]=contact.sub_contacts&associations[]=contact.lists')
     .after(cb)
     .expectStatus(200)
-    .expectJSONLength('data', before_count - 3 - 2)
+    .expectJSONLength('data', before_count - 3 - 4)
     .expectJSON({
       code: 'OK',
     })
@@ -725,6 +725,49 @@ const getAllTags = (cb) => {
     })
 }
 
+const findDuplicates = (cb) => {
+  return frisby.create('find duplicate clusters')
+    .post('/jobs', {
+      name: 'contact_duplicates',
+      data: {
+        type: 'add_vertices',
+        user_id: results.authorize.token.data.id,
+        contact_ids: [
+          ...results.contact.createManyContacts.data,
+          results.contact.create.data[0].id,
+          results.contact.createCompanyContact.data[0].id
+        ]
+      }
+    })
+    .after(cb)
+    .expectStatus(200)
+}
+
+const getDuplicateClusters = cb => {
+  return frisby.create('get the list of duplicate clusters')
+    .get('/contacts/duplicates')
+    .after(cb)
+    .expectStatus(200)
+    .expectJSONLength('data', 2)
+}
+
+const getContactDuplicates = cb => {
+  const id = results.contact.getDuplicateClusters.data[0].contacts[0].id
+
+  return frisby.create('get contact duplicates')
+    .get(`/contacts/${id}/duplicates`)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      data: {
+        type: 'contact_duplicate',
+        contacts: [{
+          id
+        }]
+      }
+    })
+}
+
 const mergeContacts = cb => {
   const sub_contacts = _.take(results.contact.createManyContacts.data, 2)
   const parent_id = results.contact.createManyContacts.data[2]
@@ -733,14 +776,6 @@ const mergeContacts = cb => {
     .post(`/contacts/${parent_id}/merge?associations[]=contact.sub_contacts`, {
       sub_contacts
     })
-    // .after((err, res, json) => {
-    //   const scs = json.data.sub_contacts.map(sc => sc.id)
-    //   for (const id of sub_contacts) {
-    //     if (!scs.includes(id))
-    //       throw 'Contacts are not merged.'
-    //   }
-    //   cb(err, res, json)
-    // })
     .after(cb)
     .expectStatus(200)
     .expectJSON({
@@ -749,6 +784,49 @@ const mergeContacts = cb => {
         id: parent_id
       }
     })
+}
+
+const triggerBulkMerge = cb => {
+  return frisby
+    .create('trigger merging two clusters of duplicate contacts')
+    .post('/contacts/merge', {
+      clusters: results.contact.getDuplicateClusters.data.map(cl => {
+        return {
+          parent: cl.contacts[0].id,
+          sub_contacts: cl.contacts.slice(1).map(c => c.id)
+        }
+      })
+    })
+    .after(cb)
+    .expectStatus(200)
+}
+
+const getJobStatus = cb => {
+  return frisby
+    .create('get status of a contact-related job')
+    .get('/contacts/jobs/' + results.contact.triggerBulkMerge.data.job_id)
+    .after(cb)
+    .expectStatus(200)
+}
+
+const bulkMerge = cb => {
+  return frisby
+    .create('trigger merging two clusters of duplicate contacts')
+    .post('/jobs', {
+      name: 'contact_duplicates',
+      data: {
+        type: 'merge',
+        user_id: results.authorize.token.data.id,
+        clusters: results.contact.getDuplicateClusters.data.map(cl => {
+          return {
+            parent: cl.contacts[0].id,
+            sub_contacts: cl.contacts.slice(1).map(c => c.id)
+          }
+        })
+      }
+    })
+    .after(cb)
+    .expectStatus(200)
 }
 
 const exportByFilter = cb => {
@@ -824,7 +902,13 @@ module.exports = {
   searchByRemovedEmail,
   removeNonExistingAttribute,
   removeGibberishAttribute,
+  findDuplicates,
+  getDuplicateClusters,
+  getContactDuplicates,
   mergeContacts,
+  triggerBulkMerge,
+  getJobStatus,
+  bulkMerge,
   deleteContact,
   deleteManyContacts,
   deleteContactWorked,
