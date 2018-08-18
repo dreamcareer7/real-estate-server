@@ -279,6 +279,23 @@ module.exports = [
         text: 'IOSAddressBook'
       },
       {
+        attribute_type: 'first_name',
+        text: 'David'
+      }
+    ],
+    ios_address_book_id: 'E94CD15C-7964-4A9B-8AC4-10D7CFB791FD'
+  },
+  {
+    attributes: [
+      {
+        attribute_type: 'phone_number',
+        text: '555-610-6679'
+      },
+      {
+        attribute_type: 'source_type',
+        text: 'IOSAddressBook'
+      },
+      {
         attribute_type: 'state',
         text: 'CA',
         index: 0
@@ -346,6 +363,46 @@ module.exports = [
       {
         attribute_type: 'last_name',
         text: 'Boy'
+      }
+    ],
+    ios_address_book_id: '52EAB13E-733F-4153-B019-9A83EE67171D:ABPerson'
+  }, {
+    attributes: [
+      {
+        attribute_type: 'email',
+        text: 'd@d.com'
+      },
+      {
+        attribute_type: 'source_type',
+        text: 'IOSAddressBook'
+      },
+      {
+        attribute_type: 'state',
+        text: '33333',
+        index: 0
+      },
+      {
+        attribute_type: 'city',
+        text: 'Union',
+        index: 0
+      },
+      {
+        attribute_type: 'street_name',
+        text: '50 Park',
+        index: 0
+      },
+      {
+        attribute_type: 'postal_code',
+        text: '',
+        index: 0
+      },
+      {
+        attribute_type: 'first_name',
+        text: 'Goat'
+      },
+      {
+        attribute_type: 'last_name',
+        text: 'Boy 2'
       }
     ],
     ios_address_book_id: '52EAB13E-733F-4153-B019-9A83EE67171D:ABPerson'

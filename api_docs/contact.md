@@ -168,8 +168,20 @@ Updates a single contact and its attributes. If attributes have `id`, they are u
 ### Deleting an attribute [DELETE /contacts/:id/attributes/:attribute_id]
 <!-- include(tests/contact/removeAttribute.md) -->
 
+### Get all of the duplicate clusters [GET /contacts/:id/duplicates]
+<!-- include(tests/contact/getContactDuplicates.md) -->
+
+### Get the duplicate cluster for a contact [GET /contacts/:id/duplicates]
+<!-- include(tests/contact/getDuplicateClusters.md) -->
+
 ### Merge contacts [POST /contacts/:id/merge]
 <!-- include(tests/contact/mergeContacts.md) -->
+
+### Merge multiple clusters of duplicate contacts [POST /contacts/merge]
+<!-- include(tests/contact/triggerBulkMerge.md) -->
+
+### Get status of a contact related background job [GET /contacts/jobs/:job_id]
+<!-- include(tests/contact/getJobStatus.md) -->
 
 ## Timeline Activities
 An _Activity_ is an object, recording an event that either a specific user has done or a user has done on a specific contact of theirs. There are generally two types of activities. *User* activities and *Contact* activities.
