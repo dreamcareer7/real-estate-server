@@ -6,12 +6,12 @@ const manyContacts = require('./data/manyContacts.js')
 const brand = require('./data/brand.js')
 
 let defs
-const contactAttributes = _.groupBy(contact.attributes, 'type')
+const contactAttributes = _.groupBy(contact.attributes, 'attribute_type')
 
 function _fixContactAttributeDefs(contact) {
   for (const attr of contact.attributes) {
-    attr.attribute_def = defs[attr.type].id
-    delete attr.type
+    attr.attribute_def = defs[attr.attribute_type].id
+    delete attr.attribute_type
   }
 }
 
@@ -250,6 +250,22 @@ const stringSearch = cb => {
   return frisby
     .create('search in contacts by search terms')
     .post('/contacts/filter?q[]=' + encodeURIComponent('kate-bell@mac.com'))
+    .after(cb)
+    .expectJSONLength('data', 1)
+    .expectJSON({
+      data: [{
+        id: results.contact.createManyContacts.data[0].id
+      }]
+    })
+    .expectStatus(200)
+}
+
+const stringSearchInBody = cb => {
+  return frisby
+    .create('search in contacts by search terms sent in request body')
+    .post('/contacts/filter', {
+      query: 'kate-bell@mac.com'
+    })
     .after(cb)
     .expectJSONLength('data', 1)
     .expectJSON({
@@ -505,7 +521,7 @@ const deleteContact = cb => {
 }
 
 const deleteManyContacts = cb => {
-  const ids = _.takeRight(results.contact.createManyContacts.data, 2)
+  const ids = results.contact.getDuplicateClusters.data.map(cl => cl.contacts[0].id)
 
   return frisby
     .create('delete multiple contacts')
@@ -519,10 +535,10 @@ const deleteContactWorked = cb => {
 
   return frisby
     .create('get list of contacts and make sure delete contact was successful')
-    .get('/contacts?associations[]=contact.sub_contacts')
+    .get('/contacts?associations[]=contact.sub_contacts&associations[]=contact.lists')
     .after(cb)
     .expectStatus(200)
-    .expectJSONLength('data', before_count - 3 - 2)
+    .expectJSONLength('data', before_count - 3 - 4)
     .expectJSON({
       code: 'OK',
     })
@@ -582,15 +598,17 @@ const updateContact = cb => {
 const updateManyContacts = cb => {
   return frisby
     .create('add a tag attribute to many contacts')
-    .patch('/contacts?associations[]=contact.sub_contacts', {
-      ids: results.contact.createManyContacts.data,
-      attributes: [{
-        attribute_def: defs.tag.id,
-        text: 'ManyContacts'
-      }]
+    .patch('/contacts?get=true&associations[]=contact.sub_contacts', {
+      contacts: results.contact.createManyContacts.data.map(id => ({
+        id,
+        attributes: [{
+          attribute_def: defs.tag.id,
+          text: 'ManyContacts'
+        }]
+      }))
     })
     .after(cb)
-    .expectStatus(204)
+    .expectStatus(200)
 }
 
 function makeSureManyContactsTagIsAdded(cb) {
@@ -616,10 +634,105 @@ function createManyContactsList(cb) {
           value: 'ManyContacts'
         }
       ],
-      'name': 'Many Contacts'
+      'name': 'Many Contacts',
+      touch_freq: 7
     })
     .after(cb)
     .expectStatus(200)
+}
+
+function syncListMembers(cb) {
+  return frisby.create('sync members of many contacts list')
+    .post('/jobs', {
+      name: 'contact_lists',
+      data: {
+        type: 'update_list_memberships',
+        list_id: results.contact.createManyContactsList.data
+      }
+    })
+    .after(cb)
+    .expectStatus(200)
+}
+
+function updateNextTouchOnManyContacts(cb) {
+  return frisby.create('update next_touch on many contacts')
+    .post('/jobs', {
+      name: 'touches',
+      data: {
+        type: 'update_next_touch',
+        contacts: results.contact.createManyContacts.data
+      }
+    })
+    .after(cb)
+    .expectStatus(200)
+}
+
+function getManyContactsList(cb) {
+  return frisby.create('create many contacts list')
+    .get('/contacts/lists/' + results.contact.createManyContactsList.data)
+    .after(cb)
+    .expectJSON({
+      data: {
+        member_count: manyContacts.length
+      }
+    })
+    .expectStatus(200)
+}
+
+function getContactsInManyContactsList(cb) {
+  return frisby
+    .create('get list of contacts in many contacts list')
+    .get('/contacts?list=' + results.contact.createManyContactsList.data)
+    .after((err, res, json) => {
+      if (!json.data.every(c => Boolean(c.next_touch)))
+        throw 'Next touch is not set on ManyContacts list members'
+      cb(err, res, json)
+    })
+    .expectStatus(200)
+    .expectJSONLength('data', manyContacts.length)
+}
+
+function unsetTouchFreqOnManyContactsList(cb) {
+  return frisby.create('unset touch frequency of many contacts list')
+    .put('/contacts/lists/' + results.contact.createManyContactsList.data, {
+      filters: [
+        {
+          attribute_def: defs.tag.id,
+          value: 'ManyContacts'
+        }
+      ],
+      'name': 'Many Contacts',
+      touch_freq: null,
+      is_pinned: false
+    })
+    .after(cb)
+    .expectStatus(200)
+}
+
+function updateNextTouchOnManyContactsListMembers(cb) {
+  return frisby.create('update next_touch on many contacts list members again')
+    .post('/jobs', {
+      name: 'touches',
+      data: {
+        type: 'update_next_touch_for_list_members',
+        list: results.contact.createManyContactsList.data
+      }
+    })
+    .after(cb)
+    .expectStatus(200)
+}
+
+function checkIfNextTouchIsNull(cb) {
+  return frisby
+    .create('check if next_touch is cleared on many contacts')
+    .get('/contacts?list=' + results.contact.createManyContactsList.data)
+    .after((err, res, json) => {
+      if (json.data.some(c => Boolean(c.next_touch)))
+        throw 'Next touch is not null on ManyContacts list members'
+      cb(err, res, json)
+    })
+    .expectStatus(200)
+    .expectJSONLength('data', manyContacts.length)
 }
 
 const getTimeline = (cb) => {
@@ -647,6 +760,49 @@ const getAllTags = (cb) => {
     })
 }
 
+const findDuplicates = (cb) => {
+  return frisby.create('find duplicate clusters')
+    .post('/jobs', {
+      name: 'contact_duplicates',
+      data: {
+        type: 'add_vertices',
+        user_id: results.authorize.token.data.id,
+        contact_ids: [
+          ...results.contact.createManyContacts.data,
+          results.contact.create.data[0].id,
+          results.contact.createCompanyContact.data[0].id
+        ]
+      }
+    })
+    .after(cb)
+    .expectStatus(200)
+}
+
+const getDuplicateClusters = cb => {
+  return frisby.create('get the list of duplicate clusters')
+    .get('/contacts/duplicates')
+    .after(cb)
+    .expectStatus(200)
+    .expectJSONLength('data', 2)
+}
+
+const getContactDuplicates = cb => {
+  const id = results.contact.getDuplicateClusters.data[0].contacts[0].id
+
+  return frisby.create('get contact duplicates')
+    .get(`/contacts/${id}/duplicates`)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      data: {
+        type: 'contact_duplicate',
+        contacts: [{
+          id
+        }]
+      }
+    })
+}
+
 const mergeContacts = cb => {
   const sub_contacts = _.take(results.contact.createManyContacts.data, 2)
   const parent_id = results.contact.createManyContacts.data[2]
@@ -655,14 +811,7 @@ const mergeContacts = cb => {
     .post(`/contacts/${parent_id}/merge?associations[]=contact.sub_contacts`, {
       sub_contacts
     })
-    .after((err, res, json) => {
-      const scs = json.data.sub_contacts.map(sc => sc.id)
-      for (const id of sub_contacts) {
-        if (!scs.includes(id))
-          throw 'Contacts are not merged.'
-      }
-      cb(err, res, json)
-    })
+    .after(cb)
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
@@ -670,6 +819,49 @@ const mergeContacts = cb => {
         id: parent_id
       }
     })
+}
+
+const triggerBulkMerge = cb => {
+  return frisby
+    .create('trigger merging two clusters of duplicate contacts')
+    .post('/contacts/merge', {
+      clusters: results.contact.getDuplicateClusters.data.map(cl => {
+        return {
+          parent: cl.contacts[0].id,
+          sub_contacts: cl.contacts.slice(1).map(c => c.id)
+        }
+      })
+    })
+    .after(cb)
+    .expectStatus(200)
+}
+
+const getJobStatus = cb => {
+  return frisby
+    .create('get status of a contact-related job')
+    .get('/contacts/jobs/' + results.contact.triggerBulkMerge.data.job_id)
+    .after(cb)
+    .expectStatus(200)
+}
+
+const bulkMerge = cb => {
+  return frisby
+    .create('trigger merging two clusters of duplicate contacts')
+    .post('/jobs', {
+      name: 'contact_duplicates',
+      data: {
+        type: 'merge',
+        user_id: results.authorize.token.data.id,
+        clusters: results.contact.getDuplicateClusters.data.map(cl => {
+          return {
+            parent: cl.contacts[0].id,
+            sub_contacts: cl.contacts.slice(1).map(c => c.id)
+          }
+        })
+      }
+    })
+    .after(cb)
+    .expectStatus(200)
 }
 
 const exportByFilter = cb => {
@@ -684,6 +876,23 @@ const exportByFilter = cb => {
     })
     .after(cb)
     .expectHeaderToMatch('Content-Disposition', `rechat_${moment().format('MM_DD_YY')}.csv`)
+    .expectStatus(200)
+}
+
+const sendEmails = cb => {
+  const emails = [{
+    subject: 'Email Subject',
+    to: 'recipient@rechat.com',
+    html: '<div>HTML Body</div>',
+    text: 'Text Body',
+  }]
+
+  return frisby
+    .create('send emails to contacts')
+    .post('/contacts/emails', {
+      emails
+    })
+    .after(cb)
     .expectStatus(200)
 }
 
@@ -703,6 +912,7 @@ module.exports = {
   filterContactsHavingTwoTags,
   invertedFilter,
   stringSearch,
+  stringSearchInBody,
   filterOnNonExistentAttributeDef,
   addAttribute,
   addInvalidAttribute,
@@ -715,6 +925,13 @@ module.exports = {
   updateManyContacts,
   makeSureManyContactsTagIsAdded,
   createManyContactsList,
+  syncListMembers,
+  updateNextTouchOnManyContacts,
+  getManyContactsList,
+  getContactsInManyContactsList,
+  unsetTouchFreqOnManyContactsList,
+  updateNextTouchOnManyContactsListMembers,
+  checkIfNextTouchIsNull,
   getTimeline,
   getAllTags,
   removeAttribute,
@@ -722,9 +939,16 @@ module.exports = {
   searchByRemovedEmail,
   removeNonExistingAttribute,
   removeGibberishAttribute,
+  findDuplicates,
+  getDuplicateClusters,
+  getContactDuplicates,
   mergeContacts,
+  triggerBulkMerge,
+  getJobStatus,
+  bulkMerge,
   deleteContact,
   deleteManyContacts,
   deleteContactWorked,
-  exportByFilter
+  exportByFilter,
+  sendEmails
 }

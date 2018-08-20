@@ -10,6 +10,7 @@ FROM
   JOIN contacts_attributes AS cattrs
     ON contacts.id = cattrs.contact
 WHERE
-  contacts.deleted_at IS NULL
-  AND check_contact_read_access(contacts, $1)
-  AND cattrs.attribute_type = 'tag';
+  check_contact_read_access(contacts, $1)
+  AND cattrs.attribute_type = 'tag'
+ORDER BY
+  cattrs.text

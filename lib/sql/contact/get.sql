@@ -1,32 +1,31 @@
-WITH all_contacts AS (
+WITH lists AS (
   SELECT
-    c1.id,
-    c2.id AS parent,
-    c1.display_name,
-    array_agg(c1.id) OVER (PARTITION BY c2.id) AS sub_contacts,
-    first_value(c1.created_at) OVER (PARTITION BY c2.id ORDER BY c1.created_at) AS created_at,
-    last_value (c1.updated_at) OVER (PARTITION BY c2.id ORDER BY c1.updated_at) AS updated_at
+    contact AS id,
+    array_agg(list) as lists
   FROM
-    contacts c1,
-    contacts c2
+    contact_lists_members
+    JOIN contact_search_lists
+      ON contact_search_lists.id = list
   WHERE
-    coalesce(c2.parent, c2.id) = coalesce(c1.parent, c1.id)
-    AND c2.id = ANY($1::uuid[])
-    AND (c1.id = c2.id OR c1.deleted_at IS NULL)
-    -- AND c2.deleted_at IS NULL
+    contact_search_lists.deleted_at IS NULL
+    AND contact_lists_members.deleted_at IS NULL
+    AND contact = ANY($1::uuid[])
+  GROUP BY
+    contact
 )
 SELECT
-  parent AS id,
+  id,
   display_name,
-  sub_contacts,
+  extract(epoch FROM last_touch) AS last_touch,
+  extract(epoch FROM next_touch) AS next_touch,
+  id AS summary,
+  lists,
+  ARRAY[id] AS sub_contacts,
   extract(epoch FROM created_at) as created_at,
   extract(epoch FROM updated_at) as updated_at,
-  parent AS summary,
-  (array_length(sub_contacts, 1) > 1)::boolean AS merged,
+  extract(epoch FROM deleted_at) as deleted_at,
   'contact' as type
 FROM
-  all_contacts
-  JOIN
-    unnest($1::uuid[])
-    WITH ORDINALITY t(cid, ord)
-    ON id = cid;
+  contacts
+  JOIN unnest($1::uuid[]) WITH ORDINALITY t(cid, ord) ON contacts.id = t.cid
+  LEFT JOIN lists USING (id)

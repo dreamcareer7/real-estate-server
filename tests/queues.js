@@ -20,6 +20,14 @@ const sendTaskNotifications = (job, cb) => {
   Task.sendNotifications().nodeify(cb)
 }
 
+const createEmail = (job, cb) => {
+  Email.create(job.data).nodeify(cb)
+}
+
+const storeEmailId = (job, cb) => {
+  Email.storeId(job.data.email, job.data.mailgun_id).nodeify(cb)
+}
+
 const list = {
   'Refresh.Subdivisions': Listing.refreshSubdivisions,
   'Refresh.Schools': School.refresh,
@@ -36,7 +44,9 @@ const list = {
   'BrokerWolf.PropertyTypes.map': mapBrokerwolfProperty,
   'BrokerWolf.ContactTypes.Sync': nodeify(BrokerWolf.ContactTypes.sync),
   'BrokerWolf.ContactTypes.map': mapBrokerwolfContact,
-  'Task.sendNotifications': sendTaskNotifications
+  'Task.sendNotifications': sendTaskNotifications,
+  'Email.create': createEmail,
+  'Email.storeId': storeEmailId
 }
 
 const queues = {}

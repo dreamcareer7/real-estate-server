@@ -11,7 +11,7 @@ const program = require('commander')
 const options = program.parse(process.argv)
 
 try {
-  mkdir('/tmp/rechat')
+  mkdir('docs')
 } catch (e) {
   // FIXME: What is to be done here?
 }
@@ -34,7 +34,7 @@ if (options.tests) {
   generate()
 
 function generate() {
-  const files = fs.readdirSync('/tmp/rechat')
+  const files = fs.readdirSync('docs')
     .filter(filename => {
       if (filename.substr(0,1) === '.')
         return false
@@ -58,17 +58,17 @@ function generate() {
 }
 
 function generateMd(docName, cb) {
-  const md = fs.readFileSync(`/tmp/rechat/${docName}.md`).toString()
+  const md = fs.readFileSync(`docs/${docName}.md`).toString()
 
   aglio.render(md, {
     theme: options.theme || 'olio',
-//     themeTemplate:'triple',
+    //     themeTemplate:'triple',
     themeFullWidth: true,
-    includePath: '/tmp/rechat'
+    includePath: 'docs'
   }, (err, html) => {
     if (err)
       return cb(err)
 
-    fs.writeFile(`/tmp/rechat/${docName}.html`, html, cb)
+    fs.writeFile(`docs/${docName}.html`, html, cb)
   })
 }

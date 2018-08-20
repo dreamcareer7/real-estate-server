@@ -1,4 +1,5 @@
 const globals = [
+  'Context',
   'Error',
   'Orm',
   'Job',
@@ -45,7 +46,6 @@ const globals = [
   'Message',
   'Slack',
   'SocketServer',
-  'Twilio',
   'Website',
   'Stripe',
   'Godaddy',
@@ -55,6 +55,7 @@ const globals = [
   'DealRole',
   'Envelope',
   'EnvelopeRecipient',
+  'EnvelopeDocument',
   'Activity',
   'AttachedFile',
   'Submission',
@@ -83,9 +84,8 @@ module.exports = {
     'node': true
   },
   'parserOptions': {
-    'ecmaVersion': 8,
+    'ecmaVersion': 9,
     'ecmaFeatures': {
-      'experimentalObjectRestSpread': true
     }
   },
   'extends': 'eslint:recommended',

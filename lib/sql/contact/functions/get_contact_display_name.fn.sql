@@ -19,6 +19,7 @@ AS $function$
   pivoted AS (
     SELECT
       contact_id AS id,
+      ( SELECT text FROM attrs WHERE attribute_type = 'marketing_name' LIMIT 1 ) AS marketing_name,
       ( SELECT text FROM attrs WHERE attribute_type = 'nickname' LIMIT 1 ) AS nickname,
       ( SELECT text FROM attrs WHERE attribute_type = 'first_name' LIMIT 1 ) AS first_name,
       ( SELECT text FROM attrs WHERE attribute_type = 'last_name' LIMIT 1 ) AS last_name,
@@ -28,6 +29,7 @@ AS $function$
   )
   SELECT COALESCE(
     CASE WHEN first_name IS NOT NULL AND last_name IS NOT NULL THEN first_name || ' ' || last_name ELSE NULL END,
+    marketing_name,
     nickname,
     first_name,
     last_name,

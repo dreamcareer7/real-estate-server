@@ -1,3 +1,38 @@
+function createDefaultLists(cb) {
+  return frisby.create('create default lists for user')
+    .post('/jobs', {
+      name: 'contact_lists',
+      data: {
+        type: 'create_default_lists',
+        user_id: results.authorize.token.data.id
+      }
+    })
+    .after(cb)
+    .expectStatus(200)
+}
+
+function checkDefaultLists(cb) {
+  return frisby.create('check if default lists are created in the right order')
+    .get('/contacts/lists')
+    .after(cb)
+    .expectStatus(200)
+    .expectJSONLength('data', 5)
+    .expectJSON({
+      code: 'OK',
+      data: [{
+        name: 'General'
+      }, {
+        name: 'Warm List'
+      }, {
+        name: 'Hot List'
+      }, {
+        name: 'Past Client'
+      }, {
+        name: 'iOS'
+      }]
+    })
+}
+
 function create (cb) {
   return frisby.create('create contact search list')
     .post('/contacts/lists', {
@@ -11,6 +46,7 @@ function create (cb) {
           'value': 'great'
         }
       ],
+      query: 'Wow',
       'name': 'Wow list',
       'is_pinned': true
     })
@@ -26,48 +62,41 @@ function create (cb) {
 }
 
 function update(cb) {
+  const update = {
+    filters: [
+      {
+        'attribute_def': '24171fd0-7994-43fc-a1cb-adcb726429b5',
+        'value': 'cool'
+      },
+      {
+        'attribute_def': '24171fd0-7994-43fc-a1cb-adcb726429b5',
+        'value': 'great'
+      }
+    ],
+    query: 'OMG',
+    name: 'Wow list',
+    is_pinned: false
+  }
+
   return frisby.create('update contact search list')
-    .put('/contacts/lists/' + results.contact_list.create.data, {
-      filters: [
-        {
-          'attribute_def': '24171fd0-7994-43fc-a1cb-adcb726429b5',
-          'value': 'cool'
-        },
-        {
-          'attribute_def': '24171fd0-7994-43fc-a1cb-adcb726429b5',
-          'value': 'great'
-        }
-      ],
-      'name': 'Wow list',
-      'is_pinned': false
-    })
+    .put('/contacts/lists/' + results.contact_list.create.data, update)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
-      code: 'OK'
-    })
-    .expectJSONTypes({
-      code: String,
-      data: Array
+      code: 'OK',
+      data: update
     })
 }
 
 function listForUser(cb) {
   return frisby.create('list for user')
     .get('/contacts/lists')
-    .after(cb)
+    .after((err, res, json) => {
+      if (!(json.data[json.data.length - 1].name === 'Wow list'))
+        throw 'Wow list not found!'
+      cb(err, res, json)
+    })
     .expectStatus(200)
-    .expectJSON({
-      code: 'OK',
-      data: [{
-        filters: [{
-          type: 'contact_list_filter'
-        }]
-      }]
-    })
-    .expectJSONTypes({
-      data: Array
-    })
 }
 
 function deleteIt(cb) {
@@ -91,6 +120,8 @@ function listAllFilters(cb) {
 }
 
 module.exports = {
+  createDefaultLists,
+  checkDefaultLists,
   create,
   update,
   listForUser,

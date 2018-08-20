@@ -47,7 +47,7 @@ SELECT
   association_type,
   crm_task,
   -- contact_note,
-  crm_activity,
+  touch,
   deal,
   contact,
   listing,

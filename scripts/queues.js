@@ -1,9 +1,11 @@
 require('../lib/models/index.js')()
 const config = require('../lib/config')
 const {
-  import_csv: contact_import_csv,
-  import_json: contact_import_json
+  contact_import,
+  contact_lists,
+  contact_duplicates,
 } = require('../lib/models/Contact/worker')
+const touches_handler = require('../lib/models/CRM/Touch/worker')
 
 const airship = (job, done) => {
   const {
@@ -20,12 +22,12 @@ const notification = (job, done) => {
   Notification.create(job.data.notification, done)
 }
 
-const email_sane = (job, done) => {
-  Email.sendSane(job.data, done)
+const email = (job, done) => {
+  Email.send(job.data).nodeify(done)
 }
 
 const sms = (job, done) => {
-  Twilio.callTwilio(job.data, done)
+  SMS.callTwilio(job.data, done)
 }
 
 const saveLastSeen = (job, done) => {
@@ -88,8 +90,8 @@ module.exports = {
     parallel: 50
   },
 
-  email_sane: {
-    handler: email_sane,
+  email: {
+    handler: email,
     parallel: config.email.parallel
   },
 
@@ -153,13 +155,23 @@ module.exports = {
     parallel: 5
   },
 
-  contact_import_csv: {
-    handler: contact_import_csv,
-    parallel: 2
+  contact_import: {
+    handler: contact_import,
+    parallel: 4
   },
 
-  contact_import_json: {
-    handler: contact_import_json,
-    parallel: 2
+  contact_lists: {
+    handler: contact_lists,
+    parallel: 8
+  },
+
+  contact_duplicates: {
+    handler: contact_duplicates,
+    parallel: 8
+  },
+
+  touches: {
+    handler: touches_handler,
+    parallel: 8
   }
 }

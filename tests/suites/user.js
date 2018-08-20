@@ -146,7 +146,12 @@ const patchUserTimeZone = (cb) => {
   return frisby.create('change timezone setting for a user')
     .patch('/users/self/timezone', {time_zone: results.user.create.data.timezone})
     .after(cb)
-    .expectStatus(204)
+    .expectJSON({
+      data: {
+        timezone: results.user.create.data.timezone
+      }
+    })
+    .expectStatus(200)
 }
 
 const addInvalidActivityByAction = (cb) => {
@@ -242,286 +247,286 @@ const getTimeline = (cb) => {
 
 const initiatePasswordReset = (cb) => {
   return frisby.create('initiate password reset')
-  .post('/users/reset_password', {
-    email: 'test@rechat.com'
-  })
-  .after(cb)
-  .expectStatus(204)
+    .post('/users/reset_password', {
+      email: 'test@rechat.com'
+    })
+    .after(cb)
+    .expectStatus(204)
 }
 
 const initiatePasswordResetEmailNotFound = (cb) => {
   return frisby.create('initiate password reset for a non-existing user')
-  .post('/users/reset_password', {
-    email: 'test@rechat.comcom'
-  })
-  .after(cb)
-  .expectStatus(404)
+    .post('/users/reset_password', {
+      email: 'test@rechat.comcom'
+    })
+    .after(cb)
+    .expectStatus(404)
 }
 
 const resetPasswordByTokenEmail = (cb) => {
   return frisby.create('reset password by token and email')
-  .patch('/users/password', {
-    email: 'test@rechat.com',
-    token: 'a',
-    password: '123456'
-  })
-  .after(cb)
-  .expectStatus(200)
+    .patch('/users/password', {
+      email: 'test@rechat.com',
+      token: 'a',
+      password: '123456'
+    })
+    .after(cb)
+    .expectStatus(200)
 }
 
 const resetPasswordByTokenEmailNoNewPassword = (cb) => {
   return frisby.create('reset password where no new password is specified')
-  .patch('/users/password', {
-    email: 'test@rechat.com',
-    token: 'a',
-  })
-  .after(cb)
-  .expectStatus(400)
+    .patch('/users/password', {
+      email: 'test@rechat.com',
+      token: 'a',
+    })
+    .after(cb)
+    .expectStatus(400)
 }
 
 const resetPasswordByTokenEmailInvalidEmail = (cb) => {
   return frisby.create('reset password by token for non-existing user')
-  .patch('/users/password', {
-    email: 'test@rechat.comcom',
-    token: 'a',
-    password: '123456'
-  })
-  .after(cb)
-  .expectStatus(404)
+    .patch('/users/password', {
+      email: 'test@rechat.comcom',
+      token: 'a',
+      password: '123456'
+    })
+    .after(cb)
+    .expectStatus(404)
 }
 
 const resetPasswordByTokenEmailInvalidToken = (cb) => {
   return frisby.create('reset password by token where token is invalid')
-  .patch('/users/password', {
-    email: 'test@rechat.com',
-    token: 'b',
-    password: '123456'
-  })
-  .after(cb)
-  .expectStatus(403)
+    .patch('/users/password', {
+      email: 'test@rechat.com',
+      token: 'b',
+      password: '123456'
+    })
+    .after(cb)
+    .expectStatus(403)
 }
 
 const resetPasswordByShadowTokenEmail = (cb) => {
   return frisby.create('reset password by shadow token and email')
-  .patch('/users/password', {
-    email: 'test@rechat.com',
-    shadow_token: '206cc0a36c8ecfa37639a4d0dc682c73',
-    password: '123456'
-  })
-  .after(cb)
-  .expectStatus(200)
+    .patch('/users/password', {
+      email: 'test@rechat.com',
+      shadow_token: '206cc0a36c8ecfa37639a4d0dc682c73',
+      password: '123456'
+    })
+    .after(cb)
+    .expectStatus(200)
 }
 
 const resetPasswordByShadowTokenEmailInvalidEmail = (cb) => {
   return frisby.create('reset password by shadow token and email for non-existing user')
-  .patch('/users/password', {
-    email: 'test@rechat.comcom',
-    shadow_token: '206cc0a36c8ecfa37639a4d0dc682c73',
-    password: '123456'
-  })
-  .after(cb)
-  .expectStatus(404)
+    .patch('/users/password', {
+      email: 'test@rechat.comcom',
+      shadow_token: '206cc0a36c8ecfa37639a4d0dc682c73',
+      password: '123456'
+    })
+    .after(cb)
+    .expectStatus(404)
 }
 
 const resetPasswordByShadowTokenEmailInvalidToken = (cb) => {
   return frisby.create('reset password by shadow token and email where token is invalid')
-  .patch('/users/password', {
-    email: 'test@rechat.com',
-    shadow_token: 'bombastictoken',
-    password: '123456'
-  })
-  .after(cb)
-  .expectStatus(403)
+    .patch('/users/password', {
+      email: 'test@rechat.com',
+      shadow_token: 'bombastictoken',
+      password: '123456'
+    })
+    .after(cb)
+    .expectStatus(403)
 }
 
 const resetPasswordByShadowTokenPhone = (cb) => {
   return frisby.create('reset password by shadow token and phone number')
-  .patch('/users/password', {
-    phone_number: '+4368120265807',
-    shadow_token: '206cc0a36c8ecfa37639a4d0dc682c73',
-    password: '123456'
-  })
-  .after(cb)
-  .expectStatus(200)
+    .patch('/users/password', {
+      phone_number: '+4368120265807',
+      shadow_token: '206cc0a36c8ecfa37639a4d0dc682c73',
+      password: '123456'
+    })
+    .after(cb)
+    .expectStatus(200)
 }
 
 const resetPasswordByShadowTokenPhoneInvalidToken = (cb) => {
   return frisby.create('reset password by shadow token and phone number')
-  .patch('/users/password', {
-    phone_number: '+4368120265807',
-    shadow_token: 'bombastictoken',
-    password: '123456'
-  })
-  .after(cb)
-  .expectStatus(403)
+    .patch('/users/password', {
+      phone_number: '+4368120265807',
+      shadow_token: 'bombastictoken',
+      password: '123456'
+    })
+    .after(cb)
+    .expectStatus(403)
 }
 
 const resetPasswordByShadowTokenPhoneInvalidPhone = (cb) => {
   return frisby.create('reset password by shadow token and phone number for non-existing user')
-  .patch('/users/password', {
-    phone_number: '+4368120265817',
-    shadow_token: '206cc0a36c8ecfa37639a4d0dc682c73',
-    password: '123456'
-  })
-  .after(cb)
-  .expectStatus(404)
+    .patch('/users/password', {
+      phone_number: '+4368120265817',
+      shadow_token: '206cc0a36c8ecfa37639a4d0dc682c73',
+      password: '123456'
+    })
+    .after(cb)
+    .expectStatus(404)
 }
 
 const upgradeToAgentWithEmail = (cb) => {
   const agent = results.agent.getByMlsId.data
   return frisby.create('upgrade user to agent with email')
-  .patch('/users/self/upgrade', {
-    agent: agent.id,
-    secret: agent.email,
-  })
-  .after(cb)
-  .expectStatus(200)
+    .patch('/users/self/upgrade', {
+      agent: agent.id,
+      secret: agent.email,
+    })
+    .after(cb)
+    .expectStatus(200)
 }
 
 const upgradeToAgentWithPhoneNumber = (cb) => {
   const agent = results.agent.getByMlsId.data
   return frisby.create('upgrade user to agent with phone number')
-  .patch('/users/self/upgrade', {
-    agent: agent.id,
-    secret: agent.phone_number,
-  })
-  .after(cb)
-  .expectStatus(200)
+    .patch('/users/self/upgrade', {
+      agent: agent.id,
+      secret: agent.phone_number,
+    })
+    .after(cb)
+    .expectStatus(200)
 }
 
 const upgradeToAgentInvalidSecret = (cb) => {
   const agent = results.agent.getByMlsId.data
   return frisby.create('upgrade user to agent with invalid secret')
-  .patch('/users/self/upgrade', {
-    agent: agent.id,
-    secret: 'mr@bombastic.com',
-  })
-  .after(cb)
-  .expectStatus(401)
+    .patch('/users/self/upgrade', {
+      agent: agent.id,
+      secret: 'mr@bombastic.com',
+    })
+    .after(cb)
+    .expectStatus(401)
 }
 
 const upgradeToAgentSecretMissing = (cb) => {
   const agent = results.agent.getByMlsId.data
   return frisby.create('upgrade user to agent secret missing')
-  .patch('/users/self/upgrade', {
-    agent: agent.id
-  })
-  .after(cb)
-  .expectStatus(400)
+    .patch('/users/self/upgrade', {
+      agent: agent.id
+    })
+    .after(cb)
+    .expectStatus(400)
 }
 
 const markAsNonShadow = (cb) => {
   return frisby.create('convert to non-shadow user')
-  .put('/users/self', {
-    is_shadow: true
-  })
-  .after(cb)
-  .expectStatus(200)
-  .expectJSON({
-    code: 'OK',
-    data: {
-      id: results.authorize.token.data.id,
-      type: 'user',
+    .put('/users/self', {
       is_shadow: true
-    }
-  })
+    })
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      data: {
+        id: results.authorize.token.data.id,
+        type: 'user',
+        is_shadow: true
+      }
+    })
 }
 
 const markAsShadow = (cb) => {
   return frisby.create('convert to shadow user')
-  .put('/users/self', {
-    is_shadow: false
-  })
-  .after(cb)
-  .expectStatus(200)
-  .expectJSON({
-    code: 'OK',
-    data: {
-      id: results.authorize.token.data.id,
-      type: 'user',
+    .put('/users/self', {
       is_shadow: false
-    }
-  })
+    })
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      data: {
+        id: results.authorize.token.data.id,
+        type: 'user',
+        is_shadow: false
+      }
+    })
 }
 
 const testShadowUserEmailReSignup = (cb) => {
   return frisby.create('testing signup for already existing shadow user')
-  .post('/users', {
-    client_id: config.tests.client_id,
-    client_secret: config.tests.client_secret,
-    first_name: '',
-    last_name: '',
-    password: '123456',
-    email: 'test+email@rechat.com'
-  })
-  .after(cb)
-  .expectStatus(202)
-  .expectJSON({
-    code: 'OK',
-    data: {
-      type: 'user_reference',
-      email: 'test+email@rechat.com',
-      email_confirmed: false,
-      phone_confirmed: false,
-      is_shadow: true,
-      fake_email: false
-    }
-  })
+    .post('/users', {
+      client_id: config.tests.client_id,
+      client_secret: config.tests.client_secret,
+      first_name: '',
+      last_name: '',
+      password: '123456',
+      email: 'test+email@rechat.com'
+    })
+    .after(cb)
+    .expectStatus(202)
+    .expectJSON({
+      code: 'OK',
+      data: {
+        type: 'user_reference',
+        email: 'test+email@rechat.com',
+        email_confirmed: false,
+        phone_confirmed: false,
+        is_shadow: true,
+        fake_email: false
+      }
+    })
 }
 
 
 const resetPhoneShadowPasswordByEmail = (cb) => {
   return frisby.create('reset phone shadow user by email')
-  .patch('/users/password', {
-    email: 'guest+foobarbaz@rechat.com',
-    shadow_token: 'c4ca4238a0b923820dcc509a6f75849b',
-    password: '123456'
-  })
-  .after(cb)
-  .expectStatus(406)
+    .patch('/users/password', {
+      email: 'guest+foobarbaz@rechat.com',
+      shadow_token: 'c4ca4238a0b923820dcc509a6f75849b',
+      password: '123456'
+    })
+    .after(cb)
+    .expectStatus(406)
 }
 
 const resetPhoneShadowPassword = (cb) => {
   return frisby.create('reset phone shadow user by shadow token')
-  .patch('/users/password', {
-    phone_number: '+989028202677',
-    shadow_token: 'c4ca4238a0b923820dcc509a6f75849b',
-    password: '123456'
-  })
-  .after(cb)
-  .expectStatus(200)
-  .expectJSON({
-    code: 'OK',
-    data: {
-      type: 'user',
+    .patch('/users/password', {
       phone_number: '+989028202677',
-      fake_email: true,
-      email_confirmed: false,
-      phone_confirmed: true,
-      is_shadow: true
-    }
-  })
+      shadow_token: 'c4ca4238a0b923820dcc509a6f75849b',
+      password: '123456'
+    })
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      data: {
+        type: 'user',
+        phone_number: '+989028202677',
+        fake_email: true,
+        email_confirmed: false,
+        phone_confirmed: true,
+        is_shadow: true
+      }
+    })
 }
 
 const resetEmailShadowPassword = (cb) => {
   return frisby.create('reset email shadow user by shadow token')
-  .patch('/users/password', {
-    email: 'test+email@rechat.com',
-    shadow_token: 'c4ca4238a0b923820dcc509a6f75849b',
-    password: '123456'
-  })
-  .after(cb)
-  .expectStatus(200)
-  .expectJSON({
-    code: 'OK',
-    data: {
-      type: 'user',
-      fake_email: false,
-      email_confirmed: true,
-      phone_confirmed: false,
-      is_shadow: true
-    }
-  })
+    .patch('/users/password', {
+      email: 'test+email@rechat.com',
+      shadow_token: 'c4ca4238a0b923820dcc509a6f75849b',
+      password: '123456'
+    })
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      data: {
+        type: 'user',
+        fake_email: false,
+        email_confirmed: true,
+        phone_confirmed: false,
+        is_shadow: true
+      }
+    })
 }
 
 const deleteAddress = (cb) => {

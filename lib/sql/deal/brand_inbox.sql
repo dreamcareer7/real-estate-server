@@ -6,6 +6,7 @@ FROM deals
   JOIN tasks ON deals_checklists.id = tasks.checklist
 WHERE
   deals.deleted_at IS NULL
+  AND deals.is_draft IS FALSE
   AND deals_checklists.terminated_at   IS NULL
   AND deals_checklists.deactivated_at  IS NULL
   AND tasks.attention_requested_at     IS NOT NULL

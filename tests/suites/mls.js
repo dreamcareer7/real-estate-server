@@ -114,11 +114,11 @@ const addPhoto = (cb) => {
 const refresher = (name, description) => {
   return cb => {
     return frisby.create(name)
-    .post('/jobs', {
-      name
-    })
-    .after(cb)
-    .expectStatus(200)
+      .post('/jobs', {
+        name
+      })
+      .after(cb)
+      .expectStatus(200)
   }
 }
 

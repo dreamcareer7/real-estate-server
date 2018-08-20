@@ -12,7 +12,7 @@ CREATE TABLE formsboer (
     name text
 );
 
-COPY formsboer from 'formsboer.csv' csv;
+\copy formsboer from '/tmp/formsboer.csv' csv;
 
 INSERT INTO forms(id,created_at,updated_at,deleted_at,formstack_id,fields,name)
    SELECT * FROM formsboer

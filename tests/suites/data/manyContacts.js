@@ -2,47 +2,55 @@ module.exports = [
   {
     attributes: [
       {
-        type: 'first_name',
+        attribute_type: 'first_name',
         text: 'Kate'
       },
       {
-        type: 'last_name',
+        attribute_type: 'last_name',
         text: 'Bell'
       },
       {
-        type: 'email',
+        attribute_type: 'email',
         text: 'kate-bell@mac.com'
       },
       {
-        type: 'birthday',
+        attribute_type: 'birthday',
         date: 253497600
       },
       {
-        type: 'source_type',
+        attribute_type: 'source_type',
         text: 'IOSAddressBook'
       },
       {
-        type: 'state',
-        text: 'CA'
+        attribute_type: 'state',
+        text: 'CA',
+        index: 0,
+        is_primary: true
       },
       {
-        type: 'city',
-        text: 'Hillsborough'
+        attribute_type: 'city',
+        text: 'Hillsborough',
+        index: 0,
+        is_primary: true
       },
       {
-        type: 'street_name',
-        text: '165 Davis Street'
+        attribute_type: 'street_name',
+        text: '165 Davis Street',
+        index: 0,
+        is_primary: true
       },
       {
-        type: 'postal_code',
-        text: '94010'
+        attribute_type: 'postal_code',
+        text: '94010',
+        index: 0,
+        is_primary: true
       },
       {
-        type: 'phone_number',
+        attribute_type: 'phone_number',
         text: '(555) 564-8583'
       },
       {
-        type: 'phone_number',
+        attribute_type: 'phone_number',
         text: '(415) 555-3695'
       }
     ],
@@ -51,47 +59,51 @@ module.exports = [
   {
     attributes: [
       {
-        type: 'first_name',
+        attribute_type: 'first_name',
         text: 'Daniel'
       },
       {
-        type: 'last_name',
+        attribute_type: 'last_name',
         text: 'Higgins'
       },
       {
-        type: 'email',
+        attribute_type: 'email',
         text: 'd-higgins@mac.com'
       },
       {
-        type: 'source_type',
+        attribute_type: 'source_type',
         text: 'IOSAddressBook'
       },
       {
-        type: 'state',
-        text: 'CA'
+        attribute_type: 'state',
+        text: 'CA',
+        index: 0
       },
       {
-        type: 'city',
-        text: 'Corte Madera'
+        attribute_type: 'city',
+        text: 'Corte Madera',
+        index: 0
       },
       {
-        type: 'street_name',
-        text: '332 Laguna Street'
+        attribute_type: 'street_name',
+        text: '332 Laguna Street',
+        index: 0
       },
       {
-        type: 'postal_code',
-        text: '94925'
+        attribute_type: 'postal_code',
+        text: '94925',
+        index: 0
       },
       {
-        type: 'phone_number',
+        attribute_type: 'phone_number',
         text: '555-478-7672'
       },
       {
-        type: 'phone_number',
+        attribute_type: 'phone_number',
         text: '(408) 555-5270'
       },
       {
-        type: 'phone_number',
+        attribute_type: 'phone_number',
         text: '(408) 555-3514'
       }
     ],
@@ -100,51 +112,55 @@ module.exports = [
   {
     attributes: [
       {
-        type: 'first_name',
+        attribute_type: 'first_name',
         text: 'John'
       },
       {
-        type: 'last_name',
+        attribute_type: 'last_name',
         text: 'Appleseed'
       },
       {
-        type: 'email',
+        attribute_type: 'email',
         text: 'John-Appleseed@mac.com'
       },
       {
-        type: 'email',
+        attribute_type: 'email',
         text: 'john-appleseed@mac.com'
       },
       {
-        type: 'birthday',
+        attribute_type: 'birthday',
         date: 330048000
       },
       {
-        type: 'source_type',
+        attribute_type: 'source_type',
         text: 'IOSAddressBook'
       },
       {
-        type: 'state',
-        text: 'GA'
+        attribute_type: 'state',
+        text: 'GA',
+        index: 0
       },
       {
-        type: 'city',
-        text: 'Atlanta'
+        attribute_type: 'city',
+        text: 'Atlanta',
+        index: 0
       },
       {
-        type: 'street_name',
-        text: '3494 Kuhl Avenue'
+        attribute_type: 'street_name',
+        text: '3494 Kuhl Avenue',
+        index: 0
       },
       {
-        type: 'postal_code',
-        text: '30303'
+        attribute_type: 'postal_code',
+        text: '30303',
+        index: 0
       },
       {
-        type: 'phone_number',
+        attribute_type: 'phone_number',
         text: '888-555-5512'
       },
       {
-        type: 'phone_number',
+        attribute_type: 'phone_number',
         text: '888-555-1212'
       }
     ],
@@ -153,43 +169,47 @@ module.exports = [
   {
     attributes: [
       {
-        type: 'first_name',
+        attribute_type: 'first_name',
         text: 'Anna'
       },
       {
-        type: 'last_name',
+        attribute_type: 'last_name',
         text: 'Haro'
       },
       {
-        type: 'email',
+        attribute_type: 'email',
         text: 'anna-haro@mac.com'
       },
       {
-        type: 'birthday',
+        attribute_type: 'birthday',
         date: 493516800
       },
       {
-        type: 'source_type',
+        attribute_type: 'source_type',
         text: 'IOSAddressBook'
       },
       {
-        type: 'state',
-        text: 'CA'
+        attribute_type: 'state',
+        text: 'CA',
+        index: 0
       },
       {
-        type: 'city',
-        text: 'Sausalito'
+        attribute_type: 'city',
+        text: 'Sausalito',
+        index: 0
       },
       {
-        type: 'street_name',
-        text: '1001  Leavenworth Street'
+        attribute_type: 'street_name',
+        text: '1001  Leavenworth Street',
+        index: 0
       },
       {
-        type: 'postal_code',
-        text: '94965'
+        attribute_type: 'postal_code',
+        text: '94965',
+        index: 0
       },
       {
-        type: 'phone_number',
+        attribute_type: 'phone_number',
         text: '555-522-8243'
       }
     ],
@@ -198,43 +218,47 @@ module.exports = [
   {
     attributes: [
       {
-        type: 'first_name',
+        attribute_type: 'first_name',
         text: 'Hank'
       },
       {
-        type: 'last_name',
+        attribute_type: 'last_name',
         text: 'Zakroff'
       },
       {
-        type: 'email',
+        attribute_type: 'email',
         text: 'hank-zakroff@mac.com'
       },
       {
-        type: 'source_type',
+        attribute_type: 'source_type',
         text: 'IOSAddressBook'
       },
       {
-        type: 'state',
-        text: 'CA'
+        attribute_type: 'state',
+        text: 'CA',
+        index: 0
       },
       {
-        type: 'city',
-        text: 'San Rafael'
+        attribute_type: 'city',
+        text: 'San Rafael',
+        index: 0
       },
       {
-        type: 'street_name',
-        text: '1741 Kearny Street'
+        attribute_type: 'street_name',
+        text: '1741 Kearny Street',
+        index: 0
       },
       {
-        type: 'postal_code',
-        text: '94901'
+        attribute_type: 'postal_code',
+        text: '94901',
+        index: 0
       },
       {
-        type: 'phone_number',
+        attribute_type: 'phone_number',
         text: '(555) 766-4823'
       },
       {
-        type: 'phone_number',
+        attribute_type: 'phone_number',
         text: '(707) 555-1854'
       }
     ],
@@ -243,39 +267,60 @@ module.exports = [
   {
     attributes: [
       {
-        type: 'phone_number',
+        attribute_type: 'phone_number',
         text: '555-610-6679'
       },
       {
-        type: 'birthday',
+        attribute_type: 'birthday',
         date: 897868800
       },
       {
-        type: 'source_type',
+        attribute_type: 'source_type',
         text: 'IOSAddressBook'
       },
       {
-        type: 'state',
-        text: 'CA'
+        attribute_type: 'first_name',
+        text: 'David'
+      }
+    ],
+    ios_address_book_id: 'E94CD15C-7964-4A9B-8AC4-10D7CFB791FD'
+  },
+  {
+    attributes: [
+      {
+        attribute_type: 'phone_number',
+        text: '555-610-6679'
       },
       {
-        type: 'city',
-        text: 'Tiburon'
+        attribute_type: 'source_type',
+        text: 'IOSAddressBook'
       },
       {
-        type: 'street_name',
-        text: '1747 Steuart Street'
+        attribute_type: 'state',
+        text: 'CA',
+        index: 0
       },
       {
-        type: 'postal_code',
-        text: '94920'
+        attribute_type: 'city',
+        text: 'Tiburon',
+        index: 0
       },
       {
-        type: 'first_name',
+        attribute_type: 'street_name',
+        text: '1747 Steuart Street',
+        index: 0
+      },
+      {
+        attribute_type: 'postal_code',
+        text: '94920',
+        index: 0
+      },
+      {
+        attribute_type: 'first_name',
         text: 'David'
       },
       {
-        type: 'last_name',
+        attribute_type: 'last_name',
         text: 'Taylor'
       }
     ],
@@ -284,36 +329,80 @@ module.exports = [
   {
     attributes: [
       {
-        type: 'email',
+        attribute_type: 'email',
         text: 'd@d.com'
       },
       {
-        type: 'source_type',
+        attribute_type: 'source_type',
         text: 'IOSAddressBook'
       },
       {
-        type: 'state',
-        text: '33333'
+        attribute_type: 'state',
+        text: '33333',
+        index: 0
       },
       {
-        type: 'city',
-        text: 'Union'
+        attribute_type: 'city',
+        text: 'Union',
+        index: 0
       },
       {
-        type: 'street_name',
-        text: '50 Park'
+        attribute_type: 'street_name',
+        text: '50 Park',
+        index: 0
       },
       {
-        type: 'postal_code',
-        text: ''
+        attribute_type: 'postal_code',
+        text: '',
+        index: 0
       },
       {
-        type: 'first_name',
+        attribute_type: 'first_name',
         text: 'Goat'
       },
       {
-        type: 'last_name',
+        attribute_type: 'last_name',
         text: 'Boy'
+      }
+    ],
+    ios_address_book_id: '52EAB13E-733F-4153-B019-9A83EE67171D:ABPerson'
+  }, {
+    attributes: [
+      {
+        attribute_type: 'email',
+        text: 'd@d.com'
+      },
+      {
+        attribute_type: 'source_type',
+        text: 'IOSAddressBook'
+      },
+      {
+        attribute_type: 'state',
+        text: '33333',
+        index: 0
+      },
+      {
+        attribute_type: 'city',
+        text: 'Union',
+        index: 0
+      },
+      {
+        attribute_type: 'street_name',
+        text: '50 Park',
+        index: 0
+      },
+      {
+        attribute_type: 'postal_code',
+        text: '',
+        index: 0
+      },
+      {
+        attribute_type: 'first_name',
+        text: 'Goat'
+      },
+      {
+        attribute_type: 'last_name',
+        text: 'Boy 2'
       }
     ],
     ios_address_book_id: '52EAB13E-733F-4153-B019-9A83EE67171D:ABPerson'
