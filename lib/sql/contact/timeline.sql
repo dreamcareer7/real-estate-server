@@ -1,10 +1,4 @@
-WITH cusers AS (
-  SELECT
-    user_id AS id
-  FROM
-    get_users_for_contacts(ARRAY[$1::uuid])
-),
-timeline_content AS (
+WITH timeline_content AS (
   (
     SELECT crm_tasks.id, due_date as "timestamp", 'crm_task' as "type"
     FROM crm_tasks
@@ -29,10 +23,7 @@ timeline_content AS (
     SELECT id, created_at as "timestamp", 'activity' as "type"
     FROM activities
     WHERE 
-      (
-        (reference = ANY(SELECT id FROM cusers) AND reference_type = 'User')
-        OR (reference = $1::uuid AND reference_type = 'Contact')
-      )
+      reference = $1::uuid AND reference_type = 'Contact'
       AND is_visible IS True
       AND deleted_at IS NULL
   )
