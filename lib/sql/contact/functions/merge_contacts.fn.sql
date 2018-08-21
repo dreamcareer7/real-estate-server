@@ -173,6 +173,92 @@ AS $$
   WHERE
     contact = ANY(children);
 
+  /* Delete all edges between parent and children */
+  DELETE FROM
+    contacts_duplicate_pairs
+  WHERE
+    (a = parent AND b = ANY(children))
+    OR (b = parent AND a = ANY(children))
+    OR (a = ANY(children) AND b = ANY(children));
+
+  /* Disband whole related clusters */
+  DELETE FROM
+    contacts_duplicate_clusters
+  WHERE
+    contact = ANY(children)
+    OR contact = parent;
+
+  /* Prune additional edges between the merging group and other cluster
+   * members to prevent duplicate edges after updating child references
+   * to parent, while maintaining old connections to the group.
+   */
+  WITH unidirectional AS (
+    (
+      SELECT
+        a, b
+      FROM
+        contacts_duplicate_pairs
+      WHERE
+        b = ANY(array_prepend(parent, children))
+    )
+    UNION ALL
+    (
+      SELECT
+        b AS a,
+        a AS b
+      FROM
+        contacts_duplicate_pairs
+      WHERE
+        a = ANY(array_prepend(parent, children))
+    )
+  ), pairs_to_delete AS (
+    (
+      SELECT * FROM unidirectional
+    )
+    EXCEPT 
+    (
+      SELECT DISTINCT ON (a)
+        a, b
+      FROM
+        unidirectional
+      ORDER BY
+        a, (b = parent) DESC
+    )
+  )
+  DELETE FROM
+    contacts_duplicate_pairs
+  WHERE
+    (a,b) IN (SELECT LEAST(a, b) AS a, GREATEST(a, b) AS b FROM pairs_to_delete);
+
+  /* Update left child references to parent */
+  UPDATE
+    contacts_duplicate_pairs
+  SET
+    a = LEAST(b, parent),
+    b = GREATEST(b, parent)
+  WHERE
+    a = ANY(children);
+
+  /* Update right child references to parent */
+  UPDATE
+    contacts_duplicate_pairs
+  SET
+    a = LEAST(a, parent),
+    b = GREATEST(a, parent)
+  WHERE
+    b = ANY(children);
+
+  /* Recalculate duplicate clusters for parent after reconnecting edges */
+  SELECT update_duplicate_clusters_for_contacts(ARRAY[parent]);
+
+  /* Set updated_at timestamp on parent */
+  UPDATE
+    contacts
+  SET
+    updated_at = NOW()
+  WHERE
+    id = parent;
+
   /* Delete child contacts */
   UPDATE
     contacts
