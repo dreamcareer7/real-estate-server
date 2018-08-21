@@ -3,6 +3,7 @@ SELECT deals.*,
   EXTRACT(EPOCH FROM created_at) AS created_at,
   EXTRACT(EPOCH FROM updated_at) AS updated_at,
   EXTRACT(EPOCH FROM deleted_at) AS deleted_at,
+  faired_at IS NULL as is_draft,
   (
     SELECT ARRAY_AGG(id ORDER BY created_at ASC) FROM deals_roles WHERE deal = deals.id AND deleted_at IS NULL
   ) AS roles,
