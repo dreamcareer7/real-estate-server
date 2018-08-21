@@ -188,7 +188,7 @@ SELECT deals.*,
   -- However, there's a neat complexity:
   -- If the deal was a draft at the time of submission,
   -- Then the real time it was submitted would be the time it went live.
-  -- That's why we have that LEAST statement.
+  -- That's why we have that GREATEST statement.
   -- Please note that if there's nothing submitted, then attention_requested_at
   -- Is expected to be NULL, hence that IS NULL check
   -- More explanation at server#1146
@@ -208,7 +208,7 @@ SELECT deals.*,
     )
     SELECT
       CASE WHEN (SELECT attention_requested_at FROM earliest_task) IS NULL THEN NULL
-      ELSE LEAST(
+      ELSE GREATEST(
         EXTRACT(EPOCH FROM (SELECT attention_requested_at FROM earliest_task)),
         EXTRACT(EPOCH FROM deals.faired_at)
       )
