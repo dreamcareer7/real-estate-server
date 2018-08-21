@@ -24,7 +24,7 @@ const run = async () => {
 
   await sql('BEGIN')
 
-  await sql('ALTER TABLE deals ADD title TEXT')
+  await sql('ALTER TABLE deals ADD COLUMN IF NOT EXISTS title TEXT')
 
   const res = await sql('SELECT id FROM deals')
   const ids = res.rows.map(r => r.id)
