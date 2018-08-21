@@ -139,6 +139,7 @@ const patchDraft = cb => {
   }
 
   results.deal.create.data.is_draft = false
+  delete results.deal.create.data.faired_at
 
   const expected_object = Object.assign({}, results.deal.create.data, patch)
 
