@@ -9,7 +9,7 @@ db.enableLogging(true)
 
 // For dev only
 app.use(function (req, res, next) {
-  res.header('Allow', '*')
+  res.header('Access-Control-Allow-Methods', '*')
   res.header('Access-Control-Allow-Origin', '*')
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, X-Rechat-Brand, X-Auth-Mode')
   next()
