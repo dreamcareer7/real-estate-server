@@ -2,7 +2,9 @@ const _ = require('lodash')
 const moment = require('moment')
 const ical = require('ical')
 
-let { contacts, deal } = require('./data/calendar')
+let { contacts } = require('./data/calendar')
+const { deal } = require('./data/calendar')
+
 let defs
 
 registerSuite('listing', ['getListing'])
