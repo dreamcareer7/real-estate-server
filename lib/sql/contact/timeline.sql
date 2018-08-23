@@ -20,6 +20,19 @@ WITH timeline_content AS (
   )
   UNION ALL
   (
+    SELECT
+      id,
+      created_at as "timestamp",
+      'contact_attribute' AS "type"
+    FROM
+      contacts_attributes
+    WHERE
+      deleted_at IS NULL
+      AND contact = $1::uuid
+      AND attribute_type = 'note'
+  )
+  UNION ALL
+  (
     SELECT id, created_at as "timestamp", 'activity' as "type"
     FROM activities
     WHERE 
