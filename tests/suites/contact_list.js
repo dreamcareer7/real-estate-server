@@ -1,10 +1,12 @@
+registerSuite('contact', ['brandCreateParent', 'brandCreate'])
+
 function createDefaultLists(cb) {
   return frisby.create('create default lists for user')
     .post('/jobs', {
       name: 'contact_lists',
       data: {
         type: 'create_default_lists',
-        user_id: results.authorize.token.data.id
+        brand_id: results.contact.brandCreate.data.id
       }
     })
     .after(cb)

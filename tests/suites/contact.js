@@ -668,7 +668,7 @@ function updateNextTouchOnManyContacts(cb) {
 }
 
 function getManyContactsList(cb) {
-  return frisby.create('create many contacts list')
+  return frisby.create('get many contacts list')
     .get('/contacts/lists/' + results.contact.createManyContactsList.data)
     .after(cb)
     .expectJSON({
