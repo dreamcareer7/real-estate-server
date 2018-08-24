@@ -10,16 +10,17 @@ const contacts = [{
   birthday: moment().add(1, 'day').unix()
 }]
 
-const deals = [{
+const deal = {
   deal_type: 'Buying',
   property_type: 'Resale',
-
   deal_context: {
-    full_address: '3030 Bryan Street Unit 308, 75204, Dallas, TX'
+    'option_period': {
+      value: moment().add(3, 'day').format()
+    }
   }
-}]
+}
 
 module.exports = {
   contacts,
-  deals,
+  deal,
 }

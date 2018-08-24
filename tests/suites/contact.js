@@ -742,9 +742,13 @@ const getTimeline = (cb) => {
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
+      data: [{
+        type: 'contact_attribute',
+        attribute_type: 'note'
+      }],
       info: {
-        count: 0,
-        total: 0
+        count: 1,
+        total: 1
       }
     })
 }

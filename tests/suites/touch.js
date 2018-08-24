@@ -133,6 +133,9 @@ function checkContactTimeline(cb) {
     .expectStatus(200)
     .expectJSON({
       data: [
+        {
+          type: 'contact_attribute'
+        },
         updated_touch
       ]
     })
