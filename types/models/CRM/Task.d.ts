@@ -5,7 +5,7 @@ interface ITypedRef {
 
 declare type TTaskStatus = "PENDING" | "DONE";
 declare type TTaskType = "Call" | "Message" | "Todo";
-declare type TAccessActions = "read" | "update" | "delete"
+declare type TAccessActions = "read" | "write"
 declare interface ITask extends ICrmAssociationsCategorized {
   id: UUID;
   title: string;
@@ -42,7 +42,7 @@ declare interface ITaskInput {
 declare interface ITaskFilters extends IAssociationFilters {
   q?: string;
   assignee?: UUID;
-  user?: UUID;
+  created_by?: UUID;
   brand?: UUID;
   status?: TTaskStatus;
   task_type?: TTaskType;

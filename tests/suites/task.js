@@ -484,14 +484,22 @@ const loginAsAnotherUser = (cb) => {
 
   return frisby.create('login as another user')
     .post('/oauth2/token', auth_params)
-    .after(cb)
+    .after((err, res, body) => {
+      const setup = frisby.globalSetup()
+
+      // results.authorize.token.data.id
+      setup.request.headers['Authorization'] = 'Bearer ' + body.access_token
+      setup.request.headers['X-RECHAT-BRAND'] = results.contact.brandCreateParent.data.id
+
+      frisby.globalSetup(setup)
+      cb(err, res, body)
+    })
     .expectStatus(200)
 }
 
 function anotherUserCantAccessCreatedTasks(cb) {
   return frisby.create('another user cannot access tasks for the original user')
     .get('/crm/tasks?associations[]=crm_task.associations')
-    .addHeader('Authorization', 'Bearer ' + results.task.loginAsAnotherUser.access_token)
     .after(cb)
     .expectStatus(200)
     .expectJSONLength('data', 0)
@@ -500,7 +508,6 @@ function anotherUserCantAccessCreatedTasks(cb) {
 function anotherUserCantAccessTaskById(cb) {
   return frisby.create('another user cannot access a single task by id')
     .get(`/crm/tasks/${results.task.create.data.id}?associations[]=crm_task.associations`)
-    .addHeader('Authorization', 'Bearer ' + results.task.loginAsAnotherUser.access_token)
     .after(cb)
     .expectStatus(404)
 }
@@ -508,7 +515,6 @@ function anotherUserCantAccessTaskById(cb) {
 function anotherUserCantFetchAssociations(cb) {
   return frisby.create('another user cannot fetch task associations')
     .get(`/crm/tasks/${results.task.create.data.id}/associations?associations[]=crm_association.listing&associations[]=crm_association.contact`)
-    .addHeader('Authorization', 'Bearer ' + results.task.loginAsAnotherUser.access_token)
     .after(cb)
     .expectStatus(404)
 }
@@ -518,7 +524,6 @@ function anotherUserCantEditCreatedTasks(cb) {
     .put('/crm/tasks/' + results.task.create.data.id, Object.assign({}, task, {
       status: 'PENDING'
     }))
-    .addHeader('Authorization', 'Bearer ' + results.task.loginAsAnotherUser.access_token)
     .after(cb)
     .expectStatus(404)
 }
@@ -531,7 +536,6 @@ function anotherUserCantAddContactAssociation(cb) {
 
   return frisby.create('another user cannot add a contact association')
     .post(`/crm/tasks/${results.task.create.data.id}/associations?associations[]=crm_association.contact`, data)
-    .addHeader('Authorization', 'Bearer ' + results.task.loginAsAnotherUser.access_token)
     .after(cb)
     .expectStatus(404)
 }
@@ -539,7 +543,6 @@ function anotherUserCantAddContactAssociation(cb) {
 function anotherUserCantRemoveCreatedTasks(cb) {
   return frisby.create('another user cannot remove tasks for the original user')
     .delete(`/crm/tasks/${results.task.create.data.id}`)
-    .addHeader('Authorization', 'Bearer ' + results.task.loginAsAnotherUser.access_token)
     .after(cb)
     .expectStatus(404)
 }
@@ -549,7 +552,6 @@ function anotherUserCantRemoveContactAssociation(cb) {
   const association_id = results.task.addContactAssociation.data.id
   return frisby.create('another user cannot delete the contact association from task')
     .delete(`/crm/tasks/${task_id}/associations/${association_id}?associations[]=crm_task.associations`)
-    .addHeader('Authorization', 'Bearer ' + results.task.loginAsAnotherUser.access_token)
     .after(cb)
     .expectStatus(404)
 }
@@ -570,7 +572,6 @@ function anotherUserCantAttachFile(cb) {
       json: false,
       form: true
     })
-    .addHeader('Authorization', 'Bearer ' + results.task.loginAsAnotherUser.access_token)
     .addHeader('content-type', 'multipart/form-data')
     .after(cb)
     .expectStatus(404)
@@ -583,7 +584,7 @@ function anotherUserCantFetchAttachments(cb) {
     .create('another user cannot get task attachmets')
     .get(`/crm/tasks/${task_id}/files`)
     .after(cb)
-    .expectStatus(200)
+    .expectStatus(404)
     .expectJSON({
       code: 'OK',
       data: [{
@@ -599,8 +600,15 @@ function anotherUserCantRemoveAttachment(cb) {
   return frisby
     .create('another user cannot remove a task attachment')
     .delete(`/crm/tasks/${task_id}/files/${file_id}`)
-    .addHeader('Authorization', 'Bearer ' + results.task.loginAsAnotherUser.access_token)
-    .after(cb)
+    .after((err, res, body) => {
+      const setup = frisby.globalSetup()
+
+      setup.request.headers['Authorization'] = 'Bearer ' + results.authorize.token.data.id
+      setup.request.headers['X-RECHAT-BRAND'] = results.contact.brandCreate.data.id
+
+      frisby.globalSetup(setup)
+      cb(err, res, body)
+    })
     .expectStatus(404)
 }
 
