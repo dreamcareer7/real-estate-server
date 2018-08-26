@@ -28,7 +28,7 @@ const run = async () => {
 
   await sql('BEGIN')
 
-  const res = await sql('SELECT csl.id, email FROM contact_search_lists AS csl JOIN users on users.id = csl."user"')
+  const res = await sql('SELECT csl.id, brands.name FROM contact_search_lists AS csl JOIN brands on brands.id = csl."brand"')
   const list_owners = _.keyBy(res.rows, 'id')
 
   const ids = res.rows.map(r => r.id)
