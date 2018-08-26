@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION update_duplicate_clusters_for_user(user_id uuid)
+CREATE OR REPLACE FUNCTION update_duplicate_clusters_for_brand(brand_id uuid)
 RETURNS int
 LANGUAGE plpgsql
 AS $$
@@ -8,7 +8,7 @@ AS $$
     b_cid int;
     duplicate_count int;
   BEGIN
-    FOR pair IN SELECT * FROM contacts_duplicate_pairs WHERE ignored_at IS NULL AND "user" = $1 LOOP
+    FOR pair IN SELECT * FROM contacts_duplicate_pairs WHERE ignored_at IS NULL AND brand = $1 LOOP
       SELECT cluster INTO a_cid FROM contacts_duplicate_clusters WHERE contact = pair.a LIMIT 1;
       SELECT cluster INTO b_cid FROM contacts_duplicate_clusters WHERE contact = pair.b LIMIT 1;
 
@@ -50,7 +50,7 @@ AS $$
       JOIN contacts
         ON id = contact
     WHERE
-      "user" = user_id;
+      brand = brand_id;
 
     RETURN duplicate_count;
   END;

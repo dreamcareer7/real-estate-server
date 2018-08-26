@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION update_contact_duplicate_vertices(user_id uuid, contact_ids uuid[])
+CREATE OR REPLACE FUNCTION update_contact_duplicate_vertices(brand_id uuid, contact_ids uuid[])
 RETURNS void
 LANGUAGE plpgsql
 AS $$

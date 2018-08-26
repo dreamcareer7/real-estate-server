@@ -771,6 +771,7 @@ const findDuplicates = (cb) => {
       data: {
         type: 'add_vertices',
         user_id: results.authorize.token.data.id,
+        brand_id: results.contact.brandCreate.data.id,
         contact_ids: [
           ...results.contact.createManyContacts.data,
           results.contact.create.data[0].id,
