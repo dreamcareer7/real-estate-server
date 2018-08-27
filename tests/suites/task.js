@@ -6,10 +6,11 @@ const FormData = require('form-data')
 const config = require('../../lib/config.js')
 const { task, fixed_reminder, relative_reminder } = require('./data/task')
 const anotherUser = require('./data/user')
+const brand = require('./data/brand.js')
 
-registerSuite('user', ['create', 'upgradeToAgentWithEmail', 'markAsNonShadow'])
 registerSuite('contact', ['brandCreateParent', 'brandCreate', 'getAttributeDefs', 'create', 'createManyContacts'])
 registerSuite('listing', ['by_mui'])
+
 
 function fixResponseTaskToInput(task) {
   if (task.contact)
@@ -487,9 +488,26 @@ const loginAsAnotherUser = (cb) => {
     .after((err, res, body) => {
       const setup = frisby.globalSetup()
 
-      // results.authorize.token.data.id
       setup.request.headers['Authorization'] = 'Bearer ' + body.access_token
-      setup.request.headers['X-RECHAT-BRAND'] = results.contact.brandCreateParent.data.id
+
+      frisby.globalSetup(setup)
+      cb(err, res, body)
+    })
+    .expectStatus(200)
+}
+
+function createPersonalBrandForNewUser(cb) {
+  const b = Object.assign({}, brand, {
+    name: 'Other Brand',
+    role: 'Admin'
+  }) // We're admin of this one
+
+  return frisby.create('create personal brand for the new user')
+    .post('/brands', b)
+    .after((err, res, body) => {
+      const setup = frisby.globalSetup()
+
+      setup.request.headers['X-RECHAT-BRAND'] = body.data.id
 
       frisby.globalSetup(setup)
       cb(err, res, body)
@@ -585,12 +603,6 @@ function anotherUserCantFetchAttachments(cb) {
     .get(`/crm/tasks/${task_id}/files`)
     .after(cb)
     .expectStatus(404)
-    .expectJSON({
-      code: 'OK',
-      data: [{
-        name: 'logo.png'
-      }]
-    })
 }
 
 function anotherUserCantRemoveAttachment(cb) {
@@ -603,7 +615,7 @@ function anotherUserCantRemoveAttachment(cb) {
     .after((err, res, body) => {
       const setup = frisby.globalSetup()
 
-      setup.request.headers['Authorization'] = 'Bearer ' + results.authorize.token.data.id
+      setup.request.headers['Authorization'] = 'Bearer ' + results.authorize.token.access_token
       setup.request.headers['X-RECHAT-BRAND'] = results.contact.brandCreate.data.id
 
       frisby.globalSetup(setup)
@@ -733,6 +745,7 @@ module.exports = {
   filterByContact,
   filterByInvalidDealId,
   loginAsAnotherUser,
+  createPersonalBrandForNewUser,
   anotherUserCantAccessCreatedTasks,
   anotherUserCantAccessTaskById,
   anotherUserCantFetchAssociations,
