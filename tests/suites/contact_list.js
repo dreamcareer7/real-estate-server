@@ -1,4 +1,4 @@
-registerSuite('contact', ['brandCreateParent', 'brandCreate'])
+registerSuite('contact', ['brandCreateParent', 'brandCreate', 'getAttributeDefs'])
 
 function createDefaultLists(cb) {
   return frisby.create('create default lists for user')
@@ -36,15 +36,17 @@ function checkDefaultLists(cb) {
 }
 
 function create (cb) {
+  const tag = results.contact.getAttributeDefs.data.find(a => a.name === 'tag')
+
   return frisby.create('create contact search list')
     .post('/contacts/lists', {
       filters: [
         {
-          'attribute_def': '24171fd0-7994-43fc-a1cb-adcb726429b5',
+          'attribute_def': tag.id,
           'value': 'cool'
         },
         {
-          'attribute_def': '24171fd0-7994-43fc-a1cb-adcb726429b5',
+          'attribute_def': tag.id,
           'value': 'great'
         }
       ],
