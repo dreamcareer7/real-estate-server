@@ -8,7 +8,6 @@ const config = require('../../lib/config.js')
 const { touch } = require('./data/touch')
 const anotherUser = require('./data/user')
 
-registerSuite('user', ['create', 'upgradeToAgentWithEmail', 'markAsNonShadow'])
 registerSuite('contact', ['brandCreateParent', 'brandCreate', 'getAttributeDefs', 'create', 'createManyContacts'])
 registerSuite('listing', ['by_mui'])
 
