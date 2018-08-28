@@ -102,6 +102,9 @@ Updates a single contact and its attributes. If attributes have `id`, they are u
 ### Deleting an attribute [DELETE /contacts/:id/attributes/:attribute_id]
 <!-- include(tests/contact/removeAttribute.md) -->
 
+### Import contacts with JSON data
+<!-- include(tests/contact/importManyContacts.md) -->
+
 ### Get all of the duplicate clusters [GET /contacts/:id/duplicates]
 <!-- include(tests/contact/getContactDuplicates.md) -->
 
@@ -140,9 +143,8 @@ global     | boolean | Whether the attribute is a global, system-defined attribu
 singular   | boolean | Whether there can only be one instance of the attribute or multiple attributes of the same type are allowed.
 show       | boolean | Whether the clients must show the attribute or not.
 editable   | boolean | Whether the clients mush allow editing the attribute or not.
-user       | uuid    | The user that owns the user-defined attribute.
-brand      | uuid    | **Unused** The brand that owns the user-defined attribute.
-created_by | uuid    |
+brand      | uuid    | The brand that owns the user-defined attribute.
+created_by | uuid    | The original creator of the contact
 created_at | date    | 
 updated_at | date    | 
 deleted_at | date    | 

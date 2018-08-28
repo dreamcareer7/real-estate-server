@@ -5,7 +5,9 @@ registerSuite('contact', [
   'brandCreate',
   'getAttributeDefs',
   'create',
-  'createManyContacts'
+  'createCompanyContact',
+  'createManyContacts',
+  'getContacts'
 ])
 
 function is_primary_address_field(a) {
@@ -25,7 +27,7 @@ function is_primary_address_field(a) {
 }
 
 const secondMCHasPrimaryAddress = cb => {
-  const contact_id = results.contact.createManyContacts.data[0]
+  const contact_id = results.contact.getContacts.data[2].id
 
   return frisby
     .create('second MC has a primary address')
@@ -57,8 +59,8 @@ const secondMCHasPrimaryAddress = cb => {
 }
 
 const subcontactAddressIsPrimaryIsIgnored = cb => {
-  const sub_contacts = _.take(results.contact.createManyContacts.data, 2)
-  const parent_id = results.contact.createManyContacts.data[2]
+  const sub_contacts = results.contact.getContacts.data.slice(2, 4).map(c => c.id)
+  const parent_id = results.contact.getContacts.data[4].id
 
   return frisby
     .create('primary status of address fields in subcontacts is ignored')
