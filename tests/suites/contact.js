@@ -554,6 +554,31 @@ const deleteManyContacts = cb => {
     .after(cb)
 }
 
+function deleteManyContactsListMembership(cb) {
+  return frisby.create('sync list membership status for many contacts')
+    .post('/jobs', {
+      name: 'contact_lists',
+      data: {
+        type: 'delete_contact_memberships',
+        contact_ids: results.contact.getContacts.data.slice(2).map(c => c.id)
+      }
+    })
+    .after(cb)
+    .expectStatus(200)
+}
+
+function checkIfManyContactsListIsEmpty(cb) {
+  return frisby.create('check if many contacts list members are actually gone')
+    .get('/contacts/lists/' + results.contact.createManyContactsList.data)
+    .after(cb)
+    .expectJSON({
+      data: {
+        member_count: 0
+      }
+    })
+    .expectStatus(200)
+}
+
 const deleteContactWorked = cb => {
   const before_count = results.contact.getContacts.info.count
 
@@ -590,7 +615,7 @@ const updateContact = cb => {
   delete phone.attribute_def
   delete email.attribute_def
 
-  stage.text = 'Customer'
+  stage.text = 'Warm List'
   phone.text = '+989028202679'
   phone.label = 'Home-Line1'
   phone.is_primary = true
@@ -617,6 +642,79 @@ const updateContact = cb => {
       cb(err, res, json)
     })
     .expectStatus(200)
+}
+
+function createWarmList(cb) {
+  return frisby.create('create warm list')
+    .post('/contacts/lists', {
+      filters: [
+        {
+          attribute_def: defs.stage.id,
+          value: 'Warm List'
+        }
+      ],
+      'name': 'Warm List',
+      touch_freq: 14
+    })
+    .after(cb)
+    .expectStatus(200)
+}
+
+function syncWarmListMembers(cb) {
+  return frisby.create('sync members of warm list')
+    .post('/jobs', {
+      name: 'contact_lists',
+      data: {
+        type: 'update_contact_memberships',
+        contact_ids: [results.contact.create.data[0].id]
+      }
+    })
+    .after(cb)
+    .expectStatus(200)
+}
+
+function checkContactListMemberships(cb) {
+  return frisby.create('check if contact is a member of warm list')
+    .get('/contacts/' + results.contact.create.data[0].id + '?associations[]=contact.lists')
+    .after(cb)
+    .expectJSON({
+      data: {
+        lists: [{
+          id: results.contact.createWarmList.data
+        }]
+      }
+    })
+}
+
+function deleteWarmList(cb) {
+  return frisby.create('delete warm list')
+    .delete('/contacts/lists/' + results.contact.createWarmList.data)
+    .after(cb)
+    .expectStatus(204)
+}
+
+function deleteWarmListMembers(cb) {
+  return frisby.create('delete members of warm list')
+    .post('/jobs', {
+      name: 'contact_lists',
+      data: {
+        type: 'delete_list_memberships',
+        list_id: results.contact.createWarmList.data
+      }
+    })
+    .after(cb)
+    .expectStatus(200)
+}
+
+function confirmNoContactListMembership(cb) {
+  return frisby.create('check if contact does not belong to warm list anymore')
+    .get('/contacts/' + results.contact.create.data[0].id + '?associations[]=contact.lists')
+    .after(cb)
+    .expectJSON({
+      data: {
+        lists: null
+      }
+    })
 }
 
 const updateManyContacts = cb => {
@@ -948,6 +1046,12 @@ module.exports = {
   searchByAddedEmail,
   areEmailsLowered,
   updateContact,
+  createWarmList,
+  syncWarmListMembers,
+  checkContactListMemberships,
+  deleteWarmList,
+  deleteWarmListMembers,
+  confirmNoContactListMembership,
   updateManyContacts,
   makeSureManyContactsTagIsAdded,
   createManyContactsList,
@@ -974,6 +1078,8 @@ module.exports = {
   bulkMerge,
   deleteContact,
   deleteManyContacts,
+  deleteManyContactsListMembership,
+  checkIfManyContactsListIsEmpty,
   deleteContactWorked,
   exportByFilter,
   sendEmails
