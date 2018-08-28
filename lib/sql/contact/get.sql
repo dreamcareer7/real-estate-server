@@ -29,3 +29,5 @@ FROM
   contacts
   JOIN unnest($1::uuid[]) WITH ORDINALITY t(cid, ord) ON contacts.id = t.cid
   LEFT JOIN lists USING (id)
+ORDER BY
+  t.ord
