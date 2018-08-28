@@ -122,15 +122,30 @@ const createCompanyContact = cb => {
     })
 }
 
-const createManyContacts = cb => {
+const importManyContacts = cb => {
   return frisby
-    .create('add many contacts')
-    .post('/contacts?get=false&relax=true&activity=false', {
+    .create('trigger import many contacts from json')
+    .post('/contacts/import.json', {
       contacts: manyContacts
     })
     .after(cb)
     .expectStatus(200)
-    .expectJSONLength('data', manyContacts.length)
+}
+
+const createManyContacts = cb => {
+  return frisby
+    .create('add many contacts')
+    .post('/jobs', {
+      name: 'contact_import',
+      data: {
+        type: 'import_json',
+        brand_id: results.contact.brandCreate.data.id,
+        user_id: results.authorize.token.data.id,
+        contacts: manyContacts
+      }
+    })
+    .after(cb)
+    .expectStatus(200)
 }
 
 const createEmptyContactFails = cb => {
@@ -146,8 +161,15 @@ const createEmptyContactFails = cb => {
 const getContacts = cb => {
   return frisby
     .create('get list of contacts and see if the ones we added is there')
-    .get('/contacts')
-    .after(cb)
+    .get('/contacts?order=created_at')
+    .after((err, res, json) => {
+      for (let i = 0; i < json.data.length - 1; i++) {
+        if (json.data[i].created_at > json.data[i + 1].created_at) {
+          throw 'Contacts are not sorted by created_at'
+        }
+      }
+      cb(err, res, json)
+    })
     .expectStatus(200)
     .expectJSONLength('data', manyContacts.length + 2)
 }
@@ -256,7 +278,7 @@ const stringSearch = cb => {
     .expectJSONLength('data', 1)
     .expectJSON({
       data: [{
-        id: results.contact.createManyContacts.data[0].id
+        id: results.contact.getContacts.data[2].id
       }]
     })
     .expectStatus(200)
@@ -272,7 +294,7 @@ const stringSearchInBody = cb => {
     .expectJSONLength('data', 1)
     .expectJSON({
       data: [{
-        id: results.contact.createManyContacts.data[0].id
+        id: results.contact.getContacts.data[2].id
       }]
     })
     .expectStatus(200)
@@ -601,8 +623,8 @@ const updateManyContacts = cb => {
   return frisby
     .create('add a tag attribute to many contacts')
     .patch('/contacts?get=true&associations[]=contact.sub_contacts', {
-      contacts: results.contact.createManyContacts.data.map(id => ({
-        id,
+      contacts: results.contact.getContacts.data.slice(2).map(c => ({
+        id: c.id,
         attributes: [{
           attribute_def: defs.tag.id,
           text: 'ManyContacts'
@@ -662,7 +684,7 @@ function updateNextTouchOnManyContacts(cb) {
       name: 'touches',
       data: {
         type: 'update_next_touch',
-        contacts: results.contact.createManyContacts.data
+        contacts: results.contact.getContacts.data.slice(2).map(c => c.id)
       }
     })
     .after(cb)
@@ -774,11 +796,7 @@ const findDuplicates = (cb) => {
         type: 'add_vertices',
         user_id: results.authorize.token.data.id,
         brand_id: results.contact.brandCreate.data.id,
-        contact_ids: [
-          ...results.contact.createManyContacts.data,
-          results.contact.create.data[0].id,
-          results.contact.createCompanyContact.data[0].id
-        ]
+        contact_ids: results.contact.getContacts.data.map(c => c.id)
       }
     })
     .after(cb)
@@ -811,8 +829,8 @@ const getContactDuplicates = cb => {
 }
 
 const mergeContacts = cb => {
-  const sub_contacts = _.take(results.contact.createManyContacts.data, 2)
-  const parent_id = results.contact.createManyContacts.data[2]
+  const sub_contacts = results.contact.getContacts.data.slice(2, 4).map(c => c.id)
+  const parent_id = results.contact.getContacts.data[4].id
 
   return frisby.create('merge contacts')
     .post(`/contacts/${parent_id}/merge?associations[]=contact.sub_contacts`, {
@@ -908,8 +926,9 @@ module.exports = {
   brandCreate,
   getAttributeDefs,
   create,
-  createManyContacts,
   createCompanyContact,
+  importManyContacts,
+  createManyContacts,
   createEmptyContactFails,
   getContacts,
   getSingleContact,
