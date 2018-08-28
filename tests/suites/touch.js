@@ -167,11 +167,11 @@ function addBulkContactAssociations(cb) {
   const data = [
     {
       association_type: 'contact',
-      contact: results.contact.createManyContacts.data[0]
+      contact: results.contact.getContacts.data[2].id
     },
     {
       association_type: 'contact',
-      contact: results.contact.createManyContacts.data[1]
+      contact: results.contact.getContacts.data[3].id
     }
   ]
 
@@ -191,14 +191,14 @@ function addBulkContactAssociations(cb) {
           association_type: 'contact',
           touch: results.touch.create.data.id,
           contact: {
-            id: results.contact.createManyContacts.data[0]
+            id: results.contact.getContacts.data[2].id
           }
         },
         {
           association_type: 'contact',
           touch: results.touch.create.data.id,
           contact: {
-            id: results.contact.createManyContacts.data[1]
+            id: results.contact.getContacts.data[3].id
           }
         }
       ]
@@ -242,7 +242,7 @@ function fetchAssociations(cb) {
           touch: results.touch.create.data.id,
           association_type: 'contact',
           contact: {
-            id: results.contact.createManyContacts.data[0],
+            id: results.contact.getContacts.data[2].id,
             type: 'contact',
             users: undefined,
             deals: undefined
@@ -253,7 +253,7 @@ function fetchAssociations(cb) {
           touch: results.touch.create.data.id,
           association_type: 'contact',
           contact: {
-            id: results.contact.createManyContacts.data[1],
+            id: results.contact.getContacts.data[3].id,
             type: 'contact',
             users: undefined,
             deals: undefined
@@ -795,8 +795,8 @@ function removeAssociationReturns404OnNotFound(cb) {
 function bulkRemoveAssociations(cb) {
   const touch_id = results.touch.create.data.id
   const ids = [
-    results.contact.createManyContacts.data[0],
-    results.contact.createManyContacts.data[1]
+    results.contact.getContacts.data[2].id,
+    results.contact.getContacts.data[3].id
   ]
 
   return frisby
