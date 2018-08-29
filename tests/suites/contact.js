@@ -615,7 +615,7 @@ const updateContact = cb => {
   delete phone.attribute_def
   delete email.attribute_def
 
-  stage.text = 'Warm List'
+  stage.text = 'General'
   phone.text = '+989028202679'
   phone.label = 'Home-Line1'
   phone.is_primary = true
@@ -644,24 +644,21 @@ const updateContact = cb => {
     .expectStatus(200)
 }
 
-function createWarmList(cb) {
-  return frisby.create('create warm list')
-    .post('/contacts/lists', {
-      filters: [
-        {
-          attribute_def: defs.stage.id,
-          value: 'Warm List'
-        }
-      ],
-      'name': 'Warm List',
-      touch_freq: 14
+function createStageLists(cb) {
+  return frisby.create('create stage lists')
+    .post('/jobs', {
+      name: 'contact_lists',
+      data: {
+        type: 'create_default_lists',
+        brand_id: results.contact.brandCreate.data.id
+      }
     })
     .after(cb)
     .expectStatus(200)
 }
 
-function syncWarmListMembers(cb) {
-  return frisby.create('sync members of warm list')
+function updateContactListMembership(cb) {
+  return frisby.create('sync list membership status of the contact')
     .post('/jobs', {
       name: 'contact_lists',
       data: {
@@ -674,13 +671,54 @@ function syncWarmListMembers(cb) {
 }
 
 function checkContactListMemberships(cb) {
+  return frisby.create('check if contact is a member of general list')
+    .get('/contacts/' + results.contact.create.data[0].id + '?associations[]=contact.lists')
+    .after(cb)
+    .expectJSON({
+      data: {
+        lists: [{
+          name: 'General'
+        }]
+      }
+    })
+}
+
+function moveContactToWarmListStage(cb) {
+  const stage = results.contact.addAttribute.data.sub_contacts[0].attributes.find(a => a.attribute_type === 'stage')
+
+  return frisby
+    .create('change contact stage to warm list')
+    .patch('/contacts/' + results.contact.create.data[0].id, {
+      attributes: [{
+        id: stage.id,
+        text: 'Warm List'
+      }]
+    })
+    .after(cb)
+    .expectStatus(200)
+}
+
+function updateContactListMembershipAgain(cb) {
+  return frisby.create('sync list membership status of the contact')
+    .post('/jobs', {
+      name: 'contact_lists',
+      data: {
+        type: 'update_contact_memberships',
+        contact_ids: [results.contact.create.data[0].id]
+      }
+    })
+    .after(cb)
+    .expectStatus(200)
+}
+
+function contactShouldBeInWarmList(cb) {
   return frisby.create('check if contact is a member of warm list')
     .get('/contacts/' + results.contact.create.data[0].id + '?associations[]=contact.lists')
     .after(cb)
     .expectJSON({
       data: {
         lists: [{
-          id: results.contact.createWarmList.data
+          name: 'Warm List'
         }]
       }
     })
@@ -688,7 +726,7 @@ function checkContactListMemberships(cb) {
 
 function deleteWarmList(cb) {
   return frisby.create('delete warm list')
-    .delete('/contacts/lists/' + results.contact.createWarmList.data)
+    .delete('/contacts/lists/' + results.contact.createStageLists[1])
     .after(cb)
     .expectStatus(204)
 }
@@ -699,7 +737,7 @@ function deleteWarmListMembers(cb) {
       name: 'contact_lists',
       data: {
         type: 'delete_list_memberships',
-        list_id: results.contact.createWarmList.data
+        list_id: results.contact.createStageLists[1]
       }
     })
     .after(cb)
@@ -1046,9 +1084,12 @@ module.exports = {
   searchByAddedEmail,
   areEmailsLowered,
   updateContact,
-  createWarmList,
-  syncWarmListMembers,
+  createStageLists,
+  updateContactListMembership,
   checkContactListMemberships,
+  moveContactToWarmListStage,
+  updateContactListMembershipAgain,
+  contactShouldBeInWarmList,
   deleteWarmList,
   deleteWarmListMembers,
   confirmNoContactListMembership,
