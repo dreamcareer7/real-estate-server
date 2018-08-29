@@ -3,12 +3,16 @@ const queues = Object.assign(
   require('./queues.js')
 )
 
-module.exports = app => {
+function handleJob(name, data, cb) {
+  queues[name].handler({type: name, data}, cb)
+}
+
+function installJobsRoute(app) {
   app.post('/jobs', (req, res) => {
     const name = req.body.name
     const data = req.body.data
 
-    queues[name].handler({data}, (err, result) => {
+    handleJob(name, data, (err, result) => {
       if (err) {
         console.log(err)
         return res.json(err)
@@ -16,4 +20,9 @@ module.exports = app => {
       res.json(result)
     })
   })
+}
+
+module.exports = {
+  handleJob,
+  installJobsRoute
 }

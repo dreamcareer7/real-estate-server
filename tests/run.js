@@ -13,6 +13,8 @@ const EventEmitter = require('events')
 const redis = require('redis')
 const AssertionError = require('assertion-error')
 
+const {handleJob, installJobsRoute} = require('./jobs')
+
 const redisClient = redis.createClient(config.redis)
 
 global.Run = new EventEmitter()
@@ -95,6 +97,8 @@ const database = (req, res, next) => {
   context.watchOver(res)
 
   let handled = false
+  const end = res.end
+
   context.on('error', (e) => {
     if (handled)
       return
@@ -123,9 +127,32 @@ const database = (req, res, next) => {
       res.json(e)
   })
 
+  res.end = function (data, encoding, callback) {
+    if (req.headers['x-handle-jobs'] === 'yes') {
+      async.whilst(() => {
+        const jobs = Context.get('jobs')
+        return jobs.length > 0
+      }, (cb) => {
+        const jobs = Context.get('jobs')
+        const job = jobs.shift()
+        handleJob(job.type, job.data, (err, result) => {
+          if (result) {
+            Context.log(JSON.stringify(result, null, 2))
+          }
+          cb(err, result)
+        })
+      }, () => {
+        Context.log('finished jobs')
+        end.call(res, data, encoding, callback)
+      })
+    }
+    else (
+      end.call(res, data, encoding, callback)
+    )
+  }
+
   if (connections[suite]) {
     const jobs = []
-    jobs.push = job => job.save()
 
     context.set({
       db: connections[suite],
@@ -208,7 +235,7 @@ const setupApp = cb => {
     })
   }
 
-  require('./jobs')(app)
+  installJobsRoute(app)
 }
 
 const steps = []
