@@ -14,7 +14,7 @@ registerSuite('contact', [
   'getAttributeDefs',
   'create',
   'createCompanyContact',
-  'createManyContacts',
+  'importManyContacts',
   'getContacts'
 ])
 registerSuite('listing', ['by_mui'])

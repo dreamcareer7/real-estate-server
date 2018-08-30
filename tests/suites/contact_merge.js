@@ -6,7 +6,7 @@ registerSuite('contact', [
   'getAttributeDefs',
   'create',
   'createCompanyContact',
-  'createManyContacts',
+  'importManyContacts',
   'getContacts'
 ])
 

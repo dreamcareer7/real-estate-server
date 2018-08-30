@@ -41,6 +41,7 @@ const brandCreate = (cb) => {
       const setup = frisby.globalSetup()
 
       setup.request.headers['X-RECHAT-BRAND'] = body.data.id
+      setup.request.headers['x-handle-jobs'] = 'yes'
 
       frisby.globalSetup(setup)
       cb(err, res, body)
@@ -127,22 +128,6 @@ const importManyContacts = cb => {
     .create('trigger import many contacts from json')
     .post('/contacts/import.json', {
       contacts: manyContacts
-    })
-    .after(cb)
-    .expectStatus(200)
-}
-
-const createManyContacts = cb => {
-  return frisby
-    .create('add many contacts')
-    .post('/jobs', {
-      name: 'contact_import',
-      data: {
-        type: 'import_json',
-        brand_id: results.contact.brandCreate.data.id,
-        user_id: results.authorize.token.data.id,
-        contacts: manyContacts
-      }
     })
     .after(cb)
     .expectStatus(200)
@@ -554,26 +539,13 @@ const deleteManyContacts = cb => {
     .after(cb)
 }
 
-function deleteManyContactsListMembership(cb) {
-  return frisby.create('sync list membership status for many contacts')
-    .post('/jobs', {
-      name: 'contact_lists',
-      data: {
-        type: 'delete_contact_memberships',
-        contact_ids: results.contact.getContacts.data.slice(2).map(c => c.id)
-      }
-    })
-    .after(cb)
-    .expectStatus(200)
-}
-
 function checkIfManyContactsListIsEmpty(cb) {
   return frisby.create('check if many contacts list members are actually gone')
     .get('/contacts/lists/' + results.contact.createManyContactsList.data)
     .after(cb)
     .expectJSON({
       data: {
-        member_count: 0
+        member_count: manyContacts.length - 2 - results.contact.getDuplicateClusters.data.reduce((s, cl) => s + cl.contacts.length, 0)
       }
     })
     .expectStatus(200)
@@ -657,19 +629,6 @@ function createStageLists(cb) {
     .expectStatus(200)
 }
 
-function updateContactListMembership(cb) {
-  return frisby.create('sync list membership status of the contact')
-    .post('/jobs', {
-      name: 'contact_lists',
-      data: {
-        type: 'update_contact_memberships',
-        contact_ids: [results.contact.create.data[0].id]
-      }
-    })
-    .after(cb)
-    .expectStatus(200)
-}
-
 function checkContactListMemberships(cb) {
   return frisby.create('check if contact is a member of general list')
     .get('/contacts/' + results.contact.create.data[0].id + '?associations[]=contact.lists')
@@ -698,19 +657,6 @@ function moveContactToWarmListStage(cb) {
     .expectStatus(200)
 }
 
-function updateContactListMembershipAgain(cb) {
-  return frisby.create('sync list membership status of the contact')
-    .post('/jobs', {
-      name: 'contact_lists',
-      data: {
-        type: 'update_contact_memberships',
-        contact_ids: [results.contact.create.data[0].id]
-      }
-    })
-    .after(cb)
-    .expectStatus(200)
-}
-
 function contactShouldBeInWarmList(cb) {
   return frisby.create('check if contact is a member of warm list')
     .get('/contacts/' + results.contact.create.data[0].id + '?associations[]=contact.lists')
@@ -729,19 +675,6 @@ function deleteWarmList(cb) {
     .delete('/contacts/lists/' + results.contact.createStageLists[1])
     .after(cb)
     .expectStatus(204)
-}
-
-function deleteWarmListMembers(cb) {
-  return frisby.create('delete members of warm list')
-    .post('/jobs', {
-      name: 'contact_lists',
-      data: {
-        type: 'delete_list_memberships',
-        list_id: results.contact.createStageLists[1]
-      }
-    })
-    .after(cb)
-    .expectStatus(200)
 }
 
 function confirmNoContactListMembership(cb) {
@@ -801,32 +734,6 @@ function createManyContactsList(cb) {
     .expectStatus(200)
 }
 
-function syncListMembers(cb) {
-  return frisby.create('sync members of many contacts list')
-    .post('/jobs', {
-      name: 'contact_lists',
-      data: {
-        type: 'update_list_memberships',
-        list_id: results.contact.createManyContactsList.data
-      }
-    })
-    .after(cb)
-    .expectStatus(200)
-}
-
-function updateNextTouchOnManyContacts(cb) {
-  return frisby.create('update next_touch on many contacts')
-    .post('/jobs', {
-      name: 'touches',
-      data: {
-        type: 'update_next_touch',
-        contacts: results.contact.getContacts.data.slice(2).map(c => c.id)
-      }
-    })
-    .after(cb)
-    .expectStatus(200)
-}
-
 function getManyContactsList(cb) {
   return frisby.create('get many contacts list')
     .get('/contacts/lists/' + results.contact.createManyContactsList.data)
@@ -842,7 +749,7 @@ function getManyContactsList(cb) {
 function getContactsInManyContactsList(cb) {
   return frisby
     .create('get list of contacts in many contacts list')
-    .get('/contacts?list=' + results.contact.createManyContactsList.data)
+    .get('/contacts?associations[]=contact.lists&list=' + results.contact.createManyContactsList.data)
     .after((err, res, json) => {
       if (!json.data.every(c => Boolean(c.next_touch)))
         throw 'Next touch is not set on ManyContacts list members'
@@ -869,23 +776,10 @@ function unsetTouchFreqOnManyContactsList(cb) {
     .expectStatus(200)
 }
 
-function updateNextTouchOnManyContactsListMembers(cb) {
-  return frisby.create('update next_touch on many contacts list members again')
-    .post('/jobs', {
-      name: 'touches',
-      data: {
-        type: 'update_next_touch_for_list_members',
-        list: results.contact.createManyContactsList.data
-      }
-    })
-    .after(cb)
-    .expectStatus(200)
-}
-
 function checkIfNextTouchIsNull(cb) {
   return frisby
     .create('check if next_touch is cleared on many contacts')
-    .get('/contacts?list=' + results.contact.createManyContactsList.data)
+    .get('/contacts?associations[]=contact.lists&list=' + results.contact.createManyContactsList.data)
     .after((err, res, json) => {
       if (json.data.some(c => Boolean(c.next_touch)))
         throw 'Next touch is not null on ManyContacts list members'
@@ -922,21 +816,6 @@ const getAllTags = (cb) => {
     .expectJSON({
       code: 'OK'
     })
-}
-
-const findDuplicates = (cb) => {
-  return frisby.create('find duplicate clusters')
-    .post('/jobs', {
-      name: 'contact_duplicates',
-      data: {
-        type: 'add_vertices',
-        user_id: results.authorize.token.data.id,
-        brand_id: results.contact.brandCreate.data.id,
-        contact_ids: results.contact.getContacts.data.map(c => c.id)
-      }
-    })
-    .after(cb)
-    .expectStatus(200)
 }
 
 const getDuplicateClusters = cb => {
@@ -982,9 +861,9 @@ const mergeContacts = cb => {
     })
 }
 
-const triggerBulkMerge = cb => {
+const bulkMerge = cb => {
   return frisby
-    .create('trigger merging two clusters of duplicate contacts')
+    .create('merge two clusters of duplicate contacts')
     .post('/contacts/merge', {
       clusters: results.contact.getDuplicateClusters.data.map(cl => {
         return {
@@ -1000,27 +879,7 @@ const triggerBulkMerge = cb => {
 const getJobStatus = cb => {
   return frisby
     .create('get status of a contact-related job')
-    .get('/contacts/jobs/' + results.contact.triggerBulkMerge.data.job_id)
-    .after(cb)
-    .expectStatus(200)
-}
-
-const bulkMerge = cb => {
-  return frisby
-    .create('trigger merging two clusters of duplicate contacts')
-    .post('/jobs', {
-      name: 'contact_duplicates',
-      data: {
-        type: 'merge',
-        user_id: results.authorize.token.data.id,
-        clusters: results.contact.getDuplicateClusters.data.map(cl => {
-          return {
-            parent: cl.contacts[0].id,
-            sub_contacts: cl.contacts.slice(1).map(c => c.id)
-          }
-        })
-      }
-    })
+    .get('/contacts/jobs/' + results.contact.bulkMerge.data.job_id)
     .after(cb)
     .expectStatus(200)
 }
@@ -1064,7 +923,6 @@ module.exports = {
   create,
   createCompanyContact,
   importManyContacts,
-  createManyContacts,
   createEmptyContactFails,
   getContacts,
   getSingleContact,
@@ -1085,23 +943,17 @@ module.exports = {
   areEmailsLowered,
   updateContact,
   createStageLists,
-  updateContactListMembership,
   checkContactListMemberships,
   moveContactToWarmListStage,
-  updateContactListMembershipAgain,
   contactShouldBeInWarmList,
   deleteWarmList,
-  deleteWarmListMembers,
   confirmNoContactListMembership,
   updateManyContacts,
   makeSureManyContactsTagIsAdded,
   createManyContactsList,
-  syncListMembers,
-  updateNextTouchOnManyContacts,
   getManyContactsList,
   getContactsInManyContactsList,
   unsetTouchFreqOnManyContactsList,
-  updateNextTouchOnManyContactsListMembers,
   checkIfNextTouchIsNull,
   getTimeline,
   getAllTags,
@@ -1110,16 +962,13 @@ module.exports = {
   searchByRemovedEmail,
   removeNonExistingAttribute,
   removeGibberishAttribute,
-  findDuplicates,
   getDuplicateClusters,
   getContactDuplicates,
   mergeContacts,
-  triggerBulkMerge,
-  getJobStatus,
   bulkMerge,
+  getJobStatus,
   deleteContact,
   deleteManyContacts,
-  deleteManyContactsListMembership,
   checkIfManyContactsListIsEmpty,
   deleteContactWorked,
   exportByFilter,

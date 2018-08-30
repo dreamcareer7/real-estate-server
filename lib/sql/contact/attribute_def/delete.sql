@@ -1,1 +1,1 @@
-SELECT * FROM delete_contact_attribute_def($1::uuid);
+SELECT delete_contact_attribute_def AS id FROM delete_contact_attribute_def($1::uuid);
