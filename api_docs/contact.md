@@ -115,7 +115,7 @@ Updates a single contact and its attributes. If attributes have `id`, they are u
 <!-- include(tests/contact/mergeContacts.md) -->
 
 ### Merge multiple clusters of duplicate contacts [POST /contacts/merge]
-<!-- include(tests/contact/triggerBulkMerge.md) -->
+<!-- include(tests/contact/bulkMerge.md) -->
 
 ### Get status of a contact related background job [GET /contacts/jobs/:job_id]
 <!-- include(tests/contact/getJobStatus.md) -->
