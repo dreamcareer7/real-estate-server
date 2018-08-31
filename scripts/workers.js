@@ -11,6 +11,7 @@ const Job = require('../lib/models/Job')
 const Metric = require('../lib/models/Metric')
 const Slack = require('../lib/models/Slack')
 
+const Context = require('../lib/models/Context')
 const Notification = require('../lib/models/Notification')
 const CrmTaskWorker = require('../lib/models/CRM/Task/worker')
 const attachContactEvents = require('../lib/models/Contact/events')
