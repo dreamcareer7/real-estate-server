@@ -2,27 +2,12 @@ CREATE OR REPLACE FUNCTION user_has_contact_with_another(uuid, uuid) RETURNS boo
   LANGUAGE SQL
   STABLE
 AS $$
-  WITH u AS (
-    SELECT email, phone_number FROM users WHERE id = $2
-  )
-  SELECT
-    (count(*) > 0)::boolean AS is_connected
-  FROM
-    contacts
-    JOIN contacts_attributes
-      ON contacts.id = contacts_attributes.contact
-  WHERE
-    (
-      (
-        attribute_type = 'email'
-        AND "text" = (SELECT email FROM u)
-      )
-      OR
-      (
-        attribute_type = 'phone_number'
-        AND "text" = (SELECT phone_number FROM u)
-      )
-    )
-    AND contacts."user" = $1
-    AND contacts.deleted_at IS NULL
+  SELECT EXISTS(
+    SELECT c.id
+    FROM contacts c
+    JOIN contacts_users cu
+      ON c.id = cu.contact
+    WHERE c."user" = '163db054-f5bb-11e5-bf57-f23c91b0d077'::uuid
+     AND cu."user" = 'fc1ae8e6-480f-11e8-8b24-0a95998482ac'::uuid
+  ) AS is_connected
 $$
