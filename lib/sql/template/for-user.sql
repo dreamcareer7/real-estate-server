@@ -7,4 +7,5 @@ WITH user_brands AS (
 
 SELECT id FROM templates
 WHERE brand IN(SELECT brand FROM user_brands)
+AND deleted_at IS NULL
 ORDER BY name ASC
