@@ -45,12 +45,13 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
   UNION ALL
   (
     SELECT
-      contacts_attributes.id,
+      ca.id,
       'contact_attribute' AS object_type,
-      attribute_type AS event_type,
+      COALESCE(cad.name, cad.label) AS event_type,
       (CASE
         WHEN attribute_type = 'birthday' THEN 'Birthday'
-        ELSE COALESCE(contacts_attributes.label, 'Important Date')
+        WHEN attribute_type = 'important_date' THEN COALESCE(ca.label, 'Important Date')
+        ELSE COALESCE(cad.name, cad.label)
       END) AS type_label,
       "date" AS "timestamp",
       True AS recurring,
@@ -63,10 +64,13 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       NULL::text AS status
     FROM
       contacts
-      JOIN contacts_attributes
-        ON contacts.id = contacts_attributes.contact
+      JOIN contacts_attributes AS ca
+        ON contacts.id = ca.contact
+      JOIN contacts_attribute_defs AS cad
+        ON ca.attribute_def = cad.id
     WHERE
       contacts.deleted_at IS NULL
-      AND contacts_attributes.deleted_at IS NULL
-      AND (attribute_type = 'important_date' OR attribute_type = 'birthday')
+      AND ca.deleted_at IS NULL
+      AND cad.deleted_at IS NULL
+      AND data_type = 'date'
   )

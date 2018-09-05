@@ -16,6 +16,7 @@ WITH lists AS (
 SELECT
   id,
   display_name,
+  sort_field,
   extract(epoch FROM last_touch) AS last_touch,
   extract(epoch FROM next_touch) AS next_touch,
   id AS summary,
@@ -29,3 +30,5 @@ FROM
   contacts
   JOIN unnest($1::uuid[]) WITH ORDINALITY t(cid, ord) ON contacts.id = t.cid
   LEFT JOIN lists USING (id)
+ORDER BY
+  t.ord

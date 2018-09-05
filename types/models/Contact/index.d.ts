@@ -14,6 +14,7 @@ declare interface IContactAttributeDefInput {
 declare interface IContactAttributeDef {
   id: UUID;
   name: string;
+  label: string;
   data_type: 'number' | 'text' | 'date';
   section?: string;
   global: boolean;
