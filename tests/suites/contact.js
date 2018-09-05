@@ -43,6 +43,7 @@ function create(cb) {
     .post('/contacts?get=true&relax=false&activity=true&associations[]=contact_attribute.attribute_def&associations[]=contact.sub_contacts&associations[]=contact.summary', {
       contacts: [contact]
     })
+    .addHeader('x-handle-jobs', 'yes')
     .after((err, res, json) => {
       for (const attr of contact.attributes) {
         if (!json.data[0].sub_contacts[0].attributes.find(a => a.attribute_def.id === attr.attribute_def))
@@ -124,7 +125,11 @@ const getSingleContact = cb => {
     .after(cb)
     .expectStatus(200)
     .expectJSON({
-      data: results.contact.create.data[0]
+      data: {
+        ...results.contact.create.data[0],
+        display_name: 'John Doe',
+        sort_field: 'Doe John'
+      }
     })
 }
 

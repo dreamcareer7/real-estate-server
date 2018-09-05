@@ -1,6 +1,7 @@
 require('../lib/models/index.js')()
 const config = require('../lib/config')
 const {
+  contacts,
   contact_import,
   contact_lists,
   contact_duplicates,
@@ -158,6 +159,11 @@ module.exports = {
   contact_import: {
     handler: contact_import,
     parallel: 4
+  },
+
+  contacts: {
+    handler: contacts,
+    parallel: 8
   },
 
   contact_lists: {

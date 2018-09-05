@@ -13,11 +13,14 @@ const EventEmitter = require('events')
 const redis = require('redis')
 const AssertionError = require('assertion-error')
 
+const Context = require('../lib/models/Context')
+
 const {handleJob, installJobsRoute} = require('./jobs')
 
 const redisClient = redis.createClient(config.redis)
 
-global.Run = new EventEmitter()
+const Run = new EventEmitter()
+global['Run'] = Run
 
 program
   .usage('[options] <suite> <suite>')
@@ -141,7 +144,11 @@ const database = (req, res, next) => {
           }
           cb(err, result)
         })
-      }, () => {
+      }, (err) => {
+        if (err) {
+          console.error(err)
+        }
+
         Context.log('finished jobs')
         end.call(res, data, encoding, callback)
       })
