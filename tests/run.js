@@ -7,7 +7,8 @@ const fs = require('fs')
 const EventEmitter = require('events')
 const program = require('commander')
 
-global.Run = new EventEmitter()
+const Run = new EventEmitter()
+global['Run'] = Run
 
 const config = require('../lib/config.js')
 const migrate = require('../lib/utils/migrate')
@@ -15,6 +16,8 @@ const fork = require('child_process').fork
 const async = require('async')
 const redis = require('redis')
 const AssertionError = require('assertion-error')
+
+const Context = require('../lib/models/Context')
 
 const {handleJob, installJobsRoute} = require('./jobs')
 
@@ -142,7 +145,11 @@ const database = (req, res, next) => {
           }
           cb(err, result)
         })
-      }, () => {
+      }, (err) => {
+        if (err) {
+          console.error(err)
+        }
+
         Context.log('finished jobs')
         end.call(res, data, encoding, callback)
       })
