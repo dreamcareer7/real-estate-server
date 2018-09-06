@@ -62,6 +62,11 @@ function checkRemovedCustomAttribute(cb) {
         throw `Deleted custom attribute ${def_id} still shows up on contact data.`
       cb(err, res, json)
     })
+    .expectJSON({
+      data: {
+        updated_by: results.authorize.token.data.id
+      }
+    })
     .expectStatus(200)
 }
 

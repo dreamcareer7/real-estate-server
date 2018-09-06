@@ -10,7 +10,8 @@ WITH u AS (
     has_label = $7,
     labels = $8::text[],
     enum_values = $9::text[],
-    updated_at = now()
+    updated_at = now(),
+    updated_by = $10::uuid
   WHERE
     id = $1
 )

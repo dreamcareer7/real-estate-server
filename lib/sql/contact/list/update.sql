@@ -4,6 +4,7 @@ UPDATE contact_search_lists SET
   name = $4,
   is_pinned = $5,
   touch_freq = $6,
-  updated_at = now()
+  updated_at = now(),
+  updated_by = $7::uuid
 WHERE id = $1
 RETURNING id

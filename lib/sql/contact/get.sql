@@ -25,6 +25,8 @@ SELECT
   extract(epoch FROM created_at) as created_at,
   extract(epoch FROM updated_at) as updated_at,
   extract(epoch FROM deleted_at) as deleted_at,
+  created_by,
+  updated_by,
   'contact' as type
 FROM
   contacts

@@ -4,6 +4,7 @@ SELECT
   EXTRACT(EPOCH FROM updated_at) AS updated_at,
   EXTRACT(EPOCH FROM deleted_at) AS deleted_at,
   created_by,
+  updated_by,
   "name",
   data_type,
   label,
