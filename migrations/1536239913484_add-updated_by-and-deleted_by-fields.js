@@ -11,20 +11,20 @@ const source = p => fs.readFileSync(sql_path(p), 'utf-8')
 const up = [
   'BEGIN',
   `ALTER TABLE crm_tasks
-    ADD COLUMN updated_by uuid REFERENCES users(id),
-    ADD COLUMN deleted_by uuid REFERENCES users(id)`,
+    ADD COLUMN IF NOT EXISTS updated_by uuid REFERENCES users(id),
+    ADD COLUMN IF NOT EXISTS deleted_by uuid REFERENCES users(id)`,
   `ALTER TABLE contacts
-    ADD COLUMN updated_by uuid REFERENCES users(id),
-    ADD COLUMN deleted_by uuid REFERENCES users(id)`,
+    ADD COLUMN IF NOT EXISTS updated_by uuid REFERENCES users(id),
+    ADD COLUMN IF NOT EXISTS deleted_by uuid REFERENCES users(id)`,
   `ALTER TABLE contacts_attributes
-    ADD COLUMN updated_by uuid REFERENCES users(id),
-    ADD COLUMN deleted_by uuid REFERENCES users(id)`,
+    ADD COLUMN IF NOT EXISTS updated_by uuid REFERENCES users(id),
+    ADD COLUMN IF NOT EXISTS deleted_by uuid REFERENCES users(id)`,
   `ALTER TABLE contacts_attribute_defs
-    ADD COLUMN updated_by uuid REFERENCES users(id),
-    ADD COLUMN deleted_by uuid REFERENCES users(id)`,
+    ADD COLUMN IF NOT EXISTS updated_by uuid REFERENCES users(id),
+    ADD COLUMN IF NOT EXISTS deleted_by uuid REFERENCES users(id)`,
   `ALTER TABLE contact_search_lists
-    ADD COLUMN updated_by uuid REFERENCES users(id),
-    ADD COLUMN deleted_by uuid REFERENCES users(id)`,
+    ADD COLUMN IF NOT EXISTS updated_by uuid REFERENCES users(id),
+    ADD COLUMN IF NOT EXISTS deleted_by uuid REFERENCES users(id)`,
   'DROP FUNCTION IF EXISTS delete_contact_attribute_def(uuid)',
   source('functions/delete_contact_attribute_def.fn.sql'),
   'DROP FUNCTION IF EXISTS delete_contact_attribute_defs(uuid[])',
