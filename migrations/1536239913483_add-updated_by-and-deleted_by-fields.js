@@ -5,7 +5,7 @@ const fs = require('fs')
 const async = require('async')
 const db = require('../lib/utils/db')
 
-const sql_path = p => path.resolve(__dirname, '../lib/sql/contact/functions', p)
+const sql_path = p => path.resolve(__dirname, '../lib/sql/contact', p)
 const source = p => fs.readFileSync(sql_path(p), 'utf-8')
 
 const up = [
@@ -26,9 +26,10 @@ const up = [
     ADD COLUMN updated_by uuid REFERENCES users(id),
     ADD COLUMN deleted_by uuid REFERENCES users(id)`,
   'DROP FUNCTION IF EXISTS delete_contact_attribute_def(uuid)',
-  source('delete_contact_attribute_def.fn.sql'),
+  source('functions/delete_contact_attribute_def.fn.sql'),
   'DROP FUNCTION IF EXISTS delete_contact_attribute_defs(uuid[])',
-  source('delete_contact_attribute_defs.fn.sql'),
+  source('functions/delete_contact_attribute_defs.fn.sql'),
+  source('views/contacts_attributes_with_name.view.sql'),
   'COMMIT'
 ]
 
