@@ -603,6 +603,10 @@ const updateContact = cb => {
   delete phone.updated_at
   delete email.updated_at
 
+  delete stage.updated_by
+  delete phone.updated_by
+  delete email.updated_by
+
   return frisby
     .create('update a contact')
     .patch('/contacts/' + results.contact.create.data[0].id + '?associations[]=contact.sub_contacts', {
@@ -614,6 +618,8 @@ const updateContact = cb => {
         _.find(json.data.sub_contacts[0].attributes, phone),
         _.find(json.data.sub_contacts[0].attributes, email)
       ]
+
+      console.log(json.data.sub_contacts[0].attributes.filter(a => a.attribute_type === 'stage'))
       if (!attrs.every(x => Boolean(x))) throw 'Attributes are not updated.'
 
       cb(err, res, json)
