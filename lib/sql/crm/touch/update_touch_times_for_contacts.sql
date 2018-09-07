@@ -10,7 +10,7 @@ WITH ult AS (
       FROM
         crm_associations
       WHERE
-        touch = $1::uuid
+        crm_task = $1::uuid
         AND deleted_at IS NULL
     ) AS cids,
     get_last_touch_for_contacts(cids.ids) as ltc
