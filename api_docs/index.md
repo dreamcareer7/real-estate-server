@@ -29,7 +29,6 @@ Welcome. Rechat's API is broken into several small components to be readable.
 
 ## CRM
 
-* [Touches](touch.html)
 * [Contacts](contact.html)
 * [Contact Lists](contact_list.html)
 * [Dashboard](dashboard.html)
