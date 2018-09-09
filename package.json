@@ -45,7 +45,6 @@
     "exif-parser": "^0.1.12",
     "express": "^4.15.4",
     "forever": "^0.15.3",
-    "formstack-web-api-node": "^0.1.0",
     "godaddy": "^0.2.1",
     "google-libphonenumber": "^3.1.3",
     "googlemaps": "^1.0.1",
