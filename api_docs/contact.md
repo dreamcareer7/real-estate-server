@@ -102,8 +102,14 @@ Updates a single contact and its attributes. If attributes have `id`, they are u
 ### Deleting an attribute [DELETE /contacts/:id/attributes/:attribute_id]
 <!-- include(tests/contact/removeAttribute.md) -->
 
-### Import contacts with JSON data
+### Upload a file for contacts [POST /contacts/upload]
+<!-- include(tests/contact_import/uploadCSV.md) -->
+
+### Import contacts with JSON data [POST /contacts/import.json]
 <!-- include(tests/contact/importManyContacts.md) -->
+
+### Import contacts from CSV [POST /contacts/import.csv]
+<!-- include(tests/contact_import/importCSV.md) -->
 
 ### Get all of the duplicate clusters [GET /contacts/:id/duplicates]
 <!-- include(tests/contact/getContactDuplicates.md) -->
