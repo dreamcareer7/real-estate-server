@@ -5,6 +5,7 @@ const db = require('../lib/utils/db')
 
 const up = [
   'BEGIN',
+  'DROP TABLE IF EXISTS contacts_summaries',
   `CREATE TABLE contacts_summaries (
     id uuid PRIMARY KEY,
     created_by uuid NOT NULL REFERENCES users (id),
