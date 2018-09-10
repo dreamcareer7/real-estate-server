@@ -16,6 +16,8 @@ WITH lists AS (
 SELECT
   id,
   display_name,
+  brand,
+  "user",
   sort_field,
   extract(epoch FROM last_touch) AS last_touch,
   extract(epoch FROM next_touch) AS next_touch,
