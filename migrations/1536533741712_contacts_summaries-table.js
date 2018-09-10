@@ -10,7 +10,8 @@ const up = [
     id uuid PRIMARY KEY,
     created_by uuid NOT NULL REFERENCES users (id),
     updated_by uuid REFERENCES users (id),
-    "user" uuid NOT NULL REFERENCES users (id),
+    "user" uuid REFERENCES users (id),
+    brand uuid REFERENCES brands (id),
     display_name text,
     sort_field text,
     search_field tsvector,
@@ -199,6 +200,7 @@ const up = [
     ct JOIN contacts AS c USING (id)`,
 
   'CREATE INDEX IF NOT EXISTS contacts_summaries_user_idx ON contacts_summaries USING hash ("user")',
+  'CREATE INDEX IF NOT EXISTS contacts_summaries_brand_idx ON contacts_summaries USING hash (brand)',
   'CREATE INDEX IF NOT EXISTS contacts_summaries_tag_idx ON contacts_summaries USING GIN (tag)',
   'CREATE INDEX IF NOT EXISTS contacts_summaries_source_type_idx ON contacts_summaries (source_type)',
   'CREATE INDEX IF NOT EXISTS contacts_summaries_stage_idx ON contacts_summaries (stage)',
