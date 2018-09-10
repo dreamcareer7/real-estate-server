@@ -250,7 +250,7 @@ const invertedFilter = cb => {
         value: 'New',
         invert: true
       }, {
-        attribute_def: defs.tag.id,
+        attribute_type: 'tag',
         value: 'foo',
         invert: true
       }]
