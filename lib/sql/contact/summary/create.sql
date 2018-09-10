@@ -3,6 +3,8 @@ INSERT INTO
   (
     id,
     created_by,
+    created_at,
+    updated_at,
     "user",
     display_name,
     search_field,
@@ -30,6 +32,8 @@ INSERT INTO
 SELECT
   c.id,
   c.created_by,
+  c.created_at,
+  c.updated_at,
   c."user",
   c.display_name,
   to_tsvector('english', c.searchable_field) AS search_field,

@@ -2,6 +2,7 @@ WITH cs AS (
   SELECT
     c.id,
     c.created_by,
+    c.updated_at,
     c."user",
     c.display_name,
     to_tsvector('english', c.searchable_field) AS search_field,
@@ -32,6 +33,7 @@ WITH cs AS (
 UPDATE
   contacts_summaries
 SET
+  updated_at = cs.updated_at,
   display_name = cs.display_name,
   search_field = cs.search_field,
   next_touch = cs.next_touch,

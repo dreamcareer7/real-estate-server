@@ -1,5 +1,7 @@
 CREATE TABLE contacts_summaries (
   id uuid PRIMARY KEY,
+  created_at timestamptz,
+  updated_at timestamptz,
   created_by uuid NOT NULL REFERENCES users (id),
   updated_by uuid REFERENCES users (id),
   "user" uuid NOT NULL REFERENCES users (id),
