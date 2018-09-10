@@ -669,6 +669,16 @@ function moveContactToWarmListStage(cb) {
     .expectStatus(200)
 }
 
+function patchOwner(cb) {
+  return frisby
+    .create('change contact stage to warm list')
+    .patch('/contacts/' + results.contact.create.data[0].id, {
+      user: results.authorize.token.data.id
+    })
+    .after(cb)
+    .expectStatus(200)
+}
+
 function contactShouldBeInWarmList(cb) {
   return frisby.create('check if contact is a member of warm list')
     .get('/contacts/' + results.contact.create.data[0].id + '?associations[]=contact.lists')
@@ -954,6 +964,7 @@ module.exports = {
   searchByAddedEmail,
   areEmailsLowered,
   updateContact,
+  patchOwner,
   createStageLists,
   checkContactListMemberships,
   moveContactToWarmListStage,
