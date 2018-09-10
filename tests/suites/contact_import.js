@@ -32,6 +32,7 @@ function uploadCSV(cb) {
 function importCSV(cb) {
   const data = {
     file_id: results.contact_import.uploadCSV.data.id,
+    owner: results.authorize.token.data.id,
     mappings
   }
   

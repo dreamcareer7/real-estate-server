@@ -13,6 +13,7 @@ registerSuite('user', ['upgradeToAgentWithEmail'])
 
 function prepareContactRequest(defs) {
   contacts = contacts.map(c => ({
+    user: results.authorize.token.data.id,
     attributes: Object.keys(c).map(a => ({
       attribute_def: defs[a].id,
       [defs[a].data_type]: c[a]

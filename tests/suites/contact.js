@@ -11,6 +11,7 @@ let defs
 const contactAttributes = _.groupBy(contact.attributes, 'attribute_type')
 
 function _fixContactAttributeDefs(contact) {
+  contact.user = results.authorize.token.data.id
   for (const attr of contact.attributes) {
     attr.attribute_def = defs[attr.attribute_type].id
     delete attr.attribute_type
@@ -128,6 +129,7 @@ const importManyContacts = cb => {
   return frisby
     .create('trigger import many contacts from json')
     .post('/contacts/import.json', {
+      owner: results.authorize.token.data.id,
       contacts: manyContacts
     })
     .after(cb)
@@ -619,7 +621,6 @@ const updateContact = cb => {
         _.find(json.data.sub_contacts[0].attributes, email)
       ]
 
-      console.log(json.data.sub_contacts[0].attributes.filter(a => a.attribute_type === 'stage'))
       if (!attrs.every(x => Boolean(x))) throw 'Attributes are not updated.'
 
       cb(err, res, json)
