@@ -33,6 +33,7 @@ WITH cs AS (
 UPDATE
   contacts_summaries
 SET
+  "user" = cs."user",
   updated_at = cs.updated_at,
   display_name = cs.display_name,
   search_field = cs.search_field,
