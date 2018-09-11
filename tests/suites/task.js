@@ -4,7 +4,7 @@ const uuid = require('node-uuid')
 const FormData = require('form-data')
 
 const config = require('../../lib/config.js')
-const { task, fixed_reminder, relative_reminder } = require('./data/task')
+const { task, fixed_reminder, relative_reminder, abbasUser } = require('./data/task')
 const anotherUser = require('./data/user')
 const brand = require('./data/brand.js')
 
@@ -20,10 +20,49 @@ registerSuite('contact', [
 registerSuite('listing', ['by_mui'])
 
 function fixResponseTaskToInput(task) {
+  if (!task.description) delete task.description
+
   if (task.contact) task.contact = task.contact.id
   if (task.deal) task.deal = task.deal.id
   if (task.listing) task.listing = task.listing.id
-  if (task.assignee) delete task.assignee
+  if (task.assignees) delete task.assignees
+}
+
+function registerNewUser(cb) {
+  return frisby
+    .create('register a new team member')
+    .post('/users', abbasUser)
+    .after(cb)
+    .expectStatus(201)
+}
+
+function addAbbasToBrand(cb) {
+  const brand_id = results.contact.brandCreate.data.id
+  const role_id = results.contact.brandCreate.data.roles[0].id
+
+  return frisby
+    .create('add Abbas to the team')
+    .post(`/brands/${brand_id}/roles/${role_id}/members`, {
+      users: [results.task.registerNewUser.data.id]
+    })
+    .after(cb)
+    .expectStatus(200)  
+}
+
+const getTokenForAbbas = cb => {
+  const auth_params = {
+    client_id: config.tests.client_id,
+    client_secret: config.tests.client_secret,
+    username: abbasUser.email,
+    password: abbasUser.password,
+    grant_type: 'password'
+  }
+
+  return frisby
+    .create('login as another user')
+    .post('/oauth2/token', auth_params)
+    .after(cb)
+    .expectStatus(200)
 }
 
 function create(cb) {
@@ -33,6 +72,9 @@ function create(cb) {
         association_type: 'listing',
         listing: results.listing.by_mui.data.id
       }
+    ],
+    assignees: [
+      results.task.registerNewUser.data.id
     ]
   })
 
@@ -42,12 +84,15 @@ function create(cb) {
         association_type: 'listing'
       }
     ],
+    assignees: [{
+      id: results.task.registerNewUser.data.id
+    }],
     listings: [results.listing.by_mui.data.id]
   })
 
   return frisby
     .create('create a task')
-    .post('/crm/tasks?associations[]=crm_task.associations', data)
+    .post('/crm/tasks?associations[]=crm_task.associations&associations[]=crm_task.assignees', data)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
@@ -109,6 +154,35 @@ function updateTask(cb) {
     .expectJSON({
       data: {
         status: 'DONE'
+      }
+    })
+}
+
+function updateAssignee(cb) {
+  const updated_task = {...results.task.updateTask.data}
+  fixResponseTaskToInput(updated_task)
+
+  const data = Object.assign({}, updated_task, {
+    assignees: [
+      results.authorize.token.data.id
+    ]
+  })
+
+  console.log(JSON.stringify(data, null, 2))
+
+  return frisby
+    .create('re-assign a task to someone else')
+    .put(
+      `/crm/tasks/${results.task.create.data.id}?associations[]=crm_task.assignees`,
+      data
+    )
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      data: {
+        assignees: [{
+          id: results.authorize.token.data.id
+        }]
       }
     })
 }
@@ -574,6 +648,47 @@ function filterByContact(cb) {
     .expectJSONLength('data', 1)
 }
 
+function filterByAssignee(cb) {
+  return frisby
+    .create('get tasks assigned to a user')
+    .get(
+      `/crm/tasks/search/?assignee=${
+        results.task.registerNewUser.data.id
+      }&start=0&limit=10&associations[]=crm_task.assignees`
+    )
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      data: [{
+        assignees: [{
+          id: results.authorize.token.data.id
+        }]
+      }],
+      info: {
+        total: 1
+      }
+    })
+    .expectJSONLength('data', 1)
+}
+
+function filterByNonExistingAssignee(cb) {
+  return frisby
+    .create('filter by non-existing assignee')
+    .get(
+      `/crm/tasks/search/?assignee=${
+        uuid.v4()
+      }&start=0&limit=10&associations[]=crm_task.assignees`
+    )
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      info: {
+        total: 0
+      }
+    })
+    .expectJSONLength('data', 0)
+}
+
 function filterByInvalidDealId(cb) {
   return frisby
     .create('filtering tasks fails with an invalid deal id')
@@ -863,11 +978,15 @@ function makeSureTaskIsDeleted(cb) {
 }
 
 module.exports = {
+  registerNewUser,
+  addAbbasToBrand,
+  getTokenForAbbas,
   create,
   createWithInvalidData,
   createWithInvalidAssociationId,
   getForUser,
   updateTask,
+  updateAssignee,
   addContactAssociation,
   addBulkContactAssociations,
   fetchAssociations,
@@ -889,6 +1008,8 @@ module.exports = {
   substringFilter,
   stringFilterReturnsEmptyWhenNoResults,
   filterByContact,
+  filterByAssignee,
+  filterByNonExistingAssignee,
   filterByInvalidDealId,
   loginAsAnotherUser,
   createPersonalBrandForNewUser,

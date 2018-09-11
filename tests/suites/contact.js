@@ -34,10 +34,10 @@ const brandCreateParent = (cb) => {
 const brandCreate = (cb) => {
   brand.parent = results.contact.brandCreateParent.data.id
   brand.name = 'Brand'
-  delete brand.role // We don't have a role in this one. But we should have access as we have access to the parent.
+  brand.role = 'Agent'
 
   return frisby.create('create a child brand')
-    .post('/brands', brand)
+    .post('/brands?associations[]=brand.roles', brand)
     .after((err, res, body) => {
       const setup = frisby.globalSetup()
 

@@ -8,7 +8,15 @@ SELECT
   EXTRACT(EPOCH FROM due_date) AS due_date,
   "status",
   task_type,
-  assignee,
+  (
+    SELECT
+      ARRAY_AGG("user" ORDER BY created_at)
+    FROM
+      crm_tasks_assignees
+    WHERE
+      crm_task = crm_tasks.id
+      AND deleted_at IS NULL
+  ) AS assignees,
   (
     SELECT
       ARRAY_AGG(id ORDER BY "created_at")
