@@ -12,7 +12,7 @@ const up = [
     created_by uuid NOT NULL REFERENCES users (id),
     created_at timestamptz NOT NULL DEFAULT now(),
     deleted_at timestamptz,
-    deleted_by REFERENCES users (id)
+    deleted_by uuid REFERENCES users (id)
   )`,
   `INSERT INTO crm_tasks_assignees
     (crm_task, "user", created_by, created_at)
