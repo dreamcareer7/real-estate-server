@@ -7,10 +7,6 @@ WITH tasks AS (
   ) as deal,
 
   (
-    SELECT formstack_id FROM forms WHERE id = tasks.form
-  ) as formstack_id, -- Fuck my life.
-
-  (
     attention_requested_at IS NOT NULL
   ) as attention_requested
 
