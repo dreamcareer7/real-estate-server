@@ -513,7 +513,7 @@ function getSingleTask(cb) {
     .get(
       `/crm/tasks/${
         results.task.create.data.id
-      }?associations[]=crm_task.associations`
+      }?associations[]=crm_task.associations&associations[]=crm_task.assignees`
     )
     .after(cb)
     .expectJSON({
