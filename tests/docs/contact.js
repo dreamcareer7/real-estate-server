@@ -43,22 +43,18 @@ module.exports = {
       owner: {
         type: 'string',
         required: false,
-        uuid: true
-      },
-      listing: {
-        type: 'string',
-        required: false,
-        uuid: true
+        uuid: true,
+        description: 'Owner of the contact'
       },
       updated_gte: {
         type: 'number',
         required: false,
-        description: 'Timestamp greater than or equal to'
+        description: 'Last updated after'
       },
       updated_lte: {
         type: 'number',
         required: false,
-        description: 'Timestamp less than or equal to'
+        description: 'Last updated before'
       },
       start: {
         type: 'number',
