@@ -123,8 +123,12 @@ declare interface IContactAttributeFilter {
 
 declare interface IContactFilterOptions {
   q?: string[];
+  created_by?: UUID;
+  updated_by?: UUID;
   updated_gte?: number;
   updated_lte?: number;
+  created_gte?: number;
+  created_lte?: number;
   ids?: UUID[];
   list?: UUID;
   user?: UUID;
