@@ -6,7 +6,7 @@ module.exports = {
       forced: false
     }
   },
-  'GET /crm/activities': {
+  'GET /contacts': {
     start: {
       type: 'number',
       required: false,
@@ -20,12 +20,19 @@ module.exports = {
     order: {
       type: 'string',
       required: false,
-      enum: ['timestamp', 'created_at', 'updated_at'],
-      example: '-timestamp',
+      enum: [
+        'display_name',
+        'sort_field',
+        'last_touch',
+        'next_touch',
+        'created_at',
+        'updated_at'
+      ],
+      example: 'sort_field',
       description: 'Put a minus sign before field name for descending order'
     }
   },
-  'GET /crm/activities/search': {
+  'POST /contacts/filter': {
     params: {
       q: {
         type: 'string',
@@ -33,50 +40,21 @@ module.exports = {
         description: 'String search in title and description',
         example: 'Hello World'
       },
-      assignee: {
+      owner: {
         type: 'string',
         required: false,
-        uuid: true
+        uuid: true,
+        description: 'Owner of the contact'
       },
-      contact: {
-        type: 'string',
-        required: false,
-        uuid: true
-      },
-      deal: {
-        type: 'string',
-        required: false,
-        uuid: true
-      },
-      listing: {
-        type: 'string',
-        required: false,
-        uuid: true
-      },
-      timestamp_gte: {
+      updated_gte: {
         type: 'number',
         required: false,
-        description: 'Timestamp greater than or equal to'
+        description: 'Last updated after'
       },
-      timestamp_lte: {
+      updated_lte: {
         type: 'number',
         required: false,
-        description: 'Timestamp less than or equal to'
-      },
-      activity_type: {
-        type: 'string',
-        required: false,
-        enum: [
-          'Closing',
-          'Inspection',
-          'Tour',
-          'Listing appointment',
-          'Follow up',
-          'Call',
-          'Message',
-          'Todo',
-          'Open House'
-        ]
+        description: 'Last updated before'
       },
       start: {
         type: 'number',
@@ -91,16 +69,17 @@ module.exports = {
       order: {
         type: 'string',
         required: false,
-        enum: ['timestamp', 'created_at', 'updated_at'],
-        example: '-timestamp',
+        enum: [
+          'display_name',
+          'sort_field',
+          'last_touch',
+          'next_touch',
+          'created_at',
+          'updated_at'
+        ],
+        example: 'sort_field',
         description: 'Put a minus sign before field name for descending order'
       }
-    }
-  },
-  'DELETE /crm/activities/:id/associations': {
-    ids: {
-      type: 'array',
-      required: true
     }
   }
 }
