@@ -11,15 +11,24 @@ Default value for `status` is `PENDING`
 
 | Field        | Type          | Required? | Notes                            |
 |--------------|---------------|:---------:|----------------------------------|
+| created_by   | User          |           | User who created the task        |
 | title        | String        | ✓         |                                  |
 | description  | String        |           |                                  |
 | due_date     | Timestamp     | ✓         | Should be UTC timestamp in ms.   |
-| assignee     | User UUID     |           | Unused. Set to the creator user. |
+| assignees    | User[]        |           | Users assigned to the task.      |
 | associations | Association[] |           | A related listing                |
 | status       | String Enum   |           | `PENDING`, `DONE`                |
 | task_type    | String Enum   | ✓         | `Call`, `Message`, `Todo`        |
 | reminders    | Reminder[]    |           |                                  |
 | type         | String        |           | `crm_task`                       |
+
+Task's available model associations are as follows:
+
+*  `crm_task.assignees`
+*  `crm_task.associations`
+*  `crm_task.created_by`
+*  `crm_task.files`
+*  `crm_task.reminders`
 
 #### Reminder
 
@@ -62,6 +71,9 @@ Reminders can be specified when creating the task.
 
 ### Update a task [PUT /crm/tasks/:id]
 <!-- include(tests/task/updateTask.md) -->
+
+### Re-assign a task [PUT /crm/tasks/:id]
+<!-- include(tests/task/updateAssignee.md) -->
 
 ### Update a task, add a fixed reminder [PUT /crm/tasks/:id]
 
