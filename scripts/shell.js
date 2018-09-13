@@ -45,4 +45,5 @@ function cleanup() {
   redis.quit()
   context.get('db').release()
   db.close()
+  process.exit()
 }
