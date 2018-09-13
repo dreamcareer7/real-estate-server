@@ -15,7 +15,7 @@ const context = Context.create({
 
 context.enter()
 
-db.conn(false, (err, client) => {
+db.conn((err, client) => {
   if (err) {
     process.exit(1)
   }
