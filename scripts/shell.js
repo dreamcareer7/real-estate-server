@@ -39,9 +39,7 @@ db.conn((err, client) => {
 
 
 function cleanup() {
-  queue.shutdown(500, (sig) => {
-    console.log( '\nKue shutdown:', sig || 'OK' )
-  })
+  queue.shutdown(500, () => {})
   redis.quit()
   context.get('db').release()
   db.close()
