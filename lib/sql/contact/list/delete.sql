@@ -1,4 +1,4 @@
 UPDATE contact_search_lists
 SET
   deleted_at = clock_timestamp()
-WHERE id = $1
+WHERE id = ANY($1::uuid[])
