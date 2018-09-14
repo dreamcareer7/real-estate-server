@@ -9,6 +9,12 @@ const sql = require('../lib/models/SupportBot/sql')
 const Context = require('../lib/models/Context/index')
 const redis = require('../lib/data-service/redis').createClient()
 
+const attachContactEvents = require('../lib/models/Contact/events')
+const attachTouchEventHandler = require('../lib/models/CRM/Touch/events')
+
+attachContactEvents()
+attachTouchEventHandler()
+
 const context = Context.create({
   id: '<rechat-shell>',
   created_at: process.hrtime()
@@ -33,6 +39,10 @@ db.conn((err, client) => {
   r.context.sql = sql
   r.context.context = context
   r.context.promisify = promisify
+  r.context.handleJobs = async () => { 
+    await promisify(Job.handle)(Context.get('jobs'))
+    Context.set({ jobs: [] })
+  }
 
   context.set({
     db: client,
