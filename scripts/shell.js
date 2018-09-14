@@ -5,6 +5,7 @@ const queue = require('../lib/utils/queue')
 require('../lib/models/index')()
 
 const db = require('../lib/utils/db')
+const sql = require('../lib/models/SupportBot/sql')
 const Context = require('../lib/models/Context/index')
 const redis = require('../lib/data-service/redis').createClient()
 
@@ -28,6 +29,8 @@ db.conn((err, client) => {
 
   r.on('exit', cleanup)
 
+  r.context.db = db
+  r.context.sql = sql
   r.context.context = context
   r.context.promisify = promisify
 

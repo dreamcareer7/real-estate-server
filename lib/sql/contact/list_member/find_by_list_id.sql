@@ -3,4 +3,4 @@ SELECT
 FROM
   contact_lists_members
 WHERE
-  list = $1::uuid
+  list = ANY($1::uuid[])
