@@ -7,29 +7,31 @@ module.exports = {
     }
   },
   'GET /contacts': {
-    start: {
-      type: 'number',
-      required: false,
-      default: 0
-    },
-    limit: {
-      type: 'number',
-      required: false,
-      default: 10
-    },
-    order: {
-      type: 'string',
-      required: false,
-      enum: [
-        'display_name',
-        'sort_field',
-        'last_touch',
-        'next_touch',
-        'created_at',
-        'updated_at'
-      ],
-      example: 'sort_field',
-      description: 'Put a minus sign before field name for descending order'
+    params: {
+      start: {
+        type: 'number',
+        required: false,
+        default: 0
+      },
+      limit: {
+        type: 'number',
+        required: false,
+        default: 10
+      },
+      order: {
+        type: 'string',
+        required: false,
+        enum: [
+          'display_name',
+          'sort_field',
+          'last_touch',
+          'next_touch',
+          'created_at',
+          'updated_at'
+        ],
+        example: 'sort_field',
+        description: 'Put a minus sign before field name for descending order'
+      }
     }
   },
   'POST /contacts/filter': {
