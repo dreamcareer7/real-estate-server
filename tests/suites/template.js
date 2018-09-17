@@ -17,7 +17,7 @@ const create = cb => {
 
 const getForUser = cb => {
   return frisby.create('get templates for a user')
-    .get('/templates')
+    .get('/templates?types[]=Listing')
     .after(cb)
     .expectStatus(200)
     .expectJSON({
