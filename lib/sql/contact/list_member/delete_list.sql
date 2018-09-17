@@ -3,7 +3,7 @@ UPDATE
 SET
   deleted_at = NOW()
 WHERE
-  list = $1::uuid
+  list = ANY($1::uuid[])
   AND deleted_at IS NULL
 RETURNING
   contact

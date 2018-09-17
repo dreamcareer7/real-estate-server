@@ -72,6 +72,7 @@ const createCompanyContact = cb => {
     .post('/contacts?get=true&relax=false&activity=true&associations[]=contact.summary', {
       contacts: [companyContact]
     })
+    .addHeader('x-handle-jobs', 'yes')
     .after(cb)
     .expectStatus(200)
     .expectJSONLength('data', 1)
@@ -92,6 +93,7 @@ const createManyContacts = cb => {
     .post('/contacts?get=false&relax=true&activity=false', {
       contacts: manyContacts
     })
+    .addHeader('x-handle-jobs', 'yes')
     .after(cb)
     .expectStatus(200)
     .expectJSONLength('data', manyContacts.length)
@@ -200,13 +202,13 @@ const filterContactsHavingTwoTags = cb => {
 const invertedFilter = cb => {
   return frisby
     .create('filter by contact attributes using invert option')
-    .post('/contacts/filter', {
+    .post('/contacts/fast-filter', {
       filter: [{
         attribute_def: defs.tag.id,
         value: 'New',
         invert: true
       }, {
-        attribute_def: defs.tag.id,
+        attribute_type: 'tag',
         value: 'foo',
         invert: true
       }]
@@ -354,6 +356,7 @@ const addEmail = cb => {
     .post(`/contacts/${results.contact.addPhoneNumber.data.id}/attributes?associations[]=contact.sub_contacts`, {
       attributes: [a]
     })
+    .addHeader('x-handle-jobs', 'yes')
     .after((err, res, json) => {
       if (_.find(json.data.sub_contacts[0].attributes, {
         text: a.text,
@@ -440,6 +443,7 @@ const removeEmail = cb => {
   return frisby
     .create('remove the latest added email')
     .after(cb)
+    .addHeader('x-handle-jobs', 'yes')
     .delete(
       `/contacts/${results.contact.addEmail.data.id}/attributes/${attr_id}`
     )
@@ -577,6 +581,7 @@ const updateManyContacts = cb => {
         }]
       }))
     })
+    .addHeader('x-handle-jobs', 'yes')
     .after(cb)
     .expectStatus(200)
 }
