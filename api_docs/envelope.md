@@ -60,17 +60,6 @@ In this example user has no Docusign authentication. Therefore will receicve a `
 
 <!-- include(tests/envelope/getDealEnvelopes.md) -->
 
-### Get a PDF file that includes all documents [GET /envelopes/:id.pdf]
-
-<!-- include(tests/envelope/getPdf.md) -->
-
-### Get a PDF file of a document [GET /envelopes/:id/:doc.pdf]
-
-`id` (uuid) id of the envelope
-`doc` (integer) `envelope_document.document_id` of the document
-
-<!-- include(tests/envelope/getDocumentPdf.md) -->
-
 ### Sign an Envelope [GET /envelopes/:id:/sign/:recipient]
 
 If the current user is among `envelope.recipients`, it means he should be able to sign it as well.
