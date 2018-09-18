@@ -5,8 +5,8 @@ const db = require('../lib/utils/db')
 
 const up = [
   'BEGIN',
-  `DROP INDEX notifications_subject_idx`,
-  `CREATE INDEX notifications_subject_idx ON notifications(subject)`,
+  'DROP INDEX notifications_subject_idx',
+  'CREATE INDEX notifications_subject_idx ON notifications(subject)',
   'COMMIT'
 ]
 
