@@ -43,6 +43,7 @@ AS $function$
         JOIN contact_ids ON contacts.id = contact_ids.id::uuid
       WHERE
         contacts_attributes.deleted_at IS NULL
+        AND contacts_attributes.is_partner IS False
         AND contacts.deleted_at IS NULL
         AND attribute_type = ANY(VALUES
           ('title'),
@@ -98,6 +99,7 @@ AS $function$
           contacts_attributes
         WHERE
           contacts_attributes.deleted_at IS NULL
+          AND is_partner IS False
           AND attribute_type = 'tag'
           AND contact = ANY(contact_ids)
         GROUP BY

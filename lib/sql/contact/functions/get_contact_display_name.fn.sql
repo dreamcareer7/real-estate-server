@@ -9,7 +9,8 @@ AS $function$
     FROM
       contacts_attributes
     WHERE
-      contact = contact_id
+      is_partner IS FALSE
+      AND contact = contact_id
       AND deleted_at IS NULL
     ORDER BY
       attribute_def,
