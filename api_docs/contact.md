@@ -138,22 +138,26 @@ An _Activity_ is an object, recording an event that either a specific user has d
 ## Overview
 A _ContactAttributeDef_ is an object defining every aspect of an attribute type. There a number of system defined attribute definitions, and users can create their own user-defined attribute types. System defined definitions are marked as `global`. Non-global attributes are commonly referred to as _Custom Attributes_.
 
-Field      | Type    | Description
------------|:-------:|----------------------------------------------------------------------------
-name       | string  | A name for the attribute def (e.g. email, phone_number, etc.) Used for global attributes.
-data_type  | string  | `text`, `date` or `number`.
-label      | string  | The form label for the attribute on clients
-section    | string  | The section on which the attribute should be displayed
-required   | boolean | Whether the attribute is mandatory
-global     | boolean | Whether the attribute is a global, system-defined attribute in contrast to user-defined ones.
-singular   | boolean | Whether there can only be one instance of the attribute or multiple attributes of the same type are allowed.
-show       | boolean | Whether the clients must show the attribute or not.
-editable   | boolean | Whether the clients mush allow editing the attribute or not.
-brand      | uuid    | The brand that owns the user-defined attribute.
-created_by | uuid    | The original creator of the contact
-created_at | date    | 
-updated_at | date    | 
-deleted_at | date    | 
+Field       | Type     | Description
+------------|:--------:|----------------------------------------------------------------------------
+name        | string   | A name for the attribute def (e.g. email, phone_number, etc.) Used for global attributes.
+data_type   | string   | `text`, `date` or `number`.
+label       | string   | The form label for the attribute on clients
+section     | string   | The section on which the attribute should be displayed
+required    | boolean  | Whether the attribute is mandatory
+global      | boolean  | Whether the attribute is a global, system-defined attribute in contrast to user-defined ones.
+singular    | boolean  | Whether there can only be one instance of the attribute or multiple attributes of the same type are allowed.
+show        | boolean  | Whether the clients must show the attribute or not.
+editable    | boolean  | Whether the clients must allow editing the attribute or not.
+searchable  | boolean  | Whether the attribute contributes to full-text index of the contact or not. Only for textual attributes
+has_label   | boolean  | Whether the clients must display a label UI for the attribute or not.
+enum_values | string[] | Whether the clients must display a dropdown for the value of attribute or not.
+labels      | string[] | Whether the clients must display a dropdown as label UI component.
+brand       | uuid     | The brand that owns the user-defined attribute.
+created_by  | uuid     | The original creator of the contact
+created_at  | date     | 
+updated_at  | date     | 
+deleted_at  | date     | 
 
 ### Global Attribute types
 
