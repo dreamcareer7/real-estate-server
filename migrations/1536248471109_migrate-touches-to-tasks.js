@@ -37,6 +37,7 @@ const up = [
   WHERE
     deleted_at IS NULL
     AND touches.description IS NOT NULL`,
+  'DELETE FROM crm_associations WHERE touch = ANY(SELECT * FROM touches WHERE deleted_at IS NOT NULL)',
   `UPDATE 
     crm_associations
   SET
