@@ -5,6 +5,8 @@ const db = require('../lib/utils/db')
 
 const up = [
   'BEGIN',
+  'DELETE FROM crm_associations WHERE touch = ANY(select id from touches WHERE description IS NULL)',
+  'delete from touches where description is null',
   `INSERT INTO
     crm_tasks
       (
@@ -33,7 +35,9 @@ const up = [
   FROM
     touches
   WHERE
-    deleted_at IS NULL`,
+    deleted_at IS NULL
+    AND touches.description IS NOT NULL`,
+  'DELETE FROM crm_associations WHERE touch = ANY(SELECT id FROM touches WHERE deleted_at IS NOT NULL)',
   `UPDATE 
     crm_associations
   SET
@@ -47,11 +51,6 @@ const up = [
 ]
 
 const down = [
-  'BEGIN',
-  'UNDO SOMETHING',
-  'UNDO SOMETHING ELSE',
-  'UNDO EVEN MORE',
-  'COMMIT'
 ]
 
 const runAll = (sqls, next) => {
