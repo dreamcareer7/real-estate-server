@@ -68,5 +68,5 @@ const getDb = async () => {
   })
 }
 
-exports.up = cb => run().nodeify(cb)
+exports.up = cb => cb() // run().nodeify(cb)
 exports.down = cb => cb()
