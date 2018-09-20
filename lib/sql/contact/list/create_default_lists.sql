@@ -1,1 +1,1 @@
-SELECT * FROM create_stage_lists_for_user($1::uuid)
+SELECT id FROM create_stage_lists_for_brand($1::uuid)

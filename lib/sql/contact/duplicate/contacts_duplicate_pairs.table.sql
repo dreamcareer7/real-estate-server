@@ -1,7 +1,7 @@
 CREATE TABLE contacts_duplicate_pairs (
   a uuid NOT NULL,
   b uuid NOT NULL,
-  "user" uuid NOT NULL,
+  brand uuid NOT NULL,
   created_at timestamptz NOT NULL DEFAULT now(),
   ignored_at timestamptz,
   PRIMARY KEY (a, b),
@@ -10,4 +10,4 @@ CREATE TABLE contacts_duplicate_pairs (
 
 CREATE INDEX contacts_duplicate_pairs_left_idx ON contacts_duplicate_pairs (a);
 CREATE INDEX contacts_duplicate_pairs_right_idx ON contacts_duplicate_pairs (b);
-CREATE INDEX contacts_duplicate_pairs_user_idx ON contacts_duplicate_pairs ("user");
+CREATE INDEX contacts_duplicate_pairs_brand_idx ON contacts_duplicate_pairs (brand);

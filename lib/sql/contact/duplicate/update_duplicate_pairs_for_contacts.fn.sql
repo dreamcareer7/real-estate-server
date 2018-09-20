@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION update_duplicate_pairs_for_contacts(user_id uuid, contact_ids uuid[])
+CREATE OR REPLACE FUNCTION update_duplicate_pairs_for_contacts(brand_id uuid, contact_ids uuid[])
 RETURNS void
 LANGUAGE SQL
 AS $$
@@ -28,7 +28,7 @@ AS $$
       contacts.deleted_at IS NULL
       AND ca.deleted_at IS NULL
       AND text IN (SELECT text FROM attrs)
-      AND "user" = $1::uuid
+      AND brand = $1::uuid
     GROUP BY
       text
   ), duplicate_clusters AS (
@@ -42,7 +42,7 @@ AS $$
   INSERT INTO
     contacts_duplicate_pairs
   SELECT DISTINCT
-    a, b, user_id AS "user"
+    a, b, brand_id AS brand
   FROM
     duplicate_clusters,
     compute_combinations(ids)

@@ -5,7 +5,7 @@ interface ITypedRef {
 
 declare type TTaskStatus = "PENDING" | "DONE";
 declare type TTaskType = "Call" | "Message" | "Todo";
-declare type TAccessActions = "read" | "update" | "delete"
+declare type TAccessActions = "read" | "write"
 declare interface ITask extends ICrmAssociationsCategorized {
   id: UUID;
   title: string;
@@ -15,7 +15,7 @@ declare interface ITask extends ICrmAssociationsCategorized {
   task_type: TTaskType;
 
   notification?: UUID;
-  assignee: UUID;
+  assignees: UUID[];
   brand: UUID;
   created_by: UUID;
 
@@ -34,13 +34,15 @@ declare interface ITaskInput {
 
   reminders: IReminderInput[];
   associations?: ICrmAssociationInput[];
-
-  assignee: UUID;
+  assignees?: UUID[];
 }
 
 declare interface ITaskFilters extends IAssociationFilters {
   q?: string;
   assignee?: UUID;
+  created_by?: UUID;
+  updated_by?: UUID;
+  brand?: UUID;
   status?: TTaskStatus;
   task_type?: TTaskType;
   due_gte?: number;
@@ -51,4 +53,10 @@ declare interface IUnreadTaskNotification {
   notification: UUID;
   task: ITask;
   user: IUser;
+}
+
+declare interface ITaskAssigneeInput {
+  crm_task: UUID;
+  user: UUID;
+  created_by: UUID;
 }

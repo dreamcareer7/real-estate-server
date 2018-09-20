@@ -42,6 +42,7 @@ declare interface IContactBase {
 
 declare interface IContactInput extends IContactBase {
   id?: UUID;
+  user: UUID;
   attributes: IContactAttributeInput[];
 }
 
@@ -64,7 +65,7 @@ declare interface IContactAttribute {
   deleted_at?: number;
 
   created_by: UUID;
-  user: UUID;
+  brand: UUID;
   contact: UUID;
 
   attribute_def: UUID;
@@ -85,7 +86,6 @@ declare interface IContactAttributeInput {
 
   id?: UUID;
   created_by?: UUID;
-  user?: UUID;
   contact?: UUID;
 
   text?: string;
@@ -123,10 +123,15 @@ declare interface IContactAttributeFilter {
 
 declare interface IContactFilterOptions {
   q?: string[];
+  created_by?: UUID;
+  updated_by?: UUID;
   updated_gte?: number;
   updated_lte?: number;
+  created_gte?: number;
+  created_lte?: number;
   ids?: UUID[];
   list?: UUID;
+  user?: UUID;
 }
 
 declare interface ICSVImporterMappedField {

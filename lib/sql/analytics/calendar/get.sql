@@ -6,17 +6,8 @@ SELECT
 FROM
   analytics.calendar
 WHERE
-  (
-    (
-      "user" IS NULL
-      AND "brand" = $2::uuid
-    )
-    OR
-    (
-      brand IS NULL
-      AND "user" = $1::uuid
-    )
-  )
+  brand = $2::uuid
+  AND CASE WHEN $1::uuid[] IS NULL THEN TRUE ELSE users && $1::uuid[] END
   AND (CASE
     WHEN "recurring" IS True THEN
       range_contains_birthday(to_timestamp($3), to_timestamp($4), "timestamp")

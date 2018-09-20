@@ -16,6 +16,8 @@ WITH lists AS (
 SELECT
   id,
   display_name,
+  brand,
+  "user",
   sort_field,
   extract(epoch FROM last_touch) AS last_touch,
   extract(epoch FROM next_touch) AS next_touch,
@@ -25,6 +27,8 @@ SELECT
   extract(epoch FROM created_at) as created_at,
   extract(epoch FROM updated_at) as updated_at,
   extract(epoch FROM deleted_at) as deleted_at,
+  created_by,
+  updated_by,
   'contact' as type
 FROM
   contacts

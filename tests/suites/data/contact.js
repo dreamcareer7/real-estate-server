@@ -37,10 +37,6 @@ const contact = {
       text: 'foo'
     },
     {
-      attribute_type: 'stage',
-      text: 'Contact'
-    },
-    {
       attribute_type: 'birthday',
       date: 1000000
     },

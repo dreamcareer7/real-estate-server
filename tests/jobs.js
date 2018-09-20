@@ -4,6 +4,7 @@ const queues = Object.assign(
 )
 
 function handleJob(name, data, cb) {
+  console.log('Handling job', name)
   queues[name].handler({type: name, data}, cb)
 }
 

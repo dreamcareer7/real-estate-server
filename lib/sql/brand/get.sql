@@ -15,7 +15,18 @@ SELECT brands.*,
 
   (
     SELECT ARRAY_AGG(id) FROM brands_roles WHERE brand = brands.id AND deleted_at IS NULL
-  ) as roles
+  ) as roles,
+
+  (
+    SELECT
+      count(bu.id)
+    FROM
+      brands_users AS bu
+      JOIN brands_roles AS br
+        ON br.id = bu.role
+    WHERE
+      br.brand = brands.id
+  )::INT as member_count
 
 FROM brands
 JOIN unnest($1::uuid[]) WITH ORDINALITY t(bid, ord) ON brands.id = bid

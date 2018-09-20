@@ -1,4 +1,4 @@
-registerSuite('contact', ['getAttributeDefs', 'create', 'createManyContacts'])
+registerSuite('contact', ['brandCreateParent', 'brandCreate', 'getAttributeDefs', 'create'])
 
 function create(cb) {
   const def = {
@@ -61,6 +61,11 @@ function checkRemovedCustomAttribute(cb) {
       if (json.data.sub_contacts[0].attributes.find(a => a.attribute_def.id === def_id))
         throw `Deleted custom attribute ${def_id} still shows up on contact data.`
       cb(err, res, json)
+    })
+    .expectJSON({
+      data: {
+        updated_by: results.authorize.token.data.id
+      }
     })
     .expectStatus(200)
 }
