@@ -33,7 +33,8 @@ const up = [
   FROM
     touches
   WHERE
-    deleted_at IS NULL`,
+    deleted_at IS NULL
+    AND touches.description IS NOT NULL`,
   `UPDATE 
     crm_associations
   SET
