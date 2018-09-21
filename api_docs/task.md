@@ -27,6 +27,7 @@ Task's available model associations are as follows:
 *  `crm_task.assignees`
 *  `crm_task.associations`
 *  `crm_task.created_by`
+*  `crm_task.updated_by`
 *  `crm_task.files`
 *  `crm_task.reminders`
 
