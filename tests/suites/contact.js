@@ -63,6 +63,7 @@ function getAttributeDefs(cb) {
       _fixContactAttributeDefs(contact)
       _fixContactAttributeDefs(companyContact)
       for (const c of manyContacts) {
+        c.user = results.authorize.token.data.id
         _fixContactAttributeDefs(c)
       }
 
@@ -129,7 +130,6 @@ const importManyContacts = cb => {
   return frisby
     .create('trigger import many contacts from json')
     .post('/contacts/import.json', {
-      owner: results.authorize.token.data.id,
       contacts: manyContacts
     })
     .after(cb)

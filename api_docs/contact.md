@@ -9,6 +9,10 @@ A _Contact_ is a simple and small object that contains an actual _Subcontact_. T
 Field          | Type         | Description
 ---------------|:------------:|------------------------------------------------------------------------
 id             | uuid         | Id of the parent subcontact
+user           | User         | Owner of the contact. association: `contact.user`
+created_by     | User         | User who created this contact
+updated_by     | User         | User who created this contact
+brand          | Brand        | **Unused** Owner of the contact, if it's a brand.
 sub_contacts   | Subcontact[] | Array of a single sub-contact. Array is kept for legacy reasons.
 created_at     | number       |
 updated_at     | number       |
@@ -30,14 +34,11 @@ A _Subcontact_ is the actual contact data object containing `attributes`.
 Field                   | Type   | Description
 ------------------------|:------:|------------------------------------------------------------------
 id                      | uuid   | 
-user                    | uuid   | Owner of the contact
 created_at              | number | 
 updated_at              | number | 
 deleted_at              | number | 
 ios_address_book_id     | string | Address book id of this contact on iOS device
 android_address_book_id | string | Address book id of this contact on Android device
-created_by              | uuid   | User who created this contact
-brand                   | uuid   | **Unused** Owner of the contact, if it's a brand.
 users                   | User[] | Users connected to this contact via credentials match
 deals                   | Deal[] | Deals roles that match with credentials of the contact
 
