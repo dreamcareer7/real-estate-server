@@ -40,6 +40,7 @@ SELECT
   ) as reminders,
   brand,
   created_by,
+  updated_by,
   'crm_task' as "type"
 FROM
   crm_tasks
