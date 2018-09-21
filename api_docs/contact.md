@@ -14,6 +14,16 @@ created_at     | number       |
 updated_at     | number       |
 deleted_at     | number       |
 
+Contact's available model associations are as follows:
+
+*  `contact.sub_contacts`
+*  `contact.summary`
+*  `contact.lists`
+*  `contact.brand`
+*  `contact.user`
+*  `contact.created_by`
+*  `contact.updated_by`
+
 ### Subcontact
 A _Subcontact_ is the actual contact data object containing `attributes`.
 
