@@ -64,7 +64,9 @@ function checkRemovedCustomAttribute(cb) {
     })
     .expectJSON({
       data: {
-        updated_by: results.authorize.token.data.id
+        updated_by: {
+          id: results.authorize.token.data.id
+        }
       }
     })
     .expectStatus(200)
