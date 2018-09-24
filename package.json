@@ -99,6 +99,7 @@
     "@types/papaparse": "^4.5.2",
     "@types/pg": "^7.4.10",
     "app-root-path": "^2.1.0",
+    "cli-progress": "^2.1.0",
     "copy-dir": "0.0.8",
     "eslint-config-node-style-guide": "^3.0.0",
     "eslint-config-standard": "^6.0.1",
