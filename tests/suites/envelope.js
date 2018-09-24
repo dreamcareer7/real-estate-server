@@ -89,21 +89,6 @@ const getDealEnvelopes = cb => {
     })
 }
 
-const getPdf = cb => {
-  return frisby.create('get a single PDF file containing all docs')
-    .head(`/envelopes/${results.envelope.create.data.id}.pdf`)
-    .after(cb)
-    .expectStatus(200)
-    .expectHeader('content-type', 'application/pdf')
-}
-
-const getDocumentPdf = cb => {
-  return frisby.create('get PDF file for first document of envelope')
-    .head(`/envelopes/${results.envelope.create.data.id}/1.pdf`)
-    .after(cb)
-    .expectStatus(200)
-    .expectHeader('content-type', 'application/pdf')
-}
 
 const sign = cb => {
   return frisby.create('Go to "sign envelope" page')
@@ -150,8 +135,6 @@ module.exports = {
   create,
   get,
   getDealEnvelopes,
-  getPdf,
-  getDocumentPdf,
   sign,
   voidit,
   resend,

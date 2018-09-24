@@ -1,10 +1,10 @@
 SELECT
   id
 FROM
-  unnest($1::uuid[]) AS t("user")
-  JOIN contact_search_lists USING ("user")
+  contact_search_lists
 WHERE
   deleted_at IS NULL
+  AND brand = ANY($1::uuid[])
 ORDER BY
   is_pinned DESC,
   created_at

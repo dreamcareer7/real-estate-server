@@ -1,5 +1,6 @@
 INSERT INTO contact_search_lists (
-    "user",
+    "created_by",
+    brand,
     filters,
     query,
     name,
@@ -11,5 +12,6 @@ INSERT INTO contact_search_lists (
     $3,
     $4,
     $5,
-    $6
+    $6,
+    $7
 ) RETURNING id

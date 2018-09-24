@@ -1,6 +1,3 @@
-WITH ub AS (
-  SELECT brand FROM user_brands($1) WHERE CASE WHEN $2::uuid IS NULL THEN TRUE ELSE brand = $2::uuid END
-)
 SELECT
   *,
   "timestamp" AS timestamp_readable,
@@ -9,17 +6,8 @@ SELECT
 FROM
   analytics.calendar
 WHERE
-  (
-    (
-      "user" IS NULL
-      AND "brand" = ANY(SELECT brand FROM ub)
-    )
-    OR
-    (
-      brand IS NULL
-      AND "user" = $1::uuid
-    )
-  )
+  brand = $2::uuid
+  AND CASE WHEN $1::uuid[] IS NULL THEN TRUE ELSE users && $1::uuid[] END
   AND (CASE
     WHEN "recurring" IS True THEN
       range_contains_birthday(to_timestamp($3), to_timestamp($4), "timestamp")

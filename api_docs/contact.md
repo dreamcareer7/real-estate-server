@@ -9,10 +9,24 @@ A _Contact_ is a simple and small object that contains an actual _Subcontact_. T
 Field          | Type         | Description
 ---------------|:------------:|------------------------------------------------------------------------
 id             | uuid         | Id of the parent subcontact
+user           | User         | Owner of the contact. association: `contact.user`
+created_by     | User         | User who created this contact
+updated_by     | User         | User who created this contact
+brand          | Brand        | **Unused** Owner of the contact, if it's a brand.
 sub_contacts   | Subcontact[] | Array of a single sub-contact. Array is kept for legacy reasons.
 created_at     | number       |
 updated_at     | number       |
 deleted_at     | number       |
+
+Contact's available model associations are as follows:
+
+*  `contact.sub_contacts`
+*  `contact.summary`
+*  `contact.lists`
+*  `contact.brand`
+*  `contact.user`
+*  `contact.created_by`
+*  `contact.updated_by`
 
 ### Subcontact
 A _Subcontact_ is the actual contact data object containing `attributes`.
@@ -20,14 +34,11 @@ A _Subcontact_ is the actual contact data object containing `attributes`.
 Field                   | Type   | Description
 ------------------------|:------:|------------------------------------------------------------------
 id                      | uuid   | 
-user                    | uuid   | Owner of the contact
 created_at              | number | 
 updated_at              | number | 
 deleted_at              | number | 
 ios_address_book_id     | string | Address book id of this contact on iOS device
 android_address_book_id | string | Address book id of this contact on Android device
-created_by              | uuid   | User who created this contact
-brand                   | uuid   | **Unused** Owner of the contact, if it's a brand.
 users                   | User[] | Users connected to this contact via credentials match
 deals                   | Deal[] | Deals roles that match with credentials of the contact
 
@@ -102,6 +113,15 @@ Updates a single contact and its attributes. If attributes have `id`, they are u
 ### Deleting an attribute [DELETE /contacts/:id/attributes/:attribute_id]
 <!-- include(tests/contact/removeAttribute.md) -->
 
+### Upload a file for contacts [POST /contacts/upload]
+<!-- include(tests/contact_import/uploadCSV.md) -->
+
+### Import contacts with JSON data [POST /contacts/import.json]
+<!-- include(tests/contact/importManyContacts.md) -->
+
+### Import contacts from CSV [POST /contacts/import.csv]
+<!-- include(tests/contact_import/importCSV.md) -->
+
 ### Get all of the duplicate clusters [GET /contacts/:id/duplicates]
 <!-- include(tests/contact/getContactDuplicates.md) -->
 
@@ -112,7 +132,7 @@ Updates a single contact and its attributes. If attributes have `id`, they are u
 <!-- include(tests/contact/mergeContacts.md) -->
 
 ### Merge multiple clusters of duplicate contacts [POST /contacts/merge]
-<!-- include(tests/contact/triggerBulkMerge.md) -->
+<!-- include(tests/contact/bulkMerge.md) -->
 
 ### Get status of a contact related background job [GET /contacts/jobs/:job_id]
 <!-- include(tests/contact/getJobStatus.md) -->
@@ -129,23 +149,26 @@ An _Activity_ is an object, recording an event that either a specific user has d
 ## Overview
 A _ContactAttributeDef_ is an object defining every aspect of an attribute type. There a number of system defined attribute definitions, and users can create their own user-defined attribute types. System defined definitions are marked as `global`. Non-global attributes are commonly referred to as _Custom Attributes_.
 
-Field      | Type    | Description
------------|:-------:|----------------------------------------------------------------------------
-name       | string  | A name for the attribute def (e.g. email, phone_number, etc.) Used for global attributes.
-data_type  | string  | `text`, `date` or `number`.
-label      | string  | The form label for the attribute on clients
-section    | string  | The section on which the attribute should be displayed
-required   | boolean | Whether the attribute is mandatory
-global     | boolean | Whether the attribute is a global, system-defined attribute in contrast to user-defined ones.
-singular   | boolean | Whether there can only be one instance of the attribute or multiple attributes of the same type are allowed.
-show       | boolean | Whether the clients must show the attribute or not.
-editable   | boolean | Whether the clients mush allow editing the attribute or not.
-user       | uuid    | The user that owns the user-defined attribute.
-brand      | uuid    | **Unused** The brand that owns the user-defined attribute.
-created_by | uuid    |
-created_at | date    | 
-updated_at | date    | 
-deleted_at | date    | 
+Field       | Type     | Description
+------------|:--------:|----------------------------------------------------------------------------
+name        | string   | A name for the attribute def (e.g. email, phone_number, etc.) Used for global attributes.
+data_type   | string   | `text`, `date` or `number`.
+label       | string   | The form label for the attribute on clients
+section     | string   | The section on which the attribute should be displayed
+required    | boolean  | Whether the attribute is mandatory
+global      | boolean  | Whether the attribute is a global, system-defined attribute in contrast to user-defined ones.
+singular    | boolean  | Whether there can only be one instance of the attribute or multiple attributes of the same type are allowed.
+show        | boolean  | Whether the clients must show the attribute or not.
+editable    | boolean  | Whether the clients must allow editing the attribute or not.
+searchable  | boolean  | Whether the attribute contributes to full-text index of the contact or not. Only for textual attributes
+has_label   | boolean  | Whether the clients must display a label UI for the attribute or not.
+enum_values | string[] | Whether the clients must display a dropdown for the value of attribute or not.
+labels      | string[] | Whether the clients must display a dropdown as label UI component.
+brand       | uuid     | The brand that owns the user-defined attribute.
+created_by  | uuid     | The original creator of the contact
+created_at  | date     | 
+updated_at  | date     | 
+deleted_at  | date     | 
 
 ### Global Attribute types
 

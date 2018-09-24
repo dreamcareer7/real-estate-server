@@ -5,10 +5,11 @@ const db = require('../lib/utils/db')
 
 const up = [
   'BEGIN',
+  'DROP TABLE IF EXISTS contacts_duplicate_pairs',
   `CREATE TABLE IF NOT EXISTS contacts_duplicate_pairs (
     a uuid NOT NULL,
     b uuid NOT NULL,
-    "user" uuid NOT NULL,
+    brand uuid NOT NULL,
     created_at timestamptz NOT NULL DEFAULT now(),
     ignored_at timestamptz,
     PRIMARY KEY (a, b),
@@ -16,7 +17,7 @@ const up = [
   )`,
   'CREATE INDEX IF NOT EXISTS contacts_duplicate_pairs_left_idx ON contacts_duplicate_pairs (a)',
   'CREATE INDEX IF NOT EXISTS contacts_duplicate_pairs_right_idx ON contacts_duplicate_pairs (b)',
-  'CREATE INDEX IF NOT EXISTS contacts_duplicate_pairs_user_idx ON contacts_duplicate_pairs ("user")',
+  'CREATE INDEX IF NOT EXISTS contacts_duplicate_pairs_brand_idx ON contacts_duplicate_pairs (brand)',
   'COMMIT'
 ]
 

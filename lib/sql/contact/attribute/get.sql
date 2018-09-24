@@ -9,6 +9,7 @@ SELECT
   is_primary,
   index,
   created_by,
+  updated_by,
   "name" as attribute_type,
   "text",
   EXTRACT(EPOCH FROM "date") AS "date",

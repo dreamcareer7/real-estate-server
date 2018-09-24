@@ -1,7 +1,6 @@
 INSERT INTO crm_tasks (
     created_by,
     brand,
-    assignee,
     title,
     description,
     due_date,
@@ -17,7 +16,6 @@ VALUES (
     $5,
     $6,
     $7,
-    $8,
-    COALESCE($4, '') || ' ' || COALESCE($5, '')
+    COALESCE($3, '') || ' ' || COALESCE($4, '')
 )
 RETURNING id

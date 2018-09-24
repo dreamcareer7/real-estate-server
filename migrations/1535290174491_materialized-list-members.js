@@ -2,8 +2,8 @@ const _ = require('lodash')
 
 const db = require('../lib/utils/db')
 require('../lib/models')()
+const Context = require('../lib/models/Context')
 
-const ContactList = require('../lib/models/Contact/list')
 const ListMember = require('../lib/models/Contact/list_members')
 
 const sql = async (sql, args) => {
@@ -28,18 +28,14 @@ const run = async () => {
 
   await sql('BEGIN')
 
-  const res = await sql('SELECT csl.id, email FROM contact_search_lists AS csl JOIN users on users.id = csl."user"')
+  const res = await sql('SELECT csl.id, csl.name, brands.name AS brand FROM contact_search_lists AS csl JOIN brands on brands.id = csl."brand"')
   const list_owners = _.keyBy(res.rows, 'id')
-
-  const ids = res.rows.map(r => r.id)
-
-  const lists = await ContactList.getAll(ids)
 
   let i = 0
 
-  for(const list of lists) {
+  for(const list of res.rows) {
     await ListMember.updateListMemberships(list.id)
-    console.log(`${++i}/${lists.length}`, list.name, 'for', list_owners[list.id].email)
+    console.log(`${++i}/${res.rows.length}`, list.name, 'for', list_owners[list.id].brand)
   }
 
   await sql('COMMIT')

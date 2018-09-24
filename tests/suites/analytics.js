@@ -13,6 +13,7 @@ registerSuite('user', ['upgradeToAgentWithEmail'])
 
 function prepareContactRequest(defs) {
   contacts = contacts.map(c => ({
+    user: results.authorize.token.data.id,
     attributes: Object.keys(c).map(a => ({
       attribute_def: defs[a].id,
       [defs[a].data_type]: c[a]
@@ -24,6 +25,7 @@ function getAttributeDefs(cb) {
   return frisby
     .create('get all attribute defs, global or user-defined')
     .get('/contacts/attribute_defs')
+    .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
     .after(function(err, res, json) {
       defs = _.keyBy(json.data, 'name')
 
@@ -56,6 +58,7 @@ function createContacts(cb) {
     .post('/contacts?get=false&relax=true&activity=false', {
       contacts
     })
+    .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
     .after(cb)
     .expectStatus(200)
 }

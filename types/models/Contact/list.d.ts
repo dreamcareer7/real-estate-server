@@ -6,7 +6,8 @@ declare interface IContactList {
   is_pinned: boolean;
   touch_freq?: number;
 
-  user: UUID;
+  created_by: UUID;
+  brand: UUID;
 }
 
 declare interface IContactListMember {
