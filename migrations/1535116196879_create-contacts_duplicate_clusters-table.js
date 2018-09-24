@@ -5,14 +5,16 @@ const db = require('../lib/utils/db')
 
 const up = [
   'BEGIN',
-  `CREATE TABLE IF NOT EXISTS contacts_duplicate_clusters (
+  'DROP TABLE IF EXISTS contacts_duplicate_clusters',
+  `CREATE TABLE contacts_duplicate_clusters (
     contact uuid REFERENCES contacts(id),
     cluster int,
     PRIMARY KEY (contact, cluster)
   )`,
   'CREATE INDEX IF NOT EXISTS contacts_duplicate_clusters_contact_idx ON contacts_duplicate_clusters (contact)',
   'CREATE INDEX IF NOT EXISTS contacts_duplicate_clusters_cluster_idx ON contacts_duplicate_clusters (cluster)',
-  'CREATE SEQUENCE IF NOT EXISTS contact_duplicate_cluster_seq',
+  'DROP SEQUENCE IF EXISTS contact_duplicate_cluster_seq',
+  'CREATE SEQUENCE contact_duplicate_cluster_seq',
   'COMMIT'
 ]
 

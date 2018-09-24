@@ -4,7 +4,7 @@ WITH ignored AS (
   SET
     ignored_at = NOW()
   WHERE
-    "user" = $1::uuid
+    brand = $1::uuid
     AND a = $2::uuid
     AND b = $3::uuid
   RETURNING

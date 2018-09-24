@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION delete_contact_attribute_def(id uuid)
+CREATE OR REPLACE FUNCTION delete_contact_attribute_def(id uuid, user_id uuid)
 RETURNS setof uuid
 LANGUAGE plpgsql
 AS $$
@@ -9,7 +9,8 @@ AS $$
     UPDATE
       contacts_attribute_defs
     SET
-      deleted_at = now()
+      deleted_at = now(),
+      deleted_by = user_id
     WHERE
       contacts_attribute_defs.id = $1
     RETURNING
@@ -19,7 +20,8 @@ AS $$
       UPDATE  /* We should delete contact attributes with the deleted attribute_def */
         contacts_attributes
       SET
-        deleted_at = now()
+        deleted_at = now(),
+        deleted_by = user_id
       WHERE
         attribute_def = $1
       RETURNING
@@ -32,6 +34,7 @@ AS $$
         contacts
       SET
         updated_at = NOW(),
+        updated_by = user_id,
         searchable_field = csf.searchable_field
       FROM
         get_searchable_field_for_contacts(affected_contacts) csf
@@ -41,7 +44,8 @@ AS $$
       UPDATE  /* Set updated_at for affected contacts */
         contacts
       SET
-        updated_at = now()
+        updated_at = now(),
+        updated_by = user_id
       WHERE
         contacts.id = ANY(affected_contacts);
     END IF;

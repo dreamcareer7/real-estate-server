@@ -5,7 +5,7 @@ FROM
 WHERE
   deleted_at IS NULL
   AND (
-    "user" = $1
+    brand = $1
     OR "global" = true
   )
 ORDER BY global, created_at DESC

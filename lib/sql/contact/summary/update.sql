@@ -34,6 +34,7 @@ WITH cs AS (
 UPDATE
   contacts_summaries
 SET
+  "user" = cs."user",
   updated_at = cs.updated_at,
   display_name = cs.display_name,
   sort_field = cs.sort_field,

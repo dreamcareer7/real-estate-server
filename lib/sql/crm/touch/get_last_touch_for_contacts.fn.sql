@@ -7,13 +7,14 @@ LANGUAGE SQL
 AS $$
   SELECT DISTINCT ON (ca.contact)
     ca.contact,
-    touches.timestamp AS last_touch
+    crm_tasks.due_date AS last_touch
   FROM
-    touches
+    crm_tasks
     JOIN crm_associations AS ca
-      ON ca.touch = touches.id
+      ON ca.crm_task = crm_tasks.id
   WHERE
     ca.contact = ANY($1)
+    AND crm_tasks.status = 'DONE'
   ORDER BY
-    ca.contact, touches.timestamp desc
+    ca.contact, crm_tasks.due_date desc
 $$

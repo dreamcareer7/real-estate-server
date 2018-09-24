@@ -1,12 +1,15 @@
-insert into calendar_feed_settings("user", selected_brand, selected_types)
+insert into calendar_feed_settings
+  ("user", selected_brand, selected_types, selected_users)
 values (
   $1,
   $2,
-  $3
+  $3,
+  $4
 )
 on conflict ("user") do
 update
 set selected_brand = $2,
     selected_types = $3,
-    updated_at = transaction_timestamp()
+    selected_users = $4::uuid[],
+    updated_at = now()
 returning "user"

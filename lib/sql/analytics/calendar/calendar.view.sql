@@ -1,6 +1,7 @@
 CREATE OR REPLACE VIEW analytics.calendar AS (
   SELECT
     id,
+    created_by,
     'crm_task' AS object_type,
     task_type AS event_type,
     task_type AS type_label,
@@ -10,8 +11,10 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
     id AS crm_task,
     NULL::uuid AS deal,
     NULL::uuid AS contact,
-    assignee AS "user",
-    NULL AS brand,
+    (
+      SELECT ARRAY_AGG("user") FROM crm_tasks_assignees WHERE crm_task = crm_tasks.id
+    ) AS users,
+    brand,
     status
   FROM
     crm_tasks
@@ -22,6 +25,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
   (
     SELECT
       current_deal_context.id,
+      deals.created_by,
       'deal_context' AS object_type,
       "key" AS event_type,
       NULL AS type_label,
@@ -31,7 +35,19 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       NULL::uuid AS crm_task,
       deal,
       NULL::uuid AS contact,
-      NULL::uuid AS "user",
+      (
+        SELECT
+          ARRAY_AGG(r."user")
+        FROM
+          deals_roles AS r
+        WHERE
+          r.deal = deals.id
+          AND r.deleted_at IS NULL
+          AND r.role = CASE deals.deal_type
+            WHEN 'Selling'::deal_type THEN 'SellerAgent'::deal_role
+            ELSE 'BuyerAgent'::deal_role
+          END
+      ) AS users,
       brand,
       NULL::text AS status
     FROM
@@ -46,6 +62,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
   (
     SELECT
       ca.id,
+      contacts.created_by,
       'contact_attribute' AS object_type,
       COALESCE(cad.name, cad.label) AS event_type,
       (CASE
@@ -59,7 +76,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       NULL::uuid AS crm_task,
       NULL::uuid AS deal,
       contact,
-      contacts."user",
+      ARRAY[contacts."user"] AS users,
       contacts.brand,
       NULL::text AS status
     FROM

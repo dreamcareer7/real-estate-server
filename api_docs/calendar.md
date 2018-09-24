@@ -1,7 +1,7 @@
-# Group Dashboard
+# Group Calendar
 
 ## Overview
-This document describes the set of APIs used in the calendar view and analytical reports.
+This document describes the set of APIs used in the calendar view.
 
 ### Data Model
 
@@ -57,3 +57,6 @@ Possible values for `event_type` field are:
 
 ### Get Calendar events [GET /calendar]
 <!-- include(tests/analytics/getCalendar.md) -->
+
+### Get iCal feed url [GET /calendar/feed]
+<!-- include(tests/analytics/getCalendarFeedUrl.md) -->
