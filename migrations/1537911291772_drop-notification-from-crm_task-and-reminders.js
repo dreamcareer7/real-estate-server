@@ -6,14 +6,14 @@ const db = require('../lib/utils/db')
 const up = [
   'BEGIN',
   'ALTER TABLE crm_tasks DROP notification',
-  'ALTER TABLE reminder DROP notification',
+  'ALTER TABLE reminders DROP notification',
   'COMMIT'
 ]
 
 const down = [
   'BEGIN',
   'ALTER TABLE crm_tasks ADD COLUMN notification uuid REFERENCES notifications(id)',
-  'ALTER TABLE reminder ADD COLUMN notification uuid REFERENCES notifications(id)',
+  'ALTER TABLE reminders ADD COLUMN notification uuid REFERENCES notifications(id)',
   'COMMIT'
 ]
 
