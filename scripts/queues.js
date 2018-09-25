@@ -60,7 +60,10 @@ const mls_photo = (job, done) => {
 }
 
 const mls_listing = (job, done) => {
-  Listing.create(job.data.processed, done)
+  Listing.create({
+    ...job.data.processed,
+    revision: job.data.revision
+  }, done)
 }
 
 const mls_validate_listing_photos = (job, done) => {
