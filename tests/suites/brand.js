@@ -288,6 +288,10 @@ const addMember = cb => {
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
+      data: [{
+        email: 'invited-member@boer.rechat.com',
+        type: 'user'
+      }]
     })
 }
 
@@ -298,7 +302,11 @@ const getMembers = cb => {
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
+      data: [{
+        type: 'user'
+      }]
     })
+    .expectJSONLength('data', 1)
 }
 
 const deleteMember = cb => {
