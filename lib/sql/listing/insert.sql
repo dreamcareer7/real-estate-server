@@ -95,7 +95,8 @@ INSERT INTO listings (
   seller_type,
   occupancy,
   private_remarks,
-  application_fee_yn
+  application_fee_yn,
+  revision
 ) VALUES (
   $1,
   $2,
@@ -193,7 +194,8 @@ INSERT INTO listings (
   $94,
   $95,
   $96,
-  $97
+  $97,
+  $98
 )
 
 ON CONFLICT (matrix_unique_id) DO UPDATE SET
@@ -292,6 +294,7 @@ ON CONFLICT (matrix_unique_id) DO UPDATE SET
   occupancy = $95,
   private_remarks = $96,
   application_fee_yn = $97,
+  revision = $98,
   updated_at = CLOCK_TIMESTAMP()
 
 WHERE listings.matrix_unique_id = $7
