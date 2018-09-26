@@ -29,8 +29,8 @@ const storeEmailId = (job, cb) => {
 }
 
 const list = {
-  socket_emit: () => {},
-  socket_join: () => {},
+  socket_emit: (job, cb) => cb(),
+  socket_join: (job, cb) => cb(),
   'Refresh.Subdivisions': Listing.refreshSubdivisions,
   'Refresh.Schools': School.refresh,
   'Refresh.Listings': Alert.refreshFilters,
