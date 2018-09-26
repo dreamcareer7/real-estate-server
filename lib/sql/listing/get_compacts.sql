@@ -26,6 +26,8 @@ SELECT 'compact_listing' AS TYPE,
        (
           SELECT id FROM agents WHERE matrix_unique_id = listings.selling_agent_mui LIMIT 1
        ) as selling_agent,
+       list_office_name,
+       selling_office_name,
        list_agent_mls_id,
        list_agent_email,
        list_agent_full_name,
