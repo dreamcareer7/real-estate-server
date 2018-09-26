@@ -1,14 +1,9 @@
 SELECT
-  r.id
+  id
 FROM
-  reminders AS r
-  LEFT JOIN notifications AS n
-    ON r.id = n.subject
+  reminders
 WHERE
-  n.id IS NULL
-  AND subject_class = 'Reminder'
-  AND object_class = 'CrmTask'
-  AND "object" = r.task
-  AND r.deleted_at IS NULL
-  AND r."timestamp" <  (now() + interval '20 seconds')
-  AND r."timestamp" >= (now() - interval '2 hours')
+  needs_notification IS True
+  AND deleted_at IS NULL
+  AND "timestamp" <  (now() + interval '20 seconds')
+  AND "timestamp" >= (now() - interval '2 hours')
