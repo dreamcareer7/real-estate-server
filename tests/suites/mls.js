@@ -28,7 +28,10 @@ const addListing = (cb) => {
   return frisby.create('add a listing')
     .post('/jobs', {
       name: 'MLS.Listing',
-      data: {processed: listing}
+      data: {
+        processed: listing,
+        revision: 1
+      }
     })
     .after(cb)
     .expectStatus(200)
@@ -41,6 +44,11 @@ const getFeed = cb => {
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
+      data: [{
+        listing: {
+          revision: 1
+        }
+      }],
       info: {
         count: 1
       }
