@@ -5,8 +5,8 @@ const db = require('../lib/utils/db')
 
 const up = [
   'BEGIN',
-  'ALTER TABLE crm_tasks DROP notification',
-  'ALTER TABLE reminders DROP notification',
+  'ALTER TABLE crm_tasks DROP COLUMN IF EXISTS notification',
+  'ALTER TABLE reminders DROP COLUMN IF EXISTS notification',
   'DROP TRIGGER clear_crm_task_notifications_on_due_update ON crm_tasks',
   'DROP TRIGGER clear_reminder_notifications_on_timestamp_update ON reminders',
   'ALTER TABLE crm_tasks ADD COLUMN needs_notification boolean NOT NULL DEFAULT False',
