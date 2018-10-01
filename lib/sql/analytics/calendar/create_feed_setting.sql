@@ -1,15 +1,13 @@
 insert into calendar_feed_settings
-  ("user", selected_brand, selected_types, selected_users)
+  ("user", selected_types, filter)
 values (
   $1,
   $2,
-  $3,
-  $4
+  $3
 )
 on conflict ("user") do
 update
-set selected_brand = $2,
-    selected_types = $3,
-    selected_users = $4::uuid[],
+set selected_types = $2,
+    filter = $3::jsonb[],
     updated_at = now()
 returning "user"
