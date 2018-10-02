@@ -22,6 +22,10 @@ const runFrisbies = function (tasks) {
       cb(err, res)
     })
 
+    f.exceptionHandler(err => {
+      console.error(err)
+    })
+
     f.current.outgoing.headers['x-suite'] = process.argv[2]
     f.current.outgoing.headers['x-original-suite'] = task.suite
     f.current.outgoing.headers['x-test-name'] = task.name
