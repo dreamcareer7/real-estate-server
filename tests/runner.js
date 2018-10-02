@@ -16,7 +16,7 @@ frisby.globalSetup({
 const runFrisbies = function (tasks) {
   const runF = function (task, cb) {
     const f = task.fn((err, res) => {
-      if (res.body)
+      if (res && res.body)
         global.results[task.suite][task.name] = res.body
 
       cb(err, res)
