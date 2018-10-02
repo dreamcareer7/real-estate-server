@@ -5,7 +5,10 @@ SELECT id,
        long_name,
        address,
        phone,
-       fax
+       fax,
+       city,
+       state,
+       postal_code
 FROM offices
 JOIN unnest($1::uuid[]) WITH ORDINALITY t(oid, ord) ON offices.id = oid
 ORDER BY t.ord

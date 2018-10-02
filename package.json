@@ -72,6 +72,7 @@
     "passport-http-bearer": "^1.0.1",
     "passport-oauth2-client-password": "^0.1.2",
     "password-generator": "^2.0.2",
+    "pdfjs-dist": "https://github.com/rechat/pdfjs-dist",
     "pg": "^7.4.3",
     "redis": "^2.8.0",
     "request": "^2.88.0",
