@@ -29,6 +29,8 @@ declare interface INotificationInput {
   auxiliary_object_class?: string;
   auxiliary_subject?: UUID;
   auxiliary_subject_class?: string;
+
+  data: Record<string, any>;
 }
 
 declare interface INotification {

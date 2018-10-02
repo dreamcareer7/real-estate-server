@@ -79,7 +79,12 @@ function getCalendar(cb) {
 function getCalendarFeedUrl(cb) {
   return frisby
     .create('get url for calendar feed')
-    .get('/calendar/feed?types[]=birthday&types[]=option_period')
+    .post('/calendar/feed?types[]=birthday&types[]=option_period', {
+      types: [
+        'birthday',
+        'option_period'
+      ]
+    })
     .after((err, res) => {
       if (err) {
         return cb(err)

@@ -74,7 +74,9 @@ function spawnProcesses (cb) {
 function spawnSuite (suite, cb) {
   const url = program.server ? program.server : 'http://localhost:' + config.url.port
 
-  const runner = fork(__dirname + '/runner.js', [suite, url])
+  const runner = fork(__dirname + '/runner.js', [suite, url], {
+    execArgv: []
+  })
 
   Run.emit('spawn', suite)
 

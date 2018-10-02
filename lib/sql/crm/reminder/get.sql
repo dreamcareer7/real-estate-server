@@ -6,7 +6,6 @@ SELECT
   is_relative,
   EXTRACT(EPOCH FROM "timestamp") AS "timestamp",
   task,
-  "notification",
   'reminder' as "type"
 FROM
   reminders

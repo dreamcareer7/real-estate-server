@@ -13,4 +13,5 @@ WHERE
   AND (
     subject_class = 'CrmTask'::notification_object_class
     OR subject_class = 'Reminder'::notification_object_class
+    OR subject_class = 'User'::notification_object_class
   )

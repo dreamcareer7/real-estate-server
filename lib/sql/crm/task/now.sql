@@ -3,7 +3,7 @@ SELECT
 FROM
   crm_tasks
 WHERE
-  "notification" IS NULL
+  needs_notification IS True
   AND deleted_at IS NULL
   AND due_date <  (now() + interval '20 seconds')
   AND due_date >= (now() - interval '6 hours')

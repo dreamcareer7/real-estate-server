@@ -26,6 +26,31 @@ const create = (cb) => {
     })
 }
 
+const createDirect = cb => {
+  return frisby.create('create a direct room')
+    .post('/rooms', {
+      room_type: 'Direct',
+      users: [ ],
+      emails: [
+        'another@rechat.com'
+      ],
+      phone_numbers: [ ]
+    })
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      data: {
+        room_type: 'Direct',
+      }
+    })
+    .expectJSONTypes({
+      code: String,
+      data: room_response
+    }).
+    expectJSONLength('data.users', 2)
+}
+
 const create400 = (cb) => {
   return frisby.create('expect 400 with empty model when creating a room')
     .post('/rooms')
@@ -242,6 +267,7 @@ const archiveRoom = (cb) => {
 
 module.exports = {
   create,
+  createDirect,
   create400,
   getRoom,
   getRoom404,
