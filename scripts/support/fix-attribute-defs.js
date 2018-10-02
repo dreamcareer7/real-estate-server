@@ -3,7 +3,6 @@ const fs = require('fs')
 const pmapping = {
   '49b1127f-0cf6-46f0-86ec-08e039003e16': 'title',
   '6c40e986-3013-4c7d-86fb-1f68ffaaaeab': 'marketing_name',
-  '5c1e76e3-3569-41ef-bd52-896b6e8f56fe': 'stage',
   'ea245873-81b2-4746-88ef-4372d70bbf31': 'profile_image_url',
   '3e9b8292-63c7-43ea-8079-c04dc8b7ba6f': 'cover_image_url',
   'bbe8009f-8ba4-40d3-adcb-58993f06f6ec': 'source_type',
@@ -49,7 +48,6 @@ const bmapping = {
   title: 'd32dd3de-f099-497b-997b-64a49358e6af',
   state: '20f5af85-ed22-4bfb-ab15-d62d5978c377',
   marketing_name: 'c790428c-7564-41c9-92bd-7e5964696e54',
-  stage: 'dcefed44-56fe-4c00-af0c-7779c0c532b3',
   postal_code: '08b9e815-5691-47f8-a038-9054ed46a7b4',
   first_name: 'a90a7cef-a080-44e3-8c13-eb33da4c0465',
   middle_name: '2a92ad44-5d9e-471c-b464-63c322193e49',

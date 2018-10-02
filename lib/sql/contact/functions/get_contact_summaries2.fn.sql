@@ -13,7 +13,6 @@ RETURNS TABLE (
   cover_image_url text,
   job_title text,
   source_type text,
-  stage text,
   source text,
   email text[],
   phone_number text[],
@@ -60,7 +59,6 @@ AS $function$
                 ('cover_image_url'),
                 ('job_title'),
                 ('source_type'),
-                ('stage'),
                 ('source')
               )
           )
@@ -113,7 +111,6 @@ AS $function$
       contacts_summaries.cover_image_url,
       contacts_summaries.job_title,
       contacts_summaries.source_type,
-      contacts_summaries.stage,
       contacts_summaries.source,
       contacts_summaries.email,
       contacts_summaries.phone_number,
@@ -135,7 +132,6 @@ AS $function$
         ('cover_image_url'),
         ('job_title'),
         ('source_type'),
-        ('stage'),
         ('source'),
         ('email'),
         ('phone_number'),
@@ -155,7 +151,6 @@ AS $function$
       cover_image_url text,
       job_title text,
       source_type text,
-      stage text,
       source text,
       email text[],
       phone_number text[],

@@ -393,17 +393,6 @@ const DB_DATA = [
               updated_at: 1517828644.08845
             }
           ],
-          stages: [
-            {
-              created_at: 1517828644.09721,
-              id: '471e3f26-0a64-11e8-b2db-0242ac110002',
-              is_primary: false,
-              label: null,
-              stage: 'General',
-              type: 'stage',
-              updated_at: 1517828644.09722
-            }
-          ],
           type: 'attributes'
         },
         created_at: 1517828644.0374,
@@ -555,17 +544,6 @@ const DB_DATA = [
               source_type: 'External/Outlook',
               type: 'source_type',
               updated_at: 1517828644.08845
-            }
-          ],
-          stages: [
-            {
-              created_at: 1517828644.09721,
-              id: '571e3f26-0a64-11e8-b2db-0242ac110002',
-              is_primary: false,
-              label: null,
-              stage: 'General',
-              type: 'stage',
-              updated_at: 1517828644.09722
             }
           ],
           type: 'attributes'

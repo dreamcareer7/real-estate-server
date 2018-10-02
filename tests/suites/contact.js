@@ -310,7 +310,7 @@ const filterOnNonExistentAttributeDef = cb => {
 
 const addAttribute = cb => {
   const a = {
-    attribute_def: defs['stage'].id,
+    attribute_def: defs['tag'].id,
     text: 'PastClient'
   }
 
@@ -321,7 +321,7 @@ const addAttribute = cb => {
     })
     .after((err, res, json) => {
       if (_.find(json.data.sub_contacts[0].attributes, {
-        attribute_type: 'stage',
+        attribute_type: 'tag',
         text: a.text
       }))
         return cb(err, res, json)
@@ -454,7 +454,7 @@ const removeAttribute = cb => {
   const attr_id = _.findLast(
     results.contact.addAttribute.data.sub_contacts[0].attributes,
     {
-      attribute_type: 'stage'
+      attribute_type: 'tag'
     }
   ).id
 
@@ -573,9 +573,9 @@ const deleteContactWorked = cb => {
 }
 
 const updateContact = cb => {
-  const stages = _.filter(
+  const tags = _.filter(
     results.contact.addAttribute.data.sub_contacts[0].attributes,
-    { attribute_type: 'stage' }
+    { attribute_type: 'tag' }
   )
   const phones = _.filter(
     results.contact.addPhoneNumber.data.sub_contacts[0].attributes,
@@ -586,37 +586,37 @@ const updateContact = cb => {
     { attribute_type: 'email' }
   )
 
-  const stage = stages[stages.length - 1]
+  const tag = tags[tags.length - 1]
   const phone = phones[phones.length - 1]
   const email = emails[emails.length - 1]
 
-  delete stage.attribute_def
+  delete tag.attribute_def
   delete phone.attribute_def
   delete email.attribute_def
 
-  stage.text = 'General'
+  tag.text = 'General'
   phone.text = '+989028202679'
   phone.label = 'Home-Line1'
   phone.is_primary = true
   email.text = 'test+email3@rechat.com'
   emails[0].is_primary = true
 
-  delete stage.updated_at
+  delete tag.updated_at
   delete phone.updated_at
   delete email.updated_at
 
-  delete stage.updated_by
+  delete tag.updated_by
   delete phone.updated_by
   delete email.updated_by
 
   return frisby
     .create('update a contact')
     .patch('/contacts/' + results.contact.create.data[0].id + '?associations[]=contact.sub_contacts', {
-      attributes: [stage, phone, email]
+      attributes: [tag, phone, email]
     })
     .after((err, res, json) => {
       const attrs = [
-        _.find(json.data.sub_contacts[0].attributes, stage),
+        _.find(json.data.sub_contacts[0].attributes, tag),
         _.find(json.data.sub_contacts[0].attributes, phone),
         _.find(json.data.sub_contacts[0].attributes, email)
       ]
@@ -641,27 +641,12 @@ function createStageLists(cb) {
     .expectStatus(200)
 }
 
-function checkContactListMemberships(cb) {
-  return frisby.create('check if contact is a member of general list')
-    .get('/contacts/' + results.contact.create.data[0].id + '?associations[]=contact.lists')
-    .after(cb)
-    .expectJSON({
-      data: {
-        lists: [{
-          name: 'General'
-        }]
-      }
-    })
-}
-
 function moveContactToWarmListStage(cb) {
-  const stage = results.contact.addAttribute.data.sub_contacts[0].attributes.find(a => a.attribute_type === 'stage')
-
   return frisby
     .create('change contact stage to warm list')
     .patch('/contacts/' + results.contact.create.data[0].id, {
       attributes: [{
-        id: stage.id,
+        attribute_type: 'tag',
         text: 'Warm List'
       }]
     })
@@ -671,7 +656,7 @@ function moveContactToWarmListStage(cb) {
 
 function patchOwner(cb) {
   return frisby
-    .create('change contact stage to warm list')
+    .create('change contact owner')
     .patch('/contacts/' + results.contact.create.data[0].id, {
       user: results.authorize.token.data.id
     })
@@ -694,7 +679,7 @@ function contactShouldBeInWarmList(cb) {
 
 function deleteWarmList(cb) {
   return frisby.create('delete warm list')
-    .delete('/contacts/lists/' + results.contact.createStageLists[1])
+    .delete('/contacts/lists/' + results.contact.createStageLists[0])
     .after(cb)
     .expectStatus(204)
 }
@@ -834,7 +819,7 @@ const getAllTags = (cb) => {
     .get('/contacts/tags')
     .after(cb)
     .expectStatus(200)
-    .expectJSONLength('data', 3)
+    .expectJSONLength('data', 5)
     .expectJSON({
       code: 'OK'
     })
@@ -966,7 +951,6 @@ module.exports = {
   updateContact,
   patchOwner,
   createStageLists,
-  checkContactListMemberships,
   moveContactToWarmListStage,
   contactShouldBeInWarmList,
   deleteWarmList,

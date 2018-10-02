@@ -25,7 +25,6 @@ WITH cs AS (
     ct.cover_image_url,
     ct.job_title,
     ct.source_type,
-    ct.stage,
     ct.source
   FROM
     get_contact_summaries2($1::uuid[]) AS ct
@@ -57,7 +56,6 @@ SET
   cover_image_url = cs.cover_image_url,
   job_title = cs.job_title,
   source_type = cs.source_type,
-  stage = cs.stage,
   source = cs.source
 FROM
   cs

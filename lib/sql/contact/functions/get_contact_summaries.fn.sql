@@ -15,7 +15,6 @@ RETURNS TABLE (
   cover_image_url text,
   job_title text,
   source_type text,
-  stage text,
   source text,
   tags text[]
 )
@@ -59,7 +58,6 @@ AS $function$
           ('cover_image_url'),
           ('job_title'),
           ('source_type'),
-          ('stage'),
           ('source')
         )
       ORDER BY
@@ -85,7 +83,6 @@ AS $function$
       contacts_summaries.cover_image_url,
       contacts_summaries.job_title,
       contacts_summaries.source_type,
-      contacts_summaries.stage,
       contacts_summaries.source,
       ctags.tags
     FROM
@@ -119,7 +116,6 @@ AS $function$
         ('cover_image_url'),
         ('job_title'),
         ('source_type'),
-        ('stage'),
         ('source')
     $$) AS contacts_summaries(
       cid uuid,
@@ -137,7 +133,6 @@ AS $function$
       cover_image_url text,
       job_title text,
       source_type text,
-      stage text,
       source text
     ) ON cids.id = contacts_summaries.cid;
   END;

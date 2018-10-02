@@ -189,7 +189,6 @@ source            | string |
 profile_image_url | string | A url pointing to profile image of this contact
 cover_image_url   | string | A url pointing to cover image of this contact
 company           | string | A string indicating a company name
-stage             | string | Stage of this contact
 website           | string | Any url related to the contact
 job_title         | string | Contact's job title/position in company
 street_prefix     | string |
@@ -202,15 +201,6 @@ country           | string |
 postal_code       | string |
 source_type       | string | Source type of this contact. **Non-editable**.
 note              | string | A small note for this contact
-
-### Stage possible values
-
-Values     |
------------|
-General    |
-Warm List  |
-Hot List   |
-PastClient |
 
 ### SourceType possible values
 

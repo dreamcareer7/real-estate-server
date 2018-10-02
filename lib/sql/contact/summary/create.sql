@@ -28,7 +28,6 @@ INSERT INTO
     cover_image_url,
     job_title,
     source_type,
-    stage,
     source
   )
 SELECT
@@ -59,7 +58,6 @@ SELECT
   ct.cover_image_url,
   ct.job_title,
   ct.source_type,
-  ct.stage,
   ct.source
 FROM
   get_contact_summaries2($1::uuid[]) AS ct
