@@ -22,8 +22,6 @@ function checkDefaultLists(cb) {
     .expectJSON({
       code: 'OK',
       data: [{
-        name: 'General'
-      }, {
         name: 'Warm List'
       }, {
         name: 'Hot List'
