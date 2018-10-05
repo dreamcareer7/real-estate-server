@@ -5,7 +5,7 @@ WITH timeline_content AS (
     INNER JOIN crm_associations ON crm_tasks.id = crm_associations.crm_task
     WHERE
       contact = $1::uuid
-      AND brand = $2::uuid
+      AND crm_tasks.brand = $2::uuid
       AND crm_associations.deleted_at IS NULL
       AND crm_tasks.deleted_at IS NULL
   )

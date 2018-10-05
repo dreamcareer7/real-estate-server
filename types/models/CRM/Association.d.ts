@@ -14,8 +14,9 @@ declare interface ICrmAssociationInput {
   contact: UUID;
 
   crm_task: UUID;
-  touch: UUID;
-  contact_note: UUID;
+
+  index?: number;
+  metadata?: any;
 }
 
 declare interface ICrmAssociation {
@@ -23,16 +24,20 @@ declare interface ICrmAssociation {
   created_at: number;
   updated_at: number;
   deleted_at?: number;
+  brand: UUID;
+  created_by: UUID;
+  deleted_by?: UUID;
 
   association_type: TCrmAssoicationType;
 
   crm_task: UUID;
-  touch: UUID;
-  contact_note: UUID;
 
   deal: UUID;
   contact: UUID;
   listing: UUID;
+
+  index?: number;
+  metadata?: any;
 }
 
 declare interface ICrmAssociationsCategorized {

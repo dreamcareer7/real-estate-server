@@ -18,7 +18,7 @@ function checkDefaultLists(cb) {
     .get('/contacts/lists')
     .after(cb)
     .expectStatus(200)
-    .expectJSONLength('data', 5)
+    .expectJSONLength('data', 4)
     .expectJSON({
       code: 'OK',
       data: [{

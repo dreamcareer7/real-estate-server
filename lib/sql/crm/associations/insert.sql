@@ -1,11 +1,13 @@
 INSERT INTO crm_associations (
+    created_by,
+    brand,
     association_type,
     crm_task,
-    touch,
-    -- contact_note,
     contact,
     deal,
-    listing
+    listing,
+    index,
+    metadata
 )
 VALUES (
     $1,
@@ -13,6 +15,9 @@ VALUES (
     $3,
     $4,
     $5,
-    $6
+    $6,
+    $7,
+    $8,
+    $9
 )
 RETURNING id

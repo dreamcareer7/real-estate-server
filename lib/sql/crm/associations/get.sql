@@ -6,13 +6,15 @@ SELECT
   EXTRACT(EPOCH FROM created_at) AS created_at,
   EXTRACT(EPOCH FROM updated_at) AS updated_at,
   EXTRACT(EPOCH FROM deleted_at) AS deleted_at,
+  created_by,
+  a_ids.brand,
   association_type,
   crm_task,
-  -- contact_note,
-  touch,
   deal,
   contact,
   listing,
+  index,
+  metadata,
   'crm_association' as "type"
 FROM
   (
@@ -25,7 +27,8 @@ FROM
         crm_associations
       JOIN deals
         ON crm_associations.deal = deals.id
-      JOIN ub USING (brand)
+      JOIN ub
+        ON deals.brand = ub.brand
       WHERE 
         crm_associations.association_type = 'deal'
     )
@@ -39,8 +42,9 @@ FROM
         crm_associations
       JOIN contacts
         ON crm_associations.contact = contacts.id
-      JOIN ub USING (brand)
-      WHERE 
+      JOIN ub
+        ON contacts.brand = ub.brand
+      WHERE
         crm_associations.association_type = 'contact'
     )
     UNION

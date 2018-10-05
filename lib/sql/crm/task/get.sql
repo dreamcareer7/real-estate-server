@@ -19,7 +19,7 @@ SELECT
   ) AS assignees,
   (
     SELECT
-      ARRAY_AGG(id ORDER BY "created_at")
+      ARRAY_AGG(id ORDER BY index, "created_at")
     FROM
       crm_associations
     WHERE
