@@ -168,8 +168,6 @@ function updateAssignee(cb) {
     ]
   })
 
-  console.log(JSON.stringify(data, null, 2))
-
   return frisby
     .create('re-assign a task to someone else')
     .put(
@@ -190,7 +188,11 @@ function updateAssignee(cb) {
 function addContactAssociation(cb) {
   const data = {
     association_type: 'contact',
-    contact: results.contact.create.data[0].id
+    contact: results.contact.create.data[0].id,
+    index: 1,
+    metadata: {
+      note: 'Hey, this is a note'
+    }
   }
 
   return frisby
@@ -206,9 +208,14 @@ function addContactAssociation(cb) {
     .expectJSON({
       data: {
         association_type: 'contact',
+        type: 'crm_association',
+        index: 1,
         crm_task: results.task.create.data.id,
         contact: {
           id: results.contact.create.data[0].id
+        },
+        metadata: {
+          note: 'Hey, this is a note'
         }
       }
     })

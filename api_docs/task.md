@@ -43,14 +43,20 @@ Task's available model associations are as follows:
 
 Depending on the `association_type` value, one of `deal`, `contact` or `listing` is also required.
 
-| Field            | Type        | Required? | Notes                            |
-|------------------|-------------|:---------:|----------------------------------|
-| crm_task         | UUID        |           | Parent Task Id                   |
-| listing          | UUID        |           | Associated listing id            |
-| contact          | UUID        |           | Associated contact id            |
-| deal             | UUID        |           | Associated deal id               |
-| association_type | String Enum | ✓         | `deal` or `contact` or `listing` |
-| type             | String      |           | `crm_association`                |
+| Field            | Type        | Required? | Notes                             |
+|------------------|-------------|:---------:|-----------------------------------|
+| created_at       | timestamp   |           |                                   |
+| deleted_at       | timestamp   |           |                                   |
+| created_by       | UUID        |           |                                   |
+| brand            | UUID        |           |                                   |
+| crm_task         | UUID        |           | Parent Task Id                    |
+| listing          | UUID        |           | Associated listing id             |
+| contact          | UUID        |           | Associated contact id             |
+| deal             | UUID        |           | Associated deal id                |
+| index            | UUID        |           | A number used for ordering        |
+| metadata         | UUID        |           | A json holding metadata for event |
+| association_type | String Enum | ✓         | `deal` or `contact` or `listing`  |
+| type             | String      |           | `crm_association`                 |
 
 ### Get tasks [GET /crm/tasks]
 <!-- include(tests/task/getForUser.md) -->
