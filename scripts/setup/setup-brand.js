@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 const promisify = require('../../lib/utils/promisify')
 const Brand = require('../../lib/models/Brand/index')
 const BrandRole = require('../../lib/models/Brand/role')
