@@ -118,6 +118,7 @@ SELECT 'compact_listing' AS TYPE,
           'lot_size_dimensions', properties.lot_size_dimensions,
           'lot_square_meters', properties.lot_square_meters,
           'lot_size_area', properties.lot_size_area,
+          'description', properties.description,
           'created_at', EXTRACT(EPOCH FROM properties.created_at),
           'updated_at', EXTRACT(EPOCH FROM properties.updated_at)
        ) AS compact_property,
