@@ -5,7 +5,10 @@ const due_date = new Date()
 const task = {
   title: 'Hello, Task World!',
   due_date: due_date.getTime() / 1000,
-  task_type: 'Todo'
+  task_type: 'Todo',
+  metadata: {
+    template: '<html></html>'
+  }
 }
 
 const fixed_reminder = {

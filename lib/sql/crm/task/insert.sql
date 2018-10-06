@@ -6,6 +6,7 @@ INSERT INTO crm_tasks (
   due_date,
   status,
   task_type,
+  metadata,
   searchable_field
 )
 VALUES (
@@ -16,6 +17,7 @@ VALUES (
   $5,
   $6,
   $7,
+  $8,
   COALESCE($3, '') || ' ' || COALESCE($4, '')
 )
 RETURNING id

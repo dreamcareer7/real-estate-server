@@ -35,6 +35,8 @@ declare interface ITaskInput {
   reminders: IReminderInput[];
   associations?: ICrmAssociationInput[];
   assignees?: UUID[];
+
+  metadata?: any;
 }
 
 declare interface ITaskFilters extends IAssociationFilters {

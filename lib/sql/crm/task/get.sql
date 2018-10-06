@@ -8,6 +8,7 @@ SELECT
   EXTRACT(EPOCH FROM due_date) AS due_date,
   "status",
   task_type,
+  metadata,
   (
     SELECT
       ARRAY_AGG("user" ORDER BY created_at)
