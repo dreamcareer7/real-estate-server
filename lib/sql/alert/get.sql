@@ -21,9 +21,9 @@ SELECT alerts.*,
                ARRAY[alerts.id] <@ recommendations.referring_objects
        ) AS new_recommendations,
        (
-         SELECT url FROM photos
+         SELECT url FROM production.photos
          INNER JOIN recommendations
-           ON photos.listing_mui = recommendations.matrix_unique_id
+           ON production.photos.listing_mui = recommendations.matrix_unique_id
          WHERE ARRAY[alerts.id] <@ recommendations.referring_objects
            AND url IS NOT NULL
          ORDER BY recommendations.updated_at DESC
