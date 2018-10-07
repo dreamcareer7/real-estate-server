@@ -67,11 +67,11 @@ SELECT 'compact_listing' AS TYPE,
           'type', 'location'
        ) ELSE NULL END AS location,
        (
-         SELECT url FROM photos
+         SELECT url FROM production.photos
          WHERE
           listing_mui = listings.matrix_unique_id
-          AND photos.url IS NOT NULL
-          AND photos.deleted_at IS NULL
+          AND production.photos.url IS NOT NULL
+          AND production.photos.deleted_at IS NULL
          ORDER BY "order" LIMIT 1
        ) as cover_image_url,
        json_build_object(
