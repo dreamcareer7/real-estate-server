@@ -73,11 +73,11 @@ SELECT deals.*,
         )
       ) AS street_address,
       (
-        SELECT url FROM production.photos
+        SELECT url FROM photos
         WHERE
         listing_mui = listings.matrix_unique_id
-        AND production.photos.url IS NOT NULL
-        AND production.photos.deleted_at IS NULL
+        AND photos.url IS NOT NULL
+        AND photos.deleted_at IS NULL
         ORDER BY "order" LIMIT 1
       ) AS photo
       FROM listings
