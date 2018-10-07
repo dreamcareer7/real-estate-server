@@ -11,15 +11,15 @@ SET
   next_touch = tt.next_touch
 FROM (
   SELECT
-    lt.id,
+    nt.contact,
     lt.last_touch,
     nt.next_touch
   FROM
     lt
     JOIN nt
-      ON lt.id = nt.id
+      ON lt.contact = nt.contact
 ) tt
 WHERE
-  tt.id = contacts.id
+  tt.contact = contacts.id
 RETURNING
   contacts.id
