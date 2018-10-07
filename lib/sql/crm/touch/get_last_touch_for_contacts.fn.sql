@@ -15,6 +15,8 @@ AS $$
   WHERE
     ca.contact = ANY($1)
     AND crm_tasks.status = 'DONE'
+    AND crm_tasks.deleted_at IS NULL
+    AND ca.deleted_at IS NULL
   ORDER BY
     ca.contact, crm_tasks.due_date desc
 $$
