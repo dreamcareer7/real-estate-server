@@ -97,7 +97,6 @@ const connections = {}
 
 const database = (req, res, next) => {
   const context = Context.create()
-  context.log('New context...')
   const suite = req.headers['x-suite']
 
   context.watchOver(req)
