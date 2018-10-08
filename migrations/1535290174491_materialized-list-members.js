@@ -41,6 +41,7 @@ const run = async () => {
   await sql('COMMIT')
   
   release()
+  context.exit()
 }
 
 const getDb = async () => {
