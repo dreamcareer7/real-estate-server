@@ -181,7 +181,8 @@ const database = (req, res, next) => {
 
       connections[suite] = conn
       context.set({
-        db: conn
+        db: conn,
+        jobs: []
       })
       context.run(next)
     })
