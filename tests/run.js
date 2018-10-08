@@ -162,6 +162,7 @@ const database = (req, res, next) => {
   }
 
   if (connections[suite]) {
+    context.log('Initialize jobs after existing connection.')
     context.set({
       db: connections[suite],
       jobs: []
@@ -180,8 +181,10 @@ const database = (req, res, next) => {
         return res.error(err)
 
       connections[suite] = conn
+      context.log('Initialize jobs after new connection.')
       context.set({
-        db: conn
+        db: conn,
+        jobs: []
       })
       context.run(next)
     })
