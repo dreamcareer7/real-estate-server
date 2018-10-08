@@ -23,7 +23,7 @@ modules:
 
 modules:docs:
   stage: build
-  image: node:9-alpine
+  image: node:10-alpine
   cache:
     key: docs
     paths:
@@ -73,7 +73,7 @@ coverage:
 
 docs:
   stage: deploy
-  image: node:9-alpine
+  image: node:10-alpine
   dependencies:
     - modules:docs
     - coverage
