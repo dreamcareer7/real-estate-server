@@ -1,7 +1,4 @@
-WITH cusers AS (
-  SELECT * FROM get_users_for_contacts($1::uuid[])
-),
-cdeals AS (
+WITH cdeals AS (
   SELECT * FROM get_deals_with_contacts($2::uuid, $1::uuid[])
 )
 SELECT
@@ -23,8 +20,24 @@ SELECT
     contacts_attributes.contact = contacts.id
     AND contacts_attributes.deleted_at IS NULL
   ) as attributes,
-  (SELECT array_agg(user_id) FROM cusers WHERE contact_id = id) as users,
-  (SELECT array_agg(deal) FROM cdeals WHERE contact = id) as deals
+  (
+    SELECT
+      array_agg("user")
+    FROM
+      contacts_users
+    WHERE
+      contact = id
+      AND $3::text[] @> ARRAY['sub_contact.users']
+  ) as users,
+  (
+    SELECT
+      array_agg(deal)
+    FROM
+      cdeals
+    WHERE
+      contact = id
+      AND $3::text[] @> ARRAY['sub_contact.deals']
+  ) as deals
 FROM
   contacts
   JOIN

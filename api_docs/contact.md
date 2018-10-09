@@ -4,43 +4,31 @@
 A _Contact_ is an object, belonging to a user which holds various information about another person, ranging from phone numbers and email to birthdays and company information. A contact is a personal object, meaning each user has a set of them individually.
 
 ### Contact
-A _Contact_ is a simple and small object that contains an actual _Subcontact_. This object is just a logical representation of a contact's entity, used as a container in which we can request all kinds of different representations; e.g. _Subcontact_, _ContactSummary_, etc.
+A _Contact_ is a simple and small object that contains an actual _Attributes_.
 
-Field          | Type         | Description
----------------|:------------:|------------------------------------------------------------------------
-id             | uuid         | Id of the parent subcontact
-user           | User         | Owner of the contact. association: `contact.user`
-created_by     | User         | User who created this contact
-updated_by     | User         | User who created this contact
-brand          | Brand        | **Unused** Owner of the contact, if it's a brand.
-sub_contacts   | Subcontact[] | Array of a single sub-contact. Array is kept for legacy reasons.
-created_at     | number       |
-updated_at     | number       |
-deleted_at     | number       |
+Field                   | Type         | Description
+------------------------|:------------:|------------------------------------------------------------------------
+id                      | uuid         | Id of the parent contact
+user                    | User         | Owner of the contact. association: `contact.user`
+created_by              | User         | User who created this contact
+updated_by              | User         | User who created this contact
+brand                   | Brand        | **Unused** Owner of the contact, if it's a brand.
+created_at              | number       |
+updated_at              | number       |
+deleted_at              | number       |
+ios_address_book_id     | string | Address book id of this contact on iOS device
+android_address_book_id | string | Address book id of this contact on Android device
 
 Contact's available model associations are as follows:
 
-*  `contact.sub_contacts`
 *  `contact.summary`
 *  `contact.lists`
+*  `contact.users`
+*  `contact.deals`
 *  `contact.brand`
 *  `contact.user`
 *  `contact.created_by`
 *  `contact.updated_by`
-
-### Subcontact
-A _Subcontact_ is the actual contact data object containing `attributes`.
-
-Field                   | Type   | Description
-------------------------|:------:|------------------------------------------------------------------
-id                      | uuid   | 
-created_at              | number | 
-updated_at              | number | 
-deleted_at              | number | 
-ios_address_book_id     | string | Address book id of this contact on iOS device
-android_address_book_id | string | Address book id of this contact on Android device
-users                   | User[] | Users connected to this contact via credentials match
-deals                   | Deal[] | Deals roles that match with credentials of the contact
 
 ### Contact attributes
 A _ContactAttribute_ is an object that holds all the data and meta-data about a contact attribute.
