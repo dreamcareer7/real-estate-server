@@ -5,7 +5,7 @@ const db = require('../lib/utils/db')
 
 const up = [
   'BEGIN',
-  'ALTER TABLE properties ADD block TEXT',
+  'ALTER TABLE properties ADD IF NOT EXISTS block TEXT',
   `UPDATE properties SET block = (
     SELECT (value->>'Block') FROM mls_data WHERE matrix_unique_id = properties.matrix_unique_id
   )`,
