@@ -126,6 +126,57 @@ const createCompanyContact = cb => {
     })
 }
 
+const createSingleAttrContact = cb => {
+  const c = {
+    attributes: [{
+      attribute_type: 'birthday',
+      date: Date.now() / 1000
+    }]
+  }
+
+  _fixContactAttributeDefs(c)
+
+  return frisby
+    .create('add a single attribute contact')
+    .post('/contacts?get=true&relax=false&activity=true&associations[]=contact.summary', {
+      contacts: [c]
+    })
+    .after(cb)
+    .expectStatus(200)
+    .expectJSONLength('data', 1)
+    .expectJSON({
+      data: [
+        {
+          summary: {
+            display_name: 'Guest'
+          }
+        }
+      ]
+    })
+}
+
+const stringSearchForGuest = cb => {
+  return frisby
+    .create('search for Guest contacts')
+    .post('/contacts/filter?q[]=Guest')
+    .after(cb)
+    .expectJSONLength('data', 1)
+    .expectJSON({
+      data: [{
+        id: results.contact.createSingleAttrContact.data[0].id
+      }]
+    })
+    .expectStatus(200)
+}
+
+const removeSingleAttrContact = cb => {
+  return frisby
+    .create('delete single attr contact')
+    .delete(`/contacts/${results.contact.createSingleAttrContact.data[0].id}`)
+    .after(cb)
+    .expectStatus(204)
+}
+
 const importManyContacts = cb => {
   return frisby
     .create('trigger import many contacts from json')
@@ -929,6 +980,9 @@ module.exports = {
   getAttributeDefs,
   create,
   createCompanyContact,
+  createSingleAttrContact,
+  stringSearchForGuest,
+  removeSingleAttrContact,
   importManyContacts,
   createEmptyContactFails,
   getContacts,
