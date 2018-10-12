@@ -4,9 +4,9 @@ const async = require('async')
 const db = require('../lib/utils/db')
 const fs = require('fs')
 
-const calendar_view = fs.readFileSync(__dirname + '/../lib/sql/analytics/calendar/calendar.view.sql', 'utf-8')
+const calendar_view = fs.readFileSync(__dirname + '/../lib/sql/calendar/calendar.view.sql', 'utf-8')
 const get_contact_display_name = fs.readFileSync(__dirname + '/../lib/sql/contact/functions/get_contact_display_name.fn.sql', 'utf-8')
-const get_deal_display_title = fs.readFileSync(__dirname + '/../lib/sql/analytics/calendar/get_deal_display_title.fn.sql', 'utf-8')
+const get_deal_display_title = fs.readFileSync(__dirname + '/../lib/sql/calendar/get_deal_display_title.fn.sql', 'utf-8')
 
 const up = [
   'BEGIN',
