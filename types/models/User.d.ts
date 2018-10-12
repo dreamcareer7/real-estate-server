@@ -15,6 +15,3 @@ declare interface IUser extends IModel {
 
     agent?: IAgent;
 }
-
-declare namespace User {
-}

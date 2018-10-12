@@ -11,7 +11,7 @@ const sql = require('../../lib/models/SupportBot/sql')
 async function createBrandForUser(user_id) {
   var brand_data, brand, role, user
 
-  user = await promisify(User.get)(user_id)
+  user = await User.get(user_id)
 
   brand_data = {
     palette: {
