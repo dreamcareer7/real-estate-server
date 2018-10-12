@@ -22,7 +22,7 @@ const run = async() => {
   const file_ids = rows.reduce((all, row) => {
     return all.concat(row.files)
   }, [])
-  .filter(Boolean)
+    .filter(Boolean)
 
   const files = await promisify(AttachedFile.getAll)(file_ids)
   const indexed = _.keyBy(files, 'id')
