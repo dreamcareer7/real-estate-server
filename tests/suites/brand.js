@@ -326,7 +326,7 @@ const getAgents = cb => {
     })
 }
 
-const setTemplate = cb => {
+const addTemplate = cb => {
   const submission = {
     state: 'Fair',
     values: {
@@ -334,8 +334,16 @@ const setTemplate = cb => {
     }
   }
 
-  return frisby.create('save a form template')
-    .post(`/brands/${brand_id}/templates/${results.form.create.data.id}`, submission)
+  const template = {
+    name: 'Form Template',
+    submission,
+    deal_types: null,
+    property_types: null,
+    form: results.form.create.data.id
+  }
+
+  return frisby.create('add a form template')
+    .post(`/brands/${brand_id}/templates`, template)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
@@ -343,7 +351,7 @@ const setTemplate = cb => {
     })
 }
 
-const setTemplateAgain = cb => {
+const updateTemplate = cb => {
   const submission = {
     state: 'Fair',
     values: {
@@ -351,8 +359,15 @@ const setTemplateAgain = cb => {
     }
   }
 
-  return frisby.create('save a form template again (upsert)')
-    .post(`/brands/${brand_id}/templates/${results.form.create.data.id}`, submission)
+  const template = {
+    name: 'Updated Form Template',
+    submission,
+    deal_types: ['Buying'],
+    property_types: ['Resale']
+  }
+
+  return frisby.create('update a form template')
+    .put(`/brands/${brand_id}/templates/${results.brand.addTemplate.data.id}`, template)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
@@ -362,11 +377,19 @@ const setTemplateAgain = cb => {
 
 const getTemplates = cb => {
   return frisby.create('get all templates for a brand (and its parents)')
-    .get(`/brands/${brand_id}/templates/${results.form.create.data.id}`)
+    .get(`/brands/${brand_id}/templates?form=${results.form.create.data.id}`)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
+      data: [
+        {
+          name: results.brand.updateTemplate.data.name
+        }
+      ],
+      info: {
+        count: 1
+      }
     })
 }
 
@@ -413,8 +436,8 @@ module.exports = {
   removeOffice,
   removeHostname,
 
-  setTemplate,
-  setTemplateAgain,
+  addTemplate,
+  updateTemplate,
   getTemplates,
 
   removeBrand
