@@ -9,21 +9,6 @@ const create = cb => {
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
-      data: omit(form, ['fields'])
-    })
-    .expectJSONTypes({
-      code: String,
-      data: form_response
-    })
-}
-
-const getWithFields = cb => {
-  return frisby.create('get a form')
-    .get(`/forms/${results.form.create.data.id}?associations[]=form.fields`)
-    .after(cb)
-    .expectStatus(200)
-    .expectJSON({
-      code: 'OK',
       data: form
     })
     .expectJSONTypes({
@@ -33,7 +18,7 @@ const getWithFields = cb => {
 }
 
 const update = cb => {
-  const form = results.form.getWithFields.data
+  const form = results.form.create.data
   form.name = 'Updated form name'
 
   // update_at is going to change. If we dont delete this this,
@@ -48,7 +33,7 @@ const update = cb => {
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
-      data: omit(form, ['fields', 'updated_at'])
+      data: omit(form, ['updated_at'])
     })
     .expectJSONTypes({
       code: String,
@@ -86,26 +71,9 @@ const getAll = (cb) => {
     })
 }
 
-const getByFSId = (cb) => {
-  return frisby.create('get form by formstack id')
-    .get(`/forms/search?formstack_id=${results.form.update.data.formstack_id}`)
-    .after(cb)
-    .expectStatus(200)
-    .expectJSON({
-      code: 'OK',
-      data: results.form.update.data
-    })
-    .expectJSONTypes({
-      code: String,
-      data: form_response
-    })
-}
-
 module.exports = {
   create,
-  getWithFields,
   update,
   get,
   getAll,
-  getByFSId,
 }

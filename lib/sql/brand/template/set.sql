@@ -1,1 +1,0 @@
-INSERT INTO brands_forms_templates(brand, form, submission) VALUES ($1, $2, $3)

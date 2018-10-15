@@ -57,13 +57,6 @@ The rest of the API endpoints documented here are used by our internal mapper to
 ### Update a form [PUT /forms/:id]
 <!-- include(tests/form/getAll.md) -->
 
-### Get a form by Formstack ID [GET /forms/search?formstack_id]
-
-`formstack_id` (integer) Formstack ID
-
-<!-- include(tests/form/getByFSId.md) -->
-
-
 #Group Submission
 
 ## Overview

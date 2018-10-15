@@ -1,3 +1,3 @@
 INSERT INTO
-  forms (formstack_id, name, fields) VALUES ($1, $2, $3)
+  forms (name) VALUES ($1)
 RETURNING id

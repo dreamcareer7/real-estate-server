@@ -16,6 +16,8 @@ registerSuite('brokerwolf', [
 ])
 registerSuite('user', ['upgradeToAgentWithEmail'])
 
+const pdf = 'https://s3-us-west-2.amazonaws.com/rechat-forms/2672324.pdf'
+
 const getContexts = cb => {
   return frisby.create('get all possible context items')
     .get('/deals/contexts')
@@ -485,8 +487,9 @@ const setSubmission = cb => {
   const submission = {
     form: results.form.create.data.id,
     state: 'Fair',
+    pdf,
     values: {
-      51821682: '11112 New Orleans Drive'
+      Form1: '11112 New Orleans Drive'
     }
   }
 
@@ -499,8 +502,9 @@ const updateSubmission = cb => {
   const submission = {
     form: results.form.create.data.id,
     state: 'Fair',
+    pdf,
     values: {
-      51821682: 'Updated 11112 New Orleans Drive'
+      Form1: 'Updated 11112 New Orleans Drive'
     }
   }
 
