@@ -42,7 +42,7 @@ module.exports = {
         description: 'String search in title and description',
         example: 'Hello World'
       },
-      user: {
+      users: {
         type: 'string',
         required: false,
         uuid: true,

@@ -131,7 +131,7 @@ declare interface IContactFilterOptions {
   created_lte?: number;
   ids?: UUID[];
   list?: UUID;
-  user?: UUID;
+  users?: UUID[];
 }
 
 declare interface ICSVImporterMappedField {
