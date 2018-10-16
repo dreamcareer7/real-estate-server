@@ -12,7 +12,13 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
     NULL::uuid AS deal,
     NULL::uuid AS contact,
     (
-      SELECT ARRAY_AGG("user") FROM crm_tasks_assignees WHERE crm_task = crm_tasks.id
+      SELECT
+        ARRAY_AGG("user")
+      FROM
+        crm_tasks_assignees
+      WHERE
+        crm_task = crm_tasks.id
+        AND deleted_at IS NULL
     ) AS users,
     brand,
     status
