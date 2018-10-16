@@ -20,11 +20,6 @@ VALUES (
   $7,
   $8,
   COALESCE($3, '') || ' ' || COALESCE($4, ''),
-  (CASE
-    WHEN $5::timestamptz <> due_date THEN
-      $5::timestamptz > now()
-    ELSE
-      needs_notification
-  END) AND $6 <> 'DONE'
+  ($5::timestamptz > now() AND $6 <> 'DONE')
 )
 RETURNING id
