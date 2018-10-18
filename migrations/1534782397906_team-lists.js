@@ -12,7 +12,7 @@ const up = [
   'BEGIN',
   'ALTER TABLE contact_search_lists RENAME COLUMN "user" TO created_by',
   'ALTER TABLE contact_search_lists ALTER COLUMN created_by DROP NOT NULL',
-  'ALTER TABLE contact_search_lists ADD COLUMN brand uuid',
+  'ALTER TABLE contact_search_lists ADD COLUMN IF NOT EXISTS brand uuid',
   'DROP FUNCTION IF EXISTS create_stage_lists_for_user(uuid)',
   create_stage_lists_for_brand,
   'COMMIT'
