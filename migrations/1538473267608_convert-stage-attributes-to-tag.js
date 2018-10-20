@@ -10,6 +10,12 @@ const source = p => fs.readFileSync(sql_path(p), 'utf-8')
 
 const up = [
   'BEGIN',
+  `UPDATE
+    contacts_attributes
+  SET
+    index = NULL
+  WHERE
+    attribute_type = 'stage'`,
   `WITH tag_id AS (
     SELECT id FROM contacts_attribute_defs WHERE name = 'tag' LIMIT 1
   )
