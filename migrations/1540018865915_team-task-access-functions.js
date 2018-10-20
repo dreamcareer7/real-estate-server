@@ -17,7 +17,7 @@ const up = [
   check_task_read_access,
   'DROP FUNCTION IF EXISTS check_task_write_access(uuid, uuid)',
   check_task_write_access,
-  'ALTER TABLE crm_tasks ALTER COLUMN assignee DROP NOT NULL',
+  'ALTER TABLE crm_tasks DROP COLUMN IF EXISTS assignee',
   'COMMIT'
 ]
 
