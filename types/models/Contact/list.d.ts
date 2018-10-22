@@ -1,5 +1,7 @@
 declare interface IContactList {
   id: UUID;
+  deleted_at?: number;
+
   name: string;
   filters: IContactAttributeFilter[];
   query: string;
