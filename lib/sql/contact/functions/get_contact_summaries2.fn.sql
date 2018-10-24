@@ -45,6 +45,7 @@ AS $function$
               JOIN contact_ids ON contacts.id = contact_ids.id::uuid
             WHERE
               contacts_attributes.deleted_at IS NULL
+              AND is_partner IS False
               AND contacts.deleted_at IS NULL
               AND attribute_type = ANY(VALUES
                 ('title'),
@@ -74,6 +75,7 @@ AS $function$
               JOIN contact_ids ON contacts.id = contact_ids.id::uuid
             WHERE
               contacts_attributes.deleted_at IS NULL
+              AND is_partner IS False
               AND contacts.deleted_at IS NULL
               AND attribute_type = ANY(VALUES
                 ('email'),
