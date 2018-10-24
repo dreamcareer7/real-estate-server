@@ -95,6 +95,7 @@ declare interface IContactAttributeInput {
   index?: number;
   label?: String;
   is_primary?: boolean;
+  is_partner?: boolean;
 }
 
 declare interface IAddContactOptions {

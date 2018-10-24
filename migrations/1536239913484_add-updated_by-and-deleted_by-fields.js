@@ -27,10 +27,6 @@ const up = [
     ADD COLUMN IF NOT EXISTS deleted_by uuid REFERENCES users(id)`,
   'DROP FUNCTION IF EXISTS delete_contact_attribute_def(uuid)',
   source('functions/delete_contact_attribute_def.fn.sql'),
-  'DROP FUNCTION IF EXISTS delete_contact_attribute_defs(uuid[])',
-  source('functions/delete_contact_attribute_defs.fn.sql'),
-  'DROP VIEW IF EXISTS contacts_attributes_with_name',
-  source('views/contacts_attributes_with_name.view.sql'),
   'COMMIT'
 ]
 

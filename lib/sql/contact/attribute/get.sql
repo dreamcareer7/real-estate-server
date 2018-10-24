@@ -11,12 +11,12 @@ SELECT
   index,
   created_by,
   updated_by,
-  "name" as attribute_type,
+  attribute_type,
   "text",
   EXTRACT(EPOCH FROM "date") AS "date",
   "number",
   'contact_attribute' as "type"
 FROM
-  contacts_attributes_with_name
+  contacts_attributes
   JOIN unnest($1::uuid[]) WITH ORDINALITY t(cid, ord) ON id = cid
     ORDER BY t.ord
