@@ -10,8 +10,6 @@ const fn_source = fn_name => fs.readFileSync(path.resolve(sql_path, fn_name + '.
 
 const read_access = fn_source('read_access')
 const write_access = fn_source('write_access')
-const delete_contacts_for_user = fn_source('delete_contacts_for_user')
-const purge_deleted_contacts = fn_source('purge_deleted_contacts')
 
 const up = [
   'BEGIN',
@@ -19,9 +17,6 @@ const up = [
   read_access,
   'DROP FUNCTION check_contact_write_access(contacts, uuid)',
   write_access,
-  'DROP FUNCTION delete_contacts_for_user(text)',
-  delete_contacts_for_user,
-  purge_deleted_contacts,
   'COMMIT'
 ]
 
