@@ -73,11 +73,6 @@ function getAttributeDefs(cb) {
 }
 
 function create(cb) {
-  const name =
-    contactAttributes.first_name[0].text +
-    ' ' +
-    contactAttributes.last_name[0].text
-
   return frisby
     .create('add a contact')
     .post('/contacts?get=true&relax=false&activity=true&associations[]=contact_attribute.attribute_def&associations[]=contact.attributes&associations[]=contact.summary', {
