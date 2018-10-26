@@ -8,7 +8,6 @@ const brand = require('./data/brand.js')
 registerSuite('user', ['create', 'upgradeToAgentWithEmail', 'markAsNonShadow'])
 
 let defs
-const contactAttributes = _.groupBy(contact.attributes, 'attribute_type')
 
 function _fixContactAttributeDefs(contact) {
   contact.user = results.authorize.token.data.id
