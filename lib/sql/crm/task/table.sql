@@ -13,6 +13,5 @@ CREATE TABLE IF NOT EXISTS crm_tasks (
     "status" TEXT,
     "type" TEXT,
 
-    assignee uuid NOT NULL REFERENCES users(id),
     "notification" uuid uuid REFERENCES notifications(id)
 )
