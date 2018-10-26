@@ -5,6 +5,7 @@ const db = require('../lib/utils/db')
 
 const up = [
   'ALTER TYPE activity_type ADD VALUE IF NOT EXISTS \'UserImportedContacts\'',
+  'ALTER TYPE activity_type ADD VALUE IF NOT EXISTS \'UserCreatedContactList\'',
   'ALTER TYPE notification_object_class ADD VALUE IF NOT EXISTS \'ContactList\'',
 ]
 
