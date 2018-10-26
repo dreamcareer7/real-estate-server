@@ -5,13 +5,15 @@ const db = require('../lib/utils/db')
 
 const up = [
   'BEGIN',
-  'ALTER TABLE contacts_summaries ADD COLUMN partner_name text',
+  'ALTER TABLE contacts ADD COLUMN IF NOT EXISTS partner_name text',
+  'ALTER TABLE contacts_summaries ADD COLUMN IF NOT EXISTS partner_name text',
   'COMMIT'
 ]
 
 const down = [
   'BEGIN',
-  'ALTER TABLE contacts_summaries DROP COLUMN partner_name',
+  'ALTER TABLE contacts_summaries DROP COLUMN IF EXISTS partner_name',
+  'ALTER TABLE contacts DROP COLUMN IF EXISTS partner_name',
   'COMMIT'
 ]
 

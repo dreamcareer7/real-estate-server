@@ -1,19 +1,23 @@
 'use strict'
 
+const path = require('path')
+const fs = require('fs')
 const async = require('async')
 const db = require('../lib/utils/db')
 
+const sql_path = p => path.resolve(__dirname, '../lib/sql/contact/functions', p)
+const source = p => fs.readFileSync(sql_path(p), 'utf-8')
+
 const up = [
   'BEGIN',
-  'ALTER TABLE contacts_attributes ADD COLUMN IF NOT EXISTS is_partner boolean NOT NULL DEFAULT False',
-  'ALTER TABLE contacts_attributes ALTER COLUMN is_partner DROP DEFAULT',
+  'DROP FUNCTION IF EXISTS get_contact_summaries(uuid[])',
+  source('get_contact_summaries.fn.sql'),
+  'DROP FUNCTION IF EXISTS get_contact_summaries2(uuid[])',
+  source('get_contact_summaries2.fn.sql'),
   'COMMIT'
 ]
 
 const down = [
-  'BEGIN',
-  'ALTER TABLE contacts_attributes DROP COLUMN IF EXISTS is_partner',
-  'COMMIT'
 ]
 
 const runAll = (sqls, next) => {

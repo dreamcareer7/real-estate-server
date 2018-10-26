@@ -7,6 +7,13 @@ const contact = {
       is_primary: true
     },
     {
+      attribute_type: 'email',
+      text: 'jane@doe.org',
+      label: 'Work',
+      is_primary: true,
+      is_partner: true
+    },
+    {
       attribute_type: 'phone_number',
       text: '+989124834198',
       label: 'Mobile',
@@ -17,12 +24,22 @@ const contact = {
       text: 'John'
     },
     {
+      attribute_type: 'first_name',
+      text: 'Jane',
+      is_partner: true
+    },
+    {
       attribute_type: 'middle_name',
       text: 'M.'
     },
     {
       attribute_type: 'last_name',
       text: 'Doe'
+    },
+    {
+      attribute_type: 'last_name',
+      text: 'Doe',
+      is_partner: true
     },
     {
       attribute_type: 'nickname',
