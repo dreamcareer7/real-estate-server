@@ -8,7 +8,6 @@ const brand = require('./data/brand.js')
 registerSuite('user', ['create', 'upgradeToAgentWithEmail', 'markAsNonShadow'])
 
 let defs
-const contactAttributes = _.groupBy(contact.attributes, 'attribute_type')
 
 function _fixContactAttributeDefs(contact) {
   contact.user = results.authorize.token.data.id
@@ -73,11 +72,6 @@ function getAttributeDefs(cb) {
 }
 
 function create(cb) {
-  const name =
-    contactAttributes.first_name[0].text +
-    ' ' +
-    contactAttributes.last_name[0].text
-
   return frisby
     .create('add a contact')
     .post('/contacts?get=true&relax=false&activity=true&associations[]=contact_attribute.attribute_def&associations[]=contact.attributes&associations[]=contact.summary', {
@@ -97,9 +91,7 @@ function create(cb) {
     .expectJSON({
       data: [
         {
-          summary: {
-            display_name: name
-          }
+          type: 'contact'
         }
       ]
     })
@@ -225,6 +217,7 @@ const getSingleContact = cb => {
       data: {
         ...results.contact.create.data[0],
         display_name: 'John Doe',
+        partner_name: 'Jane Doe',
         sort_field: 'Doe John'
       }
     })

@@ -24,6 +24,7 @@ WITH cdeals AS (
 SELECT
   id,
   display_name,
+  partner_name,
   brand,
   "user",
   sort_field,

@@ -34,8 +34,8 @@ const run = async () => {
   let i = 0
 
   for(const list of res.rows) {
-    await ListMember.updateListMemberships(list.id)
     console.log(`${++i}/${res.rows.length}`, list.name, 'for', list_owners[list.id].brand)
+    await ListMember.updateListMemberships(list.id)
   }
 
   await sql('COMMIT')

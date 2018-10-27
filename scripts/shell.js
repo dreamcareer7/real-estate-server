@@ -1,6 +1,16 @@
 const repl = require('repl')
 const promisify = require('../lib/utils/promisify')
 const queue = require('../lib/utils/queue')
+const program = require('commander')
+const Brand = require('../lib/models/Brand')
+const Job = require('../lib/models/Job')
+const User = require('../lib/models/User')
+
+program
+  .usage('npm run shell [options]')
+  .option('-u, --user <user>', 'user-id to be preset on context')
+  .option('-b, --brand <brand>', 'brand-id to be preset on context')
+  .parse(process.argv)
 
 require('../lib/models/index')()
 
@@ -22,7 +32,7 @@ const context = Context.create({
 
 context.enter()
 
-db.conn((err, client) => {
+db.conn(async (err, client) => {
   if (err) {
     process.exit(1)
   }
@@ -48,6 +58,16 @@ db.conn((err, client) => {
     db: client,
     jobs: []
   })
+
+  if (program.user) {
+    const user = await User.get(program.user)
+    context.set({ user })
+  }
+
+  if (program.brand) {
+    const brand = await Brand.get(program.brand)
+    context.set({ brand })
+  }
 })
 
 

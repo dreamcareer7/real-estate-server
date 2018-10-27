@@ -22,6 +22,7 @@ const up = [
         'Guest'
       ) AS sort_field
     FROM ids, get_contact_summaries(ids.ids) AS s
+    WHERE is_partner IS False
   )
   UPDATE
     contacts

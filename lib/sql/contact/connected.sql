@@ -1,1 +1,0 @@
-SELECT user_has_contact_with_another($1::uuid, $2::uuid) AS is_connected

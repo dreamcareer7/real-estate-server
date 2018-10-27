@@ -45,6 +45,7 @@ AS $function$
               JOIN contact_ids ON contacts.id = contact_ids.id::uuid
             WHERE
               contacts_attributes.deleted_at IS NULL
+              AND contacts_attributes.is_partner IS False
               AND contacts.deleted_at IS NULL
               AND attribute_type = ANY(VALUES
                 ('title'),
@@ -67,13 +68,14 @@ AS $function$
             SELECT
               contacts.id,
               contacts_attributes.attribute_type,
-              array_agg(text)::text AS "value"
+              array_agg(text ORDER BY contacts_attributes.is_primary desc, contacts_attributes.updated_at desc)::text AS "value"
             FROM
               contacts
               JOIN contacts_attributes ON contacts_attributes.contact = contacts.id
               JOIN contact_ids ON contacts.id = contact_ids.id::uuid
             WHERE
               contacts_attributes.deleted_at IS NULL
+              AND contacts_attributes.is_partner IS False
               AND contacts.deleted_at IS NULL
               AND attribute_type = ANY(VALUES
                 ('email'),

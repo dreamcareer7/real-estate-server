@@ -42,7 +42,14 @@ const prepareContext = (c, cb) => {
     }
 
     const commit = cb => {
-      conn.query('COMMIT', function () {
+      conn.query('COMMIT', function (err) {
+        if (err) {
+          Context.trace('<- Commit failed!'.red)
+          return rollback(err)
+        }
+
+        Context.log('Committed 👌')
+
         done()
         const jobs = context.get('jobs')
         Job.handle(jobs, cb)

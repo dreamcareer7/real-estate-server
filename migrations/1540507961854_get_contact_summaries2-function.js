@@ -5,19 +5,15 @@ const fs = require('fs')
 const async = require('async')
 const db = require('../lib/utils/db')
 
-const sql_path = fn => path.resolve(__dirname, '../lib/sql/crm/task', fn + '.fn.sql')
-const source = fn => fs.readFileSync(sql_path(fn), 'utf-8')
-
-const check_task_read_access = source('read_access')
-const check_task_write_access = source('write_access')
+const sql_path = p => path.resolve(__dirname, '../lib/sql/contact/functions', p)
+const source = p => fs.readFileSync(sql_path(p), 'utf-8')
 
 const up = [
   'BEGIN',
-  'DROP FUNCTION IF EXISTS check_task_read_access(uuid, uuid)',
-  check_task_read_access,
-  'DROP FUNCTION IF EXISTS check_task_write_access(uuid, uuid)',
-  check_task_write_access,
-  'ALTER TABLE crm_tasks ALTER COLUMN assignee DROP NOT NULL',
+  'DROP FUNCTION IF EXISTS get_contact_summaries(uuid[])',
+  source('get_contact_summaries.fn.sql'),
+  'DROP FUNCTION IF EXISTS get_contact_summaries2(uuid[])',
+  source('get_contact_summaries2.fn.sql'),
   'COMMIT'
 ]
 

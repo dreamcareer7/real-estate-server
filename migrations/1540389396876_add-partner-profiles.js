@@ -1,26 +1,19 @@
 'use strict'
 
-const fs = require('fs')
-const path = require('path')
 const async = require('async')
 const db = require('../lib/utils/db')
 
-const sql_path = path.resolve(__dirname, '../lib/sql/contact/functions')
-const fn_source = fn_name => fs.readFileSync(path.resolve(sql_path, fn_name + '.fn.sql'), 'utf-8')
-
-const read_access = fn_source('read_access')
-const write_access = fn_source('write_access')
-
 const up = [
   'BEGIN',
-  'DROP FUNCTION check_contact_read_access(contacts, uuid)',
-  read_access,
-  'DROP FUNCTION check_contact_write_access(contacts, uuid)',
-  write_access,
+  'ALTER TABLE contacts_attributes ADD COLUMN IF NOT EXISTS is_partner boolean NOT NULL DEFAULT False',
+  'ALTER TABLE contacts_attributes ALTER COLUMN is_partner DROP DEFAULT',
   'COMMIT'
 ]
 
 const down = [
+  'BEGIN',
+  'ALTER TABLE contacts_attributes DROP COLUMN IF EXISTS is_partner',
+  'COMMIT'
 ]
 
 const runAll = (sqls, next) => {

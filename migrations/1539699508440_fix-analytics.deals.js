@@ -1,22 +1,14 @@
 'use strict'
 
-const fs = require('fs')
-const path = require('path')
 const async = require('async')
 const db = require('../lib/utils/db')
+const fs = require('fs')
 
-const sql_path = path.resolve(__dirname, '../lib/sql/contact/functions')
-const fn_source = fn_name => fs.readFileSync(path.resolve(sql_path, fn_name + '.fn.sql'), 'utf-8')
-
-const read_access = fn_source('read_access')
-const write_access = fn_source('write_access')
+const deals_view = fs.readFileSync(__dirname + '/../lib/sql/analytics/olap/deals.view.sql', 'utf-8')
 
 const up = [
   'BEGIN',
-  'DROP FUNCTION check_contact_read_access(contacts, uuid)',
-  read_access,
-  'DROP FUNCTION check_contact_write_access(contacts, uuid)',
-  write_access,
+  deals_view,
   'COMMIT'
 ]
 

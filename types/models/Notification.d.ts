@@ -30,7 +30,7 @@ declare interface INotificationInput {
   auxiliary_subject?: UUID;
   auxiliary_subject_class?: string;
 
-  data: Record<string, any>;
+  data?: Record<string, any>;
 }
 
 declare interface INotification {

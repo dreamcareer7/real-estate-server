@@ -21,4 +21,6 @@ SELECT
   ) AS abbreviated_display_name,
   'contact_summary' AS type
 FROM
-  get_contact_summaries($1::uuid[]);
+  get_contact_summaries($1::uuid[])
+WHERE
+  is_partner IS False

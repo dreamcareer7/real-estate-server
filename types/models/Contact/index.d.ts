@@ -95,6 +95,7 @@ declare interface IContactAttributeInput {
   index?: number;
   label?: String;
   is_primary?: boolean;
+  is_partner?: boolean;
 }
 
 declare interface IAddContactOptions {
@@ -131,7 +132,7 @@ declare interface IContactFilterOptions {
   created_lte?: number;
   ids?: UUID[];
   list?: UUID;
-  user?: UUID;
+  users?: UUID[];
 }
 
 declare interface ICSVImporterMappedField {

@@ -1,6 +1,7 @@
 CREATE OR REPLACE FUNCTION get_contact_summaries(contact_ids uuid[])
 RETURNS TABLE (
   id uuid,
+  is_partner boolean,
   title text,
   first_name text,
   middle_name text,
@@ -28,8 +29,10 @@ AS $function$
 
     crosstab_sql := $ctsql$
       WITH contact_ids(id) AS ( VALUES $ctsql$ || cid_values || $ctsql$ )
-      SELECT DISTINCT ON (contacts.id, contacts_attributes.attribute_def)
+      SELECT DISTINCT ON (contacts.id, contacts_attributes.is_partner, contacts_attributes.attribute_def)
+        (contacts.id || ':' || contacts_attributes.is_partner) AS row_name,
         contacts.id,
+        contacts_attributes.is_partner,
         contacts_attributes.attribute_type,
         COALESCE(
           contacts_attributes.text,
@@ -62,6 +65,7 @@ AS $function$
         )
       ORDER BY
         contacts.id,
+        contacts_attributes.is_partner,
         contacts_attributes.attribute_def,
         contacts_attributes.is_primary desc,
         contacts_attributes.updated_at desc
@@ -69,6 +73,7 @@ AS $function$
 
     RETURN QUERY SELECT
       cids.id,
+      contacts_summaries.is_partner,
       contacts_summaries.title,
       contacts_summaries.first_name,
       contacts_summaries.middle_name,
@@ -118,7 +123,9 @@ AS $function$
         ('source_type'),
         ('source')
     $$) AS contacts_summaries(
+      row_name text,
       cid uuid,
+      is_partner boolean,
       title text,
       first_name text,
       middle_name text,

@@ -22,8 +22,7 @@ const up = [
   WHERE
     ca.crm_task = ct.id`,
   `ALTER TABLE crm_associations
-    ALTER COLUMN created_by SET NOT NULL,
-    ALTER COLUMN brand SET NOT NULL`,
+    ALTER COLUMN created_by SET NOT NULL`,
   'COMMIT'
 ]
 
