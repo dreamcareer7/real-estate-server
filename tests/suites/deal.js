@@ -4,8 +4,8 @@ const omit = require('lodash/omit')
 const schemas = require('./schemas/deal')
 
 registerSuite('listing', ['getListing'])
-registerSuite('brand', ['createParent', 'create', 'addChecklist', 'addForm', 'addTask', 'addAnotherTask'])
 registerSuite('brokerwolf', [
+  'saveSettings',
   'syncMembers',
   'syncClassifications',
   'mapClassification',
@@ -14,6 +14,7 @@ registerSuite('brokerwolf', [
   'syncContactTypes',
   'mapContactType'
 ])
+registerSuite('brand', ['addChecklist', 'addForm', 'addTask', 'addAnotherTask'])
 registerSuite('user', ['upgradeToAgentWithEmail'])
 
 const pdf = 'https://s3-us-west-2.amazonaws.com/rechat-forms/2672324.pdf'

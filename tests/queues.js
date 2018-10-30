@@ -4,12 +4,34 @@ const nodeify = fn => {
   }
 }
 
+const saveBrokerwolfSettings = (job, cb) => {
+  BrokerWolf.Settings.save(job.data).nodeify(cb)
+}
+
+
+const syncBrokerwolfMembers = (job, cb) => {
+  BrokerWolf.Members.sync(job.data.brand).nodeify(cb)
+}
+
+
+const syncBrokerwolfProperties = (job, cb) => {
+  BrokerWolf.PropertyTypes.sync(job.data.brand).nodeify(cb)
+}
+
 const mapBrokerwolfProperty = (job, cb) => {
   BrokerWolf.PropertyTypes.map(job.data).nodeify(cb)
 }
 
+const syncBrokerwolfClassifications = (job, cb) => {
+  BrokerWolf.Classifications.sync(job.data.brand).nodeify(cb)
+}
+
 const mapBrokerwolfClassification = (job, cb) => {
   BrokerWolf.Classifications.map(job.data).nodeify(cb)
+}
+
+const syncBrokerwolfContacts = (job, cb) => {
+  BrokerWolf.Classifications.sync(job.data.brand).nodeify(cb)
 }
 
 const mapBrokerwolfContact = (job, cb) => {
@@ -39,12 +61,13 @@ const list = {
   'Refresh.Agents': Agent.refreshContacts,
   'Seamless.Email': Message.sendEmailForUnread,
   'Seamless.SMS': Notification.sendForUnread,
-  'BrokerWolf.Members.Sync': nodeify(BrokerWolf.Members.sync),
-  'BrokerWolf.Classifications.Sync': nodeify(BrokerWolf.Classifications.sync),
+  'BrokerWolf.Settings.Save': saveBrokerwolfSettings,
+  'BrokerWolf.Members.Sync': syncBrokerwolfMembers,
+  'BrokerWolf.Classifications.Sync': syncBrokerwolfClassifications,
   'BrokerWolf.Classifications.map': mapBrokerwolfClassification,
-  'BrokerWolf.PropertyTypes.Sync': nodeify(BrokerWolf.PropertyTypes.sync),
+  'BrokerWolf.PropertyTypes.Sync': syncBrokerwolfProperties,
   'BrokerWolf.PropertyTypes.map': mapBrokerwolfProperty,
-  'BrokerWolf.ContactTypes.Sync': nodeify(BrokerWolf.ContactTypes.sync),
+  'BrokerWolf.ContactTypes.Sync': syncBrokerwolfContacts,
   'BrokerWolf.ContactTypes.map': mapBrokerwolfContact,
   'Task.sendNotifications': sendTaskNotifications,
   'Email.create': createEmail,

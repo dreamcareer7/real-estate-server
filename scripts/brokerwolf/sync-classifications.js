@@ -4,7 +4,7 @@ require('../connection.js')
 require('../../lib/models/index.js')
 
 const sync = async () => {
-  await BrokerWolf.Classifications.sync()
+  await BrokerWolf.Classifications.sync(process.argv[2])
   process.exit()
 }
 

@@ -15,10 +15,11 @@ const sync = async () => {
   const options = {
     method,
     uri,
-    json: true
+    json: true,
+    brand: deal.brand
   }
 
-  const req = BrokerWolf.tokenize(options)
+  const req = await BrokerWolf.tokenize(options)
 
   const tr = await request(req)
 

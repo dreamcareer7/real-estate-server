@@ -1,7 +1,32 @@
+const settings = require('./data/brokerwolf/settings')
+
+registerSuite('brand', [
+  'createParent',
+  'create'
+])
+
+let brand
+
+const saveSettings = cb => {
+  brand = results.brand.create.data.id
+
+  return frisby.create('Save BrokerWolf Settings for a brand')
+    .post('/jobs', {
+      name: 'BrokerWolf.Settings.Save',
+      data: {
+        brand,
+        ...settings
+      }
+    })
+    .after(cb)
+    .expectStatus(200)
+}
+
 const syncMembers = (cb) => {
   return frisby.create('Sync BrokerWolf Members')
     .post('/jobs', {
-      name: 'BrokerWolf.Members.Sync'
+      name: 'BrokerWolf.Members.Sync',
+      data: { brand }
     })
     .after(cb)
     .expectStatus(200)
@@ -10,7 +35,8 @@ const syncMembers = (cb) => {
 const syncClassifications = (cb) => {
   return frisby.create('Sync BrokerWolf Classifications')
     .post('/jobs', {
-      name: 'BrokerWolf.Classifications.Sync'
+      name: 'BrokerWolf.Classifications.Sync',
+      data: { brand }
     })
     .after(cb)
     .expectStatus(200)
@@ -22,7 +48,7 @@ const mapClassification = (cb) => {
       name: 'BrokerWolf.Classifications.map',
       data: {
         brokerwolf_id: results.brokerwolf.syncClassifications[0].Id,
-        ender_type: 'Buying'
+        ender_type: 'Buying',
       }
     })
     .after(cb)
@@ -32,7 +58,8 @@ const mapClassification = (cb) => {
 const syncPropertyTypes = (cb) => {
   return frisby.create('Sync BrokerWolf Property Types')
     .post('/jobs', {
-      name: 'BrokerWolf.PropertyTypes.Sync'
+      name: 'BrokerWolf.PropertyTypes.Sync',
+      data: { brand }
     })
     .after(cb)
     .expectStatus(200)
@@ -54,7 +81,8 @@ const mapPropertyType = (cb) => {
 const syncContactTypes = (cb) => {
   return frisby.create('Sync BrokerWolf Contact Types')
     .post('/jobs', {
-      name: 'BrokerWolf.ContactTypes.Sync'
+      name: 'BrokerWolf.ContactTypes.Sync',
+      data: { brand }
     })
     .after(cb)
     .expectStatus(200)
@@ -75,6 +103,7 @@ const mapContactType = (cb) => {
 
 
 module.exports = {
+  saveSettings,
   syncMembers,
   syncClassifications,
   mapClassification,
