@@ -1,9 +1,3 @@
-const nodeify = fn => {
-  return cb => {
-    fn().nodeify(cb)
-  }
-}
-
 const saveBrokerwolfSettings = (job, cb) => {
   BrokerWolf.Settings.save(job.data).nodeify(cb)
 }
