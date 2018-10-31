@@ -1008,6 +1008,7 @@ module.exports = {
   updateManyContacts,
   makeSureManyContactsTagIsAdded,
   createManyContactsList,
+  exportByFilter,
   getManyContactsList,
   getContactsInManyContactsList,
   unsetTouchFreqOnManyContactsList,
@@ -1028,6 +1029,5 @@ module.exports = {
   deleteManyContacts,
   checkIfManyContactsListIsEmpty,
   deleteContactWorked,
-  exportByFilter,
   sendEmails
 }
