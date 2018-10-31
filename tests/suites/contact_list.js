@@ -49,6 +49,9 @@ function create (cb) {
         }
       ],
       query: 'Wow',
+      args: {
+        users: [results.authorize.token.data.id]
+      },
       'name': 'Wow list',
       'is_pinned': true
     })

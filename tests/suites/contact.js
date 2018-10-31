@@ -778,6 +778,9 @@ function createManyContactsList(cb) {
           value: 'ManyContacts'
         }
       ],
+      args: {
+        users: [results.authorize.token.data.id]
+      },
       'name': 'Many Contacts',
       touch_freq: 7
     })
