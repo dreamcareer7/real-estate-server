@@ -1,4 +1,4 @@
-CREATE FUNCTION deal_status_mask(deal_id uuid, mask text[]) RETURNS boolean
+CREATE OR REPLACE FUNCTION deal_status_mask(deal_id uuid, mask text[]) RETURNS boolean
 LANGUAGE SQL
 STABLE
 AS $$
