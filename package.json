@@ -97,6 +97,7 @@
     "@types/exceljs": "^0.5.2",
     "@types/kue": "^0.11.9",
     "@types/lodash": "^4.14.104",
+    "@types/mailgun-js": "^0.16.1",
     "@types/node": "^10.9.2",
     "@types/papaparse": "^4.5.2",
     "@types/pg": "^7.4.10",

@@ -1,4 +1,7 @@
 const fs = require('fs')
+const os = require('os')
+const path = require('path')
+
 const promisify = require('../../lib/utils/promisify')
 const runInContext = require('../../lib/models/Context/util')
 
@@ -6,6 +9,8 @@ require('../../lib/models/CRM/Task/index')
 const TaskMailer = require('../../lib/models/CRM/Task/mailer')
 const Notification = require('../../lib/models/Notification')
 const Orm = require('../../lib/models/Orm')
+
+const HOME = os.homedir()
 
 async function mailer_for(id) {
   let n = await promisify(Notification.get)(id)
@@ -31,7 +36,10 @@ async function mailer_for(id) {
 async function run(program) {
   if (program.notification) {
     const mailer = await mailer_for(program.notification)
-    fs.writeFileSync('~/Documents/b.html', await mailer.render())
+    fs.writeFileSync(
+      path.resolve(HOME, 'Documents/b.html'),
+      await mailer.render()
+    )
   }
 }
 
