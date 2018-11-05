@@ -78,6 +78,7 @@ declare interface IContactAttribute {
   index?: number;
   label?: String;
   is_primary: boolean;
+  is_partner: boolean;
 }
 
 declare interface IContactAttributeInput {
