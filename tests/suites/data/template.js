@@ -6,6 +6,7 @@ module.exports = {
   height: 300,
   thumbnail: 'thumbnail-url',
   brand: null,
+  medium: 'Email',
   template_type: 'Listing',
   template
 }
