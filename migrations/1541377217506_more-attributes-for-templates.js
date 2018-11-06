@@ -38,7 +38,7 @@ const up = [
   `UPDATE templates
     SET template_type = 'JustSold' WHERE name ILIKE '%Sold%'`,
 
-  `ALTER TABLE templates ADD COLUMN video boolean NOT NULL DEFAULT FALSE`,
+  'ALTER TABLE templates ADD COLUMN video boolean NOT NULL DEFAULT FALSE',
 
   'COMMIT'
 ]
