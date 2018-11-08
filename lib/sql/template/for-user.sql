@@ -6,8 +6,9 @@ WITH user_brands AS (
 )
 
 SELECT id FROM templates
-WHERE brand IS NULL
-OR brand IN(SELECT brand FROM user_brands)
-AND $2 @> ARRAY[template_type]
-AND deleted_at IS NULL
+WHERE
+  brand IS NULL OR brand IN(SELECT brand FROM user_brands)
+  AND ($2::template_type[]   IS NULL OR $2 @> ARRAY[template_type])
+  AND ($3::template_medium[] IS NULL OR $3 @> ARRAY[medium])
+  AND deleted_at IS NULL
 ORDER BY name ASC
