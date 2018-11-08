@@ -6,7 +6,8 @@ WITH user_brands AS (
 )
 
 SELECT id FROM templates
-WHERE brand IN(SELECT brand FROM user_brands)
+WHERE brand IS NULL
+OR brand IN(SELECT brand FROM user_brands)
 AND $2 @> ARRAY[template_type]
 AND deleted_at IS NULL
 ORDER BY name ASC
