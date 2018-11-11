@@ -79,6 +79,9 @@ function update(cb) {
       }
     ],
     query: 'OMG',
+    args: {
+      users: [results.authorize.token.data.id]
+    },
     name: 'Wow list',
     is_pinned: false
   }
