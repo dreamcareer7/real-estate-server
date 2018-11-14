@@ -4,5 +4,5 @@ module.exports = {
   height: 300,
   brand: null,
   medium: 'Email',
-  template_type: 'Listing',
+  template_types: ['Listing'],
 }
