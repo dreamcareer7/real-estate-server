@@ -1,5 +1,8 @@
+const fs = require('fs')
+
 const envelope = require('./envelope/data.js')
 const envelope_response = require('./envelope/types.js')
+const webhook = fs.readFileSync(__dirname + '/envelope/webhook.xml').toString()
 
 registerSuite('deal', ['create', 'createHippocket', 'addRole', 'addChecklist', 'addTask', 'setSubmission'])
 
@@ -121,13 +124,62 @@ const resend = cb => {
     .after(cb)
     .expectStatus(200)
 }
-//
-// const updateStatus = cb => {
-//   return frisby.create('update status')
-//     .post(`/envelopes/${results.envelope.create.data.id}/hook`)
-//     .after(cb)
-//     .expectStatus(200)
-// }
+
+const updateStatus = cb => {
+  const envelope = results.envelope.create.data
+
+  const body = eval('`'+webhook+'`')
+
+  const headers = {
+    'Content-Type': 'text/xml',
+    'Content-Length': body.length
+  }
+
+  return frisby.create('update status')
+    .post(`/envelopes/${envelope.id}/hook?token=${envelope.webhook_token}`, {}, {
+      json: false,
+      headers,
+      body
+    })
+    .after(cb)
+    .expectStatus(200)
+}
+
+const checkEnvelope = cb => {
+  return frisby.create('Check if envelope is updated properly')
+    .get(`/envelopes/${results.envelope.create.data.id}`)
+    .after(cb)
+    .expectJSON({
+      data: {
+        status: 'Completed',
+        recipients: [
+          { status: 'Completed' },
+          { status: 'Completed' }
+        ]
+      }
+    })
+    .expectStatus(200)
+}
+
+const checkTask = cb => {
+  return frisby.create('Check if the task is submitted')
+    .get(`/deals/${results.envelope.create.data.deal}?associations[]=deal.checklists&associations[]=deal_checklist.tasks&associations[]=task.room`)
+    .after(cb)
+    .expectJSON({
+      data: {
+        checklists: [
+          {
+            tasks: [
+              {
+                id: results.deal.addTask.data.id
+              }
+            ]
+          }
+        ]
+      }
+    })
+    .expectStatus(200)
+}
 
 module.exports = {
   create412,
@@ -138,5 +190,7 @@ module.exports = {
   sign,
   voidit,
   resend,
-  // updateStatus
+  updateStatus,
+  checkEnvelope,
+  checkTask
 }
