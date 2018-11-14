@@ -128,7 +128,8 @@ const resend = cb => {
 const updateStatus = cb => {
   const envelope = results.envelope.create.data
 
-  const body = eval('`'+webhook+'`')
+  // eslint-disable-next-line no-eval
+  const body = eval('`' + webhook + '`')
 
   const headers = {
     'Content-Type': 'text/xml',
