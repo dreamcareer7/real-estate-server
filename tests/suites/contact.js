@@ -778,6 +778,9 @@ function createManyContactsList(cb) {
           value: 'ManyContacts'
         }
       ],
+      args: {
+        users: [results.authorize.token.data.id]
+      },
       'name': 'Many Contacts',
       touch_freq: 7
     })
@@ -1005,6 +1008,7 @@ module.exports = {
   updateManyContacts,
   makeSureManyContactsTagIsAdded,
   createManyContactsList,
+  exportByFilter,
   getManyContactsList,
   getContactsInManyContactsList,
   unsetTouchFreqOnManyContactsList,
@@ -1025,6 +1029,5 @@ module.exports = {
   deleteManyContacts,
   checkIfManyContactsListIsEmpty,
   deleteContactWorked,
-  exportByFilter,
   sendEmails
 }

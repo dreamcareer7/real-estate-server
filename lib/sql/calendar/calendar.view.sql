@@ -63,6 +63,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
     WHERE
       deals.deleted_at IS NULL
       AND context_type = 'Date'::deal_context_type
+      AND deal_status_mask(deals.id, '{Withdrawn,Cancelled,"Contract Terminated"}') IS NOT FALSE
   )
   UNION ALL
   (

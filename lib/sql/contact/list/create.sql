@@ -3,6 +3,7 @@ INSERT INTO contact_search_lists (
     brand,
     filters,
     query,
+    args,
     name,
     is_pinned,
     touch_freq
@@ -13,5 +14,6 @@ INSERT INTO contact_search_lists (
     $4,
     $5,
     $6,
-    $7
+    $7,
+    $8
 ) RETURNING id

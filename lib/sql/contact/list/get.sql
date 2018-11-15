@@ -20,6 +20,7 @@ SELECT
   brand,
   filters,
   query,
+  args,
   name,
   is_pinned,
   touch_freq,

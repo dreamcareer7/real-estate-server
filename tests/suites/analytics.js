@@ -83,7 +83,10 @@ function getCalendarFeedUrl(cb) {
       types: [
         'birthday',
         'option_period'
-      ]
+      ],
+      filter: [{
+        brand: results.brand.create.data.id
+      }]
     })
     .after((err, res) => {
       if (err) {
