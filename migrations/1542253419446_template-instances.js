@@ -8,13 +8,14 @@ const up = [
   `CREATE TABLE templates_instances (
     id uuid NOT NULL PRIMARY KEY DEFAULT uuid_generate_v1(),
     created_at timestamp with time zone DEFAULT NOW(),
-    origin uuid NOT NULL REFERENCES templates(id),
+    template uuid NOT NULL REFERENCES templates(id),
     html TEXT NOT NULL,
-    url TEXT NOT NULL,
+    file uuid NOT NULL REFERENCES files(id),
     created_by uuid NOT NULL REFERENCES users(id)
   )`,
   `CREATE TABLE templates_instances_relations (
     id uuid NOT NULL PRIMARY KEY DEFAULT uuid_generate_v1(),
+    instance uuid NOT NULL REFERENCES templates_instances(id),
     deal uuid REFERENCES deals(id),
     contact uuid REFERENCES contacts(id)
    )`,

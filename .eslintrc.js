@@ -4,6 +4,7 @@ const globals = [
   'Orm',
   'Job',
   'Template',
+  'TemplateInstance',
   'Address',
   'User',
   'CompactUser',
