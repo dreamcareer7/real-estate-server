@@ -4,13 +4,16 @@ process.env.NODE_ENV = 'tests' // So we read the proper config file
 require('colors')
 
 const fs = require('fs')
+const EventEmitter = require('events')
 const program = require('commander')
+
+const Run = new EventEmitter()
+global['Run'] = Run
 
 const config = require('../lib/config.js')
 const migrate = require('../lib/utils/migrate')
 const fork = require('child_process').fork
 const async = require('async')
-const EventEmitter = require('events')
 const redis = require('redis')
 const AssertionError = require('assertion-error')
 
@@ -19,8 +22,6 @@ const Context = require('../lib/models/Context')
 const {handleJob, installJobsRoute} = require('./jobs')
 
 const redisClient = redis.createClient(config.redis)
-
-global.Run = new EventEmitter()
 
 program
   .usage('[options] <suite> <suite>')
