@@ -405,23 +405,23 @@ function attachFile(cb) {
   data.append('file', logo)
 
   return frisby
-    .create('attach file to a task')
-    .post(
-      `/crm/tasks/${task_id}/files?associations[]=crm_task.files`,
-      {
-        file: logo
-      },
-      {
-        json: false,
-        form: true
-      }
-    )
-    .addHeader('content-type', 'multipart/form-data')
-    .after(cb)
-    .expectStatus(200)
-    .expectJSON({
-      code: 'OK'
-    })
+  .create('attach file to a task')
+  .post(
+    `/crm/tasks/${task_id}/files?associations[]=crm_task.files`,
+    {
+      file: logo
+    },
+    {
+      json: false,
+      form: true
+    }
+  )
+  .addHeader('content-type', 'multipart/form-data')
+  .after(cb)
+  .expectStatus(200)
+  .expectJSON({
+    code: 'OK'
+  })
 }
 
 function fetchTaskWithAttachments(cb) {
@@ -839,20 +839,20 @@ function anotherUserCantAttachFile(cb) {
   data.append('file', logo)
 
   return frisby
-    .create('another user cannot attach a file to a task')
-    .post(
-      `/crm/tasks/${task_id}/files?associations[]=crm_task.files`,
-      {
-        file: logo
-      },
-      {
-        json: false,
-        form: true
-      }
-    )
-    .addHeader('content-type', 'multipart/form-data')
-    .after(cb)
-    .expectStatus(404)
+  .create('another user cannot attach a file to a task')
+  .post(
+    `/crm/tasks/${task_id}/files?associations[]=crm_task.files`,
+    {
+      file: logo
+    },
+    {
+      json: false,
+      form: true
+    }
+  )
+  .addHeader('content-type', 'multipart/form-data')
+  .after(cb)
+  .expectStatus(404)
 }
 
 function anotherUserCantFetchAttachments(cb) {
