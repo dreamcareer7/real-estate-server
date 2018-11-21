@@ -8,7 +8,8 @@ Each time a user saves a template for himself, we call that copy a Template _Ins
 
 ### Create a template [POST /templates]
 ::: warning
-  This endpoint creates a new template for everyone.
+  This endpoint adds a new template to the system so users can use it.
+  If you want to save and endpoint for users and render them, look at instantiation.
 :::
 <!-- include(tests/template/create.md) -->
 
@@ -21,7 +22,7 @@ Each time a user saves a template for himself, we call that copy a Template _Ins
 <!-- include(tests/template/getForUser.md) -->
 
 ### Save a template [POST /templates]
-::: info
+::: warning
   Use this endpoint to save a user-edited template and get it rendered
 :::
 <!-- include(tests/template/instantiate.md) -->
