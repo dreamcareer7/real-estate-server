@@ -32,7 +32,7 @@ This endpoints sends a template instance with a text to a selection of recipient
 So they can use their mobile phones to share it on social networks
 <!-- include(tests/template/share.md) -->
 
-### History [POST /templates/instances]
+### History [GET /templates/instances]
 Returns a collection of instances that my user has saved before
 <!-- include(tests/template/getMine.md) -->
 
