@@ -4,7 +4,7 @@ interface ITypedRef {
 }
 
 declare type TTaskStatus = "PENDING" | "DONE";
-declare type TTaskType = "Call" | "Message" | "Todo";
+declare type TTaskType = "Call" | "Email" | "Message" | "Other";
 declare type TAccessActions = "read" | "write"
 declare interface ITask extends ICrmAssociationsCategorized {
   id: UUID;
@@ -27,12 +27,12 @@ declare interface ITask extends ICrmAssociationsCategorized {
 declare interface ITaskInput {
   id?: UUID;
   title: string;
-  description: string;
+  description?: string;
   due_date: number;
   status: TTaskStatus;
   task_type: TTaskType;
 
-  reminders: IReminderInput[];
+  reminders?: IReminderInput[];
   associations?: ICrmAssociationInput[];
   assignees?: UUID[];
 

@@ -970,6 +970,40 @@ const sendEmails = cb => {
     .expectStatus(200)
 }
 
+const sendEmailsToTag = cb => {
+  const emails = [{
+    subject: 'Email Subject',
+    html: '<div>HTML Body</div>',
+    text: 'Text Body',
+    tag: 'ManyContacts'
+  }]
+
+  return frisby
+    .create('send emails to contacts with ManyContacts tag')
+    .post('/contacts/emails', {
+      emails
+    })
+    .after(cb)
+    .expectStatus(200)
+}
+
+const sendEmailsToList = cb => {
+  const emails = [{
+    subject: 'Email Subject',
+    html: '<div>HTML Body</div>',
+    text: 'Text Body',
+    list: results.contact.createManyContactsList.data
+  }]
+
+  return frisby
+    .create('send emails to many contacts list')
+    .post('/contacts/emails', {
+      emails
+    })
+    .after(cb)
+    .expectStatus(200)
+}
+
 module.exports = {
   brandCreateParent,
   brandCreate,
@@ -1007,9 +1041,11 @@ module.exports = {
   confirmNoContactListMembership,
   updateManyContacts,
   makeSureManyContactsTagIsAdded,
+  sendEmailsToTag,
   createManyContactsList,
   exportByFilter,
   getManyContactsList,
+  sendEmailsToList,
   getContactsInManyContactsList,
   unsetTouchFreqOnManyContactsList,
   checkIfNextTouchIsNull,

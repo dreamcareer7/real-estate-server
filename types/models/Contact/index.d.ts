@@ -115,8 +115,8 @@ declare interface IContactSummary {
 }
 
 declare interface IContactAttributeFilter {
-  attribute_def: UUID;
-  attribute_type: string;
+  attribute_def?: UUID;
+  attribute_type?: string;
   operator: 'eq' | 'lte' | 'gte' | 'between' | 'any' | 'all',
   value: any;
   invert?: boolean;
