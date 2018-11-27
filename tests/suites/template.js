@@ -29,7 +29,7 @@ const getForUser = cb => {
 
 const instantiate = cb => {
   const id = results.template.create.data.id
-  const html = '<html />'
+  const html = 'SOME HTML'
 
   const data = {
     html,
