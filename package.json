@@ -21,6 +21,7 @@
   "license": "ISC",
   "dependencies": {
     "amanda": "^0.5.1",
+    "amqplib": "^0.5.2",
     "async": "^1.4.2",
     "aws-cloudfront-sign": "^2.2.0",
     "aws-sdk": "^2.168.0",
