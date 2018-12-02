@@ -56,7 +56,10 @@ const mls_office = (job, done) => {
 }
 
 const mls_photo = (job, done) => {
-  Photo.create(job.data.processed, done)
+  Photo.create({
+    ...job.data.processed,
+    revision: job.data.revision
+  }, done)
 }
 
 const mls_listing = (job, done) => {
