@@ -15,7 +15,7 @@ VALUES ($1,
         $6,
         $7
 )
-ON CONFLICT (matrix_unique_id) DO UPDATE SET
+ON CONFLICT (matrix_unique_id) WHERE (revision < $7) DO UPDATE SET
   description = $3,
   url = $4,
   "order" = $5,
