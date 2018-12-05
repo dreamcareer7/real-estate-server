@@ -1,4 +1,4 @@
 INSERT INTO templates_instances_relations
-(instance, deal, contact)
+(instance, listing, deal, contact)
 VALUES
-($1, $2, $3)
+($1, $2, $3, $4)
