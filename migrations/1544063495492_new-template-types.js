@@ -11,7 +11,7 @@ const up = [
     ADD VALUE 'Christmas'`,
 
   `ALTER TYPE template_medium
-    ADD VALUE 'FacebookCover'`
+    ADD VALUE 'FacebookCover'`,
 
   `ALTER TYPE template_medium
     ADD VALUE 'InstagramStory'`,
