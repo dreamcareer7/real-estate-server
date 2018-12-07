@@ -1,3 +1,5 @@
+const fs = require('fs')
+const path = require('path')
 const template = require('./data/template.js')
 
 registerSuite('brand', ['createParent'])
@@ -81,10 +83,36 @@ const getMine = cb => {
     })
 }
 
+function createAsset(cb) {
+  const logo = fs.createReadStream(path.resolve(__dirname, 'data/logo.png'))
+
+  return frisby
+    .create('create an asset')
+    .post(
+      '/templates/assets',
+      {
+        file: logo,
+        template: results.template.create.data.id,
+        listing: results.deal.create.data.listing
+      },
+      {
+        json: false,
+        form: true
+      }
+    )
+    .addHeader('content-type', 'multipart/form-data')
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK'
+    })
+}
+
 module.exports = {
   create,
   getForUser,
   instantiate,
   share,
-  getMine
+  getMine,
+  createAsset
 }
