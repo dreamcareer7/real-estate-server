@@ -43,9 +43,9 @@ Upload a template asset
   This is a multipart endpont.
   file that must be uploaded should be posted to this along with:
 
-  `template` (required) ID of the template
-  `listing`  (optional) ID of the listing
-  `contact`  (optional) ID of the contact
+  * `'template' (required)` ID of the template
+  * `'listing'  (optional)` ID of the listing
+  * `'contact'  (optional)` ID of the contact
 :::
 
 <!-- include(tests/template/createAsset.md) -->
