@@ -36,3 +36,17 @@ So they can use their mobile phones to share it on social networks
 Returns a collection of instances that my user has saved before
 <!-- include(tests/template/getMine.md) -->
 
+### Upload as asset [POST /templates/assets]
+Upload a template asset
+
+::: warning
+  This is a multipart endpont.
+  file that must be uploaded should be posted to this along with:
+
+  `template` (required) ID of the template
+  `listing`  (optional) ID of the listing
+  `contact`  (optional) ID of the contact
+:::
+
+<!-- include(tests/template/createAsset.md) -->
+
