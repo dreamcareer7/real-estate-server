@@ -1,7 +1,6 @@
 const fs = require('fs')
 const path = require('path')
 const uuid = require('node-uuid')
-const FormData = require('form-data')
 
 const config = require('../../lib/config.js')
 const { task, fixed_reminder, relative_reminder, abbasUser } = require('./data/task')
@@ -400,9 +399,6 @@ function updateFixedReminder(cb) {
 function attachFile(cb) {
   const task_id = results.task.create.data.id
   const logo = fs.createReadStream(path.resolve(__dirname, 'data/logo.png'))
-
-  const data = new FormData()
-  data.append('file', logo)
 
   return frisby
     .create('attach file to a task')
