@@ -7,7 +7,7 @@ const up = [
   'BEGIN',
   `CREATE TYPE template_input AS
     ENUM('listing', 'user', 'contact', 'listings')`,
-  'ALTER TABLE templates ADD template_inputs template_input[]',
+  'ALTER TABLE templates ADD inputs template_input[]',
   'ALTER TABLE templates DROP width',
   'ALTER TABLE templates DROP height',
   'COMMIT'
