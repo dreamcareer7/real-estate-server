@@ -1,8 +1,8 @@
 module.exports = {
   name: 'Test Template',
-  width: 600,
-  height: 300,
-  brand: null,
+  variant: 'Test Variant',
+  template_type: 'JustListed',
   medium: 'Email',
-  template_type: 'Listing',
+  inputs: ['user', 'listing', 'contact'],
+  brand: null,
 }
