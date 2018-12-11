@@ -108,11 +108,19 @@ function createAsset(cb) {
     })
 }
 
+const deleteInstance = cb => {
+  return frisby.create('delete an instance')
+    .delete(`/templates/instances/${results.template.instantiate.data.id}`)
+    .after(cb)
+    .expectStatus(204)
+}
+
 module.exports = {
   create,
   getForUser,
   instantiate,
   share,
   getMine,
-  createAsset
+  createAsset,
+  deleteInstance
 }
