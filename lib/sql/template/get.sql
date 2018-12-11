@@ -3,6 +3,7 @@ WITH te AS (
     DISTINCT ON(id)
     templates.*,
     'template' as type,
+    inputs::text[] as inputs,
     EXTRACT(EPOCH FROM created_at) AS created_at,
     EXTRACT(EPOCH FROM created_at) AS updated_at -- Dan needs this to be present
   FROM templates

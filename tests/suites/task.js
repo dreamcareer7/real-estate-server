@@ -831,9 +831,6 @@ function anotherUserCantAttachFile(cb) {
   const task_id = results.task.create.data.id
   const logo = fs.createReadStream(path.resolve(__dirname, 'data/logo.png'))
 
-  const data = new FormData()
-  data.append('file', logo)
-
   return frisby
     .create('another user cannot attach a file to a task')
     .post(

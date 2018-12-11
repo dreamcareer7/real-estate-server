@@ -2,6 +2,15 @@ SELECT
   ($1 || '_' || brand) as id,
   brand,
   ARRAY_AGG(access) AS acl,
+  (
+    SELECT
+      JSON_OBJECT_AGG(key, value)
+    FROM
+      users_settings us
+    WHERE
+      us.brand = brand
+      AND "user" = $1::uuid
+  ) AS settings,
   'user_role' as type
   FROM (
     SELECT

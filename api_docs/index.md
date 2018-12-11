@@ -34,6 +34,10 @@ Welcome. Rechat's API is broken into several small components to be readable.
 * [Calendar](calendar.html)
 * [Tasks](task.html)
 
+## Marketing
+
+* [Templates](template.html)
+
 ## Sharing
 
 * [Alerts](alert.html)
