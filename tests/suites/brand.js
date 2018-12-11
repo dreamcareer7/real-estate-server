@@ -393,6 +393,23 @@ const getTemplates = cb => {
     })
 }
 
+const updateUserSettings = cb => {
+  return frisby.create('update a user setting')
+    .put('/users/self/settings/favorite-tags', {
+      value: ['Buyer', 'Seller']
+    })
+    .addHeader('X-Rechat-Brand', brand_id)
+    .after(cb)
+    .expectStatus(204)
+}
+
+const getUserRoles = cb => {
+  return frisby.create('get all user roles')
+    .get('/users/self/roles')
+    .after(cb)
+    .expectStatus(200)
+}
+
 const removeBrand = cb => {
   return frisby.create('delete a brand')
     .delete(`/brands/${brand_id}`)
@@ -439,6 +456,9 @@ module.exports = {
   addTemplate,
   updateTemplate,
   getTemplates,
+
+  updateUserSettings,
+  getUserRoles,
 
   removeBrand
 }

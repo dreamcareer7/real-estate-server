@@ -42,87 +42,9 @@ const create = (cb) => {
     })
 }
 
-const createHippocket = cb => {
-  const data = JSON.parse(JSON.stringify(deal))
-  data.deal_context = {
-    full_address: {
-      value: full_address
-    }
-  }
-
-  data.roles = [
-    {
-      legal_first_name: 'Hippocket',
-      legal_last_name: 'Seller',
-      email: 'hippocket+seller@rechat.com',
-      role: 'Seller'
-    },
-
-    {
-      legal_first_name: 'Hippocket',
-      email: 'hippocket+agent@rechat.com',
-      legal_last_name: 'Hip Agent',
-      role: 'SellerAgent'
-    },
-
-    {
-      legal_first_name: 'Hippocket',
-      email: 'hippocket+agent@rechat.com',
-      legal_last_name: 'Hip Agent',
-      role: 'BuyerAgent'
-    },
-  ]
-
-  const expected_object = Object.assign({}, data, {
-    deal_context: {
-      full_address: {
-        context_type: 'Text',
-        text: full_address
-      }
-    },
-
-    roles: data.roles.map(role => omit(role, ['email']))
-  })
-
-  return frisby.create('create a hippocket deal')
-    .post('/deals', data)
-    .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
-    .after(cb)
-    .expectStatus(200)
-    .expectJSONSchema(schemas.createHippocket)
-    .expectJSON({
-      code: 'OK',
-      data: expected_object
-    })
-}
-
-const createAddressless = cb => {
-  const data = JSON.parse(JSON.stringify(deal))
-
-  data.roles = [
-    {
-      legal_first_name: 'Buyer Name',
-      email: 'addressless+buyer@rechat.com',
-      legal_last_name: 'Buyer Last Name',
-      role: 'Buyer'
-    },
-  ]
-
-  return frisby.create('create a deal with no address and observe title')
-    .post('/deals', data)
-    .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
-    .after(cb)
-    .expectStatus(200)
-//     .expectJSONSchema(schemas.createHippocket)
-//     .expectJSON({
-//       code: 'OK',
-//       data: expected_object
-//     })
-}
-
 const patchListing = cb => {
   const patch = {
-    listing: results.listing.getListing.data.id
+    listing: results.listing.getListing.data.id,
   }
   const expected_object = Object.assign({}, results.deal.create.data, patch)
 
@@ -157,33 +79,44 @@ const patchDraft = cb => {
 }
 
 const addContext = cb => {
+  const checklist = results.deal.addChecklist.data.id
+
   const context = {
     listing_status: {
-      value: 'Active'
+      value: 'Active',
+      checklist
     },
     year_built: {
-      value: 1972
+      value: 1972,
+      checklist
     },
     contract_date: {
-      value: '1979/12/01'
+      value: '1979/12/01',
+      checklist
     },
     closing_date: {
-      value: '1980/01/01'
+      value: '1980/01/01',
+      checklist
     },
     list_date: {
-      value: '2017/12/06'
+      value: '2017/12/06',
+      checklist
     },
     sales_price: {
-      value: 999999
+      value: 999999,
+      checklist
     },
     commission_listing: {
-      value: 3
+      value: 3,
+      checklist
     },
     commission_selling: {
-      value: 3
+      value: 3,
+      checklist
     },
     unit_number: {
-      value: '3A'
+      value: '3A',
+      checklist
     }
   }
 
@@ -292,8 +225,6 @@ const getAll = (cb) => {
     .expectJSON({
       code: 'OK',
       data: [
-        results.deal.createAddressless.data,
-        results.deal.createHippocket.data,
         results.deal.approveContext.data
       ]
     })
@@ -315,15 +246,15 @@ const get = (cb) => {
     })
 }
 
-const offerChecklist = cb => {
+const addChecklist = cb => {
   const checklist = {
     title: 'Offered Checklist',
     order: 1,
     is_deactivated: true
   }
 
-  return frisby.create('offer a checklist')
-    .post(`/deals/${results.deal.create.data.id}/checklists/offer`, {
+  return frisby.create('add a checklist')
+    .post(`/deals/${results.deal.create.data.id}/checklists`, {
       checklist,
 
       conditions: {
@@ -340,16 +271,6 @@ const offerChecklist = cb => {
       }
     })
     .expectJSONSchema(schemas.offerChecklist)
-}
-
-const addChecklist = cb => {
-  return frisby.create('add a checklist')
-    .post(`/deals/${results.deal.create.data.id}/checklists`, {
-      title: 'Checklist 1',
-      order: 1
-    })
-    .after(cb)
-    .expectStatus(200)
 }
 
 const updateChecklist = cb => {
@@ -516,7 +437,7 @@ const updateSubmission = cb => {
 
 const getContextHistory = cb => {
   return frisby.create('get context history on a deal')
-    .get(`/deals/${results.deal.create.data.id}/context/full_address`)
+    .get(`/deals/${results.deal.create.data.id}/context/year_built`)
     .after(cb)
 }
 
@@ -654,8 +575,7 @@ const filter = (cb) => {
 module.exports = {
   getContexts,
   create,
-  createHippocket,
-  createAddressless,
+  addChecklist,
   patchListing,
   patchDraft,
   addRole,
@@ -664,8 +584,6 @@ module.exports = {
   approveContext,
   get,
   getAll,
-  addChecklist,
-  offerChecklist,
   updateChecklist,
   addTask,
   addAnotherTask,

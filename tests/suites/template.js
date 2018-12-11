@@ -20,7 +20,7 @@ const create = cb => {
 
 const getForUser = cb => {
   return frisby.create('get templates for a user')
-    .get('/templates?types[]=Listing&mediums[]=Email')
+    .get('/templates?types[]=JustListed&mediums[]=Email')
     .after(cb)
     .expectStatus(200)
     .expectJSON({
@@ -108,11 +108,19 @@ function createAsset(cb) {
     })
 }
 
+const deleteInstance = cb => {
+  return frisby.create('delete an instance')
+    .delete(`/templates/instances/${results.template.instantiate.data.id}`)
+    .after(cb)
+    .expectStatus(204)
+}
+
 module.exports = {
   create,
   getForUser,
   instantiate,
   share,
   getMine,
-  createAsset
+  createAsset,
+  deleteInstance
 }

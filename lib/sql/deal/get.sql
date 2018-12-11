@@ -98,6 +98,7 @@ SELECT deals.*,
         number,
         date,
         context_type,
+        checklist,
         EXTRACT(EPOCH FROM context.created_at) AS created_at,
         EXTRACT(EPOCH FROM context.approved_at) AS approved_at,
         EXTRACT(EPOCH FROM context.date) AS date

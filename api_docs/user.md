@@ -76,3 +76,6 @@ It is important to remember that shadow users _can_ use some of the Rechat's fea
 
 ### Add activity [POST /users/self/timeline]
 <!-- include(tests/user/addActivity.md) -->
+
+### Update user settings [PUT /users/self/settings/:key]
+<!-- include(tests/brand/updateUserSettings.md) -->
