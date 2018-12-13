@@ -395,12 +395,12 @@ const getTemplates = cb => {
 
 const updateUserSettings = cb => {
   return frisby.create('update a user setting')
-    .put('/users/self/settings/favorite-tags', {
-      value: ['Buyer', 'Seller']
+    .put('/users/self/settings/user_filter', {
+      "value": ["4926132e-9e1d-11e7-8fd6-0242ac110003","5d66ae5e-f82c-11e5-b4b4-f23c91b0d077"]
     })
     .addHeader('X-Rechat-Brand', brand_id)
     .after(cb)
-    .expectStatus(204)
+    .expectStatus(200)
 }
 
 const getUserRoles = cb => {
