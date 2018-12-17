@@ -32,7 +32,8 @@ SELECT 'user' AS type,
        ) as cover_image_url,
        (
         SELECT count(*) > 0 FROM docusign_users WHERE "user" = users.id
-       ) as has_docusign
+       ) as has_docusign,
+       (SELECT brand FROM users_settings WHERE "user" = users.id ORDER BY updated_at DESC LIMIT 1) AS last_active_brand
 FROM users
 JOIN unnest($1::uuid[]) WITH ORDINALITY t(uid, ord) ON users.id = uid
 ORDER BY t.ord
