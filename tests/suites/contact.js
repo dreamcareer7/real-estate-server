@@ -961,10 +961,13 @@ const sendEmails = cb => {
     text: 'Text Body',
   }]
 
+  const from = results.authorize.token.data.id
+
   return frisby
     .create('send emails to contacts')
     .post('/contacts/emails', {
-      emails
+      emails,
+      from
     })
     .after(cb)
     .expectStatus(200)
@@ -975,13 +978,16 @@ const sendEmailsToTag = cb => {
     subject: 'Email Subject',
     html: '<div>HTML Body</div>',
     text: 'Text Body',
-    tag: 'ManyContacts'
+    tag: 'ManyContacts',
   }]
+
+  const from = results.authorize.token.data.id
 
   return frisby
     .create('send emails to contacts with ManyContacts tag')
     .post('/contacts/emails', {
-      emails
+      emails,
+      from
     })
     .after(cb)
     .expectStatus(200)
@@ -992,13 +998,16 @@ const sendEmailsToList = cb => {
     subject: 'Email Subject',
     html: '<div>HTML Body</div>',
     text: 'Text Body',
-    list: results.contact.createManyContactsList.data
+    list: results.contact.createManyContactsList.data,
   }]
+
+  const from = results.authorize.token.data.id
 
   return frisby
     .create('send emails to many contacts list')
     .post('/contacts/emails', {
-      emails
+      emails,
+      from
     })
     .after(cb)
     .expectStatus(200)
