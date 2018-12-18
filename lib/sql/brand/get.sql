@@ -19,7 +19,7 @@ SELECT brands.*,
 
   (
     SELECT
-      count(bu.id)
+      count(distinct bu."user")
     FROM
       brands_users AS bu
       JOIN brands_roles AS br
