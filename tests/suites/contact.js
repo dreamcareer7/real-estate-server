@@ -1,5 +1,4 @@
 const _ = require('lodash')
-const moment = require('moment')
 const uuid = require('uuid')
 const { contact, companyContact } = require('./data/contact.js')
 const manyContacts = require('./data/manyContacts.js')
