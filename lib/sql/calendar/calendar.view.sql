@@ -76,7 +76,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       END) AS type_label,
       "date" AS "timestamp",
       True AS recurring,
-      contacts.display_name AS title,
+      (CASE WHEN ca.is_partner IS TRUE THEN contacts.partner_name ELSE contacts.display_name END) AS title,
       NULL::uuid AS crm_task,
       NULL::uuid AS deal,
       contact,

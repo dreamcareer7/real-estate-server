@@ -938,21 +938,6 @@ const getJobStatus = cb => {
     .expectStatus(200)
 }
 
-const exportByFilter = cb => {
-  return frisby
-    .create('export contacts by filter and list id')
-    .post('/contacts/outlook.csv', {
-      lists: [results.contact.createManyContactsList.data],
-      filter: [{
-        attribute_def: defs.company.id,
-        value: 'Rechat'
-      }]
-    })
-    .after(cb)
-    .expectHeaderToMatch('Content-Disposition', `rechat_${moment().format('MM_DD_YY')}.csv`)
-    .expectStatus(200)
-}
-
 const sendEmails = cb => {
   const emails = [{
     subject: 'Email Subject',
@@ -1052,7 +1037,6 @@ module.exports = {
   makeSureManyContactsTagIsAdded,
   sendEmailsToTag,
   createManyContactsList,
-  exportByFilter,
   getManyContactsList,
   sendEmailsToList,
   getContactsInManyContactsList,
