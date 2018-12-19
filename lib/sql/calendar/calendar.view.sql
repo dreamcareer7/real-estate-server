@@ -49,10 +49,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
         WHERE
           r.deal = deals.id
           AND r.deleted_at IS NULL
-          AND r.role = CASE deals.deal_type
-            WHEN 'Selling'::deal_type THEN 'SellerAgent'::deal_role
-            ELSE 'BuyerAgent'::deal_role
-          END
+          AND r."user" IS NOT NULL
       ) AS users,
       brand,
       NULL::text AS status
