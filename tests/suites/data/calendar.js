@@ -1,9 +1,12 @@
 const moment = require('moment')
 
 const contacts = [{
-  first_name: 'Abbas',
-  last_name: 'Mashayekh',
-  birthday: moment().subtract(1, 'day').unix()
+  first_name: 'John',
+  last_name: 'Doe',
+  birthday: moment().subtract(1, 'day').unix(),
+  partner_first_name: 'Jane',
+  partner_last_name: 'Doe',
+  partner_birthday: moment().subtract(5, 'day').unix(),
 }, {
   first_name: 'Gholi',
   last_name: 'Gholavi',
