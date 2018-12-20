@@ -23,4 +23,4 @@ SELECT
 FROM
   get_contact_summaries($1::uuid[])
 WHERE
-  is_partner IS False
+  is_partner IS NOT TRUE
