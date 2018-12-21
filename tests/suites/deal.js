@@ -1,4 +1,4 @@
-const {deal, full_address} = require('./data/deal.js')
+const {deal} = require('./data/deal.js')
 const deal_response = require('./expected_objects/deal.js')
 const omit = require('lodash/omit')
 const schemas = require('./schemas/deal')

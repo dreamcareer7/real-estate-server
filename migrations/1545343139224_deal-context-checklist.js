@@ -27,8 +27,8 @@ const up = [
   current_deal_context_trigger,
   current_deal_context_fn,
 
-  `ALTER TABLE current_deal_context DROP revision`,
-  `ALTER TABLE current_deal_context DROP submission`,
+  'ALTER TABLE current_deal_context DROP revision',
+  'ALTER TABLE current_deal_context DROP submission',
 
   'COMMIT'
 ]

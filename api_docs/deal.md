@@ -113,9 +113,6 @@ then we consider that deal to have an active offer.
 ### Add new checklist [POST /deals/:id/checklists]
 <!-- include(tests/deal/addChecklist.md) -->
 
-### Offer a new checklist [POST /deals/:id/checklists/offer]
-<!-- include(tests/deal/offerChecklist.md) -->
-
 ### Update a checklist [PUT /deals/:id/checklists/:cid]
 <!-- include(tests/deal/updateChecklist.md) -->
 
