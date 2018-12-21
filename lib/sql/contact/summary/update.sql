@@ -4,6 +4,7 @@ WITH cs AS (
     c.created_by,
     c.updated_at,
     c."user",
+    c.brand,
     c.display_name,
     c.sort_field,
     c.partner_name,
@@ -35,6 +36,7 @@ UPDATE
   contacts_summaries
 SET
   "user" = cs."user",
+  brand = cs.brand,
   updated_at = cs.updated_at,
   display_name = cs.display_name,
   sort_field = cs.sort_field,

@@ -75,9 +75,6 @@ Updates multiple contacts and their attributes. If attributes have `id`, they ar
 ### Filter contacts by multiple tags [POST /contacts/filter]
 <!-- include(tests/contact/filterContactsHavingTwoTags.md) -->
 
-### Filter contacts by multiple tags and get result as outlook compatible CSV [POST /contacts/outlook.csv]
-<!-- include(tests/contact/exportByFilter.md) -->
-
 ### Filter contacts not having attributes [POST /contacts/filter]
 <!-- include(tests/contact/invertedFilter.md) -->
 

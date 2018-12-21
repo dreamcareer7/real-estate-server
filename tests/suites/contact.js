@@ -1,5 +1,4 @@
 const _ = require('lodash')
-const moment = require('moment')
 const uuid = require('uuid')
 const { contact, companyContact } = require('./data/contact.js')
 const manyContacts = require('./data/manyContacts.js')
@@ -938,21 +937,6 @@ const getJobStatus = cb => {
     .expectStatus(200)
 }
 
-const exportByFilter = cb => {
-  return frisby
-    .create('export contacts by filter and list id')
-    .post('/contacts/outlook.csv', {
-      lists: [results.contact.createManyContactsList.data],
-      filter: [{
-        attribute_def: defs.company.id,
-        value: 'Rechat'
-      }]
-    })
-    .after(cb)
-    .expectHeaderToMatch('Content-Disposition', `rechat_${moment().format('MM_DD_YY')}.csv`)
-    .expectStatus(200)
-}
-
 const sendEmails = cb => {
   const emails = [{
     subject: 'Email Subject',
@@ -961,10 +945,13 @@ const sendEmails = cb => {
     text: 'Text Body',
   }]
 
+  const from = results.authorize.token.data.id
+
   return frisby
     .create('send emails to contacts')
     .post('/contacts/emails', {
-      emails
+      emails,
+      from
     })
     .after(cb)
     .expectStatus(200)
@@ -975,13 +962,16 @@ const sendEmailsToTag = cb => {
     subject: 'Email Subject',
     html: '<div>HTML Body</div>',
     text: 'Text Body',
-    tag: 'ManyContacts'
+    tag: 'ManyContacts',
   }]
+
+  const from = results.authorize.token.data.id
 
   return frisby
     .create('send emails to contacts with ManyContacts tag')
     .post('/contacts/emails', {
-      emails
+      emails,
+      from
     })
     .after(cb)
     .expectStatus(200)
@@ -992,13 +982,16 @@ const sendEmailsToList = cb => {
     subject: 'Email Subject',
     html: '<div>HTML Body</div>',
     text: 'Text Body',
-    list: results.contact.createManyContactsList.data
+    list: results.contact.createManyContactsList.data,
   }]
+
+  const from = results.authorize.token.data.id
 
   return frisby
     .create('send emails to many contacts list')
     .post('/contacts/emails', {
-      emails
+      emails,
+      from
     })
     .after(cb)
     .expectStatus(200)
@@ -1043,7 +1036,6 @@ module.exports = {
   makeSureManyContactsTagIsAdded,
   sendEmailsToTag,
   createManyContactsList,
-  exportByFilter,
   getManyContactsList,
   sendEmailsToList,
   getContactsInManyContactsList,

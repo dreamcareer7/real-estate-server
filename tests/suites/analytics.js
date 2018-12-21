@@ -14,10 +14,16 @@ registerSuite('user', ['upgradeToAgentWithEmail'])
 function prepareContactRequest(defs) {
   contacts = contacts.map(c => ({
     user: results.authorize.token.data.id,
-    attributes: Object.keys(c).map(a => ({
-      attribute_def: defs[a].id,
-      [defs[a].data_type]: c[a]
-    }))
+    attributes: Object.keys(c).map(k => {
+      const is_partner = /^partner_/.test(k)
+      const a = k.replace(/^partner_/, '')
+
+      return {
+        attribute_def: defs[a].id,
+        [defs[a].data_type]: c[k],
+        is_partner
+      }
+    })
   }))
 }
 
@@ -42,6 +48,7 @@ const createDeal = (cb) => {
   return frisby.create('create a deal')
     .post('/deals', deal)
     .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
+    .addHeader('x-handle-jobs', 'yes')
     .after(cb)
     .expectStatus(200)
     .expectJSON({
@@ -59,6 +66,7 @@ function createContacts(cb) {
       contacts
     })
     .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
+    .addHeader('x-handle-jobs', 'yes')
     .after(cb)
     .expectStatus(200)
 }

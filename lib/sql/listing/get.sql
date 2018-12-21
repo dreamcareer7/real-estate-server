@@ -122,7 +122,7 @@ address AS (
             CASE
               WHEN addresses.unit_number IS NULL THEN NULL
               WHEN addresses.unit_number = '' THEN NULL
-              ELSE 'Unit ' || addresses.unit_number || ',' END
+              ELSE 'Unit ' || addresses.unit_number END
           ], ' ', NULL
         )
       ) AS street_address
