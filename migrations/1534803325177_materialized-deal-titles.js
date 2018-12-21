@@ -1,5 +1,4 @@
 const db = require('../lib/utils/db')
-const promisify = require('../lib/utils/promisify')
 require('../lib/models')()
 
 const sql = async (sql, args) => {
@@ -26,17 +25,20 @@ const run = async () => {
 
   await sql('ALTER TABLE deals ADD COLUMN IF NOT EXISTS title TEXT')
 
-//   const res = await sql('SELECT id FROM deals')
-//   const ids = res.rows.map(r => r.id)
-//
-//   const deals = await promisify(Deal.getAll)(ids)
-//
-//   let i = 0
-//
-//   for(const deal of deals) {
-//     const updated = await Deal.updateTitle(deal)
-//     console.log(`${++i}/${deals.length}`, updated.title)
-//   }
+  /* This doesn't work anymore due to the fact that our
+   * functions, views, etc dont play nice with migrations
+  const res = await sql('SELECT id FROM deals')
+  const ids = res.rows.map(r => r.id)
+
+  const deals = await promisify(Deal.getAll)(ids)
+
+  let i = 0
+
+  for(const deal of deals) {
+    const updated = await Deal.updateTitle(deal)
+    console.log(`${++i}/${deals.length}`, updated.title)
+  }
+  */
 
   await sql('COMMIT')
   context.exit()
