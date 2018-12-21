@@ -80,9 +80,6 @@ then we consider that deal to have an active offer.
 ### Create a deal with a listing [POST /deals]
 <!-- include(tests/deal/create.md) -->
 
-### Create a hippocket deal [POST /deals]
-<!-- include(tests/deal/createHippocket.md) -->
-
 ### Delete a deal [DELETE /deals/:id]
 <!-- include(tests/deal/remove.md) -->
 
