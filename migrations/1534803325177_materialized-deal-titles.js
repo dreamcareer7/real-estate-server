@@ -26,17 +26,17 @@ const run = async () => {
 
   await sql('ALTER TABLE deals ADD COLUMN IF NOT EXISTS title TEXT')
 
-  const res = await sql('SELECT id FROM deals')
-  const ids = res.rows.map(r => r.id)
-
-  const deals = await promisify(Deal.getAll)(ids)
-
-  let i = 0
-
-  for(const deal of deals) {
-    const updated = await Deal.updateTitle(deal)
-    console.log(`${++i}/${deals.length}`, updated.title)
-  }
+//   const res = await sql('SELECT id FROM deals')
+//   const ids = res.rows.map(r => r.id)
+//
+//   const deals = await promisify(Deal.getAll)(ids)
+//
+//   let i = 0
+//
+//   for(const deal of deals) {
+//     const updated = await Deal.updateTitle(deal)
+//     console.log(`${++i}/${deals.length}`, updated.title)
+//   }
 
   await sql('COMMIT')
   context.exit()
