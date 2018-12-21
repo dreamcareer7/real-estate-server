@@ -249,9 +249,10 @@ const get = (cb) => {
 const addChecklist = cb => {
   const checklist = {
     title: 'Offered Checklist',
-    order: 1,
-    is_deactivated: true
+    order: 1
   }
+
+  results.deal.create.data.has_active_offer = true // We are adding the active offer right now
 
   return frisby.create('add a checklist')
     .post(`/deals/${results.deal.create.data.id}/checklists`, {
