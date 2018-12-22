@@ -11,7 +11,8 @@ INSERT INTO deals_roles (
   email,
   phone_number,
   commission_dollar,
-  commission_percentage
+  commission_percentage,
+  checklist
 ) VALUES (
   $1,
   $2,
@@ -27,7 +28,8 @@ INSERT INTO deals_roles (
   $10,
   $11,
   $12,
-  $13
+  $13,
+  $14
 )
 
 RETURNING id
