@@ -12,11 +12,13 @@ const setEnvelopeDetails = envelope => {
   envelope.deal = results.deal.create.data.id
 
   envelope.recipients.push({
-    role: results.deal.addRole.data[0].id
+    role: results.deal.addRole.data[0].id,
+    envelope_recipient_type: 'Signer'
   })
 
   envelope.recipients.push({
-    role: results.deal.addRole.data[1].id
+    role: results.deal.addRole.data[1].id,
+    envelope_recipient_type: 'CarbonCopy'
   })
 }
 
