@@ -1,21 +1,32 @@
-WITH ult AS (
+WITH cids AS (
+  SELECT
+    array_agg(DISTINCT contact) AS ids
+  FROM
+    crm_associations
+  WHERE
+    deleted_at IS NULL
+    AND association_type = 'contact'
+    AND crm_task = $1::uuid
+),
+lt AS (
+  SELECT
+    c.id AS contact,
+    ltc.last_touch
+  FROM
+    cids,
+    unnest(cids.ids) AS c(id)
+    LEFT JOIN get_last_touch_for_contacts(cids.ids) as ltc
+      ON c.id = ltc.contact
+),
+ult AS (
   UPDATE
     contacts
   SET
-    last_touch = ltc.last_touch
+    last_touch = lt.last_touch
   FROM
-    (
-      SELECT
-        array_agg(contact) AS ids
-      FROM
-        crm_associations
-      WHERE
-        crm_task = $1::uuid
-        AND deleted_at IS NULL
-    ) AS cids,
-    get_last_touch_for_contacts(cids.ids) as ltc
+    lt
   WHERE
-    contacts.id = ltc.contact
+    contacts.id = lt.contact
   RETURNING
     contacts.id
 ),
