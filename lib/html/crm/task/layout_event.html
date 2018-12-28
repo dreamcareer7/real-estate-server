@@ -1662,19 +1662,6 @@ th.large-12.last {
 </head>
 
 <body>
-  {% set p1 = listing.gallery_image_urls[0] %}
-  {% set address = listing.property.address.street_address %}
-  {% set city = listing.property.address.city %}
-  {% set state = listing.property.address.state %}
-  {% set postal_code = listing.property.address.postal_code %}
-  {% set price = listing.price %}
-  {% set bedroom = listing.property.bedroom_count %}
-  {% set bathroom = listing.property.full_bathroom_count + listing.property.half_bathroom_count %}
-  {% set sq = listing.property.square_meters %}
-  {% set userpic= user.profile_image_url %}
-  {% set name = user.display_name %}
-  {% set email = user.email %}
-  {% set phone_number = user.phone_number %}
 
   <!-- <style> -->
   <table class="body" data-made-with-foundation="">
@@ -1707,7 +1694,7 @@ th.large-12.last {
                                           <tr>
                                             <th>
                                               <center data-parsed=""> <div rechat-editable="true" rechat-assets="listing-image"
-                                                  class="first-pic" style="background:url(https://media.wired.com/photos/598e35994ab8482c0d6946e0/master/w_2400,c_limit/phonepicutres-TA.jpg);background-size: cover;width:100%;height:320px;margin-top:40px;"
+                                                  class="first-pic" style="background-color:yellow;background-size: cover;width:100%;height:320px;margin-top:40px;"
                                                   align="center" class="float-center"></div> </center>
                                             </th>
                                           </tr>
@@ -1763,7 +1750,7 @@ th.large-12.last {
                                       <th class="small-12 large-5 columns first" style="padding: 40px 32px 40px 40px !important;">
                                         <table>
                                           <tr>
-                                            <th> <div rechat-editable="true" rechat-assets="avatar" style="background:url(https://media.wired.com/photos/598e35994ab8482c0d6946e0/master/w_2400,c_limit/phonepicutres-TA.jpg);background-size: cover;width:135px !important;height: 135px !important;object-fit: cover;"
+                                            <th> <div rechat-editable="true" rechat-assets="avatar" style="background-color:red;background-size: cover;width:135px !important;height: 135px !important;object-fit: cover;"
                                                 class="small-float-center" alt=""></div> </th>
                                           </tr>
                                         </table>
