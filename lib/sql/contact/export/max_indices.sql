@@ -14,7 +14,7 @@ WITH cnt AS (
     AND ca.attribute_def = ANY($2::uuid[])
     AND brand = $1::uuid
     AND (CASE
-      WHERE $3::uuid[] IS NOT NULL THEN
+      WHEN $3::uuid[] IS NOT NULL THEN
         c.id = ANY($3::uuid[])
       ELSE
         TRUE
