@@ -11,6 +11,12 @@ FROM
     ON contacts.id = cattrs.contact
 WHERE
   check_contact_read_access(contacts, $1)
+  AND (CASE
+    WHEN $2::uuid[] IS NOT NULL THEN
+      contacts."user" = ANY($2::uuid[])
+    ELSE
+      TRUE
+  END)
   AND cattrs.attribute_type = 'tag'
 ORDER BY
   cattrs.text
