@@ -471,6 +471,4 @@ const contexts = {
   }
 }
 
-Deal.contexts = contexts
-
 module.exports = contexts

@@ -14,18 +14,10 @@ registerSuite('brokerwolf', [
   'syncContactTypes',
   'mapContactType'
 ])
-registerSuite('brand', ['addChecklist', 'addForm', 'addTask', 'addAnotherTask'])
+registerSuite('brand', ['addChecklist', 'addContext', 'addForm', 'addTask', 'addAnotherTask'])
 registerSuite('user', ['upgradeToAgentWithEmail'])
 
 const pdf = 'https://s3-us-west-2.amazonaws.com/rechat-forms/2672324.pdf'
-
-const getContexts = cb => {
-  return frisby.create('get all possible context items')
-    .get('/deals/contexts')
-    .after(cb)
-    .expectStatus(200)
-    .expectJSONSchema(schemas.getContexts)
-}
 
 const create = (cb) => {
   const data = JSON.parse(JSON.stringify(deal))
@@ -81,44 +73,13 @@ const patchDraft = cb => {
 const addContext = cb => {
   const checklist = results.deal.addChecklist.data.id
 
-  const context = {
-    listing_status: {
-      value: 'Active',
-      checklist
-    },
-    year_built: {
-      value: 1972,
-      checklist
-    },
-    contract_date: {
-      value: '1979/12/01',
-      checklist
-    },
-    closing_date: {
-      value: '1980/01/01',
-      checklist
-    },
-    list_date: {
-      value: '2017/12/06',
-      checklist
-    },
-    sales_price: {
-      value: 999999,
-      checklist
-    },
-    commission_listing: {
-      value: 3,
-      checklist
-    },
-    commission_selling: {
-      value: 3,
-      checklist
-    },
-    unit_number: {
-      value: '3A',
-      checklist
+  const context = [
+    {
+      definition: results.brand.addContext.data.id,
+      checklist,
+      value: '2017/12/06'
     }
-  }
+  ]
 
   const expected_object = Object.assign({}, omit(results.deal.create.data, [
     'brokerwolf_tier_id',
@@ -146,9 +107,9 @@ const addContext = cb => {
 }
 
 const approveContext = cb => {
-  const cid = results.deal.addContext.data.deal_context.listing_status.id
+  const cid = results.deal.addContext.data.deal_context.list_date.id
 
-  delete results.deal.addContext.data.deal_context.listing_status
+  delete results.deal.addContext.data.deal_context.list_date
 
   return frisby.create('approve a context item')
     .patch(`/deals/${results.deal.create.data.id}/context/${cid}/approved`, {approved: true})
@@ -224,9 +185,7 @@ const getAll = (cb) => {
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
-      data: [
-        results.deal.approveContext.data
-      ]
+      data: []
     })
 }
 
@@ -237,8 +196,7 @@ const get = (cb) => {
     .after(cb)
     .expectStatus(200)
     .expectJSON({
-      code: 'OK',
-      data: results.deal.approveContext.data
+      code: 'OK'
     })
     .expectJSONTypes({
       code: String,
@@ -575,17 +533,20 @@ const filter = (cb) => {
 }
 
 module.exports = {
-  getContexts,
   create,
   addChecklist,
   patchListing,
+  addContext,
+  approveContext,
   patchDraft,
   addRole,
   updateRole,
-  addContext,
-  approveContext,
   get,
   getAll,
+  getBrandInbox,
+  getBrandDeals,
+  getBrandXls,
+  filter,
   updateChecklist,
   addTask,
   addAnotherTask,
@@ -604,10 +565,6 @@ module.exports = {
   sendNotifications,
   patchAttention,
   postMessage,
-  getBrandInbox,
-  getBrandDeals,
-  getBrandXls,
-  filter,
   removeRole,
   remove
 }
