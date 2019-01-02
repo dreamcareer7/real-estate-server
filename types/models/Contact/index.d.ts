@@ -153,3 +153,10 @@ declare interface IContactDuplicateClusterInput {
   parent: UUID;
   sub_contacts: UUID[];
 }
+
+declare interface IContactTag {
+  id: UUID;
+  text: string;
+  created_at: number;
+  updated_at: number;
+}

@@ -1,4 +1,4 @@
-SELECT
+SELECT DISTINCT ON (cattrs.text)
   cattrs.id,
   'contact_attribute' as "type",
   'tag' as "attribute_type",

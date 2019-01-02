@@ -871,6 +871,52 @@ const getAllTags = (cb) => {
     })
 }
 
+const renameTag = (cb) => {
+  return frisby.create('rename foo tag to bar')
+    .patch('/contacts/tags/foo', {
+      tag: 'bar'
+    })
+    .after(cb)
+    .expectStatus(204)
+}
+
+const verifyTagRenamed = cb => {
+  return frisby.create('verify that tag is renamed')
+    .get('/contacts/tags')
+    .after((err, res, body) => {
+      const tags = body.data.map(a => a.text)
+
+      if (!tags.includes('bar') || tags.length !== 5) {
+        throw 'Tag was not renamed correctly.'
+      }
+
+      cb(err, res, body)
+    })
+    .expectStatus(200)
+}
+
+const deleteTag = (cb) => {
+  return frisby.create('delete bar tag')
+    .delete('/contacts/tags/bar')
+    .after(cb)
+    .expectStatus(204)
+}
+
+const verifyTagDeleted = cb => {
+  return frisby.create('verify that tag is deleted')
+    .get('/contacts/tags')
+    .after((err, res, body) => {
+      const tags = body.data.map(a => a.text)
+
+      if (tags.includes('bar') || tags.length !== 4) {
+        throw 'Tag was not deleted correctly.'
+      }
+
+      cb(err, res, body)
+    })
+    .expectStatus(200)
+}
+
 const getDuplicateClusters = cb => {
   return frisby.create('get the list of duplicate clusters')
     .get('/contacts/duplicates')
@@ -1043,6 +1089,10 @@ module.exports = {
   checkIfNextTouchIsNull,
   getTimeline,
   getAllTags,
+  renameTag,
+  verifyTagRenamed,
+  deleteTag,
+  verifyTagDeleted,
   removeAttribute,
   removeEmail,
   searchByRemovedEmail,
