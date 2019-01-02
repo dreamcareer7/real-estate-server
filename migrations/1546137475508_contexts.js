@@ -53,10 +53,10 @@ const up = [
     optional deal_context_condition[],
     triggers_brokerwolf boolean DEFAULT FALSE NOT NULL
    )`,
-   'ALTER TABLE deal_context ADD definition uuid REFERENCES brands_contexts(id)',
-   `UPDATE deal_context SET definition = (
-     SELECT id FROM brands_contexts WHERE key = deal_context.key
-    )`,
+  'ALTER TABLE deal_context ADD definition uuid REFERENCES brands_contexts(id)',
+  `UPDATE deal_context SET definition = (
+    SELECT id FROM brands_contexts WHERE key = deal_context.key
+  )`,
 ]
 
 const runAll = (sqls, cb) => {

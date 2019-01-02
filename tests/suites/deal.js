@@ -185,9 +185,7 @@ const getAll = (cb) => {
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
-      data: [
-//         results.deal.patchDraft.data
-      ]
+      data: []
     })
 }
 
@@ -198,8 +196,7 @@ const get = (cb) => {
     .after(cb)
     .expectStatus(200)
     .expectJSON({
-      code: 'OK',
-//       data: results.deal.patchDraft.data
+      code: 'OK'
     })
     .expectJSONTypes({
       code: String,
