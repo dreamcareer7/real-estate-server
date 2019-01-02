@@ -57,13 +57,12 @@ const up = [
    `UPDATE deal_context SET definition = (
      SELECT id FROM brands_contexts WHERE key = deal_context.key
     )`,
-    'ALTER TABLE deal_context ALTER definition SET NOT NULL'
 ]
 
 const runAll = (sqls, cb) => {
   db.conn((err, client, release) => {
     if (err)
-      return next(err)
+      return cb(err)
 
     async.eachSeries(sqls, client.query.bind(client), err => {
       release()
