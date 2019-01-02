@@ -81,6 +81,12 @@ Updates multiple contacts and their attributes. If attributes have `id`, they ar
 ### Get all tags [GET /contacts/tags]
 <!-- include(tests/contact/getAllTags.md) -->
 
+### Rename a tag [PATCH /contacts/tags/:tag]
+<!-- include(tests/contact/renameTag.md) -->
+
+### Delete a tag from all contacts [DELETE /contacts/tags/:tag]
+<!-- include(tests/contact/deleteTag.md) -->
+
 ### Get a contact [GET /contacts/:id]
 <!-- include(tests/contact/getSingleContact.md) -->
 
