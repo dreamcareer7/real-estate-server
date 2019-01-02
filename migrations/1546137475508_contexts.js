@@ -54,10 +54,11 @@ const up = [
     triggers_brokerwolf boolean DEFAULT FALSE NOT NULL
    )`,
   'ALTER TABLE deal_context ADD definition uuid REFERENCES brands_contexts(id)',
-  `UPDATE deal_context SET definition = (
-    SELECT id FROM brands_contexts WHERE key = deal_context.key
-  )`,
 ]
+
+const update = `UPDATE deal_context SET definition = (
+  SELECT id FROM brands_contexts WHERE key = deal_context.key
+)`
 
 const runAll = (sqls, cb) => {
   db.conn((err, client, release) => {
@@ -149,6 +150,8 @@ const run = async (queries) => {
 
     await save(context, client)
   }
+
+  await promisify(client.query.bind(client))(update)
 
   await promisify(client.query.bind(client))('COMMIT')
 }

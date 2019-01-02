@@ -18,49 +18,11 @@ Each deal has the following attributes:
 A deal may consist of many different data that are gathered from different sources.
 MLS, DCAD, user-submitted-forms and the user interfaces are current data sources.
 
-::: note
-All of the contexts are considered to be optional.
-:::
-
 contexts are stored in `deal.deal_context` object.
 For example, `street_name` of a deal can be fetched from `deal.deal_context.street_name`.
 
-[Here](https://gitlab.com/rechat/server/blob/testing/lib/models/Deal/context.js) You can find a list of all
-context items and their types.
-
-### Get a list of all possible context [GET /deals/contexts]
-
-Gives you a list of all usable context items.
-Each context item has:
-
-* `data_type` `(Required)` `Date|Number|String`
-* `name`      `(Required)`  Name of the data type (eg _list_date_) (Used internally)
-* `label`                   Label to show to users (eg _List Starting Date_)
-* `short_label`             Abbreviate version of the label
-* `section`                 Which section of fact sheet this should appear on `CriticalDates|Listing|CDA`
-* `required`                A Bit flag set representing the cases in which this item is required
-* `optional`                A Bit flag set representing the cases in which this item is asked but not required
-* `show_on_fact_sheet`      A Bit flag set representing the cases in which this context is shown on fact sheet
-* `needs_approval`          A boolean which determines if this context needs back office approval or not
-
-Items based on bit flags use the following constants to determine whether they should show up:
-
-Condition                              | Bit
----------------------------------------|-----
-`deal_type === 'Selling'`              | `1`
-`deal_type === 'Buying'`               | `2`
-`property_type === 'Resale'`           | `128`
-`property_type === 'NewHome'`          | `256`
-`property_type === 'Lot'`              | `512`
-`property_type === 'CommercialSale'`   | `1024`
-`property_type === 'ResidentialLease'` | `2048`
-`property_type === 'CommercialLease'`  | `4096`
-_There is an active offer_ *           | `131072`
-
-If the deal type is selling and there is an active checklist with `checklist_type === 'Buying'`
-then we consider that deal to have an active offer.
-
-<!-- include(tests/deal/getContexts.md) -->
+Contexts are defined by each brand. Please refer to brand documentation to see how you can
+get a list of available contexts for each brand.
 
 ### Get a deal [GET /deals/:id]
 <!-- include(tests/deal/get.md) -->
