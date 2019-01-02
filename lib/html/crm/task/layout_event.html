@@ -1659,22 +1659,7 @@ table.button:active table a {
 </head>
 
 <body>
-  {% set p1 = listing.gallery_image_urls[0] %}
-  {% set p2 = listing.gallery_image_urls[1] %}
-  {% set p3 = listing.gallery_image_urls[2] %}
-  {% set address = listing.property.address.street_address %}
-  {% set city = listing.property.address.city %}
-  {% set state = listing.property.address.state %}
-  {% set postal_code = listing.property.address.postal_code %}
-  {% set price = listing.price %}
-  {% set bedroom = listing.property.bedroom_count %}
-  {% set bathroom = listing.property.full_bathroom_count + listing.property.half_bathroom_count %}
-  {% set sq = listing.property.square_meters %}
-  {% set userpic= user.profile_image_url %}
-  {% set name = user.display_name %}
-  {%set email = user.email %}
-  {% set phone_number = user.phone_number %}
-  {% set listing_id = listing.id %}
+
 
   <table class="body" data-made-with-foundation="">
     <tr>
