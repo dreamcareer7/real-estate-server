@@ -4,95 +4,131 @@
   {% include 'lib/html/crm/task/row1_edited.html' %}
 {% endif %}
 <!--row2-->
-<table class="row">
-  <tbody>
-    <tr>
-      <th style="padding: 0 80px;">
-        <div style="border:1px solid #d4d4d4;border-radius: 8px;">
-          <table class="row" style="margin: 0 auto;background: none;border:1px solid #d4d4d4;border-radius: 8px;">
-            <tbody>
-              <tr>
-                <th>
-                  <p style="color: #000000;font-family: barlow, Arial, sans-serif;font-size: 16px;font-weight:500 ;line-height: 1.5;padding-top: 24px;text-align: center;display:inline-block;padding-left: 36px;margin-bottom: 0;padding-right: 54px;">
-                    <span><img style="height: 24px;width: 24px;padding-right: 8px;float: left;" src="{{icon}}"></span>
-                    {{task.task_type}} <span style="padding:0 3px;color:#7f7f7f;">
-                      | </span><span style="color: #7f7f7f;">{{due_date}}</span></p>
-                  <p style="color: #000000;font-family: barlow, Arial, sans-serif;font-size: 24px;font-weight:500 ;line-height: 1.5;padding: 30px 32px 0 32px;">{{task.title}}</p>
-                  <p style="color: #7f7f7f;font-family: barlow, Arial, sans-serif;font-size: 16px ;line-height: 1.5;padding:16px 32px 16px 32px;">{{task.description}}</p>
-                </th>
-              </tr>
+<table class="row" style="margin-bottom: 40px;">
+    <tbody>
+        <tr>
+            <th class="pth-30" style="padding: 0 80px;">
+                <div  style="border-radius: 8px;">
+                    <table class="row" style="margin: 0 auto;background: none;border:1px solid #d4d4d4;">
+                        <tbody>
 
-              {% for assoc in associations %}
-                <tr>
-                  <th style="padding-bottom: 8px;float:left;padding-left:45px;">
-                    <div style="background-color: #f2f2f2; border-radius: 3px; display: inline-block;padding-right: 30px;">
-                      <div style="float: left;padding:24px 8px 16px 16px;">
-                        <img style="width: 32px;height:32px;border-radius: 50px;" src="{{assoc.icon}}">
-                      </div>
-                      <div style="float: left;padding: 9px 0;">
-                        <p style="font-size: 14px;font-weight:500;font-family: barlow, Arial, sans-serif;color:#000000;line-height: normal; margin-bottom: 8px; ">{{assoc.title}}</p>
-                        <p style="font-size: 14px;font-family: barlow, Arial, sans-serif;color:#7f7f7f;line-height: normal;margin-bottom: 0; ">{{assoc.subtitle}}</p>
-                      </div>
-                    </div>
-                  </th>
-                </tr>
-              {% endfor %}
+                            <tr>
+                                <th>
+                                    <p style="color: #000000;font-family: Barlow, Arial, sans-serif;font-size: 16px;font-weight:500 ;line-height: 1.5;padding-top: 24px;text-align: center;display:inline-block;padding-left: 36px;margin-bottom: 0;padding-right: 54px;">
+                                        <span><img
+                                                style="height: 24px;width: 24px;padding-right: 5px;float: left;"
+                                                src="{{icon}}"></span>
+                                                {{task.task_type}} <span
+                                            style="padding:0 3px;color:#7f7f7f;">
+                                            | </span><span
+                                            style="color: #7f7f7f;">
+                                            {{due_date}}</span></p>
+                                    <p class="pdl-32-font"
+                                        style="color: #000000;font-family: Barlow, Arial, sans-serif;font-size: 24px;font-weight:500 ;line-height: 1.5;padding: 30px 32px 0 64px;">{{task.title}}.</p>
+                                    <p class="p-des"
+                                        style="color: #7f7f7f;font-family: Barlow, Arial, sans-serif;font-size: 16px ;line-height: 1.5;padding:16px 32px 16px 64px;">We
+                                        {{task.description}}</p>
+                                </th>
+                            </tr>
+                            {% for assoc in associations %}
+                            <tr>
+                                <th class="pl-30" style="padding-left:64px;padding-bottom: 8px;">
 
-              {% if task.assignees and task.assignees.length > 0 %}
-              <tr>
-                <td style="padding: 32px 0 40px 64px;">
-                  <table>
-                    <tr style="display: inline-block;">
-                      {% for assignee in task.assignees %}
-                        <th class="menu-item"><img alt="{{assignee | full_name}}" title="{{assignee | full_name}}" style="width: 32px;height:32px;border-radius: 50px;" src="{{assignee.profile_image_url}}"></th>
-                      {% endfor %}
-                    </tr>
-                  </table>
-                </td>
-              </tr>
-              {% endif %}
-            </tbody>
-          </table>
-        </div>
-      </th>
-    </tr>
-  </tbody>
+                                    <div style="background-color: #f2f2f2; border-radius: 3px; display: inline-block;padding-right: 40px;">
+                                        <div style="float: left;padding:12px 8px 16px 16px;">
+                                            <img style="width: 32px;height:32px;border-radius: 50px;"
+                                                src="{{assoc.icon}}">
+                                        </div>
+                                        <div style="float: left;padding: 9px 0;">
+                                            <p style="font-size: 14px;font-weight:500;font-family: Barlow, Arial, sans-serif;color:#000000;line-height: normal; margin-bottom: 8px; ">
+                                                {{assoc.title}}</p>
+                                            <p style="font-size: 14px;font-family: Barlow, Arial, sans-serif;color:#7f7f7f;line-height: normal;margin-bottom: 0; ">
+                                                {{assoc.subtitle}}</p>
+                                        </div>
+                                    </div>
+                                </th>
+                            </tr>
+                            {% endfor %}
+
+                            
+                            <!-- <tr>
+                           
+                                <th class="pl-30" style="padding-left:64px;padding-bottom: 8px;">
+
+                                    <div style="background-color: #f2f2f2; border-radius: 3px; display: inline-block; padding-right: 10px;">
+                                        <div id="avatar-pic" style="float: left;padding:12px 8px 16px 16px;">
+                                            <img alt="{{assignee | full_name}}" title="{{assignee | full_name}}" style="width: 32px;height:32px;border-radius: 50px;"
+                                                src="{{assignee.profile_image_url}}">
+                                        </div>
+
+                                        <!-- <div class="avatar-name"
+                                            style="display: inline-block; width: 32px; height: 32px; border-radius: 500px;margin:13px 8px 14px 16px;float:left;">
+                                            <div style="width: 32px;height: 32px;font: 13px/30px Barlow, Arial, sans-serif;text-align: center;text-transform: uppercase;color: rgb(255, 255, 255);background: rgb(0, 0, 0);border-radius: 100%;">RM</div>
+                                        </div> -->
+                                        <div style="float: left;padding: 9px 0;">
+                                            <p style="font-size: 14px;font-weight:500;font-family: Barlow, Arial, sans-serif;color:#000000;line-height: normal; margin-bottom: 8px; ">Mark
+                                                Koepsell</p>
+                                            <p style="font-size: 14px;font-family: Barlow, Arial, sans-serif;color:#7f7f7f;line-height: normal;margin-bottom: 0; ">Buyer,
+                                                516.123.5643</p>
+
+                                        </div>
+                                    </div>
+                                </th>
+                               
+                            </tr> -->
+
+                            
+                            {% if task.assignees and task.assignees.length > 0 %}
+                           <tr>
+                                 <td class="pl-32" style="padding: 32px 0 40px 64px;">
+                                    <table>
+                                        <tr style="display: inline-block;">
+                                            {% for assignee in task.assignees %}
+                                            <th class="menu-item">
+                                               <img id="avatar-pic" alt="{{assignee | full_name}}" title="{{assignee | full_name}}"
+                                                    style="width: 32px;height:32px;border-radius: 50px;"
+                                                    src="{{assignee.profile_image_url}}"> -->
+                                                <!-- <div
+                                                    class="avatar-name"
+                                                    style="display: inline-block; width: 32px; height: 32px; border-radius: 500px;float:left;">
+                                                    <div
+                                                        style="width: 32px;height: 32px;font: 13px/30px Barlow, Arial, sans-serif;text-align: center;text-transform: uppercase;color: rgb(255, 255, 255);background: rgb(0, 0, 0);border-radius: 100%;">RM</div>
+                                                </div> -->
+                                            </th>
+                                            {% endfor %}
+                                            <!-- <th class="menu-item">
+                                                <img id="avatar-pic"
+                                                    style="width: 32px;height:32px;border-radius: 50px;margin: 0 8px;"
+                                                    src="https://assets.rechat.com/marketing/birthday/img-01.png"> 
+                                                <div class="avatar-name" style="display: inline-block; width: 32px; height: 32px; border-radius: 500px;float:left;margin-left:8px;margin-right: 8px;"><div style="width: 32px;height: 32px;font: 13px/30px Barlow, Arial, sans-serif;text-align: center;text-transform: uppercase;color: rgb(255, 255, 255);background: rgb(0, 0, 0);border-radius: 100%;">RM</div></div> -->
+                                             </th> -->
+                                           <!-- <th class="menu-item"> -->
+                                                <!-- <img id="avatar-pic"
+                                                    style="width: 32px;height:32px;border-radius: 50px;"
+                                                    src="https://assets.rechat.com/marketing/birthday/img-01.png"> -->
+                                                <!-- <div
+                                                    class="avatar-name"
+                                                    style="display: inline-block; width: 32px; height: 32px; border-radius: 500px;float:left;">
+                                                    <div
+                                                        style="width: 32px;height: 32px;font: 13px/30px Barlow, Arial, sans-serif;text-align: center;text-transform: uppercase;color: rgb(255, 255, 255);background: rgb(0, 0, 0);border-radius: 100%;">RM</div>
+                                                </div> 
+                                            </th>-->
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </th>
+        </tr>
+    </tbody>
 </table>
-<!--/row2-->
- <!--row6-->
- <hr style="margin:40px 80px;border: 0.5px solid #dcdcdc;">
- <center data-parsed="">
-   <table class="button float-center" style="width:100%; width: auto;
-   margin: 0 0 43px 0;text-align: left;
-   
-   background: #003bdf;
-   /* border: 2px solid #003bdf; */
-   border-radius: 3px;      font-family: Helvetica, Arial, sans-serif;
-   font-size: 16px;
-   font-weight: bold;
-   
-   text-decoration: none;
-   display: inline-block;
-   padding: 5px 16px 5px 16px;
-   border: 0 solid #2199e8;
-   border-radius: 3px;">
-     <tbody>
-       <tr>
-         <td>
-           <table>
-             <tbody>
-               <tr>
-                 <td style="border-radius: 3px; vertical-align: middle !important; text-align: center !important;border-radius: 3px;">
-                   <a style="color:#ffffff;font-size: 16px;font-family:Barlow,Arial,sans-serif;font-weight: 500; background:#003bdf;text-decoration: none;"
-                     href="http://tinyurl.com/mls-terms-of-use" align="center" class="float-center">View
-                     in Rechat</a></td>
-               </tr>
-             </tbody>
-           </table>
-         </td>
-       </tr>
-     </tbody>
-   </table>
- </center>
+</th>
+</tr>
+</tbody>
+</table>
 
- <!--/row6-->
+<!--/row2-->
+ 
