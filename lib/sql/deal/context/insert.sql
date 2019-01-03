@@ -3,8 +3,8 @@ WITH definition AS (
 
   $6::text                                                                                         AS value,
   $6::text                                                                                         AS text,
-  (CASE WHEN data_type = 'Date'   THEN to_jsonb($6)::text::timestamp with time zone ELSE NULL END) AS date,
-  (CASE WHEN data_type = 'Number' THEN to_jsonb($6)::text::numeric ELSE NULL END)                  AS number
+  (CASE WHEN data_type = 'Date'   THEN (to_jsonb($6) #>> '{}')::timestamp with time zone ELSE NULL END) AS date,
+  (CASE WHEN data_type = 'Number' THEN (to_jsonb($6) #>> '{}')::numeric ELSE NULL END)         AS number
 
   FROM brands_contexts WHERE id = $1
 )
