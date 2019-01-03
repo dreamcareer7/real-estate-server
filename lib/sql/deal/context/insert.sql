@@ -3,8 +3,8 @@ WITH definition AS (
 
   $6::text                                                                                         AS value,
   $6::text                                                                                         AS text,
-  (CASE WHEN data_type = 'Date'   THEN to_jsonb($6)::text::timestamp with time zone ELSE NULL END) AS date,
-  (CASE WHEN data_type = 'Number' THEN to_jsonb($6)::text::numeric ELSE NULL END)                  AS number
+  (CASE WHEN data_type = 'Date'   THEN (to_jsonb($6) #>> '{}')::timestamp with time zone ELSE NULL END) AS date,
+  (CASE WHEN data_type = 'Number' THEN (to_jsonb($6) #>> '{}')::numeric ELSE NULL END)         AS number
 
   FROM brands_contexts WHERE id = $1
 )
@@ -34,7 +34,7 @@ SELECT
   $2::uuid,
   $3::uuid,
   $4::uuid,
-  (CASE WHEN $5::boolean IS FALSE THEN NULL ELSE $2::uuid END),
+  (CASE WHEN $5::boolean IS FALSE THEN NULL ELSE $3::uuid END),
   (CASE WHEN $5::boolean IS FALSE THEN NULL ELSE CLOCK_TIMESTAMP() END)
   -- We don't want to re-save a context value if it's unchanged.
   -- Because that would mean we will lose some history (approvals, origins, etc)
