@@ -34,7 +34,7 @@ SELECT
   $2::uuid,
   $3::uuid,
   $4::uuid,
-  (CASE WHEN $5::boolean IS FALSE THEN NULL ELSE $2::uuid END),
+  (CASE WHEN $5::boolean IS FALSE THEN NULL ELSE $3::uuid END),
   (CASE WHEN $5::boolean IS FALSE THEN NULL ELSE CLOCK_TIMESTAMP() END)
   -- We don't want to re-save a context value if it's unchanged.
   -- Because that would mean we will lose some history (approvals, origins, etc)
