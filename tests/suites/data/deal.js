@@ -7,8 +7,6 @@ const deal = {
   }
 }
 
-const full_address = '3030 Bryan Street Unit 308, 75204, Dallas, TX'
-
 const address = {
   postal_code: {
     value: '75204',
@@ -20,7 +18,7 @@ const address = {
     value: '308'
   },
   full_address: {
-    value: full_address
+    value: '3030 Bryan Street Unit 308, 75204, Dallas, TX'
   },
   street_number: {
     value: '3030'
@@ -33,4 +31,4 @@ const address = {
   }
 }
 
-module.exports = { deal, address, full_address }
+module.exports = { deal, address }

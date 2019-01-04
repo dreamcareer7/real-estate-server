@@ -4,7 +4,7 @@ const envelope = require('./envelope/data.js')
 const envelope_response = require('./envelope/types.js')
 const webhook = fs.readFileSync(__dirname + '/envelope/webhook.xml').toString()
 
-registerSuite('deal', ['create', 'createHippocket', 'addRole', 'addChecklist', 'addTask', 'setSubmission'])
+registerSuite('deal', ['create', 'addRole', 'addChecklist', 'addTask', 'setSubmission'])
 
 const setEnvelopeDetails = envelope => {
   envelope.documents[0].revision = results.deal.setSubmission.data.last_revision
@@ -173,6 +173,7 @@ const checkTask = cb => {
         checklists: [
           {
             tasks: [
+              {},
               {
                 id: results.deal.addTask.data.id
               }

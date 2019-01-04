@@ -5,7 +5,14 @@ SELECT deals.*,
   EXTRACT(EPOCH FROM deleted_at) AS deleted_at,
   faired_at IS NULL as is_draft,
   (
-    SELECT ARRAY_AGG(id ORDER BY created_at ASC) FROM deals_roles WHERE deal = deals.id AND deleted_at IS NULL
+    SELECT ARRAY_AGG(deals_roles.id ORDER BY deals_roles.created_at ASC)
+    FROM deals_roles
+    LEFT JOIN deals_checklists ON deals_roles.checklist = deals_checklists.id
+    WHERE deals_roles.deal = deals.id
+    AND deals_roles.deleted_at          IS NULL
+    AND deals_checklists.deleted_at     IS NULL
+    AND deals_checklists.terminated_at  IS NULL
+    AND deals_checklists.deactivated_at IS NULL
   ) AS roles,
   (
     SELECT ARRAY_AGG(id ORDER BY "order") FROM deals_checklists
@@ -98,6 +105,7 @@ SELECT deals.*,
         number,
         date,
         context_type,
+        checklist,
         EXTRACT(EPOCH FROM context.created_at) AS created_at,
         EXTRACT(EPOCH FROM context.approved_at) AS approved_at,
         EXTRACT(EPOCH FROM context.date) AS date

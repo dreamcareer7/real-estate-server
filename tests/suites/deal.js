@@ -1,4 +1,4 @@
-const {deal, full_address} = require('./data/deal.js')
+const {deal} = require('./data/deal.js')
 const deal_response = require('./expected_objects/deal.js')
 const omit = require('lodash/omit')
 const schemas = require('./schemas/deal')
@@ -14,18 +14,10 @@ registerSuite('brokerwolf', [
   'syncContactTypes',
   'mapContactType'
 ])
-registerSuite('brand', ['addChecklist', 'addForm', 'addTask', 'addAnotherTask'])
+registerSuite('brand', ['addChecklist', 'addContext', 'addForm', 'addTask', 'addAnotherTask'])
 registerSuite('user', ['upgradeToAgentWithEmail'])
 
 const pdf = 'https://s3-us-west-2.amazonaws.com/rechat-forms/2672324.pdf'
-
-const getContexts = cb => {
-  return frisby.create('get all possible context items')
-    .get('/deals/contexts')
-    .after(cb)
-    .expectStatus(200)
-    .expectJSONSchema(schemas.getContexts)
-}
 
 const create = (cb) => {
   const data = JSON.parse(JSON.stringify(deal))
@@ -42,87 +34,9 @@ const create = (cb) => {
     })
 }
 
-const createHippocket = cb => {
-  const data = JSON.parse(JSON.stringify(deal))
-  data.deal_context = {
-    full_address: {
-      value: full_address
-    }
-  }
-
-  data.roles = [
-    {
-      legal_first_name: 'Hippocket',
-      legal_last_name: 'Seller',
-      email: 'hippocket+seller@rechat.com',
-      role: 'Seller'
-    },
-
-    {
-      legal_first_name: 'Hippocket',
-      email: 'hippocket+agent@rechat.com',
-      legal_last_name: 'Hip Agent',
-      role: 'SellerAgent'
-    },
-
-    {
-      legal_first_name: 'Hippocket',
-      email: 'hippocket+agent@rechat.com',
-      legal_last_name: 'Hip Agent',
-      role: 'BuyerAgent'
-    },
-  ]
-
-  const expected_object = Object.assign({}, data, {
-    deal_context: {
-      full_address: {
-        context_type: 'Text',
-        text: full_address
-      }
-    },
-
-    roles: data.roles.map(role => omit(role, ['email']))
-  })
-
-  return frisby.create('create a hippocket deal')
-    .post('/deals', data)
-    .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
-    .after(cb)
-    .expectStatus(200)
-    .expectJSONSchema(schemas.createHippocket)
-    .expectJSON({
-      code: 'OK',
-      data: expected_object
-    })
-}
-
-const createAddressless = cb => {
-  const data = JSON.parse(JSON.stringify(deal))
-
-  data.roles = [
-    {
-      legal_first_name: 'Buyer Name',
-      email: 'addressless+buyer@rechat.com',
-      legal_last_name: 'Buyer Last Name',
-      role: 'Buyer'
-    },
-  ]
-
-  return frisby.create('create a deal with no address and observe title')
-    .post('/deals', data)
-    .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
-    .after(cb)
-    .expectStatus(200)
-//     .expectJSONSchema(schemas.createHippocket)
-//     .expectJSON({
-//       code: 'OK',
-//       data: expected_object
-//     })
-}
-
 const patchListing = cb => {
   const patch = {
-    listing: results.listing.getListing.data.id
+    listing: results.listing.getListing.data.id,
   }
   const expected_object = Object.assign({}, results.deal.create.data, patch)
 
@@ -157,35 +71,15 @@ const patchDraft = cb => {
 }
 
 const addContext = cb => {
-  const context = {
-    listing_status: {
-      value: 'Active'
-    },
-    year_built: {
-      value: 1972
-    },
-    contract_date: {
-      value: '1979/12/01'
-    },
-    closing_date: {
-      value: '1980/01/01'
-    },
-    list_date: {
+  const checklist = results.deal.addChecklist.data.id
+
+  const context = [
+    {
+      definition: results.brand.addContext.data.id,
+      checklist,
       value: '2017/12/06'
-    },
-    sales_price: {
-      value: 999999
-    },
-    commission_listing: {
-      value: 3
-    },
-    commission_selling: {
-      value: 3
-    },
-    unit_number: {
-      value: '3A'
     }
-  }
+  ]
 
   const expected_object = Object.assign({}, omit(results.deal.create.data, [
     'brokerwolf_tier_id',
@@ -213,9 +107,9 @@ const addContext = cb => {
 }
 
 const approveContext = cb => {
-  const cid = results.deal.addContext.data.deal_context.listing_status.id
+  const cid = results.deal.addContext.data.deal_context.list_date.id
 
-  delete results.deal.addContext.data.deal_context.listing_status
+  delete results.deal.addContext.data.deal_context.list_date
 
   return frisby.create('approve a context item')
     .patch(`/deals/${results.deal.create.data.id}/context/${cid}/approved`, {approved: true})
@@ -291,11 +185,7 @@ const getAll = (cb) => {
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
-      data: [
-        results.deal.createAddressless.data,
-        results.deal.createHippocket.data,
-        results.deal.approveContext.data
-      ]
+      data: []
     })
 }
 
@@ -306,8 +196,7 @@ const get = (cb) => {
     .after(cb)
     .expectStatus(200)
     .expectJSON({
-      code: 'OK',
-      data: results.deal.approveContext.data
+      code: 'OK'
     })
     .expectJSONTypes({
       code: String,
@@ -315,15 +204,16 @@ const get = (cb) => {
     })
 }
 
-const offerChecklist = cb => {
+const addChecklist = cb => {
   const checklist = {
     title: 'Offered Checklist',
-    order: 1,
-    is_deactivated: true
+    order: 1
   }
 
-  return frisby.create('offer a checklist')
-    .post(`/deals/${results.deal.create.data.id}/checklists/offer`, {
+  results.deal.create.data.has_active_offer = true // We are adding the active offer right now
+
+  return frisby.create('add a checklist')
+    .post(`/deals/${results.deal.create.data.id}/checklists`, {
       checklist,
 
       conditions: {
@@ -340,16 +230,6 @@ const offerChecklist = cb => {
       }
     })
     .expectJSONSchema(schemas.offerChecklist)
-}
-
-const addChecklist = cb => {
-  return frisby.create('add a checklist')
-    .post(`/deals/${results.deal.create.data.id}/checklists`, {
-      title: 'Checklist 1',
-      order: 1
-    })
-    .after(cb)
-    .expectStatus(200)
 }
 
 const updateChecklist = cb => {
@@ -516,7 +396,7 @@ const updateSubmission = cb => {
 
 const getContextHistory = cb => {
   return frisby.create('get context history on a deal')
-    .get(`/deals/${results.deal.create.data.id}/context/full_address`)
+    .get(`/deals/${results.deal.create.data.id}/context/year_built`)
     .after(cb)
 }
 
@@ -653,20 +533,20 @@ const filter = (cb) => {
 }
 
 module.exports = {
-  getContexts,
   create,
-  createHippocket,
-  createAddressless,
+  addChecklist,
   patchListing,
+  addContext,
+  approveContext,
   patchDraft,
   addRole,
   updateRole,
-  addContext,
-  approveContext,
   get,
   getAll,
-  addChecklist,
-  offerChecklist,
+  getBrandInbox,
+  getBrandDeals,
+  getBrandXls,
+  filter,
   updateChecklist,
   addTask,
   addAnotherTask,
@@ -685,10 +565,6 @@ module.exports = {
   sendNotifications,
   patchAttention,
   postMessage,
-  getBrandInbox,
-  getBrandDeals,
-  getBrandXls,
-  filter,
   removeRole,
   remove
 }

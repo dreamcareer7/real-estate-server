@@ -71,8 +71,9 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       COALESCE(cad.name, cad.label) AS event_type,
       (CASE
         WHEN attribute_type = 'birthday' THEN 'Birthday'
+        WHEN attribute_type = 'child_birthday' THEN COALESCE('Child Birthday (' || ca.label || ')', 'Child Birthday')
         WHEN attribute_type = 'important_date' THEN COALESCE(ca.label, 'Important Date')
-        ELSE COALESCE(cad.name, cad.label)
+        ELSE COALESCE(cad.label, cad.name)
       END) AS type_label,
       "date" AS "timestamp",
       True AS recurring,
