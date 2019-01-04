@@ -3,6 +3,7 @@ INSERT INTO brands_contexts (
   key,
   label,
   short_label,
+  "order",
   section,
   needs_approval,
   exports,
@@ -13,5 +14,5 @@ INSERT INTO brands_contexts (
   required,
   optional,
   triggers_brokerwolf
-) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
+) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)
 RETURNING id
