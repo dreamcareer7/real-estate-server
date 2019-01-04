@@ -22,6 +22,7 @@ const up = [
     JOIN forms_data ON deal_context.revision = forms_data.id
     JOIN forms_submissions ON forms_data.submission = forms_submissions.id
     JOIN tasks ON forms_submissions.id = tasks.submission
+    LIMIT 1
   )`,
 
   current_deal_context_trigger,
