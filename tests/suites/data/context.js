@@ -14,5 +14,6 @@ module.exports = {
     'Resale'
   ],
   optional: [],
-  triggers_brokerwolf: true
+  triggers_brokerwolf: true,
+  order: 1
 }
