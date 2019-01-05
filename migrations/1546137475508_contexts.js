@@ -66,7 +66,6 @@ const runAll = (sqls, cb) => {
       return cb(err)
 
     async.eachSeries(sqls, client.query.bind(client), err => {
-      release()
       cb(err, client)
     })
   })
