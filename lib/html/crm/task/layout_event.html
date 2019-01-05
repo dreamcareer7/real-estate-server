@@ -16,7 +16,12 @@
             padding: 0;
         }
 
+        .body {
+            background-color: #f3f3f3;
+        }
+
         body {
+            width: 100% !important;
             -webkit-text-size-adjust: 100%;
             -ms-text-size-adjust: 100%;
             margin: 0;
@@ -102,7 +107,7 @@
 
         table.body {
             background: #ffffff;
-            margin: 0 auto;
+            height: 100%;
         }
 
         table.container {
@@ -110,11 +115,11 @@
             width: 580px;
             margin: 0 auto;
 
-            text-align: center;
+            text-align: inherit;
         }
 
         table.row {
-            /* background-color: #ffffff; */
+            background-color: #ffffff;
             padding: 0;
             width: 100%;
             position: relative;
@@ -965,7 +970,6 @@
             table.body table.container .row.hide-for-large {
                 display: table !important;
                 width: 100% !important;
-                margin: 0 auto !important;
             }
         }
 
@@ -1713,42 +1717,28 @@
 
         @media only screen and (max-width: 596px) {
             .p-des {
-                padding: 16px 32px 16px !important;
+                padding: 16px 32px 16px 32px !important;
             }
 
-            .pl-30 {
+            .p-title {
+                padding: 30px 32px 0 32px !important;
+            }
+
+            .plth-32 {
                 padding-left: 32px !important;
+            }
+
+            .pth1-40 {
+                padding: 56px 40px 40px !important;
+            }
+
+            .pth-40 {
+                padding: 40px 40px !important;
             }
 
             .pl-32 {
                 padding: 32px 0 40px 32px !important;
             }
-
-            .pdl-32-font {
-                padding: 30px 32px 0 32px !important;
-                font-size: 22px !important;
-            }
-
-            .pth-30 {
-                padding: 0 30px !important;
-            }
-
-            .inner-box {
-                max-height: 850px !important;
-            }
-
-            table.container {
-                margin: 0 auto !important;
-            }
-
-            /* .mhr-30{
-                margin: 0 30px;
-            } */
-
-            .th-bgres{
-                background-color: #f3f3f3 !important;
-            }
-
         }
     </style>
 
@@ -1757,7 +1747,6 @@
         html,
         .body {
             background: #f3f3f3 !important;
-
         }
     </style>
 </head>
@@ -1767,7 +1756,7 @@
         <tr>
             <td class="float-center" align="center" valign="top">
                 <center data-parsed="">
-                    <table align="center" class="container float-center" style="margin-top: 40px !important;margin: 40px auto;">
+                    <table align="center" class="container float-center" style="margin-top: 40px;">
                         <tbody>
                             <tr>
                                 <td>
@@ -1775,27 +1764,206 @@
                                         <tbody>
                                             <tr>
                                                 <th class="small-12 large-12 columns first last" align="center">
-                                                        <table align="center">
-                                                                <tr>
-                                                                  <th>
-                                                                    {% include 'lib/html/crm/task/event.html' %}
-                                                                  </th>
-                                                                </tr>
-                                                              </table>
+                                                    <table align="center">
+                                                        <tr>
+                                                            <th>
+                                                                <!--row1-->
+                                                                <table class="row">
+                                                                    <tbody>
+                                                                        <tr>
+                                                                            <th>
+                                                                                <table>
+                                                                                    <tr>
+                                                                                        <th class="pth1-40" style="padding: 56px 80px 40px;">
+                                                                                            <p style="color: #000000;font-family: Merriweather, Arial, sans-serif;font-size: 40px;font-weight: 900;line-height: 1.2;margin-bottom: 0;">You
+                                                                                                and <span style="color: #000000;font-family: Merriweather, Arial, sans-serif;font-size: 40px;font-weight: 900;line-height: 1.2;margin-bottom: 0;">
+                                                                                                    2 </span> others
+                                                                                                have been assigned to
+                                                                                                an event <span style="color: #7f7f7f;font-family: Merriweather, Arial, sans-serif;font-size: 40px;font-weight: 900;line-height: 1.2;margin-bottom: 0;">
+                                                                                                    by Gorden Green.
+                                                                                                </span>
+                                                                                            </p>
+
+                                                                                        </th>
+                                                                                    </tr>
+                                                                                </table>
+                                                                            </th>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                                <!--/row1-->
+                                                                <!--row2-->
+                                                                <table class="row">
+                                                                    <tbody>
+                                                                        <tr>
+                                                                            <th class="pth-40" style="padding: 40px 80px;">
+                                                                                <div style="border-radius: 8px;">
+                                                                                    <table class="row" style="margin: 0 auto;background: none;border:1px solid #d4d4d4;border-radius: 8px;">
+                                                                                        <tbody>
+
+                                                                                            <tr>
+                                                                                                <th>
+                                                                                                    <p style="color: #000000;font-family: Barlow, Arial, sans-serif;font-size: 16px;font-weight:500 ;line-height: 1.5;padding-top: 24px;text-align: center;display:inline-block;padding-left: 36px;margin-bottom: 0;padding-right: 54px;">
+                                                                                                        <span><img
+                                                                                                                style="height: 24px;width: 24px;padding-right: 8px;float: left;"
+                                                                                                                src="https://image.ibb.co/bDtvbL/Task-Follow-up-2x.png"></span>
+                                                                                                        In-Person
+                                                                                                        Meeting <span
+                                                                                                            style="padding:0 3px;color:#7f7f7f;">
+                                                                                                            | </span><span
+                                                                                                            style="color: #7f7f7f;">
+                                                                                                            Sep 1,
+                                                                                                            2018,
+                                                                                                            10:12 PM</span></p>
+                                                                                                    <p class="p-title"
+                                                                                                        style="color: #000000;font-family: Barlow, Arial, sans-serif;font-size: 24px;font-weight:500 ;line-height: 1.5;padding: 30px 32px 0 64px;">Meet
+                                                                                                        with Jose
+                                                                                                        Schillings.</p>
+                                                                                                    <p class="p-des"
+                                                                                                        style="color: #7f7f7f;font-family: Barlow, Arial, sans-serif;font-size: 16px ;line-height: 1.5;padding:16px 32px 16px 64px;">We
+                                                                                                        spoke about
+                                                                                                        home
+                                                                                                        types he likes.
+                                                                                                        He
+                                                                                                        mentioned,
+                                                                                                        single-family
+                                                                                                        homes
+                                                                                                        that are
+                                                                                                        modern,
+                                                                                                        ideally
+                                                                                                        mid-modern
+                                                                                                        century
+                                                                                                        architecture.
+                                                                                                        1,500
+                                                                                                        sqft
+                                                                                                        to 3,000 sqft.
+                                                                                                        Must
+                                                                                                        have backyard
+                                                                                                        and a
+                                                                                                        2 carport.</p>
+                                                                                                </th>
+                                                                                            </tr>
+                                                                                            <tr>
+                                                                                                <th class="plth-32"
+                                                                                                    style="padding-left:64px;padding-bottom: 8px;">
+
+                                                                                                    <div style="background-color: #f2f2f2; border-radius: 3px; display: inline-block;padding-right: 30px;">
+                                                                                                        <div style="float: left;padding:12px 8px 16px 16px;">
+                                                                                                            <img style="width: 32px;height:32px;border-radius: 50px;"
+                                                                                                                src="https://d2j29n432zojb.cloudfront.net/81278490-1.jpg">
+                                                                                                        </div>
+                                                                                                        <div style="float: left;padding: 9px 0;">
+                                                                                                            <p style="font-size: 14px;font-weight:500;font-family: Barlow, Arial, sans-serif;color:#000000;line-height: normal; margin-bottom: 8px; ">1102
+                                                                                                                Apple
+                                                                                                                Street</p>
+                                                                                                            <p style="font-size: 14px;font-family: Barlow, Arial, sans-serif;color:#7f7f7f;line-height: normal;margin-bottom: 0; ">Active,
+                                                                                                                $500,000</p>
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                </th>
+                                                                                            </tr>
+                                                                                            <tr>
+                                                                                                <th class="plth-32"
+                                                                                                    style="padding-left:64px;padding-bottom: 8px;">
+
+                                                                                                    <div style="background-color: #f2f2f2; border-radius: 3px; display: inline-block; padding-right: 10px;">
+                                                                                                        <div class="avatar-pic"
+                                                                                                            style="float: left;margin:12px 8px 16px 16px;">
+                                                                                                            <img style="width: 32px;height:32px;border-radius: 50px;"
+                                                                                                                src="https://assets.rechat.com/marketing/birthday/img-01.png">
+                                                                                                        </div>
+                                                                                                        <!-- <div class="avatar-name" style="display: inline-block; width: 32px; height: 32px; border-radius: 500px;float:left;margin:15px 8px 0 16px"><div style="width: 32px;height: 32px;font: 13px/30px Barlow, Arial, sans-serif;text-align: center;text-transform: uppercase;color: rgb(255, 255, 255);background: rgb(0, 0, 0);border-radius: 100%;">RM</div></div> -->
+                                                                                                        <div style="float: left;padding: 9px 0;">
+                                                                                                            <p style="font-size: 14px;font-weight:500;font-family: Barlow, Arial, sans-serif;color:#000000;line-height: normal; margin-bottom: 8px; ">Mark
+                                                                                                                Koepsell</p>
+                                                                                                            <p style="font-size: 14px;font-family: Barlow, Arial, sans-serif;color:#7f7f7f;line-height: normal;margin-bottom: 0; ">Buyer,
+                                                                                                                516.123.5643</p>
+
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                </th>
+                                                                                            </tr>
+                                                                                            <tr>
+                                                                                                <th class="plth-32"
+                                                                                                    style="padding-left:64px;">
+
+                                                                                                    <div style="background-color: #f2f2f2; border-radius: 3px; display: inline-block; padding-right: 10px;">
+                                                                                                        <!-- <div class="avatar-pic" style="float: left;padding:12px 8px 16px 16px;">
+                                                                                                            <img style="width: 32px;height:32px;border-radius: 50px;"
+                                                                                                                src="https://assets.rechat.com/marketing/birthday/img-01.png">
+                                                                                                        </div> -->
+                                                                                                        <div class="avatar-name"
+                                                                                                            style="display: inline-block; width: 32px; height: 32px; border-radius: 500px;float:left;margin:15px 8px 0 16px">
+                                                                                                            <div style="width: 32px;height: 32px;font: 13px/30px Barlow, Arial, sans-serif;text-align: center;text-transform: uppercase;color: rgb(255, 255, 255);background: rgb(0, 0, 0);border-radius: 100%;">RM</div>
+                                                                                                        </div>
+                                                                                                        <div style="float: left;padding: 9px 0;">
+                                                                                                            <p style="font-size: 14px;font-weight:500;font-family: Barlow, Arial, sans-serif;color:#000000;line-height: normal; margin-bottom: 8px; ">Mark
+                                                                                                                Koepsell</p>
+                                                                                                            <p style="font-size: 14px;font-family: Barlow, Arial, sans-serif;color:#7f7f7f;line-height: normal;margin-bottom: 0; ">Buyer,
+                                                                                                                516.123.5643</p>
+
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                </th>
+                                                                                            </tr>
+                                                                                            <tr>
+                                                                                                <td class="pl-32" style="padding: 32px 0 40px 64px;">
+                                                                                                    <table>
+                                                                                                        <tr style="display: inline-block;">
+                                                                                                            <th class="menu-item">
+                                                                                                                <!-- <img id="avatar-pic"
+                                                                                                                            style="width: 32px;height:32px;border-radius: 50px;"
+                                                                                                                            src="https://assets.rechat.com/marketing/birthday/img-01.png"> -->
+                                                                                                                <div
+                                                                                                                    class="avatar-name"
+                                                                                                                    style="display: inline-block; width: 32px; height: 32px; border-radius: 500px;float:left;">
+                                                                                                                    <div
+                                                                                                                        style="width: 32px;height: 32px;font: 13px/30px Barlow, Arial, sans-serif;text-align: center;text-transform: uppercase;color: rgb(255, 255, 255);background: rgb(0, 0, 0);border-radius: 100%;">RM</div>
+                                                                                                                </div>
+                                                                                                            </th>
+                                                                                                            <th class="menu-item">
+                                                                                                                <img id="avatar-pic"
+                                                                                                                    style="width: 32px;height:32px;border-radius: 50px;margin: 0 8px;"
+                                                                                                                    src="https://assets.rechat.com/marketing/birthday/img-01.png">
+                                                                                                                <!-- <div class="avatar-name" style="display: inline-block; width: 32px; height: 32px; border-radius: 500px;float:left;margin-left:8px;margin-right: 8px;"><div style="width: 32px;height: 32px;font: 13px/30px Barlow, Arial, sans-serif;text-align: center;text-transform: uppercase;color: rgb(255, 255, 255);background: rgb(0, 0, 0);border-radius: 100%;">RM</div></div> -->
+                                                                                                            </th>
+                                                                                                            <th class="menu-item">
+                                                                                                                <!-- <img id="avatar-pic"
+                                                                                                                            style="width: 32px;height:32px;border-radius: 50px;"
+                                                                                                                            src="https://assets.rechat.com/marketing/birthday/img-01.png"> -->
+                                                                                                                <div
+                                                                                                                    class="avatar-name"
+                                                                                                                    style="display: inline-block; width: 32px; height: 32px; border-radius: 500px;float:left;">
+                                                                                                                    <div
+                                                                                                                        style="width: 32px;height: 32px;font: 13px/30px Barlow, Arial, sans-serif;text-align: center;text-transform: uppercase;color: rgb(255, 255, 255);background: rgb(0, 0, 0);border-radius: 100%;">RM</div>
+                                                                                                                </div>
+                                                                                                            </th>
+                                                                                                        </tr>
+                                                                                                    </table>
+                                                                                                </td>
+                                                                                            </tr>
+                                                                                        </tbody>
+                                                                                    </table>
+                                                                                </div>
+                                                                            </th>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
                                                             </th>
-                                                          </tr>
-                                                        </tbody>
-                                                      </table>
-                                              
+                                                        </tr>
+                                        </tbody>
+                                    </table>
+
+                                    <!--/row2-->
                                     <!--row3-->
-                                  
-                                     <center data-parsed="">
-                                            <hr  style="width: 73%;border: 0.5px solid #dcdcdc;">
-                                        <table class="button float-center" align="center" style="width:100%;margin-top: 40px">
+
+                                    <center data-parsed="">
+                                        <hr style="width: 73%;border: 0.5px solid #dcdcdc;">
+                                        <table class="button float-center" style="width:100%;margin-top:40px;">
                                             <tbody>
                                                 <tr>
                                                     <td>
-                                                        <table class="float-center" align="center">
+                                                        <table>
                                                             <tbody>
                                                                 <tr>
                                                                     <td style="border-radius: 3px; vertical-align: middle !important; text-align: center !important;border-radius: 3px; background:white;">
@@ -1814,10 +1982,10 @@
 
                                     <!--/row3-->
                                     <!--row4-->
-                                    <table class="row" style="background-color:#f3f3f3;">
+                                    <table class="row">
                                         <tbody>
                                             <tr>
-                                                <th class="th-bgres" class="small-12 large-12 columns first last" style="background-color:#f3f3f3 !important;padding: 32px 0;">
+                                                <th class="small-12 large-12 columns first last" style="background-color:#f3f3f3 !important;padding: 32px 0;">
                                                     <table style="width: 100%!important;">
                                                         <tr style="width: 100%!important;">
                                                             <th style="width: 100%!important;">
