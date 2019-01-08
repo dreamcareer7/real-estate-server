@@ -20,102 +20,63 @@ SELECT deals.*,
   ) as checklists,
 
   (
-    SELECT ROW_TO_JSON(p.*) FROM
-    (
-      SELECT
-      'mls_context' AS type,
-      status AS listing_status,
-      transaction_type,
-      mls_number,
-      mls_area_major,
-      mls_area_minor,
-      price AS list_price,
-      EXTRACT(EPOCH FROM list_date) as list_date,
-      property_type,
-      year_built,
-      city,
-      county_or_parish AS county,
-      postal_code,
-      street_number,
-      street_dir_prefix,
-      street_name,
-      street_suffix,
-      postal_code,
-      lot_number,
-      block as block_number,
-      subdivision_name AS subdivision,
-      unit_number,
-      state_code,
-      state,
-      (
-        SELECT ARRAY_TO_STRING
-        (
-          ARRAY[
-            addresses.street_number,
-            addresses.street_dir_prefix,
-            addresses.street_name,
-            addresses.street_suffix,
-            CASE
-              WHEN addresses.unit_number IS NULL THEN NULL
-              WHEN addresses.unit_number = '' THEN NULL
-              ELSE 'Unit ' || addresses.unit_number || ',' END,
-            addresses.city || ',',
-            addresses.state_code,
-            addresses.postal_code
-          ], ' ', NULL
-        )
-      ) AS full_address,
-      (
-        SELECT ARRAY_TO_STRING(
-          ARRAY[
-          addresses.street_number,
-          addresses.street_dir_prefix,
-          addresses.street_name,
-          addresses.street_suffix,
-          CASE
-            WHEN addresses.unit_number IS NULL THEN NULL
-            WHEN addresses.unit_number = '' THEN NULL
-            ELSE 'Unit ' || addresses.unit_number
-          END
-          ], ' ', NULL
-        )
-      ) AS street_address,
-      (
-        SELECT url FROM photos
-        WHERE
-        listing_mui = listings.matrix_unique_id
-        AND photos.url IS NOT NULL
-        AND photos.deleted_at IS NULL
-        ORDER BY "order" LIMIT 1
-      ) AS photo
-      FROM listings
-      JOIN properties ON listings.property_id = properties.id
-      JOIN addresses ON properties.address_id = addresses.id
-      WHERE listings.id = deals.listing
-    ) p
-  ) AS mls_context,
+    WITH definitions AS (
+      SELECT * FROM brands_contexts
+      WHERE brand IN (SELECT brand_parents(deals.brand::uuid))
+    ),
 
-  (
-    WITH c AS (
+    deal_context AS (
       SELECT
-        id,
+        id::uuid,
         type,
+        'Provided' as source,
         key,
         text,
         number,
-        date,
         context_type,
         checklist,
         EXTRACT(EPOCH FROM context.created_at) AS created_at,
         EXTRACT(EPOCH FROM context.approved_at) AS approved_at,
         EXTRACT(EPOCH FROM context.date) AS date
       FROM current_deal_context context WHERE context.deal = deals.id
+    ) ,
+
+    mls_context AS (
+      SELECT
+        null::uuid as id,
+        'mls_context' as type,
+        'MLS' as source,
+        ctx.key,
+        ctx.text,
+        ctx.number,
+        NULL::deal_context_type AS context_type,
+        NULL::uuid as checklist,
+        NULL::numeric as created_at,
+        NULL::numeric as approved_at,
+        ctx.date
+      FROM get_mls_context(deals.listing) ctx
+    ),
+
+    merged AS (
+      SELECT * FROM deal_context
+      UNION ALL
+      SELECT * FROM mls_context
+    ),
+
+    c AS (
+      SELECT
+      merged.*,
+      definitions.id as definition
+      FROM merged
+      JOIN definitions ON merged.key = definitions.key
+      ORDER BY key ASC,
+        (preffered_source = 'MLS' AND source = 'MLS') DESC
     )
 
     SELECT
       JSON_OBJECT_AGG(c.key, c.*)
     FROM c
-  ) as deal_context,
+  ) as context,
 
   (
     SELECT ARRAY_AGG(id) FROM envelopes WHERE deal = deals.id

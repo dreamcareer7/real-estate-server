@@ -6,7 +6,7 @@ const DealContext = H.Object({
 })
 
 module.exports = H.schema({
-  deal_context: H.Required(H.Object({
+  context: H.Required(H.Object({
     listing_status: H.Required(DealContext),
     year_built: H.Required(DealContext),
     contract_date: H.Required(DealContext),
