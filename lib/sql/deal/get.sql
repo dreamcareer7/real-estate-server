@@ -44,7 +44,7 @@ SELECT deals.*,
     mls_context AS (
       SELECT
         null::uuid as id,
-        'mls_context' as type,
+        'deal_context_item' as type,
         'MLS' as source,
         ctx.key,
         ctx.text,
