@@ -9,7 +9,7 @@ SELECT
   deal_context.key,
   deal_context.text,
   deal_context.number,
-  deal_context.context_type,
+  deal_context.data_type,
 --   forms_submissions.id as submission,
 --   forms_data.id as revision,
   deal_context.deal as deal,

@@ -89,7 +89,7 @@ const addContext = cb => {
   ]), {
     context: {
       list_date: {
-        context_type: 'Date',
+        data_type: 'Date',
         date: (new Date('2017/12/06')).valueOf() / 1000
       }
     }

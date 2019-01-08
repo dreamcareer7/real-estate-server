@@ -2,7 +2,7 @@ const H = require('../jsonSchemaHelper')
 
 const DealContext = H.Object({
   id: H.String,
-  context_type: H.String,
+  data_type: H.String,
 })
 
 module.exports = H.schema({

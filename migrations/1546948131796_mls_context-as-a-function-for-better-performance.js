@@ -5,11 +5,13 @@ const db = require('../lib/utils/db')
 const fs = require('fs')
 
 const get_mls_context = fs.readFileSync(__dirname + '/../lib/sql/deal/context/get_mls_context.fn.sql', 'utf-8')
+const update = fs.readFileSync(__dirname + '/../lib/sql/deal/context/update_current_deal_context.fn.sql', 'utf-8')
 
 const up = [
   'ALTER TYPE deal_context_type RENAME TO context_data_type',
   'ALTER TABLE deal_context RENAME context_type TO data_type',
   'ALTER TABLE current_deal_context RENAME context_type TO data_type',
+  update,
   `CREATE TYPE mls_context AS
     (
       data_type context_data_type,
