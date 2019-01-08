@@ -9,11 +9,8 @@ const contexts = require('./contexts.jss')
 
 require('../lib/models')()
 
-const cast = fs.readFileSync(__dirname + '/../lib/sql/deal/context/cast_context.fn.sql', 'utf-8')
-
 const up = [
   'BEGIN',
-  cast,
   `CREATE TYPE deal_context_section AS ENUM (
     'Listing', 'CDA', 'Dates'
   )`,

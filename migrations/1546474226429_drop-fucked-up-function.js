@@ -5,7 +5,7 @@ const db = require('../lib/utils/db')
 
 const up = [
   'BEGIN',
-  'DROP FUNCTION cast_context(anyelement, text, text)',
+  'DROP FUNCTION IF EXISTS cast_context(anyelement, text, text)',
   'COMMIT'
 ]
 
