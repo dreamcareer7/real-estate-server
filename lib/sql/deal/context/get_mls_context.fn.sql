@@ -57,7 +57,8 @@ BEGIN
   IF r1.status IS NOT NULL THEN
     SELECT
       'listing_status' AS key,
-      r1.status AS text
+      r1.status AS text,
+      'Text' as context_type
       INTO c;
 
     RETURN NEXT c;
@@ -66,7 +67,8 @@ BEGIN
   IF r1.mls_area_major IS NOT NULL THEN
     SELECT
       'mls_area_major' AS key,
-      r1.mls_area_major AS text
+      r1.mls_area_major AS text,
+      'Text' as context_type
       INTO c;
 
     RETURN NEXT c;
@@ -75,7 +77,8 @@ BEGIN
   IF r1.mls_area_minor IS NOT NULL THEN
     SELECT
       'mls_area_minor' AS key,
-      r1.mls_area_minor AS text
+      r1.mls_area_minor AS text,
+      'Text' as context_type
       INTO c;
 
     RETURN NEXT c;
@@ -84,7 +87,8 @@ BEGIN
   IF r1.property_type IS NOT NULL THEN
     SELECT
       'property_type' AS key,
-      r1.property_type AS text
+      r1.property_type AS text,
+      'Text' as context_type
       INTO c;
 
     RETURN NEXT c;
@@ -93,7 +97,8 @@ BEGIN
   IF r1.city IS NOT NULL THEN
     SELECT
       'city' AS key,
-      r1.city AS text
+      r1.city AS text,
+      'Text' as context_type
       INTO c;
 
     RETURN NEXT c;
@@ -102,7 +107,8 @@ BEGIN
   IF r1.county_or_parish IS NOT NULL THEN
     SELECT
       'county' AS key,
-      r1.county_or_parish AS text
+      r1.county_or_parish AS text,
+      'Text' as context_type
       INTO c;
 
     RETURN NEXT c;
@@ -111,7 +117,8 @@ BEGIN
   IF r1.postal_code IS NOT NULL THEN
     SELECT
       'postal_code' AS key,
-      r1.postal_code AS text
+      r1.postal_code AS text,
+      'Text' as context_type
       INTO c;
 
     RETURN NEXT c;
@@ -120,7 +127,8 @@ BEGIN
   IF r1.street_number IS NOT NULL THEN
     SELECT
       'street_number' AS key,
-      r1.street_number AS text
+      r1.street_number AS text,
+      'Text' as context_type
       INTO c;
 
     RETURN NEXT c;
@@ -129,7 +137,8 @@ BEGIN
   IF r1.street_dir_prefix IS NOT NULL THEN
     SELECT
       'street_dir_prefix' AS key,
-      r1.street_dir_prefix AS text
+      r1.street_dir_prefix AS text,
+      'Text' as context_type
       INTO c;
 
     RETURN NEXT c;
@@ -138,7 +147,8 @@ BEGIN
   IF r1.street_name IS NOT NULL THEN
     SELECT
       'street_name' AS key,
-      r1.street_name AS text
+      r1.street_name AS text,
+      'Text' as context_type
       INTO c;
 
     RETURN NEXT c;
@@ -147,7 +157,8 @@ BEGIN
   IF r1.street_suffix IS NOT NULL THEN
     SELECT
       'street_suffix' AS key,
-      r1.street_suffix AS text
+      r1.street_suffix AS text,
+      'Text' as context_type
       INTO c;
 
     RETURN NEXT c;
@@ -156,7 +167,8 @@ BEGIN
   IF r1.lot_number IS NOT NULL THEN
     SELECT
       'lot_number' AS key,
-      r1.lot_number AS text
+      r1.lot_number AS text,
+      'Text' as context_type
       INTO c;
 
     RETURN NEXT c;
@@ -165,7 +177,8 @@ BEGIN
   IF r1.block IS NOT NULL THEN
     SELECT
       'block_number' AS key,
-      r1.block AS text
+      r1.block AS text,
+      'Text' as context_type
       INTO c;
 
     RETURN NEXT c;
@@ -174,7 +187,8 @@ BEGIN
   IF r1.subdivision_name IS NOT NULL THEN
     SELECT
       'subdivision' AS key,
-      r1.subdivision_name AS text
+      r1.subdivision_name AS text,
+      'Text' as context_type
       INTO c;
 
     RETURN NEXT c;
@@ -183,7 +197,8 @@ BEGIN
   IF r1.unit_number IS NOT NULL THEN
     SELECT
       'unit_number' AS key,
-      r1.unit_number AS text
+      r1.unit_number AS text,
+      'Text' as context_type
       INTO c;
 
     RETURN NEXT c;
@@ -192,7 +207,8 @@ BEGIN
   IF r1.state_code IS NOT NULL THEN
     SELECT
       'state_code' AS key,
-      r1.state_code AS text
+      r1.state_code AS text,
+      'Text' as context_type
       INTO c;
 
     RETURN NEXT c;
@@ -201,7 +217,8 @@ BEGIN
   IF r1.state IS NOT NULL THEN
     SELECT
       'state' AS key,
-      r1.state AS text
+      r1.state AS text,
+      'Text' as context_type
       INTO c;
 
     RETURN NEXT c;
@@ -210,7 +227,8 @@ BEGIN
   IF r1.full_address IS NOT NULL THEN
     SELECT
       'full_address' AS key,
-      r1.full_address AS text
+      r1.full_address AS text,
+      'Text' as context_type
       INTO c;
 
     RETURN NEXT c;
@@ -219,7 +237,8 @@ BEGIN
   IF r1.street_address IS NOT NULL THEN
     SELECT
       'street_address' AS key,
-      r1.street_address AS text
+      r1.street_address AS text,
+      'Text' as context_type
       INTO c;
 
     RETURN NEXT c;
@@ -228,7 +247,8 @@ BEGIN
   IF r1.photo IS NOT NULL THEN
     SELECT
       'photo' AS key,
-      r1.photo AS text
+      r1.photo AS text,
+      'Text' as context_type
       INTO c;
 
     RETURN NEXT c;
@@ -238,7 +258,8 @@ BEGIN
     SELECT
       'list_price' AS key,
       null AS text,
-      r1.price AS number
+      r1.price AS number,
+      'Number' as context_type
       INTO c;
 
     RETURN NEXT c;
@@ -248,7 +269,8 @@ BEGIN
     SELECT
       'mls_number' AS key,
       null AS text,
-      r1.mls_number AS number
+      r1.mls_number AS number,
+      'Number' as context_type
       INTO c;
 
     RETURN NEXT c;
@@ -258,7 +280,8 @@ BEGIN
     SELECT
       'year_built' AS key,
       null AS text,
-      r1.year_built AS number
+      r1.year_built AS number,
+      'Number' as context_type
       INTO c;
 
     RETURN NEXT c;
@@ -269,7 +292,8 @@ BEGIN
       'list_date' AS key,
       null AS text,
       null AS number,
-      EXTRACT(epoch FROM r1.list_date) AS date
+      EXTRACT(epoch FROM r1.list_date) AS date,
+      'Date' as context_type
       INTO c;
 
     RETURN NEXT c;
