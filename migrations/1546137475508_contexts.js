@@ -1,6 +1,5 @@
 'use strict'
 
-const fs = require('fs')
 const async = require('async')
 const _ = require('lodash')
 const db = require('../lib/utils/db')
