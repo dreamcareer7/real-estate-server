@@ -984,61 +984,52 @@ const getJobStatus = cb => {
 }
 
 const sendEmails = cb => {
-  const emails = [{
+  const campaign = {
     subject: 'Email Subject',
-    to: 'recipient@rechat.com',
+    to: [{ email: 'recipient@rechat.com' }],
     html: '<div>HTML Body</div>',
     text: 'Text Body',
-  }]
-
-  const from = results.authorize.token.data.id
+    from: results.authorize.token.data.id
+  }
 
   return frisby
     .create('send emails to contacts')
-    .post('/contacts/emails', {
-      emails,
-      from
-    })
+    .post('/contacts/emails', campaign)
     .after(cb)
     .expectStatus(200)
 }
 
 const sendEmailsToTag = cb => {
-  const emails = [{
+  const campaign = {
     subject: 'Email Subject',
     html: '<div>HTML Body</div>',
     text: 'Text Body',
-    tag: 'ManyContacts',
-  }]
+    to: [{ tag: 'ManyContacts' }],
+    from: results.authorize.token.data.id
+  }
 
-  const from = results.authorize.token.data.id
 
   return frisby
     .create('send emails to contacts with ManyContacts tag')
-    .post('/contacts/emails', {
-      emails,
-      from
-    })
+    .post('/contacts/emails', campaign)
     .after(cb)
     .expectStatus(200)
 }
 
 const sendEmailsToList = cb => {
-  const emails = [{
+  const campaign = {
     subject: 'Email Subject',
     html: '<div>HTML Body</div>',
     text: 'Text Body',
-    list: results.contact.createManyContactsList.data,
-  }]
-
-  const from = results.authorize.token.data.id
+    to: [{
+      list: results.contact.createManyContactsList.data
+    }],
+    from: results.authorize.token.data.id
+  }
 
   return frisby
     .create('send emails to many contacts list')
-    .post('/contacts/emails', {
-      emails,
-      from
-    })
+    .post('/contacts/emails', campaign)
     .after(cb)
     .expectStatus(200)
 }

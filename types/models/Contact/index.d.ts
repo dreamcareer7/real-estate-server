@@ -76,7 +76,7 @@ declare interface IContactAttribute {
   date: number;
 
   index?: number;
-  label?: String;
+  label?: string;
   is_primary: boolean;
   is_partner: boolean;
 }
@@ -94,7 +94,7 @@ declare interface IContactAttributeInput {
   date?: number;
 
   index?: number;
-  label?: String;
+  label?: string;
   is_primary?: boolean;
   is_partner?: boolean;
 }
@@ -109,10 +109,10 @@ declare interface IAddContactOptions {
 }
 
 declare interface IContactSummary {
-  display_name: String;
-  abbreviated_display_name: String;
-  email: String;
-  phone_number: String;
+  display_name: string;
+  abbreviated_display_name: string;
+  email: string;
+  phone_number: string;
 }
 
 declare interface IContactAttributeFilter {
@@ -133,6 +133,7 @@ declare interface IContactFilterOptions {
   created_lte?: number;
   ids?: UUID[];
   list?: UUID;
+  lists?: UUID[];
   users?: UUID[];
   filter_type?: 'and' | 'or'
 }
