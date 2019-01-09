@@ -55,10 +55,10 @@ const patchDraft = cb => {
     is_draft: false
   }
 
-  results.deal.create.data.is_draft = false
-  delete results.deal.create.data.faired_at
+  results.deal.approveContext.data.is_draft = false
+  delete results.deal.approveContext.data.faired_at
 
-  const expected_object = Object.assign({}, results.deal.create.data, patch)
+  const expected_object = Object.assign({}, results.deal.approveContext.data, patch)
 
   return frisby.create('publish a deal to live mode')
     .patch(`/deals/${results.deal.create.data.id}/draft`, patch)
@@ -87,9 +87,9 @@ const addContext = cb => {
     'brokerwolf_row_version',
     'email'
   ]), {
-    deal_context: {
+    context: {
       list_date: {
-        context_type: 'Date',
+        data_type: 'Date',
         date: (new Date('2017/12/06')).valueOf() / 1000
       }
     }
@@ -107,9 +107,9 @@ const addContext = cb => {
 }
 
 const approveContext = cb => {
-  const cid = results.deal.addContext.data.deal_context.list_date.id
+  const cid = results.deal.addContext.data.context.list_date.id
 
-  delete results.deal.addContext.data.deal_context.list_date
+  delete results.deal.addContext.data.context.list_date
 
   return frisby.create('approve a context item')
     .patch(`/deals/${results.deal.create.data.id}/context/${cid}/approved`, {approved: true})

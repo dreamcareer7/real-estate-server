@@ -4,9 +4,8 @@ const async = require('async')
 const db = require('../lib/utils/db')
 
 const up = [
-  'BEGIN',
-  'DROP FUNCTION IF EXISTS cast_context(anyelement, text, text)',
-  'COMMIT'
+  `INSERT INTO brands_contexts (brand, key, label, preffered_source, data_type)
+  VALUES ((SELECT brand FROM brands_contexts LIMIT 1), 'photo', 'Photo', 'Provided', 'Text')`
 ]
 
 const down = []

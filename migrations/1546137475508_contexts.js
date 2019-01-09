@@ -1,6 +1,5 @@
 'use strict'
 
-const fs = require('fs')
 const async = require('async')
 const _ = require('lodash')
 const db = require('../lib/utils/db')
@@ -9,11 +8,8 @@ const contexts = require('./contexts.jss')
 
 require('../lib/models')()
 
-const cast = fs.readFileSync(__dirname + '/../lib/sql/deal/context/cast_context.fn.sql', 'utf-8')
-
 const up = [
   'BEGIN',
-  cast,
   `CREATE TYPE deal_context_section AS ENUM (
     'Listing', 'CDA', 'Dates'
   )`,

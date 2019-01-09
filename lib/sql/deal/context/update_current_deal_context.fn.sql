@@ -17,7 +17,7 @@ $$
       deal_context.text,
       deal_context.number,
       deal_context.date,
-      deal_context.context_type,
+      deal_context.data_type,
       deal_context.deal as deal,
       deal_context.checklist as checklist
     FROM
