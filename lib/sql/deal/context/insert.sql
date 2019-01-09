@@ -11,7 +11,7 @@ WITH definition AS (
 
 INSERT INTO deal_context (
   definition,
-  context_type,
+  data_type,
   key,
   value,
   text,
