@@ -70,7 +70,7 @@ SELECT deals.*,
       FROM merged
       JOIN definitions ON merged.key = definitions.key
       ORDER BY key ASC,
-        (preffered_source = 'MLS' AND source = 'MLS') DESC
+        (preffered_source = 'MLS' AND source = 'MLS') ASC
     )
 
     SELECT
