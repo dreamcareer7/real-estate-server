@@ -5,7 +5,7 @@ const db = require('../lib/utils/db')
 
 const up = [
   'BEGIN',
-  'DELETE FROM contacts_attribute_defs WHERE name = \'important_date\' AND global IS TRUE',
+  'UPDATE contacts_attribute_defs SET deleted_at = NOW() WHERE name = \'important_date\' AND global IS TRUE',
   'COMMIT'
 ]
 
