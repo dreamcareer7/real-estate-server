@@ -4,8 +4,8 @@ const async = require('async')
 const db = require('../lib/utils/db')
 
 const up = [
-  `INSERT INTO brands_contexts (brand, key, label, preffered_source, data_type)
-  VALUES ((SELECT brand FROM brands_contexts LIMIT 1), 'photo', 'Photo', 'Provided', 'Text')`
+  `INSERT INTO brands_contexts (brand, key, label, preffered_source, data_type, "order")
+  VALUES ((SELECT brand FROM brands_contexts LIMIT 1), 'photo', 'Photo', 'Provided', 'Text', 0)`
 ]
 
 const down = []
