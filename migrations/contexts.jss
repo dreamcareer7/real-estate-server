@@ -44,7 +44,6 @@ const contexts = {
     label: 'Listing Start Date',
     short_label: 'Lst',
     needs_approval: true,
-    show_on_fact_sheet: Flags.SELLING | Flags.ALL_PROPERTY_TYPES,
     required: Flags.SELLING | Flags.ALL_BUT_LEASES,
     export: true
   },
@@ -55,7 +54,6 @@ const contexts = {
     short_label: 'Exp',
     section: Sections.DATES,
     required: Flags.SELLING | Flags.ALL_BUT_LEASES,
-    show_on_fact_sheet: Flags.SELLING | Flags.ALL_BUT_LEASES,
     needs_approval: true,
     export: true
   },
