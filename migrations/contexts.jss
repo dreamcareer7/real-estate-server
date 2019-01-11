@@ -337,7 +337,7 @@ const contexts = {
 
   file_id: {
     type: 'Number',
-    label: 'File ID',
+    label: 'File ID (Admin use)',
     section: Sections.LISTING,
     show_on_fact_sheet: Flags.ALL_DEAL_TYPES | Flags.ALL_PROPERTY_TYPES,
     export: true,
