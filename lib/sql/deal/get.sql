@@ -64,13 +64,19 @@ SELECT deals.*,
     ),
 
     c AS (
-      SELECT
+      SELECT DISTINCT ON(key)
       merged.*,
       definitions.id as definition
       FROM merged
       JOIN definitions ON merged.key = definitions.key
-      ORDER BY key ASC,
-        (preffered_source = 'MLS' AND source = 'MLS') DESC
+      ORDER BY
+        key ASC,
+        (
+          CASE
+            WHEN preffered_source::text = source::text THEN 1
+            ELSE 2
+          END
+        ) ASC
     )
 
     SELECT

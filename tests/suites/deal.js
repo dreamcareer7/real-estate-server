@@ -21,7 +21,6 @@ const pdf = 'https://s3-us-west-2.amazonaws.com/rechat-forms/2672324.pdf'
 
 const create = (cb) => {
   const data = JSON.parse(JSON.stringify(deal))
-  data.listing = results.listing.getListing.data.id
 
   return frisby.create('create a deal')
     .post('/deals', data)
@@ -55,10 +54,10 @@ const patchDraft = cb => {
     is_draft: false
   }
 
-  results.deal.approveContext.data.is_draft = false
-  delete results.deal.approveContext.data.faired_at
+  results.deal.patchListing.data.is_draft = false
+  delete results.deal.patchListing.data.faired_at
 
-  const expected_object = Object.assign({}, results.deal.approveContext.data, patch)
+  const expected_object = Object.assign({}, results.deal.patchListing.data, patch)
 
   return frisby.create('publish a deal to live mode')
     .patch(`/deals/${results.deal.create.data.id}/draft`, patch)
@@ -535,9 +534,9 @@ const filter = (cb) => {
 module.exports = {
   create,
   addChecklist,
-  patchListing,
   addContext,
   approveContext,
+  patchListing,
   patchDraft,
   addRole,
   updateRole,

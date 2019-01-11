@@ -3,7 +3,7 @@ const path = require('path')
 const template = require('./data/template.js')
 
 registerSuite('brand', ['createParent'])
-registerSuite('deal', ['create'])
+registerSuite('deal', ['create', 'addChecklist', 'addContext', 'approveContext', 'patchListing'])
 
 const create = cb => {
   template.brand = results.brand.createParent.data.id
@@ -36,7 +36,7 @@ const instantiate = cb => {
   const data = {
     html,
     deals: [
-      results.deal.create.data.id
+      results.deal.patchListing.data.id
     ],
     contacts: []
   }
@@ -93,7 +93,7 @@ function createAsset(cb) {
       {
         file: logo,
         template: results.template.create.data.id,
-        listing: results.deal.create.data.listing
+        listing: results.deal.patchListing.data.listing
       },
       {
         json: false,
