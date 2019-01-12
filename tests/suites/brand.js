@@ -1,4 +1,5 @@
 const brand = require('./data/brand.js')
+const context = require('./data/context.js')
 
 registerSuite('office', ['add'])
 registerSuite('form', ['create'])
@@ -92,6 +93,28 @@ const removeHostname = cb => {
     .expectJSON({
       code: 'OK',
       //       data: brand
+    })
+}
+
+const addContext = cb => {
+  return frisby.create('add a context definition to a brand')
+    .post(`/brands/${brand_id}/contexts`, context)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      data: context
+    })
+}
+
+const getContexts = cb => {
+  return frisby.create('get brand context definitions')
+    .get(`/brands/${brand_id}/contexts`)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      data: [context]
     })
 }
 
@@ -455,6 +478,9 @@ module.exports = {
   getByHostname,
   removeOffice,
   removeHostname,
+
+  addContext,
+  getContexts,
 
   addTemplate,
   updateTemplate,

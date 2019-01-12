@@ -13,6 +13,12 @@ WITH cnt AS (
     AND ca.deleted_at IS NULL
     AND ca.attribute_def = ANY($2::uuid[])
     AND brand = $1::uuid
+    AND (CASE
+      WHEN $3::uuid[] IS NOT NULL THEN
+        c.id = ANY($3::uuid[])
+      ELSE
+        TRUE
+    END)
   GROUP BY
     ca.contact,
     ca.attribute_def,

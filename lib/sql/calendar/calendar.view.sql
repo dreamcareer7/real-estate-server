@@ -30,16 +30,16 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
   UNION ALL
   (
     SELECT
-      current_deal_context.id,
+      cdc.id,
       deals.created_by,
       'deal_context' AS object_type,
-      "key" AS event_type,
-      NULL AS type_label,
-      "date" AS "timestamp",
+      cdc."key" AS event_type,
+      bc.label AS type_label,
+      cdc."date" AS "timestamp",
       False AS recurring,
       deals.title,
       NULL::uuid AS crm_task,
-      deal,
+      cdc.deal,
       NULL::uuid AS contact,
       (
         SELECT
@@ -51,15 +51,19 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
           AND r.deleted_at IS NULL
           AND r."user" IS NOT NULL
       ) AS users,
-      brand,
+      deals.brand,
       NULL::text AS status
     FROM
-      current_deal_context
+      current_deal_context cdc
       JOIN deals
-        ON current_deal_context.deal = deals.id
+        ON cdc.deal = deals.id
+      JOIN deal_context dc
+        ON dc.id = cdc.id
+      JOIN brands_contexts bc
+        ON bc.id = dc.definition
     WHERE
       deals.deleted_at IS NULL
-      AND context_type = 'Date'::deal_context_type
+      AND cdc.data_type = 'Date'::context_data_type
       AND deal_status_mask(deals.id, '{Withdrawn,Cancelled,"Contract Terminated"}') IS NOT FALSE
   )
   UNION ALL
@@ -71,8 +75,9 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       COALESCE(cad.name, cad.label) AS event_type,
       (CASE
         WHEN attribute_type = 'birthday' THEN 'Birthday'
+        WHEN attribute_type = 'child_birthday' THEN COALESCE('Child Birthday (' || ca.label || ')', 'Child Birthday')
         WHEN attribute_type = 'important_date' THEN COALESCE(ca.label, 'Important Date')
-        ELSE COALESCE(cad.name, cad.label)
+        ELSE COALESCE(cad.label, cad.name)
       END) AS type_label,
       "date" AS "timestamp",
       True AS recurring,

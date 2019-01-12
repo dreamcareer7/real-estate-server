@@ -7,6 +7,7 @@
 /// <reference path="Contact/index.d.ts" />
 /// <reference path="Contact/list.d.ts" />
 /// <reference path="Notification.d.ts" />
+/// <reference path="Email.d.ts" />
 /// <reference path="CRM/Association.d.ts" />
 /// <reference path="CRM/Reminder.d.ts" />
 /// <reference path="CRM/Task.d.ts" />

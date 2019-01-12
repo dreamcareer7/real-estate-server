@@ -34,7 +34,14 @@ SELECT deals_checklists.*,
 
   (
     SELECT deal_type FROM brands_checklists WHERE id = deals_checklists.origin
-  ) as checklist_type
+  ) as checklist_type,
+
+  (
+    deactivated_at     IS NULL
+    AND terminated_at  IS NULL
+    AND deleted_at     IS NULL
+    AND (SELECT deal_type FROM brands_checklists WHERE id = deals_checklists.origin) = 'Buying'
+  ) as is_active_offer
 
 FROM deals_checklists
 JOIN unnest($1::uuid[]) WITH ORDINALITY t(did, ord) ON deals_checklists.id = did

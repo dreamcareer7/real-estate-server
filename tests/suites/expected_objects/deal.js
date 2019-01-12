@@ -4,5 +4,5 @@ module.exports = {
   id: String,
   deal_type: String,
 
-  mls_context: v.optionalObject,
+  context: v.optionalObject,
 }

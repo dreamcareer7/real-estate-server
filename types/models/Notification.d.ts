@@ -65,3 +65,8 @@ declare interface INotification {
   auxiliary_subject?: UUID;
   auxiliary_subject_class?: string;
 }
+
+declare interface INotificationPopulated<S, O> extends INotification {
+  subjects: S[];
+  objects: O[];
+}

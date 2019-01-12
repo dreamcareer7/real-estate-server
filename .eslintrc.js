@@ -65,6 +65,7 @@ const globals = [
   'Review',
   'DealChecklist',
   'BrandChecklist',
+  'BrandContext',
   'BrandRole',
   'BrokerWolf',
   'UserRole',

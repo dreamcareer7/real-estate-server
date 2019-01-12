@@ -44,7 +44,6 @@ const contexts = {
     label: 'Listing Start Date',
     short_label: 'Lst',
     needs_approval: true,
-    show_on_fact_sheet: Flags.SELLING | Flags.ALL_PROPERTY_TYPES,
     required: Flags.SELLING | Flags.ALL_BUT_LEASES,
     export: true
   },
@@ -55,7 +54,6 @@ const contexts = {
     short_label: 'Exp',
     section: Sections.DATES,
     required: Flags.SELLING | Flags.ALL_BUT_LEASES,
-    show_on_fact_sheet: Flags.SELLING | Flags.ALL_PROPERTY_TYPES,
     needs_approval: true,
     export: true
   },
@@ -339,7 +337,7 @@ const contexts = {
 
   file_id: {
     type: 'Number',
-    label: 'File ID',
+    label: 'File ID (Admin use)',
     section: Sections.LISTING,
     show_on_fact_sheet: Flags.ALL_DEAL_TYPES | Flags.ALL_PROPERTY_TYPES,
     export: true,
@@ -443,7 +441,7 @@ const contexts = {
     label: 'Seller\'s Credit 12A(1)(b)',
     export: true,
     required: Flags.BUYING | Flags.ALL_BUT_LEASES,
-    show_on_fact_sheet: Flags.ALL_DEAL_TYPES | Flags.ALL_BUT_LEASES,
+    show_on_fact_sheet: Flags.ALL_DEAL_TYPES | Flags.ALL_BUT_LEASES | Flags.ACTIVE_OFFER,
     section: Sections.CDA,
     format: Formats.CURRENCY,
     needs_approval: true,
@@ -470,7 +468,5 @@ const contexts = {
     section: Sections.CDA
   }
 }
-
-Deal.contexts = contexts
 
 module.exports = contexts

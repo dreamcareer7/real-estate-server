@@ -1,13 +1,8 @@
 const deal = {
   deal_type: 'Buying',
   property_type: 'Resale',
-  is_draft: true,
-  deal_context: {
-
-  }
+  is_draft: true
 }
-
-const full_address = '3030 Bryan Street Unit 308, 75204, Dallas, TX'
 
 const address = {
   postal_code: {
@@ -20,7 +15,7 @@ const address = {
     value: '308'
   },
   full_address: {
-    value: full_address
+    value: '3030 Bryan Street Unit 308, 75204, Dallas, TX'
   },
   street_number: {
     value: '3030'
@@ -33,4 +28,4 @@ const address = {
   }
 }
 
-module.exports = { deal, address, full_address }
+module.exports = { deal, address }
