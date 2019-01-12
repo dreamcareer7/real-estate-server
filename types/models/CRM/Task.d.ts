@@ -20,7 +20,7 @@ declare interface ITask extends ICrmAssociationsCategorized {
   created_by: UUID;
 
   reminders: UUID[];
-  associations?: ICrmAssociation[];
+  associations?: UUID[];
   files?: any[];
 }
 
