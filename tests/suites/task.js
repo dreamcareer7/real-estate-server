@@ -19,7 +19,7 @@ registerSuite('contact', [
 registerSuite('listing', ['by_mui'])
 
 function fixResponseTaskToInput(original) {
-  let task = { ...original }
+  const task = { ...original }
   if (!task.description) delete task.description
 
   if (Array.isArray(task.associations)) {
