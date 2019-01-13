@@ -2,8 +2,6 @@ SELECT
   id,
   created_at,
   updated_at,
-  "user",
-  brand,
   object_type,
   event_type,
   EXTRACT(epoch FROM reminder) AS reminder,
