@@ -6,7 +6,7 @@ SELECT
   brand,
   object_type,
   event_type,
-  reminder,
+  EXTRACT(epoch FROM reminder) AS reminder,
   'calendar_notification_setting' AS type
 FROM
   calendar_notification_settings
