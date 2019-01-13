@@ -18,13 +18,19 @@ registerSuite('contact', [
 ])
 registerSuite('listing', ['by_mui'])
 
-function fixResponseTaskToInput(task) {
+function fixResponseTaskToInput(original) {
+  let task = { ...original }
   if (!task.description) delete task.description
 
-  if (task.contact) task.contact = task.contact.id
-  if (task.deal) task.deal = task.deal.id
-  if (task.listing) task.listing = task.listing.id
-  if (task.assignees) delete task.assignees
+  if (Array.isArray(task.associations)) {
+    for (const assoc of task.associations) {
+      if (assoc.contact) assoc.contact = assoc.contact.id
+      if (assoc.deal) assoc.deal = assoc.deal.id
+      if (assoc.listing) assoc.listing = assoc.listing.id
+    }
+  }
+
+  return task
 }
 
 function registerNewUser(cb) {
@@ -158,8 +164,7 @@ function updateTask(cb) {
 }
 
 function updateAssignee(cb) {
-  const updated_task = {...results.task.updateTask.data}
-  fixResponseTaskToInput(updated_task)
+  const updated_task = fixResponseTaskToInput(results.task.updateTask.data)
 
   const data = Object.assign({}, updated_task, {
     assignees: [
@@ -220,8 +225,23 @@ function addContactAssociation(cb) {
     })
 }
 
+function refreshTaskAssociations(cb) {
+  return frisby
+    .create('refresh task associations')
+    .get(
+      `/crm/tasks/${
+        results.task.create.data.id
+      }?associations[]=crm_association.contact&associations[]=crm_task.associations&associations[]=crm_association.listing`
+    )
+    .after(cb)
+    .expectStatus(200)
+}
+
 function addBulkContactAssociations(cb) {
-  const data = [
+  const task = fixResponseTaskToInput(results.task.refreshTaskAssociations.data)
+
+  const associations = [
+    ...task.associations,
     {
       association_type: 'contact',
       contact: results.contact.getContacts.data[2].id
@@ -232,33 +252,46 @@ function addBulkContactAssociations(cb) {
     }
   ]
 
+  console.log(associations)
+
+  const data = Object.assign(task, {
+    status: 'DONE',
+    associations
+  })
+
   return frisby
     .create('add multiple contact associations')
-    .post(
+    .put(
       `/crm/tasks/${
         results.task.create.data.id
-      }/associations/bulk?associations[]=crm_association.contact`,
+      }?associations[]=crm_association.contact&associations[]=crm_task.associations`,
       data
     )
     .after(cb)
     .expectStatus(200)
     .expectJSON({
-      data: [
-        {
-          association_type: 'contact',
-          crm_task: results.task.create.data.id,
-          contact: {
-            id: results.contact.getContacts.data[2].id
+      data: {
+        associations: [
+          {
+          },
+          {
+          },
+          {
+            association_type: 'contact',
+            crm_task: results.task.create.data.id,
+            contact: {
+              id: results.contact.getContacts.data[2].id
+            }
+          },
+          {
+            association_type: 'contact',
+            crm_task: results.task.create.data.id,
+            contact: {
+              id: results.contact.getContacts.data[3].id
+            }
           }
-        },
-        {
-          association_type: 'contact',
-          crm_task: results.task.create.data.id,
-          contact: {
-            id: results.contact.getContacts.data[3].id
-          }
-        }
-      ]
+        ]
+      }
     })
 }
 
@@ -339,12 +372,12 @@ function addInvalidAssociation(cb) {
 }
 
 function addFixedReminder(cb) {
-  const data = Object.assign({}, results.task.updateTask.data, {
+  let data = Object.assign({}, results.task.updateTask.data, {
     reminders: [fixed_reminder]
   })
   delete data.description
 
-  fixResponseTaskToInput(data)
+  data = fixResponseTaskToInput(data)
 
   return frisby
     .create('add a fixed reminder')
@@ -372,12 +405,12 @@ function updateFixedReminder(cb) {
     timestamp: new Date().getTime() / 1000 + 3600 * 24
   })
 
-  const data = Object.assign({}, results.task.addFixedReminder.data, {
+  let data = Object.assign({}, results.task.addFixedReminder.data, {
     reminders: [reminder]
   })
   delete data.description
 
-  fixResponseTaskToInput(data)
+  data = fixResponseTaskToInput(data)
 
   return frisby
     .create('update the fixed reminder')
@@ -988,6 +1021,7 @@ module.exports = {
   updateTask,
   updateAssignee,
   addContactAssociation,
+  refreshTaskAssociations,
   addBulkContactAssociations,
   fetchAssociations,
   addInvalidAssociation,
