@@ -61,11 +61,13 @@ db.conn(async (err, client) => {
 
   if (program.user) {
     const user = await User.get(program.user)
+    context.log(`Logged in as ${user.display_name}`)
     context.set({ user })
   }
 
   if (program.brand) {
     const brand = await Brand.get(program.brand)
+    context.log(`Active brand set to ${brand.name}`)
     context.set({ brand })
   }
 })
