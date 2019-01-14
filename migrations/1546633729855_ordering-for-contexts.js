@@ -84,9 +84,6 @@ const run = async (queries) => {
 
   await client.query('BEGIN')
 
-
-  await client.query('TRUNCATE TABLE brands_contexts CASCADE')
-
   await client.query('ALTER TABLE brands_contexts ADD "order" integer NOT NULL')
 
   let order = 0

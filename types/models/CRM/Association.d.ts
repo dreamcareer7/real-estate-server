@@ -8,6 +8,8 @@ declare interface IAssociationFilters {
 }
 
 declare interface ICrmAssociationInput {
+  id?: UUID;
+
   association_type: "listing" | "deal" | "contact";
   listing: UUID;
   deal: UUID;

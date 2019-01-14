@@ -131,12 +131,42 @@ function getCalendarFeed(cb) {
 }
 
 function getCalendarFeedSetting(cb) {
-
   return frisby
     .create('get calendar feed')
     .get('/calendar/feed/setting')
     .after(cb)
     .expectStatus(200)
+}
+
+function setCalendarNotificationSettings(cb) {
+  return frisby
+    .create('set calendar notification settings for birthday')
+    .put('/calendar/settings/notifications', {
+      settings: [{
+        object_type: 'contact_attribute',
+        event_type: 'birthday',
+        reminder: 24 * 60 * 60
+      }]
+    })
+    .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
+    .after(cb)
+    .expectStatus(204)
+}
+
+function getCalendarNotificationSettings(cb) {
+  return frisby
+    .create('get calendar notification settings')
+    .get('/calendar/settings/notifications')
+    .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      data: [{
+        object_type: 'contact_attribute',
+        event_type: 'birthday',
+        reminder: 24 * 60 * 60
+      }]
+    })
 }
 
 module.exports = {
@@ -146,5 +176,7 @@ module.exports = {
   getCalendar,
   getCalendarFeedUrl,
   getCalendarFeed,
-  getCalendarFeedSetting
+  getCalendarFeedSetting,
+  setCalendarNotificationSettings,
+  getCalendarNotificationSettings
 }

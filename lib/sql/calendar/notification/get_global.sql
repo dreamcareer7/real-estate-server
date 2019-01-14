@@ -2,11 +2,9 @@ SELECT
   id,
   created_at,
   updated_at,
-  "user",
-  brand,
   object_type,
   event_type,
-  reminder,
+  EXTRACT(epoch FROM reminder) AS reminder,
   'calendar_notification_setting' AS type
 FROM
   calendar_notification_settings

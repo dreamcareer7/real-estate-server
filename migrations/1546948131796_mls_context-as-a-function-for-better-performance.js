@@ -9,7 +9,6 @@ const update = fs.readFileSync(__dirname + '/../lib/sql/deal/context/update_curr
 
 const up = [
   'ALTER TYPE deal_context_type RENAME TO context_data_type',
-  'ALTER TABLE deal_context RENAME context_type TO data_type',
   'ALTER TABLE current_deal_context RENAME context_type TO data_type',
   update,
   `CREATE TYPE mls_context AS
