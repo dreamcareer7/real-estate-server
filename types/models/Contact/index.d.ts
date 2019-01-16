@@ -44,6 +44,7 @@ declare interface IContactInput extends IContactBase {
   id?: UUID;
   user: UUID;
   attributes: IContactAttributeInput[];
+  ios_address_book_id?: string;
 }
 
 declare interface IContact extends IContactBase {
@@ -82,12 +83,12 @@ declare interface IContactAttribute {
 }
 
 declare interface IContactAttributeInput {
-  attribute_def: UUID;
+  attribute_def?: UUID;
   attribute_type?: string;
 
   id?: UUID;
   created_by?: UUID;
-  contact?: UUID;
+  contact: UUID;
 
   text?: string;
   number?: number;

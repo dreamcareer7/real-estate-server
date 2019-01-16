@@ -22,8 +22,8 @@ declare interface IIdCollectionResponse {
     ids: UUID[];
 }
 
-declare type Extends<T, K extends keyof T> = {
+declare type RequireProp<T, K extends keyof T> = {
   [P in K]-?: T[K];
-};
+} & T;
 declare type TIsPropertyPresent<T, P extends T, K extends keyof P> = (x: T) => x is P;
-declare type TRequireProp<T, K extends keyof T> = TIsPropertyPresent<T, T & Extends<T, K>, K>;
+declare type TIsRequirePropPresent<T, K extends keyof T> = TIsPropertyPresent<T, T & RequireProp<T, K>, K>;
