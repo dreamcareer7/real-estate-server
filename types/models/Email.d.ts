@@ -1,9 +1,22 @@
-declare interface IEmailRecipientInput {
-  list?: UUID;
-  tag?: string;
-  email?: string;
+declare interface IEmailRecipientListInput {
+  list: UUID;
+}
+declare interface IEmailRecipientTagInput {
+  tag: string;
+}
+declare interface IEmailRecipientEmailInput {
+  email: string;
   contact?: UUID;
 }
+
+declare type IEmailRecipientInput = 
+  | IEmailRecipientEmailInput
+  | IEmailRecipientListInput
+  | IEmailRecipientTagInput;
+
+declare type TIsTagPresent = TIsPropertyPresent<IEmailRecipientInput, IEmailRecipientTagInput, 'tag'>;
+declare type TIsListPresent = TIsPropertyPresent<IEmailRecipientInput, IEmailRecipientListInput, 'list'>;
+declare type TIsEmailPresent = TIsPropertyPresent<IEmailRecipientInput, IEmailRecipientEmailInput, 'email'>;
 
 declare interface IEmailRecipient {
   contact?: UUID;
