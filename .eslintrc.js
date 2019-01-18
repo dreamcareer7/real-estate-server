@@ -88,10 +88,7 @@ module.exports = {
     'node': true
   },
   'parserOptions': {
-    'ecmaVersion': 9,
-    'ecmaFeatures': {
-      experimentalObjectRestSpread: true
-    }
+    'ecmaVersion': 9
   },
   'extends': 'eslint:recommended',
   'rules': {
