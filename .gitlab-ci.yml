@@ -91,7 +91,7 @@ unit_coverage:
     - psql -h "postgres" -U "$POSTGRES_USER" "$POSTGRES_DB" < ./data/minimal.sql
   script:
     - export NODE_ENV=production
-    - npm run coverage:unit
+    - NODE_ENV=production npm run coverage:unit
   coverage: '/Lines\s+:\s([\d\.]+)/'
   artifacts:
     paths:
