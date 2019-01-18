@@ -4,11 +4,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "node tests/run.js --concurrency 20 --report",
+    "test": "node tests/functional/run.js --concurrency 20 --report",
+    "test:unit": "npx mocha --exit tests/unit/**/*.test.js",
     "start": "npx gulp",
     "migration": "node_modules/migratus/bin/create --template scripts/migrate_template.js ",
     "docs": "node api_docs/index.js",
-    "coverage": "npx istanbul cover --dir istanbul tests/run.js -- --docs --curl --stop-on-fail --concurrency 20",
+    "coverage": "npx istanbul cover --dir istanbul tests/functional/run.js -- --docs --curl --stop-on-fail --concurrency 20",
     "db:upgrade": "node ./scripts/migrate.js",
     "shell": "node --experimental-repl-await scripts/shell.js",
     "heroku-postbuild": "npm run db:upgrade"
@@ -110,6 +111,7 @@
     "gulp": "^4.0.0",
     "istanbul": "^1.1.0-alpha.1",
     "jasmine-node": "^1.16.2",
+    "mocha": "^5.2.0",
     "nock": "^9.6.1",
     "request-as-curl": "^0.1.0",
     "rimraf": "^2.6.3",

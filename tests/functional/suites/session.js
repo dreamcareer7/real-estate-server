@@ -1,4 +1,4 @@
-const config = require('../../lib/config.js')
+const config = require('../../../lib/config.js')
 
 const session = require('./data/session.js')
 const client = JSON.parse(JSON.stringify(session))

@@ -1,5 +1,5 @@
 const _u = require('lodash')
-const config = require('../../lib/config.js')
+const config = require('../../../lib/config.js')
 const user = require('./data/user.js')
 const address = require('./data/address.js')
 const user_response = require('./expected_objects/user.js')

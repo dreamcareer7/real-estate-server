@@ -2,10 +2,10 @@ const uuid = require('node-uuid')
 const message = require('./data/message.js')
 const message_response = require('./expected_objects/message.js')
 const info_response = require('./expected_objects/info.js')
-const config = require('../../lib/config')
+const config = require('../../../lib/config')
 const sms = require('./message/sms.js')
 
-require('../../lib/models/Crypto')
+require('../../../lib/models/Crypto')
 
 registerSuite('recommendation', ['feed'])
 
