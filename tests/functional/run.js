@@ -10,14 +10,14 @@ const program = require('commander')
 const Run = new EventEmitter()
 global['Run'] = Run
 
-const config = require('../lib/config.js')
-const migrate = require('../lib/utils/migrate')
+const config = require('../../lib/config.js')
+const migrate = require('../../lib/utils/migrate')
 const fork = require('child_process').fork
 const async = require('async')
 const redis = require('redis')
 const AssertionError = require('assertion-error')
 
-const Context = require('../lib/models/Context')
+const Context = require('../../lib/models/Context')
 
 const {handleJob, installJobsRoute} = require('./jobs')
 
@@ -90,8 +90,8 @@ function spawnSuite (suite, cb) {
   })
 }
 
-const db = require('../lib/utils/db')
-const {app, start} = require('../lib/bootstrap.js')
+const db = require('../../lib/utils/db')
+const {app, start} = require('../../lib/bootstrap.js')
 
 const connections = {}
 

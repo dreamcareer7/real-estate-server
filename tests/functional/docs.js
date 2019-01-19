@@ -2,7 +2,7 @@ const fs = require('fs')
 const _ = require('lodash')
 const copy = require('copy-dir')
 
-copy.sync(__dirname + '/../api_docs/', 'docs')
+copy.sync(__dirname + '/../../api_docs/', 'docs')
 
 try {
   fs.mkdirSync('docs/tests')

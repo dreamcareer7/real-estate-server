@@ -2,7 +2,7 @@ const fs = require('fs')
 const path = require('path')
 const uuid = require('node-uuid')
 
-const config = require('../../lib/config.js')
+const config = require('../../../lib/config.js')
 const { task, fixed_reminder, relative_reminder, abbasUser } = require('./data/task')
 const anotherUser = require('./data/user')
 const brand = require('./data/brand.js')

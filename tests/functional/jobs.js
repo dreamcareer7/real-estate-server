@@ -1,5 +1,5 @@
 const queues = Object.assign(
-  require('../scripts/queues.js'),
+  require('../../scripts/queues.js'),
   require('./queues.js')
 )
 
