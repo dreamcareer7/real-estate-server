@@ -1,10 +1,11 @@
+const Context = require('../../lib/models/Context')
 const queues = Object.assign(
   require('../../scripts/queues.js'),
   require('./queues.js')
 )
 
 function handleJob(name, data, cb) {
-  console.log('Handling job', name)
+  Context.log('Handling job', name)
   queues[name].handler({type: name, data}, cb)
 }
 
