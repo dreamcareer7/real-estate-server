@@ -4,7 +4,6 @@ const { createContext } = require('../helper')
 const promisify = require('../../../lib/utils/promisify')
 const config = require('../../../lib/config')
 
-
 const _createRoom = async () => {
   const user = await promisify(User.getByEmail)(config.tests.username)
 
@@ -62,7 +61,7 @@ const getUserRooms = async () => {
 }
 
 describe('Room', () => {
-  beforeEach(createContext)
+  createContext()
 
   it('should successfully create a room', createRoom)
   it('should update a room', updateRoom)
