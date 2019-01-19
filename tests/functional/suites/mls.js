@@ -132,7 +132,6 @@ const refresher = (name, description) => {
 
 const refreshSubdivisions = refresher('Refresh.Subdivisions', 'Refresh Subdivisions')
 const refreshSchools = refresher('Refresh.Schools', 'Refresh Schools')
-const refreshListings = refresher('Refresh.Listings', 'Refresh Listings')
 const refreshCounties = refresher('Refresh.Counties', 'Refresh Counties')
 const refreshAreas = refresher('Refresh.Areas', 'Refresh Areas')
 const refreshAgents = refresher('Refresh.Agents', 'Refresh Agent Contacts')
@@ -150,7 +149,6 @@ module.exports = {
 
   refreshSubdivisions,
   refreshSchools,
-  refreshListings,
   refreshCounties,
   refreshAreas,
   refreshAgents
