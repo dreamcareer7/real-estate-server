@@ -70,12 +70,6 @@ const globals = [
   'BrokerWolf',
   'UserRole',
   'FormTemplate',
-
-  'context',
-  'before',
-  'beforeEach',
-  'afterEach',
-  'after',
 ]
 
 const global_object = {}

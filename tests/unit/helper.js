@@ -1,3 +1,5 @@
+process.env.NODE_ENV = 'test'
+
 const async = require('async')
 
 const db = require('../../lib/utils/db')
@@ -25,7 +27,7 @@ const getDb = async () => {
 function createContext() {
   let conn, release, context
 
-  beforeEach(async() => {
+  before(async() => {
     context = Context.create({
       logger() {}
     })
@@ -44,7 +46,7 @@ function createContext() {
     await db.executeSql.promise('BEGIN', [], conn)    
   })
 
-  afterEach(async () => {
+  after(async () => {
     context.log('ROLLBACK')
     await db.executeSql.promise('ROLLBACK', [], conn)
 
