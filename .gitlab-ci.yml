@@ -90,8 +90,10 @@ unit_coverage:
     - export PGPASSWORD=$POSTGRES_PASSWORD
     - psql -h "postgres" -U "$POSTGRES_USER" "$POSTGRES_DB" < ./data/minimal.sql
   script:
-    - export NODE_ENV=production
-    - NODE_ENV=production npm run coverage:unit
+    - export ORIGINAL_NODE_ENV=production
+    - export NODE_ENV=tests
+    - npm run db:upgrade
+    - npm run coverage:unit
   coverage: '/Lines\s+:\s([\d\.]+)/'
   artifacts:
     paths:
