@@ -92,6 +92,7 @@ unit_coverage:
   script:
     - export ORIGINAL_NODE_ENV=production
     - export NODE_ENV=tests
+    - npm run db:upgrade
     - npm run coverage:unit
   coverage: '/Lines\s+:\s([\d\.]+)/'
   artifacts:
