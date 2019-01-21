@@ -6,7 +6,7 @@ DECLARE
 BEGIN
   SELECT
     *,
-    listings.id as listing,
+--     listings.id as listing,
     (
       SELECT ARRAY_TO_STRING
       (
@@ -58,7 +58,8 @@ BEGIN
     SELECT
       'Text' as data_type,
       'listing_status' AS key,
-      r1.status::text AS text
+      r1.status::text AS text,
+      NULL as date
       INTO c;
 
     RETURN NEXT c;
@@ -293,7 +294,7 @@ BEGIN
       'list_date' AS key,
       null AS text,
       null AS number,
-      EXTRACT(epoch FROM r1.list_date) AS date
+      r1.list_date::timestamp with time zone
       INTO c;
 
     RETURN NEXT c;
