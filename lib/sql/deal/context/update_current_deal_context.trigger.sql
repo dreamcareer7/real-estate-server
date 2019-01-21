@@ -19,6 +19,8 @@ RETURNS trigger AS
 $$
   BEGIN
     PERFORM update_current_deal_context(NEW.deal);
+
+    RETURN NEW;
   END;
 $$
 LANGUAGE PLPGSQL;

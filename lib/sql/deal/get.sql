@@ -20,63 +20,12 @@ SELECT deals.*,
   ) as checklists,
 
   (
-    WITH definitions AS (
-      SELECT * FROM brands_contexts
-      WHERE brand IN (SELECT brand_parents(deals.brand::uuid))
-    ),
-
-    deal_context AS (
+    WITH c AS (
       SELECT
-        id::uuid,
-        type,
-        'Provided' as source,
-        key,
-        text,
-        number,
-        data_type,
-        checklist,
-        EXTRACT(EPOCH FROM context.created_at) AS created_at,
-        EXTRACT(EPOCH FROM context.approved_at) AS approved_at,
-        EXTRACT(EPOCH FROM context.date) AS date
-      FROM current_deal_context context WHERE context.deal = deals.id
-    ) ,
-
-    mls_context AS (
-      SELECT
-        null::uuid as id,
-        'deal_context_item' as type,
-        'MLS' as source,
-        ctx.key,
-        ctx.text,
-        ctx.number,
-        ctx.data_type,
-        NULL::uuid as checklist,
-        NULL::numeric as created_at,
-        NULL::numeric as approved_at,
-        ctx.date
-      FROM get_mls_context(deals.listing) ctx
-    ),
-
-    merged AS (
-      SELECT * FROM deal_context
-      UNION ALL
-      SELECT * FROM mls_context
-    ),
-
-    c AS (
-      SELECT DISTINCT ON(key)
-      merged.*,
-      definitions.id as definition
-      FROM merged
-      JOIN definitions ON merged.key = definitions.key
-      ORDER BY
-        key ASC,
-        (
-          CASE
-            WHEN preffered_source::text = source::text THEN 1
-            ELSE 2
-          END
-        ) ASC
+        *,
+        EXTRACT(EPOCH FROM date) as date
+      FROM current_deal_context
+      WHERE deal = deals.id
     )
 
     SELECT
