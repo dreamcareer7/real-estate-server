@@ -1,6 +1,6 @@
-process.env.NODE_ENV = 'test'
-
 const async = require('async')
+
+process.env.NODE_ENV = 'tests'
 
 const db = require('../../lib/utils/db')
 const Context = require('../../lib/models/Context')
@@ -9,7 +9,7 @@ require('../../lib/models/index')()
 
 // Mock Socket so Notification can work in unit tests
 global['Socket'] = {
-  send(_event, _room, _args, cb) { cb() },
+  send(_event, _room, _args, cb) { if (typeof cb === 'function') return cb() },
   join(_user, _room_id) {}
 }
 
@@ -27,13 +27,13 @@ const getDb = async () => {
 function createContext() {
   let conn, release, context
 
-  before(async() => {
+  beforeEach(async() => {
     context = Context.create({
       logger() {}
     })
 
     context.enter()
-  
+
     const res = await getDb()
     conn = res.conn
     release = res.release
@@ -46,7 +46,7 @@ function createContext() {
     await db.executeSql.promise('BEGIN', [], conn)    
   })
 
-  after(async () => {
+  afterEach(async () => {
     context.log('ROLLBACK')
     await db.executeSql.promise('ROLLBACK', [], conn)
 

@@ -106,6 +106,7 @@ async function sendNotification() {
 }
 
 async function makeSureItsLogged() {
+  await sendNotification()
   const events = await CalendarWorker.getNotificationDueEvents()
 
   expect(events).to.be.empty
@@ -114,7 +115,7 @@ async function makeSureItsLogged() {
 describe('Calendar', () => {
   describe('notifications', () => {
     createContext()
-    before(setup)
+    beforeEach(setup)
 
     context('when there is an upcoming birthday', () => {
       it('should find due events correctly', findDueEvents)
