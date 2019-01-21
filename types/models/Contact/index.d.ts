@@ -88,7 +88,6 @@ declare interface IContactAttributeInput {
 
   id?: UUID;
   created_by?: UUID;
-  contact: UUID;
 
   text?: string;
   number?: number;
@@ -98,6 +97,10 @@ declare interface IContactAttributeInput {
   label?: string;
   is_primary?: boolean;
   is_partner?: boolean;
+}
+
+declare interface IContactAttributeInputWithContact extends IContactAttributeInput {
+  contact: UUID;
 }
 
 declare interface IAddContactOptions {

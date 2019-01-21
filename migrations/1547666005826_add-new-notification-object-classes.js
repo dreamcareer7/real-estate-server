@@ -3,9 +3,13 @@
 const async = require('async')
 const db = require('../lib/utils/db')
 
-const up = ['ALTER TABLE users DROP address_id']
+const up = [
+  'ALTER TYPE notification_object_class ADD VALUE IF NOT EXISTS \'DealContext\'',
+  'ALTER TYPE notification_object_class ADD VALUE IF NOT EXISTS \'ContactAttribute\'',
+]
 
-const down = []
+const down = [
+]
 
 const runAll = (sqls, next) => {
   db.conn((err, client, release) => {

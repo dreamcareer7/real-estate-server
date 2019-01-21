@@ -69,7 +69,7 @@ const globals = [
   'BrandRole',
   'BrokerWolf',
   'UserRole',
-  'FormTemplate'
+  'FormTemplate',
 ]
 
 const global_object = {}

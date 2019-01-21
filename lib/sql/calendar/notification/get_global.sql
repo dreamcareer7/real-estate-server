@@ -1,7 +1,7 @@
 SELECT
   id,
-  created_at,
-  updated_at,
+  EXTRACT(epoch FROM created_at),
+  EXTRACT(epoch FROM updated_at),
   object_type,
   event_type,
   EXTRACT(epoch FROM reminder) AS reminder,
