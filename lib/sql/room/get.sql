@@ -15,6 +15,9 @@ SELECT 'room' AS TYPE,
          SELECT id FROM messages WHERE room = rooms.id ORDER BY created_at DESC LIMIT 1
        ) AS latest_message,
        (
+         SELECT id FROM messages WHERE room = rooms.id AND activity IS NOT NULL ORDER BY created_at DESC LIMIT 1
+       ) AS latest_activity,
+       (
          SELECT json_object_agg
          (
            "user", notification_setting
