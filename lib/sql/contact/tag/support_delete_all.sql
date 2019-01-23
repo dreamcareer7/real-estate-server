@@ -2,8 +2,7 @@ WITH cids AS (
   DELETE FROM
     contacts_attributes AS ca
   WHERE
-    ca.text ILIKE $2
-    AND attribute_type = 'tag'
+    ca.attribute_type = 'tag'
     AND ca.contact = ANY(
       SELECT
         id
@@ -11,6 +10,7 @@ WITH cids AS (
         contacts
       WHERE
         brand = $1
+        AND "user" = $2
     )
   RETURNING
     ca.contact
