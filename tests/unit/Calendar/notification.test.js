@@ -20,7 +20,10 @@ attachTouchEventHandler()
 let user, brand, contact
 
 async function createBrand() {
-  const b = await Brand.create({ name: 'Test Brand' })
+  const b = await Brand.create({
+    name: 'Test Brand',
+    brand_type: Brand.BROKERAGE
+  })
 
   const role = await BrandRole.create({
     brand: b.id,
