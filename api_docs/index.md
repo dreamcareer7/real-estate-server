@@ -11,7 +11,6 @@ Welcome. Rechat's API is broken into several small components to be readable.
 * [Response formats](format.html)
 * [Pagination](pagination.html)
 * [Users](user.html)
-* [Sessions](session.html)
 
 ## Real Estate
 
