@@ -133,6 +133,7 @@ declare interface IContactFilterOptions {
   ids?: UUID[];
   list?: UUID;
   users?: UUID[];
+  filter_type?: 'and' | 'or'
 }
 
 declare interface ICSVImporterMappedField {
