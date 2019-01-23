@@ -13,7 +13,8 @@ SELECT
 --   forms_submissions.id as submission,
 --   forms_data.id as revision,
   deal_context.deal as deal,
-  deal_context.checklist
+  deal_context.checklist,
+  deal_context.definition
 
 FROM deal_context
 -- LEFT JOIN forms_data ON deal_context.revision = forms_data.id

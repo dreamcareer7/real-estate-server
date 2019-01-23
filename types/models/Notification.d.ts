@@ -123,6 +123,7 @@ declare interface INotification {
   message: string;
   title: string;
   image_url?: string
+  data?: any;
 
   notified_user?: UUID;
   room?: UUID;

@@ -12,6 +12,7 @@ declare interface IUser extends IModel {
     email_confirmed: boolean;
     fake_email: boolean;
     is_shadow: boolean;
+    timezone: string;
 
     agent?: IAgent;
 }
