@@ -8,7 +8,7 @@ const up = [
   `ALTER TYPE template_type
     ADD VALUE 'Valentines'`,
   `ALTER TYPE template_type
-    ADD VALUE 'StPatrick'`
+    ADD VALUE 'StPatrick'`,
   'COMMIT'
 ]
 
