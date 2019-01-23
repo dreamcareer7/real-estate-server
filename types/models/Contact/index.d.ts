@@ -49,11 +49,15 @@ declare interface IContactInput extends IContactBase {
 
 declare interface IContact extends IContactBase {
   id: UUID;
+  created_at: number;
+  updated_at: number;
   deleted_at?: number | null;
-  type: "sub_contact";
   user: UUID;
-  parent: UUID;
+  brand: UUID;
   attributes: IContactAttribute[];
+
+  display_name: string;
+  partner_name?: string;
 
   users?: UUID[];
   deals?: IDeal[];

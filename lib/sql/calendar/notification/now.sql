@@ -7,6 +7,7 @@ SELECT
   extract(epoch from cns.reminder) as reminder,
   cns.object_type,
   cns.event_type,
+  cns.reminder,
   c.contact,
   c.deal
 FROM
@@ -24,7 +25,7 @@ FROM
   LEFT JOIN calendar_notification_logs AS cnl
     ON (c.id = cnl.id AND c."user" = cnl."user")
 WHERE
-  (c.timestamp - cns.reminder) >= now() - interval '20 hours'
+  (c.timestamp - cns.reminder) between now() - interval '44 hours' and now()
   AND cns.deleted_at IS NULL
   AND c.object_type::calendar_object_type = cns.object_type
   AND c.event_type = cns.event_type

@@ -1,15 +1,18 @@
 const { expect } = require('chai')
-const { DateTime } = require('luxon')
+const moment = require('moment-timezone')
 
 const { createContext, handleJobs } = require('../helper')
 const promisify = require('../../../lib/utils/promisify')
 
-const Brand = require('../../../lib/models/Brand')
-const BrandRole = require('../../../lib/models/Brand/role')
 const CalendarNotification = require('../../../lib/models/Calendar/notification')
 const CalendarWorker = require('../../../lib/models/Calendar/worker')
 const Contact = require('../../../lib/models/Contact')
+const Context = require('../../../lib/models/Context')
+const { Listing } = require('../../../lib/models/Listing')
 const User = require('../../../lib/models/User')
+
+const { createBrand } = require('../model_helpers/brand')
+const { createDeal } = require('../model_helpers/deal')
 
 const attachContactEvents = require('../../../lib/models/Contact/events')
 const attachTouchEventHandler = require('../../../lib/models/CRM/Touch/events')
@@ -17,36 +20,35 @@ const attachTouchEventHandler = require('../../../lib/models/CRM/Touch/events')
 attachContactEvents()
 attachTouchEventHandler()
 
-let user, brand, contact
-
-async function createBrand() {
-  const b = await Brand.create({ name: 'Test Brand' })
-
-  const role = await BrandRole.create({
-    brand: b.id,
-    role: 'Admin',
-    acl: ['*']
-  })
-
-  await BrandRole.addMember({
-    user: user.id,
-    role: role.id
-  })
-
-  return Brand.get(b.id)
-}
+let user, brand, listing
 
 async function setup() {
   user = await promisify(User.getByEmail)('test@rechat.com')
-  brand = await createBrand()
+  listing = await promisify(Listing.getByMLSNumber)(10018693)
 
-  await createContact()
+  brand = await createBrand({
+    roles: {
+      Admin: [user.id]
+    }
+  })
+  Context.set({ user, brand })
+
   await CalendarNotification.setGlobalSettings(
     [
       {
         object_type: 'contact_attribute',
         event_type: 'birthday',
         reminder: 2 * 24 * 3600 // 2 days
+      },
+      {
+        object_type: 'contact_attribute',
+        event_type: 'child_birthday',
+        reminder: 1 * 24 * 3600 // 1 day
+      },
+      {
+        object_type: 'deal_context',
+        event_type: 'closing_date',
+        reminder: 1 * 24 * 3600 // 1 day
       }
     ],
     user.id,
@@ -55,7 +57,7 @@ async function setup() {
 }
 
 async function createContact() {
-  const cids = await Contact.create(
+  await Contact.create(
     [
       {
         user: user.id,
@@ -66,18 +68,18 @@ async function createContact() {
           },
           {
             attribute_type: 'birthday',
-            date: DateTime.local()
+            date: moment()
+              .add(20, 'days')
               .startOf('day')
-              .plus({ days: 2 })
-              .toSeconds()
+              .unix()
           },
           {
             attribute_type: 'child_birthday',
             label: 'John',
-            date: DateTime.local()
+            date: moment()
+              .add(1, 'days')
               .startOf('day')
-              .plus({ days: 20 })
-              .toSeconds()
+              .unix()
           }
         ]
       }
@@ -87,16 +89,18 @@ async function createContact() {
     { activity: false, get: false, relax: false }
   )
 
-  contact = await Contact.get(cids[0])
-
   await promisify(handleJobs)()
 }
 
-async function findDueEvents() {
-  const events = await CalendarWorker.getNotificationDueEvents()
+function findDueEvents(expected_event) {
+  return async function() {
+    const events = await CalendarWorker.getNotificationDueEvents()
 
-  expect(events.length).to.be.eq(1, 'events.length')
-  expect(events[0].contact).to.equal(contact.id)
+    Context.log(events)
+
+    expect(events.length).to.be.eq(1, 'events.length')
+    expect(events[0]).to.include(expected_event)
+  }
 }
 
 async function sendNotification() {
@@ -112,15 +116,63 @@ async function makeSureItsLogged() {
   expect(events).to.be.empty
 }
 
-describe('Calendar', () => {
-  describe('notifications', () => {
-    createContext()
-    beforeEach(setup)
+async function sendEmailForUnread() {
+  await sendNotification()
 
+  const notifications = await CalendarWorker.getUnreadNotifications()
+  expect(notifications).not.to.be.empty
+
+  await CalendarWorker.sendEmailForUnread()
+  await promisify(handleJobs)()
+}
+
+async function makeSureEmailDeliveryIsLogged() {
+  await sendEmailForUnread()
+
+  const notifications = await CalendarWorker.getUnreadNotifications()
+  expect(notifications).to.be.empty
+}
+
+describe('Calendar', () => {
+  createContext()
+  beforeEach(setup)
+
+  describe('contact notifications', () => {
+    beforeEach(createContact)
     context('when there is an upcoming birthday', () => {
-      it('should find due events correctly', findDueEvents)
+      it('should find due events correctly', findDueEvents({ event_type: 'child_birthday', object_type: 'contact_attribute' }))
       it('should send a notification to subscribed users', sendNotification)
       it('should log the event notification', makeSureItsLogged)
+      it('should send email for unread notifications', sendEmailForUnread)
+      it('should log email delivery', makeSureEmailDeliveryIsLogged)
+    })
+  })
+
+  describe('deal notifications', () => {
+    beforeEach(async () => {
+      await createDeal(user.id, brand.id, {
+        checklists: [{
+          context: {
+            closing_date: { value: moment().tz(user.timezone).add(1, 'day').startOf('day').format() }
+          },
+        }],
+        roles: [{
+          role: 'BuyerAgent',
+          email: user.email,
+          phone_number: user.phone_number,
+          legal_first_name: user.first_name,
+          legal_last_name: user.last_name
+        }],
+        listing: listing.id,
+      })
+    })
+
+    context('when there is an upcoming critical date', () => {
+      it('should find due events correctly', findDueEvents({ event_type: 'closing_date', object_type: 'deal_context' }))
+      it('should send a notification to subscribed users', sendNotification)
+      it('should log the event notification', makeSureItsLogged)
+      it('should send email for unread notifications', sendEmailForUnread)
+      it('should log email delivery', makeSureEmailDeliveryIsLogged)
     })
   })
 })
