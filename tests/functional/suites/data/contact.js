@@ -54,6 +54,10 @@ const contact = {
       text: 'foo'
     },
     {
+      attribute_type: 'tag',
+      text: 'poo'
+    },
+    {
       attribute_type: 'birthday',
       date: 1000000
     },
