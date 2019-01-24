@@ -4,7 +4,7 @@ const promisify = require('../../../lib/utils/promisify')
 const Deal = require('../../../lib/models/Deal')
 const DealChecklist = require('../../../lib/models/Deal/checklist')
 
-const { getBrandContexts, getBrandChecklists } = require('./brand')
+const { getBrandContexts, getBrandChecklists } = require('../brand/helper')
 
 const default_checklist_values = {
   title: 'Checklist',

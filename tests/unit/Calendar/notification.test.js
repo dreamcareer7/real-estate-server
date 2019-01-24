@@ -11,8 +11,8 @@ const Context = require('../../../lib/models/Context')
 const { Listing } = require('../../../lib/models/Listing')
 const User = require('../../../lib/models/User')
 
-const { createBrand } = require('../model_helpers/brand')
-const { createDeal } = require('../model_helpers/deal')
+const { createBrand } = require('../brand/helper')
+const { createDeal } = require('../deal/helper')
 
 const attachContactEvents = require('../../../lib/models/Contact/events')
 const attachTouchEventHandler = require('../../../lib/models/CRM/Touch/events')
