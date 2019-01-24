@@ -4,12 +4,10 @@ const async = require('async')
 const db = require('../lib/utils/db')
 
 const up = [
-  'BEGIN',
   `ALTER TYPE template_type
     ADD VALUE 'Valentines'`,
   `ALTER TYPE template_type
     ADD VALUE 'StPatrick'`,
-  'COMMIT'
 ]
 
 const down = [
