@@ -2,7 +2,7 @@ WITH cids AS (
   DELETE FROM
     contacts_attributes AS ca
   WHERE
-    ca.text ILIKE $2
+    lower(ca.text) = ANY($2::text[])
     AND attribute_type = 'tag'
     AND ca.contact = ANY(
       SELECT
