@@ -140,7 +140,7 @@ function reportQueueStatistics () {
 reportQueueStatistics()
 
 const shutdown = () => {
-  queue.shutdown(5000, process.exit)
+  queue.shutdown(5 * 60 * 1000, process.exit)
 }
 process.once('SIGTERM', shutdown)
 process.once('SIGINT', shutdown)
