@@ -38,7 +38,6 @@ const globals = [
   'Office',
   'PropertyUnit',
   'PropertyRoom',
-  'CMA',
   'Brand',
   'School',
   'Intercom',

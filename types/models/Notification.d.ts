@@ -59,7 +59,6 @@ declare type TNotificationObjectClass =
   | 'Transaction'
   | 'Contact'
   | 'Attachment'
-  | 'CMA'
   | 'OpenHouse'
   | 'CreatedFor'
   | 'Recipient'

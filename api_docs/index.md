@@ -41,7 +41,6 @@ Welcome. Rechat's API is broken into several small components to be readable.
 
 * [Alerts](alert.html)
 * [Recommendation](recommendation.html)
-* [CMA](cma.html)
 
 ## Website Builder
 
