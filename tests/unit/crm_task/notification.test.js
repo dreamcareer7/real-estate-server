@@ -10,12 +10,6 @@ const CrmTask = require('../../../lib/models/CRM/Task')
 const Worker = require('../../../lib/models/CRM/Task/worker')
 const User = require('../../../lib/models/User')
 
-const attachContactEvents = require('../../../lib/models/Contact/events')
-const attachTouchEventHandler = require('../../../lib/models/CRM/Touch/events')
-
-attachContactEvents()
-attachTouchEventHandler()
-
 let userA, userB, brand
 
 async function setup() {

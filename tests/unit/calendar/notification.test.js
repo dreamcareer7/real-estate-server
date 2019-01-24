@@ -14,12 +14,6 @@ const User = require('../../../lib/models/User')
 const { createBrand } = require('../brand/helper')
 const { createDeal } = require('../deal/helper')
 
-const attachContactEvents = require('../../../lib/models/Contact/events')
-const attachTouchEventHandler = require('../../../lib/models/CRM/Touch/events')
-
-attachContactEvents()
-attachTouchEventHandler()
-
 let user, brand, listing
 
 async function setup() {

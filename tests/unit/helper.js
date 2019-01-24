@@ -9,6 +9,12 @@ const Context = require('../../lib/models/Context')
 const { handleJob } = require('../functional/jobs')
 require('../../lib/models/index')()
 
+const attachContactEvents = require('../../lib/models/Contact/events')
+const attachTouchEventHandler = require('../../lib/models/CRM/Touch/events')
+
+attachContactEvents()
+attachTouchEventHandler()
+
 // Mock Socket so Notification can work in unit tests
 global['Socket'] = {
   send(_event, _room, _args, cb) { if (typeof cb === 'function') return cb() },
