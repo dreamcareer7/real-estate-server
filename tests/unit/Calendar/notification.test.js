@@ -89,7 +89,7 @@ async function createContact() {
     { activity: false, get: false, relax: false }
   )
 
-  await promisify(handleJobs)()
+  await handleJobs()
 }
 
 function findDueEvents(expected_event) {
@@ -106,7 +106,7 @@ function findDueEvents(expected_event) {
 async function sendNotification() {
   await CalendarWorker.sendReminderNotifications()
 
-  await promisify(handleJobs)()
+  await handleJobs()
 }
 
 async function makeSureItsLogged() {
@@ -123,7 +123,7 @@ async function sendEmailForUnread() {
   expect(notifications).not.to.be.empty
 
   await CalendarWorker.sendEmailForUnread()
-  await promisify(handleJobs)()
+  await handleJobs()
 }
 
 async function makeSureEmailDeliveryIsLogged() {

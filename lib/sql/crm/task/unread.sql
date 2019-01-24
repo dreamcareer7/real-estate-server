@@ -1,5 +1,6 @@
 SELECT
   id,
+  "action",
   "object",
   'CrmTask' as object_class,
   "user" as "subject",
