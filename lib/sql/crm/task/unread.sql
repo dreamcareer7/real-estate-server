@@ -3,6 +3,8 @@ SELECT
   "action",
   "object",
   'CrmTask' as object_class,
+  "subject" as auxiliary_subject,
+  "subject_class" as auxiliary_subject_class,
   "user" as "subject",
   'User' as subject_class,
   'notification' as "type"
