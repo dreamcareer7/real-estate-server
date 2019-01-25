@@ -168,8 +168,15 @@ const sendNotifications = function () {
       nodeifyFn(CrmTaskWorker.sendNotifications),
       nodeifyFn(Task.sendNotifications),
     ], err => {
-      if (err)
+      if (err) {
+        Slack.send({
+          channel: '7-server-errors',
+          text: 'Notifications worker: ' + '`' + err + '`',
+          emoji: ':skull:'
+        }, process.exit)
+
         return rollback(err)
+      }
 
       commit(err => {
         if (err)
