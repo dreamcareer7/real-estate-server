@@ -139,9 +139,9 @@ declare interface INotification {
   extra_object_class?: TNotificationObjectClass;
   extra_subject_class?: TNotificationObjectClass;
 
-  auxiliary_object?: UUID;
+  auxiliary_object?: any;
   auxiliary_object_class?: TNotificationObjectClass;
-  auxiliary_subject?: UUID;
+  auxiliary_subject?: any;
   auxiliary_subject_class?: TNotificationObjectClass;
 }
 

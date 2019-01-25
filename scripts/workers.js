@@ -140,7 +140,7 @@ function reportQueueStatistics () {
 reportQueueStatistics()
 
 const shutdown = () => {
-  queue.shutdown(5000, process.exit)
+  queue.shutdown(5 * 60 * 1000, process.exit)
 }
 process.once('SIGTERM', shutdown)
 process.once('SIGINT', shutdown)
@@ -168,8 +168,15 @@ const sendNotifications = function () {
       nodeifyFn(CrmTaskWorker.sendNotifications),
       nodeifyFn(Task.sendNotifications),
     ], err => {
-      if (err)
+      if (err) {
+        Slack.send({
+          channel: '7-server-errors',
+          text: 'Notifications worker: ' + '`' + err + '`',
+          emoji: ':skull:'
+        }, process.exit)
+
         return rollback(err)
+      }
 
       commit(err => {
         if (err)

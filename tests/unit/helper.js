@@ -3,9 +3,17 @@ const async = require('async')
 process.env.NODE_ENV = 'tests'
 
 const db = require('../../lib/utils/db')
+const promisify = require('../../lib/utils/promisify')
+
 const Context = require('../../lib/models/Context')
 const { handleJob } = require('../functional/jobs')
 require('../../lib/models/index')()
+
+const attachContactEvents = require('../../lib/models/Contact/events')
+const attachTouchEventHandler = require('../../lib/models/CRM/Touch/events')
+
+attachContactEvents()
+attachTouchEventHandler()
 
 // Mock Socket so Notification can work in unit tests
 global['Socket'] = {
@@ -81,4 +89,4 @@ const handleJobs = (done) => {
   })
 }
 
-module.exports = { createContext, handleJobs }
+module.exports = { createContext, handleJobs: promisify(handleJobs) }

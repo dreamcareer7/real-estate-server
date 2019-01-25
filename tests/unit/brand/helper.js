@@ -25,6 +25,28 @@ const default_data = {
       preffered_source: 'Provided',
       triggers_brokerwolf: false
     },
+    contract_date: {
+      data_type: 'Date',
+      label: 'Contract Date',
+      short_label: 'Off',
+      order: 0,
+      section: 'Dates',
+      needs_approval: true,
+      exports: true,
+      preffered_source: 'Provided',
+      triggers_brokerwolf: false
+    },
+    expiration_date: {
+      data_type: 'Date',
+      label: 'Listing Expiration',
+      short_label: 'Exp',
+      order: 0,
+      section: 'Dates',
+      needs_approval: true,
+      exports: true,
+      preffered_source: 'Provided',
+      triggers_brokerwolf: false
+    },
     full_address: {
       data_type: 'Text',
       label: 'Full Address',

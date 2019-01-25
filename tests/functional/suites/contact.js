@@ -865,7 +865,7 @@ const getAllTags = (cb) => {
     .get('/contacts/tags')
     .after(cb)
     .expectStatus(200)
-    .expectJSONLength('data', 5)
+    .expectJSONLength('data', 6)
     .expectJSON({
       code: 'OK'
     })
@@ -886,7 +886,7 @@ const verifyTagRenamed = cb => {
     .after((err, res, body) => {
       const tags = body.data.map(a => a.text)
 
-      if (!tags.includes('bar') || tags.length !== 5) {
+      if (!tags.includes('bar') || tags.length !== 6) {
         throw 'Tag was not renamed correctly.'
       }
 
@@ -902,13 +902,22 @@ const deleteTag = (cb) => {
     .expectStatus(204)
 }
 
+const deleteTags = (cb) => {
+  return frisby.create('delete poo tag')
+    .post('/contacts/tags/delete', {
+      tags: ['poo']
+    })
+    .after(cb)
+    .expectStatus(204)
+}
+
 const verifyTagDeleted = cb => {
   return frisby.create('verify that tag is deleted')
     .get('/contacts/tags')
     .after((err, res, body) => {
       const tags = body.data.map(a => a.text)
 
-      if (tags.includes('bar') || tags.length !== 4) {
+      if (tags.includes('bar') || tags.includes('poo') || tags.length !== 4) {
         throw 'Tag was not deleted correctly.'
       }
 
@@ -1083,6 +1092,7 @@ module.exports = {
   renameTag,
   verifyTagRenamed,
   deleteTag,
+  deleteTags,
   verifyTagDeleted,
   removeAttribute,
   removeEmail,

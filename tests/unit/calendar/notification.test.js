@@ -11,14 +11,8 @@ const Context = require('../../../lib/models/Context')
 const { Listing } = require('../../../lib/models/Listing')
 const User = require('../../../lib/models/User')
 
-const { createBrand } = require('../model_helpers/brand')
-const { createDeal } = require('../model_helpers/deal')
-
-const attachContactEvents = require('../../../lib/models/Contact/events')
-const attachTouchEventHandler = require('../../../lib/models/CRM/Touch/events')
-
-attachContactEvents()
-attachTouchEventHandler()
+const { createBrand } = require('../brand/helper')
+const { createDeal } = require('../deal/helper')
 
 let user, brand, listing
 
@@ -47,7 +41,7 @@ async function setup() {
       },
       {
         object_type: 'deal_context',
-        event_type: 'closing_date',
+        event_type: 'contract_date',
         reminder: 1 * 24 * 3600 // 1 day
       }
     ],
@@ -89,7 +83,7 @@ async function createContact() {
     { activity: false, get: false, relax: false }
   )
 
-  await promisify(handleJobs)()
+  await handleJobs()
 }
 
 function findDueEvents(expected_event) {
@@ -106,7 +100,7 @@ function findDueEvents(expected_event) {
 async function sendNotification() {
   await CalendarWorker.sendReminderNotifications()
 
-  await promisify(handleJobs)()
+  await handleJobs()
 }
 
 async function makeSureItsLogged() {
@@ -123,7 +117,7 @@ async function sendEmailForUnread() {
   expect(notifications).not.to.be.empty
 
   await CalendarWorker.sendEmailForUnread()
-  await promisify(handleJobs)()
+  await handleJobs()
 }
 
 async function makeSureEmailDeliveryIsLogged() {
@@ -153,7 +147,8 @@ describe('Calendar', () => {
       await createDeal(user.id, brand.id, {
         checklists: [{
           context: {
-            closing_date: { value: moment().tz(user.timezone).add(1, 'day').startOf('day').format() }
+            closing_date: { value: moment().tz(user.timezone).add(10, 'day').startOf('day').format() },
+            contract_date: { value: moment().tz(user.timezone).add(1, 'day').startOf('day').format() },
           },
         }],
         roles: [{
@@ -168,7 +163,7 @@ describe('Calendar', () => {
     })
 
     context('when there is an upcoming critical date', () => {
-      it('should find due events correctly', findDueEvents({ event_type: 'closing_date', object_type: 'deal_context' }))
+      it('should find due events correctly', findDueEvents({ event_type: 'contract_date', object_type: 'deal_context' }))
       it('should send a notification to subscribed users', sendNotification)
       it('should log the event notification', makeSureItsLogged)
       it('should send email for unread notifications', sendEmailForUnread)

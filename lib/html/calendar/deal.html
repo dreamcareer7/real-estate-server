@@ -1952,20 +1952,26 @@
                                                     </p>
                                                   </th>
                                                 </tr>
-                                                {% for cdate in critical_dates %}
+                                                {% for cdate in upcoming_dates %}
                                                 <tr>
+                                                  {% if loop.last %}
+                                                  <th
+                                                    style="padding:16px 24px 24px;"
+                                                  >
+                                                  {% else %}
                                                   <th
                                                     style="padding:16px 24px 0;"
                                                   >
+                                                  {% endif %}
                                                     <p
                                                       style="font-family: Barlow; font-size: 16px; font-weight: 500; font-style: normal; font-stretch: normal; line-height: 1.5; letter-spacing: normal; color: #000000;margin-bottom: 0;"
                                                     >
-                                                      {{cdate.key}}
+                                                      {{cdate.type_label}}
                                                     </p>
                                                     <p
                                                       style="font-family: Barlow; font-size: 16px; font-weight: 500; font-style: normal; font-stretch: normal; line-height: 1.5; letter-spacing: normal; color: #7f7f7f;margin-bottom: 0;"
                                                     >
-                                                      Due {{cdate.date | time('MMM Do, YYYY', user.timezone)}}
+                                                      Due {{cdate.timestamp | time('MMM D, YYYY', user.timezone)}}
                                                     </p>
                                                   </th>
                                                 </tr>

@@ -2,7 +2,12 @@ WITH cids AS (
   DELETE FROM
     contacts_attributes AS ca
   WHERE
-    ca.text ILIKE $2
+    CASE
+      WHEN $3::boolean IS TRUE THEN
+        ca.text = ANY($2::text[])
+      ELSE
+        lower(ca.text) = ANY($2::text[])
+    END
     AND attribute_type = 'tag'
     AND ca.contact = ANY(
       SELECT
