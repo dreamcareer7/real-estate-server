@@ -123,10 +123,12 @@ declare interface IContactSummary {
   phone_number: string;
 }
 
+declare type TContactFilterOperator = 'eq' | 'lte' | 'gte' | 'between' | 'any' | 'all';
+
 declare interface IContactAttributeFilter {
   attribute_def?: UUID;
   attribute_type?: string;
-  operator?: 'eq' | 'lte' | 'gte' | 'between' | 'any' | 'all',
+  operator?: TContactFilterOperator,
   value: any;
   invert?: boolean;
 }
@@ -137,6 +139,10 @@ declare interface IContactFilterOptions {
   updated_by?: UUID;
   updated_gte?: number;
   updated_lte?: number;
+  last_touch_gte?: number;
+  last_touch_lte?: number;
+  next_touch_gte?: number;
+  next_touch_lte?: number;
   created_gte?: number;
   created_lte?: number;
   ids?: UUID[];
