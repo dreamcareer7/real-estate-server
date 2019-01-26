@@ -37,6 +37,25 @@ const up = [
     FOR EACH STATEMENT
     EXECUTE PROCEDURE update_contact_summaries_from_contact()
   `,
+  `
+    UPDATE
+      contacts_summaries cs
+    SET
+      "user" = c."user",
+      brand = c.brand,
+      updated_at = c.updated_at,
+      display_name = c.display_name,
+      sort_field = c.sort_field,
+      partner_name = c.partner_name,
+      search_field = to_tsvector('english', c.searchable_field),
+      next_touch = c.next_touch,
+      last_touch = c.last_touch
+    FROM
+      contacts c
+    WHERE
+      cs.id = c.id
+      AND c.deleted_at IS NULL
+  `,
   'COMMIT'
 ]
 
