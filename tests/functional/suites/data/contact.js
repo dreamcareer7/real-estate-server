@@ -114,6 +114,10 @@ const contact = {
       text: 'This is a sample note'
     },
     {
+      attribute_type: 'note',
+      text: 'This is another note'
+    },
+    {
       attribute_type: 'job_title',
       text: 'Contact Test Subject'
     },

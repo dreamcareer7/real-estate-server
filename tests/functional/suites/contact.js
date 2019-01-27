@@ -518,6 +518,16 @@ const removeAttribute = cb => {
     .expectStatus(200)
 }
 
+const removeBulkAttributes = cb => {
+  const ids = results.contact.addAttribute.data.attributes.filter(a => a.attribute_type === 'note').map(a => a.id)
+
+  return frisby
+    .create('remove all note attributes')
+    .delete('/contacts/attributes', { ids })
+    .after(cb)
+    .expectStatus(204)
+}
+
 const removeEmail = cb => {
   const attr_id = _.findLast(
     results.contact.addEmail.data.attributes,
@@ -854,8 +864,8 @@ const getTimeline = (cb) => {
         attribute_type: 'note'
       }],
       info: {
-        count: 1,
-        total: 1
+        count: 2,
+        total: 2
       }
     })
 }
@@ -1095,6 +1105,7 @@ module.exports = {
   deleteTags,
   verifyTagDeleted,
   removeAttribute,
+  removeBulkAttributes,
   removeEmail,
   searchByRemovedEmail,
   removeNonExistingAttribute,
