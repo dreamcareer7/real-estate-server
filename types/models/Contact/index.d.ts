@@ -29,12 +29,6 @@ declare interface IContactAttributeDef {
   brand?: UUID;
 }
 
-declare interface IParentContact extends IModel {
-  sub_contacts: IContact[];
-  summary?: Record<string, string>;
-  merged: boolean;
-}
-
 declare interface IContactBase {
   ios_address_book_id?: string;
   android_address_book_id?: string;
@@ -58,6 +52,8 @@ declare interface IContact extends IContactBase {
 
   display_name: string;
   partner_name?: string;
+  last_touch?: number;
+  next_touch?: number;
 
   users?: UUID[];
   deals?: IDeal[];
@@ -161,7 +157,7 @@ declare interface ICSVImporterMappedField {
 
 declare interface IContactDuplicateCluster {
   cluster: number;
-  contacts: IParentContact[];
+  contacts: IContact[];
   type: 'contact_duplicate';
   total: number;
 }
