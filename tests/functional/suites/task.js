@@ -252,8 +252,6 @@ function addBulkContactAssociations(cb) {
     }
   ]
 
-  console.log(associations)
-
   const data = Object.assign(task, {
     status: 'DONE',
     associations
