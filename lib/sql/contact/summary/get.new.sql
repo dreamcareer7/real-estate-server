@@ -19,6 +19,9 @@ SELECT
   tag[0] AS tags,
   display_name,
   display_name AS abbreviated_display_name,
+  partner_name,
+  last_touch,
+  next_touch,
   'contact_summary' AS type
 FROM
   contacts_summaries AS cs

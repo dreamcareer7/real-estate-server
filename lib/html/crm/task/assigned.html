@@ -1790,7 +1790,7 @@
                               <tr>
                                 <th>
                                   <!--row1-->
-                                  <table class="row">
+                                  <table class="row" id="row1">
                                     <tbody>
                                       <tr>
                                         <th>
@@ -1802,7 +1802,7 @@
                                                 <p style="color: #000000;font-family: Merriweather, Arial, sans-serif;font-size: 40px;font-weight: 900;line-height: 1.2;margin-bottom: 0;">
                                                   {{action}}
                                                   <span style="color: #7f7f7f;font-family: Merriweather, Arial, sans-serif;font-size: 40px;font-weight: 900;line-height: 1.2;margin-bottom: 0;">
-                                                    by {{ user | full_name }}.
+                                                    by {{ notification.auxiliary_subject | full_name }}.
                                                   </span>
                                                 </p>
                                               </th>
@@ -1817,6 +1817,7 @@
                                   <table
                                     class="row"
                                     style="margin-bottom: 40px;"
+                                    id="row2"
                                   >
                                     <tbody>
                                       <tr>
@@ -1849,7 +1850,7 @@
                                                       ><span
                                                         style="color: #7f7f7f;"
                                                       >
-                                                        {{ due_date }}</span
+                                                        {{ task.due_date | time('MMM Do, YYYY, hh:mm A', user.timezone) }}</span
                                                       >
                                                     </p>
                                                     <p
@@ -1866,6 +1867,8 @@
                                                     </p>
                                                   </th>
                                                 </tr>
+                                              </tbody>
+                                              <tbody>
                                                 {% for assoc in associations %}
                                                 <tr>
                                                   {% if assoc.has_picture %}
@@ -1921,6 +1924,8 @@
                                                   {% endif %}
                                                 </tr>
                                                 {% endfor %}
+                                              </tbody>
+                                              <tbody>
                                                 {% if assignees and assignees.length > 0 %}
                                                 <tr>
                                                   <td
@@ -1977,7 +1982,7 @@
                     <!--/row2-->
                     <!--row3-->
 
-                    <center data-parsed="">
+                    <center data-parsed="" id="row3">
                       <hr style="width: 73%;border: 0.5px solid #dcdcdc;" />
                       <table
                         class="button float-center"
@@ -2012,7 +2017,7 @@
 
                     <!--/row3-->
                     <!--row4-->
-                    <table class="row" style="background-color:#f3f3f3;">
+                    <table class="row" style="background-color:#f3f3f3;" id="row4">
                       <tbody>
                         <tr>
                           <th
