@@ -1790,7 +1790,7 @@
                               <tr>
                                 <th>
                                   <!--row1-->
-                                  <table class="row">
+                                  <table class="row" id="row1">
                                     <tbody>
                                       <tr>
                                         <th>
@@ -1802,7 +1802,7 @@
                                                 <p
                                                   style="color: #7f7f7f;font-family: Merriweather, Arial, sans-serif;font-size: 40px;font-weight: 900;line-height: 1.2;margin-bottom: 0;"
                                                 >
-                                                  {{ user | full_name }}
+                                                  {{ notification.auxiliary_subject | full_name }}
                                                 </p>
                                                 <p
                                                   style="color: #000000;font-family: Merriweather, Arial, sans-serif;font-size: 40px;font-weight: 900;line-height: 1.2;margin-bottom: 0;"
@@ -1812,7 +1812,7 @@
                                                 <p
                                                   style="color: #7f7f7f;font-family: Barlow, Arial, sans-serif;font-size: 16px;font-weight:500 ;line-height: 1.5;padding-top: 8px;"
                                                 >
-                                                  Updated on {{ timestamp }}
+                                                  Updated on {{ task.updated_at | time('MMM Do, YYYY, hh:mm A', user.timezone) }}
                                                 </p>
                                               </th>
                                             </tr>
@@ -1837,6 +1837,7 @@
                                             <table
                                               class="row"
                                               style="margin: 0 auto;background: none;border:1px solid #d4d4d4;"
+                                              id="row2"
                                             >
                                               <tbody>
                                                 <tr>
@@ -1858,7 +1859,7 @@
                                                       ><span
                                                         style="color: #7f7f7f;"
                                                       >
-                                                        {{ due_date }}</span
+                                                        {{ task.due_date | time('MMM Do, YYYY, hh:mm A', user.timezone) }}</span
                                                       >
                                                     </p>
                                                     <p
@@ -1875,6 +1876,8 @@
                                                     </p>
                                                   </th>
                                                 </tr>
+                                              </tbody>
+                                              <tbody>
                                                 {% for assoc in associations %}
                                                 <tr>
                                                   {% if assoc.has_picture %}
@@ -1930,6 +1933,8 @@
                                                   {% endif %}
                                                 </tr>
                                                 {% endfor %}
+                                              </tbody>
+                                              <tbody>
                                                 {% if assignees and assignees.length > 0 %}
                                                 <tr>
                                                   <td
@@ -1986,7 +1991,7 @@
                     <!--/row2-->
                     <!--row3-->
 
-                    <center data-parsed="">
+                    <center data-parsed="" id="row3">
                       <hr style="width: 73%;border: 0.5px solid #dcdcdc;" />
                       <table
                         class="button float-center"
@@ -2021,7 +2026,7 @@
 
                     <!--/row3-->
                     <!--row4-->
-                    <table class="row" style="background-color:#f3f3f3;">
+                    <table class="row" style="background-color:#f3f3f3;" id="row4">
                       <tbody>
                         <tr>
                           <th

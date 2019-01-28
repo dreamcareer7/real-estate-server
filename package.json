@@ -99,6 +99,7 @@
   "devDependencies": {
     "@types/async": "^2.4.0",
     "@types/chai": "^4.1.7",
+    "@types/cheerio": "^0.22.10",
     "@types/exceljs": "^0.5.2",
     "@types/kue": "^0.11.10",
     "@types/lodash": "^4.14.119",
@@ -109,6 +110,7 @@
     "@types/papaparse": "^4.5.6",
     "@types/pg": "^7.4.11",
     "@types/request-promise-native": "^1.0.15",
+    "cheerio": "^1.0.0-rc.2",
     "copy-dir": "0.0.8",
     "deepmerge": "^3.1.0",
     "eslint-config-standard": "^6.0.1",

@@ -1,9 +1,11 @@
+const cheerio = require('cheerio')
 const { expect } = require('chai')
 
 const moment = require('moment-timezone')
 
 const { createContext, handleJobs } = require('../helper')
 const promisify = require('../../../lib/utils/promisify')
+const render_filters = require('../../../lib/utils/render_filters')
 
 const { createBrand } = require('../brand/helper')
 
@@ -50,10 +52,12 @@ async function expectEmailWithSubject(subject) {
   const emails = await getEmails()
   expect(emails).to.have.length(1)
   expect(emails[0].subject).to.equal(subject)
+
+  return emails[0]
 }
 
 async function testAssignment() {
-  await CrmTask.create(
+  const task = await CrmTask.create(
     {
       assignees: [userB.id],
       due_date: moment()
@@ -78,11 +82,24 @@ async function testAssignment() {
   expect(notifications[0].action).to.equal('Assigned')
   expect(notifications[0].subject).to.equal(userA.id)
 
-  await expectEmailWithSubject(userA.display_name)
+  const { html, subject } = await expectEmailWithSubject(userA.display_name)
+  const $ = cheerio.load(html)
+
+  expect(subject).to.be.equal(userA.display_name)
+  expect($('#row1 th p:first-child').text().trim().replace(/\s{2,}/g, ' ')).to.be.equal('You have been assigned to an event by ' + userA.display_name + '.')
+
+  expect($('#row2 tbody:nth-child(1) p:nth-child(1)').text().trim().replace(/\s{2,}/g, ' ')).to.be.equal(`${task.task_type} | ${render_filters.time(task.due_date, 'MMM Do, YYYY, hh:mm A', userB.timezone)}`)
+  expect($('#row2 tbody:nth-child(1) p:nth-child(2)').text().trim().replace(/\s{2,}/g, ' ')).to.be.equal(task.title)
+  expect($('#row2 tbody:nth-child(1) p:nth-child(3)').text().trim().replace(/\s{2,}/g, ' ')).to.be.equal('')
+
+  expect($('#row2 tbody:nth-child(2)').children()).to.have.length(0)
+  expect($('#row2 tbody:nth-child(3)').children()).to.have.length(1)
+  expect($('#row2 tbody:nth-child(3) th.menu-item')).to.have.length(1)
+  expect($('#row2 tbody:nth-child(3) th.menu-item').text().trim()).to.be.equal(render_filters.initials(userB.display_name))
 }
 
 async function testUpdateAssignedTask() {
-  const task = await CrmTask.create(
+  let task = await CrmTask.create(
     {
       assignees: [userB.id],
       due_date: moment()
@@ -98,7 +115,7 @@ async function testUpdateAssignedTask() {
 
   await handleJobs()
 
-  await CrmTask.update(
+  task = await CrmTask.update(
     task.id,
     {
       due_date: moment()
@@ -121,7 +138,23 @@ async function testUpdateAssignedTask() {
   expect(notifications).to.have.length(1)
   expect(notifications[0].action).to.equal('Edited')
 
-  await expectEmailWithSubject('Updated Event')
+  const { html, subject } = await expectEmailWithSubject('Updated Event')
+  const $ = cheerio.load(html)
+
+  expect(subject).to.be.equal('Updated Event')
+
+  expect($('#row1 th p:first-child').text().trim()).to.be.equal(userA.display_name)
+  expect($('#row1 th p:nth-child(2)').text().trim()).to.be.equal('updated an event.')
+  expect($('#row1 th p:nth-child(3)').text().trim()).to.be.equal(`Updated on ${render_filters.time(task.updated_at, 'MMM Do, YYYY, hh:mm A', userB.timezone)}`)
+
+  expect($('#row2 tbody:nth-child(1) p:nth-child(1)').text().trim().replace(/\s{2,}/g, ' ')).to.be.equal(`${task.task_type} | ${render_filters.time(task.due_date, 'MMM Do, YYYY, hh:mm A', userB.timezone)}`)
+  expect($('#row2 tbody:nth-child(1) p:nth-child(2)').text().trim().replace(/\s{2,}/g, ' ')).to.be.equal(task.title)
+  expect($('#row2 tbody:nth-child(1) p:nth-child(3)').text().trim().replace(/\s{2,}/g, ' ')).to.be.equal('')
+
+  expect($('#row2 tbody:nth-child(2)').children()).to.have.length(0)
+  expect($('#row2 tbody:nth-child(3)').children()).to.have.length(1)
+  expect($('#row2 tbody:nth-child(3) th.menu-item')).to.have.length(1)
+  expect($('#row2 tbody:nth-child(3) th.menu-item').text().trim()).to.be.equal(render_filters.initials(userB.display_name))
 }
 
 async function testTaskIsDue() {
@@ -152,7 +185,10 @@ async function testTaskIsDue() {
   expect(notifications).to.have.length(1)
   expect(notifications[0].action).to.equal('IsDue')
 
-  await expectEmailWithSubject('Upcoming Rechat Event')
+  const { html } = await expectEmailWithSubject('Upcoming Rechat Event')
+  const $ = cheerio.load(html)
+
+  expect($('#row2 th p:nth-child(1)').text().trim()).to.be.equal(task.title)
 }
 
 describe('CrmTask', () => {
