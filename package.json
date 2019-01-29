@@ -16,7 +16,7 @@
     "heroku-postbuild": "npm run db:upgrade"
   },
   "engines": {
-    "node": "10.x"
+    "node": "11.x"
   },
   "author": "",
   "license": "ISC",
