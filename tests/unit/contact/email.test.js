@@ -168,6 +168,30 @@ async function testDuplicateEmail() {
   expect(emails).to.have.length(1)
 }
 
+async function testEmailsOnly() {
+  const campaign = {
+    from: user.id,
+    to: [
+      {
+        email: 'gholi@rechat.com'
+      }
+    ],
+    subject: 'testEmailOnly',
+    html: 'test'
+  }
+
+  const summaries = await EmailCampaign._filterContacts(campaign.to, brand.id)
+  expect(summaries).to.have.length(0)
+
+  const contact_ids = await EmailCampaign.create(campaign, brand.id)
+  expect(contact_ids).to.have.length(0)
+
+  await handleJobs()
+
+  const emails = await getEmails()
+  expect(emails).to.have.length(1)
+}
+
 describe('Contact', () => {
   createContext()
   beforeEach(setup)
@@ -175,5 +199,6 @@ describe('Contact', () => {
   describe('Email', () => {
     it('should send emails to a set of tags', testEmailToTags)
     it('should not send duplicate emails to a contact with two tags', testDuplicateEmail)
+    it('should send only to specified emails if no list or tag were given', testEmailsOnly)
   })
 })
