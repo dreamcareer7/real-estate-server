@@ -1,5 +1,8 @@
 const _ = require('lodash')
 
+const checklists = require('./checklists')
+const contexts = require('./contexts')
+
 const Brand = require('../../../lib/models/Brand')
 const BrandRole = require('../../../lib/models/Brand/role')
 const BrandContext = require('../../../lib/models/Brand/context')
@@ -12,97 +15,8 @@ const default_data = {
     Admin: []
   },
 
-  contexts: {
-    closing_date: {
-      data_type: 'Date',
-      label: 'Closing Date',
-      short_label: 'Cls',
-      order: 0,
-      section: 'Dates',
-      needs_approval: true,
-      exports: true,
-      preffered_source: 'Provided',
-      triggers_brokerwolf: false
-    },
-    contract_date: {
-      data_type: 'Date',
-      label: 'Contract Date',
-      short_label: 'Off',
-      order: 0,
-      section: 'Dates',
-      needs_approval: true,
-      exports: true,
-      preffered_source: 'Provided',
-      triggers_brokerwolf: false
-    },
-    expiration_date: {
-      data_type: 'Date',
-      label: 'Listing Expiration',
-      short_label: 'Exp',
-      order: 0,
-      section: 'Dates',
-      needs_approval: true,
-      exports: true,
-      preffered_source: 'Provided',
-      triggers_brokerwolf: false
-    },
-    full_address: {
-      data_type: 'Text',
-      label: 'Full Address',
-      short_label: 'Cls',
-      order: 0,
-      section: 'Dates',
-      needs_approval: true,
-      exports: true,
-      preffered_source: 'MLS',
-      triggers_brokerwolf: false
-    },
-    street_address: {
-      data_type: 'Text',
-      label: 'Street Address',
-      short_label: 'Cls',
-      order: 0,
-      section: 'Dates',
-      needs_approval: true,
-      exports: true,
-      preffered_source: 'MLS',
-      triggers_brokerwolf: false
-    },
-    photo: {
-      data_type: 'Text',
-      label: 'Photo',
-      short_label: 'Cls',
-      order: 0,
-      section: 'Dates',
-      needs_approval: true,
-      exports: true,
-      preffered_source: 'MLS',
-      triggers_brokerwolf: false
-    },
-    list_price: {
-      data_type: 'Number',
-      label: 'List Price',
-      short_label: 'Cls',
-      order: 0,
-      section: 'Dates',
-      needs_approval: true,
-      exports: true,
-      preffered_source: 'MLS',
-      triggers_brokerwolf: false
-    }
-  },
-
-  checklists: [
-    {
-      title: 'Buying - Resale',
-      deal_type: 'Buying',
-      property_type: 'Resale',
-      order: 1,
-      is_deactivatable: false,
-      is_terminatable: false,
-      tab_name: 'Contract Inbox'
-    }
-  ]
+  contexts,
+  checklists
 }
 
 async function create(data) {
@@ -134,13 +48,11 @@ async function create(data) {
     })
   }
 
-  for (const c in contexts) {
-    await BrandContext.create({
-      ...contexts[c],
-      key: c,
-      brand: b.id
-    })
-  }
+  await BrandContext.createAll(Object.keys(contexts).map(c => ({
+    ...contexts[c],
+    key: c,
+    brand: b.id
+  })))
 
   return Brand.get(b.id)
 }
@@ -151,6 +63,10 @@ async function getContexts(brand_id) {
   return _.keyBy(bc, 'key')
 }
 
+/**
+ * @param {UUID} brand_id 
+ * @returns {Promise<any[]>}
+ */
 function getChecklists(brand_id) {
   return BrandChecklist.getByBrand(brand_id)
 }
