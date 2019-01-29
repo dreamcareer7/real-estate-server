@@ -17,7 +17,7 @@ const { createDeal } = require('../deal/helper')
 let user, brand, listing
 
 async function setup() {
-  user = await promisify(User.getByEmail)('test@rechat.com')
+  user = await User.getByEmail('test@rechat.com')
   listing = await promisify(Listing.getByMLSNumber)(10018693)
 
   brand = await createBrand({

@@ -20,8 +20,8 @@ const Worker = require('../../../lib/models/CRM/Task/worker')
 let userA, userB, brand
 
 async function setup() {
-  userA = await promisify(User.getByEmail)('test@rechat.com')
-  userB = await promisify(User.getByEmail)('test+email@rechat.com')
+  userA = await User.getByEmail('test@rechat.com')
+  userB = await User.getByEmail('test+email@rechat.com')
 
   brand = await createBrand({
     roles: {
