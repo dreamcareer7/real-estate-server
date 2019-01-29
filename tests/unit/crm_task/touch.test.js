@@ -8,14 +8,14 @@ const Context = require('../../../lib/models/Context')
 const CrmTask = require('../../../lib/models/CRM/Task')
 const User = require('../../../lib/models/User')
 
-const { createBrand } = require('../brand/helper')
+const BrandHelper = require('../brand/helper')
 
 let user, brand
 
 async function setup() {
   user = await User.getByEmail('test@rechat.com')
 
-  brand = await createBrand({
+  brand = await BrandHelper.create({
     roles: {
       Admin: [user.id]
     }

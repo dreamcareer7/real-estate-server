@@ -4,7 +4,7 @@ const promisify = require('../../../lib/utils/promisify')
 const Deal = require('../../../lib/models/Deal')
 const DealChecklist = require('../../../lib/models/Deal/checklist')
 
-const { getBrandContexts, getBrandChecklists } = require('../brand/helper')
+const BrandHelper = require('../brand/helper')
 
 const default_checklist_values = {
   title: 'Checklist',
@@ -20,13 +20,13 @@ const default_values = {
   roles: []
 }
 
-async function createDeal(user_id, brand_id, data) {
+async function create(user_id, brand_id, data) {
   data = deepmerge(default_values, data)
 
   const { roles, checklists, ...deal_props } = data
 
-  const brand_contexts = await getBrandContexts(brand_id)
-  const brand_checklists = await getBrandChecklists(brand_id)
+  const brand_contexts = await BrandHelper.getContexts(brand_id)
+  const brand_checklists = await BrandHelper.getChecklists(brand_id)
 
   const deal = await Deal.create({
     ...deal_props,
@@ -70,5 +70,5 @@ async function createDeal(user_id, brand_id, data) {
 }
 
 module.exports = {
-  createDeal
+  create
 }
