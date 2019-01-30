@@ -83,7 +83,7 @@ const liveUpdate = async() => {
   await Deal.notifyById(deal.id)
 }
 
-describe('Deal', () => {
+describe('Deal Misc', () => {
   createContext()
 
   it('should be among deals of a brand', brandDeals)

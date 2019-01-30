@@ -112,7 +112,7 @@ const addressTitle = async () => {
   expect(updated.title).to.equal(street_address)
 }
 
-describe('Deal', () => {
+describe('Deal Title', () => {
   createContext()
   beforeEach(setupBrand)
 
