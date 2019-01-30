@@ -43,9 +43,17 @@ const userDeals = async () => {
   expect(found).to.be.false
 }
 
+const liveUpdate = async() => {
+  const deal = await createDeal()
+
+  await Deal.notify({deal})
+  await Deal.notifyById(deal.id)
+}
+
 describe('Deal', () => {
   createContext()
 
   it('should be among deals of a brand', brandDeals)
   it('should be among deals of a user', userDeals)
+  it('should not throw an error on a live update', liveUpdate)
 })
