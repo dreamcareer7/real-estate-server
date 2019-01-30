@@ -31,4 +31,5 @@ ON CONFLICT (matrix_unique_id) DO UPDATE SET
   level = $8,
   room_type = $9,
   updated_at = CLOCK_TIMESTAMP()
-  WHERE property_rooms.matrix_unique_id = $1;
+  WHERE property_rooms.matrix_unique_id = $1
+  RETURNING id

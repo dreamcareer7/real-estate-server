@@ -1,0 +1,19 @@
+{
+  "dining_length": 11,
+  "dining_width": 11,
+  "kitchen_length": 10,
+  "kitchen_width": 8,
+  "lease": 1095,
+  "listing_mui": 60218382,
+  "living_length": 18,
+  "living_width": 17,
+  "master_length": 15,
+  "master_width": 12,
+  "matrix_unique_id": 60231125,
+  "matrix_modified_dt": "2016-03-09T16:57:42.600",
+  "full_bath": 2,
+  "half_bath": null,
+  "beds": 3,
+  "units": 1,
+  "square_feet": 1453
+}

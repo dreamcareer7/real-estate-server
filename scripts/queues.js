@@ -36,7 +36,7 @@ const saveLastSeen = (job, done) => {
 }
 
 const mls_unit = (job, done) => {
-  PropertyUnit.create(job.data.processed, done)
+  PropertyUnit.create(job.data.processed).nodeify(done)
 }
 
 const mls_openhouse = (job, done) => {
@@ -44,7 +44,7 @@ const mls_openhouse = (job, done) => {
 }
 
 const mls_room = (job, done) => {
-  PropertyRoom.create(job.data.processed, done)
+  PropertyRoom.create(job.data.processed).nodeify(done)
 }
 
 const mls_agent = (job, done) => {

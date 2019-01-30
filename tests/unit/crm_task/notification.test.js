@@ -7,7 +7,7 @@ const { createContext, handleJobs } = require('../helper')
 const promisify = require('../../../lib/utils/promisify')
 const render_filters = require('../../../lib/utils/render_filters')
 
-const { createBrand } = require('../brand/helper')
+const BrandHelper = require('../brand/helper')
 
 const sql = require('../../../lib/models/SupportBot/sql')
 
@@ -20,10 +20,10 @@ const Worker = require('../../../lib/models/CRM/Task/worker')
 let userA, userB, brand
 
 async function setup() {
-  userA = await promisify(User.getByEmail)('test@rechat.com')
-  userB = await promisify(User.getByEmail)('test+email@rechat.com')
+  userA = await User.getByEmail('test@rechat.com')
+  userB = await User.getByEmail('test+email@rechat.com')
 
-  brand = await createBrand({
+  brand = await BrandHelper.create({
     roles: {
       Admin: [userA.id, userB.id]
     }

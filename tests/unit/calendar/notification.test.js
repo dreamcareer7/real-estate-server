@@ -11,16 +11,16 @@ const Context = require('../../../lib/models/Context')
 const { Listing } = require('../../../lib/models/Listing')
 const User = require('../../../lib/models/User')
 
-const { createBrand } = require('../brand/helper')
-const { createDeal } = require('../deal/helper')
+const BrandHelper = require('../brand/helper')
+const DealHelper = require('../deal/helper')
 
 let user, brand, listing
 
 async function setup() {
-  user = await promisify(User.getByEmail)('test@rechat.com')
+  user = await User.getByEmail('test@rechat.com')
   listing = await promisify(Listing.getByMLSNumber)(10018693)
 
-  brand = await createBrand({
+  brand = await BrandHelper.create({
     roles: {
       Admin: [user.id]
     }
@@ -48,6 +48,25 @@ async function setup() {
     user.id,
     brand.id
   )
+}
+
+async function createDeal() {
+  await DealHelper.create(user.id, brand.id, {
+    checklists: [{
+      context: {
+        closing_date: { value: moment().tz(user.timezone).add(10, 'day').startOf('day').format() },
+        contract_date: { value: moment().tz(user.timezone).add(1, 'day').startOf('day').format() },
+      },
+    }],
+    roles: [{
+      role: 'BuyerAgent',
+      email: user.email,
+      phone_number: user.phone_number,
+      legal_first_name: user.first_name,
+      legal_last_name: user.last_name
+    }],
+    listing: listing.id,
+  })
 }
 
 async function createContact() {
@@ -143,24 +162,7 @@ describe('Calendar', () => {
   })
 
   describe('deal notifications', () => {
-    beforeEach(async () => {
-      await createDeal(user.id, brand.id, {
-        checklists: [{
-          context: {
-            closing_date: { value: moment().tz(user.timezone).add(10, 'day').startOf('day').format() },
-            contract_date: { value: moment().tz(user.timezone).add(1, 'day').startOf('day').format() },
-          },
-        }],
-        roles: [{
-          role: 'BuyerAgent',
-          email: user.email,
-          phone_number: user.phone_number,
-          legal_first_name: user.first_name,
-          legal_last_name: user.last_name
-        }],
-        listing: listing.id,
-      })
-    })
+    beforeEach(createDeal)
 
     context('when there is an upcoming critical date', () => {
       it('should find due events correctly', findDueEvents({ event_type: 'contract_date', object_type: 'deal_context' }))
