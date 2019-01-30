@@ -41,18 +41,15 @@ async function create(data) {
     }
   }
 
-  for (const c of checklists) {
-    BrandChecklist.create({
-      ...c,
-      brand: b.id
-    })
-  }
+  await BrandChecklist.createAll(checklists.map(c => ({ ...c, brand: b.id })))
 
-  await BrandContext.createAll(Object.keys(contexts).map(c => ({
-    ...contexts[c],
-    key: c,
-    brand: b.id
-  })))
+  await BrandContext.createAll(
+    Object.keys(contexts).map(c => ({
+      ...contexts[c],
+      key: c,
+      brand: b.id
+    }))
+  )
 
   return Brand.get(b.id)
 }
@@ -64,7 +61,7 @@ async function getContexts(brand_id) {
 }
 
 /**
- * @param {UUID} brand_id 
+ * @param {UUID} brand_id
  * @returns {Promise<any[]>}
  */
 function getChecklists(brand_id) {
@@ -74,5 +71,5 @@ function getChecklists(brand_id) {
 module.exports = {
   create,
   getContexts,
-  getChecklists,
+  getChecklists
 }
