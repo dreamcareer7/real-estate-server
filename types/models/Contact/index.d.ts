@@ -29,12 +29,6 @@ declare interface IContactAttributeDef {
   brand?: UUID;
 }
 
-declare interface IParentContact extends IModel {
-  sub_contacts: IContact[];
-  summary?: Record<string, string>;
-  merged: boolean;
-}
-
 declare interface IContactBase {
   ios_address_book_id?: string;
   android_address_book_id?: string;
@@ -58,6 +52,8 @@ declare interface IContact extends IContactBase {
 
   display_name: string;
   partner_name?: string;
+  last_touch?: number;
+  next_touch?: number;
 
   users?: UUID[];
   deals?: IDeal[];
@@ -123,10 +119,12 @@ declare interface IContactSummary {
   phone_number: string;
 }
 
+declare type TContactFilterOperator = 'eq' | 'lte' | 'gte' | 'between' | 'any' | 'all';
+
 declare interface IContactAttributeFilter {
   attribute_def?: UUID;
   attribute_type?: string;
-  operator?: 'eq' | 'lte' | 'gte' | 'between' | 'any' | 'all',
+  operator?: TContactFilterOperator,
   value: any;
   invert?: boolean;
 }
@@ -137,6 +135,10 @@ declare interface IContactFilterOptions {
   updated_by?: UUID;
   updated_gte?: number;
   updated_lte?: number;
+  last_touch_gte?: number;
+  last_touch_lte?: number;
+  next_touch_gte?: number;
+  next_touch_lte?: number;
   created_gte?: number;
   created_lte?: number;
   ids?: UUID[];
@@ -155,7 +157,7 @@ declare interface ICSVImporterMappedField {
 
 declare interface IContactDuplicateCluster {
   cluster: number;
-  contacts: IParentContact[];
+  contacts: IContact[];
   type: 'contact_duplicate';
   total: number;
 }

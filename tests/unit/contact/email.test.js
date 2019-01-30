@@ -1,7 +1,6 @@
 const { expect } = require('chai')
 
 const { createContext, handleJobs } = require('../helper')
-const promisify = require('../../../lib/utils/promisify')
 const sql = require('../../../lib/models/SupportBot/sql')
 
 const Contact = require('../../../lib/models/Contact')
@@ -9,14 +8,14 @@ const Context = require('../../../lib/models/Context')
 const EmailCampaign = require('../../../lib/models/EmailCampaign')
 const User = require('../../../lib/models/User')
 
-const { createBrand } = require('../brand/helper')
+const BrandHelper = require('../brand/helper')
 
 let user, brand
 
 async function setup() {
-  user = await promisify(User.getByEmail)('test@rechat.com')
+  user = await User.getByEmail('test@rechat.com')
 
-  brand = await createBrand({
+  brand = await BrandHelper.create({
     roles: {
       Admin: [user.id]
     }
@@ -168,6 +167,30 @@ async function testDuplicateEmail() {
   expect(emails).to.have.length(1)
 }
 
+async function testEmailsOnly() {
+  const campaign = {
+    from: user.id,
+    to: [
+      {
+        email: 'gholi@rechat.com'
+      }
+    ],
+    subject: 'testEmailOnly',
+    html: 'test'
+  }
+
+  const summaries = await EmailCampaign._filterContacts(campaign.to, brand.id)
+  expect(summaries).to.have.length(0)
+
+  const contact_ids = await EmailCampaign.create(campaign, brand.id)
+  expect(contact_ids).to.have.length(0)
+
+  await handleJobs()
+
+  const emails = await getEmails()
+  expect(emails).to.have.length(1)
+}
+
 describe('Contact', () => {
   createContext()
   beforeEach(setup)
@@ -175,5 +198,6 @@ describe('Contact', () => {
   describe('Email', () => {
     it('should send emails to a set of tags', testEmailToTags)
     it('should not send duplicate emails to a contact with two tags', testDuplicateEmail)
+    it('should send only to specified emails if no list or tag were given', testEmailsOnly)
   })
 })

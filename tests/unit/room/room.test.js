@@ -5,7 +5,7 @@ const promisify = require('../../../lib/utils/promisify')
 const config = require('../../../lib/config')
 
 const _createRoom = async () => {
-  const user = await promisify(User.getByEmail)(config.tests.username)
+  const user = await User.getByEmail(config.tests.username)
 
   const base = {
     room_type: 'Group',

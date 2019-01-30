@@ -4,12 +4,11 @@ const promisify = require('../../../lib/utils/promisify')
 const Deal = require('../../../lib/models/Deal')
 const DealChecklist = require('../../../lib/models/Deal/checklist')
 
-const { getBrandContexts, getBrandChecklists } = require('../brand/helper')
+const BrandHelper = require('../brand/helper')
 
 const default_checklist_values = {
-  title: 'Checklist',
   is_deactivated: false,
-  is_terminated: false,
+  is_terminated: false
 }
 
 const default_values = {
@@ -20,13 +19,13 @@ const default_values = {
   roles: []
 }
 
-async function createDeal(user_id, brand_id, data) {
+async function create(user_id, brand_id, data) {
   data = deepmerge(default_values, data)
 
   const { roles, checklists, ...deal_props } = data
 
-  const brand_contexts = await getBrandContexts(brand_id)
-  const brand_checklists = await getBrandChecklists(brand_id)
+  const brand_contexts = await BrandHelper.getContexts(brand_id)
+  const brand_checklists = await BrandHelper.getChecklists(brand_id)
 
   const deal = await Deal.create({
     ...deal_props,
@@ -34,12 +33,29 @@ async function createDeal(user_id, brand_id, data) {
   })
 
   for (let i = 0; i < checklists.length; i++) {
-    const {context, ...c} = checklists[i]
-    const cl_data = deepmerge.all([default_checklist_values, c, {
-      deal: deal.id,
-      order: i + 1,
-      origin: brand_checklists[0].id
-    }])
+    const {
+      context,
+      deal_type = deal.deal_type,
+      property_type = deal.property_type,
+      ...c
+    } = checklists[i]
+
+    const origin = brand_checklists.find(
+      bc => bc.deal_type === deal_type && bc.property_type === property_type
+    )
+
+    const cl_data = deepmerge.all([
+      default_checklist_values,
+      {
+        title: origin.title
+      },
+      c,
+      {
+        deal: deal.id,
+        order: i + 1,
+        origin: origin.id
+      }
+    ])
 
     const cl = await DealChecklist.create(cl_data)
 
@@ -70,5 +86,5 @@ async function createDeal(user_id, brand_id, data) {
 }
 
 module.exports = {
-  createDeal
+  create
 }
