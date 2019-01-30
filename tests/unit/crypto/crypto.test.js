@@ -18,7 +18,19 @@ const decrypt = async () => {
 }
 
 const sign = async () => {
-  Crypto.sign(string)
+  const signed = Crypto.sign(string)
+  return signed
+}
+
+const verify = async () => {
+  const signature = await sign()
+  const verified = Crypto.verify(string, signature)
+
+  expect(verified).to.be.true
+
+  const failed = Crypto.verify(string, signature + ' ')
+
+  expect(failed).to.be.false
 }
 
 describe('Crypto', () => {
@@ -27,4 +39,5 @@ describe('Crypto', () => {
   it('encrypt something', encrypt)
   it('decrypt something', decrypt)
   it('sign    something', sign)
+  it('verify  something', verify)
 })
