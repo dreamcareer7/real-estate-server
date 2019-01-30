@@ -47,5 +47,5 @@ describe('Deal', () => {
   createContext()
 
   it('should be among deals of a brand', brandDeals)
-  it('should be among deals of a user',  userDeals)
+  it('should be among deals of a user', userDeals)
 })
