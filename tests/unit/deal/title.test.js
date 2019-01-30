@@ -2,13 +2,11 @@ const { expect } = require('chai')
 const { createContext } = require('../helper')
 const DealHelper = require('./helper')
 const BrandHelper = require('../brand/helper')
-const promisify = require('../../../lib/utils/promisify')
 
 const setupBrand = async () => {
-    const brand = await BrandHelper.create()
-    Context.set({ brand })
+  const brand = await BrandHelper.create()
+  Context.set({ brand })
 }
-
 
 const dealWithNoTitle = async () => {
   const user = await User.getByEmail('test@rechat.com')
@@ -72,9 +70,7 @@ const buyersTitle = async () => {
   const updated = await Deal.updateTitle(deal)
 
   // But it should NOT include Sellers as the deal is a buying deal and clients are buyers
-  expect(deal.title).to.equal('John K Smith, Marry J Jones')
-
-  return deal
+  expect(updated.title).to.equal('John K Smith, Marry J Jones')
 }
 
 const sellersTitle = async () => {
@@ -89,9 +85,7 @@ const sellersTitle = async () => {
   const updated = await Deal.updateTitle(deal)
 
   // But it should NOT include Buyers as the deal is a selling deal and clients are sellers
-  expect(deal.title).to.equal('Kevin S Manning, Mark S Jones')
-
-  return deal
+  expect(updated.title).to.equal('Kevin S Manning, Mark S Jones')
 }
 
 const addressTitle = async () => {
