@@ -59,7 +59,7 @@ const mls_photo = (job, done) => {
   Photo.create({
     ...job.data.processed,
     revision: job.data.revision
-  }, done)
+  }).nodeify(done)
 }
 
 const mls_listing = (job, done) => {
@@ -70,7 +70,7 @@ const mls_listing = (job, done) => {
 }
 
 const mls_validate_listing_photos = (job, done) => {
-  Photo.deleteMissing(job.data.listing, job.data.present, done)
+  Photo.deleteMissing(job.data.listing, job.data.present).nodeify(done)
 }
 
 const sync_brokerwolf = (job, done) => {
