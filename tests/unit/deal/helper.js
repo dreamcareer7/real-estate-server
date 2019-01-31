@@ -74,7 +74,7 @@ async function create(user_id, brand_id, data) {
   }
 
   for (const r of roles) {
-    await promisify(Deal.addRole)({
+    await Deal.addRole({
       ...r,
       deal: deal.id,
       created_by: user_id,
