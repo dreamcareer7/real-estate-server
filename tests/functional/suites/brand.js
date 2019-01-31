@@ -130,7 +130,7 @@ const getByHostname = (cb) => {
 }
 
 const addOffice = cb => {
-  office_id = results.office.add.rows[0].id
+  office_id = results.office.add
   return frisby.create('add an office to a brand')
     .post(`/brands/${brand_id}/offices`, {
       office: office_id
