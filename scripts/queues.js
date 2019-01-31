@@ -40,7 +40,7 @@ const mls_unit = (job, done) => {
 }
 
 const mls_openhouse = (job, done) => {
-  OpenHouse.create(job.data.processed, done)
+  OpenHouse.create(job.data.processed).nodeify(done)
 }
 
 const mls_room = (job, done) => {
