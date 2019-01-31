@@ -57,7 +57,10 @@ async function create(user_id, brand_id, data) {
       }
     ])
 
-    const cl = await DealChecklist.create(cl_data)
+    const cl = await DealChecklist.createWithTasks(cl_data, {
+      deal_type: deal.deal_type,
+      property_type: deal.property_type
+    })
 
     if (context) {
       await Deal.saveContext({
