@@ -78,13 +78,13 @@ $$
           )
         ], ' ', NULL
       ) as address
-    FROM addresses
+    FROM listings
     JOIN
-      properties ON addresses.matrix_unique_id = properties.matrix_unique_id
+      properties  ON listings.matrix_unique_id = properties.matrix_unique_id
     JOIN
-      listings   ON addresses.matrix_unique_id = listings.matrix_unique_id
+      addresses   ON listings.matrix_unique_id = addresses.matrix_unique_id
 
-    WHERE addresses.matrix_unique_id = NEW.matrix_unique_id;
+    WHERE listings.matrix_unique_id = NEW.matrix_unique_id;
 
     RETURN NEW;
   END;
