@@ -1,7 +1,6 @@
 const { expect } = require('chai')
 
 const { createContext } = require('../helper')
-const OfficeHelper = require('./office')
 
 const json = require('./agent.json')
 
@@ -17,12 +16,11 @@ const save = async (props = {}) => {
   return id
 }
 
-const getAgent = async () => {
+const get = async () => {
   const saved = await save()
-
   const fetched = await Agent.get(saved)
 
-  expect(fetched[0].id).to.equal(saved)
+  expect(fetched.id).to.equal(saved)
 }
 
 const getAgents = async () => {
@@ -82,7 +80,7 @@ const getByOfficeMls = async () => {
   let fetched = await Agent.getByOfficeId(json.office_mlsid)
   expect(fetched).not.to.include(saved)
 
-  await Office.create(json)
+  await Office.create(officeJson)
 
   fetched = await Agent.getByOfficeId(json.office_mlsid)
   expect(fetched).not.to.include(saved)
@@ -136,8 +134,10 @@ describe('MLS Agent', () => {
   createContext()
 
   it('should save an agent', save)
+  it('should fetch an agent', get)
   it('should fetch a list of agents', getAgents)
   it('should audit agent based on phone', auditPhone)
+  it('should audit agent based on email', auditEmail)
   it('should fail audit agent based on wrong secret', auditFail)
   it('should fetch an agent by mlsid', getByMls)
   it('should fetch agents by their office mlsid', getByOfficeMls)

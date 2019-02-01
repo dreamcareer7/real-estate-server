@@ -6,8 +6,8 @@ require('../../../lib/models/index.js')
 
 Agent.refreshContacts()
   .catch(err => {
-      console.log(err)
-      process.exit()
+    console.log(err)
+    process.exit()
   })
   .then(() => {
     const job = {
