@@ -39,3 +39,4 @@ ON CONFLICT (matrix_unique_id) DO UPDATE SET
   matrix_modified_dt = $16,
   updated_at = CLOCK_TIMESTAMP()
   WHERE agents.matrix_unique_id = $15
+RETURNING id

@@ -44,6 +44,10 @@ const storeEmailId = (job, cb) => {
   Email.storeId(job.data.email, job.data.mailgun_id).nodeify(cb)
 }
 
+const refreshAgents = (job, cb) => {
+  Agent.refreshContacts().nodeify(cb)
+}
+
 const list = {
   socket_emit: (job, cb) => cb(),
   socket_join: (job, cb) => cb(),
@@ -52,7 +56,7 @@ const list = {
   'Refresh.Schools': School.refresh,
   'Refresh.Counties': Listing.refreshCounties,
   'Refresh.Areas': Listing.refreshAreas,
-  'Refresh.Agents': Agent.refreshContacts,
+  'Refresh.Agents': refreshAgents,
   'Seamless.Email': Message.sendEmailForUnread,
   'Seamless.SMS': Notification.sendForUnread,
   'BrokerWolf.Settings.Save': saveBrokerwolfSettings,

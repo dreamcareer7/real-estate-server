@@ -48,7 +48,7 @@ const mls_room = (job, done) => {
 }
 
 const mls_agent = (job, done) => {
-  Agent.create(job.data.processed, done)
+  Agent.create(job.data.processed).nodeify(done)
 }
 
 const mls_office = (job, done) => {
