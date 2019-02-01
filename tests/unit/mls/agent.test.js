@@ -130,6 +130,25 @@ const publicize = async () => {
   expect(agent.phone_numbers).to.be.undefined
 }
 
+const report = async () => {
+  /*
+   * TODO: Actually asserting the results.
+   * For now we only test to make sure it runs and the SQL is fine
+   */
+  await Agent.report({
+    list_volume: {},
+    list_value: {},
+    sell_volume: {},
+    sell_value: {},
+    active_volume: {},
+    active_value: {},
+    total_active_volume: {},
+    total_active_value: {},
+    total_value: {},
+    total_volume: {}
+  })
+}
+
 describe('MLS Agent', () => {
   createContext()
 
@@ -145,5 +164,6 @@ describe('MLS Agent', () => {
   it('should not find an inactive agent', searchInactive)
   it('should find an active agent', searchActive)
   it('should hide email and phone on publicize', publicize)
+  it('should run agent report', report)
 
 })
