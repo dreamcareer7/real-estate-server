@@ -2,7 +2,7 @@ const { expect } = require('chai')
 
 const { createContext } = require('../helper')
 
-const json = require('./openhouse.json')
+const json = require('./json/openhouse')
 
 const save = async () => {
   const id = await OpenHouse.create(json)

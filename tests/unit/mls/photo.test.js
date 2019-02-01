@@ -2,7 +2,7 @@ const { expect } = require('chai')
 
 const { createContext } = require('../helper')
 
-const json = require('./photo.json')
+const json = require('./json/photo')
 
 const savePhoto = async () => {
   const id = await Photo.create(json)

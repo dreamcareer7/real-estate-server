@@ -2,7 +2,7 @@ const { expect } = require('chai')
 
 const { createContext } = require('../helper')
 
-const json = require('./room.json')
+const json = require('./json/room')
 
 const saveRoom = async () => {
   const id = await PropertyRoom.create(json)

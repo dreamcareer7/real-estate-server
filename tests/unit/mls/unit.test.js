@@ -2,7 +2,7 @@ const { expect } = require('chai')
 
 const { createContext } = require('../helper')
 
-const json = require('./unit.json')
+const json = require('./json/unit')
 
 const saveUnit = async () => {
   const id = await PropertyUnit.create(json)

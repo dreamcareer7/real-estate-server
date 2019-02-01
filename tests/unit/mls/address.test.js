@@ -2,7 +2,7 @@ const { expect } = require('chai')
 
 const { createContext } = require('../helper')
 
-const json = require('./address.json')
+const json = require('./json/address')
 
 const save = async () => {
   const id = await Address.create(json)
