@@ -2,10 +2,9 @@ const moment = require('moment-timezone')
 const DealHelper = require('../../deal/helper')
 
 const { Listing } = require('../../../../lib/models/Listing')
-const promisify = require('../../../../lib/utils/promisify')
 
 module.exports = async function(buyerAgent, brand, mls_number) {
-  const listing = await promisify(Listing.getByMLSNumber)(mls_number)
+  const listing = await Listing.getByMLSNumber(mls_number)
 
   return DealHelper.create(buyerAgent.id, brand.id, {
     is_draft: false,

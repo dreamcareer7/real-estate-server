@@ -2,7 +2,6 @@ const moment = require('moment-timezone')
 const DealHelper = require('../../deal/helper')
 
 const { Listing } = require('../../../../lib/models/Listing')
-const promisify = require('../../../../lib/utils/promisify')
 const sql = require('../../../../lib/models/SupportBot/sql')
 
 module.exports = async function(sellerAgent, buyerAgent, brand, mls_number) {
@@ -11,7 +10,7 @@ module.exports = async function(sellerAgent, buyerAgent, brand, mls_number) {
     mls_number
   ])
 
-  const listing = await promisify(Listing.getByMLSNumber)(mls_number)
+  const listing = await Listing.getByMLSNumber(mls_number)
 
   return DealHelper.create(sellerAgent.id, brand.id, {
     is_draft: false,

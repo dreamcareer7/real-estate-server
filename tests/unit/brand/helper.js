@@ -7,6 +7,7 @@ const Brand = require('../../../lib/models/Brand')
 const BrandRole = require('../../../lib/models/Brand/role')
 const BrandContext = require('../../../lib/models/Brand/context')
 const BrandChecklist = require('../../../lib/models/Brand/checklist')
+const Context = require('../../../lib/models/Context')
 
 const default_data = {
   name: 'Test Brand',
