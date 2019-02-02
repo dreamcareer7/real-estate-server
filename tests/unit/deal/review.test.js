@@ -53,7 +53,7 @@ const add = async () => {
 }
 
 const update = async () => {
-  const { review, task, user } = await add()
+  const { task, user } = await add()
 
   const updated_task = await Task.setReview(task.id, {
     created_by: user.id,
