@@ -1,12 +1,13 @@
 const { expect } = require('chai')
+const { createContext } = require('../helper')
 
 const promisify = require('../../../lib/utils/promisify')
 
-const { createContext } = require('../helper')
+const { Listing } = require('../../../lib/models/Listing')
 
-const json = require('./json/listing')
-const property = require('./json/property')
-const address = require('./json/address')
+const json = require('./json/listing.json')
+const property = require('./json/property.json')
+const address = require('./json/address.json')
 
 const save = async () => {
   const saved = await promisify(Listing.create)({
@@ -28,7 +29,7 @@ const get = async () => {
 
 const getAll = async () => {
   const id = await save()
-  const listings = await promisify(Listing.getAll)([id])
+  const listings = await Listing.getAll([id])
 
   const ids = listings.map(l => l.id)
 
@@ -37,7 +38,7 @@ const getAll = async () => {
 
 const getCompacts = async () => {
   const id = await save()
-  const listings = await promisify(Listing.getCompacts)([id])
+  const listings = await Listing.getCompacts([id])
 
   const ids = listings.map(l => l.id)
 
@@ -46,14 +47,14 @@ const getCompacts = async () => {
 
 const getByMLSNumber = async () => {
   const id = await save()
-  const listing = await promisify(Listing.getByMLSNumber)(json.mls_number)
+  const listing = await Listing.getByMLSNumber(json.mls_number)
 
   expect(listing.id).to.equal(id)
 }
 
 const getByMUI = async () => {
   const id = await save()
-  const listing = await promisify(Listing.getByMUI)(json.matrix_unique_id)
+  const listing = await Listing.getByMUI(json.matrix_unique_id)
 
   expect(listing.id).to.equal(id)
 }
@@ -66,8 +67,9 @@ const search = async () => {
   const status = [ listing.status ]
   const limit = 1
 
-  const found = await promisify(Listing.stringSearch)({query, status, limit})
+  const found = await Listing.stringSearch({query, status, limit})
 
+  expect(found).not.to.be.empty
   expect(found[0].id).to.equal(id)
 }
 

@@ -7,6 +7,7 @@ const Brand = require('../../../lib/models/Brand')
 const BrandRole = require('../../../lib/models/Brand/role')
 const BrandContext = require('../../../lib/models/Brand/context')
 const BrandChecklist = require('../../../lib/models/Brand/checklist')
+const Context = require('../../../lib/models/Context')
 
 const default_data = {
   name: 'Test Brand',
@@ -21,6 +22,9 @@ const default_data = {
 }
 
 async function create(data) {
+  const original_log_setting = Context.get('db:log')
+  Context.set({'db:log': false})
+
   data = Object.assign({}, default_data, data)
 
   const { roles, contexts, checklists, ...brand_props } = data
@@ -65,6 +69,8 @@ async function create(data) {
       brand: b.id
     })
   }
+
+  Context.set({'db:log': original_log_setting})
 
   return Brand.get(b.id)
 }

@@ -2,7 +2,6 @@ const { expect } = require('chai')
 const moment = require('moment-timezone')
 
 const { createContext, handleJobs } = require('../helper')
-const promisify = require('../../../lib/utils/promisify')
 
 const CalendarNotification = require('../../../lib/models/Calendar/notification')
 const CalendarWorker = require('../../../lib/models/Calendar/worker')
@@ -16,15 +15,22 @@ const DealHelper = require('../deal/helper')
 
 let user, brand, listing
 
-async function setup() {
+async function setup(without_checklists = false) {
   user = await User.getByEmail('test@rechat.com')
-  listing = await promisify(Listing.getByMLSNumber)(10018693)
+  listing = await Listing.getByMLSNumber(10018693)
 
-  brand = await BrandHelper.create({
+  const brand_data = {
     roles: {
       Admin: [user.id]
     }
-  })
+  }
+
+  if (without_checklists) {
+    brand_data.contexts = []
+    brand_data.checklists = []
+  }
+
+  brand = await BrandHelper.create(brand_data)
   Context.set({ user, brand })
 
   await CalendarNotification.setGlobalSettings(
@@ -148,9 +154,9 @@ async function makeSureEmailDeliveryIsLogged() {
 
 describe('Calendar', () => {
   createContext()
-  beforeEach(setup)
 
   describe('contact notifications', () => {
+    beforeEach(async () => await setup(true))
     beforeEach(createContact)
     context('when there is an upcoming birthday', () => {
       it('should find due events correctly', findDueEvents({ event_type: 'child_birthday', object_type: 'contact_attribute' }))
@@ -162,6 +168,7 @@ describe('Calendar', () => {
   })
 
   describe('deal notifications', () => {
+    beforeEach(async () => await setup(false))
     beforeEach(createDeal)
 
     context('when there is an upcoming critical date', () => {
