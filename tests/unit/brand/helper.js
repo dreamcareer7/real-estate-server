@@ -21,6 +21,9 @@ const default_data = {
 }
 
 async function create(data) {
+  const original_log_setting = Context.get('db:log')
+  Context.set({'db:log': false})
+
   data = Object.assign({}, default_data, data)
 
   const { roles, contexts, checklists, ...brand_props } = data
@@ -65,6 +68,8 @@ async function create(data) {
       brand: b.id
     })
   }
+
+  Context.set({'db:log': original_log_setting})
 
   return Brand.get(b.id)
 }
