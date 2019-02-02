@@ -42,15 +42,29 @@ async function create(data) {
     }
   }
 
-  await BrandChecklist.createAll(checklists.map(c => ({ ...c, brand: b.id })))
-
-  await BrandContext.createAll(
-    Object.keys(contexts).map(c => ({
-      ...contexts[c],
-      key: c,
+  for(const checklist of checklists) {
+    const saved = await BrandChecklist.create({
+      ...checklist,
       brand: b.id
-    }))
-  )
+    })
+
+    const { tasks } = checklist
+
+    for(const task of tasks) {
+      await BrandChecklist.addTask({
+        ...task,
+        checklist: saved.id
+      })
+    }
+  }
+
+  for(const key in contexts) {
+    await BrandContext.create({
+      ...contexts[key],
+      key,
+      brand: b.id
+    })
+  }
 
   return Brand.get(b.id)
 }
