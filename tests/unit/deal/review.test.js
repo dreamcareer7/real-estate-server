@@ -78,7 +78,7 @@ const update = async () => {
 }
 
 const notification = async() => {
-  const { review, task } = await _add({
+  await _add({
     status: Review.DECLINED
   })
 
