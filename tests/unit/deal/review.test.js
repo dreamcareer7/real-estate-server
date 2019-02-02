@@ -21,19 +21,31 @@ const createTask = async () => {
   return { task, user }
 }
 
-const add = async () => {
+const _add = async(props) => {
   const { task, user } = await createTask()
 
-  const status = Review.INCOMPLETE
-  const created_by = user.id
-
   const updated_task = await Task.setReview(task.id, {
-    status,
-    created_by
+    created_by: user.id,
+    ...props
   })
 
-  const saved = await Review.get(updated_task.review)
-  expect(saved.status).to.equal(status)
+  const review = await Review.get(updated_task.review)
+
+  return {
+    task: updated_task,
+    review,
+    user
+  }
+}
+
+const add = async (props = {}) => {
+  const status = Review.INCOMPLETE
+
+  const { task, review, user } = await _add({
+    status
+  })
+
+  expect(review.status).to.equal(status)
 
   const room = await promisify(Room.get)(task.room)
   expect(room.latest_activity).not.to.be.null
@@ -42,12 +54,12 @@ const add = async () => {
   const activity = await promisify(Activity.get)(message.activity)
 
   expect(activity.object_class).to.equal('Review')
-  expect(activity.object).to.equal(saved.id)
+  expect(activity.object).to.equal(review.id)
   expect(activity.action).to.equal('UserUpdatedReview')
 
   return {
-    review: saved,
-    task: updated_task,
+    review,
+    task,
     user
   }
 }
@@ -60,9 +72,21 @@ const update = async () => {
     status: Review.SUBMITTED
   })
 
-  const updated = await Review.get(updated_task.review)
+  const review = await Review.get(updated_task.review)
 
-  expect(updated.status).to.equal(Review.SUBMITTED)
+  expect(review.status).to.equal(Review.SUBMITTED)
+}
+
+const notification = async() => {
+  const { review, task } = await _add({
+    status: Review.DECLINED
+  })
+
+  await Task.sendNotifications(-1)
+
+  /*
+   * TODO: We need some assertions to make sure it's been sent.
+   */
 }
 
 describe('Deal Review', () => {
@@ -70,4 +94,5 @@ describe('Deal Review', () => {
 
   it('should set a review on a task', add)
   it('should update a review on a task', update)
+  it('should set a review and send notifications', notification)
 })
