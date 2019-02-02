@@ -93,7 +93,7 @@ const update = async () => {
   expect(updated.attention_requested_at).not.to.be.null
 }
 
-describe('Deal Role', () => {
+describe('Deal Task', () => {
   createContext()
 
   it('should a add a task', add)
