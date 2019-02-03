@@ -4,8 +4,8 @@ INSERT INTO deals_checklists (
   deal,
   origin,
   deactivated_at,
-  terminated_at
-
+  terminated_at,
+  faired_at
 ) VALUES (
   $1,
   $2,
@@ -24,6 +24,12 @@ INSERT INTO deals_checklists (
       WHEN $6::boolean = false THEN NULL
       WHEN $6 IS NULL  THEN NULL
       ELSE CLOCK_TIMESTAMP()
+    END
+  ),
+
+  (
+    CASE WHEN $7 IS FALSE THEN CLOCK_TIMESTAMP()
+    ELSE NULL
     END
   )
 )

@@ -6,6 +6,8 @@ SELECT deals_checklists.*,
 
   deactivated_at IS NOT NULL is_deactivated,
   terminated_at  IS NOT NULL is_terminated,
+  faired_at      IS NULL as is_draft,
+
 
   (
     SELECT

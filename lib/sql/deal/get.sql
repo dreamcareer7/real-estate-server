@@ -3,7 +3,6 @@ SELECT deals.*,
   EXTRACT(EPOCH FROM created_at) AS created_at,
   EXTRACT(EPOCH FROM updated_at) AS updated_at,
   EXTRACT(EPOCH FROM deleted_at) AS deleted_at,
-  faired_at IS NULL as is_draft,
   (
     SELECT ARRAY_AGG(deals_roles.id ORDER BY deals_roles.created_at ASC)
     FROM deals_roles
@@ -118,26 +117,17 @@ SELECT deals.*,
   -- Is expected to be NULL, hence that IS NULL check
   -- More explanation at server#1146
   (
-    WITH earliest_task AS (
-      SELECT
-        MIN(attention_requested_at) as attention_requested_at
-      FROM tasks
-      JOIN deals_checklists  ON tasks.checklist = deals_checklists.id
-      WHERE
-        deals_checklists.deal = deals.id
-        AND deals_checklists.terminated_at  IS NULL
-        AND deals_checklists.deactivated_at IS NULL
-        AND deals_checklists.deleted_at IS NULL
-        AND tasks.attention_requested_at IS NOT NULL
-        AND tasks.deleted_at IS NULL
-    )
     SELECT
-      CASE WHEN (SELECT attention_requested_at FROM earliest_task) IS NULL THEN NULL
-      ELSE GREATEST(
-        EXTRACT(EPOCH FROM (SELECT attention_requested_at FROM earliest_task)),
-        EXTRACT(EPOCH FROM deals.faired_at)
-      )
-      END
+      MIN(LEAST(tasks.attention_requested_at, deals_checklists.faired_at)) as attention_requested_at
+    FROM tasks
+    JOIN deals_checklists  ON tasks.checklist = deals_checklists.id
+    WHERE
+      deals_checklists.deal = deals.id
+      AND deals_checklists.terminated_at  IS NULL
+      AND deals_checklists.deactivated_at IS NULL
+      AND deals_checklists.deleted_at IS NULL
+      AND tasks.attention_requested_at IS NOT NULL
+      AND tasks.deleted_at IS NULL
   ) as attention_requested_at,
 
   (
@@ -147,7 +137,7 @@ SELECT deals.*,
       deals_checklists.deal = deals.id
       AND deals_checklists.deactivated_at IS NULL
       AND deals_checklists.terminated_at  IS NULL
-      AND deals_checklists.deleted_at IS NULL
+      AND deals_checklists.deleted_at     IS NULL
       AND brands_checklists.deal_type = 'Buying'
   ) as has_active_offer,
 
