@@ -152,6 +152,14 @@ async function makeSureEmailDeliveryIsLogged() {
   expect(notifications).to.be.empty
 }
 
+async function testResetNotificationSettings() {
+  await CalendarNotification.setGlobalSettings([], user.id, brand.id)
+
+  const settings = await CalendarNotification.getGlobalSettings(user.id)
+
+  expect(settings).to.be.empty
+}
+
 describe('Calendar', () => {
   createContext()
 
@@ -178,5 +186,9 @@ describe('Calendar', () => {
       it('should send email for unread notifications', sendEmailForUnread)
       it('should log email delivery', makeSureEmailDeliveryIsLogged)
     })
+  })
+
+  describe('notification settings', () => {
+    it('should allow clearing all settings', testResetNotificationSettings)
   })
 })
