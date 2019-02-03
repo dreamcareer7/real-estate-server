@@ -11,6 +11,18 @@ const add = async () => {
   return saved
 }
 
+const update = async () => {
+  const name = 'Updated Form'
+
+  const saved = await add()
+
+  const updated = await Form.update(saved.id, {
+    name
+  })
+
+  expect(updated.name).to.equal(name)
+}
+
 const get = async () => {
   const saved = await add()
   const form = await Form.get(saved.id)
@@ -37,6 +49,7 @@ describe('Deal Form', () => {
   createContext()
 
   it('should a add a form', add)
+  it('should update a form', update)
   it('should get a form', get)
   it('should get a batch of forms', getAll)
   it('should get all available forms', getAllForms)
