@@ -35,14 +35,14 @@ const getAll = async () => {
   const saved = await add()
   const forms = await Form.getAll()
 
-  expect(forms).to.include(saved)
+  expect(form[0]).to.equal(saved)
 }
 
 const getAllForms = async () => {
   const saved = await add()
   const forms = await Form.getAllForms()
 
-  expect(forms).to.include(saved)
+  expect(forms[0]).to.equal(saved)
 }
 
 describe('Deal Form', () => {
