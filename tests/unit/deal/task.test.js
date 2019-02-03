@@ -6,7 +6,11 @@ const BrandHelper = require('../brand/helper')
 const createChecklist = async () => {
   const user = await User.getByEmail('test@rechat.com')
 
-  const brand = await BrandHelper.create()
+  const brand = await BrandHelper.create({
+    roles: {
+      Admin: [user.id]
+    }
+  })
   Context.set({ brand })
 
 
@@ -93,6 +97,17 @@ const update = async () => {
   expect(updated.attention_requested_at).not.to.be.null
 }
 
+const addUser = async () => {
+  const task = await add()
+
+  const user = await User.getByEmail('test@rechat.com')
+
+  await Task.addUser({
+    user,
+    task_id: task.id
+  })
+}
+
 describe('Deal Task', () => {
   createContext()
 
@@ -102,4 +117,5 @@ describe('Deal Task', () => {
   it('should delete a task', remove)
   it('should delete a batch of task', removeAll)
   it('should update a task', update)
+  it('add user to a task', addUser)
 })
