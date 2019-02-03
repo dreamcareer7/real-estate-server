@@ -35,17 +35,14 @@ const getAll = async () => {
   const saved = await add()
   const forms = await Form.getAll()
 
-  console.log(JSON.stringify(forms[0]))
-  console.log(JSON.stringify(saved))
-
-  expect(form[0]).to.equal(saved)
+  expect(forms).to.deep.include(saved)
 }
 
 const getAllForms = async () => {
   const saved = await add()
   const forms = await Form.getAllForms()
 
-  expect(forms[0]).to.equal(saved)
+  expect(forms).to.deep.include(saved)
 }
 
 describe('Deal Form', () => {
