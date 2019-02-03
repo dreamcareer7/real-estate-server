@@ -35,6 +35,9 @@ const getAll = async () => {
   const saved = await add()
   const forms = await Form.getAll()
 
+  console.log(JSON.stringify(forms[0]))
+  console.log(JSON.stringify(saved))
+
   expect(form[0]).to.equal(saved)
 }
 
