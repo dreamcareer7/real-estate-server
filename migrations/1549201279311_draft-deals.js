@@ -2,13 +2,18 @@
 
 const async = require('async')
 const db = require('../lib/utils/db')
+const fs = require('fs')
+
+const deals_view = fs.readFileSync(__dirname + '/../lib/sql/analytics/olap/deals.view.sql', 'UTF-8')
+const mini_deals_view = fs.readFileSync(__dirname + '/../lib/sql/analytics/olap/mini_deals.view.sql', 'UTF-8')
 
 const up = [
   'BEGIN',
   `UPDATE deals_checklists SET faired_at = (
     SELECT faired_at FROM deals WHERE deals.id = deals_checklists.deal
    )`,
-   // TODO: Abbas djaan can you update the analytics view in here?
+   deals_view,
+   mini_deals_view,
    'ALTER TABLE deals DROP faired_at',
   'COMMIT'
 ]

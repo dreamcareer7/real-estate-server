@@ -22,11 +22,11 @@ CREATE OR REPLACE VIEW analytics.mini_deals AS
       JOIN brands_checklists bc
         ON bc.id = dc.origin
     WHERE
-      d.faired_at IS NOT NULL
-      AND d.brand NOT IN (SELECT id FROM training_brands)
-      AND dc.deleted_at IS NULL
+      d.brand NOT IN (SELECT id FROM training_brands)
+      AND dc.deleted_at     IS NULL
       AND dc.deactivated_at IS NULL
-      AND dc.terminated_at IS NULL
+      AND dc.terminated_at  IS NULL
+      AND dc.faired_at      IS NULL
   ), agent_info AS (
     SELECT
       dr.deal,
