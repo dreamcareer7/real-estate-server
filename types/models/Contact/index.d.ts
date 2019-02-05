@@ -57,6 +57,7 @@ declare interface IContact extends IContactBase {
 
   users?: UUID[];
   deals?: IDeal[];
+  lists?: UUID[];
 }
 
 declare interface IContactAttribute {
