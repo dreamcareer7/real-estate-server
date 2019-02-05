@@ -1,8 +1,6 @@
 const { expect } = require('chai')
 
 const { createContext, handleJobs } = require('../helper')
-const sql = require('../../../lib/models/SupportBot/sql')
-const { NotFound } = require('../../../lib/models/SupportBot/errors')
 
 const Contact = require('../../../lib/models/Contact')
 const ContactDuplicate = require('../../../lib/models/Contact/duplicate')
