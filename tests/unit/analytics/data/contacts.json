@@ -45,11 +45,11 @@
       },
       {
         "attribute_type": "email",
-        "text": "emil@rechat.com"
+        "text": "emil+agent@rechat.com"
       },
       {
         "attribute_type": "tag",
-        "text": "Rechat"
+        "text": "friends"
       }
     ]
   },

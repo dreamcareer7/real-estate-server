@@ -19,3 +19,5 @@ SELECT
   'contact_duplicate' AS "type"
 FROM
   cluster_members
+WHERE
+  contacts IS NOT NULL
