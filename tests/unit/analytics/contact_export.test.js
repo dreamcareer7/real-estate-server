@@ -55,6 +55,23 @@ async function testExportJoint() {
   expect(facts).to.have.length(3)
 }
 
+async function testExportJointWithFilter() {
+  const queryBuilder = new ContactJointExportQueryBuilder(
+    null,
+    [{
+      attribute_type: 'tag',
+      value: ['friends'],
+      operator: 'any'
+    }],
+    user.id,
+    brand.id
+  )
+
+  const facts = await queryBuilder.facts({})
+
+  expect(facts).to.have.length(2)
+}
+
 async function testNormalExport() {
   const queryBuilder = new ContactExportQueryBuilder(
     null,
@@ -68,12 +85,31 @@ async function testNormalExport() {
   expect(facts).to.have.length(4)
 }
 
+async function testNormalExportWithFilter() {
+  const queryBuilder = new ContactExportQueryBuilder(
+    null,
+    [{
+      attribute_type: 'tag',
+      value: ['friends'],
+      operator: 'any'
+    }],
+    user.id,
+    brand.id
+  )
+
+  const facts = await queryBuilder.facts({})
+
+  expect(facts).to.have.length(3)
+}
+
 describe('Analytics', () => {
   createContext()
   beforeEach(setup)
 
   describe('Contact Export', () => {
     it('should export contacts in joint format', testExportJoint)
+    it('should export contacts in joint format with a filter', testExportJointWithFilter)
     it('should export contacts in non-joint format', testNormalExport)
+    it('should export contacts in non-joint format with a filter', testNormalExportWithFilter)
   })
 })
