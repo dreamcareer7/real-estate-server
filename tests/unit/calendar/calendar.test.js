@@ -1,7 +1,7 @@
 const { expect } = require('chai')
 const moment = require('moment-timezone')
 
-const { createContext, handleJobs } = require('../helper')
+const { createContext } = require('../helper')
 
 const Calendar = require('../../../lib/models/Calendar')
 const Context = require('../../../lib/models/Context')
