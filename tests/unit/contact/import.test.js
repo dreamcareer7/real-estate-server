@@ -4,8 +4,6 @@ const { expect } = require('chai')
 
 const { createContext, handleJobs } = require('../helper')
 
-const promisify = require('../../../lib/utils/promisify')
-
 const AttachedFile = require('../../../lib/models/AttachedFile')
 const Contact = require('../../../lib/models/Contact')
 const Context = require('../../../lib/models/Context')
@@ -32,7 +30,7 @@ async function setup() {
 }
 
 async function testImportFromCsv() {
-  const file = await promisify(AttachedFile.saveFromStream)({
+  const file = await AttachedFile.saveFromStream({
     stream: fs.createReadStream(path.resolve(__dirname, '../../functional/suites/data/contacts.csv')),
     filename: 'contacts.csv',
     user,
