@@ -26,7 +26,7 @@ CREATE OR REPLACE VIEW analytics.mini_deals AS
       AND dc.deleted_at     IS NULL
       AND dc.deactivated_at IS NULL
       AND dc.terminated_at  IS NULL
-      AND dc.faired_at      IS NULL
+      AND dc.faired_at      IS NOT NULL
   ), agent_info AS (
     SELECT
       dr.deal,

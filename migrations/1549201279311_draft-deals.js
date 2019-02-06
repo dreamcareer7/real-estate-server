@@ -11,10 +11,10 @@ const up = [
   'BEGIN',
   `UPDATE deals_checklists SET faired_at = (
     SELECT faired_at FROM deals WHERE deals.id = deals_checklists.deal
-   )`,
-   deals_view,
-   mini_deals_view,
-   'ALTER TABLE deals DROP faired_at',
+  )`,
+  deals_view,
+  mini_deals_view,
+  'ALTER TABLE deals DROP faired_at',
   'COMMIT'
 ]
 

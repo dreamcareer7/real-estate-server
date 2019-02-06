@@ -61,9 +61,15 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
         ON dc.id = cdc.id
       JOIN brands_contexts bc
         ON bc.id = dc.definition
+      JOIN deals_checklists dcl
+        ON dcl.deal = deals.id
     WHERE
       deals.deleted_at IS NULL
       AND cdc.data_type = 'Date'::context_data_type
+      AND dcl.deleted_at     IS NULL
+      AND dcl.deactivated_at IS NULL
+      AND dcl.terminated_at  IS NULL
+      AND dcl.faired_at      IS NOT NULL
       AND deal_status_mask(deals.id, '{Withdrawn,Cancelled,"Contract Terminated"}') IS NOT FALSE
   )
   UNION ALL
