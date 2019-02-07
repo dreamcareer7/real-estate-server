@@ -3,7 +3,7 @@
 const promisify = require('../../lib/utils/promisify')
 const Brand = require('../../lib/models/Brand/index')
 const BrandRole = require('../../lib/models/Brand/role')
-const sql = require('../../lib/models/SupportBot/sql')
+const sql = require('../../lib/utils/sql')
 
 /**
  * @param {UUID} user_id

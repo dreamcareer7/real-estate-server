@@ -2,7 +2,7 @@ const moment = require('moment-timezone')
 const DealHelper = require('../../deal/helper')
 
 const { Listing } = require('../../../../lib/models/Listing')
-const sql = require('../../../../lib/models/SupportBot/sql')
+const sql = require('../../../../lib/utils/sql')
 
 module.exports = async function(sellerAgent, brand, mls_number) {
   await sql.update('UPDATE listings SET list_date = to_timestamp($1) WHERE mls_number = $2', [

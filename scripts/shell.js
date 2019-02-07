@@ -15,7 +15,7 @@ program
 require('../lib/models/index')()
 
 const db = require('../lib/utils/db')
-const sql = require('../lib/models/SupportBot/sql')
+const sql = require('../lib/utils/sql')
 const Context = require('../lib/models/Context/index')
 const redis = require('../lib/data-service/redis').createClient()
 
