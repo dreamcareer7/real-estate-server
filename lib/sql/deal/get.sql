@@ -22,7 +22,24 @@ SELECT deals.*,
     WITH c AS (
       SELECT
         *,
-        EXTRACT(EPOCH FROM date) as date
+        EXTRACT(EPOCH FROM date) as date,
+
+        (
+          CASE WHEN $3::text[] @> ARRAY['deal_context_item.definition'] THEN (
+            SELECT
+              (
+                row_to_json(brands_contexts.*)::jsonb ||
+                JSON_BUILD_OBJECT(
+                  'brand_context', 'type'
+                )::jsonb
+              )
+            FROM brands_contexts WHERE brands_contexts.id = current_deal_context.definition
+          )
+          ELSE
+            NULL
+          END
+        ) AS definition
+
       FROM current_deal_context
       WHERE deal = deals.id
     )
