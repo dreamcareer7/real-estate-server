@@ -56,8 +56,8 @@ async function testImportFromCsv() {
 
   await handleJobs()
 
-  const contacts = await Contact.getForBrand(brand.id, [], {})
-  expect(contacts).to.have.length(192)
+  const { total } = await Contact.filter(brand.id, [], { limit: 1 })
+  expect(total).to.be.equal(192)
 }
 
 async function testImportFromJson() {
