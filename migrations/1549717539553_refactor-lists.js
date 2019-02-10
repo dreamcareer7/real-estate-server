@@ -60,6 +60,8 @@ const up = [
     DROP COLUMN filters,
     DROP COLUMN args
   `,
+  'DROP FUNCTION IF EXISTS create_stage_lists_for_user(uuid)',
+  'DROP FUNCTION IF EXISTS create_stage_lists_for_brand(uuid)',
   'COMMIT'
 ]
 

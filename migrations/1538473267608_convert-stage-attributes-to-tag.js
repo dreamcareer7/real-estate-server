@@ -78,8 +78,6 @@ const up = [
   source('functions/get_contact_summaries.fn.sql'),
   'DROP FUNCTION get_contact_summaries2(uuid[])',
   source('functions/get_contact_summaries2.fn.sql'),
-  'DROP FUNCTION create_stage_lists_for_brand(uuid)',
-  source('list/create_stage_lists_for_brand.fn.sql'),
   'COMMIT'
 ]
 

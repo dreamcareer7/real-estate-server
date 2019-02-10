@@ -1,12 +1,7 @@
 'use strict'
 
-const path = require('path')
-const fs = require('fs')
 const async = require('async')
 const db = require('../lib/utils/db')
-
-const sql_path = fn => path.resolve(__dirname, '../lib/sql/contact/list', fn + '.fn.sql')
-const create_stage_lists_for_brand = fs.readFileSync(sql_path('create_stage_lists_for_brand'), 'utf-8')
 
 const up = [
   'BEGIN',
@@ -14,7 +9,6 @@ const up = [
   'ALTER TABLE contact_search_lists ALTER COLUMN created_by DROP NOT NULL',
   'ALTER TABLE contact_search_lists ADD COLUMN IF NOT EXISTS brand uuid',
   'DROP FUNCTION IF EXISTS create_stage_lists_for_user(uuid)',
-  create_stage_lists_for_brand,
   'COMMIT'
 ]
 

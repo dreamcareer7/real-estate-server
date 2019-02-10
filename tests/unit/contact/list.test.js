@@ -2,9 +2,8 @@ const { expect } = require('chai')
 
 const { createContext, handleJobs } = require('../helper')
 
-const sql = require('../../../lib/utils/sql')
-
 const Contact = require('../../../lib/models/Contact')
+const AttributeDef = require('../../../lib/models/Contact/attribute_def')
 const List = require('../../../lib/models/Contact/list')
 const ListMember = require('../../../lib/models/Contact/list_members')
 const Context = require('../../../lib/models/Context')
@@ -14,7 +13,7 @@ const User = require('../../../lib/models/User')
 const BrandHelper = require('../brand/helper')
 const { create } = require('./data/list.json')
 
-let user, brand
+let user, brand, def_ids_by_name
 
 async function setup() {
   user = await User.getByEmail('test@rechat.com')
@@ -25,6 +24,8 @@ async function setup() {
     }
   })
   Context.set({ user, brand })
+
+  def_ids_by_name = await AttributeDef.getDefsByName(brand.id)
 }
 
 async function createContact(data) {
@@ -44,21 +45,16 @@ async function testCreateList() {
   const id = await List.create(user.id, brand.id, {
     name: 'Warm List',
     filters: [{
-      attribute_type: 'tag',
+      attribute_def: def_ids_by_name.get('tag'),
       value: 'Warm List'
     }],
     is_editable: true,
     touch_freq: 30
   })
 
-  console.log(await sql.select('SELECT * FROM crm_lists_filters', []))
-
   await handleJobs()
 
   const list = await List.get(id)
-
-  console.log(list)
-
   expect(list).not.to.be.undefined
 
   return list
@@ -105,6 +101,6 @@ describe('Contact', () => {
     it('should allow creating a list', testCreateList)
     it('should fetch lists for brand', testFetchListsForBrand)
     it('should initialize list members when list is created', testInitializeListMembers)
-    // it('should update list members after contacts are created', testUpdateListMembersAfterAddingContacts)
+    it('should update list members after contacts are created', testUpdateListMembersAfterAddingContacts)
   })
 })
