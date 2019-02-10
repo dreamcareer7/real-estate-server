@@ -166,7 +166,15 @@ SELECT deals.*,
     WHERE
       "role" = 'Deal'
       AND role_id = deals.id
-  ) AS files
+  ) AS files,
+
+  (
+    SELECT count(*) < 1
+    FROM deals_checklists
+    WHERE
+      deals_checklists.deal = deals.id
+      AND deals_checklists.faired_at IS NOT NULL
+  ) as is_draft
 
 FROM deals
 JOIN unnest($1::uuid[]) WITH ORDINALITY t(did, ord) ON deals.id = did
