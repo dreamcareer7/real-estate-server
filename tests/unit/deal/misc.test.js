@@ -27,7 +27,7 @@ const brandDeals = async () => {
   let found = deals.some(d => d.id === deal.id)
   expect(found).to.be.true
 
-  await promisify(Deal.delete)(deal.id)
+  await Deal.delete(deal.id)
 
   deals = await promisify(Deal.getBrandDeals)(deal.brand)
   found = deals.some(d => d.id === deal.id)
@@ -41,7 +41,7 @@ const userDeals = async () => {
   let found = deals.some(d => d.id === deal.id)
   expect(found).to.be.true
 
-  await promisify(Deal.delete)(deal.id)
+  await Deal.delete(deal.id)
 
   deals = await promisify(Deal.getUserDeals)(deal.brand)
   found = deals.some(d => d.id === deal.id)
