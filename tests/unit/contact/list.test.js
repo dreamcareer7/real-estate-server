@@ -2,6 +2,8 @@ const { expect } = require('chai')
 
 const { createContext, handleJobs } = require('../helper')
 
+const sql = require('../../../lib/utils/sql')
+
 const Contact = require('../../../lib/models/Contact')
 const List = require('../../../lib/models/Contact/list')
 const ListMember = require('../../../lib/models/Contact/list_members')
@@ -45,13 +47,17 @@ async function testCreateList() {
       attribute_type: 'tag',
       value: 'Warm List'
     }],
-    is_pinned: true,
+    is_editable: true,
     touch_freq: 30
   })
+
+  console.log(await sql.select('SELECT * FROM crm_lists_filters', []))
 
   await handleJobs()
 
   const list = await List.get(id)
+
+  console.log(list)
 
   expect(list).not.to.be.undefined
 
@@ -99,6 +105,6 @@ describe('Contact', () => {
     it('should allow creating a list', testCreateList)
     it('should fetch lists for brand', testFetchListsForBrand)
     it('should initialize list members when list is created', testInitializeListMembers)
-    it('should update list members after contacts are created', testUpdateListMembersAfterAddingContacts)
+    // it('should update list members after contacts are created', testUpdateListMembersAfterAddingContacts)
   })
 })

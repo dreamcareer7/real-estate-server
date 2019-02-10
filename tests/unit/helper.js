@@ -37,7 +37,7 @@ function createContext() {
 
   beforeEach(async() => {
     context = Context.create({
-      logger() {}
+      // logger() {}
     })
 
     context.enter()
@@ -48,7 +48,8 @@ function createContext() {
 
     context.set({
       db: conn,
-      jobs: []
+      jobs: [],
+      'db:log': true
     })
 
     await db.executeSql.promise('BEGIN', [], conn)    

@@ -1,5 +1,5 @@
 UPDATE
-  contact_lists_members
+  crm_lists_members
 SET
   deleted_at = NOW()
 WHERE

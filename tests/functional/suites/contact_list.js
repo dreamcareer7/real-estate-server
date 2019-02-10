@@ -49,45 +49,33 @@ function create (cb) {
         }
       ],
       query: 'Wow',
-      args: {
-        users: [results.authorize.token.data.id]
-      },
-      'name': 'Wow list',
-      'is_pinned': true
+      args: {},
+      'name': 'Wow list'
     })
     .after(cb)
     .expectStatus(200)
     .expectJSON({
-      code: 'OK'
-    })
-    .expectJSONTypes({
-      code: String,
-      data: String
+      code: 'OK',
+      data: {
+        name: 'Wow list'
+      }
     })
 }
 
 function update(cb) {
   const update = {
-    filters: [
-      {
-        'attribute_def': '24171fd0-7994-43fc-a1cb-adcb726429b5',
-        'value': 'cool'
-      },
-      {
-        'attribute_def': '24171fd0-7994-43fc-a1cb-adcb726429b5',
-        'value': 'great'
-      }
-    ],
+    ...results.contact_list.create.data,
     query: 'OMG',
     args: {
-      users: [results.authorize.token.data.id]
-    },
-    name: 'Wow list',
-    is_pinned: false
+      filter_type: 'and'
+    }
   }
 
+  delete update.updated_at
+  delete update.updated_by
+
   return frisby.create('update contact search list')
-    .put('/contacts/lists/' + results.contact_list.create.data, update)
+    .put('/contacts/lists/' + results.contact_list.create.data.id, update)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
@@ -109,7 +97,7 @@ function listForUser(cb) {
 
 function deleteIt(cb) {
   return frisby.create('delete contact search list')
-    .delete(`/contacts/lists/${results.contact_list.create.data}`)
+    .delete(`/contacts/lists/${results.contact_list.create.data.id}`)
     .after(cb)
     .expectStatus(204)
 }

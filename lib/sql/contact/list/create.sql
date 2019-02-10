@@ -1,19 +1,38 @@
-INSERT INTO contact_search_lists (
+WITH list_id AS (
+  INSERT INTO crm_lists (
     "created_by",
     brand,
-    filters,
-    query,
-    args,
     name,
-    is_pinned,
-    touch_freq
-) VALUES (
+    touch_freq,
+    is_editable,
+    is_and_filter,
+    query
+  ) VALUES (
     $1,
     $2,
     $3,
     $4,
     $5,
     $6,
-    $7,
-    $8
-) RETURNING id
+    $7
+  ) RETURNING id
+)
+INSERT INTO crm_lists_filters (
+  crm_list,
+
+  attribute_def,
+  operator,
+  "value",
+  invert
+)
+SELECT
+  list_id,
+  attribute_def,
+  COALESCE(operator, 'eq') AS operator,
+  "value",
+  COALESCE(invert, FALSE) AS invert
+FROM
+  json_populate_recordset(null::crm_lists_filters, $8::json) AS filters,
+  list_id AS l(list_id)
+RETURNING
+  crm_list AS id

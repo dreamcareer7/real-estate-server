@@ -3,7 +3,7 @@ WITH counts AS (
     list AS id,
     count(contact) AS member_count
   FROM
-    contact_lists_members
+    crm_lists_members
   WHERE
     list = ANY($1::uuid[])
     AND deleted_at IS NULL
@@ -18,20 +18,30 @@ SELECT
   created_by,
   updated_by,
   brand,
-  filters,
+  (
+    SELECT
+      json_agg(clf.*)
+    FROM
+      crm_lists_filters AS clf
+    WHERE
+      clf.crm_list = crm_lists.id
+  ) AS filters,
   query,
-  args,
+  json_build_object(
+    'filter_type', CASE WHEN is_and_filter IS TRUE THEN 'and' ELSE 'or' END,
+    'query', query
+  ) AS args,
   name,
-  is_pinned,
+  is_editable,
   touch_freq,
   COALESCE(member_count::int, 0) AS member_count,
   'contact_list' AS "type"
 FROM
-  contact_search_lists
+  crm_lists
   JOIN
     unnest($1::uuid[])
     WITH ORDINALITY t(cid, ord)
-    ON contact_search_lists.id = cid
+    ON crm_lists.id = cid
   LEFT JOIN counts USING(id)
 ORDER BY
   t.ord

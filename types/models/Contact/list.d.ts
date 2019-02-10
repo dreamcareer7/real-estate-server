@@ -3,7 +3,7 @@ declare interface IContactListInput {
   filters: IContactAttributeFilter[];
   query?: string;
   args?: IContactFilterOptions;
-  is_pinned?: boolean;
+  is_editable?: boolean;
   touch_freq?: number;
 }
 

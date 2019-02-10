@@ -1,7 +1,7 @@
 SELECT
   id
 FROM
-  contact_search_lists
+  crm_lists
 WHERE
   deleted_at IS NULL
   AND brand = ANY($1::uuid[])
@@ -12,5 +12,5 @@ WHERE
       TRUE
   END)
 ORDER BY
-  is_pinned DESC,
+  is_editable,
   created_at
