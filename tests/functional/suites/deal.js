@@ -186,7 +186,8 @@ const get = (cb) => {
 const addChecklist = cb => {
   const checklist = {
     title: 'Offered Checklist',
-    order: 1
+    order: 1,
+    is_draft: true
   }
 
   results.deal.create.data.has_active_offer = true // We are adding the active offer right now
