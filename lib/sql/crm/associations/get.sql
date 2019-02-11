@@ -1,5 +1,5 @@
 WITH ub AS (
-  SELECT brand FROM user_brands($2)
+  SELECT brand FROM user_brands($2, NULL)
 )
 SELECT
   id,
