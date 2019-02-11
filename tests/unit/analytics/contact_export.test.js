@@ -74,6 +74,29 @@ async function testExportJointWithExclusion() {
   expect(headers).to.include.members(['E-mail Address', 'Email 2'])
 }
 
+async function testExportJointWithNotFilter() {
+  const queryBuilder = new ContactJointExportQueryBuilder(
+    null,
+    [
+      {
+        attribute_type: 'tag',
+        invert: true,
+        operator: 'eq',
+        value: 'friends'
+      }
+    ],
+    user.id,
+    brand.id
+  )
+
+  const facts = await queryBuilder.facts({})
+  expect(facts).to.have.length(1)
+
+  const headers = await queryBuilder.headerMapper(facts[0])
+  expect(headers).to.include.members(['E-mail Address'])
+  expect(headers).not.to.include.members(['Email 2'])
+}
+
 async function testExportJointWithFilter() {
   const queryBuilder = new ContactJointExportQueryBuilder(
     null,
@@ -108,6 +131,29 @@ async function testNormalExport() {
 
   const headers = await queryBuilder.headerMapper(facts[0])
   expect(headers).to.include.members(['E-mail Address', 'Email 2'])
+}
+
+async function testNormalExportWithNotFilter() {
+  const queryBuilder = new ContactExportQueryBuilder(
+    null,
+    [
+      {
+        attribute_type: 'tag',
+        invert: true,
+        operator: 'eq',
+        value: 'friends'
+      }
+    ],
+    user.id,
+    brand.id
+  )
+
+  const facts = await queryBuilder.facts({})
+  expect(facts).to.have.length(1)
+
+  const headers = await queryBuilder.headerMapper(facts[0])
+  expect(headers).to.include.members(['E-mail Address'])
+  expect(headers).not.to.include.members(['Email 2'])
 }
 
 async function testNormalExportWithExclusion() {
@@ -162,7 +208,15 @@ describe('Analytics', () => {
       'should export contacts in joint format with exclusiion',
       testExportJointWithExclusion
     )
+    it(
+      'should export contacts in joint format with not filter',
+      testExportJointWithNotFilter
+    )
     it('should export contacts in non-joint format', testNormalExport)
+    it(
+      'should export contacts in non-joint format with not filter',
+      testNormalExportWithNotFilter
+    )
     it(
       'should export contacts in non-joint format with a filter',
       testNormalExportWithFilter
