@@ -68,12 +68,6 @@ const userDeals = async () => {
   }
 
   expect(errored).to.be.true
-
-  let access = await Deal.hasAccessToDeals(user.id, [deal])
-  expect(access[deal.id]).to.be.true
-
-  access = await Deal.hasAccessToDeals(another.id, [deal])
-  expect(access[deal.id]).to.be.false
 }
 
 const liveUpdate = async() => {
