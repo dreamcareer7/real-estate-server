@@ -4,7 +4,7 @@ const async = require('async')
 const db = require('../lib/utils/db')
 
 const up = [
-  `DROP FUNCTION user_brands(uuid)`,
+  'DROP FUNCTION user_brands(uuid)',
   `CREATE OR REPLACE FUNCTION user_brands("user" uuid, roles text[]) RETURNS TABLE(
   brand uuid
 )
