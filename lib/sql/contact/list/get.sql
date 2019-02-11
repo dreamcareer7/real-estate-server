@@ -20,7 +20,14 @@ SELECT
   brand,
   (
     SELECT
-      json_agg(clf.*)
+      json_agg(json_build_object(
+        'id', clf.id,
+        'attribute_def', clf.attribute_def,
+        'operator', clf.operator,
+        'value', clf.value,
+        'invert', clf.invert,
+        'type', 'contact_list_filter'
+      ))
     FROM
       crm_lists_filters AS clf
     WHERE
@@ -29,7 +36,8 @@ SELECT
   query,
   json_build_object(
     'filter_type', CASE WHEN is_and_filter IS TRUE THEN 'and' ELSE 'or' END,
-    'query', query
+    'query', query,
+    'type', 'contact_list_args'
   ) AS args,
   name,
   is_editable,
