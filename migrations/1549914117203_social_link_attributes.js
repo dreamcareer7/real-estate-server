@@ -16,8 +16,9 @@ const up = [
   `UPDATE
     contacts_attributes
   SET
-    attribute_def = (SELECT id FROM contacts_attribute_defs WHERE name = 'Facebook' LIMIT 1),
-    attribute_type = 'facebook'
+    attribute_def = (SELECT id FROM contacts_attribute_defs WHERE name = 'facebook' LIMIT 1),
+    attribute_type = 'facebook',
+    label = NULL
   WHERE
     attribute_type = 'social'
     AND label ILIKE 'Facebook'
@@ -25,8 +26,9 @@ const up = [
   `UPDATE
     contacts_attributes
   SET
-    attribute_def = (SELECT id FROM contacts_attribute_defs WHERE name = 'Instagram' LIMIT 1),
-    attribute_type = 'instagram'
+    attribute_def = (SELECT id FROM contacts_attribute_defs WHERE name = 'instagram' LIMIT 1),
+    attribute_type = 'instagram',
+    label = NULL
   WHERE
     attribute_type = 'social'
     AND label ILIKE 'Instagram'
@@ -34,8 +36,9 @@ const up = [
   `UPDATE
     contacts_attributes
   SET
-    attribute_def = (SELECT id FROM contacts_attribute_defs WHERE name = 'LinkedIn' LIMIT 1),
-    attribute_type = 'linkedin'
+    attribute_def = (SELECT id FROM contacts_attribute_defs WHERE name = 'linkedin' LIMIT 1),
+    attribute_type = 'linkedin',
+    label = NULL
   WHERE
     attribute_type = 'social'
     AND label ILIKE 'LinkedIn'
