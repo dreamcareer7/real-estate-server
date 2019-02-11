@@ -169,7 +169,7 @@ SELECT deals.*,
   ) AS files,
 
   (
-    SELECT count(*) < 1
+    SELECT count(*) > 0
     FROM deals_checklists
     WHERE
       deals_checklists.deal = deals.id
