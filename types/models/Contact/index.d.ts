@@ -29,12 +29,6 @@ declare interface IContactAttributeDef {
   brand?: UUID;
 }
 
-declare interface IParentContact extends IModel {
-  sub_contacts: IContact[];
-  summary?: Record<string, string>;
-  merged: boolean;
-}
-
 declare interface IContactBase {
   ios_address_book_id?: string;
   android_address_book_id?: string;
@@ -44,15 +38,22 @@ declare interface IContactInput extends IContactBase {
   id?: UUID;
   user: UUID;
   attributes: IContactAttributeInput[];
+  ios_address_book_id?: string;
 }
 
 declare interface IContact extends IContactBase {
   id: UUID;
+  created_at: number;
+  updated_at: number;
   deleted_at?: number | null;
-  type: "sub_contact";
   user: UUID;
-  parent: UUID;
+  brand: UUID;
   attributes: IContactAttribute[];
+
+  display_name: string;
+  partner_name?: string;
+  last_touch?: number;
+  next_touch?: number;
 
   users?: UUID[];
   deals?: IDeal[];
@@ -76,26 +77,30 @@ declare interface IContactAttribute {
   date: number;
 
   index?: number;
-  label?: String;
+  label?: string;
   is_primary: boolean;
+  is_partner: boolean;
 }
 
 declare interface IContactAttributeInput {
-  attribute_def: UUID;
+  attribute_def?: UUID;
   attribute_type?: string;
 
   id?: UUID;
   created_by?: UUID;
-  contact?: UUID;
 
   text?: string;
   number?: number;
   date?: number;
 
   index?: number;
-  label?: String;
+  label?: string;
   is_primary?: boolean;
   is_partner?: boolean;
+}
+
+declare interface IContactAttributeInputWithContact extends IContactAttributeInput {
+  contact: UUID;
 }
 
 declare interface IAddContactOptions {
@@ -108,16 +113,18 @@ declare interface IAddContactOptions {
 }
 
 declare interface IContactSummary {
-  display_name: String;
-  abbreviated_display_name: String;
-  email: String;
-  phone_number: String;
+  display_name: string;
+  abbreviated_display_name: string;
+  email: string;
+  phone_number: string;
 }
+
+declare type TContactFilterOperator = 'eq' | 'lte' | 'gte' | 'between' | 'any' | 'all';
 
 declare interface IContactAttributeFilter {
   attribute_def?: UUID;
   attribute_type?: string;
-  operator: 'eq' | 'lte' | 'gte' | 'between' | 'any' | 'all',
+  operator?: TContactFilterOperator,
   value: any;
   invert?: boolean;
 }
@@ -128,10 +135,15 @@ declare interface IContactFilterOptions {
   updated_by?: UUID;
   updated_gte?: number;
   updated_lte?: number;
+  last_touch_gte?: number;
+  last_touch_lte?: number;
+  next_touch_gte?: number;
+  next_touch_lte?: number;
   created_gte?: number;
   created_lte?: number;
   ids?: UUID[];
   list?: UUID;
+  lists?: UUID[];
   users?: UUID[];
   filter_type?: 'and' | 'or'
 }
@@ -145,7 +157,7 @@ declare interface ICSVImporterMappedField {
 
 declare interface IContactDuplicateCluster {
   cluster: number;
-  contacts: IParentContact[];
+  contacts: IContact[];
   type: 'contact_duplicate';
   total: number;
 }

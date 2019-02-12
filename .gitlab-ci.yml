@@ -71,6 +71,37 @@ coverage:
   tags:
     - docker
 
+unit_coverage:
+  stage: test
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+      - node_modules/
+    policy: pull
+  dependencies:
+    - modules
+  services:
+    - alias: postgres
+      name: mdillon/postgis:10-alpine
+    - alias: redis
+      name: redis:latest
+  before_script:
+    - apk --no-cache --update add postgresql-client
+    - export PGPASSWORD=$POSTGRES_PASSWORD
+    - psql -h "postgres" -U "$POSTGRES_USER" "$POSTGRES_DB" < ./data/minimal.sql
+  script:
+    - export ORIGINAL_NODE_ENV=production
+    - export NODE_ENV=tests
+    - npm run db:upgrade
+    - npm run coverage:unit
+  coverage: '/Lines\s+:\s([\d\.]+)/'
+  artifacts:
+    paths:
+      - istanbul
+      - docs
+  tags:
+    - docker
+
 docs:
   stage: deploy
   image: node:10-alpine

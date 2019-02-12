@@ -66,6 +66,9 @@ Updates multiple contacts and their attributes. If attributes have `id`, they ar
 ### Delete multiple contacts [DELETE /contacts]
 <!-- include(tests/contact/deleteManyContacts.md) -->
 
+### Delete multiple attributes [DELETE /contacts/attributes]
+<!-- include(tests/contact/removeBulkAttributes.md) -->
+
 ### Search in contacts by query term [POST /contacts/filter]
 <!-- include(tests/contact/stringSearch.md) -->
 

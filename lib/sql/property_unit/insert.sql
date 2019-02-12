@@ -55,3 +55,4 @@ ON CONFLICT (matrix_unique_id) DO UPDATE SET
   square_feet = $17,
   updated_at = CLOCK_TIMESTAMP()
 WHERE property_units.matrix_unique_id = $11
+RETURNING id

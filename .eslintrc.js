@@ -65,10 +65,11 @@ const globals = [
   'Review',
   'DealChecklist',
   'BrandChecklist',
+  'BrandContext',
   'BrandRole',
   'BrokerWolf',
   'UserRole',
-  'FormTemplate'
+  'FormTemplate',
 ]
 
 const global_object = {}
@@ -87,10 +88,7 @@ module.exports = {
     'node': true
   },
   'parserOptions': {
-    'ecmaVersion': 9,
-    'ecmaFeatures': {
-      experimentalObjectRestSpread: true
-    }
+    'ecmaVersion': 9
   },
   'extends': 'eslint:recommended',
   'rules': {

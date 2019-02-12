@@ -97,7 +97,7 @@ You don't need to pass `associations` for `crm_association` model in query args.
 ### Add an associated record [POST /crm/tasks/:id/associations]
 <!-- include(tests/task/addContactAssociation.md) -->
 
-### Bulk add associated records [POST /crm/tasks/:id/associations/bulk]
+### Bulk add associated records [PUT /crm/tasks/:id]
 <!-- include(tests/task/addBulkContactAssociations.md) -->
 
 ### Remove an association [DELETE /crm/tasks/:id/associations/:id]

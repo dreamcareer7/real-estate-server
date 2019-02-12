@@ -36,7 +36,7 @@ const saveLastSeen = (job, done) => {
 }
 
 const mls_unit = (job, done) => {
-  PropertyUnit.create(job.data.processed, done)
+  PropertyUnit.create(job.data.processed).nodeify(done)
 }
 
 const mls_openhouse = (job, done) => {
@@ -44,7 +44,7 @@ const mls_openhouse = (job, done) => {
 }
 
 const mls_room = (job, done) => {
-  PropertyRoom.create(job.data.processed, done)
+  PropertyRoom.create(job.data.processed).nodeify(done)
 }
 
 const mls_agent = (job, done) => {
@@ -52,14 +52,14 @@ const mls_agent = (job, done) => {
 }
 
 const mls_office = (job, done) => {
-  Office.create(job.data.processed, done)
+  Office.create(job.data.processed).nodeify(done)
 }
 
 const mls_photo = (job, done) => {
   Photo.create({
     ...job.data.processed,
     revision: job.data.revision
-  }, done)
+  }).nodeify(done)
 }
 
 const mls_listing = (job, done) => {
@@ -70,7 +70,7 @@ const mls_listing = (job, done) => {
 }
 
 const mls_validate_listing_photos = (job, done) => {
-  Photo.deleteMissing(job.data.listing, job.data.present, done)
+  Photo.deleteMissing(job.data.listing, job.data.present).nodeify(done)
 }
 
 const sync_brokerwolf = (job, done) => {

@@ -4,9 +4,11 @@
   {% set reaction = 'signed' %}
 {% elif object.recipient.status == 'Declined'%}
   {% set reaction = 'declined' %}
-{% elif object.recipient.status == 'sent'%}
+{% elif object.recipient.status == 'Sent'%}
   {% set reaction = 'sent' %}
+{% elif object.recipient.status == 'Created'%}
+  {% set reaction = 'drafted' %}
 {% endif %}
 
 
-{{data.legal_full_name}} {{reaction}} "{{object.task.title}}"
+{{data.legal_full_name}} {{reaction}} "{{object.task.title | safe}}"

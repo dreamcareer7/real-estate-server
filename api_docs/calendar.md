@@ -60,3 +60,9 @@ Possible values for `event_type` field are:
 
 ### Get iCal feed url [GET /calendar/feed]
 <!-- include(tests/analytics/getCalendarFeedUrl.md) -->
+
+### Get global notification settings [GET /calendar/settings/notifications]
+<!-- include(tests/analytics/getCalendarNotificationSettings.md) -->
+
+### Set global notification settings [PUT /calendar/settings/notifications]
+<!-- include(tests/analytics/setCalendarNotificationSettings.md) -->

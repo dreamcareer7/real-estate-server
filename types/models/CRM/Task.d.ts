@@ -18,9 +18,11 @@ declare interface ITask extends ICrmAssociationsCategorized {
   assignees: UUID[];
   brand: UUID;
   created_by: UUID;
+  created_at: number;
+  updated_at: number;
 
   reminders: UUID[];
-  associations?: ICrmAssociation[];
+  associations?: UUID[];
   files?: any[];
 }
 

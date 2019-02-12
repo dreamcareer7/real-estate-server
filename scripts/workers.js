@@ -165,11 +165,18 @@ const sendNotifications = function () {
     async.series([
       nodeifyFn(Notification.sendForUnread),
       Message.sendEmailForUnread,
-      nodeifyFn(CrmTaskWorker.sendNotifications),
+      nodeifyFn(CrmTaskWorker.sendNotifications.bind(CrmTaskWorker)),
       nodeifyFn(Task.sendNotifications),
     ], err => {
-      if (err)
+      if (err) {
+        Slack.send({
+          channel: '7-server-errors',
+          text: 'Notifications worker: ' + '`' + err + '`',
+          emoji: ':skull:'
+        }, process.exit)
+
         return rollback(err)
+      }
 
       commit(err => {
         if (err)

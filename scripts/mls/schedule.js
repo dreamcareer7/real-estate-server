@@ -4,6 +4,7 @@ require('../../lib/utils/db.js')
 const _ = require('underscore')
 const spawn = require('child_process').spawn
 const config = require('../../lib/config.js')
+const MLSJob = require('../../lib/models/MLSJob')
 
 const definitions = config.scheduler.queues
 const queues = {}
