@@ -38,6 +38,7 @@
     "commander": "^2.19.0",
     "compression": "^1.7.3",
     "convert-units": "^2.3.4",
+    "content-disposition": "^0.5.3",
     "csv-write-stream": "2.0.0",
     "datadog-metrics": "^0.2.1",
     "deasync": "^0.1.14",
