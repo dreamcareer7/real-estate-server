@@ -1,12 +1,15 @@
 WITH cids AS (
-  DELETE FROM
+  UPDATE
     contacts_attributes AS ca
+  SET
+    deleted_at = NOW(),
+    deleted_by = $2::uuid
   WHERE
     CASE
-      WHEN $3::boolean IS TRUE THEN
-        ca.text = ANY($2::text[])
+      WHEN $4::boolean IS TRUE THEN
+        ca.text = ANY($3::text[])
       ELSE
-        lower(ca.text) = ANY($2::text[])
+        lower(ca.text) = ANY($3::text[])
     END
     AND attribute_type = 'tag'
     AND ca.contact = ANY(
@@ -19,5 +22,20 @@ WITH cids AS (
     )
   RETURNING
     ca.contact
+), tag_delete AS (
+  UPDATE
+    crm_tags
+  SET
+    deleted_at = NOW(),
+    deleted_by = $2::uuid
+  WHERE
+    CASE
+      WHEN $4::boolean IS TRUE THEN
+        tag = ANY($3::text[])
+      ELSE
+        lower(tag) = ANY($3::text[])
+    END
+  RETURNING
+    1
 )
-SELECT DISTINCT contact AS id FROM cids
+SELECT DISTINCT contact AS id FROM cids, tag_delete

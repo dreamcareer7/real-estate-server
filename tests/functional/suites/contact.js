@@ -875,7 +875,33 @@ const getAllTags = (cb) => {
     .get('/contacts/tags')
     .after(cb)
     .expectStatus(200)
-    .expectJSONLength('data', 6)
+    .expectJSONLength('data', 7)
+    .expectJSON({
+      code: 'OK'
+    })
+}
+
+const addTag = cb => {
+  return frisby.create('add a tag manually')
+    .post('/contacts/tags', {
+      tag: 'baz'
+    })
+    .after(cb)
+    .expectStatus(204)
+}
+
+const checkTagIsAdded = cb => {
+  return frisby.create('check whether baz tag is added')
+    .get('/contacts/tags')
+    .after((err, res, json) => {
+      if (json.data.every(t => t.tag !== 'baz')) {
+        throw 'baz tag is not added!'
+      }
+
+      cb(err, res, json)
+    })
+    .expectStatus(200)
+    .expectJSONLength('data', 8)
     .expectJSON({
       code: 'OK'
     })
@@ -895,8 +921,8 @@ const verifyTagRenamed = cb => {
     .get('/contacts/tags')
     .after((err, res, body) => {
       const tags = body.data.map(a => a.text)
-
-      if (!tags.includes('bar') || tags.length !== 6) {
+      console.log(tags)
+      if (!tags.includes('bar') || tags.length !== 8) {
         throw 'Tag was not renamed correctly.'
       }
 
@@ -927,7 +953,7 @@ const verifyTagDeleted = cb => {
     .after((err, res, body) => {
       const tags = body.data.map(a => a.text)
 
-      if (tags.includes('bar') || tags.includes('poo') || tags.length !== 4) {
+      if (tags.includes('bar') || tags.includes('poo') || tags.length !== 6) {
         throw 'Tag was not deleted correctly.'
       }
 
@@ -1098,6 +1124,8 @@ module.exports = {
   checkIfNextTouchIsNull,
   getTimeline,
   getAllTags,
+  addTag,
+  checkTagIsAdded,
   renameTag,
   verifyTagRenamed,
   deleteTag,

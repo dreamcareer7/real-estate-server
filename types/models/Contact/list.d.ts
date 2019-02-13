@@ -18,6 +18,8 @@ declare interface IContactList {
   is_pinned: boolean;
   touch_freq?: number;
 
+  member_count: number;
+
   created_by: UUID;
   brand: UUID;
 }
