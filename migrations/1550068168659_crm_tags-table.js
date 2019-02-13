@@ -47,13 +47,13 @@ const migrations = [
 ]
 
 const run = async () => {
-  const { conn, done } = await db.conn.promise()
+  const conn = await db.conn.promise()
 
   for(const sql of migrations) {
     await conn.query(sql)
   }
 
-  done()
+  conn.release()
 }
 
 exports.up = cb => {
