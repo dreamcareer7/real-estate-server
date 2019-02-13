@@ -4,8 +4,7 @@ SELECT brands_roles.*,
   EXTRACT(EPOCH FROM updated_at) AS updated_at,
 
   (
-    SELECT ARRAY_AGG("user") FROM brands_users WHERE
-    role = brands_roles.id AND brands_users.deleted_at IS NULL
+    SELECT ARRAY_AGG("user") FROM brands_users WHERE role = brands_roles.id
   ) as members
 
 FROM brands_roles

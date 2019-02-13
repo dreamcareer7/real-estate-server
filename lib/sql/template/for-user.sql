@@ -3,7 +3,6 @@ WITH user_brands AS (
   FROM brands_users
   JOIN brands_roles ON brands_users.role = brands_roles.id
   WHERE brands_users.user = $1::uuid
-  AND brands_users.deleted_at IS NULL
 )
 
 SELECT id FROM templates

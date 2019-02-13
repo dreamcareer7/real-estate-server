@@ -15,8 +15,7 @@ WITH r AS (
       WHERE
         users.id = $1
         AND brands_roles.deleted_at IS NULL
-        AND brands.deleted_at       IS NULL
-        AND brands_users.deleted_at IS NULL
+        AND brands.deleted_at IS NULL
     ) roles
   GROUP BY
     brand
