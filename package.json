@@ -7,13 +7,13 @@
     "test": "node tests/functional/run.js --concurrency 20 --report",
     "test:unit": "npx mocha --exit tests/unit/**/*.test.js",
     "start": "npx gulp",
-    "migration": "node_modules/migratus/bin/create --template scripts/migrate_template.js ",
     "docs": "node api_docs/index.js",
     "coverage": "npx istanbul cover --dir istanbul tests/functional/run.js -- --docs --curl --stop-on-fail --concurrency 20",
     "coverage:unit": "npx istanbul cover --dir istanbul node_modules/mocha/bin/_mocha -- --exit tests/unit/**/*.test.js",
-    "db:upgrade": "node ./scripts/migrate.js",
+    "migrate:up": "node ./scripts/migrate/up.js",
+    "migrate:create": "node_modules/migratus/bin/create --dir migrations --template scripts/migrate/template.js",
     "shell": "node --experimental-repl-await scripts/shell.js",
-    "heroku-postbuild": "npm run db:upgrade"
+    "heroku-postbuild": "npm run migrate:up"
   },
   "engines": {
     "node": "11.x"
@@ -63,7 +63,7 @@
     "lodash": "^4.17.11",
     "mailgun-js": "^0.22.0",
     "merge": "^1.2.1",
-    "migratus": "^0.4.2",
+    "migratus": "^0.4.3",
     "mime": "^2.4.0",
     "mkdirp": "^0.5.1",
     "mock-aws-s3": "^3.0.0",
