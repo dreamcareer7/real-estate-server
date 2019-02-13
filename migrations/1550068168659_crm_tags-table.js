@@ -1,4 +1,4 @@
-const db = require('./lib/utils/db')
+const db = require('../lib/utils/db')
 
 const migrations = [
   'BEGIN',
@@ -47,13 +47,13 @@ const migrations = [
 ]
 
 const run = async () => {
-  const conn = await db.conn.promise()
+  const { conn, done } = await db.conn.promise()
 
-  for(const sql in migrations) {
+  for(const sql of migrations) {
     await conn.query(sql)
   }
 
-  conn.done()
+  done()
 }
 
 exports.up = cb => {
