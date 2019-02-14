@@ -100,6 +100,22 @@ LANGUAGE sql`
 const migrations = [
   'BEGIN',
   'ALTER TABLE brands_users ADD deleted_at timestamp with time zone',
+  `WITH to_delete AS (
+    SELECT
+      role,
+      "user",
+      count(*)
+    FROM
+      brands_users
+    GROUP BY
+      role,
+      "user"
+    HAVING count(*) > 1
+  )
+  DELETE FROM
+    brands_users
+  WHERE
+    (role, "user") IN (SELECT role, "user" FROM to_delete)`,
   'ALTER TABLE brands_users ADD CONSTRAINT unique_role_user UNIQUE(role, "user")',
   user_has_brand_access,
   get_brand_agents,
