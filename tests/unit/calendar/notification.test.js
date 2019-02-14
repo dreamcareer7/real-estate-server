@@ -60,8 +60,8 @@ async function createDeal() {
   await DealHelper.create(user.id, brand.id, {
     checklists: [{
       context: {
-        closing_date: { value: moment().tz(user.timezone).add(10, 'day').startOf('day').format() },
-        contract_date: { value: moment().tz(user.timezone).add(1, 'day').startOf('day').format() },
+        closing_date: { value: moment().tz(user.timezone).add(10, 'day').format() },
+        contract_date: { value: moment().tz(user.timezone).add(1, 'day').format() },
       },
     }],
     roles: [{
