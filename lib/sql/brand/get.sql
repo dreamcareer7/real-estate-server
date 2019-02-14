@@ -26,6 +26,7 @@ SELECT brands.*,
         ON br.id = bu.role
     WHERE
       br.brand = brands.id
+      AND bu.deleted_at IS NULL
   )::INT as member_count
 
 FROM brands
