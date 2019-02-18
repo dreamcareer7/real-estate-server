@@ -921,7 +921,6 @@ const verifyTagRenamed = cb => {
     .get('/contacts/tags')
     .after((err, res, body) => {
       const tags = body.data.map(a => a.text)
-      console.log(tags)
       if (!tags.includes('bar') || tags.length !== 8) {
         throw 'Tag was not renamed correctly.'
       }
