@@ -890,6 +890,15 @@ const addTag = cb => {
     .expectStatus(204)
 }
 
+const addDuplicateTagThrows = cb => {
+  return frisby.create('add a duplicate tag will throw 409 error')
+    .post('/contacts/tags', {
+      tag: 'baz'
+    })
+    .after(cb)
+    .expectStatus(409)
+}
+
 const checkTagIsAdded = cb => {
   return frisby.create('check whether baz tag is added')
     .get('/contacts/tags')
@@ -1145,5 +1154,6 @@ module.exports = {
   deleteManyContacts,
   checkIfManyContactsListIsEmpty,
   deleteContactWorked,
-  sendEmails
+  sendEmails,
+  addDuplicateTagThrows,
 }
