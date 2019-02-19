@@ -62,6 +62,28 @@ function create (cb) {
     })
 }
 
+function createWithEmptyFilters(cb) {
+  const data = {
+    'name': 'tag',
+    'filters': [],
+    'args': {
+      'users': [],
+      'filter_type': 'and'
+    }
+  }
+
+  return frisby.create('create a contact list with emptpy filters')
+    .post('/contacts/lists', data)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      data: {
+        name: 'tag'
+      }
+    })
+}
+
 function update(cb) {
   const update = {
     ...results.contact_list.create.data,
@@ -88,7 +110,7 @@ function listForUser(cb) {
   return frisby.create('list for user')
     .get('/contacts/lists')
     .after((err, res, json) => {
-      if (!(json.data[json.data.length - 1].name === 'Wow list'))
+      if (!(json.data.map(x => x.name).includes('Wow list')))
         throw 'Wow list not found!'
       cb(err, res, json)
     })
@@ -119,6 +141,7 @@ module.exports = {
   createDefaultLists,
   checkDefaultLists,
   create,
+  createWithEmptyFilters,
   update,
   listForUser,
   deleteIt,

@@ -44,10 +44,12 @@ async function createContact(data) {
 async function createWarmList() {
   const id = await List.create(user.id, brand.id, {
     name: 'Warm List',
-    filters: [{
-      attribute_def: def_ids_by_name.get('tag'),
-      value: 'Warm List'
-    }],
+    filters: [
+      {
+        attribute_def: def_ids_by_name.get('tag'),
+        value: 'Warm List'
+      }
+    ],
     is_editable: true,
     touch_freq: 30
   })
@@ -55,6 +57,23 @@ async function createWarmList() {
   await handleJobs()
 
   return List.get(id)
+}
+
+async function createEmptyList() {
+  const id = await List.create(user.id, brand.id, {
+    name: 'tag',
+    filters: [],
+    args: {
+      users: [],
+      filter_type: 'and'
+    }
+  })
+
+  const list = await List.get(id)
+  console.log(list)
+  expect(list.filters).to.be.null
+
+  await handleJobs()
 }
 
 async function testCreateList() {
@@ -118,8 +137,15 @@ describe('Contact', () => {
 
   describe('List', () => {
     it('should allow creating a list', testCreateList)
+    it('should allow creating an empty list', createEmptyList)
     it('should fetch lists for brand', testFetchListsForBrand)
-    it('should initialize list members when list is created', testInitializeListMembers)
-    it('should update list members after contacts are created', testUpdateListMembersAfterAddingContacts)
+    it(
+      'should initialize list members when list is created',
+      testInitializeListMembers
+    )
+    it(
+      'should update list members after contacts are created',
+      testUpdateListMembersAfterAddingContacts
+    )
   })
 })
