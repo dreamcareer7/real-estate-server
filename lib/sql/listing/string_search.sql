@@ -1,5 +1,5 @@
 WITH r AS (
-  SELECT id FROM search_listings(plainto_tsquery('english', $1))
+  SELECT id FROM search_listings(to_tsquery('english', $1))
   WHERE
     CASE
       WHEN $2::listing_status[] IS NULL THEN TRUE
