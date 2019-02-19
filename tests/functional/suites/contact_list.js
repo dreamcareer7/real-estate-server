@@ -48,9 +48,10 @@ function create (cb) {
           'value': 'great'
         }
       ],
-      query: 'Wow',
-      args: {},
-      'name': 'Wow list'
+      args: {
+        q: 'Wow'
+      },
+      name: 'Wow list'
     })
     .after(cb)
     .expectStatus(200)
@@ -64,11 +65,11 @@ function create (cb) {
 
 function createWithEmptyFilters(cb) {
   const data = {
-    'name': 'tag',
-    'filters': [],
-    'args': {
-      'users': [],
-      'filter_type': 'and'
+    name: 'Empty List',
+    filters: [],
+    args: {
+      q: null,
+      filter_type: 'and'
     }
   }
 
@@ -79,7 +80,7 @@ function createWithEmptyFilters(cb) {
     .expectJSON({
       code: 'OK',
       data: {
-        name: 'tag'
+        name: 'Empty List'
       }
     })
 }
@@ -87,11 +88,13 @@ function createWithEmptyFilters(cb) {
 function update(cb) {
   const update = {
     ...results.contact_list.create.data,
-    query: 'OMG',
     args: {
+      q: 'OMG',
       filter_type: 'and'
     }
   }
+
+  delete update.query
 
   delete update.updated_at
   delete update.updated_by

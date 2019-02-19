@@ -91,7 +91,7 @@ async function testCreateList() {
 
   expect(list.args).to.be.eql({
     filter_type: 'and',
-    query: null,
+    q: null,
     type: 'contact_list_args'
   })
 
