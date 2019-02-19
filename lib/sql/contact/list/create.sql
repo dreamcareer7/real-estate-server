@@ -16,23 +16,30 @@ WITH list_id AS (
     $6,
     $7
   ) RETURNING id
-)
-INSERT INTO crm_lists_filters (
-  crm_list,
+), filters AS (
+  INSERT INTO crm_lists_filters (
+    crm_list,
 
-  attribute_def,
-  operator,
-  "value",
-  invert
+    attribute_def,
+    operator,
+    "value",
+    invert
+  )
+  SELECT
+    list_id,
+    attribute_def,
+    COALESCE(operator, 'eq') AS operator,
+    "value",
+    COALESCE(invert, FALSE) AS invert
+  FROM
+    json_populate_recordset(null::crm_lists_filters, $8::json) AS filters,
+    list_id AS l(list_id)
+  RETURNING
+    crm_list AS id
 )
-SELECT
-  list_id,
-  attribute_def,
-  COALESCE(operator, 'eq') AS operator,
-  "value",
-  COALESCE(invert, FALSE) AS invert
+SELECT DISTINCT
+  list_id.id
 FROM
-  json_populate_recordset(null::crm_lists_filters, $8::json) AS filters,
-  list_id AS l(list_id)
-RETURNING
-  crm_list AS id
+  list_id
+  LEFT JOIN filters
+    ON TRUE

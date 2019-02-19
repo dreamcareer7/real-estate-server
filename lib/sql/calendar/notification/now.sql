@@ -31,4 +31,4 @@ WHERE
   AND c.event_type = cns.event_type
   AND (cns.object_type = 'deal_context' OR cns.object_type = 'contact_attribute')
   AND cnl.id IS NULL
-  AND extract('hour' from now() at time zone u.timezone) = $1;
+  AND CASE WHEN $1::int IS NULL THEN TRUE ELSE extract('hour' from now() at time zone u.timezone) = $1 END;

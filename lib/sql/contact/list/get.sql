@@ -36,7 +36,7 @@ SELECT
   query,
   json_build_object(
     'filter_type', CASE WHEN is_and_filter IS TRUE THEN 'and' ELSE 'or' END,
-    'query', query,
+    'q', query,
     'type', 'contact_list_args'
   ) AS args,
   name,
