@@ -70,7 +70,6 @@ async function createEmptyList() {
   })
 
   const list = await List.get(id)
-  console.log(list)
   expect(list.filters).to.be.null
 
   await handleJobs()

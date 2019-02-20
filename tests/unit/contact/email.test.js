@@ -120,7 +120,6 @@ async function testEmailToTags() {
 
   const { filters } = EmailCampaign._getFilters(campaign.to)
 
-  Context.log(filters)
   expect(filters).to.have.length(1)
   expect(filters[0].attribute_type).to.be.equal('tag')
   expect(filters[0].operator).to.be.equal('any')
@@ -151,7 +150,6 @@ async function testDuplicateEmail() {
 
   const { filters } = EmailCampaign._getFilters(campaign.to)
 
-  Context.log(filters)
   expect(filters).to.have.length(1)
   expect(filters[0].attribute_type).to.be.equal('tag')
   expect(filters[0].operator).to.be.equal('any')
