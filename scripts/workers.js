@@ -14,7 +14,7 @@ const Slack = require('../lib/models/Slack')
 const Context = require('../lib/models/Context')
 const Notification = require('../lib/models/Notification')
 const CrmTaskWorker = require('../lib/models/CRM/Task/worker')
-// const CalendarWorker = require('../lib/models/Calendar/worker')
+const CalendarWorker = require('../lib/models/Calendar/worker')
 const attachContactEvents = require('../lib/models/Contact/events')
 const attachTouchEventHandler = require('../lib/models/CRM/Touch/events')
 
@@ -167,7 +167,7 @@ const sendNotifications = function () {
       nodeifyFn(Notification.sendForUnread),
       Message.sendEmailForUnread,
       nodeifyFn(CrmTaskWorker.sendNotifications.bind(CrmTaskWorker)),
-      // nodeifyFn(CalendarWorker.sendNotifications.bind(CalendarWorker)),
+      nodeifyFn(CalendarWorker.sendNotifications.bind(CalendarWorker)),
       nodeifyFn(Task.sendNotifications),
     ], err => {
       if (err) {
