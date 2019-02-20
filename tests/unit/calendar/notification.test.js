@@ -4,6 +4,7 @@ const moment = require('moment-timezone')
 
 const { createContext, handleJobs } = require('../helper')
 
+const promisify = require('../../../lib/utils/promisify')
 const sql = require('../../../lib/utils/sql')
 const render_filters = require('../../../lib/utils/render_filters')
 
@@ -12,6 +13,7 @@ const CalendarWorker = require('../../../lib/models/Calendar/worker')
 const Contact = require('../../../lib/models/Contact')
 const Context = require('../../../lib/models/Context')
 const { Listing } = require('../../../lib/models/Listing')
+const Notification = require('../../../lib/models/Notification')
 const User = require('../../../lib/models/User')
 
 const BrandHelper = require('../brand/helper')
@@ -137,26 +139,45 @@ function findDueEvents(expected_event) {
   }
 }
 
-async function sendNotification() {
+async function sendNotificationForContact() {
   await CalendarWorker.sendReminderNotifications()
-
   await handleJobs()
+
+  const notifications = await promisify(Notification.getForUser)(user.id, {})
+  expect(notifications).not.to.be.empty
+
+  const birthday = moment().tz(user.timezone).add(1, 'days').unix()
+  expect(notifications[0].message).to.be.equal(`Contact Event: Abbas : Child Birthday (John) : ${render_filters.time(birthday, 'MMM D, YYYY', 'UTC')}`)
+}
+
+async function sendNotificationForDeal() {
+  await CalendarWorker.sendReminderNotifications()
+  await handleJobs()
+  
+  const notifications = await promisify(Notification.getForUser)(user.id, {})
+  expect(notifications).not.to.be.empty
+  expect(notifications[0].message).to.be.equal(`Deal Event: 9641  INWOOD Road : Executed Date : ${render_filters.time(Deal.getContext(deal, 'contract_date').getTime() / 1000, 'MMM D, YYYY', 'UTC')}`)
 }
 
 async function sendNotificationAgain() {
-  await sendNotification()
-  await sendNotification()
+  await CalendarWorker.sendReminderNotifications()
+  await handleJobs()
+
+  await CalendarWorker.sendReminderNotifications()
+  await handleJobs()
 }
 
 async function makeSureItsLogged() {
-  await sendNotification()
-  const events = await CalendarWorker.getNotificationDueEvents()
+  await CalendarWorker.sendReminderNotifications()
+  await handleJobs()
 
+  const events = await CalendarWorker.getNotificationDueEvents()
   expect(events).to.be.empty
 }
 
 async function sendEmailForUnread() {
-  await sendNotification()
+  await CalendarWorker.sendReminderNotifications()
+  await handleJobs()
 
   const notifications = await CalendarWorker.getUnreadNotifications()
   expect(notifications).not.to.be.empty
@@ -237,7 +258,7 @@ describe('Calendar', () => {
     beforeEach(createContact)
     context('when there is an upcoming birthday', () => {
       it('should find due events correctly', findDueEvents({ event_type: 'child_birthday', object_type: 'contact_attribute' }))
-      it('should send a notification to subscribed users', sendNotification)
+      it('should send a notification to subscribed users', sendNotificationForContact)
       it('should not try to send an already sent notification', sendNotificationAgain)
       it('should log the event notification', makeSureItsLogged)
       it('should send email for unread notifications', sendEmailForUnread)
@@ -251,7 +272,7 @@ describe('Calendar', () => {
 
     context('when there is an upcoming critical date', () => {
       it('should find due events correctly', findDueEvents({ event_type: 'contract_date', object_type: 'deal_context' }))
-      it('should send a notification to subscribed users', sendNotification)
+      it('should send a notification to subscribed users', sendNotificationForDeal)
       it('should log the event notification', makeSureItsLogged)
       it('should send email for unread notifications', sendEmailForUnread)
       it('should list upcoming dates for the deal at the bottom of the email', testCheckEmailForDeal)
