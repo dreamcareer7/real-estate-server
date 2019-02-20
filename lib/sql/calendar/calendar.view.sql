@@ -43,7 +43,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       NULL::uuid AS contact,
       (
         SELECT
-          ARRAY_AGG(r."user")
+          ARRAY_AGG(DISTINCT r."user")
         FROM
           deals_roles AS r
         WHERE
