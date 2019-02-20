@@ -255,6 +255,18 @@ async function testDeleteTag() {
   await checkTags()
 }
 
+async function testAddBackDeletedTag() {
+  await ContactTag.create(brand.id, user.id, 'Tag0')
+  await ContactTag.delete(brand.id, user.id, ['Tag0'])
+
+  await ContactTag.create(brand.id, user.id, 'Tag0')
+
+  const tags = await ContactTag.getAll(brand.id)
+
+  expect(tags).to.have.length(1)
+  expect(tags.map(t => t.tag)).to.have.members(['Tag0'])
+}
+
 function testCreateDuplicateTagFail(done) {
   ContactTag.create(brand.id, user.id, 'Tag0').then(() => {
     return ContactTag.create(brand.id, user.id, 'Tag0')
@@ -290,6 +302,7 @@ describe('Contact', () => {
     it('should update contact tags after a tag is renamed', testRenameTag)
     it('should update list filters and members after a tag is renamed', testRenameTagFixesListFilters)
     it('should delete tags globally', testDeleteTag)
+    it('should allow adding back a deleted tag', testAddBackDeletedTag)
 
     it('should not allow creating a duplicate tag', testCreateDuplicateTagFail)
     it('should not allow renaming to an existing tag', testRenameToExistingTagFail)
