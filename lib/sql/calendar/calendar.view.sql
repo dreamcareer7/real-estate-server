@@ -35,7 +35,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       'deal_context' AS object_type,
       cdc."key" AS event_type,
       bc.label AS type_label,
-      date_trunc('day', cdc."date") AS "timestamp",
+      cdc."date" AS "timestamp",
       False AS recurring,
       deals.title,
       NULL::uuid AS crm_task,
@@ -85,7 +85,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
         WHEN attribute_type = 'important_date' THEN COALESCE(ca.label, 'Important Date')
         ELSE COALESCE(cad.label, cad.name)
       END) AS type_label,
-      date_trunc('day', "date") AS "timestamp",
+      "date" AS "timestamp",
       True AS recurring,
       (CASE WHEN ca.is_partner IS TRUE THEN contacts.partner_name ELSE contacts.display_name END) AS title,
       NULL::uuid AS crm_task,
