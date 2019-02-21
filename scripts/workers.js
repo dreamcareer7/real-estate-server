@@ -167,7 +167,7 @@ const sendNotifications = function () {
       nodeifyFn(Notification.sendForUnread),
       Message.sendEmailForUnread,
       nodeifyFn(CrmTaskWorker.sendNotifications.bind(CrmTaskWorker)),
-      nodeifyFn(CalendarWorker.sendNotifications.bind(CalendarWorker)),
+      nodeifyFn(CalendarWorker.sendEmailForUnread.bind(CalendarWorker)),
       nodeifyFn(Task.sendNotifications),
     ], err => {
       if (err) {
