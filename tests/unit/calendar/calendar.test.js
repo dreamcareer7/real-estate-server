@@ -5,7 +5,6 @@ const { createContext } = require('../helper')
 
 const Calendar = require('../../../lib/models/Calendar')
 const Context = require('../../../lib/models/Context')
-const DealChecklist = require('../../../lib/models/Deal/checklist')
 const { Listing } = require('../../../lib/models/Listing')
 const User = require('../../../lib/models/User')
 
