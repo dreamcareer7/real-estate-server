@@ -49,6 +49,26 @@ const patchListing = cb => {
     })
 }
 
+const patchDraft = cb => {
+  const patch = {
+    is_draft: false
+  }
+
+  results.deal.patchListing.data.is_draft = false
+  delete results.deal.patchListing.data.faired_at
+
+  const expected_object = Object.assign({}, results.deal.patchListing.data, patch)
+
+  return frisby.create('publish a deal to live mode')
+    .patch(`/deals/${results.deal.create.data.id}/draft`, patch)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      data: expected_object
+    })
+}
+
 const addContext = cb => {
   const checklist = results.deal.addChecklist.data.id
 
@@ -186,8 +206,7 @@ const get = (cb) => {
 const addChecklist = cb => {
   const checklist = {
     title: 'Offered Checklist',
-    order: 1,
-    is_draft: true
+    order: 1
   }
 
   results.deal.create.data.has_active_offer = true // We are adding the active offer right now
@@ -518,6 +537,7 @@ module.exports = {
   addContext,
   approveContext,
   patchListing,
+  patchDraft,
   addRole,
   updateRole,
   get,

@@ -6,9 +6,9 @@ FROM deals
   JOIN tasks ON deals_checklists.id = tasks.checklist
 WHERE
   deals.deleted_at IS NULL
+  AND deals.faired_at IS NOT NULL
   AND deals_checklists.terminated_at   IS NULL
   AND deals_checklists.deactivated_at  IS NULL
-  AND deals_checklists.faired_at       IS NOT NULL
   AND tasks.attention_requested_at     IS NOT NULL
   AND tasks.deleted_at IS NULL
   AND deals.brand IN (SELECT brand_children($1::uuid))

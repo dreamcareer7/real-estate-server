@@ -66,7 +66,7 @@ const migrations = [
         JOIN brands_contexts bc
           ON bc.id = dc.definition
         JOIN deals_checklists dcl
-          ON dcl.id = dc.checklist
+          ON dcl.deal = deals.id
       WHERE
         deals.deleted_at IS NULL
         AND cdc.data_type = 'Date'::context_data_type
@@ -109,7 +109,7 @@ const migrations = [
         AND ca.deleted_at IS NULL
         AND cad.deleted_at IS NULL
         AND data_type = 'date'
-    )
+    )  
   `,
   'COMMIT'
 ]

@@ -1,6 +1,7 @@
 const deal = {
   deal_type: 'Buying',
   property_type: 'Resale',
+  is_draft: true
 }
 
 const address = {
