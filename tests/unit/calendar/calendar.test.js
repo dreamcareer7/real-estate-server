@@ -36,7 +36,6 @@ async function setup(without_checklists = false) {
 async function createDeal() {
   return DealHelper.create(user.id, brand.id, {
     checklists: [{
-      is_draft: true,
       context: {
         closing_date: { value: moment().tz(user.timezone).add(10, 'day').startOf('day').format() },
         contract_date: { value: moment().tz(user.timezone).add(1, 'day').startOf('day').format() },
@@ -50,12 +49,12 @@ async function createDeal() {
       legal_last_name: user.last_name
     }],
     listing: listing.id,
+    is_draft: true
   })
 }
 
 async function testHidingDraftCriticalDates() {
   const deal = await createDeal()
-  const cl = await DealChecklist.get(deal.checklists[0])
   let events
 
   events = await Calendar.filter([{
@@ -68,8 +67,8 @@ async function testHidingDraftCriticalDates() {
 
   expect(events).to.be.empty
 
-  await DealChecklist.update({
-    ...cl,
+  await Deal.update({
+    ...deal,
     is_draft: false
   })
 

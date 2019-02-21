@@ -73,7 +73,7 @@ const migrations = [
         AND dcl.deleted_at     IS NULL
         AND dcl.deactivated_at IS NULL
         AND dcl.terminated_at  IS NULL
-        AND dcl.faired_at      IS NOT NULL
+        AND deals.faired_at    IS NOT NULL
         AND deal_status_mask(deals.id, '{Withdrawn,Cancelled,"Contract Terminated"}') IS NOT FALSE
     )
     UNION ALL
