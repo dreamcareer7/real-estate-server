@@ -1,7 +1,7 @@
 const { expect } = require('chai')
 
 const { createContext, handleJobs } = require('../helper')
-const sql = require('../../../lib/models/SupportBot/sql')
+const sql = require('../../../lib/utils/sql')
 
 const Contact = require('../../../lib/models/Contact')
 const Context = require('../../../lib/models/Context')
@@ -18,7 +18,9 @@ async function setup() {
   brand = await BrandHelper.create({
     roles: {
       Admin: [user.id]
-    }
+    },
+    checklists: [],
+    contexts: []
   })
   Context.set({ user, brand })
 
@@ -118,7 +120,6 @@ async function testEmailToTags() {
 
   const { filters } = EmailCampaign._getFilters(campaign.to)
 
-  Context.log(filters)
   expect(filters).to.have.length(1)
   expect(filters[0].attribute_type).to.be.equal('tag')
   expect(filters[0].operator).to.be.equal('any')
@@ -149,7 +150,6 @@ async function testDuplicateEmail() {
 
   const { filters } = EmailCampaign._getFilters(campaign.to)
 
-  Context.log(filters)
   expect(filters).to.have.length(1)
   expect(filters[0].attribute_type).to.be.equal('tag')
   expect(filters[0].operator).to.be.equal('any')

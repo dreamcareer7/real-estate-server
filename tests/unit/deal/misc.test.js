@@ -27,7 +27,7 @@ const brandDeals = async () => {
   let found = deals.some(d => d.id === deal.id)
   expect(found).to.be.true
 
-  await promisify(Deal.delete)(deal.id)
+  await Deal.delete(deal.id)
 
   deals = await promisify(Deal.getBrandDeals)(deal.brand)
   found = deals.some(d => d.id === deal.id)
@@ -41,7 +41,7 @@ const userDeals = async () => {
   let found = deals.some(d => d.id === deal.id)
   expect(found).to.be.true
 
-  await promisify(Deal.delete)(deal.id)
+  await Deal.delete(deal.id)
 
   deals = await promisify(Deal.getUserDeals)(deal.brand)
   found = deals.some(d => d.id === deal.id)
@@ -68,19 +68,22 @@ const userDeals = async () => {
   }
 
   expect(errored).to.be.true
-
-  let access = await Deal.hasAccessToDeals(user.id, [deal])
-  expect(access[deal.id]).to.be.true
-
-  access = await Deal.hasAccessToDeals(another.id, [deal])
-  expect(access[deal.id]).to.be.false
 }
 
 const liveUpdate = async() => {
   const deal = await createDeal()
 
   await Deal.notify({deal})
-  await Deal.notifyById(deal.id)
+  const returned = await Deal.notifyById(deal.id)
+
+  expect(deal).to.deep.equal(returned)
+}
+
+const getByNumber = async() => {
+  const deal = await createDeal()
+  const got = await Deal.getByNumber(deal.number)
+
+  expect(deal).to.deep.equal(got)
 }
 
 describe('Deal Misc', () => {
@@ -89,4 +92,5 @@ describe('Deal Misc', () => {
   it('should be among deals of a brand', brandDeals)
   it('should be among deals of a user who has access to it', userDeals)
   it('should not throw an error on a live update', liveUpdate)
+  it('should get a deal using deal number', getByNumber)
 })

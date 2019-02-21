@@ -9,7 +9,7 @@ const render_filters = require('../../../lib/utils/render_filters')
 
 const BrandHelper = require('../brand/helper')
 
-const sql = require('../../../lib/models/SupportBot/sql')
+const sql = require('../../../lib/utils/sql')
 
 const Context = require('../../../lib/models/Context')
 const CrmTask = require('../../../lib/models/CRM/Task')

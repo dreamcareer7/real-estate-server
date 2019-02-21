@@ -7,9 +7,11 @@ const Brand = require('../../../lib/models/Brand')
 const BrandRole = require('../../../lib/models/Brand/role')
 const BrandContext = require('../../../lib/models/Brand/context')
 const BrandChecklist = require('../../../lib/models/Brand/checklist')
+const Context = require('../../../lib/models/Context')
 
 const default_data = {
   name: 'Test Brand',
+  brand_type: Brand.BROKERAGE,
 
   roles: {
     Admin: []
@@ -20,6 +22,9 @@ const default_data = {
 }
 
 async function create(data) {
+  const original_log_setting = Context.get('db:log')
+  Context.set({'db:log': false})
+
   data = Object.assign({}, default_data, data)
 
   const { roles, contexts, checklists, ...brand_props } = data
@@ -41,15 +46,31 @@ async function create(data) {
     }
   }
 
-  await BrandChecklist.createAll(checklists.map(c => ({ ...c, brand: b.id })))
-
-  await BrandContext.createAll(
-    Object.keys(contexts).map(c => ({
-      ...contexts[c],
-      key: c,
+  for(const checklist of checklists) {
+    const saved = await BrandChecklist.create({
+      ...checklist,
       brand: b.id
-    }))
-  )
+    })
+
+    const { tasks } = checklist
+
+    for(const task of tasks) {
+      await BrandChecklist.addTask({
+        ...task,
+        checklist: saved.id
+      })
+    }
+  }
+
+  for(const key in contexts) {
+    await BrandContext.create({
+      ...contexts[key],
+      key,
+      brand: b.id
+    })
+  }
+
+  Context.set({'db:log': original_log_setting})
 
   return Brand.get(b.id)
 }

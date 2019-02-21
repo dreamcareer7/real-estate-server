@@ -42,7 +42,7 @@ AS $function$
         cad.name = 'source_type'
     ) AS j
   )
-  INSERT INTO contact_search_lists
+  INSERT INTO crm_lists
     (brand, created_at, name, filters, is_pinned)
   SELECT
     *

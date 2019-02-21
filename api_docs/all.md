@@ -1,5 +1,4 @@
 <!-- include(authorize.md) -->
-<!-- include(session.md) -->
 <!-- include(user.md) -->
 <!-- include(contact.md) -->
 <!-- include(task.md) -->

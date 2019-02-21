@@ -5,6 +5,14 @@ declare interface ICalendarFilter {
   users?: UUID[];
 }
 
+declare interface ICalendarFilterQuery {
+  deal?: UUID;
+  contact?: UUID;
+  low?: number;
+  high?: number;
+  event_types?: string[];
+}
+
 declare interface ICalendarFeedSetting {
   selected_types: string[] | null;
   filter: ICalendarFilter[] | null;

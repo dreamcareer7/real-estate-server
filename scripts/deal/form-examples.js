@@ -1,6 +1,5 @@
 const _ = require('lodash')
 const db = require('../../lib/utils/db')
-const promisify = require('../../lib/utils/promisify')
 require('../connection')
 
 const sql = `SELECT
@@ -24,7 +23,7 @@ const run = async() => {
   }, [])
     .filter(Boolean)
 
-  const files = await promisify(AttachedFile.getAll)(file_ids)
+  const files = await AttachedFile.getAll(file_ids)
   const indexed = _.keyBy(files, 'id')
 
   for(const form of rows) {

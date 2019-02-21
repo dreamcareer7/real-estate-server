@@ -57,6 +57,7 @@ declare interface IContact extends IContactBase {
 
   users?: UUID[];
   deals?: IDeal[];
+  lists?: UUID[];
 }
 
 declare interface IContactAttribute {
@@ -142,6 +143,7 @@ declare interface IContactFilterOptions {
   created_gte?: number;
   created_lte?: number;
   ids?: UUID[];
+  excludes?: UUID[];
   list?: UUID;
   lists?: UUID[];
   users?: UUID[];

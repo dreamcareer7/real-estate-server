@@ -1,1 +1,2 @@
-DELETE FROM brands_users WHERE role = $1 AND "user" = $2
+UPDATE brands_users SET deleted_at = NOW()
+WHERE role = $1 AND "user" = $2

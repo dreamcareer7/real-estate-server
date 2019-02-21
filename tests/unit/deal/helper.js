@@ -27,7 +27,7 @@ async function create(user_id, brand_id, data) {
   const brand_contexts = await BrandHelper.getContexts(brand_id)
   const brand_checklists = await BrandHelper.getChecklists(brand_id)
 
-  const deal = await Deal.create({
+  let deal = await Deal.create({
     ...deal_props,
     created_by: user_id
   })
@@ -53,11 +53,13 @@ async function create(user_id, brand_id, data) {
       {
         deal: deal.id,
         order: i + 1,
-        origin: origin.id
       }
     ])
 
-    const cl = await DealChecklist.create(cl_data)
+    const cl = await DealChecklist.createWithTasks(cl_data, {
+      deal_type,
+      property_type
+    })
 
     if (context) {
       await Deal.saveContext({
@@ -74,7 +76,7 @@ async function create(user_id, brand_id, data) {
   }
 
   for (const r of roles) {
-    await promisify(Deal.addRole)({
+    await Deal.addRole({
       ...r,
       deal: deal.id,
       created_by: user_id,
@@ -82,7 +84,10 @@ async function create(user_id, brand_id, data) {
     })
   }
 
-  return promisify(Deal.get)(deal.id)
+  deal = await promisify(Deal.get)(deal.id)
+  deal = await Deal.updateTitle(deal)
+
+  return deal
 }
 
 module.exports = {

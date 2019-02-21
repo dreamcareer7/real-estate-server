@@ -19,16 +19,23 @@ FROM
       unnest(analytics.calendar.users) cu("user")
   ) AS c
   JOIN calendar_notification_settings AS cns
-    USING ("user")
+    ON c."user" = cns."user"
   JOIN users u
-    ON c.user = u.id
-  LEFT JOIN calendar_notification_logs AS cnl
-    ON (c.id = cnl.id AND c."user" = cnl."user")
+    ON c."user" = u.id
 WHERE
   (c.timestamp - cns.reminder) between now() - interval '44 hours' and now()
   AND cns.deleted_at IS NULL
   AND c.object_type::calendar_object_type = cns.object_type
   AND c.event_type = cns.event_type
   AND (cns.object_type = 'deal_context' OR cns.object_type = 'contact_attribute')
-  AND cnl.id IS NULL
-  AND extract('hour' from now() at time zone u.timezone) = $1;
+  AND NOT EXISTS (
+    SELECT
+      *
+    FROM
+      calendar_notification_logs cnl
+    WHERE
+      cnl.id = c.id
+      AND cnl.timestamp = c.timestamp
+      AND cnl."user" = c."user"
+  )
+  AND CASE WHEN $1::int IS NULL THEN TRUE ELSE extract('hour' from now() at time zone u.timezone) = $1 END;

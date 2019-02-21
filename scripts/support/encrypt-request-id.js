@@ -14,4 +14,4 @@ catch (ex) {
 }
 
 const baseUrl = config.url.protocol + '://' + config.url.hostname + '/_'
-console.log(`${baseUrl}/requests/${enc_rechat_id})`)
+console.log(`${baseUrl}/requests/${enc_rechat_id}`)

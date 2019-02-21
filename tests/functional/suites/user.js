@@ -1,7 +1,6 @@
 const _u = require('lodash')
 const config = require('../../../lib/config.js')
 const user = require('./data/user.js')
-const address = require('./data/address.js')
 const user_response = require('./expected_objects/user.js')
 const uuid = require('node-uuid')
 const password = config.tests.password
@@ -122,24 +121,6 @@ const resetPassword404 = (cb) => {
     .post('/users/reset_password', {email: 'invalid email'})
     .after(cb)
     .expectStatus(404)
-}
-
-const setAddress = (cb) => {
-  return frisby.create('set address')
-    .put('/users/self/address', address)
-    .after(cb)
-    .expectStatus(200)
-    .expectJSONTypes({
-      code: String,
-      data: user_response
-    })
-}
-
-const setAddress400 = (cb) => {
-  return frisby.create('expect 400 on invalid address')
-    .put('/users/self/address')
-    .after(cb)
-    .expectStatus(400)
 }
 
 const patchUserTimeZone = (cb) => {
@@ -529,17 +510,6 @@ const resetEmailShadowPassword = (cb) => {
     })
 }
 
-const deleteAddress = (cb) => {
-  return frisby.create('delete address')
-    .delete('/users/self/address')
-    .after(cb)
-    .expectStatus(200)
-    .expectJSONTypes({
-      code: String,
-      data: user_response
-    })
-}
-
 const deleteUser = (cb) => {
   return frisby.create('delete user')
     .delete('/users/self')
@@ -559,8 +529,6 @@ module.exports = {
   changePassword401,
   resetPassword,
   resetPassword404,
-  setAddress,
-  setAddress400,
   patchUserTimeZone,
   addInvalidActivityByAction,
   addInvalidActivityByType,
@@ -591,6 +559,5 @@ module.exports = {
   resetPhoneShadowPasswordByEmail,
   resetPhoneShadowPassword,
   resetEmailShadowPassword,
-  deleteAddress,
   deleteUser
 }

@@ -47,12 +47,6 @@ It is important to remember that shadow users _can_ use some of the Rechat's fea
 ### Set Timezone [PATCH /users/self/timezone]
 <!-- include(tests/user/patchUserTimeZone.md) -->
 
-### Set Address [PUT /users/self/address]
-<!-- include(tests/user/setAddress.md) -->
-
-### Unset Address [DELETE /users/self/address]
-<!-- include(tests/user/deleteAddress.md) -->
-
 ### Create Phone Verification [POST /phone_verifications]
 <!-- include(tests/verification/createPhoneVerification.md) -->
 

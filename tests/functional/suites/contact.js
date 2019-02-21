@@ -601,7 +601,7 @@ const deleteManyContacts = cb => {
 
 function checkIfManyContactsListIsEmpty(cb) {
   return frisby.create('check if many contacts list members are actually gone')
-    .get('/contacts/lists/' + results.contact.createManyContactsList.data)
+    .get('/contacts/lists/' + results.contact.createManyContactsList.data.id)
     .after(cb)
     .expectJSON({
       data: {
@@ -799,7 +799,7 @@ function createManyContactsList(cb) {
 
 function getManyContactsList(cb) {
   return frisby.create('get many contacts list')
-    .get('/contacts/lists/' + results.contact.createManyContactsList.data)
+    .get('/contacts/lists/' + results.contact.createManyContactsList.data.id)
     .after(cb)
     .expectJSON({
       data: {
@@ -812,7 +812,7 @@ function getManyContactsList(cb) {
 function getContactsInManyContactsList(cb) {
   return frisby
     .create('get list of contacts in many contacts list')
-    .get('/contacts?associations[]=contact.lists&list=' + results.contact.createManyContactsList.data)
+    .get('/contacts?associations[]=contact.lists&list=' + results.contact.createManyContactsList.data.id)
     .after((err, res, json) => {
       if (!json.data.every(c => Boolean(c.next_touch)))
         throw 'Next touch is not set on ManyContacts list members'
@@ -824,7 +824,7 @@ function getContactsInManyContactsList(cb) {
 
 function unsetTouchFreqOnManyContactsList(cb) {
   return frisby.create('unset touch frequency of many contacts list')
-    .put('/contacts/lists/' + results.contact.createManyContactsList.data, {
+    .put('/contacts/lists/' + results.contact.createManyContactsList.data.id, {
       filters: [
         {
           attribute_def: defs.tag.id,
@@ -842,7 +842,7 @@ function unsetTouchFreqOnManyContactsList(cb) {
 function checkIfNextTouchIsNull(cb) {
   return frisby
     .create('check if next_touch is cleared on many contacts')
-    .get('/contacts?associations[]=contact.lists&list=' + results.contact.createManyContactsList.data)
+    .get('/contacts?associations[]=contact.lists&list=' + results.contact.createManyContactsList.data.id)
     .after((err, res, json) => {
       if (json.data.some(c => Boolean(c.next_touch)))
         throw 'Next touch is not null on ManyContacts list members'
@@ -875,7 +875,42 @@ const getAllTags = (cb) => {
     .get('/contacts/tags')
     .after(cb)
     .expectStatus(200)
-    .expectJSONLength('data', 6)
+    .expectJSONLength('data', 7)
+    .expectJSON({
+      code: 'OK'
+    })
+}
+
+const addTag = cb => {
+  return frisby.create('add a tag manually')
+    .post('/contacts/tags', {
+      tag: 'baz'
+    })
+    .after(cb)
+    .expectStatus(204)
+}
+
+const addDuplicateTagThrows = cb => {
+  return frisby.create('add a duplicate tag will throw 409 error')
+    .post('/contacts/tags', {
+      tag: 'baz'
+    })
+    .after(cb)
+    .expectStatus(409)
+}
+
+const checkTagIsAdded = cb => {
+  return frisby.create('check whether baz tag is added')
+    .get('/contacts/tags')
+    .after((err, res, json) => {
+      if (json.data.every(t => t.tag !== 'baz')) {
+        throw 'baz tag is not added!'
+      }
+
+      cb(err, res, json)
+    })
+    .expectStatus(200)
+    .expectJSONLength('data', 8)
     .expectJSON({
       code: 'OK'
     })
@@ -895,8 +930,7 @@ const verifyTagRenamed = cb => {
     .get('/contacts/tags')
     .after((err, res, body) => {
       const tags = body.data.map(a => a.text)
-
-      if (!tags.includes('bar') || tags.length !== 6) {
+      if (!tags.includes('bar') || tags.length !== 8) {
         throw 'Tag was not renamed correctly.'
       }
 
@@ -927,7 +961,7 @@ const verifyTagDeleted = cb => {
     .after((err, res, body) => {
       const tags = body.data.map(a => a.text)
 
-      if (tags.includes('bar') || tags.includes('poo') || tags.length !== 4) {
+      if (tags.includes('bar') || tags.includes('poo') || tags.length !== 6) {
         throw 'Tag was not deleted correctly.'
       }
 
@@ -1027,7 +1061,6 @@ const sendEmailsToTag = cb => {
     from: results.authorize.token.data.id
   }
 
-
   return frisby
     .create('send emails to contacts with ManyContacts tag')
     .post('/contacts/emails', campaign)
@@ -1041,7 +1074,7 @@ const sendEmailsToList = cb => {
     html: '<div>HTML Body</div>',
     text: 'Text Body',
     to: [{
-      list: results.contact.createManyContactsList.data
+      list: results.contact.createManyContactsList.data.id
     }],
     from: results.authorize.token.data.id
   }
@@ -1099,6 +1132,8 @@ module.exports = {
   checkIfNextTouchIsNull,
   getTimeline,
   getAllTags,
+  addTag,
+  checkTagIsAdded,
   renameTag,
   verifyTagRenamed,
   deleteTag,
@@ -1119,5 +1154,6 @@ module.exports = {
   deleteManyContacts,
   checkIfManyContactsListIsEmpty,
   deleteContactWorked,
-  sendEmails
+  sendEmails,
+  addDuplicateTagThrows,
 }

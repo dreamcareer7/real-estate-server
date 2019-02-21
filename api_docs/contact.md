@@ -81,15 +81,6 @@ Updates multiple contacts and their attributes. If attributes have `id`, they ar
 ### Filter contacts not having attributes [POST /contacts/filter]
 <!-- include(tests/contact/invertedFilter.md) -->
 
-### Get all tags [GET /contacts/tags]
-<!-- include(tests/contact/getAllTags.md) -->
-
-### Rename a tag [PATCH /contacts/tags/:tag]
-<!-- include(tests/contact/renameTag.md) -->
-
-### Delete a tag from all contacts [DELETE /contacts/tags/:tag]
-<!-- include(tests/contact/deleteTag.md) -->
-
 ### Get a contact [GET /contacts/:id]
 <!-- include(tests/contact/getSingleContact.md) -->
 
@@ -137,6 +128,26 @@ An _Activity_ is an object, recording an event that either a specific user has d
 
 ### Get all activities [GET /contacts/:id/timeline]
 <!-- include(tests/contact/getTimeline.md) -->
+
+# Group Tags
+
+## Overview
+Tags collection is the set of all tags that are used in contacts and/or manually added by the users.
+
+**Note:** When adding a new tag attribute to a contact, if the tag is new, it will be added to the Tags collection automatically. There's no need to create the new tag before hand.
+
+### Get all tags [GET /contacts/tags]
+<!-- include(tests/contact/getAllTags.md) -->
+
+### Add a tag manually [POST /contacts/tags]
+<!-- include(tests/contact/addTag.md) -->
+
+### Rename a tag [PATCH /contacts/tags/:tag]
+<!-- include(tests/contact/renameTag.md) -->
+
+### Delete a tag from all contacts [DELETE /contacts/tags/:tag]
+<!-- include(tests/contact/deleteTag.md) -->
+
 
 # Group Attribute Definitions
 

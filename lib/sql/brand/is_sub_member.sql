@@ -5,5 +5,6 @@ SELECT
   JOIN
     brands_users ON brands_users.role = brands_roles.id
   WHERE
-    brand IN(SELECT * FROM brand_children($1))
+    brands_users.deleted_at IS NULL
+    AND brand IN(SELECT * FROM brand_children($1))
     AND brands_users.user = $2

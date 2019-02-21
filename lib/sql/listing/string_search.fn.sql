@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION search_listings(query text) RETURNS TABLE (
+CREATE OR REPLACE FUNCTION search_listings(query tsquery) RETURNS TABLE (
    "id" uuid,
    mls_number text,
    status listing_status
@@ -12,10 +12,8 @@ $$
   FROM listings_filters
 
   WHERE
-    to_tsvector('english', address) @@ plainto_tsquery('english', $1)
-    OR
-    address ILIKE '%' || $1 || '%'
-    OR mls_number = $1
+    to_tsvector('english', address) @@ $1::tsquery
+    OR mls_number = $1::text
 
 $$
 LANGUAGE sql

@@ -1,6 +1,6 @@
 const { Bar: ProgressBar, Presets } = require('cli-progress')
 
-const sql = require('../../lib/models/SupportBot/sql')
+const sql = require('../../lib/utils/sql')
 const Brand = require('../../lib/models/Brand')
 const BrandRole = require('../../lib/models/Brand/role')
 const runInContext = require('../../lib/models/Context/util')

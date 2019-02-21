@@ -1,9 +1,9 @@
 SELECT
   id,
   (brand = $2::uuid) AS "read",
-  (brand = $2::uuid) AS "write"
+  (brand = $2::uuid AND is_editable IS TRUE) AS "write"
 FROM
-  contact_search_lists
+  crm_lists
 JOIN
   unnest($1::uuid[]) WITH ORDINALITY t(did, ord) ON id = did
 WHERE

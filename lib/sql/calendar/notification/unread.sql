@@ -11,7 +11,7 @@ SELECT
 FROM
   unread_notifications
 WHERE
-  created_at <= NOW() - $1::interval
+  created_at BETWEEN NOW() - $2::interval AND NOW() - $1::interval
   AND ((
     object_class = 'Contact'::notification_object_class
     AND subject_class = 'ContactAttribute'::notification_object_class

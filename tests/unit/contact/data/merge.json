@@ -1,0 +1,53 @@
+{
+  "same_email": [
+    {
+      "attributes": [
+        {
+          "attribute_type": "first_name",
+          "text": "Abbas"
+        },
+        {
+          "attribute_type": "email",
+          "label": "Personal",
+          "text": "abbas@rechat.com"
+        }
+      ]
+    },
+    {
+      "attributes": [
+        {
+          "attribute_type": "email",
+          "label": "Personal",
+          "text": "abbas@rechat.com"
+        }
+      ]
+    }
+  ],
+  "same_phone": [
+    {
+      "attributes": [
+        {
+          "attribute_type": "first_name",
+          "text": "Emil"
+        },
+        {
+          "attribute_type": "last_name",
+          "text": "Sedgh"
+        },
+        {
+          "attribute_type": "phone_number",
+          "label": "Mobile",
+          "text": "(571) 982-6611"
+        }
+      ]
+    },
+    {
+      "attributes": [
+        {
+          "attribute_type": "phone_number",
+          "text": "(571) 982-6611"
+        }
+      ]
+    }
+  ]
+}

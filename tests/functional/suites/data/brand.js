@@ -1,4 +1,6 @@
 module.exports = {
+  brand_type: 'Brokerage',
+
   palette: {
     primary: 'red'
   },

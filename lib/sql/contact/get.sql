@@ -10,12 +10,12 @@ WITH cdeals AS (
     contact,
     array_agg(list) as lists
   FROM
-    contact_lists_members
-    JOIN contact_search_lists
-      ON contact_search_lists.id = list
+    crm_lists_members
+    JOIN crm_lists
+      ON crm_lists.id = list
   WHERE
-    contact_search_lists.deleted_at IS NULL
-    AND contact_lists_members.deleted_at IS NULL
+    crm_lists.deleted_at IS NULL
+    AND crm_lists_members.deleted_at IS NULL
     AND contact = ANY($1::uuid[])
     AND $3::text[] @> ARRAY['contact.lists']
   GROUP BY

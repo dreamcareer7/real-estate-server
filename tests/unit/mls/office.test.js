@@ -2,7 +2,7 @@ const { expect } = require('chai')
 
 const { createContext } = require('../helper')
 
-const json = require('./office.json')
+const json = require('./json/office')
 
 const saveOffice = async () => {
   const id = await Office.create(json)

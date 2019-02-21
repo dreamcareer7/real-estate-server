@@ -48,46 +48,59 @@ function create (cb) {
           'value': 'great'
         }
       ],
-      query: 'Wow',
       args: {
-        users: [results.authorize.token.data.id]
+        q: 'Wow'
       },
-      'name': 'Wow list',
-      'is_pinned': true
+      name: 'Wow list'
     })
     .after(cb)
     .expectStatus(200)
     .expectJSON({
-      code: 'OK'
+      code: 'OK',
+      data: {
+        name: 'Wow list'
+      }
     })
-    .expectJSONTypes({
-      code: String,
-      data: String
+}
+
+function createWithEmptyFilters(cb) {
+  const data = {
+    name: 'Empty List',
+    filters: [],
+    args: {
+      q: null,
+      filter_type: 'and'
+    }
+  }
+
+  return frisby.create('create a contact list with emptpy filters')
+    .post('/contacts/lists', data)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      data: {
+        name: 'Empty List'
+      }
     })
 }
 
 function update(cb) {
   const update = {
-    filters: [
-      {
-        'attribute_def': '24171fd0-7994-43fc-a1cb-adcb726429b5',
-        'value': 'cool'
-      },
-      {
-        'attribute_def': '24171fd0-7994-43fc-a1cb-adcb726429b5',
-        'value': 'great'
-      }
-    ],
-    query: 'OMG',
+    ...results.contact_list.create.data,
     args: {
-      users: [results.authorize.token.data.id]
-    },
-    name: 'Wow list',
-    is_pinned: false
+      q: 'OMG',
+      filter_type: 'and'
+    }
   }
 
+  delete update.query
+
+  delete update.updated_at
+  delete update.updated_by
+
   return frisby.create('update contact search list')
-    .put('/contacts/lists/' + results.contact_list.create.data, update)
+    .put('/contacts/lists/' + results.contact_list.create.data.id, update)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
@@ -100,7 +113,7 @@ function listForUser(cb) {
   return frisby.create('list for user')
     .get('/contacts/lists')
     .after((err, res, json) => {
-      if (!(json.data[json.data.length - 1].name === 'Wow list'))
+      if (!(json.data.map(x => x.name).includes('Wow list')))
         throw 'Wow list not found!'
       cb(err, res, json)
     })
@@ -109,7 +122,7 @@ function listForUser(cb) {
 
 function deleteIt(cb) {
   return frisby.create('delete contact search list')
-    .delete(`/contacts/lists/${results.contact_list.create.data}`)
+    .delete(`/contacts/lists/${results.contact_list.create.data.id}`)
     .after(cb)
     .expectStatus(204)
 }
@@ -131,6 +144,7 @@ module.exports = {
   createDefaultLists,
   checkDefaultLists,
   create,
+  createWithEmptyFilters,
   update,
   listForUser,
   deleteIt,

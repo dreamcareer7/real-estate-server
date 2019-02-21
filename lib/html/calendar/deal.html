@@ -1801,7 +1801,7 @@
                                   </table>
                                   <!--/row1-->
                                   <!--row2-->
-                                  <table>
+                                  <table id='row2'>
                                     <tr>
                                       <th
                                         class="plr-40"
@@ -1938,9 +1938,10 @@
                                           <div style="border-radius: 8px;">
                                             <table
                                               class="row"
+                                              id="row6"
                                               style="margin: 0 auto;background: none;border-radius: 8px;border:1px solid #d4d4d4;"
                                             >
-                                              <tbody>
+                                              <thead>
                                                 <tr>
                                                   <th
                                                     style="padding:24px 24px 0;"
@@ -1952,14 +1953,16 @@
                                                     </p>
                                                   </th>
                                                 </tr>
+                                              </thead>
+                                              <tbody>
                                                 {% for cdate in upcoming_dates %}
                                                 <tr>
                                                   {% if loop.last %}
-                                                  <th
+                                                  <td
                                                     style="padding:16px 24px 24px;"
                                                   >
                                                   {% else %}
-                                                  <th
+                                                  <td
                                                     style="padding:16px 24px 0;"
                                                   >
                                                   {% endif %}
@@ -1971,9 +1974,9 @@
                                                     <p
                                                       style="font-family: Barlow; font-size: 16px; font-weight: 500; font-style: normal; font-stretch: normal; line-height: 1.5; letter-spacing: normal; color: #7f7f7f;margin-bottom: 0;"
                                                     >
-                                                      Due {{cdate.timestamp | time('MMM D, YYYY', user.timezone)}}
+                                                      Due {{cdate.timestamp | time('MMM D, YYYY', 'UTC')}}
                                                     </p>
-                                                  </th>
+                                                  </td>
                                                 </tr>
                                                 {% endfor %}
                                               </tbody>

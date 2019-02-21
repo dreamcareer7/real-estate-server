@@ -1,3 +1,11 @@
+const tasks = [
+  {
+    title: 'Test Task',
+    task_type: Task.GENERIC,
+    order: 0
+  }
+]
+
 module.exports = [
   {
     title: 'Contract',
@@ -6,7 +14,8 @@ module.exports = [
     property_type: 'Commercial Sale',
     is_terminatable: true,
     tab_name: 'Contract Inbox',
-    is_deactivatable: true
+    is_deactivatable: true,
+    tasks
   },
   {
     title: 'Contract',
@@ -15,7 +24,8 @@ module.exports = [
     property_type: 'New Home',
     is_terminatable: true,
     tab_name: 'Contract Inbox',
-    is_deactivatable: true
+    is_deactivatable: true,
+    tasks
   },
   {
     title: 'Contract',
@@ -24,7 +34,8 @@ module.exports = [
     property_type: 'Lot / Land',
     is_terminatable: true,
     tab_name: 'Contract Inbox',
-    is_deactivatable: true
+    is_deactivatable: true,
+    tasks
   },
   {
     title: 'Contract',
@@ -33,7 +44,8 @@ module.exports = [
     property_type: 'Resale',
     is_terminatable: true,
     tab_name: 'Contract Inbox',
-    is_deactivatable: true
+    is_deactivatable: true,
+    tasks
   },
   {
     title: 'Contract',
@@ -42,7 +54,8 @@ module.exports = [
     property_type: 'Residential Lease',
     is_terminatable: true,
     tab_name: 'Contract Inbox',
-    is_deactivatable: true
+    is_deactivatable: true,
+    tasks
   },
   {
     title: 'Listing',
@@ -51,7 +64,8 @@ module.exports = [
     property_type: 'New Home',
     is_terminatable: false,
     tab_name: 'Listing Inbox',
-    is_deactivatable: false
+    is_deactivatable: false,
+    tasks
   },
   {
     title: 'Listing',
@@ -60,7 +74,8 @@ module.exports = [
     property_type: 'Lot / Land',
     is_terminatable: false,
     tab_name: 'Listing Inbox',
-    is_deactivatable: false
+    is_deactivatable: false,
+    tasks
   },
   {
     title: 'Listing',
@@ -69,7 +84,8 @@ module.exports = [
     property_type: 'Commercial Lease',
     is_terminatable: false,
     tab_name: 'Listing Inbox',
-    is_deactivatable: false
+    is_deactivatable: false,
+    tasks
   },
   {
     title: 'Listing',
@@ -78,7 +94,8 @@ module.exports = [
     property_type: 'Commercial Sale',
     is_terminatable: false,
     tab_name: 'Listing Inbox',
-    is_deactivatable: false
+    is_deactivatable: false,
+    tasks
   },
   {
     title: 'Contract',
@@ -87,7 +104,8 @@ module.exports = [
     property_type: 'Commercial Lease',
     is_terminatable: false,
     tab_name: 'Contract Inbox',
-    is_deactivatable: false
+    is_deactivatable: false,
+    tasks
   },
   {
     title: 'Listing',
@@ -96,7 +114,8 @@ module.exports = [
     property_type: 'Resale',
     is_terminatable: false,
     tab_name: 'Listing Inbox',
-    is_deactivatable: false
+    is_deactivatable: false,
+    tasks
   },
   {
     title: 'Listing',
@@ -105,6 +124,7 @@ module.exports = [
     property_type: 'Residential Lease',
     is_terminatable: false,
     tab_name: 'Listing Inbox',
-    is_deactivatable: false
+    is_deactivatable: false,
+    tasks
   }
 ]
