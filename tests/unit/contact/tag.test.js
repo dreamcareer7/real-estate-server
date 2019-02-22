@@ -278,6 +278,15 @@ function testCreateDuplicateTagFail(done) {
   )
 }
 
+function testCreateEmptyTagFail(done) {
+  ContactTag.create(brand.id, user.id, '').then(
+    () => {
+      done(new Error('Creating empty tag did not throw an error!'))
+    },
+    () => done()
+  )
+}
+
 function testRenameToExistingTagFail(done) {
   (async function() {
     await ContactTag.create(brand.id, user.id, 'Tag1')
@@ -287,6 +296,16 @@ function testRenameToExistingTagFail(done) {
     done
   ).then(
     () => done(new Error('Renaming to an existing tag did not throw an error!')),
+    () => done()
+  )
+}
+
+function testRenameToEmptyTagFail(done) {
+  ContactTag.create(brand.id, user.id, 'Tag1').then(
+    () => ContactTag.rename(brand.id, user.id, 'Tag1', ''),
+    done
+  ).then(
+    () => done(new Error('Renaming to an existing tag to empty string did not throw an error!')),
     () => done()
   )
 }
@@ -304,7 +323,12 @@ describe('Contact', () => {
     it('should delete tags globally', testDeleteTag)
     it('should allow adding back a deleted tag', testAddBackDeletedTag)
 
+    // Duplicate tag
     it('should not allow creating a duplicate tag', testCreateDuplicateTagFail)
     it('should not allow renaming to an existing tag', testRenameToExistingTagFail)
+
+    // Empty tag
+    it('should not allow creating an empty tag', testCreateEmptyTagFail)
+    it('should not allow renaming to empty tag', testRenameToEmptyTagFail)
   })
 })
