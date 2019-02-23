@@ -124,6 +124,7 @@ async function createContact() {
               .utc()
               .startOf('day')
               .add(1, 'days')
+              .add(-10, 'years')
               .unix()
           }
         ]
@@ -156,6 +157,7 @@ async function sendNotificationForContact() {
   const birthday = moment()
     .tz(user.timezone)
     .add(1, 'days')
+    .add(-10, 'years')
     .unix()
   expect(notifications[0].message).to.be.equal(
     `Contact Event: Abbas : Child Birthday (John) : ${render_filters.date(
