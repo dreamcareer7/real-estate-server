@@ -13,6 +13,8 @@ const migrations = [
     $$
     LANGUAGE PLPGSQL`,
 
+  'DROP TRIGGER IF EXISTS update_current_deal_context ON deals',
+
   `CREATE TRIGGER update_current_deal_context AFTER INSERT OR UPDATE on deals
     FOR EACH ROW EXECUTE PROCEDURE deals_updated_current_deal_context_trigger()`,
 

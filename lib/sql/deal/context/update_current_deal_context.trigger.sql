@@ -1,7 +1,7 @@
 DROP TRIGGER IF EXISTS update_current_deal_context ON deal_context;
 DROP TRIGGER IF EXISTS update_current_deal_context ON deals_checklists;
 DROP TRIGGER IF EXISTS update_current_deal_context ON addresses;
-DROP TRIGGER IF EXISTS update_current_deal_context ON addresses;
+DROP TRIGGER IF EXISTS update_current_deal_context ON deals;
 
 CREATE OR REPLACE FUNCTION update_current_deal_context_from_mls_trigger()
 RETURNS trigger AS
