@@ -62,8 +62,8 @@ async function setup(without_checklists = false) {
     brand.id
   )
 
-  CLOSING_DATE = moment.utc().startOf('day').add(10, 'day').add(12, 'hours')
-  CONTRACT_DATE = moment.utc().startOf('day').add(1, 'day').add(12, 'hours')
+  CLOSING_DATE = moment.utc().add(10, 'day')
+  CONTRACT_DATE = moment.utc().add(1, 'day')
 }
 
 async function getEmails() {
@@ -77,20 +77,25 @@ async function getEmails() {
 
 async function createDeal() {
   deal = await DealHelper.create(user.id, brand.id, {
-    checklists: [{
-      context: {
-        closing_date: { value: CLOSING_DATE.format() },
-        contract_date: { value: CONTRACT_DATE.format() },
-      },
-    }],
-    roles: [{
-      role: 'BuyerAgent',
-      email: user.email,
-      phone_number: user.phone_number,
-      legal_first_name: user.first_name,
-      legal_last_name: user.last_name
-    }],
+    checklists: [
+      {
+        context: {
+          closing_date: { value: CLOSING_DATE.format() },
+          contract_date: { value: CONTRACT_DATE.format() }
+        }
+      }
+    ],
+    roles: [
+      {
+        role: 'BuyerAgent',
+        email: user.email,
+        phone_number: user.phone_number,
+        legal_first_name: user.first_name,
+        legal_last_name: user.last_name
+      }
+    ],
     listing: listing.id,
+    is_draft: false
   })
 }
 
@@ -106,17 +111,20 @@ async function createContact() {
           },
           {
             attribute_type: 'birthday',
-            date: moment()
-              .tz(user.timezone)
+            date: moment
+              .utc()
+              .startOf('day')
               .add(20, 'days')
               .unix()
           },
           {
             attribute_type: 'child_birthday',
             label: 'John',
-            date: moment()
-              .tz(user.timezone)
+            date: moment
+              .utc()
+              .startOf('day')
               .add(1, 'days')
+              .add(-10, 'years')
               .unix()
           }
         ]
@@ -146,17 +154,32 @@ async function sendNotificationForContact() {
   const notifications = await promisify(Notification.getForUser)(user.id, {})
   expect(notifications).not.to.be.empty
 
-  const birthday = moment().tz(user.timezone).add(1, 'days').unix()
-  expect(notifications[0].message).to.be.equal(`Contact Event: Abbas : Child Birthday (John) : ${render_filters.time(birthday, 'MMM D, YYYY', 'UTC')}`)
+  const birthday = moment()
+    .tz(user.timezone)
+    .add(1, 'days')
+    .add(-10, 'years')
+    .unix()
+  expect(notifications[0].message).to.be.equal(
+    `Contact Event: Abbas : Child Birthday (John) : ${render_filters.date(
+      birthday,
+      'MMM D, YYYY'
+    )}`
+  )
 }
 
 async function sendNotificationForDeal() {
   await CalendarWorker.sendReminderNotifications()
   await handleJobs()
-  
+
   const notifications = await promisify(Notification.getForUser)(user.id, {})
   expect(notifications).not.to.be.empty
-  expect(notifications[0].message).to.be.equal(`Deal Event: 9641  INWOOD Road : Executed Date : ${render_filters.time(Deal.getContext(deal, 'contract_date').getTime() / 1000, 'MMM D, YYYY', 'UTC')}`)
+  expect(notifications[0].message).to.be.equal(
+    `Deal Event: 9641  INWOOD Road : Executed Date : ${render_filters.time(
+      Deal.getContext(deal, 'contract_date').getTime() / 1000,
+      'MMM D, YYYY',
+      'UTC'
+    )}`
+  )
 }
 
 async function sendNotificationAgain() {
@@ -217,22 +240,72 @@ async function testCheckEmailForDeal() {
   const emails = await getEmails()
   expect(emails).to.have.length(1)
 
-  const {html, subject} = emails[0]
+  const { html, subject } = emails[0]
   const $ = cheerio.load(html)
 
   expect(subject).to.be.equal('Upcoming Rechat Event')
 
   expect($('#row2 th').children()).to.have.length(4)
-  expect($('#row2 p:nth-child(1)').text().trim()).to.be.equal('Executed Date:')
-  expect($('#row2 p:nth-child(2)').text().trim()).to.be.equal(Deal.getContext(deal, 'full_address'))
-  expect($('#row2 p:nth-child(3)').text().trim()).to.be.equal(`Due ${render_filters.time(Deal.getContext(deal, 'contract_date').getTime() / 1000, 'MMM D, YYYY', 'UTC')}`)
-  expect($('#row2 p:nth-child(4)').text().trim()).to.be.equal('a day before')
+  expect(
+    $('#row2 p:nth-child(1)')
+      .text()
+      .trim()
+  ).to.be.equal('Executed Date:')
+  expect(
+    $('#row2 p:nth-child(2)')
+      .text()
+      .trim()
+  ).to.be.equal(Deal.getContext(deal, 'full_address'))
+  expect(
+    $('#row2 p:nth-child(3)')
+      .text()
+      .trim()
+  ).to.be.equal(
+    `Due ${render_filters.time(
+      Deal.getContext(deal, 'contract_date').getTime() / 1000,
+      'MMM D, YYYY',
+      'UTC'
+    )}`
+  )
+  expect(
+    $('#row2 p:nth-child(4)')
+      .text()
+      .trim()
+  ).to.be.equal('a day before')
 
   expect($('#row6 tbody').children()).to.have.length(2)
-  expect($('#row6 tbody tr:nth-child(1) p:nth-child(1)').text().trim()).to.be.equal('Executed Date')
-  expect($('#row6 tbody tr:nth-child(1) p:nth-child(2)').text().trim()).to.be.equal(`Due ${render_filters.time(Deal.getContext(deal, 'contract_date').getTime() / 1000, 'MMM D, YYYY', 'UTC')}`)
-  expect($('#row6 tbody tr:nth-child(2) p:nth-child(1)').text().trim()).to.be.equal('Closing Date')
-  expect($('#row6 tbody tr:nth-child(2) p:nth-child(2)').text().trim()).to.be.equal(`Due ${render_filters.time(Deal.getContext(deal, 'closing_date').getTime() / 1000, 'MMM D, YYYY', 'UTC')}`)
+  expect(
+    $('#row6 tbody tr:nth-child(1) p:nth-child(1)')
+      .text()
+      .trim()
+  ).to.be.equal('Executed Date')
+  expect(
+    $('#row6 tbody tr:nth-child(1) p:nth-child(2)')
+      .text()
+      .trim()
+  ).to.be.equal(
+    `Due ${render_filters.time(
+      Deal.getContext(deal, 'contract_date').getTime() / 1000,
+      'MMM D, YYYY',
+      'UTC'
+    )}`
+  )
+  expect(
+    $('#row6 tbody tr:nth-child(2) p:nth-child(1)')
+      .text()
+      .trim()
+  ).to.be.equal('Closing Date')
+  expect(
+    $('#row6 tbody tr:nth-child(2) p:nth-child(2)')
+      .text()
+      .trim()
+  ).to.be.equal(
+    `Due ${render_filters.time(
+      Deal.getContext(deal, 'closing_date').getTime() / 1000,
+      'MMM D, YYYY',
+      'UTC'
+    )}`
+  )
 }
 
 async function makeSureEmailDeliveryIsLogged() {
@@ -257,9 +330,21 @@ describe('Calendar', () => {
     beforeEach(async () => await setup(true))
     beforeEach(createContact)
     context('when there is an upcoming birthday', () => {
-      it('should find due events correctly', findDueEvents({ event_type: 'child_birthday', object_type: 'contact_attribute' }))
-      it('should send a notification to subscribed users', sendNotificationForContact)
-      it('should not try to send an already sent notification', sendNotificationAgain)
+      it(
+        'should find due events correctly',
+        findDueEvents({
+          event_type: 'child_birthday',
+          object_type: 'contact_attribute'
+        })
+      )
+      it(
+        'should send a notification to subscribed users',
+        sendNotificationForContact
+      )
+      it(
+        'should not try to send an already sent notification',
+        sendNotificationAgain
+      )
       it('should log the event notification', makeSureItsLogged)
       it('should send email for unread notifications', sendEmailForUnread)
       it('should log email delivery', makeSureEmailDeliveryIsLogged)
@@ -271,11 +356,23 @@ describe('Calendar', () => {
     beforeEach(createDeal)
 
     context('when there is an upcoming critical date', () => {
-      it('should find due events correctly', findDueEvents({ event_type: 'contract_date', object_type: 'deal_context' }))
-      it('should send a notification to subscribed users', sendNotificationForDeal)
+      it(
+        'should find due events correctly',
+        findDueEvents({
+          event_type: 'contract_date',
+          object_type: 'deal_context'
+        })
+      )
+      it(
+        'should send a notification to subscribed users',
+        sendNotificationForDeal
+      )
       it('should log the event notification', makeSureItsLogged)
       it('should send email for unread notifications', sendEmailForUnread)
-      it('should list upcoming dates for the deal at the bottom of the email', testCheckEmailForDeal)
+      it(
+        'should list upcoming dates for the deal at the bottom of the email',
+        testCheckEmailForDeal
+      )
       it('should log email delivery', makeSureEmailDeliveryIsLogged)
     })
   })

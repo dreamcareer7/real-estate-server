@@ -39,7 +39,7 @@ const migrations = [
         'deal_context' AS object_type,
         cdc."key" AS event_type,
         bc.label AS type_label,
-        cdc."date" AS "timestamp",
+        timezone('UTC', date_trunc('day', cdc."date")) AT TIME ZONE 'UTC' AS "timestamp",
         False AS recurring,
         deals.title,
         NULL::uuid AS crm_task,
@@ -89,7 +89,7 @@ const migrations = [
           WHEN attribute_type = 'important_date' THEN COALESCE(ca.label, 'Important Date')
           ELSE COALESCE(cad.label, cad.name)
         END) AS type_label,
-        "date" AS "timestamp",
+        timezone('UTC', date_trunc('day', "date")::timestamp) AT TIME ZONE 'UTC' AS "timestamp",
         True AS recurring,
         (CASE WHEN ca.is_partner IS TRUE THEN contacts.partner_name ELSE contacts.display_name END) AS title,
         NULL::uuid AS crm_task,

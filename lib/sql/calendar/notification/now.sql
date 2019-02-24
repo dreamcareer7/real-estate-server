@@ -23,7 +23,12 @@ FROM
   JOIN users u
     ON c."user" = u.id
 WHERE
-  (c.timestamp - cns.reminder) between now() - interval '44 hours' and now()
+  CASE
+    WHEN c.recurring IS TRUE THEN
+      range_contains_birthday(now() - interval '44 hours', now(), c.timestamp - cns.reminder)
+    ELSE
+      (c.timestamp - cns.reminder) between now() - interval '44 hours' and now()
+  END
   AND cns.deleted_at IS NULL
   AND c.object_type::calendar_object_type = cns.object_type
   AND c.event_type = cns.event_type
