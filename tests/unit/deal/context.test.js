@@ -77,7 +77,7 @@ const updateContext = async () => {
   expect(updated.context.street_address.text).to.equal(listing.property.address.street_address)
 }
 
-describe('Deal Misc', () => {
+describe('Deal Context', () => {
   createContext()
 
   it('should create a deal with manual context', manualContext)
