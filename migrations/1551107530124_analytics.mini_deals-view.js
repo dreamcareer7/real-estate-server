@@ -1,8 +1,10 @@
+'use strict'
+
+const async = require('async')
 const db = require('../lib/utils/db')
 
-const migrations = [
+const up = [
   'BEGIN',
-  'DROP VIEW analytics.mini_deals',
   `CREATE OR REPLACE VIEW analytics.mini_deals AS
     WITH training_brands AS (
       SELECT
@@ -37,11 +39,15 @@ const migrations = [
         dr.deal,
         d.checklist,
         dr.role,
-        array_to_string(ARRAY[
-          dr.legal_first_name,
-          dr.legal_middle_name,
-          dr.legal_last_name
-        ], ' ', NULL) AS name
+        array_to_string(
+          array_remove(ARRAY[
+            dr.legal_first_name,
+            dr.legal_middle_name,
+            dr.legal_last_name
+          ], ''),
+          ' ',
+          NULL
+        ) AS name
       FROM
         deals_roles dr
         JOIN deal_info d
@@ -56,11 +62,15 @@ const migrations = [
         d.checklist,
         dr.role,
         string_agg(
-          array_to_string(ARRAY[
-            dr.legal_first_name,
-            dr.legal_middle_name,
-            dr.legal_last_name
-          ], ' ', NULL) || ' (' || array_to_string(ARRAY[
+          array_to_string(
+            array_remove(ARRAY[
+              dr.legal_first_name,
+              dr.legal_middle_name,
+              dr.legal_last_name
+            ], ''),
+            ' ',
+            NULL
+          ) || ' (' || array_to_string(ARRAY[
             dr.email,
             dr.phone_number
           ], ', ', NULL) || ')',
@@ -111,19 +121,29 @@ const migrations = [
   'COMMIT'
 ]
 
+const down = [
+  'BEGIN',
+  'DROP VIEW analytics.mini_deals',
+  'COMMIT'
+]
 
-const run = async () => {
-  const conn = await db.conn.promise()
+const runAll = (sqls, next) => {
+  db.conn((err, client, release) => {
+    if (err)
+      return next(err)
 
-  for(const sql of migrations) {
-    await conn.query(sql)
+    async.eachSeries(sqls, client.query.bind(client), err => {
+      release()
+      next(err)
+    })
+  })
+}
+
+const run = (queries) => {
+  return (next) => {
+    runAll(queries, next)
   }
-
-  conn.release()
 }
 
-exports.up = cb => {
-  run().then(cb).catch(cb)
-}
-
-exports.down = () => {}
+exports.up = run(up)
+exports.down = run(down)

@@ -32,11 +32,15 @@ CREATE OR REPLACE VIEW analytics.mini_deals AS
       dr.deal,
       d.checklist,
       dr.role,
-      array_to_string(ARRAY[
-        dr.legal_first_name,
-        dr.legal_middle_name,
-        dr.legal_last_name
-      ], ' ', NULL) AS name
+      array_to_string(
+        array_remove(ARRAY[
+          dr.legal_first_name,
+          dr.legal_middle_name,
+          dr.legal_last_name
+        ], ''),
+        ' ',
+        NULL
+      ) AS name
     FROM
       deals_roles dr
       JOIN deal_info d
@@ -51,11 +55,15 @@ CREATE OR REPLACE VIEW analytics.mini_deals AS
       d.checklist,
       dr.role,
       string_agg(
-        array_to_string(ARRAY[
-          dr.legal_first_name,
-          dr.legal_middle_name,
-          dr.legal_last_name
-        ], ' ', NULL) || ' (' || array_to_string(ARRAY[
+        array_to_string(
+          array_remove(ARRAY[
+            dr.legal_first_name,
+            dr.legal_middle_name,
+            dr.legal_last_name
+          ], ''),
+          ' ',
+          NULL
+        ) || ' (' || array_to_string(ARRAY[
           dr.email,
           dr.phone_number
         ], ', ', NULL) || ')',
