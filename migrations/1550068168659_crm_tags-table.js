@@ -39,6 +39,7 @@ const migrations = [
     ca.deleted_at IS NULL
     AND c.deleted_at IS NULL
     AND ca.attribute_type = 'tag'
+    AND c.brand IS NOT NULL
   ORDER BY
     c.brand,
     ca.text,
