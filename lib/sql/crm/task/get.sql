@@ -17,6 +17,14 @@ SELECT
     WHERE
       crm_task = crm_tasks.id
       AND deleted_at IS NULL
+      AND EXISTS (
+        SELECT
+          brand
+        FROM
+          user_brands(crm_tasks_assignees."user", NULL) ub
+        WHERE
+          ub.brand = crm_tasks.brand
+      )
   ) AS assignees,
   (
     SELECT
