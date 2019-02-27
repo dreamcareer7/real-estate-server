@@ -5,6 +5,7 @@ const db = require('../lib/utils/db')
 
 const up = [
   'BEGIN',
+  'DROP VIEW analytics.mini_deals',
   `CREATE OR REPLACE VIEW analytics.mini_deals AS
     WITH training_brands AS (
       SELECT
