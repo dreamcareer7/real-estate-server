@@ -61,12 +61,10 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       current_deal_context cdc
       JOIN deals
         ON cdc.deal = deals.id
-      JOIN deal_context dc
-        ON dc.id = cdc.id
       JOIN brands_contexts bc
-        ON bc.id = dc.definition
+        ON bc.id = cdc.definition
       JOIN deals_checklists dcl
-        ON dcl.deal = deals.id
+        ON dcl.id = cdc.checklist
     WHERE
       deals.deleted_at IS NULL
       AND cdc.data_type = 'Date'::context_data_type
