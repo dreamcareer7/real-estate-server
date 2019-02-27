@@ -171,11 +171,11 @@ const sendNotifications = function () {
       nodeifyFn(Task.sendNotifications),
     ], err => {
       if (err) {
-        Slack.send({
-          channel: '7-server-errors',
-          text: 'Notifications worker: ' + '`' + err + '`',
-          emoji: ':skull:'
-        }, process.exit)
+        // Slack.send({
+        //   channel: '7-server-errors',
+        //   text: 'Notifications worker: ' + '`' + err + '`',
+        //   emoji: ':skull:'
+        // }, process.exit)
 
         return rollback(err)
       }
