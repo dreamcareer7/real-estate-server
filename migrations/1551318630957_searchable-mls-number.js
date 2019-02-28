@@ -1,4 +1,8 @@
-CREATE OR REPLACE FUNCTION update_listings_filters()
+const db = require('../lib/utils/db')
+
+const migrations = [
+  'BEGIN',
+  `CREATE OR REPLACE FUNCTION update_listings_filters()
   RETURNS trigger AS
 $$
   BEGIN
@@ -90,4 +94,42 @@ $$
     RETURN NEW;
   END;
 $$
-LANGUAGE PLPGSQL;
+LANGUAGE PLPGSQL`,
+  `CREATE OR REPLACE FUNCTION search_listings(query tsquery) RETURNS TABLE (
+   "id" uuid,
+   mls_number text,
+   status listing_status
+) AS
+$$
+  SELECT
+    listings_filters.id as id,
+    listings_filters.mls_number as mls_number,
+    listings_filters.status as status
+
+  FROM listings_filters
+
+  WHERE
+    to_tsvector('english', address)    @@ $1::tsquery
+
+$$
+LANGUAGE sql
+STABLE`,
+  'COMMIT'
+]
+
+
+const run = async () => {
+  const conn = await db.conn.promise()
+
+  for(const sql of migrations) {
+    await conn.query(sql)
+  }
+
+  conn.release()
+}
+
+exports.up = cb => {
+  run().then(cb).catch(cb)
+}
+
+exports.down = () => {}

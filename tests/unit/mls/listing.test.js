@@ -59,11 +59,25 @@ const getByMUI = async () => {
   expect(listing.id).to.equal(id)
 }
 
-const search = async () => {
+const searchAddress = async () => {
   const id = await save()
   const listing = await promisify(Listing.get)(id)
 
   const query = listing.property.address.street_address
+  const status = [ listing.status ]
+  const limit = 1
+
+  const found = await Listing.stringSearch({query, status, limit})
+
+  expect(found).not.to.be.empty
+  expect(found[0].id).to.equal(id)
+}
+
+const searchMls = async () => {
+  const id = await save()
+  const listing = await promisify(Listing.get)(id)
+
+  const query = listing.mls_number
   const status = [ listing.status ]
   const limit = 1
 
@@ -82,5 +96,6 @@ describe('MLS Listing', () => {
   it('should get a bunch of compact listings', getCompacts)
   it('should get a listing by mls number', getByMLSNumber)
   it('should get a listing by matrix unique id', getByMUI)
-  it('should get a listing by string search', search)
+  it('should get a listing by string search on address', searchAddress)
+  it('should get a listing by string search on mls number', searchMls)
 })
