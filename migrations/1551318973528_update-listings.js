@@ -1,10 +1,9 @@
-CREATE OR REPLACE FUNCTION update_listings_filters()
-  RETURNS trigger AS
-$$
-  BEGIN
-    DELETE FROM listings_filters WHERE matrix_unique_id = NEW.matrix_unique_id;
+const db = require('../lib/utils/db')
 
-    INSERT INTO listings_filters
+const migrations = [
+  'BEGIN',
+  'TRUNCATE TABLE listings_filters',
+  `INSERT INTO listings_filters
     SELECT
       listings.id AS id,
       listings.status AS status,
@@ -83,11 +82,23 @@ $$
     JOIN
       properties  ON listings.matrix_unique_id = properties.matrix_unique_id
     JOIN
-      addresses   ON listings.matrix_unique_id = addresses.matrix_unique_id
+      addresses   ON listings.matrix_unique_id = addresses.matrix_unique_id`,
+  'COMMIT'
+]
 
-    WHERE listings.matrix_unique_id = NEW.matrix_unique_id;
 
-    RETURN NEW;
-  END;
-$$
-LANGUAGE PLPGSQL;
+const run = async () => {
+  const conn = await db.conn.promise()
+
+  for(const sql of migrations) {
+    await conn.query(sql)
+  }
+
+  conn.release()
+}
+
+exports.up = cb => {
+  run().then(cb).catch(cb)
+}
+
+exports.down = () => {}
