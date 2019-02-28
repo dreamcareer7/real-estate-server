@@ -12,8 +12,7 @@ $$
   FROM listings_filters
 
   WHERE
-    to_tsvector('english', address) @@ $1::tsquery
-    OR mls_number = $1::text
+    to_tsvector('english', address)    @@ $1::tsquery
 
 $$
 LANGUAGE sql
