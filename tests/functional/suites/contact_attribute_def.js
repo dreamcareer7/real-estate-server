@@ -36,7 +36,7 @@ function useInContact(cb) {
       attributes: [attr]
     })
     .after((err, res, json) => {
-      if (!json.data.sub_contacts[0].attributes.find(a => a.attribute_def.id === attr.attribute_def))
+      if (!json.data.find(a => a.attribute_def.id === attr.attribute_def))
         throw `Custom attribute ${attr.attribute_def} didn't show up on contact data.`
       cb(err, res, json)
     })
@@ -56,9 +56,9 @@ function checkRemovedCustomAttribute(cb) {
 
   return frisby
     .create('make sure contact attributes with the deleted attribute_def are also deleted')
-    .get(`/contacts/${results.contact.create.data[0].id}?associations[]=contact.sub_contacts&associations[]=contact.updated_by&associations[]=contact_attribute.attribute_def`)
+    .get(`/contacts/${results.contact.create.data[0].id}?associations[]=contact.attributes&associations[]=contact.updated_by&associations[]=contact_attribute.attribute_def`)
     .after((err, res, json) => {
-      if (json.data.sub_contacts[0].attributes.find(a => a.attribute_def.id === def_id))
+      if (json.data.attributes.find(a => a.attribute_def.id === def_id))
         throw `Deleted custom attribute ${def_id} still shows up on contact data.`
       cb(err, res, json)
     })
