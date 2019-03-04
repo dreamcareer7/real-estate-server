@@ -1,4 +1,9 @@
-CREATE OR REPLACE VIEW new_notifications AS
+const db = require('../lib/utils/db')
+
+const migrations = [
+  'BEGIN',
+  'DROP VIEW new_notifications',
+  `CREATE OR REPLACE VIEW new_notifications AS
   SELECT
     notifications.id,
     notifications.object,
@@ -27,4 +32,23 @@ CREATE OR REPLACE VIEW new_notifications AS
   JOIN
     notifications_users ON notifications.id = notifications_users.notification
   WHERE
-  notifications_users.acked_at IS NULL
+  notifications_users.acked_at IS NULL`,
+  'COMMIT'
+]
+
+
+const run = async () => {
+  const conn = await db.conn.promise()
+
+  for(const sql of migrations) {
+    await conn.query(sql)
+  }
+
+  conn.release()
+}
+
+exports.up = cb => {
+  run().then(cb).catch(cb)
+}
+
+exports.down = () => {}

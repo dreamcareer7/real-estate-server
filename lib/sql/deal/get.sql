@@ -64,6 +64,7 @@ SELECT deals.*,
           'id', id,
           'notification_type', (subject_class::text || action || object_class::text),
           'room', room,
+          'message', message,
           'type', 'notification_summary'
         )
       ) FROM new_notifications nn
