@@ -1,4 +1,4 @@
-image: node:10-alpine
+image: node:11-alpine
 
 variables:
   ENV: development
@@ -23,7 +23,7 @@ modules:
 
 modules:docs:
   stage: build
-  image: node:10-alpine
+  image: node:11-alpine
   cache:
     key: docs
     paths:
