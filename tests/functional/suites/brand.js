@@ -443,6 +443,62 @@ const removeBrand = cb => {
     .expectStatus(204)
 }
 
+const addEmail = cb => {
+  const email = {
+    name: 'Email Name',
+    goal: 'Email Goal',
+    subject: 'Email Subject',
+    body: 'Email Body',
+    include_signature: true
+  }
+
+  return frisby.create('add an email template to a brand')
+    .post(`/brands/${brand_id}/emails`, email)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      data: email
+    })
+}
+
+const updateEmail = cb => {
+  const email = {
+    name: 'Updated Email Name',
+    goal: 'Updated Email Goal',
+    subject: 'Updated Email Subject',
+    body: 'Updated Email Body',
+    include_signature: false
+  }
+
+  return frisby.create('update an email template')
+    .put(`/brands/${brand_id}/emails/${results.brand.addEmail.data.id}`, email)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      data: email
+    })
+}
+
+const getEmails = cb => {
+  return frisby.create('get email templates')
+    .get(`/brands/${brand_id}/emails`)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      data: [results.brand.updateEmail.data]
+    })
+}
+
+const deleteEmail = cb => {
+  return frisby.create('delete an email')
+    .delete(`/brands/${brand_id}/emails/${results.brand.addEmail.data.id}`)
+    .after(cb)
+    .expectStatus(204)
+}
+
 module.exports = {
   createParent,
   create,
@@ -485,6 +541,11 @@ module.exports = {
   addTemplate,
   updateTemplate,
   getTemplates,
+
+  addEmail,
+  updateEmail,
+  getEmails,
+  deleteEmail,
 
   updateUserSettings,
   getUserRoles,
