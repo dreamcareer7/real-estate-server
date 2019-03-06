@@ -14,6 +14,7 @@ const migrations = [
     html TEXT NOT NULL
   )`,
   'ALTER TABLE emails ADD campaign uuid REFERENCES email_campaigns(id)',
+  'CREATE INDEX emails_campaign ON emails(campaign)',
   'COMMIT'
 ]
 

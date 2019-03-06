@@ -94,15 +94,6 @@ async function createContact() {
   await handleJobs()
 }
 
-async function getEmails() {
-  return sql.select(`
-    SELECT
-      *
-    FROM
-      emails
-  `)
-}
-
 async function testEmailToTags() {
   const campaign = {
     from: user.id,
@@ -128,9 +119,9 @@ async function testEmailToTags() {
   const summaries = await EmailCampaign._filterContacts(campaign.to, brand.id)
   expect(summaries).to.have.length(2)
 
-  const contact_ids = await EmailCampaign.create(campaign, brand.id)
+  const saved = await EmailCampaign.create(campaign, brand.id)
 
-  expect(contact_ids).to.have.length(2)
+  expect(saved.total).to.equal(2)
 }
 
 async function testDuplicateEmail() {
@@ -158,13 +149,8 @@ async function testDuplicateEmail() {
   const summaries = await EmailCampaign._filterContacts(campaign.to, brand.id)
   expect(summaries).to.have.length(1)
 
-  const contact_ids = await EmailCampaign.create(campaign, brand.id)
-  expect(contact_ids).to.have.length(1)
-
-  await handleJobs()
-
-  const emails = await getEmails()
-  expect(emails).to.have.length(1)
+  const saved = await EmailCampaign.create(campaign, brand.id)
+  expect(saved.total).to.equal(1)
 }
 
 async function testEmailsOnly() {
@@ -182,13 +168,8 @@ async function testEmailsOnly() {
   const summaries = await EmailCampaign._filterContacts(campaign.to, brand.id)
   expect(summaries).to.have.length(0)
 
-  const contact_ids = await EmailCampaign.create(campaign, brand.id)
-  expect(contact_ids).to.have.length(0)
-
-  await handleJobs()
-
-  const emails = await getEmails()
-  expect(emails).to.have.length(1)
+  const saved = await EmailCampaign.create(campaign, brand.id)
+  expect(saved.total).to.equal(1)
 }
 
 describe('Contact', () => {
