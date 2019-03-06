@@ -1,7 +1,6 @@
 const { expect } = require('chai')
 
 const { createContext, handleJobs } = require('../helper')
-const sql = require('../../../lib/utils/sql')
 
 const Contact = require('../../../lib/models/Contact')
 const Context = require('../../../lib/models/Context')
