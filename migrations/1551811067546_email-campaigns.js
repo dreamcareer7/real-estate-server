@@ -12,8 +12,8 @@ const migrations = [
     subject TEXT NOT NULL,
     include_signature BOOLEAN NOT NULL,
     html TEXT NOT NULL
-   )`,
-   'ALTER TABLE emails ADD campaign uuid REFERENCES email_campaigns(id)',
+  )`,
+  'ALTER TABLE emails ADD campaign uuid REFERENCES email_campaigns(id)',
   'COMMIT'
 ]
 
