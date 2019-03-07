@@ -7,6 +7,7 @@ const Brand = require('../../../lib/models/Brand')
 const BrandRole = require('../../../lib/models/Brand/role')
 const BrandContext = require('../../../lib/models/Brand/context')
 const BrandChecklist = require('../../../lib/models/Brand/checklist')
+const BrandFlow = require('../../../lib/models/Brand/flow')
 const Context = require('../../../lib/models/Context')
 
 const default_data = {
@@ -27,7 +28,7 @@ async function create(data) {
 
   data = Object.assign({}, default_data, data)
 
-  const { roles, contexts, checklists, ...brand_props } = data
+  const { roles, contexts, checklists, flows, ...brand_props } = data
 
   const b = await Brand.create(brand_props)
 
@@ -68,6 +69,12 @@ async function create(data) {
       key,
       brand: b.id
     })
+  }
+
+  if (Array.isArray(flows)) {
+    for (const flow of flows) {
+      await BrandFlow.create(b.id, flow.created_by, flow)
+    }
   }
 
   Context.set({'db:log': original_log_setting})
