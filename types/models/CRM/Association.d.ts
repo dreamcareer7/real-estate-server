@@ -11,6 +11,7 @@ declare interface ICrmAssociationInputBase {
   id?: UUID;
   index?: number;
   metadata?: any;
+  task?: UUID;
 }
 
 declare interface ICrmAssociationInputListing extends ICrmAssociationInputBase {

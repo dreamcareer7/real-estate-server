@@ -7,6 +7,7 @@ const {
   contact_duplicates,
 } = require('../lib/models/Contact/worker')
 const touches_handler = require('../lib/models/CRM/Touch/worker')
+const tasks_handler = require('../lib/models/CRM/Task/worker')
 
 const airship = (job, done) => {
   const {
@@ -184,6 +185,11 @@ module.exports = {
 
   touches: {
     handler: touches_handler,
+    parallel: 8
+  },
+
+  tasks: {
+    handler: tasks_handler,
     parallel: 8
   }
 }

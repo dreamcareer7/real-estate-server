@@ -1,8 +1,9 @@
 interface IReminderInput {
   id?: UUID;
-
+  task?: UUID;
   timestamp: number;
   is_relative: true;
+  needs_notification?: boolean;
 }
 
 declare interface IReminder {
