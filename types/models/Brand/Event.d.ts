@@ -4,7 +4,7 @@ declare interface IBrandEvent extends IModel {
   brand: UUID;
   title: string;
   description?: string;
-  task_type: string;
+  task_type: TTaskType;
   reminder?: number;
 }
 
