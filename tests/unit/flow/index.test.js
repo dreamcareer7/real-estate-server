@@ -5,7 +5,7 @@ const Context = require('../../../lib/models/Context')
 const Orm = require('../../../lib/models/Orm')
 const User = require('../../../lib/models/User')
 
-const { createContext, handleJobs } = require('../helper')
+const { createContext } = require('../helper')
 const BrandHelper = require('../brand/helper')
 
 let user, brand
