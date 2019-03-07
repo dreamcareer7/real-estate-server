@@ -4,9 +4,10 @@ const contacts = [{
   first_name: 'John',
   last_name: 'Doe',
   birthday: moment().subtract(1, 'day').unix(),
+  wedding_anniversary: moment().subtract(2, 'days').year(1800).unix(),
   partner_first_name: 'Jane',
   partner_last_name: 'Doe',
-  partner_birthday: moment().subtract(5, 'day').unix(),
+  partner_birthday: moment().subtract(5, 'days').unix(),
 }, {
   first_name: 'Gholi',
   last_name: 'Gholavi',
