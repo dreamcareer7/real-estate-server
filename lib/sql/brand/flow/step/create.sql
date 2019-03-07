@@ -11,14 +11,14 @@ SELECT
   $1::uuid,
   title,
   description,
-  task_type,
+  due_in,
   flow,
   event_id
 FROM
-  json_to_recordset($3) AS bs (
+  json_to_recordset($2) AS bs (
     title text,
     description text,
-    task_type text,
+    due_in interval,
     flow uuid,
     event_id uuid
   )

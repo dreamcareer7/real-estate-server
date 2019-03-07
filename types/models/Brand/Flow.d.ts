@@ -16,7 +16,7 @@ declare interface IBrandFlowStepInput {
   description?: string;
   due_in: number;
   flow: UUID;
-  event?: IBrandEvent;
+  event?: IBrandEventInput;
   event_id?: UUID;
 }
 

@@ -1,13 +1,12 @@
 SELECT
   id,
-  created_at,
-  updated_at,
+  EXTRACT(epoch FROM created_at) AS created_at,
+  EXTRACT(epoch FROM updated_at) AS updated_at,
   created_by,
   updated_by,
   title,
   description,
-  order,
-  EXTRACT(epoch FROM due_in),
+  EXTRACT(epoch FROM due_in) AS due_in,
   event,
 
   'brand_flow_step' AS type

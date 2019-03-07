@@ -1,7 +1,7 @@
 SELECT
   id,
-  created_at,
-  updated_at,
+  EXTRACT(epoch FROM created_at) AS created_at,
+  EXTRACT(epoch FROM updated_at) AS updated_at,
   created_by,
   updated_by,
   brand,
@@ -10,7 +10,7 @@ SELECT
 
   (
     SELECT
-      id
+      array_agg(id)
     FROM
       brands_flow_steps
     WHERE
