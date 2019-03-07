@@ -62,5 +62,9 @@ declare interface IUnreadTaskNotification {
 declare interface ITaskAssigneeInput {
   crm_task: UUID;
   user: UUID;
-  created_by: UUID;
+}
+
+declare interface ITaskAssignees {
+  crm_task: UUID;
+  users: UUID[];
 }
