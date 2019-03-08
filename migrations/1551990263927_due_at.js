@@ -5,7 +5,7 @@ const migrations = [
   'ALTER TABLE email_campaigns ADD due_at timestamp with time zone',
   'ALTER TABLE email_campaigns ADD executed_at timestamp with time zone',
   'ALTER TABLE email_campaigns ADD "from" uuid REFERENCES users(id)',
-  'UPDATE TABLE email_campaigns SET "from" = created_by',
+  'UPDATE email_campaigns SET "from" = created_by',
   'ALTER TABLE email_campaigns ALTER "from" SET NOT NULL',
   `CREATE TABLE email_campaigns_recipients (
     id uuid NOT NULL DEFAULT uuid_generate_v1() PRIMARY KEY,
