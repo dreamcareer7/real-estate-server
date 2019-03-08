@@ -39,7 +39,7 @@ function createContext() {
 
   beforeEach(async() => {
     context = Context.create({
-      // logger() {}
+      logger() {}
     })
 
     context.enter()
