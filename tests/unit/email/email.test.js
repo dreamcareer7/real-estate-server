@@ -1,9 +1,6 @@
 const { createContext, handleJobs } = require('../helper')
 
 const Contact = require('../../../lib/models/Contact')
-const Context = require('../../../lib/models/Context')
-const EmailCampaign = require('../../../lib/models/EmailCampaign')
-const User = require('../../../lib/models/User')
 
 const BrandHelper = require('../brand/helper')
 
@@ -148,13 +145,11 @@ async function testEmailsOnly() {
   await EmailCampaign.sendDue()
 }
 
-describe('Contact', () => {
+describe('Email', () => {
   createContext()
   beforeEach(setup)
 
-  describe('Email', () => {
-    it('should send emails to a set of tags', testEmailToTags)
-    it('should not send duplicate emails to a contact with two tags', testDuplicateEmail)
-    it('should send only to specified emails if no list or tag were given', testEmailsOnly)
-  })
+  it('should send emails to a set of tags', testEmailToTags)
+  it('should not send duplicate emails to a contact with two tags', testDuplicateEmail)
+  it('should send only to specified emails if no list or tag were given', testEmailsOnly)
 })
