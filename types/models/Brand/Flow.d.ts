@@ -9,6 +9,8 @@ declare interface IBrandFlowStep {
   due_in: number;
   flow: UUID;
   event: UUID;
+  email: UUID;
+  is_automated: boolean;
 }
 
 declare interface IBrandFlowStepInput {
@@ -17,6 +19,8 @@ declare interface IBrandFlowStepInput {
   due_in: number;
   event?: IBrandEventInput;
   event_id?: UUID;
+  email?: UUID;
+  is_automated: boolean;
 }
 
 declare interface IBrandFlow {
