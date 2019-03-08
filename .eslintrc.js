@@ -20,6 +20,7 @@ const globals = [
   'Contact',
   'Alert',
   'Email',
+  'EmailCampaign',
   'MLSArea',
   'SMS',
   'Crypto',
