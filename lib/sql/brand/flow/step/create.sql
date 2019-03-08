@@ -16,7 +16,7 @@ SELECT
   due_in,
   flow,
   event_id,
-  email_id,
+  email,
   is_automated
 FROM
   json_to_recordset($2) AS bs (
@@ -25,7 +25,7 @@ FROM
     due_in interval,
     flow uuid,
     event_id uuid,
-    email_id uuid,
+    email uuid,
     is_automated boolean
   )
 RETURNING
