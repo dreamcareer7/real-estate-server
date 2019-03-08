@@ -3,7 +3,7 @@ const db = require('../lib/utils/db')
 const migrations = [
   'BEGIN',
   `ALTER TABLE brands_flow_steps
-    ADD COLUMN email uuid NOT NULL REFERENCES brands_emails (id),
+    ADD COLUMN email uuid REFERENCES brands_emails (id),
     ADD COLUMN is_automated boolean NOT NULL`,
   'COMMIT'
 ]
