@@ -3,6 +3,7 @@
 /// <reference path="Agent.d.ts" />
 /// <reference path="User.d.ts" />
 /// <reference path="Brand/index.d.ts" />
+/// <reference path="Brand/Email.d.ts" />
 /// <reference path="Brand/Event.d.ts" />
 /// <reference path="Brand/Flow.d.ts" />
 /// <reference path="Deal/index.d.ts" />

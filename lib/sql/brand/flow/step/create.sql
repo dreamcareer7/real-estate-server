@@ -5,7 +5,9 @@ INSERT INTO
     description,
     due_in,
     flow,
-    event
+    event,
+    email,
+    is_automated
   )
 SELECT
   $1::uuid,
@@ -13,14 +15,18 @@ SELECT
   description,
   due_in,
   flow,
-  event_id
+  event_id,
+  email_id,
+  is_automated
 FROM
   json_to_recordset($2) AS bs (
     title text,
     description text,
     due_in interval,
     flow uuid,
-    event_id uuid
+    event_id uuid,
+    email_id uuid,
+    is_automated boolean
   )
 RETURNING
   id
