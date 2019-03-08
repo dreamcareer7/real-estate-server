@@ -1,9 +1,6 @@
 const { createContext, handleJobs } = require('../helper')
 
 const Contact = require('../../../lib/models/Contact')
-const Context = require('../../../lib/models/Context')
-const EmailCampaign = require('../../../lib/models/EmailCampaign')
-const User = require('../../../lib/models/User')
 
 const BrandHelper = require('../brand/helper')
 

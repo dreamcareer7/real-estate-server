@@ -1047,7 +1047,7 @@ const sendEmails = cb => {
 
   return frisby
     .create('send emails to contacts')
-    .post('/contacts/emails', campaign)
+    .post('/emails', campaign)
     .after(cb)
     .expectStatus(200)
 }
@@ -1063,7 +1063,7 @@ const sendEmailsToTag = cb => {
 
   return frisby
     .create('send emails to contacts with ManyContacts tag')
-    .post('/contacts/emails', campaign)
+    .post('/emails', campaign)
     .after(cb)
     .expectStatus(200)
 }
@@ -1081,7 +1081,7 @@ const sendEmailsToList = cb => {
 
   return frisby
     .create('send emails to many contacts list')
-    .post('/contacts/emails', campaign)
+    .post('/emails', campaign)
     .after(cb)
     .expectStatus(200)
 }
