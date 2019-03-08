@@ -1,5 +1,3 @@
-const { expect } = require('chai')
-
 const { createContext, handleJobs } = require('../helper')
 
 const Contact = require('../../../lib/models/Contact')
@@ -105,22 +103,13 @@ async function testEmailToTags() {
       }
     ],
     subject: '2',
-    html: 'test'
+    html: 'test',
+    due_at: '2019-03-07'
   }
 
-  const { filters } = EmailCampaign._getFilters(campaign.to)
+  await EmailCampaign.create(campaign, brand.id)
 
-  expect(filters).to.have.length(1)
-  expect(filters[0].attribute_type).to.be.equal('tag')
-  expect(filters[0].operator).to.be.equal('any')
-  expect(filters[0].value).to.have.members(['Tag1', 'Tag2'])
-
-  const summaries = await EmailCampaign._filterContacts(campaign.to, brand.id)
-  expect(summaries).to.have.length(2)
-
-  const saved = await EmailCampaign.create(campaign, brand.id)
-
-  expect(saved.total).to.equal(2)
+  await EmailCampaign.sendDue()
 }
 
 async function testDuplicateEmail() {
@@ -138,22 +127,12 @@ async function testDuplicateEmail() {
     html: 'test'
   }
 
-  const { filters } = EmailCampaign._getFilters(campaign.to)
-
-  expect(filters).to.have.length(1)
-  expect(filters[0].attribute_type).to.be.equal('tag')
-  expect(filters[0].operator).to.be.equal('any')
-  expect(filters[0].value).to.have.members(['Tag1', 'Tag4'])
-
-  const summaries = await EmailCampaign._filterContacts(campaign.to, brand.id)
-  expect(summaries).to.have.length(1)
-
-  const saved = await EmailCampaign.create(campaign, brand.id)
-  expect(saved.total).to.equal(1)
+  await EmailCampaign.create(campaign, brand.id)
 }
 
 async function testEmailsOnly() {
   const campaign = {
+    due_at: '2019-03-07',
     from: user.id,
     to: [
       {
@@ -164,11 +143,9 @@ async function testEmailsOnly() {
     html: 'test'
   }
 
-  const summaries = await EmailCampaign._filterContacts(campaign.to, brand.id)
-  expect(summaries).to.have.length(0)
+  await EmailCampaign.create(campaign, brand.id)
 
-  const saved = await EmailCampaign.create(campaign, brand.id)
-  expect(saved.total).to.equal(1)
+  await EmailCampaign.sendDue()
 }
 
 describe('Contact', () => {

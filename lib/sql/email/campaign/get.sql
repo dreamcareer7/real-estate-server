@@ -5,8 +5,10 @@ SELECT email_campaigns.*,
   EXTRACT(EPOCH FROM deleted_at) AS deleted_at,
 
   (
-    SELECT count(*)::int FROM emails WHERE campaign = email_campaigns.id
-  ) as total
+    SELECT ARRAY_AGG(files_relations.id)
+    FROM files_relations
+    WHERE role = 'EmailCampaign' AND role_id = email_campaigns.id
+  ) AS attachments
 
 FROM email_campaigns
 JOIN unnest($1::uuid[]) WITH ORDINALITY t(eid, ord) ON email_campaigns.id = eid
