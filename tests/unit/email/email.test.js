@@ -145,13 +145,11 @@ async function testEmailsOnly() {
   await EmailCampaign.sendDue()
 }
 
-describe('Contact', () => {
+describe('Email', () => {
   createContext()
   beforeEach(setup)
 
-  describe('Email', () => {
-    it('should send emails to a set of tags', testEmailToTags)
-    it('should not send duplicate emails to a contact with two tags', testDuplicateEmail)
-    it('should send only to specified emails if no list or tag were given', testEmailsOnly)
-  })
+  it('should send emails to a set of tags', testEmailToTags)
+  it('should not send duplicate emails to a contact with two tags', testDuplicateEmail)
+  it('should send only to specified emails if no list or tag were given', testEmailsOnly)
 })
