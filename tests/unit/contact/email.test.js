@@ -1,5 +1,3 @@
-const { expect } = require('chai')
-
 const { createContext, handleJobs } = require('../helper')
 
 const Contact = require('../../../lib/models/Contact')
@@ -109,7 +107,7 @@ async function testEmailToTags() {
     due_at: '2019-03-07'
   }
 
-  const saved = await EmailCampaign.create(campaign, brand.id)
+  await EmailCampaign.create(campaign, brand.id)
 
   await EmailCampaign.sendDue()
 }
