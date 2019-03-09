@@ -90,6 +90,7 @@ async function createContact() {
 
 async function testEmailToTags() {
   const campaign = {
+    brand: brand.id,
     from: user.id,
     to: [
       {
@@ -104,7 +105,7 @@ async function testEmailToTags() {
     due_at: '2019-03-07'
   }
 
-  await EmailCampaign.create(campaign, brand.id)
+  await EmailCampaign.createMany([campaign])
 
   await EmailCampaign.sendDue()
 }
@@ -121,10 +122,11 @@ async function testDuplicateEmail() {
       }
     ],
     subject: 'testDuplicateEmail',
-    html: 'test'
+    html: 'test',
+    brand: brand.id
   }
 
-  await EmailCampaign.create(campaign, brand.id)
+  await EmailCampaign.createMany([campaign])
 }
 
 async function testEmailsOnly() {
@@ -137,10 +139,11 @@ async function testEmailsOnly() {
       }
     ],
     subject: 'testEmailOnly',
-    html: 'test'
+    html: 'test',
+    brand: brand.id
   }
 
-  await EmailCampaign.create(campaign, brand.id)
+  await EmailCampaign.createMany([campaign])
 
   await EmailCampaign.sendDue()
 }
