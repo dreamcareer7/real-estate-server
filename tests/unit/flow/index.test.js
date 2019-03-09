@@ -4,6 +4,7 @@ const BrandFlow = require('../../../lib/models/Brand/flow')
 const Contact = require('../../../lib/models/Contact')
 const Context = require('../../../lib/models/Context')
 const CrmTask = require('../../../lib/models/CRM/Task')
+const EmailCampaign = require('../../../lib/models/Email/campaign')
 const Flow = require('../../../lib/models/Flow')
 const Orm = require('../../../lib/models/Orm')
 const User = require('../../../lib/models/User')
@@ -12,6 +13,9 @@ const { createContext, handleJobs } = require('../helper')
 const BrandHelper = require('../brand/helper')
 
 let user, brand, flow
+
+const HOUR = 3600
+const DAY = 24 * HOUR
 
 async function setup() {
   user = await User.getByEmail('test@rechat.com')
@@ -28,14 +32,28 @@ async function setup() {
         title: 'Create Rechat email',
         description: 'Create a Rechat email address for the new guy to use in other services',
         due_in: 0,
+        is_automated: false,
         event: {
           title: 'Create Rechat email',
           task_type: 'Other',
         }
       }, {
+        title: 'Send them a test email',
+        description: 'Automatically send them a test email to make sure it\'s working',
+        due_in: 8 * HOUR + DAY,
+        is_automated: true,
+        email: {
+          name: 'Onboarding Email',
+          goal: 'Test email for new team members',
+          subject: 'Test email from Rechat',
+          include_signature: false,
+          body: 'Hey, this is a test!',
+        }
+      }, {
         title: 'Demo of Rechat',
         description: 'Dan gives a quick demo of the Rechat system and explains how it works',
         due_in: 3,
+        is_automated: false,
         event: {
           title: 'Demo of Rechat',
           task_type: 'Call',
@@ -65,7 +83,7 @@ async function loadFlow() {
 }
 
 async function testBrandFlows() {
-  expect(flow.steps).to.have.length(2)
+  expect(flow.steps).to.have.length(3)
 }
 
 async function createContact() {
@@ -110,6 +128,9 @@ async function testEnrollContact() {
   const tasks = await CrmTask.getForUser(user.id, brand.id, {})
 
   expect(tasks).to.have.length(2)
+
+  const campaigns = await EmailCampaign.getByBrand(brand.id)
+  expect(campaigns).to.have.length(1)
 }
 
 describe('Flow', () => {

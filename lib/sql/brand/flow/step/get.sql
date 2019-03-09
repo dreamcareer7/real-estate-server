@@ -8,6 +8,7 @@ SELECT
   description,
   EXTRACT(epoch FROM due_in) AS due_in,
   event,
+  email,
 
   'brand_flow_step' AS type
 FROM

@@ -116,8 +116,8 @@ declare interface IAddContactOptions {
 declare interface IContactSummary {
   display_name: string;
   abbreviated_display_name: string;
-  email: string;
-  phone_number: string;
+  email: string[];
+  phone_number: string[];
 }
 
 declare type TContactFilterOperator = 'eq' | 'lte' | 'gte' | 'between' | 'any' | 'all';
