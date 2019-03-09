@@ -1,5 +1,6 @@
 const repl = require('repl')
 const promisify = require('../lib/utils/promisify')
+const { enqueueJob } = require('../lib/utils/worker')
 const queue = require('../lib/utils/queue')
 const program = require('commander')
 const Brand = require('../lib/models/Brand')
@@ -21,9 +22,11 @@ const redis = require('../lib/data-service/redis').createClient()
 
 const attachContactEvents = require('../lib/models/Contact/events')
 const attachTouchEventHandler = require('../lib/models/CRM/Touch/events')
+const attachTaskEventHandler = require('../lib/models/CRM/Task/events')
 
 attachContactEvents()
 attachTouchEventHandler()
+attachTaskEventHandler()
 
 const context = Context.create({
   id: '<rechat-shell>',
@@ -49,6 +52,7 @@ db.conn(async (err, client) => {
   r.context.sql = sql
   r.context.context = context
   r.context.promisify = promisify
+  r.context.enqueueJob = enqueueJob
   r.context.handleJobs = async () => { 
     await promisify(Job.handle)(Context.get('jobs'))
     Context.set({ jobs: [] })
