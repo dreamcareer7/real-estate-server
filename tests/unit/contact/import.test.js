@@ -37,7 +37,7 @@ async function testImportFromCsv() {
     path: user.id + '-' + Date.now().toString(),
     relations: [{
       role: 'Brand',
-      id: brand.id
+      role_id: brand.id
     }],
     public: false
   })
