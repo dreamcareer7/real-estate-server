@@ -68,6 +68,8 @@ async function createContact() {
 
 async function createTask(contact_associations) {
   const task = await CrmTask.create({
+    created_by: user.id,
+    brand: brand.id,
     associations: contact_associations.map(a => ({
       association_type: 'contact',
       contact: a
@@ -76,7 +78,7 @@ async function createTask(contact_associations) {
     title: 'Called him',
     status: 'DONE',
     task_type: 'Call'
-  }, user.id, brand.id)
+  })
 
   await handleJobs()
 

@@ -30,11 +30,13 @@ async function setup() {
 
 async function testCrmTaskAgg() {
   await CrmTask.create({
+    created_by: user.id,
+    brand: brand.id,
     title: 'Test',
     task_type: 'Call',
     status: 'DONE',
     due_date: moment().unix()
-  }, user.id, brand.id)
+  })
 
   await Model.aggregate()
 }
