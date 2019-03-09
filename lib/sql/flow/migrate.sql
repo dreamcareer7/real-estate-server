@@ -48,9 +48,11 @@ CREATE TABLE brands_flow_steps (
   title text NOT NULL,
   description text,
   due_in interval NOT NULL,
+  is_automated boolean NOT NULL,
 
   flow uuid REFERENCES brands_flows (id),
-  event uuid REFERENCES brands_events (id)
+  event uuid REFERENCES brands_events (id),
+  email uuid REFERENCES brands_emails (id)
 )
 
 
@@ -90,6 +92,21 @@ CREATE TABLE flows_events (
   crm_task uuid REFERENCES crm_tasks (id)
 )
 
+CREATE TABLE flows_emails (
+  id uuid NOT NULL PRIMARY KEY DEFAULT uuid_generate_v4(),
+
+  created_at timestamptz NOT NULL DEFAULT NOW(),
+  updated_at timestamptz NOT NULL DEFAULT NOW(),
+  deleted_at timestamptz,
+
+  created_by uuid NOT NULL REFERENCES users (id),
+  updated_by uuid REFERENCES users (id),
+  deleted_by uuid REFERENCES users (id),
+
+  origin uuid NOT NULL REFERENCES brands_emails (id),
+  email uuid REFERENCES email_campaigns (id)
+)
+
 CREATE TABLE flows_steps (
   id uuid NOT NULL PRIMARY KEY DEFAULT uuid_generate_v4(),
 
@@ -103,5 +120,6 @@ CREATE TABLE flows_steps (
 
   flow uuid NOT NULL REFERENCES flows (id),
   origin uuid NOT NULL REFERENCES brands_flow_steps (id),
-  event uuid REFERENCES flows_events (id)
+  event uuid REFERENCES flows_events (id),
+  email uuid REFERENCES flows_emails (id)
 )

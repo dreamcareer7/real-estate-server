@@ -19,7 +19,8 @@ async function setupFlows() {
           event: {
             title: 'Create Rechat email',
             task_type: 'Other'
-          }
+          },
+          is_automated: false
         },
         {
           title: 'Demo of Rechat',
@@ -29,7 +30,8 @@ async function setupFlows() {
           event: {
             title: 'Demo of Rechat',
             task_type: 'Call'
-          }
+          },
+          is_automated: false
         }
       ]
     }
