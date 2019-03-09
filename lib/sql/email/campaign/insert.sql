@@ -7,15 +7,13 @@ INSERT INTO email_campaigns (
   include_signature,
   html
 )
-VALUES
-(
-  $1,
-  $2,
-  $3,
-  $4,
-  $5,
-  $6,
-  $7
-)
-
+SELECT
+  due_at,
+  created_by,
+  "from",
+  brand,
+  subject,
+  COALESCE(include_signature, false),
+  html
+FROM json_populate_recordset(NULL::email_campaigns, $1::json)
 RETURNING id
