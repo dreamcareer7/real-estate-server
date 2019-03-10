@@ -4,7 +4,12 @@ const migrations = [
   'BEGIN',
   `ALTER TABLE brands_flow_steps
     ADD COLUMN IF NOT EXISTS email uuid REFERENCES brands_emails (id),
-    ADD COLUMN IF NOT EXISTS is_automated boolean NOT NULL`,
+    ADD COLUMN IF NOT EXISTS is_automated boolean`,
+
+  'UPDATE brands_flow_steps SET is_automated = FALSE',
+
+  'ALTER TABLE brands_flow_steps ALTER is_automated SET NOT NULL',
+
   `CREATE TABLE IF NOT EXISTS flows_emails (
     id uuid NOT NULL PRIMARY KEY DEFAULT uuid_generate_v4(),
   
