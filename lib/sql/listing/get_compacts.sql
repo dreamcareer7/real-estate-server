@@ -102,7 +102,7 @@ SELECT 'compact_listing' AS TYPE,
              EXTRACT(EPOCH FROM start_time) as start_time,
              EXTRACT(EPOCH FROM end_time)   as end_time,
              description
-           FROM open_houses WHERE listing_mui = listings.matrix_unique_id AND start_time > NOW()
+           FROM open_houses WHERE listing_mui = listings.matrix_unique_id AND end_time > NOW()
          ) AS a
        ) AS open_houses,
        json_build_object(
