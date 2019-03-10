@@ -67,7 +67,7 @@ listing_settings AS (
               EXTRACT(EPOCH FROM end_time) AS end_time,
               description
             FROM open_houses WHERE
-            end_time > NOW() AND
+            end_time AT TIME ZONE tz > NOW() AND
             listing_mui = listings.matrix_unique_id
           ) AS a
         ) AS open_houses
