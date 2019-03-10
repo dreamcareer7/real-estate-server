@@ -1,6 +1,7 @@
 const { createContext, handleJobs } = require('../helper')
 
 const Contact = require('../../../lib/models/Contact')
+const EmailCampaign = require('../../../lib/models/Email/campaign')
 
 const BrandHelper = require('../brand/helper')
 
@@ -90,6 +91,7 @@ async function createContact() {
 
 async function testEmailToTags() {
   const campaign = {
+    created_by: user.id,
     brand: brand.id,
     from: user.id,
     to: [
