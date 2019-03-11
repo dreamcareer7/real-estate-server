@@ -7,6 +7,7 @@ const Calendar = require('../../../lib/models/Calendar')
 const Context = require('../../../lib/models/Context')
 const { Listing } = require('../../../lib/models/Listing')
 const User = require('../../../lib/models/User')
+const CrmTask = require('../../../lib/models/CRM/Task')
 
 const BrandHelper = require('../brand/helper')
 const DealHelper = require('../deal/helper')
@@ -32,12 +33,12 @@ async function setup(without_checklists = false) {
   Context.set({ user, brand })
 }
 
-async function createDeal() {
+async function createDeal(is_draft = true) {
   return DealHelper.create(user.id, brand.id, {
     checklists: [{
       context: {
-        closing_date: { value: moment().tz(user.timezone).add(10, 'day').startOf('day').format() },
-        contract_date: { value: moment().tz(user.timezone).add(1, 'day').startOf('day').format() },
+        closing_date: { value: moment.utc().add(10, 'day').startOf('day').format() },
+        contract_date: { value: moment.utc().add(1, 'day').startOf('day').format() },
       },
     }],
     roles: [{
@@ -48,7 +49,7 @@ async function createDeal() {
       legal_last_name: user.last_name
     }],
     listing: listing.id,
-    is_draft: true
+    is_draft
   })
 }
 
@@ -82,9 +83,31 @@ async function testHidingDraftCriticalDates() {
   expect(events).to.have.length(2)
 }
 
+async function testCorrectTimezone() {
+  await createDeal(false)
+  await CrmTask.create({
+    brand: brand.id,
+    created_by: user.id,
+    assignees: [user.id],
+    title: 'Test task',
+    due_date: moment().unix(),
+    status: 'DONE',
+    task_type: 'Email'
+  })
+
+  const high = moment().add(1, 'year').unix(),
+    low = moment().add(-1, 'year').unix()
+
+  await Calendar.getAsICal({}, {
+    low,
+    high
+  }, user.timezone)
+}
+
 describe('Calendar', () => {
   createContext()
   beforeEach(setup)
 
   it('should hide critical dates from draft checklists', testHidingDraftCriticalDates)
+  it('should put events in correct timezones', testCorrectTimezone)
 })
