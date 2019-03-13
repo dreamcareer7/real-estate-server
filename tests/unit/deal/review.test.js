@@ -1,5 +1,5 @@
 const { expect } = require('chai')
-const { createContext } = require('../helper')
+const { createContext, handleJobs } = require('../helper')
 const DealHelper = require('./helper')
 const BrandHelper = require('../brand/helper')
 const promisify = require('../../../lib/utils/promisify')
@@ -84,6 +84,7 @@ const notification = async() => {
 
   await Task.sendNotifications(-1)
 
+  await handleJobs()
   /*
    * TODO: We need some assertions to make sure it's been sent.
    */
