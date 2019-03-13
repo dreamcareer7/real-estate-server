@@ -1,11 +1,19 @@
-{% if data.Approved.length > 0 %}{{data.Approved.length}} Approved: <br />
+{% if data.Approved.length > 0 %}{{data.Approved.length}} Approved:
+
+
   {% for approved in data.Approved %}
-    {{approved}} <br />
+    {{approved}}
+
+
   {% endfor %}
 {% endif %}
 
-{% if data.Declined.length > 0 %}{{data.Declined.length}} Declined: <br />
+{% if data.Declined.length > 0 %}{{data.Declined.length}} Declined:
+
+
   {% for declined in data.Declined %}
-    {{declined}} <br />
+    {{declined}}
+
+
   {% endfor %}
 {% endif %}
