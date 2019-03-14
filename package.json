@@ -58,6 +58,7 @@
     "html-to-text": "^4.0.0",
     "ical": "git+https://github.com/peterbraden/ical.js.git#52c1d1c",
     "ical-generator": "^1.4.4",
+    "indefinite": "^2.2.1",
     "intercom-client": "^2.10.4",
     "juice": "^5.1.0",
     "kue": "^0.11.6",
