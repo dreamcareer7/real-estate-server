@@ -1,3 +1,11 @@
-{% if data.Approved %}{{data.Approved}} Approved{% endif %}
-<br>
-{% if data.Declined %}{{data.Declined}} Declined{% endif %}
+{% if data.Approved.length > 0 %}{{data.Approved.length}} Approved: <br>
+{% for approved in data.Approved %}
+ ✔️ {{approved}}<br>
+{% endfor %}
+{% endif %}
+
+{% if data.Declined.length > 0 %}{{data.Declined.length}} Declined: <br>
+{% for declined in data.Declined %}
+ ❌ {{declined}}<br>
+{% endfor %}
+{% endif %}

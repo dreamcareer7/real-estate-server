@@ -359,15 +359,16 @@ const addAttribute = cb => {
 
   return frisby
     .create('add a new attribute')
-    .post(`/contacts/${results.contact.create.data[0].id}/attributes?associations[]=contact_attribute.attribute_def&associations[]=contact.attributes`, {
+    .post(`/contacts/${results.contact.create.data[0].id}/attributes?associations[]=contact_attribute.attribute_def`, {
       attributes: [a]
     })
     .after((err, res, json) => {
-      if (_.find(json.data.attributes, {
+      if (_.find(json.data, {
         attribute_type: 'tag',
         text: a.text
-      }))
+      })) {
         return cb(err, res, json)
+      }
 
       throw 'Attribute is not added!'
     })
@@ -414,11 +415,11 @@ const addPhoneNumber = cb => {
 
   return frisby
     .create('add a valid phone number')
-    .post(`/contacts/${results.contact.create.data[0].id}/attributes?associations[]=contact.attributes`, {
+    .post(`/contacts/${results.contact.create.data[0].id}/attributes`, {
       attributes: [a]
     })
     .after((err, res, json) => {
-      if (_.find(json.data.attributes, {
+      if (_.find(json.data, {
         text: a.text,
         label: a.label,
         is_primary: a.is_primary,
@@ -440,11 +441,11 @@ const addEmail = cb => {
 
   return frisby
     .create('add a valid email')
-    .post(`/contacts/${results.contact.addPhoneNumber.data.id}/attributes?associations[]=contact.attributes`, {
+    .post(`/contacts/${results.contact.create.data[0].id}/attributes`, {
       attributes: [a]
     })
     .after((err, res, json) => {
-      if (_.find(json.data.attributes, {
+      if (_.find(json.data, {
         text: a.text,
         label: a.label,
         attribute_type: 'email'
@@ -483,7 +484,7 @@ const areEmailsLowered = cb => {
     })
     .expectStatus(200)
     .after((err, res, json) => {
-      if (!_.find(json.data.attributes, {
+      if (!_.find(json.data, {
         attribute_type: 'email',
         text: 'bombasticemail@mrbombastic.org'
       }))
@@ -495,7 +496,7 @@ const areEmailsLowered = cb => {
 
 const removeAttribute = cb => {
   const attr_id = _.findLast(
-    results.contact.addAttribute.data.attributes,
+    results.contact.addAttribute.data,
     {
       attribute_type: 'tag'
     }
@@ -519,7 +520,7 @@ const removeAttribute = cb => {
 }
 
 const removeBulkAttributes = cb => {
-  const ids = results.contact.addAttribute.data.attributes.filter(a => a.attribute_type === 'note').map(a => a.id)
+  const ids = results.contact.addAttribute.data.filter(a => a.attribute_type === 'note').map(a => a.id)
 
   return frisby
     .create('remove all note attributes')
@@ -530,7 +531,7 @@ const removeBulkAttributes = cb => {
 
 const removeEmail = cb => {
   const attr_id = _.findLast(
-    results.contact.addEmail.data.attributes,
+    results.contact.addEmail.data,
     {
       attribute_type: 'email'
     }
@@ -540,7 +541,7 @@ const removeEmail = cb => {
     .create('remove the latest added email')
     .after(cb)
     .delete(
-      `/contacts/${results.contact.addEmail.data.id}/attributes/${attr_id}`
+      `/contacts/${results.contact.create.data[0].id}/attributes/${attr_id}`
     )
     .expectStatus(200)
 }
@@ -627,15 +628,15 @@ const deleteContactWorked = cb => {
 
 const updateContact = cb => {
   const tags = _.filter(
-    results.contact.addAttribute.data.attributes,
+    results.contact.addAttribute.data,
     { attribute_type: 'tag' }
   )
   const phones = _.filter(
-    results.contact.addPhoneNumber.data.attributes,
+    results.contact.addPhoneNumber.data,
     { attribute_type: 'phone_number' }
   )
   const emails = _.filter(
-    results.contact.addEmail.data.attributes,
+    results.contact.addEmail.data,
     { attribute_type: 'email' }
   )
 
@@ -679,6 +680,31 @@ const updateContact = cb => {
       cb(err, res, json)
     })
     .expectStatus(200)
+}
+
+const updateAttribute = cb => {
+  const phones = _.filter(
+    results.contact.addPhoneNumber.data,
+    { attribute_type: 'phone_number' }
+  )
+
+  const phone = phones[phones.length - 1]
+
+  phone.text = '+989123456789'
+  phone.label = 'Home-Line2'
+
+  delete phone.attribute_def
+  delete phone.updated_at
+  delete phone.updated_by
+
+  return frisby
+    .create('update an attribute')
+    .put(`/contacts/${results.contact.create.data[0].id}/attributes/${phone.id}`, phone)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      data: phone
+    })
 }
 
 function createStageLists(cb) {
@@ -1047,7 +1073,7 @@ const sendEmails = cb => {
 
   return frisby
     .create('send emails to contacts')
-    .post('/contacts/emails', campaign)
+    .post('/emails', campaign)
     .after(cb)
     .expectStatus(200)
 }
@@ -1063,7 +1089,7 @@ const sendEmailsToTag = cb => {
 
   return frisby
     .create('send emails to contacts with ManyContacts tag')
-    .post('/contacts/emails', campaign)
+    .post('/emails', campaign)
     .after(cb)
     .expectStatus(200)
 }
@@ -1081,7 +1107,7 @@ const sendEmailsToList = cb => {
 
   return frisby
     .create('send emails to many contacts list')
-    .post('/contacts/emails', campaign)
+    .post('/emails', campaign)
     .after(cb)
     .expectStatus(200)
 }
@@ -1114,6 +1140,7 @@ module.exports = {
   addEmail,
   searchByAddedEmail,
   areEmailsLowered,
+  updateAttribute,
   updateContact,
   patchOwner,
   createStageLists,

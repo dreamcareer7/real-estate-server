@@ -10,4 +10,5 @@ RETURNING
   crm_task,
   contact,
   deal,
-  listing
+  listing,
+  email

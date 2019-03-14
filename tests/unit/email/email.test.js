@@ -1,12 +1,7 @@
-const { expect } = require('chai')
-
 const { createContext, handleJobs } = require('../helper')
-const sql = require('../../../lib/utils/sql')
 
 const Contact = require('../../../lib/models/Contact')
-const Context = require('../../../lib/models/Context')
-const EmailCampaign = require('../../../lib/models/EmailCampaign')
-const User = require('../../../lib/models/User')
+const EmailCampaign = require('../../../lib/models/Email/campaign')
 
 const BrandHelper = require('../brand/helper')
 
@@ -94,17 +89,10 @@ async function createContact() {
   await handleJobs()
 }
 
-async function getEmails() {
-  return sql.select(`
-    SELECT
-      *
-    FROM
-      emails
-  `)
-}
-
 async function testEmailToTags() {
   const campaign = {
+    created_by: user.id,
+    brand: brand.id,
     from: user.id,
     to: [
       {
@@ -115,22 +103,13 @@ async function testEmailToTags() {
       }
     ],
     subject: '2',
-    html: 'test'
+    html: 'test',
+    due_at: '2019-03-07'
   }
 
-  const { filters } = EmailCampaign._getFilters(campaign.to)
+  await EmailCampaign.createMany([campaign])
 
-  expect(filters).to.have.length(1)
-  expect(filters[0].attribute_type).to.be.equal('tag')
-  expect(filters[0].operator).to.be.equal('any')
-  expect(filters[0].value).to.have.members(['Tag1', 'Tag2'])
-
-  const summaries = await EmailCampaign._filterContacts(campaign.to, brand.id)
-  expect(summaries).to.have.length(2)
-
-  const contact_ids = await EmailCampaign.create(campaign, brand.id)
-
-  expect(contact_ids).to.have.length(2)
+  await EmailCampaign.sendDue()
 }
 
 async function testDuplicateEmail() {
@@ -145,30 +124,16 @@ async function testDuplicateEmail() {
       }
     ],
     subject: 'testDuplicateEmail',
-    html: 'test'
+    html: 'test',
+    brand: brand.id
   }
 
-  const { filters } = EmailCampaign._getFilters(campaign.to)
-
-  expect(filters).to.have.length(1)
-  expect(filters[0].attribute_type).to.be.equal('tag')
-  expect(filters[0].operator).to.be.equal('any')
-  expect(filters[0].value).to.have.members(['Tag1', 'Tag4'])
-
-  const summaries = await EmailCampaign._filterContacts(campaign.to, brand.id)
-  expect(summaries).to.have.length(1)
-
-  const contact_ids = await EmailCampaign.create(campaign, brand.id)
-  expect(contact_ids).to.have.length(1)
-
-  await handleJobs()
-
-  const emails = await getEmails()
-  expect(emails).to.have.length(1)
+  await EmailCampaign.createMany([campaign])
 }
 
 async function testEmailsOnly() {
   const campaign = {
+    due_at: '2019-03-07',
     from: user.id,
     to: [
       {
@@ -176,28 +141,20 @@ async function testEmailsOnly() {
       }
     ],
     subject: 'testEmailOnly',
-    html: 'test'
+    html: 'test',
+    brand: brand.id
   }
 
-  const summaries = await EmailCampaign._filterContacts(campaign.to, brand.id)
-  expect(summaries).to.have.length(0)
+  await EmailCampaign.createMany([campaign])
 
-  const contact_ids = await EmailCampaign.create(campaign, brand.id)
-  expect(contact_ids).to.have.length(0)
-
-  await handleJobs()
-
-  const emails = await getEmails()
-  expect(emails).to.have.length(1)
+  await EmailCampaign.sendDue()
 }
 
-describe('Contact', () => {
+describe('Email', () => {
   createContext()
   beforeEach(setup)
 
-  describe('Email', () => {
-    it('should send emails to a set of tags', testEmailToTags)
-    it('should not send duplicate emails to a contact with two tags', testDuplicateEmail)
-    it('should send only to specified emails if no list or tag were given', testEmailsOnly)
-  })
+  it('should send emails to a set of tags', testEmailToTags)
+  it('should not send duplicate emails to a contact with two tags', testDuplicateEmail)
+  it('should send only to specified emails if no list or tag were given', testEmailsOnly)
 })

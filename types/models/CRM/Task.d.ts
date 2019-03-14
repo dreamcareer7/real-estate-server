@@ -28,6 +28,10 @@ declare interface ITask extends ICrmAssociationsCategorized {
 
 declare interface ITaskInput {
   id?: UUID;
+
+  brand: UUID;
+  created_by: UUID
+
   title: string;
   description?: string;
   due_date: number;
@@ -63,4 +67,9 @@ declare interface ITaskAssigneeInput {
   crm_task: UUID;
   user: UUID;
   created_by: UUID;
+}
+
+declare interface ITaskAssignees {
+  crm_task: UUID;
+  users: UUID[];
 }

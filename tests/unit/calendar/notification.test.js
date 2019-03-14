@@ -107,7 +107,12 @@ async function createContact() {
         attributes: [
           {
             attribute_type: 'first_name',
-            text: 'Abbas'
+            text: 'John'
+          },
+          {
+            attribute_type: 'first_name',
+            text: 'Jane',
+            is_partner: true
           },
           {
             attribute_type: 'birthday',
@@ -118,8 +123,18 @@ async function createContact() {
               .unix()
           },
           {
+            attribute_type: 'birthday',
+            is_partner: true,
+            date: moment
+              .utc()
+              .startOf('day')
+              .add(2, 'days')
+              .year(1800)
+              .unix()
+          },
+          {
             attribute_type: 'child_birthday',
-            label: 'John',
+            label: 'Tom',
             date: moment
               .utc()
               .startOf('day')
@@ -138,6 +153,18 @@ async function createContact() {
   await handleJobs()
 }
 
+function findDueContactEvents() {
+  return async function() {
+    const events = await CalendarWorker.getNotificationDueEvents()
+
+    expect(events.length).to.be.eq(2, 'events.length')
+    expect(events[0]).to.include({
+      event_type: 'child_birthday',
+      object_type: 'contact_attribute'
+    })
+  }
+}
+
 function findDueEvents(expected_event) {
   return async function() {
     const events = await CalendarWorker.getNotificationDueEvents()
@@ -152,16 +179,27 @@ async function sendNotificationForContact() {
   await handleJobs()
 
   const notifications = await promisify(Notification.getForUser)(user.id, {})
-  expect(notifications).not.to.be.empty
+  expect(notifications).to.have.length(2)
 
-  const birthday = moment()
+  const birthday1 = moment()
     .tz(user.timezone)
     .add(1, 'days')
     .add(-10, 'years')
     .unix()
+  const birthday2 = moment()
+    .tz(user.timezone)
+    .add(2, 'days')
+    .year(1800)
+    .unix()
   expect(notifications[0].message).to.be.equal(
-    `Contact Event: Abbas : Child Birthday (John) : ${render_filters.date(
-      birthday,
+    `John's spouse (Jane) has a Birthday on ${render_filters.date(
+      birthday2,
+      'MMM D'
+    )}`
+  )
+  expect(notifications[1].message).to.be.equal(
+    `John has a Child Birthday (Tom) on ${render_filters.date(
+      birthday1,
       'MMM D, YYYY'
     )}`
   )
@@ -174,7 +212,7 @@ async function sendNotificationForDeal() {
   const notifications = await promisify(Notification.getForUser)(user.id, {})
   expect(notifications).not.to.be.empty
   expect(notifications[0].message).to.be.equal(
-    `Deal Event: 9641  INWOOD Road : Executed Date : ${render_filters.time(
+    `9641  INWOOD Road has an Executed Date on ${render_filters.time(
       Deal.getContext(deal, 'contract_date').getTime() / 1000,
       'MMM D, YYYY',
       'UTC'
@@ -332,10 +370,7 @@ describe('Calendar', () => {
     context('when there is an upcoming birthday', () => {
       it(
         'should find due events correctly',
-        findDueEvents({
-          event_type: 'child_birthday',
-          object_type: 'contact_attribute'
-        })
+        findDueContactEvents()
       )
       it(
         'should send a notification to subscribed users',

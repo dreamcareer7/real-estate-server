@@ -1,16 +1,21 @@
-declare type TCrmAssoicationType = 'deal' | 'contact' | 'listing';
+declare type TCrmAssoicationType = 'deal' | 'contact' | 'listing' | 'email';
 declare type TCrmAssociationParentType = 'crm_task';
 
 declare interface IAssociationFilters {
   deal?: UUID;
   contact?: UUID;
   listing?: UUID;
+  email?: UUID;
 }
 
 declare interface ICrmAssociationInputBase {
   id?: UUID;
   index?: number;
   metadata?: any;
+  task?: UUID;
+
+  created_by: UUID;
+  brand: UUID;
 }
 
 declare interface ICrmAssociationInputListing extends ICrmAssociationInputBase {
@@ -28,10 +33,16 @@ declare interface ICrmAssociationInputDeal extends ICrmAssociationInputBase {
   deal: UUID;
 }
 
+declare interface ICrmAssociationInputEmail extends ICrmAssociationInputBase {
+  association_type: "email";
+  email: UUID;
+}
+
 declare type ICrmAssociationInput = 
   | ICrmAssociationInputContact
   | ICrmAssociationInputDeal
-  | ICrmAssociationInputListing;
+  | ICrmAssociationInputListing
+  | ICrmAssociationInputEmail;
 
 declare interface ICrmAssociation {
   id?: UUID;
@@ -49,6 +60,7 @@ declare interface ICrmAssociation {
   deal: UUID;
   contact: UUID;
   listing: UUID;
+  email: UUID;
 
   index?: number;
   metadata?: any;
@@ -58,4 +70,5 @@ declare interface ICrmAssociationsCategorized {
   deals: UUID[];
   contacts: UUID[];
   listings: UUID[];
+  emails: UUID[];
 }

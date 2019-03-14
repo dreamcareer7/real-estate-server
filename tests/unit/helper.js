@@ -10,10 +10,12 @@ const { handleJob } = require('../functional/jobs')
 require('../../lib/models/index')()
 
 const attachContactEvents = require('../../lib/models/Contact/events')
+const attachTaskEventHandler = require('../../lib/models/CRM/Task/events')
 const attachTouchEventHandler = require('../../lib/models/CRM/Touch/events')
 
 attachContactEvents()
 attachTouchEventHandler()
+attachTaskEventHandler()
 
 // Mock Socket so Notification can work in unit tests
 global['Socket'] = {
@@ -48,7 +50,8 @@ function createContext() {
 
     context.set({
       db: conn,
-      jobs: []
+      jobs: [],
+      'db:log': true
     })
 
     await db.executeSql.promise('BEGIN', [], conn)    

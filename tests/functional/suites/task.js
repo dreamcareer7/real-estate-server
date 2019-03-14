@@ -1,3 +1,4 @@
+const { expect } = require('chai')
 const fs = require('fs')
 const path = require('path')
 const uuid = require('node-uuid')
@@ -301,7 +302,18 @@ function fetchAssociations(cb) {
         results.task.create.data.id
       }/associations?associations[]=crm_association.listing&associations[]=crm_association.contact`
     )
-    .after(cb)
+    .after((err, res, json) => {
+      if (err) return cb(err, res, json)
+
+      const associated_contacts = json.data.filter(a => a.association_type === 'contact').map(a => a.contact.id)
+
+      expect(associated_contacts).to.have.members([
+        results.contact.create.data[0].id,
+        results.contact.getContacts.data[2].id,
+        results.contact.getContacts.data[3].id
+      ])
+      cb(undefined, res, json)
+    })
     .expectStatus(200)
     .expectJSON({
       data: [
@@ -319,7 +331,6 @@ function fetchAssociations(cb) {
           crm_task: results.task.create.data.id,
           association_type: 'contact',
           contact: {
-            id: results.contact.create.data[0].id,
             type: 'contact',
             users: undefined,
             deals: undefined
@@ -330,7 +341,6 @@ function fetchAssociations(cb) {
           crm_task: results.task.create.data.id,
           association_type: 'contact',
           contact: {
-            id: results.contact.getContacts.data[2].id,
             type: 'contact',
             users: undefined,
             deals: undefined
@@ -341,7 +351,6 @@ function fetchAssociations(cb) {
           crm_task: results.task.create.data.id,
           association_type: 'contact',
           contact: {
-            id: results.contact.getContacts.data[3].id,
             type: 'contact',
             users: undefined,
             deals: undefined

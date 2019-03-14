@@ -7,6 +7,8 @@ const Brand = require('../../../lib/models/Brand')
 const BrandRole = require('../../../lib/models/Brand/role')
 const BrandContext = require('../../../lib/models/Brand/context')
 const BrandChecklist = require('../../../lib/models/Brand/checklist')
+const BrandEmail = require('../../../lib/models/Brand/email')
+const BrandFlow = require('../../../lib/models/Brand/flow')
 const Context = require('../../../lib/models/Context')
 
 const default_data = {
@@ -27,7 +29,7 @@ async function create(data) {
 
   data = Object.assign({}, default_data, data)
 
-  const { roles, contexts, checklists, ...brand_props } = data
+  const { roles, contexts, checklists, emails, flows, ...brand_props } = data
 
   const b = await Brand.create(brand_props)
 
@@ -68,6 +70,42 @@ async function create(data) {
       key,
       brand: b.id
     })
+  }
+
+  if (Array.isArray(emails)) {
+    for (const email of emails) {
+      await BrandEmail.create({
+        created_by: email.created_by,
+        brand: b.id,
+        name: email.name,
+        goal: email.goal,
+        subject: email.subject,
+        include_signature: email.include_signature,
+        body: email.body,
+      })
+    }
+  }
+
+  if (Array.isArray(flows)) {
+    for (const flow of flows) {
+      for (const step of flow.steps) {
+        if (typeof step.email === 'object') {
+          const email = await BrandEmail.create({
+            created_by: flow.created_by,
+            brand: b.id,
+            name: step.email.name,
+            goal: step.email.goal,
+            subject: step.email.subject,
+            include_signature: step.email.include_signature,
+            body: step.email.body,
+          })
+
+          step.email = email.id
+        }
+      }
+
+      await BrandFlow.create(b.id, flow.created_by, flow)
+    }
   }
 
   Context.set({'db:log': original_log_setting})

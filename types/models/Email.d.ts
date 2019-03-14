@@ -24,10 +24,15 @@ declare interface IEmailRecipient {
 }
 
 declare interface IEmailCampaign {
+  id?: UUID;
+  due_at: string | null;
+  created_by: UUID;
+  brand: UUID;
   from: UUID;
   to: IEmailRecipientInput[];
   subject: string;
   html: string;
+  attachments?: UUID[];
 }
 
 declare interface IEmail {

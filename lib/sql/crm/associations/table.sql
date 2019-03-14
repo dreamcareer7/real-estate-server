@@ -11,6 +11,7 @@ CREATE TABLE IF NOT EXISTS crm_associations (
   deal uuid NOT NULL REFERENCES deals(id),
   contact uuid NOT NULL REFERENCES contacts(id),
   listing uuid NOT NULL REFERENCES listings(id),
+  email uuid NOT NULL REFERENCES email_campaigns(id),
   index integer,
   metadata json
 )

@@ -86,12 +86,14 @@ async function testHidingDraftCriticalDates() {
 async function testCorrectTimezone() {
   await createDeal(false)
   await CrmTask.create({
+    brand: brand.id,
+    created_by: user.id,
     assignees: [user.id],
     title: 'Test task',
     due_date: moment().unix(),
     status: 'DONE',
     task_type: 'Email'
-  }, user.id, brand.id)
+  })
 
   const high = moment().add(1, 'year').unix(),
     low = moment().add(-1, 'year').unix()

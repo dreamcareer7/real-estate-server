@@ -58,6 +58,15 @@ SELECT
   ) AS lists,
   (
     SELECT
+      array_agg(flows.id)
+    FROM
+      flows
+    WHERE
+      flows.contact = contacts.id
+      AND $3::text[] @> ARRAY['contact.flows']
+  ) as flows,
+  (
+    SELECT
       array_agg("user")
     FROM
       contacts_users

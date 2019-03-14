@@ -6,6 +6,7 @@ INSERT INTO crm_associations (
     contact,
     deal,
     listing,
+    email,
     index,
     metadata
 )
@@ -18,6 +19,7 @@ VALUES (
     $6,
     $7,
     $8,
-    $9
+    $9,
+    $10
 )
 RETURNING id

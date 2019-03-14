@@ -15,7 +15,7 @@ const Context = require('../../../lib/models/Context')
 const CrmTask = require('../../../lib/models/CRM/Task')
 const Notification = require('../../../lib/models/Notification')
 const User = require('../../../lib/models/User')
-const Worker = require('../../../lib/models/CRM/Task/worker')
+const Worker = require('../../../lib/models/CRM/Task/worker/notification')
 
 let userA, userB, brand
 
@@ -59,6 +59,8 @@ async function expectEmailWithSubject(subject) {
 async function testAssignment() {
   const task = await CrmTask.create(
     {
+      created_by: userA.id,
+      brand: brand.id,
       assignees: [userB.id],
       due_date: moment()
         .add(40, 'minutes')
@@ -66,9 +68,7 @@ async function testAssignment() {
       title: 'Test assignment',
       task_type: 'Call',
       status: 'PENDING'
-    },
-    userA.id,
-    brand.id
+    }
   )
 
   await handleJobs()
@@ -101,6 +101,8 @@ async function testAssignment() {
 async function testUpdateAssignedTask() {
   let task = await CrmTask.create(
     {
+      created_by: userB.id,
+      brand: brand.id,
       assignees: [userB.id],
       due_date: moment()
         .add(10, 'minutes')
@@ -108,9 +110,7 @@ async function testUpdateAssignedTask() {
       title: 'Test assigned task update',
       task_type: 'Call',
       status: 'PENDING'
-    },
-    userB.id,
-    brand.id
+    }
   )
 
   await handleJobs()
@@ -160,6 +160,8 @@ async function testUpdateAssignedTask() {
 async function testTaskIsDue() {
   const task = await CrmTask.create(
     {
+      created_by: userA.id,
+      brand: brand.id,
       assignees: [userA.id],
       due_date: moment()
         .add(1, 'second')
@@ -167,9 +169,7 @@ async function testTaskIsDue() {
       title: 'Test TaskIsDue',
       task_type: 'Call',
       status: 'PENDING'
-    },
-    userA.id,
-    brand.id
+    }
   )
 
   const due_tasks = await Worker.getDueTasks()

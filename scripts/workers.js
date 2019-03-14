@@ -13,12 +13,15 @@ const Slack = require('../lib/models/Slack')
 
 const Context = require('../lib/models/Context')
 const Notification = require('../lib/models/Notification')
-const CrmTaskWorker = require('../lib/models/CRM/Task/worker')
+const CrmTaskWorker = require('../lib/models/CRM/Task/worker/notification')
 const CalendarWorker = require('../lib/models/Calendar/worker')
+const EmailCampaign = require('../lib/models/Email/campaign')
 const attachContactEvents = require('../lib/models/Contact/events')
+const attachTaskEventHandler = require('../lib/models/CRM/Task/events')
 const attachTouchEventHandler = require('../lib/models/CRM/Touch/events')
 
 attachContactEvents()
+attachTaskEventHandler()
 attachTouchEventHandler()
 
 process.on('unhandledRejection', (err, promise) => {
@@ -169,6 +172,7 @@ const sendNotifications = function () {
       nodeifyFn(CrmTaskWorker.sendNotifications.bind(CrmTaskWorker)),
       nodeifyFn(CalendarWorker.sendEmailForUnread.bind(CalendarWorker)),
       nodeifyFn(Task.sendNotifications),
+      nodeifyFn(EmailCampaign.sendDue)
     ], err => {
       if (err) {
         Slack.send({
