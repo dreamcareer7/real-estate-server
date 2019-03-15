@@ -1,18 +1,19 @@
 UPDATE deals_roles SET
-  legal_prefix = $2,
-  legal_first_name = $3,
-  legal_middle_name = $4,
-  legal_last_name = $5,
-  "user" = COALESCE($6, (
-    SELECT id FROM users WHERE LOWER(email) = LOWER($7)
+  role_type = $2
+  legal_prefix = $3,
+  legal_first_name = $4,
+  legal_middle_name = $5,
+  legal_last_name = $6,
+  "user" = COALESCE($7, (
+    SELECT id FROM users WHERE LOWER(email) = LOWER($8)
   )),
-  email = $7,
-  phone_number = $8,
-  company_title = $9,
-  commission_dollar = $10,
-  commission_percentage = $11,
-  brokerwolf_id = $12,
-  brokerwolf_row_version = $13,
-  role = $14
+  email = $8,
+  phone_number = $9,
+  company_title = $10,
+  commission_dollar = $11,
+  commission_percentage = $12,
+  brokerwolf_id = $13,
+  brokerwolf_row_version = $14,
+  role = $15
 
 WHERE id = $1
