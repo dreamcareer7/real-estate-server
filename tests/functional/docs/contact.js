@@ -42,11 +42,29 @@ module.exports = {
         description: 'String search in title and description',
         example: 'Hello World'
       },
+      alphabet: {
+        type: 'string',
+        required: false,
+        description: 'Filter by first letter of last name (sort_field)',
+        example: 'a'
+      },
       users: {
         type: 'string',
         required: false,
         uuid: true,
         description: 'Owner of the contact'
+      },
+      ids: {
+        type: 'string',
+        required: false,
+        uuid: true,
+        description: 'List of specific contact ids to include'
+      },
+      excludes: {
+        type: 'string',
+        required: false,
+        uuid: true,
+        description: 'List of specific contact ids to exclude'
       },
       created_by: {
         type: 'string',
@@ -60,7 +78,7 @@ module.exports = {
         uuid: true,
         description: 'The last person who has updated the contact'
       },
-      list: {
+      lists: {
         type: 'string',
         required: false,
         uuid: true,
@@ -69,7 +87,7 @@ module.exports = {
       created_gte: {
         type: 'number',
         required: false,
-        description: 'Creater after'
+        description: 'Created after'
       },
       created_lte: {
         type: 'number',
@@ -85,6 +103,26 @@ module.exports = {
         type: 'number',
         required: false,
         description: 'Last updated before'
+      },
+      last_touch_gte: {
+        type: 'number',
+        required: false,
+        description: 'Last touch after'
+      },
+      last_touch_lte: {
+        type: 'number',
+        required: false,
+        description: 'Last touch before'
+      },
+      next_touch_gte: {
+        type: 'number',
+        required: false,
+        description: 'Next touch after'
+      },
+      next_touch_lte: {
+        type: 'number',
+        required: false,
+        description: 'Next touch before'
       },
       start: {
         type: 'number',
