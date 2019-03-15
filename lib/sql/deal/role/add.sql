@@ -22,7 +22,6 @@ INSERT INTO deals_roles (
   COALESCE($5, (
     SELECT id FROM users WHERE LOWER(email) = LOWER($11)
   )),
-  $5,
   $6,
   $7,
   $8,

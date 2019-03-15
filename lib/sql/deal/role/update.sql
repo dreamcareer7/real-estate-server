@@ -1,5 +1,5 @@
 UPDATE deals_roles SET
-  role_type = $2
+  role_type = $2,
   legal_prefix = $3,
   legal_first_name = $4,
   legal_middle_name = $5,
