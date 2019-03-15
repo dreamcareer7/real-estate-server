@@ -142,6 +142,7 @@ declare interface IContactFilterOptions {
   next_touch_lte?: number;
   created_gte?: number;
   created_lte?: number;
+  alphabet?: string;
   ids?: UUID[];
   excludes?: UUID[];
   list?: UUID;

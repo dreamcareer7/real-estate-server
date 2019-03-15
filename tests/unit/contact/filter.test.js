@@ -130,6 +130,31 @@ async function testFilterFirstNameEquals() {
   expect(filter_res.total).to.equal(1)
 }
 
+async function testAlphabeticalFilter() {
+  async function testFastFilter(alphabet, expected_length) {
+    const filter_res = await Contact.fastFilter(brand.id, [], { alphabet })
+    expect(filter_res.total).to.equal(expected_length)
+  }
+  async function testFilter(alphabet, expected_length) {
+    const filter_res = await Contact.filter(brand.id, [], { alphabet })
+    expect(filter_res.total).to.equal(expected_length)
+  }
+
+  await testFastFilter('a', 1)
+  await testFastFilter('A', 1)
+  await testFastFilter('b', 0)
+
+  await testFilter('a', 1)
+  await testFilter('A', 1)
+  await testFilter('b', 0)
+
+  await testFastFilter('ab', 1)
+  await testFastFilter('ab%', 0)
+
+  await testFilter('ab', 1)
+  await testFilter('ab%', 0)
+}
+
 describe('Contact', () => {
   createContext()
   beforeEach(setup)
@@ -139,5 +164,6 @@ describe('Contact', () => {
     it('should filter by has any of tags', testFilterTagAny)
     it('should filter by has all tags', testFilterTagAll)
     it('should filter by first name is', testFilterFirstNameEquals)
+    it('should filter by first letter of sort field', testAlphabeticalFilter)
   })
 })
