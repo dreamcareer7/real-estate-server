@@ -9,10 +9,10 @@ const migrations = [
   `UPDATE email_campaigns_recipients
    SET recipient_type = 'To'`,
 
-   'ALTER TABLE email_campaigns_recipients ALTER recipient_type SET NOT NULL',
+  'ALTER TABLE email_campaigns_recipients ALTER recipient_type SET NOT NULL',
 
-   'ALTER TABLE emails ADD cc text[]',
-   'ALTER TABLE emails ADD bcc text[]',
+  'ALTER TABLE emails ADD cc text[]',
+  'ALTER TABLE emails ADD bcc text[]',
 ]
 
 
