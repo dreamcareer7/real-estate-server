@@ -8,8 +8,8 @@
     "test:unit": "npx mocha --exit tests/unit/**/*.test.js",
     "start": "npx gulp",
     "docs": "node api_docs/index.js",
-    "coverage": "npx istanbul cover --dir istanbul tests/functional/run.js -- --docs --curl --stop-on-fail --concurrency 20",
-    "coverage:unit": "npx istanbul cover --dir istanbul node_modules/mocha/bin/_mocha -- --exit tests/unit/**/*.test.js",
+    "coverage": "npx nyc node tests/functional/run.js --docs --curl --stop-on-fail --concurrency 20",
+    "coverage:unit": "npx nyc mocha --exit tests/unit/**/*.test.js",
     "migrate:up": "node ./scripts/migrate/up.js",
     "migrate:create": "node_modules/migratus/bin/create --dir migrations --template scripts/migrate/template.js",
     "shell": "node --experimental-repl-await scripts/shell.js",
@@ -17,6 +17,16 @@
   },
   "engines": {
     "node": "11.x"
+  },
+  "nyc": {
+    "extension": [
+      ".js"
+    ],
+    "reporter": [
+      "text-summary",
+      "lcov"
+    ],
+    "report-dir": "./istanbul"
   },
   "author": "",
   "license": "ISC",
@@ -26,7 +36,7 @@
     "amqplib": "^0.5.3",
     "async": "^1.5.2",
     "aws-cloudfront-sign": "^2.2.0",
-    "aws-sdk": "^2.395.0",
+    "aws-sdk": "^2.422.0",
     "base64url": "^3.0.1",
     "bcrypt": "^3.0.4",
     "body-parser": "^1.18.3",
@@ -46,7 +56,7 @@
     "debug": "^3.2.6",
     "docker-names": "^1.1.1",
     "emojify.js": "^1.1.0",
-    "eslint": "^5.12.1",
+    "eslint": "^5.12.2",
     "exceljs": "^1.7.0",
     "exif-parser": "^0.1.12",
     "express": "^4.16.4",
@@ -85,7 +95,7 @@
     "redis": "^2.8.0",
     "request": "^2.88.0",
     "request-as-curl": "^0.1.0",
-    "request-promise-native": "^1.0.5",
+    "request-promise-native": "^1.0.7",
     "s3-download-stream": "^1.1.1",
     "s3-upload-stream": "^1.0.7",
     "socket.io": "^2.2.0",
@@ -95,7 +105,7 @@
     "to-pascal-case": "^1.0.0",
     "to-snake-case": "^1.0.0",
     "twilio": "^3.27.1",
-    "underscore": "^1.8.3",
+    "underscore": "^1.9.1",
     "urban-airship-push": "^0.1.0",
     "xml2js": "^0.4.19"
   },
@@ -103,7 +113,7 @@
     "@types/async": "^2.4.0",
     "@types/chai": "^4.1.7",
     "@types/cheerio": "^0.22.10",
-    "@types/exceljs": "^0.5.2",
+    "@types/exceljs": "^0.5.3",
     "@types/kue": "^0.11.10",
     "@types/lodash": "^4.14.119",
     "@types/mailgun-js": "^0.16.3",
@@ -121,12 +131,12 @@
     "eslint-plugin-standard": "^2.0.0",
     "frisby": "git+https://github.com/emilsedgh/frisby.git#b74d835",
     "gulp": "^4.0.0",
-    "istanbul": "^1.1.0-alpha.1",
     "jasmine-node": "^1.16.2",
-    "mocha": "^5.2.0",
-    "nock": "^9.6.1",
+    "mocha": "^6.0.2",
+    "nock": "^10.0.6",
+    "nyc": "^13.3.0",
     "request-as-curl": "^0.1.0",
     "rimraf": "^2.6.3",
-    "typescript": "^3.2.1"
+    "typescript": "^3.3.3333"
   }
 }
