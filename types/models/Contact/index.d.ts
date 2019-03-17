@@ -151,11 +151,19 @@ declare interface IContactFilterOptions {
   filter_type?: 'and' | 'or'
 }
 
-declare interface ICSVImporterMappedField {
+declare interface ICSVImporterMappingDef {
   label?: string;
   attribute_def: UUID;
   attribute_type?: string;
   index?: number;
+  is_partner: boolean;
+}
+
+declare interface ICSVImporterMapping {
+  def: IContactAttributeDef;
+  label?: string;
+  index?: number;
+  is_partner: boolean;
 }
 
 declare interface IContactDuplicateCluster {
