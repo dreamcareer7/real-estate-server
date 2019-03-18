@@ -47,5 +47,6 @@ SET
     application_fee = $44,
     appliances = $45,
     furnished = $46,
-    fenced_yard = $47
-WHERE id = $48
+    fenced_yard = $47,
+    master_bedroom_in_first_floor = $48
+WHERE id = $49
