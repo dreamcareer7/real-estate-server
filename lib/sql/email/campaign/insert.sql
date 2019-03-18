@@ -5,6 +5,7 @@ INSERT INTO email_campaigns (
   brand,
   subject,
   include_signature,
+  individual,
   html
 )
 SELECT
@@ -14,6 +15,7 @@ SELECT
   brand,
   subject,
   COALESCE(include_signature, false),
+  COALESCE(individual, false),
   html
 FROM json_populate_recordset(NULL::email_campaigns, $1::json)
 RETURNING id
