@@ -54,6 +54,12 @@ module.exports = {
         uuid: true,
         description: 'Owner of the contact'
       },
+      crm_task: {
+        type: 'string',
+        required: false,
+        uuid: true,
+        description: 'CrmTask association query'
+      },
       ids: {
         type: 'string',
         required: false,
