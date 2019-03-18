@@ -2,7 +2,7 @@ const db = require('../lib/utils/db')
 
 const migrations = [
   'BEGIN',
-  'ALTER TABLE open_houses ADD tz TEXT DEFAULT \'CDT\'',
+  'ALTER TABLE email_campaigns ADD individual boolean NOT NULL DEFAULT FALSE',
   'COMMIT'
 ]
 

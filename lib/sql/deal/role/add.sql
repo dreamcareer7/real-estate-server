@@ -1,8 +1,10 @@
 INSERT INTO deals_roles (
   created_by,
+  role_type,
   role,
   deal,
   "user",
+  agent,
   company_title,
   legal_prefix,
   legal_first_name,
@@ -17,10 +19,10 @@ INSERT INTO deals_roles (
   $1,
   $2,
   $3,
-  COALESCE($4, (
-    SELECT id FROM users WHERE LOWER(email) = LOWER($10)
+  $4,
+  COALESCE($5, (
+    SELECT id FROM users WHERE LOWER(email) = LOWER($11)
   )),
-  $5,
   $6,
   $7,
   $8,
@@ -29,7 +31,9 @@ INSERT INTO deals_roles (
   $11,
   $12,
   $13,
-  $14
+  $14,
+  $15,
+  $16
 )
 
 RETURNING id

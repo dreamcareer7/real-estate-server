@@ -3,6 +3,7 @@ package-lock.json
 docs
 !tests/docs
 istanbul
+.nyc_output
 lib/configs/*
 lib/configs/base.js
 scripts/ntreis/timing.config.js
