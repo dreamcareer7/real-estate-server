@@ -1,0 +1,54 @@
+[
+  {
+    "attributes": [
+      {
+        "attribute_type": "first_name",
+        "text": "Abbas"
+      },
+      {
+        "attribute_type": "email",
+        "text": "abbas@rechat.com"
+      },
+      {
+        "attribute_type": "tag",
+        "text": "Tag1"
+      },
+      {
+        "attribute_type": "tag",
+        "text": "Tag2"
+      }
+    ]
+  },
+  {
+    "attributes": [
+      {
+        "attribute_type": "first_name",
+        "text": "Emil"
+      },
+      {
+        "attribute_type": "email",
+        "text": "emil@rechat.com"
+      },
+      {
+        "attribute_type": "tag",
+        "text": "Tag2"
+      }
+    ]
+  },
+  {
+    "attributes": [
+      {
+        "attribute_type": "first_name",
+        "text": "Nasser"
+      },
+      {
+        "attribute_type": "email",
+        "text": "naser@rechat.com"
+      },
+      {
+        "attribute_type": "tag",
+        "text": "Tag3"
+      }
+    ]
+  }
+]
