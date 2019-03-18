@@ -4,6 +4,7 @@ INSERT INTO deals_roles (
   role,
   deal,
   "user",
+  agent,
   company_title,
   legal_prefix,
   legal_first_name,
@@ -31,7 +32,8 @@ INSERT INTO deals_roles (
   $12,
   $13,
   $14,
-  $15
+  $15,
+  $16
 )
 
 RETURNING id

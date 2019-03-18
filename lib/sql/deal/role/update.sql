@@ -8,12 +8,13 @@ UPDATE deals_roles SET
     SELECT id FROM users WHERE LOWER(email) = LOWER($8)
   )),
   email = $8,
-  phone_number = $9,
-  company_title = $10,
-  commission_dollar = $11,
-  commission_percentage = $12,
-  brokerwolf_id = $13,
-  brokerwolf_row_version = $14,
-  role = $15
+  agent = $9,
+  phone_number = $10,
+  company_title = $11,
+  commission_dollar = $12,
+  commission_percentage = $13,
+  brokerwolf_id = $14,
+  brokerwolf_row_version = $15,
+  role = $16
 
 WHERE id = $1
