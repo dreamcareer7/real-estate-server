@@ -92,6 +92,9 @@ An _Activity_ is an object, recording an event that either a specific user has d
 
 # Group Attributes
 
+## Overview
+Contact attributes are stored in an EAV format in the database, and have their own data structure and set of endpoints.
+
 Field          | Type    | Description
 ---------------|:-------:|----------------------------------------------------------------------------
 attribute_def  | uuid    | _AttributeDef_ id
@@ -109,9 +112,6 @@ updated_at     | number  | **Response only**
 deleted_at     | number  | **Response only**
 
 **Note:** Only one instance of any attribute type can be marked as primary at any given time. When an attribute is marked as primary, all other attributes of that type are unmarked automatically.
-
-## Overview
-Contact attributes are stored in an EAV format in the database, and have their own data structure and set of endpoints.
 
 ### Add attributes to a contact [POST /contacts/:id/attributes]
 <!-- include(tests/contact/addAttribute.md) -->
