@@ -13,6 +13,7 @@ user                    | User         | Owner of the contact. association: `con
 created_by              | User         | User who created this contact
 updated_by              | User         | User who created this contact
 brand                   | Brand        | **Unused** Owner of the contact, if it's a brand.
+attributes              | Attribute[]  | List of contact's attributes
 created_at              | number       |
 updated_at              | number       |
 deleted_at              | number       |
@@ -21,6 +22,8 @@ android_address_book_id | string | Address book id of this contact on Android de
 
 Contact's available model associations are as follows:
 
+*  `contact.attributes`
+*  `contact.flows`
 *  `contact.summary`
 *  `contact.lists`
 *  `contact.users`
@@ -29,27 +32,6 @@ Contact's available model associations are as follows:
 *  `contact.user`
 *  `contact.created_by`
 *  `contact.updated_by`
-
-### Contact attributes
-A _ContactAttribute_ is an object that holds all the data and meta-data about a contact attribute.
-
-Field          | Type    | Description
----------------|:-------:|----------------------------------------------------------------------------
-attribute_def  | uuid    | _AttributeDef_ id
-label          | string  | Label for attributes like email and phone number
-is_primary     | boolean | Marks an attribute as primary. Used in certain cases
-text           | string  | If the attribute is string, send data here
-index          | number  | An integer, used for grouping related attributes together, mainly the address components; so when a `city` and a `street_name` attribute have the same index, they belong to the same address group. This grouping is preserved when contacts are merged.
-number         | number  | If the attribute is number, send data here
-date           | number  | If the attribute is date, send the unix timestamp here
-attribute_type | string  | **Response only** for global attributes, this is the name of attribute type
-contact        | uuid    | **Response only** Id of the attribute's contact
-created_by     | uuid    | **Response only** User id who created the attribute
-created_at     | number  | **Response only**
-updated_at     | number  | **Response only**
-deleted_at     | number  | **Response only**
-
-**Note:** Only one instance of any attribute type can be marked as primary at any given time. When an attribute is marked as primary, all other attributes of that type are unmarked automatically.
 
 
 ### Get all user contacts [GET /contacts]
@@ -190,35 +172,41 @@ deleted_at  | date     |
 
 ### Global Attribute types
 
-Name              | Type   | Description
-------------------|:------:|---------------------------------------------------
-email             | string | Holds an email address
-phone_number      | string | Holds a phone number
-title             | string | a.k.a prefix
-first_name        | string |
-middle_name       | string |
-last_name         | string |
-nickname          | string |
-marketing_name    | string | A name used in marketing emails and stuff.
-birthday          | date   | A date for a birthday
-important_date    | date   | Any kind of annual event, like Wedding Anniversary, First Home, Child Birthday, etc.
-tag               | string | A string describing a contact category
-source            | string |
-profile_image_url | string | A url pointing to profile image of this contact
-cover_image_url   | string | A url pointing to cover image of this contact
-company           | string | A string indicating a company name
-website           | string | Any url related to the contact
-job_title         | string | Contact's job title/position in company
-street_prefix     | string |
-street_name       | string |
-street_suffix     | string |
-unit_number       | string |
-city              | string |
-state             | string |
-country           | string |
-postal_code       | string |
-source_type       | string | Source type of this contact. **Non-editable**.
-note              | string | A small note for this contact
+Name                | Type   | Description
+------------------  |:------:|---------------------------------------------------
+email               | string | Holds an email address
+phone_number        | string | Holds a phone number
+title               | string | a.k.a prefix
+first_name          | string |
+middle_name         | string |
+last_name           | string |
+nickname            | string |
+marketing_name      | string | A name used in marketing emails and stuff.
+birthday            | date   | A date for a birthday
+child_birthday      | date   | 
+wedding_anniversary | date   | 
+home_anniversary    | date   | 
+work_anniversary    | date   | 
+tag                 | string | A string describing a contact category
+source              | string |
+profile_image_url   | string | A url pointing to profile image of this contact
+cover_image_url     | string | A url pointing to cover image of this contact
+company             | string | A string indicating a company name
+website             | string | Any url related to the contact
+facebook            | string |
+linkedin            | string |
+instagram           | string |
+job_title           | string | Contact's job title/position in company
+street_prefix       | string |
+street_name         | string |
+street_suffix       | string |
+unit_number         | string |
+city                | string |
+state               | string |
+country             | string |
+postal_code         | string |
+source_type         | string | Source type of this contact. **Non-editable**.
+note                | string | A small note for this contact
 
 ### SourceType possible values
 
