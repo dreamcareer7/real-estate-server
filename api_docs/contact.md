@@ -92,6 +92,24 @@ An _Activity_ is an object, recording an event that either a specific user has d
 
 # Group Attributes
 
+Field          | Type    | Description
+---------------|:-------:|----------------------------------------------------------------------------
+attribute_def  | uuid    | _AttributeDef_ id
+label          | string  | Label for attributes like email and phone number
+is_primary     | boolean | Marks an attribute as primary. Used in certain cases
+text           | string  | If the attribute is string, send data here
+index          | number  | An integer, used for grouping related attributes together, mainly the address components; so when a `city` and a `street_name` attribute have the same index, they belong to the same address group. This grouping is preserved when contacts are merged.
+number         | number  | If the attribute is number, send data here
+date           | number  | If the attribute is date, send the unix timestamp here
+attribute_type | string  | **Response only** for global attributes, this is the name of attribute type
+contact        | uuid    | **Response only** Id of the attribute's contact
+created_by     | uuid    | **Response only** User id who created the attribute
+created_at     | number  | **Response only**
+updated_at     | number  | **Response only**
+deleted_at     | number  | **Response only**
+
+**Note:** Only one instance of any attribute type can be marked as primary at any given time. When an attribute is marked as primary, all other attributes of that type are unmarked automatically.
+
 ## Overview
 Contact attributes are stored in an EAV format in the database, and have their own data structure and set of endpoints.
 
