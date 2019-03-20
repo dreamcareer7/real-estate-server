@@ -11,7 +11,7 @@ AS $$
       display_name = uc.display_name,
       sort_field = uc.sort_field,
       partner_name = uc.partner_name,
-      search_field = to_tsvector('english', uc.searchable_field),
+      search_field = uc.search_field,
       next_touch = uc.next_touch,
       last_touch = uc.last_touch
     FROM

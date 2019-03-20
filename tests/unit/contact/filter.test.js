@@ -70,10 +70,60 @@ async function testFilterTagAll() {
 async function testFilterFirstNameEquals() {
   const filter_res = await Contact.fastFilter(brand.id, [{
     attribute_type: 'first_name',
-    value: 'Abbas'
+    value: 'John'
   }], {})
 
   expect(filter_res.total).to.equal(1)
+}
+
+async function testFFQuery(q, expected_length) {
+  const filter_res = await Contact.fastFilter(brand.id, [], { q })
+  expect(filter_res.total).to.equal(expected_length)
+  return filter_res
+}
+async function testFQuery(q, expected_length) {
+  const filter_res = await Contact.filter(brand.id, [], { q })
+  expect(filter_res.total).to.equal(expected_length)
+  return filter_res
+}
+
+async function testFilterByGuest() {
+  await Contact.create([
+    {
+      attributes: [
+        {
+          attribute_type: 'birthday',
+          date: Date.now() / 1000
+        }
+      ],
+      user: user.id
+    }
+  ], user.id, brand.id)
+
+  await handleJobs()
+
+  await testFFQuery(['Guest'], 1)
+  await testFQuery(['Guest'], 1)
+}
+
+async function testFilterByQuery() {
+  async function testFastFilter() {
+    const { ids } = await testFFQuery(['Emil'], 2)
+    const contacts = await Contact.getAll(ids, user.id)
+
+    expect(contacts[0].display_name).to.be.equal('Emil Sedgh')
+    expect(contacts[1].display_name).to.be.equal('Thomas and Emily')
+  }
+  async function testFilter() {
+    const { ids } = await testFQuery(['Emil'], 2)
+    const contacts = await Contact.getAll(ids, user.id)
+
+    expect(contacts[0].display_name).to.be.equal('Emil Sedgh')
+    expect(contacts[1].display_name).to.be.equal('Thomas and Emily')
+  }
+
+  await testFastFilter()
+  await testFilter()
 }
 
 async function testAlphabeticalFilter() {
@@ -86,19 +136,19 @@ async function testAlphabeticalFilter() {
     expect(filter_res.total).to.equal(expected_length)
   }
 
-  await testFastFilter('a', 1)
-  await testFastFilter('A', 1)
-  await testFastFilter('b', 0)
+  await testFastFilter('j', 1)
+  await testFastFilter('J', 1)
+  await testFastFilter('g', 0)
 
-  await testFilter('a', 1)
-  await testFilter('A', 1)
-  await testFilter('b', 0)
+  await testFilter('j', 1)
+  await testFilter('J', 1)
+  await testFilter('g', 0)
 
-  await testFastFilter('ab', 1)
-  await testFastFilter('ab%', 0)
+  await testFastFilter('jo', 1)
+  await testFastFilter('jo%', 0)
 
-  await testFilter('ab', 1)
-  await testFilter('ab%', 0)
+  await testFilter('jo', 1)
+  await testFilter('jo%', 0)
 }
 
 async function testCrmAssociationFilter() {
@@ -176,6 +226,8 @@ describe('Contact', () => {
     it('should filter by has a tag', testFilterTagEquals)
     it('should filter by has any of tags', testFilterTagAny)
     it('should filter by has all tags', testFilterTagAll)
+    it('should filter by Guest', testFilterByGuest)
+    it('should full-text search', testFilterByQuery)
     it('should filter by first name is', testFilterFirstNameEquals)
     it('should filter by first letter of sort field', testAlphabeticalFilter)
     it('should filter by task association', testCrmAssociationFilter)
