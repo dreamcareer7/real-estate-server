@@ -126,6 +126,26 @@ async function testFilterByQuery() {
   await testFilter()
 }
 
+async function testFTSWithEmptyString() {
+  async function testFastFilter() {
+    const { ids } = await testFFQuery(['Emil', ''], 2)
+    const contacts = await Contact.getAll(ids, user.id)
+
+    expect(contacts[0].display_name).to.be.equal('Emil Sedgh')
+    expect(contacts[1].display_name).to.be.equal('Thomas and Emily')
+  }
+  async function testFilter() {
+    const { ids } = await testFQuery(['Emil', ''], 2)
+    const contacts = await Contact.getAll(ids, user.id)
+
+    expect(contacts[0].display_name).to.be.equal('Emil Sedgh')
+    expect(contacts[1].display_name).to.be.equal('Thomas and Emily')
+  }
+
+  await testFastFilter()
+  await testFilter()
+}
+
 async function testAlphabeticalFilter() {
   async function testFastFilter(alphabet, expected_length) {
     const filter_res = await Contact.fastFilter(brand.id, [], { alphabet })
@@ -226,10 +246,14 @@ describe('Contact', () => {
     it('should filter by has a tag', testFilterTagEquals)
     it('should filter by has any of tags', testFilterTagAny)
     it('should filter by has all tags', testFilterTagAll)
-    it('should filter by Guest', testFilterByGuest)
-    it('should full-text search', testFilterByQuery)
     it('should filter by first name is', testFilterFirstNameEquals)
     it('should filter by first letter of sort field', testAlphabeticalFilter)
     it('should filter by task association', testCrmAssociationFilter)
+  })
+
+  describe('Full-Text Search', () => {
+    it('should full-text search', testFilterByQuery)
+    it('should filter by Guest', testFilterByGuest)
+    it('should fts-filter even if terms contain empty string', testFTSWithEmptyString)
   })
 })
