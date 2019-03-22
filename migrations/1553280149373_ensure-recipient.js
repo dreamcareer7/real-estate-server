@@ -2,6 +2,8 @@ const db = require('../lib/utils/db')
 
 const migrations = [
   'BEGIN',
+  `DELETE FROM email_campaigns_recipients WHERE
+   email IS NULL AND tag IS NULL AND list IS NULL`,
   `ALTER TABLE email_campaigns_recipients
    ADD CONSTRAINT has_recipient CHECK(email IS NOT NULL OR tag IS NOT NULL or list IS NOT NULL)`,
   'COMMIT'
