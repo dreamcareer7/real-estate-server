@@ -1,0 +1,58 @@
+version: '3'
+
+services:
+  postgres:
+    container_name: 'postgres-rechat-server'
+    image: 'mdillon/postgis:10-alpine'
+    environment:
+      POSTGRES_USER: 'postgres'
+      POSTGRES_PASSWORD: 'changeme'
+      PGDATA: '/data/postgres'
+    volumes:
+       - './postgres:/data/postgres'
+    ports:
+      - '5432:5432'
+    networks:
+      - 'postgres'
+    restart: 'always'
+
+  
+  pgadmin:
+    container_name: 'pgadmin-rechat-server'
+    image: 'dpage/pgadmin4'
+    environment:
+      PGADMIN_DEFAULT_EMAIL: 'pgadmin4@pgadmin.org'
+      PGADMIN_DEFAULT_PASSWORD: 'admin'
+    volumes:
+       - './pgadmin:/root/.pgadmin'
+    ports:
+      - '5050:80'
+    networks:
+      - 'postgres'
+    restart: 'always'
+
+
+  redis:
+    container_name: 'redis-rechat-server'
+    image: 'redis'
+    volumes:
+      - './redis:/var/lib/redis'
+    ports:
+      - '6379:6379'
+
+
+  rabbitmq:
+    container_name: 'rabbitmq-rechat-server'
+    image: 'rabbitmq:3-management'
+    environment:
+      RABBITMQ_DEFAULT_USER: 'guest'
+      RABBITMQ_DEFAULT_PASS: 'guest'
+      RABBITMQ_DEFAULT_VHOST: '/'
+    ports:
+      - '15672:15672'
+      - '5672:5672'
+
+
+networks:
+  postgres:
+    driver: bridge

@@ -1,4 +1,5 @@
-# Rechat API
+# Setup Development Env via Docker-Compose and Node.js
+# For manual setup check README-OLD.md
 
 ### Prerequisites
 
@@ -6,64 +7,91 @@
 + Node.js version v8.x.x
 + Postgres >= 9.6
 + Postgis
++ Docker
++ Docker-Compose
 
-### Getting started
 
-##### Clone the repository
+### **Getting started**
 
+
+##### Explain docker-compse file
+* postgres container_name: **'postgres-rechat-server'**
+* pgadmin container_name: **'pgadmin-rechat-server'**
+* redis container_name: **'redis-rechat-server'**
+* rabbitmq container_name: **'rabbitmq-rechat-server'**
+
+
+##### Run docker machines
 ```bash
-git clone git@gitlab.com:rechat/server.git
-cd server
+mkdir /path/to/my-containers-config-dir/rechat/
+cp docker-compose.yml /path/to/my-containers-config-dir/rechat/
+cd /path/to/my-containers-config-dir/rechat/
+mkdir postgres pgadmin redis
+docker-compose up
 ```
 
-##### Install dependencies
-
+##### List all docker machines
 ```bash
-npm install
+docker ps -a
+```
+##### Stop all docker machines
+```bash
+docker stop $(docker ps -aq)
 ```
 
-##### Create database
 
+##### Access to postgres:
+* localhost:5432
+* Username: postgres (as a default)
+* Password: changeme (as a default)
+* network: postgres
+
+##### Access to PgAdmin:
+* URL: http://localhost:5050
+* Username: pgadmin4@pgadmin.org (as a default)
+* Password: admin (as a default)
+
+
+
+### **Config DB**
 ```bash
-createuser --pwprompt --superuser <YOUR_DB_USERNAME>
-createdb --owner=<YOUR_DB_USERNAME> <YOUR_DB_NAME>
-```
+cp minimal.sql /path/to/my-containers-config-dir/rechat/postgres/
 
-##### Enable Postgres extensions
+docker exec -it postgres-rechat-server bash
 
-Connect to your database using `psql`:
-
-```bash
-psql --username=<YOUR_DB_USERNAME> <YOUR_DB_NAME>
-```
-
-Then run the following commands:
-
-```sql
+createdb -U <username> <db-name> (default password: changeme)
+sample: createdb -U postgres rechat
+  
+psql --username=postgres rechat
 CREATE EXTENSION IF NOT EXISTS postgis;
 CREATE EXTENSION IF NOT EXISTS pg_trgm;
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
+psql --username=postgres rechat < minimal.sql
+
 ```
 
-##### Import schema into your database
 
+
+### **Setup Project**
+
+##### Install dependencies
 ```bash
-psql --username=<YOUR_DB_USERNAME> <YOUR_DB_NAME> < data/minimal.sql
+npm install
 ```
+* create and update **lib/configs/development.js**
+* create and update **.aws/credentials**
 
-##### Set configuration options of your database
-
-```bash
-vim lib/configs/developments.js
-```
 
 ### Running tests
 ```bash
+export DATABASE_URL=postgresql://postgres:changeme@localhost/rechat
 npm test
 ```
 
 ### Running the application
 ```bash
+export DATABASE_URL=postgresql://postgres:changeme@localhost/rechat
 npm start
-//listening at port 3078
+// listening at port 3078
 ```
