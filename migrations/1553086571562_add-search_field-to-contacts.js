@@ -55,7 +55,7 @@ const migrations = [
           AND contacts_attribute_defs.deleted_at IS NULL
           AND attribute_type <> ALL('{
             first_name,
-            middle_name,
+            middle_name
             last_name,
             marketing_name,
             email,
@@ -74,7 +74,7 @@ const migrations = [
           FULL OUTER JOIN p2
             ON p1.contact = p2.contact
           FULL OUTER JOIN p3
-            ON COALESCE(p1.contact, p2.contact) = p3.contact
+            ON p2.contact = p3.contact
       )
       SELECT
         cids.id,
