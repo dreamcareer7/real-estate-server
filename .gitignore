@@ -21,3 +21,4 @@ jsdoc/docs
 .vscode
 scripts/setup/status.json
 .env
+.aws
