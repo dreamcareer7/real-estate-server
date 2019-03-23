@@ -8,7 +8,7 @@ WITH cs AS (
     c.display_name,
     c.sort_field,
     c.partner_name,
-    to_tsvector('english', c.searchable_field) AS search_field,
+    c.search_field,
     c.next_touch,
     c.last_touch,
     ct.title,

@@ -39,11 +39,45 @@ declare interface ITaskInput {
   task_type: TTaskType;
 
   reminders?: IReminderInput[];
-  associations?: ICrmAssociationInput[];
+  associations?: ICrmTaskAssociationInput[];
   assignees?: UUID[];
 
   metadata?: any;
 }
+
+
+declare interface ICrmTaskAssociationInputBase {
+  index?: number;
+  metadata?: any;
+}
+
+declare interface ICrmTaskAssociationInputListing extends ICrmTaskAssociationInputBase {
+  association_type: "listing";
+  listing: UUID;
+}
+
+declare interface ICrmTaskAssociationInputContact extends ICrmTaskAssociationInputBase {
+  association_type: "contact";
+  contact: UUID;
+}
+
+declare interface ICrmTaskAssociationInputDeal extends ICrmTaskAssociationInputBase {
+  association_type: "deal";
+  deal: UUID;
+}
+
+declare interface ICrmTaskAssociationInputEmail extends ICrmTaskAssociationInputBase {
+  association_type: "email";
+  email: UUID;
+}
+
+declare type ICrmTaskAssociationInput = 
+  | ICrmTaskAssociationInputContact
+  | ICrmTaskAssociationInputDeal
+  | ICrmTaskAssociationInputListing
+  | ICrmTaskAssociationInputEmail;
+
+declare type ICrmTaskAssociationInputWithId = ICrmTaskAssociationInput & { id?: UUID }
 
 declare interface ITaskFilters extends IAssociationFilters {
   q?: string;
