@@ -299,7 +299,7 @@ async function testCheckEmailForDeal() {
       .text()
       .trim()
   ).to.be.equal(
-    `Due ${render_filters.time(
+    `On ${render_filters.time(
       Deal.getContext(deal, 'contract_date').getTime() / 1000,
       'MMM D, YYYY',
       'UTC'
@@ -322,7 +322,7 @@ async function testCheckEmailForDeal() {
       .text()
       .trim()
   ).to.be.equal(
-    `Due ${render_filters.time(
+    `On ${render_filters.time(
       Deal.getContext(deal, 'contract_date').getTime() / 1000,
       'MMM D, YYYY',
       'UTC'
@@ -338,7 +338,7 @@ async function testCheckEmailForDeal() {
       .text()
       .trim()
   ).to.be.equal(
-    `Due ${render_filters.time(
+    `On ${render_filters.time(
       Deal.getContext(deal, 'closing_date').getTime() / 1000,
       'MMM D, YYYY',
       'UTC'
