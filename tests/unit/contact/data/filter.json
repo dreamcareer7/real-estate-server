@@ -3,11 +3,11 @@
     "attributes": [
       {
         "attribute_type": "first_name",
-        "text": "Abbas"
+        "text": "John"
       },
       {
         "attribute_type": "email",
-        "text": "abbas@rechat.com"
+        "text": "john@rechat.com"
       },
       {
         "attribute_type": "tag",
@@ -26,6 +26,10 @@
         "text": "Emil"
       },
       {
+        "attribute_type": "last_name",
+        "text": "Sedgh"
+      },
+      {
         "attribute_type": "email",
         "text": "emil@rechat.com"
       },
@@ -39,7 +43,16 @@
     "attributes": [
       {
         "attribute_type": "first_name",
-        "text": "Nasser"
+        "text": "Thomas"
+      },
+      {
+        "attribute_type": "marketing_name",
+        "text": "Thomas and Emily"
+      },
+      {
+        "attribute_type": "first_name",
+        "text": "Emily",
+        "is_partner": true
       },
       {
         "attribute_type": "email",

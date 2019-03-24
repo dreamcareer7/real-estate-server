@@ -14,6 +14,43 @@ WITH u AS (
     updated_by = $10::uuid
   WHERE
     id = $1
+  RETURNING
+    id
+), cids AS (
+  SELECT
+    array_agg(c.id) AS ids
+  FROM
+    contacts_attributes AS ca
+    JOIN contacts AS c
+      ON ca.contact = c.id
+    JOIN u
+      ON ca.attribute_def = u.id
+  WHERE
+    c.deleted_at IS NULL
+    AND ca.deleted_at IS NULL
+), csf AS (
+  SELECT
+    gsfc.*
+  FROM
+    cids,
+    get_search_field_for_contacts(cids.ids) AS gsfc
+), updated_contacts AS (
+  UPDATE
+    contacts
+  SET
+    search_field = csf.search_field
+  FROM
+    csf
+  WHERE
+    id = csf.contact
+  RETURNING
+    id
 )
-SELECT
-  update_searchable_field_by_attribute_def($1::uuid)
+UPDATE
+  contacts_summaries AS cs
+SET
+  search_field = c.search_field
+FROM
+  updated_contacts AS c
+WHERE
+  c.id = cs.id

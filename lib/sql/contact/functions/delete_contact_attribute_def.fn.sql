@@ -35,9 +35,9 @@ AS $$
       SET
         updated_at = NOW(),
         updated_by = user_id,
-        searchable_field = csf.searchable_field
+        search_field = csf.search_field
       FROM
-        get_searchable_field_for_contacts(affected_contacts) csf
+        get_search_field_for_contacts(affected_contacts) csf
       WHERE
         contacts.id = csf.contact;
     ELSE
