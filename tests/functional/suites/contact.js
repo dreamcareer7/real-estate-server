@@ -29,6 +29,42 @@ const brandCreateParent = (cb) => {
     })
 }
 
+const createBrandLists = cb => {
+  return frisby.create('create brand lists')
+    .post(`/brands/${results.contact.brandCreateParent.data.id}/lists`, [{
+      name: 'Warm List',
+      filters: [{
+        attribute_def: defs.tag.id,
+        value: 'Warm List'
+      }],
+      touch_freq: 60
+    }, {
+      name: 'Hot List',
+      filters: [{
+        attribute_def: defs.tag.id,
+        value: 'Hot List'
+      }],
+      touch_freq: 30
+    }, {
+      name: 'Past Client',
+      filters: [{
+        attribute_def: defs.tag.id,
+        value: 'Past Client'
+      }],
+      touch_freq: 30
+    }, {
+      name: 'iOS',
+      filters: [{
+        attribute_def: defs.source_type.id,
+        value: 'IOSAddressBook'
+      }],
+      touch_freq: 30
+    }])
+    .after(cb)
+    .expectStatus(200)
+    .expectJSONLength('data', 4)
+}
+
 const brandCreate = (cb) => {
   brand.parent = results.contact.brandCreateParent.data.id
   brand.name = 'Brand'
@@ -1116,6 +1152,7 @@ module.exports = {
   brandCreateParent,
   brandCreate,
   getAttributeDefs,
+  createBrandLists,
   create,
   createCompanyContact,
   createSingleAttrContact,
