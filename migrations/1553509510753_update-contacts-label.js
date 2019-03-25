@@ -5,12 +5,7 @@ const db = require('../lib/utils/db')
 const migrations = [
   'BEGIN',
   
-  `UPDATE contacts_attribute_defs SET labels = array_remove(labels, 'Pager') WHERE name = 'phone_number';`,
-
-  // `UPDATE contacts_attribute_defs SET labels = labels || ARRAY['WhatsApp'] WHERE name = 'phone_number'`, // alternative solution
   `UPDATE contacts_attribute_defs SET labels = '{Home,Mobile,Work,Fax,WhatsApp,Other}'::text[] WHERE name = 'phone_number'`,
-
-  // `UPDATE contacts_attribute_defs SET labels = labels || ARRAY['Investment Property'] WHERE section = 'Addresses'`, // // alternative solution
   `UPDATE contacts_attribute_defs SET labels = '{"Home","Work","Investment Property","Other"}'::text[] WHERE section = 'Addresses'`,
   
   'COMMIT'
