@@ -1,37 +1,37 @@
 registerSuite('contact', ['brandCreateParent', 'brandCreate', 'getAttributeDefs'])
 
-function createDefaultLists(cb) {
-  return frisby.create('create default lists for user')
-    .post('/jobs', {
-      name: 'contact_lists',
-      data: {
-        type: 'create_default_lists',
-        brand_id: results.contact.brandCreate.data.id
-      }
-    })
-    .after(cb)
-    .expectStatus(200)
-}
+// function createDefaultLists(cb) {
+//   return frisby.create('create default lists for user')
+//     .post('/jobs', {
+//       name: 'contact_lists',
+//       data: {
+//         type: 'create_default_lists',
+//         brand_id: results.contact.brandCreate.data.id
+//       }
+//     })
+//     .after(cb)
+//     .expectStatus(200)
+// }
 
-function checkDefaultLists(cb) {
-  return frisby.create('check if default lists are created in the right order')
-    .get('/contacts/lists')
-    .after(cb)
-    .expectStatus(200)
-    .expectJSONLength('data', 4)
-    .expectJSON({
-      code: 'OK',
-      data: [{
-        name: 'Warm List'
-      }, {
-        name: 'Hot List'
-      }, {
-        name: 'Past Client'
-      }, {
-        name: 'iOS'
-      }]
-    })
-}
+// function checkDefaultLists(cb) {
+//   return frisby.create('check if default lists are created in the right order')
+//     .get('/contacts/lists')
+//     .after(cb)
+//     .expectStatus(200)
+//     .expectJSONLength('data', 4)
+//     .expectJSON({
+//       code: 'OK',
+//       data: [{
+//         name: 'Warm List'
+//       }, {
+//         name: 'Hot List'
+//       }, {
+//         name: 'Past Client'
+//       }, {
+//         name: 'iOS'
+//       }]
+//     })
+// }
 
 function create (cb) {
   const tag = results.contact.getAttributeDefs.data.find(a => a.name === 'tag')
