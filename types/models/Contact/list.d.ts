@@ -2,7 +2,7 @@ declare interface IContactListInput {
   name: string;
   filters: IContactAttributeFilter[];
   query?: string;
-  args?: IContactFilterOptions;
+  args?: Pick<IContactFilterOptions, 'filter_type'>;
   is_editable?: boolean;
   touch_freq?: number;
 }
@@ -14,7 +14,7 @@ declare interface IContactList {
   name: string;
   filters: IContactAttributeFilter[];
   query?: string;
-  args?: IContactFilterOptions;
+  args?: Pick<IContactFilterOptions, 'filter_type'>;
   is_pinned: boolean;
   touch_freq?: number;
 

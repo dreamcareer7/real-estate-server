@@ -2,11 +2,12 @@ const { expect } = require('chai')
 
 const { createContext, handleJobs } = require('../helper')
 
-const Contact = require('../../../lib/models/Contact')
 const AttributeDef = require('../../../lib/models/Contact/attribute_def')
+const BrandList = require('../../../lib/models/Brand/list')
+const Contact = require('../../../lib/models/Contact')
+const Context = require('../../../lib/models/Context')
 const List = require('../../../lib/models/Contact/list')
 const ListMember = require('../../../lib/models/Contact/list_members')
-const Context = require('../../../lib/models/Context')
 const Orm = require('../../../lib/models/Orm')
 const User = require('../../../lib/models/User')
 
@@ -64,7 +65,6 @@ async function createEmptyList() {
     name: 'tag',
     filters: [],
     args: {
-      users: [],
       filter_type: 'and'
     }
   })
@@ -130,6 +130,64 @@ async function testInitializeListMembers() {
   expect(contact.lists).to.have.length(1)
 }
 
+async function testGlobalBrandLists() {
+  await BrandList.createAll(undefined, [{
+    name: 'Warm List',
+    touch_freq: 60,
+    filters: [
+      {
+        attribute_def: def_ids_by_name.get('tag'),
+        value: 'Warm List'
+      }
+    ]
+  }])
+
+  const lists = await BrandList.getForBrand(brand.id)
+
+  expect(lists).to.have.length(1)
+  expect(lists[0].name).to.be.equal('Warm List')
+}
+
+async function testBrandLists() {
+  await BrandList.createAll(brand.id, [
+    {
+      name: 'Warm List',
+      touch_freq: 60,
+      filters: [
+        {
+          attribute_def: def_ids_by_name.get('tag'),
+          value: 'Warm List'
+        }
+      ]
+    },
+    {
+      name: 'Hot List',
+      touch_freq: 30,
+      filters: [
+        {
+          attribute_def: def_ids_by_name.get('tag'),
+          value: 'Hot List'
+        }
+      ]
+    }
+  ])
+
+  const b2 = await BrandHelper.create({
+    roles: {
+      Admin: [user.id]
+    },
+    parent: brand.id
+  })
+
+  await handleJobs()
+
+  const lists = await List.getForBrand(b2.id)
+
+  expect(lists).to.have.length(2)
+  expect(lists[0].name).to.be.equal('Warm List')
+  expect(lists[1].name).to.be.equal('Hot List')
+}
+
 describe('Contact', () => {
   createContext()
   beforeEach(setup)
@@ -145,6 +203,12 @@ describe('Contact', () => {
     it(
       'should update list members after contacts are created',
       testUpdateListMembersAfterAddingContacts
+    )
+
+    it('should allow global brand lists', testGlobalBrandLists)
+    it(
+      'should create lists based on brand list templates on brand creation',
+      testBrandLists
     )
   })
 })

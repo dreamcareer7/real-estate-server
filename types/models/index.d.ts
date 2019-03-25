@@ -6,6 +6,7 @@
 /// <reference path="Brand/Email.d.ts" />
 /// <reference path="Brand/Event.d.ts" />
 /// <reference path="Brand/Flow.d.ts" />
+/// <reference path="Brand/List.d.ts" />
 /// <reference path="Deal/index.d.ts" />
 /// <reference path="Contact/index.d.ts" />
 /// <reference path="Contact/list.d.ts" />
