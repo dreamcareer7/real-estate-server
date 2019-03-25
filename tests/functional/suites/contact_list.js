@@ -141,8 +141,8 @@ function listAllFilters(cb) {
 }
 
 module.exports = {
-  createDefaultLists,
-  checkDefaultLists,
+  // createDefaultLists,
+  // checkDefaultLists,
   create,
   createWithEmptyFilters,
   update,
