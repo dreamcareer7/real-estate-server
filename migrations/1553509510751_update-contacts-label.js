@@ -7,7 +7,7 @@ const migrations = [
   
   `UPDATE contacts_attribute_defs SET labels = labels || ARRAY['WhatsApp'] WHERE name = 'phone_number'`,
   `UPDATE contacts_attribute_defs SET labels = array_remove(labels, 'Pager') WHERE name = 'phone_number';`,
-  `UPDATE contacts_attribute_defs SET labels = labels || 'Investment Property' WHERE section = 'Addresses'`
+  `UPDATE contacts_attribute_defs SET labels = labels || ARRAY['Investment Property'] WHERE section = 'Addresses'`,
   
   'COMMIT'
 ];
