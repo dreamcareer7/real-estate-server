@@ -50,15 +50,13 @@ const createBrandLists = cb => {
       filters: [{
         attribute_def: defs.tag.id,
         value: 'Past Client'
-      }],
-      touch_freq: 30
+      }]
     }, {
       name: 'iOS',
       filters: [{
         attribute_def: defs.source_type.id,
         value: 'IOSAddressBook'
-      }],
-      touch_freq: 30
+      }]
     }])
     .after(cb)
     .expectStatus(200)
