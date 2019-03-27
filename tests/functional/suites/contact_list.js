@@ -1,4 +1,9 @@
-registerSuite('contact', ['brandCreateParent', 'brandCreate', 'getAttributeDefs'])
+registerSuite('contact', [
+  'brandCreateParent',
+  'brandCreate',
+  'getAttributeDefs',
+  'createBrandLists'
+])
 
 function createDefaultLists(cb) {
   return frisby.create('create default lists for user')
@@ -14,38 +19,45 @@ function createDefaultLists(cb) {
 }
 
 function checkDefaultLists(cb) {
-  return frisby.create('check if default lists are created in the right order')
+  return frisby
+    .create('check if default lists are created in the right order')
     .get('/contacts/lists')
     .after(cb)
     .expectStatus(200)
     .expectJSONLength('data', 4)
     .expectJSON({
       code: 'OK',
-      data: [{
-        name: 'Warm List'
-      }, {
-        name: 'Hot List'
-      }, {
-        name: 'Past Client'
-      }, {
-        name: 'iOS'
-      }]
+      data: [
+        {
+          name: 'Warm List'
+        },
+        {
+          name: 'Hot List'
+        },
+        {
+          name: 'Past Client'
+        },
+        {
+          name: 'iOS'
+        }
+      ]
     })
 }
 
-function create (cb) {
+function create(cb) {
   const tag = results.contact.getAttributeDefs.data.find(a => a.name === 'tag')
 
-  return frisby.create('create contact search list')
+  return frisby
+    .create('create contact search list')
     .post('/contacts/lists', {
       filters: [
         {
-          'attribute_def': tag.id,
-          'value': 'cool'
+          attribute_def: tag.id,
+          value: 'cool'
         },
         {
-          'attribute_def': tag.id,
-          'value': 'great'
+          attribute_def: tag.id,
+          value: 'great'
         }
       ],
       args: {
@@ -73,7 +85,8 @@ function createWithEmptyFilters(cb) {
     }
   }
 
-  return frisby.create('create a contact list with emptpy filters')
+  return frisby
+    .create('create a contact list with emptpy filters')
     .post('/contacts/lists', data)
     .after(cb)
     .expectStatus(200)
@@ -99,7 +112,8 @@ function update(cb) {
   delete update.updated_at
   delete update.updated_by
 
-  return frisby.create('update contact search list')
+  return frisby
+    .create('update contact search list')
     .put('/contacts/lists/' + results.contact_list.create.data.id, update)
     .after(cb)
     .expectStatus(200)
@@ -110,10 +124,11 @@ function update(cb) {
 }
 
 function listForUser(cb) {
-  return frisby.create('list for user')
+  return frisby
+    .create('list for user')
     .get('/contacts/lists')
     .after((err, res, json) => {
-      if (!(json.data.map(x => x.name).includes('Wow list')))
+      if (!json.data.map(x => x.name).includes('Wow list'))
         throw 'Wow list not found!'
       cb(err, res, json)
     })
@@ -121,14 +136,16 @@ function listForUser(cb) {
 }
 
 function deleteIt(cb) {
-  return frisby.create('delete contact search list')
+  return frisby
+    .create('delete contact search list')
     .delete(`/contacts/lists/${results.contact_list.create.data.id}`)
     .after(cb)
     .expectStatus(204)
 }
 
 function listAllFilters(cb) {
-  return frisby.create('list all availabe filters')
+  return frisby
+    .create('list all availabe filters')
     .get('/contacts/lists/options')
     .after(cb)
     .expectStatus(200)
