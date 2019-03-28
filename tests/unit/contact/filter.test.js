@@ -238,6 +238,11 @@ async function testCrmAssociationFilter() {
   await testFilter(task_ids, 2, 'or')
 }
 
+async function testFTSEscape() {
+  await testFFQuery(['+1', '(214)', '642-1552'], 0)
+  await testFQuery(['+1', '(214)', '642-1552'], 0)
+}
+
 describe('Contact', () => {
   createContext()
   beforeEach(setup)
@@ -250,10 +255,11 @@ describe('Contact', () => {
     it('should filter by first letter of sort field', testAlphabeticalFilter)
     it('should filter by task association', testCrmAssociationFilter)
   })
-
+  
   describe('Full-Text Search', () => {
     it('should full-text search', testFilterByQuery)
     it('should filter by Guest', testFilterByGuest)
     it('should fts-filter even if terms contain empty string', testFTSWithEmptyString)
+    it('should escape special characters', testFTSEscape)
   })
 })

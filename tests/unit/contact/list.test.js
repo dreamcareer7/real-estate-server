@@ -1,12 +1,14 @@
 const { expect } = require('chai')
+const uuid = require('uuid')
 
 const { createContext, handleJobs } = require('../helper')
 
-const Contact = require('../../../lib/models/Contact')
 const AttributeDef = require('../../../lib/models/Contact/attribute_def')
+const BrandList = require('../../../lib/models/Brand/list')
+const Contact = require('../../../lib/models/Contact')
+const Context = require('../../../lib/models/Context')
 const List = require('../../../lib/models/Contact/list')
 const ListMember = require('../../../lib/models/Contact/list_members')
-const Context = require('../../../lib/models/Context')
 const Orm = require('../../../lib/models/Orm')
 const User = require('../../../lib/models/User')
 
@@ -17,6 +19,8 @@ let user, brand, def_ids_by_name
 
 async function setup() {
   user = await User.getByEmail('test@rechat.com')
+
+  if (!user) throw new Error('User not found!')
 
   brand = await BrandHelper.create({
     roles: {
@@ -64,7 +68,6 @@ async function createEmptyList() {
     name: 'tag',
     filters: [],
     args: {
-      users: [],
       filter_type: 'and'
     }
   })
@@ -95,6 +98,85 @@ async function testCreateList() {
   })
 
   return list
+}
+
+async function testHasAccess() {
+  const list = await createWarmList()
+
+  async function testAccess(op) {
+    const accessIndex = await List.hasAccess(brand.id, op, [list.id])
+    expect(accessIndex.get(list.id)).to.be.true
+  }
+
+  await testAccess('read')
+  await testAccess('write')
+}
+
+function testGetNonExistentList(done) {
+  List.get(uuid.v4()).then(
+    () => {
+      done(new Error('Fetching a non-existing list did not throw an error!'))
+    },
+    () => done()
+  )
+}
+
+async function testUpdateList() {
+  const list = await createWarmList()
+
+  async function updateName() {
+    await List.update(
+      list.id,
+      {
+        ...list,
+        name: 'Updated Warm List'
+      },
+      user.id
+    )
+
+    const updated = await List.get(list.id)
+    expect(updated.name).to.be.equal('Updated Warm List')
+  }
+
+  async function updateFilterType() {
+    await List.update(
+      list.id,
+      {
+        ...list,
+        args: { filter_type: 'or' }
+      },
+      user.id
+    )
+
+    const updated = await List.get(list.id)
+    expect(updated.args.filter_type).to.be.equal('or')
+  }
+
+  await updateName()
+  await updateFilterType()
+}
+
+async function testDeleteList() {
+  const list = await createWarmList()
+
+  const n = await List.delete([list.id], user.id)
+  expect(n).to.be.equal(1)
+
+  const lists = await List.getForBrand(brand.id)
+  expect(lists).to.be.empty
+}
+
+async function testFormatListName() {
+  expect(
+    await List.formatCriteria({
+      filters: [
+        {
+          attribute_def: def_ids_by_name.get('tag'),
+          value: 'Warm List'
+        }
+      ]
+    })
+  ).to.be.equal('(Tag = Warm List)')
 }
 
 async function testFetchListsForBrand() {
@@ -130,6 +212,99 @@ async function testInitializeListMembers() {
   expect(contact.lists).to.have.length(1)
 }
 
+async function testGlobalBrandLists() {
+  await BrandList.createAll(undefined, [
+    {
+      name: 'Warm List',
+      touch_freq: 60,
+      filters: [
+        {
+          attribute_def: def_ids_by_name.get('tag'),
+          value: 'Warm List'
+        }
+      ]
+    }
+  ])
+
+  const lists = await BrandList.getForBrand(brand.id)
+
+  expect(lists).to.have.length(1)
+  expect(lists[0].name).to.be.equal('Warm List')
+}
+
+async function testBrandLists() {
+  await BrandList.createAll(brand.id, [
+    {
+      name: 'Warm List',
+      touch_freq: 60,
+      filters: [
+        {
+          attribute_def: def_ids_by_name.get('tag'),
+          value: 'Warm List'
+        }
+      ]
+    },
+    {
+      name: 'Hot List',
+      touch_freq: 30,
+      filters: [
+        {
+          attribute_def: def_ids_by_name.get('tag'),
+          value: 'Hot List'
+        }
+      ]
+    }
+  ])
+
+  const b2 = await BrandHelper.create({
+    roles: {
+      Admin: [user.id]
+    },
+    parent: brand.id
+  })
+
+  await handleJobs()
+
+  const lists = await List.getForBrand(b2.id)
+
+  expect(lists).to.have.length(2)
+  expect(lists[0].name).to.be.equal('Warm List')
+  expect(lists[1].name).to.be.equal('Hot List')
+}
+
+function testBrandListNameValidation(done) {
+  BrandList.createAll(brand.id, [
+    {
+      name: '',
+      filters: []
+    }
+  ]).then(
+    () => {
+      done(new Error('Creating unnamed brand list did not throw an error!'))
+    },
+    () => done()
+  )
+}
+
+function testBrandListTouchFreqValidation(done) {
+  BrandList.createAll(brand.id, [
+    {
+      name: 'Test',
+      filters: [],
+      touch_freq: -10
+    }
+  ]).then(
+    () => {
+      done(
+        new Error(
+          'Creating brand list with negative touch frequency did not throw an error!'
+        )
+      )
+    },
+    () => done()
+  )
+}
+
 describe('Contact', () => {
   createContext()
   beforeEach(setup)
@@ -138,6 +313,14 @@ describe('Contact', () => {
     it('should allow creating a list', testCreateList)
     it('should allow creating an empty list', createEmptyList)
     it('should fetch lists for brand', testFetchListsForBrand)
+    it('should allow updating a list', testUpdateList)
+    it('should allow deleting a list', testDeleteList)
+    it('should check access to list', testHasAccess)
+    it('should throw when fetching a non-existent list', testGetNonExistentList)
+    it('should format a list for Slack', testFormatListName)
+  })
+
+  describe('List Member', () => {
     it(
       'should initialize list members when list is created',
       testInitializeListMembers
@@ -145,6 +328,22 @@ describe('Contact', () => {
     it(
       'should update list members after contacts are created',
       testUpdateListMembersAfterAddingContacts
+    )
+  })
+
+  describe('Brand List', () => {
+    it('should allow global brand lists', testGlobalBrandLists)
+    it(
+      'should create lists based on brand list templates on brand creation',
+      testBrandLists
+    )
+    it(
+      'should not allow creating brand list without a name',
+      testBrandListNameValidation
+    )
+    it(
+      'should not allow creating brand list with a negative touch frequency',
+      testBrandListTouchFreqValidation
     )
   })
 })
