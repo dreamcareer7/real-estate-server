@@ -1,6 +1,6 @@
 const sql = require('../../lib/utils/sql')
 const Context = require('../../lib/models/Context/index')
-const runInContext = require('../../lib/models/Context/util')
+const { runInContext } = require('../../lib/models/Context/util')
 const ContactSummary = require('../../lib/models/Contact/summary')
 
 async function run() {

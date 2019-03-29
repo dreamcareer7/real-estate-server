@@ -3,7 +3,7 @@ const { Bar: ProgressBar, Presets } = require('cli-progress')
 const sql = require('../../lib/utils/sql')
 const Brand = require('../../lib/models/Brand')
 const BrandRole = require('../../lib/models/Brand/role')
-const runInContext = require('../../lib/models/Context/util')
+const { runInContext } = require('../../lib/models/Context/util')
 
 const brand_data = {
   palette: {
@@ -15,7 +15,7 @@ const brand_data = {
 }
 
 async function getCrmUsersWithoutBrand() {
-  return sql.select(`select
+  return sql.selectWithError(`select
     id,
     email,
     features

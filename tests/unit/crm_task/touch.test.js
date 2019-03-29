@@ -86,7 +86,7 @@ async function createTask(contact_associations) {
 }
 
 async function testTouchDates() {
-  const summaries = await sql.select('select * from contacts_summaries where last_touch is not null', [])
+  const summaries = await sql.selectWithError('select * from contacts_summaries where last_touch is not null', [])
 
   expect(summaries).to.have.length(1)
 

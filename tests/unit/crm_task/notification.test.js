@@ -37,7 +37,7 @@ async function getNotifications(user_id) {
 }
 
 async function getEmails() {
-  return sql.select(`
+  return sql.selectWithError(`
     SELECT
       *
     FROM

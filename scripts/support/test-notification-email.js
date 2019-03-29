@@ -3,7 +3,7 @@ const os = require('os')
 const path = require('path')
 
 const promisify = require('../../lib/utils/promisify')
-const runInContext = require('../../lib/models/Context/util')
+const { runInContext } = require('../../lib/models/Context/util')
 
 require('../../lib/models/CRM/Task/index')
 const TaskMailer = require('../../lib/models/CRM/Task/mailer')
