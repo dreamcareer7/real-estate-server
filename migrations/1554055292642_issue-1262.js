@@ -8,8 +8,7 @@ const migrations = [
       notifications_tokens 
     WHERE 
       notifications_tokens.id NOT IN
-        (SELECT id FROM (SELECT DISTINCT ON (channel) * FROM notifications_tokens) as sub) 
-      ORDER BY created_at DESC`,
+        ((SELECT id FROM (SELECT DISTINCT ON (channel) * FROM notifications_tokens) as sub) ORDER BY created_at DESC)`,
 
   'ALTER TABLE notifications_tokens DROP CONSTRAINT notifications_tokens_user_channel_key',
   'ALTER TABLE notifications_tokens ADD CONSTRAINT notifications_tokens_channel UNIQUE (channel)',
