@@ -110,7 +110,6 @@
     "xml2js": "^0.4.19"
   },
   "devDependencies": {
-    "@types/async": "^2.4.1",
     "@types/chai": "^4.1.7",
     "@types/cheerio": "^0.22.11",
     "@types/exceljs": "^0.5.3",

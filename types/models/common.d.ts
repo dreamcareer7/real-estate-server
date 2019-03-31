@@ -27,3 +27,7 @@ declare type RequireProp<T, K extends keyof T> = {
 } & T;
 declare type TIsPropertyPresent<T, P extends T, K extends keyof P> = (x: T) => x is P;
 declare type TIsRequirePropPresent<T, K extends keyof T> = TIsPropertyPresent<T, T & RequireProp<T, K>, K>;
+
+declare type TCallback<T> = 
+  | ((err: any) => void)
+  | ((err: null, res: T) => void)
