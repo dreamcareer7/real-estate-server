@@ -17,7 +17,7 @@ try {
 }
 
 if (options.tests) {
-  const c = spawn('node ' + __dirname + '/../tests/run --docs', {
+  const c = spawn('node ' + __dirname + '/../tests/functional/run --docs', {
     maxBuffer: 1024 * 1000
   }, err => {
     if (err) {
