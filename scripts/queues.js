@@ -1,4 +1,6 @@
 require('../lib/models/index.js')()
+const { aggregate } = require('../lib/utils/worker')
+
 const config = require('../lib/config')
 const {
   contacts,
@@ -8,6 +10,7 @@ const {
 } = require('../lib/models/Contact/worker')
 const touches_handler = require('../lib/models/CRM/Touch/worker')
 const tasks_handler = require('../lib/models/CRM/Task/worker')
+const calendar_handlers = require('../lib/models/Calendar/worker')
 
 const airship = (job, done) => {
   const {
@@ -191,5 +194,10 @@ module.exports = {
   tasks: {
     handler: tasks_handler,
     parallel: 8
+  },
+
+  calendar: {
+    handler: aggregate(calendar_handlers),
+    parallel: 2
   }
 }

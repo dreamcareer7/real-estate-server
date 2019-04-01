@@ -1,3 +1,6 @@
+If you want to setup development Env via docker-compose [click-here](./README.DOCKERIZE.md)    
+
+
 # Rechat API
 
 ### Prerequisites

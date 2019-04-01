@@ -1,5 +1,5 @@
 const Context = require('../../lib/models/Context/index')
-const runInContext = require('../../lib/models/Context/util')
+const { runInContext } = require('../../lib/models/Context/util')
 
 const ContactWorker = require('../../lib/models/Contact/worker/contact')
 

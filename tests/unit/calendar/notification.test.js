@@ -9,7 +9,7 @@ const sql = require('../../../lib/utils/sql')
 const render_filters = require('../../../lib/utils/render_filters')
 
 const CalendarNotification = require('../../../lib/models/Calendar/notification')
-const CalendarWorker = require('../../../lib/models/Calendar/worker')
+const CalendarWorker = require('../../../lib/models/Calendar/worker/notification')
 const Contact = require('../../../lib/models/Contact')
 const Context = require('../../../lib/models/Context')
 const { Listing } = require('../../../lib/models/Listing')
@@ -67,7 +67,7 @@ async function setup(without_checklists = false) {
 }
 
 async function getEmails() {
-  return sql.select(`
+  return sql.selectWithError(`
     SELECT
       *
     FROM
