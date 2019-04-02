@@ -21,7 +21,6 @@ const migrations = [
             attribute_type='social'
             AND text LIKE '%' || network || '%'
             AND deleted_at IS NULL
-            AND id = '1170ea99-8183-4dbb-a7d9-4ad8e3886723'
             AND NOT EXISTS (
               SELECT
                 id
