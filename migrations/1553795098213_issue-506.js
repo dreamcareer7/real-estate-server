@@ -72,13 +72,13 @@ const migrations = [
       END;
   $$`,
 
-  `CREATE OR REPLACE VIEW affected_contacts_view_facebook AS
+  `CREATE MATERIALIZED VIEW affected_contacts_view_facebook AS
     SELECT contact FROM generate_to_update('facebook')`,
 
-  `CREATE OR REPLACE VIEW affected_contacts_view_linkedin AS
+  `CREATE MATERIALIZED VIEW affected_contacts_view_linkedin AS
     SELECT contact FROM generate_to_update('linkedin')`,
 
-  `CREATE OR REPLACE VIEW affected_contacts_view_instagram AS
+  `CREATE MATERIALIZED VIEW affected_contacts_view_instagram AS
     SELECT contact FROM generate_to_update('instagram')`,
 
   `UPDATE contacts_attribute_defs SET
@@ -110,13 +110,13 @@ const migrations = [
   )
   select i506usf.* from affected_contacts, issue_506_update_search_field(affected_contacts.ids) as i506usf`,
 
-  `DROP VIEW
+  `DROP MATERIALIZED VIEW
     affected_contacts_view_facebook`,
 
-  `DROP VIEW
+  `DROP MATERIALIZED VIEW
     affected_contacts_view_linkedin`,
 
-  `DROP VIEW
+  `DROP MATERIALIZED VIEW
     affected_contacts_view_instagram`,
   
   `DROP FUNCTION
