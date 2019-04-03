@@ -3,34 +3,44 @@ const db = require('../lib/utils/db')
 const migrations = [
   'BEGIN',
 
-  `UPDATE contacts_attribute_defs
-    SET singular = TRUE WHERE name = 'website'`,
+  `CREATE OR REPLACE FUNCTION generate_to_update(network TEXT) 
+    RETURNS TABLE (
+      id uuid,
+      contact uuid
+    )
+    LANGUAGE SQL
+    STABLE
+    AS $$
+      WITH to_update AS (
+        SELECT
+          id, contact
+        FROM
+          contacts_attributes AS parent
+        WHERE
+          attribute_type='social'
+          AND text LIKE '%' || network || '%'
+          AND deleted_at IS NULL
+          AND NOT EXISTS (
+          SELECT
+            id
+          FROM
+            contacts_attributes AS child
+          WHERE
+            child.attribute_type = network
+            AND child.contact = parent.contact
+            AND child.deleted_at IS NULL
+        )
+      )
+      SELECT * FROM to_update;
+  $$`,
 
-  `CREATE OR REPLACE FUNCTION my_func(network TEXT) 
+  `CREATE OR REPLACE FUNCTION issue_506_update_attributes(network TEXT) 
     RETURNS VOID
     LANGUAGE plpgsql
     AS $$
       BEGIN
-    
         WITH to_update AS (
-          SELECT
-            id
-          FROM
-            contacts_attributes AS parent
-          WHERE
-            attribute_type='social'
-            AND text LIKE '%' || network || '%'
-            AND deleted_at IS NULL
-            AND NOT EXISTS (
-              SELECT
-                id
-              FROM
-                contacts_attributes AS child
-              WHERE
-                child.attribute_type = network
-                AND child.contact = parent.contact
-                AND child.deleted_at IS NULL
-            )
+          SELECT * FROM generate_to_update(network)
         )
         UPDATE contacts_attributes
         SET
@@ -40,26 +50,83 @@ const migrations = [
           to_update
         WHERE
           contacts_attributes.id = to_update.id;
-    
       END;
   $$`,
 
-  `SELECT
-    my_func('facebook')`,
+  `CREATE OR REPLACE FUNCTION issue_506_update_search_field(contact_ids uuid[])
+    RETURNS VOID
+    LANGUAGE plpgsql
+    VOLATILE
+    AS $$
+      BEGIN
+
+        UPDATE
+          contacts
+        SET
+          search_field = csf.search_field
+        FROM
+          get_search_field_for_contacts(contact_ids) csf
+        WHERE
+          id = csf.contact;
+
+      END;
+  $$`,
+
+  `CREATE OR REPLACE VIEW affected_contacts_view_facebook AS
+    SELECT contact FROM generate_to_update('facebook')`,
+
+  `CREATE OR REPLACE VIEW affected_contacts_view_linkedin AS
+    SELECT contact FROM generate_to_update('linkedin')`,
+
+  `CREATE OR REPLACE VIEW affected_contacts_view_instagram AS
+    SELECT contact FROM generate_to_update('instagram')`,
+
+  `UPDATE contacts_attribute_defs SET
+    singular = TRUE WHERE name = 'website'`,
 
   `SELECT
-    my_func('instagram')`,
+    issue_506_update_attributes('facebook')`,
 
   `SELECT
-    my_func('linkedin')`,
+    issue_506_update_attributes('instagram')`,
+
+  `SELECT
+    issue_506_update_attributes('linkedin')`,
+
+  `UPDATE contacts_attributes SET
+    deleted_at = NOW() WHERE attribute_type='social'`,
+
+  `UPDATE contacts_attribute_defs SET
+    deleted_at = NOW() WHERE name = 'social'`,
+
+  `WITH affected_contacts AS (
+    SELECT array(
+      SELECT contact FROM affected_contacts_view_facebook
+        UNION ALL
+      SELECT contact FROM affected_contacts_view_linkedin
+        UNION ALL
+      SELECT contact FROM affected_contacts_view_instagram
+    ) AS ids
+  )
+  select i506usf.* from affected_contacts, issue_506_update_search_field(affected_contacts.ids) as i506usf`,
+
+  `DROP VIEW
+    affected_contacts_view_facebook`,
+
+  `DROP VIEW
+    affected_contacts_view_linkedin`,
+
+  `DROP VIEW
+    affected_contacts_view_instagram`,
   
-  'DROP FUNCTION my_func(TEXT)',
+  `DROP FUNCTION
+    issue_506_update_attributes(TEXT)`,
 
-  `UPDATE contacts_attributes
-    SET deleted_at = NOW() WHERE attribute_type='social'`,
+  `DROP FUNCTION
+    generate_to_update(TEXT)`,
 
-  `UPDATE contacts_attribute_defs
-    SET deleted_at = NOW() WHERE name = 'social'`,
+  `DROP FUNCTION
+    issue_506_update_search_field(uuid[])`,
 
   'COMMIT'
 ]
