@@ -3,14 +3,12 @@ const db = require('../lib/utils/db')
 const migrations = [
   'BEGIN',
 
-  `CREATE OR REPLACE FUNCTION generate_to_update(network TEXT) 
-    RETURNS TABLE (
-      id uuid,
-      contact uuid
-    )
+  `CREATE OR REPLACE FUNCTION issue_506_update_attributes(network TEXT) 
+    RETURNS VOID
     LANGUAGE SQL
-    STABLE
+    VOLATILE
     AS $$
+
       WITH to_update AS (
         SELECT
           id, contact
@@ -21,27 +19,17 @@ const migrations = [
           AND text LIKE '%' || network || '%'
           AND deleted_at IS NULL
           AND NOT EXISTS (
-          SELECT
-            id
-          FROM
-            contacts_attributes AS child
-          WHERE
-            child.attribute_type = network
-            AND child.contact = parent.contact
-            AND child.deleted_at IS NULL
-        )
-      )
-      SELECT * FROM to_update;
-  $$`,
+            SELECT
+              id
+            FROM
+              contacts_attributes AS child
+            WHERE
+              child.attribute_type = network
+              AND child.contact = parent.contact
+              AND child.deleted_at IS NULL
+          )
 
-  `CREATE OR REPLACE FUNCTION issue_506_update_attributes(network TEXT) 
-    RETURNS VOID
-    LANGUAGE plpgsql
-    AS $$
-      BEGIN
-        WITH to_update AS (
-          SELECT * FROM generate_to_update(network)
-        )
+      ), update_attributes AS (
         UPDATE contacts_attributes
         SET
           attribute_def = (SELECT id FROM contacts_attribute_defs WHERE name = network AND global IS TRUE),
@@ -49,40 +37,30 @@ const migrations = [
         FROM
           to_update
         WHERE
-          contacts_attributes.id = to_update.id;
-      END;
-  $$`,
+          contacts_attributes.id = to_update.id
+        RETURNING
+          to_update.contact as affected_contact_ids
 
-  `CREATE OR REPLACE FUNCTION issue_506_update_search_field(contact_ids uuid[])
-    RETURNS VOID
-    LANGUAGE plpgsql
-    VOLATILE
-    AS $$
-      BEGIN
-
-        UPDATE
-          contacts
-        SET
-          search_field = csf.search_field
+      ), affected_contacts AS (
+        SELECT
+          array_agg(DISTINCT affected_contact_ids) AS ids
         FROM
-          get_search_field_for_contacts(contact_ids) csf
-        WHERE
-          id = csf.contact;
+          update_attributes
+      )
 
-      END;
-  $$`,
-
-  `CREATE MATERIALIZED VIEW affected_contacts_view_facebook AS
-    SELECT contact FROM generate_to_update('facebook')`,
-
-  `CREATE MATERIALIZED VIEW affected_contacts_view_linkedin AS
-    SELECT contact FROM generate_to_update('linkedin')`,
-
-  `CREATE MATERIALIZED VIEW affected_contacts_view_instagram AS
-    SELECT contact FROM generate_to_update('instagram')`,
-
-  `UPDATE contacts_attribute_defs SET
-    singular = TRUE WHERE name = 'website'`,
+      UPDATE
+        contacts
+      SET
+        search_field = csf.search_field
+      FROM (
+        SELECT
+          contact, search_field
+        FROM
+          affected_contacts, get_search_field_for_contacts(affected_contacts.ids) gsf
+      ) AS csf
+      WHERE
+        id = csf.contact;
+    $$`,
 
   `SELECT
     issue_506_update_attributes('facebook')`,
@@ -93,40 +71,17 @@ const migrations = [
   `SELECT
     issue_506_update_attributes('linkedin')`,
 
+  `UPDATE contacts_attribute_defs SET
+    singular = TRUE WHERE name = 'website'`,
+
   `UPDATE contacts_attributes SET
     deleted_at = NOW() WHERE attribute_type='social'`,
 
   `UPDATE contacts_attribute_defs SET
     deleted_at = NOW() WHERE name = 'social'`,
 
-  `WITH affected_contacts AS (
-    SELECT array(
-      SELECT contact FROM affected_contacts_view_facebook
-        UNION ALL
-      SELECT contact FROM affected_contacts_view_linkedin
-        UNION ALL
-      SELECT contact FROM affected_contacts_view_instagram
-    ) AS ids
-  )
-  select i506usf.* from affected_contacts, issue_506_update_search_field(affected_contacts.ids) as i506usf`,
-
-  `DROP MATERIALIZED VIEW
-    affected_contacts_view_facebook`,
-
-  `DROP MATERIALIZED VIEW
-    affected_contacts_view_linkedin`,
-
-  `DROP MATERIALIZED VIEW
-    affected_contacts_view_instagram`,
-  
   `DROP FUNCTION
     issue_506_update_attributes(TEXT)`,
-
-  `DROP FUNCTION
-    generate_to_update(TEXT)`,
-
-  `DROP FUNCTION
-    issue_506_update_search_field(uuid[])`,
 
   'COMMIT'
 ]
