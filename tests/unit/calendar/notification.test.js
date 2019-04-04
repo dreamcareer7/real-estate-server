@@ -22,7 +22,7 @@ const DealHelper = require('../deal/helper')
 let user, brand, listing, deal
 let CLOSING_DATE, CONTRACT_DATE
 
-async function setup(without_checklists = false) {
+async function setupBrands(without_checklists = false) {
   user = await User.getByEmail('test@rechat.com')
   listing = await Listing.getByMLSNumber(10018693)
 
@@ -39,6 +39,12 @@ async function setup(without_checklists = false) {
 
   brand = await BrandHelper.create(brand_data)
   Context.set({ user, brand })
+
+  await handleJobs()
+}
+
+async function setup(without_checklists = false) {
+  await setupBrands(without_checklists)
 
   await CalendarNotification.setGlobalSettings(
     [
@@ -353,6 +359,11 @@ async function makeSureEmailDeliveryIsLogged() {
   expect(notifications).to.be.empty
 }
 
+async function testDefaultSettings() {
+  const settings = await CalendarNotification.getGlobalSettings(user.id)
+  expect(settings).not.to.be.empty
+}
+
 async function testResetNotificationSettings() {
   await CalendarNotification.setGlobalSettings([], user.id, brand.id)
 
@@ -413,6 +424,9 @@ describe('Calendar', () => {
   })
 
   describe('notification settings', () => {
+    beforeEach(async () => await setupBrands(false))
+
+    it('should have all settings by default', testDefaultSettings)
     it('should allow clearing all settings', testResetNotificationSettings)
   })
 })

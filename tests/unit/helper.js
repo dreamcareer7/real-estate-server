@@ -9,10 +9,12 @@ const Context = require('../../lib/models/Context')
 const { handleJob } = require('../functional/jobs')
 require('../../lib/models/index')()
 
+const attachCalendarEvents = require('../../lib/models/Calendar/events')
 const attachContactEvents = require('../../lib/models/Contact/events')
 const attachTaskEventHandler = require('../../lib/models/CRM/Task/events')
 const attachTouchEventHandler = require('../../lib/models/CRM/Touch/events')
 
+attachCalendarEvents()
 attachContactEvents()
 attachTouchEventHandler()
 attachTaskEventHandler()
