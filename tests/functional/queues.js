@@ -40,12 +40,12 @@ const createEmail = (job, cb) => {
   Email.create(job.data).nodeify(cb)
 }
 
-const storeEmailId = (job, cb) => {
-  Email.storeId(job.data.email, job.data.mailgun_id).nodeify(cb)
-}
-
 const refreshAgents = (job, cb) => {
   Agent.refreshContacts().nodeify(cb)
+}
+
+const sendDueEmailCampaigns = (job, cb) => {
+  EmailCampaign.sendDue().nodeify(cb)
 }
 
 const list = {
@@ -68,8 +68,7 @@ const list = {
   'BrokerWolf.ContactTypes.Sync': syncBrokerwolfContacts,
   'BrokerWolf.ContactTypes.map': mapBrokerwolfContact,
   'Task.sendNotifications': sendTaskNotifications,
-  'Email.create': createEmail,
-  'Email.storeId': storeEmailId
+  'EmailCampaign.sendDue': sendDueEmailCampaigns
 }
 
 const queues = {}

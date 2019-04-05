@@ -5,6 +5,12 @@ SELECT email_campaigns.*,
   EXTRACT(EPOCH FROM deleted_at) AS deleted_at,
 
   (
+    SELECT count(*)::int
+    FROM emails
+    WHERE campaign = email_campaigns.id
+  ) AS recipients,
+
+  (
     SELECT ARRAY_AGG(files_relations.file)
     FROM files_relations
     WHERE role = 'EmailCampaign' AND role_id = email_campaigns.id

@@ -1,34 +1,39 @@
+registerSuite('brand', [
+  'createParent',
+  'create'
+])
+
 const email = {
-  from: 'test@rechat.com',
-  to: 'recipient@rechat.com',
+  to: [
+    {
+      email: 'recipient@rechat.com'
+    },
+  ],
+  due_at: new Date(),
   html: '<div>Hi</div>',
-  text: 'Hi',
   subject: 'Email Subject'
 }
 
-const mailgun_id = '1234.1234@rechat.com'
+const mailgun_id = 'example-mailgun-id-1'
 
-const send = cb => {
+const schedule = cb => {
+  email.from = results.authorize.token.data.id
+
   return frisby
-    .create('Send an email')
-    .post('/jobs', {
-      name: 'Email.create',
-      data: email
-    })
+    .create('Schedule an email campaign')
+    .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
+    .post('/emails', email)
     .after(cb)
     .expectStatus(200)
 }
 
-const storeId = cb => {
+const sendDue = cb => {
   return frisby
-    .create('Store mailgun id')
+    .create('Send Due Email Campaigns')
     .post('/jobs', {
-      name: 'Email.storeId',
-      data: {
-        email: results.email.send.id,
-        mailgun_id: `<${mailgun_id}>`
-      }
+      name: 'EmailCampaign.sendDue',
     })
+    .addHeader('x-handle-jobs', 'yes')
     .after(cb)
     .expectStatus(200)
 }
@@ -54,8 +59,25 @@ const addEvent = cb => {
     .expectStatus(200)
 }
 
+const get = cb => {
+  return frisby
+    .create('Get the campaign')
+    .get(`/emails/${results.email.schedule.data[0]}`)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      data: {
+        subject: email.subject,
+        html: email.html,
+        delivered: 1,
+        recipients: 1
+      }
+    })
+}
+
 module.exports = {
-  send,
-  storeId,
-  addEvent
+  schedule,
+  sendDue,
+  addEvent,
+  get
 }
