@@ -36,10 +36,6 @@ const sendTaskNotifications = (job, cb) => {
   Task.sendNotifications().nodeify(cb)
 }
 
-const createEmail = (job, cb) => {
-  Email.create(job.data).nodeify(cb)
-}
-
 const refreshAgents = (job, cb) => {
   Agent.refreshContacts().nodeify(cb)
 }
