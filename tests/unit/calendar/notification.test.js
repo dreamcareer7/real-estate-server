@@ -360,14 +360,14 @@ async function makeSureEmailDeliveryIsLogged() {
 }
 
 async function testDefaultSettings() {
-  const settings = await CalendarNotification.getGlobalSettings(user.id)
+  const settings = await CalendarNotification.getGlobalSettings(user.id, brand.id)
   expect(settings).not.to.be.empty
 }
 
 async function testResetNotificationSettings() {
   await CalendarNotification.setGlobalSettings([], user.id, brand.id)
 
-  const settings = await CalendarNotification.getGlobalSettings(user.id)
+  const settings = await CalendarNotification.getGlobalSettings(user.id, brand.id)
 
   expect(settings).to.be.empty
 }

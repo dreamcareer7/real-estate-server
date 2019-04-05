@@ -28,6 +28,7 @@ async function setup() {
     }
   })
   Context.set({ user, brand })
+  await handleJobs()
 
   def_ids_by_name = await AttributeDef.getDefsByName(brand.id)
 }
@@ -260,7 +261,9 @@ async function testBrandLists() {
     roles: {
       Admin: [user.id]
     },
-    parent: brand.id
+    parent: brand.id,
+    contexts: [],
+    checklists: []
   })
 
   await handleJobs()
