@@ -11,3 +11,4 @@ FROM
 WHERE
   deleted_at IS NULL
   AND "user" = $1::uuid
+  AND brand = $2::uuid
