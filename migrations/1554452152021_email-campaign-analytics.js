@@ -21,8 +21,7 @@ const migrations = [
   clicked      = (SELECT count(*) FROM email_events WHERE campaign = email_campaigns.id AND event_type = 'clicked'),
   unsubscribed = (SELECT count(*) FROM email_events WHERE campaign = email_campaigns.id AND event_type = 'unsubscribed'),
   complained   = (SELECT count(*) FROM email_events WHERE campaign = email_campaigns.id AND event_type = 'complained'),
-  stored       = (SELECT count(*) FROM email_events WHERE campaign = email_campaigns.id AND event_type = 'stored'),
-  `,
+  stored       = (SELECT count(*) FROM email_events WHERE campaign = email_campaigns.id AND event_type = 'stored')`,
   'COMMIT'
 ]
 
