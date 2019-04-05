@@ -31,16 +31,18 @@ SELECT deals_checklists.*,
     SELECT
       brands_checklists.is_deactivatable AND deals.deal_type = 'Selling'
       FROM brands_checklists
-      JOIN deals_checklists ON deals_checklists.origin = brands_checklists.id
-      JOIN deals            ON deals_checklists.deal   = deals.id
+      JOIN deals_checklists dc ON dc.origin = brands_checklists.id
+      JOIN deals               ON dc.deal   = deals.id
+      WHERE dc.id = deals_checklists.id
   ) as is_deactivatable,
 
   (
     SELECT
       brands_checklists.is_terminatable AND deals.deal_type = 'Selling'
       FROM brands_checklists
-      JOIN deals_checklists ON deals_checklists.origin = brands_checklists.id
-      JOIN deals            ON deals_checklists.deal   = deals.id
+      JOIN deals_checklists dc ON dc.origin = brands_checklists.id
+      JOIN deals               ON dc.deal   = deals.id
+      WHERE dc.id = deals_checklists.id
   ) as is_terminatable,
 
   (
