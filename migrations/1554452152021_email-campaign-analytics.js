@@ -13,15 +13,15 @@ const migrations = [
   'ALTER TABLE email_campaigns ADD stored       SMALLINT NOT NULL DEFAULT 0',
 
   `UPDATE email_campaigns SET
-  accepted     = (SELECT count(*) FROM emails_events JOIN emails ON emails_events.email = emails.id WHERE campaign = email_campaigns.id AND event_type = 'accepted'),
-  rejected     = (SELECT count(*) FROM emails_events JOIN emails ON emails_events.email = emails.id WHERE campaign = email_campaigns.id AND event_type = 'rejected'),
-  delivered    = (SELECT count(*) FROM emails_events JOIN emails ON emails_events.email = emails.id WHERE campaign = email_campaigns.id AND event_type = 'delivered'),
-  failed       = (SELECT count(*) FROM emails_events JOIN emails ON emails_events.email = emails.id WHERE campaign = email_campaigns.id AND event_type = 'failed'),
-  opened       = (SELECT count(*) FROM emails_events JOIN emails ON emails_events.email = emails.id WHERE campaign = email_campaigns.id AND event_type = 'opened'),
-  clicked      = (SELECT count(*) FROM emails_events JOIN emails ON emails_events.email = emails.id WHERE campaign = email_campaigns.id AND event_type = 'clicked'),
-  unsubscribed = (SELECT count(*) FROM emails_events JOIN emails ON emails_events.email = emails.id WHERE campaign = email_campaigns.id AND event_type = 'unsubscribed'),
-  complained   = (SELECT count(*) FROM emails_events JOIN emails ON emails_events.email = emails.id WHERE campaign = email_campaigns.id AND event_type = 'complained'),
-  stored       = (SELECT count(*) FROM emails_events JOIN emails ON emails_events.email = emails.id WHERE campaign = email_campaigns.id AND event_type = 'stored')`,
+  accepted     = (SELECT count(*) FROM emails_events JOIN emails ON emails_events.email = emails.id WHERE campaign = email_campaigns.id AND event = 'accepted'),
+  rejected     = (SELECT count(*) FROM emails_events JOIN emails ON emails_events.email = emails.id WHERE campaign = email_campaigns.id AND event = 'rejected'),
+  delivered    = (SELECT count(*) FROM emails_events JOIN emails ON emails_events.email = emails.id WHERE campaign = email_campaigns.id AND event = 'delivered'),
+  failed       = (SELECT count(*) FROM emails_events JOIN emails ON emails_events.email = emails.id WHERE campaign = email_campaigns.id AND event = 'failed'),
+  opened       = (SELECT count(*) FROM emails_events JOIN emails ON emails_events.email = emails.id WHERE campaign = email_campaigns.id AND event = 'opened'),
+  clicked      = (SELECT count(*) FROM emails_events JOIN emails ON emails_events.email = emails.id WHERE campaign = email_campaigns.id AND event = 'clicked'),
+  unsubscribed = (SELECT count(*) FROM emails_events JOIN emails ON emails_events.email = emails.id WHERE campaign = email_campaigns.id AND event = 'unsubscribed'),
+  complained   = (SELECT count(*) FROM emails_events JOIN emails ON emails_events.email = emails.id WHERE campaign = email_campaigns.id AND event = 'complained'),
+  stored       = (SELECT count(*) FROM emails_events JOIN emails ON emails_events.email = emails.id WHERE campaign = email_campaigns.id AND event = 'stored')`,
   'COMMIT'
 ]
 
