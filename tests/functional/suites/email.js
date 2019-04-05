@@ -14,7 +14,7 @@ const email = {
   subject: 'Email Subject'
 }
 
-const mailgun_id = 'example-mailgun-id'
+const mailgun_id = 'example-mailgun-id-1'
 
 const schedule = cb => {
   email.from = results.authorize.token.data.id
