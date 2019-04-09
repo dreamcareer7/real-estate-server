@@ -1,6 +1,6 @@
 const Agent = require('../../lib/models/Agent')
 const EmailCampaign = require('../../lib/models/Email/campaign')
-const Listing = require('../../lib/models/Listing')
+const { Listing } = require('../../lib/models/Listing')
 const Task = require('../../lib/models/Task')
 
 const saveBrokerwolfSettings = (job, cb) => {
