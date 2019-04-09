@@ -1,1 +1,5 @@
+{% if data.type_label === 'Spouse Birthday' %}
+{{objects[0] | spouse(subjects[0])}} has a Birthday on {{subjects[0].date | notification_date}}
+{% else %}
 {{objects[0] | spouse(subjects[0])}} has {{data.type_label | indefinite}} on {{subjects[0].date | notification_date}}
+{% endif %}
