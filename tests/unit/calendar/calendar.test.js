@@ -1,9 +1,10 @@
 const { expect } = require('chai')
 const moment = require('moment-timezone')
 
-const { createContext } = require('../helper')
+const { createContext, handleJobs } = require('../helper')
 
 const Calendar = require('../../../lib/models/Calendar')
+const Contact = require('../../../lib/models/Contact')
 const Context = require('../../../lib/models/Context')
 const { Listing } = require('../../../lib/models/Listing')
 const Deal = require('../../../lib/models/Deal')
@@ -12,6 +13,7 @@ const CrmTask = require('../../../lib/models/CRM/Task')
 
 const BrandHelper = require('../brand/helper')
 const DealHelper = require('../deal/helper')
+const { attributes } = require('../contact/helper')
 
 let user, brand, listing
 
@@ -54,6 +56,16 @@ async function createDeal(is_draft = true) {
   })
 }
 
+async function fetchEvents(low = moment().add(-1, 'year').unix(), high = moment().add(1, 'year').unix()) {
+  return Calendar.filter([{
+    brand: brand.id,
+    users: [user.id]
+  }], {
+    high,
+    low
+  })
+}
+
 async function testHidingDraftCriticalDates() {
   const deal = await createDeal()
   let events
@@ -73,13 +85,7 @@ async function testHidingDraftCriticalDates() {
     is_draft: false
   })
 
-  events = await Calendar.filter([{
-    brand: brand.id,
-    users: [user.id]
-  }], {
-    high: moment().add(1, 'year').unix(),
-    low: moment().add(-1, 'year').unix()
-  })
+  events = await fetchEvents()
 
   expect(events).to.have.length(2)
 }
@@ -106,13 +112,7 @@ async function testHidingDroppedDeals() {
       is_draft: false
     })
 
-    const events = await Calendar.filter([{
-      brand: brand.id,
-      users: [user.id]
-    }], {
-      high: moment().add(1, 'year').unix(),
-      low: moment().add(-1, 'year').unix()
-    })
+    const events = await fetchEvents()
 
     expect(events).to.have.length(expected_events)
 
@@ -151,11 +151,101 @@ async function testCorrectTimezone() {
   }, user.timezone)
 }
 
+async function testSpouseBirthday() {
+  await Contact.create([{
+    user: user.id,
+    attributes: attributes({
+      first_name: 'John',
+      last_name: 'Doe',
+      spouse_first_name: 'Jane',
+      spouse_birthday: moment().add(10, 'days').year(1800).unix()
+    }),
+  }], user.id, brand.id)
+
+  await handleJobs()
+
+  const events = await fetchEvents()
+
+  expect(events).to.have.length(1)
+  expect(events[0].title).to.be.equal('Spouse Birthday (Jane) - John Doe')
+}
+
+async function testSpouseBirthdayWithEmptySpouseName() {
+  await Contact.create([{
+    user: user.id,
+    attributes: attributes({
+      first_name: 'John',
+      last_name: 'Doe',
+      spouse_birthday: moment().add(10, 'days').year(1800).unix()
+    }),
+  }], user.id, brand.id)
+
+  await handleJobs()
+
+  const events = await fetchEvents()
+
+  expect(events).to.have.length(1)
+  expect(events[0].title).to.be.equal('Spouse Birthday - John Doe')
+}
+
+async function testChildBirthday() {
+  await Contact.create([{
+    user: user.id,
+    attributes: attributes({
+      first_name: 'John',
+      last_name: 'Doe',
+      child_birthday: {
+        label: 'Matthew',
+        date: moment().add(10, 'days').year(1800).unix()
+      }
+    }),
+  }], user.id, brand.id)
+
+  await handleJobs()
+
+  const events = await fetchEvents()
+
+  expect(events).to.have.length(1)
+  expect(events[0].title).to.be.equal('Child Birthday (Matthew) - John Doe')
+}
+
+async function testChildBirthdayWithEmptyChildName() {
+  await Contact.create([{
+    user: user.id,
+    attributes: attributes({
+      first_name: 'John',
+      last_name: 'Doe',
+      child_birthday: moment().add(10, 'days').year(1800).unix()
+    }),
+  }], user.id, brand.id)
+
+  await handleJobs()
+
+  const events = await fetchEvents()
+
+  expect(events).to.have.length(1)
+  expect(events[0].title).to.be.equal('Child Birthday - John Doe')
+}
+
 describe('Calendar', () => {
   createContext()
-  beforeEach(setup)
 
-  it('should hide critical dates from draft checklists', testHidingDraftCriticalDates)
-  it('should hide critical dates from dropped deals', testHidingDroppedDeals)
-  it('should put events in correct timezones', testCorrectTimezone)
+  describe('Deals', () => {
+    beforeEach(setup)
+    it('should hide critical dates from draft checklists', testHidingDraftCriticalDates)
+    it('should hide critical dates from dropped deals', testHidingDroppedDeals)
+  })
+
+  describe('Events', () => {
+    beforeEach(setup)
+    it('should put events in correct timezones', testCorrectTimezone)
+  })
+
+  describe('Contacts', () => {
+    beforeEach(async () => setup(true))
+    it('should put spouse name in spouse birthday event title', testSpouseBirthday)
+    it('should put spouse name in spouse birthday event title when spouse name is empty', testSpouseBirthdayWithEmptySpouseName)
+    it('should put child name in child birthday event title', testChildBirthday)
+    it('should put child name in child birthday event title when child name is empty', testChildBirthdayWithEmptyChildName)
+  })
 })

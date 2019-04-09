@@ -82,16 +82,24 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       'contact_attribute' AS object_type,
       COALESCE(cad.name, cad.label) AS event_type,
       (CASE
-        WHEN attribute_type = 'birthday' THEN 'Birthday'
+        WHEN attribute_type = 'birthday' AND is_partner IS TRUE THEN 'Spouse Birthday'
         WHEN attribute_type = 'child_birthday' THEN COALESCE('Child Birthday (' || ca.label || ')', 'Child Birthday')
-        WHEN attribute_type = 'important_date' THEN COALESCE(ca.label, 'Important Date')
         ELSE COALESCE(cad.label, cad.name)
       END) AS type_label,
       "date" AS "timestamp",
       timezone('UTC', date_trunc('day', "date")::timestamp) AT TIME ZONE 'UTC' AS "date",
       cast("date" + ((extract(year from age("date")) + 1) * interval '1' year) as date) as next_occurence,
       True AS recurring,
-      (CASE WHEN ca.is_partner IS TRUE THEN contacts.partner_name ELSE contacts.display_name END) AS title,
+      (CASE
+        WHEN attribute_type = 'birthday' AND ca.is_partner IS TRUE THEN
+          array_to_string(ARRAY['Spouse Birthday', '(' || contacts.partner_name || ')', '- ' || contacts.display_name], ' ')
+        WHEN attribute_type = 'birthday' AND ca.is_partner IS NOT TRUE THEN
+          contacts.display_name
+        WHEN attribute_type = 'child_birthday' THEN
+          array_to_string(ARRAY['Child Birthday', '(' || ca.label || ')', '- ' || contacts.display_name], ' ')
+        ELSE
+          contacts.display_name
+      END) AS title,
       NULL::uuid AS crm_task,
       NULL::uuid AS deal,
       contact,
