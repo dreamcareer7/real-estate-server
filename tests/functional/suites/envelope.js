@@ -20,8 +20,6 @@ const setEnvelopeDetails = envelope => {
     role: results.deal.addRole.data[1].id,
     envelope_recipient_type: 'CarbonCopy'
   })
-
-  envelope.auto_notify = false
 }
 
 const create412 = cb => {
