@@ -26,6 +26,8 @@ declare interface IUser extends IModel, IUserBase {
     secondary_password?: string;
 
     agent?: IAgent;
+
+    display_name: string;
 }
 
 declare type TUserLogicalType =
