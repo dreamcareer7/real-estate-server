@@ -62,7 +62,7 @@ const addEvent = cb => {
 const get = cb => {
   return frisby
     .create('Get the campaign')
-    .get(`/emails/${results.email.schedule.data[0]}`)
+    .get(`/emails/${results.email.schedule.data[0]}?associations[]=email_campaign.emails`)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
@@ -75,9 +75,26 @@ const get = cb => {
     })
 }
 
+const getByBrand = cb => {
+  return frisby
+    .create('Get campaigns by brand')
+    .get(`/brands/${results.brand.create.data.id}/emails/campaigns`)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      data: [{
+        subject: email.subject,
+        html: email.html,
+        delivered: 1,
+        recipients: 1
+      }]
+    })
+}
+
 module.exports = {
   schedule,
   sendDue,
   addEvent,
-  get
+  get,
+  getByBrand
 }
