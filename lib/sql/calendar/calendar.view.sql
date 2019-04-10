@@ -94,9 +94,15 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
         WHEN attribute_type = 'birthday' AND ca.is_partner IS TRUE THEN
           array_to_string(ARRAY['Spouse Birthday', '(' || contacts.partner_name || ')', '- ' || contacts.display_name], ' ')
         WHEN attribute_type = 'birthday' AND ca.is_partner IS NOT TRUE THEN
-          contacts.display_name
+          contacts.display_name || $$'s Birthday$$
         WHEN attribute_type = 'child_birthday' THEN
           array_to_string(ARRAY['Child Birthday', '(' || ca.label || ')', '- ' || contacts.display_name], ' ')
+        WHEN attribute_type = ANY('{
+          work_anniversary,
+          wedding_anniversary,
+          home_anniversary
+        }'::text[]) THEN
+          contacts.display_name || $$'s $$  || cad.label
         ELSE
           contacts.display_name
       END) AS title,

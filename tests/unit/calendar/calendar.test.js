@@ -151,6 +151,26 @@ async function testCorrectTimezone() {
   }, user.timezone)
 }
 
+function testContactEvent(event_type, type_label) {
+  return async () => {
+    await Contact.create([{
+      user: user.id,
+      attributes: attributes({
+        first_name: 'John',
+        last_name: 'Doe',
+        [event_type]: moment().add(10, 'days').year(1800).unix()
+      }),
+    }], user.id, brand.id)
+  
+    await handleJobs()
+  
+    const events = await fetchEvents()
+  
+    expect(events).to.have.length(1)
+    expect(events[0].title).to.be.equal(`John Doe's ${type_label}`)
+  }
+}
+
 async function testSpouseBirthday() {
   await Contact.create([{
     user: user.id,
@@ -243,6 +263,10 @@ describe('Calendar', () => {
 
   describe('Contacts', () => {
     beforeEach(async () => setup(true))
+    it('should give correct copy for birthday event', testContactEvent('birthday', 'Birthday'))
+    it('should give correct copy for home anniversary event', testContactEvent('home_anniversary', 'Home Anniversary'))
+    it('should give correct copy for work anniversary event', testContactEvent('work_anniversary', 'Work Anniversary'))
+    it('should give correct copy for wedding anniversary event', testContactEvent('wedding_anniversary', 'Wedding Anniversary'))
     it('should put spouse name in spouse birthday event title', testSpouseBirthday)
     it('should put spouse name in spouse birthday event title when spouse name is empty', testSpouseBirthdayWithEmptySpouseName)
     it('should put child name in child birthday event title', testChildBirthday)
