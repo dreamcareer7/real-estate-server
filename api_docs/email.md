@@ -30,7 +30,7 @@ One individual email which has already been sent.
 A model that connects Email Campaigns with Emails.
 
 ### Schedule an email campaign [POST /emails]
-<!-- include(tests/email/scheudle.md) -->
+<!-- include(tests/email/schedule.md) -->
 
 ### Get an email campaign [GET /emails/:id?associations[]=email_campaign.emails]
 <!-- include(tests/email/get.md) -->
