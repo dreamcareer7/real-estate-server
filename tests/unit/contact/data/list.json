@@ -1,42 +1,25 @@
 {
   "create": [
     {
-      "attributes": [
-        {
-          "attribute_type": "first_name",
-          "text": "John"
+      "attributes": {
+        "first_name": "John",
+        "last_name": "Doe",
+        "email": {
+          "text": "john@doe.com",
+          "label": "Personal"
         },
-        {
-          "attribute_type": "last_name",
-          "text": "Doe"
-        },
-        {
-          "attribute_type": "email",
-          "label": "Personal",
-          "text": "john@doe.com"
-        },
-        {
-          "attribute_type": "tag",
-          "text": "Warm List"
-        }
-      ]
+        "tag": ["Warm List"]
+      }
     },
     {
-      "attributes": [
-        {
-          "attribute_type": "first_name",
-          "text": "John"
-        },
-        {
-          "attribute_type": "last_name",
-          "text": "Doe"
-        },
-        {
-          "attribute_type": "email",
-          "label": "Personal",
-          "text": "abbas@rechat.com"
+      "attributes": {
+        "first_name": "John",
+        "last_name": "Doe",
+        "email": {
+          "text": "abbas@rechat.com",
+          "label": "Personal"
         }
-      ]
+      }
     }
   ]
 }

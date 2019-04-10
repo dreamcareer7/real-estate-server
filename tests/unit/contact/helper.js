@@ -1,10 +1,15 @@
+/**
+ * @typedef {string | number | Partial<IContactAttributeInput>} TAttrType
+ */
+
 module.exports = {
   /**
-   * @param {{ [x: string]: string | number | Partial<IContactAttribute>; }} attrs
+   * @param {{ [x: string]: TAttrType | TAttrType[]; }} attrs
    */
   attributes(attrs) {
     /**
-     * @param {string | number | Partial<IContactAttribute>} val
+     * @param {TAttrType} val
+     * @returns {IContactAttributeInput}
      */
     function value(val) {
       if (typeof val === 'string') return {
@@ -18,22 +23,22 @@ module.exports = {
       return val
     }
 
-    /** @type {IContactAttributeInput[]} */
-    const result = []
+    /**
+     * @param {string} k
+     */
+    function key(k) {
+      return k.replace(/^spouse_/g, '')
+    }
 
-    for (const k in attrs) {
-      if (k.startsWith('spouse_')) {
-        result.push({
-          ...value(attrs[k]),
-          attribute_type: k.replace(/^spouse_/g, ''),
-          is_partner: true
-        })
+    /** @type {IContactAttributeInput[]} */
+    let result = []
+
+    for (const [k, v] of Object.entries(attrs)) {
+      if (Array.isArray(v)) {
+        result = result.concat(v.map(item => ({ ...value(item), attribute_type: key(k)})))
       }
       else {
-        result.push({
-          ...value(attrs[k]),
-          attribute_type: k
-        })
+        result.push({ ...value(v), attribute_type: key(k)})
       }
     }
 

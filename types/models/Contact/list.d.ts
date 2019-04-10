@@ -1,6 +1,13 @@
+declare interface IContactListFilter {
+  attribute_def: UUID;
+  operator?: TContactFilterOperator,
+  value: any;
+  invert?: boolean;
+}
+
 declare interface IContactListInput {
   name: string;
-  filters: IContactAttributeFilter[];
+  filters: IContactListFilter[];
   query?: string;
   args?: Pick<IContactFilterOptions, 'filter_type'>;
   is_editable?: boolean;
@@ -12,7 +19,7 @@ declare interface IContactList {
   deleted_at?: number;
 
   name: string;
-  filters: IContactAttributeFilter[];
+  filters: IContactListFilter[];
   query?: string;
   args: Pick<IContactFilterOptions, 'filter_type'>;
   is_pinned: boolean;
