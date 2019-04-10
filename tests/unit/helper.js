@@ -53,7 +53,7 @@ function createContext() {
     context.set({
       db: conn,
       jobs: [],
-      'db:log': true
+      'db:log': false
     })
 
     await db.executeSql.promise('BEGIN', [], conn)    
@@ -89,7 +89,7 @@ const handleJobs = (done) => {
       return done(err)
     }
 
-    Context.log('finished jobs')
+    Context.log('finished jobs\n')
     return done()
   })
 }
