@@ -494,7 +494,7 @@ const getEmails = cb => {
 
 const deleteEmail = cb => {
   return frisby.create('delete an email')
-    .delete(`/brands/${brand_id}/templates/emails/${results.brand.addEmail.data.id}`)
+    .delete(`/brands/${brand_id}/emails/templates/${results.brand.addEmail.data.id}`)
     .after(cb)
     .expectStatus(204)
 }
