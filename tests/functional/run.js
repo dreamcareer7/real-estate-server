@@ -164,7 +164,8 @@ const database = (req, res, next) => {
   if (connections[suite]) {
     context.set({
       db: connections[suite],
-      jobs: []
+      jobs: [],
+      suite
     })
     context.run(next)
     return
