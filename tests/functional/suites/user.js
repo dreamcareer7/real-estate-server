@@ -74,6 +74,10 @@ const update = (cb) => {
   updatedUser.first_name = 'updated first name'
   updatedUser.password = password
 
+  console.log(updatedUser)
+  updatedUser.email_signature = 'Here is my great signature.'
+  console.log(updatedUser)
+
   return frisby.create('update user')
     .put('/users/self', updatedUser)
     .after(cb)

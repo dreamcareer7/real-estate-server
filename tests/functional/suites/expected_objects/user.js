@@ -22,4 +22,5 @@ module.exports = {
   'phone_confirmed': Boolean,
   'current_time': String,
   'push_allowed': Boolean,
+  'email_signature': String
 }
