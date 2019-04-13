@@ -2,7 +2,8 @@ const db = require('../lib/utils/db')
 
 const migrations = [
   'BEGIN',
-  'ALTER TABLE users ADD COLUMN email_signature text;',
+  'ALTER TABLE users ADD COLUMN email_signature text',
+  'ALTER TABLE users ADD COLUMN email_signature_image_url text',
   'COMMIT'
 ]
 
