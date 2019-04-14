@@ -73,7 +73,7 @@ const update = (cb) => {
   const updatedUser = JSON.parse(JSON.stringify(results.authorize.token.data))
   updatedUser.first_name = 'updated first name'
   updatedUser.password = password
-  updatedUser.email_signature = 'Here is my great signature.'
+  updatedUser.email_signature = 'my signature'
 
   return frisby.create('update user')
     .put('/users/self', updatedUser)
@@ -89,6 +89,25 @@ const update = (cb) => {
         id: results.authorize.token.data.id,
         type: 'user',
         is_shadow: results.authorize.token.data.is_shadow
+      }
+    })
+}
+
+const updateEmailSignature = (cb) => {
+  const signature = 'Here is my great signature'
+
+  return frisby.create('convert to non-shadow user')
+    .put('/users/self', {
+      email_signature: signature
+    })
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      data: {
+        id: results.authorize.token.data.id,
+        type: 'user',
+        email_signature: signature
       }
     })
 }
@@ -400,8 +419,7 @@ const upgradeToAgentSecretMissing = (cb) => {
 const markAsNonShadow = (cb) => {
   return frisby.create('convert to non-shadow user')
     .put('/users/self', {
-      is_shadow: true,
-      email_signature: '',
+      is_shadow: true
     })
     .after(cb)
     .expectStatus(200)
@@ -456,7 +474,6 @@ const testShadowUserEmailReSignup = (cb) => {
       }
     })
 }
-
 
 const resetPhoneShadowPasswordByEmail = (cb) => {
   return frisby.create('reset phone shadow user by email')
@@ -527,6 +544,7 @@ module.exports = {
   getUserRoles,
   getUser404,
   update,
+  updateEmailSignature,
   changePassword,
   changePassword401,
   resetPassword,
