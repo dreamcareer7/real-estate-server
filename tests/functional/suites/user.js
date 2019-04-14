@@ -400,7 +400,8 @@ const upgradeToAgentSecretMissing = (cb) => {
 const markAsNonShadow = (cb) => {
   return frisby.create('convert to non-shadow user')
     .put('/users/self', {
-      is_shadow: true
+      is_shadow: true,
+      email_signature: '',
     })
     .after(cb)
     .expectStatus(200)
