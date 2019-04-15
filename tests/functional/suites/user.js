@@ -93,10 +93,10 @@ const update = (cb) => {
     })
 }
 
-const updateEmailSignature = (cb) => {
+const uploadEmailSignPic = (cb) => {
   const signature = 'Here is my great signature'
 
-  return frisby.create('convert to non-shadow user')
+  return frisby.create('upload email signature pic')
     .put('/users/self', {
       email_signature: signature
     })
@@ -544,7 +544,7 @@ module.exports = {
   getUserRoles,
   getUser404,
   update,
-  updateEmailSignature,
+  uploadEmailSignPic,
   changePassword,
   changePassword401,
   resetPassword,
