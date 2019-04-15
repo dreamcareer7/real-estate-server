@@ -203,6 +203,57 @@ async function testUpdateListMembersAfterAddingContacts() {
   expect(contact.lists).to.have.length(1)
 }
 
+/**
+ * @param {string} id
+ * @param {string[]} associations
+ */
+async function getContact(id, associations) {
+  Orm.setEnabledAssociations(associations)
+  const model = await Contact.get(id)
+  const populated = await Orm.populate({
+    models: [model],
+    associations
+  })
+
+  return populated[0]
+}
+
+async function testUpdateListMembersAfterUpdatingContacts() {
+  const list = await testCreateList()
+  const contact_ids = await createContact([create[0]])
+
+  const first_contact = await getContact(contact_ids[0], ['contact.attributes'])
+
+  await Contact.update(user.id, brand.id, [{
+    id: contact_ids[0],
+    attributes: [{
+      ...first_contact.attributes.find(a => a.attribute_type === 'tag'),
+      text: 'Something Else'
+    }]
+  }])
+
+  await handleJobs()
+
+  const members = await ListMember.findByListId(list.id)
+  expect(members).to.be.empty
+
+  Orm.setEnabledAssociations(['contact.lists'])
+  const contact = await Contact.get(contact_ids[0])
+  expect(contact.lists).to.be.null
+}
+
+async function testUpdateListMembersAfterDeletingContacts() {
+  const list = await testCreateList()
+  const contact_ids = await createContact([create[0]])
+
+  await Contact.delete(contact_ids, user.id)
+
+  await handleJobs()
+
+  const members = await ListMember.findByListId(list.id)
+  expect(members).to.be.empty
+}
+
 async function testUpdateListMembersAfterChangingFilters() {
   Context.log('Create WarmList...'.grey)
   const list = await createWarmList()
@@ -217,6 +268,25 @@ async function testUpdateListMembersAfterChangingFilters() {
       value: 'Agent'
     }]
   }, user.id)
+
+  await handleJobs()
+
+  const members = await ListMember.findByListId(list.id)
+  expect(members).to.be.empty
+
+  Orm.setEnabledAssociations(['contact.lists'])
+  const contact = await Contact.get(contact_ids[0])
+  expect(contact.lists).to.be.null
+}
+
+async function testUpdateListMembersAfterDeletingList() {
+  Context.log('Create WarmList...'.grey)
+  const list = await createWarmList()
+  Context.log('Create 2 contacts...'.grey)
+  const contact_ids = await createContact(create)
+
+  Context.log('Update list filters...'.grey)
+  await List.delete([list.id], user.id)
 
   await handleJobs()
 
@@ -361,8 +431,20 @@ describe('Contact', () => {
       testUpdateListMembersAfterAddingContacts
     )
     it(
-      'should update list filters are updated',
+      'should update list members after contacts are updaed',
+      testUpdateListMembersAfterUpdatingContacts
+    )
+    it(
+      'should update list members after contacts are deleted',
+      testUpdateListMembersAfterDeletingContacts
+    )
+    it(
+      'should update list members when filters are updated',
       testUpdateListMembersAfterChangingFilters
+    )
+    it(
+      'should update list members when a list is deleted',
+      testUpdateListMembersAfterDeletingList
     )
   })
 
