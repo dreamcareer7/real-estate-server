@@ -559,11 +559,11 @@ const getBrandFlows = cb => {
     .after(cb)
     .expectStatus(200)
     .expectJSON({
-      data: {
+      data: [{
         name: 'Rechat Team Onboarding',
         description: 'The process of on-boarding a new team member',
         steps: [{}, {}, {}]
-      }
+      }]
     })
 }
 
