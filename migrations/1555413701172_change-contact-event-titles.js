@@ -27,7 +27,10 @@ const migrations = [
           AND deleted_at IS NULL
       ) AS users,
       brand,
-      status
+      status,
+      jsonb_build_object(
+        'status', status
+      ) AS metadata
     FROM
       crm_tasks
     WHERE
@@ -60,7 +63,8 @@ const migrations = [
             AND r."user" IS NOT NULL
         ) AS users,
         deals.brand,
-        NULL::text AS status
+        NULL::text AS status,
+        NULL::jsonb AS metadata
       FROM
         current_deal_context cdc
         JOIN deals
@@ -115,7 +119,10 @@ const migrations = [
         contact,
         ARRAY[contacts."user"] AS users,
         contacts.brand,
-        NULL::text AS status
+        NULL::text AS status,
+        jsonb_build_object(
+          'is_partner', is_partner
+        ) AS metadata
       FROM
         contacts
         JOIN contacts_attributes AS ca
