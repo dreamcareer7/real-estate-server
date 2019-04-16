@@ -1,9 +1,15 @@
 const _u = require('lodash')
 const config = require('../../../lib/config.js')
 const user = require('./data/user.js')
-const user_response = require('./expected_objects/user.js')
 const uuid = require('node-uuid')
 const password = config.tests.password
+
+const user_response = require('./expected_objects/user.js')
+const email_sign_img_response = require('./expected_objects/img_upload/email_sign_img.js')
+const user_cover_img_response = require('./expected_objects/img_upload/user_cover_img.js')
+
+const path = require('path')
+const fs = require('fs')
 
 const client = JSON.parse(JSON.stringify(user))
 
@@ -73,6 +79,7 @@ const update = (cb) => {
   const updatedUser = JSON.parse(JSON.stringify(results.authorize.token.data))
   updatedUser.first_name = 'updated first name'
   updatedUser.password = password
+  updatedUser.email_signature = 'my signature'
 
   return frisby.create('update user')
     .put('/users/self', updatedUser)
@@ -88,6 +95,25 @@ const update = (cb) => {
         id: results.authorize.token.data.id,
         type: 'user',
         is_shadow: results.authorize.token.data.is_shadow
+      }
+    })
+}
+
+const updateEmailSignPic = (cb) => {
+  const signature = 'Here is my great signature'
+
+  return frisby.create('update email signature pic')
+    .put('/users/self', {
+      email_signature: signature
+    })
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      data: {
+        id: results.authorize.token.data.id,
+        type: 'user',
+        email_signature: signature
       }
     })
 }
@@ -455,7 +481,6 @@ const testShadowUserEmailReSignup = (cb) => {
     })
 }
 
-
 const resetPhoneShadowPasswordByEmail = (cb) => {
   return frisby.create('reset phone shadow user by email')
     .patch('/users/password', {
@@ -517,6 +542,73 @@ const deleteUser = (cb) => {
     .expectStatus(204)
 }
 
+function uploadEmailSignPic(cb) {
+  const img = fs.createReadStream(path.resolve(__dirname, 'data/img/sample.jpg'))
+
+  return frisby.create('upload email-signature pic')
+    .post('/users/self/email_signature_image_url', {
+      file: img
+    },
+    {
+      json: false,
+      form: true
+    })
+    .addHeader('content-type', 'multipart/form-data')
+    .after((err, res, body) => {
+      cb(err, {...res, body: JSON.parse(body)}, body)
+    })
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      data: email_sign_img_response
+    })
+}
+
+function patchUserCoverImage(cb) {
+  const img = fs.createReadStream(path.resolve(__dirname, 'data/img/sample.jpg'))
+
+  return frisby.create('patch user cover image')
+    .patch('/users/self/cover_image_url', {
+      file: img
+    },
+    {
+      json: false,
+      form: true
+    })
+    .addHeader('content-type', 'multipart/form-data')
+    .after((err, res, body) => {
+      cb(err, {...res, body: JSON.parse(body)}, body)
+    })
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      data: user_cover_img_response
+    })
+}
+
+function patchUserProfileImage(cb) {
+  const img = fs.createReadStream(path.resolve(__dirname, 'data/img/sample.jpg'))
+
+  return frisby.create('patch user profile image')
+    .patch('/users/self/profile_image_url', {
+      file: img
+    },
+    {
+      json: false,
+      form: true
+    })
+    .addHeader('content-type', 'multipart/form-data')
+    .after((err, res, body) => {
+      cb(err, {...res, body: JSON.parse(body)}, body)
+    })
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      data: user_cover_img_response
+    })
+}
+
+
 module.exports = {
   createWithID,
   create,
@@ -525,6 +617,7 @@ module.exports = {
   getUserRoles,
   getUser404,
   update,
+  updateEmailSignPic,
   changePassword,
   changePassword401,
   resetPassword,
@@ -559,5 +652,8 @@ module.exports = {
   resetPhoneShadowPasswordByEmail,
   resetPhoneShadowPassword,
   resetEmailShadowPassword,
+  uploadEmailSignPic,
+  patchUserCoverImage,
+  patchUserProfileImage,
   deleteUser
 }

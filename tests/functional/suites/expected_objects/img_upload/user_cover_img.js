@@ -1,14 +1,14 @@
-const v = require('./validation.js')
+const v = require('../validation.js')
 
 module.exports = {
-  'type': String,
+  'type': 'user',
+  'id': String,
   'username': v.optionalString,
   'first_name': String,
   'last_name': String,
   'email': String,
   'phone_number': v.optionalString,
   'created_at': Number,
-  'id': String,
   'cover_image_url': v.optionalString,
   'profile_image_url': v.optionalString,
   'updated_at': Number,
@@ -22,5 +22,19 @@ module.exports = {
   'phone_confirmed': Boolean,
   'current_time': String,
   'push_allowed': Boolean,
-  'email_signature': v.optionalString
+  'email_signature': v.optionalString,
+  'address_id': v.optionalString,
+  'agent': v.optionalObject,
+  'is_shadow': Boolean,
+  'personal_room': v.optionalString,
+  'brand': v.optionalString,
+  'fake_email': Boolean,
+  'features': v.optionalArray,
+  'last_seen_at': v.optionalString,
+  'last_seen_type': v.optionalString,
+  'has_docusign': Number,
+  'active_brand': v.optionalString,
+  'display_name': String,
+  'abbreviated_display_name': String,
+  'online_state': String
 }
