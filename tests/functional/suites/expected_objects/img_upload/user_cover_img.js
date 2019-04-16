@@ -1,5 +1,4 @@
 const v = require('../validation.js')
-const user = require('../user.js')
 
 module.exports = {
   'type': 'user',
