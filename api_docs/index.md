@@ -29,9 +29,10 @@ Welcome. Rechat's API is broken into several small components to be readable.
 
 ## CRM
 
+* [Calendar](calendar.html)
 * [Contacts](contact.html)
 * [Contact Lists](contact_list.html)
-* [Calendar](calendar.html)
+* [Flows](flow.html)
 * [Tasks](task.html)
 
 ## Marketing
