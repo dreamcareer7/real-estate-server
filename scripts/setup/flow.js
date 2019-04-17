@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 const BrandFlow = require('../../lib/models/Brand/flow')
 const BrandEmail = require('../../lib/models/Brand/email')
+const { runInContext } = require('../../lib/models/Context/util')
 
 const HOUR = 3600
 const DAY = 24 * HOUR
@@ -59,3 +60,16 @@ async function setupFlows() {
     }
   )
 }
+
+runInContext('flows', setupFlows).then(
+  () => {
+    console.log('Flow setup completed!')
+    process.exit()
+  },
+  ex => {
+    console.log('Encountered an error while setting up flow configuration!')
+    console.error(ex)
+
+    process.exit()
+  }
+)
