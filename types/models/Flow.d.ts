@@ -19,3 +19,20 @@ declare interface IFlowEmailInput {
   is_automated: boolean;
   event_title?: string;
 }
+
+declare interface IFlow extends IModel {
+  origin: UUID;
+  starts_at: number;
+  contact: UUID;
+  brand: UUID;
+  name: string;
+  description?: string;
+  steps: UUID[];
+}
+
+declare interface IFlowStep extends IModel {
+  flow: UUID;
+  origin: UUID;
+  crm_task?: UUID;
+  email?: UUID;
+}
