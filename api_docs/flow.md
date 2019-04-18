@@ -23,8 +23,10 @@ steps                   | BranFlowStep[] | brand_flow.steps      | Name of the f
 
 
 ### Get all brand flows [GET /brands/:id/flows]
-<!-- include(tests/brand/getBrandFlows.md) -->
+<!-- include(tests/flow/getBrandFlows.md) -->
 
 ### Create a new brand flow [POST /brands/:id/flows]
-<!-- include(tests/brand/addFlow.md) -->
+<!-- include(tests/flow/addFlow.md) -->
 
+### Enroll contacts to a flow [POST /crm/flows]
+<!-- include(tests/flow/enroll.md) -->

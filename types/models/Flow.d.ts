@@ -20,6 +20,13 @@ declare interface IFlowEmailInput {
   event_title?: string;
 }
 
+declare interface IFlowEnrollInput {
+  origin: UUID;
+  starts_at: number;
+  contacts: UUID[];
+  steps: UUID[];
+}
+
 declare interface IFlow extends IModel {
   origin: UUID;
   starts_at: number;

@@ -21,8 +21,9 @@ SELECT
     WHERE
       flow = flows.id
       AND deleted_at IS NULL
-  ) AS steps
+  ) AS steps,
 
+  'flow' AS type
 FROM
   flows
   JOIN unnest($1::uuid[]) WITH ORDINALITY t(cid, ord) ON flows.id = t.cid
