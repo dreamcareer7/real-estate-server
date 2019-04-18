@@ -1,5 +1,5 @@
 SELECT email_campaign_emails.*,
-  'email_campaign_email' AS TYPE
+  'email_campaign_email' AS TYPE,
   contacts_summaries.display_name,
   contacts_summaries.profile_image_url
 
