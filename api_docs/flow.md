@@ -29,4 +29,4 @@ steps                   | BranFlowStep[] | brand_flow.steps      | Name of the f
 <!-- include(tests/flow/addFlow.md) -->
 
 ### Enroll contacts to a flow [POST /crm/flows]
-<!-- include(tests/flow/enroll) -->
+<!-- include(tests/flow/enroll.md) -->
