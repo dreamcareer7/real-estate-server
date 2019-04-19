@@ -2,7 +2,7 @@ interface IReminderInput {
   id?: UUID;
   task?: UUID;
   timestamp: number;
-  is_relative: true;
+  is_relative: boolean;
   needs_notification?: boolean;
 }
 

@@ -191,6 +191,46 @@ async function testTaskIsDue() {
   expect($('#row2 th p:nth-child(1)').text().trim()).to.be.equal(task.title)
 }
 
+async function testReminderIsDue() {
+  const task = await CrmTask.create(
+    {
+      created_by: userA.id,
+      brand: brand.id,
+      assignees: [userA.id],
+      due_date: moment()
+        .add(1, 'hour')
+        .unix(),
+      reminders: [{
+        is_relative: false,
+        timestamp: moment()
+          .add(1, 'second')
+          .unix()
+      }],
+      title: 'Test TaskIsDue',
+      task_type: 'Call',
+      status: 'PENDING'
+    }
+  )
+
+  const due_tasks = await Worker.getDueReminders()
+
+  expect(due_tasks).not.to.be.empty
+  // expect(due_tasks[0].id).to.be.equal(task.id)
+
+  await Worker.sendReminderNotifications()
+  await handleJobs()
+
+  const notifications = await getNotifications(userA.id)
+
+  expect(notifications).to.have.length(1)
+  expect(notifications[0].action).to.equal('IsDue')
+
+  const { html } = await expectEmailWithSubject('Upcoming Rechat Event')
+  const $ = cheerio.load(html)
+
+  expect($('#row2 th p:nth-child(1)').text().trim()).to.be.equal(task.title)
+}
+
 describe('CrmTask', () => {
   createContext()
   beforeEach(setup)
@@ -198,6 +238,7 @@ describe('CrmTask', () => {
   describe('event notifications', () => {
     context('when user A assigns an event to user B', () => {
       it('should send user A a notification when a task is due', testTaskIsDue)
+      it('should send user A a notification when a reminder is due', testReminderIsDue)
       it(
         'should send user B a notification when user A assigns them to a task',
         testAssignment
