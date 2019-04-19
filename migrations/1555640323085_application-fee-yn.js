@@ -8,6 +8,12 @@ const sql = `UPDATE listings SET application_fee_yn = TRUE
 const run = async () => {
   const conn = await db.conn.promise()
 
+  /*
+   * Turns out update listings is super super slow because it triggers
+   * an update on listings filters.
+   * That trigger is super slow as it relies on a DELETE based on MUI which is not indexed.
+   */
+  await conn.query('CREATE INDEX listings_filters_matrix_unique_id ON listings_filters(matrix_unique_id)')
   await conn.query(sql)
 
   conn.release()
