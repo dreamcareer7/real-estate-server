@@ -20,6 +20,10 @@ SELECT email_campaigns.*,
     SELECT ARRAY_AGG(id) FROM email_campaign_emails
     WHERE campaign = email_campaigns.id
     AND $2 @> ARRAY['email_campaign.emails']
+    AND CASE
+      WHEN $3::uuid IS NULL THEN TRUE
+      ELSE email_campaign_emails.contact = $3::uuid
+    END
   ) as emails
 
 FROM email_campaigns
