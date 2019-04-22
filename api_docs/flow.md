@@ -30,3 +30,6 @@ steps                   | BranFlowStep[] | brand_flow.steps      | Name of the f
 
 ### Enroll contacts to a flow [POST /crm/flows]
 <!-- include(tests/flow/enroll.md) -->
+
+### Stop a flow [DELETE /crm/flows/:id]
+<!-- include(tests/flow/stop.md) -->

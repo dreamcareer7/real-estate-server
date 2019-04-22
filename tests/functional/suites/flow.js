@@ -122,10 +122,31 @@ const checkFlowAssociation = cb => {
     })
 }
 
+const stop = cb => {
+  return frisby.create('stop a flow')
+    .delete(`/crm/flows/${results.flow.enroll.data[0].id}`)
+    .after(cb)
+    .expectStatus(204)
+}
+
+const checkStoppedFlowAssociation = cb => {
+  return frisby.create('check flow association on contact')
+    .get(`/contacts/${results.contact.create.data[0].id}?associations[]=contact.flows&associations[]=flow_step.crm_task&associations[]=flow_step.email`)
+    .after(cb)
+    .expectJSON({
+      data: {
+        flows: null
+      }
+    })
+}
+
+
 module.exports = {
   addEmail,
   addFlow,
   getBrandFlows,
   enroll,
   checkFlowAssociation,
+  stop,
+  checkStoppedFlowAssociation
 }
