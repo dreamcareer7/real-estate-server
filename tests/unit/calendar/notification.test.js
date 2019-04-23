@@ -163,6 +163,8 @@ function findDueContactEvents() {
   return async function() {
     const events = await CalendarWorker.getNotificationDueEvents()
 
+    console.log(JSON.stringify(events, null, 2))
+
     expect(events.length).to.be.eq(2, 'events.length')
     expect(events[0]).to.include({
       event_type: 'child_birthday',
