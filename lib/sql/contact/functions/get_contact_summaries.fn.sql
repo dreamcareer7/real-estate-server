@@ -44,7 +44,8 @@ AS $function$
         JOIN contacts_attributes ON contacts_attributes.contact = contacts.id
         JOIN contact_ids ON contacts.id = contact_ids.id::uuid
       WHERE
-        contacts_attributes.deleted_at IS NULL
+        (contacts_attributes.text IS NULL OR LENGTH(contacts_attributes.text) > 0)
+        AND contacts_attributes.deleted_at IS NULL
         AND contacts.deleted_at IS NULL
         AND attribute_type = ANY(VALUES
           ('title'),
