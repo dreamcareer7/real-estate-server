@@ -431,6 +431,11 @@ describe('Contact', () => {
       testUpdateListMembersAfterAddingContacts
     )
     it(
+      'should update list filters are updated',
+      testUpdateListMembersAfterChangingFilters
+    )
+
+    it(
       'should update list members after contacts are updaed',
       testUpdateListMembersAfterUpdatingContacts
     )
