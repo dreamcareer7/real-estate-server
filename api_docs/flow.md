@@ -87,5 +87,8 @@ crm_task   | CrmTask       | `flow_step.crm_task`   | Link to an actual CrmTask 
 ### Enroll contacts to a flow [POST /crm/flows]
 <!-- include(tests/flow/enroll.md) -->
 
+### Stop a flow [DELETE /crm/flows/:id]
+<!-- include(tests/flow/stop.md) -->
+
 ### Get flows a contact is enrolled to [GET /contacts/:id]
 <!-- include(tests/flow/checkFlowAssociation.md) -->

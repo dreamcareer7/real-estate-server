@@ -50,4 +50,6 @@ WHERE
       AND cnl.timestamp = c.date
       AND cnl."user" = c."user"
   )
-  AND CASE WHEN $1::int IS NULL THEN TRUE ELSE extract('hour' from now() at time zone u.timezone) = $1 END;
+  AND CASE WHEN $1::int IS NULL THEN TRUE ELSE extract('hour' from now() at time zone u.timezone) = $1 END
+ORDER BY
+  c.date - date_trunc('year', c.date)
