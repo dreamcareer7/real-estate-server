@@ -453,7 +453,7 @@ const addEmail = cb => {
   }
 
   return frisby.create('add an email template to a brand')
-    .post(`/brands/${brand_id}/emails`, email)
+    .post(`/brands/${brand_id}/emails/templates`, email)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
@@ -472,7 +472,7 @@ const updateEmail = cb => {
   }
 
   return frisby.create('update an email template')
-    .put(`/brands/${brand_id}/emails/${results.brand.addEmail.data.id}`, email)
+    .put(`/brands/${brand_id}/emails/templates/${results.brand.addEmail.data.id}`, email)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
@@ -483,7 +483,7 @@ const updateEmail = cb => {
 
 const getEmails = cb => {
   return frisby.create('get email templates')
-    .get(`/brands/${brand_id}/emails`)
+    .get(`/brands/${brand_id}/emails/templates`)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
@@ -494,7 +494,7 @@ const getEmails = cb => {
 
 const deleteEmail = cb => {
   return frisby.create('delete an email')
-    .delete(`/brands/${brand_id}/emails/${results.brand.addEmail.data.id}`)
+    .delete(`/brands/${brand_id}/emails/templates/${results.brand.addEmail.data.id}`)
     .after(cb)
     .expectStatus(204)
 }

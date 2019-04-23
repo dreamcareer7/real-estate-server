@@ -1,0 +1,5 @@
+{% if object.deal.faired_at %}
+{{data.abbreviated_display_name}} notified Office.
+{% else %}
+{{data.abbreviated_display_name}} scheduled a future notification for admin.
+{% endif %}

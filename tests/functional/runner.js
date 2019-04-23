@@ -15,19 +15,29 @@ frisby.globalSetup({
 
 const runFrisbies = function (tasks) {
   const runF = function (task, cb) {
-    const f = task.fn((err, res) => {
-      if (res && res.body)
-        global.results[task.suite][task.name] = res.body
+    try {
+      const f = task.fn((err, res) => {
+        if (err) {
+          console.error(err)
+        }
+    
+        if (res && res.body)
+          global.results[task.suite][task.name] = res.body
 
-      cb(err, res)
-    })
+        cb(err, res)
+      })
 
-    f.current.outgoing.headers['x-suite'] = process.argv[2]
-    f.current.outgoing.headers['x-original-suite'] = task.suite
-    f.current.outgoing.headers['x-test-name'] = task.name
-    f.current.outgoing.headers['x-test-description'] = f.current.describe
+      f.current.outgoing.headers['x-suite'] = process.argv[2]
+      f.current.outgoing.headers['x-original-suite'] = task.suite
+      f.current.outgoing.headers['x-test-name'] = task.name
+      f.current.outgoing.headers['x-test-description'] = f.current.describe
 
-    f.toss()
+      f.toss()
+    }
+    catch (ex) {
+      console.error(ex)
+      throw ex
+    }
   }
 
   async.forEachSeries(tasks, runF)

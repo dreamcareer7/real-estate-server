@@ -1,6 +1,7 @@
 declare interface IUserBase {
   first_name: string;
   last_name: string;
+  email_signature: string;
   email: string;
   phone_number?: string;
   is_shadow: boolean;
@@ -26,6 +27,8 @@ declare interface IUser extends IModel, IUserBase {
     secondary_password?: string;
 
     agent?: IAgent;
+
+    display_name: string;
 }
 
 declare type TUserLogicalType =

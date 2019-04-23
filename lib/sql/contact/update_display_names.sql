@@ -46,8 +46,7 @@ WITH cs AS (
       last_name,
       company,
       email,
-      phone_number,
-      'Guest'
+      phone_number
     ) AS partner_name
   FROM
     cs

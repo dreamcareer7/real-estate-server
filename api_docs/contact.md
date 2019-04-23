@@ -6,19 +6,24 @@ A _Contact_ is an object, belonging to a user which holds various information ab
 ### Contact
 A _Contact_ is a simple and small object that contains an actual _Attributes_.
 
-Field                   | Type         | Description
-------------------------|:------------:|------------------------------------------------------------------------
-id                      | uuid         | Id of the parent contact
-user                    | User         | Owner of the contact. association: `contact.user`
-created_by              | User         | User who created this contact
-updated_by              | User         | User who created this contact
-brand                   | Brand        | **Unused** Owner of the contact, if it's a brand.
-attributes              | Attribute[]  | List of contact's attributes
-created_at              | number       |
-updated_at              | number       |
-deleted_at              | number       |
-ios_address_book_id     | string | Address book id of this contact on iOS device
-android_address_book_id | string | Address book id of this contact on Android device
+Field                   | Type          | association        | Description
+------------------------|:-------------:|--------------------|------------------------------------------------------------------------
+id                      | uuid          |                    | Internal identifier of the contact
+created_at              | number        |                    |
+updated_at              | number        |                    |
+deleted_at              | number        |                    |
+created_by              | User          | contact.created_by | User who created this contact
+updated_by              | User          | contact.updated_by | User who created this contact
+ios_address_book_id     | string        |                    | Address book id of this contact on iOS device
+android_address_book_id | string        |                    | Address book id of this contact on Android device
+user                    | User          | contact.user       | Owner of the contact. association: `contact.user`
+brand                   | Brand         | contact.brand      | The team this object belongs to
+attributes              | Attribute[]   | contact.attributes | List of contact's attributes
+summary                 | Summary       | contact.summary    | A plain simple object containing some of the global attribute values of the contact
+lists                   | ContactList[] | contact.lists      | List of the contact lists this contact is a member of
+users                   | User[]        | contact.users      | Users matching credential fields of this contact
+deals                   | Deal[]        | contact.deals      | Deals that have a role matching credential fields of this contact
+flows                   | Flow[]        | contact.flows      | Flows that this contact has been enrolled into
 
 Contact's available model associations are as follows:
 

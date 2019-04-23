@@ -30,6 +30,8 @@ declare interface IEmailCampaign {
   brand: UUID;
   from: UUID;
   to: IEmailRecipientInput[];
+  cc?: IEmailRecipientInput[];
+  bcc?: IEmailRecipientInput[];
   subject: string;
   html: string;
   attachments?: UUID[];

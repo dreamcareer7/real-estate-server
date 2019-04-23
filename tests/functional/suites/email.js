@@ -14,7 +14,12 @@ const email = {
   subject: 'Email Subject'
 }
 
-const mailgun_id = 'example-mailgun-id-1'
+const individual = {
+  ...email,
+  subject: 'Individual Email'
+}
+
+const mailgun_id = 'example-mailgun-id-email-1'
 
 const schedule = cb => {
   email.from = results.authorize.token.data.id
@@ -62,7 +67,7 @@ const addEvent = cb => {
 const get = cb => {
   return frisby
     .create('Get the campaign')
-    .get(`/emails/${results.email.schedule.data[0]}`)
+    .get(`/emails/${results.email.schedule.data[0]}?associations[]=email_campaign.emails`)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
@@ -75,9 +80,47 @@ const get = cb => {
     })
 }
 
+const getByBrand = cb => {
+  return frisby
+    .create('Get campaigns by brand')
+    .get(`/brands/${results.brand.create.data.id}/emails/campaigns`)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      data: [
+        {
+          subject: individual.subject,
+          html: individual.html,
+          delivered: 0,
+          recipients: 1
+        },
+
+        {
+          subject: email.subject,
+          html: email.html,
+          delivered: 1,
+          recipients: 1
+        }
+      ]
+    })
+}
+
+const scheduleIndividual = cb => {
+  individual.from = results.authorize.token.data.id
+
+  return frisby
+    .create('Schedule an individual email campaign')
+    .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
+    .post('/emails/individual', individual)
+    .after(cb)
+    .expectStatus(200)
+}
+
 module.exports = {
   schedule,
+  scheduleIndividual,
   sendDue,
   addEvent,
-  get
+  get,
+  getByBrand,
 }

@@ -30,15 +30,27 @@ module.exports = {
       return k.replace(/^spouse_/g, '')
     }
 
+    /**
+     * @param {string} k
+     * @param {string | number | Partial<IContactAttributeInput>} v
+     */
+    function getAttr(k, v) {
+      return {
+        ...value(v),
+        is_partner: /^spouse_/.test(k),
+        attribute_type: key(k)
+      }
+    }
+
     /** @type {IContactAttributeInput[]} */
     let result = []
 
     for (const [k, v] of Object.entries(attrs)) {
       if (Array.isArray(v)) {
-        result = result.concat(v.map(item => ({ ...value(item), attribute_type: key(k)})))
+        result = result.concat(v.map(getAttr.bind(null, k)))
       }
       else {
-        result.push({ ...value(v), attribute_type: key(k)})
+        result.push(getAttr(k, v))
       }
     }
 

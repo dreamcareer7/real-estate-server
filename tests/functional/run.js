@@ -3,6 +3,7 @@ process.env.NODE_ENV = 'tests' // So we read the proper config file
 
 require('colors')
 
+const path = require('path')
 const fs = require('fs')
 const EventEmitter = require('events')
 const program = require('commander')
@@ -116,6 +117,10 @@ const database = (req, res, next) => {
     delete e.domainBound
 
     if (e instanceof AssertionError) {
+      const rootDir = path.dirname(path.resolve(__dirname, '../../index.js'))
+
+      console.log(e.stack.split('\n')[0])
+      console.log(e.stack.split('\n').filter(/** @param {string} line */line => line.includes(rootDir) && !line.includes('node_modules')).join('\n'))
       e = Error.Validation(e.message)
     }
 
@@ -164,7 +169,8 @@ const database = (req, res, next) => {
   if (connections[suite]) {
     context.set({
       db: connections[suite],
-      jobs: []
+      jobs: [],
+      suite
     })
     context.run(next)
     return
