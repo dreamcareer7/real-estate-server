@@ -71,6 +71,7 @@ async function createContact() {
   contact = populated[0]
 }
 
+
 async function testDeleteAttribute() {
   const attr = contact.attributes.find(a => a.attribute_type === 'email')
 
@@ -78,6 +79,7 @@ async function testDeleteAttribute() {
   await handleJobs()
 
   const summaries = await ContactSummary.getAll([contact.id])
+
   expect(summaries[0].email).to.be.null
 }
 
@@ -130,6 +132,94 @@ async function testEmptyContact() {
   expect(summary.search_field).to.be.equal('\'guest\':1')
 }
 
+async function testGetSummaries() {
+  const ids = await Contact.create(
+    [
+      {
+        user: user.id,
+        attributes: [
+          {
+            attribute_type: 'first_name',
+            text: 'Abbas'
+          },
+          {
+            attribute_type: 'company',
+            text: 'my_company'
+          },
+          {
+            attribute_type: 'email',
+            text: 'abbas@rechat.com'
+          }
+        ]
+      }
+    ],
+    user.id,
+    brand.id,
+    { activity: false, get: false, relax: false }
+  )
+  await handleJobs()
+  Orm.setEnabledAssociations(['contact.attributes'])
+  const model = await Contact.get(ids[0])
+  const populated = await Orm.populate({
+    models: [model],
+    associations: ['contact.attributes']
+  })
+  const my_contact = populated[0]
+
+
+  let summaries = await ContactSummary.getAll([my_contact.id])
+  expect(summaries[0].display_name).to.be.equal('Abbas')
+
+
+  // delete first_name attribute
+  const first_name_attr = my_contact.attributes.find(a => a.attribute_type === 'first_name')
+  await ContactAttribute.delete([first_name_attr.id], user.id)
+  await handleJobs()
+  summaries = await ContactSummary.getAll([my_contact.id])
+  
+  expect(summaries[0].first_name).to.be.null
+  expect(summaries[0].display_name).to.be.equal('my_company')
+
+
+  // delete email attribute
+  const email_attr = my_contact.attributes.find(a => a.attribute_type === 'email')
+  await ContactAttribute.delete([email_attr.id], user.id)
+  await handleJobs()
+  summaries = await ContactSummary.getAll([my_contact.id])
+
+  expect(summaries[0].email).to.be.null
+  expect(summaries[0].display_name).to.be.equal('my_company')
+
+
+  // delete company attribute
+  const company_attr = my_contact.attributes.find(a => a.attribute_type === 'company')
+  await ContactAttribute.delete([company_attr.id], user.id)
+  await handleJobs()
+  summaries = await ContactSummary.getAll([my_contact.id])
+
+  expect(summaries[0].company).to.be.null
+  expect(summaries[0].display_name).to.be.equal('Guest')
+}
+
+async function testAddEmptyAttribute() {
+  const old_summaries = await ContactSummary.getAll([contact.id])
+  const old_middle_name = old_summaries[0].middle_name
+
+  await Contact.addAttributes(user.id, brand.id, contact.id, [{
+    attribute_type: 'middle_name',
+    text: '    ',
+    is_primary: true,
+    is_partner: false
+  }])
+  await handleJobs()
+
+  const new_summaries = await ContactSummary.getAll([contact.id])
+  const new_middle_name = new_summaries[0].middle_name
+
+  expect(old_middle_name).to.be.equal(new_middle_name)
+}
+
+
 describe('Contact', () => {
   createContext()
   beforeEach(setup)
@@ -139,5 +229,7 @@ describe('Contact', () => {
     it('should update summary after adding an attribute', testAddAttribute)
     it('should update search field for company contacts', testCompanyContact)
     it('should update search field for an empty contact', testEmptyContact)
+    it('should return valid display_name', testGetSummaries)
+    it('should not update empty forwarded attribute', testAddEmptyAttribute)
   })
 })
