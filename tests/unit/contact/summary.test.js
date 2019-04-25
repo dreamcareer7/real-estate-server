@@ -224,7 +224,7 @@ describe('Contact', () => {
   createContext()
   beforeEach(setup)
 
-  describe('Filter', () => {
+  describe('Summary', () => {
     it('should update summary after deleting an attribute', testDeleteAttribute)
     it('should update summary after adding an attribute', testAddAttribute)
     it('should update search field for company contacts', testCompanyContact)
