@@ -18,6 +18,16 @@ SELECT brands.*,
   ) as roles,
 
   (
+    CASE
+      WHEN $2 @> ARRAY['brand.agents'] THEN (
+        SELECT ARRAY_AGG("user") FROM get_brand_agents(brands.id)
+        WHERE $3::uuid[] IS NULL OR "user" = ANY($3)
+      )
+      ELSE NULL
+    END
+  ) as agents,
+
+  (
     SELECT
       count(distinct bu."user")
     FROM
