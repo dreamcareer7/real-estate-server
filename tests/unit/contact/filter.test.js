@@ -255,7 +255,7 @@ describe('Contact', () => {
     it('should filter by first letter of sort field', testAlphabeticalFilter)
     it('should filter by task association', testCrmAssociationFilter)
   })
-  
+
   describe('Full-Text Search', () => {
     it('should full-text search', testFilterByQuery)
     it('should filter by Guest', testFilterByGuest)

@@ -1,7 +1,7 @@
 declare interface IUserBase {
   first_name: string;
   last_name: string;
-  email_signature: string;
+  email_signature?: string;
   email: string;
   phone_number?: string;
   is_shadow: boolean;
