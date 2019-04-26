@@ -7,8 +7,8 @@ SELECT email_campaigns.*,
   EXTRACT(EPOCH FROM executed_at)   AS executed_at,
 
   (
-    SELECT count(*)::int
-    FROM emails
+    SELECT ARRAY_AGG(id)
+    FROM email_campaigns_recipients
     WHERE campaign = email_campaigns.id
   ) AS recipients,
 

@@ -67,7 +67,7 @@ const addEvent = cb => {
 const get = cb => {
   return frisby
     .create('Get the campaign')
-    .get(`/emails/${results.email.schedule.data[0]}?associations[]=email_campaign.emails`)
+    .get(`/emails/${results.email.schedule.data[0]}?associations[]=email_campaign.emails&associations[]=email_campaign.recipients`)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
@@ -75,7 +75,7 @@ const get = cb => {
         subject: email.subject,
         html: email.html,
         delivered: 1,
-        recipients: 1
+        recipients: email.to
       }
     })
 }
@@ -83,7 +83,7 @@ const get = cb => {
 const getByBrand = cb => {
   return frisby
     .create('Get campaigns by brand')
-    .get(`/brands/${results.brand.create.data.id}/emails/campaigns`)
+    .get(`/brands/${results.brand.create.data.id}/emails/campaigns?associations[]=email_campaign.recipients`)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
@@ -92,14 +92,14 @@ const getByBrand = cb => {
           subject: individual.subject,
           html: individual.html,
           delivered: 0,
-          recipients: 1
+          recipients: email.to
         },
 
         {
           subject: email.subject,
           html: email.html,
           delivered: 1,
-          recipients: 1
+          recipients: individual.to
         }
       ]
     })
