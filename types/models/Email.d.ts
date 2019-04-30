@@ -37,6 +37,19 @@ declare interface IEmailCampaign {
   attachments?: UUID[];
 }
 
+declare interface IEmailCampaignInput {
+  id?: UUID;
+  due_at: string | null;
+  from: UUID;
+  to: IEmailRecipientInput[];
+  cc?: IEmailRecipientInput[];
+  bcc?: IEmailRecipientInput[];
+  subject: string;
+  html: string;
+  attachments?: UUID[];
+  individual?: boolean;
+}
+
 declare interface IEmail {
   domain?: string;
   to: string;
