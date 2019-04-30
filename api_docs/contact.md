@@ -127,6 +127,9 @@ deleted_at     | number  | **Response only**
 ### Deleting an attribute [DELETE /contacts/:id/attributes/:attribute_id]
 <!-- include(tests/contact/removeAttribute.md) -->
 
+### Add multiple attributes [POST /contacts/attributes]
+<!-- include(tests/contact/addBulkAttributes.md) -->
+
 ### Delete multiple attributes [DELETE /contacts/attributes]
 <!-- include(tests/contact/removeBulkAttributes.md) -->
 

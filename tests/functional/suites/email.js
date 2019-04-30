@@ -67,7 +67,7 @@ const addEvent = cb => {
 const get = cb => {
   return frisby
     .create('Get the campaign')
-    .get(`/emails/${results.email.schedule.data[0]}?associations[]=email_campaign.emails`)
+    .get(`/emails/${results.email.schedule.data[0]}?associations[]=email_campaign.emails&associations[]=email_campaign.recipients`)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
@@ -75,31 +75,37 @@ const get = cb => {
         subject: email.subject,
         html: email.html,
         delivered: 1,
-        recipients: 1
+        recipients: email.to
       }
     })
 }
 
 const getByBrand = cb => {
+  const updated = results.email.update.data
+
   return frisby
     .create('Get campaigns by brand')
-    .get(`/brands/${results.brand.create.data.id}/emails/campaigns`)
+    .get(`/brands/${results.brand.create.data.id}/emails/campaigns?associations[]=email_campaign.recipients`)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
       data: [
         {
-          subject: individual.subject,
-          html: individual.html,
+          subject: updated.subject,
+          html: updated.html,
           delivered: 0,
-          recipients: 1
+          recipients: [
+            {
+              email: updated.recipients[0].email
+            }
+          ]
         },
 
         {
           subject: email.subject,
           html: email.html,
           delivered: 1,
-          recipients: 1
+          recipients: individual.to
         }
       ]
     })
@@ -116,9 +122,42 @@ const scheduleIndividual = cb => {
     .expectStatus(200)
 }
 
+const update = cb => {
+  const campaign = {
+    id: results.email.scheduleIndividual.data[0],
+    ...individual,
+    subject: 'Updated Subject',
+    html: 'Updated HTML',
+    to: [
+      {
+        email: 'foo@bar.com'
+      }
+    ]
+  }
+
+  return frisby
+    .create('Update a campaign')
+    .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
+    .put(`/emails/${results.email.scheduleIndividual.data.id}?associations[]=email_campaign.recipients`, campaign)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      data: {
+        subject: campaign.subject,
+        html: campaign.html,
+        recipients: [
+          {
+            email: campaign.to[0].email
+          }
+        ]
+      }
+    })
+}
+
 module.exports = {
   schedule,
   scheduleIndividual,
+  update,
   sendDue,
   addEvent,
   get,
