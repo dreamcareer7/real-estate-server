@@ -2,7 +2,7 @@ const db = require('../lib/utils/db')
 
 const migrations = [
   'BEGIN',
-  `ALTER TABLE deals_roles ADD brand uuid REFERENCES brands(id)`,
+  'ALTER TABLE deals_roles ADD brand uuid REFERENCES brands(id)',
   'COMMIT'
 ]
 
