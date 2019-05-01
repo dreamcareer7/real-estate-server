@@ -7,7 +7,7 @@ SELECT email_campaigns.*,
   EXTRACT(EPOCH FROM executed_at)   AS executed_at,
 
   (
-    SELECT count(*)
+    SELECT count(*)::integer
     FROM email_campaign_emails
     WHERE campaign = email_campaigns.id
   ) AS sent,
