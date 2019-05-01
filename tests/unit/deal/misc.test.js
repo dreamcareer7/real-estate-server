@@ -49,7 +49,7 @@ const userDeals = async () => {
 
   const user = await User.get(deal.created_by)
 
-  await promisify(Deal.limitAccess)({
+  await Deal.limitAccess({
     user,
     deal_id: deal.id
   })
@@ -58,7 +58,7 @@ const userDeals = async () => {
 
   let errored = false
   try {
-    await promisify(Deal.limitAccess)({
+    await Deal.limitAccess({
       user: another,
       deal_id: deal.id
     })
