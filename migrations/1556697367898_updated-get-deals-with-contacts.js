@@ -1,4 +1,7 @@
-CREATE OR REPLACE FUNCTION get_deals_with_contacts(user_id uuid, contact_ids uuid[])
+const db = require('../lib/utils/db')
+
+const migrations = [
+  `CREATE OR REPLACE FUNCTION get_deals_with_contacts(user_id uuid, contact_ids uuid[])
 RETURNS TABLE (
   deal uuid,
   contact uuid
@@ -77,4 +80,22 @@ AS $$
       AND contacts_attributes.attribute_type = 'phone'
       AND contacts_attributes.contact = ANY(contact_ids)
   )
-$$
+$$`
+]
+
+
+const run = async () => {
+  const conn = await db.conn.promise()
+
+  for(const sql of migrations) {
+    await conn.query(sql)
+  }
+
+  conn.release()
+}
+
+exports.up = cb => {
+  run().then(cb).catch(cb)
+}
+
+exports.down = () => {}
