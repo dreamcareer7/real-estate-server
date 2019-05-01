@@ -1,1 +1,0 @@
-SELECT user_has_brand_access($1, $2) AS has
