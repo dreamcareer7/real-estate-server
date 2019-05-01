@@ -10,10 +10,11 @@ gulp.task('lint', () => {
 })
 
 let node
-gulp.task('server', function() {
+gulp.task('server', function(done) {
   if (node) node.kill()
   node = spawn('node', ['index.js'], {stdio: 'inherit'})
   console.log('Loading server')
+  done()
   node.on('close', function (code) {
     if (code === 8) {
       gulp.log('Error detected, waiting for changes...')
