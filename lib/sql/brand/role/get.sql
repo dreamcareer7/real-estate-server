@@ -4,9 +4,12 @@ SELECT brands_roles.*,
   EXTRACT(EPOCH FROM updated_at) AS updated_at,
 
   (
-    SELECT ARRAY_AGG("user") FROM brands_users WHERE
-    role = brands_roles.id AND brands_users.deleted_at IS NULL
-  ) as members
+    SELECT ARRAY_AGG("id") FROM brands_users WHERE
+    role = brands_roles.id AND
+    (
+      $2::uuid[] IS NULL OR "user" = ANY($2)
+    )
+  ) as users
 
 FROM brands_roles
 JOIN unnest($1::uuid[]) WITH ORDINALITY t(bid, ord) ON brands_roles.id = bid
