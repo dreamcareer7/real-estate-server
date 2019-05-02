@@ -8,7 +8,8 @@ INSERT INTO email_campaigns (
   subject,
   include_signature,
   individual,
-  html
+  html,
+  text
 )
 SELECT
   due_at,
@@ -20,6 +21,7 @@ SELECT
   subject,
   COALESCE(include_signature, false),
   COALESCE(individual, false),
-  html
+  html,
+  text
 FROM json_populate_recordset(NULL::email_campaigns, $1::json)
 RETURNING id
