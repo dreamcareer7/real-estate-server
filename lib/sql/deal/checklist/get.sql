@@ -20,12 +20,29 @@ SELECT deals_checklists.*,
     SELECT ARRAY_AGG(form) FROM brands_checklists_allowed_forms WHERE checklist = deals_checklists.origin
   ) as allowed_forms,
 
+  -- The only reason we terminate or deactivate a checklist
+  -- is to open room for new offers.
+  -- But since there are no offers on a Buying deal
+  -- terminating their checklists results in an emppy deal
+  -- with no context, no status, no roles, etc
+  -- Therefore, we only allow deactivation and termination on
+  -- Seller side deals
   (
-    SELECT is_deactivatable FROM brands_checklists WHERE id = deals_checklists.origin
+    SELECT
+      brands_checklists.is_deactivatable AND deals.deal_type = 'Selling'
+      FROM brands_checklists
+      JOIN deals_checklists dc ON dc.origin = brands_checklists.id
+      JOIN deals               ON dc.deal   = deals.id
+      WHERE dc.id = deals_checklists.id
   ) as is_deactivatable,
 
   (
-    SELECT is_terminatable FROM brands_checklists WHERE id = deals_checklists.origin
+    SELECT
+      brands_checklists.is_terminatable AND deals.deal_type = 'Selling'
+      FROM brands_checklists
+      JOIN deals_checklists dc ON dc.origin = brands_checklists.id
+      JOIN deals               ON dc.deal   = deals.id
+      WHERE dc.id = deals_checklists.id
   ) as is_terminatable,
 
   (

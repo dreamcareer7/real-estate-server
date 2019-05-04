@@ -79,31 +79,36 @@ const contact = {
       attribute_type: 'street_name',
       text: 'Street',
       is_primary: true,
-      label: 'Office'
+      label: 'Office',
+      index: 1
     },
     {
       attribute_type: 'city',
       text: 'Dallas',
       is_primary: true,
-      label: 'Office'
+      label: 'Office',
+      index: 1
     },
     {
       attribute_type: 'state',
       text: 'Texas',
       is_primary: true,
-      label: 'Office'
+      label: 'Office',
+      index: 1
     },
     {
       attribute_type: 'country',
       text: 'US',
       is_primary: true,
-      label: 'Office'
+      label: 'Office',
+      index: 1
     },
     {
       attribute_type: 'postal_code',
       text: '72890',
       is_primary: true,
-      label: 'Office'
+      label: 'Office',
+      index: 1
     },
     {
       attribute_type: 'source_type',

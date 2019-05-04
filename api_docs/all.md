@@ -12,4 +12,5 @@
 <!-- include(deal.md) -->
 <!-- include(form.md) -->
 <!-- include(envelope.md) -->
+<!-- include(email.md) -->
 <!-- include(socket.md) -->

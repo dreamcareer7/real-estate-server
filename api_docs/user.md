@@ -32,7 +32,7 @@ It is important to remember that shadow users _can_ use some of the Rechat's fea
 ### Get User Roles [GET /users/self/roles]
 <!-- include(tests/user/getUserRoles.md) -->
 
-### Update User [PUT /users/{id}]
+### Update User [PUT /users/self]
 <!-- include(tests/user/update.md) -->
 
 ### Delete User [DELETE /users/self]
@@ -73,3 +73,6 @@ It is important to remember that shadow users _can_ use some of the Rechat's fea
 
 ### Update user settings [PUT /users/self/settings/:key]
 <!-- include(tests/brand/updateUserSettings.md) -->
+
+### Upload Email Signature Pic [PATCH /users/self/email_signature_image_url]
+<!-- include(tests/user/uploadEmailSignPic.md) -->

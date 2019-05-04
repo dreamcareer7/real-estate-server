@@ -113,7 +113,7 @@ const addPhoto = (cb) => {
   return frisby.create('add a photo')
     .post('/jobs', {
       name: 'MLS.Photo',
-      data: {processed: photo}
+      data: {processed: photo, revision: 1}
     })
     .after(cb)
     .expectStatus(200)

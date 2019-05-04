@@ -13,5 +13,6 @@ module.exports = {
   profile_image_thumbnail_url: 'http://rechat.com/profile_image_thumbnail_url/profile_image_thumbnail_url.png',
   address: {
     title: 'foo'
-  }
+  },
+  email_signature: 'This is my signature.'
 }

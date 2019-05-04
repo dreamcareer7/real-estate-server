@@ -13,9 +13,11 @@ const Orm = require('../../../lib/models/Orm')
 const User = require('../../../lib/models/User')
 
 const BrandHelper = require('../brand/helper')
+
+const { attributes } = require('./helper')
 const { create } = require('./data/list.json')
 
-let user, brand, def_ids_by_name
+let user, brand, def_ids_by_name, TAG
 
 async function setup() {
   user = await User.getByEmail('test@rechat.com')
@@ -28,13 +30,15 @@ async function setup() {
     }
   })
   Context.set({ user, brand })
+  await handleJobs()
 
   def_ids_by_name = await AttributeDef.getDefsByName(brand.id)
+  TAG = def_ids_by_name.get('tag')
 }
 
 async function createContact(data) {
   const res = await Contact.create(
-    data.map(c => ({ ...c, user: user.id })),
+    data.map(c => ({ ...c, attributes: attributes(c.attributes), user: user.id })),
     user.id,
     brand.id,
     { activity: false, get: false, relax: false }
@@ -50,7 +54,7 @@ async function createWarmList() {
     name: 'Warm List',
     filters: [
       {
-        attribute_def: def_ids_by_name.get('tag'),
+        attribute_def: TAG,
         value: 'Warm List'
       }
     ],
@@ -84,7 +88,7 @@ async function testCreateList() {
   expect(list.filters).to.be.an('array')
   expect(list.filters).to.have.length(1)
   expect(list.filters[0]).to.include({
-    attribute_def: def_ids_by_name.get('tag'),
+    attribute_def: TAG,
     value: 'Warm List',
     operator: 'eq',
     invert: false,
@@ -171,7 +175,7 @@ async function testFormatListName() {
     await List.formatCriteria({
       filters: [
         {
-          attribute_def: def_ids_by_name.get('tag'),
+          attribute_def: TAG,
           value: 'Warm List'
         }
       ]
@@ -199,6 +203,101 @@ async function testUpdateListMembersAfterAddingContacts() {
   expect(contact.lists).to.have.length(1)
 }
 
+/**
+ * @param {string} id
+ * @param {string[]} associations
+ */
+async function getContact(id, associations) {
+  Orm.setEnabledAssociations(associations)
+  const model = await Contact.get(id)
+  const populated = await Orm.populate({
+    models: [model],
+    associations
+  })
+
+  return populated[0]
+}
+
+async function testUpdateListMembersAfterUpdatingContacts() {
+  const list = await testCreateList()
+  const contact_ids = await createContact([create[0]])
+
+  const first_contact = await getContact(contact_ids[0], ['contact.attributes'])
+
+  await Contact.update(user.id, brand.id, [{
+    id: contact_ids[0],
+    attributes: [{
+      ...first_contact.attributes.find(a => a.attribute_type === 'tag'),
+      text: 'Something Else'
+    }]
+  }])
+
+  await handleJobs()
+
+  const members = await ListMember.findByListId(list.id)
+  expect(members).to.be.empty
+
+  Orm.setEnabledAssociations(['contact.lists'])
+  const contact = await Contact.get(contact_ids[0])
+  expect(contact.lists).to.be.null
+}
+
+async function testUpdateListMembersAfterDeletingContacts() {
+  const list = await testCreateList()
+  const contact_ids = await createContact([create[0]])
+
+  await Contact.delete(contact_ids, user.id)
+
+  await handleJobs()
+
+  const members = await ListMember.findByListId(list.id)
+  expect(members).to.be.empty
+}
+
+async function testUpdateListMembersAfterChangingFilters() {
+  Context.log('Create WarmList...'.grey)
+  const list = await createWarmList()
+  Context.log('Create 2 contacts...'.grey)
+  const contact_ids = await createContact(create)
+
+  Context.log('Update list filters...'.grey)
+  await List.update(list.id, {
+    ...list,
+    filters: [...list.filters, {
+      attribute_def: TAG,
+      value: 'Agent'
+    }]
+  }, user.id)
+
+  await handleJobs()
+
+  const members = await ListMember.findByListId(list.id)
+  expect(members).to.be.empty
+
+  Orm.setEnabledAssociations(['contact.lists'])
+  const contact = await Contact.get(contact_ids[0])
+  expect(contact.lists).to.be.null
+}
+
+async function testUpdateListMembersAfterDeletingList() {
+  Context.log('Create WarmList...'.grey)
+  const list = await createWarmList()
+  Context.log('Create 2 contacts...'.grey)
+  const contact_ids = await createContact(create)
+
+  Context.log('Update list filters...'.grey)
+  await List.delete([list.id], user.id)
+
+  await handleJobs()
+
+  const members = await ListMember.findByListId(list.id)
+  expect(members).to.be.empty
+
+  Orm.setEnabledAssociations(['contact.lists'])
+  const contact = await Contact.get(contact_ids[0])
+  expect(contact.lists).to.be.null
+}
+
 async function testInitializeListMembers() {
   const contact_ids = await createContact(create)
   const list = await testCreateList()
@@ -219,7 +318,7 @@ async function testGlobalBrandLists() {
       touch_freq: 60,
       filters: [
         {
-          attribute_def: def_ids_by_name.get('tag'),
+          attribute_def: TAG,
           value: 'Warm List'
         }
       ]
@@ -239,7 +338,7 @@ async function testBrandLists() {
       touch_freq: 60,
       filters: [
         {
-          attribute_def: def_ids_by_name.get('tag'),
+          attribute_def: TAG,
           value: 'Warm List'
         }
       ]
@@ -249,7 +348,7 @@ async function testBrandLists() {
       touch_freq: 30,
       filters: [
         {
-          attribute_def: def_ids_by_name.get('tag'),
+          attribute_def: TAG,
           value: 'Hot List'
         }
       ]
@@ -260,7 +359,9 @@ async function testBrandLists() {
     roles: {
       Admin: [user.id]
     },
-    parent: brand.id
+    parent: brand.id,
+    contexts: [],
+    checklists: []
   })
 
   await handleJobs()
@@ -328,6 +429,27 @@ describe('Contact', () => {
     it(
       'should update list members after contacts are created',
       testUpdateListMembersAfterAddingContacts
+    )
+    it(
+      'should update list filters are updated',
+      testUpdateListMembersAfterChangingFilters
+    )
+
+    it(
+      'should update list members after contacts are updaed',
+      testUpdateListMembersAfterUpdatingContacts
+    )
+    it(
+      'should update list members after contacts are deleted',
+      testUpdateListMembersAfterDeletingContacts
+    )
+    it(
+      'should update list members when filters are updated',
+      testUpdateListMembersAfterChangingFilters
+    )
+    it(
+      'should update list members when a list is deleted',
+      testUpdateListMembersAfterDeletingList
     )
   })
 

@@ -1,3 +1,8 @@
+const Agent = require('../../lib/models/Agent')
+const EmailCampaign = require('../../lib/models/Email/campaign')
+const { Listing } = require('../../lib/models/Listing')
+const Task = require('../../lib/models/Task')
+
 const saveBrokerwolfSettings = (job, cb) => {
   BrokerWolf.Settings.save(job.data).nodeify(cb)
 }
@@ -36,16 +41,12 @@ const sendTaskNotifications = (job, cb) => {
   Task.sendNotifications().nodeify(cb)
 }
 
-const createEmail = (job, cb) => {
-  Email.create(job.data).nodeify(cb)
-}
-
-const storeEmailId = (job, cb) => {
-  Email.storeId(job.data.email, job.data.mailgun_id).nodeify(cb)
-}
-
 const refreshAgents = (job, cb) => {
   Agent.refreshContacts().nodeify(cb)
+}
+
+const sendDueEmailCampaigns = (job, cb) => {
+  EmailCampaign.sendDue().nodeify(cb)
 }
 
 const list = {
@@ -68,8 +69,7 @@ const list = {
   'BrokerWolf.ContactTypes.Sync': syncBrokerwolfContacts,
   'BrokerWolf.ContactTypes.map': mapBrokerwolfContact,
   'Task.sendNotifications': sendTaskNotifications,
-  'Email.create': createEmail,
-  'Email.storeId': storeEmailId
+  'EmailCampaign.sendDue': sendDueEmailCampaigns
 }
 
 const queues = {}
