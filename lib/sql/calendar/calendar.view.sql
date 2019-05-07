@@ -13,6 +13,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
     id AS crm_task,
     NULL::uuid AS deal,
     NULL::uuid AS contact,
+    NULL::uuid AS campaign,
     (
       SELECT
         ARRAY_AGG("user")
@@ -48,6 +49,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       NULL::uuid AS crm_task,
       cdc.deal,
       NULL::uuid AS contact,
+      NULL::uuid AS campaign,
       (
         SELECT
           ARRAY_AGG(DISTINCT r."user")
@@ -113,6 +115,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       NULL::uuid AS crm_task,
       NULL::uuid AS deal,
       contact,
+      NULL::uuid AS campaign,
       ARRAY[contacts."user"] AS users,
       contacts.brand,
       NULL::text AS status,
@@ -130,4 +133,60 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       AND ca.deleted_at IS NULL
       AND cad.deleted_at IS NULL
       AND data_type = 'date'
+  )
+  UNION ALL
+  (
+    SELECT
+      id,
+      created_by,
+      'contact' AS object_type,
+      'next_touch' AS event_type,
+      'Next Touch' AS type_label,
+      next_touch AS "timestamp",
+      next_touch AS "date",
+      next_touch AS next_occurence,
+      False AS recurring,
+      display_name AS title,
+      NULL::uuid AS crm_task,
+      NULL::uuid AS deal,
+      id AS contact,
+      NULL::uuid AS campaign,
+      ARRAY[contacts."user"] AS users,
+      brand,
+      NULL::text AS status,
+      NULL::jsonb AS metadata
+    FROM
+      contacts
+    WHERE
+      deleted_at IS NULL
+      AND next_touch IS NOT NULL
+  )
+  UNION ALL
+  (
+    SELECT
+      id,
+      created_by,
+      'email_campaign' AS object_type,
+      'scheduled_email' AS event_type,
+      'Scheduled Email' AS type_label,
+      due_at AS "timestamp",
+      due_at AS "date",
+      due_at AS next_occurence,
+      False AS recurring,
+      subject AS title,
+      NULL::uuid AS crm_task,
+      NULL::uuid AS deal,
+      NULL::uuid AS contact,
+      id AS campaign,
+      ARRAY[email_campaigns.from] AS users,
+      brand,
+      NULL::text AS status,
+      NULL::jsonb AS metadata
+    FROM
+      email_campaigns
+    WHERE
+      deleted_at IS NULL
+      AND executed_at IS NULL
+      AND deal IS NULL
+      AND due_at IS NOT NULL
   )
