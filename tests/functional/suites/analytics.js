@@ -5,6 +5,8 @@ const ical = require('ical')
 let { contacts } = require('./data/calendar')
 const { deal } = require('./data/calendar')
 
+const calendarObj = require('./expected_objects/calendar.js')
+
 let defs
 
 registerSuite('listing', ['getListing'])
@@ -82,6 +84,54 @@ function getCalendar(cb) {
     .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
     .after(cb)
     .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      data: [calendarObj],
+      info: {
+        low: String,
+        high: String,
+        count: Number,
+        total: Number
+      }
+    })
+}
+
+function getCalendarByObjectTypeFilter(cb) {
+  const low = moment().subtract(10, 'day').startOf('day').unix()
+  const high = moment().add(20, 'day').startOf('day').unix()
+  
+  const object_type_1 = 'crm_task'
+  const object_type_2 = 'contact_attribute'
+  const object_type_3 = 'deal_context'
+  const object_type_4 = 'email_campaign'
+  const object_type_5 = 'contact'
+
+  const url = `/calendar?low=${low}`
+                + `&high=${high}`
+                + `&object_types[]=${object_type_1}`
+                + `&object_types[]=${object_type_2}`
+                + `&object_types[]=${object_type_3}`
+                + `&object_types[]=${object_type_4}`
+                + `&object_types[]=${object_type_5}`
+
+  return frisby
+    .create('get calendar events - filtered by object_type')
+    .get(url, {
+      contacts
+    })
+    .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      data: [calendarObj],
+      info: {
+        low: String,
+        high: String,
+        count: Number,
+        total: Number
+      }
+    })
 }
 
 function getCalendarFeedUrl(cb) {
@@ -175,6 +225,7 @@ module.exports = {
   createContacts,
   createDeal,
   getCalendar,
+  getCalendarByObjectTypeFilter,
   getCalendarFeedUrl,
   getCalendarFeed,
   getCalendarFeedSetting,
