@@ -10,6 +10,12 @@ AS $$
       ON cdc.deal = deals.id
   WHERE
     deals.id = $1
-    AND cdc.key = 'listing_status'
+    AND ((
+      deals.deal_type = 'Selling'
+      AND cdc.key = 'listing_status'
+    ) OR (
+      deals.deal_type = 'Buying'
+      AND cdc.key = 'contract_status'
+    ))
   LIMIT 1
 $$;
