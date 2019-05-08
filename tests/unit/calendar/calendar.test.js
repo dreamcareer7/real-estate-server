@@ -229,6 +229,27 @@ async function testChildBirthday() {
   expect(events[0].title).to.be.equal('Child Birthday (Matthew) - John Doe')
 }
 
+async function testNamelessChildBirthday() {
+  await Contact.create([{
+    user: user.id,
+    attributes: attributes({
+      first_name: 'John',
+      last_name: 'Doe',
+      child_birthday: {
+        label: '',
+        date: moment().add(10, 'days').year(1800).unix()
+      }
+    }),
+  }], user.id, brand.id)
+
+  await handleJobs()
+
+  const events = await fetchEvents()
+
+  expect(events).to.have.length(1)
+  expect(events[0].title).to.be.equal('Child Birthday - John Doe')
+}
+
 async function testChildBirthdayWithEmptyChildName() {
   await Contact.create([{
     user: user.id,
@@ -270,6 +291,7 @@ describe('Calendar', () => {
     it('should put spouse name in spouse birthday event title', testSpouseBirthday)
     it('should put spouse name in spouse birthday event title when spouse name is empty', testSpouseBirthdayWithEmptySpouseName)
     it('should put child name in child birthday event title', testChildBirthday)
+    it('should handle nameless child birthday in event title', testNamelessChildBirthday)
     it('should put child name in child birthday event title when child name is empty', testChildBirthdayWithEmptyChildName)
   })
 })
