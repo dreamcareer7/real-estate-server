@@ -4,6 +4,14 @@ const DealHelper = require('./helper')
 const BrandHelper = require('../brand/helper')
 const promisify = require('../../../lib/utils/promisify')
 
+const Activity = require('../../../lib/models/Activity')
+const Context = require('../../../lib/models/Context')
+const DealChecklist = require('../../../lib/models/Deal/checklist')
+const Message = require('../../../lib/models/Message')
+const Room = require('../../../lib/models/Room')
+const Task = require('../../../lib/models/Task')
+const User = require('../../../lib/models/User')
+
 const createTask = async () => {
   const user = await User.getByEmail('test@rechat.com')
 
@@ -51,7 +59,7 @@ const add = async (props = {}) => {
   expect(room.latest_activity).not.to.be.null
 
   const message = await promisify(Message.get)(room.latest_activity)
-  const activity = await promisify(Activity.get)(message.activity)
+  const activity = await Activity.get(message.activity)
 
   expect(activity.object_class).to.equal('Review')
   expect(activity.object).to.equal(review.id)
