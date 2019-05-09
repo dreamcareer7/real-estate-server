@@ -1,0 +1,1 @@
+SELECT * FROM showings WHERE agent = $1

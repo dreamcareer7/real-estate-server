@@ -1,0 +1,1 @@
+SELECT * FROM showings WHERE id = $1

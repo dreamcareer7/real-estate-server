@@ -1,0 +1,1 @@
+UPDATE showings_credentials SET deleted_at = CLOCK_TIMESTAMP() WHERE id = $1
