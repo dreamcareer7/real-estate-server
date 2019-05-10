@@ -3,16 +3,17 @@ const { expect } = require('chai')
 const { createContext } = require('../helper')
 const Context = require('../../../lib/models/Context')
 
-// const Showings = require('../../../lib/models/Showings/showings')
+const Showings = require('../../../lib/models/Showings/showings')
 const ShowingsCredential = require('../../../lib/models/Showings/credential')
 
 const agent_json = require('./data/agent.json')
 const credential_json = require('./data/credential.json')
+const showing_json = require('./data/showing.json')
 
 let agent
 
 
-async function setupOne() {
+async function setup() {
   const props = {}
   
   agent = await Agent.create({
@@ -73,14 +74,60 @@ async function deleteCredential() {
 }
 
 
-async function setupTwo() {
+async function createShowings() {
+  const body = {
+    agent: agent,
+    ...showing_json
+  }
+
+  const showingId = await Showings.create(body)
+
+  expect(showingId).to.be.uuid
 }
+
+async function getShowingByAgent() {
+  await createShowings()
+
+  const showingObj = await Showings.getByAgent(agent)
+
+  expect(agent).to.equal(showingObj.agent)
+  expect(showingObj.mls_number).to.equal(showing_json.mls_number)
+}
+
+async function updateShowing() {
+  await createShowings()
+
+  const showingObj = await Showings.getByAgent(agent)
+
+  const body = {
+    result: 'new_result',
+    feedback_text: 'agent_feedback'
+  }
+  await Showings.update(showingObj.id, body)
+
+  const updated = await Showings.getByAgent(agent)
+
+  expect(updated).to.include(body)
+}
+
+async function deleteShowing() {
+  await createShowings()
+
+  const showingObj = await Showings.getByAgent(agent)
+
+  await Showings.delete(showingObj.id)
+
+  const deleteed = await Showings.getByAgent(agent)
+
+  expect(deleteed.deleted_at).not.to.be.null
+}
+
 
 
 describe('Showings', () => {
   describe('Showings Credential', () => {
     createContext()
-    beforeEach(setupOne)
+    beforeEach(setup)
 
     it('should create a credential record', create)
     it('should return a credential record based on agent id', getByAgent)
@@ -90,7 +137,11 @@ describe('Showings', () => {
 
   describe('Showings Appoinments (events)', () => {
     createContext()
-    beforeEach(setupTwo)
+    beforeEach(setup)
 
+    it('should create a showings record', createShowings)
+    it('should return a showings record based on agent id', getShowingByAgent)
+    it('should update a showings record', updateShowing)
+    it('should delete a showings record', deleteShowing)
   })
 })

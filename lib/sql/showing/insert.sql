@@ -1,11 +1,12 @@
 INSERT INTO showings
     (
         agent,
+        showing_id,
         mls_number,
         mls_title,
+        showing_date,
         showing_start_date,
         showing_end_date,
-        remote_agent_id,
         remote_agent_name,
         remote_agent_email,
         remote_agent_desc,
@@ -13,10 +14,8 @@ INSERT INTO showings
         remote_agent_phone_cell,
         result,
         feedback_text,
-        feedback_id,
         cancellation_reason,
-        note_text,
-        note_id
+        note_text
     )
 VALUES
     (
@@ -35,7 +34,6 @@ VALUES
       $13,
       $14,
       $15,
-      $16,
-      $17
+      $16
     )
 RETURNING id

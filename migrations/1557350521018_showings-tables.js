@@ -3,6 +3,10 @@ const db = require('../lib/utils/db')
 const migrations = [
   'BEGIN',
 
+  `DROP TABLE showings_credentials`,
+
+  `DROP TABLE showings`,
+
   `CREATE TABLE IF NOT EXISTS showings_credentials (
     id uuid NOT NULL PRIMARY KEY DEFAULT uuid_generate_v4(),
     agent uuid NOT NULL REFERENCES agents(id),
@@ -23,13 +27,15 @@ const migrations = [
     id uuid NOT NULL PRIMARY KEY DEFAULT uuid_generate_v4(),
     agent uuid NOT NULL REFERENCES agents(id),
 
+    showing_id text NOT NULL,
+
     mls_number text NOT NULL,
     mls_title text NOT NULL,
 
+    showing_date text NOT NULL,
     showing_start_date timestamptz,
     showing_end_date timestamptz,
 
-    remote_agent_id text NOT NULL,
     remote_agent_name text NOT NULL,
     remote_agent_email text NOT NULL,
     remote_agent_desc text NOT NULL,
@@ -39,10 +45,8 @@ const migrations = [
     result text NOT NULL,
 
     feedback_text text NOT NULL,
-    feedback_id text NOT NULL,
     cancellation_reason text NOT NULL,
     note_text text NOT NULL,
-    note_id text NOT NULL,
 
     created_at timestamptz NOT NULL DEFAULT clock_timestamp(),
     updated_at timestamptz NOT NULL DEFAULT clock_timestamp(),
