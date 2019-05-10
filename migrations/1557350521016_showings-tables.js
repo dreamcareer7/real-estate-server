@@ -5,16 +5,15 @@ const migrations = [
 
   `CREATE TABLE IF NOT EXISTS showings_credentials (
     id uuid NOT NULL PRIMARY KEY DEFAULT uuid_generate_v4(),
-    remote_agent uuid NOT NULL REFERENCES agents(id),
+    agent uuid NOT NULL REFERENCES agents(id),
 
     username text NOT NULL,
     password text NOT NULL,
 
+    last_crawled_at timestamptz,
+
     created_at timestamptz NOT NULL DEFAULT clock_timestamp(),
     updated_at timestamptz NOT NULL DEFAULT clock_timestamp(),
-    deleted_at timestamptz,
-
-    last_crawled_at timestamptz,
     deleted_at timestamptz,
   
     UNIQUE (agent)
@@ -47,7 +46,7 @@ const migrations = [
 
     created_at timestamptz NOT NULL DEFAULT clock_timestamp(),
     updated_at timestamptz NOT NULL DEFAULT clock_timestamp(),
-    deleted_at timestamptz,
+    deleted_at timestamptz
   )`,
 
   'COMMIT'
