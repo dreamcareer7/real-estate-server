@@ -1,64 +1,74 @@
-// const agent = require('./mls/agent.js')
+const showings_credential = require('./expected_objects/showings_credential.js')
 
-// const add = (cb) => {
-//   return frisby.create('add an agent')
-//     .post('/jobs', {
-//       name: 'MLS.Agent',
-//       data: {processed: agent}
-//     })
-//     .after(cb)
-//     .expectStatus(200)
-// }
 
-// const getById = cb => {
-//   return frisby.create('get an agent by id')
-//     .get(`/agents/${results.agent.getByMlsId.data.id}`)
-//     .after(cb)
-//     .expectStatus(200)
-//     .expectJSON({
-//       code: 'OK',
-//       data: results.agent.getByMlsId.data
-//     })
-// }
+registerSuite('agent', ['add'])
+
 
 
 function createCredential(cb) {
-  const def = {
-    name: 'favorite_drinks',
-    data_type: 'text',
-    label: 'Favorite Drinks',
-    section: 'Detials',
-    required: false,
-    singular: false,
-    searchable: false,
-    has_label: false,
-    enum_values: ['Coffee', 'Tea', 'Iced Tea', 'Juice']
+  const body = {
+    agent: results.agent.add,
+    username: 'username',
+    password: 'password'
   }
 
-  return frisby
-    .create('create a custom attribute')
-    .post('/contacts/attribute_defs', def)
+  return frisby.create('create a showings credential')
+    .post('/showings/credential', body)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
-      data: def
+      data: showings_credential
     })
 }
 
 function getCredential(cb) {
+  const credentialId = results.showings.createCredential.data.id
+
+  return frisby.create('get a showings credential')
+    .get(`/showings/credential/${credentialId}`)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      data: showings_credential
+    })
 }
 
 function getCredentialByAgent(cb) {
+  return frisby.create('get a showings credential by agent id')
+    .get(`/showings/credential/agent/${results.agent.add}`)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      data: showings_credential
+    })
 }
 
 function updateCredential(cb) {
+  const credentialId = results.showings.createCredential.data.id
+
+  const body = {
+    username: 'new_username',
+    password: 'new_password'
+  }
+
+  return frisby.create('update a showings credential')
+    .put(`/showings/credential/${credentialId}`, body)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      data: showings_credential
+    })
 }
 
 function deleteCredential(cb) {
-  return frisby
-    .create('remove the custom attribute')
-    .delete(`/contacts/attribute_defs/${results.contact_attribute_def.create.data.id}`)
+  const credentialId = results.showings.createCredential.data.id
+
+  return frisby.create('update a showings credential')
+    .delete(`/showings/credential/${credentialId}`)
     .after(cb)
     .expectStatus(204)
 }
