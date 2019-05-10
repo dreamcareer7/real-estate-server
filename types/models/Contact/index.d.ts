@@ -152,6 +152,7 @@ declare interface IContactFilterOptions {
   excludes?: UUID[];
   list?: UUID;
   lists?: UUID[];
+  flows?: UUID[];
   users?: UUID[];
   filter_type?: 'and' | 'or'
 }
