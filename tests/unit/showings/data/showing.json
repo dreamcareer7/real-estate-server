@@ -1,12 +1,12 @@
 {
-    "showing_id": "895dcc2b-2923-4ebc-b927-ff8424bc2294",
+    "remote_id": "895dcc2b-2923-4ebc-b927-ff8424bc2294",
 
     "mls_number": "14065743",
     "mls_title": "2744 FUENTE (14065743)",
 
-    "showing_date": "Monday, May 6th 12:00 PM - 12:45 PM",
-    "showing_start_date": "2019-05-06T19:30:38.846Z",
-    "showing_end_date": "2019-05-06T20:15:38.846Z",
+    "date_raw": "Monday, May 6th 12:00 PM - 12:45 PM",
+    "start_date": "2019-05-06T19:30:38.846Z",
+    "end_date": "2019-05-06T20:15:38.846Z",
 
     "remote_agent_name": "amy zirbel",
     "remote_agent_email": "amy.zirbel@winansbhg.com",

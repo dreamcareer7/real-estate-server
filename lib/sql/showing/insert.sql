@@ -1,12 +1,12 @@
 INSERT INTO showings
     (
         agent,
-        showing_id,
+        remote_id,
         mls_number,
         mls_title,
-        showing_date,
-        showing_start_date,
-        showing_end_date,
+        date_raw,
+        start_date,
+        end_date,
         remote_agent_name,
         remote_agent_email,
         remote_agent_desc,

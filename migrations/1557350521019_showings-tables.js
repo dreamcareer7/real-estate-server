@@ -29,14 +29,14 @@ const migrations = [
     id uuid NOT NULL PRIMARY KEY DEFAULT uuid_generate_v4(),
     agent uuid NOT NULL REFERENCES agents(id),
 
-    showing_id text NOT NULL,
+    remote_id text NOT NULL,
 
     mls_number text NOT NULL,
     mls_title text NOT NULL,
 
-    showing_date text NOT NULL,
-    showing_start_date timestamptz,
-    showing_end_date timestamptz,
+    date_raw text NOT NULL,
+    start_date timestamptz,
+    end_date timestamptz,
 
     remote_agent_name text NOT NULL,
     remote_agent_email text NOT NULL,
