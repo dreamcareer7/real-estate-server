@@ -1,1 +1,1 @@
-SELECT *, 'showings' AS type FROM showings WHERE agent = $1
+SELECT id FROM showings WHERE agent = $1
