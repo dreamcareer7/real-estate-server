@@ -1,24 +1,51 @@
-{
-    "remote_id": "895dcc2b-2923-4ebc-b927-ff8424bc2294",
+[
+    {
+        "remote_id": "895dcc2b-2923-4ebc-b927-ff8424bc2294",
 
-    "mls_number": "14065743",
-    "mls_title": "2744 FUENTE (14065743)",
+        "mls_number": "14065743",
+        "mls_title": "2744 FUENTE (14065743)",
 
-    "date_raw": "Monday, May 6th 12:00 PM - 12:45 PM",
-    "start_date": "2019-05-06T19:30:38.846Z",
-    "end_date": "2019-05-06T20:15:38.846Z",
+        "date_raw": "Monday, May 6th 12:00 PM - 12:45 PM",
+        "start_date": "2019-05-06T19:30:38.846Z",
+        "end_date": "2019-05-06T20:15:38.846Z",
 
-    "remote_agent_name": "amy zirbel",
-    "remote_agent_email": "amy.zirbel@winansbhg.com",
-    "remote_agent_desc": "jp and associates arlington",
+        "remote_agent_name": "amy zirbel",
+        "remote_agent_email": "amy.zirbel@winansbhg.com",
+        "remote_agent_desc": "jp and associates arlington",
 
-    "result": "Showing / Setup",
+        "result": "Showing / Setup",
 
-    "remote_agent_phone_office": "817-540-2905",
-    "remote_agent_phone_cell": "682-500-9582",
+        "remote_agent_phone_office": "817-540-2905",
+        "remote_agent_phone_cell": "682-500-9582",
 
-    "feedback_text": "We had a total of nine families out to open house. All positive feedback. Two families mentioned that they felt like it was slightly overpriced. One family is thinking about making an offer.",
+        "feedback_text": "We had a total of nine families out to open house. All positive feedback. Two families mentioned that they felt like it was slightly overpriced. One family is thinking about making an offer.",
 
-    "cancellation_reason": "No Reason Given",
-    "note_text": "my-note"
-}
+        "cancellation_reason": "No Reason Given",
+        "note_text": "my-note"
+    },
+
+    {
+        "remote_id": "01cdf0b8-cba0-4b52-afa1-fdaf1921377c",
+
+        "mls_number": "14065743",
+        "mls_title": "2744 FUENTE (14065743)",
+
+        "date_raw": "Sunday, May 5th 3:00 PM - 4:00 PM",
+        "start_date": "2019-05-06T19:30:38.846Z",
+        "end_date": "2019-05-06T19:30:38.846Z",
+
+        "remote_agent_name": "shawn bucklew",
+        "remote_agent_email": "shawnbucklewteam@gmail.com",
+        "remote_agent_desc": "jp and associates arlington",
+
+        "result": "Preview / Setup",
+
+        "remote_agent_phone_office": "972-836-9295",
+        "remote_agent_phone_cell": "817-637-6822",
+
+        "feedback_text": "We had a total of nine families out to open house. All positive feedback. Two families mentioned that they felt like it was slightly overpriced. One family is thinking about making an offer.",
+
+        "cancellation_reason": "",
+        "note_text": ""
+    }
+]

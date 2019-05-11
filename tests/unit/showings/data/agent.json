@@ -1,16 +1,65 @@
-{
-    "email": "nan.myers@winansbhg.com",
-    "mlsid": "0212768",
-    "first_name": "Nan",
-    "last_name": "Myers",
-    "full_name": "Nan Myers",
-    "phone_number": "(972) 672-4597",
-    "nar_number": "817500614",
-    "office_mui": 15502007,
+[
+  {
+    "email": "agent_email_1@rechat.com",
+    "mlsid": "0212760",
+    "first_name": "name_1",
+    "last_name": "last_1",
+    "full_name": "name_1 last_1",
+    "phone_number": "(972) 672-4590",
+    "nar_number": "817500610",
+    "office_mui": 15502000,
     "status": "Inactive",
     "office_mlsid": "BHGW01",
-    "work_phone": "(972) 672-4597",
+    "work_phone": "(972) 672-4590",
+    "matrix_unique_id": 15518040,
+    "matrix_modified_dt": "2018-07-02T18:00:28.123"
+  },
+
+  {
+    "email": "agent_email_2@rechat.com",
+    "mlsid": "0212761",
+    "first_name": "name_2",
+    "last_name": "last_2",
+    "full_name": "name_2 last_2",
+    "phone_number": "(972) 672-4591",
+    "nar_number": "817500611",
+    "office_mui": 15502001,
+    "status": "Inactive",
+    "office_mlsid": "BHGW02",
+    "work_phone": "(972) 672-4591",
+    "matrix_unique_id": 15518041,
+    "matrix_modified_dt": "2018-07-02T18:00:28.123"
+  },
+
+  {
+    "email": "agent_email_3@rechat.com",
+    "mlsid": "0212762",
+    "first_name": "name_3",
+    "last_name": "last_3",
+    "full_name": "name_3 last_3",
+    "phone_number": "(972) 672-4592",
+    "nar_number": "817500611",
+    "office_mui": 15502002,
+    "status": "Inactive",
+    "office_mlsid": "BHGW03",
+    "work_phone": "(972) 672-4592",
     "matrix_unique_id": 15518042,
     "matrix_modified_dt": "2018-07-02T18:00:28.123"
+  },
+
+  {
+    "email": "agent_email_4@rechat.com",
+    "mlsid": "0212763",
+    "first_name": "name_4",
+    "last_name": "last_4",
+    "full_name": "name_4 last_4",
+    "phone_number": "(972) 672-4593",
+    "nar_number": "817500613",
+    "office_mui": 15502003,
+    "status": "Inactive",
+    "office_mlsid": "BHGW04",
+    "work_phone": "(972) 672-4593",
+    "matrix_unique_id": 15518043,
+    "matrix_modified_dt": "2018-07-02T18:00:28.123"
   }
-  
+]
