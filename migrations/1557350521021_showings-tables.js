@@ -3,10 +3,10 @@ const db = require('../lib/utils/db')
 const migrations = [
   'BEGIN',
 
-  `DROP TABLE
+  `DROP TABLE IF EXISTS
     showings_credentials`,
 
-  `DROP TABLE
+  `DROP TABLE IF EXISTS
     showings`,
 
   `CREATE TABLE IF NOT EXISTS showings_credentials (
