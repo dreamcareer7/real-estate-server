@@ -34,6 +34,18 @@ async function create() {
   const credentialId = await ShowingsCredential.create(credential)
 
   expect(credentialId).to.be.uuid
+
+  return credentialId
+}
+
+async function getById() {
+  const credentialId =  await create()
+
+  const credentialObj = await ShowingsCredential.get(credentialId)
+
+  expect(agent).to.equal(credentialObj.agent)
+  expect(credentialObj).to.include(credential_json)
+  expect(credentialObj.type).to.be.equal('showings_credentials')
 }
 
 async function getByAgent() {
@@ -130,6 +142,7 @@ describe('Showings', () => {
     beforeEach(setup)
 
     it('should create a credential record', create)
+    it('should return a credential record', getById)
     it('should return a credential record based on agent id', getByAgent)
     it('should update a credential record', update)
     it('should delete a credential record', deleteCredential)

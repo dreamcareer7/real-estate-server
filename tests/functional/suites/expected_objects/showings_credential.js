@@ -1,4 +1,5 @@
 module.exports = {
+  'type':String,
   'id': String,
   'agent': String,
   'username': String,
