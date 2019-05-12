@@ -12,6 +12,7 @@ tag_contacts AS (
   FROM   email_campaigns
   JOIN   email_campaigns_recipients ON email_campaigns.id                    =  email_campaigns_recipients.campaign
   JOIN   contacts_summaries         ON ARRAY[email_campaigns_recipients.tag] <@ contacts_summaries.tag
+         AND email_campaigns.brand = contacts_summaries.brand
   WHERE email_campaigns.id = $1
 )
 
