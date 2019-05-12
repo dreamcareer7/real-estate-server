@@ -29,6 +29,7 @@ declare interface IFlowEnrollInput {
 
 declare interface IFlow extends IModel {
   origin: UUID;
+  origin_id: UUID;
   starts_at: number;
   contact: UUID;
   brand: UUID;

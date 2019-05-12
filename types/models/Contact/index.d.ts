@@ -120,8 +120,8 @@ declare interface IContactSummary {
   company?: string;
   display_name: string;
   abbreviated_display_name: string;
-  email: string[];
-  phone_number: string[];
+  email: string | null;
+  phone_number: string | null;
 }
 
 declare type TContactFilterOperator = 'eq' | 'lte' | 'gte' | 'between' | 'any' | 'all';
