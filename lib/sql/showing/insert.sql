@@ -1,5 +1,6 @@
 INSERT INTO showings
     (
+        crm_task,
         agent,
         remote_id,
         mls_number,
@@ -32,21 +33,24 @@ VALUES
       $12,
       $13,
       $14,
-      $15
+      $15,
+      $16
     )
 ON CONFLICT (remote_id) DO UPDATE SET 
-    agent = $1,
-    mls_number = $3,
-    mls_title = $4,
-    date_raw = $5,
-    start_date = $6,
-    end_date = $7,
-    remote_agent_name = $8,
-    remote_agent_email = $9,
-    remote_agent_desc = $10,
-    remote_agent_phone = $11,
-    result = $12,
-    feedback_text = $13,
-    cancellation_reason = $14,
-    note_text = $15
+    crm_task = $1,
+    agent = $2,
+    remote_id = $3,
+    mls_number = $4,
+    mls_title = $5,
+    date_raw = $6,
+    start_date = $7,
+    end_date = $8,
+    remote_agent_name = $9,
+    remote_agent_email = $10,
+    remote_agent_desc = $11,
+    remote_agent_phone = $12,
+    result = $13,
+    feedback_text = $14,
+    cancellation_reason = $15,
+    note_text = $16
 RETURNING id

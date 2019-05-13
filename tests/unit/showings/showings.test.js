@@ -6,24 +6,28 @@ const Context = require('../../../lib/models/Context')
 
 const Showings = require('../../../lib/models/Showings/showings')
 const ShowingsCredential = require('../../../lib/models/Showings/credential')
+const User = require('../../../lib/models/User')
+const BrandHelper = require('../brand/helper')
+// const CrmTask = require('../../../lib/models/CRM/Task')
 
 const agent_json = require('./data/agent.json')
 const credential_json = require('./data/credential.json')
 const showing_json = require('./data/showing.json')
 
-let agent
-
+let agent, user, brand
 
 
 async function setup() {
   const props = {}
-  
   agent = await Agent.create({
     ...agent_json[0],
     ...props
   })
-  
-  Context.set({ agent })
+
+  user = await User.getByEmail('test@rechat.com')
+  brand = await BrandHelper.create({ roles: { Admin: [user.id] } })
+
+  Context.set({ user, brand, agent })
 }
 
 async function sendDueHelper() {
@@ -182,6 +186,10 @@ async function sendDue() {
       isFirstCrawl: isFirstCrawl,
       action: 'showings'
     },
+    crm_task_meta: {
+      user: user.id,
+      brand: brand.id
+    },
     showingCredential: showingCredential
   }
 
@@ -192,27 +200,50 @@ async function sendDue() {
 
   const crawledShowingCredential = await ShowingsCredential.get(created_ids[0])
   expect(crawledShowingCredential.last_crawled_at).not.to.be.null
+
+  const showingRecords = await Showings.getManyByAgent(crawledShowingCredential.agent)
+  showingRecords.forEach(async function(showingRecord) {
+    expect(showingRecord.crm_task).to.be.uuid
+  })
 }
 
 
 async function createShowings() {
-  const body = {
+  const taskBody = {
+    user: user.id,
+    brand: brand.id,
+    title: showing_json[0].mls_title,
+    due_date: new Date(showing_json[0].start_date).getTime(),
+    status: 'SHOWING_STATUS', // Read from showing.result
+    task_type: 'SHOWING'
+  }
+
+  const showingBody = {
     agent: agent,
     ...showing_json[0]
   }
 
-  const showingId = await Showings.create(body)
+  const showingId = await Showings.create(showingBody, taskBody)
 
   expect(showingId).to.be.uuid
 }
 
 async function testUpsert() {
+  const taskBody = {
+    brand: brand.id,
+    user: user.id,
+    title: showing_json[0].mls_title,
+    due_date: new Date(showing_json[0].start_date).getTime(),
+    status: 'SHOWING_STATUS', // Read from showing.result
+    task_type: 'SHOWING'
+  }
+
   let body = {
     agent: agent,
     ...showing_json[0]
   }
 
-  const showingId = await Showings.create(body)
+  const showingId = await Showings.create(body, taskBody)
   const showing = await Showings.get(showingId)
 
 
@@ -225,7 +256,7 @@ async function testUpsert() {
   body.mls_title = 'yyyyyy'
   body.result = 'zzzzz'
 
-  const sameSowingId = await Showings.create(body)
+  const sameSowingId = await Showings.create(body, taskBody)
   const sameShowing = await Showings.get(sameSowingId)
 
   expect(showing.id).to.equal(sameShowing.id)
@@ -236,7 +267,7 @@ async function testUpsert() {
 async function getShowingByAgent() {
   await createShowings()
 
-  const showingObj = await Showings.getByAgent(agent)
+  const showingObj = await Showings.getOneByAgent(agent)
 
   expect(agent).to.equal(showingObj.agent)
   expect(showingObj.mls_number).to.equal(showing_json[0].mls_number)
@@ -245,7 +276,7 @@ async function getShowingByAgent() {
 async function updateShowing() {
   await createShowings()
 
-  const showingObj = await Showings.getByAgent(agent)
+  const showingObj = await Showings.getOneByAgent(agent)
 
   const body = {
     result: 'new_result',
@@ -253,7 +284,7 @@ async function updateShowing() {
   }
   await Showings.update(showingObj.id, body)
 
-  const updated = await Showings.getByAgent(agent)
+  const updated = await Showings.getOneByAgent(agent)
 
   expect(updated).to.include(body)
 }
@@ -261,11 +292,11 @@ async function updateShowing() {
 async function deleteShowing() {
   await createShowings()
 
-  const showingObj = await Showings.getByAgent(agent)
+  const showingObj = await Showings.getOneByAgent(agent)
 
   await Showings.delete(showingObj.id)
 
-  const deleteed = await Showings.getByAgent(agent)
+  const deleteed = await Showings.getOneByAgent(agent)
 
   expect(deleteed.deleted_at).not.to.be.null
 }

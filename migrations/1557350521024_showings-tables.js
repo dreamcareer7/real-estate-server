@@ -28,6 +28,7 @@ const migrations = [
   `CREATE TABLE IF NOT EXISTS showings (
     id uuid NOT NULL PRIMARY KEY DEFAULT uuid_generate_v4(),
     agent uuid NOT NULL REFERENCES agents(id),
+    crm_task uuid NOT NULL REFERENCES crm_tasks(id),
 
     remote_id text NOT NULL,
 
