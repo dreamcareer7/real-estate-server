@@ -41,8 +41,8 @@ const migrations = [
     remote_agent_name text NOT NULL,
     remote_agent_email text NOT NULL,
     remote_agent_desc text NOT NULL,
-    remote_agent_phone_office text NOT NULL,
-    remote_agent_phone_cell text NOT NULL,
+
+    remote_agent_phone JSON NOT NULL,
 
     result text NOT NULL,
 
@@ -52,7 +52,9 @@ const migrations = [
 
     created_at timestamptz NOT NULL DEFAULT clock_timestamp(),
     updated_at timestamptz NOT NULL DEFAULT clock_timestamp(),
-    deleted_at timestamptz
+    deleted_at timestamptz,
+
+    UNIQUE (remote_id)
   )`,
 
   'COMMIT'

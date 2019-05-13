@@ -1,6 +1,7 @@
 const { expect } = require('chai')
 
-const { createContext } = require('../helper')
+const { createContext, handleJobs } = require('../helper')
+
 const Context = require('../../../lib/models/Context')
 
 const Showings = require('../../../lib/models/Showings/showings')
@@ -133,7 +134,7 @@ async function deleteCredential() {
   expect(deleteed.deleted_at).not.to.be.null
 }
 
-async function sendDue() {
+async function sendDueRecords() {
   const created_ids = await sendDueHelper()
   const returned_ids = await ShowingsCredential.sendDue()
 
@@ -143,16 +144,54 @@ async function sendDue() {
   for (const key in created_ids) {
     expect(returned_ids).to.contain(created_ids[key])
   }
+}
+
+async function sendDueUpdatedRecords() {
+  const created_ids = await sendDueHelper()
+  expect(created_ids).to.have.length(3)
 
   const lastCrawledTS = new Date().setDate(-3)
-  await ShowingsCredential.updateLastCrawledDate(returned_ids[0], lastCrawledTS)
-  const updatedRecord = await ShowingsCredential.get(returned_ids[0])
-  
+  await ShowingsCredential.updateLastCrawledDate(created_ids[0], lastCrawledTS)
+
+  const updatedRecord = await ShowingsCredential.get(created_ids[0])  
   expect(updatedRecord.last_crawled_at).to.be.not.null
 
   const updated_returned_ids = await ShowingsCredential.sendDue()
-
   expect(updated_returned_ids).to.have.length(2)
+
+  const returned_ids = await ShowingsCredential.sendDue()
+  expect(returned_ids).to.have.length(2)
+}
+
+async function sendDue() {
+  const created_ids = await sendDueHelper()
+  const returned_ids = await ShowingsCredential.sendDue()
+
+  expect(created_ids).to.have.length(3)
+  expect(returned_ids).to.have.length(3)
+  
+  const showingCredential = await ShowingsCredential.get(created_ids[0])
+  expect(showingCredential.last_crawled_at).to.be.null
+
+  let isFirstCrawl = true
+  if( showingCredential.last_crawled_at )
+    isFirstCrawl = false
+
+  const data = {
+    meta: {
+      isFirstCrawl: isFirstCrawl,
+      action: 'showings'
+    },
+    showingCredential: showingCredential
+  }
+
+  const job = Job.queue.create('showings_crawler', data).removeOnComplete(true)  
+  Context.get('jobs').push(job)
+
+  await handleJobs()
+
+  const crawledShowingCredential = await ShowingsCredential.get(created_ids[0])
+  expect(crawledShowingCredential.last_crawled_at).not.to.be.null
 }
 
 
@@ -165,6 +204,33 @@ async function createShowings() {
   const showingId = await Showings.create(body)
 
   expect(showingId).to.be.uuid
+}
+
+async function testUpsert() {
+  let body = {
+    agent: agent,
+    ...showing_json[0]
+  }
+
+  const showingId = await Showings.create(body)
+  const showing = await Showings.get(showingId)
+
+
+  body = {
+    agent: agent,
+    ...showing
+  }
+
+  body.mls_number = 'xxxxx'
+  body.mls_title = 'yyyyyy'
+  body.result = 'zzzzz'
+
+  const sameSowingId = await Showings.create(body)
+  const sameShowing = await Showings.get(sameSowingId)
+
+  expect(showing.id).to.equal(sameShowing.id)
+  expect(showing.agent).to.equal(sameShowing.agent)
+  expect(showing.mls_number).not.to.equal(sameShowing.mls_number)
 }
 
 async function getShowingByAgent() {
@@ -216,7 +282,9 @@ describe('Showings', () => {
     it('should return a credential record based on agent id', getByAgent)
     it('should update a credential record user/pass', updateCredential)
     it('should delete a credential record', deleteCredential)
-    it('should return some credential ids', sendDue)
+    it('should return some credential ids', sendDueRecords)
+    it('should return some credential ids with one updated record', sendDueUpdatedRecords)
+    it('should completely test sendDue', sendDue)
   })
 
   describe('Showings Appoinments (events)', () => {
@@ -224,6 +292,7 @@ describe('Showings', () => {
     beforeEach(setup)
 
     it('should create a showings record', createShowings)
+    it('should upsert a showings record correctly', testUpsert)
     it('should return a showings record based on agent id', getShowingByAgent)
     it('should update a showings record', updateShowing)
     it('should delete a showings record', deleteShowing)

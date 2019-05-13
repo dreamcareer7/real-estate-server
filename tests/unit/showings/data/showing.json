@@ -15,8 +15,12 @@
 
         "result": "Showing / Setup",
 
-        "remote_agent_phone_office": "817-540-2905",
-        "remote_agent_phone_cell": "682-500-9582",
+        "remote_agent_phone": {
+            "office": "214-254-4430",
+            "cell": "682-888-3569",
+            "direct": "Private",
+            "vmail": "Private"
+        },
 
         "feedback_text": "We had a total of nine families out to open house. All positive feedback. Two families mentioned that they felt like it was slightly overpriced. One family is thinking about making an offer.",
 
@@ -40,8 +44,12 @@
 
         "result": "Preview / Setup",
 
-        "remote_agent_phone_office": "972-836-9295",
-        "remote_agent_phone_cell": "817-637-6822",
+        "remote_agent_phone": {
+            "office": "214-254-4430",
+            "cell": "682-888-3569",
+            "direct": "Private",
+            "vmail": "Private"
+        },
 
         "feedback_text": "We had a total of nine families out to open house. All positive feedback. Two families mentioned that they felt like it was slightly overpriced. One family is thinking about making an offer.",
 
