@@ -1,1 +1,0 @@
-SELECT id FROM showings WHERE agent = $1

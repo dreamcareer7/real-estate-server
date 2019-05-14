@@ -1,1 +1,0 @@
-SELECT id FROM showings_credentials WHERE agent = $1

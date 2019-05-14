@@ -1,14 +1,14 @@
 const { expect } = require('chai')
-
 const { createContext, handleJobs } = require('../helper')
 
 const Context = require('../../../lib/models/Context')
-
+const Job = require('../../../lib/models/Job')
 const Showings = require('../../../lib/models/Showings/showings')
 const ShowingsCredential = require('../../../lib/models/Showings/credential')
 const User = require('../../../lib/models/User')
-const BrandHelper = require('../brand/helper')
 // const CrmTask = require('../../../lib/models/CRM/Task')
+
+const BrandHelper = require('../brand/helper')
 
 const agent_json = require('./data/agent.json')
 const credential_json = require('./data/credential.json')
@@ -30,62 +30,47 @@ async function setup() {
   Context.set({ user, brand, agent })
 }
 
-async function sendDueHelper() {
-  const props = {}
-  
-  const agent_1 = await Agent.create({
-    ...agent_json[1],
-    ...props
-  })
+async function crawlerJobHelper() {
+  const userA = await User.getByEmail('test@rechat.com')
+  const brandA = await BrandHelper.create({ roles: { Admin: [userA.id] } })
 
-  const agent_2 = await Agent.create({
-    ...agent_json[2],
-    ...props
-  })
+  const userB = await User.getByEmail('test@rechat.com')
+  const brandB = await BrandHelper.create({ roles: { Admin: [userB.id] } })
 
-  const agent_3 = await Agent.create({
-    ...agent_json[3],
-    ...props
-  })
 
-  const credentialBody_1 = {
-    agent: agent_1,
+  const credentialBodyA = {
+    user: userA.id,
+    brand: brandA.id,
     username: credential_json.username,
     password: credential_json.password
   }
 
-  const credentialBody_2 = {
-    agent: agent_2,
+  const credentialBodyB = {
+    user: userB.id,
+    brand: brandB.id,
     username: credential_json.username,
     password: credential_json.password
   }
 
-  const credentialBody_3 = {
-    agent: agent_3,
-    username: credential_json.username,
-    password: credential_json.password
-  }
 
-  const credential_1_id = await ShowingsCredential.create(credentialBody_1)
-  const credential_2_id = await ShowingsCredential.create(credentialBody_2)
-  const credential_3_id = await ShowingsCredential.create(credentialBody_3)
+  const credentialA_id = await ShowingsCredential.create(credentialBodyA)
+  const credentialB_id = await ShowingsCredential.create(credentialBodyB)
 
   return [
-    credential_1_id,
-    credential_2_id,
-    credential_3_id
+    credentialA_id,
+    credentialB_id
   ]
 }
 
 async function create() {
   const credentialBody = {
-    agent: agent,
+    user: user.id,
+    brand: brand.id,
     username: credential_json.username,
     password: credential_json.password
   }
 
   const credentialId = await ShowingsCredential.create(credentialBody)
-
   expect(credentialId).to.be.uuid
 
   return credentialId
@@ -93,27 +78,28 @@ async function create() {
 
 async function getById() {
   const credentialId = await create()
-
   const credentialObj = await ShowingsCredential.get(credentialId)
 
-  expect(agent).to.equal(credentialObj.agent)
+  expect(user.id).to.equal(credentialObj.user)
+  expect(brand.id).to.equal(credentialObj.brand)
   expect(credentialObj).to.include(credential_json)
   expect(credentialObj.type).to.be.equal('showings_credentials')
 }
 
-async function getByAgent() {
+async function getByUser() {
   await create()
 
-  const credentialObj = await ShowingsCredential.getByAgent(agent)
+  const credentialObj = await ShowingsCredential.getByUser(user.id, brand.id)
 
-  expect(agent).to.equal(credentialObj.agent)
+  expect(credentialObj.user).to.equal(user.id)
+  expect(credentialObj.brand).to.equal(brand.id)
   expect(credentialObj).to.include(credential_json)
 }
 
 async function updateCredential() {
-  await create()
+  const credentialId = await create()
 
-  const credentialObj = await ShowingsCredential.getByAgent(agent)
+  const credentialObj = await ShowingsCredential.get(credentialId)
 
   const body = {
     username: 'my_new_username',
@@ -121,38 +107,35 @@ async function updateCredential() {
   }
   await ShowingsCredential.updateCredential(credentialObj.id, body)
 
-  const updated = await ShowingsCredential.getByAgent(agent)
-
+  const updated = await ShowingsCredential.get(credentialObj.id)
   expect(updated).to.include(body)
 }
 
 async function deleteCredential() {
-  await create()
-
-  const credentialObj = await ShowingsCredential.getByAgent(agent)
+  const credentialId = await create()
+  const credentialObj = await ShowingsCredential.get(credentialId)
 
   await ShowingsCredential.delete(credentialObj.id)
 
-  const deleteed = await ShowingsCredential.getByAgent(agent)
-
+  const deleteed = await ShowingsCredential.get(credentialId)
   expect(deleteed.deleted_at).not.to.be.null
 }
 
-async function sendDueRecords() {
-  const created_ids = await sendDueHelper()
-  const returned_ids = await ShowingsCredential.sendDue()
+async function crawlerJobRecords() {
+  const created_ids = await crawlerJobHelper()
+  const returned_ids = await ShowingsCredential.crawlerJob()
 
-  expect(created_ids).to.have.length(3)
-  expect(returned_ids).to.have.length(3)
+  expect(created_ids).to.have.length(2)
+  expect(returned_ids).to.have.length(2)
 
   for (const key in created_ids) {
     expect(returned_ids).to.contain(created_ids[key])
   }
 }
 
-async function sendDueUpdatedRecords() {
-  const created_ids = await sendDueHelper()
-  expect(created_ids).to.have.length(3)
+async function crawlerJobUpdatedRecords() {
+  const created_ids = await crawlerJobHelper()
+  expect(created_ids).to.have.length(2)
 
   const lastCrawledTS = new Date().setDate(-3)
   await ShowingsCredential.updateLastCrawledDate(created_ids[0], lastCrawledTS)
@@ -160,19 +143,19 @@ async function sendDueUpdatedRecords() {
   const updatedRecord = await ShowingsCredential.get(created_ids[0])  
   expect(updatedRecord.last_crawled_at).to.be.not.null
 
-  const updated_returned_ids = await ShowingsCredential.sendDue()
-  expect(updated_returned_ids).to.have.length(2)
+  const updated_returned_ids = await ShowingsCredential.crawlerJob()
+  expect(updated_returned_ids).to.have.length(1)
 
-  const returned_ids = await ShowingsCredential.sendDue()
-  expect(returned_ids).to.have.length(2)
+  const returned_ids = await ShowingsCredential.crawlerJob()
+  expect(returned_ids).to.have.length(1)
 }
 
-async function sendDue() {
-  const created_ids = await sendDueHelper()
-  const returned_ids = await ShowingsCredential.sendDue()
+async function crawlerJob() {
+  const created_ids = await crawlerJobHelper()
+  // const returned_ids = await ShowingsCredential.crawlerJob()
 
-  expect(created_ids).to.have.length(3)
-  expect(returned_ids).to.have.length(3)
+  expect(created_ids).to.have.length(2)
+  // expect(returned_ids).to.have.length(2)
   
   const showingCredential = await ShowingsCredential.get(created_ids[0])
   expect(showingCredential.last_crawled_at).to.be.null
@@ -186,10 +169,6 @@ async function sendDue() {
       isFirstCrawl: isFirstCrawl,
       action: 'showings'
     },
-    crm_task_meta: {
-      user: user.id,
-      brand: brand.id
-    },
     showingCredential: showingCredential
   }
 
@@ -201,7 +180,7 @@ async function sendDue() {
   const crawledShowingCredential = await ShowingsCredential.get(created_ids[0])
   expect(crawledShowingCredential.last_crawled_at).not.to.be.null
 
-  const showingRecords = await Showings.getManyByAgent(crawledShowingCredential.agent)
+  const showingRecords = await Showings.getManyByCredential(crawledShowingCredential.id)
   showingRecords.forEach(async function(showingRecord) {
     expect(showingRecord.crm_task).to.be.uuid
   })
@@ -209,95 +188,86 @@ async function sendDue() {
 
 
 async function createShowings() {
+  const credential_id = await create()
+
+  const showingBody = {
+    credential_id: credential_id,
+    ...showing_json[0]
+  }
+
   const taskBody = {
     user: user.id,
     brand: brand.id,
     title: showing_json[0].mls_title,
     due_date: new Date(showing_json[0].start_date).getTime(),
-    status: 'SHOWING_STATUS', // Read from showing.result
-    task_type: 'SHOWING'
-  }
-
-  const showingBody = {
-    agent: agent,
-    ...showing_json[0]
+    status: 'PENDING', // Read from showing.result
+    task_type: 'Showing'
   }
 
   const showingId = await Showings.create(showingBody, taskBody)
 
+  const createdShowing = await Showings.get(showingId)
+
   expect(showingId).to.be.uuid
+
+  return showingId
 }
 
 async function testUpsert() {
+  const credential_id = await create()
+
+  let showingBody = {
+    credential_id: credential_id,
+    ...showing_json[0]
+  }
+
   const taskBody = {
     brand: brand.id,
     user: user.id,
     title: showing_json[0].mls_title,
     due_date: new Date(showing_json[0].start_date).getTime(),
-    status: 'SHOWING_STATUS', // Read from showing.result
-    task_type: 'SHOWING'
+    status: 'PENDING',
+    task_type: 'Showing'
   }
 
-  let body = {
-    agent: agent,
-    ...showing_json[0]
-  }
 
-  const showingId = await Showings.create(body, taskBody)
+  const showingId = await Showings.create(showingBody, taskBody)
   const showing = await Showings.get(showingId)
 
-
-  body = {
-    agent: agent,
+  showingBody = {
+    credential_id: credential_id,
     ...showing
   }
 
-  body.mls_number = 'xxxxx'
-  body.mls_title = 'yyyyyy'
-  body.result = 'zzzzz'
+  showingBody.mls_number = 'xxxxx' // its not updatable
+  showingBody.mls_title = 'yyyyyy'
+  showingBody.result = 'zzzzz'
 
-  const sameSowingId = await Showings.create(body, taskBody)
+  const sameSowingId = await Showings.create(showingBody, taskBody)
   const sameShowing = await Showings.get(sameSowingId)
 
   expect(showing.id).to.equal(sameShowing.id)
   expect(showing.agent).to.equal(sameShowing.agent)
-  expect(showing.mls_number).not.to.equal(sameShowing.mls_number)
+  expect(showing.mls_number).to.equal(sameShowing.mls_number)
+  expect(showing.mls_title).not.to.equal(sameShowing.mls_title)
 }
 
-async function getShowingByAgent() {
-  await createShowings()
+async function getShowingByCredential() {
+  const showingId = await createShowings()
+  const createdShowingObj = await Showings.get(showingId)
 
-  const showingObj = await Showings.getOneByAgent(agent)
+  const showingObj = await Showings.getOneByCredential(createdShowingObj.credential)
 
-  expect(agent).to.equal(showingObj.agent)
+  expect(showingId).to.equal(showingObj.id)
   expect(showingObj.mls_number).to.equal(showing_json[0].mls_number)
 }
 
-async function updateShowing() {
-  await createShowings()
-
-  const showingObj = await Showings.getOneByAgent(agent)
-
-  const body = {
-    result: 'new_result',
-    feedback_text: 'agent_feedback'
-  }
-  await Showings.update(showingObj.id, body)
-
-  const updated = await Showings.getOneByAgent(agent)
-
-  expect(updated).to.include(body)
-}
-
 async function deleteShowing() {
-  await createShowings()
+  const showingId = await createShowings()
 
-  const showingObj = await Showings.getOneByAgent(agent)
+  await Showings.delete(showingId)
 
-  await Showings.delete(showingObj.id)
-
-  const deleteed = await Showings.getOneByAgent(agent)
-
+  const deleteed = await Showings.get(showingId)
   expect(deleteed.deleted_at).not.to.be.null
 }
 
@@ -310,12 +280,12 @@ describe('Showings', () => {
 
     it('should create a credential record', create)
     it('should return a credential record', getById)
-    it('should return a credential record based on agent id', getByAgent)
+    it('should return a credential record based on user id', getByUser)
     it('should update a credential record user/pass', updateCredential)
     it('should delete a credential record', deleteCredential)
-    it('should return some credential ids', sendDueRecords)
-    it('should return some credential ids with one updated record', sendDueUpdatedRecords)
-    it('should completely test sendDue', sendDue)
+    it('should return some credential ids', crawlerJobRecords)
+    it('should return some credential ids with one updated record', crawlerJobUpdatedRecords)
+    it('should completely test crawlerJob', crawlerJob)
   })
 
   describe('Showings Appoinments (events)', () => {
@@ -324,8 +294,7 @@ describe('Showings', () => {
 
     it('should create a showings record', createShowings)
     it('should upsert a showings record correctly', testUpsert)
-    it('should return a showings record based on agent id', getShowingByAgent)
-    it('should update a showings record', updateShowing)
+    it('should return a showings record based on agent id', getShowingByCredential)
     it('should delete a showings record', deleteShowing)
   })
 })

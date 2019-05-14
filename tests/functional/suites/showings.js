@@ -2,18 +2,20 @@ const showings_credential = require('./expected_objects/showings_credential.js')
 
 
 registerSuite('agent', ['add'])
+registerSuite('brand', [ 'createParent', 'create' ])
 
 
 
 function createCredential(cb) {
   const body = {
-    agent: results.agent.add,
+    user: results.authorize.token.data.id,
+    brand: results.brand.create.data.id,
     username: 'username',
     password: 'password'
   }
 
   return frisby.create('create a showings credential')
-    .post('/showings/credential', body)
+    .post('/showings/credentials', body)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
@@ -23,10 +25,8 @@ function createCredential(cb) {
 }
 
 function getCredential(cb) {
-  const credentialId = results.showings.createCredential.data.id
-
-  return frisby.create('get a showings credential')
-    .get(`/showings/credential/${credentialId}`)
+  return frisby.create('get a showings credential by user id')
+    .get('/showings/credentials')
     .after(cb)
     .expectStatus(200)
     .expectJSON({
@@ -35,9 +35,11 @@ function getCredential(cb) {
     })
 }
 
-function getCredentialByAgent(cb) {
-  return frisby.create('get a showings credential by agent id')
-    .get(`/showings/credential/agent/${results.agent.add}`)
+function getCredentialById(cb) {
+  const credentialId = results.showings.createCredential.data.id
+
+  return frisby.create('get a showings credential')
+    .get(`/showings/credentials/${credentialId}`)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
@@ -55,7 +57,7 @@ function updateCredential(cb) {
   }
 
   return frisby.create('update a showings credential')
-    .put(`/showings/credential/${credentialId}`, body)
+    .put(`/showings/credentials/${credentialId}`, body)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
@@ -68,7 +70,7 @@ function deleteCredential(cb) {
   const credentialId = results.showings.createCredential.data.id
 
   return frisby.create('update a showings credential')
-    .delete(`/showings/credential/${credentialId}`)
+    .delete(`/showings/credentials/${credentialId}`)
     .after(cb)
     .expectStatus(204)
 }
@@ -77,7 +79,7 @@ function deleteCredential(cb) {
 module.exports = {
   createCredential,
   getCredential,
-  getCredentialByAgent,
+  getCredentialById,
   updateCredential,
   deleteCredential
 }
