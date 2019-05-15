@@ -1,1 +1,1 @@
-SELECT id FROM deals WHERE listing = $1
+SELECT id FROM deals WHERE listing = $1 AND brand = $2

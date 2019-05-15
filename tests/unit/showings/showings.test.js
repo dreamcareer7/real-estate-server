@@ -6,7 +6,7 @@ const Job = require('../../../lib/models/Job')
 const Showings = require('../../../lib/models/Showings/showings')
 const ShowingsCredential = require('../../../lib/models/Showings/credential')
 const User = require('../../../lib/models/User')
-// const CrmTask = require('../../../lib/models/CRM/Task')
+const CrmTask = require('../../../lib/models/CRM/Task')
 
 const BrandHelper = require('../brand/helper')
 
@@ -37,7 +37,6 @@ async function crawlerJobHelper() {
   const userB = await User.getByEmail('test@rechat.com')
   const brandB = await BrandHelper.create({ roles: { Admin: [userB.id] } })
 
-
   const credentialBodyA = {
     user: userA.id,
     brand: brandA.id,
@@ -51,7 +50,6 @@ async function crawlerJobHelper() {
     username: credential_json.username,
     password: credential_json.password
   }
-
 
   const credentialA_id = await ShowingsCredential.create(credentialBodyA)
   const credentialB_id = await ShowingsCredential.create(credentialBodyB)
@@ -150,7 +148,7 @@ async function crawlerJobUpdatedRecords() {
   expect(returned_ids).to.have.length(1)
 }
 
-async function customCrawlerJob() {
+async function SingleCrawlerJob() {
   const created_ids = await crawlerJobHelper()
   expect(created_ids).to.have.length(2)
   
@@ -174,19 +172,17 @@ async function customCrawlerJob() {
 
   await handleJobs()
 
-  console.log()
-  console.log()
-
   const crawledShowingCredential = await ShowingsCredential.get(created_ids[0])
   expect(crawledShowingCredential.last_crawled_at).not.to.be.null
 
   const showingRecords = await Showings.getManyByCredential(crawledShowingCredential.id)
 
-  showingRecords.forEach(async function(showingRecord) {
+  for( const showingRecord of showingRecords ) {
     expect(showingRecord.crm_task).to.be.uuid
-    // const crmTask = await CrmTask.get(showingRecord.crm_task)
-    // expect(crmTask.task_type).to.be.eqls('Showing')
-  })
+
+    const crmTask = await CrmTask.get(showingRecord.crm_task)
+    expect(crmTask.task_type).to.be.eqls('Showing')
+  }
 }
 
 async function crawlerJob() {
@@ -202,9 +198,12 @@ async function crawlerJob() {
 
   const showingRecords = await Showings.getManyByCredential(crawledShowingCredential.id)
 
-  showingRecords.forEach(async function(showingRecord) {
+  for( const showingRecord of showingRecords ) {
     expect(showingRecord.crm_task).to.be.uuid
-  })
+
+    const crmTask = await CrmTask.get(showingRecord.crm_task)
+    expect(crmTask.task_type).to.be.eqls('Showing')
+  }
 }
 
 
@@ -305,7 +304,7 @@ describe('Showings', () => {
     it('should delete a credential record', deleteCredential)
     it('should return some credential ids', crawlerJobRecords)
     it('should return some credential ids with one updated record', crawlerJobUpdatedRecords)
-    it('should completely test crawlerJob - custom', customCrawlerJob)
+    it('should completely test crawlerJob - single', SingleCrawlerJob)
     it('should completely test crawlerJob', crawlerJob)
   })
 
