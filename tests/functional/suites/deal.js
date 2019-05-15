@@ -49,15 +49,31 @@ const patchListing = cb => {
     })
 }
 
+const patchPropertyType = cb => {
+  const patch = {
+    property_type: 'New Home'
+  }
+  const expected_object = Object.assign({}, results.deal.patchListing.data, patch)
+
+  return frisby.create('change property type of a deal')
+    .patch(`/deals/${results.deal.create.data.id}/property_type`, patch)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      data: expected_object
+    })
+}
+
 const patchDraft = cb => {
   const patch = {
     is_draft: false
   }
 
-  results.deal.patchListing.data.is_draft = false
-  delete results.deal.patchListing.data.faired_at
+  results.deal.patchPropertyType.data.is_draft = false
+  delete results.deal.patchPropertyType.data.faired_at
 
-  const expected_object = Object.assign({}, results.deal.patchListing.data, patch)
+  const expected_object = Object.assign({}, results.deal.patchPropertyType.data, patch)
 
   return frisby.create('publish a deal to live mode')
     .patch(`/deals/${results.deal.create.data.id}/draft`, patch)
@@ -537,6 +553,7 @@ module.exports = {
   addContext,
   approveContext,
   patchListing,
+  patchPropertyType,
   patchDraft,
   addRole,
   updateRole,

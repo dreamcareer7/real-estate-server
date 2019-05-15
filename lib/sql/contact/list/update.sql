@@ -6,7 +6,7 @@ WITH filters AS (
     "value",
     COALESCE(invert, FALSE) AS invert
   FROM
-    json_populate_recordset(null::crm_lists_filters, $7::json) AS filters
+    json_populate_recordset(null::crm_lists_filters, $9::json) AS filters
 ), f_upd AS (
   UPDATE
     crm_lists_filters AS clf
@@ -56,6 +56,8 @@ WITH filters AS (
     touch_freq = $4,
     is_and_filter = $5,
     query = $6,
+    crm_task = $7,
+    flows = $8,
     updated_at = clock_timestamp(),
     updated_by = $2::uuid
   WHERE
