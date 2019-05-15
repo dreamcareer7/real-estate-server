@@ -8,5 +8,7 @@ UPDATE deals SET
     END
   ),
 
-  title = $4
+  title = $4,
+  property_type = $5
+
 WHERE id = $1
