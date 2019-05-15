@@ -1,0 +1,1 @@
+SELECT id FROM deals WHERE listing = $1

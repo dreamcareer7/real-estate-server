@@ -2,7 +2,8 @@ const showings_credential = require('./expected_objects/showings_credential.js')
 
 
 registerSuite('agent', ['add'])
-registerSuite('brand', [ 'createParent', 'create' ])
+registerSuite('brand', ['createParent', 'create'])
+registerSuite('contact', ['brandCreateParent', 'brandCreate'])
 
 
 
@@ -25,7 +26,7 @@ function createCredential(cb) {
 }
 
 function getCredential(cb) {
-  return frisby.create('get a showings credential by user id')
+  return frisby.create('get a showings credential by user and brand')
     .get('/showings/credentials')
     .after(cb)
     .expectStatus(200)
@@ -38,7 +39,7 @@ function getCredential(cb) {
 function getCredentialById(cb) {
   const credentialId = results.showings.createCredential.data.id
 
-  return frisby.create('get a showings credential')
+  return frisby.create('get a showings credential by Id')
     .get(`/showings/credentials/${credentialId}`)
     .after(cb)
     .expectStatus(200)

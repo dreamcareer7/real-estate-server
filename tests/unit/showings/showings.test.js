@@ -150,12 +150,9 @@ async function crawlerJobUpdatedRecords() {
   expect(returned_ids).to.have.length(1)
 }
 
-async function crawlerJob() {
+async function customCrawlerJob() {
   const created_ids = await crawlerJobHelper()
-  // const returned_ids = await ShowingsCredential.crawlerJob()
-
   expect(created_ids).to.have.length(2)
-  // expect(returned_ids).to.have.length(2)
   
   const showingCredential = await ShowingsCredential.get(created_ids[0])
   expect(showingCredential.last_crawled_at).to.be.null
@@ -177,10 +174,34 @@ async function crawlerJob() {
 
   await handleJobs()
 
+  console.log()
+  console.log()
+
   const crawledShowingCredential = await ShowingsCredential.get(created_ids[0])
   expect(crawledShowingCredential.last_crawled_at).not.to.be.null
 
   const showingRecords = await Showings.getManyByCredential(crawledShowingCredential.id)
+
+  showingRecords.forEach(async function(showingRecord) {
+    expect(showingRecord.crm_task).to.be.uuid
+    // const crmTask = await CrmTask.get(showingRecord.crm_task)
+    // expect(crmTask.task_type).to.be.eqls('Showing')
+  })
+}
+
+async function crawlerJob() {
+  await crawlerJobHelper()
+
+  const returned_ids = await ShowingsCredential.crawlerJob()
+  expect(returned_ids).to.have.length(2)
+  
+  await handleJobs()
+
+  const crawledShowingCredential = await ShowingsCredential.get(returned_ids[0])
+  expect(crawledShowingCredential.last_crawled_at).not.to.be.null
+
+  const showingRecords = await Showings.getManyByCredential(crawledShowingCredential.id)
+
   showingRecords.forEach(async function(showingRecord) {
     expect(showingRecord.crm_task).to.be.uuid
   })
@@ -206,8 +227,7 @@ async function createShowings() {
 
   const showingId = await Showings.create(showingBody, taskBody)
 
-  const createdShowing = await Showings.get(showingId)
-
+  await Showings.get(showingId)
   expect(showingId).to.be.uuid
 
   return showingId
@@ -285,6 +305,7 @@ describe('Showings', () => {
     it('should delete a credential record', deleteCredential)
     it('should return some credential ids', crawlerJobRecords)
     it('should return some credential ids with one updated record', crawlerJobUpdatedRecords)
+    it('should completely test crawlerJob - custom', customCrawlerJob)
     it('should completely test crawlerJob', crawlerJob)
   })
 
