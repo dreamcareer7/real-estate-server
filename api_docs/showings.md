@@ -22,9 +22,6 @@ deleted_at              | number        |                    |
 ### Create a credential [POST /showings/credentials]
 <!-- include(tests/showings/createCredential.md) -->
 
-### Create a duplicate credential [POST /showings/credentials]
-<!-- include(tests/showings/createDuplicateCredential.md) -->
-
 ### Retrieve a credential [GET /showings/credentials]
 <!-- include(tests/showings/getCredential.md) -->
 
