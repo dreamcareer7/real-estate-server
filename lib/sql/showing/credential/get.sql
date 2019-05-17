@@ -1,5 +1,5 @@
 SELECT
-    *, 'showings_credentials' AS type
+    id, "user", brand, username, password, last_crawled_at, 'showings_credentials' AS type
 FROM
     showings_credentials
 JOIN 

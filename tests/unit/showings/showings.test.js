@@ -42,21 +42,17 @@ async function crawlerJobHelper() {
   const brandB = await BrandHelper.create({ roles: { Admin: [userB.id] } })
 
   const credentialBodyA = {
-    user: userA.id,
-    brand: brandA.id,
     username: credential_json.username,
     password: credential_json.password
   }
 
   const credentialBodyB = {
-    user: userB.id,
-    brand: brandB.id,
     username: credential_json.username,
     password: credential_json.password
   }
 
-  const credentialA_id = await ShowingsCredential.create(credentialBodyA)
-  const credentialB_id = await ShowingsCredential.create(credentialBodyB)
+  const credentialA_id = await ShowingsCredential.create(userA.id, brandA.id, credentialBodyA)
+  const credentialB_id = await ShowingsCredential.create(userB.id, brandB.id, credentialBodyB)
 
   return [
     credentialA_id,
@@ -87,24 +83,20 @@ async function singleCrawlerJobHelper() {
   expect(deal.id).to.be.equal(deals[0].id)
 
   const credentialBody = {
-    user: user.id,
-    brand: brand.id,
     username: credential_json.username,
     password: credential_json.password
   }
 
-  return await ShowingsCredential.create(credentialBody)
+  return await ShowingsCredential.create(user.id, brand.id, credentialBody)
 }
 
 async function create() {
-  const credentialBody = {
-    user: user.id,
-    brand: brand.id,
+  const body = {
     username: credential_json.username,
     password: credential_json.password
   }
 
-  const credentialId = await ShowingsCredential.create(credentialBody)
+  const credentialId = await ShowingsCredential.create(user.id, brand.id, body)
   expect(credentialId).to.be.uuid
 
   return credentialId
@@ -112,7 +104,7 @@ async function create() {
 
 async function getById() {
   const credentialId = await create()
-  const credentialObj = await ShowingsCredential.get(credentialId)
+  const credentialObj = await ShowingsCredential.get(credentialId, false)
 
   expect(user.id).to.equal(credentialObj.user)
   expect(brand.id).to.equal(credentialObj.brand)
@@ -139,7 +131,7 @@ async function updateCredential() {
     username: 'my_new_username',
     password: 'my_new_password'
   }
-  await ShowingsCredential.updateCredential(credentialObj.id, body)
+  await ShowingsCredential.updateCredential(credentialObj.user, credentialObj.brand, body)
 
   const updated = await ShowingsCredential.get(credentialObj.id)
   expect(updated).to.include(body)
@@ -149,7 +141,7 @@ async function deleteCredential() {
   const credentialId = await create()
   const credentialObj = await ShowingsCredential.get(credentialId)
 
-  await ShowingsCredential.delete(credentialObj.id)
+  await ShowingsCredential.delete(credentialObj.user, credentialObj.brand)
 
   const deleteed = await ShowingsCredential.get(credentialId)
   expect(deleteed.deleted_at).not.to.be.null

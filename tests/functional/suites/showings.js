@@ -9,8 +9,6 @@ registerSuite('contact', ['brandCreateParent', 'brandCreate'])
 
 function createCredential(cb) {
   const body = {
-    user: results.authorize.token.data.id,
-    brand: results.brand.create.data.id,
     username: 'username',
     password: 'password'
   }
@@ -25,6 +23,18 @@ function createCredential(cb) {
     })
 }
 
+function createDuplicateCredential(cb) {
+  const body = {
+    username: 'username',
+    password: 'password'
+  }
+
+  return frisby.create('create a duplicate showings credential')
+    .post('/showings/credentials', body)
+    .after(cb)
+    .expectStatus(409)
+}
+
 function getCredential(cb) {
   return frisby.create('get a showings credential by user and brand')
     .get('/showings/credentials')
@@ -36,29 +46,14 @@ function getCredential(cb) {
     })
 }
 
-function getCredentialById(cb) {
-  const credentialId = results.showings.createCredential.data.id
-
-  return frisby.create('get a showings credential by Id')
-    .get(`/showings/credentials/${credentialId}`)
-    .after(cb)
-    .expectStatus(200)
-    .expectJSON({
-      code: 'OK',
-      data: showings_credential
-    })
-}
-
 function updateCredential(cb) {
-  const credentialId = results.showings.createCredential.data.id
-
   const body = {
     username: 'new_username',
     password: 'new_password'
   }
 
   return frisby.create('update a showings credential')
-    .put(`/showings/credentials/${credentialId}`, body)
+    .put('/showings/credentials/', body)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
@@ -68,10 +63,8 @@ function updateCredential(cb) {
 }
 
 function deleteCredential(cb) {
-  const credentialId = results.showings.createCredential.data.id
-
   return frisby.create('update a showings credential')
-    .delete(`/showings/credentials/${credentialId}`)
+    .delete('/showings/credentials/')
     .after(cb)
     .expectStatus(204)
 }
@@ -79,8 +72,8 @@ function deleteCredential(cb) {
 
 module.exports = {
   createCredential,
+  createDuplicateCredential,
   getCredential,
-  getCredentialById,
   updateCredential,
   deleteCredential
 }

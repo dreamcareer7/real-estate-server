@@ -1,1 +1,1 @@
-UPDATE showings_credentials SET username = $1, password = $2 WHERE id = $3
+UPDATE showings_credentials SET username = $1, password = $2 WHERE "user" = $3 AND brand = $4
