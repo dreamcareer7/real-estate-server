@@ -10,11 +10,13 @@ UPDATE deals_roles SET
   email = $8,
   agent = $9,
   phone_number = $10,
-  company_title = $11,
-  commission_dollar = $12,
-  commission_percentage = $13,
-  brokerwolf_id = $14,
-  brokerwolf_row_version = $15,
-  role = $16
+  current_address = $11,
+  future_address = $12,
+  company_title = $13,
+  commission_dollar = $14,
+  commission_percentage = $15,
+  brokerwolf_id = $16,
+  brokerwolf_row_version = $17,
+  role = $18
 
 WHERE id = $1

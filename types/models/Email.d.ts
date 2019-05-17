@@ -34,12 +34,14 @@ declare interface IEmailCampaignInput {
   bcc?: IEmailRecipientInput[];
   subject: string;
   html: string;
+  text?: string;
   attachments?: UUID[];
   include_signature?: boolean;
   individual?: boolean;
 }
 
 declare interface IEmailCampaign extends IEmailCampaignInput {
+  text: string;
   id: UUID;
 }
 
