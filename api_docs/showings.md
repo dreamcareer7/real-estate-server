@@ -14,6 +14,7 @@ brand                   | Brand         |                    | The team this obj
 username                | string        |                    | Agent username in showings.com (saved encrypted)
 password                | string        |                    | Agent password in showings.com (saved encrypted)
 last_crawled_at         | number        |                    |
+login_status            | Boolean       |                    | It means user credential is valid or not
 created_at              | number        |                    |
 updated_at              | number        |                    |
 deleted_at              | number        |                    |

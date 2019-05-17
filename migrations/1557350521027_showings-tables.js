@@ -4,10 +4,10 @@ const migrations = [
   'BEGIN',
 
   `DROP TABLE IF EXISTS
-    showings_credentials`,
+    showings_credentials CASCADE`,
 
   `DROP TABLE IF EXISTS
-    showings`,
+    showings CASCADE`,
 
   `CREATE TABLE IF NOT EXISTS showings_credentials (
     id uuid NOT NULL PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -19,6 +19,8 @@ const migrations = [
     password text NOT NULL,
 
     last_crawled_at timestamptz,
+
+    login_status BOOLEAN DEFAULT FALSE,
 
     created_at timestamptz NOT NULL DEFAULT clock_timestamp(),
     updated_at timestamptz NOT NULL DEFAULT clock_timestamp(),

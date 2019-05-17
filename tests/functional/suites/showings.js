@@ -35,6 +35,18 @@ function createDuplicateCredential(cb) {
     .expectStatus(409)
 }
 
+function createBadCredential(cb) {
+  const body = {
+    username: 'bad-username',
+    password: 'password'
+  }
+
+  return frisby.create('create a showings credential with invalid username/password')
+    .post('/showings/credentials', body)
+    .after(cb)
+    .expectStatus(403)
+}
+
 function getCredential(cb) {
   return frisby.create('get a showings credential by user and brand')
     .get('/showings/credentials')
@@ -73,6 +85,7 @@ function deleteCredential(cb) {
 module.exports = {
   createCredential,
   createDuplicateCredential,
+  createBadCredential,
   getCredential,
   updateCredential,
   deleteCredential

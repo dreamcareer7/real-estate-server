@@ -5,6 +5,7 @@ const Context = require('../../../lib/models/Context')
 const Job = require('../../../lib/models/Job')
 const Showings = require('../../../lib/models/Showings/showings')
 const ShowingsCredential = require('../../../lib/models/Showings/credential')
+const ShowingsCrawler = require('../../../lib/models/Showings/crawler')
 const User = require('../../../lib/models/User')
 const Brand = require('../../../lib/models/Brand')
 const CrmTask = require('../../../lib/models/CRM/Task')
@@ -43,12 +44,14 @@ async function crawlerJobHelper() {
 
   const credentialBodyA = {
     username: credential_json.username,
-    password: credential_json.password
+    password: credential_json.password,
+    loginStatus: true
   }
 
   const credentialBodyB = {
     username: credential_json.username,
-    password: credential_json.password
+    password: credential_json.password,
+    loginStatus: true
   }
 
   const credentialA_id = await ShowingsCredential.create(userA.id, brandA.id, credentialBodyA)
@@ -102,13 +105,24 @@ async function create() {
   return credentialId
 }
 
+async function loginTestFail() {
+  const body = {
+    username: 'bad-username',
+    password: 'password'
+  }
+
+  const isLoginSuccess = await ShowingsCrawler.loginTest(body)
+  expect(isLoginSuccess).to.be.false
+}
+
 async function getById() {
   const credentialId = await create()
-  const credentialObj = await ShowingsCredential.get(credentialId, false)
+  const credentialObj = await ShowingsCredential.get(credentialId)
 
   expect(user.id).to.equal(credentialObj.user)
   expect(brand.id).to.equal(credentialObj.brand)
   expect(credentialObj).to.include(credential_json)
+  expect(credentialObj.login_status).to.be.false
   expect(credentialObj.type).to.be.equal('showings_credentials')
 }
 
@@ -124,7 +138,6 @@ async function getByUser() {
 
 async function updateCredential() {
   const credentialId = await create()
-
   const credentialObj = await ShowingsCredential.get(credentialId)
 
   const body = {
@@ -135,6 +148,16 @@ async function updateCredential() {
 
   const updated = await ShowingsCredential.get(credentialObj.id)
   expect(updated).to.include(body)
+}
+
+async function updateCredentialLoginStatus() {
+  const credentialId = await create()
+  const credentialObj = await ShowingsCredential.get(credentialId)
+
+  await ShowingsCredential.updateCredentialLoginStatus(credentialObj.user, credentialObj.brand, false)
+
+  const updated = await ShowingsCredential.get(credentialObj.id)
+  expect(updated.login_status).to.be.false
 }
 
 async function deleteCredential() {
@@ -348,9 +371,11 @@ describe('Showings', () => {
     beforeEach(setup)
 
     it('should create a credential record', create)
+    it('should failed in login test', loginTestFail)
     it('should return a credential record', getById)
     it('should return a credential record based on user id', getByUser)
     it('should update a credential record user/pass', updateCredential)
+    it('should update a credential login_status', updateCredentialLoginStatus)
     it('should delete a credential record', deleteCredential)
     it('should return some credential ids', crawlerJobRecords)
     it('should return some credential ids with one updated record', crawlerJobUpdatedRecords)
