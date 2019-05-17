@@ -6,8 +6,10 @@ const Job = require('../../../lib/models/Job')
 const Showings = require('../../../lib/models/Showings/showings')
 const ShowingsCredential = require('../../../lib/models/Showings/credential')
 const User = require('../../../lib/models/User')
+const Brand = require('../../../lib/models/Brand')
 const CrmTask = require('../../../lib/models/CRM/Task')
-
+const { Listing } = require('../../../lib/models/Listing')
+const DealHelper = require('../deal/helper')
 const BrandHelper = require('../brand/helper')
 
 const agent_json = require('./data/agent.json')
@@ -15,6 +17,8 @@ const credential_json = require('./data/credential.json')
 const showing_json = require('./data/showing.json')
 
 let agent, user, brand
+const mlsNumbers = [10018693, 10183366]
+
 
 
 async function setup() {
@@ -34,7 +38,7 @@ async function crawlerJobHelper() {
   const userA = await User.getByEmail('test@rechat.com')
   const brandA = await BrandHelper.create({ roles: { Admin: [userA.id] } })
 
-  const userB = await User.getByEmail('test@rechat.com')
+  const userB = await User.getByEmail('test+email@rechat.com')
   const brandB = await BrandHelper.create({ roles: { Admin: [userB.id] } })
 
   const credentialBodyA = {
@@ -58,6 +62,38 @@ async function crawlerJobHelper() {
     credentialA_id,
     credentialB_id
   ]
+}
+
+async function singleCrawlerJobHelper() {
+  const user = await User.getByEmail('test@rechat.com')
+  const brand = Brand.getCurrent()
+  const listing = await Listing.getByMLSNumber(mlsNumbers[0])
+
+  const deal = await DealHelper.create(user.id, brand.id, {
+    listing: listing.id,
+    deal_type: 'Selling'
+  })
+
+  const filter = {
+    brand: brand.id,
+    listing: listing.id
+  }
+
+  const deals = await Deal.filter({
+    filter,
+    user
+  })
+
+  expect(deal.id).to.be.equal(deals[0].id)
+
+  const credentialBody = {
+    user: user.id,
+    brand: brand.id,
+    username: credential_json.username,
+    password: credential_json.password
+  }
+
+  return await ShowingsCredential.create(credentialBody)
 }
 
 async function create() {
@@ -149,10 +185,9 @@ async function crawlerJobUpdatedRecords() {
 }
 
 async function SingleCrawlerJob() {
-  const created_ids = await crawlerJobHelper()
-  expect(created_ids).to.have.length(2)
-  
-  const showingCredential = await ShowingsCredential.get(created_ids[0])
+  const showingCredentialId = await singleCrawlerJobHelper()
+  const showingCredential = await ShowingsCredential.get(showingCredentialId)
+
   expect(showingCredential.last_crawled_at).to.be.null
 
   let isFirstCrawl = true
@@ -172,7 +207,7 @@ async function SingleCrawlerJob() {
 
   await handleJobs()
 
-  const crawledShowingCredential = await ShowingsCredential.get(created_ids[0])
+  const crawledShowingCredential = await ShowingsCredential.get(showingCredentialId)
   expect(crawledShowingCredential.last_crawled_at).not.to.be.null
 
   const showingRecords = await Showings.getManyByCredential(crawledShowingCredential.id)
@@ -291,6 +326,29 @@ async function deleteShowing() {
 }
 
 
+async function dealFilter() {
+  const user = await User.getByEmail('test@rechat.com')
+  const brand = Brand.getCurrent()
+  const listing = await Listing.getByMLSNumber(mlsNumbers[0])
+
+  const deal = await DealHelper.create(user.id, brand.id, {
+    listing: listing.id,
+    deal_type: 'Selling'
+  })
+
+  const filter = {
+    brand: deal.brand,
+    listing: listing.id
+  }
+
+  const deals = await Deal.filter({
+    filter,
+    user
+  })
+
+  expect(deal.id).to.be.equal(deals[0].id)
+}
+
 
 describe('Showings', () => {
   describe('Showings Credential', () => {
@@ -316,5 +374,12 @@ describe('Showings', () => {
     it('should upsert a showings record correctly', testUpsert)
     it('should return a showings record based on agent id', getShowingByCredential)
     it('should delete a showings record', deleteShowing)
+  })
+
+  describe('Extra guest test => Deals Filter', () => {
+    createContext()
+    beforeEach(setup)
+
+    it('should create and retrun same deal', dealFilter)
   })
 })

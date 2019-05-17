@@ -176,7 +176,7 @@ const sendNotifications = function () {
       nodeifyFn(CalendarWorker.sendEmailForUnread.bind(CalendarWorker)),
       nodeifyFn(Task.sendNotifications),
       nodeifyFn(EmailCampaign.sendDue),
-      nodeifyFn(ShowingsCredential.sendDue)
+      nodeifyFn(ShowingsCredential.crawlerJob)
     ], err => {
       if (err) {
         Slack.send({
