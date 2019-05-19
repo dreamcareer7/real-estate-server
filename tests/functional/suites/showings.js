@@ -1,6 +1,5 @@
 const showings_credential = require('./expected_objects/showings_credential.js')
 
-
 registerSuite('agent', ['add'])
 registerSuite('brand', ['createParent', 'create'])
 registerSuite('contact', ['brandCreateParent', 'brandCreate'])
@@ -14,7 +13,7 @@ function createCredential(cb) {
   }
 
   return frisby.create('create a showings credential')
-    .post('/showings/credentials', body)
+    .post('/users/self/showings/credentials', body)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
@@ -30,7 +29,7 @@ function createDuplicateCredential(cb) {
   }
 
   return frisby.create('create a duplicate showings credential')
-    .post('/showings/credentials', body)
+    .post('/users/self/showings/credentials', body)
     .after(cb)
     .expectStatus(409)
 }
@@ -42,14 +41,14 @@ function createBadCredential(cb) {
   }
 
   return frisby.create('create a showings credential with invalid username/password')
-    .post('/showings/credentials', body)
+    .post('/users/self/showings/credentials', body)
     .after(cb)
     .expectStatus(403)
 }
 
 function getCredential(cb) {
   return frisby.create('get a showings credential by user and brand')
-    .get('/showings/credentials')
+    .get('/users/self/showings/credentials')
     .after(cb)
     .expectStatus(200)
     .expectJSON({
@@ -65,7 +64,7 @@ function updateCredential(cb) {
   }
 
   return frisby.create('update a showings credential')
-    .put('/showings/credentials/', body)
+    .put('/users/self/showings/credentials/', body)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
@@ -76,7 +75,7 @@ function updateCredential(cb) {
 
 function deleteCredential(cb) {
   return frisby.create('update a showings credential')
-    .delete('/showings/credentials/')
+    .delete('/users/self/showings/credentials/')
     .after(cb)
     .expectStatus(204)
 }

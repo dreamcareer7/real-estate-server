@@ -5,6 +5,7 @@ module.exports = {
   'username': String,
   'password': String,
   'last_crawled_at': String,
+  'login_status': Boolean,
   'created_at': String,
   'updated_at': String,
   'deleted_at': String
