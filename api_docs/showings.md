@@ -20,14 +20,14 @@ updated_at              | number        |                    |
 deleted_at              | number        |                    |
 
 
-### Create a credential [POST /showings/credentials]
+### Create a credential [POST /users/self/showings/credentials]
 <!-- include(tests/showings/createCredential.md) -->
 
-### Retrieve a credential [GET /showings/credentials]
+### Retrieve a credential [GET /users/self/showings/credentials]
 <!-- include(tests/showings/getCredential.md) -->
 
-### Update a credential [PUT /showings/credentials]
+### Update a credential [PUT /users/self/showings/credentials]
 <!-- include(tests/showings/updateCredential.md) -->
 
-### Delete a credential [DELETE /showings/credentials]
+### Delete a credential [DELETE /users/self/showings/credentials]
 <!-- include(tests/showings/deleteCredential.md) -->
