@@ -1,13 +1,20 @@
 SELECT email_campaigns.*,
   'email_campaign' AS TYPE,
-  EXTRACT(EPOCH FROM created_at) AS created_at,
-  EXTRACT(EPOCH FROM updated_at) AS updated_at,
-  EXTRACT(EPOCH FROM deleted_at) AS deleted_at,
-  EXTRACT(EPOCH FROM due_at)     AS due_at,
+  EXTRACT(EPOCH FROM created_at)    AS created_at,
+  EXTRACT(EPOCH FROM updated_at)    AS updated_at,
+  EXTRACT(EPOCH FROM deleted_at)    AS deleted_at,
+  EXTRACT(EPOCH FROM due_at)        AS due_at,
+  EXTRACT(EPOCH FROM executed_at)   AS executed_at,
 
   (
-    SELECT count(*)::int
-    FROM emails
+    SELECT count(*)::integer
+    FROM email_campaign_emails
+    WHERE campaign = email_campaigns.id
+  ) AS sent,
+
+  (
+    SELECT ARRAY_AGG(id)
+    FROM email_campaigns_recipients
     WHERE campaign = email_campaigns.id
   ) AS recipients,
 

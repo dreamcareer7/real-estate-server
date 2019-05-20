@@ -62,7 +62,8 @@ SELECT
     FROM
       flows
     WHERE
-      flows.contact = contacts.id
+      flows.deleted_at IS NULL
+      AND flows.contact = contacts.id
       AND $3::text[] @> ARRAY['contact.flows']
   ) as flows,
   (

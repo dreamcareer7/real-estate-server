@@ -78,7 +78,7 @@ FROM
           FROM
             ub
           WHERE
-            ub.brand = crm_associations.brand
+            ub.brand = email_campaigns.brand
         )
     )
     UNION ALL

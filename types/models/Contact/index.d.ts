@@ -114,6 +114,10 @@ declare interface IAddContactOptions {
 }
 
 declare interface IContactSummary {
+  first_name?: string;
+  middle_name?: string;
+  last_name?: string;
+  company?: string;
   display_name: string;
   abbreviated_display_name: string;
   email: string[];

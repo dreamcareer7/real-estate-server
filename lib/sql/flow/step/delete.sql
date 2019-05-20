@@ -5,10 +5,10 @@ WITH u_steps AS (
     deleted_at = NOW(),
     deleted_by = $2::uuid
   WHERE
-    id = ANY($1::uuid[])
+    flows_steps.id = ANY($1::uuid[])
     AND deleted_at IS NULL
   RETURNING
-    id, email, event
+    flows_steps.id, email, event
 ),
 u_emails AS (
   UPDATE
@@ -19,10 +19,10 @@ u_emails AS (
   FROM
     u_steps
   WHERE
-    steps.email IS NOT NULL
-    AND fe.id = steps.email
+    u_steps.email IS NOT NULL
+    AND fe.id = u_steps.email
   RETURNING
-    id, email
+    fe.id, fe.email
 ),
 u_events AS (
   UPDATE
@@ -33,10 +33,10 @@ u_events AS (
   FROM
     u_steps
   WHERE
-    steps.event IS NOT NULL
-    AND fe.id = steps.event
+    u_steps.event IS NOT NULL
+    AND fe.id = u_steps.event
   RETURNING
-    id, crm_task
+    fe.id, crm_task
 )
 SELECT
   u_emails.email,
