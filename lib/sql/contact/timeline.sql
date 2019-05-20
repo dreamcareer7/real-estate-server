@@ -65,6 +65,7 @@ timeline_content AS (
     WHERE
       due_at IS NOT NULL
       AND executed_at IS NULL
+      AND deleted_at IS NULL
   )
 ),
 with_total AS (
