@@ -4,7 +4,7 @@ interface ITypedRef {
 }
 
 declare type TTaskStatus = "PENDING" | "DONE";
-declare type TTaskType = "Call" | "Email" | "Message" | "Mail" | "Open House" | "Tour" | "In-Person Meeting" | "Other";
+declare type TTaskType = "Call" | "Email" | "Message" | "Mail" | "Open House" | "Tour" | "In-Person Meeting" | "Showing" | "Other";
 declare type TAccessActions = "read" | "write"
 declare interface ITask extends ICrmAssociationsCategorized {
   id: UUID;
