@@ -119,7 +119,7 @@ const migrations = [
           WHEN attribute_type = 'child_birthday' AND ca.label IS NOT NULL AND LENGTH(ca.label) > 0 THEN
             array_to_string(ARRAY['Child Birthday', '(' || ca.label || ')', '- ' || contacts.display_name], ' ')
           WHEN attribute_type = 'child_birthday' AND (ca.label IS NULL OR LENGTH(ca.label) = 0) THEN
-            'Child Birthday - ' || contacts.display_name
+            'Child Birthday'
           WHEN attribute_type = ANY('{
             work_anniversary,
             wedding_anniversary,
@@ -216,7 +216,7 @@ const migrations = [
       WHERE
         deleted_at IS NULL
         AND executed_at IS NULL
-        AND deal IS NULL
+        AND deleted_at IS NULL
         AND due_at IS NOT NULL
     )`,
 

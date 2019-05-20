@@ -209,6 +209,6 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
     WHERE
       deleted_at IS NULL
       AND executed_at IS NULL
-      AND deal IS NULL
+      AND deleted_at IS NULL
       AND due_at IS NOT NULL
   )
