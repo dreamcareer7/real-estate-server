@@ -45,12 +45,16 @@ async function crawlerJobHelper() {
   const credentialBodyA = {
     username: credential_json.username,
     password: credential_json.password,
+    selectedLocation: credential_json.selected_location,
+    selectedLocationString: credential_json.selected_location_string,
     loginStatus: true
   }
 
   const credentialBodyB = {
     username: credential_json.username,
     password: credential_json.password,
+    selectedLocation: credential_json.selected_location,
+    selectedLocationString: credential_json.selected_location_string,
     loginStatus: true
   }
 
@@ -87,7 +91,9 @@ async function singleCrawlerJobHelper() {
 
   const credentialBody = {
     username: credential_json.username,
-    password: credential_json.password
+    password: credential_json.password,
+    selectedLocation: credential_json.selected_location,
+    selectedLocationString: credential_json.selected_location_string,
   }
 
   return await ShowingsCredential.create(user.id, brand.id, credentialBody)
@@ -96,7 +102,9 @@ async function singleCrawlerJobHelper() {
 async function create() {
   const body = {
     username: credential_json.username,
-    password: credential_json.password
+    password: credential_json.password,
+    selectedLocation: credential_json.selected_location,
+    selectedLocationString: credential_json.selected_location_string,
   }
 
   const credentialId = await ShowingsCredential.create(user.id, brand.id, body)
@@ -108,7 +116,9 @@ async function create() {
 async function loginTestFail() {
   const body = {
     username: 'bad-username',
-    password: 'password'
+    password: 'password',
+    selectedLocation: credential_json.selected_location,
+    selectedLocationString: credential_json.selected_location_string,
   }
 
   const isLoginSuccess = await ShowingsCrawler.loginTest(body)
@@ -142,7 +152,9 @@ async function updateCredential() {
 
   const body = {
     username: 'my_new_username',
-    password: 'my_new_password'
+    password: 'my_new_password',
+    selected_location: '6,1,DFW',
+    selected_location_string: 'Dallas/Fort Worth',
   }
   await ShowingsCredential.updateCredential(credentialObj.user, credentialObj.brand, body)
 

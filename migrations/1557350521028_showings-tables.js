@@ -17,6 +17,8 @@ const migrations = [
 
     username text NOT NULL,
     password text NOT NULL,
+    selected_location text NOT NULL,
+    selected_location_string text NOT NULL,
 
     last_crawled_at timestamptz,
 
