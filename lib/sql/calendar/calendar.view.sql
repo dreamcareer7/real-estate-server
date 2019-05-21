@@ -35,6 +35,45 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
   )
   UNION ALL
   (
+  SELECT
+    ca.id,
+    ca.created_by,
+    'crm_association' AS object_type,
+    ct.task_type AS event_type,
+    ct.task_type AS type_label,
+    ct.due_date AS "timestamp",
+    ct.due_date AS "date",
+    ct.due_date AS next_occurence,
+    False AS recurring,
+    ct.title,
+    ct.id AS crm_task,
+    ca.deal,
+    ca.contact,
+    ca.email AS campaign,
+    (
+      SELECT
+        ARRAY_AGG("user")
+      FROM
+        crm_tasks_assignees
+      WHERE
+        crm_task = ct.id
+        AND deleted_at IS NULL
+    ) AS users,
+    ct.brand,
+    ct.status,
+    jsonb_build_object(
+      'status', ct.status
+    ) AS metadata
+  FROM
+    crm_associations AS ca
+    JOIN crm_tasks AS ct
+      ON ca.crm_task = ct.id
+  WHERE
+    ca.deleted_at IS NULL
+    AND ct.deleted_at IS NULL
+  )
+  UNION ALL
+  (
     SELECT
       cdc.id,
       deals.created_by,
