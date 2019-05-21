@@ -5,11 +5,7 @@ This document describes the set of APIs used in the calendar view.
 
 ### Data Model
 
-A `calendar_event` object is a common representation of event-like objects throughout Rechat system. There are three types of these objects which is indicated by `object_type` field:
-
-* `crm_task`
-* `deal_context` of type Date
-* `contact_attribute` when it's `birthday` or an `important_date` attribute
+A `calendar_event` object is a common representation of event-like objects throughout Rechat system.
 
 Field       | Type         | Description
 ------------|:------------:|-----------------------------------------------------------------------------------
@@ -24,9 +20,18 @@ crm_task    | CrmTask      | Related crm_task object
 deal        | Deal         | Related deal object
 contact     | Contact      | related contact object
 
+Possible values for `object_type` field are:
+
+* `contact` for contact next touch dates
+* `contact_attribute` for contact touch dates like birthdays and anniversaries
+* `crm_task` for normal events
+* `crm_association` special object type used for contact and deal timelines
+* `email_campaign` for scheduled emails that will go out automatically
+* `deal_context` for deal critical dates
+
 Possible values for `event_type` field are:
 
-* If `object_type` = `crm_task`:
+* If `object_type` = `crm_task` or `crm_association`:
   * `Call`
   * `Message`
   * `Todo`
@@ -54,6 +59,10 @@ Possible values for `event_type` field are:
 * If `object_type` = `contact_attribute`:
   * `birthday`
   * `important_date`
+* If `object_type` = `email_campaign`:
+  * `scheduled_email`
+* If `object_type` = `contact`:
+  * `next_touch`
 
 ### Get Calendar events [GET /calendar]
 <!-- include(tests/analytics/getCalendar.md) -->

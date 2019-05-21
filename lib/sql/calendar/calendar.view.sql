@@ -11,13 +11,9 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
     False AS recurring,
     title,
     id AS crm_task,
-    id AS full_crm_task,
     NULL::uuid AS deal,
-    NULL::uuid AS full_deal,
     NULL::uuid AS contact,
-    NULL::uuid AS full_contact,
     NULL::uuid AS campaign,
-    NULL::uuid AS full_campaign,
     (
       SELECT
         ARRAY_AGG("user")
@@ -39,6 +35,45 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
   )
   UNION ALL
   (
+  SELECT
+    ca.id,
+    ca.created_by,
+    'crm_association' AS object_type,
+    ct.task_type AS event_type,
+    ct.task_type AS type_label,
+    ct.due_date AS "timestamp",
+    ct.due_date AS "date",
+    ct.due_date AS next_occurence,
+    False AS recurring,
+    ct.title,
+    ct.id AS crm_task,
+    ca.deal,
+    ca.contact,
+    ca.email AS campaign,
+    (
+      SELECT
+        ARRAY_AGG("user")
+      FROM
+        crm_tasks_assignees
+      WHERE
+        crm_task = ct.id
+        AND deleted_at IS NULL
+    ) AS users,
+    ct.brand,
+    ct.status,
+    jsonb_build_object(
+      'status', ct.status
+    ) AS metadata
+  FROM
+    crm_associations AS ca
+    JOIN crm_tasks AS ct
+      ON ca.crm_task = ct.id
+  WHERE
+    ca.deleted_at IS NULL
+    AND ct.deleted_at IS NULL
+  )
+  UNION ALL
+  (
     SELECT
       cdc.id,
       deals.created_by,
@@ -51,13 +86,9 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       False AS recurring,
       deals.title,
       NULL::uuid AS crm_task,
-      NULL::uuid AS full_crm_task,
       cdc.deal,
-      cdc.deal AS full_deal,
       NULL::uuid AS contact,
-      NULL::uuid AS full_contact,
       NULL::uuid AS campaign,
-      NULL::uuid AS full_campaign,
       (
         SELECT
           ARRAY_AGG(DISTINCT r."user")
@@ -112,7 +143,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
         WHEN attribute_type = 'child_birthday' AND ca.label IS NOT NULL AND LENGTH(ca.label) > 0 THEN
           array_to_string(ARRAY['Child Birthday', '(' || ca.label || ')', '- ' || contacts.display_name], ' ')
         WHEN attribute_type = 'child_birthday' AND (ca.label IS NULL OR LENGTH(ca.label) = 0) THEN
-          'Child Birthday'
+          'Child Birthday - ' || contacts.display_name
         WHEN attribute_type = ANY('{
           work_anniversary,
           wedding_anniversary,
@@ -123,13 +154,9 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
           contacts.display_name
       END) AS title,
       NULL::uuid AS crm_task,
-      NULL::uuid AS full_crm_task,
       NULL::uuid AS deal,
-      NULL::uuid AS full_deal,
       contact,
-      contact AS full_contact,
       NULL::uuid AS campaign,
-      NULL::uuid AS full_campaign,
       ARRAY[contacts."user"] AS users,
       contacts.brand,
       NULL::text AS status,
@@ -162,13 +189,9 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       False AS recurring,
       display_name AS title,
       NULL::uuid AS crm_task,
-      NULL::uuid AS full_crm_task,
       NULL::uuid AS deal,
-      NULL::uuid AS full_deal,
       id AS contact,
-      id AS full_contact,
       NULL::uuid AS campaign,
-      NULL::uuid AS full_campaign,
       ARRAY[contacts."user"] AS users,
       brand,
       NULL::text AS status,
@@ -193,13 +216,9 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       False AS recurring,
       subject AS title,
       NULL::uuid AS crm_task,
-      NULL::uuid AS full_crm_task,
       NULL::uuid AS deal,
-      NULL::uuid AS full_deal,
       NULL::uuid AS contact,
-      NULL::uuid AS full_contact,
       id AS campaign,
-      id AS full_campaign,
       ARRAY[email_campaigns.from] AS users,
       brand,
       NULL::text AS status,
