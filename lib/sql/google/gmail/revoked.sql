@@ -1,0 +1,1 @@
+UPDATE gmails SET revoked = TRUE WHERE "user" = $1 AND brand = $2

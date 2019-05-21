@@ -1,0 +1,1 @@
+UPDATE gmails SET messages_total = $1, threads_total = $2 WHERE id = $3

@@ -1,0 +1,7 @@
+{
+  "user": "",
+  "brand": "",
+  "email": "",
+  "url": "https://accounts.google.com/o/oauth2/v2/auth?access_type=offline&scope=https%3A%2F%2Fmail.google.com%2F%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fgmail.readonly%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcontacts.readonly&response_type=code&client_id=1012064530233-u8clnq9dg0jrodls7m0gqtruejs18vqu.apps.googleusercontent.com&redirect_uri=http%3A%2F%2F127.0.0.1%3A3078%2Fwebhook%2Fgoogle%2Fgrant%2F3fafeea2-38c4-45bf-861e-74397880f3a4",
+  "scope": "https://mail.google.com/ https://www.googleapis.com/auth/gmail.readonly https://www.googleapis.com/auth/contacts.readonly"
+}

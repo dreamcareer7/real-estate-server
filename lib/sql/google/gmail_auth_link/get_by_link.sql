@@ -1,0 +1,1 @@
+SELECT id FROM gmail_auth_links WHERE url = $1 AND deleted_at IS NULL
