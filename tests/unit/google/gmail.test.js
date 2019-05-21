@@ -159,7 +159,7 @@ describe('Google', () => {
     createContext()
     beforeEach(setup)
 
-    it('should create a gmail record (semi-grant-a)', createGmail)
+    it('should create a gmail record (semi-grant-access)', createGmail)
     it('should return a gmail record by user', getGmailByUser)
     it('should return a gmail record by email', getGmailByEmail)
     it('should update a gmail record tokens', updateGmailTokens)
