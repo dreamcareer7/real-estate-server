@@ -73,9 +73,9 @@ $$
 $$
 LANGUAGE SQL;`,
 
-'DROP TRIGGER IF EXISTS update_email_campaign_stats ON emails_events',
+  'DROP TRIGGER IF EXISTS update_email_campaign_stats ON emails_events',
 
-`CREATE OR REPLACE FUNCTION update_email_campaign_stats()
+  `CREATE OR REPLACE FUNCTION update_email_campaign_stats()
 RETURNS trigger AS
 $$
   BEGIN
