@@ -55,8 +55,9 @@ const migrations = [
     brand uuid NOT NULL REFERENCES brands(id),
 
     email VARCHAR(256) UNIQUE NOT NULL,
-    url VARCHAR(512) NOT NULL,
     scope VARCHAR(512) NOT NULL,
+    url VARCHAR(512) NOT NULL,
+    webhook VARCHAR(512) NOT NULL,
 
     created_at timestamptz NOT NULL DEFAULT clock_timestamp(),
     updated_at timestamptz NOT NULL DEFAULT clock_timestamp(),

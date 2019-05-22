@@ -12,8 +12,8 @@ const BrandHelper   = require('../brand/helper')
 let user, brand
 const GMAIL_ADDRESS = 'saeed.uni68@gmail.com'
 
-const google_tokens_json = require('./data/google_tokens')
-const google_auth_json   = require('./data/google_auth')
+const google_tokens_json = require('./data/google_tokens.json')
+const google_auth_json   = require('./data/google_auth.json')
 const gmail_profile_json = require('./data/gmail_profile.json')
 
 
