@@ -19,7 +19,7 @@ const run = async () => {
       ca.created_by,
       '' AS title,
       ca.text AS description,
-      ca.created_at AS due_date,
+      extract(epoch FROM ca.created_at) AS due_date,
       'DONE' AS status,
       'Note' AS task_type,
       ARRAY[c.user] AS assignees,
