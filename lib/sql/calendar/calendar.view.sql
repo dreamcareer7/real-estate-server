@@ -231,3 +231,63 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       AND deleted_at IS NULL
       AND due_at IS NOT NULL
   )
+  UNION ALL
+  (
+    SELECT
+      ec.id,
+      ec.created_by,
+      'email_campaign_recipient' AS object_type,
+      'scheduled_email' AS event_type,
+      'Scheduled Email' AS type_label,
+      ec.due_at AS "timestamp",
+      ec.due_at AS "date",
+      ec.due_at AS next_occurence,
+      False AS recurring,
+      ec.subject AS title,
+      NULL::uuid AS crm_task,
+      NULL::uuid AS deal,
+      ecr.contact,
+      ec.id AS campaign,
+      ARRAY[ec.from] AS users,
+      ec.brand,
+      NULL::text AS status,
+      NULL::jsonb AS metadata
+    FROM
+      email_campaigns AS ec
+      JOIN (
+        (
+          SELECT
+            ecr.campaign,
+            clm.contact
+          FROM
+            email_campaigns_recipients AS ecr
+            JOIN crm_lists_members AS clm
+              ON ecr.list = clm.list
+        )
+        UNION
+        (
+          SELECT
+            ecr.campaign,
+            cs.id AS contact
+          FROM
+            email_campaigns_recipients AS ecr
+            JOIN email_campaigns AS ec
+              ON ecr.campaign = ec.id
+            JOIN contacts_summaries AS cs
+              ON ARRAY[ecr.tag] <@ cs.tag AND ec.brand = cs.brand
+          WHERE
+            ecr.tag IS NOT NULL
+        )
+        UNION
+        (
+          SELECT
+            campaign,
+            contact
+          FROM
+            email_campaigns_recipients
+          WHERE
+            contact IS NOT NULL
+        )
+      ) AS ecr
+        ON ec.id = ecr.campaign
+  )
