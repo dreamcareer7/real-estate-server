@@ -27,11 +27,11 @@ async function setup() {
 }
 
 async function requestGmailAccess() {
-  const authUrl = await GmailAuthLink.requestGmailAccess(user.id, brand.id, GMAIL_ADDRESS)
+  const authLinkRecord = await GmailAuthLink.requestGmailAccess(user.id, brand.id, GMAIL_ADDRESS)
   
-  expect(authUrl).to.be.not.null
+  expect(authLinkRecord.url).to.be.not.null
 
-  return authUrl
+  return authLinkRecord
 }
 
 async function duplicateRequestGmailAccess() {
@@ -44,12 +44,10 @@ async function duplicateRequestGmailAccess() {
 }
 
 async function getByLink() {
-  const authUrl       = await requestGmailAccess()
-  const gmailAuthLink = await GmailAuthLink.getByLink(authUrl)
+  const authLinkRecord = await requestGmailAccess()
+  const gmailAuthLink  = await GmailAuthLink.getByLink(authLinkRecord.url)
   
-  expect(authUrl).to.be.equal(gmailAuthLink.url)
-
-  return authUrl
+  expect(authLinkRecord.url).to.be.equal(gmailAuthLink.url)
 }
 
 async function getByUser() {
@@ -61,9 +59,9 @@ async function getByUser() {
 }
 
 async function getByKey() {
-  const url        = await requestGmailAccess()
-  const record     = await GmailAuthLink.getByLink(url)
-  const sameRecord = await GmailAuthLink.getByUser(user.id, brand.id)
+  const authLinkRecord = await requestGmailAccess()
+  const record         = await GmailAuthLink.getByLink(authLinkRecord.url)
+  const sameRecord     = await GmailAuthLink.getByUser(user.id, brand.id)
   
   expect(record.key).to.be.equal(sameRecord.key)
 }

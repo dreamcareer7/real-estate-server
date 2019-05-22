@@ -31,7 +31,7 @@ const migrations = [
     "user" uuid NOT NULL REFERENCES users(id),
     brand uuid NOT NULL REFERENCES brands(id),
 
-    email VARCHAR(128) UNIQUE NOT NULL,
+    email VARCHAR(128) NOT NULL,
     messages_total INTEGER NOT NULL,
     threads_total INTEGER NOT NULL,
     history_id INTEGER NOT NULL,
@@ -48,7 +48,8 @@ const migrations = [
     updated_at timestamptz NOT NULL DEFAULT clock_timestamp(),
     deleted_at timestamptz,
 
-    UNIQUE ("user", brand)
+    UNIQUE ("user", brand),
+    UNIQUE (email)
   )`,
 
   `CREATE TABLE IF NOT EXISTS gmail_auth_links(
@@ -58,7 +59,7 @@ const migrations = [
     "user" uuid NOT NULL REFERENCES users(id),
     brand uuid NOT NULL REFERENCES brands(id),
 
-    email VARCHAR(256) UNIQUE NOT NULL,
+    email VARCHAR(256) NOT NULL,
     scope VARCHAR(512) NOT NULL,
     url VARCHAR(512) NOT NULL,
     webhook VARCHAR(512) NOT NULL,
@@ -68,6 +69,7 @@ const migrations = [
     deleted_at timestamptz,
 
     UNIQUE ("user", brand),
+    UNIQUE (email),
     UNIQUE (url)
   )`,
 
@@ -76,7 +78,7 @@ const migrations = [
 
     gmail uuid NOT NULL REFERENCES gmails(id),
 
-    message_id VARCHAR(32) UNIQUE NOT NULL,
+    message_id VARCHAR(32) NOT NULL,
     thread_id VARCHAR(32) NOT NULL,
     history_id VARCHAR(32),
     snippet TEXT,
@@ -86,7 +88,9 @@ const migrations = [
 
     created_at timestamptz NOT NULL DEFAULT clock_timestamp(),
     updated_at timestamptz NOT NULL DEFAULT clock_timestamp(),
-    deleted_at timestamptz
+    deleted_at timestamptz,
+
+    UNIQUE (message_id)
   )`,
 
   `CREATE TABLE IF NOT EXISTS gmail_threads(
@@ -94,7 +98,7 @@ const migrations = [
     
     gmail uuid NOT NULL REFERENCES gmails(id),
 
-    thread_id VARCHAR(32) UNIQUE NOT NULL,
+    thread_id VARCHAR(32) NOT NULL,
     history_id VARCHAR(32) NOT NULL,
     snippet TEXT NOT NULL,
     label_ids TEXT ARRAY,
@@ -103,14 +107,16 @@ const migrations = [
 
     created_at timestamptz NOT NULL DEFAULT clock_timestamp(),
     updated_at timestamptz NOT NULL DEFAULT clock_timestamp(),
-    deleted_at timestamptz
+    deleted_at timestamptz,
+
+    UNIQUE (thread_id)
   )`,
 
   `CREATE TABLE IF NOT EXISTS gmail_messages_sync(
     id uuid NOT NULL PRIMARY KEY DEFAULT uuid_generate_v4(),
 
     gmail uuid NOT NULL REFERENCES gmails(id),
-    email VARCHAR(128) UNIQUE NOT NULL,
+    email VARCHAR(128) NOT NULL,
 
     synced_messages_num INTEGER DEFAULT 0,
     synced_threads_num INTEGER DEFAULT 0,
@@ -123,7 +129,9 @@ const migrations = [
 
     created_at timestamptz NOT NULL DEFAULT clock_timestamp(),
     updated_at timestamptz NOT NULL DEFAULT clock_timestamp(),
-    deleted_at timestamptz
+    deleted_at timestamptz,
+
+    UNIQUE (email)
   )`,
 
   `CREATE TABLE IF NOT EXISTS gmail_contacts(
@@ -143,7 +151,7 @@ const migrations = [
     brand uuid NOT NULL REFERENCES brands(id),
 
     gmail uuid NOT NULL REFERENCES gmails(id),
-    email VARCHAR(128) UNIQUE NOT NULL,
+    email VARCHAR(128) NOT NULL,
 
     synced_contacts_num INTEGER DEFAULT 0,
 
@@ -155,7 +163,9 @@ const migrations = [
 
     created_at timestamptz NOT NULL DEFAULT clock_timestamp(),
     updated_at timestamptz NOT NULL DEFAULT clock_timestamp(),
-    deleted_at timestamptz
+    deleted_at timestamptz,
+
+    UNIQUE (email)
   )`,
 
   'COMMIT'
