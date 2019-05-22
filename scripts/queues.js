@@ -20,6 +20,7 @@ const { Listing } = require('../lib/models/Listing')
 const Notification = require('../lib/models/Notification')
 const User = require('../lib/models/User')
 const ShowingsCrawler = require('../lib/models/Showings/crawler')
+const GoogleWorkers = require('../lib/models/Google/workers/')
 
 
 const airship = (job, done) => {
@@ -104,6 +105,9 @@ const showings_crawler = (job, done) => {
   ShowingsCrawler.startCrawler(job.data).nodeify(done)
 }
 
+const google_contact_downloader = (job, done) => {
+  GoogleWorkers.contactDownloader(job.data).nodeify(done)
+}
 
 
 module.exports = {
@@ -219,6 +223,11 @@ module.exports = {
 
   'showings_crawler': {
     handler: showings_crawler,
+    parallel: 1
+  },
+
+  'google_contact_downloader': {
+    handler: google_contact_downloader,
     parallel: 1
   }
 }
