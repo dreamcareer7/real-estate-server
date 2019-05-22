@@ -20,7 +20,7 @@ const gmail_profile_json = require('./data/gmail_profile.json')
 
 
 async function setup() {
-  user = await User.getByEmail('test@rechat.com')
+  user  = await User.getByEmail('test@rechat.com')
   brand = await BrandHelper.create({ roles: { Admin: [user.id] } })
 
   Context.set({ user, brand })
@@ -44,7 +44,7 @@ async function duplicateRequestGmailAccess() {
 }
 
 async function getByLink() {
-  const authUrl = await requestGmailAccess()
+  const authUrl       = await requestGmailAccess()
   const gmailAuthLink = await GmailAuthLink.getByLink(authUrl)
   
   expect(authUrl).to.be.equal(gmailAuthLink.url)
@@ -58,6 +58,14 @@ async function getByUser() {
 
   expect(gmailAuthLink.user).to.be.equal(user.id)
   expect(gmailAuthLink.brand).to.be.equal(brand.id)
+}
+
+async function getByKey() {
+  const url        = await requestGmailAccess()
+  const record     = await GmailAuthLink.getByLink(url)
+  const sameRecord = await GmailAuthLink.getByUser(user.id, brand.id)
+  
+  expect(record.key).to.be.equal(sameRecord.key)
 }
 
 
@@ -153,6 +161,7 @@ describe('Google', () => {
     it('should handle duplicate create-google-auth-link request', duplicateRequestGmailAccess)
     it('should return auth-link record by link', getByLink)
     it('should return auth-link record by user', getByUser)
+    it('should return auth-link record by key', getByKey)
   })
 
   describe('Google Gmail', () => {

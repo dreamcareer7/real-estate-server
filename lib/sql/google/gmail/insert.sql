@@ -6,6 +6,7 @@ INSERT INTO gmails
 
     messages_total,
     threads_total,
+    history_id,
 
     access_token,
     refresh_token,
@@ -23,6 +24,7 @@ VALUES
     $6,
     $7,
     $8,
-    $9
+    $9,
+    $10
   )
 RETURNING id

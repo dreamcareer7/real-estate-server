@@ -1,6 +1,7 @@
 module.exports = {
   'type': String,
   'id': String,
+  'key': String,
 
   'user': String,
   'brand': String,

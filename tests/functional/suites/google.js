@@ -23,12 +23,12 @@ function requestGmailAccess(cb) {
 }
 
 function invalidGrantAccess(cb) {
-  const recordId = results.google.requestGmailAccess.data.id
-  const code     = '4/UgGSAAwN9cxkLWP4ipdzNzvCeMH9-bqDM9N6vHqssQ7zWSy-AtSV4T-d53XyfXKQPE31A31MV9MY64t9RLO8Aiw'
-  const scope    = 'https://mail.google.com/ https://www.googleapis.com/auth/gmail.readonly https://www.googleapis.com/auth/contacts.readonly'
-  const webhook  = `/webhook/google/grant/${recordId}?code=${code}&scope=${scope}`
+  const key     = results.google.requestGmailAccess.data.key
+  const code    = '4/UgGSAAwN9cxkLWP4ipdzNzvCeMH9-bqDM9N6vHqssQ7zWSy-AtSV4T-d53XyfXKQPE31A31MV9MY64t9RLO8Aiw'
+  const scope   = 'https://mail.google.com/ https://www.googleapis.com/auth/gmail.readonly https://www.googleapis.com/auth/contacts.readonly'
+  const webhook = `/webhook/google/grant/${key}?code=${code}&scope=${scope}`
 
-  return frisby.create('Grant access to google-account')
+  return frisby.create('Invalid grant-access to google-account')
     .get(webhook)
     .after(cb)
     .expectStatus(404)

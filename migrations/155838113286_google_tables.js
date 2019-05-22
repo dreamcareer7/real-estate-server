@@ -34,6 +34,7 @@ const migrations = [
     email VARCHAR(128) UNIQUE NOT NULL,
     messages_total INTEGER NOT NULL,
     threads_total INTEGER NOT NULL,
+    history_id INTEGER NOT NULL,
 
     access_token VARCHAR(256) NOT NULL,
     refresh_token VARCHAR(256) NOT NULL,
@@ -45,11 +46,14 @@ const migrations = [
 
     created_at timestamptz NOT NULL DEFAULT clock_timestamp(),
     updated_at timestamptz NOT NULL DEFAULT clock_timestamp(),
-    deleted_at timestamptz
+    deleted_at timestamptz,
+
+    UNIQUE ("user", brand)
   )`,
 
   `CREATE TABLE IF NOT EXISTS gmail_auth_links(
     id uuid NOT NULL PRIMARY KEY DEFAULT uuid_generate_v4(),
+    key uuid NOT NULL,
 
     "user" uuid NOT NULL REFERENCES users(id),
     brand uuid NOT NULL REFERENCES brands(id),
