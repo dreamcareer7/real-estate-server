@@ -23,7 +23,7 @@ declare interface IEmailRecipient {
   email: string;
 }
 
-declare interface IEmailCampaign {
+declare interface IEmailCampaignInput {
   id?: UUID;
   due_at: string | null;
   created_by: UUID;
@@ -34,7 +34,15 @@ declare interface IEmailCampaign {
   bcc?: IEmailRecipientInput[];
   subject: string;
   html: string;
+  text?: string;
   attachments?: UUID[];
+  include_signature?: boolean;
+  individual?: boolean;
+}
+
+declare interface IEmailCampaign extends IEmailCampaignInput {
+  text: string;
+  id: UUID;
 }
 
 declare interface IEmail {

@@ -12,6 +12,12 @@ const touches_handler = require('../lib/models/CRM/Touch/worker')
 const tasks_handler = require('../lib/models/CRM/Task/worker')
 const calendar_handlers = require('../lib/models/Calendar/worker')
 
+const Agent = require('../lib/models/Agent')
+const Email = require('../lib/models/Email')
+const { Listing } = require('../lib/models/Listing')
+const Notification = require('../lib/models/Notification')
+const User = require('../lib/models/User')
+
 const airship = (job, done) => {
   const {
     notification_user,

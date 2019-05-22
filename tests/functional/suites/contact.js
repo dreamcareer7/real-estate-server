@@ -409,6 +409,32 @@ const addAttribute = cb => {
     .expectStatus(200)
 }
 
+const addBulkAttributes = cb => {
+  const a = {
+    attribute_def: defs['tag'].id,
+    text: 'BulkTag'
+  }
+
+  return frisby
+    .create('add a new attribute')
+    .post(`/contacts/attributes?get=true&users[]=${results.authorize.token.data.id}&associations[]=contact.summary`, {
+      filters: [{
+        attribute_type: 'tag',
+        value: 'PastClient'
+      }],
+      attributes: [a]
+    })
+    .after((err, res, json) => {
+      if (json.data.some(c => c.summary.tags && c.summary.tags.includes('BulkTag'))) {
+        return cb(err, res, json)
+      }
+
+      throw 'Attribute is not added!'
+    })
+    .expectJSONLength('data', 1)
+    .expectStatus(200)
+}
+
 const addInvalidAttribute = cb => {
   const a = {
     attribute_def: uuid.v4(),
@@ -935,7 +961,7 @@ const getAllTags = (cb) => {
     .get('/contacts/tags')
     .after(cb)
     .expectStatus(200)
-    .expectJSONLength('data', 7)
+    .expectJSONLength('data', 8)
     .expectJSON({
       code: 'OK'
     })
@@ -970,7 +996,7 @@ const checkTagIsAdded = cb => {
       cb(err, res, json)
     })
     .expectStatus(200)
-    .expectJSONLength('data', 8)
+    .expectJSONLength('data', 9)
     .expectJSON({
       code: 'OK'
     })
@@ -990,7 +1016,7 @@ const verifyTagRenamed = cb => {
     .get('/contacts/tags')
     .after((err, res, body) => {
       const tags = body.data.map(a => a.text)
-      if (!tags.includes('bar') || tags.length !== 8) {
+      if (!tags.includes('bar') || tags.length !== 9) {
         throw 'Tag was not renamed correctly.'
       }
 
@@ -1021,7 +1047,7 @@ const verifyTagDeleted = cb => {
     .after((err, res, body) => {
       const tags = body.data.map(a => a.text)
 
-      if (tags.includes('bar') || tags.includes('poo') || tags.length !== 6) {
+      if (tags.includes('bar') || tags.includes('poo') || tags.length !== 7) {
         throw 'Tag was not deleted correctly.'
       }
 
@@ -1169,6 +1195,7 @@ module.exports = {
   stringSearchInBody,
   filterOnNonExistentAttributeDef,
   addAttribute,
+  addBulkAttributes,
   addInvalidAttribute,
   addNullAttributeValue,
   addPhoneNumber,

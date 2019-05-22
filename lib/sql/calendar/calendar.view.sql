@@ -13,6 +13,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
     id AS crm_task,
     NULL::uuid AS deal,
     NULL::uuid AS contact,
+    NULL::uuid AS campaign,
     (
       SELECT
         ARRAY_AGG("user")
@@ -34,6 +35,45 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
   )
   UNION ALL
   (
+  SELECT
+    ca.id,
+    ca.created_by,
+    'crm_association' AS object_type,
+    ct.task_type AS event_type,
+    ct.task_type AS type_label,
+    ct.due_date AS "timestamp",
+    ct.due_date AS "date",
+    ct.due_date AS next_occurence,
+    False AS recurring,
+    ct.title,
+    ct.id AS crm_task,
+    ca.deal,
+    ca.contact,
+    ca.email AS campaign,
+    (
+      SELECT
+        ARRAY_AGG("user")
+      FROM
+        crm_tasks_assignees
+      WHERE
+        crm_task = ct.id
+        AND deleted_at IS NULL
+    ) AS users,
+    ct.brand,
+    ct.status,
+    jsonb_build_object(
+      'status', ct.status
+    ) AS metadata
+  FROM
+    crm_associations AS ca
+    JOIN crm_tasks AS ct
+      ON ca.crm_task = ct.id
+  WHERE
+    ca.deleted_at IS NULL
+    AND ct.deleted_at IS NULL
+  )
+  UNION ALL
+  (
     SELECT
       cdc.id,
       deals.created_by,
@@ -48,6 +88,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       NULL::uuid AS crm_task,
       cdc.deal,
       NULL::uuid AS contact,
+      NULL::uuid AS campaign,
       (
         SELECT
           ARRAY_AGG(DISTINCT r."user")
@@ -99,8 +140,10 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
           array_to_string(ARRAY['Spouse Birthday', '(' || contacts.partner_name || ')', '- ' || contacts.display_name], ' ')
         WHEN attribute_type = 'birthday' AND ca.is_partner IS NOT TRUE THEN
           contacts.display_name || $$'s Birthday$$
-        WHEN attribute_type = 'child_birthday' THEN
+        WHEN attribute_type = 'child_birthday' AND ca.label IS NOT NULL AND LENGTH(ca.label) > 0 THEN
           array_to_string(ARRAY['Child Birthday', '(' || ca.label || ')', '- ' || contacts.display_name], ' ')
+        WHEN attribute_type = 'child_birthday' AND (ca.label IS NULL OR LENGTH(ca.label) = 0) THEN
+          'Child Birthday - ' || contacts.display_name
         WHEN attribute_type = ANY('{
           work_anniversary,
           wedding_anniversary,
@@ -113,6 +156,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       NULL::uuid AS crm_task,
       NULL::uuid AS deal,
       contact,
+      NULL::uuid AS campaign,
       ARRAY[contacts."user"] AS users,
       contacts.brand,
       NULL::text AS status,
@@ -130,4 +174,120 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       AND ca.deleted_at IS NULL
       AND cad.deleted_at IS NULL
       AND data_type = 'date'
+  )
+  UNION ALL
+  (
+    SELECT
+      id,
+      created_by,
+      'contact' AS object_type,
+      'next_touch' AS event_type,
+      'Next Touch' AS type_label,
+      next_touch AS "timestamp",
+      next_touch AS "date",
+      next_touch AS next_occurence,
+      False AS recurring,
+      display_name AS title,
+      NULL::uuid AS crm_task,
+      NULL::uuid AS deal,
+      id AS contact,
+      NULL::uuid AS campaign,
+      ARRAY[contacts."user"] AS users,
+      brand,
+      NULL::text AS status,
+      NULL::jsonb AS metadata
+    FROM
+      contacts
+    WHERE
+      deleted_at IS NULL
+      AND next_touch IS NOT NULL
+  )
+  UNION ALL
+  (
+    SELECT
+      id,
+      created_by,
+      'email_campaign' AS object_type,
+      'scheduled_email' AS event_type,
+      'Scheduled Email' AS type_label,
+      due_at AS "timestamp",
+      due_at AS "date",
+      due_at AS next_occurence,
+      False AS recurring,
+      subject AS title,
+      NULL::uuid AS crm_task,
+      NULL::uuid AS deal,
+      NULL::uuid AS contact,
+      id AS campaign,
+      ARRAY[email_campaigns.from] AS users,
+      brand,
+      NULL::text AS status,
+      NULL::jsonb AS metadata
+    FROM
+      email_campaigns
+    WHERE
+      deleted_at IS NULL
+      AND executed_at IS NULL
+      AND deleted_at IS NULL
+      AND due_at IS NOT NULL
+  )
+  UNION ALL
+  (
+    SELECT
+      ec.id,
+      ec.created_by,
+      'email_campaign_recipient' AS object_type,
+      'scheduled_email' AS event_type,
+      'Scheduled Email' AS type_label,
+      ec.due_at AS "timestamp",
+      ec.due_at AS "date",
+      ec.due_at AS next_occurence,
+      False AS recurring,
+      ec.subject AS title,
+      NULL::uuid AS crm_task,
+      NULL::uuid AS deal,
+      ecr.contact,
+      ec.id AS campaign,
+      ARRAY[ec.from] AS users,
+      ec.brand,
+      NULL::text AS status,
+      NULL::jsonb AS metadata
+    FROM
+      email_campaigns AS ec
+      JOIN (
+        (
+          SELECT
+            ecr.campaign,
+            clm.contact
+          FROM
+            email_campaigns_recipients AS ecr
+            JOIN crm_lists_members AS clm
+              ON ecr.list = clm.list
+        )
+        UNION
+        (
+          SELECT
+            ecr.campaign,
+            cs.id AS contact
+          FROM
+            email_campaigns_recipients AS ecr
+            JOIN email_campaigns AS ec
+              ON ecr.campaign = ec.id
+            JOIN contacts_summaries AS cs
+              ON ARRAY[ecr.tag] <@ cs.tag AND ec.brand = cs.brand
+          WHERE
+            ecr.tag IS NOT NULL
+        )
+        UNION
+        (
+          SELECT
+            campaign,
+            contact
+          FROM
+            email_campaigns_recipients
+          WHERE
+            contact IS NOT NULL
+        )
+      ) AS ecr
+        ON ec.id = ecr.campaign
   )
