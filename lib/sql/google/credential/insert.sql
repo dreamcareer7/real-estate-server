@@ -1,4 +1,4 @@
-INSERT INTO gmails
+INSERT INTO google_credentials
   (
     "user",
     brand,

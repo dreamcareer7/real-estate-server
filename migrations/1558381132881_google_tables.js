@@ -4,28 +4,25 @@ const migrations = [
   'BEGIN',
 
   `DROP TABLE IF EXISTS
-    gmail_auth_links CASCADE`,
+    google_credentials CASCADE`,
 
   `DROP TABLE IF EXISTS
-    gmails CASCADE`,
+    google_auth_links CASCADE`,
 
   `DROP TABLE IF EXISTS
-    gmail_messages CASCADE`,
+    google_messages CASCADE`,
 
   `DROP TABLE IF EXISTS
-    gmail_threads CASCADE`,
+    google_messages_sync CASCADE`,
 
   `DROP TABLE IF EXISTS
-    gmail_messages_sync CASCADE`,
+    google_contacts CASCADE`,
 
   `DROP TABLE IF EXISTS
-    gmail_contacts CASCADE`,
-
-  `DROP TABLE IF EXISTS
-    gmail_contacts_sync CASCADE`,
+    google_contacts_sync CASCADE`,
 
 
-  `CREATE TABLE IF NOT EXISTS gmails(
+  `CREATE TABLE IF NOT EXISTS google_credentials(
     id uuid NOT NULL PRIMARY KEY DEFAULT uuid_generate_v4(),
 
     "user" uuid NOT NULL REFERENCES users(id),
@@ -54,7 +51,7 @@ const migrations = [
     UNIQUE (refresh_token)
   )`,
 
-  `CREATE TABLE IF NOT EXISTS gmail_auth_links(
+  `CREATE TABLE IF NOT EXISTS google_auth_links(
     id uuid NOT NULL PRIMARY KEY DEFAULT uuid_generate_v4(),
     key uuid NOT NULL,
 
@@ -75,10 +72,10 @@ const migrations = [
     UNIQUE (url)
   )`,
 
-  `CREATE TABLE IF NOT EXISTS gmail_messages(
+  `CREATE TABLE IF NOT EXISTS google_messages(
     id uuid NOT NULL PRIMARY KEY DEFAULT uuid_generate_v4(),
 
-    gmail uuid NOT NULL REFERENCES gmails(id),
+    google_credential uuid NOT NULL REFERENCES google_credentials(id),
 
     message_id VARCHAR(32) NOT NULL,
     thread_id VARCHAR(32) NOT NULL,
@@ -95,29 +92,10 @@ const migrations = [
     UNIQUE (message_id)
   )`,
 
-  `CREATE TABLE IF NOT EXISTS gmail_threads(
-    id uuid NOT NULL PRIMARY KEY DEFAULT uuid_generate_v4(),
-    
-    gmail uuid NOT NULL REFERENCES gmails(id),
-
-    thread_id VARCHAR(32) NOT NULL,
-    history_id VARCHAR(32) NOT NULL,
-    snippet TEXT NOT NULL,
-    label_ids TEXT ARRAY,
-    payload_headers JSONB,
-    internal_date TIMESTAMP,
-
-    created_at timestamptz NOT NULL DEFAULT clock_timestamp(),
-    updated_at timestamptz NOT NULL DEFAULT clock_timestamp(),
-    deleted_at timestamptz,
-
-    UNIQUE (thread_id)
-  )`,
-
-  `CREATE TABLE IF NOT EXISTS gmail_messages_sync(
+  `CREATE TABLE IF NOT EXISTS google_messages_sync(
     id uuid NOT NULL PRIMARY KEY DEFAULT uuid_generate_v4(),
 
-    gmail uuid NOT NULL REFERENCES gmails(id),
+    google_credential uuid NOT NULL REFERENCES google_credentials(id),
     email VARCHAR(128) NOT NULL,
 
     synced_messages_num INTEGER DEFAULT 0,
@@ -136,23 +114,23 @@ const migrations = [
     UNIQUE (email)
   )`,
 
-  `CREATE TABLE IF NOT EXISTS gmail_contacts(
+  `CREATE TABLE IF NOT EXISTS google_contacts(
     id uuid NOT NULL PRIMARY KEY DEFAULT uuid_generate_v4(),
 
-    gmail uuid NOT NULL REFERENCES gmails(id),
+    google_credential uuid NOT NULL REFERENCES google_credentials(id),
 
     created_at timestamptz NOT NULL DEFAULT clock_timestamp(),
     updated_at timestamptz NOT NULL DEFAULT clock_timestamp(),
     deleted_at timestamptz
   )`,
 
-  `CREATE TABLE IF NOT EXISTS gmail_contacts_sync(
+  `CREATE TABLE IF NOT EXISTS google_contacts_sync(
     id uuid NOT NULL PRIMARY KEY DEFAULT uuid_generate_v4(),
 
     "user" uuid NOT NULL REFERENCES users(id),
     brand uuid NOT NULL REFERENCES brands(id),
 
-    gmail uuid NOT NULL REFERENCES gmails(id),
+    google_credential uuid NOT NULL REFERENCES google_credentials(id),
     email VARCHAR(128) NOT NULL,
 
     synced_contacts_num INTEGER DEFAULT 0,

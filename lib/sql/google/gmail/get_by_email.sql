@@ -1,1 +1,0 @@
-SELECT id FROM gmails WHERE email = $1 AND deleted_at IS NULL

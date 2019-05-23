@@ -21,6 +21,7 @@ const attachContactEvents = require('../lib/models/Contact/events')
 const attachTaskEventHandler = require('../lib/models/CRM/Task/events')
 const attachTouchEventHandler = require('../lib/models/CRM/Touch/events')
 const ShowingsCredential = require('../lib/models/Showings/credential')
+const GoogleCredential = require('../lib/models/Google/credential')
 
 attachCalendarEvents()
 attachContactEvents()
@@ -176,7 +177,8 @@ const sendNotifications = function () {
       nodeifyFn(CalendarWorker.sendEmailForUnread.bind(CalendarWorker)),
       nodeifyFn(Task.sendNotifications),
       nodeifyFn(EmailCampaign.sendDue),
-      nodeifyFn(ShowingsCredential.crawlerJob)
+      nodeifyFn(ShowingsCredential.crawlerJob),
+      nodeifyFn(GoogleCredential.contactCownloaderJob)
     ], err => {
       if (err) {
         Slack.send({

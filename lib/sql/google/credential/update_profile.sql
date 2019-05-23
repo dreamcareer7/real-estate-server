@@ -1,0 +1,1 @@
+UPDATE google_credentials SET messages_total = $1, threads_total = $2 WHERE id = $3

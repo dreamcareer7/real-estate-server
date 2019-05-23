@@ -1,10 +1,10 @@
 SELECT
-    *, 'gmail_auth_link' AS type
+    *, 'google_credential' AS type
 FROM
-    gmail_auth_links
+    google_credentials
 JOIN 
     unnest($1::uuid[]) WITH ORDINALITY t(gid, ord)
 ON 
-    gmail_auth_links.id = gid
+    google_credentials.id = gid
 ORDER BY 
     t.ord

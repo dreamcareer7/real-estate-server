@@ -1,5 +1,5 @@
 UPDATE
-  gmails
+  google_credentials
 SET
   access_token = $1,
   refresh_token = $2,

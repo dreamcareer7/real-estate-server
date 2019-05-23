@@ -1,1 +1,0 @@
-SELECT id FROM gmails WHERE "user" = $1 AND brand = $2 AND deleted_at IS NULL
