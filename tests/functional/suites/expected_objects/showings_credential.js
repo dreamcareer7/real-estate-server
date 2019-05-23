@@ -4,6 +4,8 @@ module.exports = {
   'agent': String,
   'username': String,
   'password': String,
+  'selected_location': String,
+  'selected_location_string': String,
   'last_crawled_at': String,
   'login_status': Boolean,
   'created_at': String,

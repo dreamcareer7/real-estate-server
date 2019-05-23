@@ -4,6 +4,8 @@ INSERT INTO showings_credentials
     brand,
     username,
     password,
+    selected_location,
+    selected_location_string,
     login_status
   )
 VALUES
@@ -12,6 +14,8 @@ VALUES
     $2,
     $3,
     $4,
-    $5
+    $5,
+    $6,
+    $7
   )
 RETURNING id

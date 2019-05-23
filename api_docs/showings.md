@@ -13,6 +13,8 @@ user                    | User          |                    | User who is the o
 brand                   | Brand         |                    | The team this object belongs to
 username                | string        |                    | Agent username in showings.com (saved encrypted)
 password                | string        |                    | Agent password in showings.com (saved encrypted)
+selected_location       | string        |                    | Sample: 6,1,DFW
+selected_location_string| string        |                    | Sample: Dallas/Fort Worth
 last_crawled_at         | number        |                    |
 login_status            | Boolean       |                    | It means user credential is valid or not
 created_at              | number        |                    |

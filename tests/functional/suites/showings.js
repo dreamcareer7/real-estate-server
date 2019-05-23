@@ -9,7 +9,9 @@ registerSuite('contact', ['brandCreateParent', 'brandCreate'])
 function createCredential(cb) {
   const body = {
     username: 'username',
-    password: 'password'
+    password: 'password',
+    selectedLocation: '6,1,DFW',
+    selectedLocationString: 'Dallas/Fort Worth'
   }
 
   return frisby.create('create a showings credential')
@@ -25,7 +27,9 @@ function createCredential(cb) {
 function createDuplicateCredential(cb) {
   const body = {
     username: 'username',
-    password: 'password'
+    password: 'password',
+    selectedLocation: '6,1,DFW',
+    selectedLocationString: 'Dallas/Fort Worth'
   }
 
   return frisby.create('create a duplicate showings credential')
@@ -37,7 +41,9 @@ function createDuplicateCredential(cb) {
 function createBadCredential(cb) {
   const body = {
     username: 'bad-username',
-    password: 'password'
+    password: 'password',
+    selectedLocation: '6,1,DFW',
+    selectedLocationString: 'Dallas/Fort Worth'
   }
 
   return frisby.create('create a showings credential with invalid username/password')
@@ -60,7 +66,9 @@ function getCredential(cb) {
 function updateCredential(cb) {
   const body = {
     username: 'new_username',
-    password: 'new_password'
+    password: 'new_password',
+    selected_location: '6,1,DFW',
+    selected_location_string: 'Dallas/Fort Worth'
   }
 
   return frisby.create('update a showings credential')
