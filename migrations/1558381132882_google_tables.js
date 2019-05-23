@@ -36,8 +36,9 @@ const migrations = [
     access_token VARCHAR(256) NOT NULL,
     refresh_token VARCHAR(256) NOT NULL,
     expiry_date TIMESTAMP,
-
     scope VARCHAR(256) NOT NULL,
+
+    sync_token VARCHAR(256) NOT NULL,
 
     revoked BOOLEAN DEFAULT FALSE,
 
