@@ -49,7 +49,9 @@ const migrations = [
     deleted_at timestamptz,
 
     UNIQUE ("user", brand),
-    UNIQUE (email)
+    UNIQUE (email),
+    UNIQUE (access_token),
+    UNIQUE (refresh_token)
   )`,
 
   `CREATE TABLE IF NOT EXISTS gmail_auth_links(

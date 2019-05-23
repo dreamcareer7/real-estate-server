@@ -148,6 +148,24 @@ async function updateGmailProfile() {
   expect(updatedGmail.messages_total).to.be.equal(profile.messagesTotal)
 }
 
+async function getGmailProfile() {
+  const gmail   = await createGmail()
+  const profile = await Gmail.getProfile(gmail.user, gmail.brand)
+
+  expect(profile.emailAddress).to.be.equal(GMAIL_ADDRESS)
+}
+
+async function listConnections() {
+  const gmail       = await createGmail()
+  const connections = await Gmail.listConnections(gmail.user, gmail.brand)
+  // expect(connections.xxx).to.be.equal(xxxx)
+}
+
+async function listContactGroups() {
+  const gmail         = await createGmail()
+  const contactGroups = await Gmail.listContactGroups(gmail.user, gmail.brand)
+  // expect(contactGroups.xxx).to.be.equal(xxxx)
+}
 
 
 describe('Google', () => {
@@ -172,5 +190,9 @@ describe('Google', () => {
     it('should update a gmail record tokens', updateGmailTokens)
     it('should revoke a gmail record', updateGmailAsRevoked)
     it('should update a gmail record profile', updateGmailProfile)
+
+    it('should return gmail profile', getGmailProfile)
+    it('should return gmail connections', listConnections)
+    it('should return gmail contact groups', listContactGroups)
   })
 })
