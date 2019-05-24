@@ -198,7 +198,7 @@ async function crawlerJobUpdatedRecords() {
   const created_ids = await crawlerJobHelper()
   expect(created_ids).to.have.length(2)
 
-  const lastCrawledTS = new Date().setDate(-3)
+  const lastCrawledTS = new Date().setHours(new Date().getHours()-1)
   await ShowingsCredential.updateLastCrawledDate(created_ids[0], lastCrawledTS)
 
   const updatedRecord = await ShowingsCredential.get(created_ids[0])  
