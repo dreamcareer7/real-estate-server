@@ -3,9 +3,9 @@ const db = require('../lib/utils/db')
 const migrations = [
   'BEGIN',
   'CREATE INDEX email_campaigns_recipients_campaign_idx ON email_campaigns_recipients (campaign)',
-  'CREATE INDEX email_campaigns_recipients_campaign_idx ON email_campaigns_recipients (tag)',
-  'CREATE INDEX email_campaigns_recipients_campaign_idx ON email_campaigns_recipients (list)',
-  'CREATE INDEX email_campaigns_recipients_campaign_idx ON email_campaigns_recipients (contact)',
+  'CREATE INDEX email_campaigns_recipients_tag_idx ON email_campaigns_recipients (tag)',
+  'CREATE INDEX email_campaigns_recipients_list_idx ON email_campaigns_recipients (list)',
+  'CREATE INDEX email_campaigns_recipients_contact_idx ON email_campaigns_recipients (contact)',
 
   'CREATE INDEX email_campaign_emails_contact_idx ON email_campaign_emails (contact)',
   'CREATE INDEX email_campaign_emails_campaign_idx ON email_campaign_emails (campaign)',
