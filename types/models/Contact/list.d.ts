@@ -9,7 +9,7 @@ declare interface IContactListInput {
   name: string;
   filters: IContactListFilter[];
   query?: string;
-  args?: Pick<IContactFilterOptions, 'filter_type'>;
+  args?: Pick<IContactFilterOptions, 'filter_type' | 'q' | 'crm_task' | 'flows'>;
   is_editable?: boolean;
   touch_freq?: number;
 }

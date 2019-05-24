@@ -93,21 +93,6 @@ async function createList() {
   const list = await List.get(id)
 
   expect(list).not.to.be.undefined
-  expect(list.filters).to.be.an('array')
-  expect(list.filters).to.have.length(1)
-  expect(list.filters[0]).to.include({
-    attribute_def: TAG,
-    value: 'Warriors List',
-    operator: 'eq',
-    invert: false,
-    type: 'contact_list_filter'
-  })
-
-  expect(list.args).to.be.eql({
-    filter_type: 'and',
-    q: null,
-    type: 'contact_list_args'
-  })
 
   return list
 }

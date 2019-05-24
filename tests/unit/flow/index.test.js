@@ -5,6 +5,7 @@ const Contact = require('../../../lib/models/Contact')
 const Context = require('../../../lib/models/Context')
 const CrmTask = require('../../../lib/models/CRM/Task')
 const EmailCampaign = require('../../../lib/models/Email/campaign')
+const Calendar = require('../../../lib/models/Calendar')
 const Flow = require('../../../lib/models/Flow')
 const Orm = require('../../../lib/models/Orm')
 const User = require('../../../lib/models/User')
@@ -12,7 +13,7 @@ const User = require('../../../lib/models/User')
 const { createContext, handleJobs } = require('../helper')
 const BrandHelper = require('../brand/helper')
 
-let user, brand, flow
+let user, brand, brand_flow
 
 const HOUR = 3600
 const DAY = 24 * HOUR
@@ -52,7 +53,7 @@ async function setup() {
       }, {
         title: 'Demo of Rechat',
         description: 'Dan gives a quick demo of the Rechat system and explains how it works',
-        due_in: 3,
+        due_in: 3 * DAY,
         is_automated: false,
         event: {
           title: 'Demo of Rechat',
@@ -79,11 +80,11 @@ async function loadFlow() {
     ]
   })
 
-  flow = populated[0]
+  brand_flow = populated[0]
 }
 
 async function testBrandFlows() {
-  expect(flow.steps).to.have.length(3)
+  expect(brand_flow.steps).to.have.length(3)
 }
 
 async function createContact() {
@@ -124,13 +125,29 @@ async function createContact() {
 async function testEnrollContact() {
   const id = await createContact()
 
-  await Flow.enrollContacts(brand.id, user.id, flow.id, Date.now() / 1000, flow.steps.map(s => s.id), [id])
+  const [flow] = await Flow.enrollContacts(brand.id, user.id, brand_flow.id, Date.now() / 1000, brand_flow.steps.map(s => s.id), [id])
   const tasks = await CrmTask.getForUser(user.id, brand.id, {})
 
   expect(tasks).to.have.length(2)
 
   const campaigns = await EmailCampaign.getByBrand(brand.id)
   expect(campaigns).to.have.length(1)
+
+  return flow
+}
+
+async function testStopFlow() {
+  const flow = await testEnrollContact()
+
+  await Flow.stop(user.id, flow.id)
+
+  const events = await Calendar.filter(null, {
+    high: Date.now() / 1000 + 100 * DAY,
+    low: Date.now() / 1000 - 100 * DAY,
+    object_types: ['crm_task', 'email_campaign']
+  })
+
+  expect(events).to.have.length(1)
 }
 
 describe('Flow', () => {
@@ -139,4 +156,5 @@ describe('Flow', () => {
 
   it('should setup brand flows correctly', testBrandFlows)
   it('should enroll a contact to a flow', testEnrollContact)
+  it('should stop a flow instance and delete all future events', testStopFlow)
 })

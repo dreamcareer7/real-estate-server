@@ -1,4 +1,5 @@
 const promisify = require('../../lib/utils/promisify')
+const { runInContext } = require('../../lib/models/Context/util')
 
 async function addContext(deal_id, checklist_id, user_id) {
   await Deal.saveContext({
@@ -22,8 +23,10 @@ async function addContext(deal_id, checklist_id, user_id) {
   await Deal.notify({ deal })
 }
 
-addContext(
-  '99754f28-c69b-11e8-83ba-0a95998482ac',
-  '99813be4-c69b-11e8-83c9-0a95998482ac',
-  '0d7555f0-3f31-11e8-810a-0a95998482ac'
-).then(process.exit, process.exit)
+runInContext('listing_status', async () => {
+  await addContext(
+    '92968934-57e5-11e9-9c0b-0a95998482ac',
+    '99813be4-c69b-11e8-83c9-0a95998482ac',
+    'dfaca168-2f6e-11e8-a108-0a95998482ac'
+  )
+}).then(process.exit, process.exit)
