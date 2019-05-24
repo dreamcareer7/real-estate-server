@@ -4,7 +4,7 @@ FROM
   showings_credentials
 WHERE 
   (
-    last_crawled_at >= (NOW() - $1::interval)
+    last_crawled_at <= (NOW() - $1::interval)
     OR
     last_crawled_at IS NULL
   )
