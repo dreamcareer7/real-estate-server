@@ -35,10 +35,10 @@ function invalidGrantAccess(cb) {
     .after(cb)
     .expectStatus(404)
     .expectJSON({
-      "http": 404,
-      "message": "Google-Auth-Link Bad-Credential",
-      "code": "ResourceNotFound",
-      "skip_trace_log": true
+      'http': 404,
+      'message': 'Google-Auth-Link Bad-Credential',
+      'code': 'ResourceNotFound',
+      'skip_trace_log': true
     })
 }
 
