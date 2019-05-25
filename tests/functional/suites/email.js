@@ -47,7 +47,7 @@ const addEvent = cb => {
   const data = {
     'event-data': {
       timestamp: 1531818450.203548,
-      recipient: email.to,
+      recipient: email.to[0].email,
       event: 'delivered',
       message: {
         headers: {
