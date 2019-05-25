@@ -4,13 +4,33 @@ const { createContext, handleJobs } = require('../helper')
 const Context          = require('../../../lib/models/Context')
 const GoogleAuthLink   = require('../../../lib/models/Google/auth_link')
 const GoogleCredential = require('../../../lib/models/Google/credential')
+const GoogleContact    = require('../../../lib/models/Google/contact')
+const GoogleMessage    = require('../../../lib/models/Google/message')
 const User             = require('../../../lib/models/User')
 const Brand            = require('../../../lib/models/Brand')
 const Job              = require('../../../lib/models/Job')
 const BrandHelper      = require('../brand/helper')
 
 let user, brand
-const GMAIL_ADDRESS = 'saeed.uni68@gmail.com'
+
+const GOOGLE_ADDRESS_1 = 'saeed.uni68@gmail.com'
+const GOOGLE_TOKENS_1  = {
+  "access_token": "ya29.GlsSB5gTTkynEx16V7EnNexoVj15uo5277RNLpoGQXHuqn3UAAQ_iRZ1x7V5dzd--90eCb0Kr5F0UwMiPemjJpK2SeU24P7hxLivNitL4yJX6uOaaYM_ObY65EF9",
+  "refresh_token": "1/mvS9GZgOmJrvcRpDBsWgY0ixn2GOW0kDSHMs9LxhpTA",
+  "scope": "https://www.googleapis.com/auth/contacts.readonly",
+  "token_type": "Bearer",
+  "expiry_date": 1558581374000
+}
+
+const GOOGLE_ADDRESS_2 = 'saeed@rechat.com'
+const GOOGLE_TOKENS_2  = {
+  "access_token": "ya29.GlsUBzA2jx8dx_keCJver96nMm-eAEUHHO-olVoNyuHAdNcCeVZTHGu8gskwbz5lJKiYCX2XTX8nvBIg-FaFGMWyAkD0rPqKt3Z-6lwwOtU-rLcjEzzufD1yS8q4",
+  "refresh_token": "1/wf3VTMwGFDqnDwA9yVvz8OVLUro8iKTcvoCoXo7Pa6pajnviTBgD2gdqQQtiIeYi",
+  "token_type": "Bearer",
+  "scope": "https://www.googleapis.com/auth/gmail.readonly https://www.googleapis.com/auth/contacts.readonly",
+  "expiry_date": "2019-05-25T12:57:06.449Z"
+}
+
 
 const google_tokens_json = require('./data/google_tokens.json')
 const google_auth_json   = require('./data/google_auth.json')
@@ -27,7 +47,7 @@ async function setup() {
 }
 
 async function requestGmailAccess() {
-  const authLinkRecord = await GoogleAuthLink.requestGmailAccess(user.id, brand.id, GMAIL_ADDRESS)
+  const authLinkRecord = await GoogleAuthLink.requestGmailAccess(user.id, brand.id, GOOGLE_ADDRESS_1)
   
   expect(authLinkRecord.url).to.be.not.null
 
@@ -35,8 +55,8 @@ async function requestGmailAccess() {
 }
 
 async function duplicateRequestGmailAccess() {
-  const authUrl_1 = await GoogleAuthLink.requestGmailAccess(user.id, brand.id, GMAIL_ADDRESS)
-  const authUrl_2 = await GoogleAuthLink.requestGmailAccess(user.id, brand.id, GMAIL_ADDRESS)
+  const authUrl_1 = await GoogleAuthLink.requestGmailAccess(user.id, brand.id, GOOGLE_ADDRESS_1)
+  const authUrl_2 = await GoogleAuthLink.requestGmailAccess(user.id, brand.id, GOOGLE_ADDRESS_1)
   
   expect(authUrl_1).to.be.not.null
   expect(authUrl_2).to.be.not.null
@@ -70,14 +90,14 @@ async function getByKey() {
 async function createGmail() {
   google_auth_json.user  = user.id
   google_auth_json.brand = brand.id
-  google_auth_json.email = GMAIL_ADDRESS
+  google_auth_json.email = GOOGLE_ADDRESS_2
 
-  gmail_profile_json.emailAddress = GMAIL_ADDRESS
+  gmail_profile_json.emailAddress = GOOGLE_ADDRESS_2
 
   const body = {
     gmailAuthLink: google_auth_json,
     profile: gmail_profile_json,
-    tokens: google_tokens_json
+    tokens: GOOGLE_TOKENS_2
   }
 
   const gmailRecordId = await GoogleCredential.create(body)
@@ -138,7 +158,8 @@ async function updateGmailProfile() {
 
   const profile = {
     messagesTotal: 100,
-    threadsTotal: 15
+    threadsTotal: 15,
+    historyId: 1410
   }
   await GoogleCredential.updateProfile(createdGmail.id, profile)
 
@@ -148,28 +169,28 @@ async function updateGmailProfile() {
   expect(updatedGmail.messages_total).to.be.equal(profile.messagesTotal)
 }
 
-async function getGmailProfile() {
+async function getProfile() {
   const gmail   = await createGmail()
   const profile = await GoogleCredential.getProfile(gmail.user, gmail.brand)
 
-  expect(profile.emailAddress).to.be.equal(GMAIL_ADDRESS)
+  expect(profile.emailAddress).to.be.equal(GOOGLE_ADDRESS_2)
 }
 
 async function listMessages() {
   const gmail       = await createGmail()
-  const connections = await GoogleCredential.listMessages(gmail.user, gmail.brand)
+  const connections = await GoogleMessage.listMessages(gmail.user, gmail.brand)
   // expect(connections.xxx).to.be.equal(xxxx)
 }
 
 async function listConnections() {
   const gmail       = await createGmail()
-  const connections = await GoogleCredential.listConnections(gmail.user, gmail.brand)
+  const connections = await GoogleContact.listConnections(gmail.user, gmail.brand)
   // expect(connections.xxx).to.be.equal(xxxx)
 }
 
 async function listContactGroups() {
   const gmail         = await createGmail()
-  const contactGroups = await GoogleCredential.listContactGroups(gmail.user, gmail.brand)
+  const contactGroups = await GoogleContact.listContactGroups(gmail.user, gmail.brand)
   // expect(contactGroups.xxx).to.be.equal(xxxx)
 }
 
@@ -186,7 +207,7 @@ describe('Google', () => {
   //   it('should return auth-link record by key', getByKey)
   // })
 
-  describe('Google Gmail', () => {
+  describe('Google Account', () => {
     createContext()
     beforeEach(setup)
 
@@ -197,7 +218,7 @@ describe('Google', () => {
     // it('should revoke a gmail record', updateGmailAsRevoked)
     // it('should update a gmail record profile', updateGmailProfile)
 
-    // it('should return gmail profile', getGmailProfile)
+    // it('should return gmail profile', getProfile)
     // it('should return gmail messages', listMessages)
     it('should return gmail connections', listConnections)
     // it('should return gmail contact groups', listContactGroups)

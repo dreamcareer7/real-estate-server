@@ -4,16 +4,10 @@ const migrations = [
   'BEGIN',
 
   `DROP TABLE IF EXISTS
-    google_credentials CASCADE`,
-
-  `DROP TABLE IF EXISTS
     google_auth_links CASCADE`,
 
   `DROP TABLE IF EXISTS
-    google_messages CASCADE`,
-
-  `DROP TABLE IF EXISTS
-    google_messages_sync CASCADE`,
+    google_credentials CASCADE`,
 
   `DROP TABLE IF EXISTS
     google_contacts CASCADE`,
@@ -21,36 +15,12 @@ const migrations = [
   `DROP TABLE IF EXISTS
     google_contacts_sync CASCADE`,
 
+  `DROP TABLE IF EXISTS
+    google_messages CASCADE`,
 
-  `CREATE TABLE IF NOT EXISTS google_credentials(
-    id uuid NOT NULL PRIMARY KEY DEFAULT uuid_generate_v4(),
+  `DROP TABLE IF EXISTS
+    google_messages_sync CASCADE`,
 
-    "user" uuid NOT NULL REFERENCES users(id),
-    brand uuid NOT NULL REFERENCES brands(id),
-
-    email VARCHAR(128) NOT NULL,
-    messages_total INTEGER NOT NULL,
-    threads_total INTEGER NOT NULL,
-    history_id INTEGER NOT NULL,
-
-    access_token VARCHAR(256) NOT NULL,
-    refresh_token VARCHAR(256) NOT NULL,
-    expiry_date TIMESTAMP,
-    scope VARCHAR(256) NOT NULL,
-
-    sync_token VARCHAR(256) NOT NULL,
-
-    revoked BOOLEAN DEFAULT FALSE,
-
-    created_at timestamptz NOT NULL DEFAULT clock_timestamp(),
-    updated_at timestamptz NOT NULL DEFAULT clock_timestamp(),
-    deleted_at timestamptz,
-
-    UNIQUE ("user", brand),
-    UNIQUE (email),
-    UNIQUE (access_token),
-    UNIQUE (refresh_token)
-  )`,
 
   `CREATE TABLE IF NOT EXISTS google_auth_links(
     id uuid NOT NULL PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -71,6 +41,76 @@ const migrations = [
     UNIQUE ("user", brand),
     UNIQUE (email),
     UNIQUE (url)
+  )`,
+
+  `CREATE TABLE IF NOT EXISTS google_credentials(
+    id uuid NOT NULL PRIMARY KEY DEFAULT uuid_generate_v4(),
+
+    "user" uuid NOT NULL REFERENCES users(id),
+    brand uuid NOT NULL REFERENCES brands(id),
+
+    email VARCHAR(128) NOT NULL,
+    messages_total INTEGER NOT NULL,
+    threads_total INTEGER NOT NULL,
+    history_id INTEGER NOT NULL,
+
+    access_token VARCHAR(256) NOT NULL,
+    refresh_token VARCHAR(256) NOT NULL,
+    expiry_date TIMESTAMP,
+    scope VARCHAR(256) NOT NULL,
+
+    contacts_sync_token VARCHAR(256) DEFAULT NULL,
+
+    revoked BOOLEAN DEFAULT FALSE,
+
+    created_at timestamptz NOT NULL DEFAULT clock_timestamp(),
+    updated_at timestamptz NOT NULL DEFAULT clock_timestamp(),
+    deleted_at timestamptz,
+
+    UNIQUE ("user", brand),
+    UNIQUE (email),
+    UNIQUE (access_token),
+    UNIQUE (refresh_token)
+  )`,
+
+  `CREATE TABLE IF NOT EXISTS google_contacts(
+    id uuid NOT NULL PRIMARY KEY DEFAULT uuid_generate_v4(),
+
+    google_credential uuid NOT NULL REFERENCES google_credentials(id),
+
+    resource_name text NOT NULL,
+    meta JSONB,
+
+    created_at timestamptz NOT NULL DEFAULT clock_timestamp(),
+    updated_at timestamptz NOT NULL DEFAULT clock_timestamp(),
+    deleted_at timestamptz,
+
+    UNIQUE (google_credential, resource_name),
+    UNIQUE (resource_name)
+  )`,
+
+  `CREATE TABLE IF NOT EXISTS google_contacts_sync(
+    id uuid NOT NULL PRIMARY KEY DEFAULT uuid_generate_v4(),
+
+    "user" uuid NOT NULL REFERENCES users(id),
+    brand uuid NOT NULL REFERENCES brands(id),
+
+    google_credential uuid NOT NULL REFERENCES google_credentials(id),
+    email VARCHAR(128) NOT NULL,
+
+    synced_contacts_num INTEGER DEFAULT 0,
+
+    next_sync_date TIMESTAMP DEFAULT NULL,
+    last_sync_date TIMESTAMP DEFAULT NULL,
+    last_sync_duration REAL DEFAULT 0,
+
+    in_progress BOOLEAN DEFAULT TRUE,
+
+    created_at timestamptz NOT NULL DEFAULT clock_timestamp(),
+    updated_at timestamptz NOT NULL DEFAULT clock_timestamp(),
+    deleted_at timestamptz,
+
+    UNIQUE (email)
   )`,
 
   `CREATE TABLE IF NOT EXISTS google_messages(
@@ -101,40 +141,6 @@ const migrations = [
 
     synced_messages_num INTEGER DEFAULT 0,
     synced_threads_num INTEGER DEFAULT 0,
-
-    next_sync_date TIMESTAMP DEFAULT NULL,
-    last_sync_date TIMESTAMP DEFAULT NULL,
-    last_sync_duration REAL DEFAULT 0,
-
-    in_progress BOOLEAN DEFAULT TRUE,
-
-    created_at timestamptz NOT NULL DEFAULT clock_timestamp(),
-    updated_at timestamptz NOT NULL DEFAULT clock_timestamp(),
-    deleted_at timestamptz,
-
-    UNIQUE (email)
-  )`,
-
-  `CREATE TABLE IF NOT EXISTS google_contacts(
-    id uuid NOT NULL PRIMARY KEY DEFAULT uuid_generate_v4(),
-
-    google_credential uuid NOT NULL REFERENCES google_credentials(id),
-
-    created_at timestamptz NOT NULL DEFAULT clock_timestamp(),
-    updated_at timestamptz NOT NULL DEFAULT clock_timestamp(),
-    deleted_at timestamptz
-  )`,
-
-  `CREATE TABLE IF NOT EXISTS google_contacts_sync(
-    id uuid NOT NULL PRIMARY KEY DEFAULT uuid_generate_v4(),
-
-    "user" uuid NOT NULL REFERENCES users(id),
-    brand uuid NOT NULL REFERENCES brands(id),
-
-    google_credential uuid NOT NULL REFERENCES google_credentials(id),
-    email VARCHAR(128) NOT NULL,
-
-    synced_contacts_num INTEGER DEFAULT 0,
 
     next_sync_date TIMESTAMP DEFAULT NULL,
     last_sync_date TIMESTAMP DEFAULT NULL,
