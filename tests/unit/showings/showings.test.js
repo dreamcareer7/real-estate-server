@@ -45,16 +45,16 @@ async function crawlerJobHelper() {
   const credentialBodyA = {
     username: credential_json.username,
     password: credential_json.password,
-    selectedLocation: credential_json.selected_location,
-    selectedLocationString: credential_json.selected_location_string,
+    selected_location: credential_json.selected_location,
+    selected_location_string: credential_json.selected_location_string,
     loginStatus: true
   }
 
   const credentialBodyB = {
     username: credential_json.username,
     password: credential_json.password,
-    selectedLocation: credential_json.selected_location,
-    selectedLocationString: credential_json.selected_location_string,
+    selected_location: credential_json.selected_location,
+    selected_location_string: credential_json.selected_location_string,
     loginStatus: true
   }
 
@@ -92,8 +92,8 @@ async function singleCrawlerJobHelper() {
   const credentialBody = {
     username: credential_json.username,
     password: credential_json.password,
-    selectedLocation: credential_json.selected_location,
-    selectedLocationString: credential_json.selected_location_string,
+    selected_location: credential_json.selected_location,
+    selected_location_string: credential_json.selected_location_string,
   }
 
   return await ShowingsCredential.create(user.id, brand.id, credentialBody)
@@ -103,8 +103,8 @@ async function create() {
   const body = {
     username: credential_json.username,
     password: credential_json.password,
-    selectedLocation: credential_json.selected_location,
-    selectedLocationString: credential_json.selected_location_string,
+    selected_location: credential_json.selected_location,
+    selected_location_string: credential_json.selected_location_string,
   }
 
   const credentialId = await ShowingsCredential.create(user.id, brand.id, body)
@@ -117,8 +117,8 @@ async function loginTestFail() {
   const body = {
     username: 'bad-username',
     password: 'password',
-    selectedLocation: credential_json.selected_location,
-    selectedLocationString: credential_json.selected_location_string,
+    selected_location: credential_json.selected_location,
+    selected_location_string: credential_json.selected_location_string,
   }
 
   const isLoginSuccess = await ShowingsCrawler.loginTest(body)
@@ -157,6 +157,20 @@ async function updateCredential() {
     selected_location_string: 'Dallas/Fort Worth',
   }
   await ShowingsCredential.updateCredential(credentialObj.user, credentialObj.brand, body)
+
+  const updated = await ShowingsCredential.get(credentialObj.id)
+  expect(updated).to.include(body)
+}
+
+async function updateMarket() {
+  const credentialId = await create()
+  const credentialObj = await ShowingsCredential.get(credentialId)
+
+  const body = {
+    selected_location: '6,1,DFW',
+    selected_location_string: 'Dallas/Fort Worth',
+  }
+  await ShowingsCredential.updateMarket(credentialObj.user, credentialObj.brand, body)
 
   const updated = await ShowingsCredential.get(credentialObj.id)
   expect(updated).to.include(body)
@@ -386,7 +400,8 @@ describe('Showings', () => {
     it('should failed in login test', loginTestFail)
     it('should return a credential record', getById)
     it('should return a credential record based on user id', getByUser)
-    it('should update a credential record user/pass', updateCredential)
+    it('should update a credential record', updateCredential)
+    it('should update a credential market', updateMarket)
     it('should update a credential login_status', updateCredentialLoginStatus)
     it('should delete a credential record', deleteCredential)
     it('should return some credential ids', crawlerJobRecords)

@@ -10,8 +10,8 @@ function createCredential(cb) {
   const body = {
     username: 'username',
     password: 'password',
-    selectedLocation: '6,1,DFW',
-    selectedLocationString: 'Dallas/Fort Worth'
+    selected_location: '6,1,DFW',
+    selected_location_string: 'Dallas/Fort Worth'
   }
 
   return frisby.create('create a showings credential')
@@ -28,8 +28,8 @@ function createDuplicateCredential(cb) {
   const body = {
     username: 'username',
     password: 'password',
-    selectedLocation: '6,1,DFW',
-    selectedLocationString: 'Dallas/Fort Worth'
+    selected_location: '6,1,DFW',
+    selected_location_string: 'Dallas/Fort Worth'
   }
 
   return frisby.create('create a duplicate showings credential')
@@ -42,8 +42,8 @@ function createBadCredential(cb) {
   const body = {
     username: 'bad-username',
     password: 'password',
-    selectedLocation: '6,1,DFW',
-    selectedLocationString: 'Dallas/Fort Worth'
+    selected_location: '6,1,DFW',
+    selected_location_string: 'Dallas/Fort Worth'
   }
 
   return frisby.create('create a showings credential with invalid username/password')
@@ -71,8 +71,24 @@ function updateCredential(cb) {
     selected_location_string: 'Dallas/Fort Worth'
   }
 
-  return frisby.create('update a showings credential')
+  return frisby.create('update a showings credential details')
     .put('/users/self/showings/credentials/', body)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      data: showings_credential
+    })
+}
+
+function updateMarket(cb) {
+  const body = {
+    selected_location: '6,1,DFW',
+    selected_location_string: 'Dallas/Fort Worth'
+  }
+
+  return frisby.create('update a showings credential market')
+    .put('/users/self/showings/credentials/market', body)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
@@ -95,5 +111,6 @@ module.exports = {
   createBadCredential,
   getCredential,
   updateCredential,
+  updateMarket,
   deleteCredential
 }
