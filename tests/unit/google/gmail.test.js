@@ -2,14 +2,17 @@ const { expect } = require('chai')
 const { createContext, handleJobs } = require('../helper')
 
 const Context          = require('../../../lib/models/Context')
-const GoogleAuthLink   = require('../../../lib/models/Google/auth_link')
-const GoogleCredential = require('../../../lib/models/Google/credential')
-const GoogleContact    = require('../../../lib/models/Google/contact')
-const GoogleMessage    = require('../../../lib/models/Google/message')
 const User             = require('../../../lib/models/User')
 const Brand            = require('../../../lib/models/Brand')
 const Job              = require('../../../lib/models/Job')
 const BrandHelper      = require('../brand/helper')
+
+const GoogleAuthLink   = require('../../../lib/models/Google/auth_link')
+const GoogleCredential = require('../../../lib/models/Google/credential')
+const GoogleContact    = require('../../../lib/models/Google/contact')
+const GoogleMessage    = require('../../../lib/models/Google/message')
+const GoogleWorkers    = require('../../../lib/models/Google/workers')
+
 
 let user, brand
 
@@ -169,29 +172,104 @@ async function updateGmailProfile() {
   expect(updatedGmail.messages_total).to.be.equal(profile.messagesTotal)
 }
 
-async function getProfile() {
-  const gmail   = await createGmail()
-  const profile = await GoogleCredential.getProfile(gmail.user, gmail.brand)
+
+
+async function syncProfile() {
+  const googleCredential = await createGmail()
+
+  const data = {
+    meta: {
+      firstSync: true,
+      action: 'sync_profile'
+    },
+    googleCredential: googleCredential
+  }
+
+  const profile = await GoogleWorkers.syncProfile(data)
 
   expect(profile.emailAddress).to.be.equal(GOOGLE_ADDRESS_2)
 }
 
-async function listMessages() {
-  const gmail       = await createGmail()
-  const connections = await GoogleMessage.listMessages(gmail.user, gmail.brand)
-  // expect(connections.xxx).to.be.equal(xxxx)
+async function syncConnections() {
+  const googleCredential = await createGmail()
+
+  const data = {
+    meta: {
+      partialSync: false,
+      action: 'sync_contacts'
+    },
+    googleCredential: googleCredential
+  }
+
+  const syncToken = await GoogleWorkers.syncContacts(data)
+  const updated   = await GoogleCredential.get(googleCredential.id)
+
+  expect(updated.contacts_sync_token).to.be.equal(syncToken)
 }
 
-async function listConnections() {
-  const gmail       = await createGmail()
-  const connections = await GoogleContact.listConnections(gmail.user, gmail.brand)
-  // expect(connections.xxx).to.be.equal(xxxx)
+async function syncConnectionsComplex() {
+  const googleCredential = await createGmail()
+
+  const data = {
+    meta: {
+      partialSync: false,
+      action: 'sync_contacts'
+    },
+    googleCredential: googleCredential
+  }
+
+  const syncToken = await GoogleWorkers.syncContacts(data)
+  const updated   = await GoogleCredential.get(googleCredential.id)
+
+  expect(updated.contacts_sync_token).to.be.equal(syncToken)
+
+  data.meta.partialSync = true
+  data.googleCredential = updated
+  await GoogleWorkers.syncContacts(data)
 }
 
-async function listContactGroups() {
-  const gmail         = await createGmail()
-  const contactGroups = await GoogleContact.listContactGroups(gmail.user, gmail.brand)
-  // expect(contactGroups.xxx).to.be.equal(xxxx)
+async function syncContactGroups() {
+  const googleCredential = await createGmail()
+
+  const data = {
+    meta: {
+      partialSync: false,
+      action: 'sync_contact_groups'
+    },
+    googleCredential: googleCredential
+  }
+
+  const syncToken = await GoogleWorkers.syncContactGroups(data)
+  const updated   = await GoogleCredential.get(googleCredential.id)
+
+  expect(updated.contact_groups_sync_token).to.be.equal(syncToken)
+}
+
+async function syncContactGroupsComplex() {
+  const googleCredential = await createGmail()
+
+  const data = {
+    meta: {
+      partialSync: false,
+      action: 'sync_contact_groups'
+    },
+    googleCredential: googleCredential
+  }
+
+  const syncToken = await GoogleWorkers.syncContactGroups(data)
+  const updated   = await GoogleCredential.get(googleCredential.id)
+
+  expect(updated.contact_groups_sync_token).to.be.equal(syncToken)
+
+  data.meta.partialSync = true
+  data.googleCredential = updated
+  await GoogleWorkers.syncContactGroups(data)
+}
+
+async function syncMessages() {
+  const gmail       = await createGmail()
+  const connections = await GoogleMessage.syncMessages(gmail.user, gmail.brand)
+  // expect(connections.xxx).to.be.equal(xxxx)
 }
 
 
@@ -207,9 +285,9 @@ describe('Google', () => {
   //   it('should return auth-link record by key', getByKey)
   // })
 
-  describe('Google Account', () => {
-    createContext()
-    beforeEach(setup)
+  // describe('Google Account', () => {
+  //   createContext()
+  //   beforeEach(setup)
 
     // it('should create a gmail record (semi-grant-access)', createGmail)
     // it('should return a gmail record by user', getGmailByUser)
@@ -217,10 +295,15 @@ describe('Google', () => {
     // it('should update a gmail record tokens', updateGmailTokens)
     // it('should revoke a gmail record', updateGmailAsRevoked)
     // it('should update a gmail record profile', updateGmailProfile)
+  // })
 
-    // it('should return gmail profile', getProfile)
-    // it('should return gmail messages', listMessages)
-    it('should return gmail connections', listConnections)
-    // it('should return gmail contact groups', listContactGroups)
+  describe('Google Workers', () => {
+    createContext()
+    beforeEach(setup)
+
+    // it('should run goole sync profile worker', syncProfile)
+    // it('should run goole sync connections worker', syncConnections)
+    it('should run goole sync contact-groups worker', syncContactGroups)
+    // it('should run goole sync messages worker', syncMessages)
   })
 })

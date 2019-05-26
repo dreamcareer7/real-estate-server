@@ -13,13 +13,10 @@ const migrations = [
     google_contacts CASCADE`,
 
   `DROP TABLE IF EXISTS
-    google_contacts_sync CASCADE`,
+    google_contact_groups CASCADE`,
 
   `DROP TABLE IF EXISTS
     google_messages CASCADE`,
-
-  `DROP TABLE IF EXISTS
-    google_messages_sync CASCADE`,
 
 
   `CREATE TABLE IF NOT EXISTS google_auth_links(
@@ -59,7 +56,16 @@ const migrations = [
     expiry_date TIMESTAMP,
     scope VARCHAR(256) NOT NULL,
 
+    last_profile_sync_at timestamptz,
+
     contacts_sync_token VARCHAR(256) DEFAULT NULL,
+    last_contacts_sync_at timestamptz,
+
+    contact_groups_sync_token VARCHAR(256) DEFAULT NULL,
+    last_contact_groups_sync_at timestamptz,
+
+    messages_sync_token VARCHAR(256) DEFAULT NULL,
+    last_messages_sync_at timestamptz,
 
     revoked BOOLEAN DEFAULT FALSE,
 
@@ -89,28 +95,20 @@ const migrations = [
     UNIQUE (resource_name)
   )`,
 
-  `CREATE TABLE IF NOT EXISTS google_contacts_sync(
+  `CREATE TABLE IF NOT EXISTS google_contact_groups(
     id uuid NOT NULL PRIMARY KEY DEFAULT uuid_generate_v4(),
 
-    "user" uuid NOT NULL REFERENCES users(id),
-    brand uuid NOT NULL REFERENCES brands(id),
-
     google_credential uuid NOT NULL REFERENCES google_credentials(id),
-    email VARCHAR(128) NOT NULL,
 
-    synced_contacts_num INTEGER DEFAULT 0,
-
-    next_sync_date TIMESTAMP DEFAULT NULL,
-    last_sync_date TIMESTAMP DEFAULT NULL,
-    last_sync_duration REAL DEFAULT 0,
-
-    in_progress BOOLEAN DEFAULT TRUE,
+    resource_name text NOT NULL,
+    meta JSONB,
 
     created_at timestamptz NOT NULL DEFAULT clock_timestamp(),
     updated_at timestamptz NOT NULL DEFAULT clock_timestamp(),
     deleted_at timestamptz,
 
-    UNIQUE (email)
+    UNIQUE (google_credential, resource_name),
+    UNIQUE (resource_name)
   )`,
 
   `CREATE TABLE IF NOT EXISTS google_messages(
@@ -131,28 +129,6 @@ const migrations = [
     deleted_at timestamptz,
 
     UNIQUE (message_id)
-  )`,
-
-  `CREATE TABLE IF NOT EXISTS google_messages_sync(
-    id uuid NOT NULL PRIMARY KEY DEFAULT uuid_generate_v4(),
-
-    google_credential uuid NOT NULL REFERENCES google_credentials(id),
-    email VARCHAR(128) NOT NULL,
-
-    synced_messages_num INTEGER DEFAULT 0,
-    synced_threads_num INTEGER DEFAULT 0,
-
-    next_sync_date TIMESTAMP DEFAULT NULL,
-    last_sync_date TIMESTAMP DEFAULT NULL,
-    last_sync_duration REAL DEFAULT 0,
-
-    in_progress BOOLEAN DEFAULT TRUE,
-
-    created_at timestamptz NOT NULL DEFAULT clock_timestamp(),
-    updated_at timestamptz NOT NULL DEFAULT clock_timestamp(),
-    deleted_at timestamptz,
-
-    UNIQUE (email)
   )`,
 
   'COMMIT'

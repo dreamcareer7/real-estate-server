@@ -63,7 +63,7 @@
     "forever": "^0.15.3",
     "godaddy": "^0.2.1",
     "google-libphonenumber": "^3.2.2",
-    "googleapis": "^27.0.0",
+    "googleapis": "^40.0.0",
     "googlemaps": "^1.12.0",
     "gulp-eslint": "^5.0.0",
     "html-to-text": "^5.1.1",

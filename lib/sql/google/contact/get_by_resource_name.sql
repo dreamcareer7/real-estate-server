@@ -1,1 +1,1 @@
-SELECT id FROM google_contacts WHERE resource_name = $1 AND deleted_at IS NULL
+SELECT id FROM google_contacts WHERE resource_name = $1

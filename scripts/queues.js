@@ -105,9 +105,26 @@ const showings_crawler = (job, done) => {
   ShowingsCrawler.startCrawler(job.data).nodeify(done)
 }
 
-const google_contact_downloader = (job, done) => {
-  GoogleWorkers.contactDownloader(job.data).nodeify(done)
+const google_sync_profile = (job, done) => {
+  GoogleWorkers.syncProfile(job.data).nodeify(done)
 }
+
+const google_sync_contacts = (job, done) => {
+  GoogleWorkers.syncContacts(job.data).nodeify(done)
+}
+
+const google_sync_contact_groups = (job, done) => {
+  GoogleWorkers.syncContactGroups(job.data).nodeify(done)
+}
+
+const google_sync_messages = (job, done) => {
+  GoogleWorkers.syncMessages(job.data).nodeify(done)
+}
+
+const google_sync_threads = (job, done) => {
+  GoogleWorkers.syncThreads(job.data).nodeify(done)
+}
+
 
 
 module.exports = {
@@ -226,8 +243,28 @@ module.exports = {
     parallel: 1
   },
 
-  'google_contact_downloader': {
-    handler: google_contact_downloader,
+  'google_sync_profile': {
+    handler: google_sync_profile,
+    parallel: 1
+  },
+
+  'google_sync_contacts': {
+    handler: google_sync_contacts,
+    parallel: 1
+  },
+
+  'google_sync_contact_groups': {
+    handler: google_sync_contact_groups,
+    parallel: 1
+  },
+
+  'google_sync_messages': {
+    handler: google_sync_messages,
+    parallel: 1
+  },
+
+  'google_sync_threads': {
+    handler: google_sync_threads,
     parallel: 1
   }
 }

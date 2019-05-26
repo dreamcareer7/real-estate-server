@@ -1,0 +1,1 @@
+SELECT id FROM google_contact_groups WHERE resource_name = $1
