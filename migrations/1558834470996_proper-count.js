@@ -1,4 +1,8 @@
-CREATE OR REPLACE FUNCTION update_email_campaign_stats(campaign_id uuid)
+const db = require('../lib/utils/db')
+
+const migrations = [
+  'BEGIN',
+  `CREATE OR REPLACE FUNCTION update_email_campaign_stats(campaign_id uuid)
 RETURNS void AS
 $$
   WITH events AS (
@@ -67,4 +71,24 @@ $$
 
   WHERE id = $1
 $$
-LANGUAGE SQL;
+LANGUAGE SQL`,
+  'SELECT update_email_campaign_stats(id) FROM email_campaigns',
+  'COMMIT'
+]
+
+
+const run = async () => {
+  const conn = await db.conn.promise()
+
+  for(const sql of migrations) {
+    await conn.query(sql)
+  }
+
+  conn.release()
+}
+
+exports.up = cb => {
+  run().then(cb).catch(cb)
+}
+
+exports.down = () => {}
