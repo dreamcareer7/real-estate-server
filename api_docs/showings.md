@@ -31,7 +31,7 @@ deleted_at              | number        |                    |
 ### Update a credential [PUT /users/self/showings/credentials]
 <!-- include(tests/showings/updateCredential.md) -->
 
-### Update a credential [PUT /users/self/showings/credentials/market]
+### Update a credential's market [PUT /users/self/showings/credentials/market]
 <!-- include(tests/showings/updateMarket.md) -->
 
 ### Delete a credential [DELETE /users/self/showings/credentials]
