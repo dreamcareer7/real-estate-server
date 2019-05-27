@@ -107,8 +107,7 @@ const migrations = [
     updated_at timestamptz NOT NULL DEFAULT clock_timestamp(),
     deleted_at timestamptz,
 
-    UNIQUE (google_credential, resource_name),
-    UNIQUE (resource_name)
+    UNIQUE (google_credential, resource_name)
   )`,
 
   `CREATE TABLE IF NOT EXISTS google_messages(

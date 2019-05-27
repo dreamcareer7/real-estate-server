@@ -93,6 +93,7 @@
     "password-generator": "^2.2.0",
     "pdfjs-dist": "git+https://github.com/rechat/pdfjs-dist.git",
     "pg": "^7.11.0",
+    "pg-format": "^1.0.4",
     "prettyjson": "^1.2.1",
     "redis": "^2.8.0",
     "request": "^2.88.0",

@@ -10,7 +10,7 @@ VALUES
     $2,
     $3
   )
-ON CONFLICT (resource_name) DO UPDATE SET
+ON CONFLICT (google_credential, resource_name) DO UPDATE SET
   google_credential = $1,
   meta = $3
 RETURNING id

@@ -268,41 +268,42 @@ async function syncContactGroupsComplex() {
 
 async function syncMessages() {
   const gmail       = await createGmail()
-  const connections = await GoogleMessage.syncMessages(gmail.user, gmail.brand)
+  const connections = await GoogleWorkers.syncMessages()
   // expect(connections.xxx).to.be.equal(xxxx)
 }
 
 
 describe('Google', () => {
-  // describe('Google Auth Link', () => {
-  //   createContext()
-  //   beforeEach(setup)
+  describe('Google Auth Link', () => {
+    createContext()
+    beforeEach(setup)
 
-  //   it('should create a google auth link', requestGmailAccess)
-  //   it('should handle duplicate create-google-auth-link request', duplicateRequestGmailAccess)
-  //   it('should return auth-link record by link', getByLink)
-  //   it('should return auth-link record by user', getByUser)
-  //   it('should return auth-link record by key', getByKey)
-  // })
+    it('should create a google auth link', requestGmailAccess)
+    it('should handle duplicate create-google-auth-link request', duplicateRequestGmailAccess)
+    it('should return auth-link record by link', getByLink)
+    it('should return auth-link record by user', getByUser)
+    it('should return auth-link record by key', getByKey)
+  })
 
-  // describe('Google Account', () => {
-  //   createContext()
-  //   beforeEach(setup)
+  describe('Google Account', () => {
+    createContext()
+    beforeEach(setup)
 
-    // it('should create a gmail record (semi-grant-access)', createGmail)
-    // it('should return a gmail record by user', getGmailByUser)
-    // it('should return a gmail record by email', getGmailByEmail)
-    // it('should update a gmail record tokens', updateGmailTokens)
-    // it('should revoke a gmail record', updateGmailAsRevoked)
-    // it('should update a gmail record profile', updateGmailProfile)
-  // })
+    it('should create a gmail record (semi-grant-access)', createGmail)
+    it('should return a gmail record by user', getGmailByUser)
+    it('should return a gmail record by email', getGmailByEmail)
+    it('should update a gmail record tokens', updateGmailTokens)
+    it('should revoke a gmail record', updateGmailAsRevoked)
+    it('should update a gmail record profile', updateGmailProfile)
+  })
 
   describe('Google Workers', () => {
     createContext()
     beforeEach(setup)
 
-    // it('should run goole sync profile worker', syncProfile)
-    // it('should run goole sync connections worker', syncConnections)
+    it('should run goole sync profile worker', syncProfile)
+    it('should run goole sync connections worker', syncConnections)
+    it('should run goole sync connections worker', syncConnections)
     it('should run goole sync contact-groups worker', syncContactGroups)
     // it('should run goole sync messages worker', syncMessages)
   })
