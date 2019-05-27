@@ -264,9 +264,6 @@ module.exports = {
     'no-new-func': [
       'error'
     ],
-    // 'no-multi-spaces': [
-    //   'error'
-    // ],
     'no-invalid-this': [
       'error'
     ],
