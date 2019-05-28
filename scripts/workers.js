@@ -178,11 +178,7 @@ const sendNotifications = function () {
       nodeifyFn(Task.sendNotifications),
       nodeifyFn(EmailCampaign.sendDue),
       nodeifyFn(ShowingsCredential.crawlerJob),
-      nodeifyFn(GoogleCredential.syncProfileJob),
-      nodeifyFn(GoogleCredential.syncContactsJob),
-      nodeifyFn(GoogleCredential.syncContactGroupsJob),
-      nodeifyFn(GoogleCredential.syncMessagesJob),
-      nodeifyFn(GoogleCredential.syncThreadsJob)
+      nodeifyFn(GoogleCredential.syncJob)
     ], err => {
       if (err) {
         Slack.send({

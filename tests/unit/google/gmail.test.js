@@ -173,19 +173,33 @@ async function updateGmailProfile() {
 }
 
 
+async function syncGoogle() {
+  const googleCredential = await createGmail()
+
+  const data = {
+    action: 'google_sync',
+    googleCredential: googleCredential
+  }
+
+  const result  = await GoogleWorkers.syncGoogle(data)
+  const updated = await GoogleCredential.get(googleCredential.id)
+
+  expect(updated.last_sync_at.getTime()).to.be.equal(result.syncFinishTime.getTime())
+
+  // expect(GOOGLE_ADDRESS_2).to.be.equal(result.googleProfile.emailAddress)
+  // expect(updated.contacts_sync_token).to.be.equal(result.contactsLastSyncToken)
+  // expect(updated.contact_groups_sync_token).to.be.equal(result.contactGroupsLastSyncToken)
+}
 
 async function syncProfile() {
   const googleCredential = await createGmail()
 
   const data = {
-    meta: {
-      firstSync: true,
-      action: 'sync_profile'
-    },
+    action: 'google_sync',
     googleCredential: googleCredential
   }
 
-  const profile = await GoogleWorkers.syncProfile(data)
+  const profile = await GoogleWorkers.syncGoogle(data)
 
   expect(profile.emailAddress).to.be.equal(GOOGLE_ADDRESS_2)
 }
@@ -194,14 +208,11 @@ async function syncConnections() {
   const googleCredential = await createGmail()
 
   const data = {
-    meta: {
-      partialSync: false,
-      action: 'sync_contacts'
-    },
+    action: 'google_sync',
     googleCredential: googleCredential
   }
 
-  const syncToken = await GoogleWorkers.syncContacts(data)
+  const syncToken = await GoogleWorkers.syncGoogle(data)
   const updated   = await GoogleCredential.get(googleCredential.id)
 
   expect(updated.contacts_sync_token).to.be.equal(syncToken)
@@ -211,35 +222,28 @@ async function syncConnectionsComplex() {
   const googleCredential = await createGmail()
 
   const data = {
-    meta: {
-      partialSync: false,
-      action: 'sync_contacts'
-    },
+    action: 'google_sync',
     googleCredential: googleCredential
   }
-
-  const syncToken = await GoogleWorkers.syncContacts(data)
+  const syncToken = await GoogleWorkers.syncGoogle(data)
   const updated   = await GoogleCredential.get(googleCredential.id)
 
   expect(updated.contacts_sync_token).to.be.equal(syncToken)
 
   data.meta.partialSync = true
   data.googleCredential = updated
-  await GoogleWorkers.syncContacts(data)
+  await GoogleWorkers.syncGoogle(data)
 }
 
 async function syncContactGroups() {
   const googleCredential = await createGmail()
 
   const data = {
-    meta: {
-      partialSync: false,
-      action: 'sync_contact_groups'
-    },
+    action: 'google_sync',
     googleCredential: googleCredential
   }
 
-  const syncToken = await GoogleWorkers.syncContactGroups(data)
+  const syncToken = await GoogleWorkers.syncGoogle(data)
   const updated   = await GoogleCredential.get(googleCredential.id)
 
   expect(updated.contact_groups_sync_token).to.be.equal(syncToken)
@@ -249,62 +253,61 @@ async function syncContactGroupsComplex() {
   const googleCredential = await createGmail()
 
   const data = {
-    meta: {
-      partialSync: false,
-      action: 'sync_contact_groups'
-    },
+    action: 'google_sync',
     googleCredential: googleCredential
   }
 
-  const syncToken = await GoogleWorkers.syncContactGroups(data)
+  const syncToken = await GoogleWorkers.syncGoogle(data)
   const updated   = await GoogleCredential.get(googleCredential.id)
 
   expect(updated.contact_groups_sync_token).to.be.equal(syncToken)
 
   data.meta.partialSync = true
   data.googleCredential = updated
-  await GoogleWorkers.syncContactGroups(data)
+  await GoogleWorkers.syncGoogle(data)
 }
 
 async function syncMessages() {
-  const gmail       = await createGmail()
-  const connections = await GoogleWorkers.syncMessages()
-  // expect(connections.xxx).to.be.equal(xxxx)
+}
+
+async function syncThreads() {
 }
 
 
 describe('Google', () => {
-  describe('Google Auth Link', () => {
-    createContext()
-    beforeEach(setup)
+  // describe('Google Auth Link', () => {
+  //   createContext()
+  //   beforeEach(setup)
 
-    it('should create a google auth link', requestGmailAccess)
-    it('should handle duplicate create-google-auth-link request', duplicateRequestGmailAccess)
-    it('should return auth-link record by link', getByLink)
-    it('should return auth-link record by user', getByUser)
-    it('should return auth-link record by key', getByKey)
-  })
+  //   it('should create a google auth link', requestGmailAccess)
+  //   it('should handle duplicate create-google-auth-link request', duplicateRequestGmailAccess)
+  //   it('should return auth-link record by link', getByLink)
+  //   it('should return auth-link record by user', getByUser)
+  //   it('should return auth-link record by key', getByKey)
+  // })
 
-  describe('Google Account', () => {
-    createContext()
-    beforeEach(setup)
+  // describe('Google Account', () => {
+  //   createContext()
+  //   beforeEach(setup)
 
-    it('should create a gmail record (semi-grant-access)', createGmail)
-    it('should return a gmail record by user', getGmailByUser)
-    it('should return a gmail record by email', getGmailByEmail)
-    it('should update a gmail record tokens', updateGmailTokens)
-    it('should revoke a gmail record', updateGmailAsRevoked)
-    it('should update a gmail record profile', updateGmailProfile)
-  })
+  //   it('should create a gmail record (semi-grant-access)', createGmail)
+  //   it('should return a gmail record by user', getGmailByUser)
+  //   it('should return a gmail record by email', getGmailByEmail)
+  //   it('should update a gmail record tokens', updateGmailTokens)
+  //   it('should revoke a gmail record', updateGmailAsRevoked)
+  //   it('should update a gmail record profile', updateGmailProfile)
+  // })
 
   describe('Google Workers', () => {
     createContext()
     beforeEach(setup)
 
-    it('should run goole sync profile worker', syncProfile)
-    it('should run goole sync connections worker', syncConnections)
-    it('should run goole sync connections worker', syncConnections)
-    it('should run goole sync contact-groups worker', syncContactGroups)
+    it('should run general goole sync', syncGoogle)
+    // it('should run goole sync profile worker', syncProfile)
+    // it('should run goole sync connections worker', syncConnections)
+    // it('should run goole sync connections worker', syncConnections)
+    // it('should run goole sync contact-groups worker', syncContactGroups)
     // it('should run goole sync messages worker', syncMessages)
+    // it('should run goole sync threads worker', syncThreads)
   })
 })

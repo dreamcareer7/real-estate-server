@@ -56,16 +56,12 @@ const migrations = [
     expiry_date TIMESTAMP,
     scope VARCHAR(256) NOT NULL,
 
-    last_profile_sync_at timestamptz,
+    last_sync_at timestamptz,
 
     contacts_sync_token VARCHAR(256) DEFAULT NULL,
-    last_contacts_sync_at timestamptz,
-
     contact_groups_sync_token VARCHAR(256) DEFAULT NULL,
-    last_contact_groups_sync_at timestamptz,
-
     messages_sync_token VARCHAR(256) DEFAULT NULL,
-    last_messages_sync_at timestamptz,
+    threads_sync_token VARCHAR(256) DEFAULT NULL,
 
     revoked BOOLEAN DEFAULT FALSE,
 
