@@ -54,9 +54,3 @@ declare interface IEmail {
   text?: string;
   headers?: any;
 }
-
-declare interface IContactEmail {
-  email: UUID;
-  contact: UUID;
-  user: UUID;
-}
