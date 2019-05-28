@@ -297,7 +297,12 @@ const migrations = [
           )
         ) AS ecr
           ON ec.id = ecr.campaign
-    )`,
+      WHERE
+        ec.deleted_at IS NULL
+        AND ec.executed_at IS NULL
+        AND ec.due_at IS NOT NULL
+    )
+  `,
 
   'COMMIT'
 ]
