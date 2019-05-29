@@ -18,20 +18,20 @@ let user, brand
 
 const GOOGLE_ADDRESS_1 = 'saeed.uni68@gmail.com'
 const GOOGLE_TOKENS_1  = {
-  "access_token": "ya29.GlsSB5gTTkynEx16V7EnNexoVj15uo5277RNLpoGQXHuqn3UAAQ_iRZ1x7V5dzd--90eCb0Kr5F0UwMiPemjJpK2SeU24P7hxLivNitL4yJX6uOaaYM_ObY65EF9",
-  "refresh_token": "1/mvS9GZgOmJrvcRpDBsWgY0ixn2GOW0kDSHMs9LxhpTA",
-  "scope": "https://www.googleapis.com/auth/contacts.readonly",
-  "token_type": "Bearer",
-  "expiry_date": 1558581374000
+  'access_token': 'ya29.GlsSB5gTTkynEx16V7EnNexoVj15uo5277RNLpoGQXHuqn3UAAQ_iRZ1x7V5dzd--90eCb0Kr5F0UwMiPemjJpK2SeU24P7hxLivNitL4yJX6uOaaYM_ObY65EF9',
+  'refresh_token': '1/mvS9GZgOmJrvcRpDBsWgY0ixn2GOW0kDSHMs9LxhpTA',
+  'scope': 'https://www.googleapis.com/auth/contacts.readonly',
+  'token_type': 'Bearer',
+  'expiry_date': 1558581374000
 }
 
 const GOOGLE_ADDRESS_2 = 'saeed@rechat.com'
 const GOOGLE_TOKENS_2  = {
-  "access_token": "ya29.GlsUBzA2jx8dx_keCJver96nMm-eAEUHHO-olVoNyuHAdNcCeVZTHGu8gskwbz5lJKiYCX2XTX8nvBIg-FaFGMWyAkD0rPqKt3Z-6lwwOtU-rLcjEzzufD1yS8q4",
-  "refresh_token": "1/wf3VTMwGFDqnDwA9yVvz8OVLUro8iKTcvoCoXo7Pa6pajnviTBgD2gdqQQtiIeYi",
-  "token_type": "Bearer",
-  "scope": "https://www.googleapis.com/auth/gmail.readonly https://www.googleapis.com/auth/contacts.readonly",
-  "expiry_date": "2019-05-25T12:57:06.449Z"
+  'access_token': 'ya29.GlsUBzA2jx8dx_keCJver96nMm-eAEUHHO-olVoNyuHAdNcCeVZTHGu8gskwbz5lJKiYCX2XTX8nvBIg-FaFGMWyAkD0rPqKt3Z-6lwwOtU-rLcjEzzufD1yS8q4',
+  'refresh_token': '1/wf3VTMwGFDqnDwA9yVvz8OVLUro8iKTcvoCoXo7Pa6pajnviTBgD2gdqQQtiIeYi',
+  'token_type': 'Bearer',
+  'scope': 'https://www.googleapis.com/auth/gmail.readonly https://www.googleapis.com/auth/contacts.readonly',
+  'expiry_date': '2019-05-25T12:57:06.449Z'
 }
 
 
