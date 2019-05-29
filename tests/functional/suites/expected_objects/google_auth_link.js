@@ -6,7 +6,6 @@ module.exports = {
   'user': String,
   'brand': String,
 
-  'email': String,
   'url': String,
   'webhook': String,
   'scope': Boolean,

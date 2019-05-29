@@ -26,7 +26,7 @@ const migrations = [
     "user" uuid NOT NULL REFERENCES users(id),
     brand uuid NOT NULL REFERENCES brands(id),
 
-    email VARCHAR(256) NOT NULL,
+    email VARCHAR(256),
     scope VARCHAR(512) NOT NULL,
     url VARCHAR(512) NOT NULL,
     webhook VARCHAR(512) NOT NULL,
@@ -36,9 +36,11 @@ const migrations = [
     deleted_at timestamptz,
 
     UNIQUE ("user", brand),
-    UNIQUE (email),
     UNIQUE (url)
   )`,
+
+  `CREATE UNIQUE INDEX
+    google_auth_links_email ON google_auth_links (email) WHERE email IS NOT NULL`,
 
   `CREATE TABLE IF NOT EXISTS google_credentials(
     id uuid NOT NULL PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -76,34 +78,29 @@ const migrations = [
   )`,
 
   `CREATE TABLE IF NOT EXISTS google_contacts(
-    id uuid NOT NULL PRIMARY KEY DEFAULT uuid_generate_v4(),
-
+    id TEXT NOT NULL PRIMARY KEY,
     google_credential uuid NOT NULL REFERENCES google_credentials(id),
 
-    resource_name text NOT NULL,
     meta JSONB,
 
     created_at timestamptz NOT NULL DEFAULT clock_timestamp(),
     updated_at timestamptz NOT NULL DEFAULT clock_timestamp(),
     deleted_at timestamptz,
 
-    UNIQUE (google_credential, resource_name),
-    UNIQUE (resource_name)
+    UNIQUE (id, google_credential)
   )`,
 
   `CREATE TABLE IF NOT EXISTS google_contact_groups(
-    id uuid NOT NULL PRIMARY KEY DEFAULT uuid_generate_v4(),
-
+    id TEXT NOT NULL PRIMARY KEY,
     google_credential uuid NOT NULL REFERENCES google_credentials(id),
 
-    resource_name text NOT NULL,
     meta JSONB,
 
     created_at timestamptz NOT NULL DEFAULT clock_timestamp(),
     updated_at timestamptz NOT NULL DEFAULT clock_timestamp(),
     deleted_at timestamptz,
 
-    UNIQUE (google_credential, resource_name)
+    UNIQUE (id, google_credential)
   )`,
 
   `CREATE TABLE IF NOT EXISTS google_messages(
@@ -125,6 +122,9 @@ const migrations = [
 
     UNIQUE (message_id)
   )`,
+
+  `ALTER TABLE contacts
+    ADD COLUMN IF NOT EXISTS google_id TEXT REFERENCES google_contacts(id)`,
 
   'COMMIT'
 ]

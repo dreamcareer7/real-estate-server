@@ -12,12 +12,8 @@ const google_profile_json = require('./expected_objects/google_profile.js')
 
 
 function requestGmailAccess(cb) {
-  const body = {
-    email: GMAIL_ADDRESS
-  }
-
   return frisby.create('Request Google auhoriziation link')
-    .post('/users/self/google', body)
+    .post('/users/self/google')
     .after(cb)
     .expectStatus(200)
     .expectJSON({
@@ -56,12 +52,16 @@ function getGoogpleProfile(cb) {
 }
 
 function revokeAccess(cb) {
+  return frisby.create('Get Google profile')
+    .delete('/users/self/google')
+    .after(cb)
+    .expectStatus(204)
 }
 
 
 module.exports = {
   requestGmailAccess,
   invalidGrantAccess,
-  getGoogpleProfile
-  // revokeAccess
+  getGoogpleProfile,
+  revokeAccess
 }

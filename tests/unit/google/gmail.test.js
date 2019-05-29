@@ -93,14 +93,14 @@ async function getByKey() {
 async function createGmail() {
   google_auth_json.user  = user.id
   google_auth_json.brand = brand.id
-  google_auth_json.email = GOOGLE_ADDRESS_2
+  google_auth_json.email = GOOGLE_ADDRESS_1
 
-  gmail_profile_json.emailAddress = GOOGLE_ADDRESS_2
+  gmail_profile_json.emailAddress = GOOGLE_ADDRESS_1
 
   const body = {
     gmailAuthLink: google_auth_json,
     profile: gmail_profile_json,
-    tokens: GOOGLE_TOKENS_2
+    tokens: GOOGLE_TOKENS_1
   }
 
   const gmailRecordId = await GoogleCredential.create(body)
@@ -175,6 +175,8 @@ async function updateGmailProfile() {
 
 async function syncGoogle() {
   const googleCredential = await createGmail()
+
+  expect(googleCredential.revoked).to.be.equal(false)
 
   const data = {
     action: 'google_sync',

@@ -3,7 +3,7 @@ SELECT
 FROM
     google_contact_groups
 JOIN 
-    unnest($1::uuid[]) WITH ORDINALITY t(gcgid, ord)
+    unnest($1::text[]) WITH ORDINALITY t(gcgid, ord)
 ON 
     google_contact_groups.id = gcgid
 ORDER BY 

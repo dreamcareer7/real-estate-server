@@ -1,10 +1,10 @@
 INSERT INTO google_contacts
   (
+    id,
     google_credential,
-    resource_name,
     meta
   )
 VALUES %L
-ON CONFLICT (resource_name) DO UPDATE SET
+ON CONFLICT (id) DO UPDATE SET
   meta = excluded.meta
 RETURNING id

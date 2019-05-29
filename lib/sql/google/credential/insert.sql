@@ -34,5 +34,6 @@ ON CONFLICT ("user", brand) DO UPDATE SET
   access_token = $7,
   refresh_token = $8,
   expiry_date = $9,
-  scope = $10
+  scope = $10,
+  revoked = false
 RETURNING id
