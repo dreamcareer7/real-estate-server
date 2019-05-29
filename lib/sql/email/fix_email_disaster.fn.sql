@@ -27,36 +27,5 @@ CREATE FUNCTION fix_email_disaster(campaign uuid) RETURNS void LANGUAGE SQL AS $
   WHERE
     emails.id = de.email;
   
-  WITH ev AS (
-    SELECT
-      SUM(accepted) AS accepted,
-      SUM(rejected) AS rejected,
-      SUM(delivered) AS delivered,
-      SUM(failed) AS failed,
-      SUM(opened) AS opened,
-      SUM(clicked) AS clicked,
-      SUM(unsubscribed) AS unsubscribed,
-      SUM(complained) AS complained,
-      SUM(stored) AS stored
-    FROM
-      emails
-    WHERE
-      campaign = $1
-  )
-  UPDATE
-    email_campaigns AS e
-  SET
-    accepted = ev.accepted
-    rejected = ev.rejected
-    delivered = ev.delivered
-    failed = ev.failed
-    opened = ev.opened
-    clicked = ev.clicked
-    unsubscribed = ev.unsubscribed
-    complained = ev.complained
-    stored = ev.stored
-  FROM
-    ev
-  WHERE
-    e.id = $1;
+  SELECT update_email_campaign_stats($1);
 $$;
