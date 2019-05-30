@@ -126,6 +126,9 @@ const migrations = [
   `ALTER TABLE contacts
     ADD COLUMN IF NOT EXISTS google_id TEXT REFERENCES google_contacts(id)`,
 
+  `CREATE UNIQUE INDEX
+    contacts_google_id ON contacts (google_id) WHERE google_id IS NOT NULL`,
+
   'COMMIT'
 ]
 

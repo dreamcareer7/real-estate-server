@@ -154,7 +154,8 @@ declare interface IContactFilterOptions {
   list?: UUID;
   lists?: UUID[];
   users?: UUID[];
-  filter_type?: 'and' | 'or'
+  filter_type?: 'and' | 'or';
+  google_id?: string;
 }
 
 declare interface ICSVImporterMappingDef {

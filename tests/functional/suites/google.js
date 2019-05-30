@@ -4,8 +4,8 @@ registerSuite('agent', ['add'])
 registerSuite('brand', ['createParent', 'create'])
 registerSuite('contact', ['brandCreateParent', 'brandCreate'])
 
-const GMAIL_ADDRESS = 'saeed.uni68@gmail.com'
-const WEBHOOK_HOST  = 'http://127.0.0.1:3078'
+// const GMAIL_ADDRESS = 'saeed.uni68@gmail.com'
+// const WEBHOOK_HOST  = 'http://127.0.0.1:3078'
 
 const google_profile_json = require('./expected_objects/google_profile.js')
 
