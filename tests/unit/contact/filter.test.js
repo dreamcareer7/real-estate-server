@@ -200,22 +200,22 @@ async function testCrmAssociationFilter() {
   const task_ids = await CrmTask.createMany(tasks)
 
   /**
-   * @param {UUID[]} crm_task 
+   * @param {UUID[]} crm_tasks 
    * @param {'and' | 'or'} filter_type 
    * @param {number} expected_length 
    */
-  async function testFastFilter(crm_task, expected_length, filter_type = 'and') {
-    const filter_res = await Contact.fastFilter(brand.id, [], { crm_task, filter_type })
+  async function testFastFilter(crm_tasks, expected_length, filter_type = 'and') {
+    const filter_res = await Contact.fastFilter(brand.id, [], { crm_tasks, filter_type })
     expect(filter_res.total).to.equal(expected_length)
   }
 
   /**
-   * @param {UUID[]} crm_task 
+   * @param {UUID[]} crm_tasks 
    * @param {'and' | 'or'} filter_type 
    * @param {number} expected_length 
    */
-  async function testFilter(crm_task, expected_length, filter_type = 'and') {
-    const filter_res = await Contact.filter(brand.id, [], { crm_task, filter_type })
+  async function testFilter(crm_tasks, expected_length, filter_type = 'and') {
+    const filter_res = await Contact.filter(brand.id, [], { crm_tasks, filter_type })
     expect(filter_res.total).to.equal(expected_length)
   }
 
