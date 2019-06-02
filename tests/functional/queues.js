@@ -49,6 +49,10 @@ const sendDueEmailCampaigns = (job, cb) => {
   EmailCampaign.sendDue().nodeify(cb)
 }
 
+const updateEmailCampaginStats = (job, cb) => {
+  EmailCampaign.updateStats().nodeify(cb)
+}
+
 const list = {
   socket_emit: (job, cb) => cb(),
   socket_join: (job, cb) => cb(),
@@ -69,7 +73,8 @@ const list = {
   'BrokerWolf.ContactTypes.Sync': syncBrokerwolfContacts,
   'BrokerWolf.ContactTypes.map': mapBrokerwolfContact,
   'Task.sendNotifications': sendTaskNotifications,
-  'EmailCampaign.sendDue': sendDueEmailCampaigns
+  'EmailCampaign.sendDue': sendDueEmailCampaigns,
+  'EmailCampaign.updateStats': updateEmailCampaginStats
 }
 
 const queues = {}
