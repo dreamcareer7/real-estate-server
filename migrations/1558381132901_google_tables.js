@@ -62,8 +62,9 @@ const migrations = [
 
     contacts_sync_token VARCHAR(256) DEFAULT NULL,
     contact_groups_sync_token VARCHAR(256) DEFAULT NULL,
-    messages_sync_token VARCHAR(256) DEFAULT NULL,
-    threads_sync_token VARCHAR(256) DEFAULT NULL,
+
+    messages_sync_history_id VARCHAR(256) DEFAULT NULL,
+    threads_sync_history_id VARCHAR(256) DEFAULT NULL,
 
     revoked BOOLEAN DEFAULT FALSE,
 
@@ -104,16 +105,15 @@ const migrations = [
   )`,
 
   `CREATE TABLE IF NOT EXISTS google_messages(
-    id uuid NOT NULL PRIMARY KEY DEFAULT uuid_generate_v4(),
+    message_id VARCHAR(32) NOT NULL PRIMARY KEY,
 
     google_credential uuid NOT NULL REFERENCES google_credentials(id),
 
-    message_id VARCHAR(32) NOT NULL,
     thread_id VARCHAR(32) NOT NULL,
     history_id VARCHAR(32),
     snippet TEXT,
     label_ids TEXT ARRAY,
-    payload_headers JSONB,
+    payload JSONB,
     internal_date TIMESTAMP,
 
     created_at timestamptz NOT NULL DEFAULT clock_timestamp(),

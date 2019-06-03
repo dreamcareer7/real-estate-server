@@ -38,6 +38,7 @@
     "aws-cloudfront-sign": "^2.2.0",
     "aws-sdk": "^2.459.0",
     "base64url": "^3.0.1",
+    "batchelor": "^2.0.2",
     "bcrypt": "^3.0.6",
     "body-parser": "^1.18.3",
     "busboy": "^0.3.1",
