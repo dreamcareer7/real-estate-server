@@ -16,7 +16,6 @@ SELECT
       crm_tasks_assignees
     WHERE
       crm_task = crm_tasks.id
-      AND $2 @> ARRAY['crm_task.assignees']
       AND deleted_at IS NULL
       AND EXISTS (
         SELECT
