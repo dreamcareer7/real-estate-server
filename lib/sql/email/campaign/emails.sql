@@ -24,13 +24,18 @@ contact_recipients AS (
   JOIN   contacts_summaries         ON email_campaigns_recipients.contact = contacts_summaries.id
          AND email_campaigns.brand = contacts_summaries.brand
   WHERE email_campaigns.id = $1
+),
+
+all_emails AS (
+  SELECT email, contact, recipient_type FROM email_campaigns_recipients
+  WHERE email_campaigns_recipients.campaign = $1 AND email IS NOT NULL AND contact IS NULL
+  UNION
+  SELECT * FROM contact_recipients
+  UNION
+  SELECT * FROM list_contacts
+  UNION
+  SELECT * FROM tag_contacts
 )
 
-SELECT email, contact, recipient_type FROM email_campaigns_recipients
-WHERE email_campaigns_recipients.campaign = $1 AND email IS NOT NULL AND contact IS NULL
-UNION
-SELECT * FROM contact_recipients
-UNION
-SELECT * FROM list_contacts
-UNION
-SELECT * FROM tag_contacts
+SELECT * FROM all_emails
+WHERE email IS NOT NULL;
