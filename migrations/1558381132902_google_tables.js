@@ -66,20 +66,21 @@ const migrations = [
     messages_sync_history_id VARCHAR(256) DEFAULT NULL,
     threads_sync_history_id VARCHAR(256) DEFAULT NULL,
 
-    revoked BOOLEAN DEFAULT FALSE,
-
     created_at timestamptz NOT NULL DEFAULT clock_timestamp(),
     updated_at timestamptz NOT NULL DEFAULT clock_timestamp(),
     deleted_at timestamptz,
 
-    UNIQUE ("user", brand),
     UNIQUE (email),
     UNIQUE (access_token),
     UNIQUE (refresh_token)
   )`,
 
+  `CREATE UNIQUE INDEX
+    google_credentials_user_brand ON google_credentials ("user", brand) WHERE deleted_at IS NOT NULL`,
+
   `CREATE TABLE IF NOT EXISTS google_contacts(
     id TEXT NOT NULL PRIMARY KEY,
+
     google_credential uuid NOT NULL REFERENCES google_credentials(id),
 
     meta JSONB,
@@ -93,6 +94,7 @@ const migrations = [
 
   `CREATE TABLE IF NOT EXISTS google_contact_groups(
     id TEXT NOT NULL PRIMARY KEY,
+
     google_credential uuid NOT NULL REFERENCES google_credentials(id),
 
     meta JSONB,

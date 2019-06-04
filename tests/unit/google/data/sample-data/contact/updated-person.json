@@ -35,7 +35,7 @@
             },
             "displayName": "Emil Sedgh",
             "familyName": "Sedgh",
-            "givenName": "Emil - new",
+            "givenName": "Emil",
             "displayNameLastFirst": "Sedgh, Emil"
         }],
        
@@ -128,13 +128,14 @@
               "poBox": "po-box",
               "streetAddress": "street-address-one",
               "extendedAddress": "street-address-two",
-              "city": "custom-city-name",
+              "city": "city-name",
               "postalCode": "123456",
               "country": "DE",
               "countryCode": "DE"
           }
         ],
        
+       // valid: Personal / Work / Other
         "emailAddresses": [{
             "metadata": {
                 "primary": true,
@@ -153,18 +154,8 @@
                     "id": "151d0ed8ebcc344"
                 }
             },
-            "value": "emil-other@gmail.com",
-            "type": "Other",
-            "formattedType": "Other"
-        }, {
-            "metadata": {
-                "source": {
-                    "type": "CONTACT",
-                    "id": "151d0ed8ebcc344"
-                }
-            },
-            "value": "emil-home@yahoo.com",
-            "type": "Home",
+            "value": "emil-home@gmail.com",
+            "type": "home",
             "formattedType": "Home"
         }, {
             "metadata": {
@@ -173,9 +164,9 @@
                     "id": "151d0ed8ebcc344"
                 }
             },
-            "value": "emil@custom.com",
-            "type": "my-Custom",
-            "formattedType": "My-Custom"
+            "value": "emil-other@yahoo.com",
+            "type": "other",
+            "formattedType": "Other"
         }, {
             "metadata": {
                 "source": {
@@ -183,9 +174,9 @@
                     "id": "151d0ed8ebcc344"
                 }
             },
-            "value": "emil-new-custom@custom.com",
-            "type": "new-Custom",
-            "formattedType": "New-Custom"
+            "value": "emil-custom@custom.com",
+            "type": "Custom",
+            "formattedType": "Custom"
         }],
        
         "phoneNumbers": [{
@@ -229,9 +220,39 @@
                     "id": "151d0ed8ebcc344"
                 }
             },
-            "value": "",
+            "value": "emil.com",
             "type": "profile",
             "formattedType": "Profile"
+        }, {
+            "metadata": {
+                "source": {
+                    "type": "CONTACT",
+                    "id": "151d0ed8ebcc344"
+                }
+            },
+            "value": "blog.emil.com",
+            "type": "blog",
+            "formattedType": "Blog"
+        }, {
+            "metadata": {
+                "source": {
+                    "type": "CONTACT",
+                    "id": "151d0ed8ebcc344"
+                }
+            },
+            "value": "Custom.emil.com",
+            "type": "Custom",
+            "formattedType": "Custom"
+        }, {
+            "metadata": {
+                "source": {
+                    "type": "CONTACT",
+                    "id": "151d0ed8ebcc344"
+                }
+            },
+            "value": "work.emil.com",
+            "type": "work",
+            "formattedType": "Work"
         }],
        
         "organizations": [{
@@ -242,7 +263,7 @@
                     "id": "151d0ed8ebcc344"
                 }
             },
-            "name": "Rechat-new",
+            "name": "Rechat",
             "title": "Developer"
         }],
        
