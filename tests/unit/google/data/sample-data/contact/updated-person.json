@@ -35,7 +35,7 @@
             },
             "displayName": "Emil Sedgh",
             "familyName": "Sedgh",
-            "givenName": "Emil",
+            "givenName": "Emil - New",
             "displayNameLastFirst": "Sedgh, Emil"
         }],
        
@@ -78,7 +78,47 @@
             },
             "text": "8/10/1988"
         }],
+
+        "urls": [{
+            "metadata": {
+                "primary": true,
+                "source": {
+                    "type": "CONTACT",
+                    "id": "151d0ed8ebcc344"
+                }
+            },
+            "value": "emil.com",
+            "type": "profile",
+            "formattedType": "Profile"
+        }],
        
+        "organizations": [{
+            "metadata": {
+                "primary": true,
+                "source": {
+                    "type": "CONTACT",
+                    "id": "151d0ed8ebcc344"
+                }
+            },
+            "name": "Rechat",
+            "title": "Developer - new"
+        }],
+       
+        "memberships": [{
+            "metadata": {
+                "source": {
+                    "type": "CONTACT",
+                    "id": "151d0ed8ebcc344"
+                }
+            },
+            "contactGroupMembership": {
+                "contactGroupId": "myContacts",
+                "contactGroupResourceName": "contactGroups/myContacts"
+            }
+        }],
+
+
+
         "addresses": [
           {
             "metadata": {
@@ -135,7 +175,6 @@
           }
         ],
        
-       // valid: Personal / Work / Other
         "emailAddresses": [{
             "metadata": {
                 "primary": true,
@@ -210,84 +249,34 @@
             "value": "123456780",
             "type": "Custom",
             "formattedType": "Custom"
-        }],
-       
-        "urls": [{
-            "metadata": {
-                "primary": true,
-                "source": {
-                    "type": "CONTACT",
-                    "id": "151d0ed8ebcc344"
-                }
-            },
-            "value": "emil.com",
-            "type": "profile",
-            "formattedType": "Profile"
-        }, {
-            "metadata": {
-                "source": {
-                    "type": "CONTACT",
-                    "id": "151d0ed8ebcc344"
-                }
-            },
-            "value": "blog.emil.com",
-            "type": "blog",
-            "formattedType": "Blog"
-        }, {
-            "metadata": {
-                "source": {
-                    "type": "CONTACT",
-                    "id": "151d0ed8ebcc344"
-                }
-            },
-            "value": "Custom.emil.com",
-            "type": "Custom",
-            "formattedType": "Custom"
-        }, {
-            "metadata": {
-                "source": {
-                    "type": "CONTACT",
-                    "id": "151d0ed8ebcc344"
-                }
-            },
-            "value": "work.emil.com",
-            "type": "work",
-            "formattedType": "Work"
-        }],
-       
-        "organizations": [{
-            "metadata": {
-                "primary": true,
-                "source": {
-                    "type": "CONTACT",
-                    "id": "151d0ed8ebcc344"
-                }
-            },
-            "name": "Rechat",
-            "title": "Developer"
-        }],
-       
-        "memberships": [{
-            "metadata": {
-                "source": {
-                    "type": "CONTACT",
-                    "id": "151d0ed8ebcc344"
-                }
-            },
-            "contactGroupMembership": {
-                "contactGroupId": "myContacts",
-                "contactGroupResourceName": "contactGroups/myContacts"
-            }
-        }, {
-            "metadata": {
-                "source": {
-                    "type": "DOMAIN_PROFILE",
-                    "id": "109762015921065309210"
-                }
-            },
-            "domainMembership": {
-                "inViewerDomain": true
-            }
         }]
+    },
+
+    {
+        "resourceName": "people/c95086785872053061",
+        "etag": "%EhsBAj0DBAYHCAk+Cgs/DA0OEEATFRY1GTchJS4aBAECBQciDDF3L25ieU5KQzBjPQ==",
+    
+        "metadata": {
+            "sources": [{
+                "type": "CONTACT",
+                "id": "151d0ed8ebcc344",
+                "etag": "#1w/nbyNJC0c=",
+                "updateTime": "2019-05-28T12:53:12.511001Z"
+            }, {
+                "type": "PROFILE",
+                "id": "109762015921065309210",
+                "etag": "#4eZz2/IuMFw=",
+                "profileMetadata": {
+                    "objectType": "PERSON",
+                    "userTypes": ["GOOGLE_USER", "GOOGLE_APPS_USER"]
+                }
+            }, {
+                "type": "DOMAIN_PROFILE",
+                "id": "109762015921065309210",
+                "etag": "#4eZz2/IuMFw="
+            }],
+            "deleted": true,
+            "objectType": "PERSON"
+        }
     }
 ]
