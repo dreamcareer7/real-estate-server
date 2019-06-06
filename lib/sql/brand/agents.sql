@@ -12,3 +12,4 @@ $2::text IS NULL OR (
   )
   @@ to_tsquery('english', $2)
 )
+ORDER BY users.firts_name, users.last_name
