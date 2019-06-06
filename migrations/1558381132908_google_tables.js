@@ -19,6 +19,15 @@ const migrations = [
     google_messages CASCADE`,
 
 
+  `DROP INDEX IF EXISTS
+    google_credentials_user_brand`,
+
+  `DROP INDEX IF EXISTS
+    google_auth_links_email`,
+
+  `DROP INDEX IF EXISTS
+    contacts_google_id`,    
+
   `CREATE TABLE IF NOT EXISTS google_auth_links(
     id uuid NOT NULL PRIMARY KEY DEFAULT uuid_generate_v4(),
     key uuid NOT NULL,
@@ -30,6 +39,7 @@ const migrations = [
     scope VARCHAR(512) NOT NULL,
     url VARCHAR(512) NOT NULL,
     webhook VARCHAR(512) NOT NULL,
+    redirect VARCHAR(512) NOT NULL,
 
     created_at timestamptz NOT NULL DEFAULT clock_timestamp(),
     updated_at timestamptz NOT NULL DEFAULT clock_timestamp(),
@@ -38,9 +48,6 @@ const migrations = [
     UNIQUE ("user", brand),
     UNIQUE (url)
   )`,
-
-  `CREATE UNIQUE INDEX
-    google_auth_links_email ON google_auth_links (email) WHERE email IS NOT NULL`,
 
   `CREATE TABLE IF NOT EXISTS google_credentials(
     id uuid NOT NULL PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -58,6 +65,8 @@ const migrations = [
     expiry_date TIMESTAMP,
     scope VARCHAR(256) NOT NULL,
 
+    revoked BOOLEAN DEFAULT FALSE,
+
     last_sync_at timestamptz,
 
     contacts_sync_token VARCHAR(256) DEFAULT NULL,
@@ -74,9 +83,6 @@ const migrations = [
     UNIQUE (access_token),
     UNIQUE (refresh_token)
   )`,
-
-  `CREATE UNIQUE INDEX
-    google_credentials_user_brand ON google_credentials ("user", brand) WHERE deleted_at IS NOT NULL`,
 
   `CREATE TABLE IF NOT EXISTS google_contacts(
     id TEXT NOT NULL PRIMARY KEY,
@@ -128,7 +134,13 @@ const migrations = [
   `ALTER TABLE contacts
     ADD COLUMN IF NOT EXISTS google_id TEXT REFERENCES google_contacts(id)`,
 
-  `CREATE UNIQUE INDEX
+  `CREATE UNIQUE INDEX IF NOT EXISTS
+    google_credentials_user_brand ON google_credentials ("user", brand) WHERE deleted_at IS NOT NULL`,
+
+  `CREATE UNIQUE INDEX IF NOT EXISTS
+    google_auth_links_email ON google_auth_links (email) WHERE email IS NOT NULL`,
+
+  `CREATE UNIQUE INDEX IF NOT EXISTS
     contacts_google_id ON contacts (google_id) WHERE google_id IS NOT NULL`,
 
   'COMMIT'

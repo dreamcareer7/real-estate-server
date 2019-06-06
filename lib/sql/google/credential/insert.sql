@@ -27,7 +27,7 @@ VALUES
     $9,
     $10
   )
-ON CONFLICT ("user", brand) DO UPDATE SET
+ON CONFLICT (email) DO UPDATE SET
   messages_total = $4,
   threads_total = $5,
   history_id = $6,

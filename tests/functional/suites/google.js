@@ -13,7 +13,7 @@ const google_profile_json = require('./expected_objects/google_profile.js')
 
 function requestGmailAccess(cb) {
   return frisby.create('Request Google auhoriziation link')
-    .post('/users/self/google')
+    .post('/users/self/google', { redirect: 'http://localhost:3078/dashboard/contacts/' })
     .after(cb)
     .expectStatus(200)
     .expectJSON({

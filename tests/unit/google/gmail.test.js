@@ -51,7 +51,8 @@ async function setup() {
 }
 
 async function requestGmailAccess() {
-  const authLinkRecord = await GoogleAuthLink.requestGmailAccess(user.id, brand.id)
+  const redirect = 'http://localhost:3078/dashboard/contacts/'
+  const authLinkRecord = await GoogleAuthLink.requestGmailAccess(user.id, brand.id, redirect)
   
   expect(authLinkRecord.url).to.be.not.null
 
@@ -59,8 +60,10 @@ async function requestGmailAccess() {
 }
 
 async function duplicateRequestGmailAccess() {
-  const authUrl_1 = await GoogleAuthLink.requestGmailAccess(user.id, brand.id)
-  const authUrl_2 = await GoogleAuthLink.requestGmailAccess(user.id, brand.id)
+  const redirect = 'http://localhost:3078/dashboard/contacts/'
+
+  const authUrl_1 = await GoogleAuthLink.requestGmailAccess(user.id, brand.id, redirect)
+  const authUrl_2 = await GoogleAuthLink.requestGmailAccess(user.id, brand.id, redirect)
   
   expect(authUrl_1).to.be.not.null
   expect(authUrl_2).to.be.not.null
@@ -279,28 +282,28 @@ async function syncThreads() {
 
 
 describe('Google', () => {
-  // describe('Google Auth Link', () => {
-  //   createContext()
-  //   beforeEach(setup)
+  describe('Google Auth Link', () => {
+    createContext()
+    beforeEach(setup)
 
-  //   it('should create a google auth link', requestGmailAccess)
-  //   it('should handle duplicate create-google-auth-link request', duplicateRequestGmailAccess)
-  //   it('should return auth-link record by link', getByLink)
-  //   it('should return auth-link record by user', getByUser)
-  //   it('should return auth-link record by key', getByKey)
-  // })
+    it('should create a google auth link', requestGmailAccess)
+    it('should handle duplicate create-google-auth-link request', duplicateRequestGmailAccess)
+    it('should return auth-link record by link', getByLink)
+    it('should return auth-link record by user', getByUser)
+    it('should return auth-link record by key', getByKey)
+  })
 
-  // describe('Google Account', () => {
-  //   createContext()
-  //   beforeEach(setup)
+  describe('Google Account', () => {
+    createContext()
+    beforeEach(setup)
 
-  //   it('should create a gmail record (semi-grant-access)', createGmail)
-  //   it('should return a gmail record by user', getGmailByUser)
-  //   it('should return a gmail record by email', getGmailByEmail)
-  //   it('should update a gmail record tokens', updateGmailTokens)
-  //   it('should revoke a gmail record', updateGmailAsRevoked)
-  //   it('should update a gmail record profile', updateGmailProfile)
-  // })
+    it('should create a gmail record (semi-grant-access)', createGmail)
+    it('should return a gmail record by user', getGmailByUser)
+    it('should return a gmail record by email', getGmailByEmail)
+    it('should update a gmail record tokens', updateGmailTokens)
+    it('should revoke a gmail record', updateGmailAsRevoked)
+    it('should update a gmail record profile', updateGmailProfile)
+  })
 
   describe('Google Workers', () => {
     createContext()

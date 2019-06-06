@@ -7,6 +7,7 @@ module.exports = {
   'brand': String,
 
   'url': String,
+  'redirect': String,
   'webhook': String,
   'scope': Boolean,
 
