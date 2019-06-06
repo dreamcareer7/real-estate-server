@@ -19,8 +19,14 @@ SELECT deals_roles.*,
           ARRAY_TO_STRING(
             ARRAY[
               deals_roles.legal_prefix,
-              deals_roles.legal_first_name,
-              deals_roles.legal_middle_name,
+              -- Sice middle name comes in middle
+              -- if it's set to '' postgres wont consider it as a null
+              -- And therefore an empty space (as separator) will appear in between
+              -- first and last name.
+              -- This case is to consider '' as null to ARRAY_TO_STRING wont
+              -- add a space separator.
+              (CASE WHEN deals_roles.legal_first_name  = '' THEN NULL ELSE deals_roles.legal_first_name  END),
+              (CASE WHEN deals_roles.legal_middle_name = '' THEN NULL ELSE deals_roles.legal_middle_name END),
               deals_roles.legal_last_name
             ], ' ', NULL
           )

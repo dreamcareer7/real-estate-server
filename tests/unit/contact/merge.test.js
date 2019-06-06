@@ -107,7 +107,7 @@ async function testRemoveDuplicateEdges() {
   clusters = await ContactDuplicate.findForBrand(brand.id, {})
   expect(clusters).to.have.length(1)
 
-  await Contact.deleteOne(ids[1], user.id)
+  await Contact.delete([ids[1]], user.id)
   await handleJobs()
 
   clusters = await ContactDuplicate.findForBrand(brand.id, {})

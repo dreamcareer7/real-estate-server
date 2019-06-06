@@ -7,7 +7,7 @@ WITH list_id AS (
     is_editable,
     is_and_filter,
     query,
-    crm_task,
+    crm_tasks,
     flows
   ) VALUES (
     $1,
