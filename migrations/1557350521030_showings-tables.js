@@ -30,7 +30,7 @@ const migrations = [
   )`,
 
   `CREATE UNIQUE INDEX IF NOT EXISTS
-    showings_credentials_user_brand ON showings_credentials ("user", brand) WHERE deleted_at IS NOT NULL`,
+    showings_credentials_user_brand ON showings_credentials ("user", brand) WHERE deleted_at IS NULL`,
 
 
   `CREATE TABLE IF NOT EXISTS showings (
