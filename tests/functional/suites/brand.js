@@ -216,29 +216,9 @@ const updateTask = cb => {
     .expectStatus(200)
 }
 
-const addForm = cb => {
-  return frisby.create('add an allowed form to a brand checklist')
-    .post(`/brands/${brand_id}/checklists/${results.brand.addChecklist.data.id}/forms`, {
-      form: results.form.create.data.id,
-    })
-    .after(cb)
-    .expectStatus(200)
-    .expectJSON({
-      code: 'OK',
-      //       data: brand
-    })
-}
-
 const deleteTask = cb => {
   return frisby.create('delete a task from a brand checklist')
     .delete(`/brands/${brand_id}/checklists/${results.brand.addChecklist.data.id}/tasks/${results.brand.addTask.data.id}`)
-    .after(cb)
-    .expectStatus(204)
-}
-
-const deleteForm = cb => {
-  return frisby.create('delete a form from a brand checklist')
-    .delete(`/brands/${brand_id}/checklists/${results.brand.addChecklist.data.id}/forms/${results.form.create.data.id}`)
     .after(cb)
     .expectStatus(204)
 }
@@ -524,12 +504,10 @@ module.exports = {
   addHostname,
   addChecklist,
   updateChecklist,
-  addForm,
   addTask,
   updateTask,
   getChecklists,
   deleteTask,
-  deleteForm,
   deleteChecklist,
   getByHostname,
   removeOffice,
