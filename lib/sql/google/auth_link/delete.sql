@@ -1,0 +1,1 @@
+DELETE FROM google_auth_links WHERE "user" = $1 AND brand = $2

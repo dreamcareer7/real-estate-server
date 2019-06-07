@@ -1,0 +1,1 @@
+UPDATE google_credentials SET revoked = TRUE WHERE "user" = $1 AND brand = $2

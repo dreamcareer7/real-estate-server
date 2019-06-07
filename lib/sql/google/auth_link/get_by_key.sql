@@ -1,0 +1,1 @@
+SELECT id FROM google_auth_links WHERE key = $1 AND deleted_at IS NULL

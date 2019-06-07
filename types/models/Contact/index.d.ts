@@ -30,15 +30,15 @@ declare interface IContactAttributeDef {
 }
 
 declare interface IContactBase {
+  user: UUID;
   ios_address_book_id?: string;
   android_address_book_id?: string;
+  google_id?: string;
 }
 
 declare interface IContactInput extends IContactBase {
   id?: UUID;
-  user: UUID;
   attributes: IContactAttributeInput[];
-  ios_address_book_id?: string;
 }
 
 declare interface IContact extends IContactBase {
@@ -46,7 +46,6 @@ declare interface IContact extends IContactBase {
   created_at: number;
   updated_at: number;
   deleted_at?: number | null;
-  user: UUID;
   brand: UUID;
   attributes: IContactAttribute[];
 
@@ -56,8 +55,10 @@ declare interface IContact extends IContactBase {
   next_touch?: number;
 
   users?: UUID[];
-  deals?: IDeal[];
+  deals?: UUID[];
   lists?: UUID[];
+  flows?: UUID[];
+  summary: UUID;
 }
 
 declare interface IContactAttribute {
@@ -154,7 +155,8 @@ declare interface IContactFilterOptions {
   lists?: UUID[];
   flows?: UUID[];
   users?: UUID[];
-  filter_type?: 'and' | 'or'
+  filter_type?: 'and' | 'or';
+  google_id?: string;
 }
 
 declare interface ICSVImporterMappingDef {
