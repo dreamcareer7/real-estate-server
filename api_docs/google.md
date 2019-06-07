@@ -30,9 +30,3 @@ deleted_at                  | number        |                    |
 
 ### Verify access to google account [GET /webhook/google/grant/:key]
 <!-- include(tests/google/grantAccess.md) -->
-
-### Get google profile data [GET /users/self/google]
-<!-- include(tests/google/getGoogpleProfile.md) -->
-
-### Revoke access [DELETE /users/self/google]
-<!-- include(tests/google/revokeAccess.md) -->
