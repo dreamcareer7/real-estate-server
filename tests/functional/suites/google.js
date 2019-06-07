@@ -4,10 +4,8 @@ registerSuite('agent', ['add'])
 registerSuite('brand', ['createParent', 'create'])
 registerSuite('contact', ['brandCreateParent', 'brandCreate'])
 
-// const GMAIL_ADDRESS = 'saeed.uni68@gmail.com'
-// const WEBHOOK_HOST  = 'http://127.0.0.1:3078'
 
-const google_profile_json = require('./expected_objects/google_profile.js')
+// const google_profile_json = require('./expected_objects/google_profile.js')
 
 
 
@@ -40,6 +38,8 @@ function invalidGrantAccess(cb) {
     })
 }
 
+
+/*
 function getGoogpleProfile(cb) {
   return frisby.create('Get Google profile')
     .get('/users/self/google')
@@ -47,7 +47,7 @@ function getGoogpleProfile(cb) {
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
-      data: google_profile_json
+      // data: google_profile_json
     })
 }
 
@@ -57,11 +57,11 @@ function revokeAccess(cb) {
     .after(cb)
     .expectStatus(204)
 }
-
+*/
 
 module.exports = {
   requestGmailAccess,
-  invalidGrantAccess,
-  getGoogpleProfile,
-  revokeAccess
+  invalidGrantAccess
+  // getGoogpleProfile,
+  // revokeAccess
 }
