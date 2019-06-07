@@ -26,10 +26,12 @@ const migrations = [
 
     created_at timestamptz NOT NULL DEFAULT clock_timestamp(),
     updated_at timestamptz NOT NULL DEFAULT clock_timestamp(),
-    deleted_at timestamptz,
-  
-    UNIQUE ("user", brand)
+    deleted_at timestamptz
   )`,
+
+  `CREATE UNIQUE INDEX IF NOT EXISTS
+    showings_credentials_user_brand ON showings_credentials ("user", brand) WHERE deleted_at IS NULL`,
+
 
   `CREATE TABLE IF NOT EXISTS showings (
     id uuid NOT NULL PRIMARY KEY DEFAULT uuid_generate_v4(),
