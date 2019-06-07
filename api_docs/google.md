@@ -27,6 +27,3 @@ deleted_at                  | number        |                    |
 
 ### Request to add google account [POST /users/self/google]
 <!-- include(tests/google/requestGmailAccess.md) -->
-
-### Verify access to google account [GET /webhook/google/grant/:key]
-<!-- include(tests/google/grantAccess.md) -->

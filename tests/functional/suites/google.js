@@ -20,6 +20,7 @@ function requestGmailAccess(cb) {
     })
 }
 
+/*
 function invalidGrantAccess(cb) {
   const key     = results.google.requestGmailAccess.data.key
   const code    = '4/UgGSAAwN9cxkLWP4ipdzNzvCeMH9-bqDM9N6vHqssQ7zWSy-AtSV4T-d53XyfXKQPE31A31MV9MY64t9RLO8Aiw'
@@ -38,8 +39,6 @@ function invalidGrantAccess(cb) {
     })
 }
 
-
-/*
 function getGoogpleProfile(cb) {
   return frisby.create('Get Google profile')
     .get('/users/self/google')
@@ -60,8 +59,8 @@ function revokeAccess(cb) {
 */
 
 module.exports = {
-  requestGmailAccess,
-  invalidGrantAccess
+  requestGmailAccess
+  // invalidGrantAccess
   // getGoogpleProfile,
   // revokeAccess
 }
