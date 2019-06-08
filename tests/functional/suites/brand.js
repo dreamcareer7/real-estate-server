@@ -10,7 +10,17 @@ let brand_id
 
 const createParent = (cb) => {
   brand.name = 'Parent Brand'
-  brand.role = 'Admin' // We're admin of this one
+  brand.roles = [
+    {
+      role: 'Admin',
+      members: [
+        {
+          user:results.authorize.token.data.id
+        }
+      ],
+      acl: ['Admin']
+    }
+  ]
 
   return frisby.create('create a brand')
     .post('/brands', brand)
@@ -24,7 +34,19 @@ const createParent = (cb) => {
 
 const create = (cb) => {
   brand.parent = results.brand.createParent.data.id
-  brand.name = 'Brand'
+
+  brand.roles = [
+    {
+      role: 'Owner',
+      members: [
+        {
+          user:results.authorize.token.data.id
+        }
+      ],
+      acl: ['Admin']
+    }
+  ]
+
   delete brand.role // We don't have a role in this one. But we should have access as we have access to the parent.
 
   return frisby.create('create a child brand')
