@@ -23,7 +23,7 @@ const brandCreateParent = (cb) => {
       role: 'Admin',
       members: [
         {
-          user:results.authorize.token.data.id
+          user: results.authorize.token.data.id
         }
       ],
       acl: ['Admin']
@@ -81,7 +81,7 @@ const brandCreate = (cb) => {
       role: 'Agent',
       members: [
         {
-          user:results.authorize.token.data.id
+          user: results.authorize.token.data.id
         }
       ],
       acl: ['Agent']

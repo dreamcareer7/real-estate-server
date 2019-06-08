@@ -15,7 +15,7 @@ const createParent = (cb) => {
       role: 'Admin',
       members: [
         {
-          user:results.authorize.token.data.id
+          user: results.authorize.token.data.id
         }
       ],
       acl: ['Admin']
@@ -40,7 +40,7 @@ const create = (cb) => {
       role: 'Owner',
       members: [
         {
-          user:results.authorize.token.data.id
+          user: results.authorize.token.data.id
         }
       ],
       acl: ['Admin']
