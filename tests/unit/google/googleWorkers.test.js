@@ -1,17 +1,18 @@
-const { expect } = require('chai')
-const { createContext, handleJobs } = require('../helper')
+// @ts-nocheck
+// const { expect } = require('chai')
+// const { createContext, handleJobs } = require('../helper')
 
-const Context     = require('../../../lib/models/Context')
-const User        = require('../../../lib/models/User')
-const BrandHelper = require('../brand/helper')
+// const Context     = require('../../../lib/models/Context')
+// const User        = require('../../../lib/models/User')
+// const BrandHelper = require('../brand/helper')
 
-const GoogleCredential = require('../../../lib/models/Google/credential')
-const GoogleWorkers    = require('../../../lib/models/Google/workers')
+// const GoogleCredential = require('../../../lib/models/Google/credential')
+// const GoogleWorkers    = require('../../../lib/models/Google/workers')
 // const GoogleAuthLink = require('../../../lib/models/Google/auth_link')
 // const GoogleContact  = require('../../../lib/models/Google/contact')
 // const GoogleMessage  = require('../../../lib/models/Google/message')
 
-
+/*
 let user, brand
 
 const google_details = {
@@ -45,6 +46,7 @@ async function setup() {
 
   Context.set({ user, brand })
 }
+
 
 async function createGmail() {
   google_auth_json.user  = user.id
@@ -91,7 +93,7 @@ async function syncGoogle() {
   expect(updated.contact_groups_sync_token).to.be.equal(result.contactGroupsLastSyncToken)
 }
 
-/*
+
 async function syncProfile() {
   const googleCredential = await createGmail()
 
@@ -177,18 +179,18 @@ async function syncThreads() {
 
 
 
-describe('Google', () => {
-  describe('Google Workers', () => {
-    createContext()
-    beforeEach(setup)
+// describe('Google', () => {
+//   describe('Google Workers', () => {
+//     createContext()
+//     beforeEach(setup)
 
-    it('should run general google sync', syncGoogle)
-    // it('should run google sync profile worker', syncProfile)
-    // it('should run google sync connections worker', syncConnections)
-    // it('should run google sync connections worker', syncConnectionsComplex)
-    // it('should run google sync contact-groups worker', syncContactGroups)
-    // it('should run google sync contact-groups worker', syncContactGroupsComplex)
-    // it('should run google sync messages worker', syncMessages)
-    // it('should run google sync threads worker', syncThreads)
-  })
-})
+//     it('should run general google sync', syncGoogle)
+//     it('should run google sync profile worker', syncProfile)
+//     it('should run google sync connections worker', syncConnections)
+//     it('should run google sync connections worker', syncConnectionsComplex)
+//     it('should run google sync contact-groups worker', syncContactGroups)
+//     it('should run google sync contact-groups worker', syncContactGroupsComplex)
+//     it('should run google sync messages worker', syncMessages)
+//     it('should run google sync threads worker', syncThreads)
+//   })
+// })
