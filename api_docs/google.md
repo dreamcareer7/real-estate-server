@@ -3,7 +3,7 @@
 ## Overview
 Each user in Rechat could have Google account. With this API section they can send access-request, verify-grant, revoke-access and get their Google account's profile data.
 
-### Showing_Credential
+### Google_Credential
 A _google_credential_ is a simple and small object that contains:
 
 Field                   | Type          | association        | Description
