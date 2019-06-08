@@ -37,7 +37,7 @@ SELECT
   json_build_object(
     'filter_type', CASE WHEN is_and_filter IS TRUE THEN 'and' ELSE 'or' END,
     'q', query,
-    'crm_task', crm_task,
+    'crm_tasks', crm_tasks,
     'flows', flows,
     'type', 'contact_list_args'
   ) AS args,

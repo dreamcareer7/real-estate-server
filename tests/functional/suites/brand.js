@@ -341,7 +341,7 @@ const deleteMember = cb => {
 
 const getAgents = cb => {
   return frisby.create('get all agents of a brand')
-    .get(`/brands/${brand_id}/agents`)
+    .get(`/brands/${brand_id}/agents?q=User`)
     .after(cb)
     .expectStatus(200)
     .expectJSON({

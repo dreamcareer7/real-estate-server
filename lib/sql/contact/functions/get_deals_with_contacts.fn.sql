@@ -35,7 +35,7 @@ AS $$
       dr.user
     FROM deals_roles AS dr
     INNER JOIN deals ON deals.id = dr.deal
-    INNER JOIN user_brands(user_id, NULL) ub ON ub = deals.id
+    INNER JOIN user_brands(user_id, NULL) ub ON ub = deals.brand
     WHERE
       dr.deleted_at IS NULL
       AND (

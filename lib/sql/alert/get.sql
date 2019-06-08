@@ -26,7 +26,11 @@ SELECT alerts.*,
            ON photos.listing_mui = recommendations.matrix_unique_id
          WHERE ARRAY[alerts.id] <@ recommendations.referring_objects
            AND url IS NOT NULL
-         ORDER BY recommendations.updated_at DESC
+         -- Sorting by photos.id is completely unnecessary.
+         -- However, the LIMIT 1 makes the query become super slow without it.
+         -- Adding an irrelevant sort option makes it alright.
+         -- Based on https://dba.stackexchange.com/questions/19726/slow-order-by-with-limit/19744#19744
+         ORDER BY recommendations.updated_at DESC, photos.id
          LIMIT 1
        ) as cover_image_url,
        (

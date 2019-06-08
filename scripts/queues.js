@@ -2,12 +2,14 @@ require('../lib/models/index.js')()
 const { aggregate } = require('../lib/utils/worker')
 
 const config = require('../lib/config')
+
 const {
   contacts,
   contact_import,
   contact_lists,
   contact_duplicates,
 } = require('../lib/models/Contact/worker')
+
 const touches_handler = require('../lib/models/CRM/Touch/worker')
 const tasks_handler = require('../lib/models/CRM/Task/worker')
 const calendar_handlers = require('../lib/models/Calendar/worker')
@@ -17,6 +19,8 @@ const Email = require('../lib/models/Email')
 const { Listing } = require('../lib/models/Listing')
 const Notification = require('../lib/models/Notification')
 const User = require('../lib/models/User')
+const ShowingsCrawler = require('../lib/models/Showings/crawler')
+
 
 const airship = (job, done) => {
   const {
@@ -95,6 +99,12 @@ const sync_brokerwolf = (job, done) => {
 const deal_email = (job, done) => {
   Deal.Email.accept(job.data.incoming).nodeify(done)
 }
+
+const showings_crawler = (job, done) => {
+  ShowingsCrawler.startCrawler(job.data).nodeify(done)
+}
+
+
 
 module.exports = {
   airship_transport_send_device: {
@@ -205,5 +215,10 @@ module.exports = {
   calendar: {
     handler: aggregate(calendar_handlers),
     parallel: 2
+  },
+
+  'showings_crawler': {
+    handler: showings_crawler,
+    parallel: 1
   }
 }

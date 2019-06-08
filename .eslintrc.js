@@ -68,6 +68,7 @@ const globals = [
   'BrandChecklist',
   'BrandContext',
   'BrandRole',
+  'BrandUser',
   'BrandEmail',
   'BrokerWolf',
   'UserRole',

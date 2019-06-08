@@ -32,8 +32,10 @@ SELECT
     FROM
       crm_associations
     WHERE
-      crm_task = crm_tasks.id
+      $2 @> ARRAY['crm_task.associations']
+      AND crm_task = crm_tasks.id
       AND deleted_at IS NULL
+    LIMIT $3
   ) as associations,
   (
     get_files_by_role('CrmTask', crm_tasks.id)

@@ -30,7 +30,7 @@ $$
     ),
 
   email_counts AS (
-    SELECT count(DISTINCT recipient) as count, event, email FROM events
+    SELECT count(DISTINCT email) as count, event, email FROM events
     GROUP BY event, email
   ),
 
