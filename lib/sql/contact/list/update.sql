@@ -56,7 +56,7 @@ WITH filters AS (
     touch_freq = $4,
     is_and_filter = $5,
     query = $6,
-    crm_task = $7,
+    crm_tasks = $7,
     flows = $8,
     updated_at = clock_timestamp(),
     updated_by = $2::uuid

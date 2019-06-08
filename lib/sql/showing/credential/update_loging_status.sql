@@ -1,0 +1,1 @@
+UPDATE showings_credentials SET login_status = $3 WHERE "user" = $1 AND brand = $2

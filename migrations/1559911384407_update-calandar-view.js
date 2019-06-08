@@ -223,15 +223,15 @@ const migrations = [
         False AS recurring,
         subject AS title,
         NULL::uuid AS crm_task,
-        NULL::uuid AS deal,
+        ec.deal,
         NULL::uuid AS contact,
         id AS campaign,
-        ARRAY[email_campaigns.from] AS users,
+        ARRAY[ec.from] AS users,
         brand,
         NULL::text AS status,
         NULL::jsonb AS metadata
       FROM
-        email_campaigns
+        email_campaigns AS ec
       WHERE
         deleted_at IS NULL
         AND executed_at IS NULL
@@ -252,7 +252,7 @@ const migrations = [
         False AS recurring,
         ec.subject AS title,
         NULL::uuid AS crm_task,
-        NULL::uuid AS deal,
+        ec.deal,
         ecr.contact,
         ec.id AS campaign,
         ARRAY[ec.from] AS users,
@@ -297,7 +297,12 @@ const migrations = [
           )
         ) AS ecr
           ON ec.id = ecr.campaign
-    )`,
+      WHERE
+        ec.deleted_at IS NULL
+        AND ec.executed_at IS NULL
+        AND ec.due_at IS NOT NULL
+    )
+  `,
 
   'COMMIT'
 ]

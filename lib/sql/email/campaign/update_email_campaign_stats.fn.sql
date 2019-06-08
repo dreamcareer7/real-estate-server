@@ -50,7 +50,7 @@ $$
   ),
 
   campaign_counts AS (
-    SELECT count(DISTINCT email) as count, event FROM events
+    SELECT count(DISTINCT recipient) as count, event FROM events
     GROUP BY event
   )
 

@@ -1,0 +1,1 @@
+UPDATE showings_credentials SET last_crawled_at = $1 WHERE id = $2

@@ -9,25 +9,30 @@ declare interface IContactListInput {
   name: string;
   filters: IContactListFilter[];
   query?: string;
-  args?: Pick<IContactFilterOptions, 'filter_type' | 'q' | 'crm_task' | 'flows'>;
+  args?: Pick<IContactFilterOptions, 'filter_type' | 'q' | 'crm_tasks' | 'flows'>;
   is_editable?: boolean;
   touch_freq?: number;
 }
 
 declare interface IContactList {
   id: UUID;
+
+  created_at?: number;
+  updated_at?: number;
   deleted_at?: number;
 
   name: string;
   filters: IContactListFilter[];
   query?: string;
-  args: Pick<IContactFilterOptions, 'filter_type'>;
-  is_pinned: boolean;
+  args: Pick<IContactFilterOptions, 'filter_type' | 'crm_tasks' | 'flows' | 'q'>;
+  is_editable: boolean;
   touch_freq?: number;
 
   member_count: number;
 
   created_by: UUID;
+  updated_by: UUID;
+
   brand: UUID;
 }
 

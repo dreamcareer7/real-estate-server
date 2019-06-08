@@ -64,6 +64,16 @@ const addEvent = cb => {
     .expectStatus(200)
 }
 
+const updateStats = cb => {
+  return frisby
+    .create('Update campaign stats')
+    .post('/jobs', {
+      name: 'EmailCampaign.updateStats',
+    })
+    .after(cb)
+    .expectStatus(200)
+}
+
 const get = cb => {
   return frisby
     .create('Get the campaign')
@@ -160,6 +170,7 @@ module.exports = {
   update,
   sendDue,
   addEvent,
+  updateStats,
   get,
   getByBrand,
 }
