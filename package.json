@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "node tests/functional/run.js --concurrency 20 --report",
-    "test:unit": "npx mocha --exit tests/unit/**/*.test.js",
+    "test:unit": "npx mocha --exit --timeout 5000 tests/unit/**/*.test.js",
     "start": "npx gulp",
     "docs": "node api_docs/index.js",
     "coverage": "npx nyc node tests/functional/run.js --docs --curl --stop-on-fail --concurrency 20",
