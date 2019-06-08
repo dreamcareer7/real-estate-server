@@ -52,15 +52,6 @@ async function getByUser() {
   expect(gmailAuthLink.brand).to.be.equal(brand.id)
 }
 
-async function getByKey() {
-  const authLinkRecord = await requestGmailAccess()
-  const record         = await GoogleAuthLink.getByLink(authLinkRecord.url)
-  const sameRecord     = await GoogleAuthLink.getByUser(user.id, brand.id)
-  
-  expect(record.key).to.be.equal(sameRecord.key)
-}
-
-
 
 describe('Google', () => {
   describe('Google Auth Link', () => {
@@ -71,6 +62,5 @@ describe('Google', () => {
     it('should handle duplicate create-google-auth-link request', duplicateRequestGmailAccess)
     it('should return auth-link record by link', getByLink)
     it('should return auth-link record by user', getByUser)
-    it('should return auth-link record by key', getByKey)
   })
 })
