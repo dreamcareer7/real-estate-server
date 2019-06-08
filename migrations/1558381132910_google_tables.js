@@ -38,7 +38,6 @@ const migrations = [
     email VARCHAR(256),
     scope VARCHAR(512) NOT NULL,
     url VARCHAR(512) NOT NULL,
-    webhook VARCHAR(512) NOT NULL,
     redirect VARCHAR(512) NOT NULL,
 
     created_at timestamptz NOT NULL DEFAULT clock_timestamp(),
