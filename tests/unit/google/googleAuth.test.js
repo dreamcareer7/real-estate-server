@@ -1,3 +1,4 @@
+/*
 const { expect }        = require('chai')
 const { createContext } = require('../helper')
 
@@ -37,13 +38,6 @@ async function duplicateRequestGmailAccess() {
   expect(authUrl_2).to.be.equal(authUrl_2)
 }
 
-async function getByLink() {
-  const authLinkRecord = await requestGmailAccess()
-  const gmailAuthLink  = await GoogleAuthLink.getByLink(authLinkRecord.url)
-  
-  expect(authLinkRecord.url).to.be.equal(gmailAuthLink.url)
-}
-
 async function getByUser() {
   await requestGmailAccess()
   const gmailAuthLink = await GoogleAuthLink.getByUser(user.id, brand.id)
@@ -60,7 +54,7 @@ describe('Google', () => {
 
     it('should create a google auth link', requestGmailAccess)
     it('should handle duplicate create-google-auth-link request', duplicateRequestGmailAccess)
-    it('should return auth-link record by link', getByLink)
     it('should return auth-link record by user', getByUser)
   })
 })
+*/

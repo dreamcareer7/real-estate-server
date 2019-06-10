@@ -2,7 +2,13 @@ INSERT INTO google_credentials
   (
     "user",
     brand,
+
+    resource_name,
     email,
+    display_name,
+    first_name,
+    last_name,
+    photo,
 
     messages_total,
     threads_total,
@@ -11,7 +17,6 @@ INSERT INTO google_credentials
     access_token,
     refresh_token,
     expiry_date,
-
     scope
   )
 VALUES
@@ -25,15 +30,32 @@ VALUES
     $7,
     $8,
     $9,
-    $10
+    $10,
+    $11,
+    $12,    
+    $13,
+    $14,
+    $15
   )
 ON CONFLICT (email) DO UPDATE SET
-  messages_total = $4,
-  threads_total = $5,
-  history_id = $6,
-  access_token = $7,
-  refresh_token = $8,
-  expiry_date = $9,
-  scope = $10,
-  revoked = false
+  display_name = $5,
+  first_name = $6,
+  last_name = $7,
+  photo = $8,
+
+  messages_total = $9,
+  threads_total = $10,
+  history_id = $11,
+
+  access_token = $12,
+  refresh_token = $13,
+  expiry_date = $14,
+  scope = $15,
+
+  revoked = false,
+  last_sync_at = NULL,
+  contacts_sync_token = NULL,
+  contact_groups_sync_token = NULL,
+  messages_sync_history_id = NULL,
+  threads_sync_history_id = NULL
 RETURNING id

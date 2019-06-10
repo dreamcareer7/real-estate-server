@@ -1,5 +1,5 @@
 INSERT INTO google_auth_links
-  ("user", brand, url, redirect, scope)
+  ("user", brand, url, scope)
 VALUES 
-  ($1, $2, $3, $4, $5)
+  ($1, $2, $3, $4)
 RETURNING id
