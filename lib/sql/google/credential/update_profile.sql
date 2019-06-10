@@ -1,7 +1,8 @@
 UPDATE google_credentials
 SET
-  messages_total = $1,
-  threads_total = $2,
-  history_id = $3
+  display_name = $1,
+  first_name = $2,
+  last_name = $3,
+  photo = $4
 WHERE
-  id = $4
+  id = $5

@@ -30,15 +30,12 @@ const migrations = [
 
   `CREATE TABLE IF NOT EXISTS google_auth_links(
     id uuid NOT NULL PRIMARY KEY DEFAULT uuid_generate_v4(),
-    key uuid NOT NULL,
 
     "user" uuid NOT NULL REFERENCES users(id),
     brand uuid NOT NULL REFERENCES brands(id),
 
-    email VARCHAR(256),
-    scope VARCHAR(512) NOT NULL,
-    url VARCHAR(512) NOT NULL,
-    redirect VARCHAR(512) NOT NULL,
+    scope JSONB,
+    url text,
 
     created_at timestamptz NOT NULL DEFAULT clock_timestamp(),
     updated_at timestamptz NOT NULL DEFAULT clock_timestamp(),
@@ -54,19 +51,26 @@ const migrations = [
     "user" uuid NOT NULL REFERENCES users(id),
     brand uuid NOT NULL REFERENCES brands(id),
 
-    email VARCHAR(128) NOT NULL,
-    messages_total INTEGER NOT NULL,
-    threads_total INTEGER NOT NULL,
-    history_id INTEGER NOT NULL,
+    resource_name TEXT NOT NULL,
+    email TEXT NOT NULL,
+    display_name TEXT NULL,
+    first_name TEXT NULL,
+    last_name TEXT NULL,
+    photo TEXT NULL,
+
+    messages_total INTEGER,
+    threads_total INTEGER,
+    history_id INTEGER,
 
     access_token VARCHAR(256) NOT NULL,
     refresh_token VARCHAR(256) NOT NULL,
     expiry_date TIMESTAMP,
-    scope VARCHAR(256) NOT NULL,
+    scope JSONB,
 
     revoked BOOLEAN DEFAULT FALSE,
 
-    last_sync_at timestamptz,
+    last_sync_at timestamptz DEFAULT NULL,
+    last_sync_duration INTEGER,
 
     contacts_sync_token VARCHAR(256) DEFAULT NULL,
     contact_groups_sync_token VARCHAR(256) DEFAULT NULL,
@@ -79,6 +83,7 @@ const migrations = [
     deleted_at timestamptz,
 
     UNIQUE (email),
+    UNIQUE (resource_name),
     UNIQUE (access_token),
     UNIQUE (refresh_token)
   )`,
@@ -135,9 +140,6 @@ const migrations = [
 
   `CREATE UNIQUE INDEX IF NOT EXISTS
     google_credentials_user_brand ON google_credentials ("user", brand) WHERE deleted_at IS NOT NULL`,
-
-  `CREATE UNIQUE INDEX IF NOT EXISTS
-    google_auth_links_email ON google_auth_links (email) WHERE email IS NOT NULL`,
 
   `CREATE UNIQUE INDEX IF NOT EXISTS
     contacts_google_id ON contacts (google_id) WHERE google_id IS NOT NULL`,
