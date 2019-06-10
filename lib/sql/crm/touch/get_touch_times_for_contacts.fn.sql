@@ -25,28 +25,31 @@ AS $$
   ),
   next_touches AS (
     SELECT
-      last_touches.contact,
+      cids.id AS contact,
       MIN(COALESCE(last_touch, NOW()) + (touch_freq || ' days')::interval) AS next_touch
     FROM
-      last_touches
-      JOIN unnest($1::uuid[]) AS cids(id)
-        ON last_touches.contact = cids.id
+      unnest($1::uuid[]) AS cids(id)
       JOIN crm_lists_members AS clm
-        ON last_touches.contact = clm.contact
+        ON cids.id = clm.contact
       JOIN crm_lists AS csl
         ON csl.id = clm.list
+      LEFT JOIN last_touches
+        ON last_touches.contact = cids.id
     WHERE
       clm.deleted_at IS NULL
       AND csl.deleted_at IS NULL
       AND touch_freq IS NOT NULL
     GROUP BY
-      last_touches.contact
+      cids.id
   )
   SELECT
-    lt.contact,
+    cids.id AS contact,
     lt.last_touch,
     nt.next_touch
   FROM
-    last_touches AS lt
-    JOIN next_touches AS nt USING (contact)
+    unnest($1::uuid[]) AS cids(id)
+    LEFT JOIN last_touches AS lt
+      ON cids.id = lt.contact
+    LEFT JOIN next_touches AS nt
+      ON cids.id = nt.contact
 $$
