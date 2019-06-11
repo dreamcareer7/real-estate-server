@@ -171,13 +171,13 @@ const sendNotifications = function () {
     }
 
     async.series([
-      nodeifyFn(Notification.sendForUnread),
-      Message.sendEmailForUnread,
-      nodeifyFn(CrmTaskWorker.sendNotifications.bind(CrmTaskWorker)),
-      nodeifyFn(CalendarWorker.sendEmailForUnread.bind(CalendarWorker)),
-      nodeifyFn(Task.sendNotifications),
-      nodeifyFn(EmailCampaign.sendDue),
-      nodeifyFn(ShowingsCredential.crawlerJob),
+      // nodeifyFn(Notification.sendForUnread),
+      // Message.sendEmailForUnread,
+      // nodeifyFn(CrmTaskWorker.sendNotifications.bind(CrmTaskWorker)),
+      // nodeifyFn(CalendarWorker.sendEmailForUnread.bind(CalendarWorker)),
+      // nodeifyFn(Task.sendNotifications),
+      // nodeifyFn(EmailCampaign.sendDue),
+      // nodeifyFn(ShowingsCredential.crawlerJob),
       nodeifyFn(GoogleCredential.syncJob)
     ], err => {
       if (err) {
