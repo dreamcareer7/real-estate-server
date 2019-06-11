@@ -10,6 +10,6 @@ VALUES
     $2,
     $3
   )
-ON CONFLICT (id) DO UPDATE SET
+ON CONFLICT (id, google_credential) DO UPDATE SET
   meta = $3
 RETURNING id

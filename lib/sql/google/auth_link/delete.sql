@@ -1,1 +1,0 @@
-DELETE FROM google_auth_links WHERE "user" = $1 AND brand = $2 AND EXISTS ( SELECT FROM google_auth_links WHERE "user" = $1 AND brand = $2 )
