@@ -4,11 +4,15 @@ CREATE OR REPLACE FUNCTION delete_crm_association_by_contact ()
 AS $$
   BEGIN
     UPDATE
-      crm_associations
+      crm_associations AS ca
     SET
       deleted_at = NOW()
+    FROM
+      deleted_contacts AS dc
     WHERE
-      contact = NEW.id;
-    RETURN NEW;
+      dc.deleted_at IS NOT NULL
+      AND contact = dc.id;
+
+    RETURN NULL;
   END;
 $$

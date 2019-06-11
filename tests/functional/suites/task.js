@@ -766,8 +766,18 @@ const loginAsAnotherUser = cb => {
 function createPersonalBrandForNewUser(cb) {
   const b = Object.assign({}, brand, {
     name: 'Other Brand',
-    role: 'Admin'
-  }) // We're admin of this one
+    roles: [
+      {
+        role: 'Admin',
+        members: [
+          {
+            user: results.task.loginAsAnotherUser.data.id
+          }
+        ],
+        acl: ['Admin']
+      }
+    ]
+  })
 
   return frisby
     .create('create personal brand for the new user')

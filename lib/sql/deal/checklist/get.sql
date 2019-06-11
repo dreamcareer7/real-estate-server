@@ -16,10 +16,6 @@ SELECT deals_checklists.*,
       AND tasks.deleted_at IS NULL
   ) AS tasks,
 
-  (
-    SELECT ARRAY_AGG(form) FROM brands_checklists_allowed_forms WHERE checklist = deals_checklists.origin
-  ) as allowed_forms,
-
   -- The only reason we terminate or deactivate a checklist
   -- is to open room for new offers.
   -- But since there are no offers on a Buying deal

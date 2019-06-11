@@ -10,7 +10,17 @@ let brand_id
 
 const createParent = (cb) => {
   brand.name = 'Parent Brand'
-  brand.role = 'Admin' // We're admin of this one
+  brand.roles = [
+    {
+      role: 'Admin',
+      members: [
+        {
+          user: results.authorize.token.data.id
+        }
+      ],
+      acl: ['Admin']
+    }
+  ]
 
   return frisby.create('create a brand')
     .post('/brands', brand)
@@ -24,7 +34,19 @@ const createParent = (cb) => {
 
 const create = (cb) => {
   brand.parent = results.brand.createParent.data.id
-  brand.name = 'Brand'
+
+  brand.roles = [
+    {
+      role: 'Owner',
+      members: [
+        {
+          user: results.authorize.token.data.id
+        }
+      ],
+      acl: ['Admin']
+    }
+  ]
+
   delete brand.role // We don't have a role in this one. But we should have access as we have access to the parent.
 
   return frisby.create('create a child brand')
@@ -216,29 +238,9 @@ const updateTask = cb => {
     .expectStatus(200)
 }
 
-const addForm = cb => {
-  return frisby.create('add an allowed form to a brand checklist')
-    .post(`/brands/${brand_id}/checklists/${results.brand.addChecklist.data.id}/forms`, {
-      form: results.form.create.data.id,
-    })
-    .after(cb)
-    .expectStatus(200)
-    .expectJSON({
-      code: 'OK',
-      //       data: brand
-    })
-}
-
 const deleteTask = cb => {
   return frisby.create('delete a task from a brand checklist')
     .delete(`/brands/${brand_id}/checklists/${results.brand.addChecklist.data.id}/tasks/${results.brand.addTask.data.id}`)
-    .after(cb)
-    .expectStatus(204)
-}
-
-const deleteForm = cb => {
-  return frisby.create('delete a form from a brand checklist')
-    .delete(`/brands/${brand_id}/checklists/${results.brand.addChecklist.data.id}/forms/${results.form.create.data.id}`)
     .after(cb)
     .expectStatus(204)
 }
@@ -524,12 +526,10 @@ module.exports = {
   addHostname,
   addChecklist,
   updateChecklist,
-  addForm,
   addTask,
   updateTask,
   getChecklists,
   deleteTask,
-  deleteForm,
   deleteChecklist,
   getByHostname,
   removeOffice,

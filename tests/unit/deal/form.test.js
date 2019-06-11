@@ -1,10 +1,12 @@
 const { expect } = require('chai')
 const { createContext } = require('../helper')
+const BrandHelper = require('../brand/helper')
 
-const add = async () => {
+const add = async (form = {}) => {
   const name = 'Test Form'
   const saved = await Form.create({
-    name
+    name,
+    ...form
   })
 
   expect(saved.name).to.equal(name)
@@ -38,11 +40,28 @@ const getAll = async () => {
   expect(forms).to.deep.include(saved)
 }
 
-const getAllForms = async () => {
-  const saved = await add()
-  const forms = await Form.getAllForms()
+const getByBrand = async () => {
+  const brand1 = await BrandHelper.create()
+  const brand2 = await BrandHelper.create()
 
-  expect(forms).to.deep.include(saved)
+  const brand1Form = await add({
+    brand: brand1.id
+  })
+
+  const brandlessForm = await add()
+
+  const brand1Forms = await Form.getByBrand(brand1.id)
+  const brand2Forms = await Form.getByBrand(brand2.id)
+
+  /* Brand 1 should have access to forms
+   * that are specifically it's own or are not branded */
+  expect(brand1Forms).to.deep.include(brandlessForm)
+  expect(brand1Forms).to.deep.include(brand1Form)
+
+  /* Brand 2 should have access to a brandles form
+   * But should not have access to a branded form that belongs to another brand */
+  expect(brand2Forms).to.deep.include(brandlessForm)
+  expect(brand2Forms).not.to.deep.include(brand1Form)
 }
 
 describe('Deal Form', () => {
@@ -52,5 +71,5 @@ describe('Deal Form', () => {
   it('should update a form', update)
   it('should get a form', get)
   it('should get a batch of forms', getAll)
-  it('should get all available forms', getAllForms)
+  it('should get all available forms on a brand', getByBrand)
 })
