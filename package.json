@@ -13,7 +13,8 @@
     "migrate:up": "node ./scripts/migrate/up.js",
     "migrate:create": "node_modules/migratus/bin/create --dir migrations --template scripts/migrate/template.js",
     "shell": "node --experimental-repl-await scripts/shell.js",
-    "heroku-postbuild": "npm run migrate:up"
+    "heroku-postbuild": "npm run migrate:up",
+    "ttt": "node tests/functional/run --curl --stop-on-fail envelope"
   },
   "engines": {
     "node": "11.x"
@@ -104,6 +105,7 @@
     "s3-upload-stream": "^1.0.7",
     "socket.io": "^2.2.0",
     "socket.io-redis": "^5.2.0",
+    "string-pixel-width": "^1.9.0",
     "stripe": "^4.25.0",
     "throng": "^4.0.0",
     "to-pascal-case": "^1.0.0",
