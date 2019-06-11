@@ -1,1 +1,0 @@
-SELECT id FROM google_auth_links WHERE url = $1 AND deleted_at IS NULL
