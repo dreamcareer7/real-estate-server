@@ -13,7 +13,8 @@
     "migrate:up": "node ./scripts/migrate/up.js",
     "migrate:create": "node_modules/migratus/bin/create --dir migrations --template scripts/migrate/template.js",
     "shell": "node --experimental-repl-await scripts/shell.js",
-    "heroku-postbuild": "npm run migrate:up"
+    "heroku-postbuild": "npm run migrate:up",
+    "ttt": "node tests/functional/run --curl --stop-on-fail envelope"
   },
   "engines": {
     "node": "11.x"

@@ -4,10 +4,10 @@ const envelope = require('./envelope/data.js')
 const envelope_response = require('./envelope/types.js')
 const webhook = fs.readFileSync(__dirname + '/envelope/webhook.xml').toString()
 
-registerSuite('deal', ['create', 'addRole', 'addChecklist', 'addTask', 'setSubmission'])
+registerSuite('deal', ['create', 'addRole', 'addChecklist', 'addTask'])
 
 const setEnvelopeDetails = envelope => {
-  envelope.documents[0].revision = results.deal.setSubmission.data.last_revision
+  envelope.documents[0].task = results.deal.addTask.data.id
 
   envelope.deal = results.deal.create.data.id
 
