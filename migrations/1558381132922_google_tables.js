@@ -80,8 +80,7 @@ const migrations = [
   )`,
 
   `CREATE TABLE IF NOT EXISTS google_contact_groups(
-    id TEXT NOT NULL PRIMARY KEY,
-
+    id TEXT NOT NULL,
     google_credential uuid NOT NULL REFERENCES google_credentials(id),
 
     meta JSONB,
