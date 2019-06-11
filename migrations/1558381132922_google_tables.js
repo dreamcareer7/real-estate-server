@@ -4,9 +4,6 @@ const migrations = [
   'BEGIN',
 
   `DROP TABLE IF EXISTS
-    google_auth_links CASCADE`,
-
-  `DROP TABLE IF EXISTS
     google_credentials CASCADE`,
 
   `DROP TABLE IF EXISTS
@@ -23,27 +20,7 @@ const migrations = [
     google_credentials_user_brand`,
 
   `DROP INDEX IF EXISTS
-    google_auth_links_email`,
-
-  `DROP INDEX IF EXISTS
-    contacts_google_id`,    
-
-  `CREATE TABLE IF NOT EXISTS google_auth_links(
-    id uuid NOT NULL PRIMARY KEY DEFAULT uuid_generate_v4(),
-
-    "user" uuid NOT NULL REFERENCES users(id),
-    brand uuid NOT NULL REFERENCES brands(id),
-
-    scope JSONB,
-    url text,
-
-    created_at timestamptz NOT NULL DEFAULT clock_timestamp(),
-    updated_at timestamptz NOT NULL DEFAULT clock_timestamp(),
-    deleted_at timestamptz,
-
-    UNIQUE ("user", brand),
-    UNIQUE (url)
-  )`,
+    contacts_google_id`,
 
   `CREATE TABLE IF NOT EXISTS google_credentials(
     id uuid NOT NULL PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -103,8 +80,7 @@ const migrations = [
   )`,
 
   `CREATE TABLE IF NOT EXISTS google_contact_groups(
-    id TEXT NOT NULL PRIMARY KEY,
-
+    id TEXT NOT NULL,
     google_credential uuid NOT NULL REFERENCES google_credentials(id),
 
     meta JSONB,
