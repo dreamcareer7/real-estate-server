@@ -48,7 +48,6 @@ const migrations = [
 
     last_sync_at timestamptz DEFAULT NULL,
     last_sync_duration INTEGER,
-    sync_lock BOOLEAN DEFAULT FALSE,
 
     contacts_sync_token VARCHAR(256) DEFAULT NULL,
     contact_groups_sync_token VARCHAR(256) DEFAULT NULL,
