@@ -4,7 +4,7 @@ FROM
   google_credentials
 WHERE 
   (
-    last_sync_at <= (NOW() - $1::interval)
+    last_sync_at >= (NOW() - $1::interval)
     OR
     last_sync_at IS NULL
   )
