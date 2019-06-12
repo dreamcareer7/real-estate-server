@@ -6,6 +6,7 @@ INSERT INTO open_houses
   listing_mui,
   refreshments,
   type,
+  tz,
   matrix_unique_id
 ) VALUES (
   $1,
@@ -14,7 +15,8 @@ INSERT INTO open_houses
   $4,
   $5,
   $6,
-  $7
+  $7,
+  $8
 )
 ON CONFLICT (matrix_unique_id) DO UPDATE SET
   start_time = $1,
@@ -23,6 +25,7 @@ ON CONFLICT (matrix_unique_id) DO UPDATE SET
   listing_mui = $4,
   refreshments = $5,
   type = $6,
+  tz = $7,
   updated_at = CLOCK_TIMESTAMP()
-  WHERE open_houses.matrix_unique_id = $7
+  WHERE open_houses.matrix_unique_id = $8
 RETURNING id
