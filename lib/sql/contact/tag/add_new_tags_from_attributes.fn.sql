@@ -26,6 +26,7 @@ AS $$
         crm_tags
       WHERE
         brand = (SELECT brand FROM new_tag_attrs LIMIT 1)
+        AND deleted_at IS NULL
     ), new_tags AS (
       SELECT
         tag
