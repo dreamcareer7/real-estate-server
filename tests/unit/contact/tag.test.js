@@ -12,6 +12,7 @@ const Orm = require('../../../lib/models/Orm')
 const User = require('../../../lib/models/User')
 
 const BrandHelper = require('../brand/helper')
+const ContactHelper = require('../contact/helper')
 
 let user, brand
 
@@ -267,6 +268,29 @@ async function testAddBackDeletedTag() {
   expect(tags.map(t => t.tag)).to.have.members(['Tag0'])
 }
 
+async function testAddBackDeletedTagByUsingInContact() {
+  const [id] = await Contact.create([{
+    user: user.id,
+    attributes: ContactHelper.attributes({
+      first_name: 'John',
+      last_name: 'Doe',
+      tag: ['Tag0']
+    })
+  }], user.id, brand.id)
+
+  await ContactTag.delete(brand.id, user.id, ['Tag0'])
+
+  await Contact.update(user.id, brand.id, [{
+    id,
+    attributes: ContactHelper.attributes({ tag: ['Tag0' ]})
+  }])
+
+  const tags = await ContactTag.getAll(brand.id)
+
+  expect(tags).to.have.length(1)
+  expect(tags.map(t => t.tag)).to.have.members(['Tag0'])
+}
+
 function testCreateDuplicateTagFail(done) {
   ContactTag.create(brand.id, user.id, 'Tag0').then(() => {
     return ContactTag.create(brand.id, user.id, 'Tag0')
@@ -322,6 +346,7 @@ describe('Contact', () => {
     it('should update list filters and members after a tag is renamed', testRenameTagFixesListFilters)
     it('should delete tags globally', testDeleteTag)
     it('should allow adding back a deleted tag', testAddBackDeletedTag)
+    it('should allow adding back a deleted tag by using it in a contact', testAddBackDeletedTagByUsingInContact)
 
     // Duplicate tag
     it('should not allow creating a duplicate tag', testCreateDuplicateTagFail)
