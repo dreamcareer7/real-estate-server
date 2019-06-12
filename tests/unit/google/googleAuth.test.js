@@ -1,4 +1,3 @@
-/*
 const { expect }        = require('chai')
 const { createContext } = require('../helper')
 
@@ -48,4 +47,3 @@ describe('Google', () => {
     it('should handle duplicate create-google-auth-link request', duplicateRequestGmailAccess)
   })
 })
-*/

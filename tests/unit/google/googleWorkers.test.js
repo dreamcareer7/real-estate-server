@@ -1,18 +1,19 @@
-// @ts-nocheck
-// const { expect } = require('chai')
-// const { createContext, handleJobs } = require('../helper')
-
-// const Context     = require('../../../lib/models/Context')
-// const User        = require('../../../lib/models/User')
-// const BrandHelper = require('../brand/helper')
-
-// const GoogleCredential = require('../../../lib/models/Google/credential')
-// const GoogleWorkers    = require('../../../lib/models/Google/workers')
-// const GoogleAuthLink = require('../../../lib/models/Google/auth_link')
-// const GoogleContact  = require('../../../lib/models/Google/contact')
-// const GoogleMessage  = require('../../../lib/models/Google/message')
-
 /*
+// @ts-nocheck
+const { expect } = require('chai')
+const { createContext, handleJobs } = require('../helper')
+
+const Context     = require('../../../lib/models/Context')
+const User        = require('../../../lib/models/User')
+const BrandHelper = require('../brand/helper')
+
+const GoogleCredential = require('../../../lib/models/Google/credential')
+const GoogleWorkers    = require('../../../lib/models/Google/workers')
+const GoogleAuthLink = require('../../../lib/models/Google/auth_link')
+const GoogleContact  = require('../../../lib/models/Google/contact')
+const GoogleMessage  = require('../../../lib/models/Google/message')
+
+
 let user, brand
 
 const google_details = {
@@ -175,22 +176,22 @@ async function syncMessages() {
 
 async function syncThreads() {
 }
+
+
+
+describe('Google', () => {
+  describe('Google Workers', () => {
+    createContext()
+    beforeEach(setup)
+
+    it('should run general google sync', syncGoogle)
+    it('should run google sync profile worker', syncProfile)
+    it('should run google sync connections worker', syncConnections)
+    it('should run google sync connections worker', syncConnectionsComplex)
+    it('should run google sync contact-groups worker', syncContactGroups)
+    it('should run google sync contact-groups worker', syncContactGroupsComplex)
+    it('should run google sync messages worker', syncMessages)
+    it('should run google sync threads worker', syncThreads)
+  })
+})
 */
-
-
-
-// describe('Google', () => {
-//   describe('Google Workers', () => {
-//     createContext()
-//     beforeEach(setup)
-
-//     it('should run general google sync', syncGoogle)
-//     it('should run google sync profile worker', syncProfile)
-//     it('should run google sync connections worker', syncConnections)
-//     it('should run google sync connections worker', syncConnectionsComplex)
-//     it('should run google sync contact-groups worker', syncContactGroups)
-//     it('should run google sync contact-groups worker', syncContactGroupsComplex)
-//     it('should run google sync messages worker', syncMessages)
-//     it('should run google sync threads worker', syncThreads)
-//   })
-// })
