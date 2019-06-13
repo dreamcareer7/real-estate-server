@@ -12,7 +12,7 @@ const User = require('../../../lib/models/User')
 const BrandHelper = require('../brand/helper')
 
 const mappings = require('../../functional/suites/data/csv_mappings')
-const contacts_json = require('../analytics/data/contacts.json')
+const contacts_json = require('../analytics/data/contacts')
 
 let user, brand
 
