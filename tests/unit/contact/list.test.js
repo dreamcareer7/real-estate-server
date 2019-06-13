@@ -67,6 +67,21 @@ async function createWarmList() {
   return List.get(id)
 }
 
+async function createListWithEmptyFilters() {
+  const id = await List.create(user.id, brand.id, {
+    name: 'tag',
+    filters: null,
+    args: {
+      filter_type: 'and'
+    }
+  })
+
+  const list = await List.get(id)
+  expect(list.filters).to.be.null
+
+  await handleJobs()
+}
+
 async function createEmptyList() {
   const id = await List.create(user.id, brand.id, {
     name: 'tag',
@@ -415,6 +430,7 @@ describe('Contact', () => {
   describe('List', () => {
     it('should allow creating a list', testCreateList)
     it('should allow creating an empty list', createEmptyList)
+    it('should allow creating an empty list with null filters', createListWithEmptyFilters)
     it('should fetch lists for brand', testFetchListsForBrand)
     it('should allow updating a list', testUpdateList)
     it('should allow deleting a list', testDeleteList)
