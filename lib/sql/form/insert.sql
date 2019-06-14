@@ -1,3 +1,3 @@
 INSERT INTO
-  forms (name) VALUES ($1)
+  forms (name, brand) VALUES ($1, $2)
 RETURNING id

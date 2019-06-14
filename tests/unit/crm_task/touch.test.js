@@ -1,16 +1,26 @@
 const { expect } = require('chai')
 
 const { createContext, handleJobs } = require('../helper')
-const sql = require('../../../lib/utils/sql')
 
+const AttributeDef = require('../../../lib/models/Contact/attribute_def')
 const Contact = require('../../../lib/models/Contact')
+const List = require('../../../lib/models/Contact/list')
 const Context = require('../../../lib/models/Context')
 const CrmTask = require('../../../lib/models/CRM/Task')
 const User = require('../../../lib/models/User')
 
 const BrandHelper = require('../brand/helper')
 
-let user, brand
+/** @type {IUser} */
+let user
+
+/** @type {IBrand} */
+let brand
+
+/** @type {UUID[]} */
+let contact_ids
+
+const WARM_LIST_TOUCH_FREQ = 30
 
 async function setup() {
   user = await User.getByEmail('test@rechat.com')
@@ -20,10 +30,12 @@ async function setup() {
       Admin: [user.id]
     }
   })
+
   Context.set({ user, brand })
 
-  const ids = await createContact()
-  await createTask(ids.slice(0, 1))
+  await createList()
+
+  contact_ids = await createContact()
 }
 
 async function createContact() {
@@ -39,6 +51,10 @@ async function createContact() {
           {
             attribute_type: 'email',
             text: 'abbas@rechat.com'
+          },
+          {
+            attribute_type: 'tag',
+            text: 'Warm List'
           }
         ]
       },
@@ -85,20 +101,43 @@ async function createTask(contact_associations) {
   return task
 }
 
-async function testTouchDates() {
-  const summaries = await sql.selectWithError('select * from contacts_summaries where last_touch is not null', [])
+async function createList() {
+  const defs = await AttributeDef.getDefsByName(brand.id)
 
-  expect(summaries).to.have.length(1)
+  const id = List.create(user.id, brand.id, {
+    name: 'Warm List',
+    touch_freq: WARM_LIST_TOUCH_FREQ,
+    filters: [{
+      attribute_def: /** @type {UUID} */ (defs.get('tag')),
+      value: 'Warm List'
+    }]
+  })
+
+  await handleJobs()
+
+  return id
+}
+
+async function testTouchDates() {
+  const task = await createTask(contact_ids.slice(0, 1))
+
+  /** @type {RequireProp<IContact, 'last_touch' | 'next_touch'>} */
+  const c = await Contact.get(contact_ids[0])
+
+  expect(c.last_touch).to.be.equal(task.due_date)
+  expect(c.next_touch - c.last_touch).to.be.equal(WARM_LIST_TOUCH_FREQ * 24 * 3600)
 
   const { ids } = await Contact.fastFilter(brand.id, [], {
     last_touch_gte: Date.now() / 1000 - 7 * 24 * 3600
   })
 
   expect(ids).to.have.length(1)
-  expect(ids[0]).to.equal(summaries[0].id)
+  expect(ids[0]).to.equal(c.id)
 }
 
 async function testSortByLastTouch() {
+  await createTask(contact_ids.slice(0, 1))
+
   const { ids } = await Contact.fastFilter(brand.id, [], {
     order: '-last_touch'
   })

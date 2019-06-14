@@ -18,7 +18,17 @@ function _fixContactAttributeDefs(contact) {
 
 const brandCreateParent = (cb) => {
   brand.name = 'Parent Brand'
-  brand.role = 'Admin' // We're admin of this one
+  brand.roles = [
+    {
+      role: 'Admin',
+      members: [
+        {
+          user: results.authorize.token.data.id
+        }
+      ],
+      acl: ['Admin']
+    }
+  ]
 
   return frisby.create('create a brand')
     .post('/brands', brand)
@@ -66,7 +76,17 @@ const createBrandLists = cb => {
 const brandCreate = (cb) => {
   brand.parent = results.contact.brandCreateParent.data.id
   brand.name = 'Brand'
-  brand.role = 'Agent'
+  brand.roles = [
+    {
+      role: 'Agent',
+      members: [
+        {
+          user: results.authorize.token.data.id
+        }
+      ],
+      acl: ['Agent']
+    }
+  ]
 
   return frisby.create('create a child brand')
     .post('/brands?associations[]=brand.roles', brand)

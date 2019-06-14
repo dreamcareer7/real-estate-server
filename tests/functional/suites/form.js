@@ -2,6 +2,8 @@ const form = require('./data/form.js')
 const form_response = require('./expected_objects/form.js')
 const omit = require('lodash/omit')
 
+registerSuite('brand', ['createParent', 'create'])
+
 const create = cb => {
   return frisby.create('create a form')
     .post('/forms', form)
@@ -58,7 +60,7 @@ const get = cb => {
 
 const getAll = (cb) => {
   return frisby.create('get all forms')
-    .get('/forms')
+    .get(`/brands/${results.brand.create.data.id}/forms`)
     .after(cb)
     .expectStatus(200)
     .expectJSON({

@@ -45,7 +45,7 @@ The only endpoint clients have to use is to get the list of forms.
 The rest of the API endpoints documented here are used by our internal mapper tool.
 :::
 
-### Get all available forms [GET /forms]
+### Get all available forms [GET /brands/:brand/forms]
 <!-- include(tests/form/getAll.md) -->
 
 ### Create a new form [POST /forms]

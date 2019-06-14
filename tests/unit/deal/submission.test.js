@@ -24,26 +24,21 @@ const createTask = async () => {
 const set = async() => {
   const { task, user } = await createTask()
 
-  const name = 'Submission Test'
-
-  const form = await Form.create({
-    name
-  })
-
   const values = {
     f1: 'v1'
   }
 
   const submission = await Task.setSubmission(task.id, {
-    form_id: form.id,
     user_id: user.id,
     state: Submission.FAIR,
     values,
   })
 
+  const form = await Form.get(task.form)
+
+  expect(submission.title).to.equal(form.name)
   expect(submission.state).to.equal(Submission.FAIR)
   expect(submission.author).to.equal(user.id)
-  expect(submission.title).to.equal(name)
   expect(submission.revision_count).to.equal(1)
 
   const revision = await Form.getRevision(submission.last_revision)
