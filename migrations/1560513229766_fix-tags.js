@@ -24,6 +24,7 @@ const migrations = [
       ON c.id = ca.contact
   WHERE
     c.deleted_at IS NULL
+    AND c.brand IS NOT NULL
     AND ca.deleted_at IS NULL
     AND ca.attribute_type = 'tag'
   ORDER BY
