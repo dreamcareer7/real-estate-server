@@ -16,7 +16,7 @@ const google_details = {
     refresh_token: '1/mvS9GZgOmJrvcRpDBsWgY0ixn2GOW0kDSHMs9LxhpTA',
     scope: 'https://www.googleapis.com/auth/contacts.readonly',
     token_type: 'Bearer',
-    expiry_date: 1558581374000
+    expiry_date: 1558581374
   },
   
   address_2: 'saeed@rechat.com',
@@ -25,7 +25,7 @@ const google_details = {
     refresh_token: '1/wf3VTMwGFDqnDwA9yVvz8OVLUro8iKTcvoCoXo7Pa6pajnviTBgD2gdqQQtiIeYi',
     token_type: 'Bearer',
     scope: 'https://www.googleapis.com/auth/gmail.readonly https://www.googleapis.com/auth/contacts.readonly',
-    expiry_date: '2019-05-25T12:57:06.449Z'
+    expiry_date: 1558581374
   },
 
   scope: [
@@ -97,12 +97,12 @@ async function getCredentialByEmail() {
 
 async function updateCredentialTokens() {
   const createdCredential = await createCredential()
-  const TS = new Date()
+  const TS = Math.round(new Date().getTime() / 1000)
 
   const tokens = {
     access_token: 'new-access-token',
     refresh_token: 'new-refresh-token',
-    expiry_date: TS
+    expiry_date: Number(TS)
   }
   await GoogleCredential.updateTokens(createdCredential.id, tokens)
 

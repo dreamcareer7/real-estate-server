@@ -3,5 +3,5 @@
   "refresh_token": "1/mvS9GZgOmJrvcRpDBsWgY0ixn2GOW0kDSHMs9LxhpTA",
   "scope": "https://www.googleapis.com/auth/contacts.readonly",
   "token_type": "Bearer",
-  "expiry_date": 1558581374000
+  "expiry_date": 1558581374.000
 }

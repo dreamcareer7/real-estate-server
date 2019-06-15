@@ -1,0 +1,1 @@
+UPDATE google_contacts SET deleted_at = $2 WHERE id = ANY($1::text[])

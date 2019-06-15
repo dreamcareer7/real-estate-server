@@ -41,7 +41,7 @@ const migrations = [
 
     access_token VARCHAR(256) NOT NULL,
     refresh_token VARCHAR(256) NOT NULL,
-    expiry_date TIMESTAMP,
+    expiry_date INTEGER,
     scope JSONB,
 
     revoked BOOLEAN DEFAULT FALSE,
