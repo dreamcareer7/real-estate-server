@@ -90,6 +90,8 @@ declare interface IContactAttributeInput {
 
   id?: UUID;
   created_by?: UUID;
+  created_within?: string;
+  created_for?: string;
 
   text?: string;
   number?: number;
@@ -104,6 +106,16 @@ declare interface IContactAttributeInput {
 declare interface IContactAttributeInputWithContact extends IContactAttributeInput {
   contact: UUID;
 }
+
+declare type TContactActionReason =
+  | 'direct_request'
+  | 'deals'
+  | 'import_csv'
+  | 'import_json'
+  | 'merge'
+  | 'deleted_definition'
+  | 'google_integration'
+  | 'system';
 
 declare interface IAddContactOptions {
   /** Return {ParentContact} object or just id */

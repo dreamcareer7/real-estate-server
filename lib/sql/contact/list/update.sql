@@ -60,7 +60,8 @@ WITH filters AS (
     flows = $8,
     updated_at = clock_timestamp(),
     updated_by = $2::uuid,
-    updated_within = $10
+    updated_within = $10,
+    updated_for = $11
   WHERE
     id = $1
   RETURNING

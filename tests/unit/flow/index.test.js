@@ -114,6 +114,7 @@ async function createContact() {
     ],
     user.id,
     brand.id,
+    'direct_request',
     { activity: false, get: false, relax: false }
   )
 

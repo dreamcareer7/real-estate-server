@@ -128,7 +128,8 @@ AS $$
     is_primary = atk.is_primary,
     updated_at = now(),
     updated_by = user_id,
-    updated_within = _context
+    updated_within = _context,
+    updated_for = 'merge'
   FROM
     attrs_to_keep AS atk
   WHERE
@@ -165,7 +166,8 @@ AS $$
     contact = parent,
     updated_at = now(),
     updated_by = user_id,
-    updated_within = _context
+    updated_within = _context,
+    updated_for = 'merge'
   FROM
     attrs_to_keep AS atk
   WHERE
@@ -263,7 +265,8 @@ AS $$
   SET
     updated_at = NOW(),
     updated_by = user_id,
-    updated_within = _context
+    updated_within = _context,
+    updated_for = 'merge'
   WHERE
     id = parent;
 
@@ -273,7 +276,8 @@ AS $$
   SET
     deleted_at = NOW(),
     deleted_by = user_id,
-    deleted_within = _context
+    deleted_within = _context,
+    deleted_for = 'merge'
   WHERE
     id = ANY(children)
     AND deleted_at IS NULL
