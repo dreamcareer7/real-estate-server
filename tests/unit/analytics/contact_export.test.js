@@ -7,12 +7,13 @@ const Context = require('../../../lib/models/Context')
 const User = require('../../../lib/models/User')
 const {
   ContactJointExportQueryBuilder,
-  ContactExportQueryBuilder
+  ContactExportQueryBuilder,
+  ContactMailerExportQueryBuilder,
 } = require('../../../lib/models/Analytics/OLAP')
 
 const BrandHelper = require('../brand/helper')
 
-const contacts = require('./data/contacts.json')
+const contacts = require('./data/contacts')
 
 let user, brand, contact_ids
 
@@ -55,6 +56,42 @@ async function testExportJoint() {
 
   const headers = await queryBuilder.headerMapper(facts[0])
   expect(headers).to.include.members(['E-mail Address', 'Email 2'])
+}
+
+async function testExportMailer() {
+  const queryBuilder = new ContactMailerExportQueryBuilder(
+    null,
+    [],
+    user.id,
+    brand.id
+  )
+
+  const facts = await queryBuilder.facts({})
+  expect(facts).to.have.length(3)
+
+  const headers = await queryBuilder.headerMapper(facts[0])
+
+  Context.log(headers)
+  expect(headers).to.include.members([
+    'Title',
+    'First Name',
+    'Middle Name',
+    'Last Name',
+    'Marketing Name',
+    'Company',
+    'Home City',
+    'Home State',
+    'Home Zip Code',
+    'Full Address Home',
+    'Work City',
+    'Work State',
+    'Work Zip Code',
+    'Full Address Work',
+    'Other City',
+    'Other State',
+    'Other Zip Code',
+    'Full Address Other'
+  ])
 }
 
 async function testExportJointWithExclusion() {
@@ -200,6 +237,7 @@ describe('Analytics', () => {
 
   describe('Contact Export', () => {
     it('should export contacts in joint format', testExportJoint)
+    it('should export contacts in mailer format', testExportMailer)
     it(
       'should export contacts in joint format with a filter',
       testExportJointWithFilter

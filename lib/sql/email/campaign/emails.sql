@@ -37,5 +37,5 @@ all_emails AS (
   SELECT * FROM tag_contacts
 )
 
-SELECT * FROM all_emails
+SELECT DISTINCT ON(email) * FROM all_emails
 WHERE email IS NOT NULL;
