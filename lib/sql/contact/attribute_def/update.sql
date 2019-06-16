@@ -11,7 +11,8 @@ WITH u AS (
     labels = $8::text[],
     enum_values = $9::text[],
     updated_at = now(),
-    updated_by = $10::uuid
+    updated_by = $10::uuid,
+    updated_within = $11
   WHERE
     id = $1
   RETURNING

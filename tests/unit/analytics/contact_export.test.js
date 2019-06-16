@@ -92,8 +92,6 @@ async function testExportMailer() {
     'Other Zip Code',
     'Full Address Other'
   ])
-
-  console.log(facts[1])
 }
 
 async function testExportJointWithExclusion() {
