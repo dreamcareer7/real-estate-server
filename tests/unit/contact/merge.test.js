@@ -83,13 +83,13 @@ async function testUpdateDuplicateEdges() {
   })
   const contactA = populated[0]
 
-  await Contact.update(user.id, brand.id, [{
+  await Contact.update([{
     id: ids[0],
     attributes: [{
       id: contactA.attributes.find(a => a.attribute_type === 'phone_number').id,
       text: '(703) 726-1600'
     }]
-  }])
+  }], user.id, brand.id)
 
   await handleJobs()
 

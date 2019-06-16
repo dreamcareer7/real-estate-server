@@ -226,13 +226,13 @@ async function testUpdateListMembersAfterUpdatingContacts() {
 
   const first_contact = await getContact(contact_ids[0], ['contact.attributes'])
 
-  await Contact.update(user.id, brand.id, [{
+  await Contact.update([{
     id: contact_ids[0],
     attributes: [{
       ...first_contact.attributes.find(a => a.attribute_type === 'tag'),
       text: 'Something Else'
     }]
-  }])
+  }], user.id, brand.id)
 
   await handleJobs()
 

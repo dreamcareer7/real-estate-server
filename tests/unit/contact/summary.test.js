@@ -84,12 +84,12 @@ async function testDeleteAttribute() {
 }
 
 async function testAddAttribute() {
-  await Contact.addAttributes(user.id, brand.id, contact.id, [{
+  await Contact.addAttributes(contact.id, [{
     attribute_type: 'phone_number',
     text: '+989123456789',
     is_primary: true,
     is_partner: false
-  }])
+  }], user.id, brand.id)
   await handleJobs()
 
   const summaries = await ContactSummary.getAll([contact.id])
@@ -205,12 +205,12 @@ async function testAddEmptyAttribute() {
   const old_summaries = await ContactSummary.getAll([contact.id])
   const old_middle_name = old_summaries[0].middle_name
 
-  await Contact.addAttributes(user.id, brand.id, contact.id, [{
+  await Contact.addAttributes(contact.id, [{
     attribute_type: 'middle_name',
     text: '    ',
     is_primary: true,
     is_partner: false
-  }])
+  }], user.id, brand.id)
   await handleJobs()
 
   const new_summaries = await ContactSummary.getAll([contact.id])
