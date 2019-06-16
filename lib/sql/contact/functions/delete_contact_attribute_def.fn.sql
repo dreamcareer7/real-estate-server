@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION delete_contact_attribute_def(id uuid, user_id uuid)
+CREATE OR REPLACE FUNCTION delete_contact_attribute_def(id uuid, user_id uuid, _context text)
 RETURNS setof uuid
 LANGUAGE plpgsql
 AS $$
@@ -10,7 +10,8 @@ AS $$
       contacts_attribute_defs
     SET
       deleted_at = now(),
-      deleted_by = user_id
+      deleted_by = user_id,
+      deleted_within = _context
     WHERE
       contacts_attribute_defs.id = $1
     RETURNING
@@ -35,6 +36,7 @@ AS $$
       SET
         updated_at = NOW(),
         updated_by = user_id,
+        updated_within = _context,
         search_field = csf.search_field
       FROM
         get_search_field_for_contacts(affected_contacts) csf
@@ -45,7 +47,8 @@ AS $$
         contacts
       SET
         updated_at = now(),
-        updated_by = user_id
+        updated_by = user_id,
+        updated_within = _context
       WHERE
         contacts.id = ANY(affected_contacts);
     END IF;
