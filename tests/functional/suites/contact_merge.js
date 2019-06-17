@@ -31,11 +31,11 @@ const secondMCHasPrimaryAddress = cb => {
 
   return frisby
     .create('second MC has a primary address')
-    .get(`/contacts/${contact_id}?associations[]=contact.sub_contacts`)
+    .get(`/contacts/${contact_id}?associations[]=contact.attributes`)
     .after((err, res, json) => {
       let last = []
       if (
-        !json.data.sub_contacts[0].attributes.every(a => {
+        !json.data.attributes.every(a => {
           last = [a.attribute_type, a.index]
           return (
             ![
@@ -64,14 +64,14 @@ const subcontactAddressIsPrimaryIsIgnored = cb => {
 
   return frisby
     .create('primary status of address fields in subcontacts is ignored')
-    .post(`/contacts/${parent_id}/merge?associations[]=contact.sub_contacts`, {
+    .post(`/contacts/${parent_id}/merge?associations[]=contact.attributes`, {
       sub_contacts
     })
     .after((err, res, json) => {
       let last = []
       if (
         !Object.values(
-          _.groupBy(json.data.sub_contacts[0].attributes, 'index')
+          _.groupBy(json.data.attributes, 'index')
         ).some(g =>
           g.every(a => {
             last = [a.attribute_type, a.index, a.is_primary]
