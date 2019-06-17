@@ -12,10 +12,6 @@ const migrations = [
   `DROP TABLE IF EXISTS
     google_contact_groups CASCADE`,
 
-  `DROP TABLE IF EXISTS
-    google_messages CASCADE`,
-
-
   `DROP INDEX IF EXISTS
     google_credentials_user_brand`,
 
@@ -90,25 +86,6 @@ const migrations = [
     deleted_at timestamptz,
 
     UNIQUE (id, google_credential)
-  )`,
-
-  `CREATE TABLE IF NOT EXISTS google_messages(
-    message_id VARCHAR(32) NOT NULL PRIMARY KEY,
-
-    google_credential uuid NOT NULL REFERENCES google_credentials(id),
-
-    thread_id VARCHAR(32) NOT NULL,
-    history_id VARCHAR(32),
-    snippet TEXT,
-    label_ids TEXT ARRAY,
-    payload JSONB,
-    internal_date TIMESTAMP,
-
-    created_at timestamptz NOT NULL DEFAULT clock_timestamp(),
-    updated_at timestamptz NOT NULL DEFAULT clock_timestamp(),
-    deleted_at timestamptz,
-
-    UNIQUE (message_id)
   )`,
 
   `ALTER TABLE contacts
