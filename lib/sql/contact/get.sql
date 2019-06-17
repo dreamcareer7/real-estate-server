@@ -40,6 +40,9 @@ SELECT
   extract(epoch FROM deleted_at) as deleted_at,
   created_by,
   updated_by,
+  created_for,
+  updated_for,
+  deleted_for,
   (SELECT
     array_agg(contacts_attributes.id ORDER BY created_at)
   FROM
