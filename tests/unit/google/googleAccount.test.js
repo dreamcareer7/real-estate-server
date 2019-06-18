@@ -79,22 +79,6 @@ async function createCredential() {
   return credential
 }
 
-async function getCredentialByUser() {
-  const createdCredential = await createCredential()
-  const credential  = await GoogleCredential.getByUser(createdCredential.user, createdCredential.brand)
-
-  expect(createdCredential.user).to.be.equal(credential.user)
-  expect(createdCredential.brand).to.be.equal(credential.brand)
-  expect(createdCredential.email).to.be.equal(credential.email)
-}
-
-async function getCredentialByEmail() {
-  const createdCredential = await createCredential()
-  const credential  = await GoogleCredential.getByEmail(createdCredential.email)
-
-  expect(createdCredential.email).to.be.equal(credential.email)
-}
-
 async function updateCredentialTokens() {
   const createdCredential = await createCredential()
   const TS = Math.round(new Date().getTime() / 1000)
@@ -116,7 +100,7 @@ async function updateCredentialAsRevoked() {
   const createdCredential = await createCredential()
   expect(createdCredential.revoked).to.be.equal(false)
 
-  await GoogleCredential.updateAsRevoked(createdCredential.user, createdCredential.brand)
+  await GoogleCredential.updateAsRevoked(createdCredential.id)
   const updatedCredential = await GoogleCredential.get(createdCredential.id)
   expect(updatedCredential.revoked).to.be.equal(true)
 }
@@ -224,8 +208,6 @@ describe('Google', () => {
     beforeEach(setup)
 
     it('should create a google-credential (semi-grant-access)', createCredential)
-    it('should return a google-credential by user', getCredentialByUser)
-    it('should return a google-credential by email', getCredentialByEmail)
     it('should update a google-credential tokens', updateCredentialTokens)
     it('should revoke a google-credential', updateCredentialAsRevoked)
     it('should update a google-credential profile', updateCredentialProfile)

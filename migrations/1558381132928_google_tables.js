@@ -16,6 +16,9 @@ const migrations = [
     google_credentials_user_brand`,
 
   `DROP INDEX IF EXISTS
+    google_credentials_user_brand_email`,
+
+  `DROP INDEX IF EXISTS
     contacts_google_id`,
 
   `CREATE TABLE IF NOT EXISTS google_credentials(
@@ -24,8 +27,8 @@ const migrations = [
     "user" uuid NOT NULL REFERENCES users(id),
     brand uuid NOT NULL REFERENCES brands(id),
 
-    resource_name TEXT NOT NULL,
     email TEXT NOT NULL,
+    resource_name TEXT NOT NULL,
     display_name TEXT NOT NULL,
     first_name TEXT NULL,
     last_name TEXT NULL,
@@ -55,8 +58,6 @@ const migrations = [
     updated_at timestamptz NOT NULL DEFAULT clock_timestamp(),
     deleted_at timestamptz,
 
-    UNIQUE (email),
-    UNIQUE (resource_name),
     UNIQUE (access_token),
     UNIQUE (refresh_token)
   )`,
@@ -92,7 +93,7 @@ const migrations = [
     ADD COLUMN IF NOT EXISTS google_id TEXT REFERENCES google_contacts(id)`,
 
   `CREATE UNIQUE INDEX IF NOT EXISTS
-    google_credentials_user_brand ON google_credentials ("user", brand) WHERE deleted_at IS NOT NULL`,
+    google_credentials_user_brand_email ON google_credentials ("user", brand, email)`,
 
   `CREATE UNIQUE INDEX IF NOT EXISTS
     contacts_google_id ON contacts (google_id) WHERE google_id IS NOT NULL`,

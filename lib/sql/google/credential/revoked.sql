@@ -8,5 +8,4 @@ SET
   messages_sync_history_id = NULL,
   threads_sync_history_id = NULL
 WHERE
-  "user" = $1
-  AND brand = $2
+  id = $1

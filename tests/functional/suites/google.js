@@ -41,7 +41,7 @@ function invalidGrantAccess(cb) {
 
 function getGoogpleProfile(cb) {
   return frisby.create('Get Google profile')
-    .get('/users/self/google')
+    .get('/users/self/google/:id')
     .after(cb)
     .expectStatus(200)
     .expectJSON({
@@ -52,7 +52,7 @@ function getGoogpleProfile(cb) {
 
 function revokeAccess(cb) {
   return frisby.create('Get Google profile')
-    .delete('/users/self/google')
+    .delete('/users/self/google/:id')
     .after(cb)
     .expectStatus(204)
 }

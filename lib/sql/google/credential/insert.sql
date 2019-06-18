@@ -3,8 +3,8 @@ INSERT INTO google_credentials
     "user",
     brand,
 
-    resource_name,
     email,
+    resource_name,
     display_name,
     first_name,
     last_name,
@@ -37,7 +37,7 @@ VALUES
     $14,
     $15
   )
-ON CONFLICT (email) DO UPDATE SET
+ON CONFLICT ("user", brand, email) DO UPDATE SET
   display_name = $5,
   first_name = $6,
   last_name = $7,
