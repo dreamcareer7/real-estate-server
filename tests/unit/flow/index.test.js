@@ -1,4 +1,5 @@
 const { expect } = require('chai')
+const moment = require('moment-timezone')
 
 const BrandFlow = require('../../../lib/models/Brand/flow')
 const Contact = require('../../../lib/models/Contact')
@@ -32,7 +33,7 @@ async function setup() {
       steps: [{
         title: 'Create Rechat email',
         description: 'Create a Rechat email address for the new guy to use in other services',
-        due_in: 0,
+        due_in: 8 * HOUR,
         is_automated: false,
         event: {
           title: 'Create Rechat email',
@@ -53,7 +54,7 @@ async function setup() {
       }, {
         title: 'Demo of Rechat',
         description: 'Dan gives a quick demo of the Rechat system and explains how it works',
-        due_in: 3 * DAY,
+        due_in: 3 * DAY + 10 * HOUR,
         is_automated: false,
         event: {
           title: 'Demo of Rechat',
@@ -129,6 +130,12 @@ async function testEnrollContact() {
   const tasks = await CrmTask.getForUser(user.id, brand.id, {})
 
   expect(tasks).to.have.length(2)
+  
+  const due_dates = tasks.map(t => t.due_date)
+  expect(due_dates).to.have.members([
+    moment().tz(user.timezone).startOf('day').add(8, 'hours').unix(),
+    moment().tz(user.timezone).startOf('day').add(3, 'days').add(10, 'hours').unix(),
+  ])
 
   const campaigns = await EmailCampaign.getByBrand(brand.id)
   expect(campaigns).to.have.length(1)
