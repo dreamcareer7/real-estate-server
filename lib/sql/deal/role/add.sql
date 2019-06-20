@@ -53,7 +53,7 @@ INSERT INTO deals_roles (
   $23,
   $24,
   $25,
-  JSON_TO_STADDR($26)
+  JSON_TO_STDADDR($26)
 )
 
 RETURNING id

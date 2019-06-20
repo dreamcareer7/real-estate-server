@@ -22,7 +22,7 @@ UPDATE deals_roles SET
   office_fax = $19,
   office_license_number = $20,
   office_mls_id = $21,
-  office_address = JSON_TO_STADDR($22),
+  office_address = JSON_TO_STDADDR($22),
 
   brokerwolf_id = $23,
   brokerwolf_row_version = $24,

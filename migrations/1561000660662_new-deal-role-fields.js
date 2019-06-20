@@ -8,7 +8,7 @@ const migrations = [
   'CREATE EXTENSION IF NOT EXISTS address_standardizer_data_us',
   'DROP TABLE IF EXISTS tiger.foo', // This has been there for ages for some reason ?
 
-  `CREATE OR REPLACE FUNCTION JSON_TO_STADDR(input JSONB)
+  `CREATE OR REPLACE FUNCTION JSON_TO_STDADDR(input JSONB)
 RETURNS stdaddr AS $$
   SELECT
     ROW(
