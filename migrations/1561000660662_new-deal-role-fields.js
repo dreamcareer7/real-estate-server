@@ -2,10 +2,10 @@ const db = require('../lib/utils/db')
 
 const migrations = [
   'BEGIN',
-  'CREATE EXTENSION fuzzystrmatch',
-  'CREATE EXTENSION postgis_tiger_geocoder',
-  'CREATE EXTENSION address_standardizer',
-  'CREATE EXTENSION address_standardizer_data_us',
+  'CREATE EXTENSION IF NOT EXISTS fuzzystrmatch',
+  'CREATE EXTENSION IF NOT EXISTS postgis_tiger_geocoder',
+  'CREATE EXTENSION IF NOT EXISTS address_standardizer',
+  'CREATE EXTENSION IF NOT EXISTS address_standardizer_data_us',
   'DROP TABLE IF EXISTS tiger.foo', // This has been there for ages for some reason ?
 
   `CREATE OR REPLACE FUNCTION JSON_TO_STADDR(input JSONB)
