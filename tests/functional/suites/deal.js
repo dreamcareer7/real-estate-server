@@ -147,6 +147,15 @@ const addRole = cb => {
       legal_first_name: 'Wile',
       legal_middle_name: 'E.',
       legal_last_name: 'Coyote',
+      office_address: {
+        house_num:"11687",
+        name:"BELLAGIO",
+        suftype:"RD",
+        city:"LOS ANGELES",
+        state:"CA",
+        country:"USA",
+        postcode:"90049"
+      }
     },
 
     {
