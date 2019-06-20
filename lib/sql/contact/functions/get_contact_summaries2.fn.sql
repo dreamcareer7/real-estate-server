@@ -17,7 +17,10 @@ RETURNS TABLE (
   email text[],
   phone_number text[],
   tag text[],
-  website text[]
+  website text[],
+  display_name text,
+  sort_field text,
+  partner_name text
 )
 LANGUAGE plpgsql
 AS $function$
@@ -150,38 +153,38 @@ AS $function$
       contacts_summaries.website,
 
       COALESCE(
-        CASE WHEN first_name IS NOT NULL AND last_name IS NOT NULL THEN first_name || ' ' || last_name ELSE NULL END,
-        marketing_name,
-        nickname,
-        first_name,
-        last_name,
-        company,
-        email,
-        phone_number,
+        CASE WHEN contacts_summaries.first_name IS NOT NULL AND contacts_summaries.last_name IS NOT NULL THEN contacts_summaries.first_name || ' ' || contacts_summaries.last_name ELSE NULL END,
+        contacts_summaries.marketing_name,
+        contacts_summaries.nickname,
+        contacts_summaries.first_name,
+        contacts_summaries.last_name,
+        contacts_summaries.company,
+        contacts_summaries.email[1],
+        contacts_summaries.phone_number[1],
         'Guest'
       ) AS display_name,
 
       COALESCE(
-        CASE WHEN first_name IS NOT NULL AND last_name IS NOT NULL THEN last_name || ' ' || first_name ELSE NULL END,
-        last_name,
-        marketing_name,
-        first_name,
-        nickname,
-        company,
-        email,
-        phone_number,
+        CASE WHEN contacts_summaries.first_name IS NOT NULL AND contacts_summaries.last_name IS NOT NULL THEN contacts_summaries.last_name || ' ' || contacts_summaries.first_name ELSE NULL END,
+        contacts_summaries.last_name,
+        contacts_summaries.marketing_name,
+        contacts_summaries.first_name,
+        contacts_summaries.nickname,
+        contacts_summaries.company,
+        contacts_summaries.email[1],
+        contacts_summaries.phone_number[1],
         'Guest'
       ) AS sort_field,
 
       COALESCE(
-        CASE WHEN first_name IS NOT NULL AND last_name IS NOT NULL THEN first_name || ' ' || last_name ELSE NULL END,
-        marketing_name,
-        partner_nickname,
-        partner_first_name,
-        partner_last_name,
-        partner_company,
-        partner_email,
-        partner_phone_number
+        CASE WHEN contacts_summaries.partner_first_name IS NOT NULL AND contacts_summaries.partner_last_name IS NOT NULL THEN contacts_summaries.partner_first_name || ' ' || contacts_summaries.partner_last_name ELSE NULL END,
+        contacts_summaries.marketing_name,
+        contacts_summaries.partner_nickname,
+        contacts_summaries.partner_first_name,
+        contacts_summaries.partner_last_name,
+        contacts_summaries.partner_company,
+        contacts_summaries.partner_email,
+        contacts_summaries.partner_phone_number
       ) AS partner_name
     FROM
       unnest(contact_ids) AS cids(id)

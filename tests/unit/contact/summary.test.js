@@ -4,7 +4,6 @@ const { createContext, handleJobs } = require('../helper')
 
 const Contact = require('../../../lib/models/Contact')
 const ContactAttribute = require('../../../lib/models/Contact/attribute')
-const ContactSummary = require('../../../lib/models/Contact/summary')
 const Context = require('../../../lib/models/Context')
 const Orm = require('../../../lib/models/Orm')
 const User = require('../../../lib/models/User')
@@ -79,7 +78,7 @@ async function testDeleteAttribute() {
   await ContactAttribute.delete([attr.id], user.id)
   await handleJobs()
 
-  const summaries = await ContactSummary.getAll([contact.id])
+  const summaries = await Contact.getAll([contact.id])
 
   expect(summaries[0].email).to.be.null
 }
@@ -93,8 +92,9 @@ async function testAddAttribute() {
   }], user.id, brand.id)
   await handleJobs()
 
-  const summaries = await ContactSummary.getAll([contact.id])
-  expect(summaries[0].phone_number).to.be.equal('+989123456789')
+  const updated = await Contact.get(contact.id)
+
+  expect(updated.phone_number).to.be.equal('+989123456789')
 }
 
 async function testCompanyContact() {
@@ -111,7 +111,7 @@ async function testCompanyContact() {
   const contact = await sql.selectOne('SELECT * FROM contacts WHERE id = $1', [id])
   expect(contact.search_field).to.be.equal('\'acme\':1C \'corp\':2C')
 
-  const summary = await sql.selectOne('SELECT * FROM contacts_summaries WHERE id = $1', [id])
+  const summary = await sql.selectOne('SELECT * FROM contacts WHERE id = $1', [id])
   expect(summary.search_field).to.be.equal('\'acme\':1C \'corp\':2C')
 }
 
@@ -129,7 +129,7 @@ async function testEmptyContact() {
   const contact = await sql.selectOne('SELECT * FROM contacts WHERE id = $1', [id])
   expect(contact.search_field).to.be.equal('\'guest\':1')
 
-  const summary = await sql.selectOne('SELECT * FROM contacts_summaries WHERE id = $1', [id])
+  const summary = await sql.selectOne('SELECT * FROM contacts WHERE id = $1', [id])
   expect(summary.search_field).to.be.equal('\'guest\':1')
 }
 
@@ -169,42 +169,42 @@ async function testGetSummaries() {
   const my_contact = populated[0]
 
 
-  let summaries = await ContactSummary.getAll([my_contact.id])
-  expect(summaries[0].display_name).to.be.equal('Abbas')
+  contact = await Contact.get(my_contact.id)
+  expect(contact.display_name).to.be.equal('Abbas')
 
 
   // delete first_name attribute
   const first_name_attr = my_contact.attributes.find(a => a.attribute_type === 'first_name')
   await ContactAttribute.delete([first_name_attr.id], user.id)
   await handleJobs()
-  summaries = await ContactSummary.getAll([my_contact.id])
+  contact = await Contact.get(my_contact.id)
   
-  expect(summaries[0].first_name).to.be.null
-  expect(summaries[0].display_name).to.be.equal('my_company')
+  expect(contact.first_name).to.be.null
+  expect(contact.display_name).to.be.equal('my_company')
 
 
   // delete email attribute
   const email_attr = my_contact.attributes.find(a => a.attribute_type === 'email')
   await ContactAttribute.delete([email_attr.id], user.id)
   await handleJobs()
-  summaries = await ContactSummary.getAll([my_contact.id])
+  contact = await Contact.get(my_contact.id)
 
-  expect(summaries[0].email).to.be.null
-  expect(summaries[0].display_name).to.be.equal('my_company')
+  expect(contact.email).to.be.null
+  expect(contact.display_name).to.be.equal('my_company')
 
 
   // delete company attribute
   const company_attr = my_contact.attributes.find(a => a.attribute_type === 'company')
   await ContactAttribute.delete([company_attr.id], user.id)
   await handleJobs()
-  summaries = await ContactSummary.getAll([my_contact.id])
+  contact = await Contact.get(my_contact.id)
 
-  expect(summaries[0].company).to.be.null
-  expect(summaries[0].display_name).to.be.equal('Guest')
+  expect(contact.company).to.be.null
+  expect(contact.display_name).to.be.equal('Guest')
 }
 
 async function testAddEmptyAttribute() {
-  const old_summaries = await ContactSummary.getAll([contact.id])
+  const old_summaries = await Contact.getAll([contact.id])
   const old_middle_name = old_summaries[0].middle_name
 
   await Contact.addAttributes(contact.id, [{
@@ -215,7 +215,7 @@ async function testAddEmptyAttribute() {
   }], user.id, brand.id)
   await handleJobs()
 
-  const new_summaries = await ContactSummary.getAll([contact.id])
+  const new_summaries = await Contact.getAll([contact.id])
   const new_middle_name = new_summaries[0].middle_name
 
   expect(old_middle_name).to.be.equal(new_middle_name)

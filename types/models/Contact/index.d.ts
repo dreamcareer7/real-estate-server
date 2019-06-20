@@ -49,6 +49,28 @@ declare interface IContact extends IContactBase {
   brand: UUID;
   attributes: IContactAttribute[];
 
+  title?: string;
+  first_name?: string;
+  middle_name?: string;
+  last_name?: string;
+  marketing_name?: string;
+  nickname?: string;
+  email?: string;
+  primary_email?: string;
+  emails?: string[];
+  phone_number?: string;
+  primary_phone_number?: string;
+  phone_numbers?: string[];
+  company?: string;
+  birthday?: string;
+  profile_image_url?: string;
+  cover_image_url?: string;
+  job_title?: string;
+  source_type?: string;
+  source?: string;
+  website?: string;
+  tag?: string;
+
   display_name: string;
   partner_name?: string;
   last_touch?: number;
