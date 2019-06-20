@@ -87,6 +87,36 @@ AS $function$
               contacts.id,
               contacts_attributes.attribute_type
           )
+          UNION ALL
+          (
+            SELECT DISTINCT ON (
+              contacts.id,
+              contacts_attributes.attribute_def
+            )
+              contacts.id,
+              'partner_' || contacts_attributes.attribute_type AS attribute_type,
+              contacts_attributes.text AS "value"
+            FROM
+              contacts
+              JOIN contacts_attributes ON contacts_attributes.contact = contacts.id
+              JOIN contact_ids ON contacts.id = contact_ids.id::uuid
+            WHERE
+              contacts_attributes.deleted_at IS NULL
+              AND contacts_attributes.is_partner IS TRUE
+              AND contacts.deleted_at IS NULL
+              AND attribute_type = ANY(VALUES
+                ('first_name'),
+                ('last_name'),
+                ('nickname'),
+                ('company'),
+                ('email'),
+                ('phone_number')
+              )
+            ORDER BY
+              contacts.id,
+              contacts_attributes.attribute_def,
+              contacts_attributes.is_primary DESC
+          )
         )
       SELECT
         id,
@@ -117,7 +147,42 @@ AS $function$
       contacts_summaries.email,
       contacts_summaries.phone_number,
       contacts_summaries.tag,
-      contacts_summaries.website
+      contacts_summaries.website,
+
+      COALESCE(
+        CASE WHEN first_name IS NOT NULL AND last_name IS NOT NULL THEN first_name || ' ' || last_name ELSE NULL END,
+        marketing_name,
+        nickname,
+        first_name,
+        last_name,
+        company,
+        email,
+        phone_number,
+        'Guest'
+      ) AS display_name,
+
+      COALESCE(
+        CASE WHEN first_name IS NOT NULL AND last_name IS NOT NULL THEN last_name || ' ' || first_name ELSE NULL END,
+        last_name,
+        marketing_name,
+        first_name,
+        nickname,
+        company,
+        email,
+        phone_number,
+        'Guest'
+      ) AS sort_field,
+
+      COALESCE(
+        CASE WHEN first_name IS NOT NULL AND last_name IS NOT NULL THEN first_name || ' ' || last_name ELSE NULL END,
+        marketing_name,
+        partner_nickname,
+        partner_first_name,
+        partner_last_name,
+        partner_company,
+        partner_email,
+        partner_phone_number
+      ) AS partner_name
     FROM
       unnest(contact_ids) AS cids(id)
       LEFT JOIN crosstab(crosstab_sql, $$
@@ -138,7 +203,13 @@ AS $function$
         ('email'),
         ('phone_number'),
         ('tag'),
-        ('website')
+        ('website'),
+        ('partner_first_name'),
+        ('partner_last_name'),
+        ('partner_nickname'),
+        ('partner_company'),
+        ('partner_email'),
+        ('partner_phone_number')
     $$) AS contacts_summaries(
       cid uuid,
       title text,
@@ -157,7 +228,13 @@ AS $function$
       email text[],
       phone_number text[],
       tag text[],
-      website text[]
+      website text[],
+      partner_first_name text,
+      partner_last_name text,
+      partner_nickname text,
+      partner_company text,
+      partner_email text,
+      partner_phone_number text
     ) ON cids.id = contacts_summaries.cid;
   END;
 $function$
