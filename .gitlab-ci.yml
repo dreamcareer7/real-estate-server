@@ -54,7 +54,7 @@ coverage:
     - modules
   services:
     - alias: postgres
-      name: mdillon/postgis:10-alpine
+      name: mdillon/postgis:10
     - alias: redis
       name: redis:latest
   before_script:
