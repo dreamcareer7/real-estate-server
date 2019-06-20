@@ -7,7 +7,7 @@ const Context = require('../../../lib/models/Context')
 const User = require('../../../lib/models/User')
 const {
   ContactJointExportQueryBuilder,
-  ContactExportQueryBuilder,
+  ContactEmailExportQueryBuilder,
   ContactMailerExportQueryBuilder,
 } = require('../../../lib/models/Analytics/OLAP')
 
@@ -80,18 +80,18 @@ async function testExportMailer() {
     'Last Name',
     'Marketing Name',
     'Company',
+    'Home Address',
     'Home City',
     'Home State',
     'Home Zip Code',
-    'Full Address Home',
+    'Work Address',
     'Work City',
     'Work State',
     'Work Zip Code',
-    'Full Address Work',
+    'Other Address',
     'Other City',
     'Other State',
     'Other Zip Code',
-    'Full Address Other'
   ])
 }
 
@@ -156,8 +156,8 @@ async function testExportJointWithFilter() {
   expect(headers).to.include.members(['E-mail Address', 'Email 2'])
 }
 
-async function testNormalExport() {
-  const queryBuilder = new ContactExportQueryBuilder(
+async function testEmailExport() {
+  const queryBuilder = new ContactEmailExportQueryBuilder(
     null,
     [],
     user.id,
@@ -168,11 +168,11 @@ async function testNormalExport() {
   expect(facts).to.have.length(4)
 
   const headers = await queryBuilder.headerMapper(facts[0])
-  expect(headers).to.include.members(['E-mail Address', 'Email 2'])
+  expect(headers).to.include.members(['First Name', 'Last Name', 'E-mail Address', 'Email 2'])
 }
 
-async function testNormalExportWithNotFilter() {
-  const queryBuilder = new ContactExportQueryBuilder(
+async function testEmailExportWithNotFilter() {
+  const queryBuilder = new ContactEmailExportQueryBuilder(
     null,
     [
       {
@@ -194,8 +194,8 @@ async function testNormalExportWithNotFilter() {
   expect(headers).not.to.include.members(['Email 2'])
 }
 
-async function testNormalExportWithExclusion() {
-  const queryBuilder = new ContactExportQueryBuilder(
+async function testEmailExportWithExclusion() {
+  const queryBuilder = new ContactEmailExportQueryBuilder(
     null,
     [],
     user.id,
@@ -211,8 +211,8 @@ async function testNormalExportWithExclusion() {
   expect(headers).to.include.members(['E-mail Address', 'Email 2'])
 }
 
-async function testNormalExportWithFilter() {
-  const queryBuilder = new ContactExportQueryBuilder(
+async function testEmailExportWithFilter() {
+  const queryBuilder = new ContactEmailExportQueryBuilder(
     null,
     [
       {
@@ -251,18 +251,18 @@ describe('Analytics', () => {
       'should export contacts in joint format with not filter',
       testExportJointWithNotFilter
     )
-    it('should export contacts in non-joint format', testNormalExport)
+    it('should export contacts in email format', testEmailExport)
     it(
-      'should export contacts in non-joint format with not filter',
-      testNormalExportWithNotFilter
+      'should export contacts in email format with not filter',
+      testEmailExportWithNotFilter
     )
     it(
-      'should export contacts in non-joint format with a filter',
-      testNormalExportWithFilter
+      'should export contacts in email format with a filter',
+      testEmailExportWithFilter
     )
     it(
-      'should export contacts in non-joint format with exclusion',
-      testNormalExportWithExclusion
+      'should export contacts in email format with exclusion',
+      testEmailExportWithExclusion
     )
   })
 })
