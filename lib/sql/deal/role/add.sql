@@ -5,6 +5,7 @@ INSERT INTO deals_roles (
   deal,
   "user",
   brand,
+  checklist,
   agent,
   company_title,
   legal_prefix,
@@ -17,7 +18,13 @@ INSERT INTO deals_roles (
   future_address,
   commission_dollar,
   commission_percentage,
-  checklist
+  office_name,
+  office_email,
+  office_phone,
+  office_fax,
+  office_license_number,
+  office_mls_id,
+  office_address
 ) VALUES (
   $1,
   $2,
@@ -39,7 +46,14 @@ INSERT INTO deals_roles (
   $16,
   $17,
   $18,
-  $19
+  $19,
+  $20,
+  $21,
+  $22,
+  $23,
+  $24,
+  $25,
+  JSON_TO_STADDR($26)
 )
 
 RETURNING id
