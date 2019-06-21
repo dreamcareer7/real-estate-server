@@ -7,9 +7,7 @@ SELECT deals_roles.*,
 
        COALESCE(deals_roles.agent, users.agent) AS agent,
 
-       JSON_STRIP_NULLS(
-        ROW_TO_JSON(deals_roles.office_address)
-       ) AS office_address,
+       STDADDR_TO_JSON(deals_roles.office_address) AS office_address,
 
        (
         CASE WHEN
