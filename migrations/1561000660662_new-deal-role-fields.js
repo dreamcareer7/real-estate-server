@@ -15,7 +15,7 @@ RETURNS stdaddr AS $$
       $1->>'building',
       $1->>'house_num',
       $1->>'predir',
-      $1->>'equal',
+      $1->>'qual',
       $1->>'pretype',
       $1->>'name',
       $1->>'suftype',
