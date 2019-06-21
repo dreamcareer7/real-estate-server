@@ -12,6 +12,13 @@ const migrations = [
   `DROP TABLE IF EXISTS
     google_contact_groups CASCADE`,
 
+
+
+  `DELETE FROM contacts_summaries
+    WHERE source_type = 'Google'`,
+
+
+
   `DROP INDEX IF EXISTS
     google_credentials_user_brand`,
 
@@ -20,6 +27,8 @@ const migrations = [
 
   `DROP INDEX IF EXISTS
     contacts_google_id`,
+
+
 
   `CREATE TABLE IF NOT EXISTS google_credentials(
     id uuid NOT NULL PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -63,37 +72,43 @@ const migrations = [
   )`,
 
   `CREATE TABLE IF NOT EXISTS google_contacts(
-    id TEXT NOT NULL PRIMARY KEY,
+    id uuid NOT NULL PRIMARY KEY DEFAULT uuid_generate_v4(),
 
     google_credential uuid NOT NULL REFERENCES google_credentials(id),
-
+    resource_name TEXT NOT NULL,
     meta JSONB,
 
     created_at timestamptz NOT NULL DEFAULT clock_timestamp(),
     updated_at timestamptz NOT NULL DEFAULT clock_timestamp(),
     deleted_at timestamptz,
 
-    UNIQUE (id, google_credential)
+    UNIQUE (google_credential, resource_name)
   )`,
 
   `CREATE TABLE IF NOT EXISTS google_contact_groups(
-    id TEXT NOT NULL,
-    google_credential uuid NOT NULL REFERENCES google_credentials(id),
+    id uuid NOT NULL PRIMARY KEY DEFAULT uuid_generate_v4(),
 
+    google_credential uuid NOT NULL REFERENCES google_credentials(id),
+    resource_name TEXT NOT NULL,
     meta JSONB,
 
     created_at timestamptz NOT NULL DEFAULT clock_timestamp(),
     updated_at timestamptz NOT NULL DEFAULT clock_timestamp(),
     deleted_at timestamptz,
 
-    UNIQUE (id, google_credential)
+    UNIQUE (google_credential, resource_name)
   )`,
 
-  `ALTER TABLE contacts
-    ADD COLUMN IF NOT EXISTS google_id TEXT REFERENCES google_contacts(id)`,
 
   `CREATE UNIQUE INDEX IF NOT EXISTS
     google_credentials_user_brand_email ON google_credentials ("user", brand, email)`,
+
+
+  `ALTER TABLE contacts
+    DROP COLUMN IF EXISTS google_id`,
+
+  `ALTER TABLE contacts
+    ADD COLUMN IF NOT EXISTS google_id uuid REFERENCES google_contacts(id)`,
 
   `CREATE UNIQUE INDEX IF NOT EXISTS
     contacts_google_id ON contacts (google_id) WHERE google_id IS NOT NULL`,

@@ -1,1 +1,0 @@
-UPDATE google_contacts SET deleted_at = $2 WHERE id = $1
