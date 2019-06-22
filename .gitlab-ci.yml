@@ -57,7 +57,13 @@ lint:
   stage: test
   dependencies:
     - modules
-  script: node_modules/eslint/bin/eslint.js .
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+      - node_modules/
+    policy: pull
+
+  script: npx eslint .
   tags:
     - docker
 
