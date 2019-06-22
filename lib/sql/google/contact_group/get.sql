@@ -1,1 +1,8 @@
-SELECT id FROM google_contact_groups WHERE id = $1 AND google_credential = $2 AND deleted_at IS NULL
+SELECT 
+  id 
+FROM
+  google_contact_groups
+WHERE
+  google_credential = $1
+  AND resource_name = $2
+  AND deleted_at IS NULL
