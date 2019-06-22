@@ -57,7 +57,7 @@ lint:
   stage: test
   dependencies:
     - modules
-  script: npx eslint .
+  script: node_modules/eslint/bin/eslint.js .
   tags:
     - docker
 
