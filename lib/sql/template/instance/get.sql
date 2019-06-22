@@ -11,7 +11,7 @@ SELECT templates_instances.*,
   (
     SELECT ARRAY_AGG(listing) FROM templates_instances_relations
     WHERE templates_instances_relations.instance = templates_instances.id
-  ) as listing,
+  ) as listings,
 
   (
     SELECT ARRAY_AGG(contact) FROM templates_instances_relations
