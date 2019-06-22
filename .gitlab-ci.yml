@@ -7,6 +7,14 @@ variables:
   POSTGRES_PASSWORD: rechat
   DATABASE_URL: "postgres://$POSTGRES_USER:$POSTGRES_PASSWORD@postgres/$POSTGRES_DB"
   REDIS_URL: "redis://redis:6379"
+  CONTAINER_IMAGE: registry.gitlab.com/rechat/server:$CI_COMMIT_REF_NAME
+
+docker:
+  stage: build
+  script:
+    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
+    - docker build -t $CONTAINER_IMAGE .
+    - docker push $CONTAINER_IMAGE
 
 modules:
   stage: build
