@@ -117,7 +117,7 @@ docs:
     - develop
 
   dependencies:
-    - modules:docs
+    - modules
     - coverage
   cache:
     key: docs
