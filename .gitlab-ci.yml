@@ -11,6 +11,11 @@ variables:
 
 docker:
   stage: build
+  only:
+    - master
+    - testing
+    - develop
+
   script:
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
     - docker build -t $CONTAINER_IMAGE .
@@ -32,6 +37,11 @@ modules:
 modules:docs:
   stage: build
   image: node:11-alpine
+  only:
+    - master
+    - testing
+    - develop
+
   cache:
     key: docs
     paths:
@@ -113,6 +123,11 @@ unit_coverage:
 docs:
   stage: deploy
   image: node:11-alpine
+  only:
+    - master
+    - testing
+    - develop
+
   dependencies:
     - modules:docs
     - coverage
