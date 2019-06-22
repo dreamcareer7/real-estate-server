@@ -6,16 +6,19 @@ SELECT templates_instances.*,
   (
     SELECT ARRAY_AGG(deal) FROM templates_instances_relations
     WHERE templates_instances_relations.instance = templates_instances.id
+          AND templates_instances_relations.deal IS NOT NULL
   ) as deals,
 
   (
     SELECT ARRAY_AGG(listing) FROM templates_instances_relations
     WHERE templates_instances_relations.instance = templates_instances.id
+          AND templates_instances_relations.listing IS NOT NULL
   ) as listings,
 
   (
     SELECT ARRAY_AGG(contact) FROM templates_instances_relations
     WHERE templates_instances_relations.instance = templates_instances.id
+    AND templates_instances_relations.contact IS NOT NULL
   ) as contacts
 
 FROM templates_instances
