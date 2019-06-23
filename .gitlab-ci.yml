@@ -29,7 +29,13 @@ modules:
       - node_modules/
   before_script:
     - apk --no-cache --update add git python build-base
-    - npm install async aglio commander --no-optional # Needed for docs. No optional based on aglio#273
+    - npm install https://github.com/danielgtaylor/aglio.git#master --no-optional
+    # We need aglio to generate docs.
+    # The released version depends on protagonist which takes
+    # a long time to build.
+    # master version has a change (#272) that allows depending on draftjs
+    # which has an optional dependency on protagonist and is therefore quick
+    # to install.
   script:
     - NODE_ENV="$ENV" npm install
   tags:
