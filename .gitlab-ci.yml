@@ -29,7 +29,7 @@ modules:
       - node_modules/
   before_script:
     - apk --no-cache --update add git python build-base
-    - npm install https://github.com/danielgtaylor/aglio.git#master --no-optional
+    - npm install aglio --no-optional
     # We need aglio to generate docs.
     # The released version depends on protagonist which takes
     # a long time to build.
