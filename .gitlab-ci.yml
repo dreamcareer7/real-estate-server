@@ -29,7 +29,7 @@ modules:
       - node_modules/
   before_script:
     - apk --no-cache --update add git python build-base
-    - npm install async aglio commander # Needed for docs
+    - npm install async aglio commander --no-optional # Needed for docs. No optional based on aglio#273
   script:
     - NODE_ENV="$ENV" npm install
   tags:
