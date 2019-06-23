@@ -32,6 +32,13 @@ modules:
     - npm install async aglio commander # Needed for docs
   script:
     - NODE_ENV="$ENV" npm install
+    # We need aglio to generate docs.
+    # The released version depends on protagonist which takes
+    # a long time to build.
+    # master version has a change (#272) that allows depending on draftjs
+    # which has an optional dependency on protagonist and is therefore quick
+    # to install.
+    - npm install aglio --no-optional
   tags:
     - docker
 
