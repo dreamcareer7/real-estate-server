@@ -27,8 +27,6 @@ modules:
     key: ${CI_COMMIT_REF_SLUG}
     paths:
       - node_modules/
-  before_script:
-    - apk --no-cache --update add git python build-base
   script:
     - NODE_ENV="$ENV" npm install
   tags:
