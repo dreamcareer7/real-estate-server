@@ -7,6 +7,19 @@ variables:
   POSTGRES_PASSWORD: rechat
   DATABASE_URL: "postgres://$POSTGRES_USER:$POSTGRES_PASSWORD@postgres/$POSTGRES_DB"
   REDIS_URL: "redis://redis:6379"
+  CONTAINER_IMAGE: registry.gitlab.com/rechat/server:$CI_COMMIT_REF_NAME
+
+docker:
+  stage: build
+  only:
+    - master
+    - testing
+    - develop
+
+  script:
+    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
+    - docker build -t $CONTAINER_IMAGE .
+    - docker push $CONTAINER_IMAGE
 
 modules:
   stage: build
@@ -21,24 +34,16 @@ modules:
   tags:
     - docker
 
-modules:docs:
-  stage: build
-  image: node:11-alpine
-  cache:
-    key: docs
-    paths:
-      - node_modules/
-  before_script:
-    - apk --no-cache --update add git python build-base
-  script:
-    - npm install async aglio commander
-  tags:
-    - docker
-
 lint:
   stage: test
   dependencies:
     - modules
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+      - node_modules/
+    policy: pull
+
   script: npx eslint .
   tags:
     - docker
@@ -105,8 +110,13 @@ unit_coverage:
 docs:
   stage: deploy
   image: node:11-alpine
+  only:
+    - master
+    - testing
+    - develop
+
   dependencies:
-    - modules:docs
+    - modules
     - coverage
   cache:
     key: docs
@@ -114,6 +124,9 @@ docs:
       - node_modules/
     policy: pull
   script:
+    # Based on aglio#272 we install it wit no optional dependencies
+    # otherwise it will be build with protagonist which takes long to compile
+    - npm install aglio --no-optional
     - node api_docs/index.js -o
   after_script:
     - apk --no-cache --update add ca-certificates wget
