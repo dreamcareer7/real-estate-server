@@ -181,17 +181,27 @@ const database = (req, res, next) => {
       return res.error(err)
 
     conn.done = done
-    conn.query('BEGIN', (err) => {
-      if (err)
-        return res.error(err)
 
+    const cb = () => {
       connections[suite] = conn
       context.set({
         db: conn,
         jobs: []
       })
       context.run(next)
-    })
+    }
+
+    if (suite) {
+      conn.query('BEGIN', (err) => {
+        if (err)
+          return res.error(err)
+
+        cb()
+      })
+    }
+    else {
+      return cb()
+    }
   })
 }
 
