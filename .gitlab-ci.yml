@@ -29,13 +29,6 @@ modules:
       - node_modules/
   script:
     - NODE_ENV="$ENV" npm install
-    # We need aglio to generate docs.
-    # The released version depends on protagonist which takes
-    # a long time to build.
-    # master version has a change (#272) that allows depending on draftjs
-    # which has an optional dependency on protagonist and is therefore quick
-    # to install.
-    - npm install aglio --no-optional
   tags:
     - docker
 
@@ -129,6 +122,9 @@ docs:
       - node_modules/
     policy: pull
   script:
+    # Based on aglio#272 we install it wit no optional dependencies
+    # otherwise it will be build with protagonist which takes long to compile
+    - npm install aglio --no-optional
     - node api_docs/index.js -o
   after_script:
     - apk --no-cache --update add ca-certificates wget
