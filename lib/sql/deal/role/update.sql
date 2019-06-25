@@ -15,8 +15,17 @@ UPDATE deals_roles SET
   company_title = $13,
   commission_dollar = $14,
   commission_percentage = $15,
-  brokerwolf_id = $16,
-  brokerwolf_row_version = $17,
-  role = $18
+
+  office_name = $16,
+  office_email = $17,
+  office_phone = $18,
+  office_fax = $19,
+  office_license_number = $20,
+  office_mls_id = $21,
+  office_address = JSON_TO_STDADDR($22),
+
+  brokerwolf_id = $23,
+  brokerwolf_row_version = $24,
+  role = $25
 
 WHERE id = $1
