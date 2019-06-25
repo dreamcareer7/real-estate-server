@@ -207,6 +207,14 @@ const database = (req, res, next) => {
 
 app.use(database)
 
+app.use((req, res, next) => {
+  const newAllowedHeaders = (res.get('Access-Control-Allow-Headers') || '')
+    .split(',').concat(['x-suite', 'x-handle-jobs'])
+    .join(',')
+  res.header('Access-Control-Allow-Headers', newAllowedHeaders)
+  next()
+})
+
 app.on('after loading routes', () => {
   app.use((err, req, res, next) => {
     Context.getActive().emit('error', err)
