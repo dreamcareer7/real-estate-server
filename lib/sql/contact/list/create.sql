@@ -1,6 +1,7 @@
 WITH list_id AS (
   INSERT INTO crm_lists (
     "created_by",
+    created_within,
     brand,
     name,
     touch_freq,
@@ -11,6 +12,7 @@ WITH list_id AS (
     flows
   ) VALUES (
     $1,
+    $11,
     $2,
     $3,
     $4,

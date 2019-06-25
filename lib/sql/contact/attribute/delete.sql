@@ -14,7 +14,8 @@ UPDATE
   contacts_attributes AS ca
 SET
   deleted_at = now(),
-  deleted_by = $2::uuid
+  deleted_by = $2::uuid,
+  deleted_within = $3
 FROM
   editable_attributes AS ea
 WHERE

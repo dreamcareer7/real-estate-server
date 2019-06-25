@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION merge_contacts(parent uuid, children uuid[])
+CREATE OR REPLACE FUNCTION merge_contacts(parent uuid, children uuid[], user_id uuid, _context text)
 RETURNS setof uuid
 LANGUAGE SQL
 AS $$
@@ -125,7 +125,10 @@ AS $$
   SET
     contact = parent,
     index = index + atk.index_offset,
-    is_primary = atk.is_primary
+    is_primary = atk.is_primary,
+    updated_at = now(),
+    updated_by = user_id,
+    updated_within = _context
   FROM
     attrs_to_keep AS atk
   WHERE
@@ -159,7 +162,10 @@ AS $$
   UPDATE
     contacts_attributes AS ca
   SET
-    contact = parent
+    contact = parent,
+    updated_at = now(),
+    updated_by = user_id,
+    updated_within = _context
   FROM
     attrs_to_keep AS atk
   WHERE
@@ -255,7 +261,9 @@ AS $$
   UPDATE
     contacts
   SET
-    updated_at = NOW()
+    updated_at = NOW(),
+    updated_by = user_id,
+    updated_within = _context
   WHERE
     id = parent;
 
@@ -263,7 +271,9 @@ AS $$
   UPDATE
     contacts
   SET
-    deleted_at = NOW()
+    deleted_at = NOW(),
+    deleted_by = user_id,
+    deleted_within = _context
   WHERE
     id = ANY(children)
     AND deleted_at IS NULL

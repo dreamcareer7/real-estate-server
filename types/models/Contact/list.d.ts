@@ -7,7 +7,7 @@ declare interface IContactListFilter {
 
 declare interface IContactListInput {
   name: string;
-  filters: IContactListFilter[];
+  filters?: IContactListFilter[] | null;
   query?: string;
   args?: Pick<IContactFilterOptions, 'filter_type' | 'q' | 'crm_tasks' | 'flows'>;
   is_editable?: boolean;

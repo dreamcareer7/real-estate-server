@@ -3,7 +3,8 @@ WITH cids AS (
     contacts_attributes AS ca
   SET
     deleted_at = NOW(),
-    deleted_by = $2::uuid
+    deleted_by = $2::uuid,
+    deleted_within = $5
   WHERE
     CASE
       WHEN $4::boolean IS TRUE THEN
@@ -27,7 +28,8 @@ WITH cids AS (
     crm_tags
   SET
     deleted_at = NOW(),
-    deleted_by = $2::uuid
+    deleted_by = $2::uuid,
+    deleted_within = $5
   WHERE
     CASE
       WHEN $4::boolean IS TRUE THEN

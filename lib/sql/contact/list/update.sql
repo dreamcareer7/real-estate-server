@@ -59,7 +59,8 @@ WITH filters AS (
     crm_tasks = $7,
     flows = $8,
     updated_at = clock_timestamp(),
-    updated_by = $2::uuid
+    updated_by = $2::uuid,
+    updated_within = $10
   WHERE
     id = $1
   RETURNING
