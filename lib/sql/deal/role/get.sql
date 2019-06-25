@@ -7,6 +7,8 @@ SELECT deals_roles.*,
 
        COALESCE(deals_roles.agent, users.agent) AS agent,
 
+       STDADDR_TO_JSON(deals_roles.office_address) AS office_address,
+
        (
         CASE WHEN
           -- Trick from https://stackoverflow.com/questions/23766084/best-way-to-check-for-empty-or-null-value
