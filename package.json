@@ -9,7 +9,7 @@
     "start": "npx gulp",
     "docs": "node api_docs/index.js",
     "coverage": "npx nyc node tests/functional/run.js --docs --curl --stop-on-fail --concurrency 20",
-    "coverage:unit": "npx nyc mocha --exit tests/unit/**/*.test.js",
+    "coverage:unit": "npx nyc mocha --exit --timeout 5000 tests/unit/**/*.test.js",
     "migrate:up": "node ./scripts/migrate/up.js",
     "migrate:create": "node_modules/migratus/bin/create --dir migrations --template scripts/migrate/template.js",
     "shell": "node --experimental-repl-await scripts/shell.js",
