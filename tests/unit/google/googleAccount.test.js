@@ -138,6 +138,7 @@ async function updateCredentialGmailProfile() {
   expect(updatedCredential.messages_total).to.be.equal(profile.messagesTotal)
 }
 
+/*
 async function updateContactsSyncToken() {
   const createdCredential = await createCredential()
 
@@ -161,6 +162,7 @@ async function updateContactGroupsSyncToken() {
   expect(createdCredential.id).to.be.equal(updatedCredential.id)
   expect(updatedCredential.contact_groups_sync_token).to.be.equal(syncToken)
 }
+*/
 
 async function updateMessagesSyncHistoryId() {
   const createdCredential = await createCredential()
@@ -212,8 +214,8 @@ describe('Google', () => {
     it('should revoke a google-credential', updateCredentialAsRevoked)
     it('should update a google-credential profile', updateCredentialProfile)
     it('should update a google-credential gmail-profile', updateCredentialGmailProfile)
-    it('should update a google-credential contact sync token', updateContactsSyncToken)
-    it('should update a google-credential contact-group sync token', updateContactGroupsSyncToken)
+    // it('should update a google-credential contact sync token', updateContactsSyncToken)
+    // it('should update a google-credential contact-group sync token', updateContactGroupsSyncToken)
     it('should update a google-credential messages sync token', updateMessagesSyncHistoryId)
     it('should update a google-credential threads sync token', updateThreadsSyncHistoryId)
     it('should update a google-credential last sync time', updateLastSyncTime)
