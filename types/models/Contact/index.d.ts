@@ -51,10 +51,13 @@ declare interface IContact extends IContactBase {
 
   title?: string;
   first_name?: string;
+  partner_first_name?: string;
   middle_name?: string;
   last_name?: string;
+  partner_last_name?: string;
   marketing_name?: string;
   nickname?: string;
+  partner_email?: string;
   email?: string;
   primary_email?: string;
   emails?: string[];

@@ -21,6 +21,9 @@ RETURNS TABLE (
   display_name text,
   sort_field text,
   partner_name text,
+  partner_first_name text,
+  partner_last_name text,
+  partner_email text,
   "address" stdaddr[]
 )
 LANGUAGE plpgsql
@@ -283,6 +286,10 @@ AS $function$
         contacts_summaries.partner_email,
         contacts_summaries.partner_phone_number
       ) AS partner_name,
+
+      contacts_summaries.partner_first_name,
+      contacts_summaries.partner_last_name,
+      contacts_summaries.partner_email,
 
       (
         SELECT

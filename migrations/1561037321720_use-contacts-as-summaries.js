@@ -20,6 +20,9 @@ const migrations = [
     ADD COLUMN job_title text,
     ADD COLUMN source_type text,
     ADD COLUMN source text,
+    ADD COLUMN partner_first_name text,
+    ADD COLUMN partner_last_name text,
+    ADD COLUMN partner_email text,
     ADD COLUMN "address" stdaddr[]
   `,
   'DROP TRIGGER IF EXISTS update_contact_summaries_on_contact_update ON contacts',
@@ -347,6 +350,9 @@ const migrations = [
       display_name text,
       sort_field text,
       partner_name text,
+      partner_first_name text,
+      partner_last_name text,
+      partner_email text,
       "address" stdaddr[]
     )
     LANGUAGE plpgsql
@@ -609,6 +615,10 @@ const migrations = [
             contacts_summaries.partner_email,
             contacts_summaries.partner_phone_number
           ) AS partner_name,
+    
+          contacts_summaries.partner_first_name,
+          contacts_summaries.partner_last_name,
+          contacts_summaries.partner_email,
     
           (
             SELECT

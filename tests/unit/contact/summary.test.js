@@ -247,6 +247,27 @@ async function testAddEmptyAttribute() {
   expect(old_middle_name).to.be.equal(new_middle_name)
 }
 
+async function testPartner() {
+  const [id] = await Contact.create([{
+    attributes: attributes({
+      first_name: 'John',
+      last_name: 'Doe',
+      spouse_first_name: 'Jane',
+      spouse_last_name: 'Doe',
+      spouse_email: ['jane@doe.com']
+    }),
+    user: user.id
+  }], user.id, brand.id)
+
+  await handleJobs()
+
+  const created = await Contact.get(id)
+
+  expect(created.partner_first_name).to.be.equal('Jane')
+  expect(created.partner_last_name).to.be.equal('Doe')
+  expect(created.partner_email).to.be.equal('jane@doe.com')
+}
+
 async function testAddressSummary() {
   const [id] = await Contact.create(
     [
@@ -497,6 +518,7 @@ describe('Contact', () => {
     it('should update search field for an empty contact', testEmptyContact)
     it('should return valid display_name', testGetSummaries)
     it('should not update empty forwarded attribute', testAddEmptyAttribute)
+    it('should calculate partner summary fields', testPartner)
     it('should create stdaddr array for address summaries', testAddressSummary)
     it('should create stdaddr array for address summaries without primary', testAddressSummaryWithoutPrimary)
   })
