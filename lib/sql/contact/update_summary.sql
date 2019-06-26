@@ -21,6 +21,7 @@ WITH cs AS (
     ct.display_name,
     ct.partner_name,
     ct.sort_field,
+    ct.address,
     csf.search_field
   FROM
     contacts AS c
@@ -49,6 +50,7 @@ SET
   job_title = cs.job_title,
   source_type = cs.source_type,
   source = cs.source,
+  address = cs.address,
 
   search_field = cs.search_field,
   display_name = cs.display_name,

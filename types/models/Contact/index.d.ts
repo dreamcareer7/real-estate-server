@@ -70,6 +70,7 @@ declare interface IContact extends IContactBase {
   source?: string;
   website?: string;
   tag?: string;
+  address?: IAddress[];
 
   display_name: string;
   partner_name?: string;

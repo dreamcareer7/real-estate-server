@@ -14,7 +14,7 @@ const migrations = [
 
 
 
-  `DELETE FROM contacts_summaries
+  `DELETE FROM contacts
     WHERE source_type = 'Google'`,
 
 

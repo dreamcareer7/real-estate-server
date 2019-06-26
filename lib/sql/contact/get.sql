@@ -65,6 +65,7 @@ SELECT
   source,
   website AS website,
   tag AS tags,
+  (SELECT json_agg(STDADDR_TO_JSON(unnest)) FROM unnest("address"::stdaddr[])) AS "address",
 
   (SELECT
     array_agg(contacts_attributes.id ORDER BY created_at)

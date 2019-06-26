@@ -19,7 +19,8 @@ const migrations = [
     ADD COLUMN cover_image_url text,
     ADD COLUMN job_title text,
     ADD COLUMN source_type text,
-    ADD COLUMN source text
+    ADD COLUMN source text,
+    ADD COLUMN "address" stdaddr[]
   `,
   'DROP TRIGGER IF EXISTS update_contact_summaries_on_contact_update ON contacts',
   'DROP FUNCTION IF EXISTS update_contact_summaries_from_contact',
@@ -345,15 +346,50 @@ const migrations = [
       website text[],
       display_name text,
       sort_field text,
-      partner_name text
+      partner_name text,
+      "address" stdaddr[]
     )
     LANGUAGE plpgsql
     AS $function$
       DECLARE
         cid_values text;
         crosstab_sql text;
+        address_ct_sql text;
       BEGIN
         cid_values := $$('$$ || array_to_string(contact_ids, $$'),('$$) || $$')$$;
+    
+        address_ct_sql := $$
+          WITH contact_ids(id) AS ( VALUES $$ || cid_values || $$ )
+          SELECT
+            c.id || ':' || COALESCE(ca.index, 1) AS row_name,
+            c.id,
+            COALESCE(ca.index, 1) AS index,
+            (sum(is_primary::int) OVER (w)) > 0 AS is_primary,
+            first_value(label) OVER (w ORDER BY label NULLS LAST) AS label,
+            ca.attribute_type,
+            ca.text
+          FROM
+            contact_ids
+            JOIN contacts AS c
+              ON contact_ids.id::uuid = c.id
+            JOIN contacts_attributes AS ca
+              ON c.id = ca.contact
+          WHERE
+            ca.attribute_type = ANY(ARRAY[
+              'country',
+              'state',
+              'city',
+              'postal_code',
+              'street_number',
+              'street_name',
+              'street_suffix',
+              'unit_number',
+              'state'
+            ])
+          WINDOW w AS (PARTITION BY (contact, index))
+          ORDER BY
+            2, 3, 4
+        $$;
     
         crosstab_sql := $ctsql$
           WITH contact_ids(id) AS ( VALUES $ctsql$ || cid_values || $ctsql$ ),
@@ -445,7 +481,69 @@ const migrations = [
                   contacts_attributes.attribute_def,
                   contacts_attributes.is_primary DESC
               )
-            )
+              UNION ALL
+              (
+                WITH address_attrs AS (
+                  SELECT
+                    id,
+                    index,
+                    is_primary,
+                    label,
+                    postal_code,
+                    street_number,
+                    street_prefix,
+                    street_suffix,
+                    unit_number,
+                    country,
+                    street_name,
+                    city,
+                    "state",
+                    county
+                  FROM
+                    crosstab(
+                      $$ $ctsql$ || address_ct_sql || $ctsql$ $$,
+                      $$
+                        SELECT "name" FROM contacts_attribute_defs WHERE section = 'Addresses' AND global IS TRUE ORDER BY name
+                      $$
+                    ) AS addrs (
+                      row_name text,
+                      id uuid,
+                      index smallint,
+                      is_primary boolean,
+                      label text,
+                      city text,
+                      country text,
+                      county text,
+                      postal_code text,
+                      "state" text,
+                      street_name text,
+                      street_number text,
+                      street_prefix text,
+                      street_suffix text,
+                      unit_number text
+                    )
+                )
+                SELECT
+                  address_attrs.id,
+                  'address' AS attribute_type,
+                  array_agg(array_to_string(ARRAY[
+                    array_to_string(ARRAY[
+                      street_number,
+                      street_prefix,
+                      street_name,
+                      street_suffix,
+                      unit_number
+                    ], ' '),
+                    city,
+                    "state",
+                    postal_code
+                  ], ', ') ORDER BY address_attrs.is_primary DESC, address_attrs.label not ilike 'Home')::text AS "value"
+                FROM
+                  address_attrs
+                GROUP BY
+                  address_attrs.id
+              )
+          )
           SELECT
             id,
             attribute_type,
@@ -510,7 +608,14 @@ const migrations = [
             contacts_summaries.partner_company,
             contacts_summaries.partner_email,
             contacts_summaries.partner_phone_number
-          ) AS partner_name
+          ) AS partner_name,
+    
+          (
+            SELECT
+              array_agg(standardize_address('us_lex', 'us_gaz', 'us_rules', addr)) AS "address"
+            FROM
+              unnest(contacts_summaries.address) AS addrs(addr)
+          ) AS "address"
         FROM
           unnest(contact_ids) AS cids(id)
           LEFT JOIN crosstab(crosstab_sql, $$
@@ -537,7 +642,8 @@ const migrations = [
             ('partner_nickname'),
             ('partner_company'),
             ('partner_email'),
-            ('partner_phone_number')
+            ('partner_phone_number'),
+            ('address')
         $$) AS contacts_summaries(
           cid uuid,
           title text,
@@ -562,7 +668,8 @@ const migrations = [
           partner_nickname text,
           partner_company text,
           partner_email text,
-          partner_phone_number text
+          partner_phone_number text,
+          "address" text[]
         ) ON cids.id = contacts_summaries.cid;
       END;
     $function$`,
