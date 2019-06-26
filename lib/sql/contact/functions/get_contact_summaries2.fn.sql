@@ -17,15 +17,56 @@ RETURNS TABLE (
   email text[],
   phone_number text[],
   tag text[],
-  website text[]
+  website text[],
+  display_name text,
+  sort_field text,
+  partner_name text,
+  partner_first_name text,
+  partner_last_name text,
+  partner_email text,
+  "address" stdaddr[]
 )
 LANGUAGE plpgsql
 AS $function$
   DECLARE
     cid_values text;
     crosstab_sql text;
+    address_ct_sql text;
   BEGIN
     cid_values := $$('$$ || array_to_string(contact_ids, $$'),('$$) || $$')$$;
+
+    address_ct_sql := $$
+      WITH contact_ids(id) AS ( VALUES $$ || cid_values || $$ )
+      SELECT
+        c.id || ':' || COALESCE(ca.index, 1) AS row_name,
+        c.id,
+        COALESCE(ca.index, 1) AS index,
+        (sum(is_primary::int) OVER (w)) > 0 AS is_primary,
+        first_value(label) OVER (w ORDER BY label NULLS LAST) AS label,
+        ca.attribute_type,
+        ca.text
+      FROM
+        contact_ids
+        JOIN contacts AS c
+          ON contact_ids.id::uuid = c.id
+        JOIN contacts_attributes AS ca
+          ON c.id = ca.contact
+      WHERE
+        ca.attribute_type = ANY(ARRAY[
+          'country',
+          'state',
+          'city',
+          'postal_code',
+          'street_number',
+          'street_name',
+          'street_suffix',
+          'unit_number',
+          'state'
+        ])
+      WINDOW w AS (PARTITION BY (contact, index))
+      ORDER BY
+        2, 3, 4
+    $$;
 
     crosstab_sql := $ctsql$
       WITH contact_ids(id) AS ( VALUES $ctsql$ || cid_values || $ctsql$ ),
@@ -87,7 +128,99 @@ AS $function$
               contacts.id,
               contacts_attributes.attribute_type
           )
-        )
+          UNION ALL
+          (
+            SELECT DISTINCT ON (
+              contacts.id,
+              contacts_attributes.attribute_def
+            )
+              contacts.id,
+              'partner_' || contacts_attributes.attribute_type AS attribute_type,
+              contacts_attributes.text AS "value"
+            FROM
+              contacts
+              JOIN contacts_attributes ON contacts_attributes.contact = contacts.id
+              JOIN contact_ids ON contacts.id = contact_ids.id::uuid
+            WHERE
+              contacts_attributes.deleted_at IS NULL
+              AND contacts_attributes.is_partner IS TRUE
+              AND contacts.deleted_at IS NULL
+              AND attribute_type = ANY(VALUES
+                ('first_name'),
+                ('last_name'),
+                ('nickname'),
+                ('company'),
+                ('email'),
+                ('phone_number')
+              )
+            ORDER BY
+              contacts.id,
+              contacts_attributes.attribute_def,
+              contacts_attributes.is_primary DESC
+          )
+          UNION ALL
+          (
+            WITH address_attrs AS (
+              SELECT
+                id,
+                index,
+                is_primary,
+                label,
+                postal_code,
+                street_number,
+                street_prefix,
+                street_suffix,
+                unit_number,
+                country,
+                street_name,
+                city,
+                "state",
+                county
+              FROM
+                crosstab(
+                  $$ $ctsql$ || address_ct_sql || $ctsql$ $$,
+                  $$
+                    SELECT "name" FROM contacts_attribute_defs WHERE section = 'Addresses' AND global IS TRUE ORDER BY name
+                  $$
+                ) AS addrs (
+                  row_name text,
+                  id uuid,
+                  index smallint,
+                  is_primary boolean,
+                  label text,
+                  city text,
+                  country text,
+                  county text,
+                  postal_code text,
+                  "state" text,
+                  street_name text,
+                  street_number text,
+                  street_prefix text,
+                  street_suffix text,
+                  unit_number text
+                )
+            )
+            SELECT
+              address_attrs.id,
+              'address' AS attribute_type,
+              array_agg(array_to_string(ARRAY[
+                array_to_string(ARRAY[
+                  street_number,
+                  street_prefix,
+                  street_name,
+                  street_suffix,
+                  unit_number
+                ], ' '),
+                city,
+                "state",
+                postal_code
+              ], ', ') ORDER BY address_attrs.is_primary DESC, address_attrs.label not ilike 'Home')::text AS "value"
+            FROM
+              address_attrs
+            GROUP BY
+              address_attrs.id
+          )
+      )
       SELECT
         id,
         attribute_type,
@@ -117,7 +250,53 @@ AS $function$
       contacts_summaries.email,
       contacts_summaries.phone_number,
       contacts_summaries.tag,
-      contacts_summaries.website
+      contacts_summaries.website,
+
+      COALESCE(
+        CASE WHEN contacts_summaries.first_name IS NOT NULL AND contacts_summaries.last_name IS NOT NULL THEN contacts_summaries.first_name || ' ' || contacts_summaries.last_name ELSE NULL END,
+        contacts_summaries.marketing_name,
+        contacts_summaries.nickname,
+        contacts_summaries.first_name,
+        contacts_summaries.last_name,
+        contacts_summaries.company,
+        contacts_summaries.email[1],
+        contacts_summaries.phone_number[1],
+        'Guest'
+      ) AS display_name,
+
+      COALESCE(
+        CASE WHEN contacts_summaries.first_name IS NOT NULL AND contacts_summaries.last_name IS NOT NULL THEN contacts_summaries.last_name || ' ' || contacts_summaries.first_name ELSE NULL END,
+        contacts_summaries.last_name,
+        contacts_summaries.marketing_name,
+        contacts_summaries.first_name,
+        contacts_summaries.nickname,
+        contacts_summaries.company,
+        contacts_summaries.email[1],
+        contacts_summaries.phone_number[1],
+        'Guest'
+      ) AS sort_field,
+
+      COALESCE(
+        CASE WHEN contacts_summaries.partner_first_name IS NOT NULL AND contacts_summaries.partner_last_name IS NOT NULL THEN contacts_summaries.partner_first_name || ' ' || contacts_summaries.partner_last_name ELSE NULL END,
+        contacts_summaries.marketing_name,
+        contacts_summaries.partner_nickname,
+        contacts_summaries.partner_first_name,
+        contacts_summaries.partner_last_name,
+        contacts_summaries.partner_company,
+        contacts_summaries.partner_email,
+        contacts_summaries.partner_phone_number
+      ) AS partner_name,
+
+      contacts_summaries.partner_first_name,
+      contacts_summaries.partner_last_name,
+      contacts_summaries.partner_email,
+
+      (
+        SELECT
+          array_agg(standardize_address('us_lex', 'us_gaz', 'us_rules', addr)) AS "address"
+        FROM
+          unnest(contacts_summaries.address) AS addrs(addr)
+      ) AS "address"
     FROM
       unnest(contact_ids) AS cids(id)
       LEFT JOIN crosstab(crosstab_sql, $$
@@ -138,7 +317,14 @@ AS $function$
         ('email'),
         ('phone_number'),
         ('tag'),
-        ('website')
+        ('website'),
+        ('partner_first_name'),
+        ('partner_last_name'),
+        ('partner_nickname'),
+        ('partner_company'),
+        ('partner_email'),
+        ('partner_phone_number'),
+        ('address')
     $$) AS contacts_summaries(
       cid uuid,
       title text,
@@ -157,7 +343,14 @@ AS $function$
       email text[],
       phone_number text[],
       tag text[],
-      website text[]
+      website text[],
+      partner_first_name text,
+      partner_last_name text,
+      partner_nickname text,
+      partner_company text,
+      partner_email text,
+      partner_phone_number text,
+      "address" text[]
     ) ON cids.id = contacts_summaries.cid;
   END;
 $function$
