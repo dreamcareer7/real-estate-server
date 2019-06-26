@@ -124,10 +124,10 @@ async function testCompanyContact() {
   await handleJobs()
 
   const contact = await sql.selectOne('SELECT * FROM contacts WHERE id = $1', [id])
-  expect(contact.search_field).to.be.equal("'acme':1C 'corp':2C")
+  expect(contact.search_field).to.be.equal('\'acme\':1C \'corp\':2C')
 
   const summary = await sql.selectOne('SELECT * FROM contacts WHERE id = $1', [id])
-  expect(summary.search_field).to.be.equal("'acme':1C 'corp':2C")
+  expect(summary.search_field).to.be.equal('\'acme\':1C \'corp\':2C')
 }
 
 async function testEmptyContact() {
@@ -150,10 +150,10 @@ async function testEmptyContact() {
   await handleJobs()
 
   const contact = await sql.selectOne('SELECT * FROM contacts WHERE id = $1', [id])
-  expect(contact.search_field).to.be.equal("'guest':1")
+  expect(contact.search_field).to.be.equal('\'guest\':1')
 
   const summary = await sql.selectOne('SELECT * FROM contacts WHERE id = $1', [id])
-  expect(summary.search_field).to.be.equal("'guest':1")
+  expect(summary.search_field).to.be.equal('\'guest\':1')
 }
 
 async function testGetSummaries() {
