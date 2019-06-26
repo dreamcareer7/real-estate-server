@@ -57,8 +57,7 @@ const migrations = [
     last_sync_at timestamptz DEFAULT NULL,
     last_sync_duration INTEGER,
 
-    contacts_sync_token VARCHAR(256) DEFAULT NULL,
-    contact_groups_sync_token VARCHAR(256) DEFAULT NULL,
+    contacts_last_sync_at timestamptz DEFAULT NULL,
 
     messages_sync_history_id VARCHAR(256) DEFAULT NULL,
     threads_sync_history_id VARCHAR(256) DEFAULT NULL,
@@ -71,32 +70,32 @@ const migrations = [
     UNIQUE (refresh_token)
   )`,
 
-  `CREATE TABLE IF NOT EXISTS google_contacts(
-    id uuid NOT NULL PRIMARY KEY DEFAULT uuid_generate_v4(),
-
-    google_credential uuid NOT NULL REFERENCES google_credentials(id),
-    resource_name TEXT NOT NULL,
-    meta JSONB,
-
-    created_at timestamptz NOT NULL DEFAULT clock_timestamp(),
-    updated_at timestamptz NOT NULL DEFAULT clock_timestamp(),
-    deleted_at timestamptz,
-
-    UNIQUE (google_credential, resource_name)
-  )`,
-
   `CREATE TABLE IF NOT EXISTS google_contact_groups(
     id uuid NOT NULL PRIMARY KEY DEFAULT uuid_generate_v4(),
 
     google_credential uuid NOT NULL REFERENCES google_credentials(id),
-    resource_name TEXT NOT NULL,
-    meta JSONB,
+    entry_id TEXT NOT NULL,
+    entry JSONB,
 
     created_at timestamptz NOT NULL DEFAULT clock_timestamp(),
     updated_at timestamptz NOT NULL DEFAULT clock_timestamp(),
     deleted_at timestamptz,
 
-    UNIQUE (google_credential, resource_name)
+    UNIQUE (google_credential, entry_id)
+  )`,
+
+  `CREATE TABLE IF NOT EXISTS google_contacts(
+    id uuid NOT NULL PRIMARY KEY DEFAULT uuid_generate_v4(),
+
+    google_credential uuid NOT NULL REFERENCES google_credentials(id),
+    entry_id TEXT NOT NULL,
+    entry JSONB,
+
+    created_at timestamptz NOT NULL DEFAULT clock_timestamp(),
+    updated_at timestamptz NOT NULL DEFAULT clock_timestamp(),
+    deleted_at timestamptz,
+
+    UNIQUE (google_credential, entry_id)
   )`,
 
 

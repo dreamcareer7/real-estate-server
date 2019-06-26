@@ -1,5 +1,5 @@
 SELECT
-  id, google_credential, resource_name, meta
+  id, google_credential, entry_id, entry
 FROM
   google_contact_groups
 WHERE
