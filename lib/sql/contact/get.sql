@@ -43,6 +43,33 @@ SELECT
   created_for,
   updated_for,
   deleted_for,
+
+  title,
+  first_name,
+  partner_first_name,
+  middle_name,
+  last_name,
+  partner_last_name,
+  marketing_name,
+  nickname,
+  email[1] AS email,
+  email[1] AS primary_email,
+  email AS emails,
+  partner_email,
+  phone_number[1] AS phone_number,
+  phone_number[1] AS primary_phone_number,
+  phone_number AS phone_numbers,
+  company,
+  birthday,
+  profile_image_url,
+  cover_image_url,
+  job_title,
+  source_type,
+  source,
+  website AS website,
+  tag AS tags,
+  (SELECT json_agg(STDADDR_TO_JSON(unnest)) FROM unnest("address"::stdaddr[])) AS "address",
+
   (SELECT
     array_agg(contacts_attributes.id ORDER BY created_at)
   FROM

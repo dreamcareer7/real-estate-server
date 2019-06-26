@@ -8,9 +8,9 @@ WITH list_contacts AS (
 tag_contacts AS (
   SELECT email_campaigns_recipients.campaign
   FROM   email_campaigns_recipients
-  JOIN   contacts_summaries
-    ON   ARRAY[email_campaigns_recipients.tag] <@ contacts_summaries.tag
-  WHERE  contacts_summaries.id = $1::uuid
+  JOIN   contacts
+    ON   ARRAY[email_campaigns_recipients.tag] <@ contacts.tag
+  WHERE  contacts.id = $1::uuid AND contacts.deleted_at IS NULL
 ),
 auto_emails AS (
   (
