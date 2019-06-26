@@ -13,12 +13,6 @@ const migrations = [
     google_contact_groups CASCADE`,
 
 
-
-  `DELETE FROM contacts_summaries
-    WHERE source_type = 'Google'`,
-
-
-
   `DROP INDEX IF EXISTS
     google_credentials_user_brand`,
 
@@ -27,7 +21,6 @@ const migrations = [
 
   `DROP INDEX IF EXISTS
     contacts_google_id`,
-
 
 
   `CREATE TABLE IF NOT EXISTS google_credentials(
