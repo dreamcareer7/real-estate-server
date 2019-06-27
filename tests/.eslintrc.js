@@ -8,6 +8,5 @@ module.exports = {
     'results': false,
     'Run': false,
     'expect': false,
-    'intern': false,
   }
 };
