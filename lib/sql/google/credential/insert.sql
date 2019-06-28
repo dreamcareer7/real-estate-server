@@ -17,9 +17,7 @@ INSERT INTO google_credentials
     access_token,
     refresh_token,
     expiry_date,
-    scope,
-
-    revoked
+    scope
   )
 VALUES
   (
@@ -37,9 +35,7 @@ VALUES
     $12,
     $13,
     $14,
-    $15,
-
-    FALSE
+    $15
   )
 ON CONFLICT ("user", brand, email) DO UPDATE SET
   display_name = $5,
