@@ -6,7 +6,7 @@ WITH user_brands AS (
   AND brands_users.deleted_at IS NULL
 )
 
-SELECT templates.id FROM templates
+SELECT DISTINCT templates.id FROM templates
 FULL JOIN brands_allowed_templates bat ON templates.id = bat.template
 WHERE
   (bat.id IS NULL OR bat.brand IN(SELECT brand FROM user_brands))
