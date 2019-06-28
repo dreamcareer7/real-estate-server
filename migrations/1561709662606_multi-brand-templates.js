@@ -15,7 +15,7 @@ const migrations = [
    FROM templates
    WHERE brand IS NOT NULL`,
 
-   'ALTER TABLE templates DROP brand',
+  'ALTER TABLE templates DROP brand',
 
   'COMMIT'
 ]
