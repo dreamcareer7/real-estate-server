@@ -17,7 +17,9 @@ INSERT INTO google_credentials
     access_token,
     refresh_token,
     expiry_date,
-    scope
+    scope,
+
+    revoked
   )
 VALUES
   (
@@ -32,10 +34,12 @@ VALUES
     $9,
     $10,
     $11,
-    $12,    
+    $12,
     $13,
     $14,
-    $15
+    $15,
+
+    FALSE
   )
 ON CONFLICT ("user", brand, email) DO UPDATE SET
   display_name = $5,
@@ -56,5 +60,8 @@ ON CONFLICT ("user", brand, email) DO UPDATE SET
   last_sync_at = NULL,
   contacts_last_sync_at = NULL,
   messages_sync_history_id = NULL,
-  threads_sync_history_id = NULL
+  threads_sync_history_id = NULL,
+
+  updated_at = now(),
+  deleted_at = null
 RETURNING id
