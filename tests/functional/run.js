@@ -181,21 +181,39 @@ const database = (req, res, next) => {
       return res.error(err)
 
     conn.done = done
-    conn.query('BEGIN', (err) => {
-      if (err)
-        return res.error(err)
 
+    const cb = () => {
       connections[suite] = conn
       context.set({
         db: conn,
         jobs: []
       })
       context.run(next)
-    })
+    }
+
+    if (suite) {
+      conn.query('BEGIN', (err) => {
+        if (err)
+          return res.error(err)
+
+        cb()
+      })
+    }
+    else {
+      return cb()
+    }
   })
 }
 
 app.use(database)
+
+app.use((req, res, next) => {
+  const newAllowedHeaders = (res.get('Access-Control-Allow-Headers') || '')
+    .split(',').concat(['x-suite', 'x-handle-jobs'])
+    .join(',')
+  res.header('Access-Control-Allow-Headers', newAllowedHeaders)
+  next()
+})
 
 app.on('after loading routes', () => {
   app.use((err, req, res, next) => {

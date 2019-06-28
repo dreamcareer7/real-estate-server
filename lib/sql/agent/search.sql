@@ -9,3 +9,5 @@ OR full_name ILIKE '%' || $1 || '%'
 AND status = 'Active'
 
 AND deleted_at IS NULL
+
+ORDER BY first_name, last_name

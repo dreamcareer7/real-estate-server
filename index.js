@@ -4,15 +4,6 @@ const config = require('./lib/config.js')
 
 const {app, start} = require('./lib/bootstrap.js')
 
-// For dev only
-app.use(function (req, res, next) {
-  res.header('Access-Control-Allow-Methods', 'GET, HEAD, POST, PUT, DELETE, OPTIONS, PATCH')
-  res.header('Access-Control-Allow-Origin', '*')
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, X-Rechat-Brand, X-Auth-Mode, Range')
-  res.header('Access-Control-Expose-Headers', 'Content-Type, X-Request-Id')
-  next()
-})
-
 require('./lib/utils/logger.js')(app)
 require('./lib/utils/atomic.js')(app)
 
