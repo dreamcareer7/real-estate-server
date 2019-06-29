@@ -17,6 +17,13 @@ UPDATE deals_roles SET
   commission_percentage = $15,
   brokerwolf_id = $16,
   brokerwolf_row_version = $17,
-  role = $18
+  role = $18,
+  searchable = to_tsvector('english',
+    COALESCE($3, '')  || ' ' ||
+    COALESCE($4, '')  || ' ' ||
+    COALESCE($5, '')  || ' ' ||
+    COALESCE($6, '')  || ' ' ||
+    COALESCE($13, '')
+  )
 
 WHERE id = $1

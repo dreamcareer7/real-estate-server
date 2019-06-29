@@ -17,7 +17,8 @@ INSERT INTO deals_roles (
   future_address,
   commission_dollar,
   commission_percentage,
-  checklist
+  checklist,
+  searchable
 ) VALUES (
   $1,
   $2,
@@ -39,7 +40,14 @@ INSERT INTO deals_roles (
   $16,
   $17,
   $18,
-  $19
+  $19,
+  to_tsvector('english',
+    COALESCE($9, '')  || ' ' ||
+    COALESCE($10, '') || ' ' ||
+    COALESCE($11, '') || ' ' ||
+    COALESCE($12, '') || ' ' ||
+    COALESCE($8, '')
+  )
 )
 
 RETURNING id
