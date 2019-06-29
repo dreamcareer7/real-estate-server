@@ -119,7 +119,7 @@ module.exports = {
 
   email: {
     handler: email,
-    parallel: config.email.parallel
+    parallel: 50
   },
 
   sms: {
