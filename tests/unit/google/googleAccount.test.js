@@ -188,12 +188,12 @@ async function updateThreadsSyncHistoryId() {
   expect(updatedCredential.threads_sync_history_id).to.be.equal(syncToken)
 }
 
-async function updateLastSyncTime() {
+async function updateLastSync() {
   const createdCredential = await createCredential()
 
   const ts = new Date()
   const duration = 100
-  await GoogleCredential.updateLastSyncTime(createdCredential.id, ts, duration)
+  await GoogleCredential.updateLastSync(createdCredential.id, ts, duration)
 
   const updatedCredential = await GoogleCredential.get(createdCredential.id)
 
@@ -218,6 +218,6 @@ describe('Google', () => {
     // it('should update a google-credential contact-group sync token', updateContactGroupsSyncToken)
     it('should update a google-credential messages sync token', updateMessagesSyncHistoryId)
     it('should update a google-credential threads sync token', updateThreadsSyncHistoryId)
-    it('should update a google-credential last sync time', updateLastSyncTime)
+    it('should update a google-credential last sync time', updateLastSync)
   })
 })
