@@ -3,6 +3,21 @@ const db = require('../lib/utils/db')
 const migrations = [
   'BEGIN',
 
+  `DROP TYPE IF EXISTS
+    contact_action_reason CASCADE`,
+
+  `CREATE TYPE contact_action_reason AS ENUM (
+    'direct_request',
+    'deals',
+    'import_csv',
+    'import_json',
+    'merge',
+    'deleted_definition',
+    'google_integration',
+    'microsoft_integration',
+    'system'
+  )`,
+
   `DROP TABLE IF EXISTS
     microsoft_credentials CASCADE`,
 
@@ -29,8 +44,8 @@ const migrations = [
     access_token TEXT NOT NULL,
     refresh_token TEXT NOT NULL,
     id_token TEXT NOT NULL,
-    expires_in INTEGER,
-    ext_expires_in INTEGER,
+    expires_in BIGINT,
+    ext_expires_in BIGINT,
     scope JSONB,
 
     revoked BOOLEAN DEFAULT FALSE,

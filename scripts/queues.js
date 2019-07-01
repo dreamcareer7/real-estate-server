@@ -236,7 +236,7 @@ module.exports = {
   },
 
   microsoft_sync: {
-    handler: google_sync,
+    handler: microsoft_sync,
     parallel: 1
   }
 }

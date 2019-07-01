@@ -1,5 +1,5 @@
 SELECT
-  id, microsoft_credential, entry_id, entry
+  id, microsoft_credential, folder_id, parent_folder_id, display_ame
 FROM
   microsoft_contact_folders
 WHERE

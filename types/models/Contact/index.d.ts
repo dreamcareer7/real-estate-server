@@ -34,6 +34,7 @@ declare interface IContactBase {
   ios_address_book_id?: string;
   android_address_book_id?: string;
   google_id?: string;
+  microsoft_id?: string;
 }
 
 declare interface IContactInput extends IContactBase {
@@ -141,6 +142,7 @@ declare type TContactActionReason =
   | 'merge'
   | 'deleted_definition'
   | 'google_integration'
+  | 'microsoft_integration'
   | 'system';
 
 declare interface IAddContactOptions {
@@ -195,6 +197,7 @@ declare interface IContactFilterOptions {
   users?: UUID[];
   filter_type?: 'and' | 'or';
   google_id?: string;
+  microsoft_id?: string;
 }
 
 declare interface ICSVImporterMappingDef {
