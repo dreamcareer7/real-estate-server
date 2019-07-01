@@ -7,6 +7,25 @@ declare interface IModelAssociation {
     model: string;
 }
 
+declare interface IAddress {
+  building?: string;
+  house_num?: string;
+  predir?: string;
+  qual?: string;
+  pretype?: string;
+  name?: string;
+  suftype?: string;
+  sufdir?: string;
+  ruralroute?: string;
+  extra?: string;
+  city?: string;
+  state?: string;
+  country?: string;
+  postalcode?: string;
+  box?: string;
+  unit?: string;
+}
+
 declare interface StringMap<T> {
     [key: string]: T;
 }

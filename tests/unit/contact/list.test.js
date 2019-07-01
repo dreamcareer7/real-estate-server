@@ -41,6 +41,7 @@ async function createContact(data) {
     data.map(c => ({ ...c, attributes: attributes(c.attributes), user: user.id })),
     user.id,
     brand.id,
+    'direct_request',
     { activity: false, get: false, relax: false }
   )
 
@@ -241,13 +242,13 @@ async function testUpdateListMembersAfterUpdatingContacts() {
 
   const first_contact = await getContact(contact_ids[0], ['contact.attributes'])
 
-  await Contact.update(user.id, brand.id, [{
+  await Contact.update([{
     id: contact_ids[0],
     attributes: [{
       ...first_contact.attributes.find(a => a.attribute_type === 'tag'),
       text: 'Something Else'
     }]
-  }])
+  }], user.id, brand.id)
 
   await handleJobs()
 

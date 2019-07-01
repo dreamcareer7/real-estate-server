@@ -37,6 +37,7 @@ async function createContact() {
     contacts.map(c => ({ ...c, user: user.id })),
     user.id,
     brand.id,
+    'direct_request',
     { activity: false, get: false, relax: false }
   )
 
@@ -67,30 +68,22 @@ async function testExportMailer() {
   )
 
   const facts = await queryBuilder.facts({})
-  expect(facts).to.have.length(3)
+  expect(facts).to.have.length(1)
+  expect(facts[0]).to.be.eql({
+    marketing_name: 'John Doe and Jane Doe',
+    full_street_name: '1505 Elm Street Unit UNIT 1101',
+    city: 'Dallas',
+    state: 'Texas',
+    postcode: '75201'
+  })
 
   const headers = await queryBuilder.headerMapper(facts[0])
-
-  Context.log(headers)
   expect(headers).to.include.members([
-    'Title',
-    'First Name',
-    'Middle Name',
-    'Last Name',
     'Marketing Name',
-    'Company',
-    'Home Address',
-    'Home City',
-    'Home State',
-    'Home Zip Code',
-    'Work Address',
-    'Work City',
-    'Work State',
-    'Work Zip Code',
-    'Other Address',
-    'Other City',
-    'Other State',
-    'Other Zip Code',
+    'Full Street Name',
+    'City',
+    'State',
+    'Zip Code'
   ])
 }
 
@@ -167,7 +160,7 @@ async function testEmailExport() {
   expect(facts).to.have.length(4)
 
   const headers = await queryBuilder.headerMapper(facts[0])
-  expect(headers).to.include.members(['First Name', 'Last Name', 'E-mail Address', 'Email 2'])
+  expect(headers).to.have.members(['First Name', 'Last Name', 'E-mail Address'])
 }
 
 async function testEmailExportWithNotFilter() {
@@ -189,8 +182,7 @@ async function testEmailExportWithNotFilter() {
   expect(facts).to.have.length(1)
 
   const headers = await queryBuilder.headerMapper(facts[0])
-  expect(headers).to.include.members(['E-mail Address'])
-  expect(headers).not.to.include.members(['Email 2'])
+  expect(headers).to.have.members(['First Name', 'Last Name', 'E-mail Address'])
 }
 
 async function testEmailExportWithExclusion() {
@@ -207,7 +199,7 @@ async function testEmailExportWithExclusion() {
   expect(facts).to.have.length(2)
 
   const headers = await queryBuilder.headerMapper(facts[0])
-  expect(headers).to.include.members(['E-mail Address', 'Email 2'])
+  expect(headers).to.have.members(['First Name', 'Last Name', 'E-mail Address'])
 }
 
 async function testEmailExportWithFilter() {
@@ -228,7 +220,7 @@ async function testEmailExportWithFilter() {
   expect(facts).to.have.length(3)
 
   const headers = await queryBuilder.headerMapper(facts[0])
-  expect(headers).to.include.members(['E-mail Address', 'Email 2'])
+  expect(headers).to.include.members(['First Name', 'Last Name', 'E-mail Address'])
 }
 
 describe('Analytics', () => {

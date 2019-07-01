@@ -35,23 +35,14 @@ WITH u AS (
   FROM
     cids,
     get_search_field_for_contacts(cids.ids) AS gsfc
-), updated_contacts AS (
-  UPDATE
-    contacts
-  SET
-    search_field = csf.search_field
-  FROM
-    csf
-  WHERE
-    id = csf.contact
-  RETURNING
-    id
 )
 UPDATE
-  contacts_summaries AS cs
+  contacts
 SET
-  search_field = c.search_field
+  search_field = csf.search_field
 FROM
-  updated_contacts AS c
+  csf
 WHERE
-  c.id = cs.id
+  id = csf.contact
+RETURNING
+  id

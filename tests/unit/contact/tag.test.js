@@ -90,6 +90,7 @@ async function createContacts() {
     ],
     user.id,
     brand.id,
+    'direct_request',
     { activity: false, get: false, relax: false }
   )
 
@@ -119,13 +120,13 @@ async function testAutoTagCreateWithUpdatedContacts() {
   const contact = populated[0]
   const tag_attr = contact.attributes.find(a => a.attribute_type === 'tag')
 
-  await Contact.update(user.id, brand.id, [{
+  await Contact.update([{
     id: ids[0],
     attributes: [{
       ...tag_attr,
       text: 'Tag4'
     }]
-  }])
+  }], user.id, brand.id)
 
   const tags = await ContactTag.getAll(brand.id)
 
@@ -280,10 +281,10 @@ async function testAddBackDeletedTagByUsingInContact() {
 
   await ContactTag.delete(brand.id, user.id, ['Tag0'])
 
-  await Contact.update(user.id, brand.id, [{
+  await Contact.update([{
     id,
     attributes: ContactHelper.attributes({ tag: ['Tag0' ]})
-  }])
+  }], user.id, brand.id)
 
   const tags = await ContactTag.getAll(brand.id)
 
