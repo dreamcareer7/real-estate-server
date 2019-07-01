@@ -3,6 +3,7 @@ const async = require('async')
 process.env.NODE_ENV = 'tests'
 
 const db = require('../../lib/utils/db')
+const { peanar } = require('../../lib/utils/peanar')
 const promisify = require('../../lib/utils/promisify')
 
 const Context = require('../../lib/models/Context')

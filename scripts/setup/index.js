@@ -1,3 +1,4 @@
+const path = require('path')
 const fs = require('fs')
 const request = require('request-promise-native')
 const config = require('../../lib/config')
@@ -23,7 +24,7 @@ catch(ex) {
 
 function updateStatus(change) {
   Object.assign(status, change)
-  fs.writeFileSync('./status.json', JSON.stringify(status, null, 4), { encoding: 'utf-8' })
+  fs.writeFileSync(path.resolve(__dirname, './status.json'), JSON.stringify(status, null, 4), { encoding: 'utf-8' })
 }
 
 main()
@@ -52,19 +53,16 @@ async function createAndLoginAgentUser(brand) {
 
 async function main() {
   const adminUser = await checkLogin(true)
-  let brand = await createBrand()
+  const brand = await createBrand(adminUser)
 
   const agent = await findAgent(AGENT_MLS_ID)
-  const office = await findOffice(agent.office_mlsid)
   
-  brand = await addOfficeToBrand(brand, office)
-
   const agentUser = await createAndLoginAgentUser(brand)
   await fixUserBrand(agentUser, brand, agentAuthRequest)
   await fixUserBrand(adminUser, brand, authRequest)
   await upgradeUserToAgent(agentUser, agent)
 
-  const roleDeal = await addRoleToBrand(brand, 'Deals', ['Deals'])
+  const roleDeal = await addRoleToBrand(brand, 'Deals', ['Deals', 'CRM', 'Marketing'])
   await addMemberToRole(brand, roleDeal, agentUser)
 
   await addBackOfficeAclToAdminRole(brand)
@@ -108,7 +106,7 @@ async function checkLogin(admin) {
 }
 
 async function loginAdmin() {
-  const data = JSON.parse(fs.readFileSync('./data/loginAdmin.json', { encoding: 'utf-8' }))
+  const data = JSON.parse(fs.readFileSync(path.resolve(__dirname, './data/loginAdmin.json'), { encoding: 'utf-8' }))
 
   const resp = await baseRequest(data)
   authRequest = baseRequest.defaults({
@@ -126,7 +124,7 @@ async function loginAdmin() {
 }
 
 async function loginAgent() {
-  const data = JSON.parse(fs.readFileSync('./data/loginAgent.json', { encoding: 'utf-8' }))
+  const data = JSON.parse(fs.readFileSync(path.resolve(__dirname, './data/loginAgent.json'), { encoding: 'utf-8' }))
 
   const resp = await baseRequest(data)
   agentAuthRequest = baseRequest.defaults({
@@ -144,7 +142,7 @@ async function loginAgent() {
 }
 
 async function createAgentUser(data) {
-  const options = JSON.parse(fs.readFileSync('./data/createAgentUser.json', { encoding: 'utf-8' }))
+  const options = JSON.parse(fs.readFileSync(path.resolve(__dirname, './data/createAgentUser.json'), { encoding: 'utf-8' }))
   Object.assign(options.body, data)
 
   const resp = await authRequest(options)
@@ -199,7 +197,8 @@ async function upgradeUserToAgent(user, agent) {
   return resp
 }
 
-async function createBrand() {
+async function createBrand(user) {
+  console.log(user.id)
   if (status.brand_id) {
     const brand = await authRequest({
       uri: `/brands/${status.brand_id}`,
@@ -211,7 +210,9 @@ async function createBrand() {
     return brand.data
   }
 
-  const options = JSON.parse(fs.readFileSync('./data/createBrand.json', { encoding: 'utf-8' }))  
+  const options = JSON.parse(fs.readFileSync(path.resolve(__dirname, './data/createBrand.json'), { encoding: 'utf-8' }))
+  options.body.roles[0].members = [{ user: user.id }]
+
   const resp = await authRequest(options)
   console.log('Created brand', resp.data.id)
   updateStatus({
@@ -230,37 +231,6 @@ async function findAgent(mlsid) {
     method: 'GET',
     json: true
   })).data
-}
-
-async function findOffice(mlsid) {
-  return (await authRequest({
-    uri: '/offices/search',
-    qs: {
-      mlsid
-    },
-    method: 'GET',
-    json: true
-  })).data
-}
-
-async function addOfficeToBrand(brand, office) {
-  if (brand.offices.find(mlsid => mlsid === office.mls_id)) {
-    console.log('Office already added to brand.')
-    return brand
-  }
-
-  const resp = await authRequest({
-    uri: `/brands/${brand.id}/offices`,
-    body: {
-      office: office.id
-    },
-    method: 'POST',
-    json: true
-  })
-
-  console.log(`Added office ${office.id} to brand.`)
-
-  return resp.data
 }
 
 function getBrandRoles(brand) {
