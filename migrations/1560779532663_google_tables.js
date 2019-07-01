@@ -47,6 +47,7 @@ const migrations = [
 
     revoked BOOLEAN DEFAULT FALSE,
 
+    sync_status TEXT,
     last_sync_at timestamptz DEFAULT NULL,
     last_sync_duration INTEGER,
 
