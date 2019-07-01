@@ -22,6 +22,7 @@ const attachTaskEventHandler = require('../lib/models/CRM/Task/events')
 const attachTouchEventHandler = require('../lib/models/CRM/Touch/events')
 const ShowingsCredential = require('../lib/models/Showings/credential')
 const GoogleCredential = require('../lib/models/Google/credential')
+const MicrosoftCredential = require('../lib/models/Microsoft/credential')
 
 attachCalendarEvents()
 attachContactEvents()
@@ -182,7 +183,8 @@ const sendNotifications = function () {
       nodeifyFn(EmailCampaign.updateStats),
       nodeifyFn(ShowingsCredential.crawlerJob),
       nodeifyFn(ShowingsCredential.crawlerJob),
-      nodeifyFn(GoogleCredential.syncJob)
+      nodeifyFn(GoogleCredential.syncJob),
+      nodeifyFn(MicrosoftCredential.syncJob)
     ], err => {
       if (err) {
         Slack.send({
