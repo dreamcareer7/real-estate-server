@@ -1,4 +1,10 @@
-CREATE OR REPLACE FUNCTION update_current_deal_context(deal_id uuid)
+const db = require('../lib/utils/db')
+
+const migrations = [
+  'BEGIN',
+  'ALTER TABLE current_deal_context ADD searchable tsvector',
+  'ALTER TABLE deals_roles ADD searchable tsvector',
+  `CREATE OR REPLACE FUNCTION update_current_deal_context(deal_id uuid)
 RETURNS void AS
 $$
   BEGIN
@@ -74,7 +80,7 @@ $$
     SELECT DISTINCT ON(key)
     merged.*,
     definitions.id as definition,
-    to_tsvector('english', cdc.text)
+    to_tsvector('english', text)
     FROM merged
     JOIN definitions ON merged.key = definitions.key
     ORDER BY
@@ -88,4 +94,32 @@ $$
 
   END;
 $$
-LANGUAGE PLPGSQL;
+LANGUAGE PLPGSQL`,
+  `UPDATE current_deal_context
+   SET searchable = to_tsvector('english', text)`,
+  `UPDATE deals_roles SET searchable = to_tsvector('english',
+      COALESCE(legal_prefix, '')      || ' ' ||
+      COALESCE(legal_first_name, '')  || ' ' ||
+      COALESCE(legal_middle_name, '') || ' ' ||
+      COALESCE(legal_last_name, '')   || ' ' ||
+      COALESCE(company_title, '')
+    )`,
+  'COMMIT'
+]
+
+
+const run = async () => {
+  const conn = await db.conn.promise()
+
+  for(const sql of migrations) {
+    await conn.query(sql)
+  }
+
+  conn.release()
+}
+
+exports.up = cb => {
+  run().then(cb).catch(cb)
+}
+
+exports.down = () => {}

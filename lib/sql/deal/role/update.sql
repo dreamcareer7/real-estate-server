@@ -26,6 +26,17 @@ UPDATE deals_roles SET
 
   brokerwolf_id = $23,
   brokerwolf_row_version = $24,
-  role = $25
+  role = $25,
+
+  searchable = to_tsvector('english',
+    COALESCE($3, '')   || ' ' ||
+    COALESCE($4, '')   || ' ' ||
+    COALESCE($5, '')   || ' ' ||
+    COALESCE($6, '')   || ' ' ||
+    COALESCE($13, '')  || ' ' ||
+    COALESCE($16, '')  || ' ' ||
+    COALESCE($17, '')  || ' ' ||
+    COALESCE($18, '')
+  )
 
 WHERE id = $1
