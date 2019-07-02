@@ -1,7 +1,7 @@
 UPDATE
   microsoft_credentials
 SET
-  sync_status = 'sunccess',
+  sync_status = 'success',
   last_sync_at = $1,
   last_sync_duration = $2
 WHERE

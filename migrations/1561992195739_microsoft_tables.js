@@ -3,20 +3,8 @@ const db = require('../lib/utils/db')
 const migrations = [
   'BEGIN',
 
-  `DROP TYPE IF EXISTS
-    contact_action_reason CASCADE`,
-
-  `CREATE TYPE contact_action_reason AS ENUM (
-    'direct_request',
-    'deals',
-    'import_csv',
-    'import_json',
-    'merge',
-    'deleted_definition',
-    'google_integration',
-    'microsoft_integration',
-    'system'
-  )`,
+  `ALTER TYPE contact_action_reason
+    ADD VALUE 'microsoft_integration'`,
 
   `DROP TABLE IF EXISTS
     microsoft_credentials CASCADE`,
