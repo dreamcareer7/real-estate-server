@@ -28,15 +28,28 @@ FROM
         crm_associations
         JOIN deals
           ON crm_associations.deal = deals.id
-      WHERE 
+      WHERE
         crm_associations.association_type = 'deal'
-        AND EXISTS (
-          SELECT
-            brand
-          FROM
-            ub
-          WHERE
-            ub.brand = deals.brand
+        AND (
+          EXISTS (
+            SELECT
+              brand
+            FROM
+              ub
+            WHERE
+              ub.brand = deals.brand
+          )
+          OR
+          EXISTS (
+            SELECT
+              dr.brand
+            FROM
+              deals_roles AS dr
+              JOIN ub
+                ON dr.brand = ub.brand
+            WHERE
+              deals.id = dr.deal
+          )
         )
     )
     UNION ALL
