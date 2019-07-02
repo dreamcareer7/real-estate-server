@@ -58,6 +58,7 @@ FROM
                   dc.terminated_at IS NULL
                   AND dc.deactivated_at IS NULL
                 )
+              )
           )
         )
     )
