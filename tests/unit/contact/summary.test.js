@@ -385,7 +385,7 @@ async function testAddressSummary() {
     state: 'TX',
     unit: '#101',
     postcode: '76051',
-    line1: '3535 Bluffs Ln Unit #101,',
+    line1: '3535 Bluffs Ln Unit #101',
     line2: 'Grapevine TX 76051',
     full: '3535 Bluffs Ln Unit #101, Grapevine TX 76051'
   })
@@ -501,7 +501,7 @@ async function testAddressSummaryWithoutPrimary() {
     state: 'TX',
     unit: '#101',
     postcode: '76051',
-    line1: '3535 Bluffs Ln Unit #101,',
+    line1: '3535 Bluffs Ln Unit #101',
     line2: 'Grapevine TX 76051',
     full: '3535 Bluffs Ln Unit #101, Grapevine TX 76051'
   })
