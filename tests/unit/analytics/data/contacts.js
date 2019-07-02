@@ -7,6 +7,7 @@ module.exports = [
       last_name: 'Doe',
       spouse_first_name: 'Jane',
       spouse_last_name: 'Doe',
+      spouse_email: ['jane@doe.com'],
       email: ['john@doe.com'],
       tag: ['family', 'friends'],
       city: { text: 'Dallas', index: 1, label: 'Home' },

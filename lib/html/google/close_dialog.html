@@ -1,0 +1,11 @@
+<div id="logs"></div>
+
+<script type="text/javascript">
+  setInterval(() => {
+    try {
+      window.webkit.messageHandlers['close_webview'].postMessage({})
+    } catch(e) {
+      window.close()
+    }
+  }, 5000)
+</script>

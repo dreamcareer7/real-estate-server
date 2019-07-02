@@ -1,0 +1,1 @@
+SELECT COUNT(*)::INT FROM google_contacts WHERE google_credential = $1

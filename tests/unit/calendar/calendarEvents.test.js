@@ -102,6 +102,7 @@ async function createContact(data) {
     data.map(c => ({ ...c, attributes: attributes(c.attributes), user: user.id })),
     user.id,
     brand.id,
+    'direct_request',
     { activity: false, get: false, relax: false }
   )
 

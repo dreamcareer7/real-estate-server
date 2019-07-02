@@ -73,7 +73,8 @@ $$
 
     SELECT DISTINCT ON(key)
     merged.*,
-    definitions.id as definition
+    definitions.id as definition,
+    to_tsvector('english', cdc.text)
     FROM merged
     JOIN definitions ON merged.key = definitions.key
     ORDER BY

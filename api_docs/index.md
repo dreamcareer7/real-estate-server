@@ -69,3 +69,4 @@ Welcome. Rechat's API is broken into several small components to be readable.
 ## Integrations
 
 * [Showings Credential](showings.html)
+* [Google Profile](google.html)

@@ -27,9 +27,8 @@ modules:
     key: ${CI_COMMIT_REF_SLUG}
     paths:
       - node_modules/
-  before_script:
-    - apk --no-cache --update add git python build-base
   script:
+    - apk --no-cache --update add git python build-base
     - NODE_ENV="$ENV" npm install
   tags:
     - docker
@@ -59,14 +58,14 @@ coverage:
     - modules
   services:
     - alias: postgres
-      name: mdillon/postgis:10-alpine
+      name: mdillon/postgis:10
     - alias: redis
       name: redis:latest
-  before_script:
+  script:
     - apk --no-cache --update add postgresql-client
     - export PGPASSWORD=$POSTGRES_PASSWORD
     - psql -h "postgres" -U "$POSTGRES_USER" "$POSTGRES_DB" < ./data/minimal.sql
-  script:
+    - npm i
     - npm run coverage
   coverage: '/Lines\s+:\s([\d\.]+)/'
   artifacts:
@@ -87,14 +86,14 @@ unit_coverage:
     - modules
   services:
     - alias: postgres
-      name: mdillon/postgis:10-alpine
+      name: mdillon/postgis:10
     - alias: redis
       name: redis:latest
-  before_script:
+  script:
     - apk --no-cache --update add postgresql-client
     - export PGPASSWORD=$POSTGRES_PASSWORD
     - psql -h "postgres" -U "$POSTGRES_USER" "$POSTGRES_DB" < ./data/minimal.sql
-  script:
+    - npm i
     - export ORIGINAL_NODE_ENV=production
     - export NODE_ENV=tests
     - npm run migrate:up

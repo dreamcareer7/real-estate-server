@@ -6,10 +6,13 @@ registerSuite('brand', ['createParent'])
 registerSuite('deal', ['create', 'addChecklist', 'addContext', 'approveContext', 'patchListing'])
 
 const create = cb => {
-  template.brand = results.brand.createParent.data.id
-
   return frisby.create('create a template')
-    .post('/templates', template)
+    .post('/templates', {
+      ...template,
+      brands: [
+        results.brand.createParent.data.id
+      ]
+    })
     .after(cb)
     .expectStatus(200)
     .expectJSON({
