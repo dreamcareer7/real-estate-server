@@ -22,7 +22,9 @@ AS $$
         contacts_attributes
       SET
         deleted_at = now(),
-        deleted_by = user_id
+        deleted_by = user_id,
+        deleted_within = _context,
+        deleted_for = 'deleted_definition'
       WHERE
         attribute_def = $1
       RETURNING
@@ -37,6 +39,7 @@ AS $$
         updated_at = NOW(),
         updated_by = user_id,
         updated_within = _context,
+        updated_for = 'deleted_definition',
         search_field = csf.search_field
       FROM
         get_search_field_for_contacts(affected_contacts) csf
@@ -48,7 +51,8 @@ AS $$
       SET
         updated_at = now(),
         updated_by = user_id,
-        updated_within = _context
+        updated_within = _context,
+        updated_for = 'deleted_definition'
       WHERE
         contacts.id = ANY(affected_contacts);
     END IF;

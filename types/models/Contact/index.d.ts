@@ -30,15 +30,15 @@ declare interface IContactAttributeDef {
 }
 
 declare interface IContactBase {
+  user: UUID;
   ios_address_book_id?: string;
   android_address_book_id?: string;
+  google_id?: string;
 }
 
 declare interface IContactInput extends IContactBase {
   id?: UUID;
-  user: UUID;
   attributes: IContactAttributeInput[];
-  ios_address_book_id?: string;
 }
 
 declare interface IContact extends IContactBase {
@@ -46,9 +46,34 @@ declare interface IContact extends IContactBase {
   created_at: number;
   updated_at: number;
   deleted_at?: number | null;
-  user: UUID;
   brand: UUID;
   attributes: IContactAttribute[];
+
+  title?: string;
+  first_name?: string;
+  partner_first_name?: string;
+  middle_name?: string;
+  last_name?: string;
+  partner_last_name?: string;
+  marketing_name?: string;
+  nickname?: string;
+  partner_email?: string;
+  email?: string;
+  primary_email?: string;
+  emails?: string[];
+  phone_number?: string;
+  primary_phone_number?: string;
+  phone_numbers?: string[];
+  company?: string;
+  birthday?: string;
+  profile_image_url?: string;
+  cover_image_url?: string;
+  job_title?: string;
+  source_type?: string;
+  source?: string;
+  website?: string;
+  tag?: string;
+  address?: IAddress[];
 
   display_name: string;
   partner_name?: string;
@@ -56,8 +81,10 @@ declare interface IContact extends IContactBase {
   next_touch?: number;
 
   users?: UUID[];
-  deals?: IDeal[];
+  deals?: UUID[];
   lists?: UUID[];
+  flows?: UUID[];
+  summary: UUID;
 }
 
 declare interface IContactAttribute {
@@ -89,6 +116,8 @@ declare interface IContactAttributeInput {
 
   id?: UUID;
   created_by?: UUID;
+  created_within?: string;
+  created_for?: string;
 
   text?: string;
   number?: number;
@@ -103,6 +132,16 @@ declare interface IContactAttributeInput {
 declare interface IContactAttributeInputWithContact extends IContactAttributeInput {
   contact: UUID;
 }
+
+declare type TContactActionReason =
+  | 'direct_request'
+  | 'deals'
+  | 'import_csv'
+  | 'import_json'
+  | 'merge'
+  | 'deleted_definition'
+  | 'google_integration'
+  | 'system';
 
 declare interface IAddContactOptions {
   /** Return {ParentContact} object or just id */
@@ -154,7 +193,8 @@ declare interface IContactFilterOptions {
   lists?: UUID[];
   flows?: UUID[];
   users?: UUID[];
-  filter_type?: 'and' | 'or'
+  filter_type?: 'and' | 'or';
+  google_id?: string;
 }
 
 declare interface ICSVImporterMappingDef {

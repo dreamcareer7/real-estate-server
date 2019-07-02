@@ -273,10 +273,11 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
             email_campaigns_recipients AS ecr
             JOIN email_campaigns AS ec
               ON ecr.campaign = ec.id
-            JOIN contacts_summaries AS cs
+            JOIN contacts AS cs
               ON ARRAY[ecr.tag] <@ cs.tag AND ec.brand = cs.brand
           WHERE
             ecr.tag IS NOT NULL
+            AND cs.deleted_at IS NULL
         )
         UNION
         (
