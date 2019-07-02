@@ -65,6 +65,7 @@ coverage:
     - apk --no-cache --update add postgresql-client
     - export PGPASSWORD=$POSTGRES_PASSWORD
     - psql -h "postgres" -U "$POSTGRES_USER" "$POSTGRES_DB" < ./data/minimal.sql
+    - npm i
     - npm run coverage
   coverage: '/Lines\s+:\s([\d\.]+)/'
   artifacts:
@@ -92,6 +93,7 @@ unit_coverage:
     - apk --no-cache --update add postgresql-client
     - export PGPASSWORD=$POSTGRES_PASSWORD
     - psql -h "postgres" -U "$POSTGRES_USER" "$POSTGRES_DB" < ./data/minimal.sql
+    - npm i
     - export ORIGINAL_NODE_ENV=production
     - export NODE_ENV=tests
     - npm run migrate:up
