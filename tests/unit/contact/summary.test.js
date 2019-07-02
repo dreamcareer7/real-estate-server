@@ -363,6 +363,8 @@ async function testAddressSummary() {
 
   const created = await Contact.get(id)
 
+  if (!Array.isArray(created.address)) throw new Error('No addresses found on contact!')
+
   expect(created.address).to.have.length(2)
 
   expect(created.address[1]).to.be.eql({
@@ -370,7 +372,6 @@ async function testAddressSummary() {
     name: 'Main',
     suftype: 'Street',
     city: 'Dallas',
-    country: 'USA',
     line1: '1200 Main Street',
     line2: 'Dallas',
     full: '1200 Main Street Dallas'
@@ -379,15 +380,14 @@ async function testAddressSummary() {
   expect(created.address[0]).to.be.eql({
     house_num: '3535',
     name: 'Bluffs',
-    suftype: 'Lane',
+    suftype: 'Ln',
     city: 'Grapevine',
-    state: 'TEXAS',
-    country: 'USA',
+    state: 'TX',
     unit: '#101',
     postcode: '76051',
-    line1: '3535 Bluffs Lane Unit #101',
-    line2: 'Grapevine TEXAS 76051',
-    full: '3535 Bluffs Lane Unit #101, Grapevine TEXAS 76051'
+    line1: '3535 Bluffs Ln Unit #101,',
+    line2: 'Grapevine TX 76051',
+    full: '3535 Bluffs Ln Unit #101, Grapevine TX 76051'
   })
 }
 
@@ -479,6 +479,8 @@ async function testAddressSummaryWithoutPrimary() {
 
   const created = await Contact.get(id)
 
+  if (!Array.isArray(created.address)) throw new Error('No addresses found on contact!')
+
   expect(created.address).to.have.length(2)
 
   expect(created.address[0]).to.be.eql({
@@ -486,7 +488,6 @@ async function testAddressSummaryWithoutPrimary() {
     name: 'Main',
     suftype: 'Street',
     city: 'Dallas',
-    country: 'USA',
     line1: '1200 Main Street',
     line2: 'Dallas',
     full: '1200 Main Street Dallas'
@@ -495,15 +496,14 @@ async function testAddressSummaryWithoutPrimary() {
   expect(created.address[1]).to.be.eql({
     house_num: '3535',
     name: 'Bluffs',
-    suftype: 'Lane',
+    suftype: 'Ln',
     city: 'Grapevine',
-    state: 'TEXAS',
-    country: 'USA',
+    state: 'TX',
     unit: '#101',
     postcode: '76051',
-    line1: '3535 Bluffs Lane Unit #101',
-    line2: 'Grapevine TEXAS 76051',
-    full: '3535 Bluffs Lane Unit #101, Grapevine TEXAS 76051'
+    line1: '3535 Bluffs Ln Unit #101,',
+    line2: 'Grapevine TX 76051',
+    full: '3535 Bluffs Ln Unit #101, Grapevine TX 76051'
   })
 }
 
