@@ -385,7 +385,7 @@ async function testAddressSummary() {
     country: 'USA',
     unit: '#101',
     postcode: '76051',
-    line1: '3535 Bluffs Lane Unit #101,',
+    line1: '3535 Bluffs Lane Unit #101',
     line2: 'Grapevine TEXAS 76051',
     full: '3535 Bluffs Lane Unit #101, Grapevine TEXAS 76051'
   })
@@ -501,7 +501,7 @@ async function testAddressSummaryWithoutPrimary() {
     country: 'USA',
     unit: '#101',
     postcode: '76051',
-    line1: '3535 Bluffs Lane Unit #101,',
+    line1: '3535 Bluffs Lane Unit #101',
     line2: 'Grapevine TEXAS 76051',
     full: '3535 Bluffs Lane Unit #101, Grapevine TEXAS 76051'
   })
