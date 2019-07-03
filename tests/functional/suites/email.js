@@ -148,7 +148,7 @@ const update = cb => {
   return frisby
     .create('Update a campaign')
     .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
-    .put(`/emails/${results.email.scheduleIndividual.data.id}?associations[]=email_campaign.recipients`, campaign)
+    .put(`/emails/${results.email.scheduleIndividual.data[0]}?associations[]=email_campaign.recipients`, campaign)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
@@ -164,6 +164,14 @@ const update = cb => {
     })
 }
 
+const remove = cb => {
+  return frisby
+    .create('delete a campaign')
+    .delete(`/emails/${results.email.scheduleIndividual.data[0]}`)
+    .after(cb)
+    .expectStatus(204)
+}
+
 module.exports = {
   schedule,
   scheduleIndividual,
@@ -173,4 +181,5 @@ module.exports = {
   updateStats,
   get,
   getByBrand,
+  remove
 }
