@@ -125,6 +125,8 @@ docs:
   script:
     # Based on aglio#272 we install it wit no optional dependencies
     # otherwise it will be build with protagonist which takes long to compile
+    - apk --no-cache --update add git python build-base
+    - npm install
     - npm install aglio --no-optional
     - node api_docs/index.js -o
   after_script:

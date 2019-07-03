@@ -56,7 +56,7 @@ SET
   job_title = cs.job_title,
   source_type = cs.source_type,
   source = cs.source,
-  address = cs.address,
+  "address" = cs.address,
 
   search_field = cs.search_field,
   display_name = cs.display_name,
