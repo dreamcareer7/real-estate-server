@@ -44,11 +44,21 @@ FROM
             SELECT
               dr.brand
             FROM
-              deals_roles AS dr
-              JOIN ub
+              ub
+              JOIN deals_roles AS dr
                 ON dr.brand = ub.brand
+              LEFT JOIN deals_checklists AS dc
+                ON dr.checklist = dc.id
             WHERE
               deals.id = dr.deal
+              AND dr.deleted_at IS NULL
+              AND (
+                dc.id IS NULL
+                OR (
+                  dc.terminated_at IS NULL
+                  AND dc.deactivated_at IS NULL
+                )
+              )
           )
         )
     )
