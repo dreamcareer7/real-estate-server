@@ -43,6 +43,7 @@ const migrations = [
     last_sync_duration INTEGER,
 
     contacts_last_sync_at timestamptz DEFAULT NULL,
+    messages_last_sync_at timestamptz DEFAULT NULL,
 
     created_at timestamptz NOT NULL DEFAULT clock_timestamp(),
     updated_at timestamptz NOT NULL DEFAULT clock_timestamp(),
