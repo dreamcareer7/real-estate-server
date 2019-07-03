@@ -15,11 +15,17 @@ INSERT INTO agents
   work_phone,
   generational_name,
   matrix_unique_id,
-  matrix_modified_dt
+  matrix_modified_dt,
+  mls,
+  office
 )
 VALUES
 (
-  $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16
+  $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16, $17,
+
+  (
+    SELECT id FROM offices WHERE matrix_unique_id = $10 AND mls = $17)
+  )
 )
 ON CONFLICT (matrix_unique_id) DO UPDATE SET
   email = $1,
@@ -37,6 +43,7 @@ ON CONFLICT (matrix_unique_id) DO UPDATE SET
   work_phone = $13,
   generational_name = $14,
   matrix_modified_dt = $16,
+  mls = $17
   updated_at = CLOCK_TIMESTAMP()
   WHERE agents.matrix_unique_id = $15
 RETURNING id

@@ -60,7 +60,7 @@ INSERT INTO listings (
   last_status,
   mls_area_major,
   mls_area_minor,
-  mls,
+  mls_name,
   move_in_date,
   permit_address_internet_yn,
   permit_comments_reviews_yn,
@@ -96,7 +96,8 @@ INSERT INTO listings (
   occupancy,
   private_remarks,
   application_fee_yn,
-  revision
+  revision,
+  mls
 ) VALUES (
   $1,
   $2,
@@ -195,7 +196,8 @@ INSERT INTO listings (
   $95,
   $96,
   $97,
-  $98
+  $98,
+  $99
 )
 
 ON CONFLICT (matrix_unique_id) DO UPDATE SET
@@ -294,7 +296,8 @@ ON CONFLICT (matrix_unique_id) DO UPDATE SET
   occupancy = $95,
   private_remarks = $96,
   application_fee_yn = $97,
-  revision = $98,
+  mls = $98,
+  revision = $99,
   updated_at = CLOCK_TIMESTAMP()
 
 WHERE listings.matrix_unique_id = $7

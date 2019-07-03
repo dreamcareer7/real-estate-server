@@ -2,11 +2,6 @@ SELECT id,
        first_name,
        last_name
 FROM agents
-WHERE agents.matrix_unique_id IN
-(
-  SELECT mui
-  FROM agents_emails
-  WHERE LOWER(email) = LOWER($1)
-  LIMIT 1
-)
+JOIN agents_emails ON agents.id = agents_emails.agent
+WHERE LOWER(agents_emails.email) = LOWER($1)
 LIMIT 1

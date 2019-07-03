@@ -12,7 +12,7 @@
     state,
     matrix_unique_id,
     matrix_modified_dt,
-    mls,
+    mls_name,
     mls_id,
     mls_provider,
     nar_number,
@@ -29,8 +29,10 @@
     st_postal_code,
     st_postal_code_plus4,
     st_state,
-    url)
-VALUES ($1,
+    url,
+    mls
+) VALUES
+        ($1,
         $2,
         $3,
         $4,
@@ -61,7 +63,8 @@ VALUES ($1,
         $29,
         $30,
         $31,
-        $32)
+        $32,
+        $33)
 ON CONFLICT (matrix_unique_id) DO UPDATE SET
   board = $1,
   email = $2,
@@ -95,6 +98,7 @@ ON CONFLICT (matrix_unique_id) DO UPDATE SET
   st_postal_code_plus4 = $30,
   st_state = $31,
   url = $32,
+  mls = $33,
   updated_at = CLOCK_TIMESTAMP()
   WHERE offices.matrix_unique_id = $13
 RETURNING id
