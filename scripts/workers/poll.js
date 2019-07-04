@@ -46,6 +46,10 @@ const poll = async ({fn, name}) => {
 }
 
 const notifications = async () => {
+  /*
+   * These two need to run in this specific order.
+   * Otherwise, we might send email messages before push notifications.
+   */
   await Notification.sendForUnread()
   await promisify(Message.sendEmailForUnread)
 }
