@@ -546,7 +546,7 @@ function uploadEmailSignPic(cb) {
   const img = fs.createReadStream(path.resolve(__dirname, 'data/img/sample.jpg'))
 
   return frisby.create('upload email-signature pic')
-    .post('/users/self/email_signature_image_url', {
+    .post('/users/self/emails_signature_files', {
       file: img
     },
     {
