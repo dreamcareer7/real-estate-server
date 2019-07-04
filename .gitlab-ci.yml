@@ -65,7 +65,7 @@ coverage:
     - apk --no-cache --update add git python build-base postgresql-client
     - export PGPASSWORD=$POSTGRES_PASSWORD
     - psql -h "postgres" -U "$POSTGRES_USER" "$POSTGRES_DB" < ./data/minimal.sql
-    - npm i
+    - NODE_ENV="$ENV" npm install
     - npm run coverage
   coverage: '/Lines\s+:\s([\d\.]+)/'
   artifacts:
@@ -93,7 +93,7 @@ unit_coverage:
     - apk --no-cache --update add git python build-base postgresql-client
     - export PGPASSWORD=$POSTGRES_PASSWORD
     - psql -h "postgres" -U "$POSTGRES_USER" "$POSTGRES_DB" < ./data/minimal.sql
-    - npm i
+    - NODE_ENV="$ENV" npm install
     - export ORIGINAL_NODE_ENV=production
     - export NODE_ENV=tests
     - npm run migrate:up
@@ -126,7 +126,7 @@ docs:
     # Based on aglio#272 we install it wit no optional dependencies
     # otherwise it will be build with protagonist which takes long to compile
     - apk --no-cache --update add git python build-base
-    - npm install
+    - NODE_ENV="$ENV" npm install
     - npm install aglio --no-optional
     - node api_docs/index.js -o
   after_script:
