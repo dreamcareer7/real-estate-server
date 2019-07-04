@@ -542,11 +542,11 @@ const deleteUser = (cb) => {
     .expectStatus(204)
 }
 
-function uploadEmailSignPic(cb) {
+function uploadEmailSignAttachments(cb) {
   const img = fs.createReadStream(path.resolve(__dirname, 'data/img/sample.jpg'))
 
   return frisby.create('upload email-signature pic')
-    .post('/users/self/emails_signature_files', {
+    .post('/users/self/email_signature_attachments', {
       file: img
     },
     {
@@ -652,7 +652,7 @@ module.exports = {
   resetPhoneShadowPasswordByEmail,
   resetPhoneShadowPassword,
   resetEmailShadowPassword,
-  uploadEmailSignPic,
+  uploadEmailSignAttachments,
   patchUserCoverImage,
   patchUserProfileImage,
   deleteUser
