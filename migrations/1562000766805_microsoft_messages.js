@@ -10,7 +10,7 @@ const migrations = [
     id uuid NOT NULL PRIMARY KEY DEFAULT uuid_generate_v4(),
 
     microsoft_credential uuid NOT NULL REFERENCES microsoft_credentials(id),
-    remote_id TEXT NOT NULL,
+    message_id TEXT NOT NULL,
     data JSONB,
 
     type TEXT,
@@ -19,7 +19,7 @@ const migrations = [
     updated_at timestamptz NOT NULL DEFAULT clock_timestamp(),
     deleted_at timestamptz,
 
-    UNIQUE (microsoft_credential, remote_id)
+    UNIQUE (microsoft_credential, message_id)
   )`,
 
   'COMMIT'
