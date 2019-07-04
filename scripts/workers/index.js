@@ -3,6 +3,7 @@ const kue = require('kue')
 const promisify = require('../../lib/utils/promisify.js')
 
 const queue = require('../../lib/utils/queue.js')
+const queues = require('./queues')
 
 const Metric = require('../../lib/models/Metric')
 const Slack = require('../../lib/models/Slack')
@@ -15,12 +16,17 @@ const attachTouchEventHandler = require('../../lib/models/CRM/Touch/events')
 
 const createContext = require('./create-context')
 
+
+
+require('./poll')
+
+
 attachCalendarEvents()
 attachContactEvents()
 attachTaskEventHandler()
 attachTouchEventHandler()
 
-require('./poll')
+
 
 process.on('unhandledRejection', (err, promise) => {
   Context.trace('Unhanled Rejection on request', err)
@@ -29,7 +35,6 @@ process.on('unhandledRejection', (err, promise) => {
 // We have proper error handling here. No need for auto reports.
 Error.autoReport = false
 
-const queues = require('./queues')
 
 Object.keys(queues).forEach(queue_name => {
   const definition = queues[queue_name]
