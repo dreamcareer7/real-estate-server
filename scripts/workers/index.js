@@ -47,7 +47,7 @@ Object.keys(queues).forEach(queue_name => {
     })
 
     try {
-      const result = await definition.handler(job)
+      const result = await promisify(definition.handler)(job)
       Metric.increment(`Job.${queue_name}`)
       await commit()
       done(result)
