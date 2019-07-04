@@ -1,94 +1,32 @@
 require('colors')
 const kue = require('kue')
-const async = require('async')
+const promisify = require('../../lib/utils/promisify.js')
 
-const db = require('../lib/utils/db')
-const promisify = require('../lib/utils/promisify.js')
+const queue = require('../../lib/utils/queue.js')
 
-const queue = require('../lib/utils/queue.js')
+const Metric = require('../../lib/models/Metric')
+const Slack = require('../../lib/models/Slack')
 
-const Job = require('../lib/models/Job')
-const Metric = require('../lib/models/Metric')
-const Slack = require('../lib/models/Slack')
+require('../../lib/models/index.js')()
 
-const Context = require('../lib/models/Context')
-const Notification = require('../lib/models/Notification')
-const CrmTaskWorker = require('../lib/models/CRM/Task/worker/notification')
-const CalendarWorker = require('../lib/models/Calendar/worker/notification')
-const EmailCampaign = require('../lib/models/Email/campaign')
-const attachCalendarEvents = require('../lib/models/Calendar/events')
-const attachContactEvents = require('../lib/models/Contact/events')
-const attachTaskEventHandler = require('../lib/models/CRM/Task/events')
-const attachTouchEventHandler = require('../lib/models/CRM/Touch/events')
-const ShowingsCredential = require('../lib/models/Showings/credential')
-const GoogleCredential = require('../lib/models/Google/credential')
+const Context = require('../../lib/models/Context')
+const attachCalendarEvents = require('../../lib/models/Calendar/events')
+const attachContactEvents = require('../../lib/models/Contact/events')
+const attachTaskEventHandler = require('../../lib/models/CRM/Task/events')
+const attachTouchEventHandler = require('../../lib/models/CRM/Touch/events')
+
+const createContext = require('./create-context')
 
 attachCalendarEvents()
 attachContactEvents()
 attachTaskEventHandler()
 attachTouchEventHandler()
 
+require('./poll')
+
 process.on('unhandledRejection', (err, promise) => {
   Context.trace('Unhanled Rejection on request', err)
 })
-
-const prepareContext = (c, cb) => {
-  const context = Context.create({
-    ...c
-  })
-
-  context.enter()
-
-  db.conn(function (err, conn, done) {
-    if (err)
-      return cb(Error.Database(err))
-
-    const rollback = function (err) {
-      Context.trace('<- Rolling back on worker'.red, err)
-
-      conn.query('ROLLBACK', done)
-    }
-
-    const commit = cb => {
-      conn.query('COMMIT', function (err) {
-        if (err) {
-          Context.trace('<- Commit failed!'.red)
-          return rollback(err)
-        }
-
-        Context.log('Committed 👌')
-
-        done()
-        const jobs = context.get('jobs')
-        Job.handle(jobs, cb)
-      })
-    }
-
-    conn.query('BEGIN', function (err) {
-      if (err)
-        return cb(Error.Database(err))
-
-      context.set({
-        db: conn,
-        jobs: []
-      })
-
-      context.run(() => {
-        cb(null, {rollback,commit})
-      })
-    })
-
-    context.on('error', function (e) {
-      delete e.domain
-      delete e.domainThrown
-      delete e.domainEmitter
-      delete e.domainBound
-
-      Context.log('⚠ Panic:'.yellow, e, e.stack)
-      rollback(e.message)
-    })
-  })
-}
 
 // We have proper error handling here. No need for auto reports.
 Error.autoReport = false
@@ -98,29 +36,24 @@ const queues = require('./queues')
 Object.keys(queues).forEach(queue_name => {
   const definition = queues[queue_name]
 
-  const handler = (job, done) => {
-    // eslint-disable-next-line
-    const id = `job-${queue_name}-${job.data.type ? (job.data.type + '-') : ''}${job.id}`
-    prepareContext({ id }, (err, {rollback, commit} = {}) => {
-      if (err) {
-        Context.log('Error preparing context', err)
-        done(err)
-        return
-      }
+  const handler = async (job, done) => {
+    const id = `job-${queue_name}-${job.id}`
 
-      const examine = (err, result) => {
-        if (err) {
-          rollback(err)
-          done(err)
-          return
-        }
-
-        Metric.increment(`Job.${queue_name}`)
-        commit(done.bind(null, null, result))
-      }
-
-      definition.handler(job, examine)
+    const { rollback, commit } = await createContext({
+      id
     })
+
+    try {
+      const result = await definition.handler(job)
+      Metric.increment(`Job.${queue_name}`)
+      await commit()
+      done(result)
+    } catch(err) {
+      await rollback(err)
+      done()
+      return
+    }
+
   }
 
   queue.process(queue_name, definition.parallel, handler)
@@ -153,58 +86,7 @@ const shutdown = () => {
 process.once('SIGTERM', shutdown)
 process.once('SIGINT', shutdown)
 
-setTimeout(shutdown, 1000 * 60 * 10) // Restart every 3 minutes
-
-function nodeifyFn(fn) {
-  return (cb) => fn().nodeify(cb)
-}
-
-let i = 1
-
-const sendNotifications = function () {
-  prepareContext({
-    id: `worker-notifications-${++i}`
-  }, (err, {rollback, commit} = {}) => {
-    if (err) {
-      if (typeof rollback === 'function')
-        rollback(err)
-
-      return
-    }
-
-    async.series([
-      nodeifyFn(Notification.sendForUnread),
-      Message.sendEmailForUnread,
-      nodeifyFn(CrmTaskWorker.sendNotifications.bind(CrmTaskWorker)),
-      nodeifyFn(CalendarWorker.sendEmailForUnread.bind(CalendarWorker)),
-      nodeifyFn(Task.sendNotifications),
-      nodeifyFn(EmailCampaign.sendDue),
-      nodeifyFn(EmailCampaign.updateStats),
-      nodeifyFn(ShowingsCredential.crawlerJob),
-      nodeifyFn(ShowingsCredential.crawlerJob),
-      nodeifyFn(GoogleCredential.syncJob)
-    ], err => {
-      if (err) {
-        Slack.send({
-          channel: '7-server-errors',
-          text: 'Notifications worker: ' + '`' + err + '`',
-          emoji: ':skull:'
-        })
-
-        return rollback(err)
-      }
-
-      commit(err => {
-        if (err)
-          Context.log('Error committing', err)
-
-        setTimeout(sendNotifications, 5000)
-      })
-    })
-  })
-}
-
-sendNotifications()
+setTimeout(shutdown, 1000 * 60 * 10) // Restart every few minutes
 
 async function cleanupKueJobs() {
   const jobs = (await promisify(kue.Job.rangeByState)('complete', 0, 10000, 'asc'))
