@@ -74,5 +74,5 @@ It is important to remember that shadow users _can_ use some of the Rechat's fea
 ### Update user settings [PUT /users/self/settings/:key]
 <!-- include(tests/brand/updateUserSettings.md) -->
 
-### Upload Email Signature Pic [PATCH /users/self/email_signature_image_url]
-<!-- include(tests/user/uploadEmailSignPic.md) -->
+### Upload Email Signature Attachments [POST /users/self/email_signature_attachments]
+<!-- include(tests/user/uploadEmailSignAttachments.md) -->

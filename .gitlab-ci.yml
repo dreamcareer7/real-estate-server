@@ -62,7 +62,7 @@ coverage:
     - alias: redis
       name: redis:latest
   script:
-    - apk --no-cache --update add postgresql-client
+    - apk --no-cache --update add git postgresql-client
     - export PGPASSWORD=$POSTGRES_PASSWORD
     - psql -h "postgres" -U "$POSTGRES_USER" "$POSTGRES_DB" < ./data/minimal.sql
     - npm i
@@ -90,7 +90,7 @@ unit_coverage:
     - alias: redis
       name: redis:latest
   script:
-    - apk --no-cache --update add postgresql-client
+    - apk --no-cache --update add git postgresql-client
     - export PGPASSWORD=$POSTGRES_PASSWORD
     - psql -h "postgres" -U "$POSTGRES_USER" "$POSTGRES_DB" < ./data/minimal.sql
     - npm i
