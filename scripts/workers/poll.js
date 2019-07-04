@@ -60,11 +60,6 @@ poll({
 })
 
 poll({
-  fn: promisify(CrmTaskWorker.sendNotifications.bind(CrmTaskWorker)),
-  name: 'CrmTaskWorker.sendNotifications'
-})
-
-poll({
   fn: CrmTaskWorker.sendNotifications.bind(CrmTaskWorker),
   name: 'CrmTaskWorker.sendNotifications'
 })
