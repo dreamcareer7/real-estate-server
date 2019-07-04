@@ -1,3 +1,5 @@
+require('../../lib/models/index.js')()
+
 const { aggregate } = require('../../lib/utils/worker')
 
 const config = require('../../lib/config')

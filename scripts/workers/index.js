@@ -7,8 +7,6 @@ const queue = require('../../lib/utils/queue.js')
 const Metric = require('../../lib/models/Metric')
 const Slack = require('../../lib/models/Slack')
 
-require('../../lib/models/index.js')()
-
 const Context = require('../../lib/models/Context')
 const attachCalendarEvents = require('../../lib/models/Calendar/events')
 const attachContactEvents = require('../../lib/models/Contact/events')
