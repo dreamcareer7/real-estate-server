@@ -1,6 +1,6 @@
 const { peanar } = require('../lib/utils/peanar')
 
-require('../lib/models/Contact/worker/contact')
+require('../lib/models/Contact/worker')
 
 async function main() {
   await peanar.worker('contacts')
