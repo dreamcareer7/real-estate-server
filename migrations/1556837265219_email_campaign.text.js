@@ -6,7 +6,7 @@ const get = 'SELECT id, html FROM email_campaigns'
 const update = 'UPDATE email_campaigns SET text = $1 WHERE id = $2'
 
 const run = async () => {
-  const conn = await db.conn.promise()
+  const { conn } = await db.conn.promise()
 
   await conn.query('BEGIN')
 
