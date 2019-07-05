@@ -13,7 +13,7 @@ module.exports = {
   'state': 'TX',
   'matrix_unique_id': 9999998,
   'matrix_modified_dt': '2017-05-04T12:00:08.333',
-  'mls': 'North Texas Real Estate Information Systems',
+  'mls_name': 'North Texas Real Estate Information Systems',
   'mls_id': 'RCHT01X',
   'mls_provider': 'Metrotex Association Of Realtors',
   'nar_number': '',
