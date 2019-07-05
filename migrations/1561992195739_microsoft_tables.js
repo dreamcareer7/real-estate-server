@@ -78,6 +78,8 @@ const migrations = [
     remote_id TEXT NOT NULL,
     data JSONB,
 
+    source TEXT DEFAULT 'contacts',
+
     created_at timestamptz NOT NULL DEFAULT clock_timestamp(),
     updated_at timestamptz NOT NULL DEFAULT clock_timestamp(),
     deleted_at timestamptz,
