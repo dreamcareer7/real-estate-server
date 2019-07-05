@@ -69,7 +69,7 @@ SELECT 'compact_listing' AS TYPE,
        (
          SELECT url FROM photos
          WHERE
-          listing_mui = listings.matrix_unique_id
+          photos.listing = listings.id
           AND photos.url IS NOT NULL
           AND photos.deleted_at IS NULL
          ORDER BY "order" LIMIT 1
@@ -102,7 +102,7 @@ SELECT 'compact_listing' AS TYPE,
              EXTRACT(EPOCH FROM start_time) as start_time,
              EXTRACT(EPOCH FROM end_time)   as end_time,
              description
-           FROM open_houses WHERE listing_mui = listings.matrix_unique_id
+           FROM open_houses WHERE open_houses.listing = listings.id
                 AND end_time::timestamptz AT TIME ZONE tz > NOW()
          ) AS a
        ) AS open_houses,

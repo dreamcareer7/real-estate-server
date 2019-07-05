@@ -1,8 +1,10 @@
 const db = require('../lib/utils/db')
 const fs = require('fs')
 
-const ae = get_mls_context = fs.readFileSync(__dirname + '/../lib/sql/agent/agents_emails.mv.sql', 'utf-8')
-const ap = get_mls_context = fs.readFileSync(__dirname + '/../lib/sql/agent/agents_phones.mv.sql', 'utf-8')
+const ae = fs.readFileSync(__dirname + '/../lib/sql/agent/agents_emails.mv.sql', 'utf-8')
+const ap = fs.readFileSync(__dirname + '/../lib/sql/agent/agents_phones.mv.sql', 'utf-8')
+const ut = fs.readFileSync(__dirname + '/../lib/sql/deal/context/update_current_deal_context.trigger.sql', 'utf-8')
+const mc = fs.readFileSync(__dirname + '/../lib/sql/deal/context/get_mls_context.fn.sql', 'utf-8')
 
 const migrations = [
   'BEGIN',
@@ -72,6 +74,10 @@ const migrations = [
 
   ae,
   ap,
+  ut,
+  mc,
+
+  'ALTER TABLE recommendations DROP matrix_unique_id',
 
   'COMMIT'
 ]

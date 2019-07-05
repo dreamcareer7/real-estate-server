@@ -43,14 +43,14 @@ listing_settings AS (
         (
           SELECT COALESCE(ARRAY_AGG(url ORDER BY "order"), '{}'::text[]) FROM photos
           WHERE
-          listing_mui = listings.matrix_unique_id
+          photos.listing = listings.id
           AND photos.url IS NOT NULL
           AND photos.deleted_at IS NULL
         ) as gallery_image_urls,
         (
           SELECT url FROM photos
           WHERE
-          listing_mui = listings.matrix_unique_id
+          photos.listing = listings.id
           AND photos.url IS NOT NULL
           AND photos.deleted_at IS NULL
           ORDER BY "order" LIMIT 1
@@ -68,7 +68,7 @@ listing_settings AS (
               description
             FROM open_houses WHERE
             end_time::timestamptz AT TIME ZONE tz > NOW() AND
-            listing_mui = listings.matrix_unique_id
+            open_houses.listing = listings.id
           ) AS a
         ) AS open_houses
   FROM listings

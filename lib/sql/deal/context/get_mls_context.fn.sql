@@ -43,7 +43,7 @@ BEGIN
     (
       SELECT url FROM photos
       WHERE
-      listing_mui = listings.matrix_unique_id
+      listing = listings.id
       AND photos.url IS NOT NULL
       AND photos.deleted_at IS NULL
       ORDER BY "order" LIMIT 1

@@ -2,7 +2,7 @@ CREATE OR REPLACE FUNCTION update_listings_filters()
   RETURNS trigger AS
 $$
   BEGIN
-    DELETE FROM listings_filters WHERE matrix_unique_id = NEW.matrix_unique_id;
+    DELETE FROM listings_filters WHERE id = NEW.id;
 
     INSERT INTO listings_filters
     SELECT
