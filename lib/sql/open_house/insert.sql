@@ -30,4 +30,4 @@ ON CONFLICT (matrix_unique_id, mls) DO UPDATE SET
   tz = $7,
   updated_at = CLOCK_TIMESTAMP()
   WHERE open_houses.matrix_unique_id = $8 AND open_houses.mls = $9::mls
-RETURNING id
+RETURNING *

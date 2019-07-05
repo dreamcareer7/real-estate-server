@@ -17,7 +17,7 @@ registerSuite('contact', [
   'importManyContacts',
   'getContacts'
 ])
-registerSuite('listing', ['by_mui'])
+registerSuite('listing', ['by_mls'])
 
 function fixResponseTaskToInput(original) {
   const task = { ...original }
@@ -76,7 +76,7 @@ function create(cb) {
     associations: [
       {
         association_type: 'listing',
-        listing: results.listing.by_mui.data.id
+        listing: results.listing.by_mls.data.id
       }
     ],
     assignees: [
@@ -93,7 +93,7 @@ function create(cb) {
     assignees: [{
       id: results.task.registerNewUser.data.id
     }],
-    listings: [results.listing.by_mui.data.id]
+    listings: [results.listing.by_mls.data.id]
   })
 
   return frisby
@@ -323,7 +323,7 @@ function fetchAssociations(cb) {
           association_type: 'listing',
           listing: {
             type: 'listing',
-            id: results.listing.by_mui.data.id
+            id: results.listing.by_mls.data.id
           }
         },
         {
