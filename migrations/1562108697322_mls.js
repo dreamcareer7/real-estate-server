@@ -42,12 +42,14 @@ const migrations = [
   'ALTER TABLE property_units ALTER mls SET NOT NULL',
   'ALTER TABLE photos         ALTER mls SET NOT NULL',
 
-  'ALTER TABLE agents ADD office uuid REFERENCES offices(id)',
-  'ALTER TABLE agents ADD listing uuid REFERENCES listings(id)',
-  'ALTER TABLE photos ADD listing uuid REFERENCES listings(id)',
+  'ALTER TABLE agents      ADD office  uuid REFERENCES offices(id)',
+  'ALTER TABLE agents      ADD listing uuid REFERENCES listings(id)',
+  'ALTER TABLE photos      ADD listing uuid REFERENCES listings(id)',
+  'ALTER TABLE open_houses ADD listing uuid REFERENCES listings(id)',
 
-  'UPDATE agents SET listing = (SELECT id FROM listings WHERE listings.matrix_unique_id = agents.office_mui)',
-  'UPDATE photos SET listing = (SELECT id FROM listings WHERE listings.matrix_unique_id = photos.listing_mui)',
+  'UPDATE agents      SET listing = (SELECT id FROM listings   WHERE listings.matrix_unique_id = agents.office_mui)',
+  'UPDATE photos      SET listing = (SELECT id FROM listings   WHERE listings.matrix_unique_id = photos.listing_mui)',
+  'UPDATE open_houses SET listing = (SELECT id FROM listings l WHERE l.matrix_unique_id = open_houses.listing_mui)',
 
 
   'ALTER TABLE agents         DROP CONSTRAINT agents_matrix_unique_id_key',
