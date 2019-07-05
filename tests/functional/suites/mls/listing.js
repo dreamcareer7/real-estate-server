@@ -18,7 +18,8 @@ module.exports = {
     'directions': 'North of Lovers, between Preston and Hillcrest',
     'street_dir_prefix': '',
     'street_dir_suffix': '',
-    'street_number_searchable': '4076'
+    'street_number_searchable': '4076',
+    'mls': 'NTREIS'
   },
   'property': {
     'bedroom_count': 4,
@@ -92,6 +93,7 @@ module.exports = {
     'number_of_pets_allowed': 5,
     'furnished_yn': true,
     'fenced_yard_yn': true,
+    'mls': 'NTREIS'
   },
   'listing': {
     'currency': 'USD',
@@ -184,6 +186,7 @@ module.exports = {
     'seller_type': 'Individual(s)',
     'occupancy': 'Vacant',
     'private_remarks': 'Showings begin Friday, Dec.7th.',
-    'application_fee_yn': true
+    'application_fee_yn': true,
+    'mls': 'NTREIS'
   }
 }

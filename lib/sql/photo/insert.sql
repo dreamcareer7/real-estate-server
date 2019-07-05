@@ -17,16 +17,16 @@ VALUES (
   $5,
   $6,
   $7,
-  $8,
+  $8::mls,
   (SELECT id FROM listings WHERE matrix_unique_id = $1 AND mls = $8)
 )
-ON CONFLICT (matrix_unique_id) WHERE (revision < $7) DO UPDATE SET
+ON CONFLICT (matrix_unique_id, mls) WHERE (revision < $7) DO UPDATE SET
   description = $3,
   url = $4,
   "order" = $5,
   exif = $6,
   revision = $7
 
-WHERE photos.matrix_unique_id = $1
+WHERE photos.matrix_unique_id = $1 AND photos.mls = $8::mls
 
 RETURNING id

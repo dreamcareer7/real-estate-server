@@ -70,5 +70,6 @@ module.exports = {
     'SceneCaptureType': 0,
     'OffsetSchema': 0
   },
-  'url': 'https://d2j29n432zojb.cloudfront.net/69958752-1.jpg'
+  'url': 'https://d2j29n432zojb.cloudfront.net/69958752-1.jpg',
+  'mls': 'NTREIS'
 }

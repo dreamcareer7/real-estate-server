@@ -81,7 +81,8 @@ INSERT INTO properties (
   security_system_yn,
   furnished_yn,
   fenced_yard_yn,
-  block
+  block,
+  mls
 ) VALUES (
   $1,
   $2,
@@ -165,7 +166,8 @@ INSERT INTO properties (
   $80,
   $81,
   $82,
-  $83
+  $83,
+  $84::mls
 )
 
 ON CONFLICT (matrix_unique_id) DO UPDATE SET
@@ -252,6 +254,6 @@ ON CONFLICT (matrix_unique_id) DO UPDATE SET
   block = $83,
   updated_at = CLOCK_TIMESTAMP()
 
-WHERE properties.matrix_unique_id = $6
+WHERE properties.matrix_unique_id = $6 AND properties.mls = $84::mls
 
 RETURNING id

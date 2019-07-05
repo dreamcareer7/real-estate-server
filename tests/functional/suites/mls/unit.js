@@ -15,5 +15,6 @@ module.exports = {
   'half_bath': null,
   'beds': 4,
   'units': 2,
-  'square_feet': 2768
+  'square_feet': 2768,
+  'mls': 'NTREIS'
 }

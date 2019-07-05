@@ -96,8 +96,8 @@ INSERT INTO listings (
   occupancy,
   private_remarks,
   application_fee_yn,
-  revision,
-  mls
+  mls,
+  revision
 ) VALUES (
   $1,
   $2,
@@ -196,11 +196,11 @@ INSERT INTO listings (
   $95,
   $96,
   $97,
-  $98,
+  $98::mls,
   $99
 )
 
-ON CONFLICT (matrix_unique_id) DO UPDATE SET
+ON CONFLICT (matrix_unique_id, mls) DO UPDATE SET
   alerting_agent_id = $2,
   listing_agent_id = $3,
   currency = $4,
@@ -260,7 +260,7 @@ ON CONFLICT (matrix_unique_id) DO UPDATE SET
   last_status = $59,
   mls_area_major = $60,
   mls_area_minor = $61,
-  mls = $62,
+  mls_name = $62,
   move_in_date = $63,
   permit_address_internet_yn = $64,
   permit_comments_reviews_yn = $65,
@@ -296,10 +296,9 @@ ON CONFLICT (matrix_unique_id) DO UPDATE SET
   occupancy = $95,
   private_remarks = $96,
   application_fee_yn = $97,
-  mls = $98,
   revision = $99,
   updated_at = CLOCK_TIMESTAMP()
 
-WHERE listings.matrix_unique_id = $7
+WHERE listings.matrix_unique_id = $7 AND listings.mls = $98::mls
 
 RETURNING id

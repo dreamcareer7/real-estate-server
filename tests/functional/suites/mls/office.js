@@ -30,5 +30,6 @@ module.exports = {
   'st_postal_code': '75080',
   'st_postal_code_plus4': '',
   'st_state': 'TX',
-  'url': 'www.rechat.com'
+  'url': 'www.rechat.com',
+  'mls': 'NTREIS'
 }
