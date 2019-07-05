@@ -5,6 +5,7 @@ const ae = fs.readFileSync(__dirname + '/../lib/sql/agent/agents_emails.mv.sql',
 const ap = fs.readFileSync(__dirname + '/../lib/sql/agent/agents_phones.mv.sql', 'utf-8')
 const ut = fs.readFileSync(__dirname + '/../lib/sql/deal/context/update_current_deal_context.trigger.sql', 'utf-8')
 const mc = fs.readFileSync(__dirname + '/../lib/sql/deal/context/get_mls_context.fn.sql', 'utf-8')
+const lf = fs.readFileSync(__dirname + '/../lib/sql/alert/update_listings_filters.fn.sql', 'utf-8')
 
 const migrations = [
   'BEGIN',
@@ -78,6 +79,7 @@ const migrations = [
   ap,
   ut,
   mc,
+  lf,
 
   'ALTER TABLE recommendations DROP matrix_unique_id',
 

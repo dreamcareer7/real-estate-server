@@ -81,11 +81,11 @@ $$
       ) as address
     FROM listings
     JOIN
-      properties  ON listings.matrix_unique_id = properties.matrix_unique_id
+      properties  ON listings.property_id = properties.id
     JOIN
-      addresses   ON listings.matrix_unique_id = addresses.matrix_unique_id
+      addresses   ON properties.address_id = addresses.id
 
-    WHERE listings.matrix_unique_id = NEW.matrix_unique_id;
+    WHERE listings.id = NEW.id;
 
     RETURN NEW;
   END;
