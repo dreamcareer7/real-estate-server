@@ -55,7 +55,6 @@ async function main() {
   const brand = await createBrand()
 
   const agent = await findAgent(AGENT_MLS_ID)
-  const office = await findOffice(agent.office_mlsid)
   
   const agentUser = await createAndLoginAgentUser(brand)
   await fixUserBrand(agentUser, brand, agentAuthRequest)
@@ -222,17 +221,6 @@ async function createBrand() {
 async function findAgent(mlsid) {
   return (await authRequest({
     uri: '/agents/search',
-    qs: {
-      mlsid
-    },
-    method: 'GET',
-    json: true
-  })).data
-}
-
-async function findOffice(mlsid) {
-  return (await authRequest({
-    uri: '/offices/search',
     qs: {
       mlsid
     },

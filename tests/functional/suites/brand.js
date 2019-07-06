@@ -5,7 +5,6 @@ registerSuite('office', ['add'])
 registerSuite('form', ['create'])
 
 const hostname = 'testhost'
-let office_id
 let brand_id
 
 const createParent = (cb) => {
