@@ -100,7 +100,7 @@ const migrations = [
   mc,
   lf,
   ba,
-  bu
+  bu,
 
   'ALTER TABLE recommendations DROP matrix_unique_id',
 
