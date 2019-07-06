@@ -14,10 +14,10 @@ listing_settings AS (
           SELECT "user" FROM brand_agents
           ORDER BY (
             CASE
-              WHEN listings.list_agent       = brand_agents.mlsid THEN 4
-              WHEN listings.co_list_agent    = brand_agents.mlsid THEN 3
-              WHEN listings.selling_agent    = brand_agents.mlsid THEN 2
-              WHEN listings.co_selling_agent = brand_agents.mlsid THEN 1
+              WHEN listings.list_agent       = brand_agents.agent THEN 4
+              WHEN listings.co_list_agent    = brand_agents.agent THEN 3
+              WHEN listings.selling_agent    = brand_agents.agent THEN 2
+              WHEN listings.co_selling_agent = brand_agents.agent THEN 1
               ELSE 0
             END
           ) DESC, is_me DESC, has_contact DESC, RANDOM()
