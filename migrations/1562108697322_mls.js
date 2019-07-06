@@ -8,6 +8,7 @@ const mc = fs.readFileSync(__dirname + '/../lib/sql/deal/context/get_mls_context
 const lf = fs.readFileSync(__dirname + '/../lib/sql/alert/update_listings_filters.fn.sql', 'utf-8')
 const ba = fs.readFileSync(__dirname + '/../lib/sql/brand/get_brand_agents.fn.sql', 'utf-8')
 const bu = fs.readFileSync(__dirname + '/../lib/sql/brand/get_brand_users.fn.sql', 'utf-8')
+const pa = fs.readFileSync(__dirname + '/../lib/sql/brand/propose_brand_agents.fn.sql', 'utf-8')
 
 const migrations = [
   'BEGIN',
@@ -95,6 +96,7 @@ const migrations = [
   'DROP MATERIALIZED VIEW agents_phones',
 
   'DROP FUNCTION get_brand_agents(uuid)',
+  'DROP FUNCTION propose_brand_agents(uuid, uuid)',
 
   ae,
   ap,
@@ -103,6 +105,7 @@ const migrations = [
   lf,
   ba,
   bu,
+  pa,
 
   'ALTER TABLE recommendations DROP matrix_unique_id',
 
