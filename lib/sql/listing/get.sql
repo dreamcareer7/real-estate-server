@@ -81,7 +81,7 @@ property AS (
         EXTRACT(EPOCH FROM properties.created_at) AS created_at,
         EXTRACT(EPOCH FROM properties.updated_at) AS updated_at
   FROM properties
-  JOIN listing ON properties.matrix_unique_id = listing.matrix_unique_id
+  JOIN listing ON listing.property_id = properties.id
 ),
 address AS (
   SELECT addresses.*,
@@ -127,11 +127,11 @@ address AS (
         )
       ) AS street_address
   FROM addresses
-  JOIN listing ON listing.matrix_unique_id = addresses.matrix_unique_id
+  JOIN properties ON properties.address_id = addresses.id
 ),
 property_object AS (
   SELECT property.*, row_to_json(address) as address FROM property
-  JOIN address ON property.matrix_unique_id = address.matrix_unique_id
+  JOIN address ON property.address_id = address.id
 )
 
 SELECT listing.*, row_to_json(property_object) as property, listing_settings.id as user_listing_notification_setting
