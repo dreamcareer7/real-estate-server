@@ -13,7 +13,7 @@ const pa = fs.readFileSync(__dirname + '/../lib/sql/brand/propose_brand_agents.f
 const migrations = [
   'BEGIN',
   `CREATE TYPE mls
-     AS ENUM('NTREIS')`,
+     AS ENUM('NTREIS', 'CRMLS')`,
 
   'ALTER TABLE listings RENAME COLUMN mls TO mls_name',
   'ALTER TABLE offices  RENAME COLUMN mls TO mls_name',
