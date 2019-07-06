@@ -32,7 +32,6 @@ RETURNS JSON AS $$
               INITCAP(NULLIF(($1).suftype, '')),
               INITCAP(NULLIF(($1).sufdir, '')),
               INITCAP(NULLIF(($1).ruralroute, '')),
-              INITCAP(NULLIF(($1).extra, '')),
               CASE
                 WHEN ($1).unit IS NULL THEN NULL
                 WHEN ($1).unit = '' THEN NULL
@@ -71,7 +70,6 @@ RETURNS JSON AS $$
               INITCAP(NULLIF(($1).suftype, '')),
               INITCAP(NULLIF(($1).sufdir, '')),
               INITCAP(NULLIF(($1).ruralroute, '')),
-              INITCAP(NULLIF(($1).extra, '')),
               CASE
                 WHEN ($1).unit IS NULL THEN NULL
                 WHEN ($1).unit = '' THEN NULL
