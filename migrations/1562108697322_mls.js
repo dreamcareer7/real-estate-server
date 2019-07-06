@@ -94,6 +94,8 @@ const migrations = [
   'DROP MATERIALIZED VIEW agents_emails',
   'DROP MATERIALIZED VIEW agents_phones',
 
+  'DROP FUNCTION brands_agents(uuid)',
+
   ae,
   ap,
   ut,
