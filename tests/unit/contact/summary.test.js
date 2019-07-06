@@ -156,25 +156,44 @@ async function testEmptyContact() {
   expect(summary.search_field).to.be.equal('\'guest\':1')
 }
 
+async function testMarketingName() {
+  const attrs = {
+    first_name: 'John',
+    last_name: 'Doe',
+    marketing_name: 'John and Jane Doe'
+  }
+
+  const [id] = await Contact.create(
+    [
+      {
+        attributes: attributes(attrs),
+        user: user.id
+      }
+    ],
+    user.id,
+    brand.id
+  )
+
+  await handleJobs()
+
+  const created = await Contact.get(id)
+
+  expect(created).to.include({
+    ...attrs,
+    partner_name: null
+  })
+}
+
 async function testGetSummaries() {
   const ids = await Contact.create(
     [
       {
         user: user.id,
-        attributes: [
-          {
-            attribute_type: 'first_name',
-            text: 'Abbas'
-          },
-          {
-            attribute_type: 'company',
-            text: 'my_company'
-          },
-          {
-            attribute_type: 'email',
-            text: 'abbas@rechat.com'
-          }
-        ]
+        attributes: attributes({
+          first_name: 'Abbas',
+          company: 'my_company',
+          email: ['abbas@rechat.com']
+        })
       }
     ],
     user.id,
@@ -200,8 +219,10 @@ async function testGetSummaries() {
   await handleJobs()
   contact = await Contact.get(my_contact.id)
 
-  expect(contact.first_name).to.be.null
-  expect(contact.display_name).to.be.equal('my_company')
+  expect(contact).to.include({
+    first_name: null,
+    display_name: 'my_company'
+  })
 
   // delete email attribute
   const email_attr = my_contact.attributes.find(a => a.attribute_type === 'email')
@@ -209,8 +230,11 @@ async function testGetSummaries() {
   await handleJobs()
   contact = await Contact.get(my_contact.id)
 
-  expect(contact.email).to.be.null
-  expect(contact.display_name).to.be.equal('my_company')
+  expect(contact).to.include({
+    first_name: null,
+    email: null,
+    display_name: 'my_company'
+  })
 
   // delete company attribute
   const company_attr = my_contact.attributes.find(a => a.attribute_type === 'company')
@@ -218,8 +242,11 @@ async function testGetSummaries() {
   await handleJobs()
   contact = await Contact.get(my_contact.id)
 
-  expect(contact.company).to.be.null
-  expect(contact.display_name).to.be.equal('Guest')
+  expect(contact).to.include({
+    first_name: null,
+    email: null,
+    display_name: 'Guest'
+  })
 }
 
 async function testAddEmptyAttribute() {
@@ -516,6 +543,7 @@ describe('Contact', () => {
     it('should update summary after adding an attribute', testAddAttribute)
     it('should update search field for company contacts', testCompanyContact)
     it('should update search field for an empty contact', testEmptyContact)
+    it('should return valid marketing_name', testMarketingName)
     it('should return valid display_name', testGetSummaries)
     it('should not update empty forwarded attribute', testAddEmptyAttribute)
     it('should calculate partner summary fields', testPartner)
