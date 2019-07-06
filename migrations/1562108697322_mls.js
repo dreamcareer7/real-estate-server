@@ -99,6 +99,8 @@ const migrations = [
   ut,
   mc,
   lf,
+  ba,
+  bu
 
   'ALTER TABLE recommendations DROP matrix_unique_id',
 
