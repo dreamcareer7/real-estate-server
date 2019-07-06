@@ -14,10 +14,10 @@ listing_settings AS (
           SELECT "user" FROM brand_agents
           ORDER BY (
             CASE
-              WHEN listings.list_agent_mls_id       = brand_agents.mlsid THEN 4
-              WHEN listings.co_list_agent_mls_id    = brand_agents.mlsid THEN 3
-              WHEN listings.selling_agent_mls_id    = brand_agents.mlsid THEN 2
-              WHEN listings.co_selling_agent_mls_id = brand_agents.mlsid THEN 1
+              WHEN listings.list_agent       = brand_agents.mlsid THEN 4
+              WHEN listings.co_list_agent    = brand_agents.mlsid THEN 3
+              WHEN listings.selling_agent    = brand_agents.mlsid THEN 2
+              WHEN listings.co_selling_agent = brand_agents.mlsid THEN 1
               ELSE 0
             END
           ) DESC, is_me DESC, has_contact DESC, RANDOM()
@@ -28,9 +28,6 @@ listing_settings AS (
         EXTRACT(EPOCH FROM listings.deleted_at) AS deleted_at,
         EXTRACT(EPOCH FROM listings.list_date) AS list_date,
         EXTRACT(EPOCH FROM listings.close_date) AS close_date,
-        (
-          SELECT id FROM agents WHERE matrix_unique_id = listings.list_agent_mui LIMIT 1
-        ) as list_agent,
         (
           CASE WHEN $2::uuid IS NULL THEN FALSE ELSE (
              SELECT count(*) > 0 FROM recommendations

@@ -6,6 +6,8 @@ const ap = fs.readFileSync(__dirname + '/../lib/sql/agent/agents_phones.mv.sql',
 const ut = fs.readFileSync(__dirname + '/../lib/sql/deal/context/update_current_deal_context.trigger.sql', 'utf-8')
 const mc = fs.readFileSync(__dirname + '/../lib/sql/deal/context/get_mls_context.fn.sql', 'utf-8')
 const lf = fs.readFileSync(__dirname + '/../lib/sql/alert/update_listings_filters.fn.sql', 'utf-8')
+const ba = fs.readFileSync(__dirname + '/../lib/sql/brand/get_brand_agents.fn.sql', 'utf-8')
+const bu = fs.readFileSync(__dirname + '/../lib/sql/brand/get_brand_users.fn.sql', 'utf-8')
 
 const migrations = [
   'BEGIN',
@@ -25,33 +27,49 @@ const migrations = [
   'ALTER TABLE property_units ADD mls mls',
   'ALTER TABLE photos         ADD mls mls',
 
-  'UPDATE agents         SET mls = \'NTREIS\'',
-  'UPDATE listings       SET mls = \'NTREIS\'',
   'UPDATE properties     SET mls = \'NTREIS\'',
   'UPDATE addresses      SET mls = \'NTREIS\'',
   'UPDATE offices        SET mls = \'NTREIS\'',
-  'UPDATE open_houses    SET mls = \'NTREIS\'',
   'UPDATE property_rooms SET mls = \'NTREIS\'',
   'UPDATE property_units SET mls = \'NTREIS\'',
-  'UPDATE photos         SET mls = \'NTREIS\'',
+  // Other tables have updates below
 
-  'ALTER TABLE agents         ALTER mls SET NOT NULL',
+  'ALTER TABLE agents      ADD office           uuid REFERENCES offices(id)',
+  'ALTER TABLE photos      ADD listing          uuid REFERENCES listings(id)',
+  'ALTER TABLE open_houses ADD listing          uuid REFERENCES listings(id)',
+  'ALTER TABLE listings    ADD list_agent       uuid REFERENCES agents(id)',
+  'ALTER TABLE listings    ADD co_list_agent    uuid REFERENCES agents(id)',
+  'ALTER TABLE listings    ADD selling_agent    uuid REFERENCES agents(id)',
+  'ALTER TABLE listings    ADD co_selling_agent uuid REFERENCES agents(id)',
+  'ALTER TABLE listings    ADD list_office      uuid REFERENCES offices(id)',
+  'ALTER TABLE listings    ADD selling_office   uuid REFERENCES offices(id)',
+
+  `UPDATE agents SET
+    mls = 'NTREIS',
+    office = (SELECT id FROM offices WHERE offices.matrix_unique_id = agents.office_mui)`,
+
+  `UPDATE photos SET
+    mls = 'NTREIS',
+    listing = (SELECT id FROM listings WHERE listings.matrix_unique_id = photos.listing_mui)`,
+
+  `UPDATE open_houses SET
+    mls = 'NTREIS',
+    listing = (SELECT id FROM listings l WHERE l.matrix_unique_id = open_houses.listing_mui)`,
+
+  `UPDATE listings SET
+    list_agent       = (SELECT id FROM agents  WHERE matrix_unique_id = listings.list_agent_mui),
+    selling_agent    = (SELECT id FROM agents  WHERE matrix_unique_id = listings.selling_agent_mui),
+    co_list_agent    = (SELECT id FROM agents  WHERE matrix_unique_id = listings.list_agent_mui),
+    co_selling_agent = (SELECT id FROM agents  WHERE matrix_unique_id = listings.selling_agent_mui),
+    list_office      = (SELECT id FROM offices WHERE matrix_unique_id = listings.list_office_mui),
+    selling_office   = (SELECT id FROM offices WHERE matrix_unique_id = listings.selling_office_mui)`,
+
   'ALTER TABLE listings       ALTER mls SET NOT NULL',
   'ALTER TABLE offices        ALTER mls SET NOT NULL',
   'ALTER TABLE open_houses    ALTER mls SET NOT NULL',
   'ALTER TABLE property_rooms ALTER mls SET NOT NULL',
   'ALTER TABLE property_units ALTER mls SET NOT NULL',
   'ALTER TABLE photos         ALTER mls SET NOT NULL',
-
-  'ALTER TABLE agents      ADD office  uuid REFERENCES offices(id)',
-  'ALTER TABLE agents      ADD listing uuid REFERENCES listings(id)',
-  'ALTER TABLE photos      ADD listing uuid REFERENCES listings(id)',
-  'ALTER TABLE open_houses ADD listing uuid REFERENCES listings(id)',
-
-  'UPDATE agents      SET listing = (SELECT id FROM listings   WHERE listings.matrix_unique_id = agents.office_mui)',
-  'UPDATE photos      SET listing = (SELECT id FROM listings   WHERE listings.matrix_unique_id = photos.listing_mui)',
-  'UPDATE open_houses SET listing = (SELECT id FROM listings l WHERE l.matrix_unique_id = open_houses.listing_mui)',
-
 
   'ALTER TABLE agents         DROP CONSTRAINT agents_matrix_unique_id_key',
   'ALTER TABLE open_houses    DROP CONSTRAINT open_houses_matrix_unique_id_key',
