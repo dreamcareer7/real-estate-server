@@ -290,7 +290,6 @@ const migrations = [
     
           COALESCE(
             CASE WHEN contacts_summaries.partner_first_name IS NOT NULL AND contacts_summaries.partner_last_name IS NOT NULL THEN contacts_summaries.partner_first_name || ' ' || contacts_summaries.partner_last_name ELSE NULL END,
-            contacts_summaries.marketing_name,
             contacts_summaries.partner_nickname,
             contacts_summaries.partner_first_name,
             contacts_summaries.partner_last_name,
