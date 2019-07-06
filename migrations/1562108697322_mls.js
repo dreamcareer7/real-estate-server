@@ -57,6 +57,7 @@ const migrations = [
     listing = (SELECT id FROM listings l WHERE l.matrix_unique_id = open_houses.listing_mui)`,
 
   `UPDATE listings SET
+    mls              = 'NTREIS',
     list_agent       = (SELECT id FROM agents  WHERE matrix_unique_id = listings.list_agent_mui),
     selling_agent    = (SELECT id FROM agents  WHERE matrix_unique_id = listings.selling_agent_mui),
     co_list_agent    = (SELECT id FROM agents  WHERE matrix_unique_id = listings.list_agent_mui),
