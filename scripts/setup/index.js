@@ -52,13 +52,11 @@ async function createAndLoginAgentUser(brand) {
 
 async function main() {
   const adminUser = await checkLogin(true)
-  let brand = await createBrand()
+  const brand = await createBrand()
 
   const agent = await findAgent(AGENT_MLS_ID)
   const office = await findOffice(agent.office_mlsid)
   
-  brand = await addOfficeToBrand(brand, office)
-
   const agentUser = await createAndLoginAgentUser(brand)
   await fixUserBrand(agentUser, brand, agentAuthRequest)
   await fixUserBrand(adminUser, brand, authRequest)
@@ -241,26 +239,6 @@ async function findOffice(mlsid) {
     method: 'GET',
     json: true
   })).data
-}
-
-async function addOfficeToBrand(brand, office) {
-  if (brand.offices.find(mlsid => mlsid === office.mls_id)) {
-    console.log('Office already added to brand.')
-    return brand
-  }
-
-  const resp = await authRequest({
-    uri: `/brands/${brand.id}/offices`,
-    body: {
-      office: office.id
-    },
-    method: 'POST',
-    json: true
-  })
-
-  console.log(`Added office ${office.id} to brand.`)
-
-  return resp.data
 }
 
 function getBrandRoles(brand) {

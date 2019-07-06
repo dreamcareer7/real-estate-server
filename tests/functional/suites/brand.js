@@ -151,20 +151,6 @@ const getByHostname = (cb) => {
     })
 }
 
-const addOffice = cb => {
-  office_id = results.office.add
-  return frisby.create('add an office to a brand')
-    .post(`/brands/${brand_id}/offices`, {
-      office: office_id
-    })
-    .after(cb)
-    .expectStatus(200)
-    .expectJSON({
-      code: 'OK',
-      //       data: brand
-    })
-}
-
 const addChecklist = cb => {
   return frisby.create('add a checklist to a brand')
     .post(`/brands/${brand_id}/checklists`, {
@@ -243,17 +229,6 @@ const deleteTask = cb => {
     .delete(`/brands/${brand_id}/checklists/${results.brand.addChecklist.data.id}/tasks/${results.brand.addTask.data.id}`)
     .after(cb)
     .expectStatus(204)
-}
-
-const removeOffice = cb => {
-  return frisby.create('remove an office from a brand')
-    .delete(`/brands/${brand_id}/offices/${office_id}`)
-    .after(cb)
-    .expectStatus(200)
-    .expectJSON({
-      code: 'OK',
-      //       data: brand
-    })
 }
 
 const addRole = cb => {
@@ -522,7 +497,6 @@ module.exports = {
 
   deleteRole,
 
-  addOffice,
   addHostname,
   addChecklist,
   updateChecklist,
@@ -532,7 +506,6 @@ module.exports = {
   deleteTask,
   deleteChecklist,
   getByHostname,
-  removeOffice,
   removeHostname,
 
   addContext,

@@ -1,7 +1,6 @@
 CREATE OR REPLACE FUNCTION get_brand_agents(id uuid) RETURNS TABLE (
    "user"     uuid,
    agent      uuid,
-   mlsid      text,
    brand_user uuid,
    brand_role uuid,
    brand      uuid,
@@ -11,7 +10,6 @@ $$
   SELECT
     users.id           as "user",
     agents.id          as agent,
-    agents.mlsid       as mlsid,
     brands_users.id    as brand_user,
     brands_roles.id    as brand_role,
     brands_roles.brand as brand,
