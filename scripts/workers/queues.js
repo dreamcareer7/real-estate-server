@@ -15,14 +15,14 @@ const touches_handler = require('../../lib/models/CRM/Touch/worker')
 const tasks_handler = require('../../lib/models/CRM/Task/worker')
 const calendar_handlers = require('../../lib/models/Calendar/worker')
 
-const Agent = require('../lib/models/Agent')
-const Email = require('../lib/models/Email')
-const { Listing } = require('../lib/models/Listing')
-const Notification = require('../lib/models/Notification')
-const User = require('../lib/models/User')
-const ShowingsCrawler = require('../lib/models/Showings/crawler')
-const GoogleWorkers = require('../lib/models/Google/workers/')
-const MicrosoftWorkers = require('../lib/models/Microsoft/workers/')
+const Agent = require('../../lib/models/Agent')
+const Email = require('../../lib/models/Email')
+const { Listing } = require('../../lib/models/Listing')
+const Notification = require('../../lib/models/Notification')
+const User = require('../../lib/models/User')
+const ShowingsCrawler = require('../../lib/models/Showings/crawler')
+const GoogleWorkers = require('../../lib/models/Google/workers/')
+const MicrosoftWorkers = require('../../lib/models/Microsoft/workers/')
 
 
 const airship = (job, done) => {
@@ -114,6 +114,7 @@ const google_sync = (job, done) => {
 const microsoft_sync = (job, done) => {
   MicrosoftWorkers.syncMicrosoft(job.data).nodeify(done)
 }
+
 
 module.exports = {
   airship_transport_send_device: {
