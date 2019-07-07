@@ -72,7 +72,7 @@ LANGUAGE sql`,
 
 
 const run = async () => {
-  const conn = await db.conn.promise()
+  const { conn } = await db.conn.promise()
 
   for(const sql of migrations) {
     await conn.query(sql)

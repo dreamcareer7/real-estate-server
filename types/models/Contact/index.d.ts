@@ -185,6 +185,8 @@ declare interface IContactFilterOptions {
   next_touch_lte?: number;
   created_gte?: number;
   created_lte?: number;
+  deleted_gte?: number;
+  deleted_lte?: number;
   alphabet?: string;
   crm_tasks?: UUID[];
   ids?: UUID[];

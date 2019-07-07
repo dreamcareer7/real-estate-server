@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION update_email_campaign_stats(campaign_id uuid)
+CREATE OR REPLACE FUNCTION update_email_campaign_stats2(campaign_id uuid)
 RETURNS void AS
 $$
   WITH events AS (
@@ -9,62 +9,96 @@ $$
   ),
 
     recipient_counts AS (
-      SELECT count(*) as count, event, recipient FROM events
-      GROUP BY event, recipient
+      SELECT
+        recipient,
+        count(*) filter(WHERE events.event = 'accepted')     as accepted,
+        count(*) filter(WHERE events.event = 'rejected')     as rejected,
+        count(*) filter(WHERE events.event = 'delivered')    as delivered,
+        count(*) filter(WHERE events.event = 'failed')       as failed,
+        count(*) filter(WHERE events.event = 'opened')       as opened,
+        count(*) filter(WHERE events.event = 'clicked')      as clicked,
+        count(*) filter(WHERE events.event = 'unsubscribed') as unsubscribed,
+        count(*) filter(WHERE events.event = 'complained')   as complained,
+        count(*) filter(WHERE events.event = 'stored')       as stored
+      FROM events
+      GROUP BY recipient
+      ORDER BY recipient
     ),
 
     update_recipients AS (
       UPDATE email_campaign_emails ece SET
-        accepted     = COALESCE((SELECT count FROM recipient_counts rc WHERE ece.email_address = rc.recipient AND event = 'accepted'    ), 0),
-        rejected     = COALESCE((SELECT count FROM recipient_counts rc WHERE ece.email_address = rc.recipient AND event = 'rejected'    ), 0),
-        delivered    = COALESCE((SELECT count FROM recipient_counts rc WHERE ece.email_address = rc.recipient AND event = 'delivered'   ), 0),
-        failed       = COALESCE((SELECT count FROM recipient_counts rc WHERE ece.email_address = rc.recipient AND event = 'failed'      ), 0),
-        opened       = COALESCE((SELECT count FROM recipient_counts rc WHERE ece.email_address = rc.recipient AND event = 'opened'      ), 0),
-        clicked      = COALESCE((SELECT count FROM recipient_counts rc WHERE ece.email_address = rc.recipient AND event = 'clicked'     ), 0),
-        unsubscribed = COALESCE((SELECT count FROM recipient_counts rc WHERE ece.email_address = rc.recipient AND event = 'unsubscribed'), 0),
-        complained   = COALESCE((SELECT count FROM recipient_counts rc WHERE ece.email_address = rc.recipient AND event = 'complained'  ), 0),
-        stored       = COALESCE((SELECT count FROM recipient_counts rc WHERE ece.email_address = rc.recipient AND event = 'stored'      ), 0)
+        accepted     = rc.accepted,
+        rejected     = rc.rejected,
+        delivered    = rc.delivered,
+        failed       = rc.failed,
+        opened       = rc.opened,
+        clicked      = rc.clicked,
+        unsubscribed = rc.unsubscribed,
+        complained   = rc.complained,
+        stored       = rc.stored
       FROM recipient_counts rc
       WHERE ece.campaign = $1
-      AND   ece.email_address = rc.recipient
+      AND ece.email_address = rc.recipient
     ),
 
   email_counts AS (
-    SELECT count(DISTINCT email) as count, event, email FROM events
-    GROUP BY event, email
+    SELECT
+        email,
+        count(DISTINCT email) filter(WHERE events.event = 'accepted')     as accepted,
+        count(DISTINCT email) filter(WHERE events.event = 'rejected')     as rejected,
+        count(DISTINCT email) filter(WHERE events.event = 'delivered')    as delivered,
+        count(DISTINCT email) filter(WHERE events.event = 'failed')       as failed,
+        count(DISTINCT email) filter(WHERE events.event = 'opened')       as opened,
+        count(DISTINCT email) filter(WHERE events.event = 'clicked')      as clicked,
+        count(DISTINCT email) filter(WHERE events.event = 'unsubscribed') as unsubscribed,
+        count(DISTINCT email) filter(WHERE events.event = 'complained')   as complained,
+        count(DISTINCT email) filter(WHERE events.event = 'stored')       as stored
+      FROM events
+      GROUP BY email
+      ORDER BY email
   ),
 
   update_emails AS (
     UPDATE emails SET
-      accepted     = COALESCE((SELECT count FROM email_counts WHERE email = emails.id AND event = 'accepted'    ), 0),
-      rejected     = COALESCE((SELECT count FROM email_counts WHERE email = emails.id AND event = 'rejected'    ), 0),
-      delivered    = COALESCE((SELECT count FROM email_counts WHERE email = emails.id AND event = 'delivered'   ), 0),
-      failed       = COALESCE((SELECT count FROM email_counts WHERE email = emails.id AND event = 'failed'      ), 0),
-      opened       = COALESCE((SELECT count FROM email_counts WHERE email = emails.id AND event = 'opened'      ), 0),
-      clicked      = COALESCE((SELECT count FROM email_counts WHERE email = emails.id AND event = 'clicked'     ), 0),
-      unsubscribed = COALESCE((SELECT count FROM email_counts WHERE email = emails.id AND event = 'unsubscribed'), 0),
-      complained   = COALESCE((SELECT count FROM email_counts WHERE email = emails.id AND event = 'complained'  ), 0),
-      stored       = COALESCE((SELECT count FROM email_counts WHERE email = emails.id AND event = 'stored'      ), 0)
-
-    WHERE campaign = $1
+      accepted     = ec.accepted,
+      rejected     = ec.rejected,
+      delivered    = ec.delivered,
+      failed       = ec.failed,
+      opened       = ec.opened,
+      clicked      = ec.clicked,
+      unsubscribed = ec.unsubscribed,
+      complained   = ec.complained,
+      stored       = ec.stored
+    FROM email_counts ec
+    WHERE emails.campaign = $1
+    AND emails.id = ec.email
   ),
 
   campaign_counts AS (
-    SELECT count(DISTINCT recipient) as count, event FROM events
-    GROUP BY event
+    SELECT
+      count(DISTINCT recipient) filter(WHERE events.event = 'accepted')     as accepted,
+      count(DISTINCT recipient) filter(WHERE events.event = 'rejected')     as rejected,
+      count(DISTINCT recipient) filter(WHERE events.event = 'delivered')    as delivered,
+      count(DISTINCT recipient) filter(WHERE events.event = 'failed')       as failed,
+      count(DISTINCT recipient) filter(WHERE events.event = 'opened')       as opened,
+      count(DISTINCT recipient) filter(WHERE events.event = 'clicked')      as clicked,
+      count(DISTINCT recipient) filter(WHERE events.event = 'unsubscribed') as unsubscribed,
+      count(DISTINCT recipient) filter(WHERE events.event = 'complained')   as complained,
+      count(DISTINCT recipient) filter(WHERE events.event = 'stored')       as stored
+    FROM events
   )
 
   UPDATE email_campaigns SET
-    accepted     = COALESCE((SELECT count FROM campaign_counts WHERE event = 'accepted'    ), 0),
-    rejected     = COALESCE((SELECT count FROM campaign_counts WHERE event = 'rejected'    ), 0),
-    delivered    = COALESCE((SELECT count FROM campaign_counts WHERE event = 'delivered'   ), 0),
-    failed       = COALESCE((SELECT count FROM campaign_counts WHERE event = 'failed'      ), 0),
-    opened       = COALESCE((SELECT count FROM campaign_counts WHERE event = 'opened'      ), 0),
-    clicked      = COALESCE((SELECT count FROM campaign_counts WHERE event = 'clicked'     ), 0),
-    unsubscribed = COALESCE((SELECT count FROM campaign_counts WHERE event = 'unsubscribed'), 0),
-    complained   = COALESCE((SELECT count FROM campaign_counts WHERE event = 'complained'  ), 0),
-    stored       = COALESCE((SELECT count FROM campaign_counts WHERE event = 'stored'      ), 0)
-
-  WHERE id = $1
+    accepted     = cc.accepted,
+    rejected     = cc.rejected,
+    delivered    = cc.delivered,
+    failed       = cc.failed,
+    opened       = cc.opened,
+    clicked      = cc.clicked,
+    unsubscribed = cc.unsubscribed,
+    complained   = cc.complained,
+    stored       = cc.stored
+  FROM campaign_counts cc
+  WHERE email_campaigns.id = $1
 $$
 LANGUAGE SQL;

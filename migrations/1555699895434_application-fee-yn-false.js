@@ -7,7 +7,7 @@ const sql = `UPDATE listings SET application_fee_yn = FALSE
              WHERE matrix_unique_id IN(${ids})`
 
 const run = async () => {
-  const conn = await db.conn.promise()
+  const { conn } = await db.conn.promise()
 
   await conn.query(sql)
 

@@ -1,26 +1,27 @@
-require('../lib/models/index.js')()
-const { aggregate } = require('../lib/utils/worker')
+require('../../lib/models/index.js')()
 
-const config = require('../lib/config')
+const { aggregate } = require('../../lib/utils/worker')
+
+const config = require('../../lib/config')
 
 const {
   contacts,
   contact_import,
   contact_lists,
   contact_duplicates,
-} = require('../lib/models/Contact/worker')
+} = require('../../lib/models/Contact/worker')
 
-const touches_handler = require('../lib/models/CRM/Touch/worker')
-const tasks_handler = require('../lib/models/CRM/Task/worker')
-const calendar_handlers = require('../lib/models/Calendar/worker')
+const touches_handler = require('../../lib/models/CRM/Touch/worker')
+const tasks_handler = require('../../lib/models/CRM/Task/worker')
+const calendar_handlers = require('../../lib/models/Calendar/worker')
 
-const Agent = require('../lib/models/Agent')
-const Email = require('../lib/models/Email')
-const { Listing } = require('../lib/models/Listing')
-const Notification = require('../lib/models/Notification')
-const User = require('../lib/models/User')
-const ShowingsCrawler = require('../lib/models/Showings/crawler')
-const GoogleWorkers = require('../lib/models/Google/workers/')
+const Agent = require('../../lib/models/Agent')
+const Email = require('../../lib/models/Email')
+const { Listing } = require('../../lib/models/Listing')
+const Notification = require('../../lib/models/Notification')
+const User = require('../../lib/models/User')
+const ShowingsCrawler = require('../../lib/models/Showings/crawler')
+const GoogleWorkers = require('../../lib/models/Google/workers/')
 
 
 const airship = (job, done) => {
