@@ -10,8 +10,8 @@ UPDATE deals_roles SET
   email = $8,
   agent = $9,
   phone_number = $10,
-  current_address = $11,
-  future_address = $12,
+  current_address = JSON_TO_STDADDR($11),
+  future_address = JSON_TO_STDADDR($12),
   company_title = $13,
   commission_dollar = $14,
   commission_percentage = $15,
@@ -26,6 +26,17 @@ UPDATE deals_roles SET
 
   brokerwolf_id = $23,
   brokerwolf_row_version = $24,
-  role = $25
+  role = $25,
+
+  searchable = to_tsvector('english',
+    COALESCE($3, '')   || ' ' ||
+    COALESCE($4, '')   || ' ' ||
+    COALESCE($5, '')   || ' ' ||
+    COALESCE($6, '')   || ' ' ||
+    COALESCE($13, '')  || ' ' ||
+    COALESCE($16, '')  || ' ' ||
+    COALESCE($17, '')  || ' ' ||
+    COALESCE($18, '')
+  )
 
 WHERE id = $1

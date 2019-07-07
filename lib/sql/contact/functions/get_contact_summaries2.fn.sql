@@ -203,18 +203,24 @@ AS $function$
             SELECT
               address_attrs.id,
               'address' AS attribute_type,
-              array_agg(array_to_string(ARRAY[
-                array_to_string(ARRAY[
-                  street_number,
-                  street_prefix,
-                  street_name,
-                  street_suffix,
-                  unit_number
-                ], ' '),
-                city,
-                "state",
-                postal_code
-              ], ', ') ORDER BY address_attrs.is_primary DESC, address_attrs.label not ilike 'Home')::text AS "value"
+              array_agg(jsonb_build_object(
+                'building', null,
+                'house_num', street_number,
+                'predir', street_prefix,
+                'qual', null,
+                'pretype', null,
+                'name', street_name,
+                'suftype', street_suffix,
+                'sufdir', null,
+                'ruralroute', null,
+                'extra', null,
+                'city', city,
+                'state', "state",
+                'country', country,
+                'postcode', postal_code,
+                'box', null,
+                'unit', unit_number
+              )::text ORDER BY address_attrs.is_primary DESC, address_attrs.label not ilike 'Home')::text AS "value"
             FROM
               address_attrs
             GROUP BY
@@ -278,7 +284,6 @@ AS $function$
 
       COALESCE(
         CASE WHEN contacts_summaries.partner_first_name IS NOT NULL AND contacts_summaries.partner_last_name IS NOT NULL THEN contacts_summaries.partner_first_name || ' ' || contacts_summaries.partner_last_name ELSE NULL END,
-        contacts_summaries.marketing_name,
         contacts_summaries.partner_nickname,
         contacts_summaries.partner_first_name,
         contacts_summaries.partner_last_name,
@@ -293,7 +298,7 @@ AS $function$
 
       (
         SELECT
-          array_agg(standardize_address('us_lex', 'us_gaz', 'us_rules', addr)) AS "address"
+          array_agg(JSON_TO_STDADDR(addr)) AS "address"
         FROM
           unnest(contacts_summaries.address) AS addrs(addr)
       ) AS "address"
@@ -350,7 +355,7 @@ AS $function$
       partner_company text,
       partner_email text,
       partner_phone_number text,
-      "address" text[]
+      "address" jsonb[]
     ) ON cids.id = contacts_summaries.cid;
   END;
 $function$

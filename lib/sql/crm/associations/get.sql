@@ -28,15 +28,38 @@ FROM
         crm_associations
         JOIN deals
           ON crm_associations.deal = deals.id
-      WHERE 
+      WHERE
         crm_associations.association_type = 'deal'
-        AND EXISTS (
-          SELECT
-            brand
-          FROM
-            ub
-          WHERE
-            ub.brand = deals.brand
+        AND (
+          EXISTS (
+            SELECT
+              brand
+            FROM
+              ub
+            WHERE
+              ub.brand = deals.brand
+          )
+          OR
+          EXISTS (
+            SELECT
+              dr.brand
+            FROM
+              ub
+              JOIN deals_roles AS dr
+                ON dr.brand = ub.brand
+              LEFT JOIN deals_checklists AS dc
+                ON dr.checklist = dc.id
+            WHERE
+              deals.id = dr.deal
+              AND dr.deleted_at IS NULL
+              AND (
+                dc.id IS NULL
+                OR (
+                  dc.terminated_at IS NULL
+                  AND dc.deactivated_at IS NULL
+                )
+              )
+          )
         )
     )
     UNION ALL

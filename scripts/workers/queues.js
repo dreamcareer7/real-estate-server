@@ -1,18 +1,19 @@
-require('../lib/models/index.js')()
-const { aggregate } = require('../lib/utils/worker')
+require('../../lib/models/index.js')()
 
-const config = require('../lib/config')
+const { aggregate } = require('../../lib/utils/worker')
+
+const config = require('../../lib/config')
 
 const {
   contacts,
   contact_import,
   contact_lists,
   contact_duplicates,
-} = require('../lib/models/Contact/worker')
+} = require('../../lib/models/Contact/worker')
 
-const touches_handler = require('../lib/models/CRM/Touch/worker')
-const tasks_handler = require('../lib/models/CRM/Task/worker')
-const calendar_handlers = require('../lib/models/Calendar/worker')
+const touches_handler = require('../../lib/models/CRM/Touch/worker')
+const tasks_handler = require('../../lib/models/CRM/Task/worker')
+const calendar_handlers = require('../../lib/models/Calendar/worker')
 
 const Agent = require('../lib/models/Agent')
 const Email = require('../lib/models/Email')
@@ -127,7 +128,7 @@ module.exports = {
 
   email: {
     handler: email,
-    parallel: config.email.parallel
+    parallel: 50
   },
 
   sms: {

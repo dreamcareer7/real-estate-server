@@ -1,6 +1,6 @@
 const Context = require('../../lib/models/Context')
 const queues = Object.assign(
-  require('../../scripts/queues.js'),
+  require('../../scripts/workers/queues.js'),
   require('./queues.js')
 )
 
