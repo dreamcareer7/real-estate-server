@@ -213,7 +213,7 @@ AS $function$
                 'suftype', street_suffix,
                 'sufdir', null,
                 'ruralroute', null,
-                'extra', null,
+                'extra', label,
                 'city', city,
                 'state', "state",
                 'country', country,

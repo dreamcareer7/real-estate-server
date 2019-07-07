@@ -401,7 +401,8 @@ async function testAddressSummary() {
     city: 'Dallas',
     line1: '1200 Main Street',
     line2: 'Dallas',
-    full: '1200 Main Street Dallas'
+    full: '1200 Main Street Dallas',
+    extra: 'Home'
   })
 
   expect(created.address[0]).to.be.eql({
@@ -414,7 +415,8 @@ async function testAddressSummary() {
     postcode: '76051',
     line1: '3535 Bluffs Ln Unit #101',
     line2: 'Grapevine TX 76051',
-    full: '3535 Bluffs Ln Unit #101, Grapevine TX 76051'
+    full: '3535 Bluffs Ln Unit #101, Grapevine TX 76051',
+    extra: 'Work'
   })
 }
 
@@ -517,7 +519,8 @@ async function testAddressSummaryWithoutPrimary() {
     city: 'Dallas',
     line1: '1200 Main Street',
     line2: 'Dallas',
-    full: '1200 Main Street Dallas'
+    full: '1200 Main Street Dallas',
+    extra: 'Home'
   })
 
   expect(created.address[1]).to.be.eql({
@@ -530,7 +533,8 @@ async function testAddressSummaryWithoutPrimary() {
     postcode: '76051',
     line1: '3535 Bluffs Ln Unit #101',
     line2: 'Grapevine TX 76051',
-    full: '3535 Bluffs Ln Unit #101, Grapevine TX 76051'
+    full: '3535 Bluffs Ln Unit #101, Grapevine TX 76051',
+    extra: 'Work'
   })
 }
 
