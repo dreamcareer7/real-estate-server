@@ -30,7 +30,9 @@ export interface IPeanarRequest {
   correlationId?: string;
 }
 
-export interface IPeanarJob extends IPeanarJobDefinition, IPeanarRequest {}
+export interface IPeanarJob extends IPeanarJobDefinition, IPeanarRequest {
+  deliveryTag: bigint;
+}
 
 export interface IPeanarOptions {
   jobClass: typeof PeanarJob;
