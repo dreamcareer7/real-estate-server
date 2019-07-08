@@ -404,7 +404,8 @@ async function testAddressSummary() {
     line1: '1200 Main St',
     line2: 'Dallas',
     full: '1200 Main St Dallas',
-    extra: 'Home'
+    extra: 'Home',
+    type: 'stdaddr'
   })
 
   expect(created.address[0]).to.be.eql({
@@ -418,7 +419,8 @@ async function testAddressSummary() {
     line1: '3535 Bluffs Ln #101',
     line2: 'Grapevine Texas 76051',
     full: '3535 Bluffs Ln #101, Grapevine Texas 76051',
-    extra: 'Work'
+    extra: 'Work',
+    type: 'stdaddr'
   })
 }
 
