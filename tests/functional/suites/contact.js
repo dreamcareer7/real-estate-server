@@ -1126,14 +1126,6 @@ const bulkMerge = cb => {
     .expectStatus(200)
 }
 
-const getJobStatus = cb => {
-  return frisby
-    .create('get status of a contact-related job')
-    .get('/contacts/jobs/' + results.contact.bulkMerge.data.job_id)
-    .after(cb)
-    .expectStatus(200)
-}
-
 const sendEmails = cb => {
   const campaign = {
     subject: 'Email Subject',

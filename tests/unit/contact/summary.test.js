@@ -394,8 +394,6 @@ async function testAddressSummary() {
 
   expect(created.address).to.have.length(2)
 
-  console.log(created.address[1])
-
   expect(created.address[1]).to.be.eql({
     house_num: '1200',
     name: 'Main',

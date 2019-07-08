@@ -1,5 +1,3 @@
-const async = require('async')
-
 process.env.NODE_ENV = 'tests'
 
 const db = require('../../lib/utils/db')
@@ -54,6 +52,7 @@ function createContext() {
     context.set({
       db: conn,
       jobs: [],
+      rabbit_jobs: [],
       'db:log': false
     })
 
@@ -70,29 +69,14 @@ function createContext() {
   })
 }
 
-const handleJobs = (done) => { 
-  async.whilst(() => {
-    const jobs = Context.get('jobs')
-    return jobs.length > 0
-  }, (cb) => {
-    const jobs = Context.get('jobs')
-    const job = jobs.shift()
-
-    handleJob(job.type, job.data, (err, result) => {
-      if (result) {
-        Context.log(JSON.stringify(result, null, 2))
-      }
-      cb(err)
-    })
-  }, (err) => {
-    if (err) {
-      console.error(err)
-      return done(err)
+async function handleJobs() {
+  while (Context.get('jobs').length > 0 || Context.get('rabbit_jobs').length > 0) {
+    while (Context.get('jobs').length > 0) {
+      const job = Context.get('jobs').shift()
+      await promisify(handleJob)(job.type, job.data)
     }
-
-    Context.log('finished jobs\n')
-    return done()
-  })
+    await peanar.enqueueContextJobs()
+  }
 }
 
-module.exports = { createContext, handleJobs: promisify(handleJobs) }
+module.exports = { createContext, handleJobs: handleJobs }

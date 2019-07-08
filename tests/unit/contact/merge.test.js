@@ -3,9 +3,9 @@ const { expect } = require('chai')
 const { createContext, handleJobs } = require('../helper')
 
 const Contact = require('../../../lib/models/Contact')
+const DuplicateWorker = require('../../../lib/models/Contact/worker/duplicate')
 const ContactDuplicate = require('../../../lib/models/Contact/duplicate')
 const Context = require('../../../lib/models/Context')
-const Job = require('../../../lib/models/Job')
 const Orm = require('../../../lib/models/Orm')
 const User = require('../../../lib/models/User')
 
@@ -26,13 +26,11 @@ async function setup() {
 }
 
 async function createContact(data) {
-  const res = await Contact.create(
-    data.map(c => ({ ...c, user: user.id })),
-    user.id,
-    brand.id,
-    'direct_request',
-    { activity: false, get: false, relax: false }
-  )
+  const res = await Contact.create(data.map(c => ({ ...c, user: user.id })), user.id, brand.id, 'direct_request', {
+    activity: false,
+    get: false,
+    relax: false
+  })
 
   await handleJobs()
 
@@ -84,13 +82,21 @@ async function testUpdateDuplicateEdges() {
   })
   const contactA = populated[0]
 
-  await Contact.update([{
-    id: ids[0],
-    attributes: [{
-      id: contactA.attributes.find(a => a.attribute_type === 'phone_number').id,
-      text: '(703) 726-1600'
-    }]
-  }], user.id, brand.id)
+  await Contact.update(
+    [
+      {
+        id: ids[0],
+        attributes: [
+          {
+            id: contactA.attributes.find(a => a.attribute_type === 'phone_number').id,
+            text: '(703) 726-1600'
+          }
+        ]
+      }
+    ],
+    user.id,
+    brand.id
+  )
 
   await handleJobs()
 
@@ -121,18 +127,15 @@ async function testRemoveDuplicateEdges() {
 async function testMergeWithSameEmails() {
   const ids = await createContact(same_email)
 
-  Context.get('jobs').push(
-    Job.queue.create('contact_duplicates', {
-      clusters: [
-        {
-          parent: ids[0],
-          sub_contacts: [ids[1]]
-        }
-      ],
-      user_id: user.id,
-      brand_id: brand.id,
-      type: 'merge'
-    })
+  DuplicateWorker.merge(
+    [
+      {
+        parent: ids[0],
+        sub_contacts: [ids[1]]
+      }
+    ],
+    user.id,
+    brand.id
   )
 
   await handleJobs()
@@ -147,9 +150,7 @@ async function testMergeWithSameEmails() {
     associations: ['contact.attributes']
   })
 
-  const attrs = populated[0].attributes.filter(
-    a => a.attribute_type === 'first_name'
-  )
+  const attrs = populated[0].attributes.filter(a => a.attribute_type === 'first_name')
 
   expect(attrs).to.have.length(1)
   expect(attrs[0].text).to.be.equal('Abbas')
@@ -168,9 +169,6 @@ describe('Contact', () => {
   })
 
   describe('Merge', () => {
-    it(
-      'should remove duplicate emails from the merged contact',
-      testMergeWithSameEmails
-    )
+    it('should remove duplicate emails from the merged contact', testMergeWithSameEmails)
   })
 })
