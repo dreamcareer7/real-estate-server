@@ -1,6 +1,7 @@
 const Context = require('../../lib/models/Context')
 const Job = require('../../lib/models/Job')
 const db = require('../../lib/utils/db')
+const { peanar } = require('../../lib/utils/peanar')
 const promisify = require('../../lib/utils/promisify')
 
 const createContext = async c => {
@@ -28,8 +29,11 @@ const createContext = async c => {
 
     Context.log('Committed 👌')
 
-    const jobs = context.get('jobs')
-    await promisify(Job.handle)(jobs)
+    while (context.get('jobs').length > 0 || context.get('rabbit_jobs').length > 0) {
+      await promisify(Job.handle)(context.get('jobs'))
+      await peanar.enqueueContextJobs()
+    }
+
     done()
   }
 
