@@ -71,7 +71,7 @@ async function testExportMailer() {
   expect(facts).to.have.length(1)
   expect(facts[0]).to.be.eql({
     marketing_name: 'John Doe and Jane Doe',
-    full_street_name: '1505 Elm Street Unit 1101',
+    full_street_name: '1505 Elm St Unit 1101',
     city: 'Dallas',
     state: 'Texas',
     postcode: '75201'
