@@ -141,26 +141,29 @@ const database = (req, res, next) => {
 
   res.end = function (data, encoding, callback) {
     if (req.headers['x-handle-jobs'] === 'yes') {
-      async.parallel([
-        cb => {
-          async.whilst(() => {
-            const jobs = Context.get('jobs')
-            return jobs.length > 0
-          }, (cb) => {
-            const jobs = Context.get('jobs')
-            const job = jobs.shift()
-            handleJob(job.type, job.data, (err, result) => {
-              if (result) {
-                Context.log(JSON.stringify(result, null, 2))
-              }
-              cb(err, result)
-            })
-          }, cb)
-        },
-        cb => {
-          peanar.enqueueContextJobs().nodeify(cb)
-        }
-      ], (err) => {
+      async.whilst(() => {
+        return Context.get('jobs').length > 0 || Context.get('rabbit_jobs').length > 0
+      }, cb => {
+        async.parallel([
+          cb => {
+            async.whilst(() => {
+              const jobs = Context.get('jobs')
+              return jobs.length > 0
+            }, (cb) => {
+              const job = Context.get('jobs').shift()
+              handleJob(job.type, job.data, (err, result) => {
+                if (result) {
+                  Context.log(JSON.stringify(result, null, 2))
+                }
+                cb(err, result)
+              })
+            }, cb)
+          },
+          cb => {
+            peanar.enqueueContextJobs().nodeify(cb)
+          }
+        ], cb)
+      }, (err) => {
         if (err) {
           console.error(err)
         }
