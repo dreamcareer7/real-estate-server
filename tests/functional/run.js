@@ -13,6 +13,7 @@ global['Run'] = Run
 
 const config = require('../../lib/config.js')
 const migrate = require('../../lib/utils/migrate')
+const { peanar } = require('../../lib/utils/peanar')
 const fork = require('child_process').fork
 const async = require('async')
 const redis = require('redis')
@@ -140,19 +141,26 @@ const database = (req, res, next) => {
 
   res.end = function (data, encoding, callback) {
     if (req.headers['x-handle-jobs'] === 'yes') {
-      async.whilst(() => {
-        const jobs = Context.get('jobs')
-        return jobs.length > 0
-      }, (cb) => {
-        const jobs = Context.get('jobs')
-        const job = jobs.shift()
-        handleJob(job.type, job.data, (err, result) => {
-          if (result) {
-            Context.log(JSON.stringify(result, null, 2))
-          }
-          cb(err, result)
-        })
-      }, (err) => {
+      async.parallel([
+        cb => {
+          async.whilst(() => {
+            const jobs = Context.get('jobs')
+            return jobs.length > 0
+          }, (cb) => {
+            const jobs = Context.get('jobs')
+            const job = jobs.shift()
+            handleJob(job.type, job.data, (err, result) => {
+              if (result) {
+                Context.log(JSON.stringify(result, null, 2))
+              }
+              cb(err, result)
+            })
+          }, cb)
+        },
+        cb => {
+          peanar.enqueueContextJobs().nodeify(cb)
+        }
+      ], (err) => {
         if (err) {
           console.error(err)
         }
@@ -170,6 +178,7 @@ const database = (req, res, next) => {
     context.set({
       db: connections[suite],
       jobs: [],
+      rabbit_jobs: [],
       suite
     })
     context.run(next)

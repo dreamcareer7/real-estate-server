@@ -3,10 +3,23 @@ const queues = Object.assign(
   require('../../scripts/workers/queues.js'),
   require('./queues.js')
 )
+const { peanar } = require('../../lib/utils/peanar')
 
 function handleJob(name, data, cb) {
   Context.log('Handling job', name)
   queues[name].handler({type: name, data}, cb)
+}
+
+/**
+ * @param {string} queue 
+ * @param {import('../../lib/utils/peanar/peanar').IPeanarRequest} req 
+ */
+async function handlePeanarJob(queue, req) {
+  const fn = peanar.getJobDefinition(queue, req.name)
+
+  if (!fn) throw new Error(`handlePeanarJobs: No handler found for job ${queue}:${req.name}`)
+
+  await fn.handler.apply(null, req.args)
 }
 
 function installJobsRoute(app) {
@@ -26,5 +39,6 @@ function installJobsRoute(app) {
 
 module.exports = {
   handleJob,
+  handlePeanarJob,
   installJobsRoute
 }
