@@ -43,6 +43,7 @@ const migrations = [
     last_sync_duration INTEGER,
 
     contacts_last_sync_at timestamptz DEFAULT NULL,
+    contacts_last_extract_at timestamptz DEFAULT NULL,
     messages_last_sync_at timestamptz DEFAULT NULL,
 
     created_at timestamptz NOT NULL DEFAULT clock_timestamp(),
@@ -52,7 +53,6 @@ const migrations = [
     UNIQUE (access_token),
     UNIQUE (refresh_token)
   )`,
-
 
   `CREATE TABLE IF NOT EXISTS microsoft_contact_folders(
     id uuid NOT NULL PRIMARY KEY DEFAULT uuid_generate_v4(),
