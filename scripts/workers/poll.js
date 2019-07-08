@@ -7,6 +7,8 @@ const EmailCampaign = require('../../lib/models/Email/campaign')
 const ShowingsCredential = require('../../lib/models/Showings/credential')
 const GoogleCredential = require('../../lib/models/Google/credential')
 const Task = require('../../lib/models/Task')
+const MicrosoftCredential = require('../../lib/models/Microsoft/credential')
+
 
 const promisify = require('../../lib/utils/promisify')
 
@@ -92,4 +94,9 @@ poll({
 poll({
   fn: GoogleCredential.syncJob,
   name: 'GoogleCredential.syncJob'
+})
+
+poll({
+  fn: MicrosoftCredential.syncJob,
+  name: 'MicrosoftCredential.syncJob'
 })
