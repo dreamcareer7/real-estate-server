@@ -1,7 +1,9 @@
+import ChannelN from "ts-amqp/dist/classes/ChannelN";
+
 /* eslint-disable */
 
 declare class PeanarJob {
-  constructor(req: IPeanarRequest);
+  constructor(req: IPeanarRequest, channel: ChannelN);
   perform(): Promise<any>;
 }
 
