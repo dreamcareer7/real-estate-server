@@ -4,13 +4,6 @@ const { aggregate } = require('../../lib/utils/worker')
 
 const config = require('../../lib/config')
 
-const {
-  contacts,
-  contact_import,
-  contact_lists,
-  contact_duplicates,
-} = require('../../lib/models/Contact/worker')
-
 const touches_handler = require('../../lib/models/CRM/Touch/worker')
 const tasks_handler = require('../../lib/models/CRM/Task/worker')
 const calendar_handlers = require('../../lib/models/Calendar/worker')
@@ -185,26 +178,6 @@ module.exports = {
   'deal_email': {
     handler: deal_email,
     parallel: 5
-  },
-
-  contact_import: {
-    handler: contact_import,
-    parallel: 4
-  },
-
-  contacts: {
-    handler: contacts,
-    parallel: 8
-  },
-
-  contact_lists: {
-    handler: contact_lists,
-    parallel: 8
-  },
-
-  contact_duplicates: {
-    handler: contact_duplicates,
-    parallel: 8
   },
 
   touches: {

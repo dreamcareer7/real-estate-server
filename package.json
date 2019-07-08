@@ -108,7 +108,7 @@
     "throng": "^4.0.0",
     "to-pascal-case": "^1.0.0",
     "to-snake-case": "^1.0.0",
-    "ts-amqp": "^0.1.5",
+    "ts-amqp": "^0.2.0",
     "twilio": "^3.32.0",
     "underscore": "^1.9.1",
     "urban-airship-push": "^0.1.0",

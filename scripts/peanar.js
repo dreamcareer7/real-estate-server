@@ -8,6 +8,9 @@ async function main() {
     'contact_lists',
     'contact_duplicates',
   ], n: 5 })
+  await peanar.worker({ queues: [
+    'contact_import',
+  ], n: 2 })
 
   process.on('SIGINT', () => peanar.shutdown())
   process.on('SIGTERM', () => peanar.shutdown())
