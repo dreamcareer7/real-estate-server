@@ -1,10 +1,10 @@
 const db = require('../lib/utils/db')
 
 const migrations = [
-  'BEGIN',
-
   `ALTER TYPE contact_action_reason
     ADD VALUE 'microsoft_integration'`,
+
+  'BEGIN',
 
   `DROP TABLE IF EXISTS
     microsoft_credentials CASCADE`,
