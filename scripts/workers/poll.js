@@ -56,45 +56,45 @@ const notifications = async () => {
   await promisify(Message.sendEmailForUnread)
 }
 
-poll({
-  fn: notifications,
-  name: 'notifications'
-})
+// poll({
+//   fn: notifications,
+//   name: 'notifications'
+// })
 
-poll({
-  fn: CrmTaskWorker.sendNotifications.bind(CrmTaskWorker),
-  name: 'CrmTaskWorker.sendNotifications'
-})
+// poll({
+//   fn: CrmTaskWorker.sendNotifications.bind(CrmTaskWorker),
+//   name: 'CrmTaskWorker.sendNotifications'
+// })
 
-poll({
-  fn: CalendarWorker.sendEmailForUnread.bind(CalendarWorker),
-  name: 'CalendarWorker.sendEmailForUnread'
-})
+// poll({
+//   fn: CalendarWorker.sendEmailForUnread.bind(CalendarWorker),
+//   name: 'CalendarWorker.sendEmailForUnread'
+// })
 
-poll({
-  fn: Task.sendNotifications,
-  name: 'Task.sendNotifications'
-})
+// poll({
+//   fn: Task.sendNotifications,
+//   name: 'Task.sendNotifications'
+// })
 
-poll({
-  fn: EmailCampaign.sendDue,
-  name: 'EmailCampaign.sendDue'
-})
+// poll({
+//   fn: EmailCampaign.sendDue,
+//   name: 'EmailCampaign.sendDue'
+// })
 
-poll({
-  fn: EmailCampaign.updateStats,
-  name: 'EmailCampaign.updateStats'
-})
+// poll({
+//   fn: EmailCampaign.updateStats,
+//   name: 'EmailCampaign.updateStats'
+// })
 
-poll({
-  fn: ShowingsCredential.crawlerJob,
-  name: 'ShowingsCredential.crawlerJob'
-})
+// poll({
+//   fn: ShowingsCredential.crawlerJob,
+//   name: 'ShowingsCredential.crawlerJob'
+// })
 
-poll({
-  fn: GoogleCredential.syncJob,
-  name: 'GoogleCredential.syncJob'
-})
+// poll({
+//   fn: GoogleCredential.syncJob,
+//   name: 'GoogleCredential.syncJob'
+// })
 
 poll({
   fn: MicrosoftCredential.syncJob,
