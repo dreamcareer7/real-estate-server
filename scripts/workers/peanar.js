@@ -1,6 +1,6 @@
-const { peanar } = require('../lib/utils/peanar')
+const { peanar } = require('../../lib/utils/peanar')
 
-require('../lib/models/Contact/worker')
+require('../../lib/models/Contact/worker')
 
 async function main() {
   await peanar.worker({ queues: [

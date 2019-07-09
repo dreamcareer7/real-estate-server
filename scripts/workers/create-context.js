@@ -51,7 +51,8 @@ const createContext = async c => {
 
   context.set({
     db: conn,
-    jobs: []
+    jobs: [],
+    rabbit_jobs: [],
   })
 
   context.enter()
