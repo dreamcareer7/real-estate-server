@@ -366,7 +366,7 @@ async function testAddressSummary() {
             {
               label: 'Work',
               index: 2,
-              text: 'TX',
+              text: 'Texas',
               is_primary: true
             }
           ],
@@ -394,15 +394,18 @@ async function testAddressSummary() {
 
   expect(created.address).to.have.length(2)
 
+  console.log(created.address[1])
+
   expect(created.address[1]).to.be.eql({
     house_num: '1200',
     name: 'Main',
     suftype: 'Street',
     city: 'Dallas',
-    line1: '1200 Main Street',
+    line1: '1200 Main St',
     line2: 'Dallas',
-    full: '1200 Main Street Dallas',
-    extra: 'Home'
+    full: '1200 Main St Dallas',
+    extra: 'Home',
+    type: 'stdaddr'
   })
 
   expect(created.address[0]).to.be.eql({
@@ -410,13 +413,14 @@ async function testAddressSummary() {
     name: 'Bluffs',
     suftype: 'Ln',
     city: 'Grapevine',
-    state: 'TX',
+    state: 'Texas',
     unit: '#101',
     postcode: '76051',
-    line1: '3535 Bluffs Ln Unit #101',
-    line2: 'Grapevine TX 76051',
-    full: '3535 Bluffs Ln Unit #101, Grapevine TX 76051',
-    extra: 'Work'
+    line1: '3535 Bluffs Ln #101',
+    line2: 'Grapevine Texas 76051',
+    full: '3535 Bluffs Ln #101, Grapevine Texas 76051',
+    extra: 'Work',
+    type: 'stdaddr'
   })
 }
 
@@ -486,7 +490,7 @@ async function testAddressSummaryWithoutPrimary() {
             {
               label: 'Work',
               index: 2,
-              text: 'TX'
+              text: 'Texas'
             }
           ],
           postal_code: [
@@ -517,10 +521,11 @@ async function testAddressSummaryWithoutPrimary() {
     name: 'Main',
     suftype: 'Street',
     city: 'Dallas',
-    line1: '1200 Main Street',
+    line1: '1200 Main St',
     line2: 'Dallas',
-    full: '1200 Main Street Dallas',
-    extra: 'Home'
+    full: '1200 Main St Dallas',
+    extra: 'Home',
+    type: 'stdaddr'
   })
 
   expect(created.address[1]).to.be.eql({
@@ -528,13 +533,14 @@ async function testAddressSummaryWithoutPrimary() {
     name: 'Bluffs',
     suftype: 'Ln',
     city: 'Grapevine',
-    state: 'TX',
+    state: 'Texas',
     unit: '#101',
     postcode: '76051',
-    line1: '3535 Bluffs Ln Unit #101',
-    line2: 'Grapevine TX 76051',
-    full: '3535 Bluffs Ln Unit #101, Grapevine TX 76051',
-    extra: 'Work'
+    line1: '3535 Bluffs Ln #101',
+    line2: 'Grapevine Texas 76051',
+    full: '3535 Bluffs Ln #101, Grapevine Texas 76051',
+    extra: 'Work',
+    type: 'stdaddr'
   })
 }
 

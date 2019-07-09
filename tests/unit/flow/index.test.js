@@ -155,7 +155,7 @@ async function testStopFlow() {
     object_types: ['crm_task', 'email_campaign']
   })
 
-  expect(events).to.have.length(1)
+  expect(events).to.be.empty
 }
 
 describe('Flow', () => {

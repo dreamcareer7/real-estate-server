@@ -1,4 +1,7 @@
-CREATE OR REPLACE FUNCTION STDADDR_TO_JSON(input stdaddr)
+const db = require('../lib/utils/db')
+
+const migrations = [
+  `CREATE OR REPLACE FUNCTION STDADDR_TO_JSON(input stdaddr)
 RETURNS JSON AS $$
   WITH street_type AS (
     SELECT NULLIF(COALESCE(abbrev, ($1).suftype), '') as abbrev FROM tiger.street_type_lookup
@@ -6,7 +9,6 @@ RETURNS JSON AS $$
   )
   SELECT JSON_STRIP_NULLS(
     JSON_BUILD_OBJECT(
-      'type',       'stdaddr',
       'building',   INITCAP(NULLIF(($1).building, '')),
       'house_num',  INITCAP(NULLIF(($1).house_num, '')),
       'predir',     INITCAP(NULLIF(($1).predir, '')),
@@ -91,4 +93,22 @@ RETURNS JSON AS $$
     )
   )
 $$
-LANGUAGE SQL;
+LANGUAGE SQL;`
+]
+
+
+const run = async () => {
+  const { conn } = await db.conn.promise()
+
+  for(const sql of migrations) {
+    await conn.query(sql)
+  }
+
+  conn.release()
+}
+
+exports.up = cb => {
+  run().then(cb).catch(cb)
+}
+
+exports.down = () => {}
