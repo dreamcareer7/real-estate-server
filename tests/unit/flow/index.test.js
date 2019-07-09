@@ -33,7 +33,7 @@ async function setup() {
       steps: [{
         title: 'Create Rechat email',
         description: 'Create a Rechat email address for the new guy to use in other services',
-        due_in: 8 * HOUR,
+        due_in: 8 * HOUR + DAY,
         is_automated: false,
         event: {
           title: 'Create Rechat email',
@@ -42,7 +42,7 @@ async function setup() {
       }, {
         title: 'Send them a test email',
         description: 'Automatically send them a test email to make sure it\'s working',
-        due_in: 8 * HOUR + DAY,
+        due_in: 8 * HOUR + 2 * DAY,
         is_automated: true,
         email: {
           name: 'Onboarding Email',
@@ -54,7 +54,7 @@ async function setup() {
       }, {
         title: 'Demo of Rechat',
         description: 'Dan gives a quick demo of the Rechat system and explains how it works',
-        due_in: 3 * DAY + 10 * HOUR,
+        due_in: 4 * DAY + 10 * HOUR,
         is_automated: false,
         event: {
           title: 'Demo of Rechat',
@@ -134,8 +134,8 @@ async function testEnrollContact() {
   
   const due_dates = tasks.map(t => t.due_date)
   expect(due_dates).to.have.members([
-    moment().tz(user.timezone).startOf('day').add(8, 'hours').unix(),
-    moment().tz(user.timezone).startOf('day').add(3, 'days').add(10, 'hours').unix(),
+    moment().tz(user.timezone).startOf('day').add(1, 'days').add(8, 'hours').unix(),
+    moment().tz(user.timezone).startOf('day').add(4, 'days').add(10, 'hours').unix(),
   ])
 
   const campaigns = await EmailCampaign.getByBrand(brand.id)
