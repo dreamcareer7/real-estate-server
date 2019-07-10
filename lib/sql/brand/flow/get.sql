@@ -18,6 +18,16 @@ SELECT
       AND deleted_at IS NULL
   ) AS steps,
 
+  (
+    SELECT
+      count(id)
+    FROM
+      flows
+    WHERE
+      origin = brands_flows.id
+      AND flows.deleted_at IS NULL
+  ) AS active_flows,
+
   'brand_flow' AS type
 FROM
   brands_flows
