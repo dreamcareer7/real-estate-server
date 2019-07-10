@@ -392,6 +392,30 @@ const getTemplates = cb => {
     })
 }
 
+const updateBrandSettings = cb => {
+  return frisby.create('update a brand setting')
+    .put(`/brands/${brand_id}/settings/some_key`, {
+      value: 'Hello!'
+    })
+    .addHeader('X-Rechat-Brand', brand_id)
+    .after(cb)
+    .expectStatus(204)
+}
+
+const getBrandSettings = cb => {
+  return frisby.create('get brand settings')
+    .get(`/brands/${brand_id}/settings`)
+    .addHeader('X-Rechat-Brand', brand_id)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      data: [{
+        key: 'some_key',
+        value: 'Hello!'
+      }]
+    })
+}
+
 const updateUserSettings = cb => {
   return frisby.create('update a user setting')
     .put('/users/self/settings/user_filter', {
@@ -410,6 +434,19 @@ const getUserRoles = cb => {
     .get('/users/self/roles')
     .after(cb)
     .expectStatus(200)
+    .expectJSON({
+      data: [{
+        brand_settings: {
+          some_key: 'Hello!'
+        },
+        settings: {
+          user_filter: [
+            '4926132e-9e1d-11e7-8fd6-0242ac110003',
+            '5d66ae5e-f82c-11e5-b4b4-f23c91b0d077'
+          ]
+        }
+      }]
+    })
 }
 
 const removeBrand = cb => {
@@ -519,6 +556,8 @@ module.exports = {
   getEmails,
   deleteEmail,
 
+  updateBrandSettings,
+  getBrandSettings,
   updateUserSettings,
   getUserRoles,
 

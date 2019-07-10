@@ -30,10 +30,20 @@ WITH r AS (
     "user" = $1::uuid
   GROUP BY
     brand
+), bs AS (
+  SELECT
+    brand,
+    JSON_OBJECT_AGG(key, value) AS settings
+  FROM
+    brands_settings
+  GROUP BY
+    brand
 )
 SELECT
   r.*,
-  s.settings
+  s.settings,
+  bs.settings AS brand_settings
 FROM
   r
-  LEFT JOIN s USING (brand)
+  LEFT JOIN s ON r.brand = s.brand
+  LEFT JOIN bs ON r.brand = bs.brand
