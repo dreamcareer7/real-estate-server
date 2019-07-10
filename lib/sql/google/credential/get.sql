@@ -1,5 +1,7 @@
 SELECT
-    *, 'google_credential' AS type
+    'google_credential' AS type,
+    google_credentials.*,
+    (SELECT ARRAY_AGG(id) FROM google_sync_histories WHERE google_credential = google_credentials.id ) AS histories
 FROM
     google_credentials
 JOIN 
