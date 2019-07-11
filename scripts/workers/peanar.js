@@ -8,10 +8,10 @@ async function main() {
     'contacts',
     'contact_lists',
     'contact_duplicates',
-  ], n: 5 })
+  ], concurrency: 5 })
   await peanar.worker({ queues: [
     'contact_import',
-  ], n: 2 })
+  ], concurrency: 2 })
 
   await peanar.worker({ queues: [
     'MLS.Unit',
@@ -22,7 +22,7 @@ async function main() {
     'MLS.Photo',
     'MLS.Listing',
     'MLS.Listing.Photos.Validate',
-  ], n: 10})
+  ], concurrency: 10})
 
   process.on('SIGINT', () => peanar.shutdown())
   process.on('SIGTERM', () => peanar.shutdown())
