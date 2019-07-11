@@ -207,6 +207,11 @@ const database = (req, res, next) => {
 
 app.use(database)
 
+app.post('_/suites/:suite/rollback', (req, res) => {
+  rollback(req.params.suite)
+  res.end()
+})
+
 app.use((req, res, next) => {
   const newAllowedHeaders = (res.get('Access-Control-Allow-Headers') || '')
     .split(',').concat(['x-suite', 'x-handle-jobs'])
@@ -222,6 +227,13 @@ app.on('after loading routes', () => {
 })
 
 Run.emit('app ready', app)
+
+const rollback = suite => {
+  if(suite && connections[suite]) {
+    connections[suite].query('ROLLBACK', connections[suite].done)
+    delete connections[suite]
+  }
+}
 
 const setupApp = cb => {
   migrate(() => {
@@ -244,11 +256,6 @@ const setupApp = cb => {
       })
     })
   })
-
-  const rollback = suite => {
-    connections[suite].query('ROLLBACK', connections[suite].done)
-    delete connections[suite]
-  }
 
   if (!program.keep) {
     Run.on('suite done', (suite) => {
