@@ -1,22 +1,20 @@
-INSERT INTO google_credentials
+INSERT INTO microsoft_credentials
   (
     "user",
     brand,
 
     email,
-    resource_name,
+    remote_id,
     display_name,
     first_name,
     last_name,
     photo,
 
-    messages_total,
-    threads_total,
-    history_id,
-
     access_token,
     refresh_token,
-    expiry_date,
+    id_token,
+    expires_in,
+    ext_expires_in,
     scope
   )
 VALUES
@@ -34,8 +32,7 @@ VALUES
     $11,
     $12,
     $13,
-    $14,
-    $15
+    $14
   )
 ON CONFLICT ("user", brand, email) DO UPDATE SET
   display_name = $5,
@@ -43,18 +40,17 @@ ON CONFLICT ("user", brand, email) DO UPDATE SET
   last_name = $7,
   photo = $8,
 
-  messages_total = $9,
-  threads_total = $10,
-  history_id = $11,
-
-  access_token = $12,
-  refresh_token = $13,
-  expiry_date = $14,
-  scope = $15,
+  access_token = $9,
+  refresh_token = $10,
+  id_token  = $11,
+  expires_in = $12,
+  ext_expires_in = $13,
+  scope = $14,
 
   revoked = false,
   sync_status = NULL,
   last_sync_at = NULL,
+  contacts_last_sync_at = NULL,
 
   updated_at = now(),
   deleted_at = null

@@ -22,6 +22,7 @@ const Notification = require('../../lib/models/Notification')
 const User = require('../../lib/models/User')
 const ShowingsCrawler = require('../../lib/models/Showings/crawler')
 const GoogleWorkers = require('../../lib/models/Google/workers/')
+const MicrosoftWorkers = require('../../lib/models/Microsoft/workers/')
 
 
 const airship = (job, done) => {
@@ -108,6 +109,10 @@ const showings_crawler = (job, done) => {
 
 const google_sync = (job, done) => {
   GoogleWorkers.syncGoogle(job.data).nodeify(done)
+}
+
+const microsoft_sync = (job, done) => {
+  MicrosoftWorkers.syncMicrosoft(job.data).nodeify(done)
 }
 
 
@@ -229,6 +234,11 @@ module.exports = {
 
   google_sync: {
     handler: google_sync,
+    parallel: 1
+  },
+
+  microsoft_sync: {
+    handler: microsoft_sync,
     parallel: 1
   }
 }

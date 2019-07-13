@@ -1,5 +1,5 @@
 UPDATE
-  google_credentials
+  microsoft_credentials
 SET
   sync_status = 'success',
   last_sync_at = $1,
