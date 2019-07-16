@@ -62,7 +62,6 @@ module.exports = {
   'number_of_pets_allowed': v.optionalNumber,
   'number_of_units': v.optionalNumber,
   'pets_yn': v.optionalBoolean,
-  'security_system_yn': v.optionalBoolean,
   'deleted_at': v.optionalNumber,
   'address': address
 }
