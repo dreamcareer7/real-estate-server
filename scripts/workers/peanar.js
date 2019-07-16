@@ -1,4 +1,5 @@
 const { peanar } = require('../../lib/utils/peanar')
+require('../../lib/models/index.js')()
 
 require('../../lib/models/Contact/worker')
 require('../../lib/models/MLS/workers')
