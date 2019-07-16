@@ -5,8 +5,7 @@ INSERT INTO recommendations
   source_url,
   referring_objects,
   room,
-  listing,
-  matrix_unique_id
+  listing
 )
 VALUES
 (
@@ -15,8 +14,7 @@ VALUES
   $3,
   $4,
   $5,
-  $6,
-  $7
+  $6
 )
 ON CONFLICT(room, listing) DO NOTHING
 RETURNING id

@@ -219,8 +219,8 @@ const database = (req, res, next) => {
 
 app.use(database)
 
-app.post('_/suites/:suite/rollback', (req, res) => {
-  rollback(req.params.suite)
+app.post('_/rollback', (req, res) => {
+  rollback(req.query.suite)
   res.end()
 })
 

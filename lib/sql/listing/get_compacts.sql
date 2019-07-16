@@ -20,12 +20,6 @@ SELECT 'compact_listing' AS TYPE,
        listings.mls_number AS mls_number,
        listings.buyers_agency_commission AS buyers_agency_commission,
        listings.sub_agency_commission AS sub_agency_commission,
-       (
-          SELECT id FROM agents WHERE matrix_unique_id = listings.list_agent_mui LIMIT 1
-       ) as list_agent,
-       (
-          SELECT id FROM agents WHERE matrix_unique_id = listings.selling_agent_mui LIMIT 1
-       ) as selling_agent,
        list_office_name,
        selling_office_name,
        list_agent_mls_id,
@@ -42,10 +36,10 @@ SELECT 'compact_listing' AS TYPE,
           SELECT "user" FROM brand_agents
           ORDER BY (
             CASE
-              WHEN listings.list_agent_mls_id       = brand_agents.mlsid THEN 4
-              WHEN listings.co_list_agent_mls_id    = brand_agents.mlsid THEN 3
-              WHEN listings.selling_agent_mls_id    = brand_agents.mlsid THEN 2
-              WHEN listings.co_selling_agent_mls_id = brand_agents.mlsid THEN 1
+              WHEN listings.list_agent       = brand_agents.agent THEN 4
+              WHEN listings.co_list_agent    = brand_agents.agent THEN 3
+              WHEN listings.selling_agent    = brand_agents.agent THEN 2
+              WHEN listings.co_selling_agent = brand_agents.agent THEN 1
               ELSE 0
             END
           ) DESC, is_me DESC, has_contact DESC, RANDOM()
@@ -69,7 +63,7 @@ SELECT 'compact_listing' AS TYPE,
        (
          SELECT url FROM photos
          WHERE
-          listing_mui = listings.matrix_unique_id
+          photos.listing = listings.id
           AND photos.url IS NOT NULL
           AND photos.deleted_at IS NULL
          ORDER BY "order" LIMIT 1
@@ -102,7 +96,7 @@ SELECT 'compact_listing' AS TYPE,
              EXTRACT(EPOCH FROM start_time) as start_time,
              EXTRACT(EPOCH FROM end_time)   as end_time,
              description
-           FROM open_houses WHERE listing_mui = listings.matrix_unique_id
+           FROM open_houses WHERE open_houses.listing = listings.id
                 AND end_time::timestamptz AT TIME ZONE tz > NOW()
          ) AS a
        ) AS open_houses,

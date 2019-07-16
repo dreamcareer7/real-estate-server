@@ -12,5 +12,6 @@ module.exports = {
   'office_mlsid': 'RCHT01X',
   'work_phone': '(469) 358-8080',
   'matrix_unique_id': 155155530,
-  'matrix_modified_dt': '2016-04-26T14:00:18.090'
+  'matrix_modified_dt': '2016-04-26T14:00:18.090',
+  'mls': 'NTREIS'
 }

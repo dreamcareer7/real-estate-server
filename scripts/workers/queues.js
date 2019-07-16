@@ -80,7 +80,7 @@ const mls_listing = (job, done) => {
 }
 
 const mls_validate_listing_photos = (job, done) => {
-  Photo.deleteMissing(job.data.listing, job.data.present).nodeify(done)
+  Photo.deleteMissing(job.data.listing, job.data.mls, job.data.present).nodeify(done)
 }
 
 const sync_brokerwolf = (job, done) => {

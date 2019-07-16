@@ -53,7 +53,7 @@ async function createAndLoginAgentUser(brand) {
 
 async function main() {
   const adminUser = await checkLogin(true)
-  const brand = await createBrand(adminUser)
+  const brand = await createBrand()
 
   const agent = await findAgent(AGENT_MLS_ID)
   
@@ -211,7 +211,9 @@ async function createBrand(user) {
   }
 
   const options = JSON.parse(fs.readFileSync(path.resolve(__dirname, './data/createBrand.json'), { encoding: 'utf-8' }))
-  options.body.roles[0].members = [{ user: user.id }]
+  if (user) {
+    options.body.roles[0].members = [{ user: user.id }]
+  }
 
   const resp = await authRequest(options)
   console.log('Created brand', resp.data.id)

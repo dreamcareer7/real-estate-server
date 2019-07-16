@@ -14,10 +14,10 @@ listing_settings AS (
           SELECT "user" FROM brand_agents
           ORDER BY (
             CASE
-              WHEN listings.list_agent_mls_id       = brand_agents.mlsid THEN 4
-              WHEN listings.co_list_agent_mls_id    = brand_agents.mlsid THEN 3
-              WHEN listings.selling_agent_mls_id    = brand_agents.mlsid THEN 2
-              WHEN listings.co_selling_agent_mls_id = brand_agents.mlsid THEN 1
+              WHEN listings.list_agent       = brand_agents.agent THEN 4
+              WHEN listings.co_list_agent    = brand_agents.agent THEN 3
+              WHEN listings.selling_agent    = brand_agents.agent THEN 2
+              WHEN listings.co_selling_agent = brand_agents.agent THEN 1
               ELSE 0
             END
           ) DESC, is_me DESC, has_contact DESC, RANDOM()
@@ -28,9 +28,6 @@ listing_settings AS (
         EXTRACT(EPOCH FROM listings.deleted_at) AS deleted_at,
         EXTRACT(EPOCH FROM listings.list_date) AS list_date,
         EXTRACT(EPOCH FROM listings.close_date) AS close_date,
-        (
-          SELECT id FROM agents WHERE matrix_unique_id = listings.list_agent_mui LIMIT 1
-        ) as list_agent,
         (
           CASE WHEN $2::uuid IS NULL THEN FALSE ELSE (
              SELECT count(*) > 0 FROM recommendations
@@ -43,14 +40,14 @@ listing_settings AS (
         (
           SELECT COALESCE(ARRAY_AGG(url ORDER BY "order"), '{}'::text[]) FROM photos
           WHERE
-          listing_mui = listings.matrix_unique_id
+          photos.listing = listings.id
           AND photos.url IS NOT NULL
           AND photos.deleted_at IS NULL
         ) as gallery_image_urls,
         (
           SELECT url FROM photos
           WHERE
-          listing_mui = listings.matrix_unique_id
+          photos.listing = listings.id
           AND photos.url IS NOT NULL
           AND photos.deleted_at IS NULL
           ORDER BY "order" LIMIT 1
@@ -68,7 +65,7 @@ listing_settings AS (
               description
             FROM open_houses WHERE
             end_time::timestamptz AT TIME ZONE tz > NOW() AND
-            listing_mui = listings.matrix_unique_id
+            open_houses.listing = listings.id
           ) AS a
         ) AS open_houses
   FROM listings
@@ -81,7 +78,7 @@ property AS (
         EXTRACT(EPOCH FROM properties.created_at) AS created_at,
         EXTRACT(EPOCH FROM properties.updated_at) AS updated_at
   FROM properties
-  JOIN listing ON properties.matrix_unique_id = listing.matrix_unique_id
+  JOIN listing ON listing.property_id = properties.id
 ),
 address AS (
   SELECT addresses.*,
@@ -127,11 +124,11 @@ address AS (
         )
       ) AS street_address
   FROM addresses
-  JOIN listing ON listing.matrix_unique_id = addresses.matrix_unique_id
+  JOIN properties ON properties.address_id = addresses.id
 ),
 property_object AS (
   SELECT property.*, row_to_json(address) as address FROM property
-  JOIN address ON property.matrix_unique_id = address.matrix_unique_id
+  JOIN address ON property.address_id = address.id
 )
 
 SELECT listing.*, row_to_json(property_object) as property, listing_settings.id as user_listing_notification_setting
