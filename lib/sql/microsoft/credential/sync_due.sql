@@ -9,4 +9,4 @@ WHERE
     last_sync_at IS NULL
   )
   AND revoked IS FALSE
-  AND deleted_at IS NOT NULL
+  AND deleted_at IS NULL
