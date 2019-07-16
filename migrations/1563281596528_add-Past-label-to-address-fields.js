@@ -2,7 +2,7 @@ const db = require('../lib/utils/db')
 
 const migrations = [
   'BEGIN',
-  'UPDATE contacts_attribute_defs SET labels = labels || \'Past\' WHERE section = \'Addresses\'',
+  'UPDATE contacts_attribute_defs SET labels = labels || \'{Past}\' WHERE section = \'Addresses\'',
   'COMMIT'
 ]
 
