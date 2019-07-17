@@ -11,7 +11,6 @@ const Context = require('../../../lib/models/Context')
 const Metric = require('../../../lib/models/Metric')
 const User = require('../../../lib/models/User')
 
-const sql = require('../../../lib/utils/sql')
 
 const BrandHelper = require('../brand/helper')
 const { attributes } = require('./helper')
