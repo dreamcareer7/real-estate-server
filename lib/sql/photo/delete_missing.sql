@@ -6,4 +6,4 @@ WHERE
   listing_mui = $1::int
   AND
   mls = $2::mls
-  AND NOT (matrix_unique_id = ANY($3::int[]));
+  AND NOT (matrix_unique_id = ANY($3::text[]));
