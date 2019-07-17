@@ -1,6 +1,8 @@
 CREATE OR REPLACE FUNCTION get_brand_agents(id uuid) RETURNS TABLE (
    "user"     uuid,
    agent      uuid,
+   mui        integer,
+   mls        mls,
    brand_user uuid,
    brand_role uuid,
    brand      uuid,
@@ -8,11 +10,13 @@ CREATE OR REPLACE FUNCTION get_brand_agents(id uuid) RETURNS TABLE (
 ) AS
 $$
   SELECT
-    users.id           as "user",
-    agents.id          as agent,
-    brands_users.id    as brand_user,
-    brands_roles.id    as brand_role,
-    brands_roles.brand as brand,
+    users.id                as "user",
+    agents.id               as agent,
+    agents.matrix_unique_id as mui,
+    agents.mls              as mls,
+    brands_users.id         as brand_user,
+    brands_roles.id         as brand_role,
+    brands_roles.brand      as brand,
     (brands_users.deleted_at IS NULL AND brands_roles.deleted_at IS NULL) as enabled
 
   FROM users

@@ -16,16 +16,11 @@ INSERT INTO agents
   generational_name,
   matrix_unique_id,
   matrix_modified_dt,
-  mls,
-  office
+  mls
 )
 VALUES
 (
-  $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,
-
-  (
-    SELECT id FROM offices WHERE matrix_unique_id = $10 AND mls = $17::mls
-  )
+  $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17
 )
 ON CONFLICT (matrix_unique_id, mls) DO UPDATE SET
   email = $1,

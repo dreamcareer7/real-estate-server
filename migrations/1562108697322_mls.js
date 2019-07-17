@@ -37,38 +37,10 @@ const migrations = [
   'UPDATE property_units SET mls = \'NTREIS\'',
   'UPDATE mls_data       SET mls = \'NTREIS\'',
   'UPDATE mls_jobs       SET mls = \'NTREIS\'',
-  // Other tables have updates below
-
-  'ALTER TABLE agents      ADD office           uuid REFERENCES offices(id)',
-  'ALTER TABLE photos      ADD listing          uuid REFERENCES listings(id)',
-  'ALTER TABLE open_houses ADD listing          uuid REFERENCES listings(id)',
-  'ALTER TABLE listings    ADD list_agent       uuid REFERENCES agents(id)',
-  'ALTER TABLE listings    ADD co_list_agent    uuid REFERENCES agents(id)',
-  'ALTER TABLE listings    ADD selling_agent    uuid REFERENCES agents(id)',
-  'ALTER TABLE listings    ADD co_selling_agent uuid REFERENCES agents(id)',
-  'ALTER TABLE listings    ADD list_office      uuid REFERENCES offices(id)',
-  'ALTER TABLE listings    ADD selling_office   uuid REFERENCES offices(id)',
-
-  `UPDATE agents SET
-    mls = 'NTREIS',
-    office = (SELECT id FROM offices WHERE offices.matrix_unique_id = agents.office_mui)`,
-
-  `UPDATE photos SET
-    mls = 'NTREIS',
-    listing = (SELECT id FROM listings WHERE listings.matrix_unique_id = photos.listing_mui)`,
-
-  `UPDATE open_houses SET
-    mls = 'NTREIS',
-    listing = (SELECT id FROM listings l WHERE l.matrix_unique_id = open_houses.listing_mui)`,
-
-  `UPDATE listings SET
-    mls              = 'NTREIS',
-    list_agent       = (SELECT id FROM agents  WHERE matrix_unique_id = listings.list_agent_mui),
-    selling_agent    = (SELECT id FROM agents  WHERE matrix_unique_id = listings.selling_agent_mui),
-    co_list_agent    = (SELECT id FROM agents  WHERE matrix_unique_id = listings.list_agent_mui),
-    co_selling_agent = (SELECT id FROM agents  WHERE matrix_unique_id = listings.selling_agent_mui),
-    list_office      = (SELECT id FROM offices WHERE matrix_unique_id = listings.list_office_mui),
-    selling_office   = (SELECT id FROM offices WHERE matrix_unique_id = listings.selling_office_mui)`,
+  'UPDATE agents         SET mls = \'NTREIS\'',
+  'UPDATE photos         SET mls = \'NTREIS\'',
+  'UPDATE open_houses    SET mls = \'NTREIS\'',
+  'UPDATE listings       SET mls = \'NTREIS\'',
 
   'ALTER TABLE listings       ALTER mls SET NOT NULL',
   'ALTER TABLE offices        ALTER mls SET NOT NULL',

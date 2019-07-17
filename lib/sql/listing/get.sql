@@ -14,10 +14,10 @@ listing_settings AS (
           SELECT "user" FROM brand_agents
           ORDER BY (
             CASE
-              WHEN listings.list_agent       = brand_agents.agent THEN 4
-              WHEN listings.co_list_agent    = brand_agents.agent THEN 3
-              WHEN listings.selling_agent    = brand_agents.agent THEN 2
-              WHEN listings.co_selling_agent = brand_agents.agent THEN 1
+              WHEN listings.list_agent_mui       = brand_agents.mui AND listings.mls = brand_agents.mls THEN 4
+              WHEN listings.co_list_agent_mui    = brand_agents.mui AND listings.mls = brand_agents.mls THEN 3
+              WHEN listings.selling_agent_mui    = brand_agents.mui AND listings.mls = brand_agents.mls THEN 2
+              WHEN listings.co_selling_agent_mui = brand_agents.mui AND listings.mls = brand_agents.mls THEN 1
               ELSE 0
             END
           ) DESC, is_me DESC, has_contact DESC, RANDOM()
@@ -29,6 +29,12 @@ listing_settings AS (
         EXTRACT(EPOCH FROM listings.list_date) AS list_date,
         EXTRACT(EPOCH FROM listings.close_date) AS close_date,
         (
+          SELECT id FROM agents
+          WHERE agents.matrix_unique_id = listings.list_agent_mui
+          AND   agents.mls = listings.mls
+          LIMIT 1
+        ) as list_agent,
+        (
           CASE WHEN $2::uuid IS NULL THEN FALSE ELSE (
              SELECT count(*) > 0 FROM recommendations
              LEFT JOIN recommendations_eav ON recommendations.id = recommendations_eav.recommendation
@@ -39,17 +45,17 @@ listing_settings AS (
         ) as favorited,
         (
           SELECT COALESCE(ARRAY_AGG(url ORDER BY "order"), '{}'::text[]) FROM photos
-          WHERE
-          photos.listing = listings.id
-          AND photos.url IS NOT NULL
-          AND photos.deleted_at IS NULL
+          WHERE photos.listing_mui = listings.matrix_unique_id
+          AND   photos.mls = listings.mls
+          AND   photos.url IS NOT NULL
+          AND   photos.deleted_at IS NULL
         ) as gallery_image_urls,
         (
           SELECT url FROM photos
-          WHERE
-          photos.listing = listings.id
-          AND photos.url IS NOT NULL
-          AND photos.deleted_at IS NULL
+          WHERE photos.listing_mui = listings.matrix_unique_id
+          AND   photos.mls = listings.mls
+          AND   photos.url IS NOT NULL
+          AND   photos.deleted_at IS NULL
           ORDER BY "order" LIMIT 1
         ) as cover_image_url,
         (
@@ -63,9 +69,10 @@ listing_settings AS (
               EXTRACT(EPOCH FROM start_time) AS start_time,
               EXTRACT(EPOCH FROM end_time) AS end_time,
               description
-            FROM open_houses WHERE
-            end_time::timestamptz AT TIME ZONE tz > NOW() AND
-            open_houses.listing = listings.id
+            FROM open_houses
+            WHERE open_houses.listing_mui = listings.matrix_unique_id
+              AND open_houses.mls = listings.mls
+              AND open_houses.end_time::timestamptz AT TIME ZONE tz > NOW()
           ) AS a
         ) AS open_houses
   FROM listings
