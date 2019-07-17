@@ -1,0 +1,36 @@
+{
+  "create": [
+    {
+      "attributes": {
+        "first_name": "John",
+        "last_name": "Doe",
+        "email": {
+          "text": "john@doe.com",
+          "label": "Personal",
+          "is_primary": true
+        },
+        "tag": ["Warm List"]
+      }
+    },
+    {
+      "attributes": {
+        "first_name": "John",
+        "last_name": "Doe",
+        "email": [{
+          "text": "abbas@rechat.com",
+          "label": "Personal",
+          "is_primary": true
+        }],
+        "phone_number": [{
+          "text": "+15021863625",
+          "label": "Home",
+          "is_primary": false
+        }, {
+          "text": "+15552541900",
+          "label": "Mobile",
+          "is_primary": true
+        }]
+      }
+    }
+  ]
+}

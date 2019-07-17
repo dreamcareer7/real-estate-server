@@ -6,6 +6,7 @@ const db = require('../../lib/utils/db')
 const promisify = require('../../lib/utils/promisify')
 
 const Context = require('../../lib/models/Context')
+const Metric = require('../../lib/models/Metric')
 const { handleJob } = require('../functional/jobs')
 require('../../lib/models/index')()
 
@@ -40,6 +41,8 @@ function createContext() {
   let conn, release, context
 
   beforeEach(async() => {
+    Metric.reset()
+
     context = Context.create({
       logger() {}
     })
