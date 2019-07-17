@@ -27,12 +27,16 @@ const migrations = [
   'ALTER TABLE property_rooms ADD mls mls',
   'ALTER TABLE property_units ADD mls mls',
   'ALTER TABLE photos         ADD mls mls',
+  'ALTER TABLE mls_data       ADD mls mls',
+  'ALTER TABLE mls_jobs       ADD mls mls',
 
   'UPDATE properties     SET mls = \'NTREIS\'',
   'UPDATE addresses      SET mls = \'NTREIS\'',
   'UPDATE offices        SET mls = \'NTREIS\'',
   'UPDATE property_rooms SET mls = \'NTREIS\'',
   'UPDATE property_units SET mls = \'NTREIS\'',
+  'UPDATE mls_data       SET mls = \'NTREIS\'',
+  'UPDATE mls_jobs       SET mls = \'NTREIS\'',
   // Other tables have updates below
 
   'ALTER TABLE agents      ADD office           uuid REFERENCES offices(id)',
@@ -72,6 +76,7 @@ const migrations = [
   'ALTER TABLE property_rooms ALTER mls SET NOT NULL',
   'ALTER TABLE property_units ALTER mls SET NOT NULL',
   'ALTER TABLE photos         ALTER mls SET NOT NULL',
+  'ALTER TABLE mls_data       ALTER mls SET NOT NULL',
 
   'ALTER TABLE agents         DROP CONSTRAINT agents_matrix_unique_id_key',
   'ALTER TABLE open_houses    DROP CONSTRAINT open_houses_matrix_unique_id_key',
@@ -91,6 +96,7 @@ const migrations = [
   'ALTER TABLE property_units ADD CONSTRAINT property_units_mui_mls UNIQUE (matrix_unique_id, mls)',
   'ALTER TABLE property_rooms ADD CONSTRAINT property_rooms_mui_mls UNIQUE (matrix_unique_id, mls)',
   'ALTER TABLE photos         ADD CONSTRAINT photos_mui_mls         UNIQUE (matrix_unique_id, mls)',
+  'ALTER TABLE mls_data       ADD CONSTRAINT mls_data_mui_mls       UNIQUE (matrix_unique_id, mls)',
 
   'DROP MATERIALIZED VIEW agents_emails',
   'DROP MATERIALIZED VIEW agents_phones',
