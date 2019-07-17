@@ -1,5 +1,5 @@
 SELECT
-    id, google_credential, entry_id, 'google_contact' AS type
+    id, google_credential, entry_id, entry, 'google_contact' AS type
 FROM
     google_contacts
 JOIN 
