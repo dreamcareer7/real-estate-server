@@ -10,7 +10,7 @@ INSERT INTO photos(
   listing
 )
 VALUES (
-  $1,
+  $1::text,
   $2,
   $3,
   $4,
@@ -18,7 +18,7 @@ VALUES (
   $6,
   $7,
   $8::mls,
-  (SELECT id FROM listings WHERE matrix_unique_id = $1 AND mls = $8)
+  (SELECT id FROM listings WHERE matrix_unique_id = $2 AND mls = $8)
 )
 ON CONFLICT (matrix_unique_id, mls) WHERE (revision < $7) DO UPDATE SET
   description = $3,
@@ -27,6 +27,6 @@ ON CONFLICT (matrix_unique_id, mls) WHERE (revision < $7) DO UPDATE SET
   exif = $6,
   revision = $7
 
-WHERE photos.matrix_unique_id = $1 AND photos.mls = $8::mls
+WHERE photos.matrix_unique_id = $1::text AND photos.mls = $8::mls
 
 RETURNING id

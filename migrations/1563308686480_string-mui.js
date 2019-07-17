@@ -3,6 +3,7 @@ const db = require('../lib/utils/db')
 const migrations = [
   'BEGIN',
   'ALTER TABLE mls_data ALTER matrix_unique_id  SET DATA TYPE text',
+  'ALTER TABLE photos   ALTER matrix_unique_id  SET DATA TYPE text',
   'COMMIT'
 ]
 
