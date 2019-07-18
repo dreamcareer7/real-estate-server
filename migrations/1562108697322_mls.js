@@ -18,60 +18,26 @@ const migrations = [
   'ALTER TABLE listings RENAME COLUMN mls TO mls_name',
   'ALTER TABLE offices  RENAME COLUMN mls TO mls_name',
 
-  'ALTER TABLE agents         ADD mls mls',
-  'ALTER TABLE listings       ADD mls mls',
-  'ALTER TABLE properties     ADD mls mls',
-  'ALTER TABLE addresses      ADD mls mls',
-  'ALTER TABLE offices        ADD mls mls',
-  'ALTER TABLE open_houses    ADD mls mls',
-  'ALTER TABLE property_rooms ADD mls mls',
-  'ALTER TABLE property_units ADD mls mls',
-  'ALTER TABLE photos         ADD mls mls',
+  'ALTER TABLE agents         ADD mls mls NOT NULL DEFAULT \'NTREIS\'',
+  'ALTER TABLE listings       ADD mls mls NOT NULL DEFAULT \'NTREIS\'',
+  'ALTER TABLE properties     ADD mls mls NOT NULL DEFAULT \'NTREIS\'',
+  'ALTER TABLE addresses      ADD mls mls NOT NULL DEFAULT \'NTREIS\'',
+  'ALTER TABLE offices        ADD mls mls NOT NULL DEFAULT \'NTREIS\'',
+  'ALTER TABLE open_houses    ADD mls mls NOT NULL DEFAULT \'NTREIS\'',
+  'ALTER TABLE property_rooms ADD mls mls NOT NULL DEFAULT \'NTREIS\'',
+  'ALTER TABLE property_units ADD mls mls NOT NULL DEFAULT \'NTREIS\'',
+  'ALTER TABLE photos         ADD mls mls NOT NULL DEFAULT \'NTREIS\'',
+  'ALTER TABLE mls_data       ADD mls mls NOT NULL DEFAULT \'NTREIS\'',
+  'ALTER TABLE mls_jobs       ADD mls mls NOT NULL DEFAULT \'NTREIS\'',
 
-  'UPDATE properties     SET mls = \'NTREIS\'',
-  'UPDATE addresses      SET mls = \'NTREIS\'',
-  'UPDATE offices        SET mls = \'NTREIS\'',
-  'UPDATE property_rooms SET mls = \'NTREIS\'',
-  'UPDATE property_units SET mls = \'NTREIS\'',
-  // Other tables have updates below
 
-  'ALTER TABLE agents      ADD office           uuid REFERENCES offices(id)',
-  'ALTER TABLE photos      ADD listing          uuid REFERENCES listings(id)',
-  'ALTER TABLE open_houses ADD listing          uuid REFERENCES listings(id)',
-  'ALTER TABLE listings    ADD list_agent       uuid REFERENCES agents(id)',
-  'ALTER TABLE listings    ADD co_list_agent    uuid REFERENCES agents(id)',
-  'ALTER TABLE listings    ADD selling_agent    uuid REFERENCES agents(id)',
-  'ALTER TABLE listings    ADD co_selling_agent uuid REFERENCES agents(id)',
-  'ALTER TABLE listings    ADD list_office      uuid REFERENCES offices(id)',
-  'ALTER TABLE listings    ADD selling_office   uuid REFERENCES offices(id)',
-
-  `UPDATE agents SET
-    mls = 'NTREIS',
-    office = (SELECT id FROM offices WHERE offices.matrix_unique_id = agents.office_mui)`,
-
-  `UPDATE photos SET
-    mls = 'NTREIS',
-    listing = (SELECT id FROM listings WHERE listings.matrix_unique_id = photos.listing_mui)`,
-
-  `UPDATE open_houses SET
-    mls = 'NTREIS',
-    listing = (SELECT id FROM listings l WHERE l.matrix_unique_id = open_houses.listing_mui)`,
-
-  `UPDATE listings SET
-    mls              = 'NTREIS',
-    list_agent       = (SELECT id FROM agents  WHERE matrix_unique_id = listings.list_agent_mui),
-    selling_agent    = (SELECT id FROM agents  WHERE matrix_unique_id = listings.selling_agent_mui),
-    co_list_agent    = (SELECT id FROM agents  WHERE matrix_unique_id = listings.list_agent_mui),
-    co_selling_agent = (SELECT id FROM agents  WHERE matrix_unique_id = listings.selling_agent_mui),
-    list_office      = (SELECT id FROM offices WHERE matrix_unique_id = listings.list_office_mui),
-    selling_office   = (SELECT id FROM offices WHERE matrix_unique_id = listings.selling_office_mui)`,
-
-  'ALTER TABLE listings       ALTER mls SET NOT NULL',
-  'ALTER TABLE offices        ALTER mls SET NOT NULL',
-  'ALTER TABLE open_houses    ALTER mls SET NOT NULL',
-  'ALTER TABLE property_rooms ALTER mls SET NOT NULL',
-  'ALTER TABLE property_units ALTER mls SET NOT NULL',
-  'ALTER TABLE photos         ALTER mls SET NOT NULL',
+  'ALTER TABLE listings       ALTER mls DROP DEFAULT',
+  'ALTER TABLE offices        ALTER mls DROP DEFAULT',
+  'ALTER TABLE open_houses    ALTER mls DROP DEFAULT',
+  'ALTER TABLE property_rooms ALTER mls DROP DEFAULT',
+  'ALTER TABLE property_units ALTER mls DROP DEFAULT',
+  'ALTER TABLE photos         ALTER mls DROP DEFAULT',
+  'ALTER TABLE mls_data       ALTER mls DROP DEFAULT',
 
   'ALTER TABLE agents         DROP CONSTRAINT agents_matrix_unique_id_key',
   'ALTER TABLE open_houses    DROP CONSTRAINT open_houses_matrix_unique_id_key',
@@ -91,6 +57,7 @@ const migrations = [
   'ALTER TABLE property_units ADD CONSTRAINT property_units_mui_mls UNIQUE (matrix_unique_id, mls)',
   'ALTER TABLE property_rooms ADD CONSTRAINT property_rooms_mui_mls UNIQUE (matrix_unique_id, mls)',
   'ALTER TABLE photos         ADD CONSTRAINT photos_mui_mls         UNIQUE (matrix_unique_id, mls)',
+  'ALTER TABLE mls_data       ADD CONSTRAINT mls_data_mui_mls       UNIQUE (matrix_unique_id, mls)',
 
   'DROP MATERIALIZED VIEW agents_emails',
   'DROP MATERIALIZED VIEW agents_phones',

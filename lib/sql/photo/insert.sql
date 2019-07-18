@@ -6,8 +6,7 @@ INSERT INTO photos(
   "order",
   exif,
   revision,
-  mls,
-  listing
+  mls
 )
 VALUES (
   $1::text,
@@ -17,8 +16,7 @@ VALUES (
   $5,
   $6,
   $7,
-  $8::mls,
-  (SELECT id FROM listings WHERE matrix_unique_id = $2 AND mls = $8)
+  $8::mls
 )
 ON CONFLICT (matrix_unique_id, mls) WHERE (revision < $7) DO UPDATE SET
   description = $3,

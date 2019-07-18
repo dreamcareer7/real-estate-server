@@ -1,8 +1,9 @@
 CREATE MATERIALIZED VIEW agents_emails AS (
   WITH stated_emails AS (
     SELECT
-      ('email_' || id) as id,
-      id as agent,
+      ('email_' || matrix_unique_id || mls) as id,
+      matrix_unique_id as mui,
+      mls,
       email,
       matrix_modified_dt as date
     FROM agents
@@ -11,8 +12,9 @@ CREATE MATERIALIZED VIEW agents_emails AS (
 
   list_agents AS (
     SELECT
-      ('list_agents_' || id) as id,
-      (SELECT id FROM agents WHERE agents.mls = listings.mls AND agents.matrix_unique_id = listings.list_agent_mui),
+      ('list_agents_' || matrix_unique_id || mls) as id,
+      matrix_unique_id as mui,
+      mls,
       list_agent_email as email,
       list_date as date
     FROM listings
@@ -22,8 +24,9 @@ CREATE MATERIALIZED VIEW agents_emails AS (
 
   co_list_agents AS (
     SELECT
-      ('co_list_agents_' || id) as id,
-      (SELECT id FROM agents WHERE agents.mls = listings.mls AND agents.matrix_unique_id = listings.co_list_agent_mui),
+      ('co_list_agents_' || matrix_unique_id || mls) as id,
+      matrix_unique_id as mui,
+      mls,
       co_list_agent_email as email,
       list_date as date
     FROM listings
@@ -33,8 +36,9 @@ CREATE MATERIALIZED VIEW agents_emails AS (
 
   selling_agents AS (
     SELECT
-      ('selling_agents_' || id) as id,
-      (SELECT id FROM agents WHERE agents.mls = listings.mls AND agents.matrix_unique_id = listings.selling_agent_mui),
+      ('selling_agents_' || matrix_unique_id || mls) as id,
+      matrix_unique_id as mui,
+      mls,
       selling_agent_email as email,
       list_date as date
     FROM listings
@@ -44,8 +48,9 @@ CREATE MATERIALIZED VIEW agents_emails AS (
 
   co_selling_agents AS (
     SELECT
-      ('co_selling_agents_' || id) as id,
-      (SELECT id FROM agents WHERE agents.mls = listings.mls AND agents.matrix_unique_id = listings.co_selling_agent_mui),
+      ('co_selling_agents_' || matrix_unique_id || mls) as id,
+      matrix_unique_id as mui,
+      mls,
       co_selling_agent_email as email,
       list_date as date
     FROM listings
@@ -66,4 +71,4 @@ CREATE MATERIALIZED VIEW agents_emails AS (
 
 CREATE UNIQUE INDEX agents_emails_idx ON agents_emails (id);
 CREATE INDEX agents_emails_email ON agents_emails (LOWER(email));
-CREATE INDEX agents_emails_agent ON agents_emails (agent);
+CREATE INDEX agents_emails_agent ON agents_emails (mui, mls);
