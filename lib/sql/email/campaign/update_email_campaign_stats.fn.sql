@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION update_email_campaign_stats2(campaign_id uuid)
+CREATE OR REPLACE FUNCTION update_email_campaign_stats(campaign_id uuid)
 RETURNS void AS
 $$
   WITH events AS (
