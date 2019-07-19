@@ -47,7 +47,7 @@ const addEvent = cb => {
   const data = {
     'event-data': {
       timestamp: 1531818450.203548,
-      recipient: email.to,
+      recipient: email.to[0].email,
       event: 'delivered',
       message: {
         headers: {
@@ -60,6 +60,16 @@ const addEvent = cb => {
   return frisby
     .create('Add an event to the email')
     .post('/emails/events', data)
+    .after(cb)
+    .expectStatus(200)
+}
+
+const updateStats = cb => {
+  return frisby
+    .create('Update campaign stats')
+    .post('/jobs', {
+      name: 'EmailCampaign.updateStats',
+    })
     .after(cb)
     .expectStatus(200)
 }
@@ -138,7 +148,7 @@ const update = cb => {
   return frisby
     .create('Update a campaign')
     .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
-    .put(`/emails/${results.email.scheduleIndividual.data.id}?associations[]=email_campaign.recipients`, campaign)
+    .put(`/emails/${results.email.scheduleIndividual.data[0]}?associations[]=email_campaign.recipients`, campaign)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
@@ -154,12 +164,22 @@ const update = cb => {
     })
 }
 
+const remove = cb => {
+  return frisby
+    .create('delete a campaign')
+    .delete(`/emails/${results.email.scheduleIndividual.data[0]}`)
+    .after(cb)
+    .expectStatus(204)
+}
+
 module.exports = {
   schedule,
   scheduleIndividual,
   update,
   sendDue,
   addEvent,
+  updateStats,
   get,
   getByBrand,
+  remove
 }

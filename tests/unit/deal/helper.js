@@ -29,7 +29,8 @@ async function create(user_id, brand_id, data) {
 
   let deal = await Deal.create({
     ...deal_props,
-    created_by: user_id
+    created_by: user_id,
+    brand: brand_id
   })
 
   for (let i = 0; i < checklists.length; i++) {

@@ -1,0 +1,898 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+
+<head>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="robots" content="NOINDEX,NOFOLLOW" />
+    <meta name="Author" content="CSS" />
+    <meta http-equiv="imagetoolbar" content="no" />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1; IE=edge" />
+
+    <title>Login :: Centralized Showing Service</title>
+
+    <link rel="stylesheet" href="/css/print.css" type="text/css" media="print" />
+    <link rel="stylesheet" href="/css/reset.css" media="screen" type="text/css" />
+    <!-- general style sheet -->
+    <link rel="stylesheet" href="/css/custom.css" media="screen" type="text/css" />
+    <!-- this is the custom office stylesheet -->
+    <link rel="stylesheet" href="/css/screen.css" media="screen" type="text/css" />
+    <!-- overall style sheet -->
+
+    <link rel="Stylesheet" href="/css/colorPicker.css" />
+    <!-- color picker style sheet -->
+    <link rel="stylesheet" href="/css/fancybox.css" type="text/css" />
+    <!-- for fancybox -->
+    <link rel="Stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" type="text/css" />
+    <link rel="stylesheet" href="/css/visualize.css" type="text/css" />
+    <!-- table to graph stylesheet -->
+    <link rel="stylesheet" href="/css/visualize-light.css" type="text/css" />
+    <!-- table to graph stylesheet -->
+    <!--[if IE 7]>
+	<link rel="stylesheet" type="text/css" href="//app.showings.com/css/ie7.css" /> <!-- because IE doesn't follow rules, we have to do this -->
+    <![endif]-->
+<!--[if IE 8]>
+    <link rel="stylesheet" type="text/css" href="//app.showings.com/css/ie8.css" />
+    <!-- because IE doesn't follow rules, we have to do this -->
+    <![endif]-->
+
+<link rel="stylesheet" href="/css/slide.css" type="text/css" media="screen" />
+
+<link href="/css/jquery.mCustomScrollbar.css" rel="stylesheet" type="text/css" />
+<link href="/css/megamenu.css" rel="stylesheet" type="text/css" />
+
+<link href="/css/guidely.css" rel="stylesheet" type="text/css" />
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDML25nBA_d3-R5aMWgb6_fy8Ju7lk1EC8"> </script>
+
+<!-- PNG FIX for IE6 -->
+<!-- http://24ways.org/2007/supersleight-transparent-png-in-ie6 -->
+<!--[if lte IE 6]>
+    <script type="text/javascript" src="/js/pngfix/supersleight-min.js"></script>
+    <![endif]-->
+
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
+    <!--<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js"></script>-->
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.1/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="https://d1b7600h0d6x7o.cloudfront.net/jquery.visualize.min.js"></script>
+    <script type="text/javascript" src="https://d1b7600h0d6x7o.cloudfront.net/jquery.fancybox.js"></script>
+    <script type="text/javascript" src="https://d1b7600h0d6x7o.cloudfront.net/jquery.idtabs.js"></script>
+    <script type="text/javascript" src="https://d1b7600h0d6x7o.cloudfront.net/jquery.jcarousel.js"></script>
+    <script type="text/javascript" src="https://d1b7600h0d6x7o.cloudfront.net/jquery.validate.js"></script>
+    <!--[if !(IE 8)]>
+    <!-->
+    <script type="text/javascript" src="https://d1b7600h0d6x7o.cloudfront.net/excanvas.min.js"></script>
+    <!--<![endif]-->
+    <script type="text/javascript" src="https://d1b7600h0d6x7o.cloudfront.net/cufon.js"></script>
+    <script type="text/javascript" src="https://d1b7600h0d6x7o.cloudfront.net/Zurich_Condensed_Lt_Bd.js"></script>
+    <script type="text/javascript" src="https://d1b7600h0d6x7o.cloudfront.net/Modernizr.js"></script>
+    <script type="text/javascript" src="https://d1b7600h0d6x7o.cloudfront.net/jquery.json-2.2.min.js"></script>
+    <script type="text/javascript" src="https://d1b7600h0d6x7o.cloudfront.net/megamenu.min.js"></script>
+
+    <script type="text/javascript" src="/js/script.js"></script>
+    <link rel="stylesheet" href="../css/print.css" type="text/css" media="print" />
+    <link rel="stylesheet" href="../css/reset.css" media="screen" type="text/css" />
+    <!-- general style sheet -->
+    <link rel="stylesheet" href="../css/custom.css" media="screen" type="text/css" />
+    <!-- this is the custom office stylesheet -->
+    <!--[if IE 8]>
+    <link rel="stylesheet" href="../css/screen.css" media="screen" type="text/css"/> <!-- overall style sheet -->
+    <![endif]-->
+    <link rel="Stylesheet" href="/css/screen.css" media="screen" type="text/css" />
+    <link rel="Stylesheet" href="../css/colorPicker.css" /> <!-- color picker style sheet -->
+    <link rel="stylesheet" href="../css/fancybox.css" type="text/css" /> <!-- for fancybox -->
+    <link rel="Stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" type="text/css" />
+    <link rel="stylesheet" href="../css/visualize.css" type="text/css" /> <!-- table to graph stylesheet -->
+    <link rel="stylesheet" href="../css/visualize-light.css" type="text/css" /> <!-- table to graph stylesheet -->
+    <!--[if IE 7]>
+    <link rel="stylesheet" type="text/css" href="../css/ie7.css" />
+    <!-- because IE doesn't follow rules, we have to do this -->
+    <![endif]-->
+    <!--[if IE 8]>
+    <link rel="stylesheet" type="text/css" href="../css/ie8.css" />
+    <!-- because IE doesn't follow rules, we have to do this -->
+    <![endif]-->
+    <link rel="stylesheet" href="../css/slide.css" type="text/css" media="screen" />
+    <link href="../css/jquery.mCustomScrollbar.css" rel="stylesheet" type="text/css" />
+    <link href="../css/megamenu.css" rel="stylesheet" type="text/css" />
+    <link href="../css/guidely.css" rel="stylesheet" type="text/css" />
+    <!-- PNG FIX for IE6 -->
+    <!-- http://24ways.org/2007/supersleight-transparent-png-in-ie6 -->
+    <!--[if lte IE 6]>
+    <script type="text/javascript" src="/js/pngfix/supersleight-min.js"></script>
+    <![endif]-->
+
+    <style type="text/css">
+        #CSSPopupiFrame {
+            /* For Legacy Browsers */
+            background: #AC0000;
+            /* Safari 4-5, Chrome 1-9 */
+            background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#111111), to(#AC0000));
+            /* Safari 5.1, Chrome 10+ */
+            background: -webkit-linear-gradient(top, #AC0000, #111111);
+            /* Firefox 3.6+ */
+            background: -moz-linear-gradient(top, #AC0000, #111111);
+            /* IE 10 */
+            background: -ms-linear-gradient(top, #AC0000, #111111);
+            /* Opera 11.10+ */
+            background: -o-linear-gradient(top, #AC0000, #111111);
+        }
+    </style>
+    <script type="text/javascript">
+        jQuery(document).ready(function () {
+            $(".iframe").fancybox({
+                "type": "iframe",
+                "width": (document.documentElement.clientWidth * 0.75),
+                "height": (document.documentElement.clientHeight * 0.75)
+            });
+
+            $("#tosspan").click(function (e) {
+                e.preventDefault();
+                centeroverlayTOS();
+                if ($("#CSSPopupiFrame:has(iframe.tosiframe)")) {
+                    $("#tosiframe").remove();
+                    $("#CSSPopupiFrame").append('<iframe id="tosiframe" class="tosiframe" src="http://tos.showings.com/tos.htm" style="height: 80%; width: 97%; background: white;"></iframe>');
+                }
+                else {
+                    $("#CSSPopupiFrame").append('<br /><iframe id="tosiframe" class="tosiframe" src="http://tos.showings.com/tos.htm" style="height: 80%; width: 97%; background: white"></iframe>');
+                }
+                centeroverlayTOS();
+                $("#backdrop-overlay").fadeIn(100);
+                $("#CSSPopupiFrame").fadeIn(500);
+            });
+            $(window).scroll(function (e) { e.preventDefault(); centeroverlayTOSScroll() });
+            $("#ClosePopupiFrame").click(function (e) { e.preventDefault(); $("#backdrop-overlay").hide(); $("#CSSPopupiFrame").fadeOut(300); });
+
+            $("#ppspan").click(function (e) {
+                e.preventDefault();
+                centeroverlayTOS();
+                if ($("#CSSPopupiFrame:has(iframe.tosiframe)")) {
+                    $("#tosiframe").remove();
+                    $("#CSSPopupiFrame").append('<iframe id="tosiframe" class="tosiframe" src="http://tos.showings.com/privacy.htm" style="height: 80%; width: 97%; background: white; -webkit-overflow-scrolling : touch; overflow : auto"></iframe>');
+                }
+                else {
+                    $("#CSSPopupiFrame").append('<br /><iframe id="tosiframe" class="tosiframe" src="http://tos.showings.com/privacy.htm" style="height: 80%; width: 97%; background: white; -webkit-overflow-scrolling : touch; overflow : auto"></iframe>');
+                }
+                centeroverlayTOS();
+                $("#backdrop-overlay").fadeIn(100);
+                $("#CSSPopupiFrame").fadeIn(500);
+            });
+
+        });
+
+        function centeroverlayTOS() {
+            var windowWidth = document.documentElement.clientWidth;
+            var windowHeight = document.documentElement.clientHeight;
+            var windowScrolled = $(window).scrollTop();
+            $("#CSSPopupiFrame").height(windowHeight * 0.8);
+            $("#CSSPopupiFrame").width(windowWidth * 0.8);
+            var popupHeight = $("#CSSPopupiFrame").height();
+            var popupWidth = $("#CSSPopupiFrame").width();
+            //centering
+            $("#CSSPopupiFrame").css({
+                "position": "absolute",
+                "top": (windowHeight / 2 - popupHeight / 2) + windowScrolled,
+                "left": windowWidth / 2 - popupWidth / 2
+            });
+            $("#tosiframe").css({
+                "height": ((popupHeight - 70) * 0.97),
+                "-webkit-overflow-scrolling": "touch",
+                "overflow": "auto"
+            });
+        }
+
+        function centeroverlayTOSScroll() {
+            var windowHeight = document.documentElement.clientHeight;
+            var windowScrolled = $(window).scrollTop();
+            var popupHeight = $("#CSSPopupiFrame").height();
+            $("#CSSPopupiFrame").css({ "top": (windowHeight / 2 - popupHeight / 2) + windowScrolled });
+        }
+
+        function tosClick() {
+            centeroverlayTOS();
+            if ($("#CSSPopupiFrame:has(iframe.tosiframe)")) {
+                $("#tosiframe").remove();
+                $("#CSSPopupiFrame").append('<iframe id="tosiframe" class="tosiframe" src="http://tos.showings.com/tos.htm" style="height: 80%; width: 97%; background: white; -webkit-overflow-scrolling : touch; overflow : auto"></iframe>');
+            }
+            else {
+                $("#CSSPopupiFrame").append('<br /><iframe id="tosiframe" class="tosiframe" src="http://tos.showings.com/tos.htm" style="height: 80%; width: 97%; background: white; -webkit-overflow-scrolling : touch; overflow : auto"></iframe>');
+            }
+            $("#backdrop-overlay").fadeIn(100);
+            $("#CSSPopupiFrame").fadeIn(500);
+        }
+
+        function ppClick() {
+            centeroverlayTOS();
+            if ($("#CSSPopupiFrame:has(iframe.tosiframe)")) {
+                $("#tosiframe").remove();
+                $("#CSSPopupiFrame").append('<iframe id="tosiframe" class="tosiframe" src="http://tos.showings.com/privacy.htm" style="height: 80%; width: 97%; background: white; -webkit-overflow-scrolling : touch; overflow : auto"></iframe>');
+            }
+            else {
+                $("#CSSPopupiFrame").append('<br /><iframe id="tosiframe" class="tosiframe" src="http://tos.showings.com/privacy.htm" style="height: 80%; width: 97%; background: white; -webkit-overflow-scrolling : touch; overflow : auto"></iframe>');
+            }
+            $("#backdrop-overlay").fadeIn(100);
+            $("#CSSPopupiFrame").fadeIn(500);
+        }
+
+        window.onresize = function () { centeroverlayTOS(); }
+
+    </script>
+    <style type="text/css">
+        #menu_container {
+            border: none;
+            margin-top: 25px;
+            -moz-border-radius: 4px 4px 0px 0px;
+            -webkit-border-radius: 4px 4px 0px 0px;
+            border-radius: 4px 4px 0px 0px;
+        }
+
+        #menu li .active {
+            background-color: white;
+            color: Black;
+            text-shadow: none;
+            -moz-border-radius: 4px 4px 0px 0px;
+            -webkit-border-radius: 4px 4px 0px 0px;
+            border-radius: 4px 4px 0px 0px;
+        }
+
+        #menu a.button {
+            display: inline-block;
+            line-height: 16px;
+            border-width: 0px;
+            font-size: 11px;
+            font-family: arial;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            background: url('/images/button_glas1.png') center center repeat-x #333;
+            padding: 3px 13px 3px 13px;
+            -moz-border-radius: 3px 3px 3px 3px;
+            -webkit-border-radius: 3px 3px 3px 3px;
+            border-radius: 3px 3px 3px 3px;
+            text-align: center;
+        }
+
+        #menu li:hover a {
+            color: white;
+            text-shadow: none;
+            -moz-border-radius: 4px 4px 0px 0px;
+            -webkit-border-radius: 4px 4px 0px 0px;
+            border-radius: 4px 4px 0px 0px;
+        }
+
+            #menu li:hover a.active {
+                color: Black;
+            }
+    </style>
+
+	<script type="text/javascript">
+
+        $(document).ready(function () {
+            clearLocalStorage();
+
+            $('img[data-hover]').hover(function () {
+                $(this).attr('tmp', $(this).attr('src')).attr('src', $(this).attr('data-hover')).attr('data-hover', $(this).attr('tmp')).removeAttr('tmp');
+            }).each(function () {
+                $('<img />').attr('src', $(this).attr('data-hover'));
+            });;
+
+            $('.openid').click(function (e) {
+                var target = $(this).attr('rel');
+                e.preventDefault();
+                loginViaOpenID(target);
+            });
+
+            $('.facebook').click(function (e) {
+                e.preventDefault();
+                loginViaFacebook();
+            });
+
+            $('#Login').click(function (e) {
+                var market = $("#citylist option:selected").val();
+                var user = $("#user").val();
+                var pw = $("#password").val();
+                if (market != null && market != '' && market == "None") {
+                    $("#msgIssue").html("Please select a market first.");
+                    $("#MessageArea").show();
+                    e.preventDefault();
+                }
+                else if (!user || user.length === 0 || user == "Username") {
+                    $("#msgIssue").html("Please enter a Username.");
+                    $("#MessageArea").show();
+                    e.preventDefault();
+                }
+                else if (pw == null || pw === '') {
+                    $("#msgIssue").html("Please enter a password.");
+                    $("#MessageArea").show();
+                    e.preventDefault();
+                }
+            });
+
+            $('#citylist').change(function (e) {
+                $("#ReDir").hide();
+
+                $("#MessageArea").hide();
+                $(".button").show();
+                $(".login-footer").show();
+
+                verifyCity();
+            });
+
+            $('#CityDisabledClose').click(function (e) {
+                $('#MessageArea').slideToggle('fast');
+                e.preventDefault();
+            });
+
+            verifyCity();
+            setUserFocused();
+
+            $("#user").focus(function () {
+                if ($("#user").val() == 'Username') {
+                    $("#user").val("");
+                    $("#user").css("color", "#000000");
+                }
+            });
+            $("#user").focusout(function () {
+                if ($("#user").val() == '') {
+                    $("#user").val("Username");
+                    $("#user").css("color", "#BBB");
+                }
+            });
+
+            if (document.cookie["css_info"] != 'undefined') {
+                var pwd = document.cookie["css_info"].value.toString();
+                var doc = document.getElementById("password");
+                if (pwd.Length > 0)
+                    doc.value = pwd;
+                else
+                    doc.value = "";
+            }
+        });
+
+        // Prevents multiple clicks of login button during the login process
+        $(document).on('submit', 'form', function () {
+            var button = $(this).find('input[type="submit"]');
+            setTimeout(function () {
+                button.attr('disabled', 'disabled');
+                button.css({ 'background':'grey'})
+            }, 0);
+        });
+
+        function setUserFocused() {
+
+            var user = $('#user').val();
+            if (user != null && user != '') {
+                $('#password').focus();
+            }
+            else {
+                $('#user').val("Username");
+                $("#user").css("color", "#BBB");
+            }
+        }
+
+        function verifyCity() {
+            var v = $("#citylist option:selected").val();
+
+            $.ajax({
+                type: "POST",
+                cache: false,
+                url: "/Login/CheckIfLoginEnabled/" + v.toString(),
+                data: null,
+                success: function (data) {
+                    if (!data.loginAllowed) {
+                        $("#msgIssue").html(data.Message);
+                        $("#MessageArea").show();
+                        $(".button").hide();
+                        $(".login-footer").hide();
+                    }
+                    renderPhone(v.substring(v.indexOf(",") + 1).substring(0, v.substring(v.indexOf(",") + 1).indexOf(",")));
+                }
+            });
+        }
+
+        function renderPhone(pk) {
+            $("#mktPhone").html("");
+            $("#divmktphone").hide();
+			//Hiding phones for Edmonton and Sudbury
+            if (pk.length > 0 && (pk !== '389' && pk !== '388')) {
+	            var ph = $("#cpk_" + pk).val();
+	            if (ph != "n/a") {
+		            $("#divmktphone").show();
+		            $("#mktPhone").html($("#cpk_" + pk).val());
+		            $("#mktPhone").show();
+	            }
+            } else {
+	            $("#divmktphone").hide();
+	            $("#mktPhone").hide();
+
+            }
+        }
+
+        function loginViaOpenID(url) {
+            window.location.href = '/oAuth/GoOpenID/?openid_identifier=' + url + '&landat=' + $('#GoTo').val();
+        }
+
+        function loginViaFacebook() {
+            var dest = "/oAuth/GoFacebook/?landat=" + $('#GoTo').val();
+            window.location.href = dest;
+        }
+
+        function ForgotPassword() {
+            $("#ReDir").hide();
+
+            var v = $("#citylist option:selected").val();
+            if (v != null && v != '' && v == "None") {
+                $("#msgIssue").html("Please select a market first.");
+                $("#MessageArea").show();
+
+            }
+            else {
+                var userName = $("#user").val();
+                if (userName == null)
+                    userName = "";
+
+                var link = "/Login/ForgotPassword/";
+                link += "?UserName=" + userName + "&SelectedLocation=" + encodeURIComponent(v);
+
+                var dev = getParameterByName("dev");
+                if (dev != null && dev != '') {
+                    link += "&dev=" + dev;
+                }
+
+                window.location = link;
+            }
+        }
+
+        function getParameterByName(name) {
+            name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+            var regexS = "[\\?&]" + name + "=([^&#]*)";
+            var regex = new RegExp(regexS);
+            var results = regex.exec(window.location.search);
+            if (results == null)
+                return "";
+            else
+                return decodeURIComponent(results[1].replace(/\+/g, " "));
+        }
+        function DisableIfBlocked() {
+            var strmsg = $('#msg').text();
+            if (strmsg.toLowerCase().indexOf("locked") >= 0 || strmsg.toLowerCase().indexOf("blocked") >= 0) {
+                document.getElementById("Login").disabled = true;
+                document.getElementById("Login").className += " dxbDisabled";
+            }
+            else {
+
+                document.getElementById("Login").disabled = false;
+                document.getElementById("Login").className = "button";
+
+            }
+
+        }
+        $(window).load(function () {
+			DisableIfBlocked();
+
+			document.getElementById('Login').setAttribute('onClick', 'SetCityName()');
+		});
+
+		function SetCityName() {
+			var cityList = document.getElementById('citylist');
+
+			if (cityList != null) {
+				document.getElementById('hSelectedLocationString').value = cityList.options[cityList.selectedIndex].text;
+			}
+		}
+	</script>
+	<style>
+
+		#loginbuttonsection {
+			text-align: center;
+			width: 100%;
+		}
+
+		#citylist {
+			width: 235px;
+			margin-bottom: 5px;
+			height: 25px;
+			border-radius: 8px;
+		}
+
+		#user {
+			width: 230px;
+			margin-bottom: 5px;
+			padding: 2px;
+			height: 20px;
+			border-radius: 8px;
+		}
+
+		#Login {
+			width: 235px;
+			height: 30px;
+			border-radius: 8px;
+		}
+
+		#password {
+			width: 230px;
+			margin-bottom: 5px;
+			padding: 2px;
+			height: 20px;
+			border-radius: 8px;
+		}
+
+		.labels {
+			display: inline-block;
+			width: 75px;
+			margin-bottom: 10px;
+		}
+
+		h2 {
+			margin-top: 30px;
+			text-align: center;
+			text-transform: uppercase;
+		}
+
+			h2.background:before {
+				border-top: 2px solid #dfdfdf;
+				content: "";
+				margin: 0 auto; /* this centers the line to the full width specified */
+				position: absolute; /* positioning must be absolute here, and relative positioning must be applied to the parent */
+				top: 50%;
+				left: 0;
+				right: 0;
+				bottom: 0;
+				width: 95%;
+				z-index: -1;
+			}
+
+			h2 span {
+				/* to hide the lines from behind the text, you have to set the background color the same as the container */
+				background: #fff;
+				padding: 0 15px;
+			}
+
+			h2.background {
+				position: relative;
+				z-index: 1;
+			}
+	</style>
+
+</head>
+<body>
+    <div class="pagetop">
+        <div class="head pagesize">
+            <!-- *** head layout *** -->
+            <div class="head_top">
+                <div style="padding-top: 20px">
+                    <center>
+                        <a href="#" title="Home">
+                            <img src="//app.showings.com/images/logo/CSS_Logo_Web_H_375px.png" width="400" alt="" class="picture" />
+                        </a>
+                    </center>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="main-wrap">
+        <div class=" clear">
+            <form action="/Login" method="post">
+            <center>
+                <div class="columns clear" style="width: 600px; top: 0px; margin-top: -20px;">
+                    <div id="loginheadersection" style="position: relative; top: 0px; background-color: #990000; width: 600px; border-radius: 8px 8px 8px 8px; padding-top: 10px">
+                        <center><h1 style="color: #ffffff; font-weight: bold; padding-bottom: 10px">Welcome! Please login below</h1></center>
+                    </div>
+
+                        <div class="notification note-attention clear" style="width: 80%; margin-left: auto; margin-right: auto; margin-top: 5px">
+                            <a href="#" class="close" title="Close notification">close</a>
+
+                            <p><strong>Error:</strong></p>
+
+                            <p><small id="msg">Sorry, your username or password was incorrect. Please try again.</small></p>
+                        </div>
+
+                    <div id="MessageArea" style="width: 275px; min-height:30px; overflow:hidden; border: 1px solid #ff0000; background-color: #ffeeee; font-weight:bold; padding:5px; display:none;">
+                        <div id="divCityDisabled" style="float:left">
+                            <p><span id="msgIssue">Sorry! This market is currently unavailable.</span>&nbsp;&nbsp;<a id="CityDisabledClose" href="#">Ok</a></p>
+                        </div>
+                    </div>
+
+                    <div class="login-inside" style="height:300px; margin-bottom:40px; margin-right:40px; padding-top: 0px; border-bottom: 0px; float:center; !important; display:inline-block;">
+                        <div class="login-data" style="padding-top: 5px">
+                            <div class="row clear">
+                                <label for="SelectedLocation">Market:</label>
+            <select id="citylist" name="SelectedLocation" style="float:left"><option value="None">Select a Market</option>
+            <option value="9,58,ALCO">Alamance County</option>
+            <option value="9,113,ALLN">Allentown, PA</option>
+            <option value="8,363,ASTN">Austin, TX</option>
+            <option value="6,42,BATR">Baton Rouge</option>
+            <option value="6,385,BMNT">Beaumont, TX</option>
+            <option value="6,68,BIRM">Birmingham</option>
+            <option value="9,60,SCPA">BRIGHT</option>
+            <option value="9,307,NCR">Brunswick, NC</option>
+            <option value="6,309,BRCS">Bryan/College Station</option>
+            <option value="8,33,BUFF">Buffalo</option>
+            <option value="11,379,CALI">California</option>
+            <option value="8,28,SAN">Central TX MLS</option>
+            <option value="8,31,CHAT">Chattanooga</option>
+            <option value="11,18,CHIC">Chicago</option>
+            <option value="9,29,WFLA">Citrus County</option>
+            <option value="8,32,CLEV">Cleveland/Yes-MLS</option>
+            <option value="11,17,CLBS">Columbus</option>
+            <option value="11,15,INDY">Columbus, IN</option>
+            <option value="8,349,COOK">Cookeville</option>
+            <option value="9,371,NBMH">Crystal Coast</option>
+            <option selected="selected" value="6,1,DFW">Dallas/Fort Worth</option>
+            <option value="8,27,DEN">Denver/Front Range</option>
+            <option value="8,263,DETR">Detroit</option>
+            <option value="8,261,PENN">Erie</option>
+            <option value="8,261,PENN">Erie/Penn</option>
+            <option value="9,10,FYTV">Fayetteville</option>
+            <option value="9,29,WFLA">Florida</option>
+            <option value="11,74,FTWA">Fort Wayne</option>
+            <option value="8,343,GTR-MS">Golden Triangle, MS</option>
+            <option value="13,377,GTA">Greater Toronto Area</option>
+            <option value="9,11,GRNV">Greenville</option>
+            <option value="9,56,GVPI">Greenville-Pitt</option>
+            <option value="9,29,WFLA">Heartland FL</option>
+            <option value="9,46,HCKY">Hickory</option>
+            <option value="6,3,LRAR">Hot Springs, AR</option>
+            <option value="6,22,HSTN">Houston</option>
+            <option value="9,29,WFLA">Indian River</option>
+            <option value="11,15,INDY">Indianapolis</option>
+            <option value="8,351,JAXMS">Jackson, MS</option>
+            <option value="8,38,JAKN">Jackson, TN</option>
+            <option value="9,239,JKNC">Jacksonville,NC</option>
+            <option value="8,331,JCI">Johnson City</option>
+            <option value="6,329,JBO">Jonesboro, AR</option>
+            <option value="11,12,KC">Kansas City</option>
+            <option value="11,17,CLBS">Knox County</option>
+            <option value="8,36,KNOX">Knoxville</option>
+            <option value="11,291,LFIN">Lafayette, IN</option>
+            <option value="6,84,LFYT">Lafayette, LA</option>
+            <option value="6,295,LKCH">Lake Charles, LA</option>
+            <option value="8,383,LRDO">Laredo, TX</option>
+            <option value="11,269,LAWR">Lawrence, KS</option>
+            <option value="6,3,LRAR">Little Rock</option>
+            <option value="9,25,LNGI">Long Island</option>
+            <option value="11,62,LOKY">Louisville, KY</option>
+            <option value="9,40,LBVA">Lynchburg</option>
+            <option value="11,52,MADI">Madison</option>
+            <option value="11,375,MHTN">Manhattan, KS</option>
+            <option value="11,381,MNFLD">Mansfield</option>
+            <option value="9,60,SCPA">Maryland/ BRIGHT</option>
+            <option value="9,24,MASS">Massachusetts</option>
+            <option value="8,37,MCAL">McAllen</option>
+            <option value="8,34,MEM">Memphis</option>
+            <option value="11,387,HUTC">Mid-Kansas MLS</option>
+            <option value="11,88,MLWK">Milwaukee</option>
+            <option value="11,19,MNSP">Minneapolis/St. Paul</option>
+            <option value="6,313,TLSA">MLS Tech</option>
+            <option value="6,107,MONR">Monroe, LA</option>
+            <option value="9,70,MYRB">Myrtle Beach</option>
+            <option value="8,30,NASH">Nashville</option>
+            <option value="9,239,JKNC">NCR/Topsail Island</option>
+            <option value="9,371,NBMH">New Bern/Morehead</option>
+            <option value="6,105,NORL">New Orleans</option>
+            <option value="9,307,NCR">North Carolina Regional</option>
+            <option value="9,60,SCPA">North Virginia/BRIGHT</option>
+            <option value="6,86,OKC">Oklahoma City, OK</option>
+            <option value="11,72,OMAH">Omaha</option>
+            <option value="8,357,OXF">Oxford, MS</option>
+            <option value="11,64,PEOR">Peoria, IL</option>
+            <option value="9,60,SCPA">Philadelphia/BRIGHT</option>
+            <option value="8,27,DEN">Pikes Peak</option>
+            <option value="8,111,PUEB">Pueblo, CO</option>
+            <option value="13,389,RAE">REALTORS Association of Edmonton</option>
+            <option value="8,109,RENO">Reno, NV</option>
+            <option value="8,33,BUFF">Rochester</option>
+            <option value="11,76,ROKF">Rockford, IL</option>
+            <option value="9,307,NCR">Rocky Mount</option>
+            <option value="6,355,ROGAR">Rogers, AR</option>
+            <option value="8,39,SLC">Salt Lake City/Wasatch Range</option>
+            <option value="8,28,SAN">San Antonio</option>
+            <option value="9,10,FYTV">Sanford</option>
+            <option value="9,305,SVNH">Savannah, GA</option>
+            <option value="11,17,CLBS">Scioto Valley</option>
+            <option value="6,2,SHRV">Shreveport</option>
+            <option value="9,60,SCPA">South Central PA/BRIGHT</option>
+            <option value="11,101,SOOH">Southern Ohio</option>
+            <option value="11,13,STL">St Louis</option>
+            <option value="13,388,SREB">Sudbury Real Estate Board</option>
+            <option value="11,72,OMAH">SW Iowa</option>
+            <option value="11,267,TOPK">Topeka</option>
+            <option value="6,313,TLSA">Tulsa, OK</option>
+            <option value="8,337,TUP">Tupelo</option>
+            <option value="9,60,SCPA">Washington, DC/BRIGHT</option>
+            <option value="8,261,PENN">West Penn</option>
+            <option value="9,23,WCHS">Westchester</option>
+            <option value="8,257,WCOL">Western Colorado</option>
+            <option value="9,8,WILM">Wilmington</option>
+            <option value="9,307,NCR">Wilson, NC</option>
+            <option value="8,32,CLEV">Yes-MLS</option>
+            </select>				</div>
+
+                            <input type="hidden" name="SelectedLocationString" id="hSelectedLocationString" />
+
+                            <div class="row clear" id="divmktphone">
+                                <label for="mktPhone">Phone:</label>
+                                <label id="mktPhone" style="float:left; text-align:left; width:100px;"></label>
+                            </div>
+
+                            <div style="display:none">
+                                    <input type="hidden" id="cpk_58" value="336-417-5863" />
+                                    <input type="hidden" id="cpk_113" value="610-820-8220" />
+                                    <input type="hidden" id="cpk_363" value="512-225-0744" />
+                                    <input type="hidden" id="cpk_42" value="225-925-5100" />
+                                    <input type="hidden" id="cpk_385" value="409-895-2762" />
+                                    <input type="hidden" id="cpk_68" value="205-263-4000" />
+                                    <input type="hidden" id="cpk_60" value="877-977-4007" />
+                                    <input type="hidden" id="cpk_307" value="910-313-0022" />
+                                    <input type="hidden" id="cpk_309" value="979-690-6688" />
+                                    <input type="hidden" id="cpk_33" value="716-848-1111" />
+                                    <input type="hidden" id="cpk_379" value="844-944-7469" />
+                                    <input type="hidden" id="cpk_28" value="210-222-2227" />
+                                    <input type="hidden" id="cpk_31" value="423-266-1000" />
+                                    <input type="hidden" id="cpk_18" value="877-977-1010" />
+                                    <input type="hidden" id="cpk_29" value="888-998-9005" />
+                                    <input type="hidden" id="cpk_32" value="440-686-0100" />
+                                    <input type="hidden" id="cpk_17" value="614-255-5588" />
+                                    <input type="hidden" id="cpk_15" value="317-955-5555" />
+                                    <input type="hidden" id="cpk_349" value="931-525-6002" />
+                                    <input type="hidden" id="cpk_371" value="252-633-3088" />
+                                    <input type="hidden" id="cpk_1" value="817-858-0055" />
+                                    <input type="hidden" id="cpk_27" value="303-573-7469" />
+                                    <input type="hidden" id="cpk_263" value="866-424-1983" />
+                                    <input type="hidden" id="cpk_261" value="814-878-0001" />
+                                    <input type="hidden" id="cpk_10" value="910-401-0101" />
+                                    <input type="hidden" id="cpk_74" value="260-492-9900" />
+                                    <input type="hidden" id="cpk_343" value="662-329-1855" />
+                                    <input type="hidden" id="cpk_377" value="855-544-7469" />
+                                    <input type="hidden" id="cpk_11" value="866-460-4111" />
+                                    <input type="hidden" id="cpk_56" value="252-329-1200" />
+                                    <input type="hidden" id="cpk_46" value="828-322-3334" />
+                                    <input type="hidden" id="cpk_3" value="501-244-0333" />
+                                    <input type="hidden" id="cpk_22" value="713-977-7469" />
+                                    <input type="hidden" id="cpk_351" value="601-829-3332" />
+                                    <input type="hidden" id="cpk_38" value="731-421-8100" />
+                                    <input type="hidden" id="cpk_239" value="910-219-1111" />
+                                    <input type="hidden" id="cpk_331" value="423-952-2600" />
+                                    <input type="hidden" id="cpk_329" value="870-931-6100" />
+                                    <input type="hidden" id="cpk_12" value="913-451-7469" />
+                                    <input type="hidden" id="cpk_36" value="865-525-4999" />
+                                    <input type="hidden" id="cpk_291" value="765-237-0001" />
+                                    <input type="hidden" id="cpk_84" value="337-769-4044" />
+                                    <input type="hidden" id="cpk_295" value="337-310-1111" />
+                                    <input type="hidden" id="cpk_383" value="956-602-7044" />
+                                    <input type="hidden" id="cpk_269" value="866-664-7039" />
+                                    <input type="hidden" id="cpk_25" value="888-380-8833" />
+                                    <input type="hidden" id="cpk_62" value="502-893-8858" />
+                                    <input type="hidden" id="cpk_40" value="434-528-8858" />
+                                    <input type="hidden" id="cpk_52" value="608-231-2570" />
+                                    <input type="hidden" id="cpk_375" value="785-789-1019" />
+                                    <input type="hidden" id="cpk_381" value="419-525-4531" />
+                                    <input type="hidden" id="cpk_24" value="888-866-8388" />
+                                    <input type="hidden" id="cpk_37" value="956-687-6700" />
+                                    <input type="hidden" id="cpk_34" value="901-754-7575" />
+                                    <input type="hidden" id="cpk_387" value="620-615-7100" />
+                                    <input type="hidden" id="cpk_88" value="414-918-4218" />
+                                    <input type="hidden" id="cpk_19" value="612-343-8866" />
+                                    <input type="hidden" id="cpk_313" value="918-858-4000" />
+                                    <input type="hidden" id="cpk_107" value="318-388-3100" />
+                                    <input type="hidden" id="cpk_70" value="843-448-6866" />
+                                    <input type="hidden" id="cpk_30" value="615-327-0101" />
+                                    <input type="hidden" id="cpk_105" value="504-620-6595" />
+                                    <input type="hidden" id="cpk_86" value="405-231-5588" />
+                                    <input type="hidden" id="cpk_72" value="402-397-5554" />
+                                    <input type="hidden" id="cpk_357" value="901-271-7094" />
+                                    <input type="hidden" id="cpk_64" value="309-694-0101" />
+                                    <input type="hidden" id="cpk_111" value="719-543-3333" />
+                                    <input type="hidden" id="cpk_389" value="780-851-3333" />
+                                    <input type="hidden" id="cpk_109" value="775-324-3241" />
+                                    <input type="hidden" id="cpk_76" value="815-227-0080" />
+                                    <input type="hidden" id="cpk_355" value="866-463-1383" />
+                                    <input type="hidden" id="cpk_39" value="866-755-4555" />
+                                    <input type="hidden" id="cpk_305" value="912-691-9300" />
+                                    <input type="hidden" id="cpk_2" value="318-798-7575" />
+                                    <input type="hidden" id="cpk_101" value="866-479-0001" />
+                                    <input type="hidden" id="cpk_13" value="314-371-2100" />
+                                    <input type="hidden" id="cpk_388" value="705-885-2300" />
+                                    <input type="hidden" id="cpk_267" value="785-266-7469" />
+                                    <input type="hidden" id="cpk_337" value="662-680-6490" />
+                                    <input type="hidden" id="cpk_23" value="866-642-1222" />
+                                    <input type="hidden" id="cpk_257" value="970-241-4006" />
+                                    <input type="hidden" id="cpk_8" value="910-313-0022" />
+                            </div>
+
+                            <div class="row clear">
+                                <label for="UserName">Username:</label>
+                                <input id="user" name="UserName" size="25" style="float:left" type="text" value="0657822" />
+                            </div>
+
+                            <div class="row clear">
+                                <label for="Password">Password:</label>
+            <input id="password" name="Password" size="25" style="float:left" type="password" />				</div>
+
+                            <div class="row clear">
+                                <label for="GoTo">Go To:</label>
+                                <select name="GoTo" id="GoTo" style="float:left; width:235px; height:25px;border-radius: 8px;">
+                                    <option value="/Dashboard/" selected="selected">Dashboard</option>
+                                    <option value="/Listings/">Listings</option>
+                                    <option value="/Schedule/">Schedule Appointment</option>
+                                    <option value="/Showings/Manage/">Manage Appointments</option>
+                                    <option value="/ClassicReport/ShowingsOnYourListings/">Showings On Your Listings</option>
+                                    <option value="/ClassicReport/ShowingsForYourBuyers/">Appointments For Your Buyers</option>
+                                    <option value="/Settings/">Account Settings</option>
+                                </select>
+                            </div>
+
+                            <div class=" row clear">
+
+                                    <input type="submit" class="button"
+                                        id="Login" value="Login" />
+
+                                <div style="float:right; margin-top: 10px; display: inline-block;">
+                                    <label for="RememberMe" style="width: 150px; float: left;">
+                                        <input checked="checked" data-val="true" data-val-required="The RememberMe field is required." id="Remember" name="RememberMe" type="checkbox" value="true" /><input name="RememberMe" type="hidden" value="false" />
+                                        Remember Me
+                                    </label>
+                                    <a href="/Login/RequestPassword" class="" style="float:right; padding-top:3px; padding-left:3px">Forgot Password?</a>
+                                </div>
+                            </div>
+
+                    </div>
+                </div>
+            </center>
+            </form>
+        </div>
+    </div>
+
+    <div class="footer">
+        <div class="pagesize clear">
+            <p class="bt-space15">
+                <a href="/Dashboard/" title="View dashboard">
+                    <img src="//app.showings.com/images/logo/CSS_Logo_Web_H_375px.png" width="320" alt="" class="picture" />
+                </a>
+                <br />
+                <br />
+                <div id="CSSPopupiFrame" class="modal-window modal" style="border-radius: 6px; z-index: 1101">
+                    <a href="#"><span id="ClosePopupiFrame" style="position: absolute; top: -15px; right: -15px; width: 30px; height: 30px; background-image: url('//app.showings.com/images/fancybox/fancybox.png'); background-position: -40px 0px; cursor: pointer; z-index: 1103"></span></a><img src="//app.showings.com/images/logo/CSS_Logo_Web_H_375px.png" style="float: center; max-height: 75px; width: 350px;" alt="" class="picture" />
+                    <br />
+                </div>
+                <div id="backdrop-overlay" style="display:none;" onclick="$('#ClosePopupiFrame').click();">
+                    <div id="fancybox-overlay" style="background-color: rgb(102, 102, 102); opacity: 0.4; display: block;" onclick="$('#ClosePopupiFrame').click();"></div>
+                </div>
+
+                <span class="copy"><strong>© 2019 Copyright Centralized Showing Service, Inc.</strong></span>
+                <br />            <a href="#"><span class="copy" id="tosspan">Terms of Service</span></a> |
+                <a href="#"><span class="copy" id="ppspan">Privacy Policy</span></a> |
+                <a href="/Login/Contact/"><span class="copy">Contact CSS</span></a><!--<br /><a class="iframe" href="http://tos.showings.com/tos.htm">Terms of Service (FancyBox)</a> | <a class="iframe" href="http://tos.showings.com/privacy.htm">Privacy Policy (FancyBox)</a>-->
+                <br /><br />
+<div align="center">
+	<a href="http://www.facebook.com/pages/Centralized-Showing-Service/83737692695" target="_blank"><img src="/images/socialnet/facebookIcon.png" border="0" style="padding:10px;"></a>
+	<a href="http://twitter.com/Showings_com" target="_blank"><img src="/images/socialnet/twitterIcon.png" border="0" style="padding:10px;"></a>
+	<a href="http://www.youtube.com/user/showingsdotcom" target="_blank"><img src="/images/socialnet/youtube_social_square_white.png" border="0" style="padding:10px;"></a>
+</div>
+            </p>
+        </div>
+    </div>
+
+    <div class="printfooter">
+        <p align="center">
+            Thank you for using Centralized Showing Service<br />
+            © 2019 Copyright Centralized Showing Service, Inc.
+        </p>
+    </div>
+
+<script type="text/javascript">
+
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-2638938-7']);
+    _gaq.push(['_trackPageview']);
+
+    (function () {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+
+</script>
+
+</body>
+</html>

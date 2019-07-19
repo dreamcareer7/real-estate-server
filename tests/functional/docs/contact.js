@@ -90,6 +90,12 @@ module.exports = {
         uuid: true,
         description: 'Belongs to list'
       },
+      flows: {
+        type: 'string',
+        required: false,
+        uuid: true,
+        description: 'Enrolled in some flows'
+      },
       created_gte: {
         type: 'number',
         required: false,

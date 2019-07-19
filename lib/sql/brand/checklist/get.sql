@@ -10,15 +10,7 @@ SELECT brands_checklists.*,
     WHERE
       checklist = brands_checklists.id
       AND deleted_at IS NULL
-  ) as tasks,
-
-  (
-    SELECT
-      ARRAY_AGG(form)
-    FROM
-      brands_checklists_allowed_forms
-    WHERE checklist = brands_checklists.id AND deleted_at IS NULL
-  ) as allowed_forms
+  ) as tasks
 
 FROM brands_checklists
 JOIN unnest($1::uuid[]) WITH ORDINALITY t(bid, ord) ON brands_checklists.id = bid

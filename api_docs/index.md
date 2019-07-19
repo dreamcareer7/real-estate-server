@@ -64,3 +64,9 @@ Welcome. Rechat's API is broken into several small components to be readable.
 
 * [Brands](brand.html)
 * [Payments](payment.html)
+
+
+## Integrations
+
+* [Showings Credential](showings.html)
+* [Google Profile](google.html)

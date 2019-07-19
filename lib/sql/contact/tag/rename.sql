@@ -14,7 +14,10 @@ WITH tag_def AS (
   UPDATE
     contacts_attributes AS ca
   SET
-    text = $3
+    text = $3,
+    updated_at = NOW(),
+    updated_by = $4::uuid,
+    updated_within = $5
   FROM
     contacts AS c
   WHERE
@@ -27,7 +30,10 @@ WITH tag_def AS (
   UPDATE
     crm_tags
   SET
-    tag = $3
+    tag = $3,
+    updated_at = NOW(),
+    updated_by = $4::uuid,
+    updated_within = $5
   WHERE
     tag = $2
   RETURNING

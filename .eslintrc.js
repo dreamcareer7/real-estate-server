@@ -68,6 +68,7 @@ const globals = [
   'BrandChecklist',
   'BrandContext',
   'BrandRole',
+  'BrandUser',
   'BrandEmail',
   'BrokerWolf',
   'UserRole',
@@ -231,9 +232,9 @@ module.exports = {
     'no-unused-labels': [
       'error'
     ],
-//     'no-unused-expressions': [
-//       'error'
-//     ],
+    // 'no-unused-expressions': [
+    //   'error'
+    // ],
     'no-unmodified-loop-condition': [
       'error'
     ],
@@ -262,9 +263,6 @@ module.exports = {
       'error'
     ],
     'no-new-func': [
-      'error'
-    ],
-    'no-multi-spaces': [
       'error'
     ],
     'no-invalid-this': [

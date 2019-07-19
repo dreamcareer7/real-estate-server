@@ -1,38 +1,31 @@
 CREATE OR REPLACE FUNCTION get_brand_agents(id uuid) RETURNS TABLE (
-   "user" uuid,
-   agent uuid,
-   mlsid text
+   "user"     uuid,
+   agent      uuid,
+   mlsid      text,
+   brand_user uuid,
+   brand_role uuid,
+   brand      uuid,
+   enabled    boolean
 ) AS
 $$
   SELECT
-    users.id as "user",
-    agents.id as agent,
-    agents.mlsid as mlsid
-    FROM users
-  LEFT JOIN agents ON users.agent = agents.id
-  WHERE users.id IN (
-    (SELECT DISTINCT "user" FROM brands_users
-    JOIN brands_roles ON brands_users.role = brands_roles.id
-    WHERE
-    brands_users.deleted_at IS NULL
-    AND brands_roles.brand IN(
+    users.id           as "user",
+    agents.id          as agent,
+    agents.mlsid       as mlsid,
+    brands_users.id    as brand_user,
+    brands_roles.id    as brand_role,
+    brands_roles.brand as brand,
+    (brands_users.deleted_at IS NULL AND brands_roles.deleted_at IS NULL) as enabled
+
+  FROM users
+  LEFT JOIN agents  ON users.agent = agents.id
+  JOIN brands_users ON brands_users.user = users.id
+  JOIN brands_roles ON brands_users.role = brands_roles.id
+  WHERE
+    users.user_type = 'Agent'
+    AND
+    brands_roles.brand IN(
       SELECT brand_children($1)
-    ))
-  ) AND users.user_type = 'Agent'
-  UNION
-  SELECT
-    users.id as "user",
-    agents.id as agent,
-    agents.mlsid as mlsid
-    FROM agents
-    LEFT JOIN users ON agents.id = users.agent
-    WHERE office_mui IN (
-      SELECT matrix_unique_id
-      FROM offices
-      WHERE id IN
-      (
-        SELECT office FROM brands_offices WHERE brand = $1
-      )
-    ) AND agents.status = 'Active'
+    )
 $$
 LANGUAGE sql;

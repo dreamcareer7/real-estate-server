@@ -24,5 +24,6 @@ $$
     ) END
   )::boolean as has_contact
   FROM get_brand_agents(brand_id) brand_agents
+  WHERE enabled IS TRUE
 $$
 LANGUAGE sql;

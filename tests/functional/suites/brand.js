@@ -10,7 +10,17 @@ let brand_id
 
 const createParent = (cb) => {
   brand.name = 'Parent Brand'
-  brand.role = 'Admin' // We're admin of this one
+  brand.roles = [
+    {
+      role: 'Admin',
+      members: [
+        {
+          user: results.authorize.token.data.id
+        }
+      ],
+      acl: ['Admin']
+    }
+  ]
 
   return frisby.create('create a brand')
     .post('/brands', brand)
@@ -24,7 +34,19 @@ const createParent = (cb) => {
 
 const create = (cb) => {
   brand.parent = results.brand.createParent.data.id
-  brand.name = 'Brand'
+
+  brand.roles = [
+    {
+      role: 'Owner',
+      members: [
+        {
+          user: results.authorize.token.data.id
+        }
+      ],
+      acl: ['Admin']
+    }
+  ]
+
   delete brand.role // We don't have a role in this one. But we should have access as we have access to the parent.
 
   return frisby.create('create a child brand')
@@ -216,29 +238,9 @@ const updateTask = cb => {
     .expectStatus(200)
 }
 
-const addForm = cb => {
-  return frisby.create('add an allowed form to a brand checklist')
-    .post(`/brands/${brand_id}/checklists/${results.brand.addChecklist.data.id}/forms`, {
-      form: results.form.create.data.id,
-    })
-    .after(cb)
-    .expectStatus(200)
-    .expectJSON({
-      code: 'OK',
-      //       data: brand
-    })
-}
-
 const deleteTask = cb => {
   return frisby.create('delete a task from a brand checklist')
     .delete(`/brands/${brand_id}/checklists/${results.brand.addChecklist.data.id}/tasks/${results.brand.addTask.data.id}`)
-    .after(cb)
-    .expectStatus(204)
-}
-
-const deleteForm = cb => {
-  return frisby.create('delete a form from a brand checklist')
-    .delete(`/brands/${brand_id}/checklists/${results.brand.addChecklist.data.id}/forms/${results.form.create.data.id}`)
     .after(cb)
     .expectStatus(204)
 }
@@ -341,7 +343,7 @@ const deleteMember = cb => {
 
 const getAgents = cb => {
   return frisby.create('get all agents of a brand')
-    .get(`/brands/${brand_id}/agents`)
+    .get(`/brands/${brand_id}/agents?q=User`)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
@@ -416,6 +418,30 @@ const getTemplates = cb => {
     })
 }
 
+const updateBrandSettings = cb => {
+  return frisby.create('update a brand setting')
+    .put(`/brands/${brand_id}/settings/some_key`, {
+      value: 'Hello!'
+    })
+    .addHeader('X-Rechat-Brand', brand_id)
+    .after(cb)
+    .expectStatus(204)
+}
+
+const getBrandSettings = cb => {
+  return frisby.create('get brand settings')
+    .get(`/brands/${brand_id}/settings`)
+    .addHeader('X-Rechat-Brand', brand_id)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      data: [{
+        key: 'some_key',
+        value: 'Hello!'
+      }]
+    })
+}
+
 const updateUserSettings = cb => {
   return frisby.create('update a user setting')
     .put('/users/self/settings/user_filter', {
@@ -434,6 +460,19 @@ const getUserRoles = cb => {
     .get('/users/self/roles')
     .after(cb)
     .expectStatus(200)
+    .expectJSON({
+      data: [{
+        brand_settings: {
+          some_key: 'Hello!'
+        },
+        settings: {
+          user_filter: [
+            '4926132e-9e1d-11e7-8fd6-0242ac110003',
+            '5d66ae5e-f82c-11e5-b4b4-f23c91b0d077'
+          ]
+        }
+      }]
+    })
 }
 
 const removeBrand = cb => {
@@ -524,12 +563,10 @@ module.exports = {
   addHostname,
   addChecklist,
   updateChecklist,
-  addForm,
   addTask,
   updateTask,
   getChecklists,
   deleteTask,
-  deleteForm,
   deleteChecklist,
   getByHostname,
   removeOffice,
@@ -547,6 +584,8 @@ module.exports = {
   getEmails,
   deleteEmail,
 
+  updateBrandSettings,
+  getBrandSettings,
   updateUserSettings,
   getUserRoles,
 

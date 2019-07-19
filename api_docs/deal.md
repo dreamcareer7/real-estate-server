@@ -54,6 +54,9 @@ get a list of available contexts for each brand.
 ### Set listing for a deal [PATCH /deals/:id/listing]
 <!-- include(tests/deal/patchListing.md) -->
 
+### Change property type of a deal [PATCH /deals/:id/property_type]
+<!-- include(tests/deal/patchPropertyType.md) -->
+
 ### Add Context to a deal [POST /deals/:id/context]
 <!-- include(tests/deal/addContext.md) -->
 

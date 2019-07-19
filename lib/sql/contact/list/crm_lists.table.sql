@@ -15,5 +15,8 @@ CREATE TABLE IF NOT EXISTS crm_lists (
   is_editable boolean DEFAULT TRUE,
 
   is_and_filter boolean DEFAULT TRUE,
-  query text
+  query text,
+
+  crm_task uuid[],
+  flows uuid[]
 )

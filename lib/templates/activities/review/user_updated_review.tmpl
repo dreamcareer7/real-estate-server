@@ -1,9 +1,9 @@
 {% if object.status === 'Submitted'%}
-  {{data.abbreviated_display_name}} Submitted
+  {{data.abbreviated_display_name | safe}} Submitted
 {% elseif object.status === 'Incomplete'%}
-  {{data.abbreviated_display_name}} Cancelled Submission
+  {{data.abbreviated_display_name | safe}} Cancelled Submission
 {% elseif object.status === 'Declined'%}
-  {{data.abbreviated_display_name}} Declined
+  {{data.abbreviated_display_name | safe}} Declined
 {% elseif object.status === 'Approved'%}
-  {{data.abbreviated_display_name}} Approved
+  {{data.abbreviated_display_name | safe}} Approved
 {% endif %}

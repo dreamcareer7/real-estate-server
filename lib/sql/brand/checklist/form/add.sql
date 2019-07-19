@@ -1,1 +1,0 @@
-INSERT INTO brands_checklists_allowed_forms (checklist, form) VALUES ($1, $2)

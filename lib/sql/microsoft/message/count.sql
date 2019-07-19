@@ -1,0 +1,1 @@
+SELECT COUNT(*)::INT FROM microsoft_messages WHERE microsoft_credential = $1

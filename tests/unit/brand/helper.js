@@ -57,6 +57,10 @@ async function create(data) {
     }
   }
 
+  const form = await Form.create({
+    name: 'Test Form'
+  })
+
   for(const checklist of checklists) {
     const saved = await BrandChecklist.create({
       ...checklist,
@@ -68,7 +72,8 @@ async function create(data) {
     for(const task of tasks) {
       await BrandChecklist.addTask({
         ...task,
-        checklist: saved.id
+        checklist: saved.id,
+        form: form.id
       })
     }
   }

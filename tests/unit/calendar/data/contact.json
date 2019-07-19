@@ -1,0 +1,24 @@
+[
+  {
+    "attributes": {
+      "first_name": "saeed",
+      "last_name": "rechat",
+      "email": {
+        "text": "saeed@rechat.com",
+        "label": "Personal"
+      },
+      "tag": ["Warriors List"]
+    }
+  },
+
+  {
+    "attributes": {
+      "first_name": "saeed",
+      "last_name": "rechat",
+      "email": {
+        "text": "abbas@rechat.com",
+        "label": "Personal"
+      }
+    }
+  }
+]

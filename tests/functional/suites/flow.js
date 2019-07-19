@@ -98,13 +98,16 @@ const enroll = cb => {
       origin: results.flow.getBrandFlows.data[0].id,
       starts_at: Date.now() / 1000,
       steps: results.flow.getBrandFlows.data[0].steps.map(s => s.id),
-      contacts: [results.contact.create.data[0].id]
+      contacts: {
+        ids: [results.contact.create.data[0].id]
+      }
     })
     .after(cb)
     .expectStatus(200)
     .expectJSON({
       data: [{
-        steps: [{}, {}, {}]
+        steps: [{}, {}, {}],
+        contact: results.contact.create.data[0].id
       }]
     })
 }

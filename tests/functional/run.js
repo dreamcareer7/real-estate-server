@@ -181,21 +181,44 @@ const database = (req, res, next) => {
       return res.error(err)
 
     conn.done = done
-    conn.query('BEGIN', (err) => {
-      if (err)
-        return res.error(err)
 
+    const cb = () => {
       connections[suite] = conn
       context.set({
         db: conn,
         jobs: []
       })
       context.run(next)
-    })
+    }
+
+    if (suite) {
+      conn.query('BEGIN', (err) => {
+        if (err)
+          return res.error(err)
+
+        cb()
+      })
+    }
+    else {
+      return cb()
+    }
   })
 }
 
 app.use(database)
+
+app.post('_/rollback', (req, res) => {
+  rollback(req.query.suite)
+  res.end()
+})
+
+app.use((req, res, next) => {
+  const newAllowedHeaders = (res.get('Access-Control-Allow-Headers') || '')
+    .split(',').concat(['x-suite', 'x-handle-jobs'])
+    .join(',')
+  res.header('Access-Control-Allow-Headers', newAllowedHeaders)
+  next()
+})
 
 app.on('after loading routes', () => {
   app.use((err, req, res, next) => {
@@ -204,6 +227,13 @@ app.on('after loading routes', () => {
 })
 
 Run.emit('app ready', app)
+
+const rollback = suite => {
+  if(suite && connections[suite]) {
+    connections[suite].query('ROLLBACK', connections[suite].done)
+    delete connections[suite]
+  }
+}
 
 const setupApp = cb => {
   migrate(() => {
@@ -226,11 +256,6 @@ const setupApp = cb => {
       })
     })
   })
-
-  const rollback = suite => {
-    connections[suite].query('ROLLBACK', connections[suite].done)
-    delete connections[suite]
-  }
 
   if (!program.keep) {
     Run.on('suite done', (suite) => {

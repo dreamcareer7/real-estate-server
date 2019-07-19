@@ -8,6 +8,7 @@ SELECT
   deleted_by,
   brand,
   origin,
+  origin AS origin_id,
   name,
   description,
   extract(epoch FROM starts_at) AS starts_at,

@@ -14,6 +14,7 @@ WITH steps_with_ts AS (
       fs.deleted_at IS NULL
       AND fe.deleted_at IS NULL
       AND crm_tasks.deleted_at IS NULL
+      AND crm_tasks.status <> 'DONE'
       AND fs.flow = $1::uuid
   ) UNION ALL (
     SELECT

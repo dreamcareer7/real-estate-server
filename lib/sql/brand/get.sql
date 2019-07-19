@@ -27,7 +27,29 @@ SELECT brands.*,
     WHERE
       br.brand = brands.id
       AND bu.deleted_at IS NULL
-  )::INT as member_count
+  )::INT as member_count,
+
+  -- Brand can return both parents and children
+  -- In most cases it's parent that we care about
+  -- But in some cases a client may request for it's children (tree)
+  -- If brand.children is enabled, then we have to disable brand.parent
+  -- Otherwise we'll fall into an infinite loop
+
+  (
+    CASE WHEN $2 @> ARRAY['brand.children'] THEN
+      (
+        SELECT ARRAY_AGG(id ORDER BY name) FROM brands children
+        WHERE children.parent = brands.id AND deleted_at IS NULL
+      )
+    ELSE NULL
+    END
+  ) as children,
+
+  (
+    CASE WHEN $2 @> ARRAY['brand.children'] THEN NULL
+    ELSE parent
+    END
+  ) as parent
 
 FROM brands
 JOIN unnest($1::uuid[]) WITH ORDINALITY t(bid, ord) ON brands.id = bid

@@ -41,6 +41,7 @@ async function createContact(data) {
     data.map(c => ({ ...c, attributes: attributes(c.attributes), user: user.id })),
     user.id,
     brand.id,
+    'direct_request',
     { activity: false, get: false, relax: false }
   )
 
@@ -65,6 +66,21 @@ async function createWarmList() {
   await handleJobs()
 
   return List.get(id)
+}
+
+async function createListWithEmptyFilters() {
+  const id = await List.create(user.id, brand.id, {
+    name: 'tag',
+    filters: null,
+    args: {
+      filter_type: 'and'
+    }
+  })
+
+  const list = await List.get(id)
+  expect(list.filters).to.be.null
+
+  await handleJobs()
 }
 
 async function createEmptyList() {
@@ -98,6 +114,8 @@ async function testCreateList() {
   expect(list.args).to.be.eql({
     filter_type: 'and',
     q: null,
+    crm_tasks: null,
+    flows: null,
     type: 'contact_list_args'
   })
 
@@ -224,13 +242,13 @@ async function testUpdateListMembersAfterUpdatingContacts() {
 
   const first_contact = await getContact(contact_ids[0], ['contact.attributes'])
 
-  await Contact.update(user.id, brand.id, [{
+  await Contact.update([{
     id: contact_ids[0],
     attributes: [{
       ...first_contact.attributes.find(a => a.attribute_type === 'tag'),
       text: 'Something Else'
     }]
-  }])
+  }], user.id, brand.id)
 
   await handleJobs()
 
@@ -413,6 +431,7 @@ describe('Contact', () => {
   describe('List', () => {
     it('should allow creating a list', testCreateList)
     it('should allow creating an empty list', createEmptyList)
+    it('should allow creating an empty list with null filters', createListWithEmptyFilters)
     it('should fetch lists for brand', testFetchListsForBrand)
     it('should allow updating a list', testUpdateList)
     it('should allow deleting a list', testDeleteList)
