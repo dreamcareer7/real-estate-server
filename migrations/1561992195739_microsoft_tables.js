@@ -70,7 +70,6 @@ const migrations = [
     UNIQUE (microsoft_credential, folder_id)
   )`,
 
-
   `CREATE TABLE IF NOT EXISTS microsoft_contacts(
     id uuid NOT NULL PRIMARY KEY DEFAULT uuid_generate_v4(),
 
