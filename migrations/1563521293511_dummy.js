@@ -2,9 +2,6 @@ const db = require('../lib/utils/db')
 
 const migrations = [
   'BEGIN',
-  `ALTER TABLE crm_lists
-    ADD COLUMN crm_task uuid[],
-    ADD COLUMN flows uuid[]`,
   'COMMIT'
 ]
 
