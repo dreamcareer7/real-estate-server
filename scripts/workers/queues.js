@@ -73,6 +73,8 @@ const mls_office = (job, done) => {
 }
 
 const mls_photo = (job, done) => {
+  job.data.processed.matrix_unique_id = parseInt(job.data.processed.matrix_unique_id)
+
   Photo.create({
     ...job.data.processed,
     revision: job.data.revision
@@ -80,6 +82,8 @@ const mls_photo = (job, done) => {
 }
 
 const mls_listing = (job, done) => {
+  job.data.processed.address.matrix_unique_id = parseInt(job.data.processed.address.matrix_unique_id)
+
   Listing.create({
     ...job.data.processed,
     revision: job.data.revision
