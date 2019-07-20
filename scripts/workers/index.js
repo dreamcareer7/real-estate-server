@@ -19,7 +19,7 @@ const createContext = require('./create-context')
 
 
 require('./poll')
-
+require('./peanar')
 
 attachCalendarEvents()
 attachContactEvents()
