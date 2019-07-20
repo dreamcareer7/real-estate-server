@@ -135,46 +135,6 @@ module.exports = {
     parallel: 5
   },
 
-  'MLS.Unit': {
-    handler: mls_unit,
-    parallel: 50
-  },
-
-  'MLS.Room': {
-    handler: mls_room,
-    parallel: 50
-  },
-
-  'MLS.OpenHouse': {
-    handler: mls_openhouse,
-    parallel: 50
-  },
-
-  'MLS.Agent': {
-    handler: mls_agent,
-    parallel: 50
-  },
-
-  'MLS.Office': {
-    handler: mls_office,
-    parallel: 50
-  },
-
-  'MLS.Photo': {
-    handler: mls_photo,
-    parallel: 50
-  },
-
-  'MLS.Listing': {
-    handler: mls_listing,
-    parallel: 50
-  },
-
-  'MLS.Listing.Photos.Validate': {
-    handler: mls_validate_listing_photos,
-    parallel: 50
-  },
-
   'sync_brokerwolf': {
     handler: sync_brokerwolf,
     parallel: 1
