@@ -30,7 +30,6 @@ const createContext = async c => {
 
     while (context.get('jobs').length > 0 || context.get('rabbit_jobs').length > 0) {
       await promisify(Job.handle)(context.get('jobs'))
-      await peanar.enqueueContextJobs()
     }
 
     done()
