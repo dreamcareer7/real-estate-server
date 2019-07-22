@@ -13,7 +13,10 @@ const createContext = async c => {
 
   const rollback = err => {
     Context.trace('<- Rolling back on worker'.red, err)
-    return conn.query('ROLLBACK', done)
+    return conn.query('ROLLBACK', (err) => {
+      done(err)
+      context.exit()
+    })
   }
 
   const commit = async () => {
@@ -32,6 +35,7 @@ const createContext = async c => {
     }
 
     done()
+    context.exit()
   }
 
   context.on('error', function (e) {
@@ -51,8 +55,6 @@ const createContext = async c => {
     jobs: [],
     rabbit_jobs: [],
   })
-
-  context.enter()
 
   return { rollback, commit }
 }

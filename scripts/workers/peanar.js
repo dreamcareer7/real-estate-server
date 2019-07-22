@@ -1,18 +1,23 @@
 const { peanar } = require('../../lib/utils/peanar')
 require('../../lib/models/index.js')()
+const Context = require('../../lib/models/Context')
 
 require('../../lib/models/Contact/worker')
 require('../../lib/models/MLS/workers')
+
+const context = Context.create({
+  id: 'PeanarWorker'
+})
 
 async function main() {
   await peanar.worker({ queues: [
     'contacts',
     'contact_lists',
     'contact_duplicates',
-  ], concurrency: 20 })
+  ], concurrency: 10 })
   await peanar.worker({ queues: [
     'contact_import',
-  ], concurrency: 10 })
+  ], concurrency: 5 })
 
   await peanar.worker({ queues: [
     'MLS.Unit',
@@ -23,10 +28,12 @@ async function main() {
     'MLS.Photo',
     'MLS.Listing',
     'MLS.Listing.Photos.Validate',
-  ], concurrency: 50})
+  ], concurrency: 15})
 
   process.on('SIGINT', () => peanar.shutdown())
   process.on('SIGTERM', () => peanar.shutdown())
 }
 
-main().catch(ex => console.error(ex))
+context.run(() => {
+  main().catch(ex => console.error(ex))
+})
