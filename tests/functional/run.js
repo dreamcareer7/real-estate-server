@@ -151,7 +151,7 @@ const database = (req, res, next) => {
               return jobs.length > 0
             }, (cb) => {
               const job = Context.get('jobs').shift()
-              handleJob(job.type, job.data, (err, result) => {
+              handleJob(job.type, null, job.data, (err, result) => {
                 if (result) {
                   Context.log(JSON.stringify(result, null, 2))
                 }

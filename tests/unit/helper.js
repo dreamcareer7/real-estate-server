@@ -76,7 +76,7 @@ async function handleJobs() {
   while (Context.get('jobs').length > 0 || Context.get('rabbit_jobs').length > 0) {
     while (Context.get('jobs').length > 0) {
       const job = Context.get('jobs').shift()
-      await promisify(handleJob)(job.type, job.data)
+      await promisify(handleJob)(job.type, null, job.data)
     }
     await peanar.enqueueContextJobs()
   }
