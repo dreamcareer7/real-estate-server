@@ -8,9 +8,7 @@ const touches_handler = require('../../lib/models/CRM/Touch/worker')
 const tasks_handler = require('../../lib/models/CRM/Task/worker')
 const calendar_handlers = require('../../lib/models/Calendar/worker')
 
-const Agent = require('../../lib/models/Agent')
 const Email = require('../../lib/models/Email')
-const { Listing } = require('../../lib/models/Listing')
 const Notification = require('../../lib/models/Notification')
 const User = require('../../lib/models/User')
 const ShowingsCrawler = require('../../lib/models/Showings/crawler')
@@ -43,44 +41,6 @@ const sms = (job, done) => {
 
 const saveLastSeen = (job, done) => {
   User.saveLastSeen(job.data, done)
-}
-
-const mls_unit = (job, done) => {
-  PropertyUnit.create(job.data.processed).nodeify(done)
-}
-
-const mls_openhouse = (job, done) => {
-  OpenHouse.create(job.data.processed).nodeify(done)
-}
-
-const mls_room = (job, done) => {
-  PropertyRoom.create(job.data.processed).nodeify(done)
-}
-
-const mls_agent = (job, done) => {
-  Agent.create(job.data.processed).nodeify(done)
-}
-
-const mls_office = (job, done) => {
-  Office.create(job.data.processed).nodeify(done)
-}
-
-const mls_photo = (job, done) => {
-  Photo.create({
-    ...job.data.processed,
-    revision: job.data.revision
-  }).nodeify(done)
-}
-
-const mls_listing = (job, done) => {
-  Listing.create({
-    ...job.data.processed,
-    revision: job.data.revision
-  }, done)
-}
-
-const mls_validate_listing_photos = (job, done) => {
-  Photo.deleteMissing(job.data.listing, job.data.mls, job.data.present).nodeify(done)
 }
 
 const sync_brokerwolf = (job, done) => {
