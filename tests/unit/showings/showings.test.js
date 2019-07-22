@@ -4,6 +4,7 @@ const { createContext, handleJobs } = require('../helper')
 const Context = require('../../../lib/models/Context')
 const Job = require('../../../lib/models/Job')
 const Showings = require('../../../lib/models/Showings/showings')
+const ShowingsWorker = require('../../../lib/models/Showings/worker')
 const ShowingsCredential = require('../../../lib/models/Showings/credential')
 const ShowingsCrawler = require('../../../lib/models/Showings/crawler')
 const User = require('../../../lib/models/User')
@@ -198,7 +199,7 @@ async function deleteCredential() {
 
 async function crawlerJobRecords() {
   const created_ids = await crawlerJobHelper()
-  const returned_ids = await ShowingsCredential.crawlerJob()
+  const returned_ids = await ShowingsWorker.startDue()
 
   expect(created_ids).to.have.length(2)
   expect(returned_ids).to.have.length(2)
@@ -218,10 +219,10 @@ async function crawlerJobUpdatedRecords() {
   const updatedRecord = await ShowingsCredential.get(created_ids[0])  
   expect(updatedRecord.last_crawled_at).to.be.not.null
 
-  const updated_returned_ids = await ShowingsCredential.crawlerJob()
+  const updated_returned_ids = await ShowingsWorker.startDue()
   expect(updated_returned_ids).to.have.length(1)
 
-  const returned_ids = await ShowingsCredential.crawlerJob()
+  const returned_ids = await ShowingsWorker.startDue()
   expect(returned_ids).to.have.length(1)
 }
 
@@ -264,7 +265,7 @@ async function SingleCrawlerJob() {
 async function crawlerJob() {
   await crawlerJobHelper()
 
-  const returned_ids = await ShowingsCredential.crawlerJob()
+  const returned_ids = await ShowingsWorker.startDue()
   expect(returned_ids).to.have.length(2)
   
   await handleJobs()
