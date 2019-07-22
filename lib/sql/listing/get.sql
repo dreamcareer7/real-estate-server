@@ -131,7 +131,7 @@ address AS (
         )
       ) AS street_address
   FROM addresses
-  JOIN properties ON properties.address_id = addresses.id
+  JOIN property ON property.address_id = addresses.id
 ),
 property_object AS (
   SELECT property.*, row_to_json(address) as address FROM property
