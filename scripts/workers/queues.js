@@ -11,7 +11,6 @@ const calendar_handlers = require('../../lib/models/Calendar/worker')
 const Email = require('../../lib/models/Email')
 const Notification = require('../../lib/models/Notification')
 const User = require('../../lib/models/User')
-const ShowingsCrawler = require('../../lib/models/Showings/crawler')
 const GoogleWorkers = require('../../lib/models/Google/workers/')
 const MicrosoftWorkers = require('../../lib/models/Microsoft/workers/')
 
@@ -54,10 +53,6 @@ const sync_brokerwolf = (job, done) => {
 
 const deal_email = (job, done) => {
   Deal.Email.accept(job.data.incoming).nodeify(done)
-}
-
-const showings_crawler = (job, done) => {
-  ShowingsCrawler.startCrawler(job.data).nodeify(done)
 }
 
 const google_sync = (job, done) => {
@@ -118,11 +113,6 @@ module.exports = {
   calendar: {
     handler: aggregate(calendar_handlers),
     parallel: 2
-  },
-
-  showings_crawler: {
-    handler: showings_crawler,
-    parallel: 1
   },
 
   google_sync: {
