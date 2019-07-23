@@ -6,7 +6,7 @@ const Notification = require('../../lib/models/Notification')
 const CrmTaskWorker = require('../../lib/models/CRM/Task/worker/notification')
 const CalendarWorker = require('../../lib/models/Calendar/worker/notification')
 const EmailCampaign = require('../../lib/models/Email/campaign')
-const ShowingsWorker = require('../../lib/models/Showings/worker')
+// const ShowingsWorker = require('../../lib/models/Showings/worker')
 const GoogleWorker = require('../../lib/models/Google/workers')
 const MicrosoftWorker = require('../../lib/models/Microsoft/workers')
 const Task = require('../../lib/models/Task')
@@ -14,7 +14,24 @@ const Task = require('../../lib/models/Task')
 
 let i = 1
 
+const polling_timeouts = new Map
+let shutting_down = false
+
+function shutdown() {
+  shutting_down = true
+
+  for (const t of polling_timeouts.values()) {
+    clearTimeout(t)
+  }
+
+  polling_timeouts.clear()
+}
+
 const poll = async ({fn, name}) => {
+  if (polling_timeouts.has(name)) {
+    polling_timeouts.delete(name)
+  }
+
   const id = `${name}-${++i}`
 
   const { commit, rollback } = await createContext({
@@ -34,17 +51,20 @@ const poll = async ({fn, name}) => {
     return
   }
 
-
   await commit()
 
   const again = async () => {
+    if (shutting_down) return
+
     poll({
       fn,
       name
     })
   }
 
-  setTimeout(again, 5000)
+  if (!shutting_down) {
+    polling_timeouts.set(name, setTimeout(again, 5000))
+  }
 }
 
 const notifications = async () => {
@@ -86,10 +106,10 @@ poll({
   name: 'EmailCampaign.updateStats'
 })
 
-poll({
-  fn: ShowingsWorker.startDue,
-  name: 'ShowingsWorker.crawlerJob'
-})
+// poll({
+//   fn: ShowingsWorker.startDue,
+//   name: 'ShowingsWorker.crawlerJob'
+// })
 
 poll({
   fn: GoogleWorker.syncDue,
@@ -100,3 +120,6 @@ poll({
   fn: MicrosoftWorker.syncDue,
   name: 'MicrosoftWorker.syncDue'
 })
+
+process.once('SIGTERM', shutdown)
+process.once('SIGINT', shutdown)

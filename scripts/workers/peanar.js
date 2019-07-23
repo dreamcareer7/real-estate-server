@@ -4,7 +4,7 @@ const Context = require('../../lib/models/Context')
 
 require('../../lib/models/Contact/worker')
 require('../../lib/models/MLS/workers')
-require('../../lib/models/Showings/worker')
+// require('../../lib/models/Showings/worker')
 require('../../lib/models/Google/workers')
 require('../../lib/models/Microsoft/workers')
 
