@@ -2,7 +2,6 @@ const { expect } = require('chai')
 const { createContext, handleJobs } = require('../helper')
 
 const Context  = require('../../../lib/models/Context')
-const Job      = require('../../../lib/models/Job')
 const Showings = require('../../../lib/models/Showings/showings')
 const ShowingsWorker     = require('../../../lib/models/Showings/worker')
 const ShowingsCredential = require('../../../lib/models/Showings/credential')
@@ -244,9 +243,7 @@ async function SingleCrawlerJob() {
     showingCredential: showingCredential
   }
 
-  const job = Job.queue.create('showings_crawler', data).removeOnComplete(true)  
-  Context.get('jobs').push(job)
-
+  ShowingsWorker.startCrawler(data)
   await handleJobs()
 
   const crawledShowingCredential = await ShowingsCredential.get(showingCredentialId)
