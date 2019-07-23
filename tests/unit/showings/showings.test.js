@@ -1,22 +1,22 @@
 const { expect } = require('chai')
 const { createContext, handleJobs } = require('../helper')
 
-const Context = require('../../../lib/models/Context')
-const Job = require('../../../lib/models/Job')
+const Context  = require('../../../lib/models/Context')
+const Job      = require('../../../lib/models/Job')
 const Showings = require('../../../lib/models/Showings/showings')
-const ShowingsWorker = require('../../../lib/models/Showings/worker')
+const ShowingsWorker     = require('../../../lib/models/Showings/worker')
 const ShowingsCredential = require('../../../lib/models/Showings/credential')
-const ShowingsCrawler = require('../../../lib/models/Showings/crawler')
-const User = require('../../../lib/models/User')
-const Brand = require('../../../lib/models/Brand')
+const ShowingsCrawler    = require('../../../lib/models/Showings/crawler')
+const User    = require('../../../lib/models/User')
+const Brand   = require('../../../lib/models/Brand')
 const CrmTask = require('../../../lib/models/CRM/Task')
 const { Listing } = require('../../../lib/models/Listing')
-const DealHelper = require('../deal/helper')
+const DealHelper  = require('../deal/helper')
 const BrandHelper = require('../brand/helper')
 
-const agent_json = require('./data/agent.json')
+const agent_json      = require('./data/agent.json')
 const credential_json = require('./data/credential.json')
-const showing_json = require('./data/showing.json')
+const showing_json    = require('./data/showing.json')
 
 let agent, user, brand
 const mlsNumbers = [10018693, 10183366]
