@@ -32,6 +32,10 @@ process.on('unhandledRejection', (err, promise) => {
   Context.trace('Unhanled Rejection on request', err)
 })
 
+process.on('uncaughtException', (err) => {
+  Context.trace('Uncaught Exception:', err)
+})
+
 // We have proper error handling here. No need for auto reports.
 Error.autoReport = false
 
