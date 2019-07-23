@@ -1,4 +1,6 @@
+const promisify = require('../../lib/utils/promisify')
 const createContext = require('./create-context')
+const Slack = require('../../lib/models/Slack')
 
 const Notification = require('../../lib/models/Notification')
 const CrmTaskWorker = require('../../lib/models/CRM/Task/worker/notification')
@@ -6,12 +8,9 @@ const CalendarWorker = require('../../lib/models/Calendar/worker/notification')
 const EmailCampaign = require('../../lib/models/Email/campaign')
 const ShowingsCredential = require('../../lib/models/Showings/credential')
 const GoogleWorker = require('../../lib/models/Google/workers')
-const Slack = require('../../lib/models/Slack')
+const MicrosoftWorker = require('../../lib/models/Microsoft/workers')
 const Task = require('../../lib/models/Task')
-const MicrosoftCredential = require('../../lib/models/Microsoft/credential')
 
-
-const promisify = require('../../lib/utils/promisify')
 
 let i = 1
 
@@ -98,6 +97,6 @@ poll({
 })
 
 poll({
-  fn: MicrosoftCredential.syncJob,
-  name: 'MicrosoftCredential.syncJob'
+  fn: MicrosoftWorker.syncDue,
+  name: 'MicrosoftWorker.syncDue'
 })
