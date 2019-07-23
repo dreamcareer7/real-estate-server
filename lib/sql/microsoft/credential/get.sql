@@ -1,7 +1,7 @@
 SELECT
     'microsoft_credential' AS type,
     microsoft_credentials.*,
-    (SELECT ARRAY_AGG(id) FROM microsoft_sync_histories WHERE microsoft_credential = microsoft_credentials.id LIMIT 5 ) AS histories
+    (SELECT ARRAY( SELECT id FROM microsoft_sync_histories WHERE microsoft_credential = microsoft_credentials.id ORDER BY created_at DESC LIMIT 3 )) AS histories
 FROM
     microsoft_credentials
 JOIN 
