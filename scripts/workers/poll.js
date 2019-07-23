@@ -5,7 +5,8 @@ const CrmTaskWorker = require('../../lib/models/CRM/Task/worker/notification')
 const CalendarWorker = require('../../lib/models/Calendar/worker/notification')
 const EmailCampaign = require('../../lib/models/Email/campaign')
 const ShowingsCredential = require('../../lib/models/Showings/credential')
-const GoogleCredential = require('../../lib/models/Google/credential')
+const GoogleWorker = require('../../lib/models/Google/workers')
+const Slack = require('../../lib/models/Slack')
 const Task = require('../../lib/models/Task')
 const MicrosoftCredential = require('../../lib/models/Microsoft/credential')
 
@@ -92,8 +93,8 @@ poll({
 })
 
 poll({
-  fn: GoogleCredential.syncJob,
-  name: 'GoogleCredential.syncJob'
+  fn: GoogleWorker.syncDue,
+  name: 'GoogleWorker.syncDue'
 })
 
 poll({
