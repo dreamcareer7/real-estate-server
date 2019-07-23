@@ -1,6 +1,8 @@
 INSERT INTO
   brands_flow_steps (
     created_by,
+    created_within,
+    updated_within,
     title,
     description,
     due_in,
@@ -11,6 +13,8 @@ INSERT INTO
   )
 SELECT
   $1::uuid,
+  $3::text,
+  $3::text,
   title,
   description,
   due_in,
