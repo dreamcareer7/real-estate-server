@@ -6,8 +6,6 @@ const migrations = [
   `DROP TABLE IF EXISTS
     microsoft_messages`,
 
-  // from TEXT [],
-  // to TEXT [],
 
   `CREATE TABLE IF NOT EXISTS microsoft_messages(
     id uuid NOT NULL PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -16,10 +14,10 @@ const migrations = [
 
     message_id TEXT NOT NULL,
     conversation_id TEXT NOT NULL,
+    recipients TEXT [],
+    in_bound BOOLEAN NOT NULL,
 
     data JSONB,
-
-    type TEXT,
 
     created_at timestamptz NOT NULL DEFAULT clock_timestamp(),
     updated_at timestamptz NOT NULL DEFAULT clock_timestamp(),
