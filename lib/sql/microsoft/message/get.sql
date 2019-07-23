@@ -1,5 +1,5 @@
 SELECT
-    id, microsoft_credential, message_id, 'microsoft_message' AS type
+    id, microsoft_credential, message_id, conversation_id, recipients, in_bound, 'microsoft_message' AS type
 FROM
     microsoft_messages
 JOIN 

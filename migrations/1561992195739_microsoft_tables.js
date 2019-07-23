@@ -74,10 +74,10 @@ const migrations = [
     id uuid NOT NULL PRIMARY KEY DEFAULT uuid_generate_v4(),
 
     microsoft_credential uuid NOT NULL REFERENCES microsoft_credentials(id),
-    remote_id TEXT NOT NULL,
-    data JSONB,
 
+    remote_id TEXT NOT NULL,
     source TEXT DEFAULT 'contacts',
+    data JSONB,
 
     created_at timestamptz NOT NULL DEFAULT clock_timestamp(),
     updated_at timestamptz NOT NULL DEFAULT clock_timestamp(),
