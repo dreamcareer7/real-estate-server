@@ -11,8 +11,6 @@ const calendar_handlers = require('../../lib/models/Calendar/worker')
 const Email = require('../../lib/models/Email')
 const Notification = require('../../lib/models/Notification')
 const User = require('../../lib/models/User')
-const GoogleWorkers = require('../../lib/models/Google/workers/')
-const MicrosoftWorkers = require('../../lib/models/Microsoft/workers/')
 
 
 const airship = (job, done) => {
@@ -53,14 +51,6 @@ const sync_brokerwolf = (job, done) => {
 
 const deal_email = (job, done) => {
   Deal.Email.accept(job.data.incoming).nodeify(done)
-}
-
-const google_sync = (job, done) => {
-  GoogleWorkers.syncGoogle(job.data).nodeify(done)
-}
-
-const microsoft_sync = (job, done) => {
-  MicrosoftWorkers.syncMicrosoft(job.data).nodeify(done)
 }
 
 
@@ -113,15 +103,5 @@ module.exports = {
   calendar: {
     handler: aggregate(calendar_handlers),
     parallel: 2
-  },
-
-  google_sync: {
-    handler: google_sync,
-    parallel: 1
-  },
-
-  microsoft_sync: {
-    handler: microsoft_sync,
-    parallel: 1
   }
 }

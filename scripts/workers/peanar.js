@@ -5,6 +5,8 @@ const Context = require('../../lib/models/Context')
 require('../../lib/models/Contact/worker')
 require('../../lib/models/MLS/workers')
 require('../../lib/models/Showings/worker')
+require('../../lib/models/Google/workers')
+require('../../lib/models/Microsoft/workers')
 
 const context = Context.create({
   id: 'PeanarWorker'
@@ -15,8 +17,8 @@ async function main() {
   await peanar.worker({ queues: ['contact_import'], concurrency: 5 })
 
   await peanar.worker({
-    queues: ['showings'],
-    concurrency: 2
+    queues: ['showings', 'google', 'microsoft'],
+    concurrency: 3
   })
 
   await peanar.worker({
