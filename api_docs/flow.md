@@ -93,10 +93,10 @@ crm_task   | CrmTask       | `flow_step.crm_task`   | Link to an actual CrmTask 
 <!-- include(tests/flow/addStepToFlow.md) -->
 
 ### Edit a brand flow step [PUT /brands/:id/flows/:flow/steps/:step]
-<!-- include(tests/flow/addStepToFlow.md) -->
+<!-- include(tests/flow/editBrandFlowStep.md) -->
 
 ### Delete a brand flow step [DELETE /brands/:id/flows/:flow/steps/:step]
-<!-- include(tests/flow/addStepToFlow.md) -->
+<!-- include(tests/flow/deleteFlowStep.md) -->
 
 ### Enroll contacts to a flow [POST /crm/flows]
 <!-- include(tests/flow/enroll.md) -->
