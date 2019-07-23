@@ -5,6 +5,9 @@ registerSuite('contact', [
   'create'
 ])
 
+const HOUR = 3600
+const DAY = 24 * HOUR
+
 const addEmail = cb => {
   const email = {
     name: 'Email Name',
@@ -25,8 +28,6 @@ const addEmail = cb => {
 }
 
 const addFlow = cb => {
-  const HOUR = 3600
-  const DAY = 24 * HOUR
   const flow = {
     name: 'Rechat Team Onboarding',
     description: 'The process of on-boarding a new team member',
@@ -79,7 +80,7 @@ const addFlow = cb => {
 }
 
 const getBrandFlows = cb => {
-  return frisby.create('add a brand flow')
+  return frisby.create('get brand flows')
     .get(`/brands/${results.contact.brandCreate.data.id}/flows?associations[]=brand_flow.steps&associations[]=brand_flow_step.event&associations[]=brand_flow_step.email`)
     .after(cb)
     .expectStatus(200)
@@ -90,6 +91,88 @@ const getBrandFlows = cb => {
         steps: [{}, {}, {}]
       }]
     })
+}
+
+const updateFlow = cb => {
+  const brand = results.contact.brandCreate.data.id
+  const flow = results.flow.getBrandFlows.data[0].id
+
+  return frisby.create('update a brand flow')
+    .put(`/brands/${brand}/flows/${flow}`, {
+      name: '8 in 8',
+      description: '8 in 8 Ninja Selling Flow',
+    })
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      data: {
+        id: flow,
+        name: '8 in 8',
+        description: '8 in 8 Ninja Selling Flow'
+      }
+    })
+}
+
+const addStepToFlow = cb => {
+  const brand = results.contact.brandCreate.data.id
+  const flow = results.flow.getBrandFlows.data[0].id
+
+  const step = {
+    title: 'Call to check on them',
+    description: 'Call to check on them',
+    due_in: 7 * DAY + 10 * HOUR,
+    is_automated: false,
+    event: {
+      title: 'Call to check on them',
+      task_type: 'Call',
+    }
+  }
+
+  return frisby.create('add a step to a brand flow')
+    .post(`/brands/${brand}/flows/${flow}/steps?associations[]=brand_flow_step.event&associations[]=brand_flow_step.email`, {
+      steps: [step]
+    })
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      data: [step]
+    })
+}
+
+const editBrandFlowStep = cb => {
+  const brand = results.contact.brandCreate.data.id
+  const flow = results.flow.getBrandFlows.data[0].id
+  const step_id = results.flow.addStepToFlow.data[0].id
+
+  const step = {
+    title: 'Meet with them to catch up',
+    description: 'Meet with them to catch up',
+    due_in: 10 * DAY + 11 * HOUR,
+    is_automated: false,
+    event: {
+      title: 'Meet with them to catch up',
+      task_type: 'In-Person Meeting',
+    }
+  }
+
+  return frisby.create('update a step in a brand flow')
+    .put(`/brands/${brand}/flows/${flow}/steps/${step_id}?associations[]=brand_flow_step.event&associations[]=brand_flow_step.email`, step)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      data: step
+    })
+}
+
+const deleteFlowStep = cb => {
+  const brand = results.contact.brandCreate.data.id
+  const flow = results.flow.getBrandFlows.data[0].id
+  const step = results.flow.addStepToFlow.data[0].id
+
+  return frisby.create('stop a flow')
+    .delete(`/brands/${brand}/flows/${flow}/steps/${step}`)
+    .after(cb)
+    .expectStatus(204)
 }
 
 const enroll = cb => {
@@ -148,6 +231,10 @@ module.exports = {
   addEmail,
   addFlow,
   getBrandFlows,
+  updateFlow,
+  addStepToFlow,
+  editBrandFlowStep,
+  deleteFlowStep,
   enroll,
   checkFlowAssociation,
   stop,
