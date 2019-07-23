@@ -20,7 +20,7 @@ SELECT
 
   (
     SELECT
-      count(id)
+      (count(id))::INT
     FROM
       flows
     WHERE
