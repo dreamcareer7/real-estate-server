@@ -35,7 +35,6 @@ const addFlow = cb => {
       title: 'Create Rechat email',
       description: 'Create a Rechat email address for the new guy to use in other services',
       due_in: 10 * HOUR,
-      is_automated: false,
       event: {
         title: 'Create Rechat email',
         task_type: 'Other',
@@ -44,13 +43,11 @@ const addFlow = cb => {
       title: 'Send them a test email',
       description: 'Automatically send them a test email to make sure it\'s working',
       due_in: 8 * HOUR + DAY,
-      is_automated: true,
       email: results.flow.addEmail.data.id
     }, {
       title: 'Demo of Rechat',
       description: 'Dan gives a quick demo of the Rechat system and explains how it works',
       due_in: 3 * DAY + 14 * HOUR,
-      is_automated: false,
       event: {
         title: 'Demo of Rechat',
         task_type: 'Call',
@@ -121,7 +118,6 @@ const addStepToFlow = cb => {
     title: 'Call to check on them',
     description: 'Call to check on them',
     due_in: 7 * DAY + 10 * HOUR,
-    is_automated: false,
     event: {
       title: 'Call to check on them',
       task_type: 'Call',
@@ -148,7 +144,6 @@ const editBrandFlowStep = cb => {
     title: 'Meet with them to catch up',
     description: 'Meet with them to catch up',
     due_in: 10 * DAY + 11 * HOUR,
-    is_automated: false,
     event: {
       title: 'Meet with them to catch up',
       task_type: 'In-Person Meeting',
