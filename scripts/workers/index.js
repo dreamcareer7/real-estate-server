@@ -100,7 +100,7 @@ const shutdown = async () => {
     timeout(5.2 * 60 * 1000),
     Promise.all([
       peanar.shutdown(),
-      promisify(queue.shutdown)(5 * 60 * 1000)
+      promisify(queue.shutdown).call(queue, 5 * 60 * 1000)
     ])
   ])
 
