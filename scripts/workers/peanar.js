@@ -3,6 +3,8 @@ require('../../lib/models/index.js')()
 const Context = require('../../lib/models/Context')
 
 require('../../lib/models/Contact/worker')
+require('../../lib/models/CRM/Task/worker')
+require('../../lib/models/CRM/Touch/worker')
 require('../../lib/models/MLS/workers')
 // require('../../lib/models/Showings/worker')
 require('../../lib/models/Google/workers')

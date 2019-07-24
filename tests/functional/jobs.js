@@ -1,5 +1,7 @@
 const Context = require('../../lib/models/Context')
 require('../../lib/models/MLS/workers')
+require('../../lib/models/CRM/Task/worker')
+require('../../lib/models/CRM/Touch/worker')
 
 const queues = Object.assign(
   require('../../scripts/workers/queues.js'),
