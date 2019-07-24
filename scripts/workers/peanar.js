@@ -37,7 +37,7 @@ async function main() {
       'MLS.Listing',
       'MLS.Listing.Photos.Validate'
     ],
-    concurrency: 25
+    concurrency: 50
   })
 
   process.on('SIGINT', () => peanar.shutdown())
