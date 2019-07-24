@@ -2,7 +2,8 @@ require('colors')
 const kue = require('kue')
 const promisify = require('../../lib/utils/promisify.js')
 
-const queue = require('../../lib/utils/queue.js')
+const { peanar } = require('../../lib/utils/peanar')
+const queue = require('../../lib/utils/queue')
 const queues = require('./queues')
 
 const Metric = require('../../lib/models/Metric')
@@ -87,8 +88,23 @@ function reportQueueStatistics () {
 
 reportQueueStatistics()
 
-const shutdown = () => {
-  queue.shutdown(5 * 60 * 1000, process.exit)
+let timeout_timer
+const timeout = (seconds) => {
+  return new Promise(res => {
+    timeout_timer = setTimeout(res, seconds * 1000)
+  })
+}
+
+const shutdown = async () => {
+  await Promise.race([
+    timeout(5.2 * 60 * 1000),
+    Promise.all([
+      peanar.shutdown(),
+      promisify(queue.shutdown)(5 * 60 * 1000)
+    ])
+  ])
+
+  clearTimeout(timeout_timer)
 }
 process.once('SIGTERM', shutdown)
 process.once('SIGINT', shutdown)

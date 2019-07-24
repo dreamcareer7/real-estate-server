@@ -39,9 +39,6 @@ async function main() {
     ],
     concurrency: 50
   })
-
-  process.on('SIGINT', () => peanar.shutdown())
-  process.on('SIGTERM', () => peanar.shutdown())
 }
 
 context.run(() => {
