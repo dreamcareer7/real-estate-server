@@ -5,7 +5,9 @@ INSERT INTO
     title,
     description,
     task_type,
-    reminder
+    reminder,
+    created_within,
+    updated_within
   )
 SELECT
   $1::uuid,
@@ -13,7 +15,9 @@ SELECT
   title,
   description,
   task_type,
-  (reminder || ' seconds')::interval
+  (reminder || ' seconds')::interval,
+  $4::text,
+  $4::text
 FROM
   json_to_recordset($3) AS be(
     title text,

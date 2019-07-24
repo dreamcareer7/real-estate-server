@@ -14,12 +14,13 @@ id          | uuid            |                         | Internal identifier of
 created_at  | number          |                         |
 updated_at  | number          |                         |
 deleted_at  | number          |                         |
-created_by  | User            | `brand_flow.created_by` | User who created this object
-updated_by  | User            | `brand_flow.updated_by` | User who created this object
-brand       | Brand           | `brand_flow.brand`      | The team this object belongs to
+created_by  | User            |                         | User who created this object
+updated_by  | User            |                         | User who created this object
+brand       | Brand           |                         | The team this object belongs to
 name        | string          |                         | Name of the flow
 description | string          |                         | A description of what the flow does
 steps       | BrandFlowStep[] | `brand_flow.steps`      | Name of the flow
+is_editable | boolean         |                         | Whether user can edit the entity
 
 ### BrandFlowStep
 
@@ -54,6 +55,7 @@ created_by              | User       | `flow.created_by` | User who created this
 updated_by              | User       | `flow.updated_by` | User who created this object
 brand                   | Brand      | `flow.brand`      | The team this object belongs to
 origin                  | BrandFlow  | `flow.origin`     | Template this flow was created from
+origin_id               | uuid       |                   | Template this flow was created from
 name                    | string     |                   | Name of the flow
 description             | string     |                   | A description of what the flow does
 starts_at               | number     |                   | Flow's epoch
@@ -83,6 +85,18 @@ crm_task   | CrmTask       | `flow_step.crm_task`   | Link to an actual CrmTask 
 
 ### Create a new brand flow [POST /brands/:id/flows]
 <!-- include(tests/flow/addFlow.md) -->
+
+### Edit a brand flow [PUT /brands/:id/flows/:flow]
+<!-- include(tests/flow/updateFlow.md) -->
+
+### Add a new step to a brand flow [POST /brands/:id/flows/:flow/steps]
+<!-- include(tests/flow/addStepToFlow.md) -->
+
+### Edit a brand flow step [PUT /brands/:id/flows/:flow/steps/:step]
+<!-- include(tests/flow/editBrandFlowStep.md) -->
+
+### Delete a brand flow step [DELETE /brands/:id/flows/:flow/steps/:step]
+<!-- include(tests/flow/deleteFlowStep.md) -->
 
 ### Enroll contacts to a flow [POST /crm/flows]
 <!-- include(tests/flow/enroll.md) -->
