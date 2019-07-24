@@ -15,11 +15,14 @@ const context = Context.create({
 })
 
 async function main() {
-  await peanar.worker({ queues: ['contacts', 'contact_lists', 'contact_duplicates'], concurrency: 10 })
+  await peanar.worker({
+    queues: ['contacts', 'contact_lists', 'contact_duplicates', 'crm_tasks'],
+    concurrency: 10
+  })
   await peanar.worker({ queues: ['contact_import'], concurrency: 5 })
 
   await peanar.worker({
-    queues: ['showings', 'google', 'microsoft'],
+    queues: ['showings', 'google', 'microsoft', 'touches'],
     concurrency: 30
   })
 
