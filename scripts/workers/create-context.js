@@ -1,6 +1,5 @@
 const Context = require('../../lib/models/Context')
 const db = require('../../lib/utils/db')
-const promisify = require('../../lib/utils/promisify')
 
 const createContext = async c => {
   const context = Context.create({
@@ -30,9 +29,7 @@ const createContext = async c => {
 
     Context.log('Committed 👌')
 
-    while (context.get('jobs').length > 0 || context.get('rabbit_jobs').length > 0) {
-      await promisify(Job.handle)(context.get('jobs'))
-    }
+    await Job.handleContextJobs()
 
     done()
     context.exit()
