@@ -31,10 +31,20 @@ attachTouchEventHandler()
 
 process.on('unhandledRejection', (err, promise) => {
   Context.trace('Unhanled Rejection on request', err)
+  Slack.send({
+    channel: '7-server-errors',
+    text: `Workers: Unhandled rejection: \`${err}\``,
+    emoji: ':skull:'
+  })
 })
 
 process.on('uncaughtException', (err) => {
   Context.trace('Uncaught Exception:', err)
+  Slack.send({
+    channel: '7-server-errors',
+    text: `Workers: Uncaught exception: \`${err}\``,
+    emoji: ':skull:'
+  })
 })
 
 // We have proper error handling here. No need for auto reports.
