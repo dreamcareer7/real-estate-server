@@ -2,7 +2,7 @@ const db = require('../lib/utils/db')
 
 const migrations = [
   'BEGIN',
-
+  
   `DROP TABLE IF EXISTS
     microsoft_credentials CASCADE`,
 

@@ -14,13 +14,15 @@ const migrations = [
 
     microsoft_credential uuid NOT NULL REFERENCES microsoft_credentials(id),
 
-    synced_messages_num INTEGER,
-    messages_total INTEGER,
+    extract_contacts_error TEXT DEFAULT NULL,
+    synced_contacts_num INTEGER DEFAULT 0,
+    contacts_total INTEGER  DEFAULT 0,
 
-    synced_contacts_num INTEGER,
-    contacts_total INTEGER,
+    sync_messages_error TEXT DEFAULT NULL,
+    synced_messages_num INTEGER  DEFAULT 0,
+    messages_total INTEGER  DEFAULT 0,
 
-    sync_duration INTEGER,
+    sync_duration INTEGER  DEFAULT 0,
 
     status BOOLEAN,
 
@@ -28,6 +30,18 @@ const migrations = [
     updated_at timestamptz NOT NULL DEFAULT clock_timestamp(),
     deleted_at timestamptz
   )`,
+
+  `ALTER TABLE microsoft_sync_histories
+    DROP COLUMN IF EXISTS synced_messages_error`,
+
+  `ALTER TABLE microsoft_sync_histories
+    ADD COLUMN IF NOT EXISTS sync_messages_error TEXT DEFAULT NULL`,
+
+  `ALTER TABLE microsoft_sync_histories
+    DROP COLUMN IF EXISTS extract_contacts_error`,
+
+  `ALTER TABLE microsoft_sync_histories
+    ADD COLUMN IF NOT EXISTS extract_contacts_error TEXT DEFAULT NULL`,
 
   'COMMIT'
 ]
