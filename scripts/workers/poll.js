@@ -6,7 +6,7 @@ const Notification = require('../../lib/models/Notification')
 const CrmTaskWorker = require('../../lib/models/CRM/Task/worker/notification')
 const CalendarWorker = require('../../lib/models/Calendar/worker/notification')
 const EmailCampaign = require('../../lib/models/Email/campaign')
-// const ShowingsWorker = require('../../lib/models/Showings/worker')
+const ShowingsWorker = require('../../lib/models/Showings/worker')
 const GoogleWorker = require('../../lib/models/Google/workers')
 const MicrosoftWorker = require('../../lib/models/Microsoft/workers')
 const Task = require('../../lib/models/Task')
@@ -106,10 +106,10 @@ poll({
   name: 'EmailCampaign.updateStats'
 })
 
-// poll({
-//   fn: ShowingsWorker.startDue,
-//   name: 'ShowingsWorker.crawlerJob'
-// })
+poll({
+  fn: ShowingsWorker.startDue,
+  name: 'ShowingsWorker.crawlerJob'
+})
 
 poll({
   fn: GoogleWorker.syncDue,

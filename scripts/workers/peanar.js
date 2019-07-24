@@ -6,7 +6,7 @@ require('../../lib/models/Contact/worker')
 require('../../lib/models/CRM/Task/worker')
 require('../../lib/models/CRM/Touch/worker')
 require('../../lib/models/MLS/workers')
-// require('../../lib/models/Showings/worker')
+require('../../lib/models/Showings/worker')
 require('../../lib/models/Google/workers')
 require('../../lib/models/Microsoft/workers')
 
