@@ -15,7 +15,9 @@ INSERT INTO microsoft_credentials
     id_token,
     expires_in,
     ext_expires_in,
-    scope
+    scope,
+
+    revoked
   )
 VALUES
   (
@@ -32,7 +34,9 @@ VALUES
     $11,
     $12,
     $13,
-    $14
+    $14,
+
+    TRUE
   )
 ON CONFLICT ("user", brand, email) DO UPDATE SET
   display_name = $5,
