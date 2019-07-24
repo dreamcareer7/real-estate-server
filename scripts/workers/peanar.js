@@ -20,7 +20,7 @@ async function main() {
 
   await peanar.worker({
     queues: ['showings', 'google', 'microsoft'],
-    concurrency: 3
+    concurrency: 30
   })
 
   await peanar.worker({
