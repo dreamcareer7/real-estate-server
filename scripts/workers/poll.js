@@ -1,5 +1,6 @@
 const promisify = require('../../lib/utils/promisify')
 const createContext = require('./create-context')
+const Context = require('../../lib/models/Context')
 const Slack = require('../../lib/models/Slack')
 
 const Notification = require('../../lib/models/Notification')
@@ -62,11 +63,11 @@ const poll = async ({fn, name}) => {
     })
   }
 
-  if (!shutting_down) {
+  if (shutting_down) {
+    Context.log('Pollers: shutdown completed')
+  } else {
     polling_timeouts.set(name, setTimeout(again, 5000))
   }
-
-  Context.log('Pollers: shutdown completed')
 }
 
 const notifications = async () => {
