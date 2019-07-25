@@ -84,7 +84,7 @@ const notifications = async () => {
    * Otherwise, we might send email messages before push notifications.
    */
   await Notification.sendForUnread()
-  await promisify(Message.sendEmailForUnread)
+  await promisify(Message.sendEmailForUnread)()
 }
 
 poll({
