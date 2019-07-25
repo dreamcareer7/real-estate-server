@@ -3,6 +3,7 @@ const kue = require('kue')
 const promisify = require('../../lib/utils/promisify.js')
 
 const { peanar } = require('../../lib/utils/peanar')
+const db = require('../../lib/utils/db')
 const queue = require('../../lib/utils/queue')
 const queues = require('./queues')
 
@@ -85,9 +86,10 @@ queue.on('job failed', (id, err) => {
   })
 })
 
-setInterval(reportQueueStatistics, 10000)
+const statsInterval = setInterval(reportQueueStatistics, 10000)
 
 function reportQueueStatistics () {
+  // @ts-ignore
   queue.inactiveCount((err, count) => {
     if (err)
       return Metric.set('inactive_jobs', 99999)
@@ -98,10 +100,10 @@ function reportQueueStatistics () {
 
 reportQueueStatistics()
 
-let timeout_timer
+let shutdownRaceTimeout
 const timeout = (seconds) => {
   return new Promise(res => {
-    timeout_timer = setTimeout(res, seconds * 1000)
+    shutdownRaceTimeout = setTimeout(res, seconds * 1000)
   })
 }
 
@@ -110,17 +112,33 @@ const shutdown = async () => {
     timeout(5.2 * 60 * 1000),
     Promise.all([
       peanar.shutdown(),
-      promisify(cb => queue.shutdown(5 * 60 * 1000, cb))
+      promisify(cb => queue.shutdown(5 * 60 * 1000, (err) => {
+        if (err) {
+          Context.error(err)
+          return cb(err)
+        }
+
+        Context.log('Kue closed successfully.')
+        cb()
+      }))(),
+      db.close()
     ])
   ])
 
-  clearTimeout(timeout_timer)
+  Context.log('Race finished.')
+
+  clearTimeout(kueCleanupTimeout)
+  clearTimeout(statsInterval)
+  clearTimeout(shutdownRaceTimeout)
+  clearTimeout(shutdownTimeout)
+  clearTimeout(queue.stuck_job_watch)
 }
 process.once('SIGTERM', shutdown)
 process.once('SIGINT', shutdown)
 
-setTimeout(shutdown, 1000 * 60 * 10) // Restart every few minutes
+const shutdownTimeout = setTimeout(shutdown, 1000 * 60 * 10) // Restart every few minutes
 
+let kueCleanupTimeout
 async function cleanupKueJobs() {
   const jobs = (await promisify(kue.Job.rangeByState)('complete', 0, 10000, 'asc'))
     .filter(job => parseInt(job.toJSON().started_at) <= Date.now() - 60 * 60 * 1000)
@@ -132,7 +150,7 @@ async function cleanupKueJobs() {
     await promisify(job.remove.bind(job))()
   }
 
-  setTimeout(cleanupKueJobs, 1 * 60 * 1000)
+  kueCleanupTimeout = setTimeout(cleanupKueJobs, 1 * 60 * 1000)
 }
 
 cleanupKueJobs()

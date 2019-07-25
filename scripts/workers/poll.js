@@ -65,6 +65,8 @@ const poll = async ({fn, name}) => {
   if (!shutting_down) {
     polling_timeouts.set(name, setTimeout(again, 5000))
   }
+
+  Context.log('Pollers: shutdown completed')
 }
 
 const notifications = async () => {
