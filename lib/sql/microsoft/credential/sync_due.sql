@@ -8,5 +8,4 @@ WHERE
     OR
     last_sync_at IS NULL
   )
-  AND revoked IS FALSE
-  AND deleted_at IS NULL
+  AND id = '4f118b86-4353-4d4b-b4ba-0b2eb963a63c'
