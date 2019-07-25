@@ -1,4 +1,5 @@
 require('colors')
+const wtf = require('wtfnode')
 const kue = require('kue')
 const promisify = require('../../lib/utils/promisify.js')
 
@@ -134,6 +135,8 @@ const shutdown = async () => {
     Context.log('Race finished.')
 
     clearTimeout(shutdownRaceTimeout)
+
+    wtf.dump()
   }
   catch (ex) {
     Context.log('Race timed out!')
