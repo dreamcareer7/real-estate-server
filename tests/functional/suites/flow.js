@@ -91,7 +91,7 @@ const getBrandFlows = cb => {
 }
 
 const updateFlow = cb => {
-  const brand = results.contact.brandCreate.data.id
+  const brand = results.contact.brandCreateParent.data.id
   const flow = results.flow.getBrandFlows.data[0].id
 
   return frisby.create('update a brand flow')
@@ -111,7 +111,7 @@ const updateFlow = cb => {
 }
 
 const addStepToFlow = cb => {
-  const brand = results.contact.brandCreate.data.id
+  const brand = results.contact.brandCreateParent.data.id
   const flow = results.flow.getBrandFlows.data[0].id
 
   const step = {
@@ -136,7 +136,7 @@ const addStepToFlow = cb => {
 }
 
 const editBrandFlowStep = cb => {
-  const brand = results.contact.brandCreate.data.id
+  const brand = results.contact.brandCreateParent.data.id
   const flow = results.flow.getBrandFlows.data[0].id
   const step_id = results.flow.addStepToFlow.data[0].id
 
@@ -159,8 +159,30 @@ const editBrandFlowStep = cb => {
     })
 }
 
-const deleteFlowStep = cb => {
+const getBrandFlowById = cb => {
   const brand = results.contact.brandCreate.data.id
+  const flow = results.flow.getBrandFlows.data[0].id
+  const steps = [
+    ...results.flow.getBrandFlows.data[0].steps,
+    results.flow.editBrandFlowStep.data
+  ]
+
+  return frisby.create('get brand flows')
+    .get(`/brands/${brand}/flows/${flow}?associations[]=brand_flow.steps&associations[]=brand_flow_step.event&associations[]=brand_flow_step.email`)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      data: {
+        id: flow,
+        name: '8 in 8',
+        description: '8 in 8 Ninja Selling Flow',
+        steps
+      }
+    })
+}
+
+const deleteFlowStep = cb => {
+  const brand = results.contact.brandCreateParent.data.id
   const flow = results.flow.getBrandFlows.data[0].id
   const step = results.flow.addStepToFlow.data[0].id
 
@@ -229,6 +251,7 @@ module.exports = {
   updateFlow,
   addStepToFlow,
   editBrandFlowStep,
+  getBrandFlowById,
   deleteFlowStep,
   enroll,
   checkFlowAssociation,

@@ -83,6 +83,9 @@ crm_task   | CrmTask       | `flow_step.crm_task`   | Link to an actual CrmTask 
 ### Get all brand flows [GET /brands/:id/flows]
 <!-- include(tests/flow/getBrandFlows.md) -->
 
+### Get brand flow by id [GET /brands/:id/flows/:flow]
+<!-- include(tests/flow/getBrandFlowById.md) -->
+
 ### Create a new brand flow [POST /brands/:id/flows]
 <!-- include(tests/flow/addFlow.md) -->
 
