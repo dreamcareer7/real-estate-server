@@ -1,3 +1,38 @@
+const net = require('net')
+const tls = require('tls')
+
+function wrapNet() {
+  const _connect = net.connect
+  const _Socket_connect = net.Socket.prototype.connect
+
+  net.connect = (...args) => {
+    console.log(args)
+    return _connect(...args)
+  }
+
+  net.Socket.prototype.connect = function(...args) {
+    console.log(args)
+    return _Socket_connect.apply(this, args)
+  }
+}
+
+function wrapTls() {
+  const _connect = tls.connect
+  const _TLSSocket_connect = tls.TLSSocket.prototype.connect
+
+  tls.connect = (...args) => {
+    console.log(args)
+    return _connect(...args)
+  }
+
+  tls.TLSSocket.prototype.connect = function(...args) {
+    console.log(args)
+    return _TLSSocket_connect.apply(this, args)
+  }
+}
+
+wrapNet(); wrapTls()
+
 require('colors')
 const wtf = require('wtfnode')
 const kue = require('kue')
