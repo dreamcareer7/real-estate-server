@@ -108,6 +108,11 @@ const timeout = (seconds) => {
 
 const shutdown = async () => {
   try {
+    clearTimeout(kueCleanupTimeout)
+    clearTimeout(shutdownTimeout)
+    clearInterval(statsInterval)
+    clearInterval(queue.stuck_job_watch)
+
     await Promise.race([
       timeout(5.2 * 60 * 1000),
       Promise.all([
@@ -128,11 +133,7 @@ const shutdown = async () => {
 
     Context.log('Race finished.')
 
-    clearTimeout(kueCleanupTimeout)
     clearTimeout(shutdownRaceTimeout)
-    clearTimeout(shutdownTimeout)
-    clearInterval(statsInterval)
-    clearInterval(queue.stuck_job_watch)
   }
   catch (ex) {
     Context.log('Race timed out!')
