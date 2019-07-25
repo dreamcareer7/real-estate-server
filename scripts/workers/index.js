@@ -129,10 +129,10 @@ const shutdown = async () => {
     Context.log('Race finished.')
 
     clearTimeout(kueCleanupTimeout)
-    clearTimeout(statsInterval)
     clearTimeout(shutdownRaceTimeout)
     clearTimeout(shutdownTimeout)
-    clearTimeout(queue.stuck_job_watch)
+    clearInterval(statsInterval)
+    clearInterval(queue.stuck_job_watch)
   }
   catch (ex) {
     Context.log('Race timed out!')
