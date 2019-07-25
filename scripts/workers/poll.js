@@ -15,10 +15,11 @@ const Task = require('../../lib/models/Task')
 
 let i = 1
 
+const poll_promises = new Map
 const polling_timeouts = new Map
 let shutting_down = false
 
-function shutdown() {
+async function shutdown() {
   shutting_down = true
 
   for (const t of polling_timeouts.values()) {
@@ -26,48 +27,55 @@ function shutdown() {
   }
 
   polling_timeouts.clear()
+
+  await Promise.all(poll_promises.values())
+  Context.log('Pollers shutdown successful!')
 }
 
-const poll = async ({fn, name}) => {
-  if (polling_timeouts.has(name)) {
-    polling_timeouts.delete(name)
-  }
-
-  const id = `${name}-${++i}`
-
-  const { commit, rollback } = await createContext({
-    id
-  })
-
-  try {
-    await fn()
-  } catch(err) {
-    Slack.send({
-      channel: '7-server-errors',
-      text: `Notifications worker: '${err}'`,
-      emoji: ':skull:'
+const poll = ({ fn, name }) => {
+  const _poll = async ({fn, name}) => {
+    if (polling_timeouts.has(name)) {
+      polling_timeouts.delete(name)
+    }
+  
+    const id = `${name}-${++i}`
+  
+    const { commit, rollback } = await createContext({
+      id
     })
-
-    rollback(err)
-    return
+  
+    try {
+      await fn()
+    } catch(err) {
+      Slack.send({
+        channel: '7-server-errors',
+        text: `Notifications worker: '${err}'`,
+        emoji: ':skull:'
+      })
+  
+      rollback(err)
+      return
+    }
+  
+    await commit()
+  
+    const again = async () => {
+      if (shutting_down) return
+  
+      poll({
+        fn,
+        name
+      })
+    }
+  
+    if (shutting_down) {
+      Context.log('Pollers: shutdown completed')
+    } else {
+      polling_timeouts.set(name, setTimeout(again, 5000))
+    }
   }
 
-  await commit()
-
-  const again = async () => {
-    if (shutting_down) return
-
-    poll({
-      fn,
-      name
-    })
-  }
-
-  if (shutting_down) {
-    Context.log('Pollers: shutdown completed')
-  } else {
-    polling_timeouts.set(name, setTimeout(again, 5000))
-  }
+  poll_promises.set(name, _poll({ fn, name }))
 }
 
 const notifications = async () => {
@@ -124,5 +132,4 @@ poll({
   name: 'MicrosoftWorker.syncDue'
 })
 
-process.once('SIGTERM', shutdown)
-process.once('SIGINT', shutdown)
+module.exports = shutdown

@@ -18,16 +18,13 @@ const attachTouchEventHandler = require('../../lib/models/CRM/Touch/events')
 
 const createContext = require('./create-context')
 
-
-
-require('./poll')
+const shutdownPollers = require('./poll')
 require('./peanar')
 
 attachCalendarEvents()
 attachContactEvents()
 attachTaskEventHandler()
 attachTouchEventHandler()
-
 
 
 process.on('unhandledRejection', (err, promise) => {
@@ -102,36 +99,46 @@ reportQueueStatistics()
 
 let shutdownRaceTimeout
 const timeout = (seconds) => {
-  return new Promise(res => {
-    shutdownRaceTimeout = setTimeout(res, seconds * 1000)
+  return new Promise((_, rej) => {
+    shutdownRaceTimeout = setTimeout(() => {
+      rej(new Error('Shutdown timed out!'))
+    }, seconds * 1000)
   })
 }
 
 const shutdown = async () => {
-  await Promise.race([
-    timeout(5.2 * 60 * 1000),
-    Promise.all([
-      peanar.shutdown(),
-      promisify(cb => queue.shutdown(5 * 60 * 1000, (err) => {
-        if (err) {
-          Context.error(err)
-          return cb(err)
-        }
-
-        Context.log('Kue closed successfully.')
-        cb()
-      }))(),
-      db.close()
+  try {
+    await Promise.race([
+      timeout(5.2 * 60 * 1000),
+      Promise.all([
+        shutdownPollers(),
+        peanar.shutdown(),
+        promisify(cb => queue.shutdown(5 * 60 * 1000, (err) => {
+          if (err) {
+            Context.error(err)
+            return cb(err)
+          }
+  
+          Context.log('Kue closed successfully.')
+          cb()
+        }))(),
+        db.close()
+      ])
     ])
-  ])
 
-  Context.log('Race finished.')
+    Context.log('Race finished.')
 
-  clearTimeout(kueCleanupTimeout)
-  clearTimeout(statsInterval)
-  clearTimeout(shutdownRaceTimeout)
-  clearTimeout(shutdownTimeout)
-  clearTimeout(queue.stuck_job_watch)
+    clearTimeout(kueCleanupTimeout)
+    clearTimeout(statsInterval)
+    clearTimeout(shutdownRaceTimeout)
+    clearTimeout(shutdownTimeout)
+    clearTimeout(queue.stuck_job_watch)
+  }
+  catch (ex) {
+    Context.log('Race timed out!')
+    Context.error(ex)
+    process.exit(1)
+  }
 }
 process.once('SIGTERM', shutdown)
 process.once('SIGINT', shutdown)
