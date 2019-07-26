@@ -13,7 +13,7 @@ const migrations = [
     history_id TEXT NOT NULL,
     recipients TEXT [],
     in_bound BOOLEAN NOT NULL,
-    message_created_at NOT NULL DEFAULT clock_timestamp(),
+    message_created_at BIGINT NOT NULL,
 
     data JSONB,
 
