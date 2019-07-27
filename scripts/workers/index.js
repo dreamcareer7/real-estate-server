@@ -138,7 +138,7 @@ const shutdown = async () => {
 
     clearTimeout(shutdownRaceTimeout)
 
-    wtf.dump()
+    setTimeout(() => wtf.dump(), 10000)
   }
   catch (ex) {
     Context.log('Race timed out!')
