@@ -3,6 +3,8 @@ const wtf = require('wtfnode')
 const kue = require('kue')
 const promisify = require('../../lib/utils/promisify.js')
 
+const redisDataService = require('../../lib/data-service/redis')
+
 const { peanar } = require('../../lib/utils/peanar')
 const db = require('../../lib/utils/db')
 const queue = require('../../lib/utils/queue')
@@ -137,6 +139,7 @@ const shutdown = async () => {
     Context.log('Race finished.')
 
     clearTimeout(shutdownRaceTimeout)
+    redisDataService.shutdown()
 
     setTimeout(() => wtf.dump(), 10000)
   }
