@@ -1,5 +1,4 @@
 require('colors')
-const wtf = require('wtfnode')
 const kue = require('kue')
 const promisify = require('../../lib/utils/promisify.js')
 
@@ -140,8 +139,6 @@ const shutdown = async () => {
 
     clearTimeout(shutdownRaceTimeout)
     redisDataService.shutdown()
-
-    setTimeout(() => wtf.dump(), 10000)
   }
   catch (ex) {
     Context.log('Race timed out!')
