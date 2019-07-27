@@ -107,6 +107,21 @@ const timeout = (seconds) => {
   })
 }
 
+async function shutdownWorkers() {
+  await shutdownPollers()
+  await peanar.shutdown()
+  await promisify(cb => queue.shutdown(5 * 60 * 1000, (err) => {
+    if (err) {
+      Context.error(err)
+      return cb(err)
+    }
+
+    Context.log('Kue closed successfully.')
+    cb()
+  }))()
+  await db.close()
+}
+
 const shutdown = async () => {
   try {
     clearTimeout(kueCleanupTimeout)
@@ -116,20 +131,7 @@ const shutdown = async () => {
 
     await Promise.race([
       timeout(5.2 * 60 * 1000),
-      Promise.all([
-        shutdownPollers(),
-        peanar.shutdown(),
-        promisify(cb => queue.shutdown(5 * 60 * 1000, (err) => {
-          if (err) {
-            Context.error(err)
-            return cb(err)
-          }
-  
-          Context.log('Kue closed successfully.')
-          cb()
-        }))(),
-        db.close()
-      ])
+      shutdownWorkers()
     ])
 
     Context.log('Race finished.')
