@@ -17,11 +17,7 @@ WITH dr AS (
 
     (
     CASE WHEN
-      -- Trick from https://stackoverflow.com/questions/23766084/best-way-to-check-for-empty-or-null-value
-      (deals_roles.legal_prefix      <> '') IS NOT TRUE AND
-      (deals_roles.legal_first_name  <> '') IS NOT TRUE AND
-      (deals_roles.legal_middle_name <> '') IS NOT TRUE AND
-      (deals_roles.legal_last_name   <> '') IS NOT TRUE
+      deals_roles.role_type = 'Organization'
     THEN company_title
     ELSE
       ARRAY_TO_STRING(
