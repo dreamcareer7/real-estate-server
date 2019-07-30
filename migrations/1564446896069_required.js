@@ -5,7 +5,7 @@ const migrations = [
   'ALTER TABLE tasks                   ADD required BOOLEAN NOT NULL DEFAULT FALSE',
   'ALTER TABLE brands_checklists_tasks ADD required BOOLEAN NOT NULL DEFAULT FALSE',
   `ALTER TYPE activity_type
-    ADD VALUE 'UserRequiredTask',
+    ADD VALUE 'UserRequiredTask'`,
   'COMMIT'
 ]
 
