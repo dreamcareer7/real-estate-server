@@ -1,0 +1,5 @@
+{% if object.required %}
+{{data.abbreviated_display_name | safe}} marked {{object.title}} as required.
+{% else %}
+{{data.abbreviated_display_name | safe}} marked {{object.title}} as optional.
+{% endif %}
