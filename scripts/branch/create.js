@@ -2,7 +2,6 @@
 
 require('../connection.js')
 require('../../lib/models/index.js')
-const promisify = require('../../lib/utils/promisify')
 
 const create = async(action, uri) => {
   const url = uri ? Url.web({
