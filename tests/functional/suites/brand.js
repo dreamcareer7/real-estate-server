@@ -213,24 +213,28 @@ const getChecklists = cb => {
 }
 
 const addTask = cb => {
+  const task = {
+    title: 'Task 1',
+    task_type: 'Form',
+    form: results.form.create.data.id,
+    order: 1,
+    required: true
+  }
+
   return frisby.create('add a task to a brand checklist')
-    .post(`/brands/${brand_id}/checklists/${results.brand.addChecklist.data.id}/tasks`, {
-      title: 'Task 1',
-      task_type: 'Form',
-      form: results.form.create.data.id,
-      order: 1
-    })
+    .post(`/brands/${brand_id}/checklists/${results.brand.addChecklist.data.id}/tasks`, task)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
-      //       data: brand
+//       data: task
     })
 }
 
 const updateTask = cb => {
   const d = results.brand.addTask.data
   d.title = 'Updated Task'
+  d.required = false
 
   return frisby.create('update a task')
     .put(`/brands/${brand_id}/checklists/${results.brand.addChecklist.data.id}/tasks/${results.brand.addTask.data.id}`, d)

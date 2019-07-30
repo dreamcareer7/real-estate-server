@@ -289,7 +289,8 @@ const addTask = cb => {
     task_type: 'Form',
     form: results.form.create.data.id,
     checklist: results.deal.addChecklist.data.id,
-    is_deletable: true
+    is_deletable: true,
+    required: true
   }
 
   return frisby.create('add a task to a deal')
@@ -328,7 +329,8 @@ const addAnotherTask = cb => {
 
 const updateTask = cb => {
   const props = {
-    title: 'Another Task for Gholi'
+    title: 'Another Task for Gholi',
+    required: false
   }
 
   return frisby.create('edit another task\'s title')
@@ -337,9 +339,7 @@ const updateTask = cb => {
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
-      data: {
-        title: 'Another Task for Gholi'
-      }
+      data: props
     })
 }
 
