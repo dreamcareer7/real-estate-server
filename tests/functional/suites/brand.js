@@ -212,7 +212,6 @@ const addTask = cb => {
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
-//       data: task
     })
 }
 
