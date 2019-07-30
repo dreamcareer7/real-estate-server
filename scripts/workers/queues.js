@@ -1,10 +1,6 @@
 require('../../lib/models/index.js')()
 
-const { aggregate } = require('../../lib/utils/worker')
-
 const config = require('../../lib/config')
-
-const calendar_handlers = require('../../lib/models/Calendar/worker')
 
 const Email = require('../../lib/models/Email')
 const Notification = require('../../lib/models/Notification')
@@ -47,10 +43,6 @@ const sync_brokerwolf = (job, done) => {
   })
 }
 
-const deal_email = (job, done) => {
-  Deal.Email.accept(job.data.incoming).nodeify(done)
-}
-
 
 module.exports = {
   airship_transport_send_device: {
@@ -81,15 +73,5 @@ module.exports = {
   'sync_brokerwolf': {
     handler: sync_brokerwolf,
     parallel: 1
-  },
-
-  'deal_email': {
-    handler: deal_email,
-    parallel: 5
-  },
-
-  calendar: {
-    handler: aggregate(calendar_handlers),
-    parallel: 2
   }
 }
