@@ -3,6 +3,9 @@ const db = require('../lib/utils/db')
 const migrations = [
   'BEGIN',
 
+  `DROP TABLE IF EXISTS
+    google_messages`,
+
   `CREATE TABLE IF NOT EXISTS google_messages(
     id uuid NOT NULL PRIMARY KEY DEFAULT uuid_generate_v4(),
 
