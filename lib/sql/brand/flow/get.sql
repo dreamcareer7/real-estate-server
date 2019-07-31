@@ -26,6 +26,7 @@ SELECT
     WHERE
       origin = brands_flows.id
       AND flows.deleted_at IS NULL
+      AND (CASE WHEN $2::uuid IS NULL THEN TRUE ELSE flows.brand = $2::uuid END)
   ) AS active_flows,
 
   'brand_flow' AS type
