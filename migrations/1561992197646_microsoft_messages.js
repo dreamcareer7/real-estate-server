@@ -12,6 +12,7 @@ const migrations = [
     thread_id TEXT NOT NULL,
     recipients TEXT [],
     in_bound BOOLEAN NOT NULL,
+    message_created_at BIGINT NOT NULL,
 
     data JSONB,
 
@@ -28,6 +29,12 @@ const migrations = [
   `ALTER TABLE microsoft_messages
     ADD COLUMN IF NOT EXISTS thread_id TEXT NOT NULL`,
 
+
+  `ALTER TABLE microsoft_messages
+    DROP COLUMN IF EXISTS message_created_at`,
+
+  `ALTER TABLE microsoft_messages
+    ADD COLUMN IF NOT EXISTS message_created_at BIGINT NOT NULL`,
 
   'COMMIT'
 ]
