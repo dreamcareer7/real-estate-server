@@ -1,0 +1,10 @@
+[
+  {
+    "entry_id": "http://www.google.com/m8/feeds/groups/yaber.azimi%40gmail.com/base/f",
+    "entry": {"id": {"$t": "http://www.google.com/m8/feeds/groups/yaber.azimi%40gmail.com/base/f"}, "link": [{"rel": "self", "href": "https://www.google.com/m8/feeds/groups/yaber.azimi%40gmail.com/full/f", "type": "application/atom+xml"}], "title": {"$t": "System Group: Coworkers"}, "content": {"$t": "System Group: Coworkers"}, "gd$etag": "\"YDwreyM.\"", "updated": {"$t": "1970-01-01T00:00:00.000Z"}, "category": [{"term": "http://schemas.google.com/contact/2008#group", "scheme": "http://schemas.google.com/g/2005#kind"}], "gContact$systemGroup": {"id": "Coworkers"}}
+  },
+  {
+    "entry_id": "http://www.google.com/m8/feeds/groups/saeed.uni68%40gmail.com/base/6",
+    "entry": {"id": {"$t": "http://www.google.com/m8/feeds/groups/saeed.uni68%40gmail.com/base/6"}, "link": [{"rel": "self", "href": "https://www.google.com/m8/feeds/groups/saeed.uni68%40gmail.com/full/6", "type": "application/atom+xml"}], "title": {"$t": "System Group: My Contacts"}, "content": {"$t": "System Group: My Contacts"}, "gd$etag": "\"YDwreyM.\"", "updated": {"$t": "1970-01-01T00:00:00.000Z"}, "category": [{"term": "http://schemas.google.com/contact/2008#group", "scheme": "http://schemas.google.com/g/2005#kind"}], "gContact$systemGroup": {"id": "Contacts"}}
+  }
+]
