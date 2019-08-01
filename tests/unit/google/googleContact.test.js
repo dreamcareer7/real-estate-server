@@ -168,7 +168,7 @@ async function getRefinedContactGroups() {
 
 
 describe('Google', () => {
-  describe('Google Account', () => {
+  describe('Google Contacts', () => {
     createContext()
     beforeEach(setup)
 
