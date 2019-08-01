@@ -334,7 +334,7 @@ describe('Google', () => {
     createContext()
     beforeEach(setup)
 
-    it('should create a google-credential (semi-grant-access)', create)
+    it('should create a google-credential', create)
     it('should publicize a google-credential', publicize)
 
     it('should return a google-credential by user-brand', getByUser)
