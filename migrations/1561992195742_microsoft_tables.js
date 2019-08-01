@@ -58,7 +58,7 @@ const migrations = [
 
     folder_id TEXT NOT NULL,
     parent_folder_id TEXT,
-    display_ame TEXT,
+    display_name TEXT,
 
     created_at timestamptz NOT NULL DEFAULT clock_timestamp(),
     updated_at timestamptz NOT NULL DEFAULT clock_timestamp(),
