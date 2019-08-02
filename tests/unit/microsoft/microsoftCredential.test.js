@@ -149,6 +149,20 @@ async function updateAsRevoked() {
   expect(updatedCredential.revoked).to.be.equal(true)
 }
 
+async function updateLastSync() {
+  const createdCredential = await create()
+
+  const ts = new Date()
+  const duration = 100
+  await MicrosoftCredential.updateLastSync(createdCredential.id, ts, duration)
+
+  const updatedCredential = await MicrosoftCredential.get(createdCredential.id)
+
+  expect(createdCredential.id).to.be.equal(updatedCredential.id)
+  expect(new Date(updatedCredential.last_sync_at).getTime()).to.be.equal(new Date(ts).getTime())
+  expect(updatedCredential.last_sync_duration).to.be.equal(duration)
+}
+
 async function updateSyncStatus() {
   const createdCredential = await create()
 
@@ -278,6 +292,7 @@ describe('Microsoft', () => {
     
     it('should update a microsoft-credential tokens', updateTokens)
     it('should revoke a microsoft-credential', updateAsRevoked)
+    it('should update a microsoft-credential last sync status', updateLastSync)
     it('should update a microsoft-credential sync status', updateSyncStatus)
 
     it('should disable/enable a microsoft-credential', disableEnableSync)
