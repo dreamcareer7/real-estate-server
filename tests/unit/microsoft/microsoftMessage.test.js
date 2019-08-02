@@ -5,10 +5,10 @@ const Context             = require('../../../lib/models/Context')
 const User                = require('../../../lib/models/User')
 const BrandHelper         = require('../brand/helper')
 const MicrosoftCredential = require('../../../lib/models/Microsoft/credential')
-const MicrosoftMessage    = require('../../../lib/models/Microsoft/message')
+// const MicrosoftMessage    = require('../../../lib/models/Microsoft/message')
 
 
-const microsoft_messages_offline = require('./data/microsoft_messages.json')
+// const microsoft_messages_offline = require('./data/microsoft_messages.json')
 
 let user, brand
 
@@ -73,14 +73,18 @@ async function createMicrosoftCredential() {
   return credential
 }
 
+async function create() {
+  const credential = await createMicrosoftCredential()
 
+  return credential
+}
 
 describe('Microsoft', () => {
   describe('Microsoft Messages', () => {
     createContext()
     beforeEach(setup)
 
-    // it('should create some microsoft-messages', create)
+    it('should create some microsoft-messages', create)
     // it('should return microsoft-message by messages_id', getByMessageId)
     // it('should handle failure of microsoft-contact get by messages_id', getByMessageIdFailed)
     // it('should return number of messages of specific credential', getGCredentialMessagesNum)
