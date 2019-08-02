@@ -126,7 +126,7 @@ async function shutdownWorkers() {
 const shutdown = async () => {
   try {
     clearTimeout(kueCleanupTimeout)
-    clearTimeout(shutdownTimeout)
+    // clearTimeout(shutdownTimeout)
     clearInterval(statsInterval)
     clearInterval(queue.stuck_job_watch)
 
@@ -149,7 +149,7 @@ const shutdown = async () => {
 process.once('SIGTERM', shutdown)
 process.once('SIGINT', shutdown)
 
-const shutdownTimeout = setTimeout(shutdown, 1000 * 60 * 10) // Restart every few minutes
+// const shutdownTimeout = setTimeout(shutdown, 1000 * 60 * 10) // Restart every few minutes
 
 let kueCleanupTimeout
 async function cleanupKueJobs() {
