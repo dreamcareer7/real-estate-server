@@ -10,8 +10,12 @@ const migrations = [
 
     message_id TEXT NOT NULL,
     thread_id TEXT NOT NULL,
-    recipients TEXT [],
     in_bound BOOLEAN NOT NULL,
+    recipients TEXT [],
+
+    subject TEXT,
+    has_attachments Boolean,
+
     message_created_at BIGINT NOT NULL,
 
     data JSONB,
