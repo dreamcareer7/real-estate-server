@@ -18,8 +18,8 @@ const migrations = [
     has_attachments Boolean,
     attachments JSONB,
 
-    from JSONB,
-    to JSONB,
+    "from" JSONB,
+    "to" JSONB,
     cc JSONB,
     bcc JSONB,
 
