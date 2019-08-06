@@ -10,10 +10,19 @@ const migrations = [
 
     message_id TEXT NOT NULL,
     thread_id TEXT NOT NULL,
-    recipients TEXT [],
     in_bound BOOLEAN NOT NULL,
-    message_created_at BIGINT NOT NULL,
+    recipients TEXT [],
 
+    subject TEXT,
+    has_attachments Boolean,
+    attachments JSONB,
+
+    from JSONB,
+    to JSONB,
+    cc JSONB,
+    bcc JSONB,
+
+    message_created_at BIGINT NOT NULL,
     data JSONB,
 
     created_at timestamptz NOT NULL DEFAULT clock_timestamp(),
@@ -24,17 +33,38 @@ const migrations = [
   )`,
 
   `ALTER TABLE microsoft_messages
-    DROP COLUMN IF EXISTS conversation_id`,
-
-  `ALTER TABLE microsoft_messages
     ADD COLUMN IF NOT EXISTS thread_id TEXT NOT NULL`,
-
 
   `ALTER TABLE microsoft_messages
     DROP COLUMN IF EXISTS message_created_at`,
 
   `ALTER TABLE microsoft_messages
     ADD COLUMN IF NOT EXISTS message_created_at BIGINT NOT NULL`,
+
+
+  `ALTER TABLE microsoft_messages
+    ADD COLUMN IF NOT EXISTS subject TEXT`,
+
+  `ALTER TABLE microsoft_messages
+    ADD COLUMN IF NOT EXISTS has_attachments Boolean`,
+
+  `ALTER TABLE microsoft_messages
+    ADD COLUMN IF NOT EXISTS attachments JSONB`,
+
+
+  `ALTER TABLE microsoft_messages
+    ADD COLUMN IF NOT EXISTS "from" JSONB`,
+
+  `ALTER TABLE microsoft_messages
+    ADD COLUMN IF NOT EXISTS "to" JSONB`,
+
+  `ALTER TABLE microsoft_messages
+    ADD COLUMN IF NOT EXISTS cc JSONB`,
+
+  `ALTER TABLE microsoft_messages
+    ADD COLUMN IF NOT EXISTS bcc JSONB`,
+
+
 
   'COMMIT'
 ]
