@@ -3,6 +3,7 @@ const db = require('../lib/utils/db')
 const migrations = [
   'BEGIN',
 
+
   `DROP TABLE IF EXISTS
     google_messages`,
 
@@ -14,10 +15,19 @@ const migrations = [
     message_id TEXT NOT NULL,
     thread_id TEXT NOT NULL,
     history_id TEXT NOT NULL,
-    recipients TEXT [],
     in_bound BOOLEAN NOT NULL,
-    message_created_at BIGINT NOT NULL,
+    recipients TEXT [],
 
+    subject TEXT,
+    has_attachments Boolean,
+    attachments JSONB,
+
+    "from" JSONB,
+    "to" JSONB,
+    cc JSONB,
+    bcc JSONB,
+
+    message_created_at BIGINT NOT NULL,
     data JSONB,
 
     created_at timestamptz NOT NULL DEFAULT clock_timestamp(),
@@ -26,6 +36,29 @@ const migrations = [
 
     UNIQUE (google_credential, message_id)
   )`,
+
+
+  `ALTER TABLE google_messages
+    ADD COLUMN IF NOT EXISTS subject TEXT`,
+
+  `ALTER TABLE google_messages
+    ADD COLUMN IF NOT EXISTS has_attachments Boolean`,
+
+  `ALTER TABLE google_messages
+    ADD COLUMN IF NOT EXISTS attachments JSONB`,
+  
+  `ALTER TABLE google_messages
+    ADD COLUMN IF NOT EXISTS "from" JSONB`,
+
+  `ALTER TABLE google_messages
+    ADD COLUMN IF NOT EXISTS "to" JSONB`,
+
+  `ALTER TABLE google_messages
+    ADD COLUMN IF NOT EXISTS cc JSONB`,
+
+  `ALTER TABLE google_messages
+    ADD COLUMN IF NOT EXISTS bcc JSONB`,
+
 
   'COMMIT'
 ]
