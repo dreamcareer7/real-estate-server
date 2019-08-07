@@ -15,6 +15,7 @@ const migrations = [
     message_id TEXT NOT NULL,
     thread_id TEXT NOT NULL,
     history_id TEXT NOT NULL,
+    internet_message_id TEXT,
     in_bound BOOLEAN NOT NULL,
     recipients TEXT [],
 
@@ -36,6 +37,9 @@ const migrations = [
 
     UNIQUE (google_credential, message_id)
   )`,
+
+  `CREATE INDEX google_messages_recipients_idx
+    ON "google_messages" USING GIN ("recipients")`,
 
 
   'COMMIT'
