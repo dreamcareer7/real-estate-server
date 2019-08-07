@@ -17,6 +17,8 @@ const context = Context.create({
 })
 
 async function main() {
+  await peanar.declareAmqResources()
+
   await peanar.worker({
     queues: ['deal_email'],
     concurrency: 5

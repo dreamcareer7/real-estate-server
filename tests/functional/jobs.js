@@ -14,7 +14,7 @@ function handleJob(queue, name, data, cb) {
     return handleKueJob(queue, data, cb)
   }
 
-  return handlePeanarJob(queue, {
+  return handlePeanarJob({
     id: '1',
     attempt: 1,
     deliveryTag: BigInt(1),
@@ -29,15 +29,14 @@ function handleKueJob(name, data, cb) {
 }
 
 /**
- * @param {string} queue 
  * @param {import('peanar/dist/app').IPeanarRequest} req 
  */
-async function handlePeanarJob(queue, req) {
-  const fn = peanar.getJobDefinition(queue, req.name)
+async function handlePeanarJob(req) {
+  const def = peanar.registry.getJobDefinition(req.name)
 
-  if (!fn) throw new Error(`handlePeanarJobs: No handler found for job ${queue}:${req.name}`)
+  if (!def) throw new Error(`handlePeanarJobs: No handler found for job ${req.name}`)
 
-  await fn.handler.apply(null, req.args)
+  await def.handler.apply(null, req.args)
 }
 
 function installJobsRoute(app) {
