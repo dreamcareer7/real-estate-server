@@ -56,6 +56,10 @@ const migrations = [
     ADD COLUMN IF NOT EXISTS bcc JSONB`,
 
 
+  `ALTER TABLE microsoft_messages
+    ADD COLUMN IF NOT EXISTS internet_message_id TEXT`,
+    
+
   'COMMIT'
 ]
 
