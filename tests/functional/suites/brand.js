@@ -371,7 +371,7 @@ const addTemplate = cb => {
   }
 
   return frisby.create('add a form template')
-    .post(`/brands/${brand_id}/templates`, template)
+    .post(`/brands/${brand_id}/email-templates`, template)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
@@ -395,7 +395,7 @@ const updateTemplate = cb => {
   }
 
   return frisby.create('update a form template')
-    .put(`/brands/${brand_id}/templates/${results.brand.addTemplate.data.id}`, template)
+    .put(`/brands/${brand_id}/email-templates/${results.brand.addTemplate.data.id}`, template)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
@@ -405,7 +405,7 @@ const updateTemplate = cb => {
 
 const getTemplates = cb => {
   return frisby.create('get all templates for a brand (and its parents)')
-    .get(`/brands/${brand_id}/templates?form=${results.form.create.data.id}`)
+    .get(`/brands/${brand_id}/email-templates?form=${results.form.create.data.id}`)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
