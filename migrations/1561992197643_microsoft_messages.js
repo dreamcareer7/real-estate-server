@@ -31,7 +31,10 @@ const migrations = [
     deleted_at timestamptz,
 
     UNIQUE (microsoft_credential, message_id)
-  )`,    
+  )`,
+
+  `CREATE INDEX microsoft_messages_recipients_idx
+    ON "microsoft_messages" USING GIN ("recipients")`,
 
   'COMMIT'
 ]

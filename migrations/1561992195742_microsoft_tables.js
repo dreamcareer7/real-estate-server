@@ -2,17 +2,8 @@ const db = require('../lib/utils/db')
 
 const migrations = [
   'BEGIN',
+
   
-  `DROP TABLE IF EXISTS
-    microsoft_credentials CASCADE`,
-
-  `DROP TABLE IF EXISTS
-    microsoft_contacts CASCADE`,
-
-  `DROP TABLE IF EXISTS
-    microsoft_contact_folders CASCADE`,
-
-
   `CREATE TABLE IF NOT EXISTS microsoft_credentials(
     id uuid NOT NULL PRIMARY KEY DEFAULT uuid_generate_v4(),
     
@@ -51,6 +42,10 @@ const migrations = [
     UNIQUE (refresh_token)
   )`,
 
+  `CREATE UNIQUE INDEX IF NOT EXISTS
+    microsoft_credentials_user_brand_email ON microsoft_credentials ("user", brand, email)`,
+
+
   `CREATE TABLE IF NOT EXISTS microsoft_contact_folders(
     id uuid NOT NULL PRIMARY KEY DEFAULT uuid_generate_v4(),
 
@@ -66,6 +61,7 @@ const migrations = [
 
     UNIQUE (microsoft_credential, folder_id)
   )`,
+
 
   `CREATE TABLE IF NOT EXISTS microsoft_contacts(
     id uuid NOT NULL PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -83,16 +79,12 @@ const migrations = [
     UNIQUE (microsoft_credential, remote_id)
   )`,
 
-
-  `CREATE UNIQUE INDEX IF NOT EXISTS
-    microsoft_credentials_user_brand_email ON microsoft_credentials ("user", brand, email)`,
-
-
   `ALTER TABLE contacts
     ADD COLUMN IF NOT EXISTS microsoft_id uuid REFERENCES microsoft_contacts(id)`,
 
   `CREATE UNIQUE INDEX IF NOT EXISTS
     contacts_microsoft_id ON contacts (microsoft_id) WHERE microsoft_id IS NOT NULL`,
+
 
   'COMMIT'
 ]
