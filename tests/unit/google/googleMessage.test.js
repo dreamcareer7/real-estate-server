@@ -8,6 +8,8 @@ const BrandHelper      = require('../brand/helper')
 const GoogleCredential = require('../../../lib/models/Google/credential')
 const GoogleMessage    = require('../../../lib/models/Google/message')
 
+const { parser } = require('../../../lib/models/Google/workers/gmail/common')
+
 
 const google_messages_offline = require('./data/google_messages.json')
 
@@ -87,33 +89,30 @@ async function createGoogleCredential() {
 async function create() {
   const credential = await createGoogleCredential()
 
-  const targetHeaders  = ['from', 'to', 'bcc', 'cc']
   const googleMessages = []
 
   for (const message of google_messages_offline) {
-    let inBound = true
 
-    if ( message.labelIds.includes('SENT') )
-      inBound = false
-
-    const recipients = new Set()
-
-    for ( const header of message.payload.headers ) {
-      if ( targetHeaders.includes(header.name.toLowerCase()) ) {
-        const addresses = mimelib.parseAddresses(header.value)
-        addresses.map(a => recipients.add(a.address))
-      }  
-    }
-
-    const recipientsArr = Array.from(recipients)
+    const { recipientsArr, attachments, internetMessageId, subject, from, to, cc, bcc } = parser(message)
 
     googleMessages.push({
       google_credential: credential.id,
       message_id: message.id,
       thread_id: message.threadId,
       history_id: message.historyId,
+      internet_message_id: internetMessageId,
       recipients: `{${recipientsArr.join(',')}}`,
-      in_bound: inBound,
+      in_bound: (message.labelIds.includes('SENT')) ? false : true,
+
+      subject: subject,
+      has_attachments: (attachments.length > 0) ? true : false,
+      attachments: JSON.stringify(attachments),
+
+      '"from"': JSON.stringify(from),
+      '"to"': JSON.stringify(to),
+      cc: JSON.stringify(cc),
+      bcc: JSON.stringify(bcc),
+
       message_created_at: new Date(Number(message.internalDate)).getTime(),
       data: JSON.stringify(message)
     })
