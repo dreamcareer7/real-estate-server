@@ -38,31 +38,6 @@ const migrations = [
   )`,
 
 
-  `ALTER TABLE google_messages
-    ADD COLUMN IF NOT EXISTS subject TEXT`,
-
-  `ALTER TABLE google_messages
-    ADD COLUMN IF NOT EXISTS has_attachments Boolean`,
-
-  `ALTER TABLE google_messages
-    ADD COLUMN IF NOT EXISTS attachments JSONB`,
-  
-  `ALTER TABLE google_messages
-    ADD COLUMN IF NOT EXISTS "from" JSONB`,
-
-  `ALTER TABLE google_messages
-    ADD COLUMN IF NOT EXISTS "to" JSONB`,
-
-  `ALTER TABLE google_messages
-    ADD COLUMN IF NOT EXISTS cc JSONB`,
-
-  `ALTER TABLE google_messages
-    ADD COLUMN IF NOT EXISTS bcc JSONB`,
-
-
-  `ALTER TABLE google_messages
-    ADD COLUMN IF NOT EXISTS internet_message_id TEXT`,
-
   'COMMIT'
 ]
 
