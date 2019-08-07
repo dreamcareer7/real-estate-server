@@ -1,4 +1,3 @@
-const mimelib    = require('mimelib')
 const { expect } = require('chai')
 const { createContext } = require('../helper')
 
