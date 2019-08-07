@@ -3,8 +3,8 @@ const db = require('../lib/utils/db')
 const migrations = [
   'BEGIN',
 
-  `CREATE INDEX google_messages_recipients_idx
-    ON "google_messages" USING GIN ("recipients")`,
+  `CREATE INDEX IF NOT EXISTS microsoft_messages_recipients_idx
+    ON "microsoft_messages" USING GIN ("recipients")`,
 
   'COMMIT'
 ]
