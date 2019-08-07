@@ -89,9 +89,6 @@ const migrations = [
 
 
   `ALTER TABLE contacts
-    DROP COLUMN IF EXISTS microsoft_id`,
-
-  `ALTER TABLE contacts
     ADD COLUMN IF NOT EXISTS microsoft_id uuid REFERENCES microsoft_contacts(id)`,
 
   `CREATE UNIQUE INDEX IF NOT EXISTS

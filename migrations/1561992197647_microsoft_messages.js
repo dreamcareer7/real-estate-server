@@ -3,7 +3,6 @@ const db = require('../lib/utils/db')
 const migrations = [
   'BEGIN',
 
-
   `CREATE TABLE IF NOT EXISTS microsoft_messages(
     id uuid NOT NULL PRIMARY KEY DEFAULT uuid_generate_v4(),
 
@@ -11,6 +10,7 @@ const migrations = [
 
     message_id TEXT NOT NULL,
     thread_id TEXT NOT NULL,
+    internet_message_id TEXT,
     in_bound BOOLEAN NOT NULL,
     recipients TEXT [],
 
@@ -31,34 +31,7 @@ const migrations = [
     deleted_at timestamptz,
 
     UNIQUE (microsoft_credential, message_id)
-  )`,
-
-
-  `ALTER TABLE microsoft_messages
-    ADD COLUMN IF NOT EXISTS subject TEXT`,
-
-  `ALTER TABLE microsoft_messages
-    ADD COLUMN IF NOT EXISTS has_attachments Boolean`,
-
-  `ALTER TABLE microsoft_messages
-    ADD COLUMN IF NOT EXISTS attachments JSONB`,
-
-  `ALTER TABLE microsoft_messages
-    ADD COLUMN IF NOT EXISTS "from" JSONB`,
-
-  `ALTER TABLE microsoft_messages
-    ADD COLUMN IF NOT EXISTS "to" JSONB`,
-
-  `ALTER TABLE microsoft_messages
-    ADD COLUMN IF NOT EXISTS cc JSONB`,
-
-  `ALTER TABLE microsoft_messages
-    ADD COLUMN IF NOT EXISTS bcc JSONB`,
-
-
-  `ALTER TABLE microsoft_messages
-    ADD COLUMN IF NOT EXISTS internet_message_id TEXT`,
-    
+  )`,    
 
   'COMMIT'
 ]
