@@ -1,6 +1,8 @@
 const { peanar } = require('../../lib/utils/peanar')
+
 require('../../lib/models/index.js')()
 const Context = require('../../lib/models/Context')
+const config = require('../../lib/config')
 
 require('../../lib/models/Calendar/worker')
 require('../../lib/models/Contact/worker')
@@ -12,6 +14,7 @@ require('../../lib/models/Google/workers')
 require('../../lib/models/Microsoft/workers')
 require('../../lib/models/Deal/email')
 require('../../lib/models/Email')
+require('../../lib/models/SMS')
 
 const context = Context.create({
   id: 'PeanarWorker'
@@ -60,6 +63,11 @@ async function main() {
       'MLS.Listing.Photos.Validate'
     ],
     concurrency: 50
+  })
+
+  await peanar.worker({
+    queues: ['sms'],
+    concurrency: config.twilio.parallel
   })
 }
 

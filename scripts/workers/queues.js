@@ -21,10 +21,6 @@ const notification = (job, done) => {
   Notification.create(job.data.notification, done)
 }
 
-const sms = (job, done) => {
-  SMS.callTwilio(job.data, done)
-}
-
 const saveLastSeen = (job, done) => {
   User.saveLastSeen(job.data, done)
 }
@@ -48,11 +44,6 @@ module.exports = {
   create_notification: {
     handler: notification,
     parallel: 50
-  },
-
-  sms: {
-    handler: sms,
-    parallel: config.twilio.parallel
   },
 
   save_last_seen: {
