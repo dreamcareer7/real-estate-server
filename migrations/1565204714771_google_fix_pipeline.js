@@ -3,38 +3,36 @@ const db = require('../lib/utils/db')
 const migrations = [
   'BEGIN',
 
-  `CREATE TABLE IF NOT EXISTS microsoft_messages(
+  `CREATE TABLE IF NOT EXISTS google_messages(
     id uuid NOT NULL PRIMARY KEY DEFAULT uuid_generate_v4(),
-
-    microsoft_credential uuid NOT NULL REFERENCES microsoft_credentials(id),
-
+  
+    google_credential uuid NOT NULL REFERENCES google_credentials(id),
+  
     message_id TEXT NOT NULL,
     thread_id TEXT NOT NULL,
-    recipients TEXT [],
+    history_id TEXT NOT NULL,
+    internet_message_id TEXT,
     in_bound BOOLEAN NOT NULL,
+    recipients TEXT [],
+  
+    subject TEXT,
+    has_attachments Boolean,
+    attachments JSONB,
+  
+    "from" JSONB,
+    "to" JSONB,
+    cc JSONB,
+    bcc JSONB,
+  
     message_created_at BIGINT NOT NULL,
-
     data JSONB,
-
+  
     created_at timestamptz NOT NULL DEFAULT clock_timestamp(),
     updated_at timestamptz NOT NULL DEFAULT clock_timestamp(),
     deleted_at timestamptz,
-
-    UNIQUE (microsoft_credential, message_id)
+  
+    UNIQUE (google_credential, message_id)
   )`,
-
-  `ALTER TABLE microsoft_messages
-    DROP COLUMN IF EXISTS conversation_id`,
-
-  `ALTER TABLE microsoft_messages
-    ADD COLUMN IF NOT EXISTS thread_id TEXT NOT NULL`,
-
-
-  `ALTER TABLE microsoft_messages
-    DROP COLUMN IF EXISTS message_created_at`,
-
-  `ALTER TABLE microsoft_messages
-    ADD COLUMN IF NOT EXISTS message_created_at BIGINT NOT NULL`,
 
   'COMMIT'
 ]
