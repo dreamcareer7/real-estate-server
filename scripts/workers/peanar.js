@@ -13,6 +13,7 @@ require('../../lib/models/Showings/worker')
 require('../../lib/models/Google/workers')
 require('../../lib/models/Microsoft/workers')
 require('../../lib/models/Deal/email')
+require('../../lib/models/Deal/brokerwolf')
 require('../../lib/models/Email')
 require('../../lib/models/SMS')
 
@@ -23,6 +24,10 @@ const context = Context.create({
 async function main() {
   await peanar.declareAmqResources()
 
+  await peanar.worker({
+    queues: ['brokerwolf'],
+    concurrency: 1
+  })
   await peanar.worker({
     queues: ['deal_email'],
     concurrency: 5
@@ -36,7 +41,7 @@ async function main() {
     queues: ['contacts', 'contact_lists', 'contact_duplicates', 'crm_tasks'],
     concurrency: 10
   })
-  await peanar.worker({ queues: ['contact_import'], concurrency: 5 })
+  await peanar.worker({ queues: ['contact_import'], concurrency: 15 })
 
   await peanar.worker({
     queues: ['showings', 'google', 'microsoft', 'touches'],

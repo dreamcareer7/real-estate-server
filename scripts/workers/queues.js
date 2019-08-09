@@ -25,16 +25,6 @@ const saveLastSeen = (job, done) => {
   User.saveLastSeen(job.data, done)
 }
 
-const sync_brokerwolf = (job, done) => {
-  Deal.get(job.data.id, (err, deal) => {
-    if (err)
-      return done(err)
-
-    Deal.BrokerWolf.sync(deal).nodeify(done)
-  })
-}
-
-
 module.exports = {
   airship_transport_send_device: {
     handler: airship,
@@ -49,10 +39,5 @@ module.exports = {
   save_last_seen: {
     handler: saveLastSeen,
     parallel: 5
-  },
-
-  'sync_brokerwolf': {
-    handler: sync_brokerwolf,
-    parallel: 1
   }
 }
