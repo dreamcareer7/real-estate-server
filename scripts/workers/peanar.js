@@ -41,11 +41,17 @@ async function main() {
 
   await peanar.worker({
     queues: [
+      'MLS.Office',
       'MLS.Unit',
       'MLS.Room',
-      'MLS.OpenHouse',
       'MLS.Agent',
-      'MLS.Office',
+    ],
+    concurrency: 10
+  })
+
+  await peanar.worker({
+    queues: [
+      'MLS.OpenHouse',
       'MLS.Photo',
       'MLS.Listing',
       'MLS.Listing.Photos.Validate'
