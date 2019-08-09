@@ -1,8 +1,8 @@
 UPDATE
-  brands_events
+  brands_flows
 SET
   deleted_at = now(),
   deleted_by = $1::uuid,
   deleted_within = $2::text
 WHERE
-  id = ANY($3::uuid[])
+  id = $3::uuid
