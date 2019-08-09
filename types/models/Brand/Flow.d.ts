@@ -32,6 +32,8 @@ declare interface IBrandFlow {
   brand: UUID;
   name: string;
   description: string;
+  steps: UUID[];
+  active_flows: number;
 }
 
 declare interface IBrandFlowInput {
