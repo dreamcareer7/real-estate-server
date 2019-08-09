@@ -11,6 +11,7 @@ require('../../lib/models/Showings/worker')
 require('../../lib/models/Google/workers')
 require('../../lib/models/Microsoft/workers')
 require('../../lib/models/Deal/email')
+require('../../lib/models/Email')
 
 const context = Context.create({
   id: 'PeanarWorker'
@@ -51,6 +52,8 @@ async function main() {
 
   await peanar.worker({
     queues: [
+      'email',
+
       'MLS.OpenHouse',
       'MLS.Photo',
       'MLS.Listing',

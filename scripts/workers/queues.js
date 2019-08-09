@@ -2,7 +2,6 @@ require('../../lib/models/index.js')()
 
 const config = require('../../lib/config')
 
-const Email = require('../../lib/models/Email')
 const Notification = require('../../lib/models/Notification')
 const User = require('../../lib/models/User')
 
@@ -20,10 +19,6 @@ const airship = (job, done) => {
 
 const notification = (job, done) => {
   Notification.create(job.data.notification, done)
-}
-
-const email = (job, done) => {
-  Email.send(job.data).nodeify(done)
 }
 
 const sms = (job, done) => {
@@ -52,11 +47,6 @@ module.exports = {
 
   create_notification: {
     handler: notification,
-    parallel: 50
-  },
-
-  email: {
-    handler: email,
     parallel: 50
   },
 
