@@ -202,16 +202,6 @@ async function disableEnableSyncFailed() {
   }
 }
 
-async function disableRevokedAccountFailed() {
-  const createdCredential = await create()
-
-  await MicrosoftCredential.updateAsRevoked(createdCredential.id)
-
-  const returnFlag = await MicrosoftCredential.disableEnableSync(createdCredential.id, 'disable')
-
-  expect(returnFlag).to.be.equal(true)
-}
-
 async function forceSync() {
   const createdCredential = await create()
 
@@ -297,7 +287,6 @@ describe('Microsoft', () => {
 
     it('should disable/enable a microsoft-credential', disableEnableSync)
     it('should handle returned exception from disable/enable microsoft-credential', disableEnableSyncFailed)
-    it('should handle disabling a revoked account', disableRevokedAccountFailed)
 
     it('should handle force sync request', forceSync)
     it('should update a microsoft-credential profile', updateProfile)

@@ -186,7 +186,7 @@ const deleteFlowStep = cb => {
   const flow = results.flow.getBrandFlows.data[0].id
   const step = results.flow.addStepToFlow.data[0].id
 
-  return frisby.create('stop a flow')
+  return frisby.create('delete a brand flow step')
     .delete(`/brands/${brand}/flows/${flow}/steps/${step}`)
     .after(cb)
     .expectStatus(204)
@@ -210,6 +210,16 @@ const enroll = cb => {
         contact: results.contact.create.data[0].id
       }]
     })
+}
+
+const deleteFlowWithActiveFlows = cb => {
+  const brand = results.contact.brandCreateParent.data.id
+  const flow = results.flow.getBrandFlows.data[0].id
+
+  return frisby.create('delete a brand flow with active flows')
+    .delete(`/brands/${brand}/flows/${flow}`)
+    .after(cb)
+    .expectStatus(409)
 }
 
 const checkFlowAssociation = cb => {
@@ -243,6 +253,16 @@ const checkStoppedFlowAssociation = cb => {
     })
 }
 
+const deleteFlow = cb => {
+  const brand = results.contact.brandCreateParent.data.id
+  const flow = results.flow.getBrandFlows.data[0].id
+
+  return frisby.create('delete a brand flow')
+    .delete(`/brands/${brand}/flows/${flow}`)
+    .after(cb)
+    .expectStatus(204)
+}
+
 
 module.exports = {
   addEmail,
@@ -254,7 +274,9 @@ module.exports = {
   getBrandFlowById,
   deleteFlowStep,
   enroll,
+  deleteFlowWithActiveFlows,
   checkFlowAssociation,
   stop,
-  checkStoppedFlowAssociation
+  checkStoppedFlowAssociation,
+  deleteFlow
 }

@@ -4,6 +4,7 @@ SELECT
   EXTRACT(epoch FROM updated_at) AS updated_at,
   created_by,
   updated_by,
+  flow,
   is_automated,
   title,
   description,
