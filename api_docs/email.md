@@ -32,6 +32,9 @@ A model that connects Email Campaigns with Emails.
 ### Schedule an email campaign [POST /emails]
 <!-- include(tests/email/schedule.md) -->
 
+### Update an email campaign [PUT /emails/:id]
+<!-- include(tests/email/update.md) -->
+
 ### Get an email campaign [GET /emails/:id?associations[]=email_campaign.emails]
 <!-- include(tests/email/get.md) -->
 
