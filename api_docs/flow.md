@@ -92,6 +92,9 @@ crm_task   | CrmTask       | `flow_step.crm_task`   | Link to an actual CrmTask 
 ### Edit a brand flow [PUT /brands/:id/flows/:flow]
 <!-- include(tests/flow/updateFlow.md) -->
 
+### Delete a brand flow [DELETE /brands/:id/flows/:flow]
+<!-- include(tests/flow/deleteFlow.md) -->
+
 ### Add a new step to a brand flow [POST /brands/:id/flows/:flow/steps]
 <!-- include(tests/flow/addStepToFlow.md) -->
 

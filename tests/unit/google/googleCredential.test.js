@@ -237,16 +237,6 @@ async function disableEnableSyncFailed() {
   }
 }
 
-async function disableRevokedAccountFailed() {
-  const createdCredential = await create()
-
-  await GoogleCredential.updateAsRevoked(createdCredential.id)
-
-  const returnFlag = await GoogleCredential.disableEnableSync(createdCredential.id, 'disable')
-
-  expect(returnFlag).to.be.equal(true)
-}
-
 async function forceSync() {
   const createdCredential = await create()
 
@@ -352,7 +342,6 @@ describe('Google', () => {
     
     it('should disable/enable a google-credential', disableEnableSync)
     it('should handle returned exception from disable/enable google-credential', disableEnableSyncFailed)
-    it('should handle disabling a revoked account', disableRevokedAccountFailed)
     
     it('should handle force sync request', forceSync)
     it('should update a google-credential profile', updateProfile)
