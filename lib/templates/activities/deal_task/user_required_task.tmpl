@@ -1,5 +1,5 @@
-{% if object.required %}
-{{data.abbreviated_display_name | safe}} marked {{object.title}} as required.
+{% if object.task.required %}
+{{data.abbreviated_display_name | safe}} marked {{object.task.title}} as required.
 {% else %}
-{{data.abbreviated_display_name | safe}} marked {{object.title}} as optional.
+{{data.abbreviated_display_name | safe}} marked {{object.task.title}} as optional.
 {% endif %}
