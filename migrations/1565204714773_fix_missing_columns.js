@@ -6,6 +6,9 @@ const migrations = [
   'ALTER TABLE google_messages ADD COLUMN IF NOT EXISTS subject TEXT',
   'ALTER TABLE microsoft_messages ADD COLUMN IF NOT EXISTS subject TEXT',
 
+  'ALTER TABLE google_messages ADD COLUMN IF NOT EXISTS thread_id TEXT NOT NULL',
+  'ALTER TABLE microsoft_messages ADD COLUMN IF NOT EXISTS thread_id TEXT NOT NULL',
+
   'COMMIT'
 ]
 
