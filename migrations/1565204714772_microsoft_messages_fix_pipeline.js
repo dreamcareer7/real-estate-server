@@ -3,14 +3,13 @@ const db = require('../lib/utils/db')
 const migrations = [
   'BEGIN',
 
-  `CREATE TABLE IF NOT EXISTS google_messages(
+  `CREATE TABLE IF NOT EXISTS microsoft_messages(
     id uuid NOT NULL PRIMARY KEY DEFAULT uuid_generate_v4(),
   
-    google_credential uuid NOT NULL REFERENCES google_credentials(id),
+    microsoft_credential uuid NOT NULL REFERENCES microsoft_credentials(id),
   
     message_id TEXT NOT NULL,
     thread_id TEXT NOT NULL,
-    history_id TEXT NOT NULL,
     internet_message_id TEXT,
     in_bound BOOLEAN NOT NULL,
     recipients TEXT [],
@@ -33,7 +32,7 @@ const migrations = [
     updated_at timestamptz NOT NULL DEFAULT clock_timestamp(),
     deleted_at timestamptz,
   
-    UNIQUE (google_credential, message_id)
+    UNIQUE (microsoft_credential, message_id)
   )`,
 
   'COMMIT'
