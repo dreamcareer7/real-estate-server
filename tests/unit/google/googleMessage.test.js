@@ -113,6 +113,8 @@ async function create() {
       bcc: JSON.stringify(bcc),
 
       message_created_at: new Date(Number(message.internalDate)).getTime(),
+      message_date: new Date(Number(message.internalDate)).toISOString(),
+
       data: JSON.stringify(message)
     })
   }
