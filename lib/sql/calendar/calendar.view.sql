@@ -14,6 +14,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
     NULL::uuid AS deal,
     NULL::uuid AS contact,
     NULL::uuid AS campaign,
+    NULL::text AS thread,
     (
       SELECT
         ARRAY_AGG("user")
@@ -35,40 +36,41 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
   )
   UNION ALL
   (
-  SELECT
-    ca.id,
-    ca.created_by,
-    'crm_association' AS object_type,
-    ct.task_type AS event_type,
-    ct.task_type AS type_label,
-    ct.due_date AS "timestamp",
-    ct.due_date AS "date",
-    ct.due_date AS next_occurence,
-    False AS recurring,
-    ct.title,
-    ct.id AS crm_task,
-    ca.deal,
-    ca.contact,
-    ca.email AS campaign,
-    (
-      SELECT
-        ARRAY_AGG("user")
-      FROM
-        crm_tasks_assignees
-      WHERE
-        crm_task = ct.id
-        AND deleted_at IS NULL
-    ) AS users,
-    ct.brand,
-    ct.status,
-    jsonb_build_object(
-      'status', ct.status
-    ) AS metadata
-  FROM
-    crm_associations AS ca
-    JOIN crm_tasks AS ct
-      ON ca.crm_task = ct.id
-  WHERE
+    SELECT
+      ca.id,
+      ca.created_by,
+      'crm_association' AS object_type,
+      ct.task_type AS event_type,
+      ct.task_type AS type_label,
+      ct.due_date AS "timestamp",
+      ct.due_date AS "date",
+      ct.due_date AS next_occurence,
+      False AS recurring,
+      ct.title,
+      ct.id AS crm_task,
+      ca.deal,
+      ca.contact,
+      ca.email AS campaign,
+      NULL::text AS thread,
+      (
+        SELECT
+          ARRAY_AGG("user")
+        FROM
+          crm_tasks_assignees
+        WHERE
+          crm_task = ct.id
+          AND deleted_at IS NULL
+      ) AS users,
+      ct.brand,
+      ct.status,
+      jsonb_build_object(
+        'status', ct.status
+      ) AS metadata
+    FROM
+      crm_associations AS ca
+      JOIN crm_tasks AS ct
+        ON ca.crm_task = ct.id
+    WHERE
     ca.deleted_at IS NULL
     AND ct.deleted_at IS NULL
   )
@@ -89,6 +91,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       cdc.deal,
       NULL::uuid AS contact,
       NULL::uuid AS campaign,
+      NULL::text AS thread,
       (
         SELECT
           ARRAY_AGG(DISTINCT r."user")
@@ -157,6 +160,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       NULL::uuid AS deal,
       contact,
       NULL::uuid AS campaign,
+      NULL::text AS thread,
       ARRAY[contacts."user"] AS users,
       contacts.brand,
       NULL::text AS status,
@@ -192,6 +196,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       NULL::uuid AS deal,
       id AS contact,
       NULL::uuid AS campaign,
+      NULL::text AS thread,
       ARRAY[contacts."user"] AS users,
       brand,
       NULL::text AS status,
@@ -219,6 +224,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       ec.deal,
       NULL::uuid AS contact,
       id AS campaign,
+      NULL::text AS thread,
       ARRAY[ec.from] AS users,
       brand,
       NULL::text AS status,
@@ -248,6 +254,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       ec.deal,
       ecr.contact,
       ec.id AS campaign,
+      NULL::text AS thread,
       ARRAY[ec.from] AS users,
       ec.brand,
       NULL::text AS status,
@@ -295,4 +302,134 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       ec.deleted_at IS NULL
       AND ec.executed_at IS NULL
       AND ec.due_at IS NOT NULL
+  )
+  UNION ALL
+  (
+    SELECT
+      google_messages.id,
+      google_credentials.user AS created_by,
+      'email_thread' AS object_type,
+      'gmail' AS event_type,
+      'Email Thread' AS type_label,
+      message_date AS "timestamp",
+      message_date AS "date",
+      message_date AS next_occurence,
+      False AS recurring,
+      subject AS title,
+      NULL::uuid AS crm_task,
+      NULL::uuid AS deal,
+      NULL::uuid AS contact,
+      NULL::uuid AS campaign,
+      thread_id AS thread,
+      ARRAY[google_credentials."user"] AS users,
+      google_credentials.brand,
+      NULL::text AS status,
+      NULL::jsonb AS metadata
+    FROM
+      google_messages
+    JOIN
+      google_credentials on google_messages.google_credential = google_credentials.id
+    WHERE
+      google_messages.deleted_at IS NULL
+  )
+  UNION ALL
+  (
+    SELECT
+      microsoft_messages.id,
+      microsoft_credentials.user AS created_by,
+      'email_thread' AS object_type,
+      'outlook' AS event_type,
+      'Email Thread' AS type_label,
+      message_date AS "timestamp",
+      message_date AS "date",
+      message_date AS next_occurence,
+      False AS recurring,
+      subject AS title,
+      NULL::uuid AS crm_task,
+      NULL::uuid AS deal,
+      NULL::uuid AS contact,
+      NULL::uuid AS campaign,
+      thread_id AS thread,
+      ARRAY[microsoft_credentials."user"] AS users,
+      microsoft_credentials.brand,
+      NULL::text AS status,
+      NULL::jsonb AS metadata
+    FROM
+      microsoft_messages
+    JOIN
+      microsoft_credentials on microsoft_messages.microsoft_credential = microsoft_credentials.id
+    WHERE
+      microsoft_messages.deleted_at IS NULL
+  )
+  UNION ALL
+  (
+    SELECT
+      google_messages.id,
+      google_credentials.user AS created_by,
+      'email_thread_recipient' AS object_type,
+      'gmail' AS event_type,
+      'Email Thread' AS type_label,
+      message_date AS "timestamp",
+      message_date AS "date",
+      message_date AS next_occurence,
+      False AS recurring,
+      subject AS title,
+      NULL::uuid AS crm_task,
+      NULL::uuid AS deal,
+      c.id AS contact,
+      NULL::uuid AS campaign,
+      thread_id AS thread,
+      ARRAY[google_credentials."user"] AS users,
+      google_credentials.brand,
+      NULL::text AS status,
+      NULL::jsonb AS metadata
+    FROM
+      google_messages
+      CROSS JOIN LATERAL (
+        SELECT
+          contacts.id
+        FROM
+          contacts
+        WHERE
+          contacts.email && google_messages.recipients
+      ) AS c
+      JOIN google_credentials ON google_messages.google_credential = google_credentials.id
+    WHERE
+      google_messages.deleted_at IS NULL
+  )
+  UNION ALL
+  (
+    SELECT
+      microsoft_messages.id,
+      microsoft_credentials.user AS created_by,
+      'email_thread_recipient' AS object_type,
+      'gmail' AS event_type,
+      'Email Thread' AS type_label,
+      message_date AS "timestamp",
+      message_date AS "date",
+      message_date AS next_occurence,
+      False AS recurring,
+      subject AS title,
+      NULL::uuid AS crm_task,
+      NULL::uuid AS deal,
+      c.id AS contact,
+      NULL::uuid AS campaign,
+      thread_id AS thread,
+      ARRAY[microsoft_credentials."user"] AS users,
+      microsoft_credentials.brand,
+      NULL::text AS status,
+      NULL::jsonb AS metadata
+    FROM
+      microsoft_messages
+      CROSS JOIN LATERAL (
+        SELECT
+          contacts.id
+        FROM
+          contacts
+        WHERE
+          contacts.email && microsoft_messages.recipients
+      ) AS c
+      JOIN microsoft_credentials ON microsoft_messages.microsoft_credential = microsoft_credentials.id
+    WHERE
+      microsoft_messages.deleted_at IS NULL
   )
