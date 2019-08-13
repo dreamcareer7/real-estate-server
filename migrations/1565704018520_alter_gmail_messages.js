@@ -3,8 +3,7 @@ const db = require('../lib/utils/db')
 const migrations = [
   'BEGIN',
 
-  'ALTER TABLE google_messages DROP COLUMN IF EXISTS message_created_at',
-  'ALTER TABLE google_messages ADD COLUMN IF NOT EXISTS message_created_at TIMESTAMPTZ',
+  'ALTER TABLE google_messages ADD COLUMN IF NOT EXISTS message_date TIMESTAMPTZ',
 
   'COMMIT'
 ]
