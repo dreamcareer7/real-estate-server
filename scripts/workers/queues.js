@@ -14,6 +14,7 @@ const {
 const touches_handler = require('../../lib/models/CRM/Touch/worker')
 const tasks_handler = require('../../lib/models/CRM/Task/worker')
 const calendar_handlers = require('../../lib/models/Calendar/worker')
+const flow_handlers = require('../../lib/models/Flow/worker')
 
 const Agent = require('../../lib/models/Agent')
 const Email = require('../../lib/models/Email')
@@ -213,6 +214,11 @@ module.exports = {
 
   contact_duplicates: {
     handler: contact_duplicates,
+    parallel: 8
+  },
+
+  flow: {
+    handler: flow_handlers,
     parallel: 8
   },
 
