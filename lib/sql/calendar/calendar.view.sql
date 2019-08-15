@@ -14,6 +14,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
     NULL::uuid AS deal,
     NULL::uuid AS contact,
     NULL::uuid AS campaign,
+    NULL::uuid AS credential_id,
     NULL::text AS thread,
     (
       SELECT
@@ -51,6 +52,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       ca.deal,
       ca.contact,
       ca.email AS campaign,
+      NULL::uuid AS credential_id,
       NULL::text AS thread,
       (
         SELECT
@@ -91,6 +93,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       cdc.deal,
       NULL::uuid AS contact,
       NULL::uuid AS campaign,
+      NULL::uuid AS credential_id,
       NULL::text AS thread,
       (
         SELECT
@@ -160,6 +163,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       NULL::uuid AS deal,
       contact,
       NULL::uuid AS campaign,
+      NULL::uuid AS credential_id,
       NULL::text AS thread,
       ARRAY[contacts."user"] AS users,
       contacts.brand,
@@ -196,6 +200,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       NULL::uuid AS deal,
       id AS contact,
       NULL::uuid AS campaign,
+      NULL::uuid AS credential_id,
       NULL::text AS thread,
       ARRAY[contacts."user"] AS users,
       brand,
@@ -224,6 +229,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       ec.deal,
       NULL::uuid AS contact,
       id AS campaign,
+      NULL::uuid AS credential_id,
       NULL::text AS thread,
       ARRAY[ec.from] AS users,
       brand,
@@ -254,6 +260,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       ec.deal,
       ecr.contact,
       ec.id AS campaign,
+      NULL::uuid AS credential_id,
       NULL::text AS thread,
       ARRAY[ec.from] AS users,
       ec.brand,
@@ -320,6 +327,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       NULL::uuid AS deal,
       NULL::uuid AS contact,
       NULL::uuid AS campaign,
+      google_messages.google_credential AS credential_id,
       thread_id AS thread,
       ARRAY[google_credentials."user"] AS users,
       google_credentials.brand,
@@ -349,6 +357,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       NULL::uuid AS deal,
       NULL::uuid AS contact,
       NULL::uuid AS campaign,
+      microsoft_messages.microsoft_credential AS credential_id,
       thread_id AS thread,
       ARRAY[microsoft_credentials."user"] AS users,
       microsoft_credentials.brand,
@@ -378,6 +387,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       NULL::uuid AS deal,
       c.id AS contact,
       NULL::uuid AS campaign,
+      google_messages.google_credential AS credential_id,
       thread_id AS thread,
       ARRAY[google_credentials."user"] AS users,
       google_credentials.brand,
@@ -414,6 +424,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       NULL::uuid AS deal,
       c.id AS contact,
       NULL::uuid AS campaign,
+      microsoft_messages.microsoft_credential AS credential_id,
       thread_id AS thread,
       ARRAY[microsoft_credentials."user"] AS users,
       microsoft_credentials.brand,
