@@ -92,7 +92,7 @@ async function create() {
 
   for (const message of google_messages_offline) {
 
-    const { recipientsArr, attachments, internetMessageId, subject, from, to, cc, bcc } = parser(message)
+    const { recipientsArr, attachments, internetMessageId, inReplyTo, subject, from, to, cc, bcc } = parser(message)
 
     googleMessages.push({
       google_credential: credential.id,
@@ -100,6 +100,7 @@ async function create() {
       thread_id: message.threadId,
       history_id: message.historyId,
       internet_message_id: internetMessageId,
+      in_reply_to: inReplyTo,
       recipients: `{${recipientsArr.join(',')}}`,
       in_bound: (message.labelIds.includes('SENT')) ? false : true,
 
