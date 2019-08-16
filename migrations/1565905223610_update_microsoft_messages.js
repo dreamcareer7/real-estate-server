@@ -15,8 +15,6 @@ const migrations = [
 
   'ALTER TABLE microsoft_messages ADD COLUMN IF NOT EXISTS thread_key TEXT',
 
-  'CREATE UNIQUE INDEX IF NOT EXISTS microsoft_messages_thread_key ON microsoft_messages (thread_key)',
-
   'COMMIT'
 ]
 
