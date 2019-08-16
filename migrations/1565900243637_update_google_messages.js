@@ -15,8 +15,6 @@ const migrations = [
 
   'ALTER TABLE google_messages ADD COLUMN IF NOT EXISTS thread_key TEXT',
 
-  'CREATE UNIQUE INDEX IF NOT EXISTS google_messages_thread_key ON google_messages (thread_key)',
-
   'COMMIT'
 ]
 
