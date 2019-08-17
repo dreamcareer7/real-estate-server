@@ -108,7 +108,7 @@ FROM
     (
       SELECT
         crm_associations.id,
-        NULL::uuid AS brand,
+        crm_associations.brand,
         $2::uuid AS "user"
       FROM
         crm_associations

@@ -403,7 +403,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       microsoft_messages.id,
       microsoft_credentials.user AS created_by,
       'email_thread_recipient' AS object_type,
-      'gmail' AS event_type,
+      'outlook' AS event_type,
       'Email Thread' AS type_label,
       message_date AS "timestamp",
       message_date AS "date",
