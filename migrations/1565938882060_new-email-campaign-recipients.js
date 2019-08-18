@@ -8,9 +8,12 @@ const migrations = [
   `CREATE TYPE email_campaign_recipient_type AS ENUM
   ('Tag', 'List', 'Brand', 'AllContacts', 'Email')`,
   'ALTER TABLE email_campaigns_recipients ADD recipient_type email_campaign_recipient_type',
-  `UPDATE email_campaigns_recipients SET recipient_type = 'Tag' WHERE tag IS NOT NULL`,
-  `UPDATE email_campaigns_recipients SET recipient_type = 'List' WHERE list IS NOT NULL`,
-  `UPDATE email_campaigns_recipients SET recipient_type = 'Email' WHERE email IS NOT NULL`,
+  `UPDATE email_campaigns_recipients
+    SET recipient_type = 'Tag' WHERE tag IS NOT NULL`,
+  `UPDATE email_campaigns_recipients
+    SET recipient_type = 'List' WHERE list IS NOT NULL`,
+  `UPDATE email_campaigns_recipients
+    SET recipient_type = 'Email' WHERE email IS NOT NULL`,
   'ALTER TABLE email_campaigns_recipients ALTER recipient_type SET NOT NULL',
   'ALTER TABLE email_campaigns_recipients ADD brand uuid REFERENCES brands(id)',
   'ALTER TABLE email_campaigns_recipients DROP CONSTRAINT has_recipient',
