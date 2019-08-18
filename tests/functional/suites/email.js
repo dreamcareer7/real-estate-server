@@ -6,7 +6,8 @@ registerSuite('brand', [
 const email = {
   to: [
     {
-      email: 'recipient@rechat.com'
+      email: 'recipient@rechat.com',
+      recipient_type: 'Email'
     },
   ],
   due_at: new Date(),
@@ -149,7 +150,8 @@ const update = cb => {
     html,
     to: [
       {
-        email: 'foo@bar.com'
+        email: 'foo@bar.com',
+        recipient_type: 'Email'
       }
     ]
   }
