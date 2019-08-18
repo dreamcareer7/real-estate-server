@@ -1129,7 +1129,7 @@ const bulkMerge = cb => {
 const sendEmails = cb => {
   const campaign = {
     subject: 'Email Subject',
-    to: [{ email: 'recipient@rechat.com' }],
+    to: [{ email: 'recipient@rechat.com', recipient_type: 'Email' }],
     html: '<div>HTML Body</div>',
     text: 'Text Body',
     from: results.authorize.token.data.id
@@ -1147,7 +1147,7 @@ const sendEmailsToTag = cb => {
     subject: 'Email Subject',
     html: '<div>HTML Body</div>',
     text: 'Text Body',
-    to: [{ tag: 'ManyContacts' }],
+    to: [{ tag: 'ManyContacts', recipient_type: 'Tag' }],
     from: results.authorize.token.data.id
   }
 
@@ -1164,7 +1164,8 @@ const sendEmailsToList = cb => {
     html: '<div>HTML Body</div>',
     text: 'Text Body',
     to: [{
-      list: results.contact.createManyContactsList.data.id
+      list: results.contact.createManyContactsList.data.id,
+      recipient_type: 'List'
     }],
     from: results.authorize.token.data.id
   }
