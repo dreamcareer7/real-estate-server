@@ -1,7 +1,11 @@
 registerSuite('brand', [
   'createParent',
-  'create'
+  'create',
+  'addRole',
+  'addMember'
 ])
+
+registerSuite('user', ['upgradeToAgentWithEmail'])
 
 const email = {
   to: [
@@ -78,7 +82,7 @@ const updateStats = cb => {
 const get = cb => {
   return frisby
     .create('Get the campaign')
-    .get(`/emails/${results.email.schedule.data[0]}?associations[]=email_campaign.emails&associations[]=email_campaign.recipients`)
+    .get(`/emails/${results.email.schedule.data.id}?associations[]=email_campaign.emails&associations[]=email_campaign.recipients`)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
@@ -93,6 +97,8 @@ const get = cb => {
 
 const getByBrand = cb => {
   const updated = results.email.update.data
+  const brand = results.email.scheduleBrand.data
+
 
   return frisby
     .create('Get campaigns by brand')
@@ -101,6 +107,17 @@ const getByBrand = cb => {
     .expectStatus(200)
     .expectJSON({
       data: [
+        {
+          subject: brand.subject,
+          html: brand.html,
+          sent: 1,
+          recipients: [
+            {
+              recipient_type: 'Brand'
+            }
+          ]
+        },
+
         {
           subject: updated.subject,
           html: updated.html,
@@ -133,6 +150,28 @@ const scheduleIndividual = cb => {
     .expectStatus(200)
 }
 
+const scheduleBrand = cb => {
+  individual.from = results.authorize.token.data.id
+
+  const c = {
+    ...individual,
+    subject: 'Brand Campaign',
+    to: [
+      {
+        brand: results.brand.create.data.id,
+        recipient_type: 'Brand'
+      }
+    ]
+  }
+
+  return frisby
+    .create('Schedule an individual email campaign with a brand recipient')
+    .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
+    .post('/emails/individual', c)
+    .after(cb)
+    .expectStatus(200)
+}
+
 const update = cb => {
   const html = `<div>
   From: {{sender.display_name | fallback("me")}}
@@ -144,7 +183,7 @@ const update = cb => {
   const subject = 'Individual Email From {{sender.display_name}}'
 
   const campaign = {
-    id: results.email.scheduleIndividual.data[0],
+    id: results.email.scheduleIndividual.data.id,
     ...individual,
     subject,
     html,
@@ -159,7 +198,7 @@ const update = cb => {
   return frisby
     .create('Update a campaign')
     .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
-    .put(`/emails/${results.email.scheduleIndividual.data[0]}?associations[]=email_campaign.recipients`, campaign)
+    .put(`/emails/${results.email.scheduleIndividual.data.id}?associations[]=email_campaign.recipients`, campaign)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
@@ -178,7 +217,7 @@ const update = cb => {
 const remove = cb => {
   return frisby
     .create('delete a campaign')
-    .delete(`/emails/${results.email.scheduleIndividual.data[0]}`)
+    .delete(`/emails/${results.email.scheduleIndividual.data.id}`)
     .after(cb)
     .expectStatus(204)
 }
@@ -186,6 +225,7 @@ const remove = cb => {
 module.exports = {
   schedule,
   scheduleIndividual,
+  scheduleBrand,
   update,
   sendDue,
   addEvent,
