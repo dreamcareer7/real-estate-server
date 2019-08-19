@@ -144,6 +144,15 @@ async function testEnrollContact() {
   return flow
 }
 
+async function testDuplicateEnroll() {
+  const id = await createContact()
+
+  await Flow.enrollContacts(brand.id, user.id, brand_flow.id, Date.now() / 1000, brand_flow.steps.map(s => s.id), [id])
+  const res = await Flow.enrollContacts(brand.id, user.id, brand_flow.id, Date.now() / 1000, brand_flow.steps.map(s => s.id), [id])
+
+  expect(res).to.be.empty
+}
+
 async function testStopFlow() {
   const flow = await testEnrollContact()
 
@@ -164,5 +173,6 @@ describe('Flow', () => {
 
   it('should setup brand flows correctly', testBrandFlows)
   it('should enroll a contact to a flow', testEnrollContact)
+  it('should prevent duplicate enrollment', testDuplicateEnroll)
   it('should stop a flow instance and delete all future events', testStopFlow)
 })
