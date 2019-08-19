@@ -153,6 +153,18 @@ async function testDuplicateEnroll() {
   expect(res).to.be.empty
 }
 
+async function testStopFlowByDeleteContact() {
+  const id = await createContact()
+  const [flow] = await Flow.enrollContacts(brand.id, user.id, brand_flow.id, Date.now() / 1000, brand_flow.steps.map(s => s.id), [id])
+  await handleJobs()
+
+  await Contact.delete([id], user.id)
+  await handleJobs()
+
+  const deleted = await Flow.get(flow.id)
+  expect(deleted.deleted_at).not.to.be.null
+}
+
 async function testStopFlow() {
   const flow = await testEnrollContact()
 
@@ -175,4 +187,5 @@ describe('Flow', () => {
   it('should enroll a contact to a flow', testEnrollContact)
   it('should prevent duplicate enrollment', testDuplicateEnroll)
   it('should stop a flow instance and delete all future events', testStopFlow)
+  it('should stop a flow instance if contact deleted', testStopFlowByDeleteContact)
 })
