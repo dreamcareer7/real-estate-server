@@ -51,26 +51,15 @@ all_contacts_recipients AS (
         AND ARRAY_LENGTH(contacts.email, 1) > 0
 ),
 
-brand_recs AS (
-  SELECT
-    email_campaigns_recipients.*
-  FROM email_campaigns
-    JOIN email_campaigns_recipients ON email_campaigns_recipients.campaign = email_campaigns.id
-
-    WHERE email_campaigns.id = $1
-          AND email_campaigns_recipients.recipient_type = 'Brand'
-),
-
-brand_agents AS (
-  SELECT ba.*, brand_recs.send_type
-  FROM   brand_recs, get_brand_agents(brand_recs.brand) ba
-),
-
 brand_recipients AS (
-  SELECT    users.email, contacts_users.contact, brand_agents.send_type
-  FROM      brand_agents
-  JOIN      users          ON users.id = brand_agents.user
-  LEFT JOIN contacts_users ON contacts_users.user = users.id
+  SELECT             users.email, contacts_users.contact, email_campaigns_recipients.send_type
+  FROM               email_campaigns_recipients
+  CROSS JOIN LATERAL get_brand_agents(email_campaigns_recipients.brand) ba
+  JOIN               users          ON users.id = ba.user
+  LEFT JOIN          contacts_users ON contacts_users.user = users.id
+  WHERE              email_campaigns_recipients.campaign = $1
+  AND                email_campaigns_recipients.brand IS NOT NULL
+  AND                email_campaigns_recipients.recipient_type = 'Brand'
 ),
 
 
