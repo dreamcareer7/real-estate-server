@@ -277,6 +277,8 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
             email_campaigns_recipients AS ecr
             JOIN crm_lists_members AS clm
               ON ecr.list = clm.list
+          WHERE
+            ecr.recipient_type = 'List'
         )
         UNION
         (
@@ -290,8 +292,40 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
             JOIN contacts AS cs
               ON ARRAY[ecr.tag] <@ cs.tag AND ec.brand = cs.brand
           WHERE
-            ecr.tag IS NOT NULL
+            ecr.recipient_type = 'Tag'
+            AND ecr.tag IS NOT NULL
             AND cs.deleted_at IS NULL
+        )
+        UNION
+        (
+          SELECT
+            ecr.campaign,
+            cs.id AS contact
+          FROM
+            email_campaigns_recipients AS ecr
+            JOIN email_campaigns AS ec
+              ON ecr.campaign = ec.id
+            JOIN contacts AS cs
+              ON ec.brand = cs.brand
+          WHERE
+            ecr.recipient_type = 'AllContacts'
+            AND cs.deleted_at IS NULL
+        )
+        UNION
+        (
+          SELECT
+            ecr.campaign,
+            contacts_users.contact
+          FROM
+            email_campaigns_recipients AS ecr
+            CROSS JOIN LATERAL get_brand_agents(ecr.brand) AS ba
+            JOIN users
+              ON users.id = ba.user
+            JOIN contacts_users
+              ON contacts_users.user = users.id
+          WHERE
+            ecr.brand IS NOT NULL
+            AND ecr.recipient_type = 'Brand'
         )
         UNION
         (
@@ -301,7 +335,8 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
           FROM
             email_campaigns_recipients
           WHERE
-            contact IS NOT NULL
+            recipient_type = 'Email'
+            AND contact IS NOT NULL
         )
       ) AS ecr
         ON ec.id = ecr.campaign
