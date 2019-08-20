@@ -8,4 +8,4 @@ ON
     google_messages.message_id = gmid
     AND google_messages.google_credential = $2
 ORDER BY 
-    t.ord
+    google_messages.message_created_at DESC

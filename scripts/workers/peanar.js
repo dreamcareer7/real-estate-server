@@ -6,6 +6,7 @@ const config = require('../../lib/config')
 
 require('../../lib/models/Calendar/worker')
 require('../../lib/models/Contact/worker')
+require('../../lib/models/Flow/worker')
 require('../../lib/models/CRM/Task/worker')
 require('../../lib/models/CRM/Touch/worker')
 require('../../lib/models/MLS/workers')

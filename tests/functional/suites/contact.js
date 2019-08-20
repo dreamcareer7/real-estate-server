@@ -982,7 +982,8 @@ const getAllTags = (cb) => {
 const addTag = cb => {
   return frisby.create('add a tag manually')
     .post('/contacts/tags', {
-      tag: 'baz'
+      tag: 'baz',
+      touch_freq: 60
     })
     .after(cb)
     .expectStatus(204)
@@ -1001,8 +1002,13 @@ const checkTagIsAdded = cb => {
   return frisby.create('check whether baz tag is added')
     .get('/contacts/tags')
     .after((err, res, json) => {
-      if (json.data.every(t => t.tag !== 'baz')) {
+      const baz_tag = json.data.find(t => t.tag === 'baz')
+      if (!baz_tag) {
         throw 'baz tag is not added!'
+      }
+
+      if (baz_tag.touch_freq !== 60) {
+        throw 'touch_freq not set correctly'
       }
 
       cb(err, res, json)
@@ -1023,19 +1029,35 @@ const renameTag = (cb) => {
     .expectStatus(204)
 }
 
-const verifyTagRenamed = cb => {
-  return frisby.create('verify that tag is renamed')
-    .get('/contacts/tags')
-    .after((err, res, body) => {
-      const tags = body.data.map(a => a.text)
-      if (!tags.includes('bar') || tags.length !== 9) {
-        throw 'Tag was not renamed correctly.'
-      }
-
-      cb(err, res, body)
+const changeTagTouchFreq = cb => {
+  return frisby.create('set touch frequency on tag')
+    .patch('/contacts/tags/bar/touch', {
+      touch_freq: 10
     })
-    .expectStatus(200)
+    .after(cb)
+    .expectStatus(204)
 }
+
+// const verifyTagRenamed = cb => {
+//   return frisby.create('verify that tag is renamed')
+//     .get('/contacts/tags')
+//     .after((err, res, body) => {
+//       const bar_tag = json.data.find(t => t.tag === 'bar')
+
+//       console.log(json.data)
+//       console.log(json.data.length)
+//       if (!bar_tag || json.data.length !== 9) {
+//         throw 'Tag was not renamed correctly.'
+//       }
+
+//       if (bar_tag.touch_freq !== 10) {
+//         throw 'touch_freq not updated correctly'
+//       }
+
+//       cb(err, res, body)
+//     })
+//     .expectStatus(200)
+// }
 
 const deleteTag = (cb) => {
   return frisby.create('delete bar tag')
@@ -1228,7 +1250,8 @@ module.exports = {
   addTag,
   checkTagIsAdded,
   renameTag,
-  verifyTagRenamed,
+  changeTagTouchFreq,
+  // verifyTagRenamed,
   deleteTag,
   deleteTags,
   verifyTagDeleted,

@@ -20,13 +20,17 @@ const sql = require('../lib/utils/sql')
 const Context = require('../lib/models/Context/index')
 const redis = require('../lib/data-service/redis').createClient()
 
+const attachCalendarEvents = require('../lib/models/Calendar/events')
 const attachContactEvents = require('../lib/models/Contact/events')
 const attachTouchEventHandler = require('../lib/models/CRM/Touch/events')
 const attachTaskEventHandler = require('../lib/models/CRM/Task/events')
+const attachFlowEventHandler = require('../lib/models/Flow/events')
 
+attachCalendarEvents()
 attachContactEvents()
 attachTouchEventHandler()
 attachTaskEventHandler()
+attachFlowEventHandler()
 
 const context = Context.create({
   id: '<rechat-shell>',

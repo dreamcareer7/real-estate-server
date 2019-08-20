@@ -36,14 +36,15 @@ WITH tag_def AS (
     updated_within = $5
   WHERE
     tag = $2
+    AND brand = $1
   RETURNING
     1
 )
 SELECT DISTINCT
   au.contact
 FROM
-  attr_updates AS au
+  tag_updates
   LEFT JOIN list_updates
     ON TRUE
-  LEFT JOIN tag_updates
+  LEFT JOIN attr_updates AS au
     ON TRUE

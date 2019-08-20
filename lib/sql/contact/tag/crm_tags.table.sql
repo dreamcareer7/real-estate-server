@@ -11,6 +11,7 @@ CREATE TABLE IF NOT EXISTS crm_tags (
   deleted_by uuid REFERENCES users(id),
 
   tag text NOT NULL,
+  touch_freq integer,
 
   UNIQUE (brand, tag)
 );

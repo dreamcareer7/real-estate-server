@@ -92,14 +92,20 @@ async function create() {
 
   for (const message of google_messages_offline) {
 
-    const { recipientsArr, attachments, internetMessageId, subject, from, to, cc, bcc } = parser(message)
+    const {
+      recipientsArr, attachments, internetMessageId, inReplyTo, subject,
+      from_raw, to_raw, cc_raw, bcc_raw,
+      from, to, cc, bcc
+    } = parser(message)
 
     googleMessages.push({
       google_credential: credential.id,
       message_id: message.id,
       thread_id: message.threadId,
+      thread_key: `${credential.id}${message.threadId}${message.id}`,
       history_id: message.historyId,
       internet_message_id: internetMessageId,
+      in_reply_to: inReplyTo,
       recipients: `{${recipientsArr.join(',')}}`,
       in_bound: (message.labelIds.includes('SENT')) ? false : true,
 
@@ -107,10 +113,15 @@ async function create() {
       has_attachments: (attachments.length > 0) ? true : false,
       attachments: JSON.stringify(attachments),
 
-      '"from"': JSON.stringify(from),
-      '"to"': JSON.stringify(to),
-      cc: JSON.stringify(cc),
-      bcc: JSON.stringify(bcc),
+      from_raw: JSON.stringify(from_raw),
+      to_raw: JSON.stringify(to_raw),
+      cc_raw: JSON.stringify(cc_raw),
+      bcc_raw: JSON.stringify(bcc_raw),
+
+      '"from"': from,
+      '"to"': to,
+      cc: cc,
+      bcc: bcc,
 
       message_created_at: new Date(Number(message.internalDate)).getTime(),
       message_date: new Date(Number(message.internalDate)).toISOString(),

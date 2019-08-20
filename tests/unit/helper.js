@@ -11,11 +11,13 @@ require('../../lib/models/index')()
 
 const attachCalendarEvents = require('../../lib/models/Calendar/events')
 const attachContactEvents = require('../../lib/models/Contact/events')
+const attachFlowEvents = require('../../lib/models/Flow/events')
 const attachTaskEventHandler = require('../../lib/models/CRM/Task/events')
 const attachTouchEventHandler = require('../../lib/models/CRM/Touch/events')
 
 attachCalendarEvents()
 attachContactEvents()
+attachFlowEvents()
 attachTouchEventHandler()
 attachTaskEventHandler()
 
