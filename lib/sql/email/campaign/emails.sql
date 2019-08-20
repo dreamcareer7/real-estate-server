@@ -10,6 +10,7 @@ list_contacts AS (
   WHERE email_campaigns_recipients.recipient_type = 'List'
         AND email_campaigns.id = $1
         AND contacts.deleted_at IS NULL
+        AND LENGTH(contacts.email) > 0
 ),
 
 tag_contacts AS (
@@ -22,6 +23,7 @@ tag_contacts AS (
   WHERE email_campaigns_recipients.recipient_type = 'Tag'
         AND email_campaigns.id = $1
         AND contacts.deleted_at IS NULL
+        AND LENGTH(contacts.email) > 0
 ),
 
 contact_recipients AS (
@@ -34,6 +36,7 @@ contact_recipients AS (
   WHERE email_campaigns_recipients.recipient_type = 'Email'
         AND email_campaigns.id = $1
         AND contacts.deleted_at IS NULL
+        AND LENGTH(contacts.email) > 0
 ),
 
 all_contacts_recipients AS (
@@ -42,9 +45,10 @@ all_contacts_recipients AS (
   JOIN   email_campaigns_recipients ON email_campaigns.id    = email_campaigns_recipients.campaign
   JOIN   contacts                   ON email_campaigns.brand = contacts.brand
 
-  WHERE email_campaigns.id = $1
+  WHERE email_campaigns_recipients.recipient_type = 'AllContacts'
+        AND email_campaigns.id = $1
         AND contacts.deleted_at IS NULL
-        AND LENGTH(contacts.email[0]) > 0
+        AND LENGTH(contacts.email) > 0
 ),
 
 brand_recs AS (
