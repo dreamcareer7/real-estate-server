@@ -174,10 +174,10 @@ const scheduleBrand = cb => {
 
 const update = cb => {
   const html = `<div>
-  From: {{sender.display_name | fallback("me")}}
+  From: {{sender.display_name or "me"}}
   </div>
   <div>
-  To: {{recipient.display_name | fallback("there")}}
+  To: {{recipient.display_name or "there"}}
   </div>`
 
   const subject = 'Individual Email From {{sender.display_name}}'
