@@ -10,7 +10,7 @@ require('../../lib/models/Flow/worker')
 require('../../lib/models/CRM/Task/worker')
 require('../../lib/models/CRM/Touch/worker')
 require('../../lib/models/MLS/workers')
-require('../../lib/models/Showings/worker')
+// require('../../lib/models/Showings/worker')
 require('../../lib/models/Google/workers')
 require('../../lib/models/Microsoft/workers')
 require('../../lib/models/Deal/email')
@@ -45,29 +45,17 @@ async function main() {
   await peanar.worker({ queues: ['contact_import'], concurrency: 15 })
 
   await peanar.worker({
-    queues: ['showings', 'google', 'microsoft', 'touches'],
+    queues: ['google', 'microsoft', 'touches'],
     concurrency: 30
   })
 
   await peanar.worker({
-    queues: [
-      'MLS.Office',
-      'MLS.Unit',
-      'MLS.Room',
-      'MLS.Agent',
-    ],
+    queues: ['MLS.Office', 'MLS.Unit', 'MLS.Room', 'MLS.Agent'],
     concurrency: 10
   })
 
   await peanar.worker({
-    queues: [
-      'email',
-
-      'MLS.OpenHouse',
-      'MLS.Photo',
-      'MLS.Listing',
-      'MLS.Listing.Photos.Validate'
-    ],
+    queues: ['email', 'MLS.OpenHouse', 'MLS.Photo', 'MLS.Listing', 'MLS.Listing.Photos.Validate'],
     concurrency: 50
   })
 
