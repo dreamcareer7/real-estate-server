@@ -39,7 +39,7 @@ async function main() {
   })
 
   await peanar.worker({
-    queues: ['contacts', 'contact_lists', 'contact_duplicates', 'crm_tasks'],
+    queues: ['flows', 'contacts', 'contact_lists', 'contact_duplicates', 'crm_tasks'],
     concurrency: 10
   })
   await peanar.worker({ queues: ['contact_import'], concurrency: 15 })
