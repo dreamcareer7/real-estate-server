@@ -83,26 +83,26 @@ async function createListWithEmptyFilters() {
   await handleJobs()
 }
 
-async function createListWithSpecialCharsInFilters() {
-  const id = await List.create(user.id, brand.id, {
-    name: 'tag',
-    filters: [{
-      attribute_def: TAG,
-      value: '"TagWithDoubleQuotes"'
-    }],
-    args: {
-      filter_type: 'and'
-    }
-  })
+// async function createListWithSpecialCharsInFilters() {
+//   const id = await List.create(user.id, brand.id, {
+//     name: 'tag',
+//     filters: [{
+//       attribute_def: TAG,
+//       value: '"TagWithDoubleQuotes"'
+//     }],
+//     args: {
+//       filter_type: 'and'
+//     }
+//   })
 
-  const list = await List.get(id)
-  expect(list.filters[0]).to.include({
-    attribute_def: TAG,
-    value: '"TagWithDoubleQuotes"'
-  })
+//   const list = await List.get(id)
+//   expect(list.filters[0]).to.include({
+//     attribute_def: TAG,
+//     value: '"TagWithDoubleQuotes"'
+//   })
 
-  await handleJobs()
-}
+//   await handleJobs()
+// }
 
 async function createEmptyList() {
   const id = await List.create(user.id, brand.id, {
@@ -453,7 +453,7 @@ describe('Contact', () => {
     it('should allow creating a list', testCreateList)
     it('should allow creating an empty list', createEmptyList)
     it('should allow creating an empty list with null filters', createListWithEmptyFilters)
-    it('should allow creating valid special chars in filters', createListWithSpecialCharsInFilters)
+    // it('should allow creating valid special chars in filters', createListWithSpecialCharsInFilters)
     it('should fetch lists for brand', testFetchListsForBrand)
     it('should allow updating a list', testUpdateList)
     it('should allow deleting a list', testDeleteList)
