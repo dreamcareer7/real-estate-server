@@ -127,6 +127,25 @@ async function getMCredentialContactsNum() {
   expect(result[0]['count']).to.be.equal(microsoftContacts.length)
 }
 
+async function addContactFolder() {
+  const credential = await createMicrosoftCredential()
+
+  const contactFolders = []
+
+  for (const record of microsoft_contact_folders_offline) {
+    contactFolders.push({
+      folder_id: record.id,
+      parent_folder_id: record.parentFolderId,
+      display_name: record.displayName
+    })
+  }
+
+  for (const contactGroup of contactFolders) {
+    const result = await MicrosoftContact.addContactFolder(credential, contactGroup)
+    expect(result).to.be.uuid
+  }
+}
+
 async function getRefinedContactFolders() {
   const microsoftContacts = await create()
   const credential        = await createMicrosoftCredential()
@@ -165,6 +184,7 @@ describe('Microsoft', () => {
     it('should return microsoft contact by remote_id', getByEntryId)
     it('should handle failure of microsoft contact get by remote_id', getByEntryIdFailed)
     it('should return number of contacts of specific credential', getMCredentialContactsNum)
+    it('should handle add contact folder', addContactFolder)
     it('should return number of contacts of specific credential', getRefinedContactFolders)
   })
 })
