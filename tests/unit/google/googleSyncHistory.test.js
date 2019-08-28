@@ -111,6 +111,14 @@ async function addSyncHistory() {
   return history
 }
 
+async function getSyncHistoryFailed() {  
+  try {
+    await GoogleSyncHistory.getSyncHistory(user.id)
+  } catch(ex) {
+    expect(ex.message).to.be.equal(`Google-SyncHistory ${user.id} not found`)
+  }
+}
+
 async function getGCredentialLastSyncHistory() {
   const credential = await createGoogleCredential()
   const histroy    = await addSyncHistory()
@@ -124,6 +132,14 @@ async function getGCredentialLastSyncHistory() {
   expect(restult.sync_duration).to.be.equal(106)
 }
 
+async function getGCredentialLastSyncHistoryFailed() {
+  try {
+    await GoogleSyncHistory.getGCredentialLastSyncHistory(user.id, user.id, user.id)
+  } catch (ex) {
+    expect(ex.message).to.be.equal(`Google-SyncHistory for G-Credential ${user.id} not found`)
+  }
+}
+
 
 
 describe('Google', () => {
@@ -132,6 +148,8 @@ describe('Google', () => {
     beforeEach(setup)
 
     it('should create a google sync history', addSyncHistory)
+    it('should handle failed get sync history', getSyncHistoryFailed)
     it('should return last history of a specific google credential', getGCredentialLastSyncHistory)
+    it('should handle failed get last history of a specific google credential', getGCredentialLastSyncHistoryFailed)
   })
 })
