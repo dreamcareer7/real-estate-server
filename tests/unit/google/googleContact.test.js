@@ -139,6 +139,24 @@ async function getGCredentialContactsNum() {
   expect(result[0]['count']).to.be.equal(googleContacts.length)
 }
 
+async function addContactGroup() {
+  const credential = await createGoogleCredential()
+
+  const contactGroups = []
+
+  for (const record of google_contact_groups_offline) {
+    contactGroups.push({
+      entry_id: record.entry_id,
+      entry: record.entry
+    })
+  }
+
+  for (const contactGroup of contactGroups) {
+    const result = await GoogleContact.addContactGroup(credential, contactGroup)
+    expect(result).to.be.uuid
+  }
+}
+
 async function getRefinedContactGroups() {
   const googleContacts = await create()
   const credential     = await createGoogleCredential()
@@ -176,6 +194,7 @@ describe('Google', () => {
     it('should return google-contact by entry_id', getByEntryId)
     it('should handle failure of google-contact get by entry_id', getByEntryIdFailed)
     it('should return number of contacts of specific credential', getGCredentialContactsNum)
+    it('should handle add contact group', addContactGroup)
     it('should return number of contacts of specific credential', getRefinedContactGroups)
   })
 })
