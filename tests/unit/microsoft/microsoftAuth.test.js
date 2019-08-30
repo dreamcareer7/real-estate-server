@@ -19,7 +19,9 @@ async function setup() {
 
 async function requestMicrosoftAccess() {
   const redirect = 'http://localhost:3078/dashboard/contacts/'
-  const authLinkRecord = await MicrosoftAuthLink.requestMicrosoftAccess(user.id, brand.id, redirect)
+  const scopes   = []
+
+  const authLinkRecord = await MicrosoftAuthLink.requestMicrosoftAccess(user.id, brand.id, scopes, redirect)
   
   expect(authLinkRecord.url).to.be.not.null
 
@@ -28,13 +30,40 @@ async function requestMicrosoftAccess() {
 
 async function duplicateRequestGmailAccess() {
   const redirect = 'http://localhost:3078/dashboard/contacts/'
+  const scopes   = []
 
-  const authUrl_1 = await MicrosoftAuthLink.requestMicrosoftAccess(user.id, brand.id, redirect)
-  const authUrl_2 = await MicrosoftAuthLink.requestMicrosoftAccess(user.id, brand.id, redirect)
+  const authUrl_1 = await MicrosoftAuthLink.requestMicrosoftAccess(user.id, brand.id, scopes, redirect)
+  const authUrl_2 = await MicrosoftAuthLink.requestMicrosoftAccess(user.id, brand.id, scopes, redirect)
   
   expect(authUrl_1).to.be.not.null
   expect(authUrl_2).to.be.not.null
   expect(authUrl_2).to.be.equal(authUrl_2)
+}
+
+async function grantAccessFailedByBadState() {
+  const data_1 = {
+    state: 'user::brand',
+    code: null
+  }
+
+  try {
+    await MicrosoftAuthLink.grantAccess(data_1)
+  } catch(ex) {
+    expect(ex.message).to.be.equal('Microsoft-Auth-Hook bad-state')
+  }
+}
+
+async function grantAccessFailedByBadCode() {
+  const data_1 = {
+    state: 'user::brand::redirect',
+    code: null
+  }
+
+  try {
+    await MicrosoftAuthLink.grantAccess(data_1)
+  } catch(ex) {
+    expect(ex.message).to.be.equal('Microsoft-Auth-Hook bad-code')
+  }
 }
 
 
@@ -46,5 +75,8 @@ describe('Microsoft', () => {
 
     it('should create a microsoft auth link', requestMicrosoftAccess)
     it('should handle duplicate create-microsoft-auth-link request', duplicateRequestGmailAccess)
+
+    it('should handle failed grantAccess cause of bad state', grantAccessFailedByBadState)
+    it('should handle failed grantAccess cause of bad code', grantAccessFailedByBadCode)
   })
 })
