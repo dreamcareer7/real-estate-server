@@ -1,15 +1,11 @@
 const google_auth_link_json  = require('./expected_objects/google/auth_link.js')
 const google_credential_json = require('./expected_objects/google/credential.js')
-const google_profile_json    = require('./expected_objects/google/profile.js')
+// const google_profile_json    = require('./expected_objects/google/profile.js')
 
 registerSuite('agent', ['add'])
 registerSuite('brand', ['createParent', 'create'])
 registerSuite('contact', ['brandCreateParent', 'brandCreate'])
 
-
-async function createMockRecords() {
-
-}
 
 
 function requestGmailAccess(cb) {
