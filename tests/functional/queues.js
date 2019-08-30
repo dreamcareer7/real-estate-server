@@ -2,16 +2,15 @@ const Agent = require('../../lib/models/Agent')
 const EmailCampaign = require('../../lib/models/Email/campaign')
 const { Listing } = require('../../lib/models/Listing')
 const Task = require('../../lib/models/Task')
+const GoogleCredential  = require('../../lib/models/Google/credential')
 
 const saveBrokerwolfSettings = (job, cb) => {
   BrokerWolf.Settings.save(job.data).nodeify(cb)
 }
 
-
 const syncBrokerwolfMembers = (job, cb) => {
   BrokerWolf.Members.sync(job.data.brand).nodeify(cb)
 }
-
 
 const syncBrokerwolfProperties = (job, cb) => {
   BrokerWolf.PropertyTypes.sync(job.data.brand).nodeify(cb)
@@ -53,6 +52,10 @@ const updateEmailCampaginStats = (job, cb) => {
   EmailCampaign.updateStats().nodeify(cb)
 }
 
+const CreateGoogleCredential = (job, cb) => {
+  GoogleCredential.create(job.data).nodeify(cb)
+}
+
 const list = {
   socket_emit: (job, cb) => cb(),
   socket_join: (job, cb) => cb(),
@@ -74,7 +77,8 @@ const list = {
   'BrokerWolf.ContactTypes.map': mapBrokerwolfContact,
   'Task.sendNotifications': sendTaskNotifications,
   'EmailCampaign.sendDue': sendDueEmailCampaigns,
-  'EmailCampaign.updateStats': updateEmailCampaginStats
+  'EmailCampaign.updateStats': updateEmailCampaginStats,
+  'GoogleCredential.create': CreateGoogleCredential
 }
 
 const queues = {}
