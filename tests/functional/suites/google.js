@@ -1,6 +1,9 @@
-const google_auth_link_json  = require('./expected_objects/google/auth_link.js')
-const google_credential_json = require('./expected_objects/google/credential.js')
-// const google_profile_json    = require('./expected_objects/google/profile.js')
+const uuid = require('uuid')
+
+const google_auth_link_json   = require('./expected_objects/google/auth_link.js')
+const google_credential_json  = require('./expected_objects/google/credential.js')
+const google_syncHistory_json = require('./expected_objects/google/sync_history.js')
+// const google_profile_json  = require('./expected_objects/google/profile.js')
 
 registerSuite('agent', ['add'])
 registerSuite('brand', ['createParent', 'create'])
@@ -10,7 +13,10 @@ registerSuite('contact', ['brandCreateParent', 'brandCreate'])
 
 function requestGmailAccess(cb) {
   return frisby.create('Request Google auhoriziation link')
-    .post('/users/self/google', { redirect: 'http://localhost:3078/dashboard/contacts/' })
+    .post('/users/self/google', {
+      redirect: 'http://localhost:3078/dashboard/contacts/',
+      body: ['contacts.readonly']
+    })
     .after(cb)
     .expectStatus(200)
     .expectJSON({
@@ -54,6 +60,48 @@ function grantAccessWithMissedScope(cb) {
     .after(cb)
     .expectStatus(400)
 }
+
+
+function deleteAccountFailed(cb) {
+  return frisby.create('Delete Google profiles')
+    .delete(`/users/self/google/${results.user.create.data.id}`)
+    .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
+    .after(function(err, res, json) {
+      cb(err, res, json)
+    })
+    .expectStatus(404)
+}
+
+function disableSyncFailed(cb) {
+  return frisby.create('Delete Google profiles')
+    .delete(`/users/self/google/${results.user.create.data.id}/sync`)
+    .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
+    .after(function(err, res, json) {
+      cb(err, res, json)
+    })
+    .expectStatus(404)
+}
+
+function enableSyncFailed(cb) {
+  return frisby.create('Delete Google profiles')
+    .put(`/users/self/google/${results.user.create.data.id}/sync`)
+    .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
+    .after(function(err, res, json) {
+      cb(err, res, json)
+    })
+    .expectStatus(404)
+}
+
+function forceSyncFailed(cb) {
+  return frisby.create('Delete Google profiles')
+    .post(`/users/self/google/${results.user.create.data.id}/sync`)
+    .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
+    .after(function(err, res, json) {
+      cb(err, res, json)
+    })
+    .expectStatus(404)
+}
+
 
 const CreateGoogleCredential = (cb) => {
   const scope = ['contacts.readonly']
@@ -122,6 +170,112 @@ function getGoogleProfiles(cb) {
     })
 }
 
+function deleteAccount(cb) {
+  return frisby.create('Delete Google profiles')
+    .delete(`/users/self/google/${results.google.CreateGoogleCredential}`)
+    .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
+    .after(function(err, res, json) {
+      cb(err, res, json)
+    })
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      data: google_credential_json
+    })
+}
+
+function deleteAccountFailedCauseOfInvalidBrand(cb) {
+  const invalidBrandId = uuid.v4()
+
+  return frisby.create('Delete Google profiles')
+    .delete(`/users/self/google/${results.google.CreateGoogleCredential}`)
+    .addHeader('X-RECHAT-BRAND', invalidBrandId)
+    .after(function(err, res, json) {
+      cb(err, res, json)
+    })
+    .expectStatus(404)
+}
+
+function disableSync(cb) {
+  return frisby.create('Delete Google profiles')
+    .delete(`/users/self/google/${results.google.CreateGoogleCredential}/sync`)
+    .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
+    .after(function(err, res, json) {
+      cb(err, res, json)
+    })
+    .expectJSON({
+      code: 'OK',
+      data: google_credential_json
+    })
+}
+
+function enableSync(cb) {
+  return frisby.create('Delete Google profiles')
+    .put(`/users/self/google/${results.google.CreateGoogleCredential}/sync`)
+    .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
+    .after(function(err, res, json) {
+      cb(err, res, json)
+    })
+    .expectJSON({
+      code: 'OK',
+      data: google_credential_json
+    })
+}
+
+function forceSync(cb) {
+  return frisby.create('Delete Google profiles')
+    .post(`/users/self/google/${results.google.CreateGoogleCredential}/sync`)
+    .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
+    .after(function(err, res, json) {
+      cb(err, res, json)
+    })
+    .expectJSON({
+      code: 'OK',
+      data: google_credential_json
+    })
+}
+
+
+const addGoogleSyncHistory = (cb) => {
+  const body  = {
+    user: results.authorize.token.data.id,
+    brand: results.brand.create.data.id,
+    google_credential: results.google.CreateGoogleCredential,
+    synced_messages_num: 1,
+    messages_total: 2,
+    synced_threads_num: 3,
+    threads_total: 4,
+    synced_contacts_num: 5,
+    contacts_total: 6,
+    sync_duration: 7,
+    status: true
+  }
+
+  return frisby.create('addGoogleSyncHistory')
+    .post('/jobs', {
+      name: 'GoogleSyncHistory.addSyncHistory',
+      data: body
+    })
+    .after(function(err, res, syncHistory) {
+      cb(err, res, syncHistory)
+    })
+    .expectStatus(200)
+}
+
+function getGCredentialLastSyncHistory(cb) {
+  return frisby.create('Get Google profiles')
+    .get(`/users/self/google/sync_history/${results.google.CreateGoogleCredential}`)
+    .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
+    .after(function(err, res, json) {
+      cb(err, res, json)
+    })
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      data: google_syncHistory_json
+    })
+}
+
 /*
 function getGoogpleProfile(cb) {
   return frisby.create('Get Google profile')
@@ -147,9 +301,20 @@ module.exports = {
   grantAccessWithMissedCode,
   grantAccessWithMissedState,
   grantAccessWithMissedScope,
+  deleteAccountFailed,
+  disableSyncFailed,
+  enableSyncFailed,
+  forceSyncFailed,
   CreateGoogleCredential,
   getGoogleProfile,
   getGoogleProfiles,
+  deleteAccount,
+  deleteAccountFailedCauseOfInvalidBrand,
+  disableSync,
+  enableSync,
+  forceSync,
+  addGoogleSyncHistory,
+  getGCredentialLastSyncHistory,
   // getGoogpleProfile,
   // revokeAccess
 }

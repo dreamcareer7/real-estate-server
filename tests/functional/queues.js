@@ -1,8 +1,11 @@
 const Agent = require('../../lib/models/Agent')
+const Task  = require('../../lib/models/Task')
+const { Listing }   = require('../../lib/models/Listing')
 const EmailCampaign = require('../../lib/models/Email/campaign')
-const { Listing } = require('../../lib/models/Listing')
-const Task = require('../../lib/models/Task')
 const GoogleCredential  = require('../../lib/models/Google/credential')
+const GoogleSyncHistory  = require('../../lib/models/Google/sync_history')
+
+
 
 const saveBrokerwolfSettings = (job, cb) => {
   BrokerWolf.Settings.save(job.data).nodeify(cb)
@@ -56,6 +59,11 @@ const CreateGoogleCredential = (job, cb) => {
   GoogleCredential.create(job.data).nodeify(cb)
 }
 
+const addGoogleSyncHistory = (job, cb) => {
+  GoogleSyncHistory.addSyncHistory(job.data).nodeify(cb)
+}
+
+
 const list = {
   socket_emit: (job, cb) => cb(),
   socket_join: (job, cb) => cb(),
@@ -78,7 +86,8 @@ const list = {
   'Task.sendNotifications': sendTaskNotifications,
   'EmailCampaign.sendDue': sendDueEmailCampaigns,
   'EmailCampaign.updateStats': updateEmailCampaginStats,
-  'GoogleCredential.create': CreateGoogleCredential
+  'GoogleCredential.create': CreateGoogleCredential,
+  'GoogleSyncHistory.addSyncHistory': addGoogleSyncHistory
 }
 
 const queues = {}
