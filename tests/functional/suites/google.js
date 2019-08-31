@@ -63,7 +63,7 @@ function grantAccessWithMissedScope(cb) {
 
 
 function deleteAccountFailed(cb) {
-  return frisby.create('Delete Google profiles')
+  return frisby.create('deleteAccount Failed')
     .delete(`/users/self/google/${results.user.create.data.id}`)
     .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
     .after(function(err, res, json) {
@@ -73,7 +73,7 @@ function deleteAccountFailed(cb) {
 }
 
 function disableSyncFailed(cb) {
-  return frisby.create('Delete Google profiles')
+  return frisby.create('disableSync Failed')
     .delete(`/users/self/google/${results.user.create.data.id}/sync`)
     .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
     .after(function(err, res, json) {
@@ -83,7 +83,7 @@ function disableSyncFailed(cb) {
 }
 
 function enableSyncFailed(cb) {
-  return frisby.create('Delete Google profiles')
+  return frisby.create('enableSync Failed')
     .put(`/users/self/google/${results.user.create.data.id}/sync`)
     .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
     .after(function(err, res, json) {
@@ -93,7 +93,7 @@ function enableSyncFailed(cb) {
 }
 
 function forceSyncFailed(cb) {
-  return frisby.create('Delete Google profiles')
+  return frisby.create('forceSync Failed')
     .post(`/users/self/google/${results.user.create.data.id}/sync`)
     .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
     .after(function(err, res, json) {
@@ -131,7 +131,7 @@ const CreateGoogleCredential = (cb) => {
     scope: scope
   }
 
-  return frisby.create('CreateGoogleCredential')
+  return frisby.create('Create GoogleCredential')
     .post('/jobs', {
       name: 'GoogleCredential.create',
       data: body
@@ -171,7 +171,7 @@ function getGoogleProfiles(cb) {
 }
 
 function deleteAccount(cb) {
-  return frisby.create('Delete Google profiles')
+  return frisby.create('Delete Google account')
     .delete(`/users/self/google/${results.google.CreateGoogleCredential}`)
     .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
     .after(function(err, res, json) {
@@ -187,7 +187,7 @@ function deleteAccount(cb) {
 function deleteAccountFailedCauseOfInvalidBrand(cb) {
   const invalidBrandId = uuid.v4()
 
-  return frisby.create('Delete Google profiles')
+  return frisby.create('deleteAccount failed Cause of invalid Brand')
     .delete(`/users/self/google/${results.google.CreateGoogleCredential}`)
     .addHeader('X-RECHAT-BRAND', invalidBrandId)
     .after(function(err, res, json) {
@@ -197,7 +197,7 @@ function deleteAccountFailedCauseOfInvalidBrand(cb) {
 }
 
 function disableSync(cb) {
-  return frisby.create('Delete Google profiles')
+  return frisby.create('disable sync')
     .delete(`/users/self/google/${results.google.CreateGoogleCredential}/sync`)
     .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
     .after(function(err, res, json) {
@@ -210,7 +210,7 @@ function disableSync(cb) {
 }
 
 function enableSync(cb) {
-  return frisby.create('Delete Google profiles')
+  return frisby.create('enable sync')
     .put(`/users/self/google/${results.google.CreateGoogleCredential}/sync`)
     .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
     .after(function(err, res, json) {
@@ -223,7 +223,7 @@ function enableSync(cb) {
 }
 
 function forceSync(cb) {
-  return frisby.create('Delete Google profiles')
+  return frisby.create('force sync')
     .post(`/users/self/google/${results.google.CreateGoogleCredential}/sync`)
     .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
     .after(function(err, res, json) {
@@ -251,7 +251,7 @@ const addGoogleSyncHistory = (cb) => {
     status: true
   }
 
-  return frisby.create('addGoogleSyncHistory')
+  return frisby.create('add GoogleSyncHistory')
     .post('/jobs', {
       name: 'GoogleSyncHistory.addSyncHistory',
       data: body
@@ -263,7 +263,7 @@ const addGoogleSyncHistory = (cb) => {
 }
 
 function getGCredentialLastSyncHistory(cb) {
-  return frisby.create('Get Google profiles')
+  return frisby.create('get Google credential lastSyncHistory')
     .get(`/users/self/google/sync_history/${results.google.CreateGoogleCredential}`)
     .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
     .after(function(err, res, json) {
