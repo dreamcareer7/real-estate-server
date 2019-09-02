@@ -15,6 +15,7 @@ Default value for `status` is `PENDING`
 | title        | String        | ✓         |                                  |
 | description  | String        |           |                                  |
 | due_date     | Timestamp     | ✓         | Should be UTC timestamp in ms.   |
+| end_date     | Timestamp     |           | Should be UTC timestamp in ms.   |
 | assignees    | User[]        |           | Users assigned to the task.      |
 | associations | Association[] |           | A related listing                |
 | status       | String Enum   |           | `PENDING`, `DONE`                |

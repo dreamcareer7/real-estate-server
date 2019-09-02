@@ -35,6 +35,7 @@ declare interface ITaskInput {
   title: string;
   description?: string;
   due_date: number;
+  end_date?: number;
   status: TTaskStatus;
   task_type: TTaskType;
 
