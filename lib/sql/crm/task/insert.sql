@@ -4,6 +4,7 @@ INSERT INTO crm_tasks (
   title,
   description,
   due_date,
+  end_date,
   status,
   task_type,
   metadata,
@@ -19,7 +20,8 @@ VALUES (
   $6,
   $7,
   $8,
+  $9,
   COALESCE($3, '') || ' ' || COALESCE($4, ''),
-  ($5::timestamptz > now() AND $6 <> 'DONE')
+  ($5::timestamptz > now() AND $7 <> 'DONE')
 )
 RETURNING id
