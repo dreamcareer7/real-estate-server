@@ -3,6 +3,9 @@ const deal_response = require('./expected_objects/deal.js')
 const omit = require('lodash/omit')
 const schemas = require('./schemas/deal')
 
+const config = require('../../../lib/config')
+require('../../../lib/models/Crypto')
+
 registerSuite('listing', ['getListing'])
 registerSuite('brokerwolf', [
   'saveSettings',
@@ -511,6 +514,60 @@ const patchAttention = cb => {
     })
 }
 
+const patchAttentionOff = cb => {
+  const attention_requested = false
+  return frisby.create('Change the attention state of a task to off')
+    .patch(`/tasks/${results.deal.addTask.data.id}/attention_requested`, {
+      attention_requested
+    })
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      data: {
+        attention_requested
+      }
+    })
+}
+
+const seamlessAttention = cb => {
+  console.log()
+  const { room } = results.deal.getTask.data
+  const address = Crypto.encrypt(JSON.stringify({
+    room_id: room.id,
+    user_id: results.authorize.token.data.id
+  })) + '@' + config.email.seamless_address
+
+  const body = {
+    domain: config.mailgun.General.domain, //mailgun is property of config object. Contains API keys for mailgun.
+    'stripped-text': 'Foobar',
+    recipient: address,
+  }
+
+  return frisby.create('send seamless email')
+    .post('/messages/email', body) //POST request to /messages/email with body object sent.
+    .after(cb)
+    .expectStatus(200)
+}
+
+const verifySeamlessAttention = cb => {
+  return frisby.create('verify seamless email has worked')
+    .get(`/tasks/${results.deal.addTask.data.id}`)
+    .after(cb)
+    .expectJSON({
+      data: {
+        attention_requested: true,
+        room: {
+          latest_activity: {
+            author: {
+              id: results.authorize.token.data.id
+            }
+          }
+        }
+      }
+    })
+}
+
 const postMessage = cb => {
   const message = {
     comment: 'Comment'
@@ -605,7 +662,10 @@ module.exports = {
   sendNotifications,
   patchRequired,
   patchAttention,
+  patchAttentionOff,
   postMessage,
+  seamlessAttention,
+  verifySeamlessAttention,
   removeRole,
   remove
 }
