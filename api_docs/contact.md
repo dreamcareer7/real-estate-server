@@ -166,6 +166,9 @@ Tags collection is the set of all tags that are used in contacts and/or manually
 ### Rename a tag [PATCH /contacts/tags/:tag]
 <!-- include(tests/contact/renameTag.md) -->
 
+### Set touch reminder on a tag [PATCH /contacts/tags/:tag/touch]
+<!-- include(tests/contact/changeTagTouchFreq.md) -->
+
 ### Delete a tag from all contacts [DELETE /contacts/tags/:tag]
 <!-- include(tests/contact/deleteTag.md) -->
 

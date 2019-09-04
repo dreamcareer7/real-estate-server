@@ -213,24 +213,27 @@ const getChecklists = cb => {
 }
 
 const addTask = cb => {
+  const task = {
+    title: 'Task 1',
+    task_type: 'Form',
+    form: results.form.create.data.id,
+    order: 1,
+    required: true
+  }
+
   return frisby.create('add a task to a brand checklist')
-    .post(`/brands/${brand_id}/checklists/${results.brand.addChecklist.data.id}/tasks`, {
-      title: 'Task 1',
-      task_type: 'Form',
-      form: results.form.create.data.id,
-      order: 1
-    })
+    .post(`/brands/${brand_id}/checklists/${results.brand.addChecklist.data.id}/tasks`, task)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
-      //       data: brand
     })
 }
 
 const updateTask = cb => {
   const d = results.brand.addTask.data
   d.title = 'Updated Task'
+  d.required = false
 
   return frisby.create('update a task')
     .put(`/brands/${brand_id}/checklists/${results.brand.addChecklist.data.id}/tasks/${results.brand.addTask.data.id}`, d)
@@ -368,7 +371,7 @@ const addTemplate = cb => {
   }
 
   return frisby.create('add a form template')
-    .post(`/brands/${brand_id}/templates`, template)
+    .post(`/brands/${brand_id}/forms/templates`, template)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
@@ -392,7 +395,7 @@ const updateTemplate = cb => {
   }
 
   return frisby.create('update a form template')
-    .put(`/brands/${brand_id}/templates/${results.brand.addTemplate.data.id}`, template)
+    .put(`/brands/${brand_id}/forms/templates/${results.brand.addTemplate.data.id}`, template)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
@@ -402,7 +405,7 @@ const updateTemplate = cb => {
 
 const getTemplates = cb => {
   return frisby.create('get all templates for a brand (and its parents)')
-    .get(`/brands/${brand_id}/templates?form=${results.form.create.data.id}`)
+    .get(`/brands/${brand_id}/forms/templates?form=${results.form.create.data.id}`)
     .after(cb)
     .expectStatus(200)
     .expectJSON({

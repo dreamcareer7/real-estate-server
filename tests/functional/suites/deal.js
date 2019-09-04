@@ -289,7 +289,7 @@ const addTask = cb => {
     task_type: 'Form',
     form: results.form.create.data.id,
     checklist: results.deal.addChecklist.data.id,
-    is_deletable: true
+    is_deletable: true,
   }
 
   return frisby.create('add a task to a deal')
@@ -328,7 +328,8 @@ const addAnotherTask = cb => {
 
 const updateTask = cb => {
   const props = {
-    title: 'Another Task for Gholi'
+    title: 'Another Task for Gholi',
+    required: false
   }
 
   return frisby.create('edit another task\'s title')
@@ -337,9 +338,7 @@ const updateTask = cb => {
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
-      data: {
-        title: 'Another Task for Gholi'
-      }
+      data: props
     })
 }
 
@@ -479,21 +478,37 @@ const sendNotifications = (cb) => {
     .expectStatus(200)
 }
 
-const patchAttention = cb => {
-  return frisby.create('Change the attention state of a task')
-    .patch(`/tasks/${results.deal.addTask.data.id}/attention_requested`, {
-      attention_requested: true
+const patchRequired = cb => {
+  const required = true
+
+  return frisby.create('Mark a task as required')
+    .patch(`/tasks/${results.deal.addTask.data.id}/required`, {
+      required
     })
     .after(cb)
-//     .expectStatus(200)
-//     .expectJSON({
-//       code: 'OK',
-//       data: results.deal.create.data
-//     })
-//     .expectJSONTypes({
-//       code: String,
-//       data: deal_response
-//     })
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      data: {
+        required
+      }
+    })
+}
+
+const patchAttention = cb => {
+  const attention_requested = true
+  return frisby.create('Change the attention state of a task')
+    .patch(`/tasks/${results.deal.addTask.data.id}/attention_requested`, {
+      attention_requested
+    })
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      data: {
+        attention_requested
+      }
+    })
 }
 
 const postMessage = cb => {
@@ -588,6 +603,7 @@ module.exports = {
   getTask,
   setReview,
   sendNotifications,
+  patchRequired,
   patchAttention,
   postMessage,
   removeRole,

@@ -3,7 +3,6 @@ UPDATE
 SET
   revoked = TRUE,
   sync_status = NULL,
-  last_sync_at = NULL,
-  contacts_last_sync_at = NULL
+  deleted_at = now()
 WHERE
   id = $1

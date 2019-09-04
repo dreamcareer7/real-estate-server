@@ -133,11 +133,20 @@ const scheduleIndividual = cb => {
 }
 
 const update = cb => {
+  const html = `<div>
+  From: {{sender.display_name or "me"}}
+  </div>
+  <div>
+  To: {{recipient.display_name or "there"}}
+  </div>`
+
+  const subject = 'Individual Email From {{sender.display_name}}'
+
   const campaign = {
     id: results.email.scheduleIndividual.data[0],
     ...individual,
-    subject: 'Updated Subject',
-    html: 'Updated HTML',
+    subject,
+    html,
     to: [
       {
         email: 'foo@bar.com'

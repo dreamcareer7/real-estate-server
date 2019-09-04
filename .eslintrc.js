@@ -119,6 +119,9 @@ module.exports = {
       'error',
       {'vars': 'all', 'args': 'none'}
     ],
+    'no-prototype-builtins': 'off',
+    'require-atomic-updates': 'off',
+    'no-async-promise-executor': 'warn',
     'no-console': 'off',
     'no-empty': [
       'error',

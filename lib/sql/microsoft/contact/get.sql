@@ -1,5 +1,5 @@
 SELECT
-    id, microsoft_credential, remote_id, 'microsoft_contact' AS type
+    id, microsoft_credential, remote_id, data, deleted_at, 'microsoft_contact' AS type
 FROM
     microsoft_contacts
 JOIN 

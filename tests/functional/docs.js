@@ -2,10 +2,11 @@ const fs = require('fs')
 const _ = require('lodash')
 const copy = require('copy-dir')
 
-copy.sync(__dirname + '/../../api_docs/', 'docs')
 
 try {
+  fs.mkdirSync('docs')
   fs.mkdirSync('docs/tests')
+  copy.sync(__dirname + '/../../api_docs/', 'docs')
 } catch (e) {
   // Dont do anything if it already exists. We're good.
 }

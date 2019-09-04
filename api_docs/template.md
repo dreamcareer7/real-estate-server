@@ -13,13 +13,15 @@ Each time a user saves a template for himself, we call that copy a Template _Ins
 :::
 <!-- include(tests/template/create.md) -->
 
-### Get all templates [GET /templates{?medium,type}]
+### Get all templates [GET /brands/:brand/templates{?medium,type}]
+
+`brand` (uuid) ID of the brand
 
 `medium` (Array) Applicable mediums
 
 `type `  (Array) Applicable template types
 
-<!-- include(tests/template/getForUser.md) -->
+<!-- include(tests/template/getForBrand.md) -->
 
 ### Save a template [POST /templates]
 ::: warning

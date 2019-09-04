@@ -27,17 +27,21 @@ const add = async () => {
   const title = 'Test Task'
   const task_type = Task.GENERIC
   const order = 0
+  const required = true
+
   const task = await Task.create({
     title,
     task_type,
     checklist: checklist.id,
-    order
+    order,
+    required
   })
 
   expect(task.id).to.be.a('string')
   expect(task.title).to.equal(title)
   expect(task.task_type).to.equal(task_type)
   expect(task.checklist).to.equal(checklist.id)
+  expect(task.required).to.equal(required)
 
   return task
 }

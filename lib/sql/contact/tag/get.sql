@@ -6,11 +6,12 @@ SELECT
   updated_by,
   tag,
   tag AS text,
+  touch_freq,
   'crm_tag' AS type
 FROM
   crm_tags
 WHERE
-  brand = $1
+  brand = $1::uuid
   AND deleted_at IS NULL
 ORDER BY
   tag

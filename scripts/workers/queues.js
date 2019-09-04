@@ -14,6 +14,7 @@ const {
 const touches_handler = require('../../lib/models/CRM/Touch/worker')
 const tasks_handler = require('../../lib/models/CRM/Task/worker')
 const calendar_handlers = require('../../lib/models/Calendar/worker')
+const flow_handlers = require('../../lib/models/Flow/worker')
 
 const Agent = require('../../lib/models/Agent')
 const Email = require('../../lib/models/Email')
@@ -73,6 +74,8 @@ const mls_office = (job, done) => {
 }
 
 const mls_photo = (job, done) => {
+  job.data.processed.matrix_unique_id = parseInt(job.data.processed.matrix_unique_id)
+
   Photo.create({
     ...job.data.processed,
     revision: job.data.revision
@@ -80,6 +83,8 @@ const mls_photo = (job, done) => {
 }
 
 const mls_listing = (job, done) => {
+  job.data.processed.address.matrix_unique_id = parseInt(job.data.processed.address.matrix_unique_id)
+
   Listing.create({
     ...job.data.processed,
     revision: job.data.revision
@@ -209,6 +214,11 @@ module.exports = {
 
   contact_duplicates: {
     handler: contact_duplicates,
+    parallel: 8
+  },
+
+  flow: {
+    handler: flow_handlers,
     parallel: 8
   },
 

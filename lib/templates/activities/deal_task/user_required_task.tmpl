@@ -1,0 +1,5 @@
+{% if object.task.required %}
+{{data.abbreviated_display_name | safe}} marked {{object.task.title}} as required.
+{% else %}
+{{data.abbreviated_display_name | safe}} marked {{object.task.title}} as optional.
+{% endif %}

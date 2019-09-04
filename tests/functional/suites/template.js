@@ -21,9 +21,9 @@ const create = cb => {
     })
 }
 
-const getForUser = cb => {
+const getForBrand = cb => {
   return frisby.create('get templates for a user')
-    .get('/templates?types[]=JustListed&mediums[]=Email')
+    .get(`/brands/${results.brand.createParent.data.id}/templates?types[]=JustListed&mediums[]=Email`)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
@@ -120,7 +120,7 @@ const deleteInstance = cb => {
 
 module.exports = {
   create,
-  getForUser,
+  getForBrand,
   instantiate,
   share,
   getMine,
