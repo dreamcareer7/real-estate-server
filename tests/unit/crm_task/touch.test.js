@@ -1,9 +1,11 @@
 const { expect } = require('chai')
+const moment = require('moment-timezone')
 
 const { createContext, handleJobs } = require('../helper')
 
 const AttributeDef = require('../../../lib/models/Contact/attribute_def')
 const Contact = require('../../../lib/models/Contact')
+const ContactTag = require('../../../lib/models/Contact/tag')
 const List = require('../../../lib/models/Contact/list')
 const Context = require('../../../lib/models/Context')
 const CrmTask = require('../../../lib/models/CRM/Task')
@@ -34,8 +36,6 @@ async function setup() {
   Context.set({ user, brand })
 
   await createList()
-
-  contact_ids = await createContact()
 }
 
 async function createContact() {
@@ -120,13 +120,17 @@ async function createList() {
 }
 
 async function testTouchDates() {
+  contact_ids = await createContact()
   const task = await createTask(contact_ids.slice(0, 1))
 
   /** @type {RequireProp<IContact, 'last_touch' | 'next_touch'>} */
   const c = await Contact.get(contact_ids[0])
 
+  const lt = moment.unix(c.last_touch)
+  const nt = moment.unix(c.next_touch)
+
   expect(c.last_touch).to.be.equal(task.due_date)
-  expect(c.next_touch - c.last_touch).to.be.equal(WARM_LIST_TOUCH_FREQ * 24 * 3600)
+  expect(c.next_touch - c.last_touch).to.be.equal(WARM_LIST_TOUCH_FREQ * 24 * 3600 + (lt.utcOffset() - nt.utcOffset()) * 60)
 
   const { ids } = await Contact.fastFilter(brand.id, [], {
     last_touch_gte: Date.now() / 1000 - 7 * 24 * 3600
@@ -137,6 +141,7 @@ async function testTouchDates() {
 }
 
 async function testSortByLastTouch() {
+  contact_ids = await createContact()
   await createTask(contact_ids.slice(0, 1))
 
   const { ids } = await Contact.fastFilter(brand.id, [], {
@@ -150,10 +155,20 @@ async function testSortByLastTouch() {
   expect(contacts[1].last_touch).to.be.null
 }
 
+async function testTouchReminderOnContact() {
+  const [id] = await createContact()
+
+  await ContactTag.update_touch_frequency(brand.id, user.id, 'Warm List', 10)
+  const contact = await Contact.get(id)
+
+  expect(contact.touch_freq).to.be.equal(10)
+}
+
 describe('Touch', () => {
   createContext()
   beforeEach(setup)
 
   it('should update touch dates after a contact is attached to a crm_task', testTouchDates)
+  it('should put touch_freq on contact object', testTouchReminderOnContact)
   it('should sort correctly by touch dates putting nulls last in descending order', testSortByLastTouch)
 })
