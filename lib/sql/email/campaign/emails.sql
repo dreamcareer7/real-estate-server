@@ -43,8 +43,9 @@ all_contacts_recipients AS (
   JOIN   contacts                   ON email_campaigns.brand = contacts.brand
 
   WHERE email_campaigns.id = $1
+        AND email_campaigns_recipients.recipient_type = 'AllContacts'
         AND contacts.deleted_at IS NULL
-        AND LENGTH(contacts.email[0]) > 0
+        AND LENGTH(contacts.email[1]) > 0
 ),
 
 brand_recs AS (
