@@ -86,8 +86,8 @@ all_emails AS (
   SELECT * FROM brand_recipients
 )
 
--- We used to DISTINCT ON(email). That was the behavior we wanted.
--- However, there was a bug, that forces me to DISTINCT ON(email, send_type).
+-- We used to DISTINCT ON(email).
+-- However, there was a bug.
 -- Mailgun has a limitation that there must ALWAYS be an at least one TO recipient.
 -- Therefore, you cannot send an email with only a BCC field.
 -- That is respected in the user interface and we don't allow users to create such campaigns.
@@ -103,11 +103,15 @@ all_emails AS (
 -- BCC: a@a.com b@b.com c@c.com
 -- Which is bogus, as it has no TO recipients.
 
--- The only downside is, I really wanted us to unique the recipient list.
--- But now, they are unique per-recipient-type,
--- Therefore if you have a recipient in both CC and BCC, he _will_ receive dupes.
 
--- This may actually be better though I don't know.
+-- So now, by ordering by send_type, we make sure
+-- a recipient will be a TO recipient if he is both a TO and CC/BCC.
 
-SELECT DISTINCT ON(email, send_type) * FROM all_emails
+SELECT DISTINCT ON(email) * FROM all_emails
 WHERE email IS NOT NULL
+ORDER BY email, (
+  CASE
+    WHEN send_type = 'To'::email_campaign_send_type THEN 0
+    ELSE 1
+  END
+) ASC;
