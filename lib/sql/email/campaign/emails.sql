@@ -86,5 +86,28 @@ all_emails AS (
   SELECT * FROM brand_recipients
 )
 
-SELECT DISTINCT ON(email) * FROM all_emails
-WHERE email IS NOT NULL;
+-- We used to DISTINCT ON(email). That was the behavior we wanted.
+-- However, there was a bug, that forces me to DISTINCT ON(email, send_type).
+-- Mailgun has a limitation that there must ALWAYS be an at least one TO recipient.
+-- Therefore, you cannot send an email with only a BCC field.
+-- That is respected in the user interface and we don't allow users to create such campaigns.
+-- However, if we do DISTINCT(email), some rows will be removed if there are duplicates,
+-- And it is possible that we remove the TO fields, which might leave the campaign
+-- With no TO recipients, and therefore, rendering the whole campaign in a bogus state
+-- Which could not be sent.
+-- A campaign like this:
+-- TO:  a@a.com
+-- BCC: a@a.com b@b.com c@c.com
+
+-- When we DISTINCT ON(email), the resulting campaign will look like
+-- BCC: a@a.com b@b.com c@c.com
+-- Which is bogus, as it has no TO recipients.
+
+-- The only downside is, I really wanted us to unique the recipient list.
+-- But now, they are unique per-recipient-type,
+-- Therefore if you have a recipient in both CC and BCC, he _will_ receive dupes.
+
+-- This may actually be better though I don't know.
+
+SELECT DISTINCT ON(email, send_type) * FROM all_emails
+WHERE email IS NOT NULL
