@@ -5,11 +5,14 @@ const db = require('../lib/utils/db')
 const migrations = [
   'BEGIN',
   
-  `UPDATE contacts_attribute_defs SET labels = '{Home,Mobile,Work,Fax,WhatsApp,Other}'::text[] WHERE name = 'phone_number'`,
-  `UPDATE contacts_attribute_defs SET labels = '{"Home","Work","Investment Property","Other"}'::text[] WHERE section = 'Addresses'`,
+  `UPDATE contacts_attribute_defs
+    SET labels = '{Home,Mobile,Work,Fax,WhatsApp,Other}'::text[] WHERE name = 'phone_number'`,
+
+  `UPDATE contacts_attribute_defs
+    SET labels = '{"Home","Work","Investment Property","Other"}'::text[] WHERE section = 'Addresses'`,
   
   'COMMIT'
-];
+]
 
 const run = async () => {
   const conn = await db.conn.promise()
