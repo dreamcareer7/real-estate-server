@@ -170,10 +170,18 @@ async function updateSyncStatus() {
 
   await MicrosoftCredential.updateSyncStatus(createdCredential.id, status)
 
-  const updatedCredential = await MicrosoftCredential.get(createdCredential.id)
+  const updatedCredential_1 = await MicrosoftCredential.get(createdCredential.id)
 
-  expect(createdCredential.id).to.be.equal(updatedCredential.id)
-  expect(updatedCredential.sync_status).to.be.equal(status)
+  expect(createdCredential.id).to.be.equal(updatedCredential_1.id)
+  expect(updatedCredential_1.sync_status).to.be.equal(status)
+
+
+  await MicrosoftCredential.updateSyncStatus(createdCredential.id, null)
+
+  const updatedCredential_2 = await MicrosoftCredential.get(createdCredential.id)
+
+  expect(createdCredential.id).to.be.equal(updatedCredential_2.id)
+  expect(updatedCredential_2.sync_status).to.be.equal(null)
 }
 
 async function disableEnableSync() {
