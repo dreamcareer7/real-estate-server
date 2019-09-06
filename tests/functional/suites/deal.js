@@ -231,6 +231,28 @@ const get = (cb) => {
     })
 }
 
+const getForms = cb => {
+  return frisby.create('get forms applicable to a deal')
+    .get(`/deals/${results.deal.create.data.id}/forms`)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      data: []
+    })
+}
+
+const getContexts = cb => {
+  return frisby.create('get context applicable to a deal')
+    .get(`/deals/${results.deal.create.data.id}/contexts`)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      data: []
+    })
+}
+
 const addChecklist = cb => {
   const checklist = {
     title: 'Offered Checklist',
@@ -643,6 +665,8 @@ module.exports = {
   getBrandInbox,
   getBrandDeals,
   getBrandXls,
+  getForms,
+  getContexts,
   filter,
   updateChecklist,
   addTask,
