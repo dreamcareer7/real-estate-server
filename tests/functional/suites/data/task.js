@@ -5,6 +5,7 @@ const due_date = new Date()
 const task = {
   title: 'Hello, Task World!',
   due_date: due_date.getTime() / 1000,
+  end_date: due_date.getTime() / 1000 + 2 * 3600,
   task_type: 'Todo',
   metadata: {
     template: '<html></html>'

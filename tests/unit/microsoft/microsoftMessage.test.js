@@ -1,3 +1,5 @@
+const uuid = require('uuid')
+const sq   = require('../../../lib/utils/squel_extensions')
 const { expect }        = require('chai')
 const { createContext } = require('../helper')
 
@@ -5,10 +7,10 @@ const Context             = require('../../../lib/models/Context')
 const User                = require('../../../lib/models/User')
 const BrandHelper         = require('../brand/helper')
 const MicrosoftCredential = require('../../../lib/models/Microsoft/credential')
-// const MicrosoftMessage    = require('../../../lib/models/Microsoft/message')
+const MicrosoftMessage    = require('../../../lib/models/Microsoft/message')
 
 
-// const microsoft_messages_offline = require('./data/microsoft_messages.json')
+const microsoft_messages_offline = require('./data/microsoft_messages.json')
 
 let user, brand
 
@@ -76,8 +78,155 @@ async function createMicrosoftCredential() {
 async function create() {
   const credential = await createMicrosoftCredential()
 
-  return credential
+  const currentEmail      = credential.email
+  const microsoftMessages = []
+
+  for ( const message of microsoft_messages_offline ) {
+    const fromAddress = message.from.emailAddress.address || message.sender.emailAddress.address || null
+
+    let inBound = true
+
+    if (fromAddress) {
+      if ( fromAddress === currentEmail )
+        inBound = false
+    }
+
+    const recipients = new Set()
+
+    recipients.add(message.from.emailAddress.address)
+    recipients.add(message.sender.emailAddress.address)
+
+    for (const record of message.toRecipients )
+      recipients.add(record.emailAddress.address)
+
+    for (const record of message.ccRecipients )
+      recipients.add(record.emailAddress.address)
+
+    for (const record of message.bccRecipients )
+      recipients.add(record.emailAddress.address)
+
+    const recipientsArr = Array.from(recipients)
+
+    const from_raw = (message.from) ? message.from.emailAddress : {}
+    const to_raw   = (message.toRecipients.length) ? message.toRecipients.map(record => record.emailAddress) : []
+    const cc_raw   = (message.ccRecipients.length) ? message.ccRecipients.map(record => record.emailAddress) : []
+    const bcc_raw  = (message.bccRecipients.length) ? message.bccRecipients.map(record => record.emailAddress) : []
+
+    
+    let inReplyTo = null
+
+    if ( message.internetMessageHeaders ) {
+      for ( const header of message.internetMessageHeaders ) {
+        if ( header.name.toLowerCase() === 'in-reply-to' )
+          inReplyTo = header.value.substring(1, header.value.length - 1)
+      }
+    }
+
+    const internetMessageId = message.internetMessageId.substring(1, message.internetMessageId.length - 1)
+
+    const from = `${from_raw['name']} <${from_raw['address']}>`
+    const to   = to_raw.map(record => record.address)
+    const cc   = cc_raw.map(record => record.address)
+    const bcc  = bcc_raw.map(record => record.address)
+  
+
+    microsoftMessages.push({
+      microsoft_credential: credential.id,
+      message_id: message.id,
+      thread_id: message.conversationId,
+      thread_key: `${credential.id}${message.conversationId}`,
+      internet_message_id: internetMessageId,
+      in_reply_to: inReplyTo,
+      in_bound: inBound,
+      recipients: `{${recipientsArr.join(',')}}`,
+
+      subject: message.subject,
+      has_attachments: (message.attachments.length > 0) ? true : false,
+      attachments: JSON.stringify(message.attachments),
+
+      from_raw: JSON.stringify(from_raw),
+      to_raw: JSON.stringify(to_raw),
+      cc_raw: JSON.stringify(cc_raw),
+      bcc_raw: JSON.stringify(bcc_raw),
+
+      '"from"': from,
+      '"to"': sq.SqArray.from(to || []),
+      cc: sq.SqArray.from(cc || []),
+      bcc: sq.SqArray.from(bcc || []),
+
+      message_created_at: Number(new Date(message.createdDateTime).getTime()),
+      message_date: new Date(message.createdDateTime).toISOString(),
+
+      data: JSON.stringify(message)
+    })
+  }
+
+  const createdMessages = await MicrosoftMessage.create(microsoftMessages)
+
+  for (const createdMicrosoftMessage of createdMessages) {
+    expect(createdMicrosoftMessage.microsoft_credential).to.be.equal(credential.id)
+    
+    const microsoftMessage = await MicrosoftMessage.get(createdMicrosoftMessage.message_id, createdMicrosoftMessage.microsoft_credential)
+
+    expect(microsoftMessage.type).to.be.equal('microsoft_message')
+    expect(microsoftMessage.deleted_at).to.be.equal(null)
+    expect(microsoftMessage.recipients.length).not.to.be.equal(0)
+  }
+
+  return createdMessages
 }
+
+async function getByMessageId() {
+  const microsoftMessages = await create()
+
+  for (const mMessage of microsoftMessages) {
+
+    const microsoftMessage = await MicrosoftMessage.get(mMessage.message_id, mMessage.microsoft_credential)
+
+    expect(microsoftMessage.type).to.be.equal('microsoft_message')
+    expect(microsoftMessage.microsoft_credential).to.be.equal(mMessage.microsoft_credential)
+    expect(microsoftMessage.recipients.length).not.to.be.equal(0)
+    expect(microsoftMessage.message_id).to.be.equal(mMessage.message_id)
+  }
+}
+
+async function getByMessageIdFailed() {
+  const bad_id = user.id
+
+  const microsoftMessage = await MicrosoftMessage.get(bad_id, bad_id)
+
+  expect(microsoftMessage).to.be.equal(null)
+}
+
+async function getMCredentialMessagesNum() {
+  const microsoftMessages = await create()
+
+  const result = await MicrosoftMessage.getMCredentialMessagesNum(microsoftMessages[0]['microsoft_credential'])
+
+  expect(result[0]['count']).to.be.equal(microsoftMessages.length)
+}
+
+async function downloadAttachmentFailed() {
+  const microsoftMessages = await create()
+  const microsoftMessage_min = microsoftMessages[0]
+
+  const microsoftMessage = await MicrosoftMessage.get(microsoftMessage_min.message_id, microsoftMessage_min.microsoft_credential)
+
+  const bad_id = uuid.v4()
+
+  try {
+    await MicrosoftMessage.downloadAttachment(bad_id, bad_id, bad_id)
+  } catch(ex) {
+    expect(ex.message).to.be.equal(`Microsoft-Credential ${bad_id} not found`)
+  }
+
+  try {
+    await MicrosoftMessage.downloadAttachment(microsoftMessage.microsoft_credential, bad_id, bad_id)
+  } catch(ex) {
+    expect(ex.message).to.be.equal('Microsoft-Client failed!')
+  }
+}
+
 
 describe('Microsoft', () => {
   describe('Microsoft Messages', () => {
@@ -85,8 +234,10 @@ describe('Microsoft', () => {
     beforeEach(setup)
 
     it('should create some microsoft-messages', create)
-    // it('should return microsoft-message by messages_id', getByMessageId)
-    // it('should handle failure of microsoft-contact get by messages_id', getByMessageIdFailed)
-    // it('should return number of messages of specific credential', getGCredentialMessagesNum)
+    it('should return microsoft-message by messages_id', getByMessageId)
+    it('should handle failure of microsoft-contact get by messages_id', getByMessageIdFailed)
+    it('should return number of messages of specific credential', getMCredentialMessagesNum)
+
+    it('should handle failure of downloadAttachment', downloadAttachmentFailed)
   })
 })

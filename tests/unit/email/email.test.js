@@ -143,10 +143,12 @@ async function testEmailToTags() {
     from: userA.id,
     to: [
       {
-        tag: 'Tag1'
+        tag: 'Tag1',
+        recipient_type: Email.TAG
       },
       {
-        tag: 'Tag2'
+        tag: 'Tag2',
+        recipient_type: Email.TAG
       }
     ],
     subject: '2',
@@ -164,10 +166,12 @@ async function testDuplicateEmail() {
     from: userA.id,
     to: [
       {
-        tag: 'Tag1'
+        tag: 'Tag1',
+        recipient_type: Email.TAG
       },
       {
-        tag: 'Tag4'
+        tag: 'Tag4',
+        recipient_type: Email.TAG
       }
     ],
     subject: 'testDuplicateEmail',
@@ -184,7 +188,8 @@ async function testEmailsOnly() {
     from: userA.id,
     to: [
       {
-        email: 'gholi@rechat.com'
+        email: 'gholi@rechat.com',
+        recipient_type: Email.EMAIL
       }
     ],
     subject: 'testEmailOnly',
@@ -205,7 +210,8 @@ async function testCampaignRecipients() {
     from: userA.id,
     to: [
       {
-        tag: 'Tag1'
+        tag: 'Tag1',
+        recipient_type: Email.TAG
       }
     ],
     subject: 'testRecipients',

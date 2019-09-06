@@ -6,6 +6,7 @@ SELECT
   title,
   "description",
   EXTRACT(EPOCH FROM due_date) AS due_date,
+  EXTRACT(EPOCH FROM end_date) AS end_date,
   "status",
   task_type,
   metadata,

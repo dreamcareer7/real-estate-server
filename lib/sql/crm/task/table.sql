@@ -10,6 +10,7 @@ CREATE TABLE IF NOT EXISTS crm_tasks (
     title TEXT,
     "description" TEXT,
     due_date timestamptz,
+    end_date timestamptz,
     "status" TEXT,
     "type" TEXT,
 

@@ -1,3 +1,4 @@
+const uuid       = require('uuid')
 const { expect } = require('chai')
 const { createContext } = require('../helper')
 
@@ -175,6 +176,34 @@ async function getGCredentialMessagesNum() {
   expect(result[0]['count']).to.be.equal(googleMessages.length)
 }
 
+async function downloadAttachmentFailed() {
+  const googleMessages = await create()
+  const googleMessage_min = googleMessages[0]
+
+  const googleMessage = await GoogleMessage.get(googleMessage_min.message_id, googleMessage_min.google_credential)
+  // const attachment = googleMessage.attachments[0]
+  // await GoogleMessage.downloadAttachment(googleMessage.google_credential, googleMessage.message_id, attachment.id)
+
+  const bad_id = uuid.v4()
+
+  try {
+    await GoogleMessage.downloadAttachment(bad_id, bad_id, bad_id)
+  } catch(ex) {
+    expect(ex.message).to.be.equal(`Google-Credential ${bad_id} not found`)
+  }
+
+  try {
+    await GoogleMessage.downloadAttachment(googleMessage.google_credential, bad_id, bad_id)
+  } catch(ex) {
+    expect(ex.message).to.be.equal('Related Google-Message Not Found!')
+  }
+
+  try {
+    await GoogleMessage.downloadAttachment(googleMessage.google_credential, googleMessage.message_id, bad_id)
+  } catch(ex) {
+    expect(ex.message).to.be.equal('Google-Message-Attachment Not Found!')
+  }
+}
 
 
 describe('Google', () => {
@@ -186,5 +215,7 @@ describe('Google', () => {
     it('should return google-message by messages_id', getByMessageId)
     it('should handle failure of google-contact get by messages_id', getByMessageIdFailed)
     it('should return number of messages of specific credential', getGCredentialMessagesNum)
+
+    it('should handle failure of downloadAttachment', downloadAttachmentFailed)
   })
 })
