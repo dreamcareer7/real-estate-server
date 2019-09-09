@@ -214,7 +214,7 @@ async function testRenameTagFixesListFilters() {
 }
 
 async function testCreateTagManually() {
-  await ContactTag.create(brand.id, user.id, 'Tag0')
+  await ContactTag.create(brand.id, user.id, 'Tag0', null)
 
   const tags = await ContactTag.getAll(brand.id)
 
@@ -258,10 +258,10 @@ async function testDeleteTag() {
 }
 
 async function testAddBackDeletedTag() {
-  await ContactTag.create(brand.id, user.id, 'Tag0')
+  await ContactTag.create(brand.id, user.id, 'Tag0', null)
   await ContactTag.delete(brand.id, user.id, ['Tag0'])
 
-  await ContactTag.create(brand.id, user.id, 'Tag0')
+  await ContactTag.create(brand.id, user.id, 'Tag0', null)
 
   const tags = await ContactTag.getAll(brand.id)
 
@@ -293,8 +293,8 @@ async function testAddBackDeletedTagByUsingInContact() {
 }
 
 function testCreateDuplicateTagFail(done) {
-  ContactTag.create(brand.id, user.id, 'Tag0').then(() => {
-    return ContactTag.create(brand.id, user.id, 'Tag0')
+  ContactTag.create(brand.id, user.id, 'Tag0', null).then(() => {
+    return ContactTag.create(brand.id, user.id, 'Tag0', null)
   }).then(
     () => {
       done(new Error('Creating duplicate tag did not throw an error!'))
@@ -304,7 +304,7 @@ function testCreateDuplicateTagFail(done) {
 }
 
 function testCreateEmptyTagFail(done) {
-  ContactTag.create(brand.id, user.id, '').then(
+  ContactTag.create(brand.id, user.id, '', null).then(
     () => {
       done(new Error('Creating empty tag did not throw an error!'))
     },
@@ -314,8 +314,8 @@ function testCreateEmptyTagFail(done) {
 
 function testRenameToExistingTagFail(done) {
   (async function() {
-    await ContactTag.create(brand.id, user.id, 'Tag1')
-    await ContactTag.create(brand.id, user.id, 'Tag2')
+    await ContactTag.create(brand.id, user.id, 'Tag1', null)
+    await ContactTag.create(brand.id, user.id, 'Tag2', null)
   })().then(
     () => ContactTag.rename(brand.id, user.id, 'Tag1', 'Tag2'),
     done
@@ -326,7 +326,7 @@ function testRenameToExistingTagFail(done) {
 }
 
 function testRenameToEmptyTagFail(done) {
-  ContactTag.create(brand.id, user.id, 'Tag1').then(
+  ContactTag.create(brand.id, user.id, 'Tag1', null).then(
     () => ContactTag.rename(brand.id, user.id, 'Tag1', ''),
     done
   ).then(
