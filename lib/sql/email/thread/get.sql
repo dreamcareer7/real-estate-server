@@ -1,5 +1,5 @@
 SELECT 
-  'email_thread' AS type,
+  'thread' AS type,
 
   thread_keys.id AS id,
 
