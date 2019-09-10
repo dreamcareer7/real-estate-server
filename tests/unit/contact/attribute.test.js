@@ -45,6 +45,8 @@ async function setup() {
     checklists: [],
     contexts: []
   })
+  await handleJobs()
+
   Context.set({ user, brand })
 
   defs = await AttributeDef.getDefsByName(brand.id)

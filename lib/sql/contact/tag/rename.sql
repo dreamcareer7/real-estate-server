@@ -24,6 +24,7 @@ WITH tag_def AS (
     c.brand = $1
     AND ca.contact = c.id
     AND ca.text = $2
+    AND ca.attribute_type = 'tag'
   RETURNING
     ca.contact
 ), tag_updates AS (
@@ -37,14 +38,34 @@ WITH tag_def AS (
   WHERE
     tag = $2
     AND brand = $1
+    AND NOT EXISTS (
+      SELECT 1 FROM crm_tags WHERE lower(tag) = lower($3)
+    )
+  RETURNING
+    1
+), tag_delete AS (
+  UPDATE
+    crm_tags
+  SET
+    deleted_at = NOW(),
+    deleted_by = $4::uuid,
+    deleted_within = $5
+  WHERE
+    tag = $2
+    AND brand = $1
+    AND EXISTS (
+      SELECT 1 FROM crm_tags WHERE lower(tag) = lower($3)
+    )
   RETURNING
     1
 )
 SELECT DISTINCT
   au.contact
 FROM
-  tag_updates
+  attr_updates AS au
   LEFT JOIN list_updates
     ON TRUE
-  LEFT JOIN attr_updates AS au
+  LEFT JOIN tag_delete
+    ON TRUE
+  LEFT JOIN tag_updates
     ON TRUE
