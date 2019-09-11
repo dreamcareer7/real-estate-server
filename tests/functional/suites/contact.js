@@ -973,7 +973,7 @@ const getAllTags = (cb) => {
     .get('/contacts/tags')
     .after(cb)
     .expectStatus(200)
-    .expectJSONLength('data', 8)
+    .expectJSONLength('data', 13)
     .expectJSON({
       code: 'OK'
     })
@@ -1014,7 +1014,7 @@ const checkTagIsAdded = cb => {
       cb(err, res, json)
     })
     .expectStatus(200)
-    .expectJSONLength('data', 9)
+    .expectJSONLength('data', 14)
     .expectJSON({
       code: 'OK'
     })
