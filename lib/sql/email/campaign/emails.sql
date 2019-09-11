@@ -10,7 +10,6 @@ list_contacts AS (
   WHERE email_campaigns_recipients.recipient_type = 'List'
         AND email_campaigns.id = $1
         AND contacts.deleted_at IS NULL
-        AND ARRAY_LENGTH(contacts.email, 1) > 0
 ),
 
 tag_contacts AS (
@@ -23,7 +22,6 @@ tag_contacts AS (
   WHERE email_campaigns_recipients.recipient_type = 'Tag'
         AND email_campaigns.id = $1
         AND contacts.deleted_at IS NULL
-        AND ARRAY_LENGTH(contacts.email, 1) > 0
 ),
 
 contact_recipients AS (
@@ -36,7 +34,6 @@ contact_recipients AS (
   WHERE email_campaigns_recipients.recipient_type = 'Email'
         AND email_campaigns.id = $1
         AND contacts.deleted_at IS NULL
-        AND ARRAY_LENGTH(contacts.email, 1) > 0
 ),
 
 all_contacts_recipients AS (
@@ -45,21 +42,32 @@ all_contacts_recipients AS (
   JOIN   email_campaigns_recipients ON email_campaigns.id    = email_campaigns_recipients.campaign
   JOIN   contacts                   ON email_campaigns.brand = contacts.brand
 
-  WHERE email_campaigns_recipients.recipient_type = 'AllContacts'
-        AND email_campaigns.id = $1
+  WHERE email_campaigns.id = $1
+        AND email_campaigns_recipients.recipient_type = 'AllContacts'
         AND contacts.deleted_at IS NULL
-        AND ARRAY_LENGTH(contacts.email, 1) > 0
+        AND LENGTH(contacts.email[1]) > 0
+),
+
+brand_recs AS (
+  SELECT
+    email_campaigns_recipients.*
+  FROM email_campaigns
+    JOIN email_campaigns_recipients ON email_campaigns_recipients.campaign = email_campaigns.id
+
+    WHERE email_campaigns.id = $1
+          AND email_campaigns_recipients.recipient_type = 'Brand'
+),
+
+brand_agents AS (
+  SELECT ba.*, brand_recs.send_type
+  FROM   brand_recs, get_brand_agents(brand_recs.brand) ba
 ),
 
 brand_recipients AS (
-  SELECT             users.email, contacts_users.contact, email_campaigns_recipients.send_type
-  FROM               email_campaigns_recipients
-  CROSS JOIN LATERAL get_brand_agents(email_campaigns_recipients.brand) ba
-  JOIN               users          ON users.id = ba.user
-  LEFT JOIN          contacts_users ON contacts_users.user = users.id
-  WHERE              email_campaigns_recipients.campaign = $1
-  AND                email_campaigns_recipients.brand IS NOT NULL
-  AND                email_campaigns_recipients.recipient_type = 'Brand'
+  SELECT    users.email, contacts_users.contact, brand_agents.send_type
+  FROM      brand_agents
+  JOIN      users          ON users.id = brand_agents.user
+  LEFT JOIN contacts_users ON contacts_users.user = users.id
 ),
 
 
@@ -78,5 +86,32 @@ all_emails AS (
   SELECT * FROM brand_recipients
 )
 
+-- We used to DISTINCT ON(email).
+-- However, there was a bug.
+-- Mailgun has a limitation that there must ALWAYS be an at least one TO recipient.
+-- Therefore, you cannot send an email with only a BCC field.
+-- That is respected in the user interface and we don't allow users to create such campaigns.
+-- However, if we do DISTINCT(email), some rows will be removed if there are duplicates,
+-- And it is possible that we remove the TO fields, which might leave the campaign
+-- With no TO recipients, and therefore, rendering the whole campaign in a bogus state
+-- Which could not be sent.
+-- A campaign like this:
+-- TO:  a@a.com
+-- BCC: a@a.com b@b.com c@c.com
+
+-- When we DISTINCT ON(email), the resulting campaign will look like
+-- BCC: a@a.com b@b.com c@c.com
+-- Which is bogus, as it has no TO recipients.
+
+
+-- So now, by ordering by send_type, we make sure
+-- a recipient will be a TO recipient if he is both a TO and CC/BCC.
+
 SELECT DISTINCT ON(email) * FROM all_emails
-WHERE email IS NOT NULL;
+WHERE email IS NOT NULL
+ORDER BY email, (
+  CASE
+    WHEN send_type = 'To'::email_campaign_send_type THEN 0
+    ELSE 1
+  END
+) ASC;

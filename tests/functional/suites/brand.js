@@ -1,5 +1,5 @@
 const brand = require('./data/brand.js')
-const context = require('./data/context.js')
+const contexts = require('./data/context.js')
 
 registerSuite('office', ['add'])
 registerSuite('form', ['create'])
@@ -117,14 +117,27 @@ const removeHostname = cb => {
     })
 }
 
-const addContext = cb => {
+const addDateContext = cb => {
+  const { list_date } = contexts
   return frisby.create('add a context definition to a brand')
-    .post(`/brands/${brand_id}/contexts`, context)
+    .post(`/brands/${brand_id}/contexts`, list_date)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
-      data: context
+      data: list_date
+    })
+}
+
+const addTextContext = cb => {
+  const { contract_status }  = contexts
+  return frisby.create('add a context definition to a brand')
+    .post(`/brands/${brand_id}/contexts`, contract_status)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      data: contract_status
     })
 }
 
@@ -135,7 +148,7 @@ const getContexts = cb => {
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
-      data: [context]
+      data: Array.from(contexts)
     })
 }
 
@@ -547,7 +560,8 @@ module.exports = {
   getByHostname,
   removeHostname,
 
-  addContext,
+  addDateContext,
+  addTextContext,
   getContexts,
 
   addTemplate,

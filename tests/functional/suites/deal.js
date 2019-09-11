@@ -3,6 +3,9 @@ const deal_response = require('./expected_objects/deal.js')
 const omit = require('lodash/omit')
 const schemas = require('./schemas/deal')
 
+const config = require('../../../lib/config')
+require('../../../lib/models/Crypto')
+
 registerSuite('listing', ['getListing'])
 registerSuite('brokerwolf', [
   'saveSettings',
@@ -14,7 +17,7 @@ registerSuite('brokerwolf', [
   'syncContactTypes',
   'mapContactType'
 ])
-registerSuite('brand', ['addChecklist', 'addContext', 'addForm', 'addTask', 'addAnotherTask'])
+registerSuite('brand', ['addChecklist', 'addDateContext', 'addTextContext', 'addForm', 'addTask', 'addAnotherTask'])
 registerSuite('user', ['upgradeToAgentWithEmail'])
 
 const pdf = 'https://s3-us-west-2.amazonaws.com/rechat-forms/2672324.pdf'
@@ -90,10 +93,16 @@ const addContext = cb => {
 
   const context = [
     {
-      definition: results.brand.addContext.data.id,
+      definition: results.brand.addDateContext.data.id,
       checklist,
       value: '2017/12/06'
-    }
+    },
+
+    {
+      definition: results.brand.addTextContext.data.id,
+      checklist,
+      value: 'Active Option Period'
+    },
   ]
 
   const expected_object = Object.assign({}, omit(results.deal.create.data, [
@@ -106,6 +115,10 @@ const addContext = cb => {
       list_date: {
         data_type: 'Date',
         date: (new Date('2017/12/06')).valueOf() / 1000
+      },
+      contract_status: {
+        data_type: 'Text',
+        text: 'Active Option Period'
       }
     }
   })
@@ -225,6 +238,28 @@ const get = (cb) => {
     .expectJSONTypes({
       code: String,
       data: deal_response
+    })
+}
+
+const getForms = cb => {
+  return frisby.create('get forms applicable to a deal')
+    .get(`/deals/${results.deal.create.data.id}/forms`)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      data: []
+    })
+}
+
+const getContexts = cb => {
+  return frisby.create('get context applicable to a deal')
+    .get(`/deals/${results.deal.create.data.id}/contexts`)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      data: []
     })
 }
 
@@ -511,6 +546,60 @@ const patchAttention = cb => {
     })
 }
 
+const patchAttentionOff = cb => {
+  const attention_requested = false
+  return frisby.create('Change the attention state of a task to off')
+    .patch(`/tasks/${results.deal.addTask.data.id}/attention_requested`, {
+      attention_requested
+    })
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      data: {
+        attention_requested
+      }
+    })
+}
+
+const seamlessAttention = cb => {
+  console.log()
+  const { room } = results.deal.getTask.data
+  const address = Crypto.encrypt(JSON.stringify({
+    room_id: room.id,
+    user_id: results.authorize.token.data.id
+  })) + '@' + config.email.seamless_address
+
+  const body = {
+    domain: config.mailgun.General.domain, //mailgun is property of config object. Contains API keys for mailgun.
+    'stripped-text': 'Foobar',
+    recipient: address,
+  }
+
+  return frisby.create('send seamless email')
+    .post('/messages/email', body) //POST request to /messages/email with body object sent.
+    .after(cb)
+    .expectStatus(200)
+}
+
+const verifySeamlessAttention = cb => {
+  return frisby.create('verify seamless email has worked')
+    .get(`/tasks/${results.deal.addTask.data.id}`)
+    .after(cb)
+    .expectJSON({
+      data: {
+        attention_requested: true,
+        room: {
+          latest_activity: {
+            author: {
+              id: results.authorize.token.data.id
+            }
+          }
+        }
+      }
+    })
+}
+
 const postMessage = cb => {
   const message = {
     comment: 'Comment'
@@ -571,6 +660,48 @@ const filter = (cb) => {
     })
 }
 
+const filterByContext = (cb) => {
+  return frisby.create('search for a deal by context')
+    .post('/deals/filter', {
+      contexts: {
+        contract_status: {
+          text: [
+            'Active Option Period'
+          ]
+        }
+      }
+    })
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      info: {
+        count: 1
+      }
+    })
+}
+
+const filterByContextEmpty = (cb) => {
+  return frisby.create('search for a deal by context that doesn\'t exist')
+    .post('/deals/filter', {
+      contexts: {
+        contract_status: {
+          text: [
+            'Not Active Option Period'
+          ]
+        }
+      }
+    })
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      info: {
+        count: 0
+      }
+    })
+}
+
 module.exports = {
   create,
   addChecklist,
@@ -586,7 +717,11 @@ module.exports = {
   getBrandInbox,
   getBrandDeals,
   getBrandXls,
+  getForms,
+  getContexts,
   filter,
+  filterByContext,
+  filterByContextEmpty,
   updateChecklist,
   addTask,
   addAnotherTask,
@@ -605,7 +740,10 @@ module.exports = {
   sendNotifications,
   patchRequired,
   patchAttention,
+  patchAttentionOff,
   postMessage,
+  seamlessAttention,
+  verifySeamlessAttention,
   removeRole,
   remove
 }

@@ -80,6 +80,7 @@ declare interface IContact extends IContactBase {
   partner_name?: string;
   last_touch?: number;
   next_touch?: number;
+  touch_freq?: number;
 
   users?: UUID[];
   deals?: UUID[];

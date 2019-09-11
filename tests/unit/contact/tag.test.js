@@ -27,6 +27,23 @@ async function setup() {
     contexts: []
   })
   Context.set({ user, brand })
+
+  await handleJobs()
+}
+
+async function testCheckDefaultTags() {
+  const DEFAULT_TAGS = [
+    'Warm List',
+    'Hot List',
+    'Past Client',
+    'Seller',
+    'Agent',
+    'Buyer'
+  ]
+
+  const tags = await ContactTag.getAll(brand.id)
+
+  expect(tags.map(t => t.tag)).to.have.members(DEFAULT_TAGS)
 }
 
 async function createContacts() {
@@ -103,8 +120,8 @@ async function testAutoTagCreateWithNewContacts() {
   await createContacts()
   const tags = await ContactTag.getAll(brand.id)
 
-  expect(tags).to.have.length(3)
-  expect(tags.map(t => t.tag)).to.have.members(['Tag1', 'Tag2', 'Tag3'])
+  expect(tags).to.have.length(9)
+  expect(tags.map(t => t.tag)).to.include.members(['Tag1', 'Tag2', 'Tag3'])
 }
 
 async function testAutoTagCreateWithUpdatedContacts() {
@@ -130,8 +147,8 @@ async function testAutoTagCreateWithUpdatedContacts() {
 
   const tags = await ContactTag.getAll(brand.id)
 
-  expect(tags).to.have.length(4)
-  expect(tags.map(t => t.tag)).to.have.members(['Tag1', 'Tag2', 'Tag3', 'Tag4'])
+  expect(tags).to.have.length(10)
+  expect(tags.map(t => t.tag)).to.include.members(['Tag1', 'Tag2', 'Tag3', 'Tag4'])
 }
 
 async function testRenameTag() {
@@ -161,8 +178,8 @@ async function testRenameTag() {
   async function checkTags() {
     const tags = await ContactTag.getAll(brand.id)
 
-    expect(tags).to.have.length(3)
-    expect(tags.map(t => t.tag)).to.have.members(['Tag0', 'Tag1', 'Tag3'])
+    expect(tags).to.have.length(9)
+    expect(tags.map(t => t.tag)).to.include.members(['Tag0', 'Tag1', 'Tag3'])
   }
 
   await createContacts()
@@ -214,12 +231,12 @@ async function testRenameTagFixesListFilters() {
 }
 
 async function testCreateTagManually() {
-  await ContactTag.create(brand.id, user.id, 'Tag0')
+  await ContactTag.create(brand.id, user.id, 'Tag0', null)
 
   const tags = await ContactTag.getAll(brand.id)
 
-  expect(tags).to.have.length(1)
-  expect(tags.map(t => t.tag)).to.have.members(['Tag0'])
+  expect(tags).to.have.length(7)
+  expect(tags.map(t => t.tag)).to.include.members(['Tag0'])
 }
 
 async function testDeleteTag() {
@@ -244,8 +261,8 @@ async function testDeleteTag() {
   async function checkTags() {
     const tags = await ContactTag.getAll(brand.id)
 
-    expect(tags).to.have.length(2)
-    expect(tags.map(t => t.tag)).to.have.members(['Tag1', 'Tag3'])
+    expect(tags).to.have.length(8)
+    expect(tags.map(t => t.tag)).not.to.have.include(['Tag2'])
   }
 
   await createContacts()
@@ -258,17 +275,29 @@ async function testDeleteTag() {
 }
 
 async function testAddBackDeletedTag() {
-  await ContactTag.create(brand.id, user.id, 'Tag0')
+  await ContactTag.create(brand.id, user.id, 'Tag0', null)
   await ContactTag.delete(brand.id, user.id, ['Tag0'])
 
-  await ContactTag.create(brand.id, user.id, 'Tag0')
+  await ContactTag.create(brand.id, user.id, 'Tag0', null)
 
   const tags = await ContactTag.getAll(brand.id)
 
-  expect(tags).to.have.length(1)
-  expect(tags.map(t => t.tag)).to.have.members(['Tag0'])
+  expect(tags).to.have.length(7)
+  expect(tags.map(t => t.tag)).to.include.members(['Tag0'])
 }
 
+async function testAddExistingTagsToContacts() {
+  await Contact.create([{
+    user: user.id,
+    attributes: ContactHelper.attributes({
+      first_name: 'John',
+      last_name: 'Doe',
+      tag: ['Warm List']
+    })
+  }], user.id, brand.id)
+
+  await handleJobs()
+}
 async function testAddBackDeletedTagByUsingInContact() {
   const [id] = await Contact.create([{
     user: user.id,
@@ -288,13 +317,13 @@ async function testAddBackDeletedTagByUsingInContact() {
 
   const tags = await ContactTag.getAll(brand.id)
 
-  expect(tags).to.have.length(1)
-  expect(tags.map(t => t.tag)).to.have.members(['Tag0'])
+  expect(tags).to.have.length(7)
+  expect(tags.map(t => t.tag)).to.include.members(['Tag0'])
 }
 
 function testCreateDuplicateTagFail(done) {
-  ContactTag.create(brand.id, user.id, 'Tag0').then(() => {
-    return ContactTag.create(brand.id, user.id, 'Tag0')
+  ContactTag.create(brand.id, user.id, 'Tag0', null).then(() => {
+    return ContactTag.create(brand.id, user.id, 'tag0', null)
   }).then(
     () => {
       done(new Error('Creating duplicate tag did not throw an error!'))
@@ -304,7 +333,7 @@ function testCreateDuplicateTagFail(done) {
 }
 
 function testCreateEmptyTagFail(done) {
-  ContactTag.create(brand.id, user.id, '').then(
+  ContactTag.create(brand.id, user.id, '', null).then(
     () => {
       done(new Error('Creating empty tag did not throw an error!'))
     },
@@ -312,21 +341,20 @@ function testCreateEmptyTagFail(done) {
   )
 }
 
-function testRenameToExistingTagFail(done) {
-  (async function() {
-    await ContactTag.create(brand.id, user.id, 'Tag1')
-    await ContactTag.create(brand.id, user.id, 'Tag2')
-  })().then(
-    () => ContactTag.rename(brand.id, user.id, 'Tag1', 'Tag2'),
-    done
-  ).then(
-    () => done(new Error('Renaming to an existing tag did not throw an error!')),
-    () => done()
-  )
+async function testRenameToExistingTagDoesMerge() {
+  await ContactTag.create(brand.id, user.id, 'Tag1', null)
+  await ContactTag.create(brand.id, user.id, 'Tag2', null)
+
+  await ContactTag.rename(brand.id, user.id, 'Tag1', 'Tag2')
+
+  const tags = await ContactTag.getAll(brand.id)
+  expect(tags).to.have.length(7)
+  expect(tags.map(t => t.tag)).to.include.members(['Tag2'])
+  expect(tags.map(t => t.tag)).not.to.include.members(['Tag1'])
 }
 
 function testRenameToEmptyTagFail(done) {
-  ContactTag.create(brand.id, user.id, 'Tag1').then(
+  ContactTag.create(brand.id, user.id, 'Tag1', null).then(
     () => ContactTag.rename(brand.id, user.id, 'Tag1', ''),
     done
   ).then(
@@ -340,6 +368,7 @@ describe('Contact', () => {
   beforeEach(setup)
 
   describe('Tag', () => {
+    it('should create default tags on brand creation', testCheckDefaultTags)
     it('should create tags implicitly after contacts are created', testAutoTagCreateWithNewContacts)
     it('should create tags implicitly after contacts are updated', testAutoTagCreateWithUpdatedContacts)
     it('should allow creating a tag manually', testCreateTagManually)
@@ -350,8 +379,9 @@ describe('Contact', () => {
     it('should allow adding back a deleted tag by using it in a contact', testAddBackDeletedTagByUsingInContact)
 
     // Duplicate tag
+    it('should allow trigger to work', testAddExistingTagsToContacts)
+    it('should merge when renaming to an existing tag', testRenameToExistingTagDoesMerge)
     it('should not allow creating a duplicate tag', testCreateDuplicateTagFail)
-    it('should not allow renaming to an existing tag', testRenameToExistingTagFail)
 
     // Empty tag
     it('should not allow creating an empty tag', testCreateEmptyTagFail)
