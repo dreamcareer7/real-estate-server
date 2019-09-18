@@ -48,7 +48,6 @@
   "possession": "Negotiable",
   "mls_area_major": "DALLAS NORTHWEST (16)",
   "mls_area_minor": "NORTHWEST DALLAS (8)",
-  "mls": "North Texas Real Estate Information Systems",
   "matrix_modified_dt": "2017-11-01T17:09:06.717",
   "showing_instructions_type": "Agent Or Owner Present,Centralized Showing Service",
   "showing_instructions": "Agent to meet. Two hour advanced notice requested.",
@@ -67,5 +66,8 @@
   "appointment_call": "CSS",
   "occupancy": "Owner",
   "private_remarks": "The opposite wing consists of two more bedrooms, one opening to the serene front courtyard.  Located minutes away from some of the best private schools in Dallas. Come escape to this oasis in the heart of Dallas! Buyer and buyer's agent to verify all measurements and MLS information.",
-  "mls": "NTREIS"
+  "mls": "NTREIS",
+  "original_mls_property_type": "",
+  "original_mls_property_subtype": "",
+  "original_mls_status": ""
 }
