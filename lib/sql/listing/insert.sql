@@ -75,7 +75,11 @@ INSERT INTO listings (
   revision,
   original_mls_property_type,
   original_mls_property_subtype,
-  original_mls_status
+  original_mls_status,
+  transaction_type,
+  usage_type,
+  structure_type
+
 ) VALUES (
   $1,
   $2,
@@ -153,7 +157,10 @@ INSERT INTO listings (
   $74,
   $75,
   $76,
-  $77
+  $77,
+  $78,
+  $79,
+  $80
 )
 
 ON CONFLICT (matrix_unique_id, mls) DO UPDATE SET

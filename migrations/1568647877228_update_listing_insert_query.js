@@ -4,21 +4,21 @@ const migrations = [
   'BEGIN',
 
   `CREATE TYPE mls_transaction_type
-    AS ENUM('Sale', 'Lease', 'Sale Or Lease', 'Timeshare')`,
+    AS ENUM('Sale', 'Lease', 'Sale Or Lease', 'Timeshare', 'Unknown')`,
 
   `CREATE TYPE mls_usage_type
-    AS ENUM('Residential', 'Commercial', 'Industrial', 'Land', 'Mixed')`,
+    AS ENUM('Residential', 'Commercial', 'Industrial', 'Land', 'Mixed', 'Unknown')`,
 
   `CREATE TYPE mls_structure_type
-    AS ENUM('Apartment', 'Duplex', 'Triplex', 'Fourplex', 'FiveplexPlus', 'House', 'Townhouse', 'Condo','HalfDuplex', 'Mobile', 'Cabin', 'Studio', 'SingleFamily', 'MultiFamily', 'Hotel', 'Farm', 'Retail', 'Penthouse', 'BoatSlip', 'Office', 'Warehouse', 'Parking', 'Loft', 'Historic', 'Patio')`,
+    AS ENUM('Apartment', 'Duplex', 'Triplex', 'Fourplex', 'FiveplexPlus', 'House', 'Townhouse', 'Condo','HalfDuplex', 'Mobile', 'Cabin', 'Studio', 'SingleFamily', 'MultiFamily', 'Hotel', 'Farm', 'Retail', 'Penthouse', 'BoatSlip', 'Office', 'Warehouse', 'Parking', 'Loft', 'Historic', 'Patio', 'Unknown')`,
 
-  'ALTER TABLE listings ADD COULMN IF NOT EXISTS transaction_type mls_transaction_type  NOT NULL',
-  'ALTER TABLE listings ADD COULMN IF NOT EXISTS usage_type       mls_usage_type        NOT NULL',
-  'ALTER TABLE listings ADD COULMN IF NOT EXISTS structure_type   mls_structure_type    NOT NULL',
+  'ALTER TABLE listings ADD IF NOT EXISTS transaction_type mls_transaction_type  NOT NULL DEFAULT \'Unknown\'',
+  'ALTER TABLE listings ADD IF NOT EXISTS usage_type       mls_usage_type        NOT NULL DEFAULT \'Unknown\'',
+  'ALTER TABLE listings ADD IF NOT EXISTS structure_type   mls_structure_type    NOT NULL DEFAULT \'Unknown\'',
 
-  'ALTER TABLE listings ADD COULMN IF NOT EXISTS original_mls_property_type TEXT',
-  'ALTER TABLE listings ADD COULMN IF NOT EXISTS original_mls_property_subtype TEXT',
-  'ALTER TABLE listings ADD COULMN IF NOT EXISTS original_mls_status TEXT',
+  'ALTER TABLE listings ADD IF NOT EXISTS original_mls_property_type TEXT',
+  'ALTER TABLE listings ADD IF NOT EXISTS original_mls_property_subtype TEXT',
+  'ALTER TABLE listings ADD IF NOT EXISTS original_mls_status TEXT',
 
   'COMMIT'
 ]

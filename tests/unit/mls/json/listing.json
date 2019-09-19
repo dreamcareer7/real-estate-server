@@ -67,7 +67,10 @@
   "occupancy": "Owner",
   "private_remarks": "The opposite wing consists of two more bedrooms, one opening to the serene front courtyard.  Located minutes away from some of the best private schools in Dallas. Come escape to this oasis in the heart of Dallas! Buyer and buyer's agent to verify all measurements and MLS information.",
   "mls": "NTREIS",
-  "original_mls_property_type": "",
-  "original_mls_property_subtype": "",
-  "original_mls_status": ""
+  "original_mls_property_type": "original_mls_property_type",
+  "original_mls_property_subtype": "original_mls_property_subtype",
+  "original_mls_status": "original_mls_status",
+  "transaction_type": "Unknown",
+  "usage_type": "Unknown",
+  "structure_type": "Unknown"
 }
