@@ -3,13 +3,18 @@ const db = require('../lib/utils/db')
 const migrations = [
   'BEGIN',
 
-  'CREATE TYPE mls_transaction_type AS ENUM(\'rental\', \'sale\')',
-  'CREATE TYPE mls_usage_type       AS ENUM(\'xxx\', \'zzz\')',
-  'CREATE TYPE mls_structure_type   AS ENUM(\'xxx\', \'zzz\')',
+  `CREATE TYPE mls_transaction_type
+    AS ENUM('Sale', 'Lease', 'Sale Or Lease', 'Timeshare')`,
 
-  'ALTER TABLE listings ADD COULMN IF NOT EXISTS transaction_type mls_transaction_type  NOT NULL DEFAULT \'rental\'',
-  'ALTER TABLE listings ADD COULMN IF NOT EXISTS usage_type       mls_usage_type        NOT NULL DEFAULT \'xxx\'',
-  'ALTER TABLE listings ADD COULMN IF NOT EXISTS structure_type   mls_structure_type    NOT NULL DEFAULT \'xxx\'',
+  `CREATE TYPE mls_usage_type
+    AS ENUM('Residential', 'Commercial', 'Industrial', 'Land', 'Mixed')`,
+
+  `CREATE TYPE mls_structure_type
+    AS ENUM('Apartment', 'Duplex', 'Triplex', 'Fourplex', 'FiveplexPlus', 'House', 'Townhouse', 'Condo','HalfDuplex', 'Mobile', 'Cabin', 'Studio', 'SingleFamily', 'MultiFamily', 'Hotel', 'Farm', 'Retail', 'Penthouse', 'BoatSlip', 'Office', 'Warehouse', 'Parking', 'Loft', 'Historic', 'Patio')`,
+
+  'ALTER TABLE listings ADD COULMN IF NOT EXISTS transaction_type mls_transaction_type  NOT NULL',
+  'ALTER TABLE listings ADD COULMN IF NOT EXISTS usage_type       mls_usage_type        NOT NULL',
+  'ALTER TABLE listings ADD COULMN IF NOT EXISTS structure_type   mls_structure_type    NOT NULL',
 
   'ALTER TABLE listings ADD COULMN IF NOT EXISTS original_mls_property_type TEXT',
   'ALTER TABLE listings ADD COULMN IF NOT EXISTS original_mls_property_subtype TEXT',
