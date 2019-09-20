@@ -10,26 +10,6 @@ SELECT 'user' AS type,
        (
         SELECT client_type FROM clients WHERE id = users.last_seen_by
        ) as last_seen_type,
-       COALESCE
-       (
-         profile_image_url,
-         (
-           SELECT url FROM agents_images WHERE mui =
-           (
-             SELECT matrix_unique_id FROM agents WHERE id = users.agent
-           ) AND image_type = 'Profile' ORDER BY date DESC LIMIT 1
-         )
-       ) as profile_image_url,
-       COALESCE
-       (
-         cover_image_url,
-         (
-           SELECT url FROM agents_images WHERE mui =
-           (
-             SELECT matrix_unique_id FROM agents WHERE id = users.agent
-           ) AND image_type = 'Cover' ORDER BY date DESC LIMIT 1
-         )
-       ) as cover_image_url,
        (
         SELECT count(*) > 0 FROM docusign_users WHERE "user" = users.id
        ) as has_docusign,

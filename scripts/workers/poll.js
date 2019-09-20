@@ -1,12 +1,13 @@
 const promisify = require('../../lib/utils/promisify')
 const createContext = require('./create-context')
+const Context = require('../../lib/models/Context')
 const Slack = require('../../lib/models/Slack')
 
 const Notification = require('../../lib/models/Notification')
 const CrmTaskWorker = require('../../lib/models/CRM/Task/worker/notification')
 const CalendarWorker = require('../../lib/models/Calendar/worker/notification')
 const EmailCampaign = require('../../lib/models/Email/campaign')
-const ShowingsCredential = require('../../lib/models/Showings/credential')
+// const ShowingsWorker = require('../../lib/models/Showings/worker')
 const GoogleWorker = require('../../lib/models/Google/workers')
 const MicrosoftWorker = require('../../lib/models/Microsoft/workers')
 const Task = require('../../lib/models/Task')
@@ -14,37 +15,67 @@ const Task = require('../../lib/models/Task')
 
 let i = 1
 
-const poll = async ({fn, name}) => {
-  const id = `${name}-${++i}`
+const poll_promises = new Map
+const polling_timeouts = new Map
+let shutting_down = false
 
-  const { commit, rollback } = await createContext({
-    id
-  })
+async function shutdown() {
+  shutting_down = true
 
-  try {
-    await fn()
-  } catch(err) {
-    Slack.send({
-      channel: '7-server-errors',
-      text: `Notifications worker: '${err}'`,
-      emoji: ':skull:'
-    })
-
-    rollback(err)
-    return
+  for (const t of polling_timeouts.values()) {
+    clearTimeout(t)
   }
 
+  polling_timeouts.clear()
 
-  await commit()
+  await Promise.all(poll_promises.values())
+  Context.log('Pollers shutdown successful!')
+}
 
-  const again = async () => {
-    poll({
-      fn,
-      name
+const poll = ({ fn, name }) => {
+  const _poll = async ({fn, name}) => {
+    if (polling_timeouts.has(name)) {
+      polling_timeouts.delete(name)
+    }
+  
+    const id = `${name}-${++i}`
+  
+    const { commit, rollback } = await createContext({
+      id
     })
+  
+    try {
+      await fn()
+    } catch(err) {
+      Slack.send({
+        channel: '7-server-errors',
+        text: `Notifications worker: '${err}'`,
+        emoji: ':skull:'
+      })
+  
+      rollback(err)
+      return
+    }
+  
+    await commit()
+  
+    const again = async () => {
+      if (shutting_down) return
+  
+      poll({
+        fn,
+        name
+      })
+    }
+  
+    if (shutting_down) {
+      Context.log('Pollers: shutdown completed')
+    } else {
+      polling_timeouts.set(name, setTimeout(again, 5000))
+    }
   }
 
-  setTimeout(again, 5000)
+  poll_promises.set(name, _poll({ fn, name }))
 }
 
 const notifications = async () => {
@@ -86,10 +117,10 @@ poll({
   name: 'EmailCampaign.updateStats'
 })
 
-poll({
-  fn: ShowingsCredential.crawlerJob,
-  name: 'ShowingsCredential.crawlerJob'
-})
+// poll({
+//   fn: ShowingsWorker.startDue,
+//   name: 'ShowingsWorker.crawlerJob'
+// })
 
 poll({
   fn: GoogleWorker.syncDue,
@@ -100,3 +131,5 @@ poll({
   fn: MicrosoftWorker.syncDue,
   name: 'MicrosoftWorker.syncDue'
 })
+
+module.exports = shutdown

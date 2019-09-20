@@ -8,7 +8,7 @@ RETURNS trigger AS
 $$
   BEGIN
     PERFORM update_current_deal_context(id) FROM deals
-    WHERE listing = (SELECT id FROM listings WHERE matrix_unique_id = NEW.matrix_unique_id);
+    WHERE listing = (SELECT NEW.id);
 
     RETURN NEW;
   END;

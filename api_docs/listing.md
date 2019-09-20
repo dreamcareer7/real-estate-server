@@ -17,9 +17,6 @@ However, each `listing` object has a `property` object inside.
   So please do no look for methods to add new listings.
 :::
 
-### Get by MUI [GET /listings/search]
-<!-- include(tests/listing/by_mui.md) -->
-
 ### Get by MLS Number [GET /listings/search]
 <!-- include(tests/listing/by_mls.md) -->
 

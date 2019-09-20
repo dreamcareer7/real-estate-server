@@ -47,15 +47,18 @@ AS $$
         created_by,
         tag
       )
-    SELECT
-      brand,
-      created_at,
-      created_by,
-      tag
-    FROM
-      new_tag_attrs
-    WHERE
-      tag IN (SELECT tag FROM new_tags);
+    (
+      SELECT
+        brand,
+        created_at,
+        created_by,
+        tag
+      FROM
+        new_tag_attrs
+      WHERE
+        tag IN (SELECT tag FROM new_tags)
+    )
+    ON CONFLICT DO NOTHING;
 
     RETURN NULL;
   END;

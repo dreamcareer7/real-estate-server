@@ -1,4 +1,5 @@
 const globals = [
+  'BigInt',
   'Context',
   'Error',
   'Orm',
@@ -91,7 +92,7 @@ module.exports = {
     'node': true
   },
   'parserOptions': {
-    'ecmaVersion': 9
+    'ecmaVersion': 10
   },
   'extends': 'eslint:recommended',
   'rules': {

@@ -32,6 +32,7 @@ const brandCreateParent = (cb) => {
 
   return frisby.create('create a brand')
     .post('/brands', brand)
+    .addHeader('x-handle-jobs', 'yes')
     .after(cb)
     .expectStatus(200)
     .expectJSON({
@@ -90,6 +91,7 @@ const brandCreate = (cb) => {
 
   return frisby.create('create a child brand')
     .post('/brands?associations[]=brand.roles', brand)
+    .addHeader('x-handle-jobs', 'yes')
     .after((err, res, body) => {
       const setup = frisby.globalSetup()
 
@@ -109,6 +111,7 @@ function getAttributeDefs(cb) {
   return frisby
     .create('get all attribute defs, global or user-defined')
     .get('/contacts/attribute_defs')
+    .addHeader('X-RECHAT-BRAND', results.contact.brandCreateParent.data.id)
     .after(function(err, res, json) {
       defs = _.keyBy(json.data, 'name')
 
@@ -787,19 +790,6 @@ const updateAttribute = cb => {
     })
 }
 
-function createStageLists(cb) {
-  return frisby.create('create stage lists')
-    .post('/jobs', {
-      name: 'contact_lists',
-      data: {
-        type: 'create_default_lists',
-        brand_id: results.contact.brandCreate.data.id
-      }
-    })
-    .after(cb)
-    .expectStatus(200)
-}
-
 function moveContactToWarmListStage(cb) {
   return frisby
     .create('change contact stage to warm list')
@@ -837,8 +827,10 @@ function contactShouldBeInWarmList(cb) {
 }
 
 function deleteWarmList(cb) {
+  const warmListId = results.contact.contactShouldBeInWarmList.data.lists[0].id
+
   return frisby.create('delete warm list')
-    .delete('/contacts/lists/' + results.contact.createStageLists[0])
+    .delete('/contacts/lists/' + warmListId)
     .after(cb)
     .expectStatus(204)
 }
@@ -981,7 +973,7 @@ const getAllTags = (cb) => {
     .get('/contacts/tags')
     .after(cb)
     .expectStatus(200)
-    .expectJSONLength('data', 8)
+    .expectJSONLength('data', 13)
     .expectJSON({
       code: 'OK'
     })
@@ -1022,7 +1014,7 @@ const checkTagIsAdded = cb => {
       cb(err, res, json)
     })
     .expectStatus(200)
-    .expectJSONLength('data', 9)
+    .expectJSONLength('data', 14)
     .expectJSON({
       code: 'OK'
     })
@@ -1089,7 +1081,9 @@ const verifyTagDeleted = cb => {
     .after((err, res, body) => {
       const tags = body.data.map(a => a.text)
 
-      if (tags.includes('bar') || tags.includes('poo') || tags.length !== 7) {
+      console.log(tags)
+
+      if (tags.includes('bar') || tags.includes('poo') || tags.length !== 12) {
         throw 'Tag was not deleted correctly.'
       }
 
@@ -1156,14 +1150,6 @@ const bulkMerge = cb => {
     .expectStatus(200)
 }
 
-const getJobStatus = cb => {
-  return frisby
-    .create('get status of a contact-related job')
-    .get('/contacts/jobs/' + results.contact.bulkMerge.data.job_id)
-    .after(cb)
-    .expectStatus(200)
-}
-
 const sendEmails = cb => {
   const campaign = {
     subject: 'Email Subject',
@@ -1217,9 +1203,9 @@ const sendEmailsToList = cb => {
 
 module.exports = {
   brandCreateParent,
-  brandCreate,
   getAttributeDefs,
   createBrandLists,
+  brandCreate,
   create,
   createCompanyContact,
   createSingleAttrContact,
@@ -1248,7 +1234,6 @@ module.exports = {
   updateAttribute,
   updateContact,
   patchOwner,
-  createStageLists,
   moveContactToWarmListStage,
   contactShouldBeInWarmList,
   deleteWarmList,
@@ -1282,7 +1267,7 @@ module.exports = {
   getContactDuplicates,
   mergeContacts,
   bulkMerge,
-  getJobStatus,
+  // getJobStatus,
   deleteContact,
   deleteManyContacts,
   checkIfManyContactsListIsEmpty,

@@ -21,10 +21,16 @@ SELECT 'compact_listing' AS TYPE,
        listings.buyers_agency_commission AS buyers_agency_commission,
        listings.sub_agency_commission AS sub_agency_commission,
        (
-          SELECT id FROM agents WHERE matrix_unique_id = listings.list_agent_mui LIMIT 1
+          SELECT id FROM agents
+          WHERE  agents.matrix_unique_id = listings.list_agent_mui
+          AND    agents.mls = listings.mls
+          LIMIT 1
        ) as list_agent,
        (
-          SELECT id FROM agents WHERE matrix_unique_id = listings.selling_agent_mui LIMIT 1
+          SELECT id FROM agents
+          WHERE  agents.matrix_unique_id = listings.selling_agent_mui
+          AND    agents.mls = listings.mls
+          LIMIT 1
        ) as selling_agent,
        list_office_name,
        selling_office_name,
@@ -42,10 +48,10 @@ SELECT 'compact_listing' AS TYPE,
           SELECT "user" FROM brand_agents
           ORDER BY (
             CASE
-              WHEN listings.list_agent_mls_id       = brand_agents.mlsid THEN 4
-              WHEN listings.co_list_agent_mls_id    = brand_agents.mlsid THEN 3
-              WHEN listings.selling_agent_mls_id    = brand_agents.mlsid THEN 2
-              WHEN listings.co_selling_agent_mls_id = brand_agents.mlsid THEN 1
+              WHEN listings.list_agent_mui       = brand_agents.mui AND listings.mls = brand_agents.mls THEN 4
+              WHEN listings.co_list_agent_mui    = brand_agents.mui AND listings.mls = brand_agents.mls THEN 3
+              WHEN listings.selling_agent_mui    = brand_agents.mui AND listings.mls = brand_agents.mls THEN 2
+              WHEN listings.co_selling_agent_mui = brand_agents.mui AND listings.mls = brand_agents.mls THEN 1
               ELSE 0
             END
           ) DESC, is_me DESC, has_contact DESC, RANDOM()
@@ -70,6 +76,7 @@ SELECT 'compact_listing' AS TYPE,
          SELECT url FROM photos
          WHERE
           listing_mui = listings.matrix_unique_id
+          AND mls = listings.mls
           AND photos.url IS NOT NULL
           AND photos.deleted_at IS NULL
          ORDER BY "order" LIMIT 1
@@ -102,8 +109,10 @@ SELECT 'compact_listing' AS TYPE,
              EXTRACT(EPOCH FROM start_time) as start_time,
              EXTRACT(EPOCH FROM end_time)   as end_time,
              description
-           FROM open_houses WHERE listing_mui = listings.matrix_unique_id
-                AND end_time::timestamptz AT TIME ZONE tz > NOW()
+           FROM open_houses
+           WHERE open_houses.listing_mui = listings.matrix_unique_id
+             AND open_houses.mls = listings.mls
+             AND open_houses.end_time::timestamptz AT TIME ZONE tz > NOW()
          ) AS a
        ) AS open_houses,
        json_build_object(

@@ -5,7 +5,8 @@ registerSuite('office', ['add'])
 const add = (cb) => {
   return frisby.create('add an agent')
     .post('/jobs', {
-      name: 'MLS.Agent',
+      queue: 'MLS.Agent',
+      name: 'mls_agent',
       data: {processed: agent}
     })
     .after(cb)

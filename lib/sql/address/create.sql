@@ -17,7 +17,8 @@ INSERT INTO addresses(
   direction,
   street_dir_prefix,
   street_dir_suffix,
-  street_number_searchable
+  street_number_searchable,
+  mls
 ) VALUES (
   $1,
   $2,
@@ -37,10 +38,11 @@ INSERT INTO addresses(
   $16,
   $17,
   $18,
-  $19
+  $19,
+  $20::mls
 )
 
-ON CONFLICT (matrix_unique_id) DO UPDATE SET
+ON CONFLICT (matrix_unique_id, mls) DO UPDATE SET
   updated_at = CLOCK_TIMESTAMP(),
   title = $1,
   subtitle = $2,
@@ -60,6 +62,6 @@ ON CONFLICT (matrix_unique_id) DO UPDATE SET
   street_dir_prefix = $17,
   street_dir_suffix = $18,
   street_number_searchable = $19
-  WHERE addresses.matrix_unique_id = $14
+  WHERE addresses.matrix_unique_id = $14 AND addresses.mls = $20::mls
 
 RETURNING id

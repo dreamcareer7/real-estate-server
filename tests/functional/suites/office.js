@@ -3,7 +3,8 @@ const office = require('./mls/office.js')
 const add = (cb) => {
   return frisby.create('add an office')
     .post('/jobs', {
-      name: 'MLS.Office',
+      queue: 'MLS.Office',
+      name: 'mls_office',
       data: {processed: office}
     })
     .after(cb)

@@ -9,19 +9,22 @@
     level,
     room_type,
     created_at,
-    updated_at)
-VALUES ($1,
-        $2::timestamptz,
-        $3,
-        $4,
-        $5,
-        $6,
-        $7,
-        $8,
-        $9,
-        now(),
-        now())
-ON CONFLICT (matrix_unique_id) DO UPDATE SET
+    updated_at,
+    mls
+) VALUES (
+  $1,
+  $2::timestamptz,
+  $3,
+  $4,
+  $5,
+  $6,
+  $7,
+  $8,
+  $9,
+  now(),
+  now(),
+  $10::mls
+) ON CONFLICT (matrix_unique_id, mls) DO UPDATE SET
   matrix_modified_dt = $2::timestamptz,
   description = $3,
   length = $4,
@@ -31,5 +34,5 @@ ON CONFLICT (matrix_unique_id) DO UPDATE SET
   level = $8,
   room_type = $9,
   updated_at = CLOCK_TIMESTAMP()
-  WHERE property_rooms.matrix_unique_id = $1
+  WHERE property_rooms.matrix_unique_id = $1 AND property_rooms.mls = $10::mls
   RETURNING id

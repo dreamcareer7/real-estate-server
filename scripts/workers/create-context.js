@@ -1,5 +1,5 @@
+const Context = require('../../lib/models/Context')
 const db = require('../../lib/utils/db')
-const promisify = require('../../lib/utils/promisify')
 
 const createContext = async c => {
   const context = Context.create({
@@ -12,7 +12,10 @@ const createContext = async c => {
 
   const rollback = err => {
     Context.trace('<- Rolling back on worker'.red, err)
-    return conn.query('ROLLBACK', done)
+    return conn.query('ROLLBACK', (err) => {
+      done(err)
+      context.exit()
+    })
   }
 
   const commit = async () => {
@@ -26,9 +29,10 @@ const createContext = async c => {
 
     Context.log('Committed 👌')
 
-    const jobs = context.get('jobs')
-    await promisify(Job.handle)(jobs)
+    await Job.handleContextJobs()
+
     done()
+    context.exit()
   }
 
   context.on('error', function (e) {
@@ -45,10 +49,9 @@ const createContext = async c => {
 
   context.set({
     db: conn,
-    jobs: []
+    jobs: [],
+    rabbit_jobs: [],
   })
-
-  context.enter()
 
   return { rollback, commit }
 }

@@ -6,6 +6,7 @@ const { createContext, handleJobs } = require('../helper')
 
 const AttachedFile = require('../../../lib/models/AttachedFile')
 const Contact = require('../../../lib/models/Contact')
+const ImportWorker = require('../../../lib/models/Contact/worker/import')
 const Context = require('../../../lib/models/Context')
 const User = require('../../../lib/models/User')
 
@@ -35,24 +36,16 @@ async function testImportFromCsv() {
     filename: 'contacts.csv',
     user,
     path: user.id + '-' + Date.now().toString(),
-    relations: [{
-      role: 'Brand',
-      role_id: brand.id
-    }],
+    relations: [
+      {
+        role: 'Brand',
+        role_id: brand.id
+      }
+    ],
     public: false
   })
 
-  const job = Job.queue
-    .create('contact_import', {
-      mappings,
-      file_id: file.id,
-      owner: user.id,
-      type: 'import_csv',
-      user_id: user.id,
-      brand_id: brand.id
-    })
-
-  Context.get('jobs').push(job)
+  ImportWorker.import_csv(user.id, brand.id, file.id, user.id, mappings)
 
   await handleJobs()
 
@@ -61,15 +54,7 @@ async function testImportFromCsv() {
 }
 
 async function testImportFromJson() {
-  const job = Job.queue
-    .create('contact_import', {
-      type: 'import_json',
-      contacts: contacts_json.map(c => ({ ...c, user: user.id })),
-      user_id: user.id,
-      brand_id: brand.id
-    })
-
-  Context.get('jobs').push(job)
+  ImportWorker.import_json(contacts_json.map(c => ({ ...c, user: user.id })), user.id, brand.id)
 
   await handleJobs()
 

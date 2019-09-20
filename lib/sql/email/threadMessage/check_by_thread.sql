@@ -2,7 +2,7 @@
   SELECT
     'gmail' AS origin,
     google_credential AS "owner",
-    thread_key,
+    thread_key
   FROM
     google_messages
   WHERE
@@ -14,7 +14,7 @@ UNION ALL
   SELECT
     'outlook' AS origin,
     microsoft_credential AS "owner",
-    thread_key,
+    thread_key
   FROM
     microsoft_messages
   WHERE

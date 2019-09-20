@@ -1,1 +1,0 @@
-INSERT INTO brands_offices(brand, office) VALUES ($1, $2)

@@ -1,15 +1,20 @@
 {
-    "method": "POST",
-    "uri": "/brands",
-    "json": true,
-    "body": {
-        "palette": {
-            "primary": "red"
-        },
-        "assets": {},
-        "messages": {},
-        "name": "Parent Brand",
-        "role": "Admin"
-    }
+  "method": "POST",
+  "uri": "/brands",
+  "json": true,
+  "body": {
+    "palette": {
+      "primary": "red"
+    },
+    "brand_type": "Personal",
+    "assets": {},
+    "messages": {},
+    "name": "Parent Brand",
+    "roles": [
+      {
+        "name": "Admin",
+        "acl": ["Deals", "CRM", "Marketing"]
+      }
+    ]
   }
-  
+}

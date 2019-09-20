@@ -1,1 +1,0 @@
-DELETE FROM brands_offices WHERE brand = $1 AND office = $2

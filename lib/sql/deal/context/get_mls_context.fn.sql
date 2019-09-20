@@ -42,10 +42,10 @@ BEGIN
     ) AS street_address,
     (
       SELECT url FROM photos
-      WHERE
-      listing_mui = listings.matrix_unique_id
-      AND photos.url IS NOT NULL
-      AND photos.deleted_at IS NULL
+      WHERE photos.listing_mui = listings.matrix_unique_id
+      AND   photos.mls         = listings.mls
+      AND   photos.url IS NOT NULL
+      AND   photos.deleted_at IS NULL
       ORDER BY "order" LIMIT 1
     ) AS photo
   INTO r1

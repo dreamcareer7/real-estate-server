@@ -22,5 +22,19 @@
         </CustomFields>
       </RecipientStatus>
     </RecipientStatuses>
+    <DocumentStatuses>
+      <DocumentStatus>
+        <ID>1</ID>
+        <Name>Addendum for Back-Up Contract.pdf</Name>
+        <TemplateName />
+        <Sequence>1</Sequence>
+      </DocumentStatus>
+      <DocumentStatus>
+        <ID>2</ID>
+        <Name>Signed On Paper.pdf</Name>
+        <TemplateName />
+        <Sequence>2</Sequence>
+      </DocumentStatus>
+    </DocumentStatuses>
   </EnvelopeStatus>
 </DocuSignEnvelopeInformation>

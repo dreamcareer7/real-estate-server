@@ -11,7 +11,7 @@ const savePhoto = async () => {
 
 const deleteMissing = async () => {
   await savePhoto()
-  await Photo.deleteMissing(json.listing_mui, [json.matrix_unique_id])
+  await Photo.deleteMissing(json.listing_mui, json.mls, [json.matrix_unique_id])
 }
 
 describe('MLS Photo', () => {
