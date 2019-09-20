@@ -37,6 +37,18 @@ const airship = (job, done) => {
   Notification.sendToDevice(notification_user, notification, token, user_id, done)
 }
 
+const enabled_mls = config.mls.enabled || []
+
+function filter_mls(fn) {
+  return (job, done) => {
+    if (enabled_mls.includes(job.data.processed.mls)) {
+      return fn(job, done)
+    }
+
+    return done()
+  }
+}
+
 const notification = (job, done) => {
   Notification.create(job.data.notification, done)
 }
@@ -83,6 +95,8 @@ const mls_photo = (job, done) => {
 }
 
 const mls_listing = (job, done) => {
+  if (!enabled_mls.includes(job.data.processed.listing.mls)) return done()
+
   job.data.processed.address.matrix_unique_id = parseInt(job.data.processed.address.matrix_unique_id)
 
   Listing.create({
@@ -92,6 +106,8 @@ const mls_listing = (job, done) => {
 }
 
 const mls_validate_listing_photos = (job, done) => {
+  if (!enabled_mls.includes(job.data.mls)) return done()
+
   Photo.deleteMissing(job.data.listing, job.data.present).nodeify(done)
 }
 
@@ -148,32 +164,32 @@ module.exports = {
   },
 
   'MLS.Unit': {
-    handler: mls_unit,
+    handler: filter_mls(mls_unit),
     parallel: 50
   },
 
   'MLS.Room': {
-    handler: mls_room,
+    handler: filter_mls(mls_room),
     parallel: 50
   },
 
   'MLS.OpenHouse': {
-    handler: mls_openhouse,
+    handler: filter_mls(mls_openhouse),
     parallel: 50
   },
 
   'MLS.Agent': {
-    handler: mls_agent,
+    handler: filter_mls(mls_agent),
     parallel: 50
   },
 
   'MLS.Office': {
-    handler: mls_office,
+    handler: filter_mls(mls_office),
     parallel: 50
   },
 
   'MLS.Photo': {
-    handler: mls_photo,
+    handler: filter_mls(mls_photo),
     parallel: 50
   },
 
