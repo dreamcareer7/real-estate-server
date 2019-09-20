@@ -145,6 +145,9 @@ module.exports = {
     'occupancy': 'Vacant',
     'private_remarks': 'Showings begin Friday, Dec.7th.',
     'application_fee_yn': true,
-    'mls': 'NTREIS'
+    'mls': 'NTREIS',
+    'transaction_type': 'Sale',
+    'usage_type': 'Residential',
+    'structure_type': 'SingleFamily'
   }
 }

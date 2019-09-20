@@ -1,5 +1,5 @@
 module.exports = {
-  'matrix_unique_id': 69958752,
+  'matrix_unique_id': '69958752',
   'listing_mui': 69958019,
   'description': '',
   'order': 14,
