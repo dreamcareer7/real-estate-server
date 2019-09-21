@@ -1,7 +1,8 @@
 module.exports = {
-  'matrix_unique_id': 69958752,
+  'matrix_unique_id': '69958752',
   'listing_mui': 69958019,
   'description': '',
+  'mls': 'NTREIS',
   'order': 14,
   'exif': {
     'undefined': 48,
@@ -70,6 +71,5 @@ module.exports = {
     'SceneCaptureType': 0,
     'OffsetSchema': 0
   },
-  'url': 'https://d2j29n432zojb.cloudfront.net/69958752-1.jpg',
-  'mls': 'NTREIS'
+  'url': 'https://d2j29n432zojb.cloudfront.net/69958752-1.jpg'
 }
