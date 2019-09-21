@@ -124,7 +124,7 @@ INSERT INTO properties (
   $61::mls
 )
 
-ON CONFLICT (matrix_unique_id) DO UPDATE SET
+ON CONFLICT (matrix_unique_id, mls) DO UPDATE SET
   property_type = $1,
   property_subtype = $2,
   bedroom_count = $3,
