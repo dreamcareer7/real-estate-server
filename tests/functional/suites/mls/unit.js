@@ -16,5 +16,5 @@ module.exports = {
   'beds': 4,
   'units': 2,
   'square_feet': 2768,
-  'mls': 'NTREIS'
+  'mls': 'NTREIS',
 }
