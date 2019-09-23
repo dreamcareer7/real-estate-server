@@ -55,6 +55,8 @@ UNION ALL
     google_messages
   WHERE
     thread_key = $1
+  ORDER BY
+    message_date ASC
 )
 UNION ALL
 (
@@ -82,4 +84,6 @@ UNION ALL
     microsoft_messages
   WHERE
     thread_key = $1
+  ORDER BY
+    message_date ASC
 )
