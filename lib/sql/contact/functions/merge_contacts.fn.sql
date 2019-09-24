@@ -77,7 +77,7 @@ AS $$
   ),
   attrs_to_keep AS (
     (
-      SELECT DISTINCT ON (attribute_def, lower(text), index, label)
+      SELECT DISTINCT ON (attribute_def, lower(text), index)
         id, index_offset, is_primary
       FROM
         attrs
@@ -85,7 +85,7 @@ AS $$
         data_type = 'text'
         AND section <> 'Addresses'
       ORDER BY
-        attribute_def, lower(text), index, label, is_parent_attr desc, is_primary desc
+        attribute_def, lower(text), index, is_parent_attr desc, is_primary desc
     )
     UNION ALL
     (
