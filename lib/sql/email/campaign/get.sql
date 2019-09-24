@@ -21,7 +21,7 @@ SELECT email_campaigns.*,
   (
     SELECT ARRAY_AGG(files_relations.file)
     FROM files_relations
-    WHERE role = 'EmailCampaign' AND role_id = email_campaigns.id
+    WHERE role = 'EmailCampaign' AND role_id = email_campaigns.id AND deleted_at IS NULL
   ) AS attachments,
 
   (
