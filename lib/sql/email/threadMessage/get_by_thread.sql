@@ -3,6 +3,8 @@
     'rechat_email' AS origin,
     id,
     NULL::uuid AS "owner",
+    NULL::text AS "owner_email",
+    NULL::text AS "owner_name",
     NULL AS "message_id",
     NULL AS "thread_id",
     NULL AS "thread_key",
@@ -33,8 +35,10 @@ UNION ALL
 (
   SELECT
     'gmail' AS origin,
-    id,
+    google_messages.id,
     google_credential AS "owner",
+    google_credentials.email AS "owner_email",
+    google_credentials.display_name AS "owner_name",
     message_id,
     thread_id,
     thread_key,
@@ -53,17 +57,21 @@ UNION ALL
     message_date
   FROM
     google_messages
+  JOIN
+    google_credentials on google_messages.google_credential = google_credentials.id
   WHERE
     thread_key = $1
   ORDER BY
-    message_date ASC
+    google_messages.message_date ASC
 )
 UNION ALL
 (
   SELECT
     'outlook' AS origin,
-    id,
+    microsoft_messages.id,
     microsoft_credential AS "owner",
+    microsoft_credentials.email AS "owner_email",
+    microsoft_credentials.display_name AS "owner_name",
     message_id,
     thread_id,
     thread_key,
@@ -80,10 +88,13 @@ UNION ALL
     cc,
     bcc,
     message_date
+
   FROM
     microsoft_messages
+  JOIN
+    microsoft_credentials on microsoft_messages.microsoft_credential = microsoft_credentials.id
   WHERE
     thread_key = $1
   ORDER BY
-    message_date ASC
+    microsoft_messages.message_date ASC
 )
