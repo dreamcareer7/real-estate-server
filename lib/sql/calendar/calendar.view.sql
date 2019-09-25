@@ -375,7 +375,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       google_credentials on google_messages.google_credential = google_credentials.id
     WHERE
       google_messages.deleted_at IS NULL
-    ORDER BY google_messages.thread_key, date ASC
+    ORDER BY google_messages.thread_key, message_date ASC
   )
   UNION ALL
   (
@@ -407,7 +407,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       microsoft_credentials on microsoft_messages.microsoft_credential = microsoft_credentials.id
     WHERE
       microsoft_messages.deleted_at IS NULL
-    ORDER BY microsoft_messages.thread_key, date ASC
+    ORDER BY microsoft_messages.thread_key, message_date ASC
   )
   UNION ALL
   (
@@ -446,7 +446,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       JOIN google_credentials ON google_messages.google_credential = google_credentials.id
     WHERE
       google_messages.deleted_at IS NULL
-    ORDER BY google_messages.thread_key, contact, date ASC
+    ORDER BY google_messages.thread_key, contact, message_date ASC
   )
   UNION ALL
   (
@@ -485,5 +485,5 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       JOIN microsoft_credentials ON microsoft_messages.microsoft_credential = microsoft_credentials.id
     WHERE
       microsoft_messages.deleted_at IS NULL
-    ORDER BY microsoft_messages.thread_key, contact, date ASC
+    ORDER BY microsoft_messages.thread_key, contact, message_date ASC
   )

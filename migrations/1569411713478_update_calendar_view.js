@@ -382,7 +382,7 @@ const migrations = [
         google_credentials on google_messages.google_credential = google_credentials.id
       WHERE
         google_messages.deleted_at IS NULL
-      ORDER BY google_messages.thread_key, date ASC
+      ORDER BY google_messages.thread_key, message_date ASC
     )
     UNION ALL
     (
@@ -414,7 +414,7 @@ const migrations = [
         microsoft_credentials on microsoft_messages.microsoft_credential = microsoft_credentials.id
       WHERE
         microsoft_messages.deleted_at IS NULL
-      ORDER BY microsoft_messages.thread_key, date ASC
+      ORDER BY microsoft_messages.thread_key, message_date ASC
     )
     UNION ALL
     (
@@ -453,7 +453,7 @@ const migrations = [
         JOIN google_credentials ON google_messages.google_credential = google_credentials.id
       WHERE
         google_messages.deleted_at IS NULL
-      ORDER BY google_messages.thread_key, contact, date ASC
+      ORDER BY google_messages.thread_key, contact, message_date ASC
     )
     UNION ALL
     (
@@ -492,7 +492,7 @@ const migrations = [
         JOIN microsoft_credentials ON microsoft_messages.microsoft_credential = microsoft_credentials.id
       WHERE
         microsoft_messages.deleted_at IS NULL
-      ORDER BY microsoft_messages.thread_key, contact, date ASC
+      ORDER BY microsoft_messages.thread_key, contact, message_date ASC
     )`,
 
   'COMMIT'
