@@ -7,7 +7,6 @@ const migrations = [
 
   `CREATE OR REPLACE VIEW analytics.calendar AS (
     SELECT
-      NULL::text AS thread_key, NULL::uuid AS cid,
       id,
       created_by,
       'crm_task' AS object_type,
@@ -23,6 +22,7 @@ const migrations = [
       NULL::uuid AS contact,
       NULL::uuid AS campaign,
       NULL::uuid AS credential_id,
+      NULL::text AS thread_key,
       (
         SELECT
           ARRAY_AGG("user")
@@ -45,7 +45,6 @@ const migrations = [
     UNION ALL
     (
       SELECT
-        NULL::text AS thread_key, NULL::uuid AS cid,
         ca.id,
         ca.created_by,
         'crm_association' AS object_type,
@@ -61,6 +60,7 @@ const migrations = [
         ca.contact,
         ca.email AS campaign,
         NULL::uuid AS credential_id,
+        NULL::text AS thread_key,
         (
           SELECT
             ARRAY_AGG("user")
@@ -80,13 +80,12 @@ const migrations = [
         JOIN crm_tasks AS ct
           ON ca.crm_task = ct.id
       WHERE
-      ca.deleted_at IS NULL
-      AND ct.deleted_at IS NULL
+        ca.deleted_at IS NULL
+        AND ct.deleted_at IS NULL
     )
     UNION ALL
     (
       SELECT
-        NULL::text AS thread_key, NULL::uuid AS cid,
         cdc.id,
         deals.created_by,
         'deal_context' AS object_type,
@@ -102,6 +101,7 @@ const migrations = [
         NULL::uuid AS contact,
         NULL::uuid AS campaign,
         NULL::uuid AS credential_id,
+        NULL::text AS thread_key,
         (
           SELECT
             ARRAY_AGG(DISTINCT r."user")
@@ -135,7 +135,6 @@ const migrations = [
     UNION ALL
     (
       SELECT
-        NULL::text AS thread_key, NULL::uuid AS cid,
         ca.id,
         contacts.created_by,
         'contact_attribute' AS object_type,
@@ -172,6 +171,7 @@ const migrations = [
         contact,
         NULL::uuid AS campaign,
         NULL::uuid AS credential_id,
+        NULL::text AS thread_key,
         ARRAY[contacts."user"] AS users,
         contacts.brand,
         NULL::text AS status,
@@ -193,7 +193,6 @@ const migrations = [
     UNION ALL
     (
       SELECT
-        NULL::text AS thread_key, NULL::uuid AS cid,
         id,
         created_by,
         'contact' AS object_type,
@@ -209,6 +208,7 @@ const migrations = [
         id AS contact,
         NULL::uuid AS campaign,
         NULL::uuid AS credential_id,
+        NULL::text AS thread_key,
         ARRAY[contacts."user"] AS users,
         brand,
         NULL::text AS status,
@@ -222,7 +222,6 @@ const migrations = [
     UNION ALL
     (
       SELECT
-        NULL::text AS thread_key, NULL::uuid AS cid,
         id,
         created_by,
         'email_campaign' AS object_type,
@@ -238,6 +237,7 @@ const migrations = [
         NULL::uuid AS contact,
         id AS campaign,
         NULL::uuid AS credential_id,
+        NULL::text AS thread_key,
         ARRAY[ec.from] AS users,
         brand,
         NULL::text AS status,
@@ -253,7 +253,6 @@ const migrations = [
     UNION ALL
     (
       SELECT
-        NULL::text AS thread_key, NULL::uuid AS cid,
         ec.id,
         ec.created_by,
         'email_campaign_recipient' AS object_type,
@@ -269,6 +268,7 @@ const migrations = [
         ecr.contact,
         ec.id AS campaign,
         NULL::uuid AS credential_id,
+        NULL::text AS thread_key,
         ARRAY[ec.from] AS users,
         ec.brand,
         NULL::text AS status,
@@ -355,7 +355,7 @@ const migrations = [
     UNION ALL
     (
       SELECT
-        DISTINCT ON (google_messages.thread_key) thread_key, NULL::uuid AS cid,
+        DISTINCT ON (google_messages.thread_key)
         google_messages.id,
         google_credentials.user AS created_by,
         'email_thread' AS object_type,
@@ -371,6 +371,7 @@ const migrations = [
         NULL::uuid AS contact,
         NULL::uuid AS campaign,
         google_messages.google_credential AS credential_id,
+        thread_key,
         ARRAY[google_credentials."user"] AS users,
         google_credentials.brand,
         NULL::text AS status,
@@ -386,7 +387,7 @@ const migrations = [
     UNION ALL
     (
       SELECT
-        DISTINCT ON (microsoft_messages.thread_key) thread_key, NULL::uuid AS cid,
+        DISTINCT ON (microsoft_messages.thread_key)
         microsoft_messages.id,
         microsoft_credentials.user AS created_by,
         'email_thread' AS object_type,
@@ -402,6 +403,7 @@ const migrations = [
         NULL::uuid AS contact,
         NULL::uuid AS campaign,
         microsoft_messages.microsoft_credential AS credential_id,
+        thread_key,
         ARRAY[microsoft_credentials."user"] AS users,
         microsoft_credentials.brand,
         NULL::text AS status,
@@ -417,7 +419,7 @@ const migrations = [
     UNION ALL
     (
       SELECT
-        DISTINCT ON (google_messages.thread_key, c.id) thread_key, c.id AS cid,
+        DISTINCT ON (google_messages.thread_key, contact)
         google_messages.id,
         google_credentials.user AS created_by,
         'email_thread_recipient' AS object_type,
@@ -433,6 +435,7 @@ const migrations = [
         c.id AS contact,
         NULL::uuid AS campaign,
         google_messages.google_credential AS credential_id,
+        thread_key,
         ARRAY[google_credentials."user"] AS users,
         google_credentials.brand,
         NULL::text AS status,
@@ -450,12 +453,12 @@ const migrations = [
         JOIN google_credentials ON google_messages.google_credential = google_credentials.id
       WHERE
         google_messages.deleted_at IS NULL
-      ORDER BY google_messages.thread_key, c.id, date ASC
+      ORDER BY google_messages.thread_key, contact, date ASC
     )
     UNION ALL
     (
       SELECT
-        DISTINCT ON (microsoft_messages.thread_key, c.id) thread_key, c.id AS cid,
+        DISTINCT ON (microsoft_messages.thread_key, contact)
         microsoft_messages.id,
         microsoft_credentials.user AS created_by,
         'email_thread_recipient' AS object_type,
@@ -471,6 +474,7 @@ const migrations = [
         c.id AS contact,
         NULL::uuid AS campaign,
         microsoft_messages.microsoft_credential AS credential_id,
+        thread_key,
         ARRAY[microsoft_credentials."user"] AS users,
         microsoft_credentials.brand,
         NULL::text AS status,
@@ -488,7 +492,7 @@ const migrations = [
         JOIN microsoft_credentials ON microsoft_messages.microsoft_credential = microsoft_credentials.id
       WHERE
         microsoft_messages.deleted_at IS NULL
-      ORDER BY microsoft_messages.thread_key, c.id, date ASC
+      ORDER BY microsoft_messages.thread_key, contact, date ASC
     )`,
 
   'COMMIT'
