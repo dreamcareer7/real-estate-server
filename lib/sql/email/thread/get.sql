@@ -53,7 +53,7 @@ SELECT
       WHERE
         microsoft_messages.thread_key = thread_keys.id
     )
-  ) AS thread_emails) AS email_count
+  ) AS thread_emails)::INT AS email_count
 
 FROM (
   SELECT unnest($1::TEXT[]) AS id
