@@ -25,10 +25,10 @@
     emails
   WHERE
     mailgun_id = (
-      SELECT in_reply_to FROM google_messages WHERE thread_key = $1 ORDER BY message_created_at ASC LIMIT 1
+      SELECT in_reply_to FROM google_messages WHERE thread_key = $1 AND in_reply_to IS NOT NULL ORDER BY message_created_at ASC LIMIT 1
     ) OR
     mailgun_id = (
-      SELECT in_reply_to FROM microsoft_messages WHERE thread_key = $1 ORDER BY message_created_at ASC LIMIT 1
+      SELECT in_reply_to FROM microsoft_messages WHERE thread_key = $1 AND in_reply_to IS NOT NULL ORDER BY message_created_at ASC LIMIT 1
     )
 )
 UNION ALL
