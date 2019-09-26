@@ -53,7 +53,41 @@ SELECT
       WHERE
         microsoft_messages.thread_key = thread_keys.id
     )
-  ) AS thread_emails)::INT AS email_count
+  ) AS thread_emails)::INT AS email_count,
+
+    COALESCE (
+      (
+        SELECT "from" FROM emails WHERE
+          mailgun_id = (
+            SELECT in_reply_to FROM google_messages WHERE google_messages.thread_key = thread_keys.id
+            ORDER BY message_created_at ASC LIMIT 1
+          ) OR
+          mailgun_id = (
+            SELECT in_reply_to FROM microsoft_messages WHERE microsoft_messages.thread_key = thread_keys.id
+            ORDER BY message_created_at ASC LIMIT 1
+          )
+      ),
+
+      (SELECT "from" FROM google_messages    WHERE google_messages.thread_key    = thread_keys.id ORDER BY message_created_at ASC LIMIT 1),
+      (SELECT "from" FROM microsoft_messages WHERE microsoft_messages.thread_key = thread_keys.id ORDER BY message_created_at ASC LIMIT 1)
+    ) AS "head.from",
+
+    COALESCE (
+      (
+        SELECT "to" FROM emails WHERE
+          mailgun_id = (
+            SELECT in_reply_to FROM google_messages WHERE google_messages.thread_key = thread_keys.id
+            ORDER BY message_created_at ASC LIMIT 1
+          ) OR
+          mailgun_id = (
+            SELECT in_reply_to FROM microsoft_messages WHERE microsoft_messages.thread_key = thread_keys.id
+            ORDER BY message_created_at ASC LIMIT 1
+          )
+      ),
+
+      (SELECT "to" FROM google_messages    WHERE google_messages.thread_key    = thread_keys.id ORDER BY message_created_at ASC LIMIT 1),
+      (SELECT "to" FROM microsoft_messages WHERE microsoft_messages.thread_key = thread_keys.id ORDER BY message_created_at ASC LIMIT 1)
+    ) AS "head.to"
 
 FROM (
   SELECT unnest($1::TEXT[]) AS id
