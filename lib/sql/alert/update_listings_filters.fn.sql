@@ -78,7 +78,8 @@ $$
           ),
           listings.mls_number
         ], ' ', NULL
-      ) as address
+      ) as address,
+    listings.mls AS mls
     FROM listings
     JOIN
       properties  ON listings.property_id = properties.id
