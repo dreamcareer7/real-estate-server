@@ -2,7 +2,7 @@ const db = require('../lib/utils/db')
 
 const migrations = [
   'BEGIN',
-  'ALTER TABLE listings_filters ADD mls MLS',
+  'ALTER TABLE listings_filters ADD mls MLS NOT NULL DEFAULT \'NTREIS\'',
 
   `CREATE OR REPLACE FUNCTION update_listings_filters()
       RETURNS trigger AS
@@ -98,10 +98,6 @@ const migrations = [
       END;
     $$
     LANGUAGE PLPGSQL;`,
-
-  'UPDATE listings SET updated_at = updated_at',
-
-  'ALTER TABLE listings_filters ALTER mls SET NOT NULL',
 
   'COMMIT'
 ]
