@@ -155,9 +155,9 @@ async function create() {
       bcc: sq.SqArray.from(bcc || []),
 
       message_created_at: Number(new Date(message.createdDateTime).getTime()),
-      message_date: new Date(message.createdDateTime).toISOString(),
+      message_date: new Date(message.createdDateTime).toISOString()
 
-      data: JSON.stringify(message)
+      // data: JSON.stringify(message)
     })
   }
 
