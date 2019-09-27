@@ -184,6 +184,18 @@ async function updateSyncStatus() {
   expect(updatedCredential_2.sync_status).to.be.equal(null)
 }
 
+async function postponeSync() {
+  const createdCredential = await create()
+
+  await MicrosoftCredential.postponeSync(createdCredential.id)
+
+  const updatedCredential = await MicrosoftCredential.get(createdCredential.id)
+
+  expect(createdCredential.id).to.be.equal(updatedCredential.id)
+  expect(updatedCredential.sync_status).to.be.equal('failed')
+  expect(updatedCredential.last_sync_duration).to.be.equal(0)
+}
+
 async function disableEnableSync() {
   const createdCredential = await create()
 
@@ -292,6 +304,7 @@ describe('Microsoft', () => {
     it('should revoke a microsoft-credential', updateAsRevoked)
     it('should update a microsoft-credential last sync status', updateLastSync)
     it('should update a microsoft-credential sync status', updateSyncStatus)
+    it('should postpone a microsoft-credential sync', postponeSync)
 
     it('should disable/enable a microsoft-credential', disableEnableSync)
     it('should handle returned exception from disable/enable microsoft-credential', disableEnableSyncFailed)
