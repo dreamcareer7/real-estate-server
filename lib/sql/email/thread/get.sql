@@ -29,7 +29,7 @@ SELECT DISTINCT ON (tids.id)
   COALESCE(r."from", g."from", m."from") AS "from",
   COALESCE(r."to", g."to", m."to") AS "to",
   array_agg(COALESCE(r.id, g.id, m.id)) OVER (PARTITION BY tids.id) AS emails,
-  (count(*) OVER (PARTITION BY tids.id)) + (r.thread_key IS NOT NULL)::int AS email_count,
+  ((count(*) OVER (PARTITION BY tids.id)) + (r.thread_key IS NOT NULL)::int)::int AS email_count,
   'thread' AS type
 FROM
   unnest($1::text[]) AS tids (id)

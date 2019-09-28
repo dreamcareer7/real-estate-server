@@ -348,7 +348,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
   UNION ALL
   (
     SELECT
-      DISTINCT ON (google_messages.thread_key)
+      DISTINCT ON (google_credentials.brand, google_messages.thread_key, contact, object_type, event_type, recurring)
       google_messages.id,
       google_credentials.user AS created_by,
       'email_thread' AS object_type,
@@ -375,12 +375,12 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       google_credentials on google_messages.google_credential = google_credentials.id
     WHERE
       google_messages.deleted_at IS NULL
-    ORDER BY google_messages.thread_key, message_date ASC
+    ORDER BY google_credentials.brand, google_messages.thread_key, contact, object_type, event_type, recurring, message_date ASC
   )
   UNION ALL
   (
     SELECT
-      DISTINCT ON (microsoft_messages.thread_key)
+      DISTINCT ON (microsoft_credentials.brand, microsoft_messages.thread_key, contact, object_type, event_type, recurring)
       microsoft_messages.id,
       microsoft_credentials.user AS created_by,
       'email_thread' AS object_type,
@@ -407,12 +407,12 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       microsoft_credentials on microsoft_messages.microsoft_credential = microsoft_credentials.id
     WHERE
       microsoft_messages.deleted_at IS NULL
-    ORDER BY microsoft_messages.thread_key, message_date ASC
+    ORDER BY microsoft_credentials.brand, microsoft_messages.thread_key, contact, object_type, event_type, recurring, message_date ASC
   )
   UNION ALL
   (
     SELECT
-      DISTINCT ON (google_messages.thread_key, contact)
+      DISTINCT ON (google_credentials.brand, google_messages.thread_key, contact, object_type, event_type, recurring)
       google_messages.id,
       google_credentials.user AS created_by,
       'email_thread_recipient' AS object_type,
@@ -446,12 +446,12 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       JOIN google_credentials ON google_messages.google_credential = google_credentials.id
     WHERE
       google_messages.deleted_at IS NULL
-    ORDER BY google_messages.thread_key, contact, message_date ASC
+    ORDER BY google_credentials.brand, google_messages.thread_key, contact, object_type, event_type, recurring, message_date ASC
   )
   UNION ALL
   (
     SELECT
-      DISTINCT ON (microsoft_messages.thread_key, contact)
+      DISTINCT ON (microsoft_credentials.brand, microsoft_messages.thread_key, contact, object_type, event_type, recurring)
       microsoft_messages.id,
       microsoft_credentials.user AS created_by,
       'email_thread_recipient' AS object_type,
@@ -485,5 +485,5 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       JOIN microsoft_credentials ON microsoft_messages.microsoft_credential = microsoft_credentials.id
     WHERE
       microsoft_messages.deleted_at IS NULL
-    ORDER BY microsoft_messages.thread_key, contact, message_date ASC
+    ORDER BY microsoft_credentials.brand, microsoft_messages.thread_key, contact, object_type, event_type, recurring, message_date ASC
   )
