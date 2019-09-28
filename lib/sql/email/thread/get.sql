@@ -4,6 +4,7 @@ WITH rechat_emails AS (
       e.id,
       g.thread_key,
       e.created_at,
+      g.has_attachments,
       e."from",
       e."to" || e."cc" || e."bcc" AS "to"
     FROM
@@ -16,6 +17,7 @@ WITH rechat_emails AS (
       e.id,
       m.thread_key,
       e.created_at,
+      m.has_attachments,
       e."from",
       e."to" || e."cc" || e."bcc" AS "to"
     FROM
@@ -27,6 +29,7 @@ WITH rechat_emails AS (
 )
 SELECT DISTINCT ON (tids.id)
   tids.id,
+  COALESCE(g.has_attachments, m.has_attachments) AS has_attachments,
   COALESCE(r.created_at, g.message_date, m.message_date) AS created_at,
   COALESCE(r."from", g."from", m."from") AS "from",
   COALESCE(r."to", g."to", m."to") AS "to",
