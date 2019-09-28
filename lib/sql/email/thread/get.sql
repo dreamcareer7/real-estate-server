@@ -10,6 +10,7 @@ WITH rechat_emails AS (
       google_messages AS g
       JOIN emails AS e
         ON g.in_reply_to = e.mailgun_id
+    WHERE g.deleted_at IS NULL
   ) UNION ALL (
     SELECT
       e.id,
@@ -21,6 +22,7 @@ WITH rechat_emails AS (
       microsoft_messages AS m
       JOIN emails AS e
         ON m.in_reply_to = e.mailgun_id
+    WHERE m.deleted_at IS NULL
   )
 )
 SELECT DISTINCT ON (tids.id)
@@ -39,5 +41,8 @@ FROM
     ON tids.id = m.thread_key
   LEFT JOIN rechat_emails AS r
     ON tids.id = r.thread_key
+  WHERE
+    g.deleted_at IS NULL
+    AND m.deleted_at IS NULL
 ORDER BY
   tids.id, COALESCE(r.created_at, g.message_date, m.message_date)
