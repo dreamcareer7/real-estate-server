@@ -63,7 +63,7 @@ UNION ALL
     google_credentials on google_messages.google_credential = google_credentials.id
   WHERE
     thread_key = $1
-    AND deleted_at IS NULL
+    AND google_messages.deleted_at IS NULL
   ORDER BY
     google_messages.message_date ASC
 )
@@ -99,7 +99,7 @@ UNION ALL
     microsoft_credentials on microsoft_messages.microsoft_credential = microsoft_credentials.id
   WHERE
     thread_key = $1
-    AND deleted_at IS NULL
+    AND microsoft_messages.deleted_at IS NULL
   ORDER BY
     microsoft_messages.message_date ASC
 )
