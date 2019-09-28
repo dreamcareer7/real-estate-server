@@ -4,7 +4,6 @@ WITH rechat_emails AS (
       e.id,
       g.thread_key,
       e.created_at,
-      g.has_attachments,
       e."from",
       e."to" || e."cc" || e."bcc" AS "to"
     FROM
@@ -17,7 +16,6 @@ WITH rechat_emails AS (
       e.id,
       m.thread_key,
       e.created_at,
-      m.has_attachments,
       e."from",
       e."to" || e."cc" || e."bcc" AS "to"
     FROM
