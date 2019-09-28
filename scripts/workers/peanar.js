@@ -51,7 +51,7 @@ async function main() {
 
   await peanar.worker({
     queues: ['MLS.Office', 'MLS.Unit', 'MLS.Room', 'MLS.Agent'],
-    concurrency: 10
+    concurrency: 50
   })
 
   await peanar.worker({

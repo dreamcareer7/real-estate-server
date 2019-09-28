@@ -51,7 +51,10 @@ SELECT 'room' AS TYPE,
          WHERE files_relations.role = 'Room' AND files_relations.role_id = rooms.id
          AND files.deleted_at IS NULL
          AND files_relations.deleted_at IS NULL
-       ) AS attachments
+       ) AS attachments,
+       (
+        SELECT ARRAY_AGG(id) FROM recommendations WHERE room = rooms.id AND deleted_at IS NULL
+       ) as recommendations
 FROM rooms
 JOIN unnest($1::uuid[]) WITH ORDINALITY t(rid, ord) ON rooms.id = rid
 ORDER BY t.ord

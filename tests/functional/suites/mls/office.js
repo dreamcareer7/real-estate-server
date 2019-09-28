@@ -14,6 +14,7 @@ module.exports = {
   'matrix_unique_id': 9999998,
   'matrix_modified_dt': '2017-05-04T12:00:08.333',
   'mls_name': 'North Texas Real Estate Information Systems',
+  'mls': 'NTREIS',
   'mls_id': 'RCHT01X',
   'mls_provider': 'Metrotex Association Of Realtors',
   'nar_number': '',
@@ -30,6 +31,5 @@ module.exports = {
   'st_postal_code': '75080',
   'st_postal_code_plus4': '',
   'st_state': 'TX',
-  'url': 'www.rechat.com',
-  'mls': 'NTREIS'
+  'url': 'www.rechat.com'
 }
