@@ -11,7 +11,7 @@ SELECT
   has_attachments,
   attachments,
   in_bound,
-  subject,
+  COALESCE(subject, '') AS "subject",
   NULL AS "snippet",
   NULL AS "unique_body",
   NULL AS "html_body",
