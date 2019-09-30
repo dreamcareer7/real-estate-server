@@ -76,6 +76,26 @@ const markAsFavorite = (cb) => {
     })
 }
 
+const markAsHid = (cb) => {
+  return frisby.create('hide a rec')
+    .patch('/rooms/' + results.room.create.data.id + '/recs/' + results.recommendation.feed.data[0].id + '/hid', {
+      hid: true
+    })
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      data: {
+        type: 'recommendation',
+        favorited_by: [results.authorize.token.data],
+      }
+    })
+    .expectJSONTypes({
+      code: String,
+      data: recommendation_response
+    })
+}
+
 const markAsFavorite404 = (cb) => {
   return frisby.create('expect 404 with invalid recommendation id')
     .patch('/rooms/' + results.room.create.data.id + '/recs/' + uuid.v1() + '/favorite', {
@@ -197,6 +217,7 @@ module.exports = {
   getFavorites,
   getFavorites404,
   markAsFavorite,
+  markAsHid,
   markAsFavorite404,
   markAsFavoriteWorked,
   markAsSeen,

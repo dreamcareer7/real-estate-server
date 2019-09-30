@@ -219,6 +219,18 @@ async function updateSyncStatus() {
   expect(updatedCredential_2.sync_status).to.be.equal(null)
 }
 
+async function postponeSync() {
+  const createdCredential = await create()
+
+  await GoogleCredential.postponeSync(createdCredential.id)
+
+  const updatedCredential = await GoogleCredential.get(createdCredential.id)
+
+  expect(createdCredential.id).to.be.equal(updatedCredential.id)
+  expect(updatedCredential.sync_status).to.be.equal('failed')
+  expect(updatedCredential.last_sync_duration).to.be.equal(0)
+}
+
 async function disableEnableSync() {
   const createdCredential = await create()
 
@@ -347,6 +359,7 @@ describe('Google', () => {
     it('should revoke a google-credential', updateAsRevoked)
     it('should update a google-credential last sync time', updateLastSync)
     it('should update a google-credential sync status', updateSyncStatus)
+    it('should postpone a google-credential sync', postponeSync)
     
     it('should disable/enable a google-credential', disableEnableSync)
     it('should handle returned exception from disable/enable google-credential', disableEnableSyncFailed)

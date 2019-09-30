@@ -15,7 +15,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
     NULL::uuid AS contact,
     NULL::uuid AS campaign,
     NULL::uuid AS credential_id,
-    NULL::text AS thread,
+    NULL::text AS thread_key,
     (
       SELECT
         ARRAY_AGG("user")
@@ -53,7 +53,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       ca.contact,
       ca.email AS campaign,
       NULL::uuid AS credential_id,
-      NULL::text AS thread,
+      NULL::text AS thread_key,
       (
         SELECT
           ARRAY_AGG("user")
@@ -73,8 +73,8 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       JOIN crm_tasks AS ct
         ON ca.crm_task = ct.id
     WHERE
-    ca.deleted_at IS NULL
-    AND ct.deleted_at IS NULL
+      ca.deleted_at IS NULL
+      AND ct.deleted_at IS NULL
   )
   UNION ALL
   (
@@ -94,7 +94,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       NULL::uuid AS contact,
       NULL::uuid AS campaign,
       NULL::uuid AS credential_id,
-      NULL::text AS thread,
+      NULL::text AS thread_key,
       (
         SELECT
           ARRAY_AGG(DISTINCT r."user")
@@ -164,7 +164,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       contact,
       NULL::uuid AS campaign,
       NULL::uuid AS credential_id,
-      NULL::text AS thread,
+      NULL::text AS thread_key,
       ARRAY[contacts."user"] AS users,
       contacts.brand,
       NULL::text AS status,
@@ -201,7 +201,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       id AS contact,
       NULL::uuid AS campaign,
       NULL::uuid AS credential_id,
-      NULL::text AS thread,
+      NULL::text AS thread_key,
       ARRAY[contacts."user"] AS users,
       brand,
       NULL::text AS status,
@@ -230,7 +230,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       NULL::uuid AS contact,
       id AS campaign,
       NULL::uuid AS credential_id,
-      NULL::text AS thread,
+      NULL::text AS thread_key,
       ARRAY[ec.from] AS users,
       brand,
       NULL::text AS status,
@@ -261,7 +261,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       ecr.contact,
       ec.id AS campaign,
       NULL::uuid AS credential_id,
-      NULL::text AS thread,
+      NULL::text AS thread_key,
       ARRAY[ec.from] AS users,
       ec.brand,
       NULL::text AS status,
@@ -348,6 +348,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
   UNION ALL
   (
     SELECT
+      DISTINCT ON (google_credentials.brand, google_messages.thread_key, contact, object_type, event_type, recurring)
       google_messages.id,
       google_credentials.user AS created_by,
       'email_thread' AS object_type,
@@ -363,7 +364,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       NULL::uuid AS contact,
       NULL::uuid AS campaign,
       google_messages.google_credential AS credential_id,
-      thread_key AS thread,
+      thread_key,
       ARRAY[google_credentials."user"] AS users,
       google_credentials.brand,
       NULL::text AS status,
@@ -374,10 +375,12 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       google_credentials on google_messages.google_credential = google_credentials.id
     WHERE
       google_messages.deleted_at IS NULL
+    ORDER BY google_credentials.brand, google_messages.thread_key, contact, object_type, event_type, recurring, message_date ASC
   )
   UNION ALL
   (
     SELECT
+      DISTINCT ON (microsoft_credentials.brand, microsoft_messages.thread_key, contact, object_type, event_type, recurring)
       microsoft_messages.id,
       microsoft_credentials.user AS created_by,
       'email_thread' AS object_type,
@@ -393,7 +396,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       NULL::uuid AS contact,
       NULL::uuid AS campaign,
       microsoft_messages.microsoft_credential AS credential_id,
-      thread_key AS thread,
+      thread_key,
       ARRAY[microsoft_credentials."user"] AS users,
       microsoft_credentials.brand,
       NULL::text AS status,
@@ -404,10 +407,12 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       microsoft_credentials on microsoft_messages.microsoft_credential = microsoft_credentials.id
     WHERE
       microsoft_messages.deleted_at IS NULL
+    ORDER BY microsoft_credentials.brand, microsoft_messages.thread_key, contact, object_type, event_type, recurring, message_date ASC
   )
   UNION ALL
   (
     SELECT
+      DISTINCT ON (google_credentials.brand, google_messages.thread_key, contact, object_type, event_type, recurring)
       google_messages.id,
       google_credentials.user AS created_by,
       'email_thread_recipient' AS object_type,
@@ -423,7 +428,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       c.id AS contact,
       NULL::uuid AS campaign,
       google_messages.google_credential AS credential_id,
-      thread_key AS thread,
+      thread_key,
       ARRAY[google_credentials."user"] AS users,
       google_credentials.brand,
       NULL::text AS status,
@@ -441,10 +446,12 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       JOIN google_credentials ON google_messages.google_credential = google_credentials.id
     WHERE
       google_messages.deleted_at IS NULL
+    ORDER BY google_credentials.brand, google_messages.thread_key, contact, object_type, event_type, recurring, message_date ASC
   )
   UNION ALL
   (
     SELECT
+      DISTINCT ON (microsoft_credentials.brand, microsoft_messages.thread_key, contact, object_type, event_type, recurring)
       microsoft_messages.id,
       microsoft_credentials.user AS created_by,
       'email_thread_recipient' AS object_type,
@@ -460,7 +467,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       c.id AS contact,
       NULL::uuid AS campaign,
       microsoft_messages.microsoft_credential AS credential_id,
-      thread_key AS thread,
+      thread_key,
       ARRAY[microsoft_credentials."user"] AS users,
       microsoft_credentials.brand,
       NULL::text AS status,
@@ -478,4 +485,5 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       JOIN microsoft_credentials ON microsoft_messages.microsoft_credential = microsoft_credentials.id
     WHERE
       microsoft_messages.deleted_at IS NULL
+    ORDER BY microsoft_credentials.brand, microsoft_messages.thread_key, contact, object_type, event_type, recurring, message_date ASC
   )
