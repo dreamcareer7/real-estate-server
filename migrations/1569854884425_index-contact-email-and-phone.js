@@ -2,8 +2,8 @@ const db = require('../lib/utils/db')
 
 const migrations = [
   'BEGIN',
-  'CREATE INDEX contacts_email_idx ON contacts USING GIN (email)',
-  'CREATE INDEX contacts_phone_idx ON contacts USING GIN (phone_number)',
+  'CREATE INDEX IF NOT EXISTS contacts_email_idx ON contacts USING GIN (email)',
+  'CREATE INDEX IF NOT EXISTS contacts_phone_idx ON contacts USING GIN (phone_number)',
   'COMMIT'
 ]
 
