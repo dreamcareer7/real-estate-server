@@ -175,8 +175,10 @@ const migrations = [
           ON (deals.id = cr.deal)
       WHERE
         deals.deleted_at IS NULL
-        AND (cdc.key = 'closing_date' OR cdc.key = 'lease_end')
-        AND cdc.date < NOW()
+        AND (
+          (cdc.key = 'closing_date' AND cdc.date < NOW())
+          OR cdc.key = 'lease_end'
+        )
         AND cr.role_name = 'Buyer'
         AND deals.deal_type = 'Buying'
         -- AND bcl.deal_type = 'Buying'
