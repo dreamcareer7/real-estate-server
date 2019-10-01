@@ -18,6 +18,7 @@ const User = require('../../../lib/models/User')
 
 const BrandHelper = require('../brand/helper')
 const DealHelper = require('../deal/helper')
+const { attributes } = require('../contact/helper')
 
 let user, brand, listing, deal
 let CLOSING_DATE, CONTRACT_DATE
@@ -62,6 +63,11 @@ async function setup(without_checklists = false) {
         object_type: 'deal_context',
         event_type: 'contract_date',
         reminder: 1 * 24 * 3600 // 1 day
+      },
+      {
+        object_type: null,
+        event_type: 'home_anniversary',
+        reminder: 2 * 24 * 3600
       }
     ],
     user.id,
@@ -179,6 +185,49 @@ function findDueEvents(expected_event) {
     expect(events.length).to.be.eq(1, 'events.length')
     expect(events[0]).to.include(expected_event)
   }
+}
+
+async function findDueHomeAnniversaries() {
+  await DealHelper.create(user.id, brand.id, {
+    deal_type: 'Buying',
+    checklists: [{
+      context: {
+        contract_date: { value: moment.utc().add(-1, 'year').add(-5, 'day').startOf('day').format() },
+        closing_date: { value: moment.utc().add(-1, 'year').add(2, 'days').startOf('day').format() },
+      },
+    }],
+    roles: [{
+      role: 'BuyerAgent',
+      email: user.email,
+      phone_number: user.phone_number,
+      legal_first_name: user.first_name,
+      legal_last_name: user.last_name
+    }, {
+      role: 'Buyer',
+      email: 'john@doe.com',
+      phone_number: '(281) 531-6582',
+      legal_first_name: 'John',
+      legal_last_name: 'Doe'
+    }],
+    listing: listing.id,
+    is_draft: false
+  })
+
+  await Contact.create([{
+    user: user.id,
+    attributes: attributes({
+      first_name: 'John',
+      last_name: 'Doe',
+      email: 'john@doe.com',
+    }),
+  }], user.id, brand.id)
+
+  await handleJobs()
+
+  const events = await CalendarWorker.getNotificationDueEvents()
+
+  expect(events.length).to.be.eq(2, 'events.length')
+  expect(events.map(e => e.event_type)).to.have.members(['home_anniversary', 'contract_date'])
 }
 
 async function sendNotificationForContact() {
@@ -411,6 +460,7 @@ describe('Calendar', () => {
           object_type: 'deal_context'
         })
       )
+      it('should find due deal home anniversaries', findDueHomeAnniversaries)
       it(
         'should send a notification to subscribed users',
         sendNotificationForDeal

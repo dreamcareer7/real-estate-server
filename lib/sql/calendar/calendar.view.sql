@@ -128,6 +128,66 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
   UNION ALL
   (
     SELECT
+      cdc.id,
+      deals.created_by,
+      'deal_context' AS object_type,
+      'home_anniversary' AS event_type,
+      'Home Anniversary' AS type_label,
+      cdc."date" AS "timestamp",
+      timezone('UTC', date_trunc('day', cdc."date")) AT TIME ZONE 'UTC' AS "date",
+      cast(cdc."date" + ((extract(year from age(cdc."date")) + 1) * interval '1 year') as date) AS next_occurence,
+      True AS recurring,
+      deals.title,
+      NULL::uuid AS crm_task,
+      cdc.deal,
+      cr.contact,
+      NULL::uuid AS campaign,
+      NULL::uuid AS credential_id,
+      NULL::text AS thread_key,
+      (
+        SELECT
+          ARRAY_AGG(DISTINCT r."user")
+        FROM
+          deals_roles AS r
+        WHERE
+          r.deal = deals.id
+          AND r.deleted_at IS NULL
+          AND r."user" IS NOT NULL
+      ) AS users,
+      cr.brand,
+      NULL::text AS status,
+      NULL::jsonb AS metadata
+    FROM
+      current_deal_context cdc
+      JOIN deals
+        ON cdc.deal = deals.id
+      JOIN brands_contexts bc
+        ON bc.id = cdc.definition
+      JOIN deals_checklists dcl
+        ON dcl.id = cdc.checklist
+      -- JOIN brands_checklists bcl
+      --   ON dcl.origin = bcl.id
+      JOIN contacts_roles cr
+        ON (deals.id = cr.deal)
+    WHERE
+      deals.deleted_at IS NULL
+      AND (
+        (cdc.key = 'closing_date' AND cdc.date < NOW())
+        OR cdc.key = 'lease_end'
+      )
+      AND cr.role_name = 'Buyer'
+      AND deals.deal_type = 'Buying'
+      -- AND bcl.deal_type = 'Buying'
+      AND dcl.deleted_at     IS NULL
+      AND dcl.deactivated_at IS NULL
+      -- AND bcl.deleted_at     Is NULL
+      AND dcl.terminated_at  IS NULL
+      AND deals.faired_at    IS NOT NULL
+      AND deal_status_mask(deals.id, '{Withdrawn,Cancelled,"Contract Terminated"}', cdc.key, '{expiration_date}'::text[], '{Sold,Leased}'::text[]) IS NOT FALSE
+  )
+  UNION ALL
+  (
+    SELECT
       ca.id,
       contacts.created_by,
       'contact_attribute' AS object_type,
