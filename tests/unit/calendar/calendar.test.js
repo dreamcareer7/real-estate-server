@@ -1,6 +1,5 @@
 const { expect } = require('chai')
 const moment = require('moment-timezone')
-const sql = require('../../../lib/utils/sql')
 
 const { createContext, handleJobs } = require('../helper')
 
