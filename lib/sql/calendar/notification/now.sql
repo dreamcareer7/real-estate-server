@@ -37,9 +37,9 @@ WHERE
       (c.date - cns.reminder) between now() - interval '44 hours' and now()
   END
   AND cns.deleted_at IS NULL
-  AND c.object_type::calendar_object_type = cns.object_type
+  AND (c.object_type::calendar_object_type = cns.object_type OR cns.object_type IS NULL)
   AND c.event_type = cns.event_type
-  AND (cns.object_type = 'deal_context' OR cns.object_type = 'contact_attribute')
+  AND (c.object_type = 'deal_context' OR c.object_type = 'contact_attribute')
   AND NOT EXISTS (
     SELECT
       *

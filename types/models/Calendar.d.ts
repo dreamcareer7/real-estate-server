@@ -25,7 +25,7 @@ declare interface ICalendarFeedSettingInput {
 }
 
 declare interface ICalendarGlobalNotificationSettingInput {
-  object_type: 'deal_context' | 'contact_attribute';
+  object_type: 'deal_context' | 'contact_attribute' | null;
   event_type: string;
   reminder: number;
 }
