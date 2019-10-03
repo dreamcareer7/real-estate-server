@@ -28,8 +28,8 @@ const migrations = [
   'ALTER TABLE property_units ADD mls mls NOT NULL DEFAULT \'NTREIS\'',
   'ALTER TABLE photos         ADD mls mls NOT NULL DEFAULT \'NTREIS\'',
   
-  'ALTER TABLE mls_data IF NOT EXISTS ADD mls mls NOT NULL DEFAULT \'NTREIS\'',
-  'ALTER TABLE mls_jobs IF NOT EXISTS ADD mls mls NOT NULL DEFAULT \'NTREIS\'',
+  'ALTER TABLE mls_data ADD COLUMN IF NOT EXISTS mls mls NOT NULL DEFAULT \'NTREIS\'',
+  'ALTER TABLE mls_jobs ADD COLUMN IF NOT EXISTS mls mls NOT NULL DEFAULT \'NTREIS\'',
 
   'ALTER TABLE listings       ALTER mls DROP DEFAULT',
   'ALTER TABLE offices        ALTER mls DROP DEFAULT',
