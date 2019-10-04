@@ -1,6 +1,9 @@
 WITH tasks AS (
   SELECT
   tasks.*,
+  EXTRACT(EPOCH FROM created_at) AS created_at,
+  EXTRACT(EPOCH FROM updated_at) AS updated_at,
+  EXTRACT(EPOCH FROM deleted_at) AS deleted_at,
   'task' as type,
   (
     SELECT deal FROM deals_checklists WHERE id = tasks.checklist
