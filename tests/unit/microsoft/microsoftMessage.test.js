@@ -1,5 +1,4 @@
 const uuid = require('uuid')
-const sq   = require('../../../lib/utils/squel_extensions')
 const { expect }        = require('chai')
 const { createContext } = require('../helper')
 
