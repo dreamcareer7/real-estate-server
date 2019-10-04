@@ -15,7 +15,8 @@ INSERT INTO property_units(
   half_bath,
   beds,
   units,
-  square_feet
+  square_feet,
+  mls
 )
 VALUES (
   $1,
@@ -34,9 +35,10 @@ VALUES (
   $14,
   $15,
   $16,
-  $17
+  $17,
+  $18::mls
 )
-ON CONFLICT (matrix_unique_id) DO UPDATE SET
+ON CONFLICT (matrix_unique_id, mls) DO UPDATE SET
   dining_length = $1,
   dining_width = $2,
   kitchen_length = $3,
@@ -54,5 +56,5 @@ ON CONFLICT (matrix_unique_id) DO UPDATE SET
   units = $16,
   square_feet = $17,
   updated_at = CLOCK_TIMESTAMP()
-WHERE property_units.matrix_unique_id = $11
+WHERE property_units.matrix_unique_id = $11 AND property_units.mls = $18::mls
 RETURNING id

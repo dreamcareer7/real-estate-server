@@ -15,7 +15,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
     NULL::uuid AS contact,
     NULL::uuid AS campaign,
     NULL::uuid AS credential_id,
-    NULL::text AS thread,
+    NULL::text AS thread_key,
     (
       SELECT
         ARRAY_AGG("user")
@@ -53,7 +53,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       ca.contact,
       ca.email AS campaign,
       NULL::uuid AS credential_id,
-      NULL::text AS thread,
+      NULL::text AS thread_key,
       (
         SELECT
           ARRAY_AGG("user")
@@ -73,8 +73,8 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       JOIN crm_tasks AS ct
         ON ca.crm_task = ct.id
     WHERE
-    ca.deleted_at IS NULL
-    AND ct.deleted_at IS NULL
+      ca.deleted_at IS NULL
+      AND ct.deleted_at IS NULL
   )
   UNION ALL
   (
@@ -94,7 +94,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       NULL::uuid AS contact,
       NULL::uuid AS campaign,
       NULL::uuid AS credential_id,
-      NULL::text AS thread,
+      NULL::text AS thread_key,
       (
         SELECT
           ARRAY_AGG(DISTINCT r."user")
@@ -121,6 +121,66 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       AND cdc.data_type = 'Date'::context_data_type
       AND dcl.deleted_at     IS NULL
       AND dcl.deactivated_at IS NULL
+      AND dcl.terminated_at  IS NULL
+      AND deals.faired_at    IS NOT NULL
+      AND deal_status_mask(deals.id, '{Withdrawn,Cancelled,"Contract Terminated"}', cdc.key, '{expiration_date}'::text[], '{Sold,Leased}'::text[]) IS NOT FALSE
+  )
+  UNION ALL
+  (
+    SELECT
+      cdc.id,
+      deals.created_by,
+      'deal_context' AS object_type,
+      'home_anniversary' AS event_type,
+      'Home Anniversary' AS type_label,
+      cdc."date" AS "timestamp",
+      timezone('UTC', date_trunc('day', cdc."date")) AT TIME ZONE 'UTC' AS "date",
+      cast(cdc."date" + ((extract(year from age(cdc."date")) + 1) * interval '1 year') as date) AS next_occurence,
+      True AS recurring,
+      deals.title,
+      NULL::uuid AS crm_task,
+      cdc.deal,
+      cr.contact,
+      NULL::uuid AS campaign,
+      NULL::uuid AS credential_id,
+      NULL::text AS thread_key,
+      (
+        SELECT
+          ARRAY_AGG(DISTINCT r."user")
+        FROM
+          deals_roles AS r
+        WHERE
+          r.deal = deals.id
+          AND r.deleted_at IS NULL
+          AND r."user" IS NOT NULL
+      ) AS users,
+      cr.brand,
+      NULL::text AS status,
+      NULL::jsonb AS metadata
+    FROM
+      current_deal_context cdc
+      JOIN deals
+        ON cdc.deal = deals.id
+      JOIN brands_contexts bc
+        ON bc.id = cdc.definition
+      JOIN deals_checklists dcl
+        ON dcl.id = cdc.checklist
+      -- JOIN brands_checklists bcl
+      --   ON dcl.origin = bcl.id
+      JOIN contacts_roles cr
+        ON (deals.id = cr.deal)
+    WHERE
+      deals.deleted_at IS NULL
+      AND (
+        (cdc.key = 'closing_date' AND cdc.date < NOW())
+        OR cdc.key = 'lease_end'
+      )
+      AND cr.role_name = 'Buyer'
+      AND deals.deal_type = 'Buying'
+      -- AND bcl.deal_type = 'Buying'
+      AND dcl.deleted_at     IS NULL
+      AND dcl.deactivated_at IS NULL
+      -- AND bcl.deleted_at     Is NULL
       AND dcl.terminated_at  IS NULL
       AND deals.faired_at    IS NOT NULL
       AND deal_status_mask(deals.id, '{Withdrawn,Cancelled,"Contract Terminated"}', cdc.key, '{expiration_date}'::text[], '{Sold,Leased}'::text[]) IS NOT FALSE
@@ -164,7 +224,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       contact,
       NULL::uuid AS campaign,
       NULL::uuid AS credential_id,
-      NULL::text AS thread,
+      NULL::text AS thread_key,
       ARRAY[contacts."user"] AS users,
       contacts.brand,
       NULL::text AS status,
@@ -201,7 +261,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       id AS contact,
       NULL::uuid AS campaign,
       NULL::uuid AS credential_id,
-      NULL::text AS thread,
+      NULL::text AS thread_key,
       ARRAY[contacts."user"] AS users,
       brand,
       NULL::text AS status,
@@ -230,7 +290,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       NULL::uuid AS contact,
       id AS campaign,
       NULL::uuid AS credential_id,
-      NULL::text AS thread,
+      NULL::text AS thread_key,
       ARRAY[ec.from] AS users,
       brand,
       NULL::text AS status,
@@ -261,7 +321,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       ecr.contact,
       ec.id AS campaign,
       NULL::uuid AS credential_id,
-      NULL::text AS thread,
+      NULL::text AS thread_key,
       ARRAY[ec.from] AS users,
       ec.brand,
       NULL::text AS status,
@@ -277,6 +337,8 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
             email_campaigns_recipients AS ecr
             JOIN crm_lists_members AS clm
               ON ecr.list = clm.list
+          WHERE
+            ecr.recipient_type = 'List'
         )
         UNION
         (
@@ -290,8 +352,40 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
             JOIN contacts AS cs
               ON ARRAY[ecr.tag] <@ cs.tag AND ec.brand = cs.brand
           WHERE
-            ecr.tag IS NOT NULL
+            ecr.recipient_type = 'Tag'
+            AND ecr.tag IS NOT NULL
             AND cs.deleted_at IS NULL
+        )
+        UNION
+        (
+          SELECT
+            ecr.campaign,
+            cs.id AS contact
+          FROM
+            email_campaigns_recipients AS ecr
+            JOIN email_campaigns AS ec
+              ON ecr.campaign = ec.id
+            JOIN contacts AS cs
+              ON ec.brand = cs.brand
+          WHERE
+            ecr.recipient_type = 'AllContacts'
+            AND cs.deleted_at IS NULL
+        )
+        UNION
+        (
+          SELECT
+            ecr.campaign,
+            contacts_users.contact
+          FROM
+            email_campaigns_recipients AS ecr
+            CROSS JOIN LATERAL get_brand_agents(ecr.brand) AS ba
+            JOIN users
+              ON users.id = ba.user
+            JOIN contacts_users
+              ON contacts_users.user = users.id
+          WHERE
+            ecr.brand IS NOT NULL
+            AND ecr.recipient_type = 'Brand'
         )
         UNION
         (
@@ -301,7 +395,8 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
           FROM
             email_campaigns_recipients
           WHERE
-            contact IS NOT NULL
+            recipient_type = 'Email'
+            AND contact IS NOT NULL
         )
       ) AS ecr
         ON ec.id = ecr.campaign
@@ -313,6 +408,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
   UNION ALL
   (
     SELECT
+      DISTINCT ON (google_credentials.brand, google_messages.thread_key, contact, object_type, event_type, recurring)
       google_messages.id,
       google_credentials.user AS created_by,
       'email_thread' AS object_type,
@@ -322,13 +418,13 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       message_date AS "date",
       message_date AS next_occurence,
       False AS recurring,
-      subject AS title,
+      COALESCE(subject, '') AS "title",
       NULL::uuid AS crm_task,
       NULL::uuid AS deal,
       NULL::uuid AS contact,
       NULL::uuid AS campaign,
       google_messages.google_credential AS credential_id,
-      thread_key AS thread,
+      thread_key,
       ARRAY[google_credentials."user"] AS users,
       google_credentials.brand,
       NULL::text AS status,
@@ -339,10 +435,12 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       google_credentials on google_messages.google_credential = google_credentials.id
     WHERE
       google_messages.deleted_at IS NULL
+    ORDER BY google_credentials.brand, google_messages.thread_key, contact, object_type, event_type, recurring, message_date ASC
   )
   UNION ALL
   (
     SELECT
+      DISTINCT ON (microsoft_credentials.brand, microsoft_messages.thread_key, contact, object_type, event_type, recurring)
       microsoft_messages.id,
       microsoft_credentials.user AS created_by,
       'email_thread' AS object_type,
@@ -352,13 +450,13 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       message_date AS "date",
       message_date AS next_occurence,
       False AS recurring,
-      subject AS title,
+      COALESCE(subject, '') AS "title",
       NULL::uuid AS crm_task,
       NULL::uuid AS deal,
       NULL::uuid AS contact,
       NULL::uuid AS campaign,
       microsoft_messages.microsoft_credential AS credential_id,
-      thread_key AS thread,
+      thread_key,
       ARRAY[microsoft_credentials."user"] AS users,
       microsoft_credentials.brand,
       NULL::text AS status,
@@ -369,10 +467,12 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       microsoft_credentials on microsoft_messages.microsoft_credential = microsoft_credentials.id
     WHERE
       microsoft_messages.deleted_at IS NULL
+    ORDER BY microsoft_credentials.brand, microsoft_messages.thread_key, contact, object_type, event_type, recurring, message_date ASC
   )
   UNION ALL
   (
     SELECT
+      DISTINCT ON (google_credentials.brand, google_messages.thread_key, contact, object_type, event_type, recurring)
       google_messages.id,
       google_credentials.user AS created_by,
       'email_thread_recipient' AS object_type,
@@ -382,13 +482,13 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       message_date AS "date",
       message_date AS next_occurence,
       False AS recurring,
-      subject AS title,
+      COALESCE(subject, '') AS "title",
       NULL::uuid AS crm_task,
       NULL::uuid AS deal,
       c.id AS contact,
       NULL::uuid AS campaign,
       google_messages.google_credential AS credential_id,
-      thread_key AS thread,
+      thread_key,
       ARRAY[google_credentials."user"] AS users,
       google_credentials.brand,
       NULL::text AS status,
@@ -406,10 +506,12 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       JOIN google_credentials ON google_messages.google_credential = google_credentials.id
     WHERE
       google_messages.deleted_at IS NULL
+    ORDER BY google_credentials.brand, google_messages.thread_key, contact, object_type, event_type, recurring, message_date ASC
   )
   UNION ALL
   (
     SELECT
+      DISTINCT ON (microsoft_credentials.brand, microsoft_messages.thread_key, contact, object_type, event_type, recurring)
       microsoft_messages.id,
       microsoft_credentials.user AS created_by,
       'email_thread_recipient' AS object_type,
@@ -419,13 +521,13 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       message_date AS "date",
       message_date AS next_occurence,
       False AS recurring,
-      subject AS title,
+      COALESCE(subject, '') AS "title",
       NULL::uuid AS crm_task,
       NULL::uuid AS deal,
       c.id AS contact,
       NULL::uuid AS campaign,
       microsoft_messages.microsoft_credential AS credential_id,
-      thread_key AS thread,
+      thread_key,
       ARRAY[microsoft_credentials."user"] AS users,
       microsoft_credentials.brand,
       NULL::text AS status,
@@ -443,4 +545,5 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       JOIN microsoft_credentials ON microsoft_messages.microsoft_credential = microsoft_credentials.id
     WHERE
       microsoft_messages.deleted_at IS NULL
+    ORDER BY microsoft_credentials.brand, microsoft_messages.thread_key, contact, object_type, event_type, recurring, message_date ASC
   )

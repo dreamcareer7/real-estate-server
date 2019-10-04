@@ -1,21 +1,21 @@
 const { expect } = require('chai')
 const { createContext, handleJobs } = require('../helper')
 
-const Context = require('../../../lib/models/Context')
-const Job = require('../../../lib/models/Job')
+const Context  = require('../../../lib/models/Context')
 const Showings = require('../../../lib/models/Showings/showings')
+const ShowingsWorker     = require('../../../lib/models/Showings/worker')
 const ShowingsCredential = require('../../../lib/models/Showings/credential')
-const ShowingsCrawler = require('../../../lib/models/Showings/crawler')
-const User = require('../../../lib/models/User')
-const Brand = require('../../../lib/models/Brand')
+const ShowingsCrawler    = require('../../../lib/models/Showings/crawler')
+const User    = require('../../../lib/models/User')
+const Brand   = require('../../../lib/models/Brand')
 const CrmTask = require('../../../lib/models/CRM/Task')
 const { Listing } = require('../../../lib/models/Listing')
-const DealHelper = require('../deal/helper')
+const DealHelper  = require('../deal/helper')
 const BrandHelper = require('../brand/helper')
 
-const agent_json = require('./data/agent.json')
+const agent_json      = require('./data/agent.json')
 const credential_json = require('./data/credential.json')
-const showing_json = require('./data/showing.json')
+const showing_json    = require('./data/showing.json')
 
 let agent, user, brand
 const mlsNumbers = [10018693, 10183366]
@@ -198,7 +198,7 @@ async function deleteCredential() {
 
 async function crawlerJobRecords() {
   const created_ids = await crawlerJobHelper()
-  const returned_ids = await ShowingsCredential.crawlerJob()
+  const returned_ids = await ShowingsWorker.startDue()
 
   expect(created_ids).to.have.length(2)
   expect(returned_ids).to.have.length(2)
@@ -218,10 +218,10 @@ async function crawlerJobUpdatedRecords() {
   const updatedRecord = await ShowingsCredential.get(created_ids[0])  
   expect(updatedRecord.last_crawled_at).to.be.not.null
 
-  const updated_returned_ids = await ShowingsCredential.crawlerJob()
+  const updated_returned_ids = await ShowingsWorker.startDue()
   expect(updated_returned_ids).to.have.length(1)
 
-  const returned_ids = await ShowingsCredential.crawlerJob()
+  const returned_ids = await ShowingsWorker.startDue()
   expect(returned_ids).to.have.length(1)
 }
 
@@ -243,9 +243,7 @@ async function SingleCrawlerJob() {
     showingCredential: showingCredential
   }
 
-  const job = Job.queue.create('showings_crawler', data).removeOnComplete(true)  
-  Context.get('jobs').push(job)
-
+  ShowingsWorker.startCrawler(data)
   await handleJobs()
 
   const crawledShowingCredential = await ShowingsCredential.get(showingCredentialId)
@@ -264,7 +262,7 @@ async function SingleCrawlerJob() {
 async function crawlerJob() {
   await crawlerJobHelper()
 
-  const returned_ids = await ShowingsCredential.crawlerJob()
+  const returned_ids = await ShowingsWorker.startDue()
   expect(returned_ids).to.have.length(2)
   
   await handleJobs()

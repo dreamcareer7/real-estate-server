@@ -54,7 +54,7 @@ const getByMLSNumber = async () => {
 
 const getByMUI = async () => {
   const id = await save()
-  const listing = await Listing.getByMUI(json.matrix_unique_id)
+  const listing = await Listing.getByMUI(json.matrix_unique_id, json.mls)
 
   expect(listing.id).to.equal(id)
 }

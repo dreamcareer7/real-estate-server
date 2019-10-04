@@ -27,7 +27,8 @@ const saveAlert = cb => {
 const addListing = (cb) => {
   return frisby.create('add a listing')
     .post('/jobs', {
-      name: 'MLS.Listing',
+      name: 'mls_listing',
+      queue: 'MLS.Listing',
       data: {
         processed: listing,
         revision: 1
@@ -58,7 +59,8 @@ const getFeed = cb => {
 const addOpenHouse = (cb) => {
   return frisby.create('add an open house')
     .post('/jobs', {
-      name: 'MLS.OpenHouse',
+      name: 'mls_openhouse',
+      queue: 'MLS.OpenHouse',
       data: {processed: openhouse}
     })
     .after(cb)
@@ -70,7 +72,8 @@ const priceDrop = (cb) => {
 
   return frisby.create('change price')
     .post('/jobs', {
-      name: 'MLS.Listing',
+      name: 'mls_listing',
+      queue: 'MLS.Listing',
       data: {processed: listing}
     })
     .after(cb)
@@ -82,7 +85,8 @@ const statusChange = (cb) => {
 
   return frisby.create('change status')
     .post('/jobs', {
-      name: 'MLS.Listing',
+      name: 'mls_listing',
+      queue: 'MLS.Listing',
       data: {processed: listing}
     })
     .after(cb)
@@ -92,7 +96,8 @@ const statusChange = (cb) => {
 const addRoom = (cb) => {
   return frisby.create('add a room')
     .post('/jobs', {
-      name: 'MLS.Room',
+      name: 'mls_room',
+      queue: 'MLS.Room',
       data: {processed: room}
     })
     .after(cb)
@@ -102,7 +107,8 @@ const addRoom = (cb) => {
 const addUnit = (cb) => {
   return frisby.create('add a unit')
     .post('/jobs', {
-      name: 'MLS.Unit',
+      name: 'mls_unit',
+      queue: 'MLS.Unit',
       data: {processed: unit}
     })
     .after(cb)
@@ -112,7 +118,8 @@ const addUnit = (cb) => {
 const addPhoto = (cb) => {
   return frisby.create('add a photo')
     .post('/jobs', {
-      name: 'MLS.Photo',
+      name: 'mls_photo',
+      queue: 'MLS.Photo',
       data: {processed: photo, revision: 1}
     })
     .after(cb)

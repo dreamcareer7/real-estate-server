@@ -5,19 +5,6 @@ registerSuite('contact', [
   'createBrandLists'
 ])
 
-function createDefaultLists(cb) {
-  return frisby.create('create default lists for user')
-    .post('/jobs', {
-      name: 'contact_lists',
-      data: {
-        type: 'create_default_lists',
-        brand_id: results.contact.brandCreate.data.id
-      }
-    })
-    .after(cb)
-    .expectStatus(200)
-}
-
 function checkDefaultLists(cb) {
   return frisby
     .create('check if default lists are created in the right order')
@@ -158,7 +145,6 @@ function listAllFilters(cb) {
 }
 
 module.exports = {
-  createDefaultLists,
   checkDefaultLists,
   create,
   createWithEmptyFilters,

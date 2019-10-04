@@ -15,13 +15,14 @@ INSERT INTO agents
   work_phone,
   generational_name,
   matrix_unique_id,
-  matrix_modified_dt
+  matrix_modified_dt,
+  mls
 )
 VALUES
 (
-  $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16
+  $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17
 )
-ON CONFLICT (matrix_unique_id) DO UPDATE SET
+ON CONFLICT (matrix_unique_id, mls) DO UPDATE SET
   email = $1,
   mlsid = $2,
   fax = $3,
@@ -38,5 +39,5 @@ ON CONFLICT (matrix_unique_id) DO UPDATE SET
   generational_name = $14,
   matrix_modified_dt = $16,
   updated_at = CLOCK_TIMESTAMP()
-  WHERE agents.matrix_unique_id = $15
+  WHERE agents.matrix_unique_id = $15 AND agents.mls =$17::mls
 RETURNING id

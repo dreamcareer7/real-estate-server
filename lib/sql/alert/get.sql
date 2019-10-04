@@ -21,9 +21,10 @@ SELECT alerts.*,
                ARRAY[alerts.id] <@ recommendations.referring_objects
        ) AS new_recommendations,
        (
-         SELECT url FROM photos
-         INNER JOIN recommendations
-           ON photos.listing_mui = recommendations.matrix_unique_id
+         SELECT url FROM recommendations
+         INNER  JOIN listings ON listings.id = recommendations.listing
+         INNER  JOIN photos   ON listings.matrix_unique_id = photos.listing_mui
+                            AND listings.mls = photos.mls
          WHERE ARRAY[alerts.id] <@ recommendations.referring_objects
            AND url IS NOT NULL
          -- Sorting by photos.id is completely unnecessary.

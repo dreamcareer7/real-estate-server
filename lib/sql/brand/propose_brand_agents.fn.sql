@@ -1,7 +1,8 @@
 CREATE OR REPLACE FUNCTION propose_brand_agents(brand_id uuid, "user_id" uuid) RETURNS TABLE(
   "agent" uuid,
+  mui    integer,
+  mls    mls,
   "user" uuid,
-  mlsid text,
   is_me boolean,
   has_contact boolean
 )
@@ -9,8 +10,9 @@ AS
 $$
   SELECT
   brand_agents.agent as "agent",
-  brand_agents.user as "user",
-  brand_agents.mlsid as mlsid,
+  brand_agents.mui   as mui,
+  brand_agents.mls   as mls,
+  brand_agents.user  as "user",
   (
     CASE WHEN "user_id"::uuid IS NULL THEN false
         WHEN brand_agents.user = "user_id"::uuid THEN true

@@ -6,28 +6,6 @@ const area_response = require('./expected_objects/area.js')
 
 const uuid = require('node-uuid')
 
-const by_mui = (cb) => {
-  return frisby.create('search for a listing by mui')
-    .get('/listings/search?mui=' + listing.matrix_unique_id)
-    .after(cb)
-    .expectStatus(200)
-    .expectJSON({
-      code: 'OK',
-      data: listing
-    })
-    .expectJSONTypes({
-      code: String,
-      data: listing_response
-    })
-}
-
-const by_mui400 = (cb) => {
-  return frisby.create('expect 400 with invalid mui')
-    .get('/listings/search?mui=1')
-    .after(cb)
-    .expectStatus(400)
-}
-
 const by_mls = (cb) => {
   return frisby.create('search for a listing by mls')
     .get('/listings/search?mls_number=' + listing.mls_number)
@@ -182,8 +160,6 @@ function invalidUpdateListingSetting(cb) {
 //     .expectStatus(200)
 // }
 module.exports = {
-  by_mui,
-  by_mui400,
   by_mls,
   by_mls400,
   getListing,

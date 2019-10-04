@@ -59,12 +59,13 @@ db.conn(async (err, client) => {
   r.context.enqueueJob = enqueueJob
   r.context.handleJobs = async () => { 
     await promisify(Job.handle)(Context.get('jobs'))
-    Context.set({ jobs: [] })
+    Context.set({ jobs: [], rabbit_jobs: [] })
   }
 
   context.set({
     db: client,
-    jobs: []
+    jobs: [],
+    rabbit_jobs: []
   })
 
   if (program.user) {

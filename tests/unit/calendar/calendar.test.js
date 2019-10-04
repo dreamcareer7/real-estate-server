@@ -130,6 +130,90 @@ async function testHidingDroppedDeals() {
   await createDealWithStatus('Active', 2)
 }
 
+async function testDealClosingDateHomeAnniversary() {
+  await DealHelper.create(user.id, brand.id, {
+    deal_type: 'Buying',
+    checklists: [{
+      context: {
+        contract_date: { value: moment.utc().add(-10, 'day').startOf('day').format() },
+        closing_date: { value: moment.utc().add(-5, 'day').startOf('day').format() },
+      },
+    }],
+    roles: [{
+      role: 'BuyerAgent',
+      email: user.email,
+      phone_number: user.phone_number,
+      legal_first_name: user.first_name,
+      legal_last_name: user.last_name
+    }, {
+      role: 'Buyer',
+      email: 'john@doe.com',
+      phone_number: '(281) 531-6582',
+      legal_first_name: 'John',
+      legal_last_name: 'Doe'
+    }],
+    listing: listing.id,
+    is_draft: false
+  })
+
+  await Contact.create([{
+    user: user.id,
+    attributes: attributes({
+      first_name: 'John',
+      last_name: 'Doe',
+      email: 'john@doe.com',
+    }),
+  }], user.id, brand.id)
+
+  await handleJobs()
+
+  const events = await fetchEvents()
+  expect(events).to.have.length(3)
+  expect(events.map(e => e.event_type)).to.have.members([ 'contract_date', 'closing_date', 'home_anniversary' ])
+}
+
+async function testDealLeaseEndHomeAnniversary() {
+  await DealHelper.create(user.id, brand.id, {
+    deal_type: 'Buying',
+    checklists: [{
+      context: {
+        lease_begin: { value: moment.utc().add(-10, 'day').startOf('day').format() },
+        lease_end: { value: moment.utc().add(-10, 'day').add(1, 'year').startOf('day').format() },
+      },
+    }],
+    roles: [{
+      role: 'BuyerAgent',
+      email: user.email,
+      phone_number: user.phone_number,
+      legal_first_name: user.first_name,
+      legal_last_name: user.last_name
+    }, {
+      role: 'Buyer',
+      email: 'john@doe.com',
+      phone_number: '(281) 531-6582',
+      legal_first_name: 'John',
+      legal_last_name: 'Doe'
+    }],
+    listing: listing.id,
+    is_draft: false
+  })
+
+  await Contact.create([{
+    user: user.id,
+    attributes: attributes({
+      first_name: 'John',
+      last_name: 'Doe',
+      email: 'john@doe.com',
+    }),
+  }], user.id, brand.id)
+
+  await handleJobs()
+
+  const events = await fetchEvents()
+  expect(events.map(e => e.event_type)).to.have.members([ 'lease_begin', 'lease_end', 'home_anniversary' ])
+  expect(events).to.have.length(3)
+}
+
 async function testCorrectTimezone() {
   await createDeal(false)
   await CrmTask.create({
@@ -275,6 +359,8 @@ describe('Calendar', () => {
     beforeEach(setup)
     it('should hide critical dates from draft checklists', testHidingDraftCriticalDates)
     it('should hide critical dates from dropped deals', testHidingDroppedDeals)
+    it('should return home anniversary from closing dates', testDealClosingDateHomeAnniversary)
+    it('should return home anniversary from lease ends', testDealLeaseEndHomeAnniversary)
   })
 
   describe('Events', () => {

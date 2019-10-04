@@ -2,7 +2,7 @@ CREATE OR REPLACE FUNCTION update_listings_filters()
   RETURNS trigger AS
 $$
   BEGIN
-    DELETE FROM listings_filters WHERE matrix_unique_id = NEW.matrix_unique_id;
+    DELETE FROM listings_filters WHERE id = NEW.id;
 
     INSERT INTO listings_filters
     SELECT
@@ -25,8 +25,8 @@ $$
       listings.application_fee_yn,
       -- Areas are stored as something like this: MCKINNEY AREA (53)
       -- When filteting, we only want the number (53). So we extract it.
-      (regexp_matches(listings.mls_area_major, E'[0-9]+'))[1]::int as mls_area_major,
-      (regexp_matches(listings.mls_area_minor, E'[0-9]+'))[1]::int as mls_area_minor,
+      (SELECT regexp_matches(listings.mls_area_major, E'[0-9]+'))[1]::int as mls_area_major,
+      (SELECT regexp_matches(listings.mls_area_minor, E'[0-9]+'))[1]::int as mls_area_minor,
       properties.square_meters,
       properties.bedroom_count,
       properties.half_bathroom_count,
@@ -78,14 +78,15 @@ $$
           ),
           listings.mls_number
         ], ' ', NULL
-      ) as address
+      ) as address,
+    listings.mls AS mls
     FROM listings
     JOIN
-      properties  ON listings.matrix_unique_id = properties.matrix_unique_id
+      properties  ON listings.property_id = properties.id
     JOIN
-      addresses   ON listings.matrix_unique_id = addresses.matrix_unique_id
+      addresses   ON properties.address_id = addresses.id
 
-    WHERE listings.matrix_unique_id = NEW.matrix_unique_id;
+    WHERE listings.id = NEW.id;
 
     RETURN NEW;
   END;

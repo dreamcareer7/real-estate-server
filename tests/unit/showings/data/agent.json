@@ -12,7 +12,8 @@
     "office_mlsid": "BHGW01",
     "work_phone": "(972) 672-4590",
     "matrix_unique_id": 15518040,
-    "matrix_modified_dt": "2018-07-02T18:00:28.123"
+    "matrix_modified_dt": "2018-07-02T18:00:28.123",
+    "mls": "NTREIS"
   },
 
   {
@@ -28,7 +29,8 @@
     "office_mlsid": "BHGW02",
     "work_phone": "(972) 672-4591",
     "matrix_unique_id": 15518041,
-    "matrix_modified_dt": "2018-07-02T18:00:28.123"
+    "matrix_modified_dt": "2018-07-02T18:00:28.123",
+    "mls": "NTREIS"
   },
 
   {
@@ -44,7 +46,8 @@
     "office_mlsid": "BHGW03",
     "work_phone": "(972) 672-4592",
     "matrix_unique_id": 15518042,
-    "matrix_modified_dt": "2018-07-02T18:00:28.123"
+    "matrix_modified_dt": "2018-07-02T18:00:28.123",
+    "mls": "NTREIS"
   },
 
   {
@@ -60,6 +63,7 @@
     "office_mlsid": "BHGW04",
     "work_phone": "(972) 672-4593",
     "matrix_unique_id": 15518043,
-    "matrix_modified_dt": "2018-07-02T18:00:28.123"
+    "matrix_modified_dt": "2018-07-02T18:00:28.123",
+    "mls": "NTREIS"
   }
 ]

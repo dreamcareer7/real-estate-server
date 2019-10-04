@@ -125,9 +125,9 @@ async function create() {
       bcc: bcc,
 
       message_created_at: new Date(Number(message.internalDate)).getTime(),
-      message_date: new Date(Number(message.internalDate)).toISOString(),
+      message_date: new Date(Number(message.internalDate)).toISOString()
 
-      data: JSON.stringify(message)
+      // data: JSON.stringify(message)
     })
   }
 
@@ -157,6 +157,7 @@ async function getByMessageId() {
     expect(googleMessage.google_credential).to.be.equal(gMessage.google_credential)
     expect(googleMessage.recipients.length).not.to.be.equal(0)
     expect(googleMessage.message_id).to.be.equal(gMessage.message_id)
+    expect(googleMessage.deleted_at).to.be.equal(null)
   }
 }
 
@@ -174,6 +175,22 @@ async function getGCredentialMessagesNum() {
   const result = await GoogleMessage.getGCredentialMessagesNum(googleMessages[0]['google_credential'])
 
   expect(result[0]['count']).to.be.equal(googleMessages.length)
+}
+
+async function deleteByMessageIds() {
+  const googleMessages = await create()
+
+  for (const gMessage of googleMessages) {
+    await GoogleMessage.deleteByMessageIds(gMessage.google_credential, [gMessage.message_id])
+  }
+
+  for (const gMessage of googleMessages) {
+    const googleMessage = await GoogleMessage.get(gMessage.message_id, gMessage.google_credential)
+
+    expect(googleMessage.type).to.be.equal('google_messages')
+    expect(googleMessage.google_credential).to.be.equal(gMessage.google_credential)
+    expect(googleMessage.deleted_at).not.to.be.equal(null)
+  }
 }
 
 async function downloadAttachmentFailed() {
@@ -215,6 +232,7 @@ describe('Google', () => {
     it('should return google-message by messages_id', getByMessageId)
     it('should handle failure of google-contact get by messages_id', getByMessageIdFailed)
     it('should return number of messages of specific credential', getGCredentialMessagesNum)
+    it('should delete google-messages by messages_ids', deleteByMessageIds)
 
     it('should handle failure of downloadAttachment', downloadAttachmentFailed)
   })

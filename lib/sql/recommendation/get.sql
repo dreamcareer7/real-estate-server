@@ -14,6 +14,7 @@ WITH r AS (
          EXTRACT(EPOCH FROM recommendations.deleted_at) AS deleted_at,
          JSON_AGG(recommendations_eav."user" ORDER BY recommendations_eav.created_at) FILTER (WHERE recommendations_eav.action = 'Favorited') AS favorited_by,
          JSON_AGG(recommendations_eav."user" ORDER BY recommendations_eav.created_at) FILTER (WHERE recommendations_eav.action = 'Read') AS read_by,
+         JSON_AGG(recommendations_eav."user" ORDER BY recommendations_eav.created_at) FILTER (WHERE recommendations_eav.action = 'Hid') AS hid_by,
          COALESCE(COUNT(messages.id) FILTER (WHERE messages.document_url IS NOT NULL)::INT, 0) AS document_count,
          COALESCE(COUNT(messages.id) FILTER (WHERE messages.image_url IS NOT NULL)::INT, 0) AS image_count,
          COALESCE(COUNT(messages.id) FILTER (WHERE messages.video_url IS NOT NULL)::INT, 0) AS video_count,

@@ -2,7 +2,11 @@ require('colors')
 const kue = require('kue')
 const promisify = require('../../lib/utils/promisify.js')
 
-const queue = require('../../lib/utils/queue.js')
+const redisDataService = require('../../lib/data-service/redis')
+
+const { peanar } = require('../../lib/utils/peanar')
+const db = require('../../lib/utils/db')
+const queue = require('../../lib/utils/queue')
 const queues = require('./queues')
 
 const Metric = require('../../lib/models/Metric')
@@ -17,10 +21,8 @@ const attachTouchEventHandler = require('../../lib/models/CRM/Touch/events')
 
 const createContext = require('./create-context')
 
-
-
-require('./poll')
-
+const shutdownPollers = require('./poll')
+require('./peanar')
 
 attachCalendarEvents()
 attachContactEvents()
@@ -29,9 +31,22 @@ attachTaskEventHandler()
 attachTouchEventHandler()
 
 
-
 process.on('unhandledRejection', (err, promise) => {
   Context.trace('Unhanled Rejection on request', err)
+  Slack.send({
+    channel: '7-server-errors',
+    text: `Workers: Unhandled rejection: \`${err}\``,
+    emoji: ':skull:'
+  })
+})
+
+process.on('uncaughtException', (err) => {
+  Context.trace('Uncaught Exception:', err)
+  Slack.send({
+    channel: '7-server-errors',
+    text: `Workers: Uncaught exception: \`${err}\``,
+    emoji: ':skull:'
+  })
 })
 
 // We have proper error handling here. No need for auto reports.
@@ -72,9 +87,10 @@ queue.on('job failed', (id, err) => {
   })
 })
 
-setInterval(reportQueueStatistics, 10000)
+const statsInterval = setInterval(reportQueueStatistics, 10000)
 
 function reportQueueStatistics () {
+  // @ts-ignore
   queue.inactiveCount((err, count) => {
     if (err)
       return Metric.set('inactive_jobs', 99999)
@@ -85,14 +101,59 @@ function reportQueueStatistics () {
 
 reportQueueStatistics()
 
-const shutdown = () => {
-  queue.shutdown(5 * 60 * 1000, process.exit)
+let shutdownRaceTimeout
+const timeout = (seconds) => {
+  return new Promise((_, rej) => {
+    shutdownRaceTimeout = setTimeout(() => {
+      rej(new Error('Shutdown timed out!'))
+    }, seconds * 1000)
+  })
+}
+
+async function shutdownWorkers() {
+  await shutdownPollers()
+  await peanar.shutdown()
+  await promisify(cb => queue.shutdown(5 * 60 * 1000, (err) => {
+    if (err) {
+      Context.error(err)
+      return cb(err)
+    }
+
+    Context.log('Kue closed successfully.')
+    cb()
+  }))()
+  await db.close()
+}
+
+const shutdown = async () => {
+  try {
+    clearTimeout(kueCleanupTimeout)
+    // clearTimeout(shutdownTimeout)
+    clearInterval(statsInterval)
+    clearInterval(queue.stuck_job_watch)
+
+    await Promise.race([
+      timeout(5.2 * 60 * 1000),
+      shutdownWorkers()
+    ])
+
+    Context.log('Race finished.')
+
+    clearTimeout(shutdownRaceTimeout)
+    redisDataService.shutdown()
+  }
+  catch (ex) {
+    Context.log('Race timed out!')
+    Context.error(ex)
+    process.exit(1)
+  }
 }
 process.once('SIGTERM', shutdown)
 process.once('SIGINT', shutdown)
 
-setTimeout(shutdown, 1000 * 60 * 10) // Restart every few minutes
+// const shutdownTimeout = setTimeout(shutdown, 1000 * 60 * 10) // Restart every few minutes
 
+let kueCleanupTimeout
 async function cleanupKueJobs() {
   const jobs = (await promisify(kue.Job.rangeByState)('complete', 0, 10000, 'asc'))
     .filter(job => parseInt(job.toJSON().started_at) <= Date.now() - 60 * 60 * 1000)
@@ -104,7 +165,7 @@ async function cleanupKueJobs() {
     await promisify(job.remove.bind(job))()
   }
 
-  setTimeout(cleanupKueJobs, 1 * 60 * 1000)
+  kueCleanupTimeout = setTimeout(cleanupKueJobs, 1 * 60 * 1000)
 }
 
 cleanupKueJobs()

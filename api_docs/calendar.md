@@ -56,6 +56,7 @@ Possible values for `event_type` field are:
   * `lease_application_date`
   * `lease_begin`
   * `lease_end`
+  * `home_anniversary` (this is a virtual event type coming from `closing_date` or `lease_end`)
 * If `object_type` = `contact_attribute`:
   * `birthday`
   * `important_date`
