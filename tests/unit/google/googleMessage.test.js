@@ -8,7 +8,7 @@ const BrandHelper      = require('../brand/helper')
 const GoogleCredential = require('../../../lib/models/Google/credential')
 const GoogleMessage    = require('../../../lib/models/Google/message')
 
-const { parser } = require('../../../lib/models/Google/workers/gmail/common')
+const { generateGMesssageRecord } = require('../../../lib/models/Google/workers/gmail/common')
 
 
 const google_messages_offline = require('./data/google_messages.json')
@@ -92,43 +92,7 @@ async function create() {
   const googleMessages = []
 
   for (const message of google_messages_offline) {
-
-    const {
-      recipientsArr, attachments, internetMessageId, inReplyTo, subject,
-      from_raw, to_raw, cc_raw, bcc_raw,
-      from, to, cc, bcc
-    } = parser(message)
-
-    googleMessages.push({
-      google_credential: credential.id,
-      message_id: message.id,
-      thread_id: message.threadId,
-      thread_key: `${credential.id}${message.threadId}${message.id}`,
-      history_id: message.historyId,
-      internet_message_id: internetMessageId,
-      in_reply_to: inReplyTo,
-      recipients: `{${recipientsArr.join(',')}}`,
-      in_bound: (message.labelIds.includes('SENT')) ? false : true,
-
-      subject: subject,
-      has_attachments: (attachments.length > 0) ? true : false,
-      attachments: JSON.stringify(attachments),
-
-      from_raw: JSON.stringify(from_raw),
-      to_raw: JSON.stringify(to_raw),
-      cc_raw: JSON.stringify(cc_raw),
-      bcc_raw: JSON.stringify(bcc_raw),
-
-      '"from"': from,
-      '"to"': to,
-      cc: cc,
-      bcc: bcc,
-
-      message_created_at: new Date(Number(message.internalDate)).getTime(),
-      message_date: new Date(Number(message.internalDate)).toISOString()
-
-      // data: JSON.stringify(message)
-    })
+    googleMessages.push(generateGMesssageRecord(credential.id, message))
   }
 
   const createdMessages = await GoogleMessage.create(googleMessages)
