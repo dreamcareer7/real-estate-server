@@ -8,7 +8,7 @@ const migrations = [
    SELECT brands.id, templates.id
    FROM brands JOIN templates ON 1=1
    WHERE brands.brand_type = 'Brokerage'
-   AND templates.id NOT IN(SELECT template FROM brands_allowed_templates)`
+   AND templates.id NOT IN(SELECT template FROM brands_allowed_templates)`,
 
   'COMMIT'
 ]
