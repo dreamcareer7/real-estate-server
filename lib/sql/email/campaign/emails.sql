@@ -48,28 +48,33 @@ all_contacts_recipients AS (
         AND LENGTH(contacts.email[1]) > 0
 ),
 
-brand_recs AS (
+all_agents AS (
   SELECT
-    email_campaigns_recipients.*
-  FROM email_campaigns
-    JOIN email_campaigns_recipients ON email_campaigns_recipients.campaign = email_campaigns.id
-
-    WHERE email_campaigns.id = $1
-          AND email_campaigns_recipients.recipient_type = 'Brand'
+    u.email,
+    c.id,
+    ecr.send_type
+  FROM
+    email_campaigns AS ec
+    JOIN email_campaigns_recipients AS ecr
+      ON ec.id = ecr.campaign
+    CROSS JOIN LATERAL get_brand_agents(ecr.brand) AS ba
+    JOIN users AS u
+      ON ba."user" = u.id
+    LEFT JOIN contacts_users AS cu
+      ON cu."user" = u.id
+    LEFT JOIN contacts AS c
+      ON c.id = cu.contact
+  WHERE
+    ec.id = $1
+    AND ecr.recipient_type = 'Brand'
+    AND (
+      c.id IS NULL OR (
+        c.brand = ec.brand
+        AND c.deleted_at IS NULL
+      )
+    )
+    AND ecr.deleted_at IS NULL
 ),
-
-brand_agents AS (
-  SELECT ba.*, brand_recs.send_type
-  FROM   brand_recs, get_brand_agents(brand_recs.brand) ba
-),
-
-brand_recipients AS (
-  SELECT    users.email, contacts_users.contact, brand_agents.send_type
-  FROM      brand_agents
-  JOIN      users          ON users.id = brand_agents.user
-  LEFT JOIN contacts_users ON contacts_users.user = users.id
-),
-
 
 all_emails AS (
   SELECT email, contact, send_type FROM email_campaigns_recipients
@@ -83,7 +88,7 @@ all_emails AS (
   UNION
   SELECT * FROM all_contacts_recipients
   UNION
-  SELECT * FROM brand_recipients
+  SELECT * FROM all_agents
 )
 
 -- We used to DISTINCT ON(email).
