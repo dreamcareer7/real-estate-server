@@ -131,6 +131,22 @@ async function getMCredentialMessagesNum() {
   expect(result[0]['count']).to.be.equal(microsoftMessages.length)
 }
 
+async function deleteByInternetMessageIds() {
+  const microsoftMessages = await create()
+
+  for (const mMessage of microsoftMessages) {
+    await MicrosoftMessage.deleteByInternetMessageIds(mMessage.microsoft_credential, [mMessage.internet_message_id])
+  }
+
+  for (const mMessage of microsoftMessages) {
+    const microsoftMessage = await MicrosoftMessage.get(mMessage.message_id, mMessage.microsoft_credential)
+
+    expect(microsoftMessage.type).to.be.equal('microsoft_message')
+    expect(microsoftMessage.microsoft_credential).to.be.equal(mMessage.microsoft_credential)
+    expect(microsoftMessage.deleted_at).not.to.be.equal(null)
+  }
+}
+
 async function downloadAttachmentFailed() {
   const microsoftMessages = await create()
   const microsoftMessage_min = microsoftMessages[0]
@@ -162,6 +178,7 @@ describe('Microsoft', () => {
     it('should return microsoft-message by messages_id', getByMessageId)
     it('should handle failure of microsoft-contact get by messages_id', getByMessageIdFailed)
     it('should return number of messages of specific credential', getMCredentialMessagesNum)
+    it('should delete microsoft-messages by internet_messages_ids', deleteByInternetMessageIds)
 
     it('should handle failure of downloadAttachment', downloadAttachmentFailed)
   })
