@@ -1,4 +1,4 @@
-CREATE OR REPLACE VIEW deal_brand_access AS (
+CREATE MATERIALIZED VIEW deals_brands AS (
   (
     SELECT
       d.id AS deal,

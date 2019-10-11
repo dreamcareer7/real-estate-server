@@ -223,6 +223,7 @@ async function findDueHomeAnniversaries() {
   }], user.id, brand.id)
 
   await handleJobs()
+  await sql.update('REFRESH MATERIALIZED VIEW CONCURRENTLY deals_brands')
 
   const events = await CalendarWorker.getNotificationDueEvents()
 

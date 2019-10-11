@@ -1,4 +1,16 @@
-CREATE OR REPLACE FUNCTION update_listings_filters()
+const db = require('../lib/utils/db')
+
+const migrations = [
+  'BEGIN',
+  `UPDATE listings_filters SET
+    list_agent_mui       = listings.list_agent_mui,
+    co_list_agent_mui    = listings.co_list_agent_mui,
+    selling_agent_mui    = listings.selling_agent_mui,
+    co_selling_agent_mui = listings.co_selling_agent_mui
+  FROM listings
+  WHERE listings_filters.id = listings.id`,
+
+  `CREATE OR REPLACE FUNCTION update_listings_filters()
   RETURNS trigger AS
 $$
   BEGIN
@@ -96,4 +108,24 @@ $$
     RETURN NEW;
   END;
 $$
-LANGUAGE PLPGSQL;
+LANGUAGE PLPGSQL;`,
+
+  'COMMIT'
+]
+
+
+const run = async () => {
+  const { conn } = await db.conn.promise()
+
+  for(const sql of migrations) {
+    await conn.query(sql)
+  }
+
+  conn.release()
+}
+
+exports.up = cb => {
+  run().then(cb).catch(cb)
+}
+
+exports.down = () => {}
