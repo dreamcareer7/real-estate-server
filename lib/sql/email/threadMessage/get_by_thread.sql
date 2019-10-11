@@ -10,7 +10,7 @@
     NULL AS "thread_key",
     NULL AS "internet_message_id",
     FALSE AS "has_attachments",
-    NULL::jsonb AS "attachments",
+    '[]'::jsonb AS "attachments",
     FALSE AS "in_bound",
     subject,
     NULL AS "snippet",
