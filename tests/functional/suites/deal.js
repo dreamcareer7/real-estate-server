@@ -409,7 +409,7 @@ const makeSureAnotherTaskIsDeleted = cb => {
     .after(cb)
     .expectJSONTypes({
       data: {
-        deleted_at: String
+        deleted_at: Number
       }
     })
 }

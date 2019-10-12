@@ -11,6 +11,8 @@ const Deal = require('../../../lib/models/Deal')
 const User = require('../../../lib/models/User')
 const CrmTask = require('../../../lib/models/CRM/Task')
 
+const sql = require('../../../lib/utils/sql')
+
 const BrandHelper = require('../brand/helper')
 const DealHelper = require('../deal/helper')
 const { attributes } = require('../contact/helper')
@@ -166,6 +168,7 @@ async function testDealClosingDateHomeAnniversary() {
   }], user.id, brand.id)
 
   await handleJobs()
+  await sql.update('REFRESH MATERIALIZED VIEW CONCURRENTLY deals_brands')
 
   const events = await fetchEvents()
   expect(events).to.have.length(3)
@@ -208,6 +211,7 @@ async function testDealLeaseEndHomeAnniversary() {
   }], user.id, brand.id)
 
   await handleJobs()
+  await sql.update('REFRESH MATERIALIZED VIEW CONCURRENTLY deals_brands')
 
   const events = await fetchEvents()
   expect(events.map(e => e.event_type)).to.have.members([ 'lease_begin', 'lease_end', 'home_anniversary' ])

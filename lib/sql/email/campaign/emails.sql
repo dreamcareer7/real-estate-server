@@ -1,6 +1,6 @@
 WITH
 list_contacts AS (
-  SELECT contacts.email[1], contacts.id, email_campaigns_recipients.send_type
+  SELECT contacts.email[1], contacts.id, null, email_campaigns_recipients.send_type
   FROM   email_campaigns
   JOIN   email_campaigns_recipients ON email_campaigns.id              =  email_campaigns_recipients.campaign
   JOIN   crm_lists_members          ON email_campaigns_recipients.list = crm_lists_members.list
@@ -13,7 +13,7 @@ list_contacts AS (
 ),
 
 tag_contacts AS (
-  SELECT contacts.email[1], contacts.id, email_campaigns_recipients.send_type
+  SELECT contacts.email[1], contacts.id, null, email_campaigns_recipients.send_type
   FROM   email_campaigns
   JOIN   email_campaigns_recipients ON email_campaigns.id =  email_campaigns_recipients.campaign
   JOIN   contacts         ON ARRAY[email_campaigns_recipients.tag] <@ contacts.tag
@@ -25,7 +25,7 @@ tag_contacts AS (
 ),
 
 contact_recipients AS (
-  SELECT COALESCE(email_campaigns_recipients.email, contacts.email[1]), contacts.id, email_campaigns_recipients.send_type
+  SELECT COALESCE(email_campaigns_recipients.email, contacts.email[1]), contacts.id, null, email_campaigns_recipients.send_type
   FROM   email_campaigns
   JOIN   email_campaigns_recipients ON email_campaigns.id = email_campaigns_recipients.campaign
   JOIN   contacts         ON email_campaigns_recipients.contact = contacts.id
@@ -37,7 +37,7 @@ contact_recipients AS (
 ),
 
 all_contacts_recipients AS (
-  SELECT contacts.email[1], contacts.id, email_campaigns_recipients.send_type
+  SELECT contacts.email[1], contacts.id, null, email_campaigns_recipients.send_type
   FROM   email_campaigns
   JOIN   email_campaigns_recipients ON email_campaigns.id    = email_campaigns_recipients.campaign
   JOIN   contacts                   ON email_campaigns.brand = contacts.brand
@@ -48,31 +48,37 @@ all_contacts_recipients AS (
         AND LENGTH(contacts.email[1]) > 0
 ),
 
-brand_recs AS (
+all_brand_agents AS (
   SELECT
-    email_campaigns_recipients.*
-  FROM email_campaigns
-    JOIN email_campaigns_recipients ON email_campaigns_recipients.campaign = email_campaigns.id
-
-    WHERE email_campaigns.id = $1
-          AND email_campaigns_recipients.recipient_type = 'Brand'
+    u.email,
+    c.id,
+    null,
+    ecr.send_type
+  FROM
+    email_campaigns AS ec
+    JOIN email_campaigns_recipients AS ecr
+      ON ec.id = ecr.campaign
+    CROSS JOIN LATERAL get_brand_agents(ecr.brand) AS ba
+    JOIN users AS u
+      ON ba."user" = u.id
+    LEFT JOIN contacts_users AS cu
+      ON cu."user" = u.id
+    LEFT JOIN contacts AS c
+      ON c.id = cu.contact
+  WHERE
+    ec.id = $1
+    AND ecr.recipient_type = 'Brand'
+    AND (
+      c.id IS NULL OR (
+        c.brand = ec.brand
+        AND c.deleted_at IS NULL
+      )
+    )
+    AND ecr.deleted_at IS NULL
 ),
-
-brand_agents AS (
-  SELECT ba.*, brand_recs.send_type
-  FROM   brand_recs, get_brand_agents(brand_recs.brand) ba
-),
-
-brand_recipients AS (
-  SELECT    users.email, contacts_users.contact, brand_agents.send_type
-  FROM      brand_agents
-  JOIN      users          ON users.id = brand_agents.user
-  LEFT JOIN contacts_users ON contacts_users.user = users.id
-),
-
 
 agent_recipients AS (
-  SELECT agents.email, email_campaigns_recipients.agent, email_campaigns_recipients.send_type
+  SELECT agents.email, null, email_campaigns_recipients.agent, email_campaigns_recipients.send_type
   FROM   email_campaigns
   JOIN   email_campaigns_recipients ON email_campaigns.id = email_campaigns_recipients.campaign
   JOIN   agents                     ON email_campaigns_recipients.agent= agents.id
@@ -82,20 +88,20 @@ agent_recipients AS (
 ),
 
 all_emails AS (
-  SELECT email, contact, null as agent, send_type FROM email_campaigns_recipients
+  SELECT email, null, null, send_type FROM email_campaigns_recipients
   WHERE email_campaigns_recipients.campaign = $1 AND email IS NOT NULL AND contact IS NULL
   UNION
-  SELECT *, null as agent FROM contact_recipients
+  SELECT * FROM contact_recipients
   UNION
-  SELECT *, null as agent FROM list_contacts
+  SELECT * FROM list_contacts
   UNION
-  SELECT *, null as agent FROM tag_contacts
+  SELECT * FROM tag_contacts
   UNION
-  SELECT *, null as agent FROM all_contacts_recipients
+  SELECT * FROM all_contacts_recipients
   UNION
-  SELECT *, null as agent FROM brand_recipients
+  SELECT * FROM all_brand_agents
   UNION
-  SELECT *, null as contact FROM agent_recipients
+  SELECT * FROM all_agent_recipients
 )
 
 -- We used to DISTINCT ON(email).

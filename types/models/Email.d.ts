@@ -7,6 +7,7 @@ declare interface IEmailRecipientTagInput {
 declare interface IEmailRecipientEmailInput {
   email: string;
   contact?: UUID;
+  brand: UUID;
 }
 
 declare type IEmailRecipientInput = 

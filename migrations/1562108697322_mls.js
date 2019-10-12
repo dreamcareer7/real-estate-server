@@ -27,9 +27,9 @@ const migrations = [
   'ALTER TABLE property_rooms ADD mls mls NOT NULL DEFAULT \'NTREIS\'',
   'ALTER TABLE property_units ADD mls mls NOT NULL DEFAULT \'NTREIS\'',
   'ALTER TABLE photos         ADD mls mls NOT NULL DEFAULT \'NTREIS\'',
-  'ALTER TABLE mls_data       ADD mls mls NOT NULL DEFAULT \'NTREIS\'',
-  'ALTER TABLE mls_jobs       ADD mls mls NOT NULL DEFAULT \'NTREIS\'',
-
+  
+  'ALTER TABLE mls_data ADD COLUMN IF NOT EXISTS mls mls NOT NULL DEFAULT \'NTREIS\'',
+  'ALTER TABLE mls_jobs ADD COLUMN IF NOT EXISTS mls mls NOT NULL DEFAULT \'NTREIS\'',
 
   'ALTER TABLE listings       ALTER mls DROP DEFAULT',
   'ALTER TABLE offices        ALTER mls DROP DEFAULT',
@@ -39,14 +39,18 @@ const migrations = [
   'ALTER TABLE photos         ALTER mls DROP DEFAULT',
   'ALTER TABLE mls_data       ALTER mls DROP DEFAULT',
 
+  'ALTER TABLE agents         DROP CONSTRAINT agents_mlsid',
   'ALTER TABLE agents         DROP CONSTRAINT agents_matrix_unique_id_key',
   'ALTER TABLE open_houses    DROP CONSTRAINT open_houses_matrix_unique_id_key',
   'ALTER TABLE photos         DROP CONSTRAINT photos_matrix_unique_id_key',
 
-  'DROP INDEX listings_matrix_unique_id_idx',
-  'DROP INDEX offices_mui_idx',
-  'DROP INDEX property_rooms_mui_idx',
-  'DROP INDEX units_mui_idx',
+  'DROP INDEX IF EXISTS mls_data_matrix_unique_id_idx',
+  'DROP INDEX IF EXISTS listings_matrix_unique_id_idx',
+  'DROP INDEX IF EXISTS addresses_matrix_unique_id_idx',
+  'DROP INDEX IF EXISTS properties_matrix_unique_id_idx',
+  'DROP INDEX IF EXISTS offices_mui_idx',
+  'DROP INDEX IF EXISTS property_rooms_mui_idx',
+  'DROP INDEX IF EXISTS units_mui_idx',
 
   'ALTER TABLE agents         ADD CONSTRAINT agents_mui_mls         UNIQUE (matrix_unique_id, mls)',
   'ALTER TABLE listings       ADD CONSTRAINT listings_mui_mls       UNIQUE (matrix_unique_id, mls)',

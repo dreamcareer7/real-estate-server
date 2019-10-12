@@ -27,7 +27,14 @@
                     "name": "Megan Bowen",
                     "address": "MeganB@M365x214355.onmicrosoft.com"
                 }
+            },
+            {
+                "emailAddress": {
+                    "name": "bad-character",
+                    "address": "F184914}.DMS@wcs.lawfirm.local"
+                }
             }
+            
         ],
         "ccRecipients": [],
         "bccRecipients": [],
