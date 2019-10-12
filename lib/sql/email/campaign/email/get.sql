@@ -1,6 +1,6 @@
  SELECT email_campaign_emails.*,
   'email_campaign_email' AS TYPE,
-  COALESCE(contacts.display_name, agents.full_name),
+  COALESCE(contacts.display_name, agents.full_name) as full_name,
   contacts.profile_image_url
 
 FROM email_campaign_emails
