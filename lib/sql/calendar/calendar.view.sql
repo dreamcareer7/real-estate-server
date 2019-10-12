@@ -1,39 +1,40 @@
 CREATE OR REPLACE VIEW analytics.calendar AS (
-  SELECT
-    id,
-    created_by,
-    'crm_task' AS object_type,
-    task_type AS event_type,
-    task_type AS type_label,
-    due_date AS "timestamp",
-    due_date AS "date",
-    due_date AS next_occurence,
-    False AS recurring,
-    title,
-    id AS crm_task,
-    NULL::uuid AS deal,
-    NULL::uuid AS contact,
-    NULL::uuid AS campaign,
-    NULL::uuid AS credential_id,
-    NULL::text AS thread_key,
-    (
-      SELECT
-        ARRAY_AGG("user")
-      FROM
-        crm_tasks_assignees
-      WHERE
-        crm_task = crm_tasks.id
-        AND deleted_at IS NULL
-    ) AS users,
-    brand,
-    status,
-    jsonb_build_object(
-      'status', status
-    ) AS metadata
-  FROM
-    crm_tasks
-  WHERE
-    deleted_at IS NULL
+  (
+    SELECT
+      id,
+      created_by,
+      'crm_task' AS object_type,
+      task_type AS event_type,
+      task_type AS type_label,
+      due_date AS "timestamp",
+      due_date AS "date",
+      due_date AS next_occurence,
+      False AS recurring,
+      title,
+      id AS crm_task,
+      NULL::uuid AS deal,
+      NULL::uuid AS contact,
+      NULL::uuid AS campaign,
+      NULL::uuid AS credential_id,
+      NULL::text AS thread_key,
+      (
+        SELECT
+          ARRAY_AGG("user")
+        FROM
+          crm_tasks_assignees
+        WHERE
+          crm_task = crm_tasks.id
+          AND deleted_at IS NULL
+      ) AS users,
+      brand,
+      status,
+      jsonb_build_object(
+        'status', status
+      ) AS metadata
+    FROM
+      crm_tasks
+    WHERE
+      deleted_at IS NULL
   )
   UNION ALL
   (
@@ -547,3 +548,4 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       microsoft_messages.deleted_at IS NULL
     ORDER BY microsoft_credentials.brand, microsoft_messages.thread_key, contact, object_type, event_type, recurring, message_date ASC
   )
+)
