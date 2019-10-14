@@ -105,7 +105,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
           AND r.deleted_at IS NULL
           AND r."user" IS NOT NULL
       ) AS users,
-      deals.brand,
+      COALESCE(dr.brand, deals.brand) AS brand,
       NULL::text AS status,
       NULL::jsonb AS metadata
     FROM
@@ -116,6 +116,8 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
         ON bc.id = cdc.definition
       JOIN deals_checklists dcl
         ON dcl.id = cdc.checklist
+      LEFT JOIN (SELECT id, deal, brand FROM deals_roles WHERE brand IS NOT NULL AND deleted_at IS NULL) dr
+        ON deals.id = dr.deal
     WHERE
       deals.deleted_at IS NULL
       AND cdc.data_type = 'Date'::context_data_type
