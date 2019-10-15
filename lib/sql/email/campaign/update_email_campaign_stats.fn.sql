@@ -100,6 +100,5 @@ $$
     stored       = cc.stored
   FROM campaign_counts cc
   WHERE email_campaigns.id = $1
-  RETURNING *
 $$
 LANGUAGE SQL;
