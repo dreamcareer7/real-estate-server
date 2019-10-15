@@ -110,7 +110,7 @@ const getByBrand = cb => {
         {
           subject: brand.subject,
           html: brand.html,
-          sent: 1,
+          sent: 2,
           recipients: [
             {
               recipient_type: 'Brand'
@@ -160,6 +160,10 @@ const scheduleBrand = cb => {
       {
         brand: results.brand.create.data.id,
         recipient_type: 'Brand'
+      },
+      {
+        agent: results.user.upgradeToAgentWithEmail.data.agent.id,
+        recipient_type: 'Agent'
       }
     ]
   }

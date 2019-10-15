@@ -7,7 +7,8 @@ WITH to_insert AS (
     email,
     brand,
     send_type,
-    recipient_type
+    recipient_type,
+    agent
   FROM json_populate_recordset(NULL::email_campaigns_recipients, $1::json)
 ),
 
@@ -18,6 +19,6 @@ clear AS (
 )
 
 INSERT INTO email_campaigns_recipients
-(campaign, tag, list, contact, email, brand, send_type, recipient_type)
+(campaign, tag, list, contact, email, brand, send_type, recipient_type, agent)
 
 SELECT * FROM to_insert

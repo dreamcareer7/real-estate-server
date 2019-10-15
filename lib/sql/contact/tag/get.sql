@@ -13,5 +13,6 @@ FROM
 WHERE
   brand = $1::uuid
   AND deleted_at IS NULL
+  AND (CASE WHEN $2::uuid[] IS NULL THEN TRUE ELSE created_by = ANY($2::uuid[]) END)
 ORDER BY
   tag
