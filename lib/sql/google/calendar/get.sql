@@ -3,7 +3,7 @@ SELECT
 FROM
     google_calendars
 JOIN 
-    unnest($2::text[]) WITH ORDINALITY t(gcid, ord)
+    unnest($2::uuid[]) WITH ORDINALITY t(gcid, ord)
 ON 
     google_calendars.id = gcid
     AND google_calendars.google_credential = $1

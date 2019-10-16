@@ -3,6 +3,7 @@ const db = require('../lib/utils/db')
 const migrations = [
   'BEGIN',
 
+  'DROP TABLE IF EXISTS google_calendar_events',
   'DROP TABLE IF EXISTS google_calendars',
 
   `CREATE TABLE IF NOT EXISTS google_calendars(
