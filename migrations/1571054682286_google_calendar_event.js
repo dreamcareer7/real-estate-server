@@ -21,8 +21,8 @@ const migrations = [
     visibility TEXT,
     hangout_link TEXT,
     html_link TEXT,
-
     status TEXT,
+    sequence BIGINT,
     
     anyone_can_add_self BOOLEAN,
     guests_can_invite_others BOOLEAN,
@@ -31,8 +31,6 @@ const migrations = [
     attendees_omitted BOOLEAN,
     locked BOOLEAN,
     private_copy BOOLEAN,
-
-    sequence BIGINT,
 
     creator JSONB,
     organizer JSONB,
@@ -53,6 +51,8 @@ const migrations = [
     recurrence JSONB,
     recurring_eventId TEXT,
     original_start_time JSONB,
+
+    origin TEXT,
 
     created_at timestamptz NOT NULL DEFAULT clock_timestamp(),
     updated_at timestamptz NOT NULL DEFAULT clock_timestamp(),

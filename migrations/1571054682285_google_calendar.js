@@ -11,25 +11,14 @@ const migrations = [
     google_credential uuid NOT NULL REFERENCES google_credentials(id),
     calendar_id TEXT NOT NULL,
 
-    access_role TEXT,
-    description TEXT,
     summary TEXT,
-    summary_override TEXT,
+    description TEXT,
     location TEXT,
     time_zone TEXT,
 
-    background_color TEXT,
-    foreground_color TEXT,
-    color_id TEXT,    
-
-    "primary" BOOLEAN,
-    hidden BOOLEAN,
-    selected BOOLEAN,
-    deleted BOOLEAN,
-
-    default_reminders JSONB,
     conference_properties JSONB,
-    notification_settings JSONB,
+
+    origin TEXT,
 
     created_at timestamptz NOT NULL DEFAULT clock_timestamp(),
     updated_at timestamptz NOT NULL DEFAULT clock_timestamp(),
