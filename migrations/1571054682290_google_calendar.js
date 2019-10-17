@@ -13,10 +13,17 @@ const migrations = [
     calendar_id TEXT NOT NULL,
 
     summary TEXT,
+    summary_override TEXT,
     description TEXT,
     location TEXT,
     time_zone TEXT,
 
+    accessRole TEXT,
+    selected BOOLEAN,
+    "primary" BOOLEAN,
+
+    defaultReminders JSONB,
+    notificationSettings JSONB,
     conference_properties JSONB,
 
     origin TEXT,
