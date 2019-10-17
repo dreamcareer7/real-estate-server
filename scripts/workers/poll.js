@@ -12,11 +12,10 @@ const GoogleWorker = require('../../lib/models/Google/workers')
 const MicrosoftWorker = require('../../lib/models/Microsoft/workers')
 const Task = require('../../lib/models/Task')
 
-
 let i = 1
 
-const poll_promises = new Map
-const polling_timeouts = new Map
+const poll_promises = new Map()
+const polling_timeouts = new Map()
 let shutting_down = false
 
 async function shutdown() {
@@ -33,49 +32,64 @@ async function shutdown() {
 }
 
 const poll = ({ fn, name }) => {
-  const _poll = async ({fn, name}) => {
-    if (polling_timeouts.has(name)) {
-      polling_timeouts.delete(name)
-    }
-  
-    const id = `${name}-${++i}`
-  
-    const { commit, rollback } = await createContext({
-      id
+  async function again() {
+    if (shutting_down) return
+
+    poll({
+      fn,
+      name
     })
-  
+  }
+
+  /**
+   * Does not throw an error
+   */
+  async function execute({ commit, rollback }) {
     try {
       await fn()
-    } catch(err) {
+      await commit()
+    } catch (err) {
+      console.error(err)
+
+      // Error is handled via callback. Doesn't throw.
       Slack.send({
         channel: '7-server-errors',
-        text: `Notifications worker: '${err}'`,
+        text: `Poller error (${name}): '${err}'`,
         emoji: ':skull:'
       })
-  
+
+      // Error is handled inside the function. Doesn't throw.
       rollback(err)
       return
     }
-  
-    await commit()
-  
-    const again = async () => {
-      if (shutting_down) return
-  
-      poll({
-        fn,
-        name
-      })
+  }
+
+  async function _poll() {
+    if (polling_timeouts.has(name)) {
+      polling_timeouts.delete(name)
     }
-  
-    if (shutting_down) {
-      Context.log('Pollers: shutdown completed')
-    } else {
-      polling_timeouts.set(name, setTimeout(again, 5000))
+
+    const id = `${name}-${++i}`
+
+    try {
+      const ctxRes = await createContext({ id })
+      await execute(ctxRes)
+    } catch (ex) {
+      console.error(ex)
+      Slack.send({
+        channel: '7-server-errors',
+        text: `Poller error (${name}): Error while creating context!\n\`${ex}\``
+      })
+    } finally {
+      if (shutting_down) {
+        Context.log('Pollers: shutdown completed')
+      } else {
+        polling_timeouts.set(name, setTimeout(again, 5000))
+      }
     }
   }
 
-  poll_promises.set(name, _poll({ fn, name }))
+  poll_promises.set(name, _poll())
 }
 
 const notifications = async () => {
@@ -89,7 +103,7 @@ const notifications = async () => {
 
 poll({
   fn: notifications,
-  name: 'notifications'
+  name: 'Notifications'
 })
 
 poll({
