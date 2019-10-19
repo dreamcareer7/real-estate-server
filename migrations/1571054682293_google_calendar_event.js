@@ -3,8 +3,6 @@ const db = require('../lib/utils/db')
 const migrations = [
   'BEGIN',
 
-  'DROP TABLE IF EXISTS google_calendar_events',
-
   `CREATE TABLE IF NOT EXISTS google_calendar_events(
     id uuid NOT NULL PRIMARY KEY DEFAULT uuid_generate_v4(),
 
@@ -21,8 +19,8 @@ const migrations = [
     visibility TEXT,
     hangout_link TEXT,
     html_link TEXT,
-
     status TEXT,
+    sequence BIGINT,
     
     anyone_can_add_self BOOLEAN,
     guests_can_invite_others BOOLEAN,
@@ -31,8 +29,6 @@ const migrations = [
     attendees_omitted BOOLEAN,
     locked BOOLEAN,
     private_copy BOOLEAN,
-
-    sequence BIGINT,
 
     creator JSONB,
     organizer JSONB,
@@ -53,6 +49,8 @@ const migrations = [
     recurrence JSONB,
     recurring_eventId TEXT,
     original_start_time JSONB,
+
+    origin TEXT,
 
     created_at timestamptz NOT NULL DEFAULT clock_timestamp(),
     updated_at timestamptz NOT NULL DEFAULT clock_timestamp(),

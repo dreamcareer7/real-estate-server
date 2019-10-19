@@ -338,6 +338,19 @@ async function updateThreadsSyncHistoryId() {
   expect(updatedCredential.threads_sync_history_id).to.be.equal(syncToken)
 }
 
+async function updateRechatGoogleCalendar() {
+  const createdCredential = await create()
+
+  const rechatCalendarId = null
+
+  await GoogleCredential.updateRechatGoogleCalendar(createdCredential.id, rechatCalendarId)
+
+  const updatedCredential = await GoogleCredential.get(createdCredential.id)
+
+  expect(createdCredential.id).to.be.equal(updatedCredential.id)
+  expect(updatedCredential.rechat_gcalendar).to.be.equal(rechatCalendarId)
+}
+
 
 describe('Google', () => {
   describe('Google Account', () => {
@@ -370,5 +383,7 @@ describe('Google', () => {
     it('should update a google-credential contact_last_sync_At', updateContactsLastSyncAt)
     it('should update a google-credential messages sync token', updateMessagesSyncHistoryId)
     it('should update a google-credential threads sync token', updateThreadsSyncHistoryId)
+
+    it('should update a google-credential rechat-google-Calendar', updateRechatGoogleCalendar)
   })
 })
