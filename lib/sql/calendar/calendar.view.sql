@@ -430,7 +430,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
 
       (
         SELECT
-          ARRAY_AGG(contact)
+          ARRAY_AGG(DISTINCT contact)
         FROM
           (
             SELECT
@@ -446,6 +446,19 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
             LIMIT 5
           ) t
       ) AS people,
+
+      (
+        SELECT
+          count(DISTINCT c.id)
+        FROM
+          email_campaign_emails AS ece
+          JOIN contacts AS c
+            ON c.email @> ARRAY[ece.email_address]
+        WHERE
+          ece.campaign = ec.id
+          AND c.brand = ec.brand
+          AND c.deleted_at IS NULL
+      ) AS people_len,
 
       brand,
       NULL::text AS status,
@@ -552,6 +565,19 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
             LIMIT 5
           ) t
       ) AS people,
+
+      (
+        SELECT
+          count(DISTINCT c.id)
+        FROM
+          email_campaign_emails AS ece
+          JOIN contacts AS c
+            ON c.email @> ARRAY[ece.email_address]
+        WHERE
+          ece.campaign = ec.id
+          AND c.brand = ec.brand
+          AND c.deleted_at IS NULL
+      ) AS people_len,
 
       ec.brand,
       NULL::text AS status,

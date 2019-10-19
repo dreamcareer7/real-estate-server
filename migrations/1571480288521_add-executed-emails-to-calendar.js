@@ -242,6 +242,8 @@ const migrations = [
           ON bc.id = cdc.definition
         JOIN deals_checklists dcl
           ON dcl.id = cdc.checklist
+        -- JOIN brands_checklists bcl
+        --   ON dcl.origin = bcl.id
         JOIN contacts_roles cr
           ON (deals.id = cr.deal)
       WHERE
@@ -252,8 +254,10 @@ const migrations = [
         )
         AND cr.role_name = 'Buyer'
         AND deals.deal_type = 'Buying'
+        -- AND bcl.deal_type = 'Buying'
         AND dcl.deleted_at     IS NULL
         AND dcl.deactivated_at IS NULL
+        -- AND bcl.deleted_at     Is NULL
         AND dcl.terminated_at  IS NULL
         AND deals.faired_at    IS NOT NULL
         AND deal_status_mask(deals.id, '{Withdrawn,Cancelled,"Contract Terminated"}', cdc.key, '{expiration_date}'::text[], '{Sold,Leased}'::text[]) IS NOT FALSE
@@ -355,7 +359,7 @@ const migrations = [
     (
       SELECT
         id,
-        created_by,
+        ec.created_by,
         'email_campaign' AS object_type,
         'scheduled_email' AS event_type,
         'Scheduled Email' AS type_label,
@@ -431,7 +435,7 @@ const migrations = [
   
         (
           SELECT
-            ARRAY_AGG(contact)
+            ARRAY_AGG(DISTINCT contact)
           FROM
             (
               SELECT
@@ -447,6 +451,19 @@ const migrations = [
               LIMIT 5
             ) t
         ) AS people,
+  
+        (
+          SELECT
+            count(DISTINCT c.id)
+          FROM
+            email_campaign_emails AS ece
+            JOIN contacts AS c
+              ON c.email @> ARRAY[ece.email_address]
+          WHERE
+            ece.campaign = ec.id
+            AND c.brand = ec.brand
+            AND c.deleted_at IS NULL
+        ) AS people_len,
   
         brand,
         NULL::text AS status,
@@ -553,6 +570,19 @@ const migrations = [
               LIMIT 5
             ) t
         ) AS people,
+  
+        (
+          SELECT
+            count(DISTINCT c.id)
+          FROM
+            email_campaign_emails AS ece
+            JOIN contacts AS c
+              ON c.email @> ARRAY[ece.email_address]
+          WHERE
+            ece.campaign = ec.id
+            AND c.brand = ec.brand
+            AND c.deleted_at IS NULL
+        ) AS people_len,
   
         ec.brand,
         NULL::text AS status,
