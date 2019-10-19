@@ -404,7 +404,57 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
     WHERE
       deleted_at IS NULL
       AND executed_at IS NULL
-      AND deleted_at IS NULL
+      AND due_at IS NOT NULL
+  )
+  UNION ALL
+  (
+    SELECT
+      ec.id,
+      ec.created_by,
+      'email_campaign' AS object_type,
+      'executed_email' AS event_type,
+      'Executed Email' AS type_label,
+      executed_at AS "timestamp",
+      executed_at AS "date",
+      executed_at AS next_occurence,
+      NULL::timestamptz AS end_date,
+      False AS recurring,
+      subject AS title,
+      NULL::uuid AS crm_task,
+      ec.deal,
+      NULL::uuid AS contact,
+      id AS campaign,
+      NULL::uuid AS credential_id,
+      NULL::text AS thread_key,
+      ARRAY[ec.from] AS users,
+
+      (
+        SELECT
+          ARRAY_AGG(contact)
+        FROM
+          (
+            SELECT
+              contact
+            FROM
+              email_campaign_emails AS ece
+              JOIN contacts AS c
+                ON c.email @> ARRAY[ece.email_address]
+            WHERE
+              ece.campaign = ec.id
+              AND c.brand = ec.brand
+              AND c.deleted_at IS NULL
+            LIMIT 5
+          ) t
+      ) AS people,
+
+      brand,
+      NULL::text AS status,
+      NULL::jsonb AS metadata
+    FROM
+      email_campaigns AS ec
+    WHERE
+      deleted_at IS NULL
+      AND executed_at IS NOT NULL
       AND due_at IS NOT NULL
   )
   UNION ALL
@@ -436,7 +486,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
             SELECT
               contact
             FROM
-              email_campaigns_recipient_emails AS ecr
+              email_campaigns_recipient_emails
             WHERE
               campaign = ec.id
             LIMIT 5
@@ -446,7 +496,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
         SELECT
           COUNT(DISTINCT email)
         FROM
-          email_campaigns_recipient_emails AS ecr
+          email_campaigns_recipient_emails
         WHERE
           campaign = ec.id
       ) AS people_len,
@@ -461,6 +511,62 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       ec.deleted_at IS NULL
       AND ec.executed_at IS NULL
       AND ec.due_at IS NOT NULL
+  )
+  UNION ALL
+  (
+    SELECT
+      ec.id,
+      ec.created_by,
+      'email_campaign_recipient' AS object_type,
+      'executed_email' AS event_type,
+      'Executed Email' AS type_label,
+      executed_at AS "timestamp",
+      executed_at AS "date",
+      executed_at AS next_occurence,
+      NULL::timestamptz AS end_date,
+      False AS recurring,
+      subject AS title,
+      NULL::uuid AS crm_task,
+      ec.deal,
+      c.id AS contact,
+      ec.id AS campaign,
+      NULL::uuid AS credential_id,
+      NULL::text AS thread_key,
+      ARRAY[ec.from] AS users,
+
+      (
+        SELECT
+          ARRAY_AGG(contact)
+        FROM
+          (
+            SELECT
+              contact
+            FROM
+              email_campaign_emails
+              JOIN contacts
+                ON contacts.email @> ARRAY[email_campaign_emails.email_address]
+            WHERE
+              email_campaign_emails.campaign = ec.id
+              AND contacts.brand = ec.brand
+              AND contacts.deleted_at IS NULL
+            LIMIT 5
+          ) t
+      ) AS people,
+
+      ec.brand,
+      NULL::text AS status,
+      NULL::jsonb AS metadata
+    FROM
+      email_campaigns AS ec
+      JOIN email_campaign_emails AS ece
+        ON ece.campaign = ec.id
+      JOIN contacts c
+        ON (c.brand = ec.brand AND ec.id = ece.campaign)
+    WHERE
+      ec.deleted_at IS NULL
+      AND c.deleted_at IS NULL
+      AND c.email @> ARRAY[ece.email_address]
+      AND ec.executed_at IS NOT NULL
   )
   UNION ALL
   (
