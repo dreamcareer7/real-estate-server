@@ -8,7 +8,8 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       task_type AS type_label,
       due_date AS "timestamp",
       due_date AS "date",
-      due_date AS next_occurence,
+      NULL::timestamptz AS next_occurence,
+      end_date,
       False AS recurring,
       title,
       id AS crm_task,
@@ -26,6 +27,33 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
           crm_task = crm_tasks.id
           AND deleted_at IS NULL
       ) AS users,
+      (
+        SELECT
+          ARRAY_AGG(contact)
+        FROM
+          (
+            SELECT
+              contact
+            FROM
+              crm_associations
+            WHERE
+              crm_task = crm_tasks.id
+              AND deleted_at IS NULL
+              AND association_type = 'contact'
+            LIMIT 5
+          ) t
+      ) AS people,
+      (
+        SELECT
+          COUNT(contact)::INT
+        FROM
+          crm_associations
+        WHERE
+          crm_task = crm_tasks.id
+          AND deleted_at IS NULL
+          AND association_type = 'contact'
+        LIMIT 5
+      ) AS people_len,
       brand,
       status,
       jsonb_build_object(
@@ -46,7 +74,8 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       ct.task_type AS type_label,
       ct.due_date AS "timestamp",
       ct.due_date AS "date",
-      ct.due_date AS next_occurence,
+      NULL::timestamptz AS next_occurence,
+      ct.end_date,
       False AS recurring,
       ct.title,
       ct.id AS crm_task,
@@ -64,6 +93,32 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
           crm_task = ct.id
           AND deleted_at IS NULL
       ) AS users,
+      (
+        SELECT
+          ARRAY_AGG(contact)
+        FROM
+          (
+            SELECT
+              contact
+            FROM
+              crm_associations
+            WHERE
+              crm_task = ct.id
+              AND deleted_at IS NULL
+              AND association_type = 'contact'
+            LIMIT 5
+          ) t
+      ) AS people,
+      (
+        SELECT
+          COUNT(contact)::INT
+        FROM
+          crm_associations
+        WHERE
+          crm_task = ct.id
+          AND deleted_at IS NULL
+          AND association_type = 'contact'
+      ) AS people_len,
       ct.brand,
       ct.status,
       jsonb_build_object(
@@ -88,6 +143,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       cdc."date" AS "timestamp",
       timezone('UTC', date_trunc('day', cdc."date")) AT TIME ZONE 'UTC' AS "date",
       cdc."date" AS next_occurence,
+      NULL::timestamptz AS end_date,
       False AS recurring,
       deals.title,
       NULL::uuid AS crm_task,
@@ -106,6 +162,8 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
           AND r.deleted_at IS NULL
           AND r."user" IS NOT NULL
       ) AS users,
+      NULL::uuid[] AS people,
+      NULL AS people_len,
       COALESCE(dr.brand, deals.brand) AS brand,
       NULL::text AS status,
       NULL::jsonb AS metadata
@@ -139,6 +197,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       cdc."date" AS "timestamp",
       timezone('UTC', date_trunc('day', cdc."date")) AT TIME ZONE 'UTC' AS "date",
       cast(cdc."date" + ((extract(year from age(cdc."date")) + 1) * interval '1 year') as date) AS next_occurence,
+      NULL::timestamptz AS end_date,
       True AS recurring,
       deals.title,
       NULL::uuid AS crm_task,
@@ -157,6 +216,16 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
           AND r.deleted_at IS NULL
           AND r."user" IS NOT NULL
       ) AS users,
+      (
+        SELECT
+          ARRAY_AGG(contact)
+        FROM
+          contacts_roles
+        WHERE
+          role_name = 'Buyer'
+          AND deal = deals.id
+      ) AS people,
+      NULL AS people_len,
       cr.brand,
       NULL::text AS status,
       NULL::jsonb AS metadata
@@ -203,6 +272,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       "date" AS "timestamp",
       timezone('UTC', date_trunc('day', "date")::timestamp) AT TIME ZONE 'UTC' AS "date",
       cast("date" + ((extract(year from age("date")) + 1) * interval '1' year) as date) as next_occurence,
+      NULL::timestamptz AS end_date,
       True AS recurring,
       (CASE
         WHEN attribute_type = 'birthday' AND ca.is_partner IS TRUE THEN
@@ -229,6 +299,8 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       NULL::uuid AS credential_id,
       NULL::text AS thread_key,
       ARRAY[contacts."user"] AS users,
+      NULL::uuid[] AS people,
+      NULL AS people_len,
       contacts.brand,
       NULL::text AS status,
       jsonb_build_object(
@@ -257,6 +329,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       next_touch AS "timestamp",
       next_touch AS "date",
       next_touch AS next_occurence,
+      NULL::timestamptz AS end_date,
       False AS recurring,
       display_name AS title,
       NULL::uuid AS crm_task,
@@ -266,6 +339,8 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       NULL::uuid AS credential_id,
       NULL::text AS thread_key,
       ARRAY[contacts."user"] AS users,
+      NULL::uuid[] AS people,
+      NULL AS people_len,
       brand,
       NULL::text AS status,
       NULL::jsonb AS metadata
@@ -286,6 +361,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       due_at AS "timestamp",
       due_at AS "date",
       due_at AS next_occurence,
+      NULL::timestamptz AS end_date,
       False AS recurring,
       subject AS title,
       NULL::uuid AS crm_task,
@@ -295,6 +371,31 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       NULL::uuid AS credential_id,
       NULL::text AS thread_key,
       ARRAY[ec.from] AS users,
+
+      (
+        SELECT
+          ARRAY_AGG(contact)
+        FROM
+          (
+            SELECT
+              contact
+            FROM
+              email_campaigns_recipient_emails AS ecr
+            WHERE
+              campaign = ec.id
+            LIMIT 5
+          ) t
+      ) AS people,
+
+      (
+        SELECT
+          COUNT(DISTINCT email)
+        FROM
+          email_campaigns_recipient_emails AS ecr
+        WHERE
+          campaign = ec.id
+      ) AS people_len,
+
       brand,
       NULL::text AS status,
       NULL::jsonb AS metadata
@@ -303,7 +404,57 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
     WHERE
       deleted_at IS NULL
       AND executed_at IS NULL
-      AND deleted_at IS NULL
+      AND due_at IS NOT NULL
+  )
+  UNION ALL
+  (
+    SELECT
+      ec.id,
+      ec.created_by,
+      'email_campaign' AS object_type,
+      'executed_email' AS event_type,
+      'Executed Email' AS type_label,
+      executed_at AS "timestamp",
+      executed_at AS "date",
+      executed_at AS next_occurence,
+      NULL::timestamptz AS end_date,
+      False AS recurring,
+      subject AS title,
+      NULL::uuid AS crm_task,
+      ec.deal,
+      NULL::uuid AS contact,
+      id AS campaign,
+      NULL::uuid AS credential_id,
+      NULL::text AS thread_key,
+      ARRAY[ec.from] AS users,
+
+      (
+        SELECT
+          ARRAY_AGG(contact)
+        FROM
+          (
+            SELECT
+              contact
+            FROM
+              email_campaign_emails AS ece
+              JOIN contacts AS c
+                ON c.email @> ARRAY[ece.email_address]
+            WHERE
+              ece.campaign = ec.id
+              AND c.brand = ec.brand
+              AND c.deleted_at IS NULL
+            LIMIT 5
+          ) t
+      ) AS people,
+
+      brand,
+      NULL::text AS status,
+      NULL::jsonb AS metadata
+    FROM
+      email_campaigns AS ec
+    WHERE
+      deleted_at IS NULL
+      AND executed_at IS NOT NULL
       AND due_at IS NOT NULL
   )
   UNION ALL
@@ -317,6 +468,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       ec.due_at AS "timestamp",
       ec.due_at AS "date",
       ec.due_at AS next_occurence,
+      NULL::timestamptz AS end_date,
       False AS recurring,
       ec.subject AS title,
       NULL::uuid AS crm_task,
@@ -326,87 +478,95 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       NULL::uuid AS credential_id,
       NULL::text AS thread_key,
       ARRAY[ec.from] AS users,
+      (
+        SELECT
+          ARRAY_AGG(contact)
+        FROM
+          (
+            SELECT
+              contact
+            FROM
+              email_campaigns_recipient_emails
+            WHERE
+              campaign = ec.id
+            LIMIT 5
+          ) t
+      ) AS people,
+      (
+        SELECT
+          COUNT(DISTINCT email)
+        FROM
+          email_campaigns_recipient_emails
+        WHERE
+          campaign = ec.id
+      ) AS people_len,
       ec.brand,
       NULL::text AS status,
       NULL::jsonb AS metadata
     FROM
       email_campaigns AS ec
-      JOIN (
-        (
-          SELECT
-            ecr.campaign,
-            clm.contact
-          FROM
-            email_campaigns_recipients AS ecr
-            JOIN crm_lists_members AS clm
-              ON ecr.list = clm.list
-          WHERE
-            ecr.recipient_type = 'List'
-        )
-        UNION
-        (
-          SELECT
-            ecr.campaign,
-            cs.id AS contact
-          FROM
-            email_campaigns_recipients AS ecr
-            JOIN email_campaigns AS ec
-              ON ecr.campaign = ec.id
-            JOIN contacts AS cs
-              ON ARRAY[ecr.tag] <@ cs.tag AND ec.brand = cs.brand
-          WHERE
-            ecr.recipient_type = 'Tag'
-            AND ecr.tag IS NOT NULL
-            AND cs.deleted_at IS NULL
-        )
-        UNION
-        (
-          SELECT
-            ecr.campaign,
-            cs.id AS contact
-          FROM
-            email_campaigns_recipients AS ecr
-            JOIN email_campaigns AS ec
-              ON ecr.campaign = ec.id
-            JOIN contacts AS cs
-              ON ec.brand = cs.brand
-          WHERE
-            ecr.recipient_type = 'AllContacts'
-            AND cs.deleted_at IS NULL
-        )
-        UNION
-        (
-          SELECT
-            ecr.campaign,
-            contacts_users.contact
-          FROM
-            email_campaigns_recipients AS ecr
-            CROSS JOIN LATERAL get_brand_agents(ecr.brand) AS ba
-            JOIN users
-              ON users.id = ba.user
-            JOIN contacts_users
-              ON contacts_users.user = users.id
-          WHERE
-            ecr.brand IS NOT NULL
-            AND ecr.recipient_type = 'Brand'
-        )
-        UNION
-        (
-          SELECT
-            campaign,
-            contact
-          FROM
-            email_campaigns_recipients
-          WHERE
-            recipient_type = 'Email'
-            AND contact IS NOT NULL
-        )
-      ) AS ecr
+      JOIN email_campaigns_recipient_emails AS ecr
         ON ec.id = ecr.campaign
     WHERE
       ec.deleted_at IS NULL
       AND ec.executed_at IS NULL
       AND ec.due_at IS NOT NULL
+  )
+  UNION ALL
+  (
+    SELECT
+      ec.id,
+      ec.created_by,
+      'email_campaign_recipient' AS object_type,
+      'executed_email' AS event_type,
+      'Executed Email' AS type_label,
+      executed_at AS "timestamp",
+      executed_at AS "date",
+      executed_at AS next_occurence,
+      NULL::timestamptz AS end_date,
+      False AS recurring,
+      subject AS title,
+      NULL::uuid AS crm_task,
+      ec.deal,
+      c.id AS contact,
+      ec.id AS campaign,
+      NULL::uuid AS credential_id,
+      NULL::text AS thread_key,
+      ARRAY[ec.from] AS users,
+
+      (
+        SELECT
+          ARRAY_AGG(contact)
+        FROM
+          (
+            SELECT
+              contact
+            FROM
+              email_campaign_emails
+              JOIN contacts
+                ON contacts.email @> ARRAY[email_campaign_emails.email_address]
+            WHERE
+              email_campaign_emails.campaign = ec.id
+              AND contacts.brand = ec.brand
+              AND contacts.deleted_at IS NULL
+            LIMIT 5
+          ) t
+      ) AS people,
+
+      ec.brand,
+      NULL::text AS status,
+      NULL::jsonb AS metadata
+    FROM
+      email_campaigns AS ec
+      JOIN email_campaign_emails AS ece
+        ON ece.campaign = ec.id
+      JOIN contacts c
+        ON (c.brand = ec.brand AND ec.id = ece.campaign)
+    WHERE
+      ec.deleted_at IS NULL
+      AND c.deleted_at IS NULL
+      AND c.email @> ARRAY[ece.email_address]
+      AND ec.executed_at IS NOT NULL
   )
   UNION ALL
   (
@@ -420,6 +580,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       message_date AS "timestamp",
       message_date AS "date",
       message_date AS next_occurence,
+      NULL::timestamptz AS end_date,
       False AS recurring,
       COALESCE(subject, '') AS "title",
       NULL::uuid AS crm_task,
@@ -429,13 +590,17 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       google_messages.google_credential AS credential_id,
       thread_key,
       ARRAY[google_credentials."user"] AS users,
+
+      NULL::uuid[] AS people,
+      0 AS people_len,
+
       google_credentials.brand,
       NULL::text AS status,
       NULL::jsonb AS metadata
     FROM
       google_messages
-    JOIN
-      google_credentials on google_messages.google_credential = google_credentials.id
+      JOIN google_credentials
+        ON google_messages.google_credential = google_credentials.id
     WHERE
       google_messages.deleted_at IS NULL
     ORDER BY google_credentials.brand, google_messages.thread_key, contact, object_type, event_type, recurring, message_date ASC
@@ -452,6 +617,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       message_date AS "timestamp",
       message_date AS "date",
       message_date AS next_occurence,
+      NULL::timestamptz AS end_date,
       False AS recurring,
       COALESCE(subject, '') AS "title",
       NULL::uuid AS crm_task,
@@ -461,6 +627,10 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       microsoft_messages.microsoft_credential AS credential_id,
       thread_key,
       ARRAY[microsoft_credentials."user"] AS users,
+
+      NULL::uuid[] AS people,
+      0 AS people_len,
+
       microsoft_credentials.brand,
       NULL::text AS status,
       NULL::jsonb AS metadata
@@ -484,6 +654,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       message_date AS "timestamp",
       message_date AS "date",
       message_date AS next_occurence,
+      NULL::timestamptz AS end_date,
       False AS recurring,
       COALESCE(subject, '') AS "title",
       NULL::uuid AS crm_task,
@@ -493,6 +664,10 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       google_messages.google_credential AS credential_id,
       thread_key,
       ARRAY[google_credentials."user"] AS users,
+
+      NULL::uuid[] AS people,
+      0 AS people_len,
+
       google_credentials.brand,
       NULL::text AS status,
       NULL::jsonb AS metadata
@@ -523,6 +698,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       message_date AS "timestamp",
       message_date AS "date",
       message_date AS next_occurence,
+      NULL::timestamptz AS end_date,
       False AS recurring,
       COALESCE(subject, '') AS "title",
       NULL::uuid AS crm_task,
@@ -532,6 +708,10 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       microsoft_messages.microsoft_credential AS credential_id,
       thread_key,
       ARRAY[microsoft_credentials."user"] AS users,
+
+      NULL::uuid[] AS people,
+      0 AS people_len,
+
       microsoft_credentials.brand,
       NULL::text AS status,
       NULL::jsonb AS metadata
