@@ -354,7 +354,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
   (
     SELECT
       id,
-      created_by,
+      ec.created_by,
       'email_campaign' AS object_type,
       'scheduled_email' AS event_type,
       'Scheduled Email' AS type_label,

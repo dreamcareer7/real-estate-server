@@ -10,8 +10,8 @@ const run = async () => {
   /** @type { {rows: {crm_task: UUID; created_by: UUID }[]} } */
   const { rows } = await conn.query(`
     SELECT
-      crm_task,
-      created_by
+      a.crm_task,
+      ct.created_by
     FROM
       crm_associations AS a
       JOIN email_campaigns AS ec

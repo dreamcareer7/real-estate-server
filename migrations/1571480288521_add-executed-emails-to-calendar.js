@@ -242,8 +242,6 @@ const migrations = [
           ON bc.id = cdc.definition
         JOIN deals_checklists dcl
           ON dcl.id = cdc.checklist
-        -- JOIN brands_checklists bcl
-        --   ON dcl.origin = bcl.id
         JOIN contacts_roles cr
           ON (deals.id = cr.deal)
       WHERE
@@ -254,10 +252,8 @@ const migrations = [
         )
         AND cr.role_name = 'Buyer'
         AND deals.deal_type = 'Buying'
-        -- AND bcl.deal_type = 'Buying'
         AND dcl.deleted_at     IS NULL
         AND dcl.deactivated_at IS NULL
-        -- AND bcl.deleted_at     Is NULL
         AND dcl.terminated_at  IS NULL
         AND deals.faired_at    IS NOT NULL
         AND deal_status_mask(deals.id, '{Withdrawn,Cancelled,"Contract Terminated"}', cdc.key, '{expiration_date}'::text[], '{Sold,Leased}'::text[]) IS NOT FALSE
