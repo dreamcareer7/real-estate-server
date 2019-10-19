@@ -4,4 +4,5 @@ SET
   deleted_at = now(),
   updated_at = now()
 WHERE
-  id = $1
+  google_credential = $1
+  AND calendar_id = $2

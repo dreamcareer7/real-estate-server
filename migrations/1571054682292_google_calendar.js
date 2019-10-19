@@ -3,8 +3,15 @@ const db = require('../lib/utils/db')
 const migrations = [
   'BEGIN',
 
+  'ALTER TABLE google_credentials DROP COLUMN IF EXISTS rechat_gcalendar',
+  'ALTER TABLE google_credentials DROP COLUMN IF EXISTS calendars_last_sync_at',
+
+  'ALTER TABLE google_sync_histories DROP COLUMN IF EXISTS synced_calendar_events_num',
+  'ALTER TABLE google_sync_histories DROP COLUMN IF EXISTS calendar_events_total',
+
   'DROP TABLE IF EXISTS google_calendar_events',
   'DROP TABLE IF EXISTS google_calendars',
+
 
   `CREATE TABLE IF NOT EXISTS google_calendars(
     id uuid NOT NULL PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -20,6 +27,7 @@ const migrations = [
 
     accessRole TEXT,
     selected BOOLEAN,
+    deleted BOOLEAN,
     "primary" BOOLEAN,
 
     defaultReminders JSONB,
@@ -27,6 +35,7 @@ const migrations = [
     conference_properties JSONB,
 
     origin TEXT,
+    sync_token TEXT,
 
     created_at timestamptz NOT NULL DEFAULT clock_timestamp(),
     updated_at timestamptz NOT NULL DEFAULT clock_timestamp(),

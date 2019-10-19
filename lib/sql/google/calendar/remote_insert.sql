@@ -9,6 +9,7 @@ INSERT INTO google_calendars
     time_zone,
     accessRole,
     selected,
+    deleted,
     "primary",
     defaultReminders,
     notificationSettings,
@@ -30,7 +31,8 @@ VALUES
     $11,
     $12,
     $13,
-    $14
+    $14,
+    $15
   )
 ON CONFLICT (google_credential, calendar_id) DO UPDATE SET
   summary = $3,
@@ -40,10 +42,11 @@ ON CONFLICT (google_credential, calendar_id) DO UPDATE SET
   time_zone = $7,
   accessRole = $8,
   selected = $9,
-  "primary" = $10,
-  defaultReminders = $11,
-  notificationSettings = $12,
-  conference_properties = $13,
-  origin = $14,
+  deleted = $10,
+  "primary" = $11,
+  defaultReminders = $12,
+  notificationSettings = $13,
+  conference_properties = $14,
+  origin = $15,
   updated_at = now()
 RETURNING id
