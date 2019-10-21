@@ -5,3 +5,4 @@ SET
   updated_at = now()
 WHERE
   id = $1
+RETURNING id

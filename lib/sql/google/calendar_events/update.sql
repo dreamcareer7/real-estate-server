@@ -27,3 +27,4 @@ SET
   original_start_time = $25
 WHERE
   id = $1
+RETURNING id

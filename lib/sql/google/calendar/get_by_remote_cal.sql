@@ -1,0 +1,1 @@
+SELECT id FROM google_calendars WHERE google_credential = $1 AND calendar_id = $2
