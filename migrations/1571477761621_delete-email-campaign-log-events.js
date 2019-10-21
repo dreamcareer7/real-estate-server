@@ -30,7 +30,6 @@ const run = async () => {
   }
 
   await commit()
-  sql.release()
 }
 
 exports.up = cb => {
