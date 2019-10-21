@@ -37,6 +37,9 @@ const migrations = [
     origin TEXT,
     sync_token TEXT,
 
+    watcher_status TEXT,
+    watcher JSONB,
+
     created_at timestamptz NOT NULL DEFAULT clock_timestamp(),
     updated_at timestamptz NOT NULL DEFAULT clock_timestamp(),
     deleted_at timestamptz,
