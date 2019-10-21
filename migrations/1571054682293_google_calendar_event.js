@@ -21,7 +21,7 @@ const migrations = [
     html_link TEXT,
     status TEXT,
     sequence BIGINT,
-    
+
     anyone_can_add_self BOOLEAN,
     guests_can_invite_others BOOLEAN,
     guests_can_modify BOOLEAN,
@@ -39,10 +39,10 @@ const migrations = [
     gadget JSONB,
     reminders JSONB,
     source JSONB,
-    
+
     created timestamptz NOT NULL,
     updated timestamptz NOT NULL,
-    
+
     "start" JSONB,
     "end" JSONB,
     end_time_unspecified BOOLEAN,
