@@ -1,5 +1,5 @@
 const _ = require('lodash')
-const db = require('../lib/utils/db')
+const sql = require('../lib/utils/sql')
 const CrmTask = require('../lib/models/CRM/Task')
 const createContext = require('../scripts/workers/create-context')
 
@@ -9,7 +9,7 @@ const run = async () => {
   })
 
   /** @type { {crm_task: UUID; created_by: UUID }[] } */
-  const rows = await db.select(`
+  const rows = await sql.select(`
     SELECT
       a.crm_task,
       ct.created_by
@@ -30,7 +30,7 @@ const run = async () => {
   }
 
   await commit()
-  db.release()
+  sql.release()
 }
 
 exports.up = cb => {
