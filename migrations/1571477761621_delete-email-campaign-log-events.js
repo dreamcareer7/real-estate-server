@@ -1,3 +1,5 @@
+require('../lib/models')()
+
 const _ = require('lodash')
 const sql = require('../lib/utils/sql')
 const CrmTask = require('../lib/models/CRM/Task')
