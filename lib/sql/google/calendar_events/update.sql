@@ -21,8 +21,8 @@ SET
   gadget = $19,
   reminders = $20,
   source = $21,
-  "start" = $22,
-  "end" = $23,
+  event_start = $22,
+  event_end = $23,
   recurrence = $24,
   original_start_time = $25
 WHERE

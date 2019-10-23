@@ -43,8 +43,8 @@ const migrations = [
     created timestamptz NOT NULL,
     updated timestamptz NOT NULL,
 
-    "start" JSONB,
-    "end" JSONB,
+    event_start JSONB,
+    event_end JSONB,
     end_time_unspecified BOOLEAN,
     recurrence JSONB,
     recurring_eventId TEXT,
