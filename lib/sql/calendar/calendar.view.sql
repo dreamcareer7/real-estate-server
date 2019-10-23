@@ -554,8 +554,8 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
           ARRAY_AGG(contact)
         FROM
           (
-            SELECT
-              contact
+            SELECT DISTINCT ON (email_campaign_emails.email_address)
+              contacts.id AS contact
             FROM
               email_campaign_emails
               JOIN contacts
@@ -564,6 +564,10 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
               email_campaign_emails.campaign = ec.id
               AND contacts.brand = ec.brand
               AND contacts.deleted_at IS NULL
+            ORDER BY
+              email_campaign_emails.email_address,
+              contacts.last_touch DESC,
+              contacts.updated_at DESC
             LIMIT 5
           ) t
       ) AS people,
