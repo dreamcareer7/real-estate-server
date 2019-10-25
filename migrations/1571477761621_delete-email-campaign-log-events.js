@@ -1,14 +1,17 @@
+require('../lib/models')()
+
 const _ = require('lodash')
-const db = require('../lib/utils/db')
+const sql = require('../lib/utils/sql')
 const CrmTask = require('../lib/models/CRM/Task')
+const createContext = require('../scripts/workers/create-context')
 
 const run = async () => {
-  const { conn } = await db.conn.promise()
+  const { commit } = await createContext({
+    id: 'migrations'
+  })
 
-  await conn.query('BEGIN')
-
-  /** @type { {rows: {crm_task: UUID; created_by: UUID }[]} } */
-  const { rows } = await conn.query(`
+  /** @type { {crm_task: UUID; created_by: UUID }[] } */
+  const rows = await sql.select(`
     SELECT
       a.crm_task,
       ct.created_by
@@ -28,8 +31,7 @@ const run = async () => {
     await Promise.all(chunk.map(item => CrmTask.remove(item.crm_task, item.created_by)))
   }
 
-  await conn.query('COMMIT')
-  conn.release()
+  await commit()
 }
 
 exports.up = cb => {

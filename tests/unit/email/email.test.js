@@ -4,12 +4,15 @@ const { createContext, handleJobs } = require('../helper')
 
 const Contact = require('../../../lib/models/Contact')
 const Context = require('../../../lib/models/Context')
+const Email = require('../../../lib/models/Email')
 const User = require('../../../lib/models/User')
 const EmailCampaign = require('../../../lib/models/Email/campaign')
 
+const db = require('../../../lib/utils/db')
 const sql = require('../../../lib/utils/sql')
 
 const BrandHelper = require('../brand/helper')
+const { attributes } = require('../contact/helper')
 
 let userA, userB, brand1, brand2
 
@@ -41,58 +44,36 @@ async function createContactForUserA() {
     [
       {
         user: userA.id,
-        attributes: [
-          {
-            attribute_type: 'first_name',
-            text: 'Abbas'
-          },
-          {
-            attribute_type: 'email',
-            text: 'abbas@rechat.com'
-          },
-          {
-            attribute_type: 'tag',
-            text: 'Tag1'
-          },
-          {
-            attribute_type: 'tag',
-            text: 'Tag4'
-          }
-        ]
+        attributes: attributes({
+          first_name: 'Abbas',
+          email: ['abbas@rechat.com'],
+          tag: ['Tag1', 'Tag4']
+        })
       },
       {
         user: userA.id,
-        attributes: [
-          {
-            attribute_type: 'first_name',
-            text: 'Emil'
-          },
-          {
-            attribute_type: 'email',
-            text: 'emil@rechat.com'
-          },
-          {
-            attribute_type: 'tag',
-            text: 'Tag2'
-          }
-        ]
+        attributes: attributes({
+          first_name: 'Emil',
+          email: ['emil@rechat.com'],
+          tag: ['Tag2']
+        })
       },
       {
         user: userA.id,
-        attributes: [
-          {
-            attribute_type: 'first_name',
-            text: 'Nasser'
-          },
-          {
-            attribute_type: 'email',
-            text: 'naser@rechat.com'
-          },
-          {
-            attribute_type: 'tag',
-            text: 'Tag3'
-          }
-        ]
+        attributes: attributes({
+          first_name: 'Emil',
+          last_name: 'Sedgh',
+          email: ['emil@rechat.com'],
+          tag: ['Tag2']
+        })
+      },
+      {
+        user: userA.id,
+        attributes: attributes({
+          first_name: 'Nasser',
+          email: ['naser@rechat.com'],
+          tag: ['Tag3']
+        })
       }
     ],
     userA.id,
@@ -161,7 +142,7 @@ async function testEmailToTags() {
   await EmailCampaign.sendDue()
 }
 
-async function testDuplicateEmail() {
+async function testDuplicateEmailWithTag() {
   const campaign = {
     from: userA.id,
     to: [
@@ -176,10 +157,39 @@ async function testDuplicateEmail() {
     ],
     subject: 'testDuplicateEmail',
     html: 'test',
-    brand: brand1.id
+    brand: brand1.id,
+    due_at: null,
+    created_by: userA.id
   }
 
-  await EmailCampaign.createMany([campaign])
+  const [id] = await EmailCampaign.createMany([campaign])
+  const recipients = await db.select('email/campaign/emails', [id])
+
+  expect(recipients).to.have.length(1)
+  expect(recipients[0].email).to.be.equal('abbas@rechat.com')
+}
+
+async function testDuplicateEmailWithEmail() {
+  const campaign = {
+    from: userA.id,
+    to: [
+      {
+        email: 'emil@rechat.com',
+        recipient_type: Email.EMAIL
+      }
+    ],
+    subject: 'testDuplicateEmail',
+    html: 'test',
+    brand: brand1.id,
+    due_at: null,
+    created_by: userA.id
+  }
+
+  const [id] = await EmailCampaign.createMany([campaign])
+  const recipients = await db.select('email/campaign/emails', [id])
+
+  expect(recipients).to.have.length(1)
+  expect(recipients[0].email).to.be.equal('emil@rechat.com')
 }
 
 async function testEmailsOnly() {
@@ -194,7 +204,8 @@ async function testEmailsOnly() {
     ],
     subject: 'testEmailOnly',
     html: 'test',
-    brand: brand1.id
+    brand: brand1.id,
+    created_by: userA.id
   }
 
   await EmailCampaign.createMany([campaign])
@@ -216,7 +227,8 @@ async function testCampaignRecipients() {
     ],
     subject: 'testRecipients',
     html: 'test',
-    brand: brand1.id
+    brand: brand1.id,
+    created_by: userA.id
   }
 
   const [id] = await EmailCampaign.createMany([campaign])
@@ -247,7 +259,8 @@ describe('Email', () => {
   beforeEach(setup)
 
   it('should send emails to a set of tags', testEmailToTags)
-  it('should not send duplicate emails to a contact with two tags', testDuplicateEmail)
+  it('should not send duplicate emails to a contact with two tags', testDuplicateEmailWithTag)
+  it('should not send duplicate emails to two contacts with same email', testDuplicateEmailWithEmail)
   it('should send only to specified emails if no list or tag were given', testEmailsOnly)
   it('should prevent contacts from other brands to get the email', testCampaignRecipients)
 })

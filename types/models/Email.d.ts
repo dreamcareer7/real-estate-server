@@ -7,13 +7,22 @@ declare interface IEmailRecipientTagInput {
 declare interface IEmailRecipientEmailInput {
   email: string;
   contact?: UUID;
+}
+
+declare interface IEmailRecipientBrandInput {
   brand: UUID;
+}
+
+declare interface IEmailRecipientAgentInput {
+  agent: UUID;
 }
 
 declare type IEmailRecipientInput = 
   | IEmailRecipientEmailInput
   | IEmailRecipientListInput
-  | IEmailRecipientTagInput;
+  | IEmailRecipientTagInput
+  | IEmailRecipientBrandInput
+  | IEmailRecipientAgentInput;
 
 declare type TIsTagPresent = TIsPropertyPresent<IEmailRecipientInput, IEmailRecipientTagInput, 'tag'>;
 declare type TIsListPresent = TIsPropertyPresent<IEmailRecipientInput, IEmailRecipientListInput, 'list'>;

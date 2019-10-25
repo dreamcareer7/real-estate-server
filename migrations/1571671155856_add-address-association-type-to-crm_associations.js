@@ -1,10 +1,11 @@
 const db = require('../lib/utils/db')
 
 const migrations = [
-  `ALTER TYPE email_campaign_recipient_type
-    ADD VALUE IF NOT EXISTS 'Agent'`,
-  'ALTER TABLE email_campaigns_recipients ADD COLUMN IF NOT EXISTS agent uuid REFERENCES agents(id)',
-  'ALTER TABLE email_campaign_emails ADD COLUMN IF NOT EXISTS agent uuid REFERENCES agents(id)',
+  'ALTER TYPE crm_association_type ADD VALUE \'address\'',
+  'BEGIN',
+  'ALTER TABLE crm_associations ADD address stdaddr',
+  'ALTER TABLE crm_associations ADD location geometry(Point, 4326)',
+  'COMMIT'
 ]
 
 
