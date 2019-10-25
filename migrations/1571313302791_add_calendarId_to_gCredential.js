@@ -4,6 +4,10 @@ const migrations = [
   'BEGIN',
 
   'ALTER TABLE google_credentials ADD COLUMN IF NOT EXISTS rechat_gcalendar uuid NULL REFERENCES google_calendars(id)',
+  'ALTER TABLE google_credentials ADD COLUMN IF NOT EXISTS calendars_last_sync_at timestamp with time zone',
+
+  'ALTER TABLE google_sync_histories ADD COLUMN IF NOT EXISTS synced_calendar_events_num integer DEFAULT 0',
+  'ALTER TABLE google_sync_histories ADD COLUMN IF NOT EXISTS calendar_events_total integer DEFAULT 0',
 
   'COMMIT'
 ]

@@ -1,10 +1,7 @@
 UPDATE
   google_calendars
 SET
-  summary = $2,
-  description = $3,
-  location = $4,
-  time_zone = $5,
+  sync_token = $2,
   updated_at = now()
 WHERE
   id = $1
