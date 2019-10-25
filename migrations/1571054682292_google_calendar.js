@@ -3,6 +3,7 @@ const db = require('../lib/utils/db')
 const migrations = [
   'BEGIN',
 
+  'DROP TABLE IF EXISTS google_calendar_events',
   'DROP TABLE IF EXISTS google_calendars',
 
   `CREATE TABLE IF NOT EXISTS google_calendars(
@@ -11,25 +12,21 @@ const migrations = [
     google_credential uuid NOT NULL REFERENCES google_credentials(id),
     calendar_id TEXT NOT NULL,
 
-    access_role TEXT,
-    description TEXT,
     summary TEXT,
     summary_override TEXT,
+    description TEXT,
     location TEXT,
     time_zone TEXT,
 
-    background_color TEXT,
-    foreground_color TEXT,
-    color_id TEXT,    
-
-    "primary" BOOLEAN,
-    hidden BOOLEAN,
+    accessRole TEXT,
     selected BOOLEAN,
-    deleted BOOLEAN,
+    "primary" BOOLEAN,
 
-    default_reminders JSONB,
+    defaultReminders JSONB,
+    notificationSettings JSONB,
     conference_properties JSONB,
-    notification_settings JSONB,
+
+    origin TEXT,
 
     created_at timestamptz NOT NULL DEFAULT clock_timestamp(),
     updated_at timestamptz NOT NULL DEFAULT clock_timestamp(),
