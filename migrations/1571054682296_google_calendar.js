@@ -9,8 +9,11 @@ const migrations = [
   'ALTER TABLE google_sync_histories DROP COLUMN IF EXISTS synced_calendar_events_num',
   'ALTER TABLE google_sync_histories DROP COLUMN IF EXISTS calendar_events_total',
 
+  'ALTER TABLE google_calendars DROP CONSTRAINT google_calendars_watcher_channel_id',
+
   'DROP TABLE IF EXISTS google_calendar_events',
   'DROP TABLE IF EXISTS google_calendars',
+
 
 
   `CREATE TABLE IF NOT EXISTS google_calendars(
@@ -38,14 +41,18 @@ const migrations = [
     sync_token TEXT,
 
     watcher_status TEXT,
+    watcher_channel_id uuid NULL,
     watcher JSONB,
 
     created_at timestamptz NOT NULL DEFAULT clock_timestamp(),
     updated_at timestamptz NOT NULL DEFAULT clock_timestamp(),
     deleted_at timestamptz,
 
+    UNIQUE (watcher_channel_id),
     UNIQUE (google_credential, calendar_id)
   )`,
+
+  'CREATE UNIQUE INDEX google_calendars_watcher_channel_id ON google_calendars (watcher_channel_id) WHERE watcher_channel_id IS NOT NULL',
 
   'COMMIT'
 ]
