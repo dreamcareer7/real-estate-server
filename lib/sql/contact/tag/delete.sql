@@ -31,6 +31,7 @@ WITH cids AS (
     deleted_by = $2::uuid,
     deleted_within = $5
   WHERE
+    brand = $1 AND
     CASE
       WHEN $4::boolean IS TRUE THEN
         tag = ANY($3::text[])
