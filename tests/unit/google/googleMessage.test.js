@@ -72,7 +72,8 @@ async function createGoogleCredential() {
 
     tokens: google_details.tokens_1,
 
-    scope: google_details.scope
+    scope: google_details.scope,
+    scopeSummary: []
   }
 
   const credentialId = await GoogleCredential.create(body)
