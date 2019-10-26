@@ -3,6 +3,8 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
     SELECT
       id,
       created_by,
+      created_at,
+      updated_at,
       'crm_task' AS object_type,
       task_type AS event_type,
       task_type AS type_label,
@@ -68,7 +70,9 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
   (
     SELECT
       ca.id,
-      ca.created_by,
+      ct.created_by,
+      ct.created_at,
+      ct.updated_at,
       'crm_association' AS object_type,
       ct.task_type AS event_type,
       ct.task_type AS type_label,
@@ -137,6 +141,8 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
     SELECT
       cdc.id,
       deals.created_by,
+      cdc.created_at,
+      cdc.created_at AS updated_at,
       'deal_context' AS object_type,
       cdc."key" AS event_type,
       bc.label AS type_label,
@@ -191,6 +197,8 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
     SELECT
       cdc.id,
       deals.created_by,
+      cdc.created_at,
+      cdc.created_at AS updated_at,
       'deal_context' AS object_type,
       'home_anniversary' AS event_type,
       'Home Anniversary' AS type_label,
@@ -262,6 +270,8 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
     SELECT
       ca.id,
       contacts.created_by,
+      ca.created_at,
+      ca.updated_at,
       'contact_attribute' AS object_type,
       COALESCE(cad.name, cad.label) AS event_type,
       (CASE
@@ -299,7 +309,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       NULL::uuid AS credential_id,
       NULL::text AS thread_key,
       ARRAY[contacts."user"] AS users,
-      NULL::uuid[] AS people,
+      ARRAY[contact]::uuid[] AS people,
       NULL AS people_len,
       contacts.brand,
       NULL::text AS status,
@@ -323,6 +333,8 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
     SELECT
       id,
       created_by,
+      created_at,
+      updated_at,
       'contact' AS object_type,
       'next_touch' AS event_type,
       'Next Touch' AS type_label,
@@ -339,7 +351,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       NULL::uuid AS credential_id,
       NULL::text AS thread_key,
       ARRAY[contacts."user"] AS users,
-      NULL::uuid[] AS people,
+      ARRAY[id]::uuid[] AS people,
       NULL AS people_len,
       brand,
       NULL::text AS status,
@@ -355,6 +367,8 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
     SELECT
       id,
       ec.created_by,
+      ec.created_at,
+      ec.updated_at,
       'email_campaign' AS object_type,
       'scheduled_email' AS event_type,
       'Scheduled Email' AS type_label,
@@ -411,6 +425,8 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
     SELECT
       ec.id,
       ec.created_by,
+      ec.created_at,
+      ec.updated_at,
       'email_campaign' AS object_type,
       'executed_email' AS event_type,
       'Executed Email' AS type_label,
@@ -433,8 +449,8 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
           ARRAY_AGG(DISTINCT contact)
         FROM
           (
-            SELECT
-              contact
+            SELECT DISTINCT ON (ece.email_address)
+              c.id AS contact
             FROM
               email_campaign_emails AS ece
               JOIN contacts AS c
@@ -443,6 +459,8 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
               ece.campaign = ec.id
               AND c.brand = ec.brand
               AND c.deleted_at IS NULL
+            ORDER BY
+              ece.email_address, c.last_touch DESC, c.updated_at DESC
             LIMIT 5
           ) t
       ) AS people,
@@ -475,6 +493,8 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
     SELECT
       ec.id,
       ec.created_by,
+      ec.created_at,
+      ec.updated_at,
       'email_campaign_recipient' AS object_type,
       'scheduled_email' AS event_type,
       'Scheduled Email' AS type_label,
@@ -530,6 +550,8 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
     SELECT
       ec.id,
       ec.created_by,
+      ec.created_at,
+      ec.updated_at,
       'email_campaign_recipient' AS object_type,
       'executed_email' AS event_type,
       'Executed Email' AS type_label,
@@ -552,8 +574,8 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
           ARRAY_AGG(contact)
         FROM
           (
-            SELECT
-              contact
+            SELECT DISTINCT ON (email_campaign_emails.email_address)
+              contacts.id AS contact
             FROM
               email_campaign_emails
               JOIN contacts
@@ -562,6 +584,10 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
               email_campaign_emails.campaign = ec.id
               AND contacts.brand = ec.brand
               AND contacts.deleted_at IS NULL
+            ORDER BY
+              email_campaign_emails.email_address,
+              contacts.last_touch DESC,
+              contacts.updated_at DESC
             LIMIT 5
           ) t
       ) AS people,
@@ -600,6 +626,8 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       DISTINCT ON (google_credentials.brand, google_messages.thread_key, contact, object_type, event_type, recurring)
       google_messages.id,
       google_credentials.user AS created_by,
+      message_date AS created_at,
+      message_date AS updated_at,
       'email_thread' AS object_type,
       'gmail' AS event_type,
       'Email Thread' AS type_label,
@@ -637,6 +665,8 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       DISTINCT ON (microsoft_credentials.brand, microsoft_messages.thread_key, contact, object_type, event_type, recurring)
       microsoft_messages.id,
       microsoft_credentials.user AS created_by,
+      message_date AS created_at,
+      message_date AS updated_at,
       'email_thread' AS object_type,
       'outlook' AS event_type,
       'Email Thread' AS type_label,
@@ -674,6 +704,8 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       DISTINCT ON (google_credentials.brand, google_messages.thread_key, contact, object_type, event_type, recurring)
       google_messages.id,
       google_credentials.user AS created_by,
+      message_date AS created_at,
+      message_date AS updated_at,
       'email_thread_recipient' AS object_type,
       'gmail' AS event_type,
       'Email Thread' AS type_label,
@@ -718,6 +750,8 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       DISTINCT ON (microsoft_credentials.brand, microsoft_messages.thread_key, contact, object_type, event_type, recurring)
       microsoft_messages.id,
       microsoft_credentials.user AS created_by,
+      message_date AS created_at,
+      message_date AS updated_at,
       'email_thread_recipient' AS object_type,
       'outlook' AS event_type,
       'Email Thread' AS type_label,

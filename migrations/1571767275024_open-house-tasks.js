@@ -1,11 +1,8 @@
 const db = require('../lib/utils/db')
 
 const migrations = [
-  'BEGIN',
-
-  'ALTER TABLE google_credentials ADD COLUMN IF NOT EXISTS rechat_gcalendar uuid NULL REFERENCES google_calendars(id)',
-
-  'COMMIT'
+  `ALTER TYPE task_type
+    ADD VALUE 'OpenHouse'`
 ]
 
 
