@@ -1,0 +1,1 @@
+SELECT * from microsoft_messages WHERE id = $1 AND microsoft_credential = $2
