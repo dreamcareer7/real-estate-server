@@ -9,6 +9,7 @@
         "subject": "MyAnalytics | Focus Edition",
         "conversationId": "AAQkAGVmMDEzMTM4LTZmYWUtNDdkNC1hMDZiLTU1OGY5OTZhYmY4OAAQAOMDOBExUjJHvt37G6oQnOQ=",
         "isDraft": false,
+        "isRead": false,
         "sender": {
             "emailAddress": {
                 "name": "MyAnalytics",
@@ -172,6 +173,7 @@
         "subject": "MyAnalytics | Your past week",
         "conversationId": "AAQkAGVmMDEzMTM4LTZmYWUtNDdkNC1hMDZiLTU1OGY5OTZhYmY4OAAQAM44kV7x1ZpNs2Lyjm8TUR4=",
         "isDraft": false,
+        "isRead": false,
         "sender": {
             "emailAddress": {
                 "name": "MyAnalytics",
@@ -336,6 +338,7 @@
         "subject": "Really",
         "conversationId": "AAQkAGVmMDEzMTM4LTZmYWUtNDdkNC1hMDZiLTU1OGY5OTZhYmY4OAAQAA2rcgMuuUnmtoVF12sltw8=",
         "isDraft": false,
+        "isRead": false,
         "internetMessageHeaders": [
             {
                 "name": "Received",
@@ -661,6 +664,7 @@
         "subject": "You have late tasks!",
         "conversationId": "AAQkAGVmMDEzMTM4LTZmYWUtNDdkNC1hMDZiLTU1OGY5OTZhYmY4OAAQAI_p06Wv8oJItJeel9FBntY=",
         "isDraft": false,
+        "isRead": false,
         "internetMessageHeaders": [
             {
                 "name": "Received",
@@ -962,6 +966,7 @@
         "subject": "You have late tasks!",
         "conversationId": "AAQkAGVmMDEzMTM4LTZmYWUtNDdkNC1hMDZiLTU1OGY5OTZhYmY4OAAQAD69unzFF59KnC_UJAhVJII=",
         "isDraft": false,
+        "isRead": false,
         "internetMessageHeaders": [
             {
                 "name": "Received",
@@ -1263,6 +1268,7 @@
         "subject": "You have late tasks!",
         "conversationId": "AAQkAGVmMDEzMTM4LTZmYWUtNDdkNC1hMDZiLTU1OGY5OTZhYmY4OAAQANgOimhAJHdEoaEk3zpWDdc=",
         "isDraft": false,
+        "isRead": false,
         "internetMessageHeaders": [
             {
                 "name": "Received",
@@ -1560,6 +1566,7 @@
         "subject": "You have late tasks!",
         "conversationId": "AAQkAGVmMDEzMTM4LTZmYWUtNDdkNC1hMDZiLTU1OGY5OTZhYmY4OAAQALs2QTxbeQ5Kp6T1g-2xfLI=",
         "isDraft": false,
+        "isRead": false,
         "internetMessageHeaders": [
             {
                 "name": "Received",
@@ -1857,6 +1864,7 @@
         "subject": "You have late tasks!",
         "conversationId": "AAQkAGVmMDEzMTM4LTZmYWUtNDdkNC1hMDZiLTU1OGY5OTZhYmY4OAAQAOgQHFVGJmJPsmuMXa5e6Hs=",
         "isDraft": false,
+        "isRead": false,
         "internetMessageHeaders": [
             {
                 "name": "Received",
@@ -2158,6 +2166,7 @@
         "subject": "You have late tasks!",
         "conversationId": "AAQkAGVmMDEzMTM4LTZmYWUtNDdkNC1hMDZiLTU1OGY5OTZhYmY4OAAQAEcTg4814LFOjvRK4nlLJDw=",
         "isDraft": false,
+        "isRead": false,
         "internetMessageHeaders": [
             {
                 "name": "Received",
@@ -2459,6 +2468,7 @@
         "subject": "You have tasks due today!",
         "conversationId": "AAQkAGVmMDEzMTM4LTZmYWUtNDdkNC1hMDZiLTU1OGY5OTZhYmY4OAAQAB9j_BwwTnRDmBypTg_9FLE=",
         "isDraft": false,
+        "isRead": false,
         "internetMessageHeaders": [
             {
                 "name": "Received",
