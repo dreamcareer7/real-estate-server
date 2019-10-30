@@ -3,7 +3,7 @@ const db = require('../lib/utils/db')
 const migrations = [
   'BEGIN',
 
-  'ALTER TABLE google_messages ADD COLUMN IF NOT EXISTS is_read BOOLEAN DEFAULT FALSE',
+  'ALTER TABLE google_messages ADD COLUMN IF NOT EXISTS is_read BOOLEAN DEFAULT TRUE',
 
   'COMMIT'
 ]
