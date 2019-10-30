@@ -80,16 +80,10 @@ all_brand_agents AS (
     LEFT JOIN contacts_users AS cu
       ON cu."user" = u.id
     LEFT JOIN contacts AS c
-      ON c.id = cu.contact
+      ON c.id = cu.contact AND c.brand = ec.brand AND c.deleted_at IS NULL
   WHERE
     ec.id = $1
     AND ecr.recipient_type = 'Brand'
-    AND (
-      c.id IS NULL OR (
-        c.brand = ec.brand
-        AND c.deleted_at IS NULL
-      )
-    )
     AND ecr.deleted_at IS NULL
 ),
 
