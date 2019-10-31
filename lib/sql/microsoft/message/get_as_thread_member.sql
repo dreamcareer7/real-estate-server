@@ -11,6 +11,7 @@ SELECT
   has_attachments,
   attachments,
   in_bound,
+  is_read,
   COALESCE(subject, '') AS "subject",
   NULL AS "snippet",
   NULL AS "unique_body",

@@ -1,8 +1,10 @@
 const db = require('../lib/utils/db')
 
 const migrations = [
-  `ALTER TYPE task_type
-    ADD VALUE 'OpenHouse'`
+  `ALTER TYPE template_type
+    ADD VALUE 'Layout'`,
+  `ALTER TYPE template_type
+    ADD VALUE 'ListingLayout'`
 ]
 
 

@@ -59,7 +59,8 @@ async function createMicrosoftCredential() {
 
     tokens: microsoft_details.tokens_1,
 
-    scope: microsoft_details.scope
+    scope: microsoft_details.tokens_1.scope.split(' '),
+    scopeSummary: []
   }
 
   const credentialId = await MicrosoftCredential.create(body)

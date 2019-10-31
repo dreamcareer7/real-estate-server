@@ -92,7 +92,21 @@ function forceSyncFailed(cb) {
 
 
 const CreateMicrosoftCredential = (cb) => {
-  const scope = 'Contacts.Read Mail.Read Mail.Send'
+  const scope = 'Contacts.Read Mail.Read Mail.Send'.split(' ')
+
+  const scopeSummary = ['profile']
+
+  if ( scope.includes('Contacts.Read') )
+    scopeSummary.push('contacts.read')
+
+  if ( scope.includes('Mail.Read') )
+    scopeSummary.push('mail.read')
+
+  if ( scope.includes('Mail.Send') && scope.includes('Mail.ReadWrite') )
+    scopeSummary.push('mail.send')
+
+  if ( scope.includes('Calendar') )
+    scopeSummary.push('calendar')
 
   const body  = {
     user: results.authorize.token.data.id,
@@ -113,8 +127,11 @@ const CreateMicrosoftCredential = (cb) => {
       id_token: 'id_token',
       expires_in: 3600,
       ext_expires_in: 3600,
-      scope: scope
-    }
+      scope: scope.join(' ')
+    },
+
+    scope: scope,
+    scopeSummary: scopeSummary
   }
 
   return frisby.create('Create Microsoft Credential')
