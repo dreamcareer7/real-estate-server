@@ -5,7 +5,7 @@ const migrations = [
   `CREATE TABLE google_threads (
     id text NOT NULL PRIMARY KEY,
     google_credential uuid NOT NULL REFERENCES google_credentials (id),
-    "subject" text NOT NULL,
+    "subject" text,
     first_message_date timestamptz NOT NULL,
     last_message_date timestamptz,
     recipients text[],
@@ -47,7 +47,7 @@ const migrations = [
   `CREATE TABLE microsoft_threads (
     id text NOT NULL PRIMARY KEY,
     microsoft_credential uuid NOT NULL REFERENCES microsoft_credentials (id),
-    "subject" text NOT NULL,
+    "subject" text,
     first_message_date timestamptz NOT NULL,
     last_message_date timestamptz,
     recipients text[],
