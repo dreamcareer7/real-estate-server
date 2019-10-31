@@ -3,20 +3,14 @@ CREATE OR REPLACE VIEW email_campaigns_recipient_emails AS (
     SELECT
       campaign,
       email,
-      c.id AS contact,
+      NULL::uuid AS contact,
       NULL::uuid AS agent,
       send_type
     FROM
-      email_campaigns AS ec
-      JOIN email_campaigns_recipients AS ecr
-        ON ec.id = ecr.campaign
-      LEFT JOIN contacts AS c
-        ON ((c.email && ARRAY[ecr.email]) AND (c.brand = ec.brand))
+      email_campaigns_recipients
     WHERE
       email IS NOT NULL
-      AND ecr.contact IS NULL
-      AND ecr.deleted_at IS NULL
-      AND c.deleted_at IS NULL
+      AND contact IS NULL
       AND recipient_type = 'Email'
   ) UNION (
     SELECT
@@ -28,7 +22,7 @@ CREATE OR REPLACE VIEW email_campaigns_recipient_emails AS (
     FROM
       email_campaigns
       JOIN email_campaigns_recipients
-        ON email_campaigns.id = email_campaigns_recipients.campaign
+        ON email_campaigns.id =  email_campaigns_recipients.campaign
       JOIN crm_lists_members
         ON email_campaigns_recipients.list = crm_lists_members.list
       JOIN contacts
@@ -118,7 +112,7 @@ CREATE OR REPLACE VIEW email_campaigns_recipient_emails AS (
       JOIN email_campaigns_recipients
         ON email_campaigns.id = email_campaigns_recipients.campaign
       JOIN agents
-        ON email_campaigns_recipients.agent = agents.id
+        ON email_campaigns_recipients.agent= agents.id
     WHERE
       email_campaigns_recipients.recipient_type = 'Agent'
   )
