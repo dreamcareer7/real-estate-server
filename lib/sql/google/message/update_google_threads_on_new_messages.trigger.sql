@@ -1,0 +1,5 @@
+CREATE TRIGGER update_google_threads_on_new_messages
+AFTER INSERT ON google_messages
+REFERENCING NEW TABLE AS new_messages
+FOR EACH STATEMENT
+EXECUTE update_google_threads_on_new_messages()

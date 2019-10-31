@@ -1,7 +1,7 @@
 CREATE OR REPLACE VIEW analytics.calendar AS (
   (
     SELECT
-      id,
+      id::text,
       created_by,
       created_at,
       updated_at,
@@ -69,7 +69,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
   UNION ALL
   (
     SELECT
-      ca.id,
+      ca.id::text,
       ct.created_by,
       ct.created_at,
       ct.updated_at,
@@ -139,7 +139,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
   UNION ALL
   (
     SELECT
-      cdc.id,
+      cdc.id::text,
       deals.created_by,
       cdc.created_at,
       cdc.created_at AS updated_at,
@@ -195,7 +195,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
   UNION ALL
   (
     SELECT
-      cdc.id,
+      cdc.id::text,
       deals.created_by,
       cdc.created_at,
       cdc.created_at AS updated_at,
@@ -268,7 +268,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
   UNION ALL
   (
     SELECT
-      ca.id,
+      ca.id::text,
       contacts.created_by,
       ca.created_at,
       ca.updated_at,
@@ -331,7 +331,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
   UNION ALL
   (
     SELECT
-      id,
+      id::text,
       created_by,
       created_at,
       updated_at,
@@ -365,7 +365,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
   UNION ALL
   (
     SELECT
-      id,
+      id::text,
       ec.created_by,
       ec.created_at,
       ec.updated_at,
@@ -423,7 +423,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
   UNION ALL
   (
     SELECT
-      ec.id,
+      ec.id::text,
       ec.created_by,
       ec.created_at,
       ec.updated_at,
@@ -491,7 +491,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
   UNION ALL
   (
     SELECT
-      ec.id,
+      ec.id::text,
       ec.created_by,
       ec.created_at,
       ec.updated_at,
@@ -548,7 +548,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
   UNION ALL
   (
     SELECT
-      ec.id,
+      ec.id::text,
       ec.created_by,
       ec.created_at,
       ec.updated_at,
@@ -623,171 +623,237 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
   UNION ALL
   (
     SELECT
-      DISTINCT ON (google_credentials.brand, google_messages.thread_key, contact, object_type, event_type, recurring)
-      google_messages.id,
+      google_threads.id::text,
       google_credentials.user AS created_by,
-      message_date AS created_at,
-      message_date AS updated_at,
+      created_at,
+      updated_at,
       'email_thread' AS object_type,
       'gmail' AS event_type,
       'Email Thread' AS type_label,
-      message_date AS "timestamp",
-      message_date AS "date",
-      message_date AS next_occurence,
+      last_message_date AS "timestamp",
+      last_message_date AS "date",
+      last_message_date AS next_occurence,
       NULL::timestamptz AS end_date,
       False AS recurring,
-      COALESCE(subject, '') AS "title",
+      COALESCE(subject, '(no subject)') AS "title",
       NULL::uuid AS crm_task,
       NULL::uuid AS deal,
       NULL::uuid AS contact,
       NULL::uuid AS campaign,
-      google_messages.google_credential AS credential_id,
-      thread_key,
+      google_threads.google_credential AS credential_id,
+      google_threads.id AS thread_key,
       ARRAY[google_credentials."user"] AS users,
 
-      NULL::uuid[] AS people,
+      (
+        SELECT
+          ARRAY_AGG(contact)
+        FROM
+          (
+            SELECT DISTINCT ON (recipient)
+              contacts.id AS contact
+            FROM
+              unnest(recipients) AS recipients(recipient)
+              JOIN contacts
+                ON contacts.email @> ARRAY[recipient]
+            WHERE
+              contacts.brand = google_credentials.brand
+              AND contacts.deleted_at IS NULL
+            ORDER BY
+              recipient,
+              contacts.last_touch DESC,
+              contacts.updated_at DESC
+            LIMIT 5
+          ) t
+      ) AS people,
       0 AS people_len,
 
       google_credentials.brand,
       NULL::text AS status,
       NULL::jsonb AS metadata
     FROM
-      google_messages
+      google_threads
       JOIN google_credentials
-        ON google_messages.google_credential = google_credentials.id
-    WHERE
-      google_messages.deleted_at IS NULL
-    ORDER BY google_credentials.brand, google_messages.thread_key, contact, object_type, event_type, recurring, message_date ASC
+        ON google_threads.google_credential = google_credentials.id
   )
   UNION ALL
   (
     SELECT
-      DISTINCT ON (microsoft_credentials.brand, microsoft_messages.thread_key, contact, object_type, event_type, recurring)
-      microsoft_messages.id,
+      microsoft_threads.id::text,
       microsoft_credentials.user AS created_by,
-      message_date AS created_at,
-      message_date AS updated_at,
+      created_at,
+      updated_at,
       'email_thread' AS object_type,
       'outlook' AS event_type,
       'Email Thread' AS type_label,
-      message_date AS "timestamp",
-      message_date AS "date",
-      message_date AS next_occurence,
+      last_message_date AS "timestamp",
+      last_message_date AS "date",
+      last_message_date AS next_occurence,
       NULL::timestamptz AS end_date,
       False AS recurring,
-      COALESCE(subject, '') AS "title",
+      COALESCE(subject, '(no subject)') AS "title",
       NULL::uuid AS crm_task,
       NULL::uuid AS deal,
       NULL::uuid AS contact,
       NULL::uuid AS campaign,
-      microsoft_messages.microsoft_credential AS credential_id,
-      thread_key,
+      microsoft_threads.microsoft_credential AS credential_id,
+      microsoft_threads.id AS thread_key,
       ARRAY[microsoft_credentials."user"] AS users,
 
-      NULL::uuid[] AS people,
+      (
+        SELECT
+          ARRAY_AGG(contact)
+        FROM
+          (
+            SELECT DISTINCT ON (recipient)
+              contacts.id AS contact
+            FROM
+              unnest(recipients) AS recipients(recipient)
+              JOIN contacts
+                ON contacts.email @> ARRAY[recipient]
+            WHERE
+              contacts.brand = microsoft_credentials.brand
+              AND contacts.deleted_at IS NULL
+            ORDER BY
+              recipient,
+              contacts.last_touch DESC,
+              contacts.updated_at DESC
+            LIMIT 5
+          ) t
+      ) AS people,
       0 AS people_len,
 
       microsoft_credentials.brand,
       NULL::text AS status,
       NULL::jsonb AS metadata
     FROM
-      microsoft_messages
-    JOIN
-      microsoft_credentials on microsoft_messages.microsoft_credential = microsoft_credentials.id
-    WHERE
-      microsoft_messages.deleted_at IS NULL
-    ORDER BY microsoft_credentials.brand, microsoft_messages.thread_key, contact, object_type, event_type, recurring, message_date ASC
+      microsoft_threads
+      JOIN microsoft_credentials
+        ON microsoft_threads.microsoft_credential = microsoft_credentials.id
   )
   UNION ALL
   (
     SELECT
-      DISTINCT ON (google_credentials.brand, google_messages.thread_key, contact, object_type, event_type, recurring)
-      google_messages.id,
+      google_threads.id::text,
       google_credentials.user AS created_by,
-      message_date AS created_at,
-      message_date AS updated_at,
+      created_at,
+      updated_at,
       'email_thread_recipient' AS object_type,
       'gmail' AS event_type,
       'Email Thread' AS type_label,
-      message_date AS "timestamp",
-      message_date AS "date",
-      message_date AS next_occurence,
+      last_message_date AS "timestamp",
+      last_message_date AS "date",
+      last_message_date AS next_occurence,
       NULL::timestamptz AS end_date,
       False AS recurring,
-      COALESCE(subject, '') AS "title",
+      COALESCE(subject, '(no subject)') AS "title",
       NULL::uuid AS crm_task,
       NULL::uuid AS deal,
       c.id AS contact,
       NULL::uuid AS campaign,
-      google_messages.google_credential AS credential_id,
-      thread_key,
+      google_threads.google_credential AS credential_id,
+      google_threads.id AS thread_key,
       ARRAY[google_credentials."user"] AS users,
 
-      NULL::uuid[] AS people,
+      (
+        SELECT
+          ARRAY_AGG(contact)
+        FROM
+          (
+            SELECT DISTINCT ON (recipient)
+              contacts.id AS contact
+            FROM
+              unnest(recipients) AS recipients(recipient)
+              JOIN contacts
+                ON contacts.email @> ARRAY[recipient]
+            WHERE
+              contacts.brand = google_credentials.brand
+              AND contacts.deleted_at IS NULL
+            ORDER BY
+              recipient,
+              contacts.last_touch DESC,
+              contacts.updated_at DESC
+            LIMIT 5
+          ) t
+      ) AS people,
+
       0 AS people_len,
 
       google_credentials.brand,
       NULL::text AS status,
       NULL::jsonb AS metadata
     FROM
-      google_messages
+      google_threads
       CROSS JOIN LATERAL (
         SELECT
           contacts.id
         FROM
           contacts
         WHERE
-          contacts.email && google_messages.recipients
+          contacts.email && google_threads.recipients
       ) AS c
-      JOIN google_credentials ON google_messages.google_credential = google_credentials.id
-    WHERE
-      google_messages.deleted_at IS NULL
-    ORDER BY google_credentials.brand, google_messages.thread_key, contact, object_type, event_type, recurring, message_date ASC
+      JOIN google_credentials ON google_threads.google_credential = google_credentials.id
   )
   UNION ALL
   (
     SELECT
-      DISTINCT ON (microsoft_credentials.brand, microsoft_messages.thread_key, contact, object_type, event_type, recurring)
-      microsoft_messages.id,
+      microsoft_threads.id::text,
       microsoft_credentials.user AS created_by,
-      message_date AS created_at,
-      message_date AS updated_at,
+      created_at,
+      updated_at,
       'email_thread_recipient' AS object_type,
       'outlook' AS event_type,
       'Email Thread' AS type_label,
-      message_date AS "timestamp",
-      message_date AS "date",
-      message_date AS next_occurence,
+      last_message_date AS "timestamp",
+      last_message_date AS "date",
+      last_message_date AS next_occurence,
       NULL::timestamptz AS end_date,
       False AS recurring,
-      COALESCE(subject, '') AS "title",
+      COALESCE(subject, '(no subject)') AS "title",
       NULL::uuid AS crm_task,
       NULL::uuid AS deal,
       c.id AS contact,
       NULL::uuid AS campaign,
-      microsoft_messages.microsoft_credential AS credential_id,
-      thread_key,
+      microsoft_threads.microsoft_credential AS credential_id,
+      microsoft_threads.id AS thread_key,
       ARRAY[microsoft_credentials."user"] AS users,
 
-      NULL::uuid[] AS people,
+      (
+        SELECT
+          ARRAY_AGG(contact)
+        FROM
+          (
+            SELECT DISTINCT ON (recipient)
+              contacts.id AS contact
+            FROM
+              unnest(recipients) AS recipients(recipient)
+              JOIN contacts
+                ON contacts.email @> ARRAY[recipient]
+            WHERE
+              contacts.brand = microsoft_credentials.brand
+              AND contacts.deleted_at IS NULL
+            ORDER BY
+              recipient,
+              contacts.last_touch DESC,
+              contacts.updated_at DESC
+            LIMIT 5
+          ) t
+      ) AS people,
+
       0 AS people_len,
 
       microsoft_credentials.brand,
       NULL::text AS status,
       NULL::jsonb AS metadata
     FROM
-      microsoft_messages
+      microsoft_threads
       CROSS JOIN LATERAL (
         SELECT
           contacts.id
         FROM
           contacts
         WHERE
-          contacts.email && microsoft_messages.recipients
+          contacts.email && microsoft_threads.recipients
       ) AS c
-      JOIN microsoft_credentials ON microsoft_messages.microsoft_credential = microsoft_credentials.id
-    WHERE
-      microsoft_messages.deleted_at IS NULL
-    ORDER BY microsoft_credentials.brand, microsoft_messages.thread_key, contact, object_type, event_type, recurring, message_date ASC
+      JOIN microsoft_credentials ON microsoft_threads.microsoft_credential = microsoft_credentials.id
   )
 )

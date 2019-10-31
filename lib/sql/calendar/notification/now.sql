@@ -46,7 +46,7 @@ WHERE
     FROM
       calendar_notification_logs cnl
     WHERE
-      cnl.id = c.id
+      cnl.id::text = c.id
       AND cnl.timestamp = c.date
       AND cnl."user" = c."user"
   )
