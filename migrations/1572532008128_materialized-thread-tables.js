@@ -129,12 +129,12 @@ const migrations = [
         message_count = EXCLUDED.message_count;
     END;
   $$`,
-  `CREATE OR REPLACE FUNCTION update_microsoft_threads_on_new_messages() RETURNS TRIGGER
+  `CREATE OR REPLACE FUNCTION update_microsoft_threads_on_new_messages() RETURNS void
   LANGUAGE plpgsql
   AS $$
     BEGIN
       INSERT INTO microsoft_threads (
-        thread_key,
+        id,
         microsoft_credential,
         "subject",
         first_message_date,

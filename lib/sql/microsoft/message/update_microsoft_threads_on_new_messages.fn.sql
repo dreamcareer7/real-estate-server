@@ -3,7 +3,7 @@ LANGUAGE plpgsql
 AS $$
   BEGIN
     INSERT INTO microsoft_threads (
-      thread_key,
+      id,
       microsoft_credential,
       "subject",
       first_message_date,
