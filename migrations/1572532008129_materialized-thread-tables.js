@@ -2,6 +2,10 @@ const db = require('../lib/utils/db')
 
 const migrations = [
   'BEGIN',
+
+  `DROP TABLE google_threads`,
+  `DROP TABLE microsoft_threads`,
+
   `CREATE TABLE IF NOT EXISTS google_threads (
     id text NOT NULL PRIMARY KEY,
     google_credential uuid NOT NULL REFERENCES google_credentials (id),
