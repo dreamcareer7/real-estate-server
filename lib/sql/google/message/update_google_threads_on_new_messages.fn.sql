@@ -4,7 +4,6 @@ AS $$
   BEGIN
     INSERT INTO google_threads (
       id,
-      "subject",
       google_credential,
       first_message_date,
       last_message_date,
