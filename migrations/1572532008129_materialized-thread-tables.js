@@ -3,6 +3,7 @@ const db = require('../lib/utils/db')
 const migrations = [
   'BEGIN',
 
+  'DROP VIEW analytics.calendar',
   `DROP TABLE google_threads`,
   `DROP TABLE microsoft_threads`,
 
