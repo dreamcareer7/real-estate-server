@@ -174,7 +174,7 @@ const migrations = [
             AND r."user" IS NOT NULL
         ) AS users,
         NULL::uuid[] AS people,
-        NULL AS people_len,
+        NULL::int AS people_len,
         COALESCE(dr.brand, deals.brand) AS brand,
         NULL::text AS status,
         NULL::jsonb AS metadata
@@ -200,7 +200,7 @@ const migrations = [
     UNION ALL
     (
       SELECT
-        cdc.id::text,
+        cr.contact::text || ':' || cdc.id::text AS id,
         deals.created_by,
         cdc.created_at,
         cdc.created_at AS updated_at,
@@ -238,7 +238,7 @@ const migrations = [
             role_name = 'Buyer'
             AND deal = deals.id
         ) AS people,
-        NULL AS people_len,
+        NULL::int AS people_len,
         cr.brand,
         NULL::text AS status,
         NULL::jsonb AS metadata
@@ -315,7 +315,7 @@ const migrations = [
         NULL::text AS thread_key,
         ARRAY[contacts."user"] AS users,
         ARRAY[contact]::uuid[] AS people,
-        NULL AS people_len,
+        NULL::int AS people_len,
         contacts.brand,
         NULL::text AS status,
         jsonb_build_object(
@@ -357,7 +357,7 @@ const migrations = [
         NULL::text AS thread_key,
         ARRAY[contacts."user"] AS users,
         ARRAY[id]::uuid[] AS people,
-        NULL AS people_len,
+        NULL::int AS people_len,
         brand,
         NULL::text AS status,
         NULL::jsonb AS metadata
@@ -408,7 +408,7 @@ const migrations = [
   
         (
           SELECT
-            COUNT(DISTINCT email)
+            COUNT(DISTINCT email)::int
           FROM
             email_campaigns_recipient_emails AS ecr
           WHERE
@@ -472,7 +472,7 @@ const migrations = [
   
         (
           SELECT
-            count(DISTINCT c.id)
+            count(DISTINCT c.id)::int
           FROM
             email_campaign_emails AS ece
             JOIN contacts AS c
@@ -532,7 +532,7 @@ const migrations = [
         ) AS people,
         (
           SELECT
-            COUNT(DISTINCT email)
+            COUNT(DISTINCT email)::int
           FROM
             email_campaigns_recipient_emails
           WHERE
@@ -599,7 +599,7 @@ const migrations = [
   
         (
           SELECT
-            count(DISTINCT c.id)
+            count(DISTINCT c.id)::int
           FROM
             email_campaign_emails AS ece
             JOIN contacts AS c
@@ -670,7 +670,17 @@ const migrations = [
               LIMIT 5
             ) t
         ) AS people,
-        0 AS people_len,
+        (
+          SELECT
+            count(DISTINCT contacts.id)::int
+          FROM
+            unnest(recipients) AS recipients(recipient)
+            JOIN contacts
+              ON contacts.email @> ARRAY[recipient]
+          WHERE
+            contacts.brand = google_credentials.brand
+            AND contacts.deleted_at IS NULL
+        ) AS people_len,
   
         google_credentials.brand,
         NULL::text AS status,
@@ -725,7 +735,17 @@ const migrations = [
               LIMIT 5
             ) t
         ) AS people,
-        0 AS people_len,
+        (
+          SELECT
+            count(DISTINCT contacts.id)::int
+          FROM
+            unnest(recipients) AS recipients(recipient)
+            JOIN contacts
+              ON contacts.email @> ARRAY[recipient]
+          WHERE
+            contacts.brand = microsoft_credentials.brand
+            AND contacts.deleted_at IS NULL
+        ) AS people_len,
   
         microsoft_credentials.brand,
         NULL::text AS status,
@@ -781,7 +801,17 @@ const migrations = [
             ) t
         ) AS people,
   
-        0 AS people_len,
+        (
+          SELECT
+            count(DISTINCT contacts.id)::int
+          FROM
+            unnest(recipients) AS recipients(recipient)
+            JOIN contacts
+              ON contacts.email @> ARRAY[recipient]
+          WHERE
+            contacts.brand = google_credentials.brand
+            AND contacts.deleted_at IS NULL
+        ) AS people_len,
   
         google_credentials.brand,
         NULL::text AS status,
@@ -844,7 +874,17 @@ const migrations = [
             ) t
         ) AS people,
   
-        0 AS people_len,
+        (
+          SELECT
+            count(DISTINCT contacts.id)::int
+          FROM
+            unnest(recipients) AS recipients(recipient)
+            JOIN contacts
+              ON contacts.email @> ARRAY[recipient]
+          WHERE
+            contacts.brand = microsoft_credentials.brand
+            AND contacts.deleted_at IS NULL
+        ) AS people_len,
   
         microsoft_credentials.brand,
         NULL::text AS status,
