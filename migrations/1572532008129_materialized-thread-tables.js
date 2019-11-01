@@ -3,6 +3,12 @@ const db = require('../lib/utils/db')
 const migrations = [
   'BEGIN',
 
+  `DROP FUNCTION IF EXISTS update_google_threads_on_new_messages`,
+  `DROP FUNCTION IF EXISTS update_microsoft_threads_on_new_messages`,
+
+  `DROP TRIGGER IF EXISTS update_google_threads_on_new_messages ON google_messages`,
+  `DROP TRIGGER IF EXISTS update_microsoft_threads_on_new_messages ON microsoft_messages`,
+
   'DROP VIEW analytics.calendar',
   `DROP TABLE google_threads`,
   `DROP TABLE microsoft_threads`,
@@ -180,6 +186,7 @@ const migrations = [
         message_count = EXCLUDED.message_count;
     END;
   $$`,
+
   `CREATE TRIGGER update_google_threads_on_new_messages
     AFTER INSERT ON google_messages
     REFERENCING NEW TABLE AS new_messages
