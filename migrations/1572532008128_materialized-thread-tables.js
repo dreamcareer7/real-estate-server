@@ -10,8 +10,8 @@ const migrations = [
   'DROP TRIGGER IF EXISTS update_microsoft_threads_on_new_messages ON microsoft_messages',
 
   'DROP VIEW analytics.calendar',
-  'DROP TABLE google_threads',
-  'DROP TABLE microsoft_threads',
+  'DROP TABLE IF EXISTS google_threads',
+  'DROP TABLE IF EXISTS microsoft_threads',
 
   `CREATE TABLE IF NOT EXISTS google_threads (
     id text NOT NULL PRIMARY KEY,
