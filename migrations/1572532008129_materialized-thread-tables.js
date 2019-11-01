@@ -2,7 +2,7 @@ const db = require('../lib/utils/db')
 
 const migrations = [
   'BEGIN',
-  `CREATE TABLE google_threads (
+  `CREATE TABLE IF NOT EXISTS google_threads (
     id text NOT NULL PRIMARY KEY,
     google_credential uuid NOT NULL REFERENCES google_credentials (id),
     "subject" text,
@@ -44,7 +44,7 @@ const migrations = [
       google_messages.thread_key, message_date
   )`,
 
-  `CREATE TABLE microsoft_threads (
+  `CREATE TABLE IF NOT EXISTS microsoft_threads (
     id text NOT NULL PRIMARY KEY,
     microsoft_credential uuid NOT NULL REFERENCES microsoft_credentials (id),
     "subject" text,
