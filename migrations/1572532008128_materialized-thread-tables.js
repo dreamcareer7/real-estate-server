@@ -3,15 +3,15 @@ const db = require('../lib/utils/db')
 const migrations = [
   'BEGIN',
 
-  `DROP FUNCTION IF EXISTS update_google_threads_on_new_messages`,
-  `DROP FUNCTION IF EXISTS update_microsoft_threads_on_new_messages`,
+  'DROP FUNCTION IF EXISTS update_google_threads_on_new_messages',
+  'DROP FUNCTION IF EXISTS update_microsoft_threads_on_new_messages',
 
-  `DROP TRIGGER IF EXISTS update_google_threads_on_new_messages ON google_messages`,
-  `DROP TRIGGER IF EXISTS update_microsoft_threads_on_new_messages ON microsoft_messages`,
+  'DROP TRIGGER IF EXISTS update_google_threads_on_new_messages ON google_messages',
+  'DROP TRIGGER IF EXISTS update_microsoft_threads_on_new_messages ON microsoft_messages',
 
   'DROP VIEW analytics.calendar',
-  `DROP TABLE google_threads`,
-  `DROP TABLE microsoft_threads`,
+  'DROP TABLE google_threads',
+  'DROP TABLE microsoft_threads',
 
   `CREATE TABLE IF NOT EXISTS google_threads (
     id text NOT NULL PRIMARY KEY,
