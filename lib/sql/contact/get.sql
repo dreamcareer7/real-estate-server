@@ -34,7 +34,6 @@ SELECT
   extract(epoch FROM next_touch) AS next_touch,
   (SELECT MIN(touch_freq) FROM touch_freqs AS tf WHERE tf.id = contacts.id) AS touch_freq,
   id AS summary,
-  ARRAY[id] AS sub_contacts,
   ios_address_book_id,
   android_address_book_id,
   google_id,
