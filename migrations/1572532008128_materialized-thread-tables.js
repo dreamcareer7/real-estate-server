@@ -129,7 +129,7 @@ const migrations = [
         message_count = EXCLUDED.message_count;
     END;
   $$`,
-  `CREATE OR REPLACE FUNCTION update_microsoft_threads_on_new_messages() RETURNS void
+  `CREATE OR REPLACE FUNCTION update_microsoft_threads_on_new_messages() RETURNS TRIGGER
   LANGUAGE plpgsql
   AS $$
     BEGIN
