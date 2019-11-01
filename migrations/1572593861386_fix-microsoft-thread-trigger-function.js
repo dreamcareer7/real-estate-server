@@ -4,7 +4,7 @@ const migrations = [
   'BEGIN',
   'DROP TRIGGER update_microsoft_threads_on_new_messages ON microsoft_messages',
   'DROP FUNCTION update_microsoft_threads_on_new_messages()',
-  `CREATE OR REPLACE FUNCTION update_microsoft_threads_on_new_messages() RETURNS void
+  `CREATE OR REPLACE FUNCTION update_microsoft_threads_on_new_messages() RETURNS TRIGGER
   LANGUAGE plpgsql
   AS $$
     BEGIN
