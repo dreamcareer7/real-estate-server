@@ -35,7 +35,7 @@ AS $$
       ORDER BY
         new_messages.thread_key, message_date
     )
-    ON CONFLICT (thread_key) DO UPDATE SET
+    ON CONFLICT (id) DO UPDATE SET
       updated_at = now(),
       last_message_date = EXCLUDED.last_message_date,
       recipients = EXCLUDED.recipients,
