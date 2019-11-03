@@ -3,7 +3,7 @@ const db = require('../lib/utils/db')
 const migrations = [
   'BEGIN',
   `ALTER TABLE email_campaigns_recipients ADD CONSTRAINT has_agent CHECK (
-    (recipient_type = 'Agent' AND brand IS NOT NULL) OR (recipient_type <> 'Agent')
+    (recipient_type = 'Agent' AND agent IS NOT NULL) OR (recipient_type <> 'Agent')
   )`,
   'COMMIT'
 ]
