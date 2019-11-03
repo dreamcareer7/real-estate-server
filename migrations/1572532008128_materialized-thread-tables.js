@@ -2,7 +2,18 @@ const db = require('../lib/utils/db')
 
 const migrations = [
   'BEGIN',
-  `CREATE TABLE google_threads (
+
+  'DROP FUNCTION IF EXISTS update_google_threads_on_new_messages',
+  'DROP FUNCTION IF EXISTS update_microsoft_threads_on_new_messages',
+
+  'DROP TRIGGER IF EXISTS update_google_threads_on_new_messages ON google_messages',
+  'DROP TRIGGER IF EXISTS update_microsoft_threads_on_new_messages ON microsoft_messages',
+
+  'DROP VIEW analytics.calendar',
+  'DROP TABLE IF EXISTS google_threads',
+  'DROP TABLE IF EXISTS microsoft_threads',
+
+  `CREATE TABLE IF NOT EXISTS google_threads (
     id text NOT NULL PRIMARY KEY,
     google_credential uuid NOT NULL REFERENCES google_credentials (id),
     "subject" text,
@@ -44,7 +55,7 @@ const migrations = [
       google_messages.thread_key, message_date
   )`,
 
-  `CREATE TABLE microsoft_threads (
+  `CREATE TABLE IF NOT EXISTS microsoft_threads (
     id text NOT NULL PRIMARY KEY,
     microsoft_credential uuid NOT NULL REFERENCES microsoft_credentials (id),
     "subject" text,
@@ -134,7 +145,7 @@ const migrations = [
   AS $$
     BEGIN
       INSERT INTO microsoft_threads (
-        thread_key,
+        id,
         microsoft_credential,
         "subject",
         first_message_date,
@@ -173,6 +184,7 @@ const migrations = [
         message_count = EXCLUDED.message_count;
     END;
   $$`,
+
   `CREATE TRIGGER update_google_threads_on_new_messages
     AFTER INSERT ON google_messages
     REFERENCING NEW TABLE AS new_messages

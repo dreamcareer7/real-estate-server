@@ -169,7 +169,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
           AND r."user" IS NOT NULL
       ) AS users,
       NULL::uuid[] AS people,
-      NULL AS people_len,
+      NULL::int AS people_len,
       COALESCE(dr.brand, deals.brand) AS brand,
       NULL::text AS status,
       NULL::jsonb AS metadata
@@ -195,7 +195,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
   UNION ALL
   (
     SELECT
-      cdc.id::text,
+      cr.contact::text || ':' || cdc.id::text AS id,
       deals.created_by,
       cdc.created_at,
       cdc.created_at AS updated_at,
@@ -233,7 +233,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
           role_name = 'Buyer'
           AND deal = deals.id
       ) AS people,
-      NULL AS people_len,
+      NULL::int AS people_len,
       cr.brand,
       NULL::text AS status,
       NULL::jsonb AS metadata
@@ -310,7 +310,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       NULL::text AS thread_key,
       ARRAY[contacts."user"] AS users,
       ARRAY[contact]::uuid[] AS people,
-      NULL AS people_len,
+      NULL::int AS people_len,
       contacts.brand,
       NULL::text AS status,
       jsonb_build_object(
@@ -352,7 +352,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       NULL::text AS thread_key,
       ARRAY[contacts."user"] AS users,
       ARRAY[id]::uuid[] AS people,
-      NULL AS people_len,
+      NULL::int AS people_len,
       brand,
       NULL::text AS status,
       NULL::jsonb AS metadata
@@ -403,7 +403,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
 
       (
         SELECT
-          COUNT(DISTINCT email)
+          COUNT(DISTINCT email)::int
         FROM
           email_campaigns_recipient_emails AS ecr
         WHERE
@@ -467,7 +467,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
 
       (
         SELECT
-          count(DISTINCT c.id)
+          count(DISTINCT c.id)::int
         FROM
           email_campaign_emails AS ece
           JOIN contacts AS c
@@ -527,7 +527,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       ) AS people,
       (
         SELECT
-          COUNT(DISTINCT email)
+          COUNT(DISTINCT email)::int
         FROM
           email_campaigns_recipient_emails
         WHERE
@@ -594,7 +594,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
 
       (
         SELECT
-          count(DISTINCT c.id)
+          count(DISTINCT c.id)::int
         FROM
           email_campaign_emails AS ece
           JOIN contacts AS c
@@ -665,7 +665,17 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
             LIMIT 5
           ) t
       ) AS people,
-      0 AS people_len,
+      (
+        SELECT
+          count(DISTINCT contacts.id)::int
+        FROM
+          unnest(recipients) AS recipients(recipient)
+          JOIN contacts
+            ON contacts.email @> ARRAY[recipient]
+        WHERE
+          contacts.brand = google_credentials.brand
+          AND contacts.deleted_at IS NULL
+      ) AS people_len,
 
       google_credentials.brand,
       NULL::text AS status,
@@ -720,7 +730,17 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
             LIMIT 5
           ) t
       ) AS people,
-      0 AS people_len,
+      (
+        SELECT
+          count(DISTINCT contacts.id)::int
+        FROM
+          unnest(recipients) AS recipients(recipient)
+          JOIN contacts
+            ON contacts.email @> ARRAY[recipient]
+        WHERE
+          contacts.brand = microsoft_credentials.brand
+          AND contacts.deleted_at IS NULL
+      ) AS people_len,
 
       microsoft_credentials.brand,
       NULL::text AS status,
@@ -776,7 +796,17 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
           ) t
       ) AS people,
 
-      0 AS people_len,
+      (
+        SELECT
+          count(DISTINCT contacts.id)::int
+        FROM
+          unnest(recipients) AS recipients(recipient)
+          JOIN contacts
+            ON contacts.email @> ARRAY[recipient]
+        WHERE
+          contacts.brand = google_credentials.brand
+          AND contacts.deleted_at IS NULL
+      ) AS people_len,
 
       google_credentials.brand,
       NULL::text AS status,
@@ -839,7 +869,17 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
           ) t
       ) AS people,
 
-      0 AS people_len,
+      (
+        SELECT
+          count(DISTINCT contacts.id)::int
+        FROM
+          unnest(recipients) AS recipients(recipient)
+          JOIN contacts
+            ON contacts.email @> ARRAY[recipient]
+        WHERE
+          contacts.brand = microsoft_credentials.brand
+          AND contacts.deleted_at IS NULL
+      ) AS people_len,
 
       microsoft_credentials.brand,
       NULL::text AS status,

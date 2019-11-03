@@ -3,7 +3,7 @@ LANGUAGE plpgsql
 AS $$
   BEGIN
     INSERT INTO microsoft_threads (
-      thread_key,
+      id,
       microsoft_credential,
       "subject",
       first_message_date,
@@ -35,7 +35,7 @@ AS $$
       ORDER BY
         new_messages.thread_key, message_date
     )
-    ON CONFLICT (thread_key) DO UPDATE SET
+    ON CONFLICT (id) DO UPDATE SET
       updated_at = now(),
       last_message_date = EXCLUDED.last_message_date,
       recipients = EXCLUDED.recipients,

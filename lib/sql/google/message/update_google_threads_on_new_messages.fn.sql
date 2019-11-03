@@ -1,10 +1,11 @@
-CREATE OR REPLACE FUNCTION update_google_threads_on_new_messages() RETURNS void
+CREATE OR REPLACE FUNCTION update_google_threads_on_new_messages() RETURNS trigger
 LANGUAGE plpgsql
 AS $$
   BEGIN
     INSERT INTO google_threads (
       id,
       google_credential,
+      "subject",
       first_message_date,
       last_message_date,
       recipients,
@@ -34,7 +35,7 @@ AS $$
       ORDER BY
         new_messages.thread_key, message_date
     )
-    ON CONFLICT (thread_key) DO UPDATE SET
+    ON CONFLICT (id) DO UPDATE SET
       updated_at = now(),
       last_message_date = EXCLUDED.last_message_date,
       recipients = EXCLUDED.recipients,
