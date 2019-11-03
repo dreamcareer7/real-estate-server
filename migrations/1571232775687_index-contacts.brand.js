@@ -2,9 +2,7 @@ const db = require('../lib/utils/db')
 
 const migrations = [
   'BEGIN',
-
-  'ALTER TABLE google_credentials ADD COLUMN IF NOT EXISTS rechat_gcalendar uuid NULL REFERENCES google_calendars(id)',
-
+  'CREATE INDEX IF NOT EXISTS contacts_brand_idx ON contacts (brand)',
   'COMMIT'
 ]
 
