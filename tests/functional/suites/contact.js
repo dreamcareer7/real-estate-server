@@ -1081,8 +1081,6 @@ const verifyTagDeleted = cb => {
     .after((err, res, body) => {
       const tags = body.data.map(a => a.text)
 
-      console.log(tags)
-
       if (tags.includes('bar') || tags.includes('poo') || tags.length !== 12) {
         throw 'Tag was not deleted correctly.'
       }

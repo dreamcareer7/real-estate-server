@@ -312,52 +312,13 @@ function fetchAssociations(cb) {
         results.contact.getContacts.data[2].id,
         results.contact.getContacts.data[3].id
       ])
+
+      expect(json.data.filter(a => a.association_type === 'listing')).to.have.length(1)
+      expect(json.data.find(a => a.association_type === 'listing').listing.id).to.be.equal(results.listing.by_mls.data.id)
+
       cb(undefined, res, json)
     })
     .expectStatus(200)
-    .expectJSON({
-      data: [
-        {
-          type: 'crm_association',
-          crm_task: results.task.create.data.id,
-          association_type: 'listing',
-          listing: {
-            type: 'listing',
-            id: results.listing.by_mls.data.id
-          }
-        },
-        {
-          type: 'crm_association',
-          crm_task: results.task.create.data.id,
-          association_type: 'contact',
-          contact: {
-            type: 'contact',
-            users: undefined,
-            deals: undefined
-          }
-        },
-        {
-          type: 'crm_association',
-          crm_task: results.task.create.data.id,
-          association_type: 'contact',
-          contact: {
-            type: 'contact',
-            users: undefined,
-            deals: undefined
-          }
-        },
-        {
-          type: 'crm_association',
-          crm_task: results.task.create.data.id,
-          association_type: 'contact',
-          contact: {
-            type: 'contact',
-            users: undefined,
-            deals: undefined
-          }
-        }
-      ]
-    })
 }
 
 function addInvalidAssociation(cb) {
