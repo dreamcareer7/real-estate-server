@@ -20,7 +20,7 @@ async function setup() {
 
 async function create() {
   const { credential, body } = await createGoogleCredential(user, brand)
-  
+
   expect(credential.type).to.be.equal('google_credential')
   expect(credential.user).to.be.equal(user.id)
   expect(credential.brand).to.be.equal(brand.id)
