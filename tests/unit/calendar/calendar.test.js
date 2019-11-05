@@ -4,10 +4,13 @@ const moment = require('moment-timezone')
 const { createContext, handleJobs } = require('../helper')
 
 const Calendar = require('../../../lib/models/Calendar')
+const Agent = require('../../../lib/models/Agent')
 const Contact = require('../../../lib/models/Contact')
 const Context = require('../../../lib/models/Context')
+const EmailCampaign = require('../../../lib/models/Email/Campaign')
 const { Listing } = require('../../../lib/models/Listing')
 const Deal = require('../../../lib/models/Deal')
+const Orm = require('../../../lib/models/Orm')
 const User = require('../../../lib/models/User')
 const CrmTask = require('../../../lib/models/CRM/Task')
 
@@ -356,6 +359,98 @@ async function testChildBirthdayWithEmptyChildName() {
   expect(events[0].title).to.be.equal('Child Birthday - John Doe')
 }
 
+async function testCampaignToAgents() {
+  const agent1 = await Agent.getByMLSID('0674645')
+  const agent2 = await Agent.getByMLSID('0599572')
+
+  const [id] = await EmailCampaign.createMany([{
+    subject: 'Test subject',
+    to: [{
+      recipient_type: 'Agent',
+      agent: agent1.id
+    }, {
+      recipient_type: 'Agent',
+      agent: agent2.id
+    }],
+    created_by: user.id,
+    from: user.id,
+    brand: brand.id,
+    due_at: new Date().toISOString(),
+    html: '<html></html>'
+  }])
+
+  const events = await fetchEvents()
+
+  expect(events).to.have.length(1)
+  expect(events[0].id).to.equal(id)
+  expect(events[0].people).to.have.length(2)
+  expect(events[0].people.map(p => p.type)).to.have.members(['agent', 'agent'])
+  expect(events[0].people.map(p => p.id)).to.have.members([agent1.id, agent2.id])
+
+  const populated = await Orm.populate({ models: events, associations: ['calendar_event.people'] })
+  expect(populated).to.have.length(1)
+  expect(populated[0].id).to.equal(id)
+  expect(populated[0].people).to.have.length(2)
+  expect(populated[0].people.map(p => p.type)).to.have.members(['agent', 'agent'])
+  expect(populated[0].people.map(p => p.id)).to.have.members([agent1.id, agent2.id])
+}
+
+async function testCampaignToContacts() {
+  const [contact_id] = await Contact.create([{
+    user: user.id,
+    attributes: attributes({
+      first_name: 'John',
+      last_name: 'Doe',
+      email: ['john@doe.com']
+    })
+  }], user.id, brand.id)
+
+  const [id] = await EmailCampaign.createMany([{
+    subject: 'Test subject',
+    to: [{
+      recipient_type: 'Email',
+      contact: contact_id,
+      email: 'john@doe.com'
+    }],
+    created_by: user.id,
+    from: user.id,
+    brand: brand.id,
+    due_at: new Date().toISOString(),
+    html: '<html></html>'
+  }])
+
+  async function testFor(object_type) {
+    const events = await Calendar.filter([{
+      brand: brand.id,
+      users: [user.id]
+    }], {
+      low: moment().add(-1, 'month').unix(),
+      high: moment().add(1, 'month').unix(),
+      object_types: [object_type]
+    })
+
+    expect(events).to.have.length(1)
+    expect(events[0].id).to.equal(id)
+    expect(events[0].people).to.have.length(1)
+    expect(events[0].people.map(p => p.type)).to.have.members(['contact'])
+    expect(events[0].people.map(p => p.id)).to.have.members([contact_id])
+
+    const populated = await Orm.populate({ models: events, associations: ['calendar_event.people'] })
+    expect(populated).to.have.length(1)
+    expect(populated[0].id).to.equal(id)
+    expect(populated[0].people).to.have.length(1)
+    expect(populated[0].people.map(p => p.type)).to.have.members(['contact'])
+    expect(populated[0].people.map(p => p.id)).to.have.members([contact_id])
+
+    return { events, populated }
+  }
+
+  await testFor('email_campaign')
+
+  const { events } = await testFor('email_campaign_recipient')
+  expect(events[0].contact).to.equal(contact_id)
+}
+
 describe('Calendar', () => {
   createContext()
 
@@ -383,5 +478,11 @@ describe('Calendar', () => {
     it('should put child name in child birthday event title', testChildBirthday)
     it('should handle nameless child birthday in event title', testNamelessChildBirthday)
     it('should put child name in child birthday event title when child name is empty', testChildBirthdayWithEmptyChildName)
+  })
+
+  describe('Campaigns', () => {
+    beforeEach(async () => setup(true))
+    it('should give correct people for agent recipients', testCampaignToAgents)
+    it('should give correct people for contact recipients', testCampaignToContacts)
   })
 })
