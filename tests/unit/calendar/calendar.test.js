@@ -2,12 +2,11 @@ const { expect } = require('chai')
 const moment = require('moment-timezone')
 
 const { createContext, handleJobs } = require('../helper')
-
 const Calendar = require('../../../lib/models/Calendar')
 const Agent = require('../../../lib/models/Agent')
 const Contact = require('../../../lib/models/Contact')
 const Context = require('../../../lib/models/Context')
-const EmailCampaign = require('../../../lib/models/Email/Campaign')
+const EmailCampaign = require('../../../lib/models/Email/campaign')
 const { Listing } = require('../../../lib/models/Listing')
 const Deal = require('../../../lib/models/Deal')
 const Orm = require('../../../lib/models/Orm')
@@ -19,6 +18,8 @@ const sql = require('../../../lib/utils/sql')
 const BrandHelper = require('../brand/helper')
 const DealHelper = require('../deal/helper')
 const { attributes } = require('../contact/helper')
+
+const agents = require('./data/agents.json')
 
 let user, brand, listing
 
@@ -360,17 +361,17 @@ async function testChildBirthdayWithEmptyChildName() {
 }
 
 async function testCampaignToAgents() {
-  const agent1 = await Agent.getByMLSID('0674645')
-  const agent2 = await Agent.getByMLSID('0599572')
+  const agent1 = await Agent.create(agents[0])
+  const agent2 = await Agent.create(agents[1])
 
   const [id] = await EmailCampaign.createMany([{
     subject: 'Test subject',
     to: [{
       recipient_type: 'Agent',
-      agent: agent1.id
+      agent: agent1
     }, {
       recipient_type: 'Agent',
-      agent: agent2.id
+      agent: agent2
     }],
     created_by: user.id,
     from: user.id,
@@ -385,14 +386,14 @@ async function testCampaignToAgents() {
   expect(events[0].id).to.equal(id)
   expect(events[0].people).to.have.length(2)
   expect(events[0].people.map(p => p.type)).to.have.members(['agent', 'agent'])
-  expect(events[0].people.map(p => p.id)).to.have.members([agent1.id, agent2.id])
+  expect(events[0].people.map(p => p.id)).to.have.members([agent1, agent2])
 
   const populated = await Orm.populate({ models: events, associations: ['calendar_event.people'] })
   expect(populated).to.have.length(1)
   expect(populated[0].id).to.equal(id)
   expect(populated[0].people).to.have.length(2)
   expect(populated[0].people.map(p => p.type)).to.have.members(['agent', 'agent'])
-  expect(populated[0].people.map(p => p.id)).to.have.members([agent1.id, agent2.id])
+  expect(populated[0].people.map(p => p.id)).to.have.members([agent1, agent2])
 }
 
 async function testCampaignToContacts() {
