@@ -2,6 +2,7 @@ const db = require('../lib/utils/db')
 
 const migrations = [
   'BEGIN',
+  'DROP VIEW analytics.calendar',
   `CREATE OR REPLACE VIEW analytics.calendar AS (
     (
       SELECT
