@@ -461,7 +461,7 @@ const migrations = [
         NULL::uuid AS credential_id,
         NULL::text AS thread_key,
         ARRAY[ec.from] AS users,
-  
+
         (
           SELECT
             ARRAY_AGG(json_build_object(
@@ -479,6 +479,7 @@ const migrations = [
                   ON (((c.id = ece.contact) OR (c.email @> ARRAY[ece.email_address])) AND c.brand = ec.brand AND c.deleted_at IS NULL)
               WHERE
                 ece.campaign = ec.id
+                AND (ece.agent IS NOT NULL OR c.id IS NOT NULL)
               ORDER BY
                 ece.email_address, c.last_touch DESC, c.updated_at DESC
               LIMIT 5
@@ -611,6 +612,7 @@ const migrations = [
                      AND contacts.deleted_at IS NULL
               WHERE
                 email_campaign_emails.campaign = ec.id
+                AND (email_campaign_emails.agent IS NOT NULL OR contacts.id IS NOT NULL)
               ORDER BY
                 email_campaign_emails.email_address,
                 contacts.last_touch DESC,

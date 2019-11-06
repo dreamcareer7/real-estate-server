@@ -474,6 +474,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
                 ON (((c.id = ece.contact) OR (c.email @> ARRAY[ece.email_address])) AND c.brand = ec.brand AND c.deleted_at IS NULL)
             WHERE
               ece.campaign = ec.id
+              AND (ece.agent IS NOT NULL OR c.id IS NOT NULL)
             ORDER BY
               ece.email_address, c.last_touch DESC, c.updated_at DESC
             LIMIT 5
@@ -606,6 +607,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
                    AND contacts.deleted_at IS NULL
             WHERE
               email_campaign_emails.campaign = ec.id
+              AND (email_campaign_emails.agent IS NOT NULL OR contacts.id IS NOT NULL)
             ORDER BY
               email_campaign_emails.email_address,
               contacts.last_touch DESC,
