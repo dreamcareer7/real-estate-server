@@ -26,7 +26,7 @@ FROM
 WHERE
   email IS NOT NULL
   AND campaign = $1
-ORDER BY email, (
+ORDER BY LOWER(email), (
   CASE
     WHEN send_type = 'To'::email_campaign_send_type THEN 0
     ELSE 1
