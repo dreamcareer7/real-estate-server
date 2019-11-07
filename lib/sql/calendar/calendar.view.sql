@@ -31,7 +31,10 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       ) AS users,
       (
         SELECT
-          ARRAY_AGG(contact)
+          ARRAY_AGG(json_build_object(
+            'id', contact,
+            'type', 'contact'
+          ))
         FROM
           (
             SELECT
@@ -99,7 +102,10 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       ) AS users,
       (
         SELECT
-          ARRAY_AGG(contact)
+          ARRAY_AGG(json_build_object(
+            'id', contact,
+            'type', 'contact'
+          ))
         FROM
           (
             SELECT
@@ -168,7 +174,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
           AND r.deleted_at IS NULL
           AND r."user" IS NOT NULL
       ) AS users,
-      NULL::uuid[] AS people,
+      NULL::json[] AS people,
       NULL::int AS people_len,
       COALESCE(dr.brand, deals.brand) AS brand,
       NULL::text AS status,
@@ -226,7 +232,10 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       ) AS users,
       (
         SELECT
-          ARRAY_AGG(contact)
+          ARRAY_AGG(json_build_object(
+            'id', contact,
+            'type', 'contact'
+          ))
         FROM
           contacts_roles
         WHERE
@@ -309,8 +318,8 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       NULL::uuid AS credential_id,
       NULL::text AS thread_key,
       ARRAY[contacts."user"] AS users,
-      ARRAY[contact]::uuid[] AS people,
-      NULL::int AS people_len,
+      ARRAY[json_build_object('id', contact, 'type', 'contact')]::json[] AS people,
+      1 AS people_len,
       contacts.brand,
       NULL::text AS status,
       jsonb_build_object(
@@ -351,8 +360,8 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       NULL::uuid AS credential_id,
       NULL::text AS thread_key,
       ARRAY[contacts."user"] AS users,
-      ARRAY[id]::uuid[] AS people,
-      NULL::int AS people_len,
+      ARRAY[json_build_object('id', id, 'type', 'contact')]::json[] AS people,
+      1 AS people_len,
       brand,
       NULL::text AS status,
       NULL::jsonb AS metadata
@@ -388,11 +397,15 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
 
       (
         SELECT
-          ARRAY_AGG(contact)
+          ARRAY_AGG(json_build_object(
+            'id', COALESCE(contact, agent),
+            'type', (CASE WHEN agent IS NOT NULL THEN 'agent' ELSE 'contact' END)
+          ))
         FROM
           (
             SELECT
-              contact
+              contact,
+              agent
             FROM
               email_campaigns_recipient_emails AS ecr
             WHERE
@@ -446,19 +459,22 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
 
       (
         SELECT
-          ARRAY_AGG(DISTINCT contact)
+          ARRAY_AGG(json_build_object(
+            'id', COALESCE(contact, agent),
+            'type', (CASE WHEN agent IS NOT NULL THEN 'agent' ELSE 'contact' END)
+          ))
         FROM
           (
             SELECT DISTINCT ON (ece.email_address)
-              c.id AS contact
+              c.id AS contact,
+              ece.agent
             FROM
               email_campaign_emails AS ece
-              JOIN contacts AS c
-                ON c.email @> ARRAY[ece.email_address]
+              LEFT JOIN contacts AS c
+                ON (((c.id = ece.contact) OR (c.email @> ARRAY[ece.email_address])) AND c.brand = ec.brand AND c.deleted_at IS NULL)
             WHERE
               ece.campaign = ec.id
-              AND c.brand = ec.brand
-              AND c.deleted_at IS NULL
+              AND (ece.agent IS NOT NULL OR c.id IS NOT NULL)
             ORDER BY
               ece.email_address, c.last_touch DESC, c.updated_at DESC
             LIMIT 5
@@ -467,15 +483,13 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
 
       (
         SELECT
-          count(DISTINCT c.id)::int
+          count(*)::int
         FROM
           email_campaign_emails AS ece
-          JOIN contacts AS c
-            ON c.email @> ARRAY[ece.email_address]
+          LEFT JOIN contacts AS c
+            ON (((c.id = ece.contact) OR (c.email @> ARRAY[ece.email_address])) AND c.brand = ec.brand AND c.deleted_at IS NULL)
         WHERE
           ece.campaign = ec.id
-          AND c.brand = ec.brand
-          AND c.deleted_at IS NULL
       ) AS people_len,
 
       brand,
@@ -513,11 +527,15 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       ARRAY[ec.from] AS users,
       (
         SELECT
-          ARRAY_AGG(contact)
+          ARRAY_AGG(json_build_object(
+            'id', COALESCE(contact, agent),
+            'type', (CASE WHEN agent IS NOT NULL THEN 'agent' ELSE 'contact' END)
+          ))
         FROM
           (
             SELECT
-              contact
+              contact,
+              agent
             FROM
               email_campaigns_recipient_emails
             WHERE
@@ -544,6 +562,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       ec.deleted_at IS NULL
       AND ec.executed_at IS NULL
       AND ec.due_at IS NOT NULL
+      AND ecr.contact IS NOT NULL
   )
   UNION ALL
   (
@@ -571,19 +590,24 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
 
       (
         SELECT
-          ARRAY_AGG(contact)
+          ARRAY_AGG(json_build_object(
+            'id', COALESCE(contact, agent),
+            'type', (CASE WHEN agent IS NOT NULL THEN 'agent' ELSE 'contact' END)
+          ))
         FROM
           (
             SELECT DISTINCT ON (email_campaign_emails.email_address)
-              contacts.id AS contact
+              contacts.id AS contact,
+              email_campaign_emails.agent
             FROM
               email_campaign_emails
-              JOIN contacts
-                ON contacts.email @> ARRAY[email_campaign_emails.email_address]
+              LEFT JOIN contacts
+                ON ((contacts.email @> ARRAY[email_campaign_emails.email_address]) OR (contacts.id = email_campaign_emails.contact))
+                   AND contacts.brand = ec.brand
+                   AND contacts.deleted_at IS NULL
             WHERE
               email_campaign_emails.campaign = ec.id
-              AND contacts.brand = ec.brand
-              AND contacts.deleted_at IS NULL
+              AND (email_campaign_emails.agent IS NOT NULL OR contacts.id IS NOT NULL)
             ORDER BY
               email_campaign_emails.email_address,
               contacts.last_touch DESC,
@@ -594,15 +618,15 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
 
       (
         SELECT
-          count(DISTINCT c.id)::int
+          count(*)::int
         FROM
-          email_campaign_emails AS ece
-          JOIN contacts AS c
-            ON c.email @> ARRAY[ece.email_address]
+          email_campaign_emails
+          LEFT JOIN contacts
+            ON ((contacts.email @> ARRAY[email_campaign_emails.email_address]) OR (contacts.id = email_campaign_emails.contact))
+                AND contacts.brand = ec.brand
+                AND contacts.deleted_at IS NULL
         WHERE
-          ece.campaign = ec.id
-          AND c.brand = ec.brand
-          AND c.deleted_at IS NULL
+          email_campaign_emails.campaign = ec.id
       ) AS people_len,
 
       ec.brand,
@@ -625,8 +649,8 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
     SELECT
       google_threads.id::text,
       google_credentials.user AS created_by,
-      created_at,
-      updated_at,
+      google_threads.created_at,
+      google_threads.updated_at,
       'email_thread' AS object_type,
       'gmail' AS event_type,
       'Email Thread' AS type_label,
@@ -646,7 +670,10 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
 
       (
         SELECT
-          ARRAY_AGG(contact)
+          ARRAY_AGG(json_build_object(
+            'id', contact,
+            'type', 'contact'
+          ))
         FROM
           (
             SELECT DISTINCT ON (recipient)
@@ -690,8 +717,8 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
     SELECT
       microsoft_threads.id::text,
       microsoft_credentials.user AS created_by,
-      created_at,
-      updated_at,
+      microsoft_threads.created_at,
+      microsoft_threads.updated_at,
       'email_thread' AS object_type,
       'outlook' AS event_type,
       'Email Thread' AS type_label,
@@ -711,7 +738,10 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
 
       (
         SELECT
-          ARRAY_AGG(contact)
+          ARRAY_AGG(json_build_object(
+            'id', contact,
+            'type', 'contact'
+          ))
         FROM
           (
             SELECT DISTINCT ON (recipient)
@@ -755,8 +785,8 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
     SELECT
       google_threads.id::text,
       google_credentials.user AS created_by,
-      created_at,
-      updated_at,
+      google_threads.created_at,
+      google_threads.updated_at,
       'email_thread_recipient' AS object_type,
       'gmail' AS event_type,
       'Email Thread' AS type_label,
@@ -776,7 +806,10 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
 
       (
         SELECT
-          ARRAY_AGG(contact)
+          ARRAY_AGG(json_build_object(
+            'id', contact,
+            'type', 'contact'
+          ))
         FROM
           (
             SELECT DISTINCT ON (recipient)
@@ -828,8 +861,8 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
     SELECT
       microsoft_threads.id::text,
       microsoft_credentials.user AS created_by,
-      created_at,
-      updated_at,
+      microsoft_threads.created_at,
+      microsoft_threads.updated_at,
       'email_thread_recipient' AS object_type,
       'outlook' AS event_type,
       'Email Thread' AS type_label,
@@ -849,7 +882,10 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
 
       (
         SELECT
-          ARRAY_AGG(contact)
+          ARRAY_AGG(json_build_object(
+            'id', contact,
+            'type', 'contact'
+          ))
         FROM
           (
             SELECT DISTINCT ON (recipient)
