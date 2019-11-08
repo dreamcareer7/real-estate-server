@@ -6,7 +6,7 @@ const { createContext, handleJobs } = require('../helper')
 
 const promisify = require('../../../lib/utils/promisify')
 const sql = require('../../../lib/utils/sql')
-const render_filters = require('../../../lib/utils/render_filters')
+const render_filters = require('../../../lib/utils/render/filters')
 
 const CalendarNotification = require('../../../lib/models/Calendar/notification')
 const CalendarWorker = require('../../../lib/models/Calendar/worker/notification')
