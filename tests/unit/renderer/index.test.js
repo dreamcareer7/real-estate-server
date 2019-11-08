@@ -5,8 +5,8 @@ const renderer = require('../../../lib/utils/render')
 const ListingHelper = require('../mls/helpers/listing')
 const config = require('../../../lib/config')
 
-const worker = async function() {
-  this.timeout(30000)
+const timeout = async function() {
+  this.timeout(40000)
 
   const max = 10000
   const template = (await readFile(`${__dirname}/template.html`)).toString()
@@ -26,34 +26,13 @@ const worker = async function() {
   await Promise.all(promises)
 }
 
-const timeout = async function() {
-  this.timeout(40000)
-
-  const max = 10000
-  const template = (await readFile(`${__dirname}/template.html`)).toString()
-  const listing = await ListingHelper.create()
-  const user = await User.getByEmail(config.tests.username)
-
-  const promises = []
-
-  for(let i = 0; i<=max; i++) {
-    const promise = renderer.isolated.htmlString(template, {
-      listing,
-      user
-    })
-    promises.push(promise)
-  }
-
-  await Promise.all(promises)
-}
-
 const accuracy = async function() {
   const max = 100
-  const template = `Item {{i}}`
+  const template = 'Item {{i}}'
 
   const promises = []
 
-  for(let i = 0; i<=max; i++) {
+  for(let i = 0; i <= max; i++) {
     const promise = renderer.isolated.htmlString(template, {
       i
     })
@@ -62,7 +41,7 @@ const accuracy = async function() {
 
   const results = await Promise.all(promises)
 
-  for(let i = 0; i<=max; i++) {
+  for(let i = 0; i <= max; i++) {
     const result = results[i]
     expect(result).to.equal(`Item ${i}`)
   }
