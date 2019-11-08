@@ -5,7 +5,7 @@ const moment = require('moment-timezone')
 
 const { createContext, handleJobs } = require('../helper')
 const promisify = require('../../../lib/utils/promisify')
-const render_filters = require('../../../lib/utils/render_filters')
+const render_filters = require('../../../lib/utils/render/filters')
 
 const BrandHelper = require('../brand/helper')
 
