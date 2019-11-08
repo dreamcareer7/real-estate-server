@@ -15,7 +15,7 @@ const worker = async function() {
 
   const promises = []
 
-  for(let i = 0; i<=max; i++) {
+  for(let i = 0; i <= max; i++) {
     const promise = renderer.isolated.htmlString(template, {
       listing,
       user
