@@ -6,7 +6,7 @@ const ListingHelper = require('../mls/helpers/listing')
 const config = require('../../../lib/config')
 
 const timeout = async function() {
-  this.timeout(40000)
+  this.timeout(60000)
 
   const max = 10000
   const template = (await readFile(`${__dirname}/template.html`)).toString()
