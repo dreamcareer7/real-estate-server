@@ -32,7 +32,11 @@ SELECT email_campaigns.*,
       WHEN $3::uuid IS NULL THEN TRUE
       ELSE email_campaign_emails.contact = $3::uuid
     END
-  ) as emails
+  ) as emails,
+
+  headers,
+  google_credential,
+  microsoft_credential
 
 FROM email_campaigns
 JOIN unnest($1::uuid[]) WITH ORDINALITY t(eid, ord) ON email_campaigns.id = eid

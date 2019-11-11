@@ -60,6 +60,9 @@ declare interface IEmailCampaignInput {
   attachments?: UUID[];
   include_signature?: boolean;
   individual?: boolean;
+  headers?: any[];
+  google_credential?: UUID;
+  microsoft_credential?: UUID;
 }
 
 declare interface IEmailCampaign extends IEmailCampaignInput {
