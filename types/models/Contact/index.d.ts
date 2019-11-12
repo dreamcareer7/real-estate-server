@@ -201,6 +201,8 @@ declare interface IContactFilterOptions {
   filter_type?: 'and' | 'or';
   google_id?: string;
   microsoft_id?: string;
+
+  forUpdate?: boolean;
 }
 
 declare interface ICSVImporterMappingDef {
