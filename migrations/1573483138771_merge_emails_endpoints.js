@@ -25,7 +25,7 @@ const migrations = [
     link TEXT NOT NULL,
     type TEXT NOT NULL,
     is_inline BOOLEAN NOT NULL,
-    content_id TEXT
+    content_id TEXT,
   
     created_at timestamptz NOT NULL DEFAULT clock_timestamp(),
     updated_at timestamptz NOT NULL DEFAULT clock_timestamp(),
