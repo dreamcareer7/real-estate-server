@@ -1,0 +1,1 @@
+UPDATE email_campaign_attachment SET deleted_at = now() WHERE email_campaign = $1
