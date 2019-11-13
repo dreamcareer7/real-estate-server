@@ -8,12 +8,12 @@ LANGUAGE SQL
 AS $$
   WITH last_touches AS (
     SELECT
-      contact,
+      cids.id AS contact,
       last_touch
     FROM
-      crm_last_touches
-    WHERE
-      ca.contact = ANY($1)
+      unnest($1::uuid[]) AS cids(id)
+      LEFT JOIN crm_last_touches
+        ON crm_last_touches.contact = cids.id
   ),
   next_touches AS (
     SELECT
