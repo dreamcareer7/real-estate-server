@@ -8,7 +8,9 @@ const Contact = require('../../../lib/models/Contact')
 const ContactTag = require('../../../lib/models/Contact/tag')
 const List = require('../../../lib/models/Contact/list')
 const Context = require('../../../lib/models/Context')
+const Orm = require('../../../lib/models/Orm')
 const CrmTask = require('../../../lib/models/CRM/Task')
+const CrmAssociation = require('../../../lib/models/CRM/Association')
 const EmailCampaign = require('../../../lib/models/Email/campaign')
 
 const sql = require('../../../lib/utils/sql')
@@ -182,6 +184,57 @@ async function testTouchDates() {
   return contact_ids
 }
 
+/**
+ * @param {UUID} id 
+ * @param {(contact: IContact) => void} fn 
+ */
+async function contactShould(id, fn) {
+  const contact = await Contact.get(id)
+  return fn(contact)
+}
+
+async function testLastTouchAfterRemovedFromEvent() {
+  Orm.setEnabledAssociations([ 'crm_task.associations' ])
+
+  const [contact_id] = await createContact([DEFAULT_CONTACTS[0]])
+  const task = await createTask([contact_id])
+
+  await handleJobs()
+
+  await contactShould(contact_id, c => {
+    if (!c.last_touch) throw new Error('Last touch was not set properly.')
+    expect(c.last_touch).to.be.equal(task.due_date)
+  })
+
+  await CrmAssociation.remove(task.associations || [], task.id, user.id)
+  await handleJobs()
+
+  await contactShould(contact_id, c => {
+    if (c.last_touch) throw new Error('Last touch was not cleared properly.')
+  })
+}
+
+async function testLastTouchAfterEventIsDeleted() {
+  Orm.setEnabledAssociations([ 'crm_task.associations' ])
+
+  const [contact_id] = await createContact([DEFAULT_CONTACTS[0]])
+  const task = await createTask([contact_id])
+
+  await handleJobs()
+
+  await contactShould(contact_id, c => {
+    if (!c.last_touch) throw new Error('Last touch was not set properly.')
+    expect(c.last_touch).to.be.equal(task.due_date)
+  })
+
+  await CrmTask.remove(task.id, user.id)
+  await handleJobs()
+
+  await contactShould(contact_id, c => {
+    if (c.last_touch) throw new Error('Last touch was not cleared properly.')
+  })
+}
+
 async function testTouchDatesAfterEmailCampaign() {
   const d = new Date('2019-11-11')
   const { now } = await sql.selectOne('SELECT extract(epoch from now()) AS now')
@@ -293,4 +346,6 @@ describe('Touch', () => {
   it('should update touch dates after Gmail sync', testTouchDatesAfterGmailSync)
   it('should update touch dates after Outlook sync', testTouchDatesAfterOutlookSync)
   it('should update touch dates for new contacts', testTouchDatesOnContactEmailManipulation)
+  it('should update touch dates after contact is removed from event', testLastTouchAfterRemovedFromEvent)
+  it('should update touch dates after event is deleted', testLastTouchAfterEventIsDeleted)
 })

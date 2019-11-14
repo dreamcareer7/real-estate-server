@@ -22,7 +22,8 @@
     "to",
     cc,
     bcc,
-    created_at AS "message_date"
+    created_at AS "message_date",
+    'email_thread_email' AS "type"
   FROM
     emails
   WHERE
@@ -58,7 +59,8 @@ UNION ALL
     "to",
     cc,
     bcc,
-    message_date
+    message_date,
+    'email_thread_email' AS "type"
   FROM
     google_messages
   JOIN
@@ -94,8 +96,8 @@ UNION ALL
     "to",
     cc,
     bcc,
-    message_date
-
+    message_date,
+    'email_thread_email' AS "type"
   FROM
     microsoft_messages
   JOIN

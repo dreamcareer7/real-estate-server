@@ -22,6 +22,9 @@
     "extension": [
       ".js"
     ],
+    "exclude": [
+      "tests/**/*"
+    ],
     "reporter": [
       "text-summary",
       "lcov"

@@ -34,7 +34,7 @@ async function main() {
     concurrency: 5
   })
   await peanar.worker({
-    queues: ['calendar'],
+    queues: ['calendar', 'touches'],
     concurrency: 2
   })
 
@@ -45,7 +45,7 @@ async function main() {
   await peanar.worker({ queues: ['contact_import'], concurrency: 15 })
 
   await peanar.worker({
-    queues: ['google', 'microsoft', 'touches'],
+    queues: ['google', 'microsoft'],
     concurrency: 30
   })
 
