@@ -19,7 +19,7 @@ SELECT email_campaigns.*,
   ) AS recipients,
 
   (
-    SELECT ARRAY_AGG(email_campaign_attachments.*)
+    SELECT ARRAY_AGG(email_campaign_attachments.id)
     FROM email_campaign_attachments
     WHERE email_campaign = email_campaigns.id AND deleted_at IS NULL
   ) AS attachments,

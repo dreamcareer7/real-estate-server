@@ -16,14 +16,11 @@ const migrations = [
     id uuid NOT NULL PRIMARY KEY DEFAULT uuid_generate_v4(),
 
     email_campaign uuid NOT NULL REFERENCES email_campaigns(id),
-    google_credential uuid NOT NULL REFERENCES google_credential(id),
+    google_credential uuid NOT NULL REFERENCES google_credentials(id),
     microsoft_credential uuid NOT NULL REFERENCES microsoft_credentials(id),
   
     file uuid NOT NULL REFERENCES files(id),
 
-    file_name TEXT NOT NULL,
-    link TEXT NOT NULL,
-    type TEXT NOT NULL,
     is_inline BOOLEAN NOT NULL,
     content_id TEXT,
   
