@@ -14,12 +14,12 @@ const migrations = [
 
   `CREATE TABLE IF NOT EXISTS email_campaign_attachments(
     id uuid NOT NULL PRIMARY KEY DEFAULT uuid_generate_v4(),
-  
+
     email_campaign uuid NOT NULL REFERENCES email_campaigns(id),
     google_credential uuid NOT NULL REFERENCES google_credential(id),
     microsoft_credential uuid NOT NULL REFERENCES microsoft_credentials(id),
   
-    att_id uuid NOT NULL REFERENCES files(id),
+    file uuid NOT NULL REFERENCES files(id),
 
     file_name TEXT NOT NULL,
     link TEXT NOT NULL,
@@ -31,7 +31,7 @@ const migrations = [
     updated_at timestamptz NOT NULL DEFAULT clock_timestamp(),
     deleted_at timestamptz,
 
-    UNIQUE (email_campaign, att_id)
+    UNIQUE (email_campaign, file)
   )`,
 
   'COMMIT'
