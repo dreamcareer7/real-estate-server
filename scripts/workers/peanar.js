@@ -34,7 +34,7 @@ async function main() {
     concurrency: 5
   })
   await peanar.worker({
-    queues: ['calendar', 'touches'],
+    queues: ['calendar'],
     concurrency: 2
   })
 
