@@ -95,6 +95,19 @@ const get = cb => {
     })
 }
 
+const getEmail = cb => {
+  const campaign = results.email.get.data
+
+  return frisby
+    .create('Get an email from a campaign')
+    .get(`/emails/${campaign.id}/emails/${campaign.emails[0].id}`)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      data: campaign.emails[0]
+    })
+}
+
 const getByBrand = cb => {
   const updated = results.email.update.data
   const brand = results.email.scheduleBrand.data
@@ -235,6 +248,7 @@ module.exports = {
   addEvent,
   updateStats,
   get,
+  getEmail,
   getByBrand,
   remove
 }

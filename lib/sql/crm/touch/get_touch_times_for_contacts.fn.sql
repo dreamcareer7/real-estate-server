@@ -7,21 +7,18 @@ RETURNS TABLE (
 LANGUAGE SQL
 AS $$
   WITH last_touches AS (
-    SELECT DISTINCT ON (ca.contact)
-      ca.contact,
-      crm_tasks.due_date AS last_touch
+    SELECT
+      cids.id AS contact,
+      (
+        SELECT
+          last_touch
+        FROM
+          crm_last_touches
+        WHERE
+          crm_last_touches.contact = cids.id
+      ) AS last_touch
     FROM
-      crm_tasks
-      JOIN crm_associations AS ca
-        ON ca.crm_task = crm_tasks.id
-    WHERE
-      ca.contact = ANY($1)
-      AND crm_tasks.status = 'DONE'
-      AND crm_tasks.task_type <> ALL(ARRAY['Note', 'Other'])
-      AND crm_tasks.deleted_at IS NULL
-      AND ca.deleted_at IS NULL
-    ORDER BY
-      ca.contact, crm_tasks.due_date desc
+      unnest($1::uuid[]) AS cids(id)
   ),
   next_touches AS (
     SELECT

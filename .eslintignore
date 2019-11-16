@@ -1,3 +1,4 @@
 jsdoc
 docs
 istanbul
+**/*.ts

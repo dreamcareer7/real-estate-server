@@ -22,4 +22,6 @@ FROM
 WHERE
   ca.id = ea.id
 RETURNING
-  contact
+  ca.id,
+  ca.contact,
+  ca.attribute_type

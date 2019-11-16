@@ -84,4 +84,4 @@ async function handleJobs() {
   }
 }
 
-module.exports = { createContext, handleJobs: handleJobs }
+module.exports = { createContext, handleJobs }
