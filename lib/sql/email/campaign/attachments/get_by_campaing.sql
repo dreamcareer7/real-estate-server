@@ -1,1 +1,1 @@
-SELECT id FROM email_campaign_attachment WHERE email_campaign = $1
+SELECT id FROM email_campaign_attachments WHERE email_campaign = $1
