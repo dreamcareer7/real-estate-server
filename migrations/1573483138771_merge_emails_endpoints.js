@@ -11,6 +11,9 @@ const migrations = [
   'ALTER TABLE email_campaigns ADD CONSTRAINT email_campaigns_google_credential    FOREIGN KEY (google_credential)    REFERENCES google_credentials(id)',
   'ALTER TABLE email_campaigns ADD CONSTRAINT email_campaigns_microsoft_credential FOREIGN KEY (microsoft_credential) REFERENCES microsoft_credentials(id)',
 
+  'ALTER TABLE emails ADD CONSTRAINT emails_google_message_id    FOREIGN KEY (google_message_id)    REFERENCES google_messages(id)',
+  'ALTER TABLE emails ADD CONSTRAINT emails_microsoft_message_id FOREIGN KEY (microsoft_message_id) REFERENCES microsoft_messages(id)',
+
 
   `CREATE TABLE IF NOT EXISTS email_campaign_attachments(
     id uuid NOT NULL PRIMARY KEY DEFAULT uuid_generate_v4(),
