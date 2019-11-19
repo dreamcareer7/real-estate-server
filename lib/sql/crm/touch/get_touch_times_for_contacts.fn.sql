@@ -9,11 +9,16 @@ AS $$
   WITH last_touches AS (
     SELECT
       cids.id AS contact,
-      last_touch
+      (
+        SELECT
+          last_touch
+        FROM
+          crm_last_touches
+        WHERE
+          crm_last_touches.contact = cids.id
+      ) AS last_touch
     FROM
       unnest($1::uuid[]) AS cids(id)
-      LEFT JOIN crm_last_touches
-        ON crm_last_touches.contact = cids.id
   ),
   next_touches AS (
     SELECT
