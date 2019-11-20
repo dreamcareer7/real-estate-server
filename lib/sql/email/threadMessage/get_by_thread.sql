@@ -47,7 +47,12 @@ UNION ALL
     thread_key,
     internet_message_id,
     has_attachments,
-    attachments,
+    (
+      SELECT
+        jsonb_agg(att || '{"type": "email_thread_email_attachment"}'::jsonb)
+      FROM
+        jsonb_array_elements(attachments) attachments(att)
+    ) AS attachments,
     in_bound,
     is_read,
     COALESCE(subject, '') AS subject,
@@ -84,7 +89,12 @@ UNION ALL
     thread_key,
     internet_message_id,
     has_attachments,
-    attachments,
+    (
+      SELECT
+        jsonb_agg(att || '{"type": "email_thread_email_attachment"}'::jsonb)
+      FROM
+        jsonb_array_elements(attachments) attachments(att)
+    ) AS attachments,
     in_bound,
     is_read,
     COALESCE(subject, '') AS "subject",
