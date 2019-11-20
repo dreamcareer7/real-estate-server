@@ -49,7 +49,7 @@ UNION ALL
     has_attachments,
     (
       SELECT
-        jsonb_agg(att || '{"type": "email_thread_email_attachment"}'::jsonb)
+        COALESCE(jsonb_agg(att || '{"type": "email_thread_email_attachment"}'::jsonb), '[]'::jsonb)
       FROM
         jsonb_array_elements(attachments) attachments(att)
     ) AS attachments,
@@ -91,7 +91,7 @@ UNION ALL
     has_attachments,
     (
       SELECT
-        jsonb_agg(att || '{"type": "email_thread_email_attachment"}'::jsonb)
+        COALESCE(jsonb_agg(att || '{"type": "email_thread_email_attachment"}'::jsonb), '[]'::jsonb)
       FROM
         jsonb_array_elements(attachments) attachments(att)
     ) AS attachments,
