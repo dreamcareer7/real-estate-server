@@ -26,7 +26,7 @@ SELECT
   COALESCE(individual, false),
   html,
   text
-  meta_data,
+  headers,
   google_credential,
   microsoft_credential
 FROM json_populate_recordset(NULL::email_campaigns, $1::json)

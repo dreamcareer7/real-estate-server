@@ -377,7 +377,10 @@ async function testCampaignToAgents() {
     from: user.id,
     brand: brand.id,
     due_at: new Date().toISOString(),
-    html: '<html></html>'
+    html: '<html></html>',
+    headers: {},
+    google_credential: null,
+    microsoft_credential: null
   }])
 
   const events = await fetchEvents()
