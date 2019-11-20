@@ -1,0 +1,1 @@
+UPDATE emails SET pixel_tracking_id = $2 WHERE id = $1

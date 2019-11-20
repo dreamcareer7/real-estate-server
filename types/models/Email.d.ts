@@ -26,6 +26,12 @@ declare interface IEmailRecipientAgentInput {
   recipient_type: 'Agent';
 }
 
+declare interface IEmailCampaignAttachmentInput {
+  file: UUID;
+  is_inline?: Boolean;
+  content_id?: string;
+}
+
 declare type IEmailRecipientInput = 
   | IEmailRecipientEmailInput
   | IEmailRecipientListInput
@@ -57,9 +63,12 @@ declare interface IEmailCampaignInput {
   subject: string;
   html: string;
   text?: string;
-  attachments?: UUID[];
+  attachments?: IEmailCampaignAttachmentInput[];
   include_signature?: boolean;
   individual?: boolean;
+  headers?: Record<string, string>;
+  google_credential?: UUID;
+  microsoft_credential?: UUID;
 }
 
 declare interface IEmailCampaign extends IEmailCampaignInput {
