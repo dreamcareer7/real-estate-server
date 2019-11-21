@@ -12,16 +12,15 @@ const migrations = [
   'ALTER TABLE email_campaigns ADD CONSTRAINT email_campaigns_microsoft_credential FOREIGN KEY (microsoft_credential) REFERENCES microsoft_credentials(id)',
 
 
-  'ALTER TABLE emails ADD COLUMN IF NOT EXISTS pixel_tracking_id TEXT',
-
-  'ALTER TABLE google_messages    ADD COLUMN IF NOT EXISTS pixel_tracking_id TEXT',
-  'ALTER TABLE microsoft_messages ADD COLUMN IF NOT EXISTS pixel_tracking_id TEXT',
+  'ALTER TABLE emails ADD COLUMN IF NOT EXISTS google_message_id    TEXT',
+  'ALTER TABLE emails ADD COLUMN IF NOT EXISTS microsoft_message_id TEXT',
+  'ALTER TABLE emails ADD COLUMN IF NOT EXISTS pixel_tracking_id    TEXT',
 
 
   `CREATE TABLE IF NOT EXISTS email_campaign_attachments(
     id uuid NOT NULL PRIMARY KEY DEFAULT uuid_generate_v4(),
 
-    email_campaign uuid NOT NULL REFERENCES email_campaigns(id),
+    campaign uuid NOT NULL REFERENCES email_campaigns(id),
   
     file uuid NOT NULL REFERENCES files(id),
 
