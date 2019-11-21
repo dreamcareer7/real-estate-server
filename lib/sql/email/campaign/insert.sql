@@ -25,7 +25,7 @@ SELECT
   COALESCE(include_signature, false),
   COALESCE(individual, false),
   html,
-  text
+  text,
   headers,
   google_credential,
   microsoft_credential

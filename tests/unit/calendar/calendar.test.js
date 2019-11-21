@@ -379,8 +379,8 @@ async function testCampaignToAgents() {
     due_at: new Date().toISOString(),
     html: '<html></html>',
     headers: {},
-    google_credential: 'xxx',
-    microsoft_credential: 'xxx',
+    google_credential: null,
+    microsoft_credential: null,
     attachments: []
   }])
 
@@ -421,7 +421,11 @@ async function testCampaignToContacts() {
     from: user.id,
     brand: brand.id,
     due_at: new Date().toISOString(),
-    html: '<html></html>'
+    html: '<html></html>',
+    headers: {},
+    google_credential: null,
+    microsoft_credential: null,
+    attachments: []
   }])
 
   async function testFor(object_type) {
@@ -487,7 +491,7 @@ describe('Calendar', () => {
 
   describe('Campaigns', () => {
     beforeEach(async () => setup(true))
-    // it('should give correct people for agent recipients', testCampaignToAgents)
-    // it('should give correct people for contact recipients', testCampaignToContacts)
+    it('should give correct people for agent recipients', testCampaignToAgents)
+    it('should give correct people for contact recipients', testCampaignToContacts)
   })
 })
