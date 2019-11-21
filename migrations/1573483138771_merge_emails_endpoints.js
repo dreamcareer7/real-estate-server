@@ -12,9 +12,9 @@ const migrations = [
   'ALTER TABLE email_campaigns ADD CONSTRAINT email_campaigns_microsoft_credential FOREIGN KEY (microsoft_credential) REFERENCES microsoft_credentials(id)',
 
 
-  'ALTER TABLE emails ADD COLUMN IF NOT EXISTS google_message_id    TEXT',
-  'ALTER TABLE emails ADD COLUMN IF NOT EXISTS microsoft_message_id TEXT',
-  'ALTER TABLE emails ADD COLUMN IF NOT EXISTS pixel_tracking_id    TEXT',
+  'ALTER TABLE emails ADD COLUMN IF NOT EXISTS google_id    TEXT',
+  'ALTER TABLE emails ADD COLUMN IF NOT EXISTS microsoft_id TEXT',
+  'ALTER TABLE emails ADD COLUMN IF NOT EXISTS tracking_id  TEXT',
 
 
   `CREATE TABLE IF NOT EXISTS email_campaign_attachments(
