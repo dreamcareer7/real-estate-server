@@ -21,7 +21,7 @@ SELECT email_campaigns.*,
   (
     SELECT ARRAY_AGG(email_campaign_attachments.id)
     FROM email_campaign_attachments
-    WHERE email_campaign = email_campaigns.id AND deleted_at IS NULL
+    WHERE campaign = email_campaigns.id AND deleted_at IS NULL
   ) AS attachments,
 
   (
