@@ -31,12 +31,20 @@ const accuracy = async function() {
 
   const { render, release } = await renderer.compileText(template)
 
+  const promises = []
+
   for(let i = 0; i <= max; i++) {
-    const result = await render({i})
-    expect(result).to.equal(`Item ${i}`)
+    const promise = render({i})
+    promises.push(promise)
   }
 
+  const results = await Promise.all(promises)
   release()
+
+  for(const i in results) {
+    expect(results[i]).to.equal(`Item ${i}`)
+  }
+
 }
 
 const validate = async function() {
@@ -57,6 +65,6 @@ describe('Renderer', () => {
   createContext()
 
   it('should render a big template many times quickly', timeout)
-  it('should make sure everything is rendered properly', accuracy)
+  it('should make sure everything is rendered properly concurrently', accuracy)
   it('should error during compilation of an invalid template', validate)
 })
