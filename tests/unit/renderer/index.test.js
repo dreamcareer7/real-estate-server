@@ -13,33 +13,29 @@ const timeout = async function() {
   const listing = await ListingHelper.create()
   const user = await User.getByEmail(config.tests.username)
 
-  const promises = []
+  const contexts = []
 
   for(let i = 0; i <= max; i++) {
-    const promise = renderer.isolated.htmlString(template, {
+    contexts.push({
       listing,
       user
     })
-    promises.push(promise)
   }
 
-  await Promise.all(promises)
+  await renderer.htmlStrings(template, contexts)
 }
 
 const accuracy = async function() {
   const max = 100
   const template = 'Item {{i}}'
 
-  const promises = []
+  const contexts = []
 
   for(let i = 0; i <= max; i++) {
-    const promise = renderer.isolated.htmlString(template, {
-      i
-    })
-    promises.push(promise)
+    contexts.push({i})
   }
 
-  const results = await Promise.all(promises)
+  const results = await renderer.htmlStrings(template, contexts)
 
   for(let i = 0; i <= max; i++) {
     const result = results[i]
