@@ -8,6 +8,10 @@ const migrations = [
   'ALTER TABLE email_campaigns ADD COLUMN IF NOT EXISTS google_credential    UUID',
   'ALTER TABLE email_campaigns ADD COLUMN IF NOT EXISTS microsoft_credential UUID',
 
+
+  'ALTER TABLE email_campaigns DROP CONSTRAINT IF EXISTS email_campaigns_google_credential',
+  'ALTER TABLE email_campaigns DROP CONSTRAINT IF EXISTS email_campaigns_microsoft_credential',
+
   'ALTER TABLE email_campaigns ADD CONSTRAINT email_campaigns_google_credential    FOREIGN KEY (google_credential)    REFERENCES google_credentials(id)',
   'ALTER TABLE email_campaigns ADD CONSTRAINT email_campaigns_microsoft_credential FOREIGN KEY (microsoft_credential) REFERENCES microsoft_credentials(id)',
 
@@ -31,7 +35,7 @@ const migrations = [
     updated_at timestamptz NOT NULL DEFAULT clock_timestamp(),
     deleted_at timestamptz,
 
-    UNIQUE (email_campaign, file)
+    UNIQUE (campaign, file)
   )`,
 
   'COMMIT'
