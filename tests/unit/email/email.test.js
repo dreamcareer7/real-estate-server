@@ -118,6 +118,7 @@ async function createContactForUserB() {
 }
 
 async function testEmailToTags() {
+  /** @type {IEmailCampaignInput} */
   const campaign = {
     created_by: userA.id,
     brand: brand1.id,
@@ -143,6 +144,7 @@ async function testEmailToTags() {
 }
 
 async function testDuplicateEmailWithTag() {
+  /** @type {IEmailCampaignInput} */
   const campaign = {
     from: userA.id,
     to: [
@@ -170,6 +172,7 @@ async function testDuplicateEmailWithTag() {
 }
 
 async function testDuplicateEmailWithEmail() {
+  /** @type {IEmailCampaignInput} */
   const campaign = {
     from: userA.id,
     to: [
@@ -193,6 +196,7 @@ async function testDuplicateEmailWithEmail() {
 }
 
 async function testEmailsOnly() {
+  /** @type {IEmailCampaignInput} */
   const campaign = {
     due_at: '2019-03-07',
     from: userA.id,
@@ -216,6 +220,7 @@ async function testEmailsOnly() {
 async function testCampaignRecipients() {
   await createContactForUserB()
 
+  /** @type {IEmailCampaignInput} */
   const campaign = {
     due_at: '2019-03-07',
     from: userA.id,

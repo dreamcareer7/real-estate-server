@@ -33,8 +33,9 @@ function handleKueJob(name, data, cb) {
  */
 async function handlePeanarJob(req) {
   const def = peanar.registry.getJobDefinition(req.name)
-
+  
   if (!def) throw new Error(`handlePeanarJobs: No handler found for job ${req.name}`)
+  Context.log('Handling job', req.name)
 
   await def.handler.apply(null, req.args)
 }

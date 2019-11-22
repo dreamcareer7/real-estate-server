@@ -81,10 +81,6 @@ globals.forEach(var_name => {
   global_object[var_name] = true
 })
 
-module.exports = function (app) {
-  for (var i in files)
-    require(files[i])
-}
 module.exports = {
   'globals': global_object,
   'env': {
@@ -92,6 +88,7 @@ module.exports = {
     'node': true
   },
   'parserOptions': {
+    // 'sourceType': 'module',
     'ecmaVersion': 10
   },
   'extends': 'eslint:recommended',
@@ -120,6 +117,7 @@ module.exports = {
       'error',
       {'vars': 'all', 'args': 'none'}
     ],
+    'no-invalid-this': 'off',
     'no-prototype-builtins': 'off',
     'require-atomic-updates': 'off',
     'no-async-promise-executor': 'warn',
@@ -267,9 +265,6 @@ module.exports = {
       'error'
     ],
     'no-new-func': [
-      'error'
-    ],
-    'no-invalid-this': [
       'error'
     ],
     'no-implied-eval': [

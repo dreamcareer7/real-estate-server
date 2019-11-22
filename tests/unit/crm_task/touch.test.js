@@ -8,10 +8,18 @@ const Contact = require('../../../lib/models/Contact')
 const ContactTag = require('../../../lib/models/Contact/tag')
 const List = require('../../../lib/models/Contact/list')
 const Context = require('../../../lib/models/Context')
+const Orm = require('../../../lib/models/Orm')
 const CrmTask = require('../../../lib/models/CRM/Task')
-const User = require('../../../lib/models/User')
+const CrmAssociation = require('../../../lib/models/CRM/Association')
+const EmailCampaign = require('../../../lib/models/Email/campaign')
+
+const sql = require('../../../lib/utils/sql')
 
 const BrandHelper = require('../brand/helper')
+const UserHelper = require('../user/helper')
+const { attributes } = require('../contact/helper')
+const { createGoogleMessages } = require('../google/helper')
+const { createMicrosoftMessages } = require('../microsoft/helper')
 
 /** @type {IUser} */
 let user
@@ -19,59 +27,41 @@ let user
 /** @type {IBrand} */
 let brand
 
-/** @type {UUID[]} */
-let contact_ids
-
 const WARM_LIST_TOUCH_FREQ = 30
+const HOT_LIST_TOUCH_FREQ = 10
 
 async function setup() {
-  user = await User.getByEmail('test@rechat.com')
+  user = await UserHelper.TestUser()
 
   brand = await BrandHelper.create({
     roles: {
       Admin: [user.id]
-    }
+    },
+    contexts: [],
+    checklists: []
   })
 
   Context.set({ user, brand })
 
   await createList()
+  await prepareHotListTag()
 }
 
-async function createContact() {
+const DEFAULT_CONTACTS = [{
+  first_name: 'Abbas',
+  email: ['abbas@rechat.com'],
+  tag: ['Warm List']
+}, {
+  first_name: 'Emil',
+  email: ['emil@rechat.com']
+}]
+
+async function createContact(attributeSets = DEFAULT_CONTACTS) {
   const ids = await Contact.create(
-    [
-      {
-        user: user.id,
-        attributes: [
-          {
-            attribute_type: 'first_name',
-            text: 'Abbas'
-          },
-          {
-            attribute_type: 'email',
-            text: 'abbas@rechat.com'
-          },
-          {
-            attribute_type: 'tag',
-            text: 'Warm List'
-          }
-        ]
-      },
-      {
-        user: user.id,
-        attributes: [
-          {
-            attribute_type: 'first_name',
-            text: 'Emil'
-          },
-          {
-            attribute_type: 'email',
-            text: 'emil@rechat.com'
-          }
-        ]
-      }
-    ],
+    attributeSets.map(a => ({
+      user: user.id,
+      attributes: attributes(a)
+    })),
     user.id,
     brand.id,
     'direct_request',
@@ -119,12 +109,64 @@ async function createList() {
   return id
 }
 
+function prepareHotListTag() {
+  return ContactTag.update_touch_frequency(brand.id, user.id, 'Hot List', HOT_LIST_TOUCH_FREQ)
+}
+
+async function testTouchDatesAfterGmailSync() {
+  const contact_ids = await createContact([{
+    first_name: 'Saeed',
+    tag: ['Hot List'],
+    email: ['saeed.vayghan@gmail.com']
+  }])
+
+  await createGoogleMessages(user, brand)
+  await handleJobs()
+
+  const c = await Contact.get(contact_ids[0])
+
+  if (!c.last_touch) throw new Error('Last touch was not set properly.')
+  if (!c.next_touch) throw new Error('Next touch was not set properly.')
+
+  const lt = moment.unix(c.last_touch)
+  const nt = moment.unix(c.next_touch)
+
+  const expected_last_touch = new Date('2019-08-05T13:32:52.000Z')
+  expect(c.last_touch).to.be.equal(expected_last_touch.getTime() / 1000)
+  expect(c.next_touch - c.last_touch).to.be.equal(HOT_LIST_TOUCH_FREQ * 24 * 3600 + (lt.utcOffset() - nt.utcOffset()) * 60)
+}
+
+async function testTouchDatesAfterOutlookSync() {
+  const contact_ids = await createContact([{
+    first_name: 'Saeed',
+    tag: ['Hot List'],
+    email: ['saeed.vayghan@gmail.com']
+  }])
+
+  await createMicrosoftMessages(user, brand)
+  await handleJobs()
+
+  const c = await Contact.get(contact_ids[0])
+
+  if (!c.last_touch) throw new Error('Last touch was not set properly.')
+  if (!c.next_touch) throw new Error('Next touch was not set properly.')
+
+  const lt = moment.unix(c.last_touch)
+  const nt = moment.unix(c.next_touch)
+
+  const expected_last_touch = new Date('2019-08-01T06:23:19Z')
+  expect(c.last_touch).to.be.equal(expected_last_touch.getTime() / 1000)
+  expect(c.next_touch - c.last_touch).to.be.equal(HOT_LIST_TOUCH_FREQ * 24 * 3600 + (lt.utcOffset() - nt.utcOffset()) * 60)
+}
+
 async function testTouchDates() {
-  contact_ids = await createContact()
+  const contact_ids = await createContact()
   const task = await createTask(contact_ids.slice(0, 1))
 
-  /** @type {RequireProp<IContact, 'last_touch' | 'next_touch'>} */
   const c = await Contact.get(contact_ids[0])
+
+  if (!c.last_touch) throw new Error('Last touch was not set properly.')
+  if (!c.next_touch) throw new Error('Next touch was not set properly.')
 
   const lt = moment.unix(c.last_touch)
   const nt = moment.unix(c.next_touch)
@@ -138,10 +180,139 @@ async function testTouchDates() {
 
   expect(ids).to.have.length(1)
   expect(ids[0]).to.equal(c.id)
+
+  return contact_ids
+}
+
+/**
+ * @param {UUID} id 
+ * @param {(contact: IContact) => void} fn 
+ */
+async function contactShould(id, fn) {
+  const contact = await Contact.get(id)
+  return fn(contact)
+}
+
+async function testLastTouchAfterRemovedFromEvent() {
+  Orm.setEnabledAssociations([ 'crm_task.associations' ])
+
+  const [contact_id] = await createContact([DEFAULT_CONTACTS[0]])
+  const task = await createTask([contact_id])
+
+  await handleJobs()
+
+  await contactShould(contact_id, c => {
+    if (!c.last_touch) throw new Error('Last touch was not set properly.')
+    expect(c.last_touch).to.be.equal(task.due_date)
+  })
+
+  await CrmAssociation.remove(task.associations || [], task.id, user.id)
+  await handleJobs()
+
+  await contactShould(contact_id, c => {
+    if (c.last_touch) throw new Error('Last touch was not cleared properly.')
+  })
+}
+
+async function testLastTouchAfterEventIsDeleted() {
+  Orm.setEnabledAssociations([ 'crm_task.associations' ])
+
+  const [contact_id] = await createContact([DEFAULT_CONTACTS[0]])
+  const task = await createTask([contact_id])
+
+  await handleJobs()
+
+  await contactShould(contact_id, c => {
+    if (!c.last_touch) throw new Error('Last touch was not set properly.')
+    expect(c.last_touch).to.be.equal(task.due_date)
+  })
+
+  await CrmTask.remove(task.id, user.id)
+  await handleJobs()
+
+  await contactShould(contact_id, c => {
+    if (c.last_touch) throw new Error('Last touch was not cleared properly.')
+  })
+}
+
+async function testTouchDatesAfterEmailCampaign() {
+  const d = new Date('2019-11-11')
+  const { now } = await sql.selectOne('SELECT extract(epoch from now()) AS now')
+  const contact_ids = await createContact()
+
+  /** @type {IEmailCampaignInput} */
+  const campaign = {
+    due_at: d.toISOString(),
+    from: user.id,
+    to: [
+      {
+        email: 'abbas@rechat.com',
+        recipient_type: 'Email'
+      }
+    ],
+    subject: 'testEmailOnly',
+    html: 'test',
+    brand: brand.id,
+    created_by: user.id
+  }
+
+  await EmailCampaign.createMany([campaign])
+  await EmailCampaign.sendDue()
+
+  await handleJobs()
+
+  const c = await Contact.get(contact_ids[0])
+
+  if (!c.last_touch) throw new Error('Last touch was not set properly.')
+  if (!c.next_touch) throw new Error('Next touch was not set properly.')
+
+  const lt = moment.unix(c.last_touch)
+  const nt = moment.unix(c.next_touch)
+
+  expect(c.last_touch, 'Last touch should be same as email execution time').to.be.equal(now)
+  expect(c.next_touch - c.last_touch).to.be.equal(WARM_LIST_TOUCH_FREQ * 24 * 3600 + (lt.utcOffset() - nt.utcOffset()) * 60)
+}
+
+async function testTouchDatesOnContactEmailManipulation() {
+  const d = new Date('2019-11-11')
+  const { now } = await sql.selectOne('SELECT extract(epoch from now()) AS now')
+
+  /** @type {IEmailCampaignInput} */
+  const campaign = {
+    due_at: d.toISOString(),
+    from: user.id,
+    to: [
+      {
+        email: 'abbas@rechat.com',
+        recipient_type: 'Email'
+      }
+    ],
+    subject: 'testEmailOnly',
+    html: 'test',
+    brand: brand.id,
+    created_by: user.id
+  }
+
+  await EmailCampaign.createMany([campaign])
+  await EmailCampaign.sendDue()
+
+  await handleJobs()
+
+  const contact_ids = await createContact()
+  const c = await Contact.get(contact_ids[0])
+
+  if (!c.last_touch) throw new Error('Last touch was not set properly.')
+  if (!c.next_touch) throw new Error('Next touch was not set properly.')
+
+  const lt = moment.unix(c.last_touch)
+  const nt = moment.unix(c.next_touch)
+
+  expect(c.last_touch, 'Last touch should be same as email execution time').to.be.equal(now)
+  expect(c.next_touch - c.last_touch).to.be.equal(WARM_LIST_TOUCH_FREQ * 24 * 3600 + (lt.utcOffset() - nt.utcOffset()) * 60)
 }
 
 async function testSortByLastTouch() {
-  contact_ids = await createContact()
+  const contact_ids = await createContact()
   await createTask(contact_ids.slice(0, 1))
 
   const { ids } = await Contact.fastFilter(brand.id, [], {
@@ -171,4 +342,10 @@ describe('Touch', () => {
   it('should update touch dates after a contact is attached to a crm_task', testTouchDates)
   it('should put touch_freq on contact object', testTouchReminderOnContact)
   it('should sort correctly by touch dates putting nulls last in descending order', testSortByLastTouch)
+  it('should update touch dates after an email is sent to contact', testTouchDatesAfterEmailCampaign)
+  it('should update touch dates after Gmail sync', testTouchDatesAfterGmailSync)
+  it('should update touch dates after Outlook sync', testTouchDatesAfterOutlookSync)
+  it('should update touch dates for new contacts', testTouchDatesOnContactEmailManipulation)
+  it('should update touch dates after contact is removed from event', testLastTouchAfterRemovedFromEvent)
+  it('should update touch dates after event is deleted', testLastTouchAfterEventIsDeleted)
 })

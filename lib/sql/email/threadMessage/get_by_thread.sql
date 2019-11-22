@@ -22,7 +22,8 @@
     "to",
     cc,
     bcc,
-    created_at AS "message_date"
+    created_at AS "message_date",
+    'email_thread_email' AS "type"
   FROM
     emails
   WHERE
@@ -46,7 +47,12 @@ UNION ALL
     thread_key,
     internet_message_id,
     has_attachments,
-    attachments,
+    (
+      SELECT
+        COALESCE(jsonb_agg(att || '{"type": "email_thread_email_attachment"}'::jsonb), '[]'::jsonb)
+      FROM
+        jsonb_array_elements(attachments) attachments(att)
+    ) AS attachments,
     in_bound,
     is_read,
     COALESCE(subject, '') AS subject,
@@ -58,7 +64,8 @@ UNION ALL
     "to",
     cc,
     bcc,
-    message_date
+    message_date,
+    'email_thread_email' AS "type"
   FROM
     google_messages
   JOIN
@@ -82,7 +89,12 @@ UNION ALL
     thread_key,
     internet_message_id,
     has_attachments,
-    attachments,
+    (
+      SELECT
+        COALESCE(jsonb_agg(att || '{"type": "email_thread_email_attachment"}'::jsonb), '[]'::jsonb)
+      FROM
+        jsonb_array_elements(attachments) attachments(att)
+    ) AS attachments,
     in_bound,
     is_read,
     COALESCE(subject, '') AS "subject",
@@ -94,8 +106,8 @@ UNION ALL
     "to",
     cc,
     bcc,
-    message_date
-
+    message_date,
+    'email_thread_email' AS "type"
   FROM
     microsoft_messages
   JOIN

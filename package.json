@@ -22,6 +22,9 @@
     "extension": [
       ".js"
     ],
+    "exclude": [
+      "tests/**/*"
+    ],
     "reporter": [
       "text-summary",
       "lcov"
@@ -32,7 +35,7 @@
   "license": "ISC",
   "dependencies": {
     "@microsoft/microsoft-graph-client": "^1.7.0",
-    "@rechat/squel": "^5.13.5",
+    "@rechat/squel": "^5.14.1",
     "amanda": "^1.0.1",
     "amqplib": "^0.5.5",
     "async": "^1.5.2",
@@ -62,6 +65,7 @@
     "exif-parser": "^0.1.12",
     "express": "^4.17.1",
     "forever": "^1.0.0",
+    "generic-pool": "^3.7.1",
     "godaddy": "^0.2.1",
     "google-libphonenumber": "^3.2.6",
     "googleapis": "^42.0.0",

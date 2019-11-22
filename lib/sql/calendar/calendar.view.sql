@@ -476,7 +476,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
               ece.campaign = ec.id
               AND (ece.agent IS NOT NULL OR c.id IS NOT NULL)
             ORDER BY
-              ece.email_address, c.last_touch DESC, c.updated_at DESC
+              ece.email_address
             LIMIT 5
           ) t
       ) AS people,
@@ -486,8 +486,6 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
           count(*)::int
         FROM
           email_campaign_emails AS ece
-          LEFT JOIN contacts AS c
-            ON (((c.id = ece.contact) OR (c.email @> ARRAY[ece.email_address])) AND c.brand = ec.brand AND c.deleted_at IS NULL)
         WHERE
           ece.campaign = ec.id
       ) AS people_len,
@@ -609,9 +607,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
               email_campaign_emails.campaign = ec.id
               AND (email_campaign_emails.agent IS NOT NULL OR contacts.id IS NOT NULL)
             ORDER BY
-              email_campaign_emails.email_address,
-              contacts.last_touch DESC,
-              contacts.updated_at DESC
+              email_campaign_emails.email_address
             LIMIT 5
           ) t
       ) AS people,
@@ -621,10 +617,6 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
           count(*)::int
         FROM
           email_campaign_emails
-          LEFT JOIN contacts
-            ON ((contacts.email @> ARRAY[email_campaign_emails.email_address]) OR (contacts.id = email_campaign_emails.contact))
-                AND contacts.brand = ec.brand
-                AND contacts.deleted_at IS NULL
         WHERE
           email_campaign_emails.campaign = ec.id
       ) AS people_len,

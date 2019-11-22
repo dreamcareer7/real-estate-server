@@ -13,7 +13,11 @@ let user, brand
 
 async function setup() {
   user  = await User.getByEmail('test@rechat.com')
-  brand = await BrandHelper.create({ roles: { Admin: [user.id] } })
+  brand = await BrandHelper.create({
+    roles: { Admin: [user.id] },
+    contexts: [],
+    checklists: []
+  })
 
   Context.set({ user, brand })
 }
