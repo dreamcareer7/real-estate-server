@@ -288,7 +288,7 @@ async function testCampaignWithAttachments() {
   const attachmentsObj = {
     file: file.id,
     is_inline: true,
-    content_id: "content_id"
+    content_id: 'content_i'
   }
 
   /** @type {IEmailCampaignInput} */
@@ -306,9 +306,9 @@ async function testCampaignWithAttachments() {
     due_at: new Date().toISOString(),
     html: '<html></html>',
     headers: {
-      message_id: "message_id",
-      in_reply_to: "in_reply_to",
-      thread_id: "thread_id",
+      message_id: 'message_id',
+      in_reply_to: 'in_reply_to',
+      thread_id: 'thread_id',
     },
     google_credential: null,
     microsoft_credential: null,
@@ -353,9 +353,9 @@ async function testGoogleEmail() {
     due_at: new Date().toISOString(),
     html: '<html></html>',
     headers: {
-      message_id: "message_id",
-      in_reply_to: "in_reply_to",
-      thread_id: "thread_id",
+      message_id: 'message_id',
+      in_reply_to: 'in_reply_to',
+      thread_id: 'thread_id',
     },
     google_credential: googleCredential.id,
     microsoft_credential: null,
@@ -387,9 +387,9 @@ async function testMicrosoftEmail() {
     due_at: new Date().toISOString(),
     html: '<html></html>',
     headers: {
-      message_id: "message_id",
-      in_reply_to: "in_reply_to",
-      thread_id: "thread_id",
+      message_id: 'message_id',
+      in_reply_to: 'in_reply_to',
+      thread_id: 'thread_id',
     },
     google_credential: null,
     microsoft_credential: microsoftCredential.id,
@@ -424,9 +424,9 @@ async function testGMFailure() {
     due_at: new Date().toISOString(),
     html: '<html></html>',
     headers: {
-      message_id: "message_id",
-      in_reply_to: "in_reply_to",
-      thread_id: "thread_id",
+      message_id: 'message_id',
+      in_reply_to: 'in_reply_to',
+      thread_id: 'thread_id',
     },
     google_credential: googleCredential.id,
     microsoft_credential: microsoftCredential.id,
