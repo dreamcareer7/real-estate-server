@@ -118,6 +118,7 @@ SELECT 'compact_listing' AS TYPE,
        json_build_object(
           'type', 'compact_property',
           'property_type', properties.property_type,
+          'property_subtype', properties.property_subtype,
           'half_bathroom_count', properties.half_bathroom_count,
           'full_bathroom_count', properties.full_bathroom_count,
           'square_meters', properties.square_meters,

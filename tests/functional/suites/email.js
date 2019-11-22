@@ -168,7 +168,7 @@ const scheduleBrand = cb => {
 
   const c = {
     ...individual,
-    subject: 'Brand Campaign',
+    subject: 'Brand Campaign To {{recipient.email}}',
     to: [
       {
         brand: results.brand.create.data.id,
