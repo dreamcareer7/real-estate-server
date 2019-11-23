@@ -1,4 +1,5 @@
 const criteria = require('./data/alert_criteria.js')
+const vcriteria = require('./data/valert_criteria.js')
 const alert_response = require('./expected_objects/alert.js')
 const info = require('./expected_objects/info.js')
 const compact_listing = require('./expected_objects/compact_listing.js')
@@ -159,9 +160,8 @@ const patchAlertWorked = (cb) => {
 }
 
 const virtual = (cb) => {
-  const criteria = require('./data/valert_criteria.js')
   return frisby.create('virtual alert')
-    .post('/valerts', criteria)
+    .post('/valerts', vcriteria)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
