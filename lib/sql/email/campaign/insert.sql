@@ -9,7 +9,10 @@ INSERT INTO email_campaigns (
   include_signature,
   individual,
   html,
-  text
+  text,
+  headers,
+  google_credential,
+  microsoft_credential
 )
 SELECT
   due_at,
@@ -22,6 +25,9 @@ SELECT
   COALESCE(include_signature, false),
   COALESCE(individual, false),
   html,
-  text
+  text,
+  headers,
+  google_credential,
+  microsoft_credential
 FROM json_populate_recordset(NULL::email_campaigns, $1::json)
 RETURNING id

@@ -7,12 +7,19 @@ const Context = require('../../../lib/models/Context')
 const Email = require('../../../lib/models/Email')
 const User = require('../../../lib/models/User')
 const EmailCampaign = require('../../../lib/models/Email/campaign')
+const EmailCampaignAttachment = require('../../../lib/models/Email/campaign/attachments')
+const AttachedFile = require('../../../lib/models/AttachedFile')
 
 const db = require('../../../lib/utils/db')
 const sql = require('../../../lib/utils/sql')
+const fs = require('fs')
+const path = require('path')
 
 const BrandHelper = require('../brand/helper')
 const { attributes } = require('../contact/helper')
+
+const { createGoogleCredential } = require('../google/helper')
+const { createMicrosoftCredential } = require('../microsoft/helper')
 
 let userA, userB, brand1, brand2
 
@@ -115,6 +122,22 @@ async function createContactForUserB() {
   await handleJobs()
 
   Context.set({ user: userA, brand: brand1 })
+}
+
+async function uploadFile() {
+  return await AttachedFile.saveFromStream({
+    stream: fs.createReadStream(path.resolve(__dirname, '../../functional/suites/data/contacts.csv')),
+    filename: 'contacts.csv',
+    user: userA,
+    path: userA.id + '-' + Date.now().toString(),
+    relations: [
+      {
+        role: 'Brand',
+        role_id: brand1.id
+      }
+    ],
+    public: false
+  })
 }
 
 async function testEmailToTags() {
@@ -259,6 +282,165 @@ async function testCampaignRecipients() {
   expect(illegal_recipients).to.be.empty
 }
 
+async function testCampaignWithAttachments() {
+  const file = await uploadFile()
+
+  const attachmentsObj = {
+    file: file.id,
+    is_inline: true,
+    content_id: 'content_i'
+  }
+
+  /** @type {IEmailCampaignInput} */
+  const campaignObj = {
+    subject: 'Test subject',
+    from: userA.id,
+    to: [
+      {
+        email: 'gholi@rechat.com',
+        recipient_type: Email.EMAIL
+      }
+    ],
+    created_by: userA.id,
+    brand: brand1.id,
+    due_at: new Date().toISOString(),
+    html: '<html></html>',
+    headers: {
+      message_id: 'message_id',
+      in_reply_to: 'in_reply_to',
+      thread_id: 'thread_id',
+    },
+    google_credential: null,
+    microsoft_credential: null,
+    attachments: [attachmentsObj]
+  }
+
+  const result   = await EmailCampaign.createMany([campaignObj])
+  const campaign = await EmailCampaign.get(result[0])
+
+  expect(campaign.headers.google_credential).to.be.equal(campaignObj.headers.google_credential)
+  expect(campaign.headers.microsoft_credential).to.be.equal(campaignObj.headers.microsoft_credential)
+
+  expect(campaign.headers.message_id).to.be.equal(campaignObj.headers.message_id)
+  expect(campaign.headers.in_reply_to).to.be.equal(campaignObj.headers.in_reply_to)
+  expect(campaign.headers.thread_id).to.be.equal(campaignObj.headers.thread_id)
+
+  const attachments = await EmailCampaignAttachment.getByCampaign(campaign.id)
+
+  expect(attachments[0].type).to.be.equal('email_campaign_attachment')
+  expect(attachments[0].campaign).to.be.equal(campaign.id)
+  expect(attachments[0].file).to.be.equal(attachmentsObj.file)
+  expect(attachments[0].is_inline).to.be.equal(attachmentsObj.is_inline)
+  expect(attachments[0].content_id).to.be.equal(attachmentsObj.content_id)
+}
+
+async function testGoogleEmail() {
+  const gResult = await createGoogleCredential(userA, brand1)
+  const googleCredential = gResult.credential
+
+  /** @type {IEmailCampaignInput} */
+  const campaignObj = {
+    subject: 'Test subject',
+    from: userA.id,
+    to: [
+      {
+        email: 'gholi@rechat.com',
+        recipient_type: Email.EMAIL
+      }
+    ],
+    created_by: userA.id,
+    brand: brand1.id,
+    due_at: new Date().toISOString(),
+    html: '<html></html>',
+    headers: {
+      message_id: 'message_id',
+      in_reply_to: 'in_reply_to',
+      thread_id: 'thread_id',
+    },
+    google_credential: googleCredential.id,
+    microsoft_credential: null,
+    attachments: []
+  }
+
+  const result   = await EmailCampaign.createMany([campaignObj])
+  const campaign = await EmailCampaign.get(result[0])
+
+  expect(campaign.google_credential).to.be.equal(googleCredential.id)
+}
+
+async function testMicrosoftEmail() {
+  const mResult = await createMicrosoftCredential(userA, brand1)
+  const microsoftCredential = mResult.credential
+
+  /** @type {IEmailCampaignInput} */
+  const campaignObj = {
+    subject: 'Test subject',
+    from: userA.id,
+    to: [
+      {
+        email: 'gholi@rechat.com',
+        recipient_type: Email.EMAIL
+      }
+    ],
+    created_by: userA.id,
+    brand: brand1.id,
+    due_at: new Date().toISOString(),
+    html: '<html></html>',
+    headers: {
+      message_id: 'message_id',
+      in_reply_to: 'in_reply_to',
+      thread_id: 'thread_id',
+    },
+    google_credential: null,
+    microsoft_credential: microsoftCredential.id,
+    attachments: []
+  }
+
+  const result   = await EmailCampaign.createMany([campaignObj])
+  const campaign = await EmailCampaign.get(result[0])
+
+  expect(campaign.microsoft_credential).to.be.equal(microsoftCredential.id)
+}
+
+async function testGMFailure() {
+  const gResult = await createGoogleCredential(userA, brand1)
+  const googleCredential = gResult.credential
+
+  const mResult = await createMicrosoftCredential(userA, brand1)
+  const microsoftCredential = mResult.credential
+
+  /** @type {IEmailCampaignInput} */
+  const campaignObj = {
+    subject: 'Test subject',
+    from: userA.id,
+    to: [
+      {
+        email: 'gholi@rechat.com',
+        recipient_type: Email.EMAIL
+      }
+    ],
+    created_by: userA.id,
+    brand: brand1.id,
+    due_at: new Date().toISOString(),
+    html: '<html></html>',
+    headers: {
+      message_id: 'message_id',
+      in_reply_to: 'in_reply_to',
+      thread_id: 'thread_id',
+    },
+    google_credential: googleCredential.id,
+    microsoft_credential: microsoftCredential.id,
+    attachments: []
+  }
+
+  try {
+    await EmailCampaign.createMany([campaignObj])
+  } catch (ex) {
+    expect(ex.message).to.be.equal('It is not allowed to send both google_credential and microsoft_ceredential')
+  } 
+}
+
+
 describe('Email', () => {
   createContext()
   beforeEach(setup)
@@ -268,4 +450,9 @@ describe('Email', () => {
   it('should not send duplicate emails to two contacts with same email', testDuplicateEmailWithEmail)
   it('should send only to specified emails if no list or tag were given', testEmailsOnly)
   it('should prevent contacts from other brands to get the email', testCampaignRecipients)
+
+  it('should give correct attachments and headers for a specific campaing', testCampaignWithAttachments)
+  it('should handle a gmail-message', testGoogleEmail)
+  it('should handle an outlook-message', testMicrosoftEmail)
+  it('should faile when both of google and microsoft are present', testGMFailure)
 })
