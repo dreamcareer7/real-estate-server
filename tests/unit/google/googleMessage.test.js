@@ -26,7 +26,7 @@ async function create() {
   for (const createdGoogleMessage of createdMessages) {
     expect(createdGoogleMessage.google_credential).to.be.equal(credential.id)
     
-    const googleMessage = await GoogleMessage.get(createdGoogleMessage.message_id, createdGoogleMessage.google_credential)
+    const googleMessage = await GoogleMessage.getByMessageId(createdGoogleMessage.message_id, createdGoogleMessage.google_credential)
 
     expect(googleMessage.type).to.be.equal('google_messages')
     expect(googleMessage.deleted_at).to.be.equal(null)
@@ -41,7 +41,7 @@ async function getByMessageId() {
 
   for (const gMessage of googleMessages) {
 
-    const googleMessage = await GoogleMessage.get(gMessage.message_id, gMessage.google_credential)
+    const googleMessage = await GoogleMessage.getByMessageId(gMessage.message_id, gMessage.google_credential)
 
     expect(googleMessage.type).to.be.equal('google_messages')
     expect(googleMessage.google_credential).to.be.equal(gMessage.google_credential)
@@ -54,7 +54,7 @@ async function getByMessageId() {
 async function getByMessageIdFailed() {
   const bad_id = user.id
 
-  const googleMessage = await GoogleMessage.get(bad_id, bad_id)
+  const googleMessage = await GoogleMessage.getByMessageId(bad_id, bad_id)
 
   expect(googleMessage).to.be.equal(null)
 }
@@ -75,7 +75,7 @@ async function deleteByMessageIds() {
   }
 
   for (const gMessage of googleMessages) {
-    const googleMessage = await GoogleMessage.get(gMessage.message_id, gMessage.google_credential)
+    const googleMessage = await GoogleMessage.getByMessageId(gMessage.message_id, gMessage.google_credential)
 
     expect(googleMessage.type).to.be.equal('google_messages')
     expect(googleMessage.google_credential).to.be.equal(gMessage.google_credential)
@@ -87,7 +87,7 @@ async function downloadAttachmentFailed() {
   const googleMessages = await create()
   const googleMessage_min = googleMessages[0]
 
-  const googleMessage = await GoogleMessage.get(googleMessage_min.message_id, googleMessage_min.google_credential)
+  const googleMessage = await GoogleMessage.getByMessageId(googleMessage_min.message_id, googleMessage_min.google_credential)
   // const attachment = googleMessage.attachments[0]
   // await GoogleMessage.downloadAttachment(googleMessage.google_credential, googleMessage.message_id, attachment.id)
 
