@@ -17,3 +17,7 @@
 /// <reference path="CRM/Reminder.d.ts" />
 /// <reference path="CRM/Task.d.ts" />
 /// <reference path="CRM/Touch.d.ts" />
+/// <reference path="Google/thread.d.ts" />
+/// <reference path="Google/credential.d.ts" />
+/// <reference path="Microsoft/thread.d.ts" />
+// / <reference path="Microsoft/credential.d.ts" />

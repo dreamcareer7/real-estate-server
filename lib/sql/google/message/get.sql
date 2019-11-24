@@ -1,11 +1,35 @@
 SELECT
-    google_messages.*, 'google_messages' AS type
+  id,
+  extract(epoch FROM message_date) AS message_date,
+  extract(epoch FROM created_at) AS created_at,
+  extract(epoch FROM updated_at) AS updated_at,
+
+  google_credential,
+
+  message_id,
+  thread_id,
+  internet_message_id,
+  in_bound,
+  recipients,
+  "subject",
+  has_attachments,
+  attachments,
+  from_raw,
+  to_raw,
+  cc_raw,
+  bcc_raw,
+  in_reply_to,
+  "from",
+  "to",
+  cc,
+  bcc,
+  thread_key,
+  is_read,
+
+  'google_message' AS "type"
 FROM
-    google_messages
-JOIN 
-    unnest($1::text[]) WITH ORDINALITY t(gmid, ord)
-ON 
-    google_messages.message_id = gmid
-    AND google_messages.google_credential = $2
-ORDER BY 
-    google_messages.message_created_at DESC
+  google_messages
+  JOIN unnest($1::text[]) WITH ORDINALITY t (gmid, ord)
+    ON google_messages.message_id = gmid
+ORDER BY
+  ord

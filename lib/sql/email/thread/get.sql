@@ -1,49 +1,64 @@
-WITH rechat_emails AS (
+SELECT
+  email_threads.id,
+  email_threads.created_at,
+  email_threads.updated_at,
+  email_threads.brand,
+  email_threads."user",
+  google_credential,
+  microsoft_credential,
+  email_threads.subject,
+  first_message_date,
+  last_message_date,
+  recipients,
+  message_count,
+
   (
-    SELECT
-      e.id,
-      g.thread_key,
-      e.created_at,
-      e."from",
-      e."to" || e."cc" || e."bcc" AS "to"
-    FROM
-      google_messages AS g
-      JOIN emails AS e
-        ON g.in_reply_to = e.mailgun_id
-    WHERE g.deleted_at IS NULL
-  ) UNION ALL (
-    SELECT
-      e.id,
-      m.thread_key,
-      e.created_at,
-      e."from",
-      e."to" || e."cc" || e."bcc" AS "to"
-    FROM
-      microsoft_messages AS m
-      JOIN emails AS e
-        ON m.in_reply_to = e.mailgun_id
-    WHERE m.deleted_at IS NULL
-  )
-)
-SELECT DISTINCT ON (tids.id)
-  tids.id,
-  COALESCE(g.has_attachments, m.has_attachments) AS has_attachments,
-  COALESCE(r.created_at, g.message_date, m.message_date) AS created_at,
-  COALESCE(r."from", g."from", m."from") AS "from",
-  COALESCE(r."to", g."to", m."to") AS "to",
-  array_agg(COALESCE(r.id, g.id, m.id)) OVER (PARTITION BY tids.id) AS emails,
-  ((count(*) OVER (PARTITION BY tids.id)) + (r.thread_key IS NOT NULL)::int)::int AS email_count,
-  'thread' AS type
+    CASE
+      WHEN $2::text[] && '{"email_thread.messages"}'::text[] THEN (
+        (
+          CASE
+            WHEN emails.id IS NOT NULL THEN
+              jsonb_build_array(
+                jsonb_build_object(
+                  'id', emails.id,
+                  'type', 'email'
+                )
+              )
+            ELSE
+              '[]'::jsonb
+          END
+        ) || (
+          CASE
+            WHEN google_credential IS NOT NULL THEN
+              (SELECT
+                jsonb_agg(jsonb_build_object('id', google_messages.id, 'type', 'google_message') ORDER BY message_date)
+              FROM
+                google_messages
+              WHERE
+                thread_key = email_threads.id
+                AND google_messages.google_credential = email_threads.google_credential)
+            WHEN microsoft_credential IS NOT NULL THEN
+              (SELECT
+                jsonb_agg(jsonb_build_object('id', microsoft_messages.id, 'type', 'microsoft_message') ORDER BY message_date)
+              FROM
+                microsoft_messages
+              WHERE
+                thread_key = email_threads.id
+                AND microsoft_messages.microsoft_credential = email_threads.microsoft_credential)
+            ELSE
+              '[]'::jsonb
+          END
+        )
+      )
+    ELSE  
+      NULL
+    END
+  ) AS messages
 FROM
-  unnest($1::text[]) AS tids (id)
-  LEFT JOIN google_messages AS g
-    ON tids.id = g.thread_key
-  LEFT JOIN microsoft_messages AS m
-    ON tids.id = m.thread_key
-  LEFT JOIN rechat_emails AS r
-    ON tids.id = r.thread_key
-  WHERE
-    g.deleted_at IS NULL
-    AND m.deleted_at IS NULL
+  email_threads
+  JOIN unnest($1::text[]) WITH ORDINALITY t(eid, ord)
+    ON email_threads.id = eid
+  LEFT JOIN emails
+    ON first_message_in_reply_to IS NOT NULL AND emails.mailgun_id = first_message_in_reply_to
 ORDER BY
-  tids.id, COALESCE(r.created_at, g.message_date, m.message_date)
+  t.ord
