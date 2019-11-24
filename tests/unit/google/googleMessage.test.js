@@ -28,8 +28,7 @@ async function create() {
     
     const googleMessage = await GoogleMessage.getByMessageId(createdGoogleMessage.message_id, createdGoogleMessage.google_credential)
 
-    expect(googleMessage.type).to.be.equal('google_messages')
-    expect(googleMessage.deleted_at).to.be.equal(null)
+    expect(googleMessage.type).to.be.equal('google_message')
     expect(googleMessage.recipients.length).not.to.be.equal(0)
   }
 
@@ -43,11 +42,10 @@ async function getByMessageId() {
 
     const googleMessage = await GoogleMessage.getByMessageId(gMessage.message_id, gMessage.google_credential)
 
-    expect(googleMessage.type).to.be.equal('google_messages')
+    expect(googleMessage.type).to.be.equal('google_message')
     expect(googleMessage.google_credential).to.be.equal(gMessage.google_credential)
     expect(googleMessage.recipients.length).not.to.be.equal(0)
     expect(googleMessage.message_id).to.be.equal(gMessage.message_id)
-    expect(googleMessage.deleted_at).to.be.equal(null)
   }
 }
 
@@ -77,7 +75,7 @@ async function deleteByMessageIds() {
   for (const gMessage of googleMessages) {
     const googleMessage = await GoogleMessage.getByMessageId(gMessage.message_id, gMessage.google_credential)
 
-    expect(googleMessage.type).to.be.equal('google_messages')
+    expect(googleMessage.type).to.be.equal('google_message')
     expect(googleMessage.google_credential).to.be.equal(gMessage.google_credential)
     expect(googleMessage.deleted_at).not.to.be.equal(null)
   }
