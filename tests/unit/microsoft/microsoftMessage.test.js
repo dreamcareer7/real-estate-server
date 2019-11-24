@@ -28,7 +28,6 @@ async function create() {
     const microsoftMessage = await MicrosoftMessage.getByMessageId(createdMicrosoftMessage.message_id, createdMicrosoftMessage.microsoft_credential)
 
     expect(microsoftMessage.type).to.be.equal('microsoft_message')
-    expect(microsoftMessage.deleted_at).to.be.equal(null)
     expect(microsoftMessage.recipients.length).not.to.be.equal(0)
   }
 
