@@ -1,1 +1,1 @@
-UPDATE emails SET microsoft_message_id = $2 WHERE id = $1
+UPDATE emails SET microsoft_id = $2 WHERE id = $1
