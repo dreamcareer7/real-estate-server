@@ -24,7 +24,9 @@ const google_details = {
     'https://www.googleapis.com/auth/userinfo.profile',
     'https://www.googleapis.com/auth/userinfo.email',
     'https://www.googleapis.com/auth/contacts.readonly'
-  ]
+  ],
+
+  scopeSummary: ['profile', 'contacts.read', 'mail.read', 'mail.send', 'mail.modify']
 }
 
 
@@ -45,5 +47,5 @@ module.exports = {
   tokens: google_details.tokens_1,
 
   scope: google_details.scope,
-  scopeSummary: []
+  scopeSummary: google_details.scopeSummary
 }
