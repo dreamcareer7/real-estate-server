@@ -1,1 +1,1 @@
-UPDATE emails SET google_message_id = $2 WHERE id = $1
+UPDATE emails SET google_id = $2 WHERE id = $1
