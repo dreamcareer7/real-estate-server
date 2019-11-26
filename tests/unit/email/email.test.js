@@ -436,7 +436,7 @@ async function testGMFailure() {
   try {
     await EmailCampaign.createMany([campaignObj])
   } catch (ex) {
-    expect(ex.message).to.be.equal('It is not allowed to send both google_credential and microsoft_ceredential')
+    expect(ex.message).to.be.equal('It is not allowed to send both google and microsoft ceredentials.')
   } 
 }
 
@@ -454,5 +454,5 @@ describe('Email', () => {
   it('should give correct attachments and headers for a specific campaing', testCampaignWithAttachments)
   it('should handle a gmail-message', testGoogleEmail)
   it('should handle an outlook-message', testMicrosoftEmail)
-  it('should faile when both of google and microsoft are present', testGMFailure)
+  it('should fail when both of google and microsoft are present', testGMFailure)
 })
