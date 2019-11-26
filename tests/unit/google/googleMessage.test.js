@@ -96,19 +96,19 @@ async function downloadAttachmentFailed() {
   try {
     await GoogleMessage.downloadAttachment(bad_id, bad_id, bad_id)
   } catch(ex) {
-    expect(ex.message).to.be.equal(`Google-Credential ${bad_id} not found`)
+    expect(ex.message).to.be.equal(`GoogleMessage ${bad_id} in credential ${bad_id} not found.`)
   }
 
   try {
     await GoogleMessage.downloadAttachment(googleMessage.google_credential, bad_id, bad_id)
   } catch(ex) {
-    expect(ex.message).to.be.equal('Related Google-Message Not Found!')
+    expect(ex.message).to.be.equal(`GoogleMessage ${bad_id} in credential ${googleMessage.google_credential} not found.`)
   }
 
   try {
     await GoogleMessage.downloadAttachment(googleMessage.google_credential, googleMessage.message_id, bad_id)
   } catch(ex) {
-    expect(ex.message).to.be.equal('Google-Message-Attachment Not Found!')
+    expect(ex.message).to.be.equal('Access is denied! Insufficient Permission.')
   }
 }
 
