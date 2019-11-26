@@ -52,9 +52,11 @@ async function getByMessageId() {
 async function getByMessageIdFailed() {
   const bad_id = user.id
 
-  const googleMessage = await GoogleMessage.getByMessageId(bad_id, bad_id)
-
-  expect(googleMessage).to.be.equal(null)
+  try {
+    await GoogleMessage.getByMessageId(bad_id, bad_id)
+  } catch(ex) {
+    expect(ex.message).to.be.equal(`GoogleMessage ${bad_id} in credential ${bad_id} not found.`)
+  }
 }
 
 async function getGCredentialMessagesNum() {

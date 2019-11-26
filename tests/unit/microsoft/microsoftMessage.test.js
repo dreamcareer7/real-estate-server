@@ -51,9 +51,11 @@ async function getByMessageId() {
 async function getByMessageIdFailed() {
   const bad_id = user.id
 
-  const microsoftMessage = await MicrosoftMessage.getByMessageId(bad_id, bad_id)
-
-  expect(microsoftMessage).to.be.equal(null)
+  try {
+    await MicrosoftMessage.getByMessageId(bad_id, bad_id)
+  } catch(ex) {
+    expect(ex.message).to.be.equal(`MicrosoftMessage ${bad_id} in credential ${bad_id} not found.`)
+  }
 }
 
 async function getMCredentialMessagesNum() {
