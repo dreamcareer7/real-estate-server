@@ -17,7 +17,9 @@ const microsoft_details = {
     expires_in: new Date().getTime(),
     ext_expires_in: new Date().getTime(),
     scope: 'openid offline_access profile email User.Read Contacts.Read Mail.Read'
-  }
+  },
+
+  scopeSummary: ['profile', 'contacts.read', 'mail.read', 'mail.send', 'mail.modify']
 }
 
 
@@ -34,5 +36,5 @@ module.exports = {
   tokens: microsoft_details.tokens_1,
 
   scope: microsoft_details.tokens_1.scope.split(' '),
-  scopeSummary: []
+  scopeSummary: microsoft_details.scopeSummary
 }
