@@ -14,6 +14,7 @@ module.exports = {
   'open_house': false,
   'pool': true,
   //   'pets': true,
-  'postal_codes': ['75219']
+  'postal_codes': ['75219'],
+  search: 'Victory Park Lane'
 }
 
