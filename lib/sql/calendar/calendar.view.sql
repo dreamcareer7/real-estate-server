@@ -701,6 +701,8 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       NULL::jsonb AS metadata
     FROM
       email_threads
+    WHERE
+      email_threads.deleted_at IS NULL
   )
   UNION ALL
   (
@@ -776,5 +778,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
         WHERE
           contacts.email && recipients
       ) AS c
+    WHERE
+      email_threads.deleted_at IS NULL
   )
 )
