@@ -6,6 +6,8 @@ SET
   client_state = $4,
   notification_url = $5,
   expiration_date_time = $7,
-  creator_id = $7
+  creator_id = $7,
+  application_id = $8,
+  updated_at = now()
 WHERE
   id = $1

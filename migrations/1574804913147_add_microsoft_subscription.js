@@ -18,6 +18,7 @@ const migrations = [
     notification_url TEXT,
     expiration_date_time TEXT,
     creator_id TEXT,
+    application_id TEXT,
   
     created_at timestamptz NOT NULL DEFAULT clock_timestamp(),
     updated_at timestamptz NOT NULL DEFAULT clock_timestamp(),

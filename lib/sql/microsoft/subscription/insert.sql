@@ -7,7 +7,8 @@ INSERT INTO microsoft_subscriptions
     client_state,
     notification_url,
     expiration_date_time,
-    creator_id
+    creator_id,
+    application_id
   )
 VALUES
   (
@@ -18,7 +19,8 @@ VALUES
     $5,
     $6,
     $7,
-    $8
+    $8,
+    $9
   )
 ON CONFLICT microsoft_credential, subscription_id) DO UPDATE SET
   resource = $3,
@@ -26,5 +28,6 @@ ON CONFLICT microsoft_credential, subscription_id) DO UPDATE SET
   client_state = $5,
   notification_url = $6,
   expiration_date_time = $7,
-  creator_id = $8
+  creator_id = $8,
+  application_id = $9
 RETURNING id
