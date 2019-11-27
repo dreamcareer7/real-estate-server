@@ -1,30 +1,13 @@
-declare interface IGoogleCredential {
-  id: UUID;
-  user: UUID;
-  brand: UUID;
+declare interface IGoogleCredential extends IIntegrationCredential {
   email: string;
   resource_name: string;
-  display_name: string;
-  first_name: string;
-  last_name: string;
   photo: string;
   messages_total: number;
   threads_total: number;
   history_id: number;
-  access_token: string;
-  refresh_token: string;
-  expiry_date: number;
-  scope: string[];
-  revoked: boolean;
-  sync_status: string;
-  last_sync_at: string;
-  last_sync_duration: number;
   contacts_last_sync_at: string;
   messages_sync_history_id: string;
   threads_sync_history_id: string;
-  created_at: string;
-  updated_at: string;
-  deleted_at: string;
   rechat_gcalendar: UUID;
   calendars_last_sync_at: string;
   scope_summary?: string[];

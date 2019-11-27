@@ -1,5 +1,5 @@
 declare interface IOutlookMessage {
-  status: string;
+  status: number;
   id: string;
   isRead: boolean;
   snippet?: string;
