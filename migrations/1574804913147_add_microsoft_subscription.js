@@ -5,13 +5,17 @@ const migrations = [
 
   // 'ALTER TABLE microsoft_credentials ADD CONSTRAINT microsoft_credential_subscription FOREIGN KEY (subscription) REFERENCES microsoft_subscriptions(id)',
 
+  'ALTER TABLE microsoft_credentials ADD COLUMN last_hook_at timestamptz',
+
+  'ALTER TABLE microsoft_sync_histories ADD COLUMN source TEXT DEFAULT \'api\'',
+
 
   `CREATE TABLE IF NOT EXISTS microsoft_subscriptions(
     id uuid NOT NULL PRIMARY KEY DEFAULT uuid_generate_v4(),
 
     microsoft_credential uuid NOT NULL REFERENCES microsoft_credentials(id),
   
-    subscription_id uuid NOT NULL;
+    subscription_id uuid NOT NULL,
     resource TEXT,
     change_type TEXT,
     client_state TEXT,

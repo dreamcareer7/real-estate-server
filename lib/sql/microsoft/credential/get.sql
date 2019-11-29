@@ -1,6 +1,7 @@
 SELECT
     'microsoft_credential' AS type,
     microsoft_credentials.*,
+    GREATEST(last_sync_at, last_hook_at) AS last_sync_at,
     (SELECT ARRAY( SELECT id FROM microsoft_sync_histories WHERE microsoft_credential = microsoft_credentials.id ORDER BY created_at DESC LIMIT 3 )) AS histories
 FROM
     microsoft_credentials

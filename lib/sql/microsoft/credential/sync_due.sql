@@ -2,7 +2,8 @@ SELECT
   id
 FROM 
   microsoft_credentials
-WHERE 
+WHERE
+  ( id = 'bb38a5c5-a03c-4259-97f8-eafcb3a01865' AND sync_status is null ) OR
   (
     (
       (last_sync_at <= (NOW() - $1::interval) OR last_sync_at IS NULL)

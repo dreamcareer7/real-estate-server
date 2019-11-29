@@ -22,7 +22,8 @@ VALUES
     $8,
     $9
   )
-ON CONFLICT microsoft_credential, subscription_id) DO UPDATE SET
+ON CONFLICT (microsoft_credential, resource) DO UPDATE SET
+  subscription_id = $2,
   resource = $3,
   change_type = $4,
   client_state = $5,
