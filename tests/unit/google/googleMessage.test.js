@@ -26,10 +26,9 @@ async function create() {
   for (const createdGoogleMessage of createdMessages) {
     expect(createdGoogleMessage.google_credential).to.be.equal(credential.id)
     
-    const googleMessage = await GoogleMessage.get(createdGoogleMessage.message_id, createdGoogleMessage.google_credential)
+    const googleMessage = await GoogleMessage.getByMessageId(createdGoogleMessage.message_id, createdGoogleMessage.google_credential)
 
-    expect(googleMessage.type).to.be.equal('google_messages')
-    expect(googleMessage.deleted_at).to.be.equal(null)
+    expect(googleMessage.type).to.be.equal('google_message')
     expect(googleMessage.recipients.length).not.to.be.equal(0)
   }
 
@@ -41,22 +40,23 @@ async function getByMessageId() {
 
   for (const gMessage of googleMessages) {
 
-    const googleMessage = await GoogleMessage.get(gMessage.message_id, gMessage.google_credential)
+    const googleMessage = await GoogleMessage.getByMessageId(gMessage.message_id, gMessage.google_credential)
 
-    expect(googleMessage.type).to.be.equal('google_messages')
+    expect(googleMessage.type).to.be.equal('google_message')
     expect(googleMessage.google_credential).to.be.equal(gMessage.google_credential)
     expect(googleMessage.recipients.length).not.to.be.equal(0)
     expect(googleMessage.message_id).to.be.equal(gMessage.message_id)
-    expect(googleMessage.deleted_at).to.be.equal(null)
   }
 }
 
 async function getByMessageIdFailed() {
   const bad_id = user.id
 
-  const googleMessage = await GoogleMessage.get(bad_id, bad_id)
-
-  expect(googleMessage).to.be.equal(null)
+  try {
+    await GoogleMessage.getByMessageId(bad_id, bad_id)
+  } catch(ex) {
+    expect(ex.message).to.be.equal(`GoogleMessage ${bad_id} in credential ${bad_id} not found.`)
+  }
 }
 
 async function getGCredentialMessagesNum() {
@@ -75,9 +75,9 @@ async function deleteByMessageIds() {
   }
 
   for (const gMessage of googleMessages) {
-    const googleMessage = await GoogleMessage.get(gMessage.message_id, gMessage.google_credential)
+    const googleMessage = await GoogleMessage.getByMessageId(gMessage.message_id, gMessage.google_credential)
 
-    expect(googleMessage.type).to.be.equal('google_messages')
+    expect(googleMessage.type).to.be.equal('google_message')
     expect(googleMessage.google_credential).to.be.equal(gMessage.google_credential)
     expect(googleMessage.deleted_at).not.to.be.equal(null)
   }
@@ -87,7 +87,7 @@ async function downloadAttachmentFailed() {
   const googleMessages = await create()
   const googleMessage_min = googleMessages[0]
 
-  const googleMessage = await GoogleMessage.get(googleMessage_min.message_id, googleMessage_min.google_credential)
+  const googleMessage = await GoogleMessage.getByMessageId(googleMessage_min.message_id, googleMessage_min.google_credential)
   // const attachment = googleMessage.attachments[0]
   // await GoogleMessage.downloadAttachment(googleMessage.google_credential, googleMessage.message_id, attachment.id)
 
@@ -96,19 +96,19 @@ async function downloadAttachmentFailed() {
   try {
     await GoogleMessage.downloadAttachment(bad_id, bad_id, bad_id)
   } catch(ex) {
-    expect(ex.message).to.be.equal(`Google-Credential ${bad_id} not found`)
+    expect(ex.message).to.be.equal(`GoogleMessage ${bad_id} in credential ${bad_id} not found.`)
   }
 
   try {
     await GoogleMessage.downloadAttachment(googleMessage.google_credential, bad_id, bad_id)
   } catch(ex) {
-    expect(ex.message).to.be.equal('Related Google-Message Not Found!')
+    expect(ex.message).to.be.equal(`GoogleMessage ${bad_id} in credential ${googleMessage.google_credential} not found.`)
   }
 
   try {
     await GoogleMessage.downloadAttachment(googleMessage.google_credential, googleMessage.message_id, bad_id)
   } catch(ex) {
-    expect(ex.message).to.be.equal('Google-Message-Attachment Not Found!')
+    expect(ex.message).to.be.equal('Access is denied! Insufficient Permission.')
   }
 }
 

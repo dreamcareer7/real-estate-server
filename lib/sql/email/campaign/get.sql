@@ -19,9 +19,9 @@ SELECT email_campaigns.*,
   ) AS recipients,
 
   (
-    SELECT ARRAY_AGG(files_relations.file)
-    FROM files_relations
-    WHERE role = 'EmailCampaign' AND role_id = email_campaigns.id AND deleted_at IS NULL
+    SELECT ARRAY_AGG(email_campaign_attachments.id)
+    FROM email_campaign_attachments
+    WHERE campaign = email_campaigns.id AND deleted_at IS NULL
   ) AS attachments,
 
   (
@@ -32,7 +32,11 @@ SELECT email_campaigns.*,
       WHEN $3::uuid IS NULL THEN TRUE
       ELSE email_campaign_emails.contact = $3::uuid
     END
-  ) as emails
+  ) as emails,
+
+  headers,
+  google_credential,
+  microsoft_credential
 
 FROM email_campaigns
 JOIN unnest($1::uuid[]) WITH ORDINALITY t(eid, ord) ON email_campaigns.id = eid

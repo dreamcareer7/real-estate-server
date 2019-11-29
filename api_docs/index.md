@@ -32,6 +32,7 @@ Welcome. Rechat's API is broken into several small components to be readable.
 * [Calendar](calendar.html)
 * [Contacts](contact.html)
 * [Contact Lists](contact_list.html)
+* [Email Threads](email_thread.html)
 * [Flows](flow.html)
 * [Tasks](task.html)
 
