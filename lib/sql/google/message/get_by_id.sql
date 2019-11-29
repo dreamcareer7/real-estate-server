@@ -1,1 +1,0 @@
-SELECT * from google_messages WHERE id = $1 AND google_credential = $2
