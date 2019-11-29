@@ -1,4 +1,4 @@
-# Group Emails
+# Group Email Campaigns
 
 ## Overview
 
