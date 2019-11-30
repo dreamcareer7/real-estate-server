@@ -107,6 +107,35 @@ One individual email which has already been sent.
 
 A model that connects Email Campaigns with Emails.
 
+### Google Credential
+
+A model that connects Email Campaigns with Google_Credentials.
+
+### Microsoft Credential
+
+A model that connects Email Campaigns with Microsoft_Credentials.
+
+### Email Campaign Attachments
+
+A model that connects Email Campaigns with Email_Campaign_Attachments
+
+#### Data model
+
+An `email_campaign_attachments` object type looks like this:
+
+| Field        | Type      | association | Description |
+| ------------ | --------- | ----------- | ----------- |
+| id           | uuid      |             |
+| campaign     | uuid      |             |
+| file         | uuid      |             |
+| is_inline    | boolean   |             |
+| content_id   | text      |             |
+| created_at   | timestamp |             |
+| updated_at   | timestamp |             |
+| deleted_at   | timestamp |             |
+
+
+
 ### Schedule an email campaign [POST /emails]
 <!-- include(tests/email/schedule.md) -->
 
