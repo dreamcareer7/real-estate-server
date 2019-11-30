@@ -16,7 +16,19 @@ const email = {
   ],
   due_at: new Date(),
   html: '<div>Hi</div>',
-  subject: 'Email Subject'
+  subject: 'Email Subject',
+  headers: {
+    message_id: 'message_id',
+    in_reply_to: 'in_reply_to',
+    thread_id: 'thread_id',
+  },
+  google_credential: null,
+  microsoft_credential: null,
+  // attachments: [{
+  //   file: 'xxx',
+  //   is_inline: true,
+  //   content_id: 'content_id'
+  // }]
 }
 
 const individual = {

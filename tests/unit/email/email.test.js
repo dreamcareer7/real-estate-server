@@ -282,13 +282,96 @@ async function testCampaignRecipients() {
   expect(illegal_recipients).to.be.empty
 }
 
+async function testInsertAttachments() {
+  const file = await uploadFile()
+
+  /** @type {IEmailCampaignInput} */
+  const campaignObj = {
+    subject: 'Test subject',
+    from: userA.id,
+    to: [
+      {
+        email: 'gholi@rechat.com',
+        recipient_type: Email.EMAIL
+      }
+    ],
+    created_by: userA.id,
+    brand: brand1.id,
+    due_at: new Date().toISOString(),
+    html: '<html></html>'
+  }
+
+  const result = await EmailCampaign.createMany([campaignObj])
+  const campaign_id = result[0]
+
+  const input = [{
+    'campaign': campaign_id,
+    'file': file.id,
+    'is_inline': false,
+    'content_id': 'xxxzzzz',
+  }]
+
+  const ids = await EmailCampaignAttachment.createAll(input)
+
+  expect(ids.length).to.be.equal(1)
+
+  const attachments = await EmailCampaignAttachment.getAll(ids)
+
+  expect(attachments.length).to.be.equal(1)
+  expect(attachments[0].type).to.be.equal('email_campaign_attachment')
+  expect(attachments[0].campaign).to.be.equal(input[0].campaign)
+  expect(attachments[0].file).to.be.equal(input[0].file)
+  expect(attachments[0].is_inline).to.be.equal(input[0].is_inline)
+  expect(attachments[0].content_id).to.be.equal(input[0].content_id)
+}
+
+async function testAttachmentsGetByCampaign() {
+  const file = await uploadFile()
+
+  /** @type {IEmailCampaignInput} */
+  const campaignObj = {
+    subject: 'Test subject',
+    from: userA.id,
+    to: [
+      {
+        email: 'gholi@rechat.com',
+        recipient_type: Email.EMAIL
+      }
+    ],
+    created_by: userA.id,
+    brand: brand1.id,
+    due_at: new Date().toISOString(),
+    html: '<html></html>'
+  }
+
+  const result = await EmailCampaign.createMany([campaignObj])
+  const campaign_id = result[0]
+
+  const input = [{
+    'campaign': campaign_id,
+    'file': file.id,
+    'is_inline': false,
+    'content_id': 'xxxzzzz',
+  }]
+
+  await EmailCampaignAttachment.createAll(input)
+  const attachments = await EmailCampaignAttachment.getByCampaign(campaign_id)
+
+  expect(attachments.length).to.be.equal(1)
+  expect(attachments[0].type).to.be.equal('email_campaign_attachment')
+  expect(attachments[0].campaign).to.be.equal(input[0].campaign)
+  expect(attachments[0].file).to.be.equal(input[0].file)
+  expect(attachments[0].is_inline).to.be.equal(input[0].is_inline)
+  expect(attachments[0].content_id).to.be.equal(input[0].content_id)
+}
+
 async function testCampaignWithAttachments() {
   const file = await uploadFile()
 
   const attachmentsObj = {
     file: file.id,
     is_inline: true,
-    content_id: 'content_i'
+    content_id: 'content_id'
   }
 
   /** @type {IEmailCampaignInput} */
@@ -450,6 +533,9 @@ describe('Email', () => {
   it('should not send duplicate emails to two contacts with same email', testDuplicateEmailWithEmail)
   it('should send only to specified emails if no list or tag were given', testEmailsOnly)
   it('should prevent contacts from other brands to get the email', testCampaignRecipients)
+
+  it('should create new attachments record', testInsertAttachments)
+  it('should test get attachments', testAttachmentsGetByCampaign)
 
   it('should give correct attachments and headers for a specific campaing', testCampaignWithAttachments)
   it('should handle a gmail-message', testGoogleEmail)
