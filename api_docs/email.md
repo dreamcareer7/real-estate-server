@@ -163,8 +163,8 @@ An `email_campaign_attachments` object type looks like this:
 ### Schedule a reply to outlook message [POST /emails]
 <!-- include(tests/email/scheduleReplyToOulookMessage.md) -->
 
-### Get a gmail campaign [POST /emails]
+### Get a gmail campaign [GET /emails/:id?associations[]=email_campaign.emails&associations[]=email_campaign.recipients&associations[]=email_campaign.attachments]
 <!-- include(tests/email/getGmailCampaign.md) -->
 
-### Get an outlook campaign [POST /emails]
+### Get an outlook campaign [GET /emails/:id]
 <!-- include(tests/email/getOulookCampaign.md) -->
