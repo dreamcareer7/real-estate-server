@@ -147,3 +147,21 @@ An `email_campaign_attachments` object type looks like this:
 
 ### Get all campaigns by brand [GET /brands/:brand/emails/campaigns]
 <!-- include(tests/email/getByBrand.md) -->
+
+### Schedule a gmail message [POST /emails]
+<!-- include(tests/email/scheduleGmailMessage.md) -->
+
+### Schedule an outlook message [POST /emails]
+<!-- include(tests/email/scheduleOulookMessage.md) -->
+
+### Schedule a reply to gmail message [POST /emails]
+<!-- include(tests/email/scheduleReplyToGmailMessage.md) -->
+
+### Schedule a reply to outlook message [POST /emails]
+<!-- include(tests/email/scheduleReplyToOulookMessage.md) -->
+
+### Get a gmail campaign [POST /emails]
+<!-- include(tests/email/getGmailCampaign.md) -->
+
+### Get an outlook campaign [POST /emails]
+<!-- include(tests/email/getOulookCampaign.md) -->
