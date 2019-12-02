@@ -1,3 +1,6 @@
+const path = require('path')
+const fs = require('fs')
+
 registerSuite('brand', [
   'createParent',
   'create',
@@ -9,7 +12,6 @@ registerSuite('user', ['upgradeToAgentWithEmail'])
 
 registerSuite('google', ['createGoogleCredential', 'getGoogleProfile'])
 registerSuite('microsoft', ['createMicrosoftCredential', 'getMicrosoftProfile'])
-registerSuite('contact_import', ['uploadCSV'])
 
 
 const email = {
@@ -30,7 +32,6 @@ const individual = {
 }
 
 const mailgun_id = 'example-mailgun-id-email-1'
-
 
 
 const schedule = cb => {
@@ -247,6 +248,27 @@ const remove = cb => {
 }
 
 
+const uploadAttachment = (cb) => {
+  const logo = fs.createReadStream(path.resolve(__dirname, 'data/logo.png'))
+
+  return frisby.create('upload a file')
+    .post('/emails/attachments', {
+      file: logo
+    },
+    {
+      json: false,
+      form: true
+    })
+    .addHeader('content-type', 'multipart/form-data')
+    .after((err, res, body) => {
+      cb(err, {...res, body: JSON.parse(body)}, body)
+    })
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK'
+    })
+}
+
 const scheduleGmailMessage = cb => {
   const emailObj = {
     to: [{
@@ -369,8 +391,6 @@ const scheduleReplyToOulookMessage = cb => {
 }
 
 const scheduleEmailWithAttachments = cb => {
-  console.log()
-
   const emailObj = {
     to: [{
       email: 'recipient@rechat.com',
@@ -392,7 +412,7 @@ const scheduleEmailWithAttachments = cb => {
     microsoft_credential: null,
     attachments: [
       {
-        file: results.contact_import.uploadCSV.data.id,
+        file: results.email.uploadAttachment.data.id,
         is_inline: true,
         content_id: 'content_id'
       }
@@ -440,6 +460,7 @@ module.exports = {
   getEmail,
   getByBrand,
   remove,
+  uploadAttachment,
   scheduleGmailMessage,
   scheduleOulookMessage,
   scheduleReplyToGmailMessage,
