@@ -978,10 +978,15 @@ const migrations = [
         contacts
         JOIN contacts_users AS cu
           ON contacts.id = cu.contact
+        JOIN users AS u
+          ON cu."user" = u.id
         JOIN activities AS a
-          ON a.reference = cu."user" AND a.reference_type = 'User'
+          ON a.reference = u.id AND a.reference_type = 'User'
       WHERE
         contacts.deleted_at IS NULL
+        AND u.is_shadow IS NOT TRUE
+        AND u.deleted_at IS NULL
+        AND u.user_type = 'Client'
         AND a.deleted_at IS NULL
     )
   )`,
