@@ -9,6 +9,7 @@ registerSuite('user', ['upgradeToAgentWithEmail'])
 
 registerSuite('google', ['createGoogleCredential', 'getGoogleProfile'])
 registerSuite('microsoft', ['createMicrosoftCredential', 'getMicrosoftProfile'])
+registerSuite('contact_import', ['uploadCSV'])
 
 
 const email = {
@@ -355,9 +356,7 @@ const scheduleReplyToOulookMessage = cb => {
     microsoft_credential: results.microsoft.getMicrosoftProfile.data.id,
     attachments: [],
     headers: {
-      headers: {
-        message_id: 'message_id'
-      }
+      message_id: 'message_id'
     }
   }
 
@@ -369,12 +368,13 @@ const scheduleReplyToOulookMessage = cb => {
     .expectStatus(200)
 }
 
-/*
 const scheduleEmailWithAttachments = cb => {
+  console.log()
+
   const emailObj = {
     to: [{
-        email: 'recipient@rechat.com',
-        recipient_type: 'Email'
+      email: 'recipient@rechat.com',
+      recipient_type: 'Email'
     }],
     cc: [{
       recipient_type: 'Email',
@@ -392,7 +392,7 @@ const scheduleEmailWithAttachments = cb => {
     microsoft_credential: null,
     attachments: [
       {
-        file: 'xxx',
+        file: results.contact_import.uploadCSV.data.id,
         is_inline: true,
         content_id: 'content_id'
       }
@@ -404,99 +404,28 @@ const scheduleEmailWithAttachments = cb => {
   }
 
   return frisby
-    .create('Schedule a reply to a gmail message')
+    .create('Schedule a gmail message with attachments')
     .addHeader('X-RECHAT-BRAND', results.google.getGoogleProfile.data.brand)
     .post('/emails', emailObj)
-    // .after(function(err, res, json) {
-    //   console.log('scheduleGmailMessage err', err)
-    //   console.log('scheduleGmailMessage json', json)
-
-    //   cb()
-    // })
     .after(cb)
     .expectStatus(200)
 }
-
-const sendGmailOutlookMessages = cb => {
-  return frisby
-    .create('Send Due Gmail/Outlook Campaigns')
-    .post('/jobs', {
-      name: 'EmailCampaign.sendDue',
-    })
-    .addHeader('x-handle-jobs', 'yes')
-    .after(cb)
-    .expectStatus(200)
-}
-
-const addGmailOutlookEvent = cb => {
-  const data = {
-    'event-data': {
-      timestamp: 1531818450.203548,
-      recipient: email.to[0].email,
-      event: 'delivered',
-      message: {
-        headers: {
-          'message-id': mailgun_id
-        }
-      }
-    }
-  }
-
-  return frisby
-    .create('Add an event to the email')
-    .post('/emails/events', data)
-    .after(cb)
-    .expectStatus(200)
-}
-
-const updateGmailOutlookStats = cb => {
-  return frisby
-    .create('Update campaign stats')
-    .post('/jobs', {
-      name: 'EmailCampaign.updateStats',
-    })
-    .after(cb)
-    .expectStatus(200)
-}
-*/
 
 const getGmailCampaign = cb => {
-  // &associations[]=attachments
   return frisby
     .create('Get a gmail campaign')
-    .get(`/emails/${results.email.scheduleReplyToGmailMessage.data.id}?associations[]=email_campaign.emails&associations[]=email_campaign.recipients`)
+    .get(`/emails/${results.email.scheduleEmailWithAttachments.data.id}?associations[]=email_campaign.emails&associations[]=email_campaign.recipients&associations[]=email_campaign.attachments`)
     .after(cb)
     .expectStatus(200)
 }
 
 const getOulookCampaign = cb => {
-  // &associations[]=attachments
   return frisby
     .create('Get an outlook campaign')
     .get(`/emails/${results.email.scheduleReplyToOulookMessage.data.id}?associations[]=email_campaign.emails&associations[]=email_campaign.recipients`)
     .after(cb)
     .expectStatus(200)
 }
-
-/*
-const getGmailMessage = cb => {
-  const campaign = results.email.getGmailCampaign.data
-
-  // console.log(results.email.get.data)
-  console.log(results.email.getGmailCampaign.data)
-
-  return frisby
-    .create('Get an email from a gmail campaign')
-    .get(`/emails/${campaign.id}/emails/${campaign.emails[0].id}`)
-    .after(function(err, res, json) {
-      console.log('getGmailMessage err', err)
-      console.log('getGmailMessage json', json)
-
-      return cb()
-    })
-    .expectStatus(200)
-}
-*/
 
 
 module.exports = {
@@ -511,18 +440,11 @@ module.exports = {
   getEmail,
   getByBrand,
   remove,
-
   scheduleGmailMessage,
   scheduleOulookMessage,
   scheduleReplyToGmailMessage,
   scheduleReplyToOulookMessage,
-  // scheduleEmailWithAttachments,
-
-  // sendGmailOutlookMessages,
-  // addGmailOutlookEvent,
-  // updateGmailOutlookStats,
-
+  scheduleEmailWithAttachments,
   getGmailCampaign,
-  getOulookCampaign,
-  // getGmailMessage
+  getOulookCampaign
 }

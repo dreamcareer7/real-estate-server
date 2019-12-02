@@ -151,6 +151,9 @@ An `email_campaign_attachments` object type looks like this:
 ### Schedule a gmail message [POST /emails]
 <!-- include(tests/email/scheduleGmailMessage.md) -->
 
+### Schedule a gmail message with attachments [POST /emails]
+<!-- include(tests/email/scheduleEmailWithAttachments.md) -->
+
 ### Schedule an outlook message [POST /emails]
 <!-- include(tests/email/scheduleOulookMessage.md) -->
 
