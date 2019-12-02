@@ -20,6 +20,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       NULL::uuid AS campaign,
       NULL::uuid AS credential_id,
       NULL::text AS thread_key,
+      NULL::uuid AS activity,
       (
         SELECT
           ARRAY_AGG("user")
@@ -91,6 +92,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       ca.email AS campaign,
       NULL::uuid AS credential_id,
       NULL::text AS thread_key,
+      NULL::uuid AS activity,
       (
         SELECT
           ARRAY_AGG("user")
@@ -164,6 +166,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       NULL::uuid AS campaign,
       NULL::uuid AS credential_id,
       NULL::text AS thread_key,
+      NULL::uuid AS activity,
       (
         SELECT
           ARRAY_AGG(DISTINCT r."user")
@@ -220,6 +223,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       NULL::uuid AS campaign,
       NULL::uuid AS credential_id,
       NULL::text AS thread_key,
+      NULL::uuid AS activity,
       (
         SELECT
           ARRAY_AGG(DISTINCT r."user")
@@ -317,6 +321,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       NULL::uuid AS campaign,
       NULL::uuid AS credential_id,
       NULL::text AS thread_key,
+      NULL::uuid AS activity,
       ARRAY[contacts."user"] AS users,
       ARRAY[json_build_object('id', contact, 'type', 'contact')]::json[] AS people,
       1 AS people_len,
@@ -359,6 +364,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       NULL::uuid AS campaign,
       NULL::uuid AS credential_id,
       NULL::text AS thread_key,
+      NULL::uuid AS activity,
       ARRAY[contacts."user"] AS users,
       ARRAY[json_build_object('id', id, 'type', 'contact')]::json[] AS people,
       1 AS people_len,
@@ -393,6 +399,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       id AS campaign,
       NULL::uuid AS credential_id,
       NULL::text AS thread_key,
+      NULL::uuid AS activity,
       ARRAY[ec.from] AS users,
 
       (
@@ -455,6 +462,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       id AS campaign,
       NULL::uuid AS credential_id,
       NULL::text AS thread_key,
+      NULL::uuid AS activity,
       ARRAY[ec.from] AS users,
 
       (
@@ -522,6 +530,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       ec.id AS campaign,
       NULL::uuid AS credential_id,
       NULL::text AS thread_key,
+      NULL::uuid AS activity,
       ARRAY[ec.from] AS users,
       (
         SELECT
@@ -584,6 +593,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       ec.id AS campaign,
       NULL::uuid AS credential_id,
       NULL::text AS thread_key,
+      NULL::uuid AS activity,
       ARRAY[ec.from] AS users,
 
       (
@@ -658,6 +668,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       NULL::uuid AS campaign,
       google_threads.google_credential AS credential_id,
       google_threads.id AS thread_key,
+      NULL::uuid AS activity,
       ARRAY[google_credentials."user"] AS users,
 
       (
@@ -726,6 +737,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       NULL::uuid AS campaign,
       microsoft_threads.microsoft_credential AS credential_id,
       microsoft_threads.id AS thread_key,
+      NULL::uuid AS activity,
       ARRAY[microsoft_credentials."user"] AS users,
 
       (
@@ -794,6 +806,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       NULL::uuid AS campaign,
       google_threads.google_credential AS credential_id,
       google_threads.id AS thread_key,
+      NULL::uuid AS activity,
       ARRAY[google_credentials."user"] AS users,
 
       (
@@ -870,6 +883,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       NULL::uuid AS campaign,
       microsoft_threads.microsoft_credential AS credential_id,
       microsoft_threads.id AS thread_key,
+      NULL::uuid AS activity,
       ARRAY[microsoft_credentials."user"] AS users,
 
       (
@@ -923,5 +937,46 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
           contacts.email && microsoft_threads.recipients
       ) AS c
       JOIN microsoft_credentials ON microsoft_threads.microsoft_credential = microsoft_credentials.id
+  )
+
+  UNION ALL
+
+  (
+    SELECT
+      a.id::text,
+      a.created_by,
+      a.created_at,
+      a.updated_at,
+      'activity' AS object_type,
+      "action"::text AS event_type,
+      "action"::text AS type_label,
+      a.created_at AS "timestamp",
+      timezone('UTC', date_trunc('day', a.created_at)::timestamp) AT TIME ZONE 'UTC' AS "date",
+      cast(a.created_at + ((extract(year from age(a.created_at)) + 1) * interval '1' year) as date) as next_occurence,
+      NULL::timestamptz AS end_date,
+      False AS recurring,
+      "action"::text AS title,
+      NULL::uuid AS crm_task,
+      NULL::uuid AS deal,
+      contact,
+      NULL::uuid AS campaign,
+      NULL::uuid AS credential_id,
+      NULL::text AS thread_key,
+      a.id AS activity,
+      ARRAY[contacts."user"] AS users,
+      ARRAY[json_build_object('id', contact, 'type', 'contact')]::json[] AS people,
+      1 AS people_len,
+      contacts.brand,
+      NULL::text AS status,
+      NULL AS metadata
+    FROM
+      contacts
+      JOIN contacts_users AS cu
+        ON contacts.id = cu.contact
+      JOIN activities AS a
+        ON a.reference = cu."user" AND a.reference_type = 'User'
+    WHERE
+      contacts.deleted_at IS NULL
+      AND a.deleted_at IS NULL
   )
 )
