@@ -53,7 +53,8 @@ SELECT
     ELSE  
       NULL
     END
-  ) AS messages
+  ) AS messages,
+  'email_thread' AS "type"
 FROM
   email_threads
   JOIN unnest($1::text[]) WITH ORDINALITY t(eid, ord)

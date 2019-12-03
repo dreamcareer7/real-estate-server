@@ -8,7 +8,8 @@ INSERT INTO email_threads (
   first_message_date,
   last_message_date,
   recipients,
-  message_count
+  message_count,
+  has_attachments
 )
 (
   WITH thread_recipients AS (
@@ -31,7 +32,8 @@ INSERT INTO email_threads (
     min(message_date) OVER (w) AS first_message_date,
     max(message_date) OVER (w) AS last_message_date,
     thread_recipients.recipients AS recipients,
-    count(*) OVER (w) AS message_count
+    count(*) OVER (w) AS message_count,
+    SUM(has_attachments::int) > 0 AS has_attachments
   FROM
     google_messages
     JOIN google_credentials
@@ -51,6 +53,7 @@ ON CONFLICT (id) DO UPDATE SET
     SELECT
       array_agg(DISTINCT recipient)
     FROM
-      unnest(COALESCE(email_threads.recipients, '{}'::text[]) || COALESCE(EXCLUDED.recipients, '{}'::text[])) u(recipient)
+      unnest(COALESCE(EXCLUDED.recipients, '{}'::text[])) u(recipient)
   ),
-  message_count = email_threads.message_count + EXCLUDED.message_count;
+  message_count = EXCLUDED.message_count,
+  has_attachments = EXCLUDED.has_attachments;
