@@ -108,7 +108,7 @@ async function downloadAttachmentFailed() {
   try {
     await GoogleMessage.downloadAttachment(googleMessage.google_credential, googleMessage.message_id, bad_id)
   } catch(ex) {
-    expect(ex.message).to.be.equal('Access is denied! Insufficient Permission.')
+    expect(ex.message).to.be.equal('Access is denied! Insufficient permission.')
   }
 }
 
