@@ -125,10 +125,10 @@ An `email_campaign_attachments` object type looks like this:
 
 | Field        | Type      | association | Description |
 | ------------ | --------- | ----------- | ----------- |
-| id           | uuid      |             |
-| campaign     | uuid      |             |
-| file         | uuid      |             |
-| is_inline    | boolean   |             |
+| id           | uuid      |             | NOT NULL
+| campaign     | uuid      |             | NOT NULL
+| file         | uuid      |             | NOT NULL
+| is_inline    | boolean   |             | NOT NULL
 | content_id   | text      |             |
 | created_at   | timestamp |             |
 | updated_at   | timestamp |             |
