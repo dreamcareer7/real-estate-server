@@ -125,10 +125,10 @@ An `email_campaign_attachments` object type looks like this:
 
 | Field        | Type      | association | Description |
 | ------------ | --------- | ----------- | ----------- |
-| id           | uuid      |             |
-| campaign     | uuid      |             |
-| file         | uuid      |             |
-| is_inline    | boolean   |             |
+| id           | uuid      |             | NOT NULL
+| campaign     | uuid      |             | NOT NULL
+| file         | uuid      |             | NOT NULL
+| is_inline    | boolean   |             | NOT NULL
 | content_id   | text      |             |
 | created_at   | timestamp |             |
 | updated_at   | timestamp |             |
@@ -147,3 +147,24 @@ An `email_campaign_attachments` object type looks like this:
 
 ### Get all campaigns by brand [GET /brands/:brand/emails/campaigns]
 <!-- include(tests/email/getByBrand.md) -->
+
+### Schedule a gmail message [POST /emails]
+<!-- include(tests/email/scheduleGmailMessage.md) -->
+
+### Schedule a gmail message with attachments [POST /emails]
+<!-- include(tests/email/scheduleEmailWithAttachments.md) -->
+
+### Schedule an outlook message [POST /emails]
+<!-- include(tests/email/scheduleOulookMessage.md) -->
+
+### Schedule a reply to gmail message [POST /emails]
+<!-- include(tests/email/scheduleReplyToGmailMessage.md) -->
+
+### Schedule a reply to outlook message [POST /emails]
+<!-- include(tests/email/scheduleReplyToOulookMessage.md) -->
+
+### Get a gmail campaign [GET /emails/:id?associations[]=email_campaign.emails&associations[]=email_campaign.recipients&associations[]=email_campaign.attachments]
+<!-- include(tests/email/getGmailCampaign.md) -->
+
+### Get an outlook campaign [GET /emails/:id]
+<!-- include(tests/email/getOulookCampaign.md) -->

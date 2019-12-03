@@ -91,8 +91,8 @@ function forceSyncFailed(cb) {
 }
 
 
-const CreateMicrosoftCredential = (cb) => {
-  const scope = 'Contacts.Read Mail.Read Mail.Send'.split(' ')
+function createMicrosoftCredential(cb) {
+  const scope = 'Contacts.Read Mail.Read Mail.Send Mail.ReadWrite Calendar'.split(' ')
 
   const scopeSummary = ['profile']
 
@@ -102,8 +102,11 @@ const CreateMicrosoftCredential = (cb) => {
   if ( scope.includes('Mail.Read') )
     scopeSummary.push('mail.read')
 
-  if ( scope.includes('Mail.Send') && scope.includes('Mail.ReadWrite') )
+  // Right now we need both of Mail.send and Mail.ReadWrite to handle send-email API
+  if ( scope.includes('Mail.Send') && scope.includes('Mail.ReadWrite') ) {
     scopeSummary.push('mail.send')
+    scopeSummary.push('mail.modify')
+  }
 
   if ( scope.includes('Calendar') )
     scopeSummary.push('calendar')
@@ -147,7 +150,7 @@ const CreateMicrosoftCredential = (cb) => {
 
 function getMicrosoftProfile(cb) {
   return frisby.create('Get Microsoft profiles')
-    .get(`/users/self/microsoft/${results.microsoft.CreateMicrosoftCredential}`)
+    .get(`/users/self/microsoft/${results.microsoft.createMicrosoftCredential}`)
     .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
     .after(function(err, res, json) {
       cb(err, res, json)
@@ -175,7 +178,7 @@ function getMicrosoftProfiles(cb) {
 
 function deleteAccount(cb) {
   return frisby.create('Delete Microsoft account')
-    .delete(`/users/self/microsoft/${results.microsoft.CreateMicrosoftCredential}`)
+    .delete(`/users/self/microsoft/${results.microsoft.createMicrosoftCredential}`)
     .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
     .after(function(err, res, json) {
       cb(err, res, json)
@@ -191,7 +194,7 @@ function deleteAccountFailedCauseOfInvalidBrand(cb) {
   const invalidBrandId = uuid.v4()
 
   return frisby.create('delete account failed Cause of invalid Brand')
-    .delete(`/users/self/microsoft/${results.microsoft.CreateMicrosoftCredential}`)
+    .delete(`/users/self/microsoft/${results.microsoft.createMicrosoftCredential}`)
     .addHeader('X-RECHAT-BRAND', invalidBrandId)
     .after(function(err, res, json) {
       cb(err, res, json)
@@ -201,7 +204,7 @@ function deleteAccountFailedCauseOfInvalidBrand(cb) {
 
 function disableSync(cb) {
   return frisby.create('disable sync')
-    .delete(`/users/self/microsoft/${results.microsoft.CreateMicrosoftCredential}/sync`)
+    .delete(`/users/self/microsoft/${results.microsoft.createMicrosoftCredential}/sync`)
     .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
     .after(function(err, res, json) {
       cb(err, res, json)
@@ -214,7 +217,7 @@ function disableSync(cb) {
 
 function enableSync(cb) {
   return frisby.create('enable dync')
-    .put(`/users/self/microsoft/${results.microsoft.CreateMicrosoftCredential}/sync`)
+    .put(`/users/self/microsoft/${results.microsoft.createMicrosoftCredential}/sync`)
     .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
     .after(function(err, res, json) {
       cb(err, res, json)
@@ -227,7 +230,7 @@ function enableSync(cb) {
 
 function forceSync(cb) {
   return frisby.create('force sync')
-    .post(`/users/self/microsoft/${results.microsoft.CreateMicrosoftCredential}/sync`)
+    .post(`/users/self/microsoft/${results.microsoft.createMicrosoftCredential}/sync`)
     .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
     .after(function(err, res, json) {
       cb(err, res, json)
@@ -243,7 +246,7 @@ const addMicrosoftSyncHistory = (cb) => {
   const body  = {
     user: results.authorize.token.data.id,
     brand: results.brand.create.data.id,
-    microsoft_credential: results.microsoft.CreateMicrosoftCredential,
+    microsoft_credential: results.microsoft.createMicrosoftCredential,
     extract_contacts_error: 'extract_contacts_error',
     synced_contacts_num: 5,
     contacts_total: 6,
@@ -267,7 +270,7 @@ const addMicrosoftSyncHistory = (cb) => {
 
 function getMCredentialLastSyncHistory(cb) {
   return frisby.create('get microsoft credential LastSyncHistory')
-    .get(`/users/self/microsoft/sync_history/${results.microsoft.CreateMicrosoftCredential}`)
+    .get(`/users/self/microsoft/sync_history/${results.microsoft.createMicrosoftCredential}`)
     .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
     .after(function(err, res, json) {
       cb(err, res, json)
@@ -288,7 +291,7 @@ module.exports = {
   disableSyncFailed,
   enableSyncFailed,
   forceSyncFailed,
-  CreateMicrosoftCredential,
+  createMicrosoftCredential,
   getMicrosoftProfile,
   getMicrosoftProfiles,
   deleteAccount,
