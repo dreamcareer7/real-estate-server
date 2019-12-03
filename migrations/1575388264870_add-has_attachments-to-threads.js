@@ -36,7 +36,7 @@ const migrations = [
       max(message_date) OVER (w) AS last_message_date,
       thread_recipients.recipients AS recipients,
       count(*) OVER (w) AS message_count,
-      SUM(has_attachments::int) > 0 AS has_attachments
+      SUM(has_attachments::int) OVER (w) > 0 AS has_attachments
     FROM
       google_messages
       JOIN google_credentials
@@ -94,7 +94,7 @@ const migrations = [
       max(message_date) OVER (w) AS last_message_date,
       thread_recipients.recipients AS recipients,
       count(*) OVER (w) AS message_count,
-      SUM(has_attachments::int) > 0 AS has_attachments
+      SUM(has_attachments::int) OVER (w) > 0 AS has_attachments
     FROM
       microsoft_messages
       JOIN microsoft_credentials
