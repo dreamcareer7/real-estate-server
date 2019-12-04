@@ -415,6 +415,12 @@ const scheduleEmailWithAttachments = cb => {
         file: results.email.uploadAttachment.data.id,
         is_inline: true,
         content_id: 'content_id'
+      },
+      {
+        url: results.email.uploadAttachment.data.url,
+        is_inline: true,
+        name: 'custom_name.jpg',
+        content_id: 'content_id'
       }
     ],
     headers: {
