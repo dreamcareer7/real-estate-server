@@ -248,18 +248,16 @@ async function sendNotificationForContact() {
     .add(2, 'days')
     .year(1800)
     .unix()
-  expect(notifications[0].message).to.be.equal(
+  expect(notifications.map(n => n.message)).to.have.members([
     `John's spouse (Jane) has a Birthday on ${render_filters.date(
       birthday2,
       'MMM D'
-    )}`
-  )
-  expect(notifications[1].message).to.be.equal(
+    )}`,
     `John has a Child Birthday (Tom) on ${render_filters.date(
       birthday1,
       'MMM D, YYYY'
     )}`
-  )
+  ])
 }
 
 async function sendNotificationForDeal() {
