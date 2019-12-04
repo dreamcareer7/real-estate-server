@@ -11,7 +11,9 @@ SELECT
   last_message_date,
   recipients,
   message_count,
-
+  has_attachments,
+  is_read,
+  
   (
     CASE
       WHEN $2::text[] && '{"email_thread.messages"}'::text[] THEN (
