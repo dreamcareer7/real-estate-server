@@ -473,7 +473,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
           ))
         FROM
           (
-            SELECT DISTINCT ON (ece.email_address)
+            SELECT
               c.id AS contact,
               ece.agent
             FROM
@@ -483,8 +483,6 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
             WHERE
               ece.campaign = ec.id
               AND (ece.agent IS NOT NULL OR c.id IS NOT NULL)
-            ORDER BY
-              ece.email_address
             LIMIT 5
           ) t
       ) AS people,
@@ -604,7 +602,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
           ))
         FROM
           (
-            SELECT DISTINCT ON (email_campaign_emails.email_address)
+            SELECT
               contacts.id AS contact,
               email_campaign_emails.agent
             FROM
@@ -616,8 +614,6 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
             WHERE
               email_campaign_emails.campaign = ec.id
               AND (email_campaign_emails.agent IS NOT NULL OR contacts.id IS NOT NULL)
-            ORDER BY
-              email_campaign_emails.email_address
             LIMIT 5
           ) t
       ) AS people,
@@ -679,7 +675,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
           ))
         FROM
           (
-            SELECT DISTINCT ON (recipient)
+            SELECT
               contacts.id AS contact
             FROM
               unnest(recipients) AS recipients(recipient)
@@ -688,10 +684,6 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
             WHERE
               contacts.brand = google_credentials.brand
               AND contacts.deleted_at IS NULL
-            ORDER BY
-              recipient,
-              contacts.last_touch DESC,
-              contacts.updated_at DESC
             LIMIT 5
           ) t
       ) AS people,
@@ -748,7 +740,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
           ))
         FROM
           (
-            SELECT DISTINCT ON (recipient)
+            SELECT
               contacts.id AS contact
             FROM
               unnest(recipients) AS recipients(recipient)
@@ -757,10 +749,6 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
             WHERE
               contacts.brand = microsoft_credentials.brand
               AND contacts.deleted_at IS NULL
-            ORDER BY
-              recipient,
-              contacts.last_touch DESC,
-              contacts.updated_at DESC
             LIMIT 5
           ) t
       ) AS people,
@@ -817,7 +805,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
           ))
         FROM
           (
-            SELECT DISTINCT ON (recipient)
+            SELECT
               contacts.id AS contact
             FROM
               unnest(recipients) AS recipients(recipient)
@@ -826,10 +814,6 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
             WHERE
               contacts.brand = google_credentials.brand
               AND contacts.deleted_at IS NULL
-            ORDER BY
-              recipient,
-              contacts.last_touch DESC,
-              contacts.updated_at DESC
             LIMIT 5
           ) t
       ) AS people,
@@ -894,7 +878,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
           ))
         FROM
           (
-            SELECT DISTINCT ON (recipient)
+            SELECT
               contacts.id AS contact
             FROM
               unnest(recipients) AS recipients(recipient)
@@ -903,10 +887,6 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
             WHERE
               contacts.brand = microsoft_credentials.brand
               AND contacts.deleted_at IS NULL
-            ORDER BY
-              recipient,
-              contacts.last_touch DESC,
-              contacts.updated_at DESC
             LIMIT 5
           ) t
       ) AS people,
