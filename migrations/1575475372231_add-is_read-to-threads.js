@@ -31,8 +31,8 @@ const migrations = [
       google_credential,
       google_credentials."user",
       google_credentials.brand,
-      last_value(subject) OVER (w) AS "subject",
-      first_value(google_messages.in_reply_to) OVER (w) AS first_message_in_reply_to,
+      last_value(subject) OVER (w ORDER BY message_date) AS "subject",
+      first_value(google_messages.in_reply_to) OVER (w ORDER BY message_date) AS first_message_in_reply_to,
       min(message_date) OVER (w) AS first_message_date,
       max(message_date) OVER (w) AS last_message_date,
       thread_recipients.recipients AS recipients,
@@ -46,7 +46,7 @@ const migrations = [
       JOIN thread_recipients USING (thread_key)
     WHERE
       google_messages.deleted_at IS NULL
-    WINDOW w AS (PARTITION BY thread_key ORDER BY message_date)
+    WINDOW w AS (PARTITION BY thread_key)
     ORDER BY
       google_messages.thread_key, message_date
   )
@@ -91,8 +91,8 @@ const migrations = [
       microsoft_credential,
       microsoft_credentials."user",
       microsoft_credentials.brand,
-      last_value(subject) OVER (w) AS "subject",
-      first_value(microsoft_messages.in_reply_to) OVER (w) AS first_message_in_reply_to,
+      last_value(subject) OVER (w ORDER BY message_date) AS "subject",
+      first_value(microsoft_messages.in_reply_to) OVER (w ORDER BY message_date) AS first_message_in_reply_to,
       min(message_date) OVER (w) AS first_message_date,
       max(message_date) OVER (w) AS last_message_date,
       thread_recipients.recipients AS recipients,
@@ -106,7 +106,7 @@ const migrations = [
       JOIN thread_recipients USING (thread_key)
     WHERE
       microsoft_messages.deleted_at IS NULL
-    WINDOW w AS (PARTITION BY thread_key ORDER BY message_date)
+    WINDOW w AS (PARTITION BY thread_key)
     ORDER BY
       microsoft_messages.thread_key, message_date
   )
