@@ -118,6 +118,8 @@ A model that connects Email Campaigns with Microsoft_Credentials.
 ### Email Campaign Attachments
 
 A model that connects Email Campaigns with Email_Campaign_Attachments
+* It is not allowed to send both file and url alongside each other.
+* Combination of url and name is mandatory. 
 
 #### Data model
 
