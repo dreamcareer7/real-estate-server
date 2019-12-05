@@ -11,7 +11,9 @@ SELECT
   last_message_date,
   recipients,
   message_count,
-
+  has_attachments,
+  is_read,
+  
   (
     CASE
       WHEN $2::text[] && '{"email_thread.messages"}'::text[] THEN (
@@ -53,7 +55,8 @@ SELECT
     ELSE  
       NULL
     END
-  ) AS messages
+  ) AS messages,
+  'email_thread' AS "type"
 FROM
   email_threads
   JOIN unnest($1::text[]) WITH ORDINALITY t(eid, ord)
