@@ -27,7 +27,9 @@ declare interface IEmailRecipientAgentInput {
 }
 
 declare interface IEmailCampaignAttachmentInput {
-  file: UUID;
+  file?: UUID;
+  url?: string;
+  name?: string;
   is_inline?: Boolean;
   content_id?: string;
 }

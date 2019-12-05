@@ -107,6 +107,35 @@ One individual email which has already been sent.
 
 A model that connects Email Campaigns with Emails.
 
+### Google Credential
+
+A model that connects Email Campaigns with Google_Credentials.
+
+### Microsoft Credential
+
+A model that connects Email Campaigns with Microsoft_Credentials.
+
+### Email Campaign Attachments
+
+A model that connects Email Campaigns with Email_Campaign_Attachments
+
+#### Data model
+
+An `email_campaign_attachments` object type looks like this:
+
+| Field        | Type      | association | Description |
+| ------------ | --------- | ----------- | ----------- |
+| id           | uuid      |             | NOT NULL
+| campaign     | uuid      |             | NOT NULL
+| file         | uuid      |             | NOT NULL
+| is_inline    | boolean   |             | NOT NULL
+| content_id   | text      |             |
+| created_at   | timestamp |             |
+| updated_at   | timestamp |             |
+| deleted_at   | timestamp |             |
+
+
+
 ### Schedule an email campaign [POST /emails]
 <!-- include(tests/email/schedule.md) -->
 
@@ -118,3 +147,24 @@ A model that connects Email Campaigns with Emails.
 
 ### Get all campaigns by brand [GET /brands/:brand/emails/campaigns]
 <!-- include(tests/email/getByBrand.md) -->
+
+### Schedule a gmail message [POST /emails]
+<!-- include(tests/email/scheduleGmailMessage.md) -->
+
+### Schedule a gmail message with attachments [POST /emails]
+<!-- include(tests/email/scheduleEmailWithAttachments.md) -->
+
+### Schedule an outlook message [POST /emails]
+<!-- include(tests/email/scheduleOulookMessage.md) -->
+
+### Schedule a reply to gmail message [POST /emails]
+<!-- include(tests/email/scheduleReplyToGmailMessage.md) -->
+
+### Schedule a reply to outlook message [POST /emails]
+<!-- include(tests/email/scheduleReplyToOulookMessage.md) -->
+
+### Get a gmail campaign [GET /emails/:id?associations[]=email_campaign.emails&associations[]=email_campaign.recipients&associations[]=email_campaign.attachments]
+<!-- include(tests/email/getGmailCampaign.md) -->
+
+### Get an outlook campaign [GET /emails/:id]
+<!-- include(tests/email/getOulookCampaign.md) -->

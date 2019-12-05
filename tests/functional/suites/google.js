@@ -103,8 +103,33 @@ function forceSyncFailed(cb) {
 }
 
 
-const CreateGoogleCredential = (cb) => {
-  const scope = ['contacts.readonly']
+function createGoogleCredential(cb) {
+  const scope = [
+    'profile', 'email', 
+    'https://www.googleapis.com/auth/contacts.readonly',
+    'https://www.googleapis.com/auth/gmail.readonly', 'https://www.googleapis.com/auth/gmail.send', 'https://www.googleapis.com/auth/gmail.modify',
+    'https://www.googleapis.com/auth/calendar'
+  ]
+
+  const scopeSummary = []
+
+  if ( scope.includes('profile') )
+    scopeSummary.push('profile')
+
+  if ( scope.includes('https://www.googleapis.com/auth/contacts.readonly') )
+    scopeSummary.push('contacts.read')
+
+  if ( scope.includes('https://www.googleapis.com/auth/gmail.readonly') )
+    scopeSummary.push('mail.read')
+
+  if ( scope.includes('https://www.googleapis.com/auth/gmail.send') )
+    scopeSummary.push('mail.send')
+
+  if ( scope.includes('https://www.googleapis.com/auth/gmail.modify') )
+    scopeSummary.push('mail.modify')
+
+  if ( scope.includes('https://www.googleapis.com/auth/calendar') )
+    scopeSummary.push('calendar')
 
   const body  = {
     user: results.authorize.token.data.id,
@@ -128,7 +153,8 @@ const CreateGoogleCredential = (cb) => {
       expiry_date: 3600,
       scope: scope
     },
-    scope: scope
+    scope: scope,
+    scopeSummary: scopeSummary
   }
 
   return frisby.create('Create GoogleCredential')
@@ -144,7 +170,7 @@ const CreateGoogleCredential = (cb) => {
 
 function getGoogleProfile(cb) {
   return frisby.create('Get Google profiles')
-    .get(`/users/self/google/${results.google.CreateGoogleCredential}`)
+    .get(`/users/self/google/${results.google.createGoogleCredential}`)
     .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
     .after(function(err, res, json) {
       cb(err, res, json)
@@ -172,7 +198,7 @@ function getGoogleProfiles(cb) {
 
 function deleteAccount(cb) {
   return frisby.create('Delete Google account')
-    .delete(`/users/self/google/${results.google.CreateGoogleCredential}`)
+    .delete(`/users/self/google/${results.google.createGoogleCredential}`)
     .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
     .after(function(err, res, json) {
       cb(err, res, json)
@@ -188,7 +214,7 @@ function deleteAccountFailedCauseOfInvalidBrand(cb) {
   const invalidBrandId = uuid.v4()
 
   return frisby.create('deleteAccount failed Cause of invalid Brand')
-    .delete(`/users/self/google/${results.google.CreateGoogleCredential}`)
+    .delete(`/users/self/google/${results.google.createGoogleCredential}`)
     .addHeader('X-RECHAT-BRAND', invalidBrandId)
     .after(function(err, res, json) {
       cb(err, res, json)
@@ -198,7 +224,7 @@ function deleteAccountFailedCauseOfInvalidBrand(cb) {
 
 function disableSync(cb) {
   return frisby.create('disable sync')
-    .delete(`/users/self/google/${results.google.CreateGoogleCredential}/sync`)
+    .delete(`/users/self/google/${results.google.createGoogleCredential}/sync`)
     .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
     .after(function(err, res, json) {
       cb(err, res, json)
@@ -211,7 +237,7 @@ function disableSync(cb) {
 
 function enableSync(cb) {
   return frisby.create('enable sync')
-    .put(`/users/self/google/${results.google.CreateGoogleCredential}/sync`)
+    .put(`/users/self/google/${results.google.createGoogleCredential}/sync`)
     .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
     .after(function(err, res, json) {
       cb(err, res, json)
@@ -224,7 +250,7 @@ function enableSync(cb) {
 
 function forceSync(cb) {
   return frisby.create('force sync')
-    .post(`/users/self/google/${results.google.CreateGoogleCredential}/sync`)
+    .post(`/users/self/google/${results.google.createGoogleCredential}/sync`)
     .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
     .after(function(err, res, json) {
       cb(err, res, json)
@@ -240,7 +266,7 @@ const addGoogleSyncHistory = (cb) => {
   const body  = {
     user: results.authorize.token.data.id,
     brand: results.brand.create.data.id,
-    google_credential: results.google.CreateGoogleCredential,
+    google_credential: results.google.createGoogleCredential,
     synced_messages_num: 1,
     messages_total: 2,
     synced_threads_num: 3,
@@ -264,7 +290,7 @@ const addGoogleSyncHistory = (cb) => {
 
 function getGCredentialLastSyncHistory(cb) {
   return frisby.create('get Google credential lastSyncHistory')
-    .get(`/users/self/google/sync_history/${results.google.CreateGoogleCredential}`)
+    .get(`/users/self/google/sync_history/${results.google.createGoogleCredential}`)
     .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
     .after(function(err, res, json) {
       cb(err, res, json)
@@ -305,7 +331,7 @@ module.exports = {
   disableSyncFailed,
   enableSyncFailed,
   forceSyncFailed,
-  CreateGoogleCredential,
+  createGoogleCredential,
   getGoogleProfile,
   getGoogleProfiles,
   deleteAccount,
