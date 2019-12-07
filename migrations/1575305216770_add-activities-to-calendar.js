@@ -478,7 +478,7 @@ const migrations = [
             ))
           FROM
             (
-              SELECT DISTINCT ON (ece.email_address)
+              SELECT
                 c.id AS contact,
                 ece.agent
               FROM
@@ -488,8 +488,6 @@ const migrations = [
               WHERE
                 ece.campaign = ec.id
                 AND (ece.agent IS NOT NULL OR c.id IS NOT NULL)
-              ORDER BY
-                ece.email_address
               LIMIT 5
             ) t
         ) AS people,
@@ -609,7 +607,7 @@ const migrations = [
             ))
           FROM
             (
-              SELECT DISTINCT ON (email_campaign_emails.email_address)
+              SELECT
                 contacts.id AS contact,
                 email_campaign_emails.agent
               FROM
@@ -621,8 +619,6 @@ const migrations = [
               WHERE
                 email_campaign_emails.campaign = ec.id
                 AND (email_campaign_emails.agent IS NOT NULL OR contacts.id IS NOT NULL)
-              ORDER BY
-                email_campaign_emails.email_address
               LIMIT 5
             ) t
         ) AS people,
@@ -654,12 +650,12 @@ const migrations = [
     UNION ALL
     (
       SELECT
-        google_threads.id::text,
-        google_credentials.user AS created_by,
-        google_threads.created_at,
-        google_threads.updated_at,
+        email_threads.id::text,
+        email_threads.user AS created_by,
+        email_threads.created_at,
+        email_threads.updated_at,
         'email_thread' AS object_type,
-        'gmail' AS event_type,
+        (CASE WHEN google_credential IS NOT NULL THEN 'gmail' ELSE 'outlook' END) AS event_type,
         'Email Thread' AS type_label,
         last_message_date AS "timestamp",
         last_message_date AS "date",
@@ -671,10 +667,10 @@ const migrations = [
         NULL::uuid AS deal,
         NULL::uuid AS contact,
         NULL::uuid AS campaign,
-        google_threads.google_credential AS credential_id,
-        google_threads.id AS thread_key,
+        COALESCE(google_credential, microsoft_credential) AS credential_id,
+        email_threads.id AS thread_key,
         NULL::uuid AS activity,
-        ARRAY[google_credentials."user"] AS users,
+        ARRAY[email_threads."user"] AS users,
   
         (
           SELECT
@@ -684,19 +680,15 @@ const migrations = [
             ))
           FROM
             (
-              SELECT DISTINCT ON (recipient)
+              SELECT
                 contacts.id AS contact
               FROM
                 unnest(recipients) AS recipients(recipient)
                 JOIN contacts
                   ON contacts.email @> ARRAY[recipient]
               WHERE
-                contacts.brand = google_credentials.brand
+                contacts.brand = email_threads.brand
                 AND contacts.deleted_at IS NULL
-              ORDER BY
-                recipient,
-                contacts.last_touch DESC,
-                contacts.updated_at DESC
               LIMIT 5
             ) t
         ) AS people,
@@ -708,96 +700,27 @@ const migrations = [
             JOIN contacts
               ON contacts.email @> ARRAY[recipient]
           WHERE
-            contacts.brand = google_credentials.brand
+            contacts.brand = brand
             AND contacts.deleted_at IS NULL
         ) AS people_len,
   
-        google_credentials.brand,
+        email_threads.brand,
         NULL::text AS status,
         NULL::jsonb AS metadata
       FROM
-        google_threads
-        JOIN google_credentials
-          ON google_threads.google_credential = google_credentials.id
+        email_threads
+      WHERE
+        email_threads.deleted_at IS NULL
     )
     UNION ALL
     (
       SELECT
-        microsoft_threads.id::text,
-        microsoft_credentials.user AS created_by,
-        microsoft_threads.created_at,
-        microsoft_threads.updated_at,
-        'email_thread' AS object_type,
-        'outlook' AS event_type,
-        'Email Thread' AS type_label,
-        last_message_date AS "timestamp",
-        last_message_date AS "date",
-        last_message_date AS next_occurence,
-        NULL::timestamptz AS end_date,
-        False AS recurring,
-        COALESCE(subject, '(no subject)') AS "title",
-        NULL::uuid AS crm_task,
-        NULL::uuid AS deal,
-        NULL::uuid AS contact,
-        NULL::uuid AS campaign,
-        microsoft_threads.microsoft_credential AS credential_id,
-        microsoft_threads.id AS thread_key,
-        NULL::uuid AS activity,
-        ARRAY[microsoft_credentials."user"] AS users,
-  
-        (
-          SELECT
-            ARRAY_AGG(json_build_object(
-              'id', contact,
-              'type', 'contact'
-            ))
-          FROM
-            (
-              SELECT DISTINCT ON (recipient)
-                contacts.id AS contact
-              FROM
-                unnest(recipients) AS recipients(recipient)
-                JOIN contacts
-                  ON contacts.email @> ARRAY[recipient]
-              WHERE
-                contacts.brand = microsoft_credentials.brand
-                AND contacts.deleted_at IS NULL
-              ORDER BY
-                recipient,
-                contacts.last_touch DESC,
-                contacts.updated_at DESC
-              LIMIT 5
-            ) t
-        ) AS people,
-        (
-          SELECT
-            count(DISTINCT contacts.id)::int
-          FROM
-            unnest(recipients) AS recipients(recipient)
-            JOIN contacts
-              ON contacts.email @> ARRAY[recipient]
-          WHERE
-            contacts.brand = microsoft_credentials.brand
-            AND contacts.deleted_at IS NULL
-        ) AS people_len,
-  
-        microsoft_credentials.brand,
-        NULL::text AS status,
-        NULL::jsonb AS metadata
-      FROM
-        microsoft_threads
-        JOIN microsoft_credentials
-          ON microsoft_threads.microsoft_credential = microsoft_credentials.id
-    )
-    UNION ALL
-    (
-      SELECT
-        google_threads.id::text,
-        google_credentials.user AS created_by,
-        google_threads.created_at,
-        google_threads.updated_at,
+        email_threads.id::text,
+        email_threads."user" AS created_by,
+        email_threads.created_at,
+        email_threads.updated_at,
         'email_thread_recipient' AS object_type,
-        'gmail' AS event_type,
+        (CASE WHEN google_credential IS NOT NULL THEN 'gmail' ELSE 'outlook' END) AS event_type,
         'Email Thread' AS type_label,
         last_message_date AS "timestamp",
         last_message_date AS "date",
@@ -809,10 +732,10 @@ const migrations = [
         NULL::uuid AS deal,
         c.id AS contact,
         NULL::uuid AS campaign,
-        google_threads.google_credential AS credential_id,
-        google_threads.id AS thread_key,
+        google_credential AS credential_id,
+        email_threads.id AS thread_key,
         NULL::uuid AS activity,
-        ARRAY[google_credentials."user"] AS users,
+        ARRAY[email_threads."user"] AS users,
   
         (
           SELECT
@@ -822,19 +745,15 @@ const migrations = [
             ))
           FROM
             (
-              SELECT DISTINCT ON (recipient)
+              SELECT
                 contacts.id AS contact
               FROM
                 unnest(recipients) AS recipients(recipient)
                 JOIN contacts
                   ON contacts.email @> ARRAY[recipient]
               WHERE
-                contacts.brand = google_credentials.brand
+                contacts.brand = brand
                 AND contacts.deleted_at IS NULL
-              ORDER BY
-                recipient,
-                contacts.last_touch DESC,
-                contacts.updated_at DESC
               LIMIT 5
             ) t
         ) AS people,
@@ -847,101 +766,25 @@ const migrations = [
             JOIN contacts
               ON contacts.email @> ARRAY[recipient]
           WHERE
-            contacts.brand = google_credentials.brand
+            contacts.brand = brand
             AND contacts.deleted_at IS NULL
         ) AS people_len,
   
-        google_credentials.brand,
+        brand,
         NULL::text AS status,
         NULL::jsonb AS metadata
       FROM
-        google_threads
+        email_threads
         CROSS JOIN LATERAL (
           SELECT
             contacts.id
           FROM
             contacts
           WHERE
-            contacts.email && google_threads.recipients
+            contacts.email && recipients
         ) AS c
-        JOIN google_credentials ON google_threads.google_credential = google_credentials.id
-    )
-    UNION ALL
-    (
-      SELECT
-        microsoft_threads.id::text,
-        microsoft_credentials.user AS created_by,
-        microsoft_threads.created_at,
-        microsoft_threads.updated_at,
-        'email_thread_recipient' AS object_type,
-        'outlook' AS event_type,
-        'Email Thread' AS type_label,
-        last_message_date AS "timestamp",
-        last_message_date AS "date",
-        last_message_date AS next_occurence,
-        NULL::timestamptz AS end_date,
-        False AS recurring,
-        COALESCE(subject, '(no subject)') AS "title",
-        NULL::uuid AS crm_task,
-        NULL::uuid AS deal,
-        c.id AS contact,
-        NULL::uuid AS campaign,
-        microsoft_threads.microsoft_credential AS credential_id,
-        microsoft_threads.id AS thread_key,
-        NULL::uuid AS activity,
-        ARRAY[microsoft_credentials."user"] AS users,
-  
-        (
-          SELECT
-            ARRAY_AGG(json_build_object(
-              'id', contact,
-              'type', 'contact'
-            ))
-          FROM
-            (
-              SELECT DISTINCT ON (recipient)
-                contacts.id AS contact
-              FROM
-                unnest(recipients) AS recipients(recipient)
-                JOIN contacts
-                  ON contacts.email @> ARRAY[recipient]
-              WHERE
-                contacts.brand = microsoft_credentials.brand
-                AND contacts.deleted_at IS NULL
-              ORDER BY
-                recipient,
-                contacts.last_touch DESC,
-                contacts.updated_at DESC
-              LIMIT 5
-            ) t
-        ) AS people,
-  
-        (
-          SELECT
-            count(DISTINCT contacts.id)::int
-          FROM
-            unnest(recipients) AS recipients(recipient)
-            JOIN contacts
-              ON contacts.email @> ARRAY[recipient]
-          WHERE
-            contacts.brand = microsoft_credentials.brand
-            AND contacts.deleted_at IS NULL
-        ) AS people_len,
-  
-        microsoft_credentials.brand,
-        NULL::text AS status,
-        NULL::jsonb AS metadata
-      FROM
-        microsoft_threads
-        CROSS JOIN LATERAL (
-          SELECT
-            contacts.id
-          FROM
-            contacts
-          WHERE
-            contacts.email && microsoft_threads.recipients
-        ) AS c
-        JOIN microsoft_credentials ON microsoft_threads.microsoft_credential = microsoft_credentials.id
+      WHERE
+        email_threads.deleted_at IS NULL
     )
   
     UNION ALL
@@ -989,7 +832,8 @@ const migrations = [
         AND u.user_type = 'Client'
         AND a.deleted_at IS NULL
     )
-  )`,
+  )
+  `,
   'COMMIT'
 ]
 

@@ -141,6 +141,8 @@ const migrations = [
     END;
   $$`,
 
+  'DROP VIEW analytics.calendar',
+
   `CREATE OR REPLACE VIEW analytics.calendar AS (
     (
       SELECT
