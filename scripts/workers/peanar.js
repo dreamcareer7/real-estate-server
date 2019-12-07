@@ -44,10 +44,10 @@ async function main() {
   })
   await peanar.worker({ queues: ['contact_import'], concurrency: 15 })
 
-  await peanar.worker({
-    queues: ['google', 'microsoft'],
-    concurrency: 30
-  })
+//   await peanar.worker({
+//     queues: ['google', 'microsoft'],
+//     concurrency: 30
+//   })
 
   await peanar.worker({
     queues: ['MLS.Office', 'MLS.Unit', 'MLS.Room', 'MLS.Agent'],
