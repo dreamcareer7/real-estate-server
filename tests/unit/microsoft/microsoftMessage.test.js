@@ -25,10 +25,9 @@ async function create() {
   for (const createdMicrosoftMessage of createdMessages) {
     expect(createdMicrosoftMessage.microsoft_credential).to.be.equal(credential.id)
     
-    const microsoftMessage = await MicrosoftMessage.get(createdMicrosoftMessage.message_id, createdMicrosoftMessage.microsoft_credential)
+    const microsoftMessage = await MicrosoftMessage.getByMessageId(createdMicrosoftMessage.message_id, createdMicrosoftMessage.microsoft_credential)
 
     expect(microsoftMessage.type).to.be.equal('microsoft_message')
-    expect(microsoftMessage.deleted_at).to.be.equal(null)
     expect(microsoftMessage.recipients.length).not.to.be.equal(0)
   }
 
@@ -40,7 +39,7 @@ async function getByMessageId() {
 
   for (const mMessage of microsoftMessages) {
 
-    const microsoftMessage = await MicrosoftMessage.get(mMessage.message_id, mMessage.microsoft_credential)
+    const microsoftMessage = await MicrosoftMessage.getByMessageId(mMessage.message_id, mMessage.microsoft_credential)
 
     expect(microsoftMessage.type).to.be.equal('microsoft_message')
     expect(microsoftMessage.microsoft_credential).to.be.equal(mMessage.microsoft_credential)
@@ -52,9 +51,11 @@ async function getByMessageId() {
 async function getByMessageIdFailed() {
   const bad_id = user.id
 
-  const microsoftMessage = await MicrosoftMessage.get(bad_id, bad_id)
-
-  expect(microsoftMessage).to.be.equal(null)
+  try {
+    await MicrosoftMessage.getByMessageId(bad_id, bad_id)
+  } catch(ex) {
+    expect(ex.message).to.be.equal(`MicrosoftMessage ${bad_id} in credential ${bad_id} not found.`)
+  }
 }
 
 async function getMCredentialMessagesNum() {
@@ -73,7 +74,7 @@ async function deleteByInternetMessageIds() {
   }
 
   for (const mMessage of microsoftMessages) {
-    const microsoftMessage = await MicrosoftMessage.get(mMessage.message_id, mMessage.microsoft_credential)
+    const microsoftMessage = await MicrosoftMessage.getByMessageId(mMessage.message_id, mMessage.microsoft_credential)
 
     expect(microsoftMessage.type).to.be.equal('microsoft_message')
     expect(microsoftMessage.microsoft_credential).to.be.equal(mMessage.microsoft_credential)
@@ -85,7 +86,7 @@ async function downloadAttachmentFailed() {
   const microsoftMessages = await create()
   const microsoftMessage_min = microsoftMessages[0]
 
-  const microsoftMessage = await MicrosoftMessage.get(microsoftMessage_min.message_id, microsoftMessage_min.microsoft_credential)
+  const microsoftMessage = await MicrosoftMessage.getByMessageId(microsoftMessage_min.message_id, microsoftMessage_min.microsoft_credential)
 
   const bad_id = uuid.v4()
 
