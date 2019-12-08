@@ -8,6 +8,7 @@ const Email = require('../../../lib/models/Email')
 const User = require('../../../lib/models/User')
 const EmailCampaign = require('../../../lib/models/Email/campaign')
 const EmailCampaignAttachment = require('../../../lib/models/Email/campaign/attachments')
+const EmailCampaignEmail = require('../../../lib/models/Email/campaign/email')
 const AttachedFile = require('../../../lib/models/AttachedFile')
 
 const db = require('../../../lib/utils/db')
@@ -22,6 +23,7 @@ const { createGoogleCredential } = require('../google/helper')
 const { createMicrosoftCredential } = require('../microsoft/helper')
 
 let userA, userB, brand1, brand2
+
 
 async function setup() {
   userA = await User.getByEmail('test@rechat.com')
@@ -523,6 +525,85 @@ async function testGMFailure() {
   } 
 }
 
+async function createEmailCampaignEmail() {
+  const gResult = await createGoogleCredential(userA, brand1)
+  const googleCredential = gResult.credential
+
+  /** @type {IEmailCampaignInput} */
+  const campaignObj = {
+    subject: 'Test subject',
+    from: userA.id,
+    to: [{
+      email: 'gholi@rechat.com',
+      recipient_type: Email.EMAIL
+    }],
+    created_by: userA.id,
+    brand: brand1.id,
+    due_at: new Date().toISOString(),
+    html: '<html></html>',
+    headers: {
+      message_id: 'message_id',
+      in_reply_to: 'in_reply_to',
+      thread_id: 'thread_id',
+    },
+    google_credential: googleCredential.id,
+    microsoft_credential: null,
+    attachments: []
+  }
+
+  const result     = await EmailCampaign.createMany([campaignObj])
+  const campaign   = await EmailCampaign.get(result[0])
+  const recipients = await db.select('email/campaign/emails', [campaign.id])
+
+  const saved = await Email.create({
+    email: {
+      to: [{
+        email: 'gholi@rechat.com',
+        recipient_type: Email.EMAIL
+      }],
+      cc: [],
+      bcc: []
+    },
+    subject: 'subject',
+    html: 'html',
+    text: 'html'
+  })
+
+  const campaign_emails = recipients.map(to => {
+    return {
+      ...to,
+      email: saved.id,
+      email_address: to.email,
+      campaign: campaign.id
+    }
+  })
+
+  const ids   = await EmailCampaignEmail.createAll(campaign_emails)
+  const email = await EmailCampaignEmail.get(ids.pop())
+
+  expect(email.campaign).to.be.equal(campaign.id)
+  expect(email.send_type).to.be.equal('To')
+  expect(email.email_address).to.be.equal('gholi@rechat.com')
+
+  return email
+}
+
+async function emailSaveError() {
+  const email = await createEmailCampaignEmail()
+
+  const err = {
+    message: 'error_message'
+  }
+
+  await EmailCampaignEmail.saveError(email, err)
+
+  const updated = await EmailCampaignEmail.get(email.id)
+
+  expect(updated.id).to.be.equal(email.id)
+  expect(updated.error).to.be.equal(err.message)
+}
+
+
 
 describe('Email', () => {
   createContext()
@@ -541,4 +622,7 @@ describe('Email', () => {
   it('should handle a gmail-message', testGoogleEmail)
   it('should handle an outlook-message', testMicrosoftEmail)
   it('should fail when both of google and microsoft are present', testGMFailure)
+
+  it('should create an email_campaing_email record', createEmailCampaignEmail)
+  it('should save error message on an email_campaing_email record', emailSaveError)
 })
