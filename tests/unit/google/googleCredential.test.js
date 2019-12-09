@@ -142,14 +142,12 @@ async function updateAsRevoked() {
 async function updateLastSync() {
   const createdCredential = await create()
 
-  const ts = new Date()
   const duration = 100
-  await GoogleCredential.updateLastSync(createdCredential.id, ts, duration)
+  await GoogleCredential.updateLastSync(createdCredential.id, duration)
 
   const updatedCredential = await GoogleCredential.get(createdCredential.id)
 
   expect(createdCredential.id).to.be.equal(updatedCredential.id)
-  expect(new Date(updatedCredential.last_sync_at).getTime()).to.be.equal(new Date(ts).getTime())
   expect(updatedCredential.last_sync_duration).to.be.equal(duration)
 }
 
@@ -281,18 +279,6 @@ async function updateMessagesSyncHistoryId() {
   expect(updatedCredential.messages_sync_history_id).to.be.equal(syncToken)
 }
 
-async function updateThreadsSyncHistoryId() {
-  const createdCredential = await create()
-
-  const syncToken = 'syncToken'
-  await GoogleCredential.updateThreadsSyncHistoryId(createdCredential.id, syncToken)
-
-  const updatedCredential = await GoogleCredential.get(createdCredential.id)
-
-  expect(createdCredential.id).to.be.equal(updatedCredential.id)
-  expect(updatedCredential.threads_sync_history_id).to.be.equal(syncToken)
-}
-
 async function updateRechatGoogleCalendar() {
   const createdCredential = await create()
 
@@ -347,7 +333,6 @@ describe('Google', () => {
     it('should update a google-credential gmail-profile', updateGmailProfile)
     it('should update a google-credential contact_last_sync_At', updateContactsLastSyncAt)
     it('should update a google-credential messages sync token', updateMessagesSyncHistoryId)
-    it('should update a google-credential threads sync token', updateThreadsSyncHistoryId)
 
     it('should update a google-credential rechat-google-Calendar', updateRechatGoogleCalendar)
     it('should update a google-credential calendars_last_sync_at', updateCalendarsLastSyncAt)
