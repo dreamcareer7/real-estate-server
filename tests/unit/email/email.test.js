@@ -639,7 +639,7 @@ async function createEmailCampaignEmail() {
   const campaign   = await EmailCampaign.get(result[0])
   const recipients = await db.select('email/campaign/emails', [campaign.id])
 
-  const saved = await Email.create({
+  const email_obj = await Email.create({
     email: {
       to: [{
         email: 'gholi@rechat.com',
@@ -656,34 +656,37 @@ async function createEmailCampaignEmail() {
   const campaign_emails = recipients.map(to => {
     return {
       ...to,
-      email: saved.id,
+      email: email_obj.id,
       email_address: to.email,
       campaign: campaign.id
     }
   })
 
-  const ids   = await EmailCampaignEmail.createAll(campaign_emails)
-  const email = await EmailCampaignEmail.get(ids.pop())
+  const ids = await EmailCampaignEmail.createAll(campaign_emails)
+  const email_campaign_email_obj = await EmailCampaignEmail.get(ids.pop())
 
-  expect(email.campaign).to.be.equal(campaign.id)
-  expect(email.send_type).to.be.equal('To')
-  expect(email.email_address).to.be.equal('gholi@rechat.com')
+  expect(email_campaign_email_obj.campaign).to.be.equal(campaign.id)
+  expect(email_campaign_email_obj.send_type).to.be.equal('To')
+  expect(email_campaign_email_obj.email_address).to.be.equal('gholi@rechat.com')
 
-  return email
+  return {
+    email_obj,
+    email_campaign_email_obj
+  }
 }
 
 async function emailSaveError() {
-  const email = await createEmailCampaignEmail()
+  const { email_obj, email_campaign_email_obj } = await createEmailCampaignEmail()
 
   const err = {
     message: 'error_message'
   }
 
-  await EmailCampaignEmail.saveError(email, err)
+  await EmailCampaignEmail.saveError(email_obj, err)
 
-  const updated = await EmailCampaignEmail.get(email.id)
+  const updated = await EmailCampaignEmail.get(email_campaign_email_obj.id)
 
-  expect(updated.id).to.be.equal(email.id)
+  expect(updated.id).to.be.equal(email_campaign_email_obj.id)
   expect(updated.error).to.be.equal(err.message)
 }
 
