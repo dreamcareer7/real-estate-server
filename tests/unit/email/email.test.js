@@ -525,6 +525,90 @@ async function testGMFailure() {
   } 
 }
 
+async function testGmailLoadOfRecipients() {
+  const gResult = await createGoogleCredential(userA, brand1)
+  const googleCredential = gResult.credential
+
+  const to = []
+
+  let i = 1
+  for (i; i < 105; i++) {
+    to.push({
+      email: `gholi_${i}@rechat.com`,
+      recipient_type: Email.EMAIL      
+    })
+  }
+
+  /** @type {IEmailCampaignInput} */
+  const campaignObj = {
+    subject: 'Test subject',
+    from: userA.id,
+    to,
+    created_by: userA.id,
+    brand: brand1.id,
+    due_at: new Date().toISOString(),
+    html: '<html></html>',
+    headers: {
+      message_id: 'message_id',
+      in_reply_to: 'in_reply_to',
+      thread_id: 'thread_id',
+    },
+    google_credential: googleCredential.id,
+    microsoft_credential: null,
+    attachments: []
+  }
+
+  try {
+    const result = await EmailCampaign.createMany([campaignObj])
+    expect(result).to.be.equal(null)
+  } catch (ex) {
+    expect(ex.message).to.be.equal('Recipients number should not be greater than 100.')
+  }
+}
+
+async function testOutlookLoadOfRecipients() {
+  const mResult = await createMicrosoftCredential(userA, brand1)
+  const microsoftCredential = mResult.credential
+
+  const to = []
+
+  let i = 1
+  for (i; i < 205; i++) {
+    to.push({
+      email: `gholi_${i}@rechat.com`,
+      recipient_type: Email.EMAIL      
+    })
+  }
+
+  /** @type {IEmailCampaignInput} */
+  const campaignObj = {
+    subject: 'Test subject',
+    from: userA.id,
+    to,
+    cc: to,
+    bcc: to,
+    created_by: userA.id,
+    brand: brand1.id,
+    due_at: new Date().toISOString(),
+    html: '<html></html>',
+    headers: {
+      message_id: 'message_id',
+      in_reply_to: 'in_reply_to',
+      thread_id: 'thread_id',
+    },
+    google_credential: null,
+    microsoft_credential: microsoftCredential.id,
+    attachments: []
+  }
+
+  try {
+    const result = await EmailCampaign.createMany([campaignObj])
+    expect(result).to.be.equal(null)
+  } catch (ex) {
+    expect(ex.message).to.be.equal('Recipients number should not be greater than 500.')
+  }
+}
+
 async function createEmailCampaignEmail() {
   const gResult = await createGoogleCredential(userA, brand1)
   const googleCredential = gResult.credential
@@ -622,6 +706,9 @@ describe('Email', () => {
   it('should handle a gmail-message', testGoogleEmail)
   it('should handle an outlook-message', testMicrosoftEmail)
   it('should fail when both of google and microsoft are present', testGMFailure)
+
+  it('should fail when recipients num are more than 100', testGmailLoadOfRecipients)
+  it('should fail when recipients num are more than 500', testOutlookLoadOfRecipients)
 
   it('should create an email_campaing_email record', createEmailCampaignEmail)
   it('should save error message on an email_campaing_email record', emailSaveError)
