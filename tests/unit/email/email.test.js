@@ -367,6 +367,47 @@ async function testAttachmentsGetByCampaign() {
   expect(attachments[0].content_id).to.be.equal(input[0].content_id)
 }
 
+async function testDeleteAttachments() {
+  const file = await uploadFile()
+
+  /** @type {IEmailCampaignInput} */
+  const campaignObj = {
+    subject: 'Test subject',
+    from: userA.id,
+    to: [
+      {
+        email: 'gholi@rechat.com',
+        recipient_type: Email.EMAIL
+      }
+    ],
+    created_by: userA.id,
+    brand: brand1.id,
+    due_at: new Date().toISOString(),
+    html: '<html></html>'
+  }
+
+  const result = await EmailCampaign.createMany([campaignObj])
+  const campaign_id = result[0]
+
+  const input = [{
+    'campaign': campaign_id,
+    'file': file.id,
+    'is_inline': false,
+    'content_id': 'xxxzzzz',
+  }]
+
+  const ids = await EmailCampaignAttachment.createAll(input)
+
+  expect(ids.length).to.be.equal(1)
+
+  await EmailCampaignAttachment.deleteByCampaign(campaign_id)
+
+  const attachments = await EmailCampaignAttachment.getByCampaign(campaign_id)
+
+  expect(attachments.length).to.be.equal(0)
+}
+
+
 async function testCampaignWithAttachments() {
   const file = await uploadFile()
 
@@ -704,6 +745,7 @@ describe('Email', () => {
 
   it('should create new attachments record', testInsertAttachments)
   it('should test get attachments', testAttachmentsGetByCampaign)
+  it('should test deleted attachments', testDeleteAttachments)
 
   it('should give correct attachments and headers for a specific campaing', testCampaignWithAttachments)
   it('should handle a gmail-message', testGoogleEmail)

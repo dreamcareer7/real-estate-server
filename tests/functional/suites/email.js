@@ -453,6 +453,27 @@ const getOulookCampaign = cb => {
     .expectStatus(200)
 }
 
+const removeAttachments = cb => {
+  const campaign = {
+    id: results.email.scheduleEmailWithAttachments.data.id,
+    subject: 'Individual Email From {{sender.display_name}}',
+    html: 'html',
+    attachments: []
+  }
+
+  return frisby
+    .create('Remove attachments')
+    .addHeader('X-RECHAT-BRAND', results.google.getGoogleProfile.data.brand)
+    .put(`/emails/${results.email.scheduleEmailWithAttachments.data.id}?associations[]=email_campaign.attachments`, campaign)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      data: {
+        attachments: null
+      }
+    })
+}
+
 
 module.exports = {
   schedule,
@@ -473,5 +494,6 @@ module.exports = {
   scheduleReplyToOulookMessage,
   scheduleEmailWithAttachments,
   getGmailCampaign,
-  getOulookCampaign
+  getOulookCampaign,
+  removeAttachments
 }
