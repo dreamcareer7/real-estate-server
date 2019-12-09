@@ -3,4 +3,4 @@ UPDATE
 SET
   error = $2
 WHERE
-  id = $1
+  email = $1
