@@ -474,6 +474,19 @@ const removeAttachments = cb => {
     })
 }
 
+const getCampaignAfterRemovingAttachments = cb => {
+  return frisby
+    .create('Get campaign after removing attachments')
+    .get(`/emails/${results.email.scheduleEmailWithAttachments.data.id}?associations[]=email_campaign.emails&associations[]=email_campaign.recipients&associations[]=email_campaign.attachments`)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      data: {
+        attachments: null
+      }
+    })
+}
+
 
 module.exports = {
   schedule,
@@ -495,5 +508,6 @@ module.exports = {
   scheduleEmailWithAttachments,
   getGmailCampaign,
   getOulookCampaign,
-  removeAttachments
+  removeAttachments,
+  getCampaignAfterRemovingAttachments
 }
