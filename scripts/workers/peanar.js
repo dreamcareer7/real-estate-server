@@ -48,6 +48,10 @@ async function main() {
     queues: ['google', 'microsoft'],
     concurrency: 30
   })
+  await peanar.worker({
+    queues: ['microsoft_notifications'],
+    concurrency: 1
+  })
 
   await peanar.worker({
     queues: ['MLS.Office', 'MLS.Unit', 'MLS.Room', 'MLS.Agent'],

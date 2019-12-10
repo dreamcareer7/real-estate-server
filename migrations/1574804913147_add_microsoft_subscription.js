@@ -28,6 +28,7 @@ const migrations = [
     updated_at timestamptz NOT NULL DEFAULT clock_timestamp(),
     deleted_at timestamptz,
 
+    UNIQUE (subscription_id),
     UNIQUE (microsoft_credential, subscription_id),
     UNIQUE (microsoft_credential, resource)
   )`,
