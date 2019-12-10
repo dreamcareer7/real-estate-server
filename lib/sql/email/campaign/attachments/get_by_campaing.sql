@@ -1,0 +1,1 @@
+SELECT id FROM email_campaign_attachments WHERE campaign = $1 AND deleted_at IS NULL

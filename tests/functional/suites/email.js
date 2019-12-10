@@ -1,3 +1,6 @@
+const path = require('path')
+const fs = require('fs')
+
 registerSuite('brand', [
   'createParent',
   'create',
@@ -6,6 +9,10 @@ registerSuite('brand', [
 ])
 
 registerSuite('user', ['upgradeToAgentWithEmail'])
+
+registerSuite('google', ['createGoogleCredential', 'getGoogleProfile'])
+registerSuite('microsoft', ['createMicrosoftCredential', 'getMicrosoftProfile'])
+
 
 const email = {
   to: [
@@ -25,6 +32,7 @@ const individual = {
 }
 
 const mailgun_id = 'example-mailgun-id-email-1'
+
 
 const schedule = cb => {
   email.from = results.authorize.token.data.id
@@ -239,6 +247,234 @@ const remove = cb => {
     .expectStatus(204)
 }
 
+
+const uploadAttachment = (cb) => {
+  const logo = fs.createReadStream(path.resolve(__dirname, 'data/logo.png'))
+
+  return frisby.create('upload a file')
+    .post('/emails/attachments', {
+      file: logo
+    },
+    {
+      json: false,
+      form: true
+    })
+    .addHeader('content-type', 'multipart/form-data')
+    .after((err, res, body) => {
+      cb(err, {...res, body: JSON.parse(body)}, body)
+    })
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK'
+    })
+}
+
+const scheduleGmailMessage = cb => {
+  const emailObj = {
+    to: [{
+      email: 'recipient@rechat.com',
+      recipient_type: 'Email'
+    }],
+    cc: [{
+      recipient_type: 'Email',
+      email: 'chavoshian.shiva@gmail.com '
+    }],
+    bcc: [{
+      recipient_type: 'Email',
+      email: 'saeed@rechat.com'
+    }],
+    due_at: new Date(),
+    html: '<div>Hi</div>',
+    subject: 'schedule gmail message',
+    from: results.google.getGoogleProfile.data.user,
+    google_credential: results.google.getGoogleProfile.data.id,
+    microsoft_credential: null,
+    attachments: [],
+    headers: {}
+  }
+
+  return frisby
+    .create('Schedule a gmail message')
+    .addHeader('X-RECHAT-BRAND', results.google.getGoogleProfile.data.brand)
+    .post('/emails', emailObj)
+    .after(cb)
+    .expectStatus(200)
+}
+
+const scheduleOulookMessage = cb => {
+  const emailObj = {
+    to: [
+      {
+        email: 'recipient@rechat.com',
+        recipient_type: 'Email'
+      },
+    ],
+    due_at: new Date(),
+    html: '<div>Hi</div>',
+    subject: 'schedule outlook message',
+    from: results.microsoft.getMicrosoftProfile.data.user,
+    google_credential: null,
+    microsoft_credential: results.microsoft.getMicrosoftProfile.data.id,
+    attachments: [],
+    headers: {}
+  }
+
+  return frisby
+    .create('Schedule an outlook message')
+    .addHeader('X-RECHAT-BRAND', results.microsoft.getMicrosoftProfile.data.brand)
+    .post('/emails', emailObj)
+    .after(cb)
+    .expectStatus(200)
+}
+
+const scheduleReplyToGmailMessage = cb => {
+  const emailObj = {
+    to: [{
+      email: 'recipient@rechat.com',
+      recipient_type: 'Email'
+    }],
+    cc: [{
+      recipient_type: 'Email',
+      email: 'chavoshian.shiva@gmail.com '
+    }],
+    bcc: [{
+      recipient_type: 'Email',
+      email: 'saeed@rechat.com'
+    }],
+    due_at: new Date(),
+    html: '<div>Hi</div>',
+    subject: 'schedule reply to gmail message',
+    from: results.google.getGoogleProfile.data.user,
+    google_credential: results.google.getGoogleProfile.data.id,
+    microsoft_credential: null,
+    attachments: [],
+    headers: {
+      in_reply_to: 'in_reply_to_id',
+      thread_id: 'thread_id'
+    }
+  }
+
+  return frisby
+    .create('Schedule a reply to a gmail message')
+    .addHeader('X-RECHAT-BRAND', results.google.getGoogleProfile.data.brand)
+    .post('/emails', emailObj)
+    .after(cb)
+    .expectStatus(200)
+}
+
+const scheduleReplyToOulookMessage = cb => {
+  const emailObj = {
+    to: [
+      {
+        email: 'recipient@rechat.com',
+        recipient_type: 'Email'
+      },
+    ],
+    due_at: new Date(),
+    html: '<div>Hi</div>',
+    subject: 'schedule reply to outlook message',
+    from: results.microsoft.getMicrosoftProfile.data.user,
+    google_credential: null,
+    microsoft_credential: results.microsoft.getMicrosoftProfile.data.id,
+    attachments: [],
+    headers: {
+      message_id: 'message_id'
+    }
+  }
+
+  return frisby
+    .create('Schedule a reply to an outlook message')
+    .addHeader('X-RECHAT-BRAND', results.microsoft.getMicrosoftProfile.data.brand)
+    .post('/emails', emailObj)
+    .after(cb)
+    .expectStatus(200)
+}
+
+const scheduleEmailWithAttachments = cb => {
+  const emailObj = {
+    to: [{
+      email: 'recipient@rechat.com',
+      recipient_type: 'Email'
+    }],
+    cc: [{
+      recipient_type: 'Email',
+      email: 'chavoshian.shiva@gmail.com '
+    }],
+    bcc: [{
+      recipient_type: 'Email',
+      email: 'saeed@rechat.com'
+    }],
+    due_at: new Date(),
+    html: '<div>Hi</div>',
+    subject: 'Email Subject',
+    from: results.google.getGoogleProfile.data.user,
+    google_credential: results.google.getGoogleProfile.data.id,
+    microsoft_credential: null,
+    attachments: [
+      {
+        file: results.email.uploadAttachment.data.id,
+        is_inline: true,
+        content_id: 'content_id'
+      },
+      {
+        url: results.email.uploadAttachment.data.url,
+        is_inline: true,
+        name: 'custom_name.jpg',
+        content_id: 'content_id'
+      }
+    ],
+    headers: {
+      in_reply_to: 'in_reply_to_id',
+      thread_id: 'thread_id'
+    }
+  }
+
+  return frisby
+    .create('Schedule a gmail message with attachments')
+    .addHeader('X-RECHAT-BRAND', results.google.getGoogleProfile.data.brand)
+    .post('/emails', emailObj)
+    .after(cb)
+    .expectStatus(200)
+}
+
+const getGmailCampaign = cb => {
+  return frisby
+    .create('Get a gmail campaign')
+    .get(`/emails/${results.email.scheduleEmailWithAttachments.data.id}?associations[]=email_campaign.emails&associations[]=email_campaign.recipients&associations[]=email_campaign.attachments`)
+    .after(cb)
+    .expectStatus(200)
+}
+
+const getOulookCampaign = cb => {
+  return frisby
+    .create('Get an outlook campaign')
+    .get(`/emails/${results.email.scheduleReplyToOulookMessage.data.id}?associations[]=email_campaign.emails&associations[]=email_campaign.recipients`)
+    .after(cb)
+    .expectStatus(200)
+}
+
+const removeAttachments = cb => {
+  const campaign = {
+    id: results.email.scheduleEmailWithAttachments.data.id,
+    subject: 'Individual Email From {{sender.display_name}}',
+    html: 'html',
+    attachments: []
+  }
+
+  return frisby
+    .create('Remove attachments')
+    .addHeader('X-RECHAT-BRAND', results.google.getGoogleProfile.data.brand)
+    .put(`/emails/${results.email.scheduleEmailWithAttachments.data.id}?associations[]=email_campaign.attachments`, campaign)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      data: {
+        attachments: null
+      }
+    })
+}
+
+
 module.exports = {
   schedule,
   scheduleIndividual,
@@ -250,5 +486,14 @@ module.exports = {
   get,
   getEmail,
   getByBrand,
-  remove
+  remove,
+  uploadAttachment,
+  scheduleGmailMessage,
+  scheduleOulookMessage,
+  scheduleReplyToGmailMessage,
+  scheduleReplyToOulookMessage,
+  scheduleEmailWithAttachments,
+  getGmailCampaign,
+  getOulookCampaign,
+  removeAttachments
 }

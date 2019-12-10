@@ -22,34 +22,16 @@ CREATE OR REPLACE VIEW crm_last_touches AS (
           c.id,
           last_message_date AS "timestamp"
         FROM
-          microsoft_threads
-          JOIN microsoft_credentials
-            ON microsoft_threads.microsoft_credential = microsoft_credentials.id
+          email_threads
           CROSS JOIN LATERAL (
             SELECT
               contacts.id
             FROM
               contacts
             WHERE
-              contacts.email && microsoft_threads.recipients
-              AND contacts.brand = microsoft_credentials.brand
-          ) AS c
-      ) UNION ALL (
-        SELECT
-          c.id,
-          last_message_date AS "timestamp"
-        FROM
-          google_threads
-          JOIN google_credentials
-            ON google_threads.google_credential = google_credentials.id
-          CROSS JOIN LATERAL (
-            SELECT
-              contacts.id
-            FROM
-              contacts
-            WHERE
-              contacts.email && google_threads.recipients
-              AND contacts.brand = google_credentials.brand
+              contacts.email && email_threads.recipients
+              AND contacts.brand = email_threads.brand
+              AND contacts.deleted_at IS NULL
           ) AS c
       ) UNION ALL (
         SELECT
