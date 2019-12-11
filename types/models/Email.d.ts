@@ -71,6 +71,7 @@ declare interface IEmailCampaignInput {
   headers?: Record<string, string>;
   google_credential?: UUID;
   microsoft_credential?: UUID;
+  thread_key?: string;
 }
 
 declare interface IEmailCampaign extends IEmailCampaignInput {
