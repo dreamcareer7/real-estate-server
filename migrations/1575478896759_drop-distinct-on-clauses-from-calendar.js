@@ -2,147 +2,7 @@ const db = require('../lib/utils/db')
 
 const migrations = [
   'BEGIN',
-  `CREATE TABLE IF NOT EXISTS email_threads (
-    id text PRIMARY KEY NOT NULL,
-    created_at timestamptz NOT NULL DEFAULT NOW(),
-    updated_at timestamptz NOT NULL DEFAULT NOW(),
-
-    brand uuid NOT NULL REFERENCES brands (id),
-    "user" uuid NOT NULL REFERENCES users (id),
-  
-    google_credential uuid REFERENCES google_credentials (id),
-    microsoft_credential uuid REFERENCES microsoft_credentials (id),
-  
-    subject text,
-    first_message_in_reply_to text,
-    first_message_date timestamptz NOT NULL,
-    last_message_date timestamptz NOT NULL,
-    recipients text[],
-    message_count integer
-  )`,
-
-  `CREATE OR REPLACE FUNCTION update_google_threads_on_new_messages() RETURNS trigger
-  LANGUAGE plpgsql
-  AS $$
-    BEGIN
-      INSERT INTO email_threads (
-        id,
-        google_credential,
-        "user",
-        brand,
-        "subject",
-        first_message_in_reply_to,
-        first_message_date,
-        last_message_date,
-        recipients,
-        message_count
-      )
-      (
-        WITH thread_recipients AS (
-          SELECT
-            thread_key, array_agg(DISTINCT recipient) AS recipients
-          FROM
-            new_messages, unnest(recipients) AS t(recipient)
-          GROUP BY
-            thread_key
-        )
-        SELECT DISTINCT ON (new_messages.thread_key)
-          new_messages.thread_key,
-          google_credential,
-          google_credentials."user",
-          google_credentials.brand,
-          last_value(subject) OVER (w) AS "subject",
-          first_value(new_messages.in_reply_to) OVER (w) AS first_message_in_reply_to,
-          min(message_date) OVER (w) AS first_message_date,
-          max(message_date) OVER (w) AS last_message_date,
-          thread_recipients.recipients AS recipients,
-          count(*) OVER (w) AS message_count
-        FROM
-          new_messages
-          JOIN google_credentials
-            ON new_messages.google_credential = google_credentials.id
-          JOIN thread_recipients USING (thread_key)
-        WINDOW w AS (PARTITION BY thread_key ORDER BY message_date)
-        ORDER BY
-          new_messages.thread_key, message_date
-      )
-      ON CONFLICT (id) DO UPDATE SET
-        updated_at = now(),
-        last_message_date = EXCLUDED.last_message_date,
-        recipients = (
-          SELECT
-            array_agg(DISTINCT recipient)
-          FROM
-            unnest(COALESCE(email_threads.recipients, '{}'::text[]) || COALESCE(EXCLUDED.recipients, '{}'::text[])) u(recipient)
-        ),
-        message_count = email_threads.message_count + EXCLUDED.message_count;
-      
-      RETURN NULL;
-    END;
-  $$`,
-
-  `CREATE OR REPLACE FUNCTION update_microsoft_threads_on_new_messages() RETURNS trigger
-  LANGUAGE plpgsql
-  AS $$
-    BEGIN
-      INSERT INTO email_threads (
-        id,
-        microsoft_credential,
-        "user",
-        brand,
-        "subject",
-        first_message_in_reply_to,
-        first_message_date,
-        last_message_date,
-        recipients,
-        message_count
-      )
-      (
-        WITH thread_recipients AS (
-          SELECT
-            thread_key, array_agg(DISTINCT recipient) AS recipients
-          FROM
-            new_messages, unnest(recipients) AS t(recipient)
-          GROUP BY
-            thread_key
-        )
-        SELECT DISTINCT ON (new_messages.thread_key)
-          new_messages.thread_key,
-          microsoft_credential,
-          microsoft_credentials."user",
-          microsoft_credentials.brand,
-          last_value(subject) OVER (w) AS "subject",
-          first_value(new_messages.in_reply_to) OVER (w) AS first_message_in_reply_to,
-          min(message_date) OVER (w) AS first_message_date,
-          max(message_date) OVER (w) AS last_message_date,
-          thread_recipients.recipients AS recipients,
-          count(*) OVER (w) AS message_count
-        FROM
-          new_messages
-          JOIN microsoft_credentials
-            ON new_messages.microsoft_credential = microsoft_credentials.id
-          JOIN thread_recipients USING (thread_key)
-        WINDOW w AS (PARTITION BY thread_key ORDER BY message_date)
-        ORDER BY
-          new_messages.thread_key, message_date
-      )
-      ON CONFLICT (id) DO UPDATE SET
-        updated_at = now(),
-        last_message_date = EXCLUDED.last_message_date,
-        recipients = (
-          SELECT
-            array_agg(DISTINCT recipient)
-          FROM
-            unnest(COALESCE(email_threads.recipients, '{}'::text[]) || COALESCE(EXCLUDED.recipients, '{}'::text[])) u(recipient)
-        ),
-        message_count = email_threads.message_count + EXCLUDED.message_count;
-  
-      RETURN NULL;
-    END;
-  $$`,
-
   'DROP VIEW analytics.calendar',
-
   `CREATE OR REPLACE VIEW analytics.calendar AS (
     (
       SELECT
@@ -165,6 +25,7 @@ const migrations = [
         NULL::uuid AS campaign,
         NULL::uuid AS credential_id,
         NULL::text AS thread_key,
+        NULL::uuid AS activity,
         (
           SELECT
             ARRAY_AGG("user")
@@ -236,6 +97,7 @@ const migrations = [
         ca.email AS campaign,
         NULL::uuid AS credential_id,
         NULL::text AS thread_key,
+        NULL::uuid AS activity,
         (
           SELECT
             ARRAY_AGG("user")
@@ -309,6 +171,7 @@ const migrations = [
         NULL::uuid AS campaign,
         NULL::uuid AS credential_id,
         NULL::text AS thread_key,
+        NULL::uuid AS activity,
         (
           SELECT
             ARRAY_AGG(DISTINCT r."user")
@@ -365,6 +228,7 @@ const migrations = [
         NULL::uuid AS campaign,
         NULL::uuid AS credential_id,
         NULL::text AS thread_key,
+        NULL::uuid AS activity,
         (
           SELECT
             ARRAY_AGG(DISTINCT r."user")
@@ -462,6 +326,7 @@ const migrations = [
         NULL::uuid AS campaign,
         NULL::uuid AS credential_id,
         NULL::text AS thread_key,
+        NULL::uuid AS activity,
         ARRAY[contacts."user"] AS users,
         ARRAY[json_build_object('id', contact, 'type', 'contact')]::json[] AS people,
         1 AS people_len,
@@ -504,6 +369,7 @@ const migrations = [
         NULL::uuid AS campaign,
         NULL::uuid AS credential_id,
         NULL::text AS thread_key,
+        NULL::uuid AS activity,
         ARRAY[contacts."user"] AS users,
         ARRAY[json_build_object('id', id, 'type', 'contact')]::json[] AS people,
         1 AS people_len,
@@ -538,6 +404,7 @@ const migrations = [
         id AS campaign,
         NULL::uuid AS credential_id,
         NULL::text AS thread_key,
+        NULL::uuid AS activity,
         ARRAY[ec.from] AS users,
   
         (
@@ -600,6 +467,7 @@ const migrations = [
         id AS campaign,
         NULL::uuid AS credential_id,
         NULL::text AS thread_key,
+        NULL::uuid AS activity,
         ARRAY[ec.from] AS users,
   
         (
@@ -610,7 +478,7 @@ const migrations = [
             ))
           FROM
             (
-              SELECT DISTINCT ON (ece.email_address)
+              SELECT
                 c.id AS contact,
                 ece.agent
               FROM
@@ -620,8 +488,6 @@ const migrations = [
               WHERE
                 ece.campaign = ec.id
                 AND (ece.agent IS NOT NULL OR c.id IS NOT NULL)
-              ORDER BY
-                ece.email_address
               LIMIT 5
             ) t
         ) AS people,
@@ -667,6 +533,7 @@ const migrations = [
         ec.id AS campaign,
         NULL::uuid AS credential_id,
         NULL::text AS thread_key,
+        NULL::uuid AS activity,
         ARRAY[ec.from] AS users,
         (
           SELECT
@@ -729,6 +596,7 @@ const migrations = [
         ec.id AS campaign,
         NULL::uuid AS credential_id,
         NULL::text AS thread_key,
+        NULL::uuid AS activity,
         ARRAY[ec.from] AS users,
   
         (
@@ -739,7 +607,7 @@ const migrations = [
             ))
           FROM
             (
-              SELECT DISTINCT ON (email_campaign_emails.email_address)
+              SELECT
                 contacts.id AS contact,
                 email_campaign_emails.agent
               FROM
@@ -751,8 +619,6 @@ const migrations = [
               WHERE
                 email_campaign_emails.campaign = ec.id
                 AND (email_campaign_emails.agent IS NOT NULL OR contacts.id IS NOT NULL)
-              ORDER BY
-                email_campaign_emails.email_address
               LIMIT 5
             ) t
         ) AS people,
@@ -803,6 +669,7 @@ const migrations = [
         NULL::uuid AS campaign,
         COALESCE(google_credential, microsoft_credential) AS credential_id,
         email_threads.id AS thread_key,
+        NULL::uuid AS activity,
         ARRAY[email_threads."user"] AS users,
   
         (
@@ -813,7 +680,7 @@ const migrations = [
             ))
           FROM
             (
-              SELECT DISTINCT ON (recipient)
+              SELECT
                 contacts.id AS contact
               FROM
                 unnest(recipients) AS recipients(recipient)
@@ -822,10 +689,6 @@ const migrations = [
               WHERE
                 contacts.brand = email_threads.brand
                 AND contacts.deleted_at IS NULL
-              ORDER BY
-                recipient,
-                contacts.last_touch DESC,
-                contacts.updated_at DESC
               LIMIT 5
             ) t
         ) AS people,
@@ -846,6 +709,8 @@ const migrations = [
         NULL::jsonb AS metadata
       FROM
         email_threads
+      WHERE
+        email_threads.deleted_at IS NULL
     )
     UNION ALL
     (
@@ -869,6 +734,7 @@ const migrations = [
         NULL::uuid AS campaign,
         google_credential AS credential_id,
         email_threads.id AS thread_key,
+        NULL::uuid AS activity,
         ARRAY[email_threads."user"] AS users,
   
         (
@@ -879,7 +745,7 @@ const migrations = [
             ))
           FROM
             (
-              SELECT DISTINCT ON (recipient)
+              SELECT
                 contacts.id AS contact
               FROM
                 unnest(recipients) AS recipients(recipient)
@@ -888,10 +754,6 @@ const migrations = [
               WHERE
                 contacts.brand = brand
                 AND contacts.deleted_at IS NULL
-              ORDER BY
-                recipient,
-                contacts.last_touch DESC,
-                contacts.updated_at DESC
               LIMIT 5
             ) t
         ) AS people,
@@ -921,116 +783,56 @@ const migrations = [
           WHERE
             contacts.email && recipients
         ) AS c
+      WHERE
+        email_threads.deleted_at IS NULL
+    )
+  
+    UNION ALL
+  
+    (
+      SELECT
+        a.id::text,
+        a.created_by,
+        a.created_at,
+        a.updated_at,
+        'activity' AS object_type,
+        "action"::text AS event_type,
+        "action"::text AS type_label,
+        a.created_at AS "timestamp",
+        timezone('UTC', date_trunc('day', a.created_at)::timestamp) AT TIME ZONE 'UTC' AS "date",
+        cast(a.created_at + ((extract(year from age(a.created_at)) + 1) * interval '1' year) as date) as next_occurence,
+        NULL::timestamptz AS end_date,
+        False AS recurring,
+        "action"::text AS title,
+        NULL::uuid AS crm_task,
+        NULL::uuid AS deal,
+        contact,
+        NULL::uuid AS campaign,
+        NULL::uuid AS credential_id,
+        NULL::text AS thread_key,
+        a.id AS activity,
+        ARRAY[contacts."user"] AS users,
+        ARRAY[json_build_object('id', contact, 'type', 'contact')]::json[] AS people,
+        1 AS people_len,
+        contacts.brand,
+        NULL::text AS status,
+        NULL AS metadata
+      FROM
+        contacts
+        JOIN contacts_users AS cu
+          ON contacts.id = cu.contact
+        JOIN users AS u
+          ON cu."user" = u.id
+        JOIN activities AS a
+          ON a.reference = u.id AND a.reference_type = 'User'
+      WHERE
+        contacts.deleted_at IS NULL
+        AND u.is_shadow IS NOT TRUE
+        AND u.deleted_at IS NULL
+        AND u.user_type = 'Client'
+        AND a.deleted_at IS NULL
     )
   )`,
-
-  `CREATE OR REPLACE VIEW crm_last_touches AS (
-    SELECT
-      contact,
-      MAX(timestamp) AS last_touch
-    FROM
-      (
-        (
-          SELECT
-            ca.contact,
-            ct.due_date AS "timestamp"
-          FROM
-            crm_associations AS ca
-            JOIN crm_tasks AS ct
-              ON ca.crm_task = ct.id
-          WHERE
-            ca.deleted_at IS NULL
-            AND ct.deleted_at IS NULL
-            AND ct.task_type <> ALL('{Note,Other}')
-            AND ct.due_date <= NOW()
-        ) UNION ALL (
-          SELECT
-            c.id,
-            last_message_date AS "timestamp"
-          FROM
-            email_threads
-            CROSS JOIN LATERAL (
-              SELECT
-                contacts.id
-              FROM
-                contacts
-              WHERE
-                contacts.email && email_threads.recipients
-                AND contacts.brand = email_threads.brand
-                AND contacts.deleted_at IS NULL
-            ) AS c
-        ) UNION ALL (
-          SELECT
-            c.id AS contact,
-            executed_at AS "timestamp"
-          FROM
-            email_campaigns AS ec
-            JOIN email_campaign_emails AS ece
-              ON ece.campaign = ec.id
-            JOIN contacts c
-              ON (c.brand = ec.brand)
-          WHERE
-            ec.deleted_at IS NULL
-            AND c.deleted_at IS NULL
-            AND c.email && ARRAY[ece.email_address]
-            AND ec.executed_at IS NOT NULL
-        )
-      ) AS touches
-    GROUP BY
-      contact
-  )`,
-
-  'DROP TABLE IF EXISTS google_threads',
-  'DROP TABLE IF EXISTS microsoft_threads',
-
-  `WITH mc AS (
-    SELECT
-      thread_key AS id,
-      count(*) AS message_count
-    FROM
-      microsoft_messages
-      JOIN microsoft_credentials
-        ON microsoft_messages.microsoft_credential = microsoft_credentials.id
-    WHERE
-      microsoft_credentials.revoked IS NOT TRUE
-      AND microsoft_credentials.deleted_at IS NULL
-    GROUP BY
-      thread_key
-  )
-  UPDATE
-    email_threads
-  SET
-    message_count = mc.message_count
-  FROM
-    mc
-  WHERE
-    mc.id = email_threads.id
-  `,
-
-  `WITH mc AS (
-    SELECT
-      thread_key AS id,
-      count(*) AS message_count
-    FROM
-      google_messages
-      JOIN google_credentials
-        ON google_messages.google_credential = google_credentials.id
-    WHERE
-      google_credentials.revoked IS NOT TRUE
-      AND google_credentials.deleted_at IS NULL
-    GROUP BY
-      thread_key
-  )
-  UPDATE
-    email_threads
-  SET
-    message_count = mc.message_count
-  FROM
-    mc
-  WHERE
-    mc.id = email_threads.id
-  `,
-
   'COMMIT'
 ]
 
