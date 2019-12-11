@@ -678,7 +678,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       email_threads.id AS thread_key,
       NULL::uuid AS activity,
       ARRAY[email_threads."user"] AS users,
-      NULL::uuid[] AS accessible_to,
+      ARRAY[email_threads."user"] AS accessible_to,
 
       (
         SELECT
@@ -744,7 +744,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       email_threads.id AS thread_key,
       NULL::uuid AS activity,
       ARRAY[email_threads."user"] AS users,
-      NULL::uuid[] AS accessible_to,
+      ARRAY[email_threads."user"] AS accessible_to,
 
       (
         SELECT
