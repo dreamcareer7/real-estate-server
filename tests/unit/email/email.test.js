@@ -768,6 +768,12 @@ async function saveThreadKey() {
   expect(updated.thread_key).to.be.equal('thread_key')
 }
 
+async function findByGoogleId() {
+  const result = await Email.findByGoogleId(['xxxx'])
+
+  expect(result).to.have.length(0)
+}
+
 
 describe('Email', () => {
   createContext()
@@ -794,4 +800,5 @@ describe('Email', () => {
   it('should create an email_campaing_email record', createEmailCampaignEmail)
   it('should save error message on an email_campaing_email record', emailSaveError)
   it('should save error thread key on an email_campaing record', saveThreadKey)
+  it('should return empty array after', findByGoogleId)
 })
