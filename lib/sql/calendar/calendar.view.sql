@@ -30,6 +30,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
           crm_task = crm_tasks.id
           AND deleted_at IS NULL
       ) AS users,
+      NULL::uuid[] AS accessible_to,
       (
         SELECT
           ARRAY_AGG(json_build_object(
@@ -102,6 +103,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
           crm_task = ct.id
           AND deleted_at IS NULL
       ) AS users,
+      NULL::uuid[] AS accessible_to,
       (
         SELECT
           ARRAY_AGG(json_build_object(
@@ -177,6 +179,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
           AND r.deleted_at IS NULL
           AND r."user" IS NOT NULL
       ) AS users,
+      NULL::uuid[] AS accessible_to,
       NULL::json[] AS people,
       NULL::int AS people_len,
       COALESCE(dr.brand, deals.brand) AS brand,
@@ -234,6 +237,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
           AND r.deleted_at IS NULL
           AND r."user" IS NOT NULL
       ) AS users,
+      NULL::uuid[] AS accessible_to,
       (
         SELECT
           ARRAY_AGG(json_build_object(
@@ -323,6 +327,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       NULL::text AS thread_key,
       NULL::uuid AS activity,
       ARRAY[contacts."user"] AS users,
+      NULL::uuid[] AS accessible_to,
       ARRAY[json_build_object('id', contact, 'type', 'contact')]::json[] AS people,
       1 AS people_len,
       contacts.brand,
@@ -366,6 +371,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       NULL::text AS thread_key,
       NULL::uuid AS activity,
       ARRAY[contacts."user"] AS users,
+      NULL::uuid[] AS accessible_to,
       ARRAY[json_build_object('id', id, 'type', 'contact')]::json[] AS people,
       1 AS people_len,
       brand,
@@ -401,6 +407,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       NULL::text AS thread_key,
       NULL::uuid AS activity,
       ARRAY[ec.from] AS users,
+      NULL::uuid[] AS accessible_to,
 
       (
         SELECT
@@ -439,6 +446,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       deleted_at IS NULL
       AND executed_at IS NULL
       AND due_at IS NOT NULL
+      AND thread_key IS NULL
   )
   UNION ALL
   (
@@ -464,6 +472,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       NULL::text AS thread_key,
       NULL::uuid AS activity,
       ARRAY[ec.from] AS users,
+      NULL::uuid[] AS accessible_to,
 
       (
         SELECT
@@ -505,6 +514,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       deleted_at IS NULL
       AND executed_at IS NOT NULL
       AND due_at IS NOT NULL
+      AND thread_key IS NULL
   )
   UNION ALL
   (
@@ -530,6 +540,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       NULL::text AS thread_key,
       NULL::uuid AS activity,
       ARRAY[ec.from] AS users,
+      NULL::uuid[] AS accessible_to,
       (
         SELECT
           ARRAY_AGG(json_build_object(
@@ -593,6 +604,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       NULL::text AS thread_key,
       NULL::uuid AS activity,
       ARRAY[ec.from] AS users,
+      NULL::uuid[] AS accessible_to,
 
       (
         SELECT
@@ -666,6 +678,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       email_threads.id AS thread_key,
       NULL::uuid AS activity,
       ARRAY[email_threads."user"] AS users,
+      NULL::uuid[] AS accessible_to,
 
       (
         SELECT
@@ -731,6 +744,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       email_threads.id AS thread_key,
       NULL::uuid AS activity,
       ARRAY[email_threads."user"] AS users,
+      NULL::uuid[] AS accessible_to,
 
       (
         SELECT
@@ -807,6 +821,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       NULL::text AS thread_key,
       a.id AS activity,
       ARRAY[contacts."user"] AS users,
+      NULL::uuid[] AS accessible_to,
       ARRAY[json_build_object('id', contact, 'type', 'contact')]::json[] AS people,
       1 AS people_len,
       contacts.brand,

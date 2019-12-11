@@ -12,6 +12,8 @@ declare interface ICalendarFilterQuery {
   high?: number;
   event_types?: string[];
   object_types?: TCalendarObjectType[];
+  limit?: number;
+  user?: UUID;
 }
 
 declare interface ICalendarFeedSetting {
