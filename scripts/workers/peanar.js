@@ -59,9 +59,10 @@ async function main() {
   })
 
   await peanar.worker({
-    queues: ['email', 'MLS.OpenHouse', 'MLS.Photo', 'MLS.Listing', 'MLS.Listing.Photos.Validate'],
+    queues: ['email', 'email_high', 'MLS.OpenHouse', 'MLS.Photo', 'MLS.Listing', 'MLS.Listing.Photos.Validate'],
     concurrency: 20
   })
+  
 
   await peanar.worker({
     queues: ['sms'],
