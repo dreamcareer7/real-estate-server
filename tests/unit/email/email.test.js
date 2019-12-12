@@ -492,6 +492,8 @@ async function testGoogleEmail() {
   const campaign = await EmailCampaign.get(result[0])
 
   expect(campaign.google_credential).to.be.equal(googleCredential.id)
+
+  return campaign
 }
 
 async function testMicrosoftEmail() {
@@ -768,6 +770,67 @@ async function saveThreadKey() {
   expect(updated.thread_key).to.be.equal('thread_key')
 }
 
+async function update() {
+  const gResult = await createGoogleCredential(userA, brand1)
+  const googleCredential = gResult.credential
+
+  const mResult = await createMicrosoftCredential(userA, brand1)
+  const microsoftCredential = mResult.credential
+
+  const campaign = await testGoogleEmail()
+
+  const updated_one = await EmailCampaign.update({
+    ...campaign,
+    subject: 'custom_subject',
+    due_at: new Date(campaign.due_at),
+    google_credential: null,
+    microsoft_credential: null
+  })
+  
+  expect(updated_one.subject).to.be.equal('custom_subject')
+  expect(updated_one.google_credential).to.be.equal(null)
+  expect(updated_one.microsoft_credential).to.be.equal(null)
+
+
+  const  updated_two = await EmailCampaign.update({
+    ...campaign,
+    subject: 'custom_subject',
+    due_at: new Date(campaign.due_at),
+    google_credential: googleCredential.id,
+    microsoft_credential: null
+  })
+  
+  expect(updated_two.google_credential).to.be.equal(googleCredential.id)
+  expect(updated_two.microsoft_credential).to.be.equal(null)
+
+
+  const updated_three = await EmailCampaign.update({
+    ...campaign,
+    subject: 'custom_subject',
+    due_at: new Date(campaign.due_at),
+    google_credential: null,
+    microsoft_credential: microsoftCredential.id
+  })
+  
+  expect(updated_three.google_credential).to.be.equal(null)
+  expect(updated_three.microsoft_credential).to.be.equal(microsoftCredential.id)
+
+
+  try {
+    await EmailCampaign.update({
+      ...campaign,
+      subject: 'custom_subject',
+      due_at: new Date(campaign.due_at),
+      google_credential: googleCredential.id,
+      microsoft_credential: microsoftCredential.id
+    })
+
+  } catch (err) {
+
+    expect(err.message).to.be.equal('It is not allowed to send both google and microsoft ceredentials.')
+  }
+}
+
 
 describe('Email', () => {
   createContext()
@@ -794,4 +857,6 @@ describe('Email', () => {
   it('should create an email_campaing_email record', createEmailCampaignEmail)
   it('should save error message on an email_campaing_email record', emailSaveError)
   it('should save error thread key on an email_campaing record', saveThreadKey)
+
+  it('should update a campaign record', update)
 })
