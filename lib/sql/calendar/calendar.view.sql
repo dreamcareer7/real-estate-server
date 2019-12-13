@@ -446,7 +446,6 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       deleted_at IS NULL
       AND executed_at IS NULL
       AND due_at IS NOT NULL
-      AND thread_key IS NULL
   )
   UNION ALL
   (
@@ -653,6 +652,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       AND c.deleted_at IS NULL
       AND c.email @> ARRAY[ece.email_address]
       AND ec.executed_at IS NOT NULL
+      AND ec.thread_key IS NULL
   )
   UNION ALL
   (
