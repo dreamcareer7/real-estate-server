@@ -245,6 +245,14 @@ async function testEmailsOnly() {
 async function testCampaignRecipients() {
   await createContactForUserB()
 
+  const file = await uploadFile()
+
+  const attachmentsObj = {
+    file: file.id,
+    is_inline: true,
+    content_id: 'content_id'
+  }
+
   /** @type {IEmailCampaignInput} */
   const campaign = {
     due_at: '2019-03-07',
@@ -258,7 +266,8 @@ async function testCampaignRecipients() {
     subject: 'testRecipients',
     html: 'test',
     brand: brand1.id,
-    created_by: userA.id
+    created_by: userA.id,
+    attachments: [attachmentsObj]
   }
 
   const [id] = await EmailCampaign.createMany([campaign])
