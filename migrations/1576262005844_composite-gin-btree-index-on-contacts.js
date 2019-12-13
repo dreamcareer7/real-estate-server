@@ -2,7 +2,6 @@ const db = require('../lib/utils/db')
 
 const migrations = [
   'BEGIN',
-  'CREATE EXTENSION btree_gin',
   'CREATE INDEX contacts_brand_email_idx ON contacts USING gin (brand, email)',
   'CREATE INDEX email_threads_brand_recipients_idx ON email_threads USING gin (brand, recipients)',
   'COMMIT'
