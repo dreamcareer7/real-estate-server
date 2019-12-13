@@ -1,25 +1,25 @@
+const fs   = require('fs')
+const path = require('path')
 const { expect } = require('chai')
 
 const { createContext, handleJobs } = require('../helper')
 
+const db      = require('../../../lib/utils/db')
+const sql     = require('../../../lib/utils/sql')
+const config  = require('../../../lib/config')
 const Contact = require('../../../lib/models/Contact')
 const Context = require('../../../lib/models/Context')
-const Email = require('../../../lib/models/Email')
-const User = require('../../../lib/models/User')
+const Email   = require('../../../lib/models/Email')
+const User    = require('../../../lib/models/User')
 const EmailCampaign = require('../../../lib/models/Email/campaign')
 const EmailCampaignAttachment = require('../../../lib/models/Email/campaign/attachments')
 const EmailCampaignEmail = require('../../../lib/models/Email/campaign/email')
 const AttachedFile = require('../../../lib/models/AttachedFile')
 
-const db = require('../../../lib/utils/db')
-const sql = require('../../../lib/utils/sql')
-const fs = require('fs')
-const path = require('path')
-
-const BrandHelper = require('../brand/helper')
+const BrandHelper    = require('../brand/helper')
 const { attributes } = require('../contact/helper')
 
-const { createGoogleCredential } = require('../google/helper')
+const { createGoogleCredential }    = require('../google/helper')
 const { createMicrosoftCredential } = require('../microsoft/helper')
 
 let userA, userB, brand1, brand2
@@ -138,7 +138,7 @@ async function uploadFile() {
         role_id: brand1.id
       }
     ],
-    public: false
+    public: true
   })
 }
 
@@ -407,7 +407,6 @@ async function testDeleteAttachments() {
   expect(attachments.length).to.be.equal(0)
 }
 
-
 async function testCampaignWithAttachments() {
   const file = await uploadFile()
 
@@ -458,6 +457,156 @@ async function testCampaignWithAttachments() {
   expect(attachments[0].file).to.be.equal(attachmentsObj.file)
   expect(attachments[0].is_inline).to.be.equal(attachmentsObj.is_inline)
   expect(attachments[0].content_id).to.be.equal(attachmentsObj.content_id)
+}
+
+async function testCampaignWithLArgeAttachments() {
+  const attachments = []
+
+  let i = 0
+
+  for (i; i < 25; i++ ) {
+    const file = await uploadFile()
+
+    attachments.push({
+      file: file.id,
+      is_inline: true,
+      content_id: 'content_id'
+    })
+  }
+
+
+  /** @type {IEmailCampaignInput} */
+  const campaignObj = {
+    subject: 'Test subject',
+    from: userA.id,
+    to: [
+      {
+        email: 'gholi@rechat.com',
+        recipient_type: Email.EMAIL
+      }
+    ],
+    created_by: userA.id,
+    brand: brand1.id,
+    due_at: new Date().toISOString(),
+    html: '<html></html>',
+    headers: {
+      message_id: 'message_id',
+      in_reply_to: 'in_reply_to',
+      thread_id: 'thread_id',
+    },
+    google_credential: null,
+    microsoft_credential: null,
+    attachments: attachments
+  }
+
+  try {
+    await EmailCampaign.createMany([campaignObj])
+  } catch (ex) {
+
+    expect(ex.message).to.be.equal(`Files size could not be greater than ${config.mailgun_integration.attachment_size_limit / 1024 / 1024}MB!`)
+  }
+}
+
+async function testGmailWithLArgeAttachments() {
+  const gResult = await createGoogleCredential(userA, brand1)
+  const googleCredential = gResult.credential
+
+  const attachments = []
+
+  let i = 1
+
+  for (i; i < 10; i++ ) {
+    const file = await uploadFile()
+
+    attachments.push({
+      file: file.id,
+      is_inline: true,
+      content_id: 'content_id'
+    })
+  }
+
+
+  /** @type {IEmailCampaignInput} */
+  const campaignObj = {
+    subject: 'Test subject',
+    from: userA.id,
+    to: [
+      {
+        email: 'gholi@rechat.com',
+        recipient_type: Email.EMAIL
+      }
+    ],
+    created_by: userA.id,
+    brand: brand1.id,
+    due_at: new Date().toISOString(),
+    html: '<html></html>',
+    headers: {
+      message_id: 'message_id',
+      in_reply_to: 'in_reply_to',
+      thread_id: 'thread_id',
+    },
+    google_credential: googleCredential.id,
+    microsoft_credential: null,
+    attachments: attachments
+  }
+
+  try {
+    await EmailCampaign.createMany([campaignObj])
+  } catch (ex) {
+
+    expect(ex.message).to.be.equal(`Files size could not be greater than ${config.google_integration.attachment_size_limit / 1024 / 1024}MB!`)
+  }
+}
+
+async function testOutlookWithLArgeAttachments() {
+  const mResult = await createMicrosoftCredential(userA, brand1)
+  const microsoftCredential = mResult.credential
+
+  const attachments = []
+
+  let i = 1
+
+  for (i; i < 10; i++ ) {
+    const file = await uploadFile()
+
+    attachments.push({
+      file: file.id,
+      is_inline: true,
+      content_id: 'content_id'
+    })
+  }
+
+
+  /** @type {IEmailCampaignInput} */
+  const campaignObj = {
+    subject: 'Test subject',
+    from: userA.id,
+    to: [
+      {
+        email: 'gholi@rechat.com',
+        recipient_type: Email.EMAIL
+      }
+    ],
+    created_by: userA.id,
+    brand: brand1.id,
+    due_at: new Date().toISOString(),
+    html: '<html></html>',
+    headers: {
+      message_id: 'message_id',
+      in_reply_to: 'in_reply_to',
+      thread_id: 'thread_id',
+    },
+    google_credential: null,
+    microsoft_credential: microsoftCredential.id,
+    attachments: attachments
+  }
+
+  try {
+    await EmailCampaign.createMany([campaignObj])
+  } catch (ex) {
+
+    expect(ex.message).to.be.equal(`Files size could not be greater than ${config.microsoft_integration.attachment_size_limit / 1024 / 1024}MB!`)
+  }
 }
 
 async function testGoogleEmail() {
@@ -847,6 +996,10 @@ describe('Email', () => {
   it('should test deleted attachments', testDeleteAttachments)
 
   it('should give correct attachments and headers for a specific campaing', testCampaignWithAttachments)
+  it('should fail after attaching large files for mailgun', testCampaignWithLArgeAttachments)
+  it('should fail after attaching large files for gmail', testGmailWithLArgeAttachments)
+  it('should fail after attaching large files for goutlook', testOutlookWithLArgeAttachments)
+  
   it('should handle a gmail-message', testGoogleEmail)
   it('should handle an outlook-message', testMicrosoftEmail)
   it('should fail when both of google and microsoft are present', testGMFailure)
