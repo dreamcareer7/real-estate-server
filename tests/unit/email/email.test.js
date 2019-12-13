@@ -998,7 +998,7 @@ describe('Email', () => {
   it('should give correct attachments and headers for a specific campaing', testCampaignWithAttachments)
   it('should fail after attaching large files for mailgun', testCampaignWithLArgeAttachments)
   it('should fail after attaching large files for gmail', testGmailWithLArgeAttachments)
-  it('should fail after attaching large files for goutlook', testOutlookWithLArgeAttachments)
+  it('should fail after attaching large files for outlook', testOutlookWithLArgeAttachments)
   
   it('should handle a gmail-message', testGoogleEmail)
   it('should handle an outlook-message', testMicrosoftEmail)
