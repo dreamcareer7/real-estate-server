@@ -413,7 +413,7 @@ const migrations = [
         NULL::uuid AS activity,
         ARRAY[ec.from] AS users,
         NULL::uuid[] AS accessible_to,
-  
+
         (
           SELECT
             ARRAY_AGG(json_build_object(
@@ -432,7 +432,7 @@ const migrations = [
               LIMIT 5
             ) t
         ) AS people,
-  
+
         (
           SELECT
             COUNT(DISTINCT email)::int
@@ -441,7 +441,7 @@ const migrations = [
           WHERE
             campaign = ec.id
         ) AS people_len,
-  
+
         brand,
         NULL::text AS status,
         NULL::jsonb AS metadata
@@ -451,7 +451,6 @@ const migrations = [
         deleted_at IS NULL
         AND executed_at IS NULL
         AND due_at IS NOT NULL
-        AND thread_key IS NULL
     )
     UNION ALL
     (
@@ -478,7 +477,7 @@ const migrations = [
         NULL::uuid AS activity,
         ARRAY[ec.from] AS users,
         NULL::uuid[] AS accessible_to,
-  
+
         (
           SELECT
             ARRAY_AGG(json_build_object(
@@ -500,7 +499,7 @@ const migrations = [
               LIMIT 5
             ) t
         ) AS people,
-  
+
         (
           SELECT
             count(*)::int
@@ -509,7 +508,7 @@ const migrations = [
           WHERE
             ece.campaign = ec.id
         ) AS people_len,
-  
+
         brand,
         NULL::text AS status,
         NULL::jsonb AS metadata
@@ -610,7 +609,7 @@ const migrations = [
         NULL::uuid AS activity,
         ARRAY[ec.from] AS users,
         NULL::uuid[] AS accessible_to,
-  
+
         (
           SELECT
             ARRAY_AGG(json_build_object(
@@ -626,15 +625,15 @@ const migrations = [
                 email_campaign_emails
                 LEFT JOIN contacts
                   ON ((contacts.email @> ARRAY[email_campaign_emails.email_address]) OR (contacts.id = email_campaign_emails.contact))
-                     AND contacts.brand = ec.brand
-                     AND contacts.deleted_at IS NULL
+                    AND contacts.brand = ec.brand
+                    AND contacts.deleted_at IS NULL
               WHERE
                 email_campaign_emails.campaign = ec.id
                 AND (email_campaign_emails.agent IS NOT NULL OR contacts.id IS NOT NULL)
               LIMIT 5
             ) t
         ) AS people,
-  
+
         (
           SELECT
             count(*)::int
@@ -643,7 +642,7 @@ const migrations = [
           WHERE
             email_campaign_emails.campaign = ec.id
         ) AS people_len,
-  
+
         ec.brand,
         NULL::text AS status,
         NULL::jsonb AS metadata
@@ -658,6 +657,7 @@ const migrations = [
         AND c.deleted_at IS NULL
         AND c.email @> ARRAY[ece.email_address]
         AND ec.executed_at IS NOT NULL
+        AND ec.thread_key IS NULL
     )
     UNION ALL
     (
@@ -684,7 +684,7 @@ const migrations = [
         NULL::uuid AS activity,
         ARRAY[email_threads."user"] AS users,
         ARRAY[email_threads."user"] AS accessible_to,
-  
+
         (
           SELECT
             ARRAY_AGG(json_build_object(
@@ -716,7 +716,7 @@ const migrations = [
             contacts.brand = brand
             AND contacts.deleted_at IS NULL
         ) AS people_len,
-  
+
         email_threads.brand,
         NULL::text AS status,
         NULL::jsonb AS metadata
@@ -750,7 +750,7 @@ const migrations = [
         NULL::uuid AS activity,
         ARRAY[email_threads."user"] AS users,
         ARRAY[email_threads."user"] AS accessible_to,
-  
+
         (
           SELECT
             ARRAY_AGG(json_build_object(
@@ -771,7 +771,7 @@ const migrations = [
               LIMIT 5
             ) t
         ) AS people,
-  
+
         (
           SELECT
             count(DISTINCT contacts.id)::int
@@ -783,7 +783,7 @@ const migrations = [
             contacts.brand = brand
             AND contacts.deleted_at IS NULL
         ) AS people_len,
-  
+
         brand,
         NULL::text AS status,
         NULL::jsonb AS metadata
@@ -800,9 +800,9 @@ const migrations = [
       WHERE
         email_threads.deleted_at IS NULL
     )
-  
+
     UNION ALL
-  
+
     (
       SELECT
         a.id::text,
