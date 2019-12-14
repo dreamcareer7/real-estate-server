@@ -691,11 +691,10 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
             SELECT
               contacts.id AS contact
             FROM
-              unnest(recipients) AS recipients(recipient)
-              JOIN contacts
-                ON contacts.email @> ARRAY[recipient]
+              contacts
             WHERE
               contacts.brand = email_threads.brand
+              AND contacts.email && recipients
               AND contacts.deleted_at IS NULL
             LIMIT 5
           ) t
@@ -704,11 +703,10 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
         SELECT
           count(DISTINCT contacts.id)::int
         FROM
-          unnest(recipients) AS recipients(recipient)
-          JOIN contacts
-            ON contacts.email @> ARRAY[recipient]
+          contacts
         WHERE
-          contacts.brand = brand
+          contacts.brand = email_threads.brand
+          AND contacts.email && recipients
           AND contacts.deleted_at IS NULL
       ) AS people_len,
 
@@ -757,11 +755,10 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
             SELECT
               contacts.id AS contact
             FROM
-              unnest(recipients) AS recipients(recipient)
-              JOIN contacts
-                ON contacts.email @> ARRAY[recipient]
+              contacts
             WHERE
-              contacts.brand = brand
+              contacts.brand = email_threads.brand
+              AND contacts.email && recipients
               AND contacts.deleted_at IS NULL
             LIMIT 5
           ) t
@@ -771,11 +768,10 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
         SELECT
           count(DISTINCT contacts.id)::int
         FROM
-          unnest(recipients) AS recipients(recipient)
-          JOIN contacts
-            ON contacts.email @> ARRAY[recipient]
+          contacts
         WHERE
-          contacts.brand = brand
+          contacts.brand = email_threads.brand
+          AND contacts.email && recipients
           AND contacts.deleted_at IS NULL
       ) AS people_len,
 
