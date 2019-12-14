@@ -294,14 +294,14 @@ const scheduleGmailMessage = cb => {
   }
 
   return frisby
-    .create('Schedule a gmail message')
+    .create('Schedule a gmail campaign')
     .addHeader('X-RECHAT-BRAND', results.google.getGoogleProfile.data.brand)
     .post('/emails', emailObj)
     .after(cb)
     .expectStatus(200)
 }
 
-const scheduleOulookMessage = cb => {
+const scheduleOutlookMessage = cb => {
   const emailObj = {
     to: [
       {
@@ -320,7 +320,7 @@ const scheduleOulookMessage = cb => {
   }
 
   return frisby
-    .create('Schedule an outlook message')
+    .create('Schedule an outlook campaign')
     .addHeader('X-RECHAT-BRAND', results.microsoft.getMicrosoftProfile.data.brand)
     .post('/emails', emailObj)
     .after(cb)
@@ -487,6 +487,121 @@ const getCampaignAfterRemovingAttachments = cb => {
     })
 }
 
+const updateGmailToMailgun = cb => {
+  const html = '<div>updated</div>'
+  const subject = 'Individual Email From {{sender.display_name}}'
+
+  const campaign = {
+    subject,
+    html,
+    google_credential: null,
+    microsoft_credential: null
+  }
+
+  return frisby
+    .create('Update a Gmail campaign to Mailgin')
+    .addHeader('X-RECHAT-BRAND', results.google.getGoogleProfile.data.brand)
+    .put(`/emails/${results.email.scheduleGmailMessage.data.id}?associations[]=email_campaign.recipients`, campaign)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      data: {
+        subject: campaign.subject,
+        html: campaign.html,
+        google_credential: null,
+        microsoft_credential: null
+      }
+    })
+}
+
+const updateOutlookToMailgun = cb => {
+  const html = '<div>updated</div>'
+  const subject = 'Individual Email From {{sender.display_name}}'
+
+  const campaign = {
+    subject,
+    html,
+    google_credential: null,
+    microsoft_credential: null
+  }
+
+  return frisby
+    .create('Update a Outlook campaign to Mailgin')
+    .addHeader('X-RECHAT-BRAND', results.microsoft.getMicrosoftProfile.data.brand)
+    .put(`/emails/${results.email.scheduleOutlookMessage.data.id}?associations[]=email_campaign.recipients`, campaign)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      data: {
+        subject: campaign.subject,
+        html: campaign.html,
+        google_credential: null,
+        microsoft_credential: null
+      }
+    })
+}
+
+const scheduleTempMailGunCampaign = cb => {
+  const emailObj = {
+    to: [{
+      email: 'recipient@rechat.com',
+      recipient_type: 'Email'
+    }],
+    cc: [{
+      recipient_type: 'Email',
+      email: 'chavoshian.shiva@gmail.com '
+    }],
+    bcc: [{
+      recipient_type: 'Email',
+      email: 'saeed@rechat.com'
+    }],
+    due_at: new Date(),
+    html: '<div>Hi</div>',
+    subject: 'schedule gmail message',
+    from: results.google.getGoogleProfile.data.user,
+    google_credential: null,
+    microsoft_credential: null,
+    attachments: [],
+    headers: {}
+  }
+
+  return frisby
+    .create('Schedule a temp Mailgun campaign')
+    .addHeader('X-RECHAT-BRAND', results.google.getGoogleProfile.data.brand)
+    .post('/emails', emailObj)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      data: {
+        google_credential: null,
+        microsoft_credential: null
+      }
+    })
+}
+
+const updateMailgunToGmail = cb => {
+  const campaign = {
+    html: '<div>Hi</div>',
+    subject: 'schedule gmail message',
+    from: results.email.scheduleTempMailGunCampaign.data.created_by,
+    google_credential: results.google.getGoogleProfile.data.id,
+    microsoft_credential: null
+  }
+
+  return frisby
+    .create('Update a Gmail campaign to Mailgin')
+    .addHeader('X-RECHAT-BRAND', results.google.getGoogleProfile.data.brand)
+    .put(`/emails/${results.email.scheduleTempMailGunCampaign.data.id}?associations[]=email_campaign.recipients`, campaign)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      data: {
+        google_credential: campaign.google_credential,
+        microsoft_credential: null
+      }
+    })
+}
+
 
 module.exports = {
   schedule,
@@ -502,12 +617,16 @@ module.exports = {
   remove,
   uploadAttachment,
   scheduleGmailMessage,
-  scheduleOulookMessage,
+  scheduleOutlookMessage,
   scheduleReplyToGmailMessage,
   scheduleReplyToOulookMessage,
   scheduleEmailWithAttachments,
   getGmailCampaign,
   getOulookCampaign,
   removeAttachments,
-  getCampaignAfterRemovingAttachments
+  getCampaignAfterRemovingAttachments,
+  updateGmailToMailgun,
+  updateOutlookToMailgun,
+  scheduleTempMailGunCampaign,
+  updateMailgunToGmail
 }

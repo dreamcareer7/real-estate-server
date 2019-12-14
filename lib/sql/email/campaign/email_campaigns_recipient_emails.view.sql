@@ -35,6 +35,7 @@ CREATE OR REPLACE VIEW email_campaigns_recipient_emails AS (
     WHERE
       email_campaigns_recipients.recipient_type = 'List'
       AND contacts.deleted_at IS NULL
+      AND crm_lists_members.deleted_at IS NULL
   ) UNION (
     SELECT
       email_campaigns.id AS campaign,
