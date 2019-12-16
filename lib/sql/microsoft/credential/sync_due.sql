@@ -3,7 +3,6 @@ SELECT
 FROM 
   microsoft_credentials
 WHERE
-  id = 'bb38a5c5-a03c-4259-97f8-eafcb3a01865' OR
   (
     (
       (last_sync_at <= (NOW() - $1::interval) OR last_sync_at IS NULL)
