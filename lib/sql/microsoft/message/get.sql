@@ -11,7 +11,6 @@ SELECT
   recipients,
   "subject",
   has_attachments,
-  attachments,
   from_raw,
   to_raw,
   cc_raw,

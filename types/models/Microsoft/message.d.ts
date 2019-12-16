@@ -1,3 +1,12 @@
+declare interface outlookAttachments {
+  id?: string;
+  name?: string;
+  contentType?: string;
+  size?: number;
+  isInline?: boolean,
+  url?: string
+}
+
 declare interface IOutlookMessage {
   status: number;
   id: string;
@@ -7,4 +16,5 @@ declare interface IOutlookMessage {
   htmlBody?: string;
   textBody?: string;
   error?: string;
+  attachments?: outlookAttachments[];
 }
