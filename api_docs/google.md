@@ -30,6 +30,7 @@ A _google_credential_ is a simple and small object that contains:
 
 
 ### Request to add google account [POST /users/self/google]
+- Valid scopes: ['contacts.readonly', 'gmail.readonly', 'gmail.send']
 <!-- include(tests/google/requestGmailAccess.md) -->
 
 ### Request to get an specific google credential [GET /users/self/google/:id]

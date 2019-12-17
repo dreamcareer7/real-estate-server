@@ -6,30 +6,31 @@ Each user in Rechat could have Microsoft account. With this API section they can
 ### Microsoft Credential
 A _microsoft_credential_ is a simple and small object that contains:
 
-          Column          |           Type           | Collation | Nullable |
---------------------------+--------------------------+-----------+----------+
- id                       | uuid                     |           | not null |
- user                     | uuid                     |           | not null |
- brand                    | uuid                     |           | not null |
- email                    | text                     |           | not null |
- resource_name            | text                     |           | not null |
- display_name             | text                     |           | not null |
- first_name               | text                     |           |          |
- last_name                | text                     |           |          |
- photo                    | text                     |           |          |
- scope                    | jsonb                    |           |          |
- scope_summary            | jsonb                    |           |          |
- revoked                  | boolean                  |           | not null |
- sync_status              | text                     |           |          |
- last_sync_at             | timestamp with time zone |           |          |
- last_sync_duration       | integer                  |           |          |
- created_at               | timestamp with time zone |           | not null |
- updated_at               | timestamp with time zone |           | not null |
- deleted_at               | timestamp with time zone |           |          |
+|          Column          |           Type           | Nullable |
+| ------------------------ | ------------------------ | -------- |
+| id                       | uuid                     | not null |
+| user                     | uuid                     | not null |
+| brand                    | uuid                     | not null |
+| email                    | text                     | not null |
+| resource_name            | text                     | not null |
+| display_name             | text                     | not null |
+| first_name               | text                     |          |
+| last_name                | text                     |          |
+| photo                    | text                     |          |
+| scope                    | jsonb                    |          |
+| scope_summary            | jsonb                    |          |
+| revoked                  | boolean                  | not null |
+| sync_status              | text                     |          |
+| last_sync_at             | timestamp with time zone |          |
+| last_sync_duration       | integer                  |          |
+| created_at               | timestamp with time zone | not null |
+| updated_at               | timestamp with time zone | not null |
+| deleted_at               | timestamp with time zone |          |
 
 
 
 ### Request to add microsoft account [POST /users/self/microsoft]
+- Valid scopes: ['Contacts.Read', 'Mail.Read', 'Mail.Send']
 <!-- include(tests/microsoft/requestOutlookAccess.md) -->
 
 ### Request to get an specific microsoft credential [GET /users/self/microsoft/:id]
