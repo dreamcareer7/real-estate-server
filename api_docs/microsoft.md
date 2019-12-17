@@ -31,6 +31,7 @@ A _microsoft_credential_ is a simple and small object that contains:
 
 ### Request to add microsoft account [POST /users/self/microsoft]
 - Valid scopes: ['Contacts.Read', 'Mail.Read', 'Mail.Send']
+- To redirect back user to an specific address, use `redirect` key to set your custom address.
 <!-- include(tests/microsoft/requestOutlookAccess.md) -->
 
 ### Request to get an specific microsoft credential [GET /users/self/microsoft/:id]
