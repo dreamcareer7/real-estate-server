@@ -6,26 +6,26 @@ Each user in Rechat could have Google account. With this API section they can se
 ### Google Credential
 A _google_credential_ is a simple and small object that contains:
 
-          Column          |           Type           | Collation | Nullable |
---------------------------+--------------------------+-----------+----------+
- id                       | uuid                     |           | not null |
- user                     | uuid                     |           | not null |
- brand                    | uuid                     |           | not null |
- email                    | text                     |           | not null |
- resource_name            | text                     |           | not null |
- display_name             | text                     |           | not null |
- first_name               | text                     |           |          |
- last_name                | text                     |           |          |
- photo                    | text                     |           |          |
- scope                    | jsonb                    |           |          |
- scope_summary            | jsonb                    |           |          |
- revoked                  | boolean                  |           | not null |
- sync_status              | text                     |           |          |
- last_sync_at             | timestamp with time zone |           |          |
- last_sync_duration       | integer                  |           |          |
- created_at               | timestamp with time zone |           | not null |
- updated_at               | timestamp with time zone |           | not null |
- deleted_at               | timestamp with time zone |           |          |
+|          Column          |           Type           | Nullable |
+| ------------------------ | ------------------------ | -------- |
+| id                       | uuid                     | not null |
+| user                     | uuid                     | not null |
+| brand                    | uuid                     | not null |
+| email                    | text                     | not null |
+| resource_name            | text                     | not null |
+| display_name             | text                     | not null |
+| first_name               | text                     |          |
+| last_name                | text                     |          |
+| photo                    | text                     |          |
+| scope                    | jsonb                    |          |
+| scope_summary            | jsonb                    |          |
+| revoked                  | boolean                  | not null |
+| sync_status              | text                     |          |
+| last_sync_at             | timestamp with time zone |          |
+| last_sync_duration       | integer                  |          |
+| created_at               | timestamp with time zone | not null |
+| updated_at               | timestamp with time zone | not null |
+| deleted_at               | timestamp with time zone |          |
 
 
 

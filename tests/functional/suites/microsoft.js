@@ -146,9 +146,35 @@ function createMicrosoftCredential(cb) {
     .expectStatus(200)
 }
 
+function addMicrosoftSyncHistory(cb) {
+  const body  = {
+    user: results.authorize.token.data.id,
+    brand: results.brand.create.data.id,
+    microsoft_credential: results.microsoft.createMicrosoftCredential,
+    extract_contacts_error: 'extract_contacts_error',
+    synced_contacts_num: 5,
+    contacts_total: 6,
+    sync_messages_error: 'sync_messages_error',
+    synced_messages_num: 1,
+    messages_total: 2,
+    sync_duration: 7,
+    status: true
+  }
+
+  return frisby.create('add microsoft SyncHistory')
+    .post('/jobs', {
+      name: 'MicrosoftSyncHistory.addSyncHistory',
+      data: body
+    })
+    .after(function(err, res, syncHistory) {
+      cb(err, res, syncHistory)
+    })
+    .expectStatus(200)
+}
+
 function getMicrosoftProfile(cb) {
   return frisby.create('Get Microsoft profiles')
-    .get(`/users/self/microsoft/${results.microsoft.createMicrosoftCredential}`)
+    .get(`/users/self/microsoft/${results.microsoft.createMicrosoftCredential}?associations=google_credential.histories`)
     .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
     .after(function(err, res, json) {
       cb(err, res, json)
@@ -162,7 +188,7 @@ function getMicrosoftProfile(cb) {
 
 function getMicrosoftProfiles(cb) {
   return frisby.create('Get Microsoft profiles')
-    .get('/users/self/microsoft')
+    .get('/users/self/microsoft?associations=google_credential.histories')
     .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
     .after(function(err, res, json) {
       cb(err, res, json)
@@ -239,32 +265,6 @@ function forceSync(cb) {
     })
 }
 
-const addMicrosoftSyncHistory = (cb) => {
-  const body  = {
-    user: results.authorize.token.data.id,
-    brand: results.brand.create.data.id,
-    microsoft_credential: results.microsoft.createMicrosoftCredential,
-    extract_contacts_error: 'extract_contacts_error',
-    synced_contacts_num: 5,
-    contacts_total: 6,
-    sync_messages_error: 'sync_messages_error',
-    synced_messages_num: 1,
-    messages_total: 2,
-    sync_duration: 7,
-    status: true
-  }
-
-  return frisby.create('add microsoft SyncHistory')
-    .post('/jobs', {
-      name: 'MicrosoftSyncHistory.addSyncHistory',
-      data: body
-    })
-    .after(function(err, res, syncHistory) {
-      cb(err, res, syncHistory)
-    })
-    .expectStatus(200)
-}
-
 function getMCredentialLastSyncHistory(cb) {
   return frisby.create('get microsoft credential LastSyncHistory')
     .get(`/users/self/microsoft/sync_history/${results.microsoft.createMicrosoftCredential}`)
@@ -289,6 +289,7 @@ module.exports = {
   enableSyncFailed,
   forceSyncFailed,
   createMicrosoftCredential,
+  addMicrosoftSyncHistory,
   getMicrosoftProfile,
   getMicrosoftProfiles,
   deleteAccount,
@@ -296,6 +297,5 @@ module.exports = {
   disableSync,
   enableSync,
   forceSync,
-  addMicrosoftSyncHistory,
   getMCredentialLastSyncHistory
 }

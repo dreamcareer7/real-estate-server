@@ -166,9 +166,35 @@ function createGoogleCredential(cb) {
     .expectStatus(200)
 }
 
+function addGoogleSyncHistory(cb) {
+  const body  = {
+    user: results.authorize.token.data.id,
+    brand: results.brand.create.data.id,
+    google_credential: results.google.createGoogleCredential,
+    synced_messages_num: 1,
+    messages_total: 2,
+    synced_threads_num: 3,
+    threads_total: 4,
+    synced_contacts_num: 5,
+    contacts_total: 6,
+    sync_duration: 7,
+    status: true
+  }
+
+  return frisby.create('add GoogleSyncHistory')
+    .post('/jobs', {
+      name: 'GoogleSyncHistory.addSyncHistory',
+      data: body
+    })
+    .after(function(err, res, syncHistory) {
+      cb(err, res, syncHistory)
+    })
+    .expectStatus(200)
+}
+
 function getGoogleProfile(cb) {
   return frisby.create('Get Google profiles')
-    .get(`/users/self/google/${results.google.createGoogleCredential}`)
+    .get(`/users/self/google/${results.google.createGoogleCredential}?associations=google_credential.histories`)
     .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
     .after(function(err, res, json) {
       cb(err, res, json)
@@ -182,7 +208,7 @@ function getGoogleProfile(cb) {
 
 function getGoogleProfiles(cb) {
   return frisby.create('Get Google profiles')
-    .get('/users/self/google')
+    .get('/users/self/google?associations=google_credential.histories')
     .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
     .after(function(err, res, json) {
       cb(err, res, json)
@@ -259,32 +285,6 @@ function forceSync(cb) {
     })
 }
 
-const addGoogleSyncHistory = (cb) => {
-  const body  = {
-    user: results.authorize.token.data.id,
-    brand: results.brand.create.data.id,
-    google_credential: results.google.createGoogleCredential,
-    synced_messages_num: 1,
-    messages_total: 2,
-    synced_threads_num: 3,
-    threads_total: 4,
-    synced_contacts_num: 5,
-    contacts_total: 6,
-    sync_duration: 7,
-    status: true
-  }
-
-  return frisby.create('add GoogleSyncHistory')
-    .post('/jobs', {
-      name: 'GoogleSyncHistory.addSyncHistory',
-      data: body
-    })
-    .after(function(err, res, syncHistory) {
-      cb(err, res, syncHistory)
-    })
-    .expectStatus(200)
-}
-
 function getGCredentialLastSyncHistory(cb) {
   return frisby.create('get Google credential lastSyncHistory')
     .get(`/users/self/google/sync_history/${results.google.createGoogleCredential}`)
@@ -310,6 +310,7 @@ module.exports = {
   enableSyncFailed,
   forceSyncFailed,
   createGoogleCredential,
+  addGoogleSyncHistory,
   getGoogleProfile,
   getGoogleProfiles,
   deleteAccount,
@@ -317,7 +318,6 @@ module.exports = {
   disableSync,
   enableSync,
   forceSync,
-  addGoogleSyncHistory,
   getGCredentialLastSyncHistory,
   // getGoogpleProfile,
   // revokeAccess
