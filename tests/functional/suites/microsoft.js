@@ -49,7 +49,6 @@ function grantAccessWithMissedState(cb) {
     .expectStatus(400)
 }
 
-
 function deleteAccountFailed(cb) {
   return frisby.create('deleteAccount Failed')
     .delete(`/users/self/microsoft/${results.user.create.data.id}`)
@@ -89,7 +88,6 @@ function forceSyncFailed(cb) {
     })
     .expectStatus(404)
 }
-
 
 function createMicrosoftCredential(cb) {
   const scope = 'Contacts.Read Mail.Read Mail.Send Mail.ReadWrite Calendar'.split(' ')
@@ -240,7 +238,6 @@ function forceSync(cb) {
       data: microsoft_credential_json
     })
 }
-
 
 const addMicrosoftSyncHistory = (cb) => {
   const body  = {

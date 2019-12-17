@@ -61,7 +61,6 @@ function grantAccessWithMissedScope(cb) {
     .expectStatus(400)
 }
 
-
 function deleteAccountFailed(cb) {
   return frisby.create('deleteAccount Failed')
     .delete(`/users/self/google/${results.user.create.data.id}`)
@@ -101,7 +100,6 @@ function forceSyncFailed(cb) {
     })
     .expectStatus(404)
 }
-
 
 function createGoogleCredential(cb) {
   const scope = [
@@ -261,7 +259,6 @@ function forceSync(cb) {
     })
 }
 
-
 const addGoogleSyncHistory = (cb) => {
   const body  = {
     user: results.authorize.token.data.id,
@@ -302,25 +299,6 @@ function getGCredentialLastSyncHistory(cb) {
     })
 }
 
-/*
-function getGoogpleProfile(cb) {
-  return frisby.create('Get Google profile')
-    .get('/users/self/google/:id')
-    .after(cb)
-    .expectStatus(200)
-    .expectJSON({
-      code: 'OK',
-      // data: google_profile_json
-    })
-}
-
-function revokeAccess(cb) {
-  return frisby.create('Get Google profile')
-    .delete('/users/self/google/:id')
-    .after(cb)
-    .expectStatus(204)
-}
-*/
 
 module.exports = {
   requestGmailAccess,
