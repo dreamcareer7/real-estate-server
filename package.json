@@ -101,7 +101,7 @@
     "passport-oauth2-client-password": "^0.1.2",
     "password-generator": "^2.2.3",
     "pdfjs-dist": "git+https://github.com/rechat/pdfjs-dist.git",
-    "peanar": "^0.9.23",
+    "peanar": "^0.9.24",
     "pg": "^7.14.0",
     "redis": "^2.8.0",
     "request": "^2.88.0",
