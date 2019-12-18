@@ -1,10 +1,10 @@
-# Google Profile
+# Microsoft Profile
 
 ## Overview
-Each user in Rechat could have Google account. With this API section they can send access-request, verify-grant, revoke-access and get their Google account's profile data.
+Each user in Rechat could have Microsoft account. With this API section they can send access-request, verify-grant, revoke-access and get their Microsoft account's profile data.
 
-### Google Credential
-A _google_credential_ is a simple and small object that contains:
+### Microsoft Credential
+A _microsoft_credential_ is a simple and small object that contains:
 
 |          Column          |           Type           | Nullable |
 | ------------------------ | ------------------------ | -------- |
@@ -29,19 +29,19 @@ A _google_credential_ is a simple and small object that contains:
 
 
 
-### Request to add google account [POST /users/self/google]
-- Valid scopes: ['contacts.readonly', 'gmail.readonly', 'gmail.send']
+### Request to add microsoft account [POST /users/self/microsoft]
+- Valid scopes: ['Contacts.Read', 'Mail.Read', 'Mail.Send']
 - To redirect back user to an specific address, use `redirect` key to set your custom address.
-<!-- include(tests/google/requestGmailAccess.md) -->
+<!-- include(tests/microsoft/requestOutlookAccess.md) -->
 
-### Request to get an specific google credential [GET /users/self/google/:id]
-<!-- include(tests/google/getGoogleProfile.md) -->
+### Request to get an specific microsoft credential [GET /users/self/microsoft/:id]
+<!-- include(tests/microsoft/getMicrosoftProfile.md) -->
 
-### Request to get user's all google credentials  [GET /users/self/google]
-<!-- include(tests/google/getGoogleProfiles.md) -->
+### Request to get user's all microsoft credentials  [GET /users/self/microsoft]
+<!-- include(tests/microsoft/getMicrosoftProfiles.md) -->
 
-### Request to sync a google credential  [POST /users/self/google/:id/sync]
-<!-- include(tests/google/forceSync.md) -->
+### Request to sync a microsoft credential  [POST /users/self/microsoft/:id/sync]
+<!-- include(tests/microsoft/forceSync.md) -->
 
-### Request to delete a google credential  [DELETE /users/self/google/:id]
-<!-- include(tests/google/deleteAccount.md) -->
+### Request to delete a microsoft credential  [DELETE /users/self/microsoft/:id]
+<!-- include(tests/microsoft/deleteAccount.md) -->
