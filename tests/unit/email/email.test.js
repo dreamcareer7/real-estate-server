@@ -1,27 +1,29 @@
+const fs   = require('fs')
+const path = require('path')
 const { expect } = require('chai')
 
 const { createContext, handleJobs } = require('../helper')
 
+const db      = require('../../../lib/utils/db')
+const sql     = require('../../../lib/utils/sql')
+const config  = require('../../../lib/config')
 const Contact = require('../../../lib/models/Contact')
 const Context = require('../../../lib/models/Context')
-const Email = require('../../../lib/models/Email')
-const User = require('../../../lib/models/User')
+const Email   = require('../../../lib/models/Email')
+const User    = require('../../../lib/models/User')
 const EmailCampaign = require('../../../lib/models/Email/campaign')
 const EmailCampaignAttachment = require('../../../lib/models/Email/campaign/attachments')
+const EmailCampaignEmail = require('../../../lib/models/Email/campaign/email')
 const AttachedFile = require('../../../lib/models/AttachedFile')
 
-const db = require('../../../lib/utils/db')
-const sql = require('../../../lib/utils/sql')
-const fs = require('fs')
-const path = require('path')
-
-const BrandHelper = require('../brand/helper')
+const BrandHelper    = require('../brand/helper')
 const { attributes } = require('../contact/helper')
 
-const { createGoogleCredential } = require('../google/helper')
+const { createGoogleCredential }    = require('../google/helper')
 const { createMicrosoftCredential } = require('../microsoft/helper')
 
 let userA, userB, brand1, brand2
+
 
 async function setup() {
   userA = await User.getByEmail('test@rechat.com')
@@ -136,7 +138,7 @@ async function uploadFile() {
         role_id: brand1.id
       }
     ],
-    public: false
+    public: true
   })
 }
 
@@ -243,6 +245,14 @@ async function testEmailsOnly() {
 async function testCampaignRecipients() {
   await createContactForUserB()
 
+  const file = await uploadFile()
+
+  const attachmentsObj = {
+    file: file.id,
+    is_inline: true,
+    content_id: 'content_id'
+  }
+
   /** @type {IEmailCampaignInput} */
   const campaign = {
     due_at: '2019-03-07',
@@ -256,7 +266,8 @@ async function testCampaignRecipients() {
     subject: 'testRecipients',
     html: 'test',
     brand: brand1.id,
-    created_by: userA.id
+    created_by: userA.id,
+    attachments: [attachmentsObj]
   }
 
   const [id] = await EmailCampaign.createMany([campaign])
@@ -365,6 +376,46 @@ async function testAttachmentsGetByCampaign() {
   expect(attachments[0].content_id).to.be.equal(input[0].content_id)
 }
 
+async function testDeleteAttachments() {
+  const file = await uploadFile()
+
+  /** @type {IEmailCampaignInput} */
+  const campaignObj = {
+    subject: 'Test subject',
+    from: userA.id,
+    to: [
+      {
+        email: 'gholi@rechat.com',
+        recipient_type: Email.EMAIL
+      }
+    ],
+    created_by: userA.id,
+    brand: brand1.id,
+    due_at: new Date().toISOString(),
+    html: '<html></html>'
+  }
+
+  const result = await EmailCampaign.createMany([campaignObj])
+  const campaign_id = result[0]
+
+  const input = [{
+    'campaign': campaign_id,
+    'file': file.id,
+    'is_inline': false,
+    'content_id': 'xxxzzzz',
+  }]
+
+  const ids = await EmailCampaignAttachment.createAll(input)
+
+  expect(ids.length).to.be.equal(1)
+
+  await EmailCampaignAttachment.deleteByCampaign(campaign_id)
+
+  const attachments = await EmailCampaignAttachment.getByCampaign(campaign_id)
+
+  expect(attachments.length).to.be.equal(0)
+}
+
 async function testCampaignWithAttachments() {
   const file = await uploadFile()
 
@@ -417,6 +468,165 @@ async function testCampaignWithAttachments() {
   expect(attachments[0].content_id).to.be.equal(attachmentsObj.content_id)
 }
 
+async function testCampaignWithLArgeAttachments() {
+  const attachments = []
+
+  let i = 0
+
+  for (i; i < 25; i++ ) {
+    const file = await uploadFile()
+
+    attachments.push({
+      file: file.id,
+      is_inline: true,
+      content_id: 'content_id'
+    })
+  }
+
+
+  /** @type {IEmailCampaignInput} */
+  const campaignObj = {
+    subject: 'Test subject',
+    from: userA.id,
+    to: [
+      {
+        email: 'gholi@rechat.com',
+        recipient_type: Email.EMAIL
+      }
+    ],
+    created_by: userA.id,
+    brand: brand1.id,
+    due_at: new Date().toISOString(),
+    html: '<html></html>',
+    headers: {
+      message_id: 'message_id',
+      in_reply_to: 'in_reply_to',
+      thread_id: 'thread_id',
+    },
+    google_credential: null,
+    microsoft_credential: null,
+    attachments: attachments
+  }
+
+  try {
+    await EmailCampaign.createMany([campaignObj])
+  } catch (ex) {
+
+    const limit    = config.mailgun_integration.attachment_size_limit
+    const limitMsg = `${Math.round((limit / (1024 * 1024)) * (3 / 4))}MB`
+
+    expect(ex.message).to.be.equal(`Files size could not be greater than ${limitMsg}!`)
+  }
+}
+
+async function testGmailWithLArgeAttachments() {
+  const gResult = await createGoogleCredential(userA, brand1)
+  const googleCredential = gResult.credential
+
+  const attachments = []
+
+  let i = 1
+
+  for (i; i < 10; i++ ) {
+    const file = await uploadFile()
+
+    attachments.push({
+      file: file.id,
+      is_inline: true,
+      content_id: 'content_id'
+    })
+  }
+
+
+  /** @type {IEmailCampaignInput} */
+  const campaignObj = {
+    subject: 'Test subject',
+    from: userA.id,
+    to: [
+      {
+        email: 'gholi@rechat.com',
+        recipient_type: Email.EMAIL
+      }
+    ],
+    created_by: userA.id,
+    brand: brand1.id,
+    due_at: new Date().toISOString(),
+    html: '<html></html>',
+    headers: {
+      message_id: 'message_id',
+      in_reply_to: 'in_reply_to',
+      thread_id: 'thread_id',
+    },
+    google_credential: googleCredential.id,
+    microsoft_credential: null,
+    attachments: attachments
+  }
+
+  try {
+    await EmailCampaign.createMany([campaignObj])
+  } catch (ex) {
+
+    const limit    = config.google_integration.attachment_size_limit
+    const limitMsg = `${Math.round((limit / (1024 * 1024)) * (3 / 4))}MB`
+
+    expect(ex.message).to.be.equal(`Files size could not be greater than ${limitMsg}!`)
+  }
+}
+
+async function testOutlookWithLArgeAttachments() {
+  const mResult = await createMicrosoftCredential(userA, brand1)
+  const microsoftCredential = mResult.credential
+
+  const attachments = []
+
+  let i = 1
+
+  for (i; i < 10; i++ ) {
+    const file = await uploadFile()
+
+    attachments.push({
+      file: file.id,
+      is_inline: true,
+      content_id: 'content_id'
+    })
+  }
+
+
+  /** @type {IEmailCampaignInput} */
+  const campaignObj = {
+    subject: 'Test subject',
+    from: userA.id,
+    to: [
+      {
+        email: 'gholi@rechat.com',
+        recipient_type: Email.EMAIL
+      }
+    ],
+    created_by: userA.id,
+    brand: brand1.id,
+    due_at: new Date().toISOString(),
+    html: '<html></html>',
+    headers: {
+      message_id: 'message_id',
+      in_reply_to: 'in_reply_to',
+      thread_id: 'thread_id',
+    },
+    google_credential: null,
+    microsoft_credential: microsoftCredential.id,
+    attachments: attachments
+  }
+
+  try {
+    await EmailCampaign.createMany([campaignObj])
+  } catch (ex) {
+
+    const limit    = config.microsoft_integration.attachment_size_limit
+    const limitMsg = `${Math.round((limit / (1024 * 1024)) * (3 / 4))}MB`
+
+    expect(ex.message).to.be.equal(`Files size could not be greater than ${limitMsg}!`)
+  }
+}
+
 async function testGoogleEmail() {
   const gResult = await createGoogleCredential(userA, brand1)
   const googleCredential = gResult.credential
@@ -449,6 +659,8 @@ async function testGoogleEmail() {
   const campaign = await EmailCampaign.get(result[0])
 
   expect(campaign.google_credential).to.be.equal(googleCredential.id)
+
+  return campaign
 }
 
 async function testMicrosoftEmail() {
@@ -523,6 +735,269 @@ async function testGMFailure() {
   } 
 }
 
+async function testGmailLoadOfRecipients() {
+  const gResult = await createGoogleCredential(userA, brand1)
+  const googleCredential = gResult.credential
+
+  const to = []
+
+  let i = 1
+  for (i; i < 105; i++) {
+    to.push({
+      email: `gholi_${i}@rechat.com`,
+      recipient_type: Email.EMAIL      
+    })
+  }
+
+  /** @type {IEmailCampaignInput} */
+  const campaignObj = {
+    subject: 'Test subject',
+    from: userA.id,
+    to,
+    created_by: userA.id,
+    brand: brand1.id,
+    due_at: new Date().toISOString(),
+    html: '<html></html>',
+    headers: {
+      message_id: 'message_id',
+      in_reply_to: 'in_reply_to',
+      thread_id: 'thread_id',
+    },
+    google_credential: googleCredential.id,
+    microsoft_credential: null,
+    attachments: []
+  }
+
+  try {
+    const result = await EmailCampaign.createMany([campaignObj])
+    expect(result).to.be.equal(null)
+  } catch (ex) {
+    expect(ex.message).to.be.equal('Recipients number should not be greater than 100.')
+  }
+}
+
+async function testOutlookLoadOfRecipients() {
+  const mResult = await createMicrosoftCredential(userA, brand1)
+  const microsoftCredential = mResult.credential
+
+  const to = []
+
+  let i = 1
+  for (i; i < 205; i++) {
+    to.push({
+      email: `gholi_${i}@rechat.com`,
+      recipient_type: Email.EMAIL      
+    })
+  }
+
+  /** @type {IEmailCampaignInput} */
+  const campaignObj = {
+    subject: 'Test subject',
+    from: userA.id,
+    to,
+    cc: to,
+    bcc: to,
+    created_by: userA.id,
+    brand: brand1.id,
+    due_at: new Date().toISOString(),
+    html: '<html></html>',
+    headers: {
+      message_id: 'message_id',
+      in_reply_to: 'in_reply_to',
+      thread_id: 'thread_id',
+    },
+    google_credential: null,
+    microsoft_credential: microsoftCredential.id,
+    attachments: []
+  }
+
+  try {
+    const result = await EmailCampaign.createMany([campaignObj])
+    expect(result).to.be.equal(null)
+  } catch (ex) {
+    expect(ex.message).to.be.equal('Recipients number should not be greater than 500.')
+  }
+}
+
+async function createEmailCampaignEmail() {
+  const gResult = await createGoogleCredential(userA, brand1)
+  const googleCredential = gResult.credential
+
+  /** @type {IEmailCampaignInput} */
+  const campaignObj = {
+    subject: 'Test subject',
+    from: userA.id,
+    to: [{
+      email: 'gholi@rechat.com',
+      recipient_type: Email.EMAIL
+    }],
+    created_by: userA.id,
+    brand: brand1.id,
+    due_at: new Date().toISOString(),
+    html: '<html></html>',
+    headers: {
+      message_id: 'message_id',
+      in_reply_to: 'in_reply_to',
+      thread_id: 'thread_id',
+    },
+    google_credential: googleCredential.id,
+    microsoft_credential: null,
+    attachments: []
+  }
+
+  const result     = await EmailCampaign.createMany([campaignObj])
+  const campaign   = await EmailCampaign.get(result[0])
+  const recipients = await db.select('email/campaign/emails', [campaign.id])
+
+  const email_obj = await Email.create({
+    email: {
+      to: [{
+        email: 'gholi@rechat.com',
+        recipient_type: Email.EMAIL
+      }],
+      cc: [],
+      bcc: []
+    },
+    subject: 'subject',
+    html: 'html',
+    text: 'html'
+  })
+
+  const campaign_emails = recipients.map(to => {
+    return {
+      ...to,
+      email: email_obj.id,
+      email_address: to.email,
+      campaign: campaign.id
+    }
+  })
+
+  const ids = await EmailCampaignEmail.createAll(campaign_emails)
+  const email_campaign_email_obj = await EmailCampaignEmail.get(ids.pop())
+
+  expect(email_campaign_email_obj.campaign).to.be.equal(campaign.id)
+  expect(email_campaign_email_obj.send_type).to.be.equal('To')
+  expect(email_campaign_email_obj.email_address).to.be.equal('gholi@rechat.com')
+
+  return {
+    email_obj,
+    email_campaign_email_obj
+  }
+}
+
+async function emailSaveError() {
+  const { email_obj, email_campaign_email_obj } = await createEmailCampaignEmail()
+
+  const err = {
+    message: 'error_message'
+  }
+
+  await EmailCampaignEmail.saveError(email_obj, err)
+
+  const updated = await EmailCampaignEmail.get(email_campaign_email_obj.id)
+
+  expect(updated.id).to.be.equal(email_campaign_email_obj.id)
+  expect(updated.error).to.be.equal(err.message)
+}
+
+async function saveThreadKey() {
+  const gResult = await createGoogleCredential(userA, brand1)
+  const googleCredential = gResult.credential
+
+  /** @type {IEmailCampaignInput} */
+  const campaignObj = {
+    subject: 'Test subject',
+    from: userA.id,
+    to: [{
+      email: 'gholi@rechat.com',
+      recipient_type: Email.EMAIL
+    }],
+    created_by: userA.id,
+    brand: brand1.id,
+    due_at: new Date().toISOString(),
+    html: '<html></html>',
+    headers: {
+      message_id: 'message_id',
+      in_reply_to: 'in_reply_to',
+      thread_id: 'thread_id',
+    },
+    google_credential: googleCredential.id,
+    microsoft_credential: null,
+    attachments: []
+  }
+
+  const result   = await EmailCampaign.createMany([campaignObj])
+  const campaign = await EmailCampaign.get(result[0])
+  
+  await EmailCampaign.saveThreadKey(campaign.id, 'thread_key')
+
+  const updated = await EmailCampaign.get(result[0])
+
+  expect(updated.id).to.be.equal(campaign.id)
+  expect(updated.thread_key).to.be.equal('thread_key')
+}
+
+async function update() {
+  const gResult = await createGoogleCredential(userA, brand1)
+  const googleCredential = gResult.credential
+
+  const mResult = await createMicrosoftCredential(userA, brand1)
+  const microsoftCredential = mResult.credential
+
+  const campaign = await testGoogleEmail()
+
+  const updated_one = await EmailCampaign.update({
+    ...campaign,
+    subject: 'custom_subject',
+    due_at: new Date(campaign.due_at),
+    google_credential: null,
+    microsoft_credential: null
+  })
+  
+  expect(updated_one.subject).to.be.equal('custom_subject')
+  expect(updated_one.google_credential).to.be.equal(null)
+  expect(updated_one.microsoft_credential).to.be.equal(null)
+
+
+  const  updated_two = await EmailCampaign.update({
+    ...campaign,
+    subject: 'custom_subject',
+    due_at: new Date(campaign.due_at),
+    google_credential: googleCredential.id,
+    microsoft_credential: null
+  })
+  
+  expect(updated_two.google_credential).to.be.equal(googleCredential.id)
+  expect(updated_two.microsoft_credential).to.be.equal(null)
+
+
+  const updated_three = await EmailCampaign.update({
+    ...campaign,
+    subject: 'custom_subject',
+    due_at: new Date(campaign.due_at),
+    google_credential: null,
+    microsoft_credential: microsoftCredential.id
+  })
+  
+  expect(updated_three.google_credential).to.be.equal(null)
+  expect(updated_three.microsoft_credential).to.be.equal(microsoftCredential.id)
+
+
+  try {
+    await EmailCampaign.update({
+      ...campaign,
+      subject: 'custom_subject',
+      due_at: new Date(campaign.due_at),
+      google_credential: googleCredential.id,
+      microsoft_credential: microsoftCredential.id
+    })
+
+  } catch (err) {
+
+    expect(err.message).to.be.equal('It is not allowed to send both google and microsoft ceredentials.')
+  }
+}
+
 
 describe('Email', () => {
   createContext()
@@ -536,9 +1011,23 @@ describe('Email', () => {
 
   it('should create new attachments record', testInsertAttachments)
   it('should test get attachments', testAttachmentsGetByCampaign)
+  it('should test deleted attachments', testDeleteAttachments)
 
   it('should give correct attachments and headers for a specific campaing', testCampaignWithAttachments)
+  it('should fail after attaching large files for mailgun', testCampaignWithLArgeAttachments)
+  it('should fail after attaching large files for gmail', testGmailWithLArgeAttachments)
+  it('should fail after attaching large files for outlook', testOutlookWithLArgeAttachments)
+  
   it('should handle a gmail-message', testGoogleEmail)
   it('should handle an outlook-message', testMicrosoftEmail)
   it('should fail when both of google and microsoft are present', testGMFailure)
+
+  it('should fail when recipients num are more than 100', testGmailLoadOfRecipients)
+  it('should fail when recipients num are more than 500', testOutlookLoadOfRecipients)
+
+  it('should create an email_campaing_email record', createEmailCampaignEmail)
+  it('should save error message on an email_campaing_email record', emailSaveError)
+  it('should save error thread key on an email_campaing record', saveThreadKey)
+
+  it('should update a campaign record', update)
 })

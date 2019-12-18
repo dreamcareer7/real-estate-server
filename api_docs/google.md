@@ -6,24 +6,42 @@ Each user in Rechat could have Google account. With this API section they can se
 ### Google Credential
 A _google_credential_ is a simple and small object that contains:
 
-Field                   | Type          | association        | Description
-------------------------|:-------------:|--------------------|------------------------------------------------------------------------
-id                          | uuid          |                    | Internal identifier of the contact
-user                        | User          |                    | User who is the owner
-brand                       | Brand         |                    | The team this object belongs to
-email                       | string        |                    | gmail or g-suite email address
-messages_total              | number        |                    |
-threads_total               | number        |                    |
-history_id                  | number        |                    |
-last_profile_sync_at        | date          |                    |
-last_contacts_sync_at       | date          |                    |
-last_contact_groups_sync_at | date          |                    |
-last_messages_sync_at       | date          |                    | 
-revoked                     | Boolean       |                    | It means user credential is valid or not
-created_at                  | number        |                    |
-updated_at                  | number        |                    |
-deleted_at                  | number        |                    |
+|          Column          |           Type           | Nullable |
+| ------------------------ | ------------------------ | -------- |
+| id                       | uuid                     | not null |
+| user                     | uuid                     | not null |
+| brand                    | uuid                     | not null |
+| email                    | text                     | not null |
+| resource_name            | text                     | not null |
+| display_name             | text                     | not null |
+| first_name               | text                     |          |
+| last_name                | text                     |          |
+| photo                    | text                     |          |
+| scope                    | jsonb                    |          |
+| scope_summary            | jsonb                    |          |
+| revoked                  | boolean                  | not null |
+| sync_status              | text                     |          |
+| last_sync_at             | timestamp with time zone |          |
+| last_sync_duration       | integer                  |          |
+| created_at               | timestamp with time zone | not null |
+| updated_at               | timestamp with time zone | not null |
+| deleted_at               | timestamp with time zone |          |
+
 
 
 ### Request to add google account [POST /users/self/google]
+- Valid scopes: ['contacts.readonly', 'gmail.readonly', 'gmail.send']
+- To redirect back user to an specific address, use `redirect` key to set your custom address.
 <!-- include(tests/google/requestGmailAccess.md) -->
+
+### Request to get an specific google credential [GET /users/self/google/:id]
+<!-- include(tests/google/getGoogleProfile.md) -->
+
+### Request to get user's all google credentials  [GET /users/self/google]
+<!-- include(tests/google/getGoogleProfiles.md) -->
+
+### Request to sync a google credential  [POST /users/self/google/:id/sync]
+<!-- include(tests/google/forceSync.md) -->
+
+### Request to delete a google credential  [DELETE /users/self/google/:id]
+<!-- include(tests/google/deleteAccount.md) -->

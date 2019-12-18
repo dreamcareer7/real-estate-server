@@ -114,14 +114,12 @@ async function updateAsRevoked() {
 async function updateLastSync() {
   const createdCredential = await create()
 
-  const ts = new Date()
   const duration = 100
-  await MicrosoftCredential.updateLastSync(createdCredential.id, ts, duration)
+  await MicrosoftCredential.updateLastSync(createdCredential.id, duration)
 
   const updatedCredential = await MicrosoftCredential.get(createdCredential.id)
 
   expect(createdCredential.id).to.be.equal(updatedCredential.id)
-  expect(new Date(updatedCredential.last_sync_at).getTime()).to.be.equal(new Date(ts).getTime())
   expect(updatedCredential.last_sync_duration).to.be.equal(duration)
 }
 

@@ -118,6 +118,8 @@ A model that connects Email Campaigns with Microsoft_Credentials.
 ### Email Campaign Attachments
 
 A model that connects Email Campaigns with Email_Campaign_Attachments
+* It is not allowed to send both file and url alongside each other.
+* Combination of url and name is mandatory. 
 
 #### Data model
 
@@ -155,7 +157,7 @@ An `email_campaign_attachments` object type looks like this:
 <!-- include(tests/email/scheduleEmailWithAttachments.md) -->
 
 ### Schedule an outlook message [POST /emails]
-<!-- include(tests/email/scheduleOulookMessage.md) -->
+<!-- include(tests/email/scheduleOutlookMessage.md) -->
 
 ### Schedule a reply to gmail message [POST /emails]
 <!-- include(tests/email/scheduleReplyToGmailMessage.md) -->
