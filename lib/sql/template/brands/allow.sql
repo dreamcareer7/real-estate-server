@@ -1,2 +1,2 @@
 INSERT INTO brands_allowed_templates
-(template, brand) VALUES ($1, $2)
+(template, brand, thumbnail_requested_at) VALUES ($1, $2, NOW())
