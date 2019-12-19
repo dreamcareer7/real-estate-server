@@ -4,7 +4,7 @@ const config = require('../lib/config')
 const migrations = [
   'BEGIN',
   'ALTER TABLE templates ADD file uuid REFERENCES files(id)',
-//   'COMMIT'
+  'COMMIT'
 ]
 
 
@@ -18,16 +18,14 @@ const run = async () => {
   const { rows } = await conn.query('SELECT id, url FROM templates')
 
   for(const row of rows) {
-    const path = (row.url || '').replace(`${config.cdns.public}/`, '')
-
-    console.log(path)
+    const url = row.url.replace(config.cdns.public, '')
 
     const {
       rows: inserted
     } = await conn.query('INSERT INTO files (public, name, path) VALUES ($1, $2, $3) RETURNING id', [
       true,
       'index.html',
-      path
+      `${url}/index.html`
     ])
 
     const id = inserted[0].id
@@ -40,8 +38,7 @@ const run = async () => {
 
   await conn.query('ALTER TABLE templates ALTER file SET NOT NULL')
 
-  throw new 'foo'
-//   conn.release()
+  conn.release()
 }
 
 exports.up = cb => {

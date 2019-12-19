@@ -73,6 +73,9 @@ const addMicrosoftSyncHistory = (job, cb) => {
   MicrosoftSyncHistory.addSyncHistory(job.data).nodeify(cb)
 }
 
+const generateTemplateThumbnails = (job, cb) => {
+  Template.generateThumbnails().nodeify(cb)
+}
 
 const list = {
   socket_emit: (job, cb) => cb(),
@@ -99,7 +102,8 @@ const list = {
   'GoogleCredential.create': CreateGoogleCredential,
   'GoogleSyncHistory.addSyncHistory': addGoogleSyncHistory,
   'MicrosoftCredential.create': CreateMicrosoftCredential,
-  'MicrosoftSyncHistory.addSyncHistory': addMicrosoftSyncHistory
+  'MicrosoftSyncHistory.addSyncHistory': addMicrosoftSyncHistory,
+  'Template.generateThumbnails': generateTemplateThumbnails
 }
 
 const queues = {}
