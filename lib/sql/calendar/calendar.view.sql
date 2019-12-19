@@ -193,8 +193,20 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
         ON bc.id = cdc.definition
       JOIN deals_checklists dcl
         ON dcl.id = cdc.checklist
-      LEFT JOIN (SELECT id, deal, brand FROM deals_roles WHERE brand IS NOT NULL AND deleted_at IS NULL) dr
-        ON deals.id = dr.deal
+      CROSS JOIN LATERAL (
+        SELECT
+          brand
+        FROM
+          deals_roles
+        WHERE
+          brand IS NOT NULL
+          AND deleted_at IS NULL
+          AND deals_roles.deal = deals.id
+
+        UNION
+
+        SELECT deals.brand
+      ) dr
     WHERE
       deals.deleted_at IS NULL
       AND cdc.data_type = 'Date'::context_data_type
