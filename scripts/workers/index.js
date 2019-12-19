@@ -22,7 +22,7 @@ const attachTouchEventHandler = require('../../lib/models/CRM/Touch/events')
 const createContext = require('./create-context')
 
 const shutdownPollers = require('./poll')
-require('./peanar')
+const shutdownPeanarWorkers = require('./peanar')
 
 attachCalendarEvents()
 attachContactEvents()
@@ -113,6 +113,7 @@ const timeout = (seconds) => {
 async function shutdownWorkers() {
   await shutdownPollers()
   await peanar.shutdown()
+  await shutdownPeanarWorkers()
   await promisify(cb => queue.shutdown(5 * 60 * 1000, (err) => {
     if (err) {
       Context.error(err)
@@ -141,6 +142,7 @@ const shutdown = async () => {
 
     clearTimeout(shutdownRaceTimeout)
     redisDataService.shutdown()
+    process.exit()
   }
   catch (ex) {
     Context.log('Race timed out!')
