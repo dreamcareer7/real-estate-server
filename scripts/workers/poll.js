@@ -100,7 +100,7 @@ const notifications = async () => {
   await Notification.sendForUnread()
   await promisify(Message.sendEmailForUnread)()
 }
-/*
+
 poll({
   fn: notifications,
   name: 'Notifications'
@@ -144,7 +144,7 @@ poll({
 poll({
   fn: MicrosoftWorker.syncDue,
   name: 'MicrosoftWorker.syncDue'
-})*/
+})
 
 poll({
   fn: Template.generateThumbnails,

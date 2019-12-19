@@ -22,7 +22,7 @@ const attachTouchEventHandler = require('../../lib/models/CRM/Touch/events')
 const createContext = require('./create-context')
 
 const shutdownPollers = require('./poll')
-// require('./peanar')
+require('./peanar')
 
 attachCalendarEvents()
 attachContactEvents()
