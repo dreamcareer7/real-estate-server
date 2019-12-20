@@ -425,7 +425,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
         SELECT
           ARRAY_AGG(json_build_object(
             'id', COALESCE(contact, agent),
-            'type', (CASE WHEN agent IS NOT NULL THEN 'agent' ELSE 'contact' END)
+            'type', (CASE WHEN contact IS NOT NULL THEN 'contact' ELSE 'agent' END)
           ))
         FROM
           (
@@ -489,7 +489,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
         SELECT
           ARRAY_AGG(json_build_object(
             'id', COALESCE(contact, agent),
-            'type', (CASE WHEN agent IS NOT NULL THEN 'agent' ELSE 'contact' END)
+            'type', (CASE WHEN contact IS NOT NULL THEN 'contact' ELSE 'agent' END)
           ))
         FROM
           (
@@ -556,7 +556,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
         SELECT
           ARRAY_AGG(json_build_object(
             'id', COALESCE(contact, agent),
-            'type', (CASE WHEN agent IS NOT NULL THEN 'agent' ELSE 'contact' END)
+            'type', (CASE WHEN contact IS NOT NULL THEN 'contact' ELSE 'agent' END)
           ))
         FROM
           (
@@ -621,7 +621,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
         SELECT
           ARRAY_AGG(json_build_object(
             'id', COALESCE(contact, agent),
-            'type', (CASE WHEN agent IS NOT NULL THEN 'agent' ELSE 'contact' END)
+            'type', (CASE WHEN contact IS NOT NULL THEN 'contact' ELSE 'agent' END)
           ))
         FROM
           (
