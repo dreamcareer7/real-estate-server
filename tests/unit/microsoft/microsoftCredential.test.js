@@ -185,6 +185,7 @@ async function disableEnableSyncFailed() {
 async function forceSync() {
   const createdCredential = await create()
 
+  await MicrosoftCredential.updateLastSync(createdCredential.id)
   await MicrosoftCredential.forceSync(createdCredential.id)
 
   const updatedCredential = await MicrosoftCredential.get(createdCredential.id)
