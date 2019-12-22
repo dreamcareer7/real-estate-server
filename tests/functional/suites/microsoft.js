@@ -259,7 +259,7 @@ function forceSync(cb) {
     .after(function(err, res, json) {
       cb(err, res, json)
     })
-    .expectJSON({ http:400, message:"Please wait until current sync job is finished.", code:"BadRequest" })
+    .expectJSON({ http: 400, message: 'Please wait until current sync job is finished.', code: 'BadRequest' })
 }
 
 function getMCredentialLastSyncHistory(cb) {
