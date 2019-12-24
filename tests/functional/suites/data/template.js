@@ -4,4 +4,5 @@ module.exports = {
   template_type: 'JustListed',
   medium: 'Email',
   inputs: ['user', 'listing', 'contact'],
+  mjml: false
 }
