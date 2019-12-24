@@ -1,5 +1,10 @@
+WITH gallery AS (
+  INSERT INTO galleries (id) VALUES uuid_generate_v1()
+  RETURNING *
+)
+
 INSERT INTO deals
-  (created_by, listing, faired_at, deal_type, property_type, brand)
+  (created_by, listing, faired_at, deal_type, property_type, brand, gallery)
   VALUES (
     $1,
     $2,
@@ -10,6 +15,10 @@ INSERT INTO deals
     ),
     $4,
     $5,
-    $6
+    $6,
+
+    (
+      SELECT id FROM gallery
+    )
   )
 RETURNING *
