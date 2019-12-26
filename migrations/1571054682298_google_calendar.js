@@ -9,11 +9,8 @@ const migrations = [
   'ALTER TABLE google_sync_histories DROP COLUMN IF EXISTS synced_calendar_events_num',
   'ALTER TABLE google_sync_histories DROP COLUMN IF EXISTS calendar_events_total',
 
-  'ALTER TABLE google_calendars DROP CONSTRAINT google_calendars_watcher_channel_id',
-
   'DROP TABLE IF EXISTS google_calendar_events',
   'DROP TABLE IF EXISTS google_calendars',
-
 
 
   `CREATE TABLE IF NOT EXISTS google_calendars(
@@ -29,9 +26,9 @@ const migrations = [
     time_zone TEXT,
 
     accessRole TEXT,
-    selected BOOLEAN,
-    deleted BOOLEAN,
-    "primary" BOOLEAN,
+    selected BOOLEAN DEFAULT FALSE,
+    deleted BOOLEAN DEFAULT FALSE,
+    "primary" BOOLEAN DEFAULT FALSE,
 
     defaultReminders JSONB,
     notificationSettings JSONB,
