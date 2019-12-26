@@ -2,7 +2,7 @@ SELECT
   id
 FROM 
   google_credentials
-WHERE 
+WHERE
   (
     (
       (last_sync_at <= (NOW() - $1::interval) OR last_sync_at IS NULL)
