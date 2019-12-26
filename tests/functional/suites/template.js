@@ -9,6 +9,7 @@ const create = cb => {
   return frisby.create('create a template')
     .post('/templates', {
       ...template,
+      html: 'HTML',
       brands: [
         results.brand.createParent.data.id
       ]
@@ -118,6 +119,15 @@ const deleteInstance = cb => {
     .expectStatus(204)
 }
 
+const generateThumbnails = (cb) => {
+  return frisby.create('Generate Thumbnails')
+    .post('/jobs', {
+      name: 'Template.generateThumbnails'
+    })
+    .after(cb)
+    .expectStatus(200)
+}
+
 module.exports = {
   create,
   getForBrand,
@@ -125,5 +135,6 @@ module.exports = {
   share,
   getMine,
   createAsset,
-  deleteInstance
+  deleteInstance,
+  generateThumbnails
 }

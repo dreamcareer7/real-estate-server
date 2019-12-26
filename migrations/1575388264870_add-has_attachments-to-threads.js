@@ -2,7 +2,7 @@ const db = require('../lib/utils/db')
 
 const migrations = [
   'BEGIN',
-  'ALTER TABLE email_threads ADD has_attachments boolean DEFAULT FALSE',
+  'ALTER TABLE email_threads ADD COLUMN IF NOT EXISTS has_attachments boolean DEFAULT FALSE',
   `INSERT INTO email_threads (
     id,
     google_credential,
