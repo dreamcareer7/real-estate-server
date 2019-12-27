@@ -5,5 +5,5 @@ SET
   updated_at = now()
 WHERE
   google_credential = $1
-  AND calendar_id IN($2)
+  AND calendar_id = ANY($2::uuid[])
 RETURNING id

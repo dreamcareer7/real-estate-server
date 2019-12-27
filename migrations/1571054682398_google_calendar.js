@@ -3,6 +3,9 @@ const db = require('../lib/utils/db')
 const migrations = [
   'BEGIN',
 
+  'ALTER TABLE google_calendars DROP COLUMN IF EXISTS accessRole',
+  'ALTER TABLE google_calendars ADD COLUMN IF NOT EXISTS access_role TEXT',
+
   'ALTER TABLE google_credentials DROP COLUMN IF EXISTS rechat_gcalendar',
   'ALTER TABLE google_credentials DROP COLUMN IF EXISTS calendars_last_sync_at',
 
@@ -25,7 +28,7 @@ const migrations = [
     location TEXT,
     time_zone TEXT,
 
-    accessRole TEXT,
+    access_role TEXT,
     selected BOOLEAN DEFAULT FALSE,
     deleted BOOLEAN DEFAULT FALSE,
     "primary" BOOLEAN DEFAULT FALSE,
