@@ -38,7 +38,7 @@ const migrations = [
   'INSERT INTO galleries(deal) SELECT id FROM deals',
 
   `UPDATE deals SET gallery = (
-      SELECT id FROM galleries WHERE deal = galleries.deal
+      SELECT id FROM galleries WHERE deal = deals.id
   )`,
 
   'ALTER TABLE galleries DROP deal',
