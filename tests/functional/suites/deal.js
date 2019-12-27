@@ -728,7 +728,7 @@ function attachGalleryFile(cb) {
     })
 }
 
-function createGalleryItem(cb) {
+function createGalleryItems(cb) {
   const deal_id = results.deal.create.data.id
   const { data } = JSON.parse(results.deal.attachGalleryFile)
 
@@ -797,7 +797,7 @@ module.exports = {
   seamlessAttention,
   verifySeamlessAttention,
   attachGalleryFile,
-  createGalleryItem,
+  createGalleryItems,
   removeRole,
   remove
 }
