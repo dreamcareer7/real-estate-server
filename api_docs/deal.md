@@ -110,3 +110,9 @@ get a list of available contexts for each brand.
 
 ### Delete a task [DELETE /tasks/:task]
 <!-- include(tests/deal/removeTask.md) -->
+
+### Attach a file to a gallery item [POST /deals/:id/gallery/attach]
+<!-- include(tests/deal/attachGalleryFile.md) -->
+
+### Create gallery items [POST /deals/:id/gallery/items]
+<!-- include(tests/deal/createGalleryItems.md) -->
