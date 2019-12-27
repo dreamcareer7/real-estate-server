@@ -16,10 +16,16 @@ const migrations = [
   'BEGIN',
   `CREATE TABLE galleries (
       id uuid NOT NULL PRIMARY KEY DEFAULT uuid_generate_v1(),
+      created_at timestamp with time zone DEFAULT clock_timestamp(),
+      updated_at timestamp with time zone DEFAULT clock_timestamp(),
+      deleted_at timestamp with time zone,
       deal uuid REFERENCES deals(id)
   )`,
   `CREATE TABLE gallery_items (
       id uuid NOT NULL PRIMARY KEY DEFAULT uuid_generate_v1(),
+      created_at timestamp with time zone DEFAULT clock_timestamp(),
+      updated_at timestamp with time zone DEFAULT clock_timestamp(),
+      deleted_at timestamp with time zone,
       gallery uuid NOT NULL REFERENCES galleries(id),
       name TEXT NOT NULL,
       description TEXT,
@@ -29,7 +35,7 @@ const migrations = [
 
   'ALTER TABLE deals ADD gallery uuid REFERENCES galleries(id)',
 
-  `INSERT INTO galleries(deal) SELECT id FROM deals`,
+  'INSERT INTO galleries(deal) SELECT id FROM deals',
 
   `UPDATE deals SET gallery = (
       SELECT id FROM galleries WHERE deal = galleries.deal

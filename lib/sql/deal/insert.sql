@@ -1,5 +1,5 @@
 WITH gallery AS (
-  INSERT INTO galleries (id) VALUES uuid_generate_v1()
+  INSERT INTO galleries (id) VALUES (uuid_generate_v1())
   RETURNING *
 )
 
