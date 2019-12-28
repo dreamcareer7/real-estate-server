@@ -52,7 +52,7 @@ const queues = [
     concurrency: 50
   },
   {
-    queues: ['email_high'],
+    queues: ['email_high', 'email_event'],
     concurrency: 20
   },
   {
