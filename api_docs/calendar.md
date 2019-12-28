@@ -8,20 +8,42 @@ This document describes the set of APIs used in the calendar view.
 
 A `calendar_event` object is a common representation of event-like objects throughout Rechat system.
 
-| Field       |  Type  | Description                                                                                         |
-| ----------- | :----: | --------------------------------------------------------------------------------------------------- |
-| id          | String | Id of the underlying event-like object                                                              |
-| object_type |  Enum  | Type of the underlying object. `crm_task` or `deal_context` or `contact_attribute`                  |
-| event_type  | String | Type of the event. Used to infer icons on calendar events.                                          |
-| type_label  | String | Label used for type column in the Web UI.                                                           |
-| timestamp   | number | The exact timestamp of the event. In case of recurring events, the original user input is returned. |
-| recurring   | String | Whether this a recurring event or not. Currently only applies to `birthday` and `important_date`    |
-| title       | String | **Reserved** Currently unused.                                                                      |
-| crm_task    |  UUID  | Related crm_task object                                                                             |
-| deal        |  UUID  | Related deal object                                                                                 |
-| contact     |  UUID  | related contact object                                                                              |
-| campaign    |  UUID  | related email campaign                                                                              |
-| thread_key  | String | related email thread key                                                                            |
+| Field          |  Type   | Description                                                                                               |
+| -------------- | :-----: | --------------------------------------------------------------------------------------------------------- |
+| id             | string  | Id of the underlying event-like object                                                                    |
+| created_by     |  uuid   |                                                                                                           |
+| created_at     | number  |                                                                                                           |
+| updated_at     | number  |                                                                                                           |
+| brand          |  uuid   |                                                                                                           |
+| object_type    |  Enum   | Type of the underlying object. `crm_task` or `deal_context` or `contact_attribute`                        |
+| event_type     | string  | Type of the event. Used to infer icons on calendar events.                                                |
+| type_label     | string  | Label used for type column in the Web UI.                                                                 |
+| timestamp      | number  | The exact timestamp of the event. In case of recurring events, the original user input is returned.       |
+| end_date       | number  | End time of the event, if defined.                                                                        |
+| recurring      | boolean | Whether this a recurring event or not. Currently only applies to `birthday` and `important_date`          |
+| next_occurance | number  | Next time the event is supposed to occur, if it's a recurring event.                                      |
+| title          | string  | Title of the event record. Usually enough for direct use on clients.                                      |
+| crm_task       |  uuid   | Related crm_task object                                                                                   |
+| deal           |  uuid   | Related deal object                                                                                       |
+| contact        |  uuid   | related contact object                                                                                    |
+| campaign       |  uuid   | related email campaign                                                                                    |
+| thread_key     | string  | related email thread key                                                                                  |
+| people_len     | number  | Total number of people associated with the event. Meant to be used in conjuction with people association. |
+| metadata       |  json   | arbitrary metadata associated with the event. usually holds data related to specific object types.        |
+
+#### Associations
+
+Associations defined for the `calendar_event` object are listed below.
+
+| Association   | Type                            | Description                                                          |
+| ------------- | ------------------------------- | -------------------------------------------------------------------- |
+| people        | Mixed array of Contact or Agent | 5 items from contacts or agents associated with the event.           |
+| full_crm_task | CrmTask                         | Separate association for the full crm_task object instead of id.     |
+| full_deal     | Deal                            | Separate association for the full deal object instead of id.         |
+| full_contact  | Contact                         | Separate association for the full contact object instead of id.      |
+| full_campaign | EmailCampaign                   | Separate association for the full campaign object instead of id.     |
+| activity      | Activity                        | Separate association for the full activity object instead of id.     |
+| full_thread   | EmailThread                     | Separate association for the full email_thread object instead of id. |
 
 #### Object types
 
