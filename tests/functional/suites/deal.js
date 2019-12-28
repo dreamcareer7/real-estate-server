@@ -750,7 +750,6 @@ function createGalleryItems(cb) {
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
-      data: items
     })
 }
 
@@ -762,7 +761,7 @@ function updateGalleryItem(cb) {
     name: 'Updated Name',
     description: 'Updated Description',
     order: 2,
-    file: saved.file
+    file: saved.file.id
   }
 
   return frisby
@@ -772,7 +771,6 @@ function updateGalleryItem(cb) {
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
-      data: item
     })
 }
 
