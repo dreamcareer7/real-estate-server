@@ -2,6 +2,8 @@ const {deal} = require('./data/deal.js')
 const deal_response = require('./expected_objects/deal.js')
 const omit = require('lodash/omit')
 const schemas = require('./schemas/deal')
+const fs = require('fs')
+const path = require('path')
 
 const config = require('../../../lib/config')
 require('../../../lib/models/Crypto')
@@ -702,6 +704,109 @@ const filterByContextEmpty = (cb) => {
     })
 }
 
+function attachGalleryFile(cb) {
+  const deal_id = results.deal.create.data.id
+  const file = fs.createReadStream(path.resolve(__dirname, 'data/logo.png'))
+
+  return frisby
+    .create('attach file to a deal gallery')
+    .post(
+      `/deals/${deal_id}/gallery/attach`,
+      {
+        file
+      },
+      {
+        json: false,
+        form: true
+      }
+    )
+    .addHeader('content-type', 'multipart/form-data')
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK'
+    })
+}
+
+function createGalleryItems(cb) {
+  const deal_id = results.deal.create.data.id
+  const { data } = JSON.parse(results.deal.attachGalleryFile)
+
+  const items =  [
+    {
+      file: data.id,
+      name: 'Gallery Item Name',
+      description: 'Gallery Item Description',
+      order: 1
+    }
+  ]
+
+  return frisby
+    .create('create a gallery item')
+    .post(`/deals/${deal_id}/gallery/items`, {
+      items
+    })
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+    })
+}
+
+function updateGalleryItem(cb) {
+  const deal_id = results.deal.create.data.id
+  const saved = results.deal.createGalleryItems.data[0]
+
+  const item = {
+    name: 'Updated Name',
+    description: 'Updated Description',
+    order: 2,
+    file: saved.file.id
+  }
+
+  return frisby
+    .create('update a gallery item')
+    .put(`/deals/${deal_id}/gallery/items/${saved.id}`, item)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+    })
+}
+
+function deleteGalleryItem(cb) {
+  const deal_id = results.deal.create.data.id
+  const item = results.deal.createGalleryItems.data[0]
+
+  return frisby
+    .create('delete a gallery item')
+    .delete(`/deals/${deal_id}/gallery/items/${item.id}`)
+    .after(cb)
+    .expectStatus(204)
+}
+
+function sortGalleryItems(cb) {
+  const deal_id = results.deal.create.data.id
+  const item = results.deal.createGalleryItems.data[0]
+
+  const items = [
+    {
+      id: item.id,
+      order: item.order + 1
+    }
+  ]
+
+  return frisby
+    .create('sort a gallery')
+    .put(`/deals/${deal_id}/gallery/items/sort`, items)
+    .after(cb)
+    .expectJSON({
+      code: 'OK',
+      data: items
+    })
+    .expectStatus(200)
+}
+
 module.exports = {
   create,
   addChecklist,
@@ -744,6 +849,11 @@ module.exports = {
   postMessage,
   seamlessAttention,
   verifySeamlessAttention,
+  attachGalleryFile,
+  createGalleryItems,
+  updateGalleryItem,
+  deleteGalleryItem,
+  sortGalleryItems,
   removeRole,
   remove
 }
