@@ -30,6 +30,7 @@ attachFlowEvents()
 attachTaskEventHandler()
 attachTouchEventHandler()
 
+db.enableMetrics()
 
 process.on('unhandledRejection', (err, promise) => {
   Context.trace('Unhanled Rejection on request', err)
