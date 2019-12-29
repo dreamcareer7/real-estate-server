@@ -127,6 +127,7 @@ async function shutdownWorkers() {
 }
 
 const shutdown = async () => {
+  Context.log('Shutting down')
   try {
     clearTimeout(kueCleanupTimeout)
     // clearTimeout(shutdownTimeout)
