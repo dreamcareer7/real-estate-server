@@ -1,0 +1,12 @@
+SELECT
+  id, event_id
+FROM
+  google_calendar_events
+JOIN 
+  unnest($2::text[]) WITH ORDINALITY t(gc_ei, ord)
+ON 
+  google_calendar_events.event_id = gc_ei
+  AND google_calendar_events.google_credential = $1
+  AND google_calendar_events.google_calendar = $2
+ORDER BY 
+  t.ord
