@@ -56,6 +56,21 @@ SELECT
       NULL
     END
   ) AS messages,
+  (
+    CASE
+      WHEN $2::text[] && '{"email_thread.contacts"}'::text[] THEN (
+        SELECT
+          array_agg(id)
+        FROM
+          contacts AS c
+        WHERE
+          c.deleted_at IS NULL
+          AND c.brand = email_threads.brand
+          AND c.email && email_threads.recipients
+      )
+      ELSE NULL
+    END
+  ) AS contacts,
   'email_thread' AS "type"
 FROM
   email_threads
