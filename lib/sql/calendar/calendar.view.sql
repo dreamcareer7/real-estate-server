@@ -545,7 +545,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       ec.subject AS title,
       NULL::uuid AS crm_task,
       ec.deal,
-      ecr.contact,
+      c.id AS contact,
       ec.id AS campaign,
       NULL::uuid AS credential_id,
       NULL::text AS thread_key,
@@ -585,11 +585,14 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       email_campaigns AS ec
       JOIN email_campaigns_recipient_emails AS ecr
         ON ec.id = ecr.campaign
+      JOIN contacts AS c
+        ON c.brand = ec.brand AND c.email && ARRAY[ecr.email]
     WHERE
       ec.deleted_at IS NULL
       AND ec.executed_at IS NULL
       AND ec.due_at IS NOT NULL
       AND ecr.contact IS NOT NULL
+      AND c.deleted_at IS NULL
   )
   UNION ALL
   (
