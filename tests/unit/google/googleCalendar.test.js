@@ -54,7 +54,6 @@ const configs = {
 }
 
 
-
 async function setup() {
   user  = await User.getByEmail('test@rechat.com')
   brand = await BrandHelper.create({ roles: { Admin: [user.id] } })
@@ -155,6 +154,65 @@ async function getByRemoteCalendarId() {
   expect(cal.calendar_id).to.be.equal(alt.calendar_id)
 }
 
+async function deleteLocalByRemoteCalendarId() {
+  const cal = await createLocal()
+  
+  await GoogleCalendar.deleteLocalByRemoteCalendarId(googleCredential.id, cal.calendar_id)
+
+  const updated = await GoogleCalendar.get(cal.id)
+
+  expect(updated.id).to.be.equal(cal.id)
+  expect(updated.deleted_at).to.be.not.equal(null)
+  expect(updated.deleted).to.be.not.equal(true)
+}
+
+async function getFailed() {
+  try {
+    await GoogleCalendar.get(googleCredential.id)
+  } catch (err) {
+    expect(err.message).to.be.equal(`Google calendar by id ${googleCredential.id} not found.`)
+  }
+}
+
+async function getByWatcherChannelId() {
+  try {
+    await GoogleCalendar.getByWatcherChannelId(googleCredential.id)
+  } catch (err) {
+    expect(err.message).to.be.equal(`Google Calendar by channel ${googleCredential.id} not found.`)
+  }
+}
+
+async function getAllByGoogleCredential() {
+  await createLocal()
+  const calendars = await GoogleCalendar.getAllByGoogleCredential(googleCredential.id)
+
+  expect(calendars.length).to.be.equal(1)
+  expect(calendars[0].type).to.be.equal('google_calendars')
+}
+
+async function updateSyncToken() {
+  const syncToken = 'xxxxxx'
+
+  const cal     = await createLocal()
+  const id      = await GoogleCalendar.updateSyncToken(cal.id, syncToken)
+  const updated = await GoogleCalendar.get(id)
+
+  expect(updated.id).to.be.equal(cal.id)
+  expect(updated.sync_token).to.be.equal(syncToken)
+}
+
+async function stopSync() {
+  const cal = await createLocal()
+  
+  const remoteCalendarIds = [cal.calendar_id]
+
+  const ids       = await GoogleCalendar.stopSync(googleCredential.id, remoteCalendarIds)
+  const calendars = await GoogleCalendar.getAll(ids)
+
+  expect(calendars.length).to.be.equal(1)
+  expect(calendars[0].watcher_status).to.be.equal('stopped')
+}
+
 
 describe('Google', () => {
   describe('Google Calendars', () => {
@@ -166,5 +224,11 @@ describe('Google', () => {
     it('should persist a remote google calendar into disk', persistRemoteCalendar)
     it('should fail in get by remote calendar id', getByRemoteCalendarIdFiled)
     it('should return a calendar by remote calendar id', getByRemoteCalendarId)
+    it('should delete a local calendar by remote calendar id', deleteLocalByRemoteCalendarId)
+    it('should fail in get by id', getFailed)
+    it('should return a calendar by channel id', getByWatcherChannelId)
+    it('should return calendars by channel credential id', getAllByGoogleCredential)
+    it('should update a calendar\'s sync_token', updateSyncToken)
+    it('should stop to sync', stopSync)
   })
 })
