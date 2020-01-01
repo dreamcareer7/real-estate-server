@@ -147,8 +147,8 @@ poll({
 })
 
 poll({
-  fn: Template.generateThumbnails,
-  name: 'Template.generateThumbnails'
+  fn: Template.updateThumbnails,
+  name: 'Template.updateThumbnails'
 })
 
 module.exports = shutdown
