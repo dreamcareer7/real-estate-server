@@ -18,17 +18,6 @@ client.client_secret = config.tests.client_secret
 
 registerSuite('agent', ['add', 'getByMlsId'])
 
-const lookupExpect404 = (cb) => {
-  return frisby.create('lookup login methods and expect 404')
-    .post('/users/lookup', {
-      email: user.email,
-      client_id: config.tests.client_id,
-      client_secret: config.tests.client_secret
-    })
-    .after(cb)
-    .expectStatus(404)
-}
-
 const create = (cb) => {
   return frisby.create('create user')
     .post('/users', client)
@@ -84,23 +73,6 @@ const getUser404 = (cb) => {
     .get('/users/' + uuid.v1())
     .after(cb)
     .expectStatus(404)
-}
-
-const lookupExpectPassword = (cb) => {
-  return frisby.create('lookup login methods and expect password login')
-    .post('/users/lookup', {
-      email: results.user.create.data.email,
-      client_id: config.tests.client_id,
-      client_secret: config.tests.client_secret
-    })
-    .after(cb)
-    .expectStatus(200)
-    .expectJSON({
-      data: [],
-      info: {
-        password: true
-      }
-    })
 }
 
 const update = (cb) => {
@@ -638,14 +610,12 @@ function patchUserProfileImage(cb) {
 
 
 module.exports = {
-  lookupExpect404,
   createWithID,
   create,
   create401,
   getUser,
   getUserRoles,
   getUser404,
-  lookupExpectPassword,
   update,
   updateEmailSignPic,
   changePassword,
