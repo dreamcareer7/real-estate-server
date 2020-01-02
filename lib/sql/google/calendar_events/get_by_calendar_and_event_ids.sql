@@ -1,5 +1,5 @@
 SELECT
-  id, event_id
+  id
 FROM
   google_calendar_events
 JOIN 

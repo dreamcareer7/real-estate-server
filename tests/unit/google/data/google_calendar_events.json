@@ -68,7 +68,7 @@
       "end": { "date": "2019-10-09" },
       "recurringEventId": "6phgle50pq7677jbilj4e19u91",
       "originalStartTime": { "date": "2019-10-08" },
-      "transparency": "transparent",
+      "transparency": "transparent"
     },
     {
       "id": "6phgle50pq7677jbilj4e19u91_20191009",
@@ -81,7 +81,7 @@
       "end": { "date": "2019-10-10" },
       "recurringEventId": "6phgle50pq7677jbilj4e19u91",
       "originalStartTime": { "date": "2019-10-09" },
-      "transparency": "transparent",
+      "transparency": "transparent"
     },
     {
       "id": "6phgle50pq7677jbilj4e19u91_20191010",
@@ -93,7 +93,53 @@
       "end": { "date": "2019-10-11" },
       "recurringEventId": "6phgle50pq7677jbilj4e19u91",
       "originalStartTime": { "date": "2019-10-10" },
-      "transparency": "transparent",
+      "transparency": "transparent"
     }
   ]
 }
+
+
+[
+  {
+    "kind": "calendar#event",
+    "kind": "calendar#event",
+    "etag": "\"3154692529752000\"",
+    "htmlLink": "https://www.google.com/calendar/event?eid=MXJyZjVoMHJibDJlY3M1NnFzZGw2aDNtNjNfMjAyMDAxMDMgaGVzaG1hdC56YXBhdGFAbQ",
+    "created": "2019-12-26T07:44:24.000Z",
+    "updated": "2019-12-26T07:44:24.876Z",
+    "creator": { "email": "heshmat.zapata@gmail.com", "self": true },
+    "organizer": { "email": "heshmat.zapata@gmail.com", "self": true },
+    "recurringEventId": "1rrf5h0rbl2ecs56qsdl6h3m63",
+    "transparency": "transparent",
+    "iCalUID": "1rrf5h0rbl2ecs56qsdl6h3m63@google.com",
+    "sequence": 0,
+    "reminders": { "useDefault": false },
+
+
+    "id": "1rrf5h0rbl2ecs56qsdl6h3m63_20200103",
+    "status": "confirmed",
+    "summary": "Recurrent Event",
+    "start": { "date": "2020-01-03" },
+    "end": { "date": "2020-01-04" },
+    "recurringEventId": "1rrf5h0rbl2ecs56qsdl6h3m63",
+    "originalStartTime": { "date": "2020-01-03" }
+  },
+  {
+    "id": "1rrf5h0rbl2ecs56qsdl6h3m63_20200104",
+    "status": "confirmed",
+    "summary": "Recurrent Event",
+    "start": { "date": "2020-01-04" },
+    "end": { "date": "2020-01-05" },
+    "recurringEventId": "1rrf5h0rbl2ecs56qsdl6h3m63",
+    "originalStartTime": { "date": "2020-01-04" }
+  },
+  {
+    "id": "1rrf5h0rbl2ecs56qsdl6h3m63_20200105",
+    "status": "confirmed",
+    "summary": "Recurrent Event",
+    "start": { "date": "2020-01-05" },
+    "end": { "date": "2020-01-06" },
+    "recurringEventId": "1rrf5h0rbl2ecs56qsdl6h3m63",
+    "originalStartTime": { "date": "2020-01-05" }
+  }
+]

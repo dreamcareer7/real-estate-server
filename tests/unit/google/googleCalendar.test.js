@@ -1,9 +1,9 @@
 const { expect } = require('chai')
 const { createContext } = require('../helper')
 
-const Context           = require('../../../lib/models/Context')
-const User              = require('../../../lib/models/User')
-const BrandHelper       = require('../brand/helper')
+const Context        = require('../../../lib/models/Context')
+const User           = require('../../../lib/models/User')
+const BrandHelper    = require('../brand/helper')
 const GoogleCalendar = require('../../../lib/models/Google/calendar')
 
 const { createGoogleMessages } = require('./helper')
@@ -30,6 +30,7 @@ const calendars = {
   }
 }
 
+/*
 const configs = {
   conf_1: {
     rechatCalendar: {
@@ -51,7 +52,7 @@ const configs = {
     toSync: ['heshmat.zapata@gmail.com'],
     toStopSync: ['saeed.uni68@gmail.com']
   }
-}
+}*/
 
 
 async function setup() {
