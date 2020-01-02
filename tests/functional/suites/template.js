@@ -119,10 +119,10 @@ const deleteInstance = cb => {
     .expectStatus(204)
 }
 
-const generateThumbnails = (cb) => {
-  return frisby.create('Generate Thumbnails')
+const updateThumbnails = (cb) => {
+  return frisby.create('Update Thumbnails')
     .post('/jobs', {
-      name: 'Template.generateThumbnails'
+      name: 'Template.updateThumbnails'
     })
     .after(cb)
     .expectStatus(200)
@@ -136,5 +136,5 @@ module.exports = {
   getMine,
   createAsset,
   deleteInstance,
-  generateThumbnails
+  updateThumbnails
 }

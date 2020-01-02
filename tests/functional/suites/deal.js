@@ -456,7 +456,8 @@ const updateSubmission = cb => {
 
 const getContextHistory = cb => {
   return frisby.create('get context history on a deal')
-    .get(`/deals/${results.deal.create.data.id}/context/year_built`)
+    .get(`/deals/${results.deal.create.data.id}/context/list_date`)
+    .expectStatus(200)
     .after(cb)
 }
 
