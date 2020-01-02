@@ -23,9 +23,6 @@ Therefore a _Shadow User_ is a user who has been invited to Rechat but has not c
 It is important to remember that shadow users _can_ use some of the Rechat's features using Email/Phone.
 :::
 
-### Lookup login methods [POST /users/lookup]
-<!-- include(tests/user/lookupExpect404.md) -->
-
 ### Create User [POST /users]
 <!-- include(tests/user/create.md) -->
 
