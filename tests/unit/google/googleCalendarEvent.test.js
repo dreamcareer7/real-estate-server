@@ -7,6 +7,9 @@ const BrandHelper = require('../brand/helper')
 const GoogleCalendar      = require('../../../lib/models/Google/calendar')
 const GoogleCalendarEvent = require('../../../lib/models/Google/calendar_events')
 
+const { generateCalendarEventRecord } = require('../../../lib/models/Google/workers/calendars/common.js')
+
+
 const { createGoogleMessages } = require('./helper')
 
 let user, brand, googleCredential, googleCalendar
@@ -63,11 +66,16 @@ const events = {
       displayName: 'calendar-summary',
       self: true
     },
-    attendees: {},
-    attachments: {},
-    conferenceData: {},
-    extendedProperties: {},
-    gadget: {},
+
+    attendees: [
+      {
+        email: 'string',
+        displayName: 'string',
+        responseStatus: 'string',
+        comment: 'strin'
+      }
+    ],
+    attachments: [],
     reminders: {
       useDefault: false,
       overrides: [
@@ -75,7 +83,11 @@ const events = {
         { method: 'popup', minutes: 10 }
       ]
     },
-    source: {},
+
+    conferenceData: {},
+    extendedProperties: {},
+    gadget: {},
+    source: {},    
 
     created: '2019-10-22T20:20:44.000Z',
     updated: '2019-10-22T20:20:44.474Z',
@@ -91,7 +103,9 @@ const events = {
     endTimeUnspecified: false,
     recurrence: [],
     recurringEventId: '1rrf5h0rbl2ecs56qsdl6h3m63',
-    originalStartTime: {}
+    originalStartTime: {
+      date: '2020-01-05'
+    }
   }
 }
 
@@ -178,9 +192,94 @@ async function updateLocal() {
   expect(event.organizer).to.deep.equal(updated.organizer)
   expect(event.event_start).to.deep.equal(updated.event_start)
   expect(event.event_end).to.deep.equal(updated.event_end)
-
-  return event
 }
+
+async function bulkUpsert() {
+  const records = []
+
+  records.push(generateCalendarEventRecord(googleCredential.id, googleCalendar, events.remote_event_1))
+
+  const resutl = await GoogleCalendarEvent.bulkUpsert(records)
+
+  expect(resutl.length).to.be.equal(records.length)
+  expect(resutl[0].google_credential).to.be.equal(googleCredential.id)
+  expect(resutl[0].google_calendar).to.be.equal(googleCalendar.id)
+  expect(resutl[0].event_id).to.be.equal(events.remote_event_1.id)
+}
+
+async function deleteLocal() {
+  const event = await createLocal()
+  await GoogleCalendarEvent.deleteLocal(event.id)
+  const updated = await GoogleCalendarEvent.get(event.id)
+
+  expect(updated.status).to.be.equal('canceled')
+  expect(updated.deleted_at).to.be.not.equal(null)
+}
+
+async function deleteLocalByRemoteIds() {
+  const event = await createLocal()
+  await GoogleCalendarEvent.deleteLocalByRemoteIds(event.google_credential, event.google_calendar, [event.event_id])
+  const updated = await GoogleCalendarEvent.get(event.id)
+
+  expect(updated.status).to.be.equal('canceled')
+  expect(updated.deleted_at).to.be.not.equal(null)
+}
+
+async function restoreLocalByRemoteIds() {
+  const event = await createLocal()
+  await GoogleCalendarEvent.restoreLocalByRemoteIds(event.google_credential, event.google_calendar, [event.event_id])
+  const updated = await GoogleCalendarEvent.get(event.id)
+
+  expect(updated.status).to.be.equal('confirmed')
+  expect(updated.deleted_at).to.be.equal(null)
+}
+
+async function deleteLocalByRemoteCalendarId() {
+  const event = await createLocal()
+  await GoogleCalendarEvent.deleteLocalByRemoteCalendarId(event.google_credential, event.google_calendar)
+  const updated = await GoogleCalendarEvent.get(event.id)
+
+  expect(updated.status).to.be.equal('canceled')
+  expect(updated.deleted_at).to.be.not.equal(null)
+}
+
+async function getAll() {
+  const event = await createLocal()
+
+  const ids = [event.id]
+  const events = await GoogleCalendarEvent.getAll(ids)
+
+  expect(events.length).to.be.equal(ids.length)
+}
+
+async function getFailed() {
+  try {
+    await GoogleCalendarEvent.get(googleCredential.id)
+  } catch (err) {
+    expect(err.message).to.be.equal(`Google calendar event by ${googleCredential.id} not found.`)
+  }
+}
+
+async function getByCalendar() {
+  const event  = await createLocal()
+  const events = await GoogleCalendarEvent.getByCalendar(event.google_credential, event.google_calendar)
+
+  expect(events.length).to.be.equal(1)
+  expect(events[0].id).to.be.equal(event.id)
+  expect(events[0].google_credential).to.be.equal(event.google_credential)
+  expect(events[0].google_calendar).to.be.equal(event.google_calendar)
+}
+
+async function getByCalendarAndEventIds() {
+  const event  = await createLocal()
+  const events = await GoogleCalendarEvent.getByCalendarAndEventIds(event.google_credential, event.google_calendar, [event.event_id])
+
+  expect(events.length).to.be.equal(1)
+  expect(events[0].id).to.be.equal(event.id)
+  expect(events[0].google_credential).to.be.equal(event.google_credential)
+  expect(events[0].google_calendar).to.be.equal(event.google_calendar)
+}
+
 
 
 describe('Google', () => {
@@ -190,6 +289,15 @@ describe('Google', () => {
 
     it('should create a google calendar event', createLocal)
     it('should update a google calendar event', updateLocal)
+    it('should upsert a batch of google calendar events', bulkUpsert)
+    it('should delete a google calendar event', deleteLocal)
+    it('should delete some google calendars by remote ids', deleteLocalByRemoteIds)
+    it('should restore some google calendars by remote ids', restoreLocalByRemoteIds)
+    it('should delete some google remote by calendar id', deleteLocalByRemoteCalendarId)
+    it('should returns an array of google calendar events', getAll)
+    it('should handle get event', getFailed)
+    it('should returns an array of google calendar events - by calendar id', getByCalendar)
+    it('should returns an array of google calendar events - by calendar and event ids', getByCalendarAndEventIds)
 
   })
 })

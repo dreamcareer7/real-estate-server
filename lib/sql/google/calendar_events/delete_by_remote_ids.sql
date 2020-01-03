@@ -7,5 +7,5 @@ SET
 WHERE
   google_credential = $1
   AND google_calendar = $2
-  AND event_id = ANY($3::uuid[])
+  AND event_id = ANY($3::text[])
 RETURNING id
