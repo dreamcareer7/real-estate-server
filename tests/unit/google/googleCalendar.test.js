@@ -244,12 +244,50 @@ async function persistRemoteCalendars() {
 }
 
 async function create() {
-  const id = await GoogleCalendar.create(googleCredential.id)
+  const body = {
+    summary: 'summary',
+    description: 'description',
+    location: 'location',
+    timeZone: 'Europe/Zurich'
+  }
+
+  const id = await GoogleCalendar.create(googleCredential.id, body)
   const calendar = await GoogleCalendar.get(id)
 
   expect(calendar.google_credential).to.be.equal(googleCredential.id)
   expect(calendar.type).to.be.equal('google_calendars')
+  expect(calendar.summary).to.be.equal(body.summary)
 }
+
+async function getRemoteGoogleCalendars() {
+  const result = await GoogleCalendar.getRemoteGoogleCalendars(googleCredential)
+
+  console.log(result)
+
+  // expect(result.length).to.be.not.equal(0)
+  // expect(result[0].kind).to.be.equal('calendar#calendarListEntry')
+
+  return result
+}
+
+
+
+async function update() {
+  const body = {
+    summary: 'summary-updated',
+    description: 'description-updated',
+    location: 'location',
+    timeZone: 'Europe/Zurich'
+  }
+
+  const id = await GoogleCalendar.update(googleCredential.id, body)
+  const calendar = await GoogleCalendar.get(id)
+
+  expect(calendar.google_credential).to.be.equal(googleCredential.id)
+  expect(calendar.type).to.be.equal('google_calendars')
+  expect(calendar.summary).to.be.equal(body.summary)
+}
+
 
 
 
@@ -274,5 +312,9 @@ describe('Google', () => {
     it('should persist remote google calendars without any ToSync calendars', persistRemoteCalendarsSimple)
     it('should persist remote google calendars', persistRemoteCalendars)
     it('should create a remote google calendars', create)
+    it('should return an object of remote google calendars', getRemoteGoogleCalendars)
+    
+    
+    // it('should update a remote google calendars', update)
   })
 })
