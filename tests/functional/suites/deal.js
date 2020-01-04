@@ -808,6 +808,16 @@ function sortGalleryItems(cb) {
     .expectStatus(200)
 }
 
+function zipGallery(cb) {
+  const deal_id = results.deal.create.data.id
+
+  return frisby
+    .create('download gallery zip file')
+    .get(`/deals/${deal_id}/gallery.zip`)
+    .after(cb)
+    .expectStatus(200)
+}
+
 module.exports = {
   create,
   addChecklist,
@@ -855,6 +865,7 @@ module.exports = {
   updateGalleryItem,
   deleteGalleryItem,
   sortGalleryItems,
+  zipGallery,
   removeRole,
   remove
 }
