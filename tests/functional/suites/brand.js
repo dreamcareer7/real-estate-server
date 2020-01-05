@@ -152,6 +152,23 @@ const getContexts = cb => {
     })
 }
 
+const updateContext = cb => {
+  const data = results.brand.addDateContext.data
+  data.label = 'Updated Context'
+
+  return frisby.create('update a context')
+    .put(`/brands/${brand_id}/contexts/${data.id}`, data)
+    .after(cb)
+    .expectStatus(200)
+}
+
+const deleteContext = cb => {
+  return frisby.create('delete a context')
+    .delete(`/brands/${brand_id}/contexts/${results.brand.addDateContext.data.id}`)
+    .after(cb)
+    .expectStatus(204)
+}
+
 const getByHostname = (cb) => {
   return frisby.create('search for a hostname')
     .get(`/brands/search?hostname=${hostname}`)
@@ -563,6 +580,8 @@ module.exports = {
   addDateContext,
   addTextContext,
   getContexts,
+  updateContext,
+  deleteContext,
 
   addTemplate,
   updateTemplate,

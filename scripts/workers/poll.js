@@ -146,4 +146,9 @@ poll({
   name: 'MicrosoftWorker.syncDue'
 })
 
+poll({
+  fn: Template.updateThumbnails,
+  name: 'Template.updateThumbnails'
+})
+
 module.exports = shutdown
