@@ -28,7 +28,7 @@ const create = (cb) => {
   const data = JSON.parse(JSON.stringify(deal))
 
   return frisby.create('create a deal')
-    .post('/deals', data)
+    .post('/deals?associations[]=deal.gallery', data)
     .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
     .after(cb)
     .expectStatus(200)
@@ -42,7 +42,7 @@ const patchListing = cb => {
   const patch = {
     listing: results.listing.getListing.data.id,
   }
-  const expected_object = Object.assign({}, results.deal.create.data, patch)
+  const expected_object = Object.assign({}, omit(results.deal.create.data, ['gallery']), patch)
 
   return frisby.create('set a listing for a deal')
     .patch(`/deals/${results.deal.create.data.id}/listing`, patch)
@@ -111,7 +111,8 @@ const addContext = cb => {
     'brokerwolf_tier_id',
     'brokerwolf_id',
     'brokerwolf_row_version',
-    'email'
+    'email',
+    'gallery'
   ]), {
     context: {
       list_date: {
@@ -454,6 +455,15 @@ const updateSubmission = cb => {
     .after(cb)
 }
 
+const getSubmissionPdf = cb => {
+  const url = results.deal.addTask.data.pdf_url.replace(process.argv[3], '')
+
+  return frisby.create('download submission pdf')
+    .get(url)
+    .after(cb)
+    .expectStatus(200)
+}
+
 const getContextHistory = cb => {
   return frisby.create('get context history on a deal')
     .get(`/deals/${results.deal.create.data.id}/context/list_date`)
@@ -566,7 +576,6 @@ const patchAttentionOff = cb => {
 }
 
 const seamlessAttention = cb => {
-  console.log()
   const { room } = results.deal.getTask.data
   const address = Crypto.encrypt(JSON.stringify({
     room_id: room.id,
@@ -808,6 +817,16 @@ function sortGalleryItems(cb) {
     .expectStatus(200)
 }
 
+function zipGallery(cb) {
+  const url = results.deal.create.data.gallery.zip_url.replace(process.argv[3], '')
+
+  return frisby
+    .create('download gallery zip file')
+    .get(url)
+    .after(cb)
+    .expectStatus(200)
+}
+
 module.exports = {
   create,
   addChecklist,
@@ -838,6 +857,7 @@ module.exports = {
   makeSureAnotherTaskIsntReturnedInDealContext,
   setSubmission,
   updateSubmission,
+  getSubmissionPdf,
   getContextHistory,
   addActivity,
   getRevision,
@@ -855,6 +875,7 @@ module.exports = {
   updateGalleryItem,
   deleteGalleryItem,
   sortGalleryItems,
+  zipGallery,
   removeRole,
   remove
 }

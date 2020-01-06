@@ -1,4 +1,8 @@
+const path = require('path')
+// const { dump } = require('wtfnode')
+
 const { peanar } = require('../../lib/utils/peanar')
+const { fork } = require('../../lib/utils/fork')
 
 require('../../lib/models/index.js')()
 const Context = require('../../lib/models/Context')
@@ -18,54 +22,112 @@ require('../../lib/models/Deal/brokerwolf')
 require('../../lib/models/Email')
 require('../../lib/models/SMS')
 
+/** @type {(() => Promise<void>)[]} */
+let shutdowns = []
+
 const context = Context.create({
-  id: 'PeanarWorker'
+  id: 'peanar-workers-main'
 })
 
-async function main() {
-  await peanar.declareAmqResources()
-
-  await peanar.worker({
+const queues = [
+  {
     queues: ['brokerwolf'],
     concurrency: 1
-  })
-  await peanar.worker({
+  },
+  {
     queues: ['deal_email'],
     concurrency: 5
-  })
-  await peanar.worker({
+  },
+  {
     queues: ['calendar', 'touches'],
     concurrency: 2
-  })
-
-  await peanar.worker({
+  },
+  {
     queues: ['flows', 'contacts', 'contact_lists', 'contact_duplicates', 'crm_tasks'],
     concurrency: 10
-  })
-  await peanar.worker({ queues: ['contact_import'], concurrency: 15 })
-
-  await peanar.worker({
-    queues: ['google', 'microsoft'],
-    concurrency: 30
-  })
-
-  await peanar.worker({
-    queues: ['MLS.Office', 'MLS.Unit', 'MLS.Room', 'MLS.Agent'],
+  },
+  { queues: ['contact_import'], concurrency: 15 },
+  {
+    queues: ['MLS.Listing', 'MLS.Office', 'MLS.Room', 'MLS.Agent'],
     concurrency: 50
-  })
-
-  await peanar.worker({
-    queues: ['email_event', 'email', 'email_high', 'MLS.OpenHouse', 'MLS.Photo', 'MLS.Listing', 'MLS.Listing.Photos.Validate'],
+  },
+  {
+    queues: ['email_high', 'email_event'],
     concurrency: 20
-  })
-  
-
-  await peanar.worker({
+  },
+  {
+    queues: ['MLS.OpenHouse', 'MLS.Unit', 'MLS.Listing.Photos.Validate'],
+    concurrency: 20
+  },
+  {
     queues: ['sms'],
     concurrency: config.twilio.parallel
-  })
+  }
+]
+
+const forks = [
+  {
+    queues: ['google'],
+    concurrency: 30
+  },
+  {
+    queues: ['microsoft'],
+    concurrency: 30
+  },
+  {
+    queues: ['email'],
+    concurrency: 20
+  },
+  {
+    queues: ['MLS.Photo'],
+    concurrency: 20
+  }
+]
+
+/**
+ * @template T
+ * @param {Promise<T>[]} arr 
+ */
+async function series(arr) {
+  const res = []
+
+  for (const x of arr) {
+    res.push(await x)
+  }
+
+  return res
 }
 
+async function startPeanar() {
+  try {
+    await peanar.declareAmqResources()
+  } catch (ex) {
+    console.error(ex)
+  }
+
+  for (const q of queues) {
+    await peanar.worker(q)
+  }
+
+  shutdowns = await series(forks.map(q => fork(path.resolve(__dirname, './forked_worker'), q)))
+}
+
+function shutdownForks() {
+  return Promise.all(shutdowns.map(s => s()))
+}
+
+// process.on('SIGINT', () => {
+//   Promise.all([
+//     shutdown(),
+//     peanar.shutdown()
+//   ]).then(() => {
+//     dump()
+//     process.exit()
+//   })
+// })
+
 context.run(() => {
-  main().catch(ex => console.error(ex))
+  startPeanar().catch(ex => context.error(ex))
 })
+
+module.exports = shutdownForks
