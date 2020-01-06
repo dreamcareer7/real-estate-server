@@ -28,7 +28,7 @@ const create = (cb) => {
   const data = JSON.parse(JSON.stringify(deal))
 
   return frisby.create('create a deal')
-    .post('/deals', data)
+    .post('/deals?associations[]=deal.gallery', data)
     .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
     .after(cb)
     .expectStatus(200)
@@ -42,7 +42,7 @@ const patchListing = cb => {
   const patch = {
     listing: results.listing.getListing.data.id,
   }
-  const expected_object = Object.assign({}, results.deal.create.data, patch)
+  const expected_object = Object.assign({}, omit(results.deal.create.data, ['gallery']), patch)
 
   return frisby.create('set a listing for a deal')
     .patch(`/deals/${results.deal.create.data.id}/listing`, patch)
@@ -111,7 +111,8 @@ const addContext = cb => {
     'brokerwolf_tier_id',
     'brokerwolf_id',
     'brokerwolf_row_version',
-    'email'
+    'email',
+    'gallery'
   ]), {
     context: {
       list_date: {
@@ -809,11 +810,11 @@ function sortGalleryItems(cb) {
 }
 
 function zipGallery(cb) {
-  const deal_id = results.deal.create.data.id
+  const url = results.deal.create.data.gallery.zip_url.replace(process.argv[3], '')
 
   return frisby
     .create('download gallery zip file')
-    .get(`/deals/${deal_id}/gallery.zip`)
+    .get(url)
     .after(cb)
     .expectStatus(200)
 }
