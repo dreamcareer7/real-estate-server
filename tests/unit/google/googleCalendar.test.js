@@ -254,8 +254,7 @@ async function create() {
 async function getRemoteGoogleCalendars() {
   const result = await GoogleCalendar.getRemoteGoogleCalendars(googleCredential)
 
-  expect(result.readWrite.length).to.be.equal(3)
-  expect(result.readOnly.length).to.be.equal(2)
+  expect(result.calendars.length).to.be.equal(5)
   expect(result.currentSelectedCal).to.be.equal(null)
 
   return result
@@ -265,7 +264,7 @@ async function configureCaledars() {
   const data = await getRemoteGoogleCalendars()
 
   const conf = {
-    toSync: [data.readWrite[0].id, data.readWrite[1].id, data.readOnly[0].id],
+    toSync: [data.calendars[0].id, data.calendars[1].id],
     toStopSync: []
   }
 
