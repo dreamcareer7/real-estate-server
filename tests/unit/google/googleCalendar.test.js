@@ -1,10 +1,12 @@
+const uuid       = require('uuid')
 const { expect } = require('chai')
 const { createContext } = require('../helper')
 
-const Context        = require('../../../lib/models/Context')
-const User           = require('../../../lib/models/User')
-const BrandHelper    = require('../brand/helper')
-const GoogleCalendar = require('../../../lib/models/Google/calendar')
+const Context          = require('../../../lib/models/Context')
+const User             = require('../../../lib/models/User')
+const BrandHelper      = require('../brand/helper')
+const GoogleCredential = require('../../../lib/models/Google/credential')
+const GoogleCalendar   = require('../../../lib/models/Google/calendar')
 
 const { createGoogleMessages } = require('./helper')
 
@@ -49,8 +51,8 @@ const configs = {
   },
 
   conf_3: {
-    toSync: ['heshmat.zapata@gmail.com'],
-    toStopSync: ['saeed.uni68@gmail.com']
+    toSync: ['my_gmail_2@gmail.com'],
+    toStopSync: ['my_gmail@gmail.com']
   }
 }*/
 
@@ -214,6 +216,20 @@ async function stopSync() {
   expect(calendars[0].watcher_status).to.be.equal('stopped')
 }
 
+async function updateWatcher() {
+  const wId     = uuid.v4()
+  const wStatus = 'status'
+  const wResult = 'status'
+
+  const cal = await createLocal()
+  await GoogleCalendar.updateWatcher(cal.id, wId, wStatus, wResult)
+  const updated = await GoogleCalendar.get(cal.id)
+
+  expect(updated.watcher_channel_id).to.be.equal(wId)
+  expect(updated.watcher_status).to.be.equal(wStatus)
+  expect(updated.watcher).to.be.equal(wResult)
+}
+
 async function listRemoteCalendars() {
   const result = await GoogleCalendar.listRemoteCalendars(googleCredential.id)
 
@@ -262,31 +278,73 @@ async function create() {
 async function getRemoteGoogleCalendars() {
   const result = await GoogleCalendar.getRemoteGoogleCalendars(googleCredential)
 
-  console.log(result)
-
-  // expect(result.length).to.be.not.equal(0)
-  // expect(result[0].kind).to.be.equal('calendar#calendarListEntry')
+  expect(result.readWrite.length).to.be.equal(3)
+  expect(result.readOnly.length).to.be.equal(2)
+  expect(result.currentSelectedCal).to.be.equal(null)
 
   return result
 }
 
+async function configureCaledars() {
+  /*
+    conf: {
+      rechatCalendar: {
+        type: 'new',
+        body: {
+          summary: 'summary',
+          description: 'description',
+          location: 'Montreal',
+          timeZone: 'America/Chicago'
+        }
+      },
+      toSync: [x,y,z]
+    }
 
+    conf: {
+      rechatCalendar: {
+        type: 'old',
+        id: 'my_custom_cal',
+      },
+      toSync: [x,y,z]
+    }
 
-async function update() {
-  const body = {
-    summary: 'summary-updated',
-    description: 'description-updated',
-    location: 'location',
-    timeZone: 'Europe/Zurich'
+    conf: {
+      toSync: ['heshmat.zapata@gmail.com'],
+      toStopSync: ['saeed.uni68@gmail.com']
+    }
+  */
+
+  const data = await getRemoteGoogleCalendars()
+
+  const conf = {
+    rechatCalendar: {
+      type: 'new',
+      body: {
+        summary: 'rechat-summary',
+        description: 'rechat-description',
+        location: 'Montreal',
+        timeZone: 'America/Chicago'
+      }
+    },
+    toSync: [data.readWrite[0].id, data.readWrite[1].id, data.readOnly[0].id]
   }
 
-  const id = await GoogleCalendar.update(googleCredential.id, body)
-  const calendar = await GoogleCalendar.get(id)
+  expect(googleCredential.rechat_gcalendar).to.be.equal(null)
 
-  expect(calendar.google_credential).to.be.equal(googleCredential.id)
-  expect(calendar.type).to.be.equal('google_calendars')
-  expect(calendar.summary).to.be.equal(body.summary)
+  await GoogleCalendar.configureCaledars(googleCredential.id, conf)
+
+  const updatedGoogleCredential = await GoogleCredential.get(googleCredential.id)
+  
+  expect(updatedGoogleCredential.rechat_gcalendar).to.be.not.equal(null)
+
+  const rechatCalendar = await GoogleCalendar.get(updatedGoogleCredential.rechat_gcalendar)
+
+  expect(rechatCalendar.summary).to.be.equal(conf.rechatCalendar.body.summary)
+  expect(rechatCalendar.description).to.be.equal(conf.rechatCalendar.body.description)
+
+  return rechatCalendar
 }
+
 
 
 
@@ -296,25 +354,24 @@ describe('Google', () => {
     createContext()
     beforeEach(setup)
 
-    // it('should create a google calendar', createLocal)
-    // it('should update a google calendar', updateLocal)
-    // it('should persist a remote google calendar into disk', persistRemoteCalendar)
-    // it('should fail in get by remote calendar id', getByRemoteCalendarIdFiled)
-    // it('should return a calendar by remote calendar id', getByRemoteCalendarId)
-    // it('should delete a local calendar by remote calendar id', deleteLocalByRemoteCalendarId)
-    // it('should fail in get by id', getFailed)
-    // it('should return a calendar by channel id', getByWatcherChannelId)
-    // it('should return calendars by channel credential id', getAllByGoogleCredential)
-    // it('should update a calendar\'s sync_token', updateSyncToken)
-    // it('should stop to sync', stopSync)
-
+    it('should create a google calendar', createLocal)
+    it('should update a google calendar', updateLocal)
+    it('should persist a remote google calendar into disk', persistRemoteCalendar)
+    it('should fail in get by remote calendar id', getByRemoteCalendarIdFiled)
+    it('should return a calendar by remote calendar id', getByRemoteCalendarId)
+    it('should delete a local calendar by remote calendar id', deleteLocalByRemoteCalendarId)
+    it('should fail in get by id', getFailed)
+    it('should return a calendar by channel id', getByWatcherChannelId)
+    it('should return calendars by channel credential id', getAllByGoogleCredential)
+    it('should update a calendar\'s sync_token', updateSyncToken)
+    it('should stop to sync', stopSync)
+    it('should update watcher status', updateWatcher)
+    
     it('should return a list of remote google calendars', listRemoteCalendars)
     it('should persist remote google calendars without any ToSync calendars', persistRemoteCalendarsSimple)
     it('should persist remote google calendars', persistRemoteCalendars)
     it('should create a remote google calendars', create)
     it('should return an object of remote google calendars', getRemoteGoogleCalendars)
-    
-    
-    // it('should update a remote google calendars', update)
+    it('should config google calendars', configureCaledars)
   })
 })
