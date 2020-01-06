@@ -455,6 +455,15 @@ const updateSubmission = cb => {
     .after(cb)
 }
 
+const getSubmissionPdf = cb => {
+  const url = results.deal.addTask.data.pdf_url.replace(process.argv[3], '')
+
+  return frisby.create('download submission pdf')
+    .get(url)
+    .after(cb)
+    .expectStatus(200)
+}
+
 const getContextHistory = cb => {
   return frisby.create('get context history on a deal')
     .get(`/deals/${results.deal.create.data.id}/context/list_date`)
@@ -567,7 +576,6 @@ const patchAttentionOff = cb => {
 }
 
 const seamlessAttention = cb => {
-  console.log()
   const { room } = results.deal.getTask.data
   const address = Crypto.encrypt(JSON.stringify({
     room_id: room.id,
@@ -849,6 +857,7 @@ module.exports = {
   makeSureAnotherTaskIsntReturnedInDealContext,
   setSubmission,
   updateSubmission,
+  getSubmissionPdf,
   getContextHistory,
   addActivity,
   getRevision,
