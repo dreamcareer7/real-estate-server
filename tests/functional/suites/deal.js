@@ -566,7 +566,6 @@ const patchAttentionOff = cb => {
 }
 
 const seamlessAttention = cb => {
-  console.log()
   const { room } = results.deal.getTask.data
   const address = Crypto.encrypt(JSON.stringify({
     room_id: room.id,
