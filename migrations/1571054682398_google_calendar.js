@@ -3,8 +3,8 @@ const db = require('../lib/utils/db')
 const migrations = [
   'BEGIN',
 
-  'ALTER TABLE google_calendars DROP COLUMN IF EXISTS accessRole',
-  'ALTER TABLE google_calendars ADD COLUMN IF NOT EXISTS access_role TEXT',
+  'ALTER TABLE IF EXISTS google_calendars DROP COLUMN IF EXISTS accessRole',
+  'ALTER TABLE IF EXISTS google_calendars ADD COLUMN IF NOT EXISTS access_role TEXT',
 
   'ALTER TABLE google_credentials DROP COLUMN IF EXISTS rechat_gcalendar',
   'ALTER TABLE google_credentials DROP COLUMN IF EXISTS calendars_last_sync_at',
