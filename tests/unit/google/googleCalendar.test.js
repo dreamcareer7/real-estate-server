@@ -32,30 +32,6 @@ const calendars = {
   }
 }
 
-/*
-const configs = {
-  conf_1: {
-    rechatCalendar: {
-      type: 'new',
-      body: calendars.remote_cal_1
-    },
-    toSync: ['x', 'y', 'z']
-  },
-
-  conf_2: {
-    rechatCalendar: {
-      type: 'old',
-      id: 'my_custom_cal',
-    },
-    toSync: ['x', 'y', 'z']
-  },
-
-  conf_3: {
-    toSync: ['my_gmail_2@gmail.com'],
-    toStopSync: ['my_gmail@gmail.com']
-  }
-}*/
-
 
 async function setup() {
   user  = await User.getByEmail('test@rechat.com')
@@ -286,52 +262,16 @@ async function getRemoteGoogleCalendars() {
 }
 
 async function configureCaledars() {
-  /*
-    conf: {
-      rechatCalendar: {
-        type: 'new',
-        body: {
-          summary: 'summary',
-          description: 'description',
-          location: 'Montreal',
-          timeZone: 'America/Chicago'
-        }
-      },
-      toSync: [x,y,z]
-    }
-
-    conf: {
-      rechatCalendar: {
-        type: 'old',
-        id: 'my_custom_cal',
-      },
-      toSync: [x,y,z]
-    }
-
-    conf: {
-      toSync: ['heshmat.zapata@gmail.com'],
-      toStopSync: ['saeed.uni68@gmail.com']
-    }
-  */
-
   const data = await getRemoteGoogleCalendars()
 
   const conf = {
-    rechatCalendar: {
-      type: 'new',
-      body: {
-        summary: 'rechat-summary',
-        description: 'rechat-description',
-        location: 'Montreal',
-        timeZone: 'America/Chicago'
-      }
-    },
-    toSync: [data.readWrite[0].id, data.readWrite[1].id, data.readOnly[0].id]
+    toSync: [data.readWrite[0].id, data.readWrite[1].id, data.readOnly[0].id],
+    toStopSync: []
   }
 
   expect(googleCredential.rechat_gcalendar).to.be.equal(null)
 
-  await GoogleCalendar.configureCaledars(googleCredential.id, conf)
+  await GoogleCalendar.configureCaledars(googleCredential, conf)
 
   const updatedGoogleCredential = await GoogleCredential.get(googleCredential.id)
   
@@ -339,14 +279,10 @@ async function configureCaledars() {
 
   const rechatCalendar = await GoogleCalendar.get(updatedGoogleCredential.rechat_gcalendar)
 
-  expect(rechatCalendar.summary).to.be.equal(conf.rechatCalendar.body.summary)
-  expect(rechatCalendar.description).to.be.equal(conf.rechatCalendar.body.description)
+  expect(rechatCalendar.google_credential).to.be.equal(googleCredential.id)
 
   return rechatCalendar
 }
-
-
-
 
 
 describe('Google', () => {
