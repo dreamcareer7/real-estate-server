@@ -30,6 +30,7 @@ attachFlowEvents()
 attachTaskEventHandler()
 attachTouchEventHandler()
 
+db.enableMetrics()
 
 process.on('unhandledRejection', (err, promise) => {
   Context.trace('Unhanled Rejection on request', err)
@@ -126,6 +127,7 @@ async function shutdownWorkers() {
 }
 
 const shutdown = async () => {
+  Context.log('Shutting down')
   try {
     clearTimeout(kueCleanupTimeout)
     // clearTimeout(shutdownTimeout)
