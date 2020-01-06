@@ -136,7 +136,7 @@ async function getByRemoteCalendarId() {
 async function deleteLocalByRemoteCalendarId() {
   const cal = await createLocal()
   
-  await GoogleCalendar.deleteLocalByRemoteCalendarId(googleCredential.id, cal.calendar_id)
+  await GoogleCalendar.deleteLocalByRemoteCalendarId(cal)
 
   const updated = await GoogleCalendar.get(cal.id)
 
@@ -178,18 +178,6 @@ async function updateSyncToken() {
 
   expect(updated.id).to.be.equal(cal.id)
   expect(updated.sync_token).to.be.equal(syncToken)
-}
-
-async function stopSync() {
-  const cal = await createLocal()
-  
-  const remoteCalendarIds = [cal.calendar_id]
-
-  const ids       = await GoogleCalendar.stopSync(googleCredential.id, remoteCalendarIds)
-  const calendars = await GoogleCalendar.getAll(ids)
-
-  expect(calendars.length).to.be.equal(1)
-  expect(calendars[0].watcher_status).to.be.equal('stopped')
 }
 
 async function updateWatcher() {
@@ -283,6 +271,19 @@ async function configureCaledars() {
   return rechatCalendar
 }
 
+async function configureCaledarsFails() {
+  const conf = {
+    'toStopSync': ['x', 'y', 'z'],
+    'toSync': ['x', 'm', 'k']
+  }
+
+  try {
+    await GoogleCalendar.configureCaledars(googleCredential, conf)
+  } catch (ex) {
+    expect(ex.message).to.be.equal('Google calendar by id x not found.')
+  }
+}
+
 
 describe('Google', () => {
   describe('Google Calendars', () => {
@@ -299,7 +300,6 @@ describe('Google', () => {
     it('should return a calendar by channel id', getByWatcherChannelId)
     it('should return calendars by channel credential id', getAllByGoogleCredential)
     it('should update a calendar\'s sync_token', updateSyncToken)
-    it('should stop to sync', stopSync)
     it('should update watcher status', updateWatcher)
     
     it('should return a list of remote google calendars', listRemoteCalendars)
@@ -308,5 +308,6 @@ describe('Google', () => {
     it('should create a remote google calendars', create)
     it('should return an object of remote google calendars', getRemoteGoogleCalendars)
     it('should config google calendars', configureCaledars)
+    it('should handle bad configs', configureCaledarsFails)
   })
 })

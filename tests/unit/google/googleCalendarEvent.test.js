@@ -234,10 +234,10 @@ async function restoreLocalByRemoteIds() {
   expect(updated.deleted_at).to.be.equal(null)
 }
 
-async function deleteLocalByRemoteCalendarId() {
+async function deleteLocalByCalendar() {
   const event = await createLocal()
   const cal   = await GoogleCalendar.get(event.google_calendar)
-  await GoogleCalendarEvent.deleteLocalByRemoteCalendarId(cal)
+  await GoogleCalendarEvent.deleteLocalByCalendar(cal)
   const updated = await GoogleCalendarEvent.get(event.id)
 
   expect(updated.status).to.be.equal('canceled')
@@ -378,7 +378,7 @@ describe('Google', () => {
     it('should delete a google calendar event', deleteLocal)
     it('should delete some google calendars by remote ids', deleteLocalByRemoteIds)
     it('should restore some google calendars by remote ids', restoreLocalByRemoteIds)
-    it('should delete some google remote by calendar id', deleteLocalByRemoteCalendarId)
+    it('should delete some google remote by calendar id', deleteLocalByCalendar)
     it('should returns an array of google calendar events', getAll)
     it('should handle get event', getFailed)
     it('should returns an array of google calendar events - by calendar id', getByCalendar)
