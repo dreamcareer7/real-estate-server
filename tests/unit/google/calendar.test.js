@@ -154,11 +154,8 @@ async function getFailed() {
 }
 
 async function getByWatcherChannelId() {
-  try {
-    await GoogleCalendar.getByWatcherChannelId(googleCredential.id)
-  } catch (err) {
-    expect(err.message).to.be.equal(`Google Calendar by channel ${googleCredential.id} not found.`)
-  }
+  const cal = await GoogleCalendar.getByWatcherChannelId(googleCredential.id)
+  expect(cal).to.be.equal(null)
 }
 
 async function getAllByGoogleCredential() {

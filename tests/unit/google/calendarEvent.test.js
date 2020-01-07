@@ -368,7 +368,7 @@ async function deleteEvent() {
 
 
 describe('Google', () => {
-  describe('Google Calendars', () => {
+  describe('Google Calendars Events', () => {
     createContext()
     beforeEach(setup)
 

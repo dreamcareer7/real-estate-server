@@ -213,14 +213,11 @@ async function disableEnableSyncFailed() {
 async function forceSync() {
   const createdCredential = await create()
 
-  await GoogleCredential.forceSync(createdCredential.id)
-
-  const updatedCredential = await GoogleCredential.get(createdCredential.id)
-
-  expect(createdCredential.id).to.be.equal(updatedCredential.id)
-  expect(updatedCredential.sync_status).to.be.equal(null)
-  expect(updatedCredential.last_sync_at).to.be.equal(null)
-  expect(updatedCredential.last_sync_duration).to.be.equal(null)
+  try {
+    await GoogleCredential.forceSync(createdCredential.id)
+  } catch (ex) {
+    expect(ex.message).to.be.equal('Please wait until current sync job is finished.')
+  }
 }
 
 async function updateProfile() {
