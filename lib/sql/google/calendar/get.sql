@@ -1,10 +1,10 @@
 SELECT
-    google_calendars.*, 'google_calendars' AS type
+  google_calendars.*, 'google_calendars' AS type
 FROM
-    google_calendars
+  google_calendars
 JOIN 
-    unnest($1::uuid[]) WITH ORDINALITY t(gcid, ord)
+  unnest($1::uuid[]) WITH ORDINALITY t(gcid, ord)
 ON 
-    google_calendars.id = gcid
+  google_calendars.id = gcid
 ORDER BY 
-    google_calendars.created_at DESC
+  google_calendars.created_at DESC
