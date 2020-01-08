@@ -20,6 +20,14 @@ async function setup() {
   Context.set({ user, brand })
 }
 
+async function getByIdFailed() {
+  try {
+    await GoogleMessage.get(user.id)
+  } catch(ex) {
+    expect(ex.message).to.be.equal(`GoogleMessage ${user.id} not found.`)
+  }
+}
+
 async function create() {
   const { createdMessages, credential } = await createGoogleMessages(user, brand)
 
@@ -59,6 +67,23 @@ async function getByMessageIdFailed() {
   }
 }
 
+async function getAsThreadMember() {
+  const messages = await create()
+  const message  = await GoogleMessage.getAsThreadMember(messages[0].google_credential, messages[0].message_id)
+
+  expect(message.origin).to.be.equal('gmail')
+  expect(message.owner).to.be.equal(messages[0].google_credential)
+  expect(message.message_id).to.be.equal(messages[0].message_id)
+  expect(message.thread_key).to.be.equal(messages[0].thread_key)
+  expect(message.has_attachments).to.be.equal(true)
+}
+
+async function getAsThreadMemberFailed() {
+  const message  = await GoogleMessage.getAsThreadMember(user.id, user.id)
+
+  expect(message).to.be.equal(null)
+}
+
 async function getGCredentialMessagesNum() {
   const googleMessages = await create()
 
@@ -96,15 +121,55 @@ async function downloadAttachmentFailed() {
   try {
     await GoogleMessage.downloadAttachment(bad_id, bad_id, bad_id)
   } catch(ex) {
-    expect(ex.message).to.be.equal(`Google-Credential ${bad_id} not found`)
+    expect(ex.message).to.be.equal(`GoogleMessage ${bad_id} in credential ${bad_id} not found.`)
   }
 
   try {
     await GoogleMessage.downloadAttachment(googleMessage.google_credential, googleMessage.message_id, bad_id)
   } catch(ex) {
-    expect(ex.message).to.be.equal('Access is denied! Insufficient permission.')
+    expect(ex.message).to.be.equal('Gmail message\'s attachment not found!')
   }
 }
+
+async function getRemoteMessage() {
+  const messages = await create()
+
+  const gmailMessage = await GoogleMessage.getRemoteMessage(messages[0].google_credential, '16f80a53a53bd334')
+
+  expect(gmailMessage.origin).to.be.equal('gmail')
+  expect(gmailMessage.owner).to.be.equal(messages[0].google_credential)
+  expect(gmailMessage.has_attachments).to.be.equal(true)
+  expect(gmailMessage.attachments.length).to.be.equal(2)
+  expect(gmailMessage.html_body).to.be.equal('This is the email body')
+
+  return gmailMessage
+}
+
+async function updateIsRead() {
+  const messages = await create()
+
+  const message = await GoogleMessage.get(messages[0].id)
+  expect(message.is_read).to.be.equal(false)
+
+  await GoogleMessage.updateIsRead(messages[0].id, true)
+  
+  const updated = await GoogleMessage.get(messages[0].id)
+  expect(updated.is_read).to.be.equal(true)
+}
+
+async function updateReadStatus() {
+  const messages = await create()
+
+  await GoogleMessage.updateReadStatus(messages[0].google_credential, messages[0].id, true)
+  
+  const updated = await GoogleMessage.get(messages[0].id)
+  expect(updated.is_read).to.be.equal(true)
+}
+
+// async function searchInThreads() {
+//   await GoogleMessage.searchInThreads(messages[0].google_credential, 'query', 1)
+// }
+
 
 
 describe('Google', () => {
@@ -112,12 +177,17 @@ describe('Google', () => {
     createContext()
     beforeEach(setup)
 
+    it('should handle failure of get by id', getByIdFailed)
     it('should create some google-messages', create)
     it('should return google-message by messages_id', getByMessageId)
     it('should handle failure of google-contact get by messages_id', getByMessageIdFailed)
-    it('should return number of messages of specific credential', getGCredentialMessagesNum)
+    it('should return google-message as a thread message', getAsThreadMember)
+    it('should handle failure of get as a thread message', getAsThreadMemberFailed)
     it('should delete google-messages by messages_ids', deleteByMessageIds)
-
+    it('should return number of messages of specific credential', getGCredentialMessagesNum)
     it('should handle failure of downloadAttachment', downloadAttachmentFailed)
+    it('should get a messagte by remote id', getRemoteMessage)
+    it('should update messagte is_read', updateIsRead)
+    it('should update messagte read status', updateReadStatus)
   })
 })

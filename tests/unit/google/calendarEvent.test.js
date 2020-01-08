@@ -195,7 +195,7 @@ async function updateLocal() {
 async function bulkUpsert() {
   const records = []
 
-  records.push(generateCalendarEventRecord(googleCredential.id, googleCalendar, events.remote_event_1))
+  records.push(generateCalendarEventRecord(googleCalendar, events.remote_event_1))
 
   const resutl = await GoogleCalendarEvent.bulkUpsert(records)
 
