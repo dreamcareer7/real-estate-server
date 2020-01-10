@@ -400,6 +400,7 @@ async function testCampaignToAgents() {
   expect(populated[0].people.map(p => p.id)).to.have.members([agent1, agent2])
 }
 
+// eslint-disable-next-line no-unused-vars
 async function testCampaignToContacts() {
   const [contact_id] = await Contact.create([{
     user: user.id,
