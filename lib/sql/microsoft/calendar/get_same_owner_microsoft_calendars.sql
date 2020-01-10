@@ -5,7 +5,7 @@ FROM
 WHERE
   id IN (
     SELECT
-      rechat_gcalendar
+      microsoft_calendar
     FROM
       microsoft_credentials
     WHERE

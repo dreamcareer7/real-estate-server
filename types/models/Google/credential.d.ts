@@ -8,7 +8,7 @@ declare interface IGoogleCredential extends IIntegrationCredential {
   contacts_last_sync_at: string;
   messages_sync_history_id: string;
   threads_sync_history_id: string;
-  rechat_gcalendar: UUID;
+  google_calendar: UUID;
   calendars_last_sync_at: string;
   scope_summary?: string[];
 }

@@ -253,15 +253,15 @@ async function configureCaledars() {
     toStopSync: []
   }
 
-  expect(googleCredential.rechat_gcalendar).to.be.equal(null)
+  expect(googleCredential.google_calendar).to.be.equal(null)
 
   await GoogleCalendar.configureCaledars(googleCredential, conf)
 
   const updatedGoogleCredential = await GoogleCredential.get(googleCredential.id)
   
-  expect(updatedGoogleCredential.rechat_gcalendar).to.be.not.equal(null)
+  expect(updatedGoogleCredential.google_calendar).to.be.not.equal(null)
 
-  const rechatCalendar = await GoogleCalendar.get(updatedGoogleCredential.rechat_gcalendar)
+  const rechatCalendar = await GoogleCalendar.get(updatedGoogleCredential.google_calendar)
 
   expect(rechatCalendar.google_credential).to.be.equal(googleCredential.id)
 
