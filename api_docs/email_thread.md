@@ -30,6 +30,7 @@ An `email_thread` object looks like this:
 | recipients           | string[]             |                         | Array of email addresses |
 | message_count        | number               |                         |
 | messages             | EmailThreadMessage[] | `email_thread.messages` |
+| contacts             | Contact[]            | `email_thread.contacts` |
 
 The type `EmailThreadMessage` is defined as one of:
 
