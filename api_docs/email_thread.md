@@ -18,19 +18,23 @@ An `email_thread` object looks like this:
 
 | Field                | Type                 | Association             | Description              |
 | -------------------- | -------------------- | ----------------------- | ------------------------ |
-| id                   | UUID                 |                         |
-| created_at           | number               |                         |
-| updated_at           | number               |                         |
-| brand                | UUID                 |                         |
-| google_credential    | UUID                 |                         |
-| microsoft_credential | UUID                 |                         |
-| subject              | string               |                         |
-| first_message_date   | number               |                         |
-| last_message_date    | number               |                         |
+| id                   | UUID                 |                         |                          |
+| created_at           | number               |                         |                          |
+| updated_at           | number               |                         |                          |
+| brand                | UUID                 |                         |                          |
+| user                 | UUID                 |                         |                          |
+| google_credential    | UUID                 |                         |                          |
+| microsoft_credential | UUID                 |                         |                          |
+| subject              | string               |                         |                          |
+| first_message_date   | number               |                         |                          |
+| last_message_date    | number               |                         |                          |
 | recipients           | string[]             |                         | Array of email addresses |
-| message_count        | number               |                         |
-| messages             | EmailThreadMessage[] | `email_thread.messages` |
-| contacts             | Contact[]            | `email_thread.contacts` |
+| message_count        | number               |                         |                          |
+| has_attachments      | boolean              |                         |                          |
+| is_read              | boolean              |                         |                          |
+| messages             | EmailThreadMessage[] | `email_thread.messages` |                          |
+| contacts             | Contact[]            | `email_thread.contacts` |                          |
+| type                 | `'email_thread'`     |                         |                          |
 
 The type `EmailThreadMessage` is defined as one of:
 
