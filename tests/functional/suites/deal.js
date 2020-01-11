@@ -790,7 +790,11 @@ function deleteGalleryItem(cb) {
 
   return frisby
     .create('delete a gallery item')
-    .delete(`/deals/${deal_id}/gallery/items/${item.id}`)
+    .delete(`/deals/${deal_id}/gallery/items`, {
+      items: [
+        item.id
+      ]
+    })
     .after(cb)
     .expectStatus(204)
 }
