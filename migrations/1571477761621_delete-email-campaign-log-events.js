@@ -28,7 +28,7 @@ const run = async () => {
   `)
 
   for (const chunk of _.chunk(rows, 20)) {
-    await Promise.all(chunk.map(item => CrmTask.remove(item.crm_task, item.created_by)))
+    await Promise.all(chunk.map(item => CrmTask.remove([item.crm_task], item.created_by)))
   }
 
   await commit()

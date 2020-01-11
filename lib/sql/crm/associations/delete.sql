@@ -2,10 +2,9 @@ UPDATE
   crm_associations
 SET
   deleted_at = NOW(),
-  deleted_by = $3::uuid
+  deleted_by = $2::uuid
 WHERE
-  id = ANY($1)
-  AND crm_task = $2
+  id = ANY($1::uuid[])
 RETURNING
   crm_task,
   contact,

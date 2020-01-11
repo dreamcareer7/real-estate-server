@@ -9,14 +9,18 @@ const Context = require('../../../lib/models/Context')
 const CrmTask = require('../../../lib/models/CRM/Task')
 const CrmAssociation = require('../../../lib/models/CRM/Association')
 const Contact = require('../../../lib/models/Contact')
-const User = require('../../../lib/models/User')
+
+const UserHelper = require('../user/helper')
 
 const { attributes } = require('../contact/helper')
 
 let user, brand
 
+/** @type {RequireProp<ITaskInput, 'brand' | 'created_by'>} */
+let base_task
+
 async function setup() {
-  user = await User.getByEmail('test@rechat.com')
+  user = await UserHelper.TestUser()
 
   brand = await BrandHelper.create({
     roles: {
@@ -24,13 +28,21 @@ async function setup() {
     }
   })
 
+  base_task = {
+    created_by: user.id,
+    brand: brand.id,
+    assignees: [user.id],
+    due_date: Date.now() / 1000,
+    title: 'Test assignment',
+    task_type: 'Call',
+    status: 'PENDING'
+  }
+
   Context.set({ user: user, brand })
 }
 
-async function testUpdateAssociation() {
-  Orm.setEnabledAssociations(['crm_task.associations'])
-
-  const [contact] = await Contact.create([{
+async function createContact() {
+  return Contact.create([{
     user: user.id,
     attributes: attributes({
       first_name: 'John',
@@ -38,16 +50,16 @@ async function testUpdateAssociation() {
       email: 'john@doe.com',
     }),
   }], user.id, brand.id)
+}
+
+async function testUpdateAssociation() {
+  Orm.setEnabledAssociations(['crm_task.associations'])
+
+  const [contact] = await createContact()
 
   const task = await CrmTask.create(
     {
-      created_by: user.id,
-      brand: brand.id,
-      assignees: [user.id],
-      due_date: Date.now() / 1000,
-      title: 'Test assignment',
-      task_type: 'Call',
-      status: 'PENDING',
+      ...base_task,
       associations: [{
         association_type: 'contact',
         contact
@@ -63,9 +75,48 @@ async function testUpdateAssociation() {
   expect(assoc.index).to.be.equal(1)
 }
 
+async function createTwoTasks() {
+  const [contact] = await createContact()
+  
+  return CrmTask.createMany([{
+    ...base_task,
+    associations: [{
+      association_type: 'contact',
+      contact
+    }],
+    reminders: [{
+      is_relative: false,
+      timestamp: base_task.due_date - 3600
+    }]
+  }, {
+    ...base_task,
+    due_date: Date.now() / 1000 + 86400,
+    assignees: []
+  }])
+}
+
+async function testCreateMany() {
+  const task_ids = await createTwoTasks()
+  expect(task_ids).to.have.length(2)
+}
+
+function testCreateManyEmitsCreateEvent(done) {
+  CrmTask.once('create', ({ task_ids, user_id, brand_id }) => {
+    expect(task_ids).to.have.length(2)
+    expect(user_id).to.be.equal(user.id)
+    expect(brand_id).to.be.equal(brand.id)
+
+    done()
+  })
+
+  createTwoTasks().catch(done)
+}
+
 describe('CrmTask', () => {
   createContext()
   beforeEach(setup)
 
   it('should allow updating association metadata', testUpdateAssociation)
+  it('should create multiple tasks', testCreateMany)
+  it('should emit create event when creating multiple tasks', testCreateManyEmitsCreateEvent)
 })
