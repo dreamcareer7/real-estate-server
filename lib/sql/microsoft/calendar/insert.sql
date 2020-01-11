@@ -2,13 +2,13 @@ INSERT INTO microsoft_calendars
   (
     microsoft_credential,
     calendar_id,
-    summary,
-    summary_override,
-    description,
-    location,
-    time_zone,
-    conference_properties,
-    access_role,
+    name,
+    color,
+    change_key,
+    can_share,
+    can_view_private_items,
+    can_edit,
+    owner,
     origin
   )
 VALUES
@@ -25,13 +25,13 @@ VALUES
     $10
   )
 ON CONFLICT (microsoft_credential, calendar_id) DO UPDATE SET
-  summary = $3,
-  summary_override = $4,
-  description = $5,
-  location = $6,
-  time_zone = $7,
-  conference_properties = $8,
-  access_role = $9,
+  name = $3,
+  color = $4,
+  change_key = $5,
+  can_share = $6,
+  can_view_private_items = $7,
+  can_edit = $8,
+  owner = $9,
   origin = $10,
   updated_at = now(),
   deleted_at = null

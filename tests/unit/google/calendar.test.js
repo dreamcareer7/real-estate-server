@@ -245,7 +245,7 @@ async function getRemoteGoogleCalendars() {
   return result
 }
 
-async function configureCaledars() {
+async function configureCalendars() {
   const data = await getRemoteGoogleCalendars()
 
   const conf = {
@@ -255,7 +255,7 @@ async function configureCaledars() {
 
   expect(googleCredential.google_calendar).to.be.equal(null)
 
-  await GoogleCalendar.configureCaledars(googleCredential, conf)
+  await GoogleCalendar.configureCalendars(googleCredential, conf)
 
   const updatedGoogleCredential = await GoogleCredential.get(googleCredential.id)
   
@@ -268,14 +268,14 @@ async function configureCaledars() {
   return rechatCalendar
 }
 
-async function configureCaledarsFails() {
+async function configureCalendarsFails() {
   const conf = {
     'toStopSync': ['x', 'y', 'z'],
     'toSync': ['x', 'm', 'k']
   }
 
   try {
-    await GoogleCalendar.configureCaledars(googleCredential, conf)
+    await GoogleCalendar.configureCalendars(googleCredential, conf)
   } catch (ex) {
     expect(ex.message).to.be.equal('Google calendar by id x not found.')
   }
@@ -304,7 +304,7 @@ describe('Google', () => {
     it('should persist remote google calendars', persistRemoteCalendars)
     it('should create a remote google calendars', create)
     it('should return an object of remote google calendars', getRemoteGoogleCalendars)
-    it('should config google calendars', configureCaledars)
-    it('should handle bad configs', configureCaledarsFails)
+    it('should config google calendars', configureCalendars)
+    it('should handle bad configs', configureCalendarsFails)
   })
 })
