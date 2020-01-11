@@ -142,7 +142,7 @@ const database = (req, res, next) => {
   res.end = function (data, encoding, callback) {
     if (req.headers['x-handle-jobs'] === 'yes') {
       async.whilst(() => {
-        return Context.get('jobs').length > 0 || Context.get('rabbit_jobs').length > 0
+        return (Context.get('jobs') || []).length > 0 || (Context.get('rabbit_jobs') || []).length > 0
       }, cb => {
         async.parallel([
           cb => {
