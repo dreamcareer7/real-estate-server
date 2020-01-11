@@ -10,22 +10,18 @@ const migrations = [
     microsoft_credential uuid NOT NULL REFERENCES microsoft_credentials(id),
     calendar_id TEXT NOT NULL,
 
-    name TEXT
+    name TEXT,
     owner JSONB,
 
     can_edit Boolean,
     can_share Boolean,
     can_view_private_items Boolean,
 
-    change_key String,
-    color String,
+    change_key TEXT,
+    color TEXT,
 
     origin TEXT,
     sync_token TEXT,
-
-    // watcher_status TEXT,
-    // watcher_channel_id uuid NULL,
-    // watcher JSONB,
 
     created_at timestamptz NOT NULL DEFAULT clock_timestamp(),
     updated_at timestamptz NOT NULL DEFAULT clock_timestamp(),
@@ -34,7 +30,6 @@ const migrations = [
     UNIQUE (microsoft_credential, calendar_id)
   )`,
 
-  // 'CREATE UNIQUE INDEX microsoft_calendars_watcher_channel_id ON microsoft_calendars (watcher_channel_id) WHERE watcher_channel_id IS NOT NULL',
 
 
   `CREATE TABLE IF NOT EXISTS microsoft_calendar_events(
@@ -51,12 +46,12 @@ const migrations = [
     body_preview TEXT,
 
     created_date_time timestamptz,
-    original_start timestamptz
+    original_start timestamptz,
     last_modified_date_time timestamptz,
-    original_end_time_zone TEXT
-    original_start_time_zone TEXT
-    start JSONB,
-    end JSONB,
+    original_end_time_zone TEXT,
+    original_start_time_zone TEXT,
+    event_start JSONB,
+    event_end JSONB,
 
     location JSONB,
     locations JSONB,
@@ -67,6 +62,7 @@ const migrations = [
     body JSONB,
     attendees JSONB,
     categories JSONB,
+    response_status JSONB,
 
     has_attachments Boolean,
     is_all_day Boolean,
@@ -78,9 +74,8 @@ const migrations = [
     change_key TEXT,
     ical_uid TEXT,
     importance TEXT,
-    online_meeting_url TEXT
-    reminder_minutes_before_start BIGINT
-    response_status
+    online_meeting_url TEXT,
+    reminder_minutes_before_start BIGINT,
     sensitivity TEXT,
     series_masterId TEXT,
     show_as TEXT,
