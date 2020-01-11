@@ -817,8 +817,20 @@ function sortGalleryItems(cb) {
     .expectStatus(200)
 }
 
-function zipGallery(cb) {
-  const url = results.deal.create.data.gallery.zip_url.replace(process.argv[3], '')
+function createGalleryZipUrl(cb) {
+  const id = results.deal.create.data.id
+
+  const items = results.deal.sortGalleryItems.data.map(r => r.id)
+
+  return frisby
+    .create('create a zip gallery url')
+    .post(`/deals/${id}/gallery.zip`, {items})
+    .after(cb)
+    .expectStatus(200)
+}
+
+function downloadGalleryZip(cb) {
+  const url = results.deal.createGalleryZipUrl.info.url.replace(process.argv[3], '')
 
   return frisby
     .create('download gallery zip file')
@@ -875,7 +887,8 @@ module.exports = {
   updateGalleryItem,
   deleteGalleryItem,
   sortGalleryItems,
-  zipGallery,
+  createGalleryZipUrl,
+  downloadGalleryZip,
   removeRole,
   remove
 }
