@@ -227,7 +227,7 @@ async function testLastTouchAfterEventIsDeleted() {
     expect(c.last_touch).to.be.equal(task.due_date)
   })
 
-  await CrmTask.remove(task.id, user.id)
+  await CrmTask.remove([task.id], user.id)
   await handleJobs()
 
   await contactShould(contact_id, c => {
