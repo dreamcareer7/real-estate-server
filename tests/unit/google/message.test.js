@@ -148,12 +148,12 @@ async function getRemoteMessage() {
 async function updateIsRead() {
   const messages = await create()
 
-  const message = await GoogleMessage.get(messages[0].id)
+  const message = await GoogleMessage.getAsThreadMember(messages[0].google_credential, messages[0].message_id)
   expect(message.is_read).to.be.equal(false)
 
   await GoogleMessage.updateIsRead(messages[0].id, true)
   
-  const updated = await GoogleMessage.get(messages[0].id)
+  const updated = await GoogleMessage.getAsThreadMember(messages[0].google_credential, messages[0].message_id)
   expect(updated.is_read).to.be.equal(true)
 }
 
@@ -162,14 +162,9 @@ async function updateReadStatus() {
 
   await GoogleMessage.updateReadStatus(messages[0].google_credential, messages[0].id, true)
   
-  const updated = await GoogleMessage.get(messages[0].id)
+  const updated = await GoogleMessage.getAsThreadMember(messages[0].google_credential, messages[0].message_id)
   expect(updated.is_read).to.be.equal(true)
 }
-
-// async function searchInThreads() {
-//   await GoogleMessage.searchInThreads(messages[0].google_credential, 'query', 1)
-// }
-
 
 
 describe('Google', () => {
@@ -186,8 +181,8 @@ describe('Google', () => {
     it('should delete google-messages by messages_ids', deleteByMessageIds)
     it('should return number of messages of specific credential', getGCredentialMessagesNum)
     it('should handle failure of downloadAttachment', downloadAttachmentFailed)
-    it('should get a messagte by remote id', getRemoteMessage)
-    it('should update messagte is_read', updateIsRead)
-    it('should update messagte read status', updateReadStatus)
+    it('should get a message by remote id', getRemoteMessage)
+    it('should update message is_read', updateIsRead)
+    it('should update message read status', updateReadStatus)
   })
 })
