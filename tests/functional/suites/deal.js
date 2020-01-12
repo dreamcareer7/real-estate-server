@@ -784,13 +784,17 @@ function updateGalleryItem(cb) {
     })
 }
 
-function deleteGalleryItem(cb) {
+function deleteGalleryItems(cb) {
   const deal_id = results.deal.create.data.id
   const item = results.deal.createGalleryItems.data[0]
 
   return frisby
     .create('delete a gallery item')
-    .delete(`/deals/${deal_id}/gallery/items/${item.id}`)
+    .delete(`/deals/${deal_id}/gallery/items`, {
+      items: [
+        item.id
+      ]
+    })
     .after(cb)
     .expectStatus(204)
 }
@@ -885,7 +889,7 @@ module.exports = {
   attachGalleryFile,
   createGalleryItems,
   updateGalleryItem,
-  deleteGalleryItem,
+  deleteGalleryItems,
   sortGalleryItems,
   createGalleryZipUrl,
   downloadGalleryZip,
