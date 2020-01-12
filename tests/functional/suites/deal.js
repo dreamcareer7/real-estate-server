@@ -784,7 +784,7 @@ function updateGalleryItem(cb) {
     })
 }
 
-function deleteGalleryItem(cb) {
+function deleteGalleryItems(cb) {
   const deal_id = results.deal.create.data.id
   const item = results.deal.createGalleryItems.data[0]
 
@@ -889,7 +889,7 @@ module.exports = {
   attachGalleryFile,
   createGalleryItems,
   updateGalleryItem,
-  deleteGalleryItem,
+  deleteGalleryItems,
   sortGalleryItems,
   createGalleryZipUrl,
   downloadGalleryZip,
