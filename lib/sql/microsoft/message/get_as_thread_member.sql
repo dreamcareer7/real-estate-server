@@ -1,9 +1,9 @@
 SELECT
-  'gmail' AS origin,
-  google_messages.id,
-  google_credential AS "owner",
-  google_credentials.email AS "owner_email",
-  google_credentials.display_name AS "owner_name",
+  'outlook' AS origin,
+  microsoft_messages.id,
+  microsoft_credential AS "owner",
+  microsoft_credentials.email AS "owner_email",
+  microsoft_credentials.display_name AS "owner_name",
   message_id,
   thread_id,
   thread_key,
@@ -24,9 +24,9 @@ SELECT
   is_read,
   message_date
 FROM
-  google_messages
+  microsoft_messages
 JOIN
-  google_credentials on google_messages.google_credential = google_credentials.id
+  microsoft_credentials on microsoft_messages.microsoft_credential = microsoft_credentials.id
 WHERE
-  google_credential = $1
+  microsoft_credential = $1
   AND message_id = $2

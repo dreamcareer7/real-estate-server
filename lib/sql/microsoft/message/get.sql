@@ -21,7 +21,6 @@ SELECT
   cc,
   bcc,
   thread_key,
-  is_read,
   'microsoft_message' AS "type"
 FROM
   microsoft_messages
