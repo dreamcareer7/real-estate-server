@@ -118,11 +118,8 @@ async function persistRemoteCalendar() {
 }
 
 async function getByRemoteCalendarIdFiled() {
-  try {
-    await GoogleCalendar.getByRemoteCalendarId(googleCredential.id, 'xxxx')
-  } catch (err) {
-    expect(err.message).to.be.equal('Google calendar by id xxxx not found.')
-  }
+  const cal = await GoogleCalendar.getByRemoteCalendarId(googleCredential.id, 'xxxx')
+  expect(cal).to.be.equal(null)
 }
 
 async function getByRemoteCalendarId() {
@@ -208,12 +205,11 @@ async function persistRemoteCalendarsSimple() {
 
 async function persistRemoteCalendars() {
   const remoteCals = await listRemoteCalendars()
-  const toSyncRemoteCalendarIds = remoteCals.map(cal => cal.id)
-  const deletedRemoteCalendarIds = remoteCals.filter(rec => { if (rec.deleted) return true }).map(cal => cal.id)
+  const toSyncRemoteCalendarIds  = remoteCals.map(cal => cal.id)
   const result      = await GoogleCalendar.persistRemoteCalendars(googleCredential.id, toSyncRemoteCalendarIds)
   const pesistedCal = await GoogleCalendar.get(result[0])
 
-  expect(result.length).to.be.equal(toSyncRemoteCalendarIds.length - deletedRemoteCalendarIds.length)
+  expect(result.length).to.be.equal(toSyncRemoteCalendarIds.length)
   expect(pesistedCal.id).to.be.equal(result[0])
   expect(pesistedCal.google_credential).to.be.equal(googleCredential.id)
   expect(pesistedCal.origin).to.be.equal('google')
