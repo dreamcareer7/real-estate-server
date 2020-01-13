@@ -12,7 +12,6 @@ SELECT
   recipients,
   message_count,
   has_attachments,
-  is_read,
   
   (
     CASE
