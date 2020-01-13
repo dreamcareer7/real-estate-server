@@ -34,6 +34,7 @@ const individual = {
 const mailgun_id = 'example-mailgun-id-email-1'
 
 
+
 const schedule = cb => {
   email.from = results.authorize.token.data.id
 
@@ -287,7 +288,7 @@ const scheduleGmailMessage = cb => {
     html: '<div>Hi</div>',
     subject: 'schedule gmail message',
     from: results.google.getGoogleProfile.data.user,
-    google_credential: results.google.getGoogleProfile.data.id,
+    google_credential: null,
     microsoft_credential: null,
     attachments: [],
     headers: {}
@@ -436,6 +437,43 @@ const scheduleEmailWithAttachments = cb => {
     .after(cb)
     .expectStatus(200)
 }
+
+const sendGmailOutlookDue = cb => {
+  return frisby
+    .create('Send Due Gmail/Outlook Campaigns')
+    .post('/jobs', {
+      name: 'EmailCampaign.sendDue',
+    })
+    .addHeader('x-handle-jobs', 'yes')
+    .after(cb)
+    .expectStatus(200)
+}
+
+const updateGmailOutlookStats = cb => {
+  return frisby
+    .create('Update campaign stats')
+    .post('/jobs', {
+      name: 'EmailCampaign.updateStats',
+    })
+    .after(cb)
+    .expectStatus(200)
+}
+
+const getGmailMessage = cb => {
+  return frisby
+    .create('Get the campaign')
+    .get(`/emails/${results.email.scheduleGmailMessage.data.id}?associations[]=email_campaign.emails&associations[]=email_campaign.recipients`)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      data: {
+        subject: results.email.scheduleGmailMessage.data.subject,
+        html: results.email.scheduleGmailMessage.data.html,
+        recipients: results.email.scheduleGmailMessage.data.to
+      }
+    })
+}
+
 
 const getGmailCampaign = cb => {
   return frisby
@@ -602,6 +640,16 @@ const updateMailgunToGmail = cb => {
     })
 }
 
+// function updateReadStatus(cb) {
+//   return frisby.create('Update isRead')
+//     .put(`/emails/microsoft/${results.microsoft.createMicrosoftCredential}/messages/:mid`, { status: true })
+//     .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
+//     .after(function(err, res, json) {
+//       cb(err, res, json)
+//     })
+//     .expectJSON({ http: 400, message: 'Please wait until current sync job is finished.', code: 'BadRequest' })
+// }
+
 
 module.exports = {
   schedule,
@@ -618,6 +666,9 @@ module.exports = {
   uploadAttachment,
   scheduleGmailMessage,
   scheduleOutlookMessage,
+  sendGmailOutlookDue,
+  updateGmailOutlookStats,
+  getGmailMessage,
   scheduleReplyToGmailMessage,
   scheduleReplyToOulookMessage,
   scheduleEmailWithAttachments,
@@ -628,5 +679,6 @@ module.exports = {
   updateGmailToMailgun,
   updateOutlookToMailgun,
   scheduleTempMailGunCampaign,
-  updateMailgunToGmail
+  updateMailgunToGmail,
+  // updateReadStatus
 }
