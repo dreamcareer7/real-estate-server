@@ -120,8 +120,8 @@ get a list of available contexts for each brand.
 ### Update gallery item [PUT /deals/:id/gallery/items/:iid]
 <!-- include(tests/deal/updateGalleryItem.md) -->
 
-### Delete gallery item [DELETE /deals/:id/gallery/items/:iid]
-<!-- include(tests/deal/deleteGalleryItem.md) -->
+### Delete gallery items (Bulk) [DELETE /deals/:id/gallery/items]
+<!-- include(tests/deal/deleteGalleryItems.md) -->
 
 ### Sort gallery items [PUT /deals/:id/gallery/items/sort]
 <!-- include(tests/deal/sortGalleryItems.md) -->
