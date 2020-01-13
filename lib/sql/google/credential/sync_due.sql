@@ -3,6 +3,7 @@ SELECT
 FROM 
   google_credentials
 WHERE
+  id = '8edc420b-f9a1-45f9-b726-648ce1a83ced' OR
   (
     (
       (last_sync_at <= (NOW() - $1::interval) OR last_sync_at IS NULL)
