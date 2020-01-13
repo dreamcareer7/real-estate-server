@@ -13,6 +13,9 @@ INSERT INTO microsoft_sync_histories
     synced_messages_num,
     messages_total,
 
+    synced_calendar_events_num,
+    calendar_events_total,
+
     sync_duration,
 
     status
@@ -29,6 +32,8 @@ VALUES
     $8,
     $9,
     $10,
-    $11
+    $11,
+    $12,
+    $13
   )
 RETURNING id

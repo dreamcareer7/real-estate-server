@@ -5,7 +5,7 @@ FROM
 WHERE
   id IN (
     SELECT
-      rechat_gcalendar
+      google_calendar
     FROM
       google_credentials
     WHERE

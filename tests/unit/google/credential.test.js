@@ -286,7 +286,7 @@ async function updateRechatGoogleCalendar() {
   const updatedCredential = await GoogleCredential.get(createdCredential.id)
 
   expect(createdCredential.id).to.be.equal(updatedCredential.id)
-  expect(updatedCredential.rechat_gcalendar).to.be.equal(rechatCalendarId)
+  expect(updatedCredential.google_calendar).to.be.equal(rechatCalendarId)
 }
 
 async function updateCalendarsLastSyncAt() {

@@ -1,0 +1,1 @@
+SELECT id FROM microsoft_calendars WHERE microsoft_credential = $1 AND deleted_at IS NULL AND deleted IS false
