@@ -170,3 +170,6 @@ An `email_campaign_attachments` object type looks like this:
 
 ### Get an outlook campaign [GET /emails/:id]
 <!-- include(tests/email/getOulookCampaign.md) -->
+
+### Get an outlook campaign [PUT /emails/google/:credentialId/messages/:messageId}]
+<!-- include(tests/email/updateIsRead.md) -->
