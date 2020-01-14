@@ -222,7 +222,7 @@ declare interface ICSVImporterMapping {
 
 declare interface IContactDuplicateCluster {
   cluster: number;
-  contacts: IContact[];
+  contacts: UUID[];
   type: 'contact_duplicate';
   total: number;
 }
