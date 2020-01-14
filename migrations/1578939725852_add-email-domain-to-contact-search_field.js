@@ -84,13 +84,15 @@ const migrations = [
           ON combined.contact = cids.id
     $$`,
   `WITH cids AS (
-    SELECT
-      brand,
-      array_agg(c.id) AS ids
-    FROM
-      contacts c
-    WHERE
-      brand IS NOT NULL
+      SELECT
+        brand,
+        array_agg(c.id) AS ids
+      FROM
+        contacts c
+      WHERE
+        brand IS NOT NULL
+      GROUP BY
+        brand
     ), csf AS (
       SELECT
         contact,
