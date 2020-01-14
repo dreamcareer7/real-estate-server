@@ -99,7 +99,7 @@ const migrations = [
         search_field
       FROM
         cids,
-        get_search_field_for_contacts2(cids.ids) AS sf
+        get_search_field_for_contacts(cids.ids) AS sf
     )
     UPDATE
       contacts
