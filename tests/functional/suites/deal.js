@@ -714,14 +714,14 @@ const filterByContextEmpty = (cb) => {
     })
 }
 
-function attachGalleryFile(cb) {
+function createGalleryItem(cb) {
   const deal_id = results.deal.create.data.id
   const file = fs.createReadStream(path.resolve(__dirname, 'data/logo.png'))
 
   return frisby
-    .create('attach file to a deal gallery')
+    .create('add item to a deal gallery')
     .post(
-      `/deals/${deal_id}/gallery/attach`,
+      `/deals/${deal_id}/gallery/items`,
       {
         file
       },
@@ -738,34 +738,9 @@ function attachGalleryFile(cb) {
     })
 }
 
-function createGalleryItems(cb) {
-  const deal_id = results.deal.create.data.id
-  const { data } = JSON.parse(results.deal.attachGalleryFile)
-
-  const items =  [
-    {
-      file: data.id,
-      name: 'Gallery Item Name',
-      description: 'Gallery Item Description',
-      order: 1
-    }
-  ]
-
-  return frisby
-    .create('create a gallery item')
-    .post(`/deals/${deal_id}/gallery/items`, {
-      items
-    })
-    .after(cb)
-    .expectStatus(200)
-    .expectJSON({
-      code: 'OK',
-    })
-}
-
 function updateGalleryItem(cb) {
   const deal_id = results.deal.create.data.id
-  const saved = results.deal.createGalleryItems.data[0]
+  const saved = JSON.parse(results.deal.createGalleryItem).data
 
   const item = {
     name: 'Updated Name',
@@ -786,7 +761,7 @@ function updateGalleryItem(cb) {
 
 function deleteGalleryItems(cb) {
   const deal_id = results.deal.create.data.id
-  const item = results.deal.createGalleryItems.data[0]
+  const item = results.deal.updateGalleryItem.data
 
   return frisby
     .create('delete a gallery item')
@@ -801,7 +776,7 @@ function deleteGalleryItems(cb) {
 
 function sortGalleryItems(cb) {
   const deal_id = results.deal.create.data.id
-  const item = results.deal.createGalleryItems.data[0]
+  const item = results.deal.updateGalleryItem.data
 
   const items = [
     {
@@ -886,8 +861,7 @@ module.exports = {
   postMessage,
   seamlessAttention,
   verifySeamlessAttention,
-  attachGalleryFile,
-  createGalleryItems,
+  createGalleryItem,
   updateGalleryItem,
   deleteGalleryItems,
   sortGalleryItems,
