@@ -1,3 +1,4 @@
+const _ = require('lodash')
 const { expect } = require('chai')
 
 const { createContext, handleJobs } = require('../helper')
@@ -25,6 +26,7 @@ async function setup() {
   })
   Context.set({ user, brand })
 
+  await sql.query('ALTER SEQUENCE contact_duplicate_cluster_seq RESTART WITH 1')
   await createContact()
 }
 
@@ -54,14 +56,18 @@ async function testContactDuplicateCluster() {
 }
 
 async function testRemoveContactFromCluster() {
+  const contacts = await Contact.getAll(contact_ids)
+  const thomas = contacts.find(c => c.first_name === 'Thomas')
+  if (!thomas) throw new Error('Thomas not found!')
+
   const duplicate = await Duplicates.findForContact(brand.id, contact_ids[0])
 
-  await Duplicates.ignoreContactFromCluster(brand.id, duplicate.id, duplicate.contacts[2])
+  await Duplicates.ignoreContactFromCluster(brand.id, duplicate.id, thomas.id)
   await handleJobs()
 
   const new_clusters = await Duplicates.findForBrand(brand.id)
   expect(new_clusters).to.have.length(1)
-  expect(new_clusters[0].contacts).to.have.members([contact_ids[0], contact_ids[1]])
+  expect(new_clusters[0].contacts).to.have.members(_.without(contact_ids, thomas.id))
 }
 
 describe('Contact', () => {
