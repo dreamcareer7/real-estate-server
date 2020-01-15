@@ -10,6 +10,8 @@ SELECT
   "status",
   task_type,
   metadata,
+  google_event_id,
+  microsoft_event_id,
   (
     SELECT
       ARRAY_AGG("user" ORDER BY created_at)
