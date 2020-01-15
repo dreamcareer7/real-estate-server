@@ -102,9 +102,6 @@ async function testUpdateDuplicateEdges() {
 
   clusters = await ContactDuplicate.findForBrand(brand.id, {})
   expect(clusters).to.be.empty
-
-  const cluster = await ContactDuplicate.findForContact(brand.id, ids[0])
-  expect(cluster).to.be.undefined
 }
 
 async function testRemoveDuplicateEdges() {
@@ -119,9 +116,6 @@ async function testRemoveDuplicateEdges() {
 
   clusters = await ContactDuplicate.findForBrand(brand.id, {})
   expect(clusters).to.be.empty
-
-  const cluster = await ContactDuplicate.findForContact(brand.id, ids[0])
-  expect(cluster).to.be.undefined
 }
 
 async function testMergeWithSameEmails() {
