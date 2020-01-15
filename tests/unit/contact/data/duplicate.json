@@ -1,0 +1,54 @@
+[
+  {
+    "attributes": [
+      {
+        "attribute_type": "first_name",
+        "text": "John"
+      },
+      {
+        "attribute_type": "email",
+        "text": "john@rechat.com"
+      },
+      {
+        "attribute_type": "last_name",
+        "text": "doe"
+      }
+    ]
+  },
+  {
+    "attributes": [
+      {
+        "attribute_type": "first_name",
+        "text": "Johhny"
+      },
+      {
+        "attribute_type": "email",
+        "text": "john@rechat.com"
+      },
+      {
+        "attribute_type": "email",
+        "text": "john@doe.com"
+      },
+      {
+        "attribute_type": "phone_number",
+        "text": "+12345678901"
+      }
+    ]
+  },
+  {
+    "attributes": [
+      {
+        "attribute_type": "first_name",
+        "text": "Thomas"
+      },
+      {
+        "attribute_type": "email",
+        "text": "tom@rechat.com"
+      },
+      {
+        "attribute_type": "phone_number",
+        "text": "+12345678901"
+      }
+    ]
+  }
+]
