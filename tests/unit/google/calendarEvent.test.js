@@ -197,12 +197,12 @@ async function bulkUpsert() {
 
   records.push(generateCalendarEventRecord(googleCalendar, events.remote_event_1))
 
-  const resutl = await GoogleCalendarEvent.bulkUpsert(records)
+  const result = await GoogleCalendarEvent.bulkUpsert(records)
 
-  expect(resutl.length).to.be.equal(records.length)
-  expect(resutl[0].google_credential).to.be.equal(googleCredential.id)
-  expect(resutl[0].google_calendar).to.be.equal(googleCalendar.id)
-  expect(resutl[0].event_id).to.be.equal(events.remote_event_1.id)
+  expect(result.length).to.be.equal(records.length)
+  expect(result[0].google_credential).to.be.equal(googleCredential.id)
+  expect(result[0].google_calendar).to.be.equal(googleCalendar.id)
+  expect(result[0].event_id).to.be.equal(events.remote_event_1.id)
 }
 
 async function deleteLocal() {
