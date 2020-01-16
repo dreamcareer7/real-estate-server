@@ -136,6 +136,7 @@ declare type TDbSqlAddress =
   | 'contact/duplicate/for_contact'
   | 'contact/duplicate/get'
   | 'contact/duplicate/ignore'
+  | 'contact/duplicate/ignore_all'
   | 'contact/duplicate/ignore_cluster'
   | 'contact/duplicate/remove'
   | 'contact/duplicate/update'

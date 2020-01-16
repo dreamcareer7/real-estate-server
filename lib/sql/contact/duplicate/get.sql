@@ -1,6 +1,6 @@
 SELECT
   cluster AS id,
-  array_agg(c.id ORDER BY c.updated_at) AS contacts,
+  array_agg(DISTINCT c.id) AS contacts,
   'contact_duplicate' AS "type"
 FROM
   contacts_duplicate_clusters
@@ -12,5 +12,3 @@ WHERE
   deleted_at IS NULL
 GROUP BY
   cluster
-ORDER BY
-  t.ord
