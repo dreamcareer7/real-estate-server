@@ -81,7 +81,7 @@ async function testRemoveWholeCluster() {
   expect(clusters).to.be.empty
 }
 
-async function mergeAll() {
+async function testMergeAll() {
   // Create another cluster
   await Contact.create(
     contactsData[1].map(c => ({ ...c, user: user.id })),
@@ -114,6 +114,25 @@ async function mergeAll() {
   expect(contacts.ids).to.have.members(clusters.map(cl => cl.contacts[0]))
 }
 
+async function testIgnoreAll() {
+  // Create another cluster
+  await Contact.create(
+    contactsData[1].map(c => ({ ...c, user: user.id })),
+    user.id,
+    brand.id,
+    'direct_request',
+    { activity: false, get: false, relax: false }
+  )
+
+  await handleJobs()
+
+  await Duplicates.ignoreAll(brand.id)
+  await handleJobs()
+
+  const clusters = await Duplicates.findForBrand(brand.id)
+  expect(clusters).to.be.empty
+}
+
 describe('Contact', () => {
   createContext()
   beforeEach(setup)
@@ -123,6 +142,7 @@ describe('Contact', () => {
     it('find duplicate cluster for contact', testContactDuplicateCluster)
     it('remove contact from cluster', testRemoveContactFromCluster)
     it('remove the whole cluster', testRemoveWholeCluster)
-    it('merge all clusters', mergeAll)
+    it('merge all clusters', testMergeAll)
+    it('remove all clusters', testIgnoreAll)
   })
 })
