@@ -164,6 +164,7 @@ This is all of our avaailable scopes: `["profile", "contacts.read", "mail.read",
 When a user wants to update email IsRead flag, two conditions should be met.
 * `credential.deleted_at is null` and `credentila.revoked is false`
 * `credential.scope_summary` includes `mail.send and mail.modify`
+
 <!-- include(tests/email/scheduleGmailMessage.md) -->
 
 ### Schedule a gmail message with attachments [POST /emails]
