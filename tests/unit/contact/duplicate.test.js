@@ -2,10 +2,11 @@ const _ = require('lodash')
 const { expect } = require('chai')
 
 const { createContext, handleJobs } = require('../helper')
-const contactsData = require('./data/duplicate.json')
+const contactsData = require('./data/duplicate')
 
 const Contact = require('../../../lib/models/Contact')
 const Duplicates = require('../../../lib/models/Contact/duplicate')
+const DuplicatesWorker = require('../../../lib/models/Contact/worker/duplicate')
 const Context = require('../../../lib/models/Context')
 const sql = require('../../../lib/utils/sql')
 
@@ -32,7 +33,7 @@ async function setup() {
 
 async function createContact() {
   contact_ids = await Contact.create(
-    contactsData.map(c => ({ ...c, user: user.id })),
+    contactsData[0].map(c => ({ ...c, user: user.id })),
     user.id,
     brand.id,
     'direct_request',
@@ -80,6 +81,39 @@ async function testRemoveWholeCluster() {
   expect(clusters).to.be.empty
 }
 
+async function mergeAll() {
+  // Create another cluster
+  await Contact.create(
+    contactsData[1].map(c => ({ ...c, user: user.id })),
+    user.id,
+    brand.id,
+    'direct_request',
+    { activity: false, get: false, relax: false }
+  )
+
+  await handleJobs()
+
+  const user_id = user.id
+  const brand_id = brand.id
+
+  const clusters = await Duplicates.findForBrand(brand_id)
+
+  DuplicatesWorker.merge(
+    /** @type {IContactDuplicateClusterInput[]} */
+    (clusters.map(cl => ({
+      parent: cl.contacts[0],
+      sub_contacts: cl.contacts.slice(1)
+    }))),
+    user_id,
+    brand_id
+  )
+
+  await handleJobs()
+
+  const contacts = await Contact.filter(brand.id, [], {})
+  expect(contacts.ids).to.have.members(clusters.map(cl => cl.contacts[0]))
+}
+
 describe('Contact', () => {
   createContext()
   beforeEach(setup)
@@ -89,5 +123,6 @@ describe('Contact', () => {
     it('find duplicate cluster for contact', testContactDuplicateCluster)
     it('remove contact from cluster', testRemoveContactFromCluster)
     it('remove the whole cluster', testRemoveWholeCluster)
+    it('merge all clusters', mergeAll)
   })
 })
