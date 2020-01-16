@@ -70,6 +70,16 @@ async function testRemoveContactFromCluster() {
   expect(new_clusters[0].contacts).to.have.members(_.without(contact_ids, thomas.id))
 }
 
+async function testRemoveWholeCluster() {
+  let clusters = await Duplicates.findForBrand(brand.id)
+
+  await Duplicates.ignoreCluster(brand.id, clusters[0].id)
+  await handleJobs()
+
+  clusters = await Duplicates.findForBrand(brand.id)
+  expect(clusters).to.be.empty
+}
+
 describe('Contact', () => {
   createContext()
   beforeEach(setup)
@@ -78,5 +88,6 @@ describe('Contact', () => {
     it('mark duplicates', testDuplicateClusters)
     it('find duplicate cluster for contact', testContactDuplicateCluster)
     it('remove contact from cluster', testRemoveContactFromCluster)
+    it('remove the whole cluster', testRemoveWholeCluster)
   })
 })
