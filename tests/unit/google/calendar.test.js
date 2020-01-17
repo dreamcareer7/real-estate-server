@@ -209,8 +209,8 @@ async function persistRemoteCalendars() {
   const result      = await GoogleCalendar.persistRemoteCalendars(googleCredential.id, toSyncRemoteCalendarIds)
   const pesistedCal = await GoogleCalendar.get(result.activeCalendarIds[0])
 
-  expect(result.length).to.be.equal(toSyncRemoteCalendarIds.length)
-  expect(pesistedCal.id).to.be.equal(result[0])
+  expect(result.activeCalendarIds.length).to.be.equal(toSyncRemoteCalendarIds.length)
+  expect(pesistedCal.id).to.be.equal(result.activeCalendarIds[0])
   expect(pesistedCal.google_credential).to.be.equal(googleCredential.id)
   expect(pesistedCal.origin).to.be.equal('google')
   expect(pesistedCal.type).to.be.equal('google_calendars')
