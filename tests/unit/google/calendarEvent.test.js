@@ -283,6 +283,15 @@ async function getByCalendarAndEventRemoteIds() {
   expect(events[0].google_calendar).to.be.equal(event.google_calendar)
 }
 
+async function getByCalendarIds() {
+  const event = await createLocal()
+  const cal   = await GoogleCalendar.get(event.google_calendar)
+  const ids   = await GoogleCalendarEvent.getByCalendarIds(cal.google_credential, [cal.id])
+
+  expect(ids.length).to.not.be.equal(0)
+  expect(ids[0]).to.be.equal(event.id)
+}
+
 async function create() {
   const body = {
     'summary': 'Google I/O 2015',
@@ -383,6 +392,7 @@ describe('Google', () => {
     it('should handle get event', getFailed)
     it('should returns an array of google calendar events - by calendar id', getByCalendar)
     it('should returns an array of google calendar events - by calendar and event ids', getByCalendarAndEventRemoteIds)
+    it('should returns an array of google calendar event ids - by calendar id', getByCalendarIds)
 
     it('should create a remote google calendar event', create)
     it('should update a remote google calendar event', update)
