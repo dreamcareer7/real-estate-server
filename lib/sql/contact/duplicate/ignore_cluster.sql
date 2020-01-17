@@ -4,13 +4,13 @@ WITH cluster AS (
   FROM
     contacts_duplicate_clusters d
   WHERE
-    AND d.cluster = $1
+    d.cluster = $1
 ), combinations AS (
   SELECT
-    combs
+    c.a, c.b
   FROM
     cluster,
-    compute_combinations(cluster.ids) AS c(combs)
+    compute_combinations(cluster.ids) AS c(a, b)
 )
 UPDATE
   contacts_duplicate_pairs AS cdp

@@ -1134,15 +1134,17 @@ const mergeContacts = cb => {
 }
 
 const bulkMerge = cb => {
+  const clusters = results.contact.getDuplicateClusters.data.map(cl => {
+    return {
+      parent: cl.contacts[0].id,
+      sub_contacts: cl.contacts.slice(1).map(c => c.id)
+    }
+  })
+
   return frisby
     .create('merge two clusters of duplicate contacts')
     .post('/contacts/merge', {
-      clusters: results.contact.getDuplicateClusters.data.map(cl => {
-        return {
-          parent: cl.contacts[0].id,
-          sub_contacts: cl.contacts.slice(1).map(c => c.id)
-        }
-      })
+      clusters
     })
     .after(cb)
     .expectStatus(200)
