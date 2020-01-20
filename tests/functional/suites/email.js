@@ -450,7 +450,7 @@ const getGmailCampaign = cb => {
 
 const getGmailMessage = cb => {
   return frisby
-    .create('Get the campaign')
+    .create('Get a gmail message')
     .get(`/emails/${results.email.scheduleGmailMessage.data.id}?associations[]=email_campaign.emails&associations[]=email_campaign.recipients`)
     .after(cb)
     .expectStatus(200)

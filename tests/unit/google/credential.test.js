@@ -60,6 +60,19 @@ async function getByUser() {
   }
 }
 
+async function getByEmail() {
+  const createdCredential = await create()
+  const credentials       = await GoogleCredential.getByEmail(createdCredential.email)
+
+  expect(credentials.length).to.be.equal(1)
+
+  for (const record of credentials) {
+    expect(record.type).to.be.equal('google_credential')
+    expect(record.user).to.be.equal(createdCredential.user)
+    expect(record.brand).to.be.equal(createdCredential.brand)
+  }
+}
+
 async function getByUserFailed() {
   const credentials = await GoogleCredential.getByUser(user.id, user.id)
 
@@ -274,6 +287,21 @@ async function updateMessagesSyncHistoryId() {
 
   expect(createdCredential.id).to.be.equal(updatedCredential.id)
   expect(updatedCredential.messages_sync_history_id).to.be.equal(syncToken)
+  expect(updatedCredential.watcher_exp).to.be.equal(null)
+}
+
+async function updateMessagesSyncHistoryIdWithThirdParam() {
+  const createdCredential = await create()
+
+  const syncToken   = 'syncToken'
+  const watcher_exp = new Date().getTime()
+  await GoogleCredential.updateMessagesSyncHistoryId(createdCredential.id, syncToken, watcher_exp)
+
+  const updatedCredential = await GoogleCredential.get(createdCredential.id)
+
+  expect(createdCredential.id).to.be.equal(updatedCredential.id)
+  expect(updatedCredential.messages_sync_history_id).to.be.equal(syncToken)
+  expect(Number(updatedCredential.watcher_exp)).to.be.equal(watcher_exp)
 }
 
 async function updateRechatGoogleCalendar() {
@@ -309,6 +337,7 @@ describe('Google', () => {
     it('should publicize a google-credential', publicize)
 
     it('should return a google-credential by user-brand', getByUser)
+    it('should return a google-credential by email', getByEmail)
     it('should handle returned exception from google-credential by user-brand', getByUserFailed)
 
     it('should return a google-credential by id', getById)
@@ -330,6 +359,7 @@ describe('Google', () => {
     it('should update a google-credential gmail-profile', updateGmailProfile)
     it('should update a google-credential contact_last_sync_At', updateContactsLastSyncAt)
     it('should update a google-credential messages sync token', updateMessagesSyncHistoryId)
+    it('should update a google-credential messages sync token', updateMessagesSyncHistoryIdWithThirdParam)
 
     it('should update a google-credential rechat-google-Calendar', updateRechatGoogleCalendar)
     it('should update a google-credential calendars_last_sync_at', updateCalendarsLastSyncAt)

@@ -174,6 +174,7 @@ When a user wants to update email IsRead flag, two conditions should be met.
 <!-- include(tests/email/scheduleOutlookMessage.md) -->
 
 ### Schedule a reply to gmail message [POST /emails]
+* Tip: Use `message_ob.internet_message_id` for setting the `headers.in_reply_to`. You are replying to current message, so the `in_reply_to` of new reply-message should be a `internet_message_id` of previous message.
 <!-- include(tests/email/scheduleReplyToGmailMessage.md) -->
 
 ### Schedule a reply to outlook message [POST /emails]

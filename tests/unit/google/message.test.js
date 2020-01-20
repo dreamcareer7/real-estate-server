@@ -166,6 +166,21 @@ async function updateReadStatus() {
   expect(updated.is_read).to.be.equal(true)
 }
 
+async function watchMailBox() {
+  const messages = await create()
+  const result   = await GoogleMessage.watchMailBox(messages[0].google_credential)
+  
+  expect(result.historyId).to.be.equal('24753')
+  expect(result.expiration).to.be.equal('1579959900549')
+}
+
+async function stopWatchMailBox() {
+  const messages = await create()
+  const result   = await GoogleMessage.stopWatchMailBox(messages[0].google_credential)
+  
+  expect(result).to.be.equal(true)
+}
+
 
 describe('Google', () => {
   describe('Google Messages', () => {
@@ -184,5 +199,7 @@ describe('Google', () => {
     it('should get a message by remote id', getRemoteMessage)
     it('should update message is_read', updateIsRead)
     it('should update message read status', updateReadStatus)
+    it('should handle watch mail-box', watchMailBox)
+    it('should handle stop watch mail-box', stopWatchMailBox)
   })
 })

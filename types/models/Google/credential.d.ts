@@ -11,4 +11,5 @@ declare interface IGoogleCredential extends IIntegrationCredential {
   google_calendar: UUID;
   calendars_last_sync_at: string;
   scope_summary?: string[];
+  watcher_exp?: number;
 }
