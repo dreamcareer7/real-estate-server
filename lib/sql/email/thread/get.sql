@@ -39,6 +39,7 @@ SELECT
               WHERE
                 thread_key = email_threads.id
                 AND google_messages.google_credential = email_threads.google_credential)
+                AND google_messages.deleted_at IS NULL
             WHEN microsoft_credential IS NOT NULL THEN
               (SELECT
                 jsonb_agg(jsonb_build_object('id', microsoft_messages.id, 'type', 'microsoft_message') ORDER BY message_date)
@@ -47,6 +48,7 @@ SELECT
               WHERE
                 thread_key = email_threads.id
                 AND microsoft_messages.microsoft_credential = email_threads.microsoft_credential)
+                AND microsoft_messages.deleted_at IS NULL
             ELSE
               '[]'::jsonb
           END
