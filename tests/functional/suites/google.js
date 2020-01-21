@@ -300,6 +300,58 @@ function getGCredentialLastSyncHistory(cb) {
     })
 }
 
+function getRemoteCalendars(cb) {
+  return frisby.create('List Google Remote Calendars - initial')
+    .get(`/users/google/${results.google.createGoogleCredential}/calendars`)
+    .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
+    .after(function(err, res, json) {
+      cb(err, res, json)
+    })
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK'
+    })
+}
+
+function configureCaledars(cb) {
+  return frisby.create('Configure Google Calendars')
+    .post(`/users/google/${results.google.createGoogleCredential}/conf`, {
+      toSync: ['my_gmail@gmail.com']
+    })
+    .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
+    .after(function(err, res, json) {
+      cb(err, res, json)
+    })
+    .expectStatus(204)
+}
+
+function getRemoteCalendarsAfterConfiguring(cb) {
+  return frisby.create('List Google Remote Calendars')
+    .get(`/users/google/${results.google.createGoogleCredential}/calendars`)
+    .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
+    .after(function(err, res, json) {
+      console.log(json)
+      cb(err, res, json)
+    })
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK'
+    })
+}
+
+function reCconfigCaledars(cb) {
+  return frisby.create('Configure Google Calendars')
+    .post(`/users/google/${results.google.createGoogleCredential}/conf`, {
+      toSync: ['en.usa#holiday@group.v.calendar.google.com'],
+      toStopSync: ['my_gmail@gmail.com']
+    })
+    .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
+    .after(function(err, res, json) {
+      cb(err, res, json)
+    })
+    .expectStatus(204)
+}
+
 
 module.exports = {
   requestGmailAccess,
@@ -320,6 +372,8 @@ module.exports = {
   enableSync,
   forceSync,
   getGCredentialLastSyncHistory,
-  // getGoogpleProfile,
-  // revokeAccess
+  getRemoteCalendars,
+  configureCaledars,
+  getRemoteCalendarsAfterConfiguring,
+  reCconfigCaledars
 }

@@ -45,3 +45,12 @@ A _google_credential_ is a simple and small object that contains:
 
 ### Request to delete a google credential  [DELETE /users/self/google/:id]
 <!-- include(tests/google/deleteAccount.md) -->
+
+### Request to get list of remote google calendars  [GET /users/google/:gcid/calendars]
+<!-- include(tests/google/getRemoteCalendarsAfterConfiguring.md) -->
+
+### Request to config google calendars  [POST /users/google/:gcid/conf]
+<!-- include(tests/google/configureCaledars.md) -->
+
+### Request to reconfig google calendars  [POST /users/google/:gcid/conf]
+<!-- include(tests/google/reCconfigCaledars.md) -->
