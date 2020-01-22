@@ -151,6 +151,20 @@ An `email_campaign_attachments` object type looks like this:
 <!-- include(tests/email/getByBrand.md) -->
 
 ### Schedule a gmail message [POST /emails]
+If either of `credential.deleted_at is not null` or `credentila.revoked is true` is met, then credential is disconnected.
+So it should not be allowed to send or read an email if user's connected account is disconnected.
+
+When a user wants to send an email through Gmail or Outlook, two conditions should be met.
+* `credential.deleted_at is null` and `credentila.revoked is false`
+* `credential.scope_summary` includes `mail.send`
+
+Every Google and Microsoft connected account has a field with the name `scope_summary`.
+This is all of our avaailable scopes: `["profile", "contacts.read", "mail.read", "mail.send", "mail.modify", "calendar"]`
+
+When a user wants to update email IsRead flag, two conditions should be met.
+* `credential.deleted_at is null` and `credentila.revoked is false`
+* `credential.scope_summary` includes `mail.send and mail.modify`
+
 <!-- include(tests/email/scheduleGmailMessage.md) -->
 
 ### Schedule a gmail message with attachments [POST /emails]
@@ -160,6 +174,7 @@ An `email_campaign_attachments` object type looks like this:
 <!-- include(tests/email/scheduleOutlookMessage.md) -->
 
 ### Schedule a reply to gmail message [POST /emails]
+* Tip: Use `message_ob.internet_message_id` for setting the `headers.in_reply_to`. You are replying to current message, so the `in_reply_to` of new reply-message should be a `internet_message_id` of previous message.
 <!-- include(tests/email/scheduleReplyToGmailMessage.md) -->
 
 ### Schedule a reply to outlook message [POST /emails]
@@ -170,3 +185,6 @@ An `email_campaign_attachments` object type looks like this:
 
 ### Get an outlook campaign [GET /emails/:id]
 <!-- include(tests/email/getOulookCampaign.md) -->
+
+### Get an outlook campaign [PUT /emails/google/:credentialId/messages/:messageId}]
+<!-- include(tests/email/updateIsRead.md) -->

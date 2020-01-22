@@ -1,18 +1,17 @@
 SELECT
   email_threads.id,
-  email_threads.created_at,
-  email_threads.updated_at,
+  extract(epoch from email_threads.created_at) AS created_at,
+  extract(epoch from email_threads.updated_at) AS updated_at,
   email_threads.brand,
   email_threads."user",
   google_credential,
   microsoft_credential,
   email_threads.subject,
-  first_message_date,
-  last_message_date,
+  extract(epoch from first_message_date) AS first_message_date,
+  extract(epoch from last_message_date) AS last_message_date,
   recipients,
   message_count,
   has_attachments,
-  is_read,
   
   (
     CASE
@@ -56,6 +55,21 @@ SELECT
       NULL
     END
   ) AS messages,
+  (
+    CASE
+      WHEN $2::text[] && '{"email_thread.contacts"}'::text[] THEN (
+        SELECT
+          array_agg(id)
+        FROM
+          contacts AS c
+        WHERE
+          c.deleted_at IS NULL
+          AND c.brand = email_threads.brand
+          AND c.email && email_threads.recipients
+      )
+      ELSE NULL
+    END
+  ) AS contacts,
   'email_thread' AS "type"
 FROM
   email_threads

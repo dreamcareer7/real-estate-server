@@ -101,49 +101,54 @@ const notifications = async () => {
   await promisify(Message.sendEmailForUnread)()
 }
 
-// poll({
-//   fn: notifications,
-//   name: 'Notifications'
-// })
+poll({
+  fn: notifications,
+  name: 'Notifications'
+})
 
-// poll({
-//   fn: CrmTaskWorker.sendNotifications.bind(CrmTaskWorker),
-//   name: 'CrmTaskWorker.sendNotifications'
-// })
+poll({
+  fn: CrmTaskWorker.sendNotifications.bind(CrmTaskWorker),
+  name: 'CrmTaskWorker.sendNotifications'
+})
 
-// poll({
-//   fn: CalendarWorker.sendEmailForUnread.bind(CalendarWorker),
-//   name: 'CalendarWorker.sendEmailForUnread'
-// })
+poll({
+  fn: CalendarWorker.sendEmailForUnread.bind(CalendarWorker),
+  name: 'CalendarWorker.sendEmailForUnread'
+})
 
-// poll({
-//   fn: Task.sendNotifications,
-//   name: 'Task.sendNotifications'
-// })
+poll({
+  fn: Task.sendNotifications,
+  name: 'Task.sendNotifications'
+})
 
-// poll({
-//   fn: EmailCampaign.sendDue,
-//   name: 'EmailCampaign.sendDue'
-// })
+poll({
+  fn: EmailCampaign.sendDue,
+  name: 'EmailCampaign.sendDue'
+})
 
-// poll({
-//   fn: EmailCampaign.updateStats,
-//   name: 'EmailCampaign.updateStats'
-// })
+poll({
+  fn: EmailCampaign.updateStats,
+  name: 'EmailCampaign.updateStats'
+})
 
 // poll({
 //   fn: ShowingsWorker.startDue,
 //   name: 'ShowingsWorker.crawlerJob'
 // })
 
-// poll({
-//   fn: GoogleWorker.syncDue,
-//   name: 'GoogleWorker.syncDue'
-// })
+poll({
+  fn: GoogleWorker.syncDue,
+  name: 'GoogleWorker.syncDue'
+})
 
 poll({
   fn: MicrosoftWorker.syncDue,
   name: 'MicrosoftWorker.syncDue'
+})
+
+poll({
+  fn: Template.updateThumbnails,
+  name: 'Template.updateThumbnails'
 })
 
 module.exports = shutdown

@@ -110,3 +110,18 @@ get a list of available contexts for each brand.
 
 ### Delete a task [DELETE /tasks/:task]
 <!-- include(tests/deal/removeTask.md) -->
+
+### Create gallery item [POST /deals/:id/gallery/items]
+<!-- include(tests/deal/createGalleryItem.md) -->
+
+### Update gallery item [PUT /deals/:id/gallery/items/:iid]
+<!-- include(tests/deal/updateGalleryItem.md) -->
+
+### Delete gallery items (Bulk) [DELETE /deals/:id/gallery/items]
+<!-- include(tests/deal/deleteGalleryItems.md) -->
+
+### Sort gallery items [PUT /deals/:id/gallery/items/sort]
+<!-- include(tests/deal/sortGalleryItems.md) -->
+
+### Generate a Zip file [POST /deals/:id/gallery.zip]
+<!-- include(tests/deal/createGalleryZipUrl.md) -->

@@ -8,6 +8,7 @@ INSERT INTO google_calendars
     location,
     time_zone,
     conference_properties,
+    access_role,
     origin
   )
 VALUES
@@ -20,7 +21,8 @@ VALUES
     $6,
     $7,
     $8,
-    $9
+    $9,
+    $10
   )
 ON CONFLICT (google_credential, calendar_id) DO UPDATE SET
   summary = $3,
@@ -29,7 +31,8 @@ ON CONFLICT (google_credential, calendar_id) DO UPDATE SET
   location = $6,
   time_zone = $7,
   conference_properties = $8,
-  origin = $9,
+  access_role = $9,
+  origin = $10,
   updated_at = now(),
   deleted_at = null
 RETURNING id

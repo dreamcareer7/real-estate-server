@@ -34,6 +34,7 @@ const individual = {
 const mailgun_id = 'example-mailgun-id-email-1'
 
 
+
 const schedule = cb => {
   email.from = results.authorize.token.data.id
 
@@ -270,6 +271,8 @@ const uploadAttachment = (cb) => {
 }
 
 const scheduleGmailMessage = cb => {
+  const due_at = new Date().getTime() - 10 * 60 * 1000
+
   const emailObj = {
     to: [{
       email: 'recipient@rechat.com',
@@ -277,13 +280,13 @@ const scheduleGmailMessage = cb => {
     }],
     cc: [{
       recipient_type: 'Email',
-      email: 'chavoshian.shiva@gmail.com '
+      email: 'chavoshi.mohsen@gmail.com'
     }],
     bcc: [{
       recipient_type: 'Email',
       email: 'saeed@rechat.com'
     }],
-    due_at: new Date(),
+    due_at: new Date(due_at),
     html: '<div>Hi</div>',
     subject: 'schedule gmail message',
     from: results.google.getGoogleProfile.data.user,
@@ -335,7 +338,7 @@ const scheduleReplyToGmailMessage = cb => {
     }],
     cc: [{
       recipient_type: 'Email',
-      email: 'chavoshian.shiva@gmail.com '
+      email: 'chavoshi.mohsen@gmail.com'
     }],
     bcc: [{
       recipient_type: 'Email',
@@ -398,7 +401,7 @@ const scheduleEmailWithAttachments = cb => {
     }],
     cc: [{
       recipient_type: 'Email',
-      email: 'chavoshian.shiva@gmail.com '
+      email: 'chavoshi.mohsen@gmail.com'
     }],
     bcc: [{
       recipient_type: 'Email',
@@ -440,9 +443,24 @@ const scheduleEmailWithAttachments = cb => {
 const getGmailCampaign = cb => {
   return frisby
     .create('Get a gmail campaign')
-    .get(`/emails/${results.email.scheduleEmailWithAttachments.data.id}?associations[]=email_campaign.emails&associations[]=email_campaign.recipients&associations[]=email_campaign.attachments`)
+    .get(`/emails/${results.email.scheduleGmailMessage.data.id}?associations[]=email_campaign.emails&associations[]=email_campaign.recipients&associations[]=email_campaign.attachments`)
     .after(cb)
     .expectStatus(200)
+}
+
+const getGmailMessage = cb => {
+  return frisby
+    .create('Get a gmail message')
+    .get(`/emails/${results.email.scheduleGmailMessage.data.id}?associations[]=email_campaign.emails&associations[]=email_campaign.recipients`)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      data: {
+        subject: results.email.scheduleGmailMessage.data.subject,
+        html: results.email.scheduleGmailMessage.data.html,
+        recipients: results.email.scheduleGmailMessage.data.to
+      }
+    })
 }
 
 const getOulookCampaign = cb => {
@@ -549,7 +567,7 @@ const scheduleTempMailGunCampaign = cb => {
     }],
     cc: [{
       recipient_type: 'Email',
-      email: 'chavoshian.shiva@gmail.com '
+      email: 'chavoshi.mohsen@gmail.com'
     }],
     bcc: [{
       recipient_type: 'Email',
@@ -602,6 +620,39 @@ const updateMailgunToGmail = cb => {
     })
 }
 
+function getThread(cb) {
+  const assoc = '?associations=email_thread.messages&select=google_message.html_body&select=microsoft_message.html_body&select=email.html&select=email.text'
+
+  return frisby.create('Get email thread')
+    .get(`/emails/threads/${results.email.getGmailMessage.data.thread_key}${assoc}`)
+    .addHeader('X-RECHAT-BRAND', results.google.getGoogleProfile.data.brand)
+    .after(function(err, res, json) {
+      cb(err, res, json)
+    })
+    .expectJSON({
+      code: 'OK',
+      data: {
+        id: results.email.getGmailMessage.data.thread_key,
+        brand: results.google.getGoogleProfile.data.brand,
+        google_credential: results.google.getGoogleProfile.data.id,
+        microsoft_credential: results.email.getGmailMessage.data.microsoft_credential,
+        subject: results.email.getGmailMessage.data.subject,
+        message_count: 1,
+        type: 'email_thread'
+      }    
+    })
+}
+
+function updateIsRead(cb) {
+  return frisby.create('Update isRead')
+    .put(`/emails/google/${results.google.createGoogleCredential}/messages/${results.email.getThread.data.messages[0].id}`, { status: false })
+    .addHeader('X-RECHAT-BRAND', results.email.getThread.data.brand)
+    .after(function(err, res, json) {
+      cb(err, res, json)
+    })
+    .expectStatus(202)
+}
+
 
 module.exports = {
   schedule,
@@ -622,11 +673,15 @@ module.exports = {
   scheduleReplyToOulookMessage,
   scheduleEmailWithAttachments,
   getGmailCampaign,
+  sendDueGmailOutlook: sendDue,
+  getGmailMessage,
   getOulookCampaign,
   removeAttachments,
   getCampaignAfterRemovingAttachments,
   updateGmailToMailgun,
   updateOutlookToMailgun,
   scheduleTempMailGunCampaign,
-  updateMailgunToGmail
+  updateMailgunToGmail,
+  getThread,
+  updateIsRead
 }

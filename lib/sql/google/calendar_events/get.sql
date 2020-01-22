@@ -3,7 +3,7 @@ SELECT
 FROM
     google_calendar_events
 JOIN 
-    unnest($2::text[]) WITH ORDINALITY t(gceid, ord)
+    unnest($1::uuid[]) WITH ORDINALITY t(gceid, ord)
 ON 
     google_calendar_events.id = gceid
 ORDER BY 

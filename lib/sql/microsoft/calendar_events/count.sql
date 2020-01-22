@@ -1,0 +1,1 @@
+SELECT COUNT(*)::INT FROM microsoft_calendar_events WHERE microsoft_credential = $1 AND deleted_at IS NULL

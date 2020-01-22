@@ -22,7 +22,7 @@ const attachTouchEventHandler = require('../../lib/models/CRM/Touch/events')
 const createContext = require('./create-context')
 
 const shutdownPollers = require('./poll')
-require('./peanar')
+const shutdownPeanarWorkers = require('./peanar')
 
 attachCalendarEvents()
 attachContactEvents()
@@ -30,6 +30,7 @@ attachFlowEvents()
 attachTaskEventHandler()
 attachTouchEventHandler()
 
+db.enableMetrics()
 
 process.on('unhandledRejection', (err, promise) => {
   Context.trace('Unhanled Rejection on request', err)
@@ -113,6 +114,7 @@ const timeout = (seconds) => {
 async function shutdownWorkers() {
   await shutdownPollers()
   await peanar.shutdown()
+  await shutdownPeanarWorkers()
   await promisify(cb => queue.shutdown(5 * 60 * 1000, (err) => {
     if (err) {
       Context.error(err)
@@ -126,6 +128,7 @@ async function shutdownWorkers() {
 }
 
 const shutdown = async () => {
+  Context.log('Shutting down')
   try {
     clearTimeout(kueCleanupTimeout)
     // clearTimeout(shutdownTimeout)
@@ -141,6 +144,7 @@ const shutdown = async () => {
 
     clearTimeout(shutdownRaceTimeout)
     redisDataService.shutdown()
+    process.exit()
   }
   catch (ex) {
     Context.log('Race timed out!')

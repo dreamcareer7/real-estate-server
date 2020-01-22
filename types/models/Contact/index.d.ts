@@ -221,8 +221,8 @@ declare interface ICSVImporterMapping {
 }
 
 declare interface IContactDuplicateCluster {
-  cluster: number;
-  contacts: IContact[];
+  id: number;
+  contacts: UUID[];
   type: 'contact_duplicate';
   total: number;
 }

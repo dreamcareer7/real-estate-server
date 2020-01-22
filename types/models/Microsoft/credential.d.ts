@@ -7,5 +7,7 @@ declare interface IMicrosoftCredential extends IIntegrationCredential {
   contacts_last_sync_at: string;
   contacts_last_extract_at: string;
   messages_last_sync_at: string;
+  microsoft_calendar: UUID;
+  calendars_last_sync_at: string;
   scope_summary: string[];
 }

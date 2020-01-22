@@ -21,6 +21,7 @@ SELECT
   "to",
   cc,
   bcc,
+  is_read,
   message_date
 FROM
   google_messages
