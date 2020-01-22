@@ -3,10 +3,6 @@ const db = require('../lib/utils/db')
 const migrations = [
   'BEGIN',
 
-  // 'ALTER TABLE microsoft_credentials ADD CONSTRAINT microsoft_credential_subscription FOREIGN KEY (subscription) REFERENCES microsoft_subscriptions(id)',
-
-  'ALTER TABLE microsoft_credentials ADD COLUMN last_hook_at timestamptz',
-
   'ALTER TABLE microsoft_sync_histories ADD COLUMN source TEXT DEFAULT \'api\'',
 
 
