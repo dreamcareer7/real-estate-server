@@ -759,6 +759,30 @@ function updateGalleryItem(cb) {
     })
 }
 
+function updateGalleryItemFile(cb) {
+  const deal_id = results.deal.create.data.id
+  const saved = JSON.parse(results.deal.createGalleryItem).data
+  const file = fs.createReadStream(path.resolve(__dirname, 'data/logo.png'))
+
+  return frisby
+    .create('update the file of a media gallery item')
+    .patch(`/deals/${deal_id}/gallery/items/${saved.id}/file`,
+      {
+        file
+      },
+      {
+        json: false,
+        form: true
+      }
+    )
+    .addHeader('content-type', 'multipart/form-data')
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK'
+    })
+}
+
 function deleteGalleryItems(cb) {
   const deal_id = results.deal.create.data.id
   const item = results.deal.updateGalleryItem.data
@@ -863,6 +887,7 @@ module.exports = {
   verifySeamlessAttention,
   createGalleryItem,
   updateGalleryItem,
+  updateGalleryItemFile,
   deleteGalleryItems,
   sortGalleryItems,
   createGalleryZipUrl,

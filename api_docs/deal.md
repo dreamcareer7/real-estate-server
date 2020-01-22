@@ -117,6 +117,9 @@ get a list of available contexts for each brand.
 ### Update gallery item [PUT /deals/:id/gallery/items/:iid]
 <!-- include(tests/deal/updateGalleryItem.md) -->
 
+### Update gallery item's file [PATCH /deals/:id/gallery/items/:iid/file]
+<!-- include(tests/deal/updateGalleryItemFile.md) -->
+
 ### Delete gallery items (Bulk) [DELETE /deals/:id/gallery/items]
 <!-- include(tests/deal/deleteGalleryItems.md) -->
 
