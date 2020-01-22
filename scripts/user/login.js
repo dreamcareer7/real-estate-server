@@ -3,8 +3,6 @@
 require('../connection.js')
 require('../../lib/models/index.js')
 
-const promisify = require('../../lib/utils/promisify')
-
 const update = async () => {
   const user = await User.getByEmail(process.argv[2])
   const client = await Client.get(process.argv[3])
