@@ -330,7 +330,6 @@ function getRemoteCalendarsAfterConfiguring(cb) {
     .get(`/users/google/${results.google.createGoogleCredential}/calendars`)
     .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
     .after(function(err, res, json) {
-      console.log(json)
       cb(err, res, json)
     })
     .expectStatus(200)

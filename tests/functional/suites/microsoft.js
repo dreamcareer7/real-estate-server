@@ -200,32 +200,6 @@ function getMicrosoftProfiles(cb) {
     })
 }
 
-function deleteAccount(cb) {
-  return frisby.create('Delete Microsoft account')
-    .delete(`/users/self/microsoft/${results.microsoft.createMicrosoftCredential}`)
-    .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
-    .after(function(err, res, json) {
-      cb(err, res, json)
-    })
-    .expectStatus(200)
-    .expectJSON({
-      code: 'OK',
-      data: microsoft_credential_json
-    })
-}
-
-function deleteAccountFailedCauseOfInvalidBrand(cb) {
-  const invalidBrandId = uuid.v4()
-
-  return frisby.create('delete account failed Cause of invalid Brand')
-    .delete(`/users/self/microsoft/${results.microsoft.createMicrosoftCredential}`)
-    .addHeader('X-RECHAT-BRAND', invalidBrandId)
-    .after(function(err, res, json) {
-      cb(err, res, json)
-    })
-    .expectStatus(404)
-}
-
 function disableSync(cb) {
   return frisby.create('disable sync')
     .delete(`/users/self/microsoft/${results.microsoft.createMicrosoftCredential}/sync`)
@@ -262,6 +236,32 @@ function forceSync(cb) {
     .expectJSON({ http: 400, message: 'Please wait until current sync job is finished.', code: 'BadRequest' })
 }
 
+function deleteAccount(cb) {
+  return frisby.create('Delete Microsoft account')
+    .delete(`/users/self/microsoft/${results.microsoft.createMicrosoftCredential}`)
+    .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
+    .after(function(err, res, json) {
+      cb(err, res, json)
+    })
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      data: microsoft_credential_json
+    })
+}
+
+function deleteAccountFailedCauseOfInvalidBrand(cb) {
+  const invalidBrandId = uuid.v4()
+
+  return frisby.create('delete account failed Cause of invalid Brand')
+    .delete(`/users/self/microsoft/${results.microsoft.createMicrosoftCredential}`)
+    .addHeader('X-RECHAT-BRAND', invalidBrandId)
+    .after(function(err, res, json) {
+      cb(err, res, json)
+    })
+    .expectStatus(404)
+}
+
 function getMCredentialLastSyncHistory(cb) {
   return frisby.create('get microsoft credential LastSyncHistory')
     .get(`/users/self/microsoft/sync_history/${results.microsoft.createMicrosoftCredential}`)
@@ -289,10 +289,10 @@ module.exports = {
   addMicrosoftSyncHistory,
   getMicrosoftProfile,
   getMicrosoftProfiles,
-  deleteAccount,
-  deleteAccountFailedCauseOfInvalidBrand,
   disableSync,
   enableSync,
   forceSync,
+  deleteAccount,
+  deleteAccountFailedCauseOfInvalidBrand,
   getMCredentialLastSyncHistory
 }
