@@ -45,7 +45,6 @@ INSERT INTO email_threads (
     JOIN thread_recipients USING (thread_key)
   WHERE
     google_messages.thread_key = ANY($1::text[])
-    AND google_messages.deleted_at IS NULL
   WINDOW w AS (PARTITION BY thread_key)
   ORDER BY
     google_messages.thread_key, message_date
