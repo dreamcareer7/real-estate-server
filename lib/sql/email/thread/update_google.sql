@@ -10,8 +10,7 @@ INSERT INTO email_threads (
   recipients,
   message_count,
   has_attachments,
-  is_read,
-  deleted_at
+  is_read
 )
 (
   WITH thread_recipients AS (
@@ -36,8 +35,7 @@ INSERT INTO email_threads (
     thread_recipients.recipients AS recipients,
     count(*) OVER (w) AS message_count,
     SUM(has_attachments::int) OVER (w) > 0 AS has_attachments,
-    SUM(is_read::int) OVER (w) > 0 AS is_read,
-    google_messages.deleted_at
+    SUM(is_read::int) OVER (w) > 0 AS is_read
   FROM
     google_messages
     JOIN google_credentials
@@ -45,12 +43,13 @@ INSERT INTO email_threads (
     JOIN thread_recipients USING (thread_key)
   WHERE
     google_messages.thread_key = ANY($1::text[])
+    AND google_messages.deleted_at IS NULL
   WINDOW w AS (PARTITION BY thread_key)
   ORDER BY
     google_messages.thread_key, message_date
 )
 ON CONFLICT (id) DO UPDATE SET
-  deleted_at = CASE WHEN EXCLUDED.deleted_at IS NOT NULL THEN EXCLUDED.deleted_at ELSE NULL END,
+  deleted_at = null,
   updated_at = now(),
   last_message_date = EXCLUDED.last_message_date,
   recipients = (
