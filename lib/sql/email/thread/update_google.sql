@@ -49,7 +49,7 @@ INSERT INTO email_threads (
     google_messages.thread_key, message_date
 )
 ON CONFLICT (id) DO UPDATE SET
-  deleted_at = null,
+  deleted_at = EXCLUDED.deleted_at,
   updated_at = now(),
   last_message_date = EXCLUDED.last_message_date,
   recipients = (
