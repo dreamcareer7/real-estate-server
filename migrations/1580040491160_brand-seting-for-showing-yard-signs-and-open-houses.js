@@ -1,12 +1,10 @@
 const db = require('../lib/utils/db')
 
 const migrations = [
-  'BEGIN',
   `ALTER TYPE brand_setting
-    ADD VALUE 'EnableOpenHouseRequest'`,
+    ADD VALUE 'EnableOpenHouseRequests'`,
   `ALTER TYPE brand_setting
-    ADD VALUE 'EnableYardSignRequest'`,
-  'COMMIT'
+    ADD VALUE 'EnableYardSignRequests'`,
 ]
 
 
