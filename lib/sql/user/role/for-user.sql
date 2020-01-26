@@ -20,30 +20,20 @@ WITH r AS (
     ) roles
   GROUP BY
     brand
-), s AS (
+), us AS (
   SELECT
     brand,
-    JSON_OBJECT_AGG(key, value) AS settings
+    JSON_OBJECT_AGG(key, value) AS user_settings
   FROM
     users_settings
   WHERE
     "user" = $1::uuid
   GROUP BY
     brand
-), bs AS (
-  SELECT
-    brand,
-    JSON_OBJECT_AGG(key, value) AS settings
-  FROM
-    brands_settings
-  GROUP BY
-    brand
 )
 SELECT
   r.*,
-  s.settings,
-  bs.settings AS brand_settings
+  us.user_settings
 FROM
   r
-  LEFT JOIN s ON r.brand = s.brand
-  LEFT JOIN bs ON r.brand = bs.brand
+  LEFT JOIN us ON r.brand = us.brand

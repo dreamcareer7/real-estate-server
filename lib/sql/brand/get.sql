@@ -12,6 +12,10 @@ SELECT brands.*,
   ) as roles,
 
   (
+    SELECT JSON_OBJECT_AGG(bs.key, bs) AS settings FROM brands_settings bs WHERE brand = brands.id AND deleted_at IS NULL
+  ),
+
+  (
     SELECT
       count(distinct bu."user")
     FROM
