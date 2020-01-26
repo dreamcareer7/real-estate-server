@@ -6,7 +6,7 @@ const migrations = [
   'ALTER TABLE brands_settings ADD number FLOAT',
   'ALTER TABLE brands_settings ADD date timestamp without time zone',
   'ALTER TABLE brands_settings ADD boolean BOOLEAN',
-  'UPDATE brands_settings SET date = value',
+  'UPDATE brands_settings SET date = value::text::timestamp without time zone',
   `UPDATE brands_settings
     SET key = 'SyncedContactsLastSeen'`,
   'ALTER TABLE brands_settings DROP value',
