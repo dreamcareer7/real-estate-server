@@ -13,13 +13,13 @@ const migrations = [
   `CREATE TYPE brand_setting AS ENUM(
     'SyncedContactsLastSeen'
    )`,
-   'ALTER TABLE brands_settings ALTER COLUMN key TYPE brand_setting USING key::brand_setting',
-   `ALTER TABLE brands_settings ADD CONSTRAINT type CHECK(
+  'ALTER TABLE brands_settings ALTER COLUMN key TYPE brand_setting USING key::brand_setting',
+  `ALTER TABLE brands_settings ADD CONSTRAINT type CHECK(
        (text    IS NOT NULL AND (number IS NULL AND date   IS NULL AND boolean IS NULL))
     OR (number  IS NOT NULL AND (text   IS NULL AND date   IS NULL AND boolean IS NULL))
     OR (date    IS NOT NULL AND (text   IS NULL AND number IS NULL AND boolean IS NULL))
     OR (boolean IS NOT NULL AND (text   IS NULL AND number IS NULL AND date    IS NULL))
-    )`,
+  )`,
   'COMMIT'
 ]
 
