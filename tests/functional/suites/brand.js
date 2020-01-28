@@ -427,8 +427,10 @@ const getTemplates = cb => {
 
 const updateBrandSettings = cb => {
   return frisby.create('update a brand setting')
-    .put(`/brands/${brand_id}/settings/synced-contacts-last-seen`, {
-      date: new Date()
+    .put(`/brands/${brand_id}/settings/palette`, {
+      palette: {
+        'body-bg-color': '#eee'
+      }
     })
     .addHeader('X-Rechat-Brand', brand_id)
     .after(cb)
