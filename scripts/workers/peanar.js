@@ -68,11 +68,11 @@ const queues = [
 const forks = [
   {
     queues: ['google'],
-    concurrency: 30
+    concurrency: 5
   },
   {
     queues: ['microsoft'],
-    concurrency: 30
+    concurrency: 5
   },
   {
     queues: ['email'],
