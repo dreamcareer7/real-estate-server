@@ -9,7 +9,8 @@ INSERT INTO
     number,
     text,
     boolean,
-    date
+    date,
+    palette
   )
 VALUES (
   $1::uuid,
@@ -21,7 +22,8 @@ VALUES (
   $5,
   $6,
   $7,
-  $8
+  $8,
+  JSON_TO_PALETTE($9)
 )
 ON CONFLICT (brand, "key") DO UPDATE
   SET
@@ -31,4 +33,5 @@ ON CONFLICT (brand, "key") DO UPDATE
     number = $5,
     text = $6,
     boolean = $7,
-    date = $8
+    date = $8,
+    palette = JSON_TO_PALETTE($9)
