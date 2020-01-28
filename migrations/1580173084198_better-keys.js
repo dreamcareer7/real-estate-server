@@ -1,7 +1,7 @@
 const db = require('../lib/utils/db')
 
 const migrations = [
- ' BEGIN',
+  'BEGIN',
 
   'ALTER TYPE brand_setting RENAME TO brand_setting_old',
 

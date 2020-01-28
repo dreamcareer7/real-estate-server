@@ -427,7 +427,7 @@ const getTemplates = cb => {
 
 const updateBrandSettings = cb => {
   return frisby.create('update a brand setting')
-    .put(`/brands/${brand_id}/settings/synced_contacts_last_seen`, {
+    .put(`/brands/${brand_id}/settings/synced-contacts-last-seen`, {
       date: new Date()
     })
     .addHeader('X-Rechat-Brand', brand_id)
