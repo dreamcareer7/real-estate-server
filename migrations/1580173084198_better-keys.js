@@ -1,20 +1,20 @@
 const db = require('../lib/utils/db')
 
 const migrations = [
-  'BEGIN',
+ ' BEGIN',
 
   'ALTER TYPE brand_setting RENAME TO brand_setting_old',
 
   `CREATE TYPE brand_setting AS ENUM(
-    'synced_contact_last_seen',
-    'enable_open_house_requests',
-    'enable_yard_sign_requests'
+    'synced-contacts-last-seen',
+    'enable-open-house-requests',
+    'enable-yard-sign-requests'
    )`,
 
   'ALTER TABLE brands_settings ALTER COLUMN key TYPE text',
 
   `UPDATE brands_settings
-    SET key = 'synced_contacts_last_seen'`,
+    SET key = 'synced-contacts-last_seen'`,
 
   'ALTER TABLE brands_settings ALTER COLUMN key TYPE brand_setting USING key::brand_setting',
 
