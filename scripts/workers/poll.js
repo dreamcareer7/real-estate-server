@@ -49,7 +49,7 @@ const poll = ({ fn, name }) => {
       await fn()
       await commit()
     } catch (err) {
-      console.error(err)
+      Context.error(err)
 
       // Error is handled via callback. Doesn't throw.
       Slack.send({
@@ -75,7 +75,7 @@ const poll = ({ fn, name }) => {
       const ctxRes = await createContext({ id })
       await execute(ctxRes)
     } catch (ex) {
-      console.error(ex)
+      Context.error(ex)
       Slack.send({
         channel: '7-server-errors',
         text: `Poller error (${name}): Error while creating context!\n\`${ex}\``
