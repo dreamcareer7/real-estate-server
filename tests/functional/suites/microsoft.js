@@ -289,6 +289,7 @@ function getRemoteCalendars(cb) {
     })
 }
 
+/*
 function configureCaledars(cb) {
 }
 
@@ -297,6 +298,7 @@ function getRemoteCalendarsAfterConfiguring(cb) {
 
 function reCconfigCaledars(cb) {
 }
+*/
 
 module.exports = {
   requestOutlookAccess,
