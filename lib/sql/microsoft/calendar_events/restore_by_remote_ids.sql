@@ -1,7 +1,6 @@
 UPDATE
   microsoft_calendar_events
 SET
-  status = 'confirmed',
   deleted_at = null,
   updated_at = now()
 WHERE

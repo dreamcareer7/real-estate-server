@@ -19,9 +19,7 @@ const migrations = [
 
     change_key TEXT,
     color TEXT,
-
     origin TEXT,
-    sync_token TEXT,
 
     created_at timestamptz NOT NULL DEFAULT clock_timestamp(),
     updated_at timestamptz NOT NULL DEFAULT clock_timestamp(),

@@ -290,41 +290,12 @@ function getRemoteCalendars(cb) {
 }
 
 function configureCaledars(cb) {
-  return frisby.create('Configure Microsoft Calendars')
-    .post(`/users/microsoft/${results.microsoft.createMicrosoftCredential}/conf`, {
-      toSync: ['my_outlook@outlook.com']
-    })
-    .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
-    .after(function(err, res, json) {
-      cb(err, res, json)
-    })
-    .expectStatus(204)
 }
 
 function getRemoteCalendarsAfterConfiguring(cb) {
-  return frisby.create('List Microsoft Remote Calendars')
-    .get(`/users/microsoft/${results.microsoft.createMicrosoftCredential}/calendars`)
-    .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
-    .after(function(err, res, json) {
-      cb(err, res, json)
-    })
-    .expectStatus(200)
-    .expectJSON({
-      code: 'OK'
-    })
 }
 
 function reCconfigCaledars(cb) {
-  return frisby.create('Configure Microsoft Calendars')
-    .post(`/users/microsoft/${results.microsoft.createMicrosoftCredential}/conf`, {
-      toSync: ['en.usa#holiday@group.v.calendar.microsoft.com'],
-      toStopSync: ['my_outlook@outlook.com']
-    })
-    .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
-    .after(function(err, res, json) {
-      cb(err, res, json)
-    })
-    .expectStatus(204)
 }
 
 module.exports = {
@@ -345,8 +316,8 @@ module.exports = {
   deleteAccount,
   deleteAccountFailedCauseOfInvalidBrand,
   getMCredentialLastSyncHistory,
-  getRemoteCalendars,
-  configureCaledars,
-  getRemoteCalendarsAfterConfiguring,
-  reCconfigCaledars
+  getRemoteCalendars
+  // configureCaledars,
+  // getRemoteCalendarsAfterConfiguring,
+  // reCconfigCaledars
 }

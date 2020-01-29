@@ -16,96 +16,119 @@ let user, brand, microsoftCredential, microsoftCalendar
 
 const calendars = {
   remote_cal_1: {
-    id: 'remote_cal_id_1',
-    summary: 'summary_1',
-    summaryOverride: 'summaryOverride_1',
-    description: 'description_1',
-    location: 'location',
-    timeZone: 'timeZone',
-    conferenceProperties: 'conferenceProperties',
-    origin: 'microsoft',
-    accessRole: 'owner',
-    selected: false,
-    deleted: false,
-    primary: false,
-    defaultReminders: {},
-    notificationSettings: {},
-    conference_properties: {}
+    '@odata.context': 'https://graph.microsoft.com/v1.0/$metadata#me/calendars/$entity',
+    '@odata.id': 'https://graph.microsoft.com/v1.0/users(ddfcd489-628b-40d7-b48b-57002df800e5@1717622f-1d94-4d0c-9d74-709fad664b77)calendars(AAMkAGI2TGuLAAA=)',
+    'id': 'AAMkAGI2TGuLAAA=',
+    'name': 'Calendar',
+    'color': 'auto',
+    'changeKey': 'nfZyf7VcrEKLNoU37KWlkQAAA0x0+w==',
+    'canShare': true,
+    'canViewPrivateItems': true,
+    'canEdit': true,
+    'owner': {
+      'name': 'Samantha Booth',
+      'address': 'samanthab@adatum.onmicrosoft.com'
+    }
   }
 }
 
 const events = {
   remote_event_1: {
-    id: 'remote_event_id_1',
-
-    description: 'description',
-    summary: 'summary',
-    location: 'location',
-    colorId: 'colorId',
-    iCalUID: 'iCalUID',
-    transparency: 'transparent',
-    visibility: 'visibility',
-    hangoutLink: 'hangoutLink',
-    htmlLink: 'htmlLink',
-    status: 'confirmed',
-    sequence: 123456,
-    
-    anyoneCanAddSelf: false,
-    guestsCanInviteOthers: true,
-    guestsCanModify: false,
-    guestsCanSeeOtherGuests: true,
-    attendeesOmitted: false,
-    locked: false,
-    privateCopy: false,
-
-    creator: {
-      email: 'heshmat.zapata@outlook.com'
+    '@odata.context': 'https://graph.microsoft.com/v1.0/$metadata#users(919717da-0460-4cca-a6be-d25382429896)/events/$entity',
+    '@odata.etag': 'W+T8RDneHMkKe2BGYEaQZ4wAA5a9Acw==',
+    'id': 'AAMkADQwMD',
+    'createdDateTime': '2017-10-07T04:59:12.9698856Z',
+    'lastModifiedDateTime': '2017-10-07T04:59:13.8136423Z',
+    'changeKey': '+T8RDneHMkKe2BGYEaQZ4wAA5a9Acw==',
+    'categories': [],
+    'originalStartTimeZone': 'Pacific Standard Time',
+    'originalEndTimeZone': 'Pacific Standard Time',
+    'iCalUId': '040000008200E00074C5B7101A82E0080000000028CEBE04293FD3010000000000000000100000009F85AB8AF8ED4D4FAC777FA89954BDB7',
+    'reminderMinutesBeforeStart': 15,
+    'isReminderOn': true,
+    'hasAttachments': false,
+    'subject': 'Lets go for lunch',
+    'bodyPreview': 'Does late morning work for you?',
+    'importance': 'normal',
+    'sensitivity': 'normal',
+    'isAllDay': false,
+    'isCancelled': false,
+    'isOrganizer': true,
+    'responseRequested': true,
+    'seriesMasterId': null,
+    'showAs': 'busy',
+    'type': 'seriesMaster',
+    'webLink': 'https://outlook.office365.com/owa/?itemid=AAMkADQwMD&exvsurl=1&path=/calendar/item',
+    'onlineMeetingUrl': null,
+    'responseStatus': {
+      'response': 'organizer',
+      'time': '0001-01-01T00:00:00Z'
     },
-    organizer: {
-      email: 'jqq8b51h0rfdujo4ofted56uqc@group.calendar.microsoft.com',
-      displayName: 'calendar-summary',
-      self: true
+    'body': {
+      'contentType': 'html',
+      'content': '<html>\r\n<head>\r\n<meta http-equiv=\'Content-Type\' content=\'text/html; charset=utf-8\'>\r\n<meta content=\'text/html; charset=us-ascii\'>\r\n</head>\r\n<body>\r\nDoes late morning work for you?\r\n</body>\r\n</html>\r\n'
     },
-
-    attendees: [
+    'start': {
+      'dateTime': '2017-09-04T12:00:00.0000000',
+      'timeZone': 'Pacific Standard Time'
+    },
+    'end': {
+      'dateTime': '2017-09-04T14:00:00.0000000',
+      'timeZone': 'Pacific Standard Time'
+    },
+    'location': {
+      'displayName': 'Harrys Bar',
+      'locationType': 'default',
+      'uniqueId': 'Harrys Bar',
+      'uniqueIdType': 'private'
+    },
+    'locations': [
       {
-        email: 'string',
-        displayName: 'string',
-        responseStatus: 'string',
-        comment: 'strin'
+        'displayName': 'Harrys Bar',
+        'locationType': 'default',
+        'uniqueIdType': 'unknown'
       }
     ],
-    attachments: [],
-    reminders: {
-      useDefault: false,
-      overrides: [
-        { method: 'email', minutes: 24 * 60 },
-        { method: 'popup', minutes: 10 }
-      ]
+    'recurrence': {
+      'pattern': {
+        'type': 'weekly',
+        'interval': 1,
+        'month': 0,
+        ' dayOfMonth': 0,
+        'daysOfWeek': [
+          'monday'
+        ],
+        'firstDayOfWeek': 'sunday',
+        'index': 'first'
+      },
+      'range': {
+        'type': 'endDate',
+        'startDate': '2017-09-04',
+        'endDate': '2017-12-31',
+        'recurrenceTimeZone': 'Pacific Standard Time',
+        'numberOfOccurrences': 0
+      }
     },
-
-    conferenceData: {},
-    extendedProperties: {},
-    gadget: {},
-    source: {},    
-
-    created: '2019-10-22T20:20:44.000Z',
-    updated: '2019-10-22T20:20:44.474Z',
-
-    start: {
-      dateTime: '2019-10-20T09:00:00-07:00',
-      timeZone: 'America/Los_Angeles'
+    'attendees': [
+      {
+        'type': 'required',
+        'status': {
+          'response': 'none',
+          'time': '0001-01-01T00:00:00Z'
+        },
+        'emailAddress': {
+          'name': 'Adele Vance',
+          'address': 'AdeleV@contoso.onmicrosoft.com'
+        }
+      }
+    ],
+    'organizer': {
+      'emailAddress': {
+        'name': 'Alex Wilber',
+        'address': 'AlexW@contoso.onmicrosoft.com'
+      }
     },
-    end: {
-      dateTime: '2019-10-20T11:00:00-07:00',
-      timeZone: 'America/Los_Angeles'
-    },
-    endTimeUnspecified: false,
-    recurrence: [],
-    recurringEventId: '1rrf5h0rbl2ecs56qsdl6h3m63',
-    originalStartTime: {
-      date: '2020-01-05'
-    }
+    'OnlineMeeting': null
   }
 }
 
@@ -118,19 +141,8 @@ async function createCal() {
   expect(cal.calendar_id).to.be.equal(calendars.remote_cal_1.id)
   expect(cal.type).to.be.equal('microsoft_calendars')
   expect(cal.microsoft_credential).to.be.equal(microsoftCredential.id)
-  expect(cal.summary).to.be.equal(calendars.remote_cal_1.summary)
-  expect(cal.location).to.be.equal(calendars.remote_cal_1.location)
-  expect(cal.timeZone).to.be.equal(calendars.remote_cal_1.time_zone)
-  expect(cal.description).to.be.equal(calendars.remote_cal_1.description)
-  expect(cal.origin).to.be.equal(calendars.remote_cal_1.origin)
-  expect(cal.selected).to.be.equal(false)
-  expect(cal.deleted).to.be.equal(false)
-  expect(cal.primary).to.be.equal(false)
-  expect(cal.sync_token).to.be.equal(null)
-  expect(cal.watcher).to.be.equal(null)
-  expect(cal.watcher_status).to.be.equal(null)
-  expect(cal.watcher_channel_id).to.be.equal(null)
-  expect(cal.deleted_at).to.be.equal(null)
+  expect(cal.name).to.be.equal(calendars.remote_cal_1.name)
+  expect(cal.to_sync).to.be.equal(false)
 
   return cal
 }
@@ -155,16 +167,9 @@ async function createLocal() {
   expect(event.microsoft_calendar).to.be.equal(microsoftCalendar.id)
   expect(event.microsoft_credential).to.be.equal(microsoftCredential.id)
   expect(event.event_id).to.be.equal(events.remote_event_1.id)
-  expect(event.summary).to.be.equal(events.remote_event_1.summary)
-  expect(event.location).to.be.equal(events.remote_event_1.location)
-  expect(event.timeZone).to.be.equal(events.remote_event_1.time_zone)
-  expect(event.description).to.be.equal(events.remote_event_1.description)
-  expect(event.origin).to.be.equal('rechat')
-  expect(event.status).to.be.equal(events.remote_event_1.status)
-  expect(event.recurring_event_id).to.be.equal(events.remote_event_1.recurring_eventid)
+  expect(event.subject).to.be.equal(events.remote_event_1.subject)
   expect(event.type).to.be.equal('microsoft_calendar_events')
-  expect(event.organizer).to.deep.equal(events.remote_event_1.organizer)
-  expect(new Date(event.created).getTime()).to.be.equal(new Date(events.remote_event_1.created).getTime())
+  expect(event.description).to.be.equal(events.remote_event_1.description)
   expect(event.event_start).to.deep.equal(events.remote_event_1.start)
   expect(event.event_end).to.deep.equal(events.remote_event_1.end)
 
@@ -180,14 +185,9 @@ async function updateLocal() {
   expect(event.microsoft_calendar).to.be.equal(updated.microsoft_calendar)
   expect(event.microsoft_credential).to.be.equal(updated.microsoft_credential)
   expect(event.event_id).to.be.equal(updated.event_id)
-  expect(event.summary).to.be.equal(updated.summary)
-  expect(event.location).to.be.equal(updated.location)
-  expect(event.timeZone).to.be.equal(updated.timeZone)
+  expect(event.subject).to.be.equal(updated.subject)
+  expect(event.location).to.be.deep.equal(updated.location)
   expect(event.description).to.be.equal(updated.description)
-  expect(event.origin).to.be.equal(updated.origin)
-  expect(event.status).to.be.equal(updated.status)
-  expect(event.recurring_event_id).to.be.equal(updated.recurring_event_id)
-  expect(event.organizer).to.deep.equal(updated.organizer)
   expect(event.event_start).to.deep.equal(updated.event_start)
   expect(event.event_end).to.deep.equal(updated.event_end)
 }
@@ -195,14 +195,20 @@ async function updateLocal() {
 async function bulkUpsert() {
   const records = []
 
-  records.push(generateCalendarEventRecord(microsoftCalendar, events.remote_event_1))
+  const record = generateCalendarEventRecord(microsoftCalendar, events.remote_event_1)
+
+  if (record)
+    records.push()
 
   const result = await MicrosoftCalendarEvent.bulkUpsert(records)
 
   expect(result.length).to.be.equal(records.length)
-  expect(result[0].microsoft_credential).to.be.equal(microsoftCredential.id)
-  expect(result[0].microsoft_calendar).to.be.equal(microsoftCalendar.id)
-  expect(result[0].event_id).to.be.equal(events.remote_event_1.id)
+
+  if (result.length) {
+    expect(result[0].microsoft_credential).to.be.equal(microsoftCredential.id)
+    expect(result[0].microsoft_calendar).to.be.equal(microsoftCalendar.id)
+    expect(result[0].event_id).to.be.equal(events.remote_event_1.id)
+  }
 }
 
 async function deleteLocal() {
@@ -210,7 +216,6 @@ async function deleteLocal() {
   await MicrosoftCalendarEvent.deleteLocal(event.id)
   const updated = await MicrosoftCalendarEvent.get(event.id)
 
-  expect(updated.status).to.be.equal('canceled')
   expect(updated.deleted_at).to.be.not.equal(null)
 }
 
@@ -220,7 +225,6 @@ async function deleteLocalByRemoteIds() {
   await MicrosoftCalendarEvent.deleteLocalByRemoteIds(cal, [event.event_id])
   const updated = await MicrosoftCalendarEvent.get(event.id)
 
-  expect(updated.status).to.be.equal('canceled')
   expect(updated.deleted_at).to.be.not.equal(null)
 }
 
@@ -230,7 +234,6 @@ async function restoreLocalByRemoteIds() {
   await MicrosoftCalendarEvent.restoreLocalByRemoteIds(cal, [event.event_id])
   const updated = await MicrosoftCalendarEvent.get(event.id)
 
-  expect(updated.status).to.be.equal('confirmed')
   expect(updated.deleted_at).to.be.equal(null)
 }
 
@@ -240,7 +243,6 @@ async function deleteLocalByCalendar() {
   await MicrosoftCalendarEvent.deleteLocalByCalendar(cal)
   const updated = await MicrosoftCalendarEvent.get(event.id)
 
-  expect(updated.status).to.be.equal('canceled')
   expect(updated.deleted_at).to.be.not.equal(null)
 }
 
@@ -294,24 +296,30 @@ async function getByCalendarIds() {
 
 async function create() {
   const body = {
-    'summary': 'Microsoft I/O 2015',
+    'name': 'Lets go for lunch',
     'location': '800 Howard St., San Francisco, CA 94103',
     'description': 'A chance to hear more about Microsoft\'s developer products.',
     'start': {
-      'dateTime': '2015-05-28T09:00:00-07:00',
-      'timeZone': 'America/Los_Angeles'
+      'dateTime': '2017-09-04T12:00:00.0000000',
+      'timeZone': 'Pacific Standard Time'
     },
     'end': {
-      'dateTime': '2015-05-28T17:00:00-07:00',
-      'timeZone': 'America/Los_Angeles'
+      'dateTime': '2017-09-04T14:00:00.0000000',
+      'timeZone': 'Pacific Standard Time'
     },
     'attendees': [
-      {'email': 'lpage@example.com'},
-      {'email': 'sbrin@example.com'}
-    ],
-    'reminders': {
-      'useDefault': false
-    }
+      {
+        'type': 'required',
+        'status': {
+          'response': 'none',
+          'time': '0001-01-01T00:00:00Z'
+        },
+        'emailAddress': {
+          'name': 'Adele Vance',
+          'address': 'AdeleV@contoso.onmicrosoft.com'
+        }
+      }
+    ]
   }
   
   const id = await MicrosoftCalendarEvent.create(microsoftCalendar, body)
@@ -320,10 +328,10 @@ async function create() {
   expect(event.id).to.be.equal(id)
   expect(event.microsoft_credential).to.be.equal(microsoftCalendar.microsoft_credential)
   expect(event.microsoft_calendar).to.be.equal(microsoftCalendar.id)
-  expect(event.summary).to.be.equal(body.summary)
+  expect(event.subject).to.be.equal(body.name)
   expect(event.event_start).to.be.deep.equal(body.start)
   expect(event.event_end).to.be.deep.equal(body.end)
-  expect(event.reminders).to.be.deep.equal(body.reminders)
+  expect(event.attendees).to.be.deep.equal(body.attendees)
 
   return event
 }
@@ -332,24 +340,30 @@ async function update() {
   const event = await create()
 
   const body = {
-    'summary': 'Microsoft I/O 2015 - xxxx',
-    'location': '800 Howard St., San Francisco, CA 94103 - xxxx',
-    'description': 'A chance to hear more about Microsoft\'s developer products - xxxx',
+    'name': 'Lets go for lunch',
+    'location': '800 Howard St., San Francisco, CA 94103',
+    'description': 'A chance to hear more about Microsoft\'s developer products.',
     'start': {
-      'dateTime': '2016-05-28T09:00:00-07:00',
-      'timeZone': 'America/Los_Angeles'
+      'dateTime': '2017-09-04T12:00:00.0000000',
+      'timeZone': 'Pacific Standard Time'
     },
     'end': {
-      'dateTime': '2016-05-28T17:00:00-07:00',
-      'timeZone': 'America/Los_Angeles'
+      'dateTime': '2017-09-04T14:00:00.0000000',
+      'timeZone': 'Pacific Standard Time'
     },
     'attendees': [
-      {'email': 'lpagexxx@example.com'},
-      {'email': 'sbrinxxx@example.com'}
-    ],
-    'reminders': {
-      'useDefault': false
-    }
+      {
+        'type': 'required',
+        'status': {
+          'response': 'none',
+          'time': '0001-01-01T00:00:00Z'
+        },
+        'emailAddress': {
+          'name': 'Adele Vance',
+          'address': 'AdeleV@contoso.onmicrosoft.com'
+        }
+      }
+    ]
   }
   
   await MicrosoftCalendarEvent.update(event.id, microsoftCalendar, body)
@@ -357,10 +371,10 @@ async function update() {
 
   expect(updated.microsoft_credential).to.be.equal(microsoftCalendar.microsoft_credential)
   expect(updated.microsoft_calendar).to.be.equal(microsoftCalendar.id)
-  expect(updated.summary).to.be.equal(body.summary)
+  expect(updated.subject).to.be.equal(body.name)
   expect(updated.event_start).to.be.deep.equal(body.start)
   expect(updated.event_end).to.be.deep.equal(body.end)
-  expect(updated.reminders).to.be.deep.equal(body.reminders)
+  expect(updated.attendees).to.be.deep.equal(body.attendees)
 }
 
 async function deleteEvent() {
@@ -371,7 +385,6 @@ async function deleteEvent() {
 
   expect(updated.microsoft_credential).to.be.equal(microsoftCalendar.microsoft_credential)
   expect(updated.microsoft_calendar).to.be.equal(microsoftCalendar.id)
-  expect(updated.status).to.be.equal('canceled')
   expect(updated.deleted_at).to.be.not.equal(null)
 }
 
@@ -381,21 +394,21 @@ describe('Microsoft', () => {
     createContext()
     beforeEach(setup)
 
-    // it('should create a microsoft calendar event', createLocal)
-    // it('should update a microsoft calendar event', updateLocal)
-    // it('should upsert a batch of microsoft calendar events', bulkUpsert)
-    // it('should delete a microsoft calendar event', deleteLocal)
-    // it('should delete some microsoft calendars by remote ids', deleteLocalByRemoteIds)
-    // it('should restore some microsoft calendars by remote ids', restoreLocalByRemoteIds)
-    // it('should delete some microsoft remote by calendar id', deleteLocalByCalendar)
-    // it('should returns an array of microsoft calendar events', getAll)
-    // it('should handle get event', getFailed)
-    // it('should returns an array of microsoft calendar events - by calendar id', getByCalendar)
-    // it('should returns an array of microsoft calendar events - by calendar and event ids', getByCalendarAndEventRemoteIds)
-    // it('should returns an array of microsoft calendar event ids - by calendar id', getByCalendarIds)
+    it('should create a microsoft calendar event', createLocal)
+    it('should update a microsoft calendar event', updateLocal)
+    it('should upsert a batch of microsoft calendar events', bulkUpsert)
+    it('should delete a microsoft calendar event', deleteLocal)
+    it('should delete some microsoft calendars by remote ids', deleteLocalByRemoteIds)
+    it('should restore some microsoft calendars by remote ids', restoreLocalByRemoteIds)
+    it('should delete some microsoft remote by calendar id', deleteLocalByCalendar)
+    it('should returns an array of microsoft calendar events', getAll)
+    it('should handle get event', getFailed)
+    it('should returns an array of microsoft calendar events - by calendar id', getByCalendar)
+    it('should returns an array of microsoft calendar events - by calendar and event ids', getByCalendarAndEventRemoteIds)
+    it('should returns an array of microsoft calendar event ids - by calendar id', getByCalendarIds)
 
-    // it('should create a remote microsoft calendar event', create)
-    // it('should update a remote microsoft calendar event', update)
-    // it('should delete a remote microsoft calendar event', deleteEvent)
+    it('should create a remote microsoft calendar event', create)
+    it('should update a remote microsoft calendar event', update)
+    it('should delete a remote microsoft calendar event', deleteEvent)
   })
 })

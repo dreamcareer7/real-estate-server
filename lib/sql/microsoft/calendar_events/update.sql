@@ -3,8 +3,8 @@ UPDATE
 SET
   subject = $2,
   type = $3,
-  body_preview = $5,
-  created_date_time = $6,
+  body_preview = $4,
+  created_date_time = $5,
   original_start = $6,
   last_modified_date_time = $7,
   original_end_time_zone = $8,
