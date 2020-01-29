@@ -3,6 +3,9 @@ const db = require('../lib/utils/db')
 const migrations = [
   'BEGIN',
 
+  'ALTER TABLE IF EXISTS google_calendars DROP COLUMN IF EXISTS accessRole',
+  'ALTER TABLE IF EXISTS google_calendars ADD COLUMN IF NOT EXISTS access_role TEXT',
+
   'ALTER TABLE google_credentials DROP COLUMN IF EXISTS rechat_gcalendar',
   'ALTER TABLE google_credentials DROP COLUMN IF EXISTS calendars_last_sync_at',
 
@@ -25,10 +28,10 @@ const migrations = [
     location TEXT,
     time_zone TEXT,
 
-    accessRole TEXT,
-    selected BOOLEAN,
-    deleted BOOLEAN,
-    "primary" BOOLEAN,
+    access_role TEXT,
+    selected BOOLEAN DEFAULT FALSE,
+    deleted BOOLEAN DEFAULT FALSE,
+    "primary" BOOLEAN DEFAULT FALSE,
 
     defaultReminders JSONB,
     notificationSettings JSONB,
@@ -38,14 +41,18 @@ const migrations = [
     sync_token TEXT,
 
     watcher_status TEXT,
+    watcher_channel_id uuid NULL,
     watcher JSONB,
 
     created_at timestamptz NOT NULL DEFAULT clock_timestamp(),
     updated_at timestamptz NOT NULL DEFAULT clock_timestamp(),
     deleted_at timestamptz,
 
+    UNIQUE (watcher_channel_id),
     UNIQUE (google_credential, calendar_id)
   )`,
+
+  'CREATE UNIQUE INDEX google_calendars_watcher_channel_id ON google_calendars (watcher_channel_id) WHERE watcher_channel_id IS NOT NULL',
 
   'COMMIT'
 ]

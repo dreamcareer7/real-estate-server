@@ -2,8 +2,7 @@ INSERT INTO google_calendar_events
   (
     google_credential,
     google_calendar,
-    event_id NOT NULL,
-
+    event_id,
     description,
     summary,
     location,
@@ -84,12 +83,20 @@ VALUES
     $39
   )
 ON CONFLICT (google_credential, google_calendar, event_id) DO UPDATE SET
-  summary = $3,
   description = $4,
-  location = $5,
-  time_zone = $6,
-  conference_properties = $7,
-  origin = $8,
+  summary = $5,
+  location = $6,
+  color_id = $7,
+  status = $13,
+  attendees = $24,
+  extended_properties = $27,
+  reminders = $29,
+  updated = $32,
+  event_start = $33,
+  event_end = $34,
+  end_time_unspecified = $35,
+  original_start_time = $38,
+  origin = $39,
   updated_at = now(),
   deleted_at = null
 RETURNING id

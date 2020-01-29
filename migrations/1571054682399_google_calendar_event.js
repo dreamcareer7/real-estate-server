@@ -10,6 +10,8 @@ const migrations = [
     google_calendar uuid NOT NULL REFERENCES google_calendars(id),
     event_id TEXT NOT NULL,
 
+    crm_task_foreign_key uuid NULL,
+
     description TEXT,
     summary TEXT,
     location TEXT,

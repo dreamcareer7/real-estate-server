@@ -1,1 +1,1 @@
-SELECT id FROM google_calendars WHERE google_credential = $1 AND deleted_at IS NULL
+SELECT id FROM google_calendars WHERE google_credential = $1 AND deleted_at IS NULL AND deleted IS false

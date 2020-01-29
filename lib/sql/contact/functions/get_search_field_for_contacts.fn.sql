@@ -9,7 +9,7 @@ AS $$
   WITH p1 AS (
     SELECT
       contact,
-      array_to_string(array_agg(text), ' ') as search_field
+      array_to_string(array_agg(text || ' ' || CASE WHEN attribute_type = 'email' THEN split_part(text, '@', 2) ELSE '' END), ' ') as search_field
     FROM
       contacts_attributes
     WHERE
@@ -38,7 +38,7 @@ AS $$
   ), p3 AS (
     SELECT
       contact,
-      array_to_string(array_agg(text), ' ') as search_field
+      array_to_string(array_agg(text || ' ' || CASE WHEN attribute_type = 'email' THEN split_part(text, '@', 2) ELSE '' END), ' ') as search_field
     FROM
       contacts_attributes
       JOIN contacts_attribute_defs ON contacts_attributes.attribute_def = contacts_attribute_defs.id

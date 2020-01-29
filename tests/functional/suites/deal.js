@@ -28,7 +28,7 @@ const create = (cb) => {
   const data = JSON.parse(JSON.stringify(deal))
 
   return frisby.create('create a deal')
-    .post('/deals', data)
+    .post('/deals?associations[]=deal.gallery', data)
     .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
     .after(cb)
     .expectStatus(200)
@@ -42,7 +42,7 @@ const patchListing = cb => {
   const patch = {
     listing: results.listing.getListing.data.id,
   }
-  const expected_object = Object.assign({}, results.deal.create.data, patch)
+  const expected_object = Object.assign({}, omit(results.deal.create.data, ['gallery']), patch)
 
   return frisby.create('set a listing for a deal')
     .patch(`/deals/${results.deal.create.data.id}/listing`, patch)
@@ -111,7 +111,8 @@ const addContext = cb => {
     'brokerwolf_tier_id',
     'brokerwolf_id',
     'brokerwolf_row_version',
-    'email'
+    'email',
+    'gallery'
   ]), {
     context: {
       list_date: {
@@ -454,6 +455,15 @@ const updateSubmission = cb => {
     .after(cb)
 }
 
+const getSubmissionPdf = cb => {
+  const url = results.deal.addTask.data.pdf_url.replace(process.argv[3], '')
+
+  return frisby.create('download submission pdf')
+    .get(url)
+    .after(cb)
+    .expectStatus(200)
+}
+
 const getContextHistory = cb => {
   return frisby.create('get context history on a deal')
     .get(`/deals/${results.deal.create.data.id}/context/list_date`)
@@ -566,7 +576,6 @@ const patchAttentionOff = cb => {
 }
 
 const seamlessAttention = cb => {
-  console.log()
   const { room } = results.deal.getTask.data
   const address = Crypto.encrypt(JSON.stringify({
     room_id: room.id,
@@ -705,14 +714,14 @@ const filterByContextEmpty = (cb) => {
     })
 }
 
-function attachGalleryFile(cb) {
+function createGalleryItem(cb) {
   const deal_id = results.deal.create.data.id
   const file = fs.createReadStream(path.resolve(__dirname, 'data/logo.png'))
 
   return frisby
-    .create('attach file to a deal gallery')
+    .create('add item to a deal gallery')
     .post(
-      `/deals/${deal_id}/gallery/attach`,
+      `/deals/${deal_id}/gallery/items`,
       {
         file
       },
@@ -729,34 +738,9 @@ function attachGalleryFile(cb) {
     })
 }
 
-function createGalleryItems(cb) {
-  const deal_id = results.deal.create.data.id
-  const { data } = JSON.parse(results.deal.attachGalleryFile)
-
-  const items =  [
-    {
-      file: data.id,
-      name: 'Gallery Item Name',
-      description: 'Gallery Item Description',
-      order: 1
-    }
-  ]
-
-  return frisby
-    .create('create a gallery item')
-    .post(`/deals/${deal_id}/gallery/items`, {
-      items
-    })
-    .after(cb)
-    .expectStatus(200)
-    .expectJSON({
-      code: 'OK',
-    })
-}
-
 function updateGalleryItem(cb) {
   const deal_id = results.deal.create.data.id
-  const saved = results.deal.createGalleryItems.data[0]
+  const saved = JSON.parse(results.deal.createGalleryItem).data
 
   const item = {
     name: 'Updated Name',
@@ -775,20 +759,24 @@ function updateGalleryItem(cb) {
     })
 }
 
-function deleteGalleryItem(cb) {
+function deleteGalleryItems(cb) {
   const deal_id = results.deal.create.data.id
-  const item = results.deal.createGalleryItems.data[0]
+  const item = results.deal.updateGalleryItem.data
 
   return frisby
     .create('delete a gallery item')
-    .delete(`/deals/${deal_id}/gallery/items/${item.id}`)
+    .delete(`/deals/${deal_id}/gallery/items`, {
+      items: [
+        item.id
+      ]
+    })
     .after(cb)
     .expectStatus(204)
 }
 
 function sortGalleryItems(cb) {
   const deal_id = results.deal.create.data.id
-  const item = results.deal.createGalleryItems.data[0]
+  const item = results.deal.updateGalleryItem.data
 
   const items = [
     {
@@ -805,6 +793,28 @@ function sortGalleryItems(cb) {
       code: 'OK',
       data: items
     })
+    .expectStatus(200)
+}
+
+function createGalleryZipUrl(cb) {
+  const id = results.deal.create.data.id
+
+  const items = results.deal.sortGalleryItems.data.map(r => r.id)
+
+  return frisby
+    .create('create a zip gallery url')
+    .post(`/deals/${id}/gallery.zip`, {items})
+    .after(cb)
+    .expectStatus(200)
+}
+
+function downloadGalleryZip(cb) {
+  const url = results.deal.createGalleryZipUrl.info.url.replace(process.argv[3], '')
+
+  return frisby
+    .create('download gallery zip file')
+    .get(url)
+    .after(cb)
     .expectStatus(200)
 }
 
@@ -838,6 +848,7 @@ module.exports = {
   makeSureAnotherTaskIsntReturnedInDealContext,
   setSubmission,
   updateSubmission,
+  getSubmissionPdf,
   getContextHistory,
   addActivity,
   getRevision,
@@ -850,11 +861,12 @@ module.exports = {
   postMessage,
   seamlessAttention,
   verifySeamlessAttention,
-  attachGalleryFile,
-  createGalleryItems,
+  createGalleryItem,
   updateGalleryItem,
-  deleteGalleryItem,
+  deleteGalleryItems,
   sortGalleryItems,
+  createGalleryZipUrl,
+  downloadGalleryZip,
   removeRole,
   remove
 }

@@ -527,73 +527,73 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       AND due_at IS NOT NULL
       AND thread_key IS NULL
   )
-  UNION ALL
-  (
-    SELECT
-      ec.id::text,
-      ec.created_by,
-      ec.created_at,
-      ec.updated_at,
-      'email_campaign_recipient' AS object_type,
-      'scheduled_email' AS event_type,
-      'Scheduled Email' AS type_label,
-      ec.due_at AS "timestamp",
-      ec.due_at AS "date",
-      ec.due_at AS next_occurence,
-      NULL::timestamptz AS end_date,
-      False AS recurring,
-      ec.subject AS title,
-      NULL::uuid AS crm_task,
-      ec.deal,
-      c.id AS contact,
-      ec.id AS campaign,
-      NULL::uuid AS credential_id,
-      NULL::text AS thread_key,
-      NULL::uuid AS activity,
-      ARRAY[ec.from] AS users,
-      NULL::uuid[] AS accessible_to,
-      (
-        SELECT
-          ARRAY_AGG(json_build_object(
-            'id', COALESCE(contact, agent),
-            'type', (CASE WHEN contact IS NOT NULL THEN 'contact' ELSE 'agent' END)
-          ))
-        FROM
-          (
-            SELECT
-              contact,
-              agent
-            FROM
-              email_campaigns_recipient_emails
-            WHERE
-              campaign = ec.id
-            LIMIT 5
-          ) t
-      ) AS people,
-      (
-        SELECT
-          COUNT(DISTINCT email)::int
-        FROM
-          email_campaigns_recipient_emails
-        WHERE
-          campaign = ec.id
-      ) AS people_len,
-      ec.brand,
-      NULL::text AS status,
-      NULL::jsonb AS metadata
-    FROM
-      email_campaigns AS ec
-      JOIN email_campaigns_recipient_emails AS ecr
-        ON ec.id = ecr.campaign
-      JOIN contacts AS c
-        ON c.brand = ec.brand AND c.email && ARRAY[ecr.email]
-    WHERE
-      ec.deleted_at IS NULL
-      AND ec.executed_at IS NULL
-      AND ec.due_at IS NOT NULL
-      AND ecr.contact IS NOT NULL
-      AND c.deleted_at IS NULL
-  )
+  -- UNION ALL
+  -- (
+  --   SELECT
+  --     ec.id::text,
+  --     ec.created_by,
+  --     ec.created_at,
+  --     ec.updated_at,
+  --     'email_campaign_recipient' AS object_type,
+  --     'scheduled_email' AS event_type,
+  --     'Scheduled Email' AS type_label,
+  --     ec.due_at AS "timestamp",
+  --     ec.due_at AS "date",
+  --     ec.due_at AS next_occurence,
+  --     NULL::timestamptz AS end_date,
+  --     False AS recurring,
+  --     ec.subject AS title,
+  --     NULL::uuid AS crm_task,
+  --     ec.deal,
+  --     c.id AS contact,
+  --     ec.id AS campaign,
+  --     NULL::uuid AS credential_id,
+  --     NULL::text AS thread_key,
+  --     NULL::uuid AS activity,
+  --     ARRAY[ec.from] AS users,
+  --     NULL::uuid[] AS accessible_to,
+  --     (
+  --       SELECT
+  --         ARRAY_AGG(json_build_object(
+  --           'id', COALESCE(contact, agent),
+  --           'type', (CASE WHEN contact IS NOT NULL THEN 'contact' ELSE 'agent' END)
+  --         ))
+  --       FROM
+  --         (
+  --           SELECT
+  --             contact,
+  --             agent
+  --           FROM
+  --             email_campaigns_recipient_emails
+  --           WHERE
+  --             campaign = ec.id
+  --           LIMIT 5
+  --         ) t
+  --     ) AS people,
+  --     (
+  --       SELECT
+  --         COUNT(DISTINCT email)::int
+  --       FROM
+  --         email_campaigns_recipient_emails
+  --       WHERE
+  --         campaign = ec.id
+  --     ) AS people_len,
+  --     ec.brand,
+  --     NULL::text AS status,
+  --     NULL::jsonb AS metadata
+  --   FROM
+  --     email_campaigns AS ec
+  --     JOIN email_campaigns_recipient_emails AS ecr
+  --       ON ec.id = ecr.campaign
+  --     JOIN contacts AS c
+  --       ON c.brand = ec.brand AND c.email && ARRAY[ecr.email]
+  --   WHERE
+  --     ec.deleted_at IS NULL
+  --     AND ec.executed_at IS NULL
+  --     AND ec.due_at IS NOT NULL
+  --     AND ecr.contact IS NOT NULL
+  --     AND c.deleted_at IS NULL
+  -- )
   UNION ALL
   (
     SELECT

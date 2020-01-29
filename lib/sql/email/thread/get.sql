@@ -1,14 +1,14 @@
 SELECT
   email_threads.id,
-  email_threads.created_at,
-  email_threads.updated_at,
+  extract(epoch from email_threads.created_at) AS created_at,
+  extract(epoch from email_threads.updated_at) AS updated_at,
   email_threads.brand,
   email_threads."user",
   google_credential,
   microsoft_credential,
   email_threads.subject,
-  first_message_date,
-  last_message_date,
+  extract(epoch from first_message_date) AS first_message_date,
+  extract(epoch from last_message_date) AS last_message_date,
   recipients,
   message_count,
   has_attachments,
@@ -38,7 +38,8 @@ SELECT
                 google_messages
               WHERE
                 thread_key = email_threads.id
-                AND google_messages.google_credential = email_threads.google_credential)
+                AND google_messages.google_credential = email_threads.google_credential
+                AND google_messages.deleted_at IS NULL)
             WHEN microsoft_credential IS NOT NULL THEN
               (SELECT
                 jsonb_agg(jsonb_build_object('id', microsoft_messages.id, 'type', 'microsoft_message') ORDER BY message_date)
@@ -46,7 +47,8 @@ SELECT
                 microsoft_messages
               WHERE
                 thread_key = email_threads.id
-                AND microsoft_messages.microsoft_credential = email_threads.microsoft_credential)
+                AND microsoft_messages.microsoft_credential = email_threads.microsoft_credential
+                AND microsoft_messages.deleted_at IS NULL)
             ELSE
               '[]'::jsonb
           END

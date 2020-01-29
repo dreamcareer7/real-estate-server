@@ -5,8 +5,11 @@ AS $$
   DELETE FROM
     contacts_duplicate_pairs
   WHERE
-    a = ANY($2)
-    OR b = ANY($2);
+    ignored_at IS NULL
+    AND (
+      a = ANY($2)
+      OR b = ANY($2)
+    );
 
   WITH attrs AS (
     SELECT

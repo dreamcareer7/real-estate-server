@@ -111,17 +111,17 @@ get a list of available contexts for each brand.
 ### Delete a task [DELETE /tasks/:task]
 <!-- include(tests/deal/removeTask.md) -->
 
-### Attach a file to a gallery item [POST /deals/:id/gallery/attach]
-<!-- include(tests/deal/attachGalleryFile.md) -->
-
-### Create gallery items [POST /deals/:id/gallery/items]
-<!-- include(tests/deal/createGalleryItems.md) -->
+### Create gallery item [POST /deals/:id/gallery/items]
+<!-- include(tests/deal/createGalleryItem.md) -->
 
 ### Update gallery item [PUT /deals/:id/gallery/items/:iid]
 <!-- include(tests/deal/updateGalleryItem.md) -->
 
-### Delete gallery item [DELETE /deals/:id/gallery/items/:iid]
-<!-- include(tests/deal/deleteGalleryItem.md) -->
+### Delete gallery items (Bulk) [DELETE /deals/:id/gallery/items]
+<!-- include(tests/deal/deleteGalleryItems.md) -->
 
 ### Sort gallery items [PUT /deals/:id/gallery/items/sort]
 <!-- include(tests/deal/sortGalleryItems.md) -->
+
+### Generate a Zip file [POST /deals/:id/gallery.zip]
+<!-- include(tests/deal/createGalleryZipUrl.md) -->
