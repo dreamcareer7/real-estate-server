@@ -1,7 +1,7 @@
 const db = require('../lib/utils/db')
 
 const migrations = [
-  'ALTER TABLE email_campaigns ALTER COLUMN error TYPE text'
+  'ALTER TABLE email_campaigns ALTER COLUMN errored_within TYPE text'
 ]
 
 
