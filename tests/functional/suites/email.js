@@ -132,9 +132,9 @@ const getByBrand = cb => {
           subject: invalid.subject,
           html: invalid.html,
           sent: 0,
-          error: String,
-          errored_at: Date,
-          errored_within: String
+          failure: String,
+          failed_at: Date,
+          failed_within: String
         },
 
         {
