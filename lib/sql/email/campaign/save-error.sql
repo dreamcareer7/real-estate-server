@@ -1,5 +1,5 @@
 UPDATE email_campaigns SET
-  errored_at = NOW(),
-  errored_within = $2,
-  error = $3
+  failed_at = NOW(),
+  failed_within = $2,
+  failure = $3
 WHERE id = $1
