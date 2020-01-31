@@ -14,7 +14,7 @@ const migrations = [
   'ALTER TABLE brands_settings ALTER COLUMN key TYPE text',
 
   `UPDATE brands_settings
-    SET key = 'synced-contacts-last_seen'`,
+    SET key = 'synced-contacts-last-seen'`,
 
   'ALTER TABLE brands_settings ALTER COLUMN key TYPE brand_setting USING key::brand_setting',
 
