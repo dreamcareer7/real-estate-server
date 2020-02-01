@@ -120,7 +120,6 @@ const getEmail = cb => {
 const getByBrand = cb => {
   const updated = results.email.update.data
   const brand = results.email.scheduleBrand.data
-  const invalid = results.email.scheduleInvalid.data
 
   return frisby
     .create('Get campaigns by brand')
@@ -129,15 +128,6 @@ const getByBrand = cb => {
     .expectStatus(200)
     .expectJSON({
       data: [
-        {
-          subject: invalid.subject,
-          html: invalid.html,
-          sent: 0,
-          failure: String,
-          failed_at: Date,
-          failed_within: String
-        },
-
         {
           subject: brand.subject,
           html: brand.html,
@@ -177,23 +167,6 @@ const scheduleIndividual = cb => {
     .create('Schedule an individual email campaign')
     .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
     .post('/emails/individual', individual)
-    .after(cb)
-    .expectStatus(200)
-}
-
-const scheduleInvalid = cb => {
-  const html = '<div>{{ [].class.base.subclasses() }}</div>'
-  const subject = 'Invalid email {{ [].class.base.subclasses() }}'
-
-  const data = {
-    ...individual,
-    subject,
-    html
-  }
-  return frisby
-    .create('Schedule an invalid email campaign')
-    .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
-    .post('/emails/individual', data)
     .after(cb)
     .expectStatus(200)
 }
@@ -684,7 +657,6 @@ module.exports = {
   schedule,
   scheduleIndividual,
   scheduleBrand,
-  scheduleInvalid,
   update,
   sendDue,
   addEvent,
