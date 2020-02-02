@@ -28,7 +28,7 @@ const run = async () => {
     brand: brand.id
   })
 
-  for(template of templates)
+  for(const template of templates)
     await Template.generateThumbnailForBrand({template, brand})
 }
 
