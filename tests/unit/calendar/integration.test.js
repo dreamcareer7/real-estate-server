@@ -6,7 +6,7 @@ const User             = require('../../../lib/models/User')
 const BrandHelper      = require('../brand/helper')
 const CalendarIntegration   = require('../../../lib/models/Calendar/integration')
 
-const { createGoogleMessages }    = require('../google/helper')
+const { createGoogleMessages, createGoogleCalendarEvent } = require('../google/helper')
 const { createMicrosoftMessages } = require('../microsoft/helper')
 
 

@@ -8,29 +8,11 @@ const BrandHelper      = require('../brand/helper')
 const GoogleCredential = require('../../../lib/models/Google/credential')
 const GoogleCalendar   = require('../../../lib/models/Google/calendar')
 
-const { createGoogleMessages } = require('./helper')
+const { createGoogleMessages, createGoogleCalendar } = require('./helper')
+const calendars = require('./data/calendars.json')
 
 let user, brand, googleCredential
 
-const calendars = {
-  remote_cal_1: {
-    id: 'remote_cal_id_1',
-    summary: 'summary_1',
-    summaryOverride: 'summaryOverride_1',
-    description: 'description_1',
-    location: 'location',
-    timeZone: 'timeZone',
-    conferenceProperties: 'conferenceProperties',
-    origin: 'google',
-    accessRole: 'owner',
-    selected: false,
-    deleted: false,
-    primary: false,
-    defaultReminders: {},
-    notificationSettings: {},
-    conference_properties: {}
-  }
-}
 
 
 async function setup() {
@@ -44,28 +26,7 @@ async function setup() {
 }
 
 async function createLocal() {
-  const id  = await GoogleCalendar.createLocal(googleCredential.id, calendars.remote_cal_1)
-  const cal = await GoogleCalendar.get(id)
-
-  expect(cal.id).to.be.equal(id)
-  expect(cal.calendar_id).to.be.equal(calendars.remote_cal_1.id)
-  expect(cal.type).to.be.equal('google_calendars')
-  expect(cal.google_credential).to.be.equal(googleCredential.id)
-  expect(cal.summary).to.be.equal(calendars.remote_cal_1.summary)
-  expect(cal.location).to.be.equal(calendars.remote_cal_1.location)
-  expect(cal.timeZone).to.be.equal(calendars.remote_cal_1.time_zone)
-  expect(cal.description).to.be.equal(calendars.remote_cal_1.description)
-  expect(cal.origin).to.be.equal(calendars.remote_cal_1.origin)
-  expect(cal.selected).to.be.equal(false)
-  expect(cal.deleted).to.be.equal(false)
-  expect(cal.primary).to.be.equal(false)
-  expect(cal.sync_token).to.be.equal(null)
-  expect(cal.watcher).to.be.equal(null)
-  expect(cal.watcher_status).to.be.equal(null)
-  expect(cal.watcher_channel_id).to.be.equal(null)
-  expect(cal.deleted_at).to.be.equal(null)
-
-  return cal
+  return await createGoogleCalendar(googleCredential.id)
 }
 
 async function updateLocal() {
