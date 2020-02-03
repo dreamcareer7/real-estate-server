@@ -43,14 +43,16 @@ async function setup() {
       google_id: googleEvent.id,
       microsoft_id: null,
       object_type: 'crm_task',
-      event_type: 'Other'
+      event_type: 'Other',
+      origin: 'google'
     },
     {
       rechat_id: uuid.v4(),
       google_id: null,
       microsoft_id: microsoftEvent.id,
       object_type: 'crm_task',
-      event_type: 'Other'
+      event_type: 'Other',
+      origin: 'microsoft'
     }
   ]
 
