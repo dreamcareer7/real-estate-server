@@ -53,9 +53,6 @@ declare interface ITaskInput {
   associations?: ICrmTaskAssociationInput[]
   assignees?: UUID[]
 
-  google_event_id?: UUID;
-  microsoft_event_id?: UUID;
-
   metadata?: any;
 }
 
