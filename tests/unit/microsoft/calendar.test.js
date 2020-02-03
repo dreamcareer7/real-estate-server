@@ -25,7 +25,7 @@ async function setup() {
 }
 
 async function createLocal() {
-  return await createMicrosoftCalendar(microsoftCredential.id)
+  return await createMicrosoftCalendar(microsoftCredential)
 }
 
 async function getByRemoteCalendarIdFiled() {

@@ -1,16 +1,29 @@
+const uuid       = require('uuid')
 const { expect } = require('chai')
 const { createContext } = require('../helper')
+const BrandHelper       = require('../brand/helper')
 
-const Context          = require('../../../lib/models/Context')
-const User             = require('../../../lib/models/User')
-const BrandHelper      = require('../brand/helper')
-const CalendarIntegration   = require('../../../lib/models/Calendar/integration')
+const Context = require('../../../lib/models/Context')
+const User    = require('../../../lib/models/User')
+const CalendarIntegration = require('../../../lib/models/Calendar/integration')
 
-const { createGoogleMessages, createGoogleCalendarEvent } = require('../google/helper')
-const { createMicrosoftMessages } = require('../microsoft/helper')
+const { createGoogleMessages, createGoogleCalendarEvent }       = require('../google/helper')
+const { createMicrosoftMessages, createMicrosoftCalendarEvent } = require('../microsoft/helper')
+
+let user, brand, googleEvent, microsoftEvent
 
 
-let user, brand, googleCredential, microsoftCredential, googleCalendar
+// const mapping = {
+//   'object_types': ['crm_task', 'deal_context', 'contact_attribute', 'contact'],
+//   'event_types': ['birthday', 'child_birthday', 'important_date', 'wedding_anniversary', 'work_anniversary', 'home_anniversary', 'next_touch', 'Other'],
+
+//   'crm_task': ['Other'],
+//   'deal_context': [],
+//   'contact_attribute': ['birthday', 'child_birthday', 'important_date', 'wedding_anniversary', 'work_anniversary', 'home_anniversary'],
+//   'contact': ['next_touch']
+// }
+
+let integration_records = []
 
 
 
@@ -21,43 +34,64 @@ async function setup() {
   const { credential: googleCredential }    = await createGoogleMessages(user, brand)
   const { credential: microsoftCredential } = await createMicrosoftMessages(user, brand)
 
-  Context.set({ user, brand, googleCredential, microsoftCredential })
+  googleEvent    = await createGoogleCalendarEvent(googleCredential)
+  microsoftEvent = await createMicrosoftCalendarEvent(microsoftCredential)
+
+  integration_records = [
+    {
+      rechat_id: uuid.v4(),
+      google_id: googleEvent.id,
+      microsoft_id: null,
+      object_type: 'crm_task',
+      event_type: 'Other'
+    },
+    {
+      rechat_id: uuid.v4(),
+      google_id: null,
+      microsoft_id: microsoftEvent.id,
+      object_type: 'crm_task',
+      event_type: 'Other'
+    }
+  ]
+
+  Context.set({ user, brand, googleEvent, microsoftEvent })
 }
 
 async function bulkUpsert() {
-  const result = await CalendarIntegration.bulkUpsert([])
-
-  return result
+  return await CalendarIntegration.bulkUpsert(integration_records)
 }
 
 async function getAll() {
   const result = await bulkUpsert()
-
   const ids = result.map(r => r.id)
-
   const records = await CalendarIntegration.getAll(ids)
 
-  expect(records[0].type).to.be.equal('google_calendars')
+  expect(records.length).to.be.equal(integration_records.length)
+  expect(records[0].type).to.be.equal('calendar_integration')
+  expect(records[0].deleted_at).to.be.equal(null)
 
   return records
 }
 
 async function get() {
-  const record = await CalendarIntegration.get(id)
+  const result = await bulkUpsert()
+  const record = await CalendarIntegration.get(result[0].id)
+
+  return record
 }
 
 async function getFailed() {
   try {
-    await CalendarIntegration.get(googleCredential.id)
+    await CalendarIntegration.get(user.id)
   } catch (err) {
-    expect(err.message).to.be.equal(`Google calendar by id ${googleCredential.id} not found.`)
+    expect(err.message).to.be.equal(`Calendar integration by id ${user.id} not found.`)
   }
 }
 
 async function deleteMany() {
   const records = await bulkUpsert()
   
-  await CalendarIntegration.deleteMany(records[0])
+  await CalendarIntegration.deleteMany([records[0].id])
 
   const updated = await CalendarIntegration.get(records[0].id)
 

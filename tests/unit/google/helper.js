@@ -55,7 +55,6 @@ async function createGoogleCalendar(googleCredential) {
   expect(cal.google_credential).to.be.equal(googleCredential.id)
   expect(cal.summary).to.be.equal(calendars.remote_cal_1.summary)
   expect(cal.location).to.be.equal(calendars.remote_cal_1.location)
-  expect(cal.timeZone).to.be.equal(calendars.remote_cal_1.time_zone)
   expect(cal.description).to.be.equal(calendars.remote_cal_1.description)
   expect(cal.origin).to.be.equal(calendars.remote_cal_1.origin)
   expect(cal.selected).to.be.equal(false)

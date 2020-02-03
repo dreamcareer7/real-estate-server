@@ -3,10 +3,10 @@ const db = require('../lib/utils/db')
 const migrations = [
   'BEGIN',
 
-  'ALTER TABLE crm_tasks DROP INDEX  IF EXISTS crm_tasks_gevent_id',
+  'DROP INDEX IF EXISTS crm_tasks_gevent_id',
   'ALTER TABLE crm_tasks DROP COLUMN IF EXISTS google_event_id',
 
-  'ALTER TABLE crm_tasks DROP INDEX  IF EXISTS crm_tasks_mevent_id',
+  'DROP INDEX IF EXISTS crm_tasks_mevent_id',
   'ALTER TABLE crm_tasks DROP COLUMN IF EXISTS microsoft_event_id',
 
 

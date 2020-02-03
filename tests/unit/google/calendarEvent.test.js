@@ -23,7 +23,7 @@ async function setup() {
   const { credential } = await createGoogleMessages(user, brand)
   googleCredential = credential
 
-  googleCalendar = await createGoogleCalendar(googleCredential.id)
+  googleCalendar = await createGoogleCalendar(googleCredential)
 
   Context.set({ user, brand, googleCredential, googleCalendar })
 }

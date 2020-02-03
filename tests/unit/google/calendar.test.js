@@ -26,7 +26,7 @@ async function setup() {
 }
 
 async function createLocal() {
-  return await createGoogleCalendar(googleCredential.id)
+  return await createGoogleCalendar(googleCredential)
 }
 
 async function updateLocal() {

@@ -62,7 +62,7 @@ async function createMicrosoftCalendarEvent(microsoftCredential) {
   const microsoftCalendar = await createMicrosoftCalendar(microsoftCredential)
 
   const id    = await MicrosoftCalendarEvent.createLocal(microsoftCalendar, events.remote_event_1)
-  const event = await MicrosoftCalendarEvent.get(id))
+  const event = await MicrosoftCalendarEvent.get(id)
 
   expect(event.id).to.be.equal(id)
   expect(event.microsoft_calendar).to.be.equal(microsoftCalendar.id)

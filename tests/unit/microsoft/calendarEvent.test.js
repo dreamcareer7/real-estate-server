@@ -23,7 +23,7 @@ async function setup() {
   const { credential } = await createMicrosoftMessages(user, brand)
   microsoftCredential = credential
 
-  microsoftCalendar = await createMicrosoftCalendar(microsoftCredential.id)
+  microsoftCalendar = await createMicrosoftCalendar(microsoftCredential)
 
   Context.set({ user, brand, microsoftCredential, microsoftCalendar })
 }
