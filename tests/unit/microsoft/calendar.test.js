@@ -7,27 +7,11 @@ const BrandHelper         = require('../brand/helper')
 const MicrosoftCredential = require('../../../lib/models/Microsoft/credential')
 const MicrosoftCalendar   = require('../../../lib/models/Microsoft/calendar')
 
-const { createMicrosoftMessages } = require('./helper')
+const { createMicrosoftMessages, createMicrosoftCalendar } = require('./helper')
+const calendars = require('./data/calendars.json')
 
 let user, brand, microsoftCredential
 
-const calendars = {
-  remote_cal_1: {
-    '@odata.context': 'https://graph.microsoft.com/v1.0/$metadata#me/calendars/$entity',
-    '@odata.id': 'https://graph.microsoft.com/v1.0/users(ddfcd489-628b-40d7-b48b-57002df800e5@1717622f-1d94-4d0c-9d74-709fad664b77)calendars(AAMkAGI2TGuLAAA=)',
-    'id': 'AAMkAGI2TGuLAAA=',
-    'name': 'Calendar',
-    'color': 'auto',
-    'changeKey': 'nfZyf7VcrEKLNoU37KWlkQAAA0x0+w==',
-    'canShare': true,
-    'canViewPrivateItems': true,
-    'canEdit': true,
-    'owner': {
-      'name': 'Samantha Booth',
-      'address': 'samanthab@adatum.onmicrosoft.com'
-    }
-  }
-}
 
 
 async function setup() {
@@ -41,17 +25,7 @@ async function setup() {
 }
 
 async function createLocal() {
-  const id  = await MicrosoftCalendar.createLocal(microsoftCredential.id, calendars.remote_cal_1)
-  const cal = await MicrosoftCalendar.get(id)
-
-  expect(cal.id).to.be.equal(id)
-  expect(cal.calendar_id).to.be.equal(calendars.remote_cal_1.id)
-  expect(cal.type).to.be.equal('microsoft_calendars')
-  expect(cal.microsoft_credential).to.be.equal(microsoftCredential.id)
-  expect(cal.name).to.be.equal(calendars.remote_cal_1.name)
-  expect(cal.to_sync).to.be.equal(false)
-
-  return cal
+  return await createMicrosoftCalendar(microsoftCredential.id)
 }
 
 async function getByRemoteCalendarIdFiled() {
