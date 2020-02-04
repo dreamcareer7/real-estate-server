@@ -90,6 +90,13 @@ async function getFailed() {
   }
 }
 
+async function getByGoogleIds() {
+  const allRecords = await getAll()
+  const records    = await CalendarIntegration.getByGoogleIds([allRecords[1].google_id])
+
+  return records
+}
+
 async function deleteMany() {
   const records = await bulkUpsert()
   
@@ -112,6 +119,7 @@ describe('Google', () => {
     it('should return several calendar integration records', getAll)
     it('should return a calendar integration record', get)
     it('should fail in get by id', getFailed)
+    it('should return several calendar integration records by google_ids', getByGoogleIds)
     it('should delete several calendar integration records', deleteMany)
   })
 })

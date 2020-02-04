@@ -3,7 +3,7 @@ const db = require('../lib/utils/db')
 const migrations = [
   'BEGIN',
 
-  'ALTER TABLE google_calendar_events ADD COLUMN IF NOT EXISTS origin TEXT',
+  'ALTER TABLE calendar_integration ADD COLUMN IF NOT EXISTS origin TEXT',
 
   'COMMIT'
 ]
