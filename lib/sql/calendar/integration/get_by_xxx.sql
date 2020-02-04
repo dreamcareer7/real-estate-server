@@ -1,1 +1,0 @@
-SELECT id FROM calendar_integration WHERE xxx = $1 AND yyy = $2

@@ -34,8 +34,6 @@ declare interface PaginationOptions {
     start?: number;
     limit?: number;
     order?: string;
-    google_event_ids?: UUID[]
-    microsoft_event_ids?: UUID[]
 }
 
 declare interface IIdCollectionResponse {
