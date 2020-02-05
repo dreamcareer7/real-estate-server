@@ -46,7 +46,6 @@ const run = async () => {
       refresh_token: row.refresh_token
     }
     const { aToken, rToken } = await encryptTokens(tokens)
-    console.log('xxxx a =>', aToken, '\nxxxx r =>', rToken)
 
     await conn.query('UPDATE microsoft_credentials SET access_token = $1, refresh_token = $2 WHERE id = $3', [aToken, rToken, row.id ])
   }
@@ -60,7 +59,6 @@ const run = async () => {
       refresh_token: row.refresh_token
     }
     const { aToken, rToken } = await encryptTokens(tokens)
-    console.log('\nxxxx a =>', aToken, '\nxxxx r =>', rToken)
 
     await conn.query('UPDATE google_credentials SET access_token = $1, refresh_token = $2 WHERE id = $3', [aToken, rToken, row.id ])
   }
