@@ -186,5 +186,8 @@ When a user wants to update email IsRead flag, two conditions should be met.
 ### Get an outlook campaign [GET /emails/:id]
 <!-- include(tests/email/getOulookCampaign.md) -->
 
-### Get an outlook campaign [PUT /emails/google/:credentialId/messages/:messageId}]
+### Update message's IsRead status  [PUT /emails/google/:credentialId/messages/:messageId}]
 <!-- include(tests/email/updateIsRead.md) -->
+
+### Batch update some messages IsRead status [PUT /emails/google/:credentialId/messages}]
+<!-- include(tests/email/batchUpdateIsRead.md) -->

@@ -151,7 +151,7 @@ async function updateIsRead() {
   const message = await GoogleMessage.getAsThreadMember(messages[0].google_credential, messages[0].message_id)
   expect(message.is_read).to.be.equal(false)
 
-  await GoogleMessage.updateIsRead(messages[0].id, true)
+  await GoogleMessage.updateIsRead([messages[0].id], true)
   
   const updated = await GoogleMessage.getAsThreadMember(messages[0].google_credential, messages[0].message_id)
   expect(updated.is_read).to.be.equal(true)
@@ -160,7 +160,7 @@ async function updateIsRead() {
 async function updateReadStatus() {
   const messages = await create()
 
-  await GoogleMessage.updateReadStatus(messages[0].google_credential, messages[0].id, true)
+  await GoogleMessage.updateReadStatus(messages[0].google_credential, [messages[0].id], true)
   
   const updated = await GoogleMessage.getAsThreadMember(messages[0].google_credential, messages[0].message_id)
   expect(updated.is_read).to.be.equal(true)
