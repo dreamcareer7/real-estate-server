@@ -110,7 +110,7 @@ async function downloadAttachmentFailed() {
   try {
     await MicrosoftMessage.downloadAttachment(bad_id, bad_id, bad_id)
   } catch(ex) {
-    expect(ex.message).to.be.equal(`Microsoft-Credential ${bad_id} not found`)
+    expect(ex.message).to.be.equal(`MicrosoftMessage ${bad_id} in credential ${bad_id} not found.`)
   }
 
   try {
@@ -126,20 +126,20 @@ async function updateIsRead() {
   const message = await MicrosoftMessage.getAsThreadMember(messages[0].microsoft_credential, messages[0].message_id)
   expect(message.is_read).to.be.equal(false)
 
-  await MicrosoftMessage.updateIsRead(messages[0].id, true)
+  await MicrosoftMessage.updateIsRead([messages[0].id], true)
   
   const updated = await MicrosoftMessage.getAsThreadMember(messages[0].microsoft_credential, messages[0].message_id)
   expect(updated.is_read).to.be.equal(true)
 }
 
-// async function updateReadStatus() {
-//   const messages = await create()
+async function updateReadStatus() {
+  const messages = await create()
 
-//   await MicrosoftMessage.updateReadStatus(messages[0].microsoft_credential, messages[0].id, true)
+  await MicrosoftMessage.updateReadStatus(messages[0].microsoft_credential, [messages[0].id], true)
   
-//   const updated = await MicrosoftMessage.getAsThreadMember(messages[0].microsoft_credential, messages[0].message_id)
-//   expect(updated.is_read).to.be.equal(true)
-// }
+  const updated = await MicrosoftMessage.getAsThreadMember(messages[0].microsoft_credential, messages[0].message_id)
+  expect(updated.is_read).to.be.equal(true)
+}
 
 
 describe('Microsoft', () => {
@@ -156,6 +156,6 @@ describe('Microsoft', () => {
     it('should delete microsoft-messages by internet_messages_ids', deleteByInternetMessageIds)
     it('should handle failure of downloadAttachment', downloadAttachmentFailed)
     it('should update message is_read', updateIsRead)
-    // it('should update message read status', updateReadStatus)
+    it('should update message read status', updateReadStatus)
   })
 })
