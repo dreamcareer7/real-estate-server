@@ -110,7 +110,7 @@ async function downloadAttachmentFailed() {
   try {
     await MicrosoftMessage.downloadAttachment(bad_id, bad_id, bad_id)
   } catch(ex) {
-    expect(ex.message).to.be.equal(`Microsoft-Credential ${bad_id} not found`)
+    expect(ex.message).to.be.equal(`MicrosoftMessage ${bad_id} in credential ${bad_id} not found.`)
   }
 
   try {
