@@ -1,17 +1,21 @@
-const uuid       = require('uuid')
 const { expect } = require('chai')
 const { createContext } = require('../helper')
 const BrandHelper       = require('../brand/helper')
 
 const Context = require('../../../lib/models/Context')
 const User    = require('../../../lib/models/User')
+const CrmTask = require('../../../lib/models/CRM/Task')
+const Contact = require('../../../lib/models/Contact')
 const CalendarIntegration = require('../../../lib/models/Calendar/integration')
 
 const { createGoogleMessages, createGoogleCalendarEvent }       = require('../google/helper')
 const { createMicrosoftMessages, createMicrosoftCalendarEvent } = require('../microsoft/helper')
 
-let user, brand, googleEvent, microsoftEvent
+const { attributes } = require('../contact/helper')
 
+/** @type {RequireProp<ITaskInput, 'brand' | 'created_by'>} */
+let base_task
+let user, brand, googleEvent, microsoftEvent
 
 // const mapping = {
 //   'object_types': ['crm_task', 'deal_context', 'contact_attribute', 'contact'],
@@ -27,6 +31,37 @@ let integration_records = []
 
 
 
+async function createContact() {
+  return Contact.create([{
+    user: user.id,
+    attributes: attributes({
+      first_name: 'John',
+      last_name: 'Doe',
+      email: 'john@doe.com',
+    }),
+  }], user.id, brand.id)
+}
+
+async function createTwoTasks() {
+  const [contact] = await createContact()
+  
+  return CrmTask.createMany([{
+    ...base_task,
+    associations: [{
+      association_type: 'contact',
+      contact
+    }],
+    reminders: [{
+      is_relative: false,
+      timestamp: base_task.due_date - 3600
+    }]
+  }, {
+    ...base_task,
+    due_date: Date.now() / 1000 + 86400,
+    assignees: []
+  }])
+}
+
 async function setup() {
   user  = await User.getByEmail('test@rechat.com')
   brand = await BrandHelper.create({ roles: { Admin: [user.id] } })
@@ -37,34 +72,80 @@ async function setup() {
   googleEvent    = await createGoogleCalendarEvent(googleCredential)
   microsoftEvent = await createMicrosoftCalendarEvent(microsoftCredential)
 
+  base_task = {
+    created_by: user.id,
+    brand: brand.id,
+    assignees: [user.id],
+    due_date: Date.now() / 1000,
+    title: 'Test assignment',
+    task_type: 'Call',
+    status: 'PENDING'
+  }
+
+  const result = await createTwoTasks()
+
   integration_records = [
     {
-      rechat_id: uuid.v4(),
       google_id: googleEvent.id,
       microsoft_id: null,
+      crm_task: result[0],
+      contact: null,
+      contact_attribute: null,
+      deal_context: null,
       object_type: 'crm_task',
       event_type: 'Other',
       origin: 'google'
     },
     {
-      rechat_id: uuid.v4(),
       google_id: null,
       microsoft_id: microsoftEvent.id,
+      crm_task: result[1],
+      contact: null,
+      contact_attribute: null,
+      deal_context: null,
       object_type: 'crm_task',
       event_type: 'Other',
-      origin: 'microsoft'
+      origin: 'google'
     }
   ]
 
   Context.set({ user, brand, googleEvent, microsoftEvent })
 }
 
-async function bulkUpsert() {
-  return await CalendarIntegration.bulkUpsert(integration_records)
+async function insert() {
+  return await CalendarIntegration.insert(integration_records)
+  /*
+    [
+      {
+        id: '1bc397e1-bbe2-41ff-9ec1-8c651dd18dc9',
+        google_id: 'b796f2c3-6816-4e90-94a7-07b38e0c4711',
+        microsoft_id: null,
+        crm_task: '2f656cb5-e9bb-4c35-aabb-e1360b82272a',
+        contact: null,
+        contact_attribute: null,
+        deal_context: null,
+        object_type: 'crm_task',
+        event_type: 'Other',
+        origin: 'google'
+      },
+      {
+        id: '774a9bdb-7b44-4b5f-bb6a-91e695ae6ece',
+        google_id: null,
+        microsoft_id: '80c439d8-8347-4721-a745-2906d436d1af',
+        crm_task: 'd1282324-c16c-4dfb-8d38-293abf736e77',
+        contact: null,
+        contact_attribute: null,
+        deal_context: null,
+        object_type: 'crm_task',
+        event_type: 'Other',
+        origin: 'google'
+      }
+    ]
+  */
 }
 
 async function getAll() {
-  const result = await bulkUpsert()
+  const result = await insert()
   const ids = result.map(r => r.id)
   const records = await CalendarIntegration.getAll(ids)
 
@@ -76,7 +157,7 @@ async function getAll() {
 }
 
 async function get() {
-  const result = await bulkUpsert()
+  const result = await insert()
   const record = await CalendarIntegration.get(result[0].id)
 
   return record
@@ -98,7 +179,7 @@ async function getByGoogleIds() {
 }
 
 async function deleteMany() {
-  const records = await bulkUpsert()
+  const records = await insert()
   
   await CalendarIntegration.deleteMany([records[0].id])
 
@@ -115,7 +196,7 @@ describe('Google', () => {
     createContext()
     beforeEach(setup)
 
-    it('should create several calendar integration records', bulkUpsert)
+    it('should create several calendar integration records', insert)
     it('should return several calendar integration records', getAll)
     it('should return a calendar integration record', get)
     it('should fail in get by id', getFailed)

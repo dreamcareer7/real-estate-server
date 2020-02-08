@@ -12,12 +12,14 @@ const migrations = [
   'ALTER TABLE calendar_integration ADD COLUMN IF NOT EXISTS contact_attribute  UUID NULL REFERENCES contacts_attributes(id)',
   'ALTER TABLE calendar_integration ADD COLUMN IF NOT EXISTS deal_context       UUID NULL REFERENCES deal_context(id)',
 
-  `CREATE TYPE public.calendar_integration_origin AS ENUM ('google', 'microsoft', 'rechat')`,
-  'ALTER TABLE calendar_integration ALTER COLUMN origin TYPE public.calendar_integration_origin NOT NULL',
+  `CREATE TYPE public.calendar_integration_origin
+    AS ENUM ('google', 'microsoft', 'rechat')`,
+
+  'ALTER TABLE calendar_integration DROP COLUMN IF EXISTS origin',
+  'ALTER TABLE calendar_integration ADD COLUMN origin public.calendar_integration_origin NOT NULL',
 
   'COMMIT'
 ]
-
 
 const run = async () => {
   const { conn } = await db.conn.promise()
