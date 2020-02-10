@@ -32,7 +32,7 @@ async function createGoogleMessages(user, brand) {
     googleMessages.push(generateGMesssageRecord(credential.id, message))
   }
 
-  const createdMessages = await GoogleMessage.create(googleMessages)
+  const createdMessages = await GoogleMessage.create(googleMessages, credential.id)
 
   return {
     createdMessages,

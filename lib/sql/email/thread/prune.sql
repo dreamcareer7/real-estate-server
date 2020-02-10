@@ -34,3 +34,5 @@ FROM
   to_delete
 WHERE
   email_threads.id = to_delete.thread_key
+RETURNING
+  email_threads.id

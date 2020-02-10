@@ -31,7 +31,7 @@ async function createMicrosoftMessages(user, brand) {
     microsoftMessages.push(generateMMesssageRecord(credential, message))
   }
 
-  const createdMessages = await MicrosoftMessage.create(microsoftMessages)
+  const createdMessages = await MicrosoftMessage.create(microsoftMessages, credential.id)
 
   return {
     createdMessages,

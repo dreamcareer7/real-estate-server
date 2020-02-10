@@ -151,7 +151,7 @@ async function updateIsRead() {
   const message = await GoogleMessage.getAsThreadMember(messages[0].google_credential, messages[0].message_id)
   expect(message.is_read).to.be.equal(false)
 
-  await GoogleMessage.updateIsRead([messages[0].id], true)
+  await GoogleMessage.updateIsRead([messages[0].id], true, messages[0].google_credential)
   
   const updated = await GoogleMessage.getAsThreadMember(messages[0].google_credential, messages[0].message_id)
   expect(updated.is_read).to.be.equal(true)

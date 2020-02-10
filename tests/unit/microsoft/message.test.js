@@ -126,7 +126,7 @@ async function updateIsRead() {
   const message = await MicrosoftMessage.getAsThreadMember(messages[0].microsoft_credential, messages[0].message_id)
   expect(message.is_read).to.be.equal(false)
 
-  await MicrosoftMessage.updateIsRead([messages[0].id], true)
+  await MicrosoftMessage.updateIsRead([messages[0].id], true, messages[0].microsoft_credential)
   
   const updated = await MicrosoftMessage.getAsThreadMember(messages[0].microsoft_credential, messages[0].message_id)
   expect(updated.is_read).to.be.equal(true)
