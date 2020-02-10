@@ -178,6 +178,34 @@ async function getByGoogleIds() {
   return records
 }
 
+async function getByCrmTask() {
+  const allRecords = await getAll()
+  const records    = await CalendarIntegration.getByCrmTask([allRecords[1].crm_task])
+
+  return records
+}
+
+async function getByContact() {
+  const allRecords = await getAll()
+  const records    = await CalendarIntegration.getByCrmTask([allRecords[1].contact])
+
+  return records
+}
+
+async function getByContactAttribute() {
+  const allRecords = await getAll()
+  const records    = await CalendarIntegration.getByCrmTask([allRecords[1].contact_attribute])
+
+  return records
+}
+
+async function getByDealContext() {
+  const allRecords = await getAll()
+  const records    = await CalendarIntegration.getByCrmTask([allRecords[1].deal_context])
+
+  return records
+}
+
 async function deleteMany() {
   const records = await insert()
   
@@ -201,6 +229,10 @@ describe('Google', () => {
     it('should return a calendar integration record', get)
     it('should fail in get by id', getFailed)
     it('should return several calendar integration records by google_ids', getByGoogleIds)
+    it('should return a calendar integration records by crm_task', getByCrmTask)
+    it('should return a calendar integration records by contact', getByContact)
+    it('should return a calendar integration records by contact_attribute', getByContactAttribute)
+    it('should return a calendar integration records by deal_context', getByDealContext)
     it('should delete several calendar integration records', deleteMany)
   })
 })

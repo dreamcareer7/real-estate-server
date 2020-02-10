@@ -7,10 +7,11 @@ const Notification = require('../../lib/models/Notification')
 const CrmTaskWorker = require('../../lib/models/CRM/Task/worker/notification')
 const CalendarWorker = require('../../lib/models/Calendar/worker/notification')
 const EmailCampaign = require('../../lib/models/Email/campaign')
-// const ShowingsWorker = require('../../lib/models/Showings/worker')
 const GoogleWorker = require('../../lib/models/Google/workers')
 const MicrosoftWorker = require('../../lib/models/Microsoft/workers')
 const Task = require('../../lib/models/Task')
+// const calendarIntegrations = require('../../lib/models/Calendar/integration/workers')
+// const ShowingsWorker = require('../../lib/models/Showings/worker')
 
 let i = 1
 
@@ -150,5 +151,15 @@ poll({
   fn: Template.updateThumbnails,
   name: 'Template.updateThumbnails'
 })
+
+// poll({
+//   fn: calendarIntegrations.GCalendarWorker.syncDue,
+//   name: 'calendarIntegrations.GCalendarWorker.syncDue'
+// })
+
+// poll({
+//   fn: calendarIntegrations.MCalendarWorker.syncDue,
+//   name: 'calendarIntegrations.MCalendarWorker.syncDue'
+// })
 
 module.exports = shutdown
