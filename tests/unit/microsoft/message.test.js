@@ -6,6 +6,7 @@ const Context             = require('../../../lib/models/Context')
 const User                = require('../../../lib/models/User')
 const BrandHelper         = require('../brand/helper')
 const MicrosoftMessage    = require('../../../lib/models/Microsoft/message')
+const MicrosoftCredential    = require('../../../lib/models/Microsoft/credential')
 
 const { createMicrosoftMessages } = require('./helper')
 
@@ -127,16 +128,17 @@ async function updateIsRead() {
   expect(message.is_read).to.be.equal(false)
 
   await MicrosoftMessage.updateIsRead([messages[0].id], true, messages[0].microsoft_credential)
-  
+
   const updated = await MicrosoftMessage.getAsThreadMember(messages[0].microsoft_credential, messages[0].message_id)
   expect(updated.is_read).to.be.equal(true)
 }
 
 async function updateReadStatus() {
   const messages = await create()
+  const credential = await MicrosoftCredential.get(messages[0].microsoft_credential)
 
-  await MicrosoftMessage.updateReadStatus(messages[0].microsoft_credential, [messages[0].id], true)
-  
+  await MicrosoftMessage.updateReadStatus(credential, [messages[0].id], true)
+
   const updated = await MicrosoftMessage.getAsThreadMember(messages[0].microsoft_credential, messages[0].message_id)
   expect(updated.is_read).to.be.equal(true)
 }
