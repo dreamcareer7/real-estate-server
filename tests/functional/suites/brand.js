@@ -457,6 +457,44 @@ const getUserRoles = cb => {
     .expectStatus(200)
 }
 
+const createSubscription = cb => {
+  const subscription = {
+    plan: 'cbdemo_hustle',
+    user: results.authorize.token.data.id
+  }
+
+  return frisby.create('create a subscription')
+    .post(`/brands/${brand_id}/subscriptions`, subscription)
+    .after(cb)
+    .expectStatus(200)
+}
+
+const updateSubscription = cb => {
+  const created = results.brand.createSubscription.data
+
+  const data = {
+    content: {
+      subscription: {
+        id: created.chargebee_id
+      }
+    }
+  }
+
+  return frisby.create('update a subscription (webhook)')
+    .post('/brands/chargebee/webhook', data)
+    .after(cb)
+    .expectStatus(200)
+}
+
+const checkoutSubscription = cb => {
+  const { id } = results.brand.createSubscription.data
+
+  return frisby.create('get checkout page')
+    .get(`/brands/${brand_id}/subscriptions/${id}/checkout`)
+    .after(cb)
+    .expectStatus(200)
+}
+
 const removeBrand = cb => {
   return frisby.create('delete a brand')
     .delete(`/brands/${brand_id}`)
@@ -570,6 +608,10 @@ module.exports = {
   updateBrandSettings,
   updateUserSettings,
   getUserRoles,
+
+  createSubscription,
+  updateSubscription,
+  checkoutSubscription,
 
   removeBrand
 }
