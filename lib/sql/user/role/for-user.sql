@@ -15,6 +15,7 @@ WITH r AS (
           AND   bs.brand IN (
             SELECT * FROM brand_parents(brand)
           )
+          AND bs.status IN('in_trial', 'active')
         )
       )
     ), NULL) as acl,
