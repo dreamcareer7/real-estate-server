@@ -42,7 +42,7 @@ const create = (cb) => {
           user: results.authorize.token.data.id
         }
       ],
-      acl: ['Admin']
+      acl: ['Admin', 'Marketing', 'Deals', 'CRM']
     }
   ]
 
@@ -457,9 +457,24 @@ const getUserRoles = cb => {
     .expectStatus(200)
 }
 
+const createBillingPlan = (cb) => {
+  return frisby.create('Create a billing plan')
+    .post('/jobs', {
+      name: 'BillingPlan.create',
+      data: {
+        acl: ['Admin', 'Marketing'],
+        chargebee_id: 'cbdemo_hustle'
+      }
+    })
+    .after(cb)
+    .expectStatus(200)
+}
+
 const createSubscription = cb => {
+  const plan = results.brand.createBillingPlan
+
   const subscription = {
-    plan: 'cbdemo_hustle',
+    plan: plan.id,
     user: results.authorize.token.data.id
   }
 
@@ -607,11 +622,13 @@ module.exports = {
 
   updateBrandSettings,
   updateUserSettings,
-  getUserRoles,
 
+  createBillingPlan,
   createSubscription,
   updateSubscription,
   checkoutSubscription,
+
+  getUserRoles,
 
   removeBrand
 }

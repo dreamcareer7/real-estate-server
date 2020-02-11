@@ -26,6 +26,15 @@ const migrations = [
     chargebee_object JSONB NOT NULL
   )`,
 
+  `CREATE TABLE billing_plans (
+    id               uuid primary key NOT NULL DEFAULT uuid_generate_v4(),
+    created_at       timestamp without time zone NOT NULL DEFAULT clock_timestamp(),
+    updated_at       timestamp without time zone NOT NULL DEFAULT clock_timestamp(),
+    deleted_at       timestamp without time zone,
+    acl              text[],
+    chargebee_id     TEXT UNIQUE
+  )`,
+
   `CREATE TABLE brands_subscriptions (
     id           uuid primary key NOT NULL DEFAULT uuid_generate_v4(),
     created_at       timestamp without time zone NOT NULL DEFAULT clock_timestamp(),
@@ -38,7 +47,7 @@ const migrations = [
     brand        uuid NOT NULL REFERENCES brands(id),
    "user"        uuid NOT NULL REFERENCES users(id),
     customer     uuid NOT NULL REFERENCES brands_customers(id),
-    plan         TEXT NOT NULL,
+    plan         uuid NOT NULL REFERENCES billing_plans(id),
     status       subscription_status NOT NULL,
     chargebee_id TEXT NOT NULL UNIQUE,
     chargebee_object JSONB NOT NULL,

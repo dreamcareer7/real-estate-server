@@ -7,7 +7,7 @@ const GoogleCredential     = require('../../lib/models/Google/credential')
 const GoogleSyncHistory    = require('../../lib/models/Google/sync_history')
 const MicrosoftCredential  = require('../../lib/models/Microsoft/credential')
 const MicrosoftSyncHistory = require('../../lib/models/Microsoft/sync_history')
-
+const BillingPlan = require('../../lib/models/BillingPlan')
 
 const saveBrokerwolfSettings = (job, cb) => {
   BrokerWolf.Settings.save(job.data).nodeify(cb)
@@ -77,6 +77,10 @@ const updateTemplateThumbnails = (job, cb) => {
   Template.updateThumbnails().nodeify(cb)
 }
 
+const createBillingPlan = (job, cb) => {
+  BillingPlan.create(job.data).nodeify(cb)
+}
+
 const list = {
   socket_emit: (job, cb) => cb(),
   socket_join: (job, cb) => cb(),
@@ -103,7 +107,8 @@ const list = {
   'GoogleSyncHistory.addSyncHistory': addGoogleSyncHistory,
   'MicrosoftCredential.create': CreateMicrosoftCredential,
   'MicrosoftSyncHistory.addSyncHistory': addMicrosoftSyncHistory,
-  'Template.updateThumbnails': updateTemplateThumbnails
+  'Template.updateThumbnails': updateTemplateThumbnails,
+  'BillingPlan.create': createBillingPlan
 }
 
 const queues = {}
