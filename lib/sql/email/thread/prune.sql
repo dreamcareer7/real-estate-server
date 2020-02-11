@@ -29,6 +29,7 @@ WITH to_delete AS (
 UPDATE
   email_threads
 SET
+  message_count = 0,
   deleted_at = now()
 FROM
   to_delete
