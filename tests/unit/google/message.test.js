@@ -118,12 +118,9 @@ async function getRemoteMessage() {
   const messages = await create()
 
   const gmailMessage = await GoogleMessage.getRemoteMessage(messages[0].google_credential, '16f80a53a53bd334')
-
-  expect(gmailMessage.origin).to.be.equal('gmail')
-  expect(gmailMessage.owner).to.be.equal(messages[0].google_credential)
+  expect(gmailMessage.type).to.be.equal('google_message')
+  expect(gmailMessage.google_credential).to.be.equal(messages[0].google_credential)
   expect(gmailMessage.has_attachments).to.be.equal(true)
-  expect(gmailMessage.attachments.length).to.be.equal(2)
-  expect(gmailMessage.html_body).to.be.equal('This is the email body')
 
   return gmailMessage
 }
