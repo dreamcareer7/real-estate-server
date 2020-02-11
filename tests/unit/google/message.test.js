@@ -67,23 +67,6 @@ async function getByMessageIdFailed() {
   }
 }
 
-async function getAsThreadMember() {
-  const messages = await create()
-  const message  = await GoogleMessage.getAsThreadMember(messages[0].google_credential, messages[0].message_id)
-
-  expect(message.origin).to.be.equal('gmail')
-  expect(message.owner).to.be.equal(messages[0].google_credential)
-  expect(message.message_id).to.be.equal(messages[0].message_id)
-  expect(message.thread_key).to.be.equal(messages[0].thread_key)
-  expect(message.has_attachments).to.be.equal(true)
-}
-
-async function getAsThreadMemberFailed() {
-  const message  = await GoogleMessage.getAsThreadMember(user.id, user.id)
-
-  expect(message).to.be.equal(null)
-}
-
 async function getGCredentialMessagesNum() {
   const googleMessages = await create()
 
@@ -148,12 +131,12 @@ async function getRemoteMessage() {
 async function updateIsRead() {
   const messages = await create()
 
-  const message = await GoogleMessage.getAsThreadMember(messages[0].google_credential, messages[0].message_id)
+  const message = await GoogleMessage.get(messages[0].id)
   expect(message.is_read).to.be.equal(false)
 
   await GoogleMessage.updateIsRead([messages[0].id], true, messages[0].google_credential)
   
-  const updated = await GoogleMessage.getAsThreadMember(messages[0].google_credential, messages[0].message_id)
+  const updated = await GoogleMessage.get(messages[0].id)
   expect(updated.is_read).to.be.equal(true)
 }
 
@@ -162,7 +145,7 @@ async function updateReadStatus() {
 
   await GoogleMessage.updateReadStatus(messages[0].google_credential, [messages[0].id], true)
   
-  const updated = await GoogleMessage.getAsThreadMember(messages[0].google_credential, messages[0].message_id)
+  const updated = await GoogleMessage.get(messages[0].id)
   expect(updated.is_read).to.be.equal(true)
 }
 
@@ -191,8 +174,6 @@ describe('Google', () => {
     it('should create some google-messages', create)
     it('should return google-message by messages_id', getByMessageId)
     it('should handle failure of google-contact get by messages_id', getByMessageIdFailed)
-    it('should return google-message as a thread message', getAsThreadMember)
-    it('should handle failure of get as a thread message', getAsThreadMemberFailed)
     it('should delete google-messages by messages_ids', deleteByMessageIds)
     it('should return number of messages of specific credential', getGCredentialMessagesNum)
     it('should handle failure of downloadAttachment', downloadAttachmentFailed)
