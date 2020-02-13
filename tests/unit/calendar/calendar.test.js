@@ -3,6 +3,7 @@ const moment = require('moment-timezone')
 
 const { createContext, handleJobs } = require('../helper')
 const Calendar = require('../../../lib/models/Calendar')
+const getAsICal = require('../../../lib/models/Calendar/ical')
 const Agent = require('../../../lib/models/Agent')
 const Contact = require('../../../lib/models/Contact')
 const Context = require('../../../lib/models/Context')
@@ -237,7 +238,7 @@ async function testCorrectTimezone() {
   const high = moment().add(1, 'year').unix(),
     low = moment().add(-1, 'year').unix()
 
-  await Calendar.getAsICal({}, {
+  await getAsICal([{ brand: brand.id, users: [user.id] }], {
     low,
     high
   }, user.timezone)
@@ -379,8 +380,6 @@ async function testCampaignToAgents() {
     due_at: new Date().toISOString(),
     html: '<html></html>',
     headers: {},
-    google_credential: null,
-    microsoft_credential: null,
     attachments: []
   }])
 
@@ -424,8 +423,6 @@ async function testCampaignToContacts() {
     due_at: new Date().toISOString(),
     html: '<html></html>',
     headers: {},
-    google_credential: null,
-    microsoft_credential: null,
     attachments: []
   }])
 
