@@ -29,7 +29,7 @@ const getForBrand = cb => {
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
-      data: [template]
+      data: [{template}]
     })
 }
 
