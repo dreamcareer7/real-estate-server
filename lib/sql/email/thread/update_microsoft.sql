@@ -35,7 +35,7 @@ INSERT INTO email_threads (
     thread_recipients.recipients AS recipients,
     count(*) OVER (w) AS message_count,
     SUM(has_attachments::int) OVER (w) > 0 AS has_attachments,
-    SUM(is_read::int) OVER (w) > 0 AS is_read
+    AVG(is_read::int) OVER (w) = 1 AS is_read
   FROM
     microsoft_messages
     JOIN microsoft_credentials

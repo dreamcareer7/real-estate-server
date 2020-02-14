@@ -102,7 +102,7 @@ async function getByIdFailed() {
 
 async function updateTokens() {
   const createdCredential = await create()
-  const TS = Math.round(new Date().getTime() / 1000)
+  const TS = Math.round(new Date().getTime())
 
   const tokens = {
     access_token: 'new-access-token',
@@ -135,7 +135,7 @@ async function updateAccesshToken() {
 
   const new_access_token = 'new_access_token'
 
-  await GoogleCredential.updateAccesshToken(createdCredential.id, new_access_token)
+  await GoogleCredential.updateAccesshToken(createdCredential.id, new_access_token, new Date().getTime())
 
   const updatedCredential = await GoogleCredential.get(createdCredential.id)
 
