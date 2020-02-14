@@ -178,30 +178,30 @@ async function getByGoogleIds() {
   return records
 }
 
-async function getByCrmTask() {
+async function getByCrmTasks() {
   const allRecords = await getAll()
-  const records    = await CalendarIntegration.getByCrmTask([allRecords[1].crm_task])
+  const records    = await CalendarIntegration.getByCrmTasks([allRecords[1].crm_task])
 
   return records
 }
 
-async function getByContact() {
+async function getByContacts() {
   const allRecords = await getAll()
-  const records    = await CalendarIntegration.getByCrmTask([allRecords[1].contact])
+  const records    = await CalendarIntegration.getByContacts([allRecords[1].contact])
 
   return records
 }
 
-async function getByContactAttribute() {
+async function getByContactAttributes() {
   const allRecords = await getAll()
-  const records    = await CalendarIntegration.getByCrmTask([allRecords[1].contact_attribute])
+  const records    = await CalendarIntegration.getByContactAttributes([allRecords[1].contact_attribute])
 
   return records
 }
 
-async function getByDealContext() {
+async function getByDealContexts() {
   const allRecords = await getAll()
-  const records    = await CalendarIntegration.getByCrmTask([allRecords[1].deal_context])
+  const records    = await CalendarIntegration.getByDealContexts([allRecords[1].deal_context])
 
   return records
 }
@@ -229,10 +229,10 @@ describe('Google', () => {
     it('should return a calendar integration record', get)
     it('should fail in get by id', getFailed)
     it('should return several calendar integration records by google_ids', getByGoogleIds)
-    it('should return a calendar integration records by crm_task', getByCrmTask)
-    it('should return a calendar integration records by contact', getByContact)
-    it('should return a calendar integration records by contact_attribute', getByContactAttribute)
-    it('should return a calendar integration records by deal_context', getByDealContext)
+    it('should return a calendar integration records by crm_task', getByCrmTasks)
+    it('should return a calendar integration records by contact', getByContacts)
+    it('should return a calendar integration records by contact_attribute', getByContactAttributes)
+    it('should return a calendar integration records by deal_context', getByDealContexts)
     it('should delete several calendar integration records', deleteMany)
   })
 })

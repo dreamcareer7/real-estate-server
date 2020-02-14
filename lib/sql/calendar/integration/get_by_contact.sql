@@ -1,1 +1,0 @@
-SELECT id FROM calendar_integration WHERE contact = $1
