@@ -1,20 +1,8 @@
 const db = require('../lib/utils/db')
 const KMS = require('../lib/models/KMS')
 
-const migrations = [
-  'BEGIN',
+const migrations = []
 
-  'ALTER TABLE google_credentials ALTER COLUMN access_token  TYPE TEXT',
-  'ALTER TABLE google_credentials ALTER COLUMN refresh_token TYPE TEXT',
-
-  'ALTER TABLE google_credentials DROP CONSTRAINT IF EXISTS google_credentials_access_token_key',
-  'ALTER TABLE google_credentials DROP CONSTRAINT IF EXISTS google_credentials_refresh_token_key',
-
-  'ALTER TABLE microsoft_credentials DROP CONSTRAINT IF EXISTS microsoft_credentials_access_token_key',
-  'ALTER TABLE microsoft_credentials DROP CONSTRAINT IF EXISTS microsoft_credentials_refresh_token_key',
-
-  'COMMIT'
-]
 
 const encryptTokens = async (tokens) => {
   const promises = []
