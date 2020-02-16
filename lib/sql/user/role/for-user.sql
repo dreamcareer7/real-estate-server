@@ -10,12 +10,13 @@ WITH r AS (
         (
           SELECT UNNEST(billing_plans.acl)
           FROM brands_subscriptions bs
-          JOIN billing_plans ON bs.plan = billing_plans.id
+          JOIN chargebee_subscriptions cs ON bs.chargebee = cs.id
+          JOIN billing_plans ON cs.plan = billing_plans.id
           WHERE bs.user = $1
           AND   bs.brand IN (
             SELECT * FROM brand_parents(brand)
           )
-          AND bs.status IN('in_trial', 'active')
+          AND cs.status IN('in_trial', 'active')
         )
       )
     ), NULL) as acl,

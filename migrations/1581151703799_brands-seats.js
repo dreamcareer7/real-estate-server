@@ -21,7 +21,7 @@ const migrations = [
     updated_within   text NOT NULL,
     deleted_within   text,
     brand            uuid NOT NULL UNIQUE REFERENCES brands(id),
-   "user"           uuid NOT NULL UNIQUE REFERENCES users(id),
+   "user"            uuid NOT NULL UNIQUE REFERENCES users(id),
     chargebee_id     TEXT NOT NULL UNIQUE,
     chargebee_object JSONB NOT NULL
   )`,
@@ -35,24 +35,37 @@ const migrations = [
     chargebee_id     TEXT UNIQUE
   )`,
 
-  `CREATE TABLE brands_subscriptions (
-    id           uuid primary key NOT NULL DEFAULT uuid_generate_v4(),
+  `CREATE TABLE chargebee_subscriptions (
+    id               uuid primary key NOT NULL DEFAULT uuid_generate_v4(),
     created_at       timestamp without time zone NOT NULL DEFAULT clock_timestamp(),
-    updated_at       timestamp without time zone NOT NULL DEFAULT clock_timestamp(),
+    updated_at       timestamp without time zone,
     deleted_at       timestamp without time zone,
     created_within   text NOT NULL,
-    updated_within   text NOT NULL,
+    updated_within   text,
     deleted_within   text,
-    created_by       uuid NOT NULL REFERENCES users(id),
-    brand        uuid NOT NULL REFERENCES brands(id),
-   "user"        uuid NOT NULL REFERENCES users(id),
-    customer     uuid NOT NULL REFERENCES brands_customers(id),
-    plan         uuid NOT NULL REFERENCES billing_plans(id),
-    status       subscription_status NOT NULL,
-    chargebee_id TEXT NOT NULL UNIQUE,
+    plan             uuid NOT NULL REFERENCES billing_plans(id),
+    status           subscription_status NOT NULL,
+    customer         uuid NOT NULL REFERENCES brands_customers(id),
+    chargebee_id     TEXT NOT NULL UNIQUE,
     chargebee_object JSONB NOT NULL,
 
-    UNIQUE(brand, "user", customer, plan)
+    UNIQUE(customer, plan)
+  )`,
+
+  `CREATE TABLE brands_subscriptions (
+    id               uuid primary key NOT NULL DEFAULT uuid_generate_v4(),
+    created_at       timestamp without time zone NOT NULL DEFAULT clock_timestamp(),
+    updated_at       timestamp without time zone,
+    deleted_at       timestamp without time zone,
+    created_within   text NOT NULL,
+    updated_within   text,
+    deleted_within   text,
+    created_by       uuid NOT NULL REFERENCES users(id),
+    brand            uuid NOT NULL REFERENCES brands(id),
+   "user"            uuid NOT NULL REFERENCES users(id),
+    chargebee        uuid NOT NULL REFERENCES chargebee_subscriptions(id),
+
+    UNIQUE(brand, "user", chargebee)
   )`,
 
   'COMMIT'

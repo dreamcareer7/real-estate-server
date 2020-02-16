@@ -505,9 +505,11 @@ const checkoutSubscription = cb => {
   const { id } = results.brand.createSubscription.data
 
   return frisby.create('get checkout page')
-    .get(`/brands/${brand_id}/subscriptions/${id}/checkout`)
+    .get(`/brands/${brand_id}/subscriptions/${id}/checkout`, {
+      followRedirect: false
+    })
     .after(cb)
-//     .expectStatus(200)
+    .expectStatus(302)
 }
 
 const removeBrand = cb => {
