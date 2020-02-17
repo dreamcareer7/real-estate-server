@@ -175,7 +175,7 @@ async function create() {
     }
   }
   
-  const {id}  = await GoogleCalendarEvent.create(googleCalendar, body)
+  const {id}  = await GoogleCalendarEvent.insert(googleCalendar, body)
   const event = await GoogleCalendarEvent.get(id)
 
   expect(event.id).to.be.equal(id)
