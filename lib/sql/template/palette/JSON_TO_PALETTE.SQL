@@ -43,7 +43,16 @@ RETURNS palette AS $$
       $1->>'h3-text-color',
       $1->>'h3-font-family',
       $1->>'h3-font-size',
-      $1->>'h3-font-weight'
+      $1->>'h3-font-weight',
+
+      $1->>'inverted-button-bg-color',
+      $1->>'inverted-button-text-color',
+      $1->>'inverted-light-text-color',
+      $1->>'inverted-h1-text-color',
+      $1->>'inverted-h2-text-color',
+      $1->>'inverted-h3-text-color',
+      $1->>'inverted-logo-wide',
+      $1->>'inverted-logo-square'
     )::palette
 $$
 LANGUAGE SQL
