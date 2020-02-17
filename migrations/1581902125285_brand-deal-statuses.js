@@ -12,9 +12,7 @@ const migrations = [
       color TEXT NOT NULL,
       deal_types deal_type[] NOT NULL,
       property_types deal_property_type[] NOT NULL,
-      admin_only BOOLEAN NOT NULL,
-
-      UNIQUE(brand, label)
+      admin_only BOOLEAN NOT NULL
   )`,
   'COMMIT'
 ]
