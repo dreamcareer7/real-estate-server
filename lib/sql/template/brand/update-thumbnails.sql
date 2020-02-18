@@ -1,4 +1,4 @@
 UPDATE brands_allowed_templates SET
-  thumbnail = $1,
-  preview = $2
+  thumbnail = $2,
+  preview = $3
 WHERE id = $1
