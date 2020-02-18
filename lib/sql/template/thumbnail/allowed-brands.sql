@@ -1,4 +1,5 @@
 SELECT
+  id,
   (
     SELECT id FROM brands
     WHERE brand_type = 'Brokerage'
