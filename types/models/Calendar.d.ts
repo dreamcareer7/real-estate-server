@@ -10,6 +10,7 @@ declare interface ICalendarFilterQuery {
   contact?: UUID;
   low?: number;
   high?: number;
+  last_updated_gt?: number;
   event_types?: string[] | null;
   object_types?: TCalendarObjectType[];
   limit?: number;

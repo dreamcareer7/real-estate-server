@@ -54,11 +54,21 @@
   />
 
   <mj-class
+    name="inverted-h1"
+    color="{{get('inverted-h1-text-color')}}"
+  />
+
+  <mj-class
     name="h2"
     color="{{get('h2-text-color')}}"
     font-family="{{get('h2-font-family')}}"
     font-weight="{{get('h2-font-weight')}}"
     font-size="{{get('h2-font-size')}}"
+  />
+
+  <mj-class
+    name="inverted-h2"
+    color="{{get('inverted-h2-text-color')}}"
   />
 
   <mj-class
@@ -70,11 +80,21 @@
   />
 
   <mj-class
+    name="inverted-h3"
+    color="{{get('inverted-h3-text-color')}}"
+  />
+
+  <mj-class
     name="light"
     color="{{get('light-text-color')}}"
     font-family="{{get('light-font-family')}}"
     font-weight="{{get('light-font-weight')}}"
     font-size="{{get('light-font-size')}}"
+  />
+
+  <mj-class
+    name="inverted-light"
+    color="{{get('inverted-light-text-color')}}"
   />
 
   <mj-button
@@ -84,5 +104,11 @@
     border="{{get('button-border')}}"
     font-weight="{{get('button-font-weight')}}"
     font-size="{{get('button-font-size')}}"
+  />
+
+  <mj-button
+    name="inverted-button"
+    background-color="{{get('inverted-button-bg-color')}}"
+    color="{{get('inverted-button-text-color')}}"
   />
 </mj-attribues>
