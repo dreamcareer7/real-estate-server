@@ -23,7 +23,7 @@ WITH r AS (
 ), us AS (
   SELECT
     brand,
-    JSON_OBJECT_AGG(key, value) AS user_settings
+    JSON_OBJECT_AGG(key, value) AS settings
   FROM
     users_settings
   WHERE
@@ -33,7 +33,7 @@ WITH r AS (
 )
 SELECT
   r.*,
-  us.user_settings
+  us.settings as settings
 FROM
   r
   LEFT JOIN us ON r.brand = us.brand
