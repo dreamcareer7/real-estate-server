@@ -520,6 +520,72 @@ const deleteEmail = cb => {
     .expectStatus(204)
 }
 
+const addStatus = cb => {
+  const status = {
+    label: 'Active',
+    color: 'green',
+    deal_types: [
+      'Buying'
+    ],
+    property_types: [
+      'Resale'
+    ],
+    admin_only: false
+  }
+
+  return frisby.create('add a deal status')
+    .post(`/brands/${brand_id}/deals/statuses`, status)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      data: status
+    })
+}
+
+const updateStatus = cb => {
+  const status = {
+    label: 'Active Contingent',
+    color: 'yellow',
+    deal_types: [
+      'Buying',
+      'Selling'
+    ],
+    property_types: [
+      'Resale',
+      'New Home'
+    ],
+    admin_only: true
+  }
+
+  return frisby.create('update a deal status')
+    .put(`/brands/${brand_id}/deals/statuses/${results.brand.addStatus.data.id}`, status)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      data: status
+    })
+}
+
+const getStatuses = cb => {
+  return frisby.create('get deal statuses')
+    .get(`/brands/${brand_id}/deals/statuses`)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      data: [results.brand.updateStatus.data]
+    })
+}
+
+const deleteStatus = cb => {
+  return frisby.create('delete a deal status')
+    .delete(`/brands/${brand_id}/deals/statuses/${results.brand.addStatus.data.id}`)
+    .after(cb)
+    .expectStatus(204)
+}
+
 module.exports = {
   createParent,
   create,
@@ -570,6 +636,11 @@ module.exports = {
   updateBrandSettings,
   updateUserSettings,
   getUserRoles,
+
+  addStatus,
+  updateStatus,
+  getStatuses,
+  deleteStatus,
 
   removeBrand
 }
