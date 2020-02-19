@@ -6,7 +6,7 @@ const Context = require('../../../lib/models/Context')
 const User    = require('../../../lib/models/User')
 const CrmTask = require('../../../lib/models/CRM/Task')
 const Contact = require('../../../lib/models/Contact')
-const CalendarIntegration = require('../../../lib/models/Calendar/integration')
+const CalendarIntegration = require('../../../lib/models/CalendarIntegration')
 
 const { createGoogleMessages, createGoogleCalendarEvent }       = require('../google/helper')
 const { createMicrosoftMessages, createMicrosoftCalendarEvent } = require('../microsoft/helper')
