@@ -178,6 +178,7 @@ declare interface IContactAttributeFilter {
 
 declare interface IContactFilterOptions {
   q?: string[];
+  activities?: UUID[];
   created_by?: UUID;
   updated_by?: UUID;
   updated_gte?: number;
@@ -200,7 +201,9 @@ declare interface IContactFilterOptions {
   users?: UUID[];
   filter_type?: 'and' | 'or';
   google_id?: string;
+  google_ids?: string[];
   microsoft_id?: string;
+  microsoft_ids?: string[];
 
   forUpdate?: boolean;
 }
