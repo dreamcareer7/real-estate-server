@@ -15,7 +15,7 @@ const migrations = [
     job_name TEXT,
     status TEXT,
 
-    start_at timestamptz NULL clock_timestamp(),
+    start_at timestamptz NULL,
 
     created_at timestamptz NOT NULL DEFAULT clock_timestamp(),
     updated_at timestamptz NOT NULL DEFAULT clock_timestamp(),
