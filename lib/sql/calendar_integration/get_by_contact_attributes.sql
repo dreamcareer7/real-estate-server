@@ -1,0 +1,1 @@
+SELECT id FROM calendar_integration WHERE contact_attribute = ANY($1::uuid[])

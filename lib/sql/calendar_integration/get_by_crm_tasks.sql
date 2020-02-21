@@ -1,0 +1,1 @@
+SELECT id FROM calendar_integration WHERE crm_task = ANY($1::uuid[])

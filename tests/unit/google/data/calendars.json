@@ -1,0 +1,19 @@
+{
+  "remote_cal_1": {
+    "id": "remote_cal_id_1",
+    "summary": "summary_1",
+    "summaryOverride": "summaryOverride_1",
+    "description": "description_1",
+    "location": "location",
+    "timeZone": "timeZone",
+    "conferenceProperties": "conferenceProperties",
+    "origin": "google",
+    "accessRole": "owner",
+    "selected": false,
+    "deleted": false,
+    "primary": false,
+    "defaultReminders": {},
+    "notificationSettings": {},
+    "conference_properties": {}
+  }
+}

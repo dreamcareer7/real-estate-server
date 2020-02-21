@@ -37,8 +37,6 @@ const migrations = [
     microsoft_calendar uuid NOT NULL REFERENCES microsoft_calendars(id),
     event_id TEXT NOT NULL,
 
-    crm_task_foreign_key uuid NULL,
-
     subject TEXT,
     type TEXT,
     body_preview TEXT,

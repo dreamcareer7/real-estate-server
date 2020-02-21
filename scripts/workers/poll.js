@@ -7,10 +7,11 @@ const Notification = require('../../lib/models/Notification')
 const CrmTaskWorker = require('../../lib/models/CRM/Task/worker/notification')
 const CalendarWorker = require('../../lib/models/Calendar/worker/notification')
 const EmailCampaign = require('../../lib/models/Email/campaign')
-// const ShowingsWorker = require('../../lib/models/Showings/worker')
-const GoogleWorker = require('../../lib/models/Google/workers')
+const GoogleWorkers = require('../../lib/models/Google/workers')
 const MicrosoftWorker = require('../../lib/models/Microsoft/workers')
 const Task = require('../../lib/models/Task')
+// const GoogleCalendar = require('../../lib/models/Calendar/integration/workers')
+// const ShowingsWorker = require('../../lib/models/Showings/worker')
 
 let i = 1
 
@@ -131,14 +132,14 @@ poll({
   name: 'EmailCampaign.updateStats'
 })
 
-// poll({
-//   fn: ShowingsWorker.startDue,
-//   name: 'ShowingsWorker.crawlerJob'
-// })
+poll({
+  fn: GoogleWorkers.Gmail.syncDue,
+  name: 'GoogleWorkers.gmail.syncDue'
+})
 
 poll({
-  fn: GoogleWorker.syncDue,
-  name: 'GoogleWorker.syncDue'
+  fn: GoogleWorkers.Calendar.syncDue,
+  name: 'GoogleWorkers.calendar.syncDue'
 })
 
 poll({
@@ -150,5 +151,10 @@ poll({
   fn: Template.updateThumbnails,
   name: 'Template.updateThumbnails'
 })
+
+// poll({
+//   fn: ShowingsWorker.startDue,
+//   name: 'ShowingsWorker.crawlerJob'
+// })
 
 module.exports = shutdown

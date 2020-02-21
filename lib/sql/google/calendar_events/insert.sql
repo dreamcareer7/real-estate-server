@@ -36,7 +36,7 @@ INSERT INTO google_calendar_events
     event_end,
     end_time_unspecified,
     recurrence,
-    recurring_eventId,
+    recurring_event_id,
     original_start_time,
     origin
   )
@@ -116,7 +116,7 @@ ON CONFLICT (google_credential, google_calendar, event_id) DO UPDATE SET
   event_end = $34,
   end_time_unspecified = $35,
   recurrence = $36,
-  recurring_eventId = $37,
+  recurring_event_id = $37,
   original_start_time = $38,
   origin = $39,
   updated_at = now(),
