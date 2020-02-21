@@ -2,22 +2,14 @@ INSERT INTO microsoft_sync_histories
   (
     "user",
     brand,
-
     microsoft_credential,
-
     extract_contacts_error,
     synced_contacts_num,
     contacts_total,
-
     sync_messages_error,
     synced_messages_num,
     messages_total,
-
-    synced_calendar_events_num,
-    calendar_events_total,
-
     sync_duration,
-
     status
   )
 VALUES
@@ -32,8 +24,6 @@ VALUES
     $8,
     $9,
     $10,
-    $11,
-    $12,
-    $13
+    $11
   )
 RETURNING id
