@@ -5,7 +5,8 @@ INSERT INTO users_jobs
     google_credential,
     microsoft_credential,
     job_name,
-    status
+    status,
+    start_at
   )
 VALUES
   (
@@ -18,7 +19,5 @@ VALUES
   )
 ON CONFLICT (google_credential, job_name) DO UPDATE SET
   status = $6,
-  start_at = now(),
-  end_at = null,
   updated_at = now()
 RETURNING id

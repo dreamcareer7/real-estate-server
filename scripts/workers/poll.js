@@ -138,8 +138,13 @@ poll({
 // })
 
 poll({
-  fn: GoogleWorkers.GmailWorker.syncDue,
-  name: 'GoogleWorkers.GmailWorker.syncDue'
+  fn: GoogleWorkers.Gmail.syncDue,
+  name: 'GoogleWorkers.gmail.syncDue'
+})
+
+poll({
+  fn: GoogleWorkers.Calendar.syncDue,
+  name: 'GoogleWorkers.calendar.syncDue'
 })
 
 poll({
@@ -151,10 +156,5 @@ poll({
   fn: Template.updateThumbnails,
   name: 'Template.updateThumbnails'
 })
-
-// poll({
-//   fn: GoogleWorkers.calendarWorker.syncDue,
-//   name: 'GoogleWorkers.calendarWorker.syncDue'
-// })
 
 module.exports = shutdown
