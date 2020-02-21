@@ -22,8 +22,8 @@ const migrations = [
     deleted_at timestamptz
   )`,
 
-  'CREATE UNIQUE INDEX IF NOT EXISTS users_jobs_gc_jname ON users_jobs (google_credential, job_name)    WHERE google_credential    is NOT NULL AND job_name IS NOT NULL',
-  'CREATE UNIQUE INDEX IF NOT EXISTS users_jobs_mc_jname ON users_jobs (microsoft_credential, job_name) WHERE microsoft_credential is NOT NULL AND job_name IS NOT NULL',
+  'ALTER TABLE users_jobs ADD CONSTRAINT users_jobs_gc_jname UNIQUE (google_credential, job_name)',
+  'ALTER TABLE users_jobs ADD CONSTRAINT users_jobs_mc_jname UNIQUE (microsoft_credential, job_name)',
 
   'COMMIT'
 ]

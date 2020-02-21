@@ -132,11 +132,6 @@ poll({
   name: 'EmailCampaign.updateStats'
 })
 
-// poll({
-//   fn: ShowingsWorker.startDue,
-//   name: 'ShowingsWorker.crawlerJob'
-// })
-
 poll({
   fn: GoogleWorkers.Gmail.syncDue,
   name: 'GoogleWorkers.gmail.syncDue'
@@ -156,5 +151,10 @@ poll({
   fn: Template.updateThumbnails,
   name: 'Template.updateThumbnails'
 })
+
+// poll({
+//   fn: ShowingsWorker.startDue,
+//   name: 'ShowingsWorker.crawlerJob'
+// })
 
 module.exports = shutdown

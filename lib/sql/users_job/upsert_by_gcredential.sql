@@ -15,7 +15,8 @@ VALUES
     $3,
     $4,
     $5,
-    $6
+    $6,
+    $7
   )
 ON CONFLICT (google_credential, job_name) DO UPDATE SET
   status = $6,

@@ -320,7 +320,7 @@ async function updateRechatGoogleCalendar() {
 async function updateCalendarsLastSyncAt() {
   const createdCredential = await create()
 
-  await GoogleCredential.updateCalendarsLastSyncAt(createdCredential.id)
+  await GoogleCredential.updateCalendarsLastSyncAt(createdCredential.id, new Date())
 
   const updatedCredential = await GoogleCredential.get(createdCredential.id)
 
