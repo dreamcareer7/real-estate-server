@@ -334,6 +334,7 @@ declare type TDbSqlAddress =
   | 'google/credential/postpone_cal_sync'
   | 'google/credential/revoked'
   | 'google/credential/gmail_sync_due'
+  | 'google/credential/cal_sync_due'
   | 'google/credential/update_access_token'
   | 'google/credential/update_calendars_last_sync_at'
   | 'google/credential/update_contacts_last_sync_at'
