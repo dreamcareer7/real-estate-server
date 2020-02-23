@@ -22,6 +22,7 @@ SELECT
   cc,
   bcc,
   thread_key,
+  is_read,
   'google_message' AS "type"
 FROM
   google_messages

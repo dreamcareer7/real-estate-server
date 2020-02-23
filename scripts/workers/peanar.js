@@ -75,6 +75,10 @@ const forks = [
     concurrency: 5
   },
   {
+    queues: ['google_cal'],
+    concurrency: 5
+  },
+  {
     queues: ['microsoft'],
     concurrency: 5
   },

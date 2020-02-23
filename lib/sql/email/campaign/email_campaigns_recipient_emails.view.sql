@@ -106,6 +106,7 @@ CREATE OR REPLACE VIEW email_campaigns_recipient_emails AS (
     WHERE
       ecr.recipient_type = 'Brand'
       AND ecr.deleted_at IS NULL
+      AND ba.enabled = TRUE
   ) UNION (
     SELECT
       email_campaigns.id AS campaign,

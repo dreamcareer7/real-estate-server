@@ -38,7 +38,7 @@ async function create() {
 
 async function hasAccess() {
   const messages = await create()
-  const message  = await GoogleMessage.getAsThreadMember(messages[1].google_credential, messages[1].message_id)
+  const message  = await GoogleMessage.get(messages[1].id)
 
   const thread = await ThreadMessage.get(message.thread_key)
 
@@ -57,8 +57,8 @@ async function hasAccess() {
 
 async function get() {
   const messages  = await create()
-  const message_1 = await GoogleMessage.getAsThreadMember(messages[0].google_credential, messages[0].message_id)
-  const message_2 = await GoogleMessage.getAsThreadMember(messages[1].google_credential, messages[1].message_id)
+  const message_1 = await GoogleMessage.get(messages[0].id)
+  const message_2 = await GoogleMessage.get(messages[1].id)
 
   const thread_1 = await ThreadMessage.get(message_1.thread_key)
   expect(thread_1.message_count).to.be.equal(1)

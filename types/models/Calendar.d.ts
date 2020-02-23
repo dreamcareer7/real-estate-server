@@ -1,4 +1,4 @@
-declare type TCalendarObjectType = 'crm_task' | 'deal_context' | 'contact_attribute' | 'contact' | 'email_campaign';
+declare type TCalendarObjectType = 'crm_task' | 'deal_context' | 'contact_attribute' | 'contact' | 'email_campaign' | 'email_thread' | 'activity';
 
 declare interface ICalendarFilter {
   brand: UUID;
@@ -10,6 +10,7 @@ declare interface ICalendarFilterQuery {
   contact?: UUID;
   low?: number;
   high?: number;
+  last_updated_gt?: number;
   event_types?: string[] | null;
   object_types?: TCalendarObjectType[];
   limit?: number;

@@ -1,9 +1,14 @@
-const MicrosoftCredential = require('../../../lib/models/Microsoft/credential')
-const MicrosoftMessage    = require('../../../lib/models/Microsoft/message')
+const { expect } = require('chai')
 
+const MicrosoftCredential    = require('../../../lib/models/Microsoft/credential')
+const MicrosoftMessage       = require('../../../lib/models/Microsoft/message')
+const MicrosoftCalendar      = require('../../../lib/models/Microsoft/calendar')
+const MicrosoftCalendarEvent = require('../../../lib/models/Microsoft/calendar_events')
 const { generateMMesssageRecord } = require('../../../lib/models/Microsoft/workers/messages/common')
 
 const microsoft_messages_offline = require('./data/microsoft_messages.json')
+const calendars = require('./data/calendars.json')
+const events    = require('./data/calendar_events.json')
 
 
 
@@ -31,7 +36,7 @@ async function createMicrosoftMessages(user, brand) {
     microsoftMessages.push(generateMMesssageRecord(credential, message))
   }
 
-  const createdMessages = await MicrosoftMessage.create(microsoftMessages)
+  const createdMessages = await MicrosoftMessage.create(microsoftMessages, credential.id)
 
   return {
     createdMessages,
@@ -39,7 +44,42 @@ async function createMicrosoftMessages(user, brand) {
   }
 }
 
+async function createMicrosoftCalendar(microsoftCredential) {
+  const id  = await MicrosoftCalendar.createLocal(microsoftCredential.id, calendars.remote_cal_1)
+  const cal = await MicrosoftCalendar.get(id)
+
+  expect(cal.id).to.be.equal(id)
+  expect(cal.calendar_id).to.be.equal(calendars.remote_cal_1.id)
+  expect(cal.type).to.be.equal('microsoft_calendars')
+  expect(cal.microsoft_credential).to.be.equal(microsoftCredential.id)
+  expect(cal.name).to.be.equal(calendars.remote_cal_1.name)
+  expect(cal.to_sync).to.be.equal(false)
+
+  return cal
+}
+
+async function createMicrosoftCalendarEvent(microsoftCredential) {
+  const microsoftCalendar = await createMicrosoftCalendar(microsoftCredential)
+
+  const id    = await MicrosoftCalendarEvent.createLocal(microsoftCalendar, events.remote_event_1)
+  const event = await MicrosoftCalendarEvent.get(id)
+
+  expect(event.id).to.be.equal(id)
+  expect(event.microsoft_calendar).to.be.equal(microsoftCalendar.id)
+  expect(event.microsoft_credential).to.be.equal(microsoftCredential.id)
+  expect(event.event_id).to.be.equal(events.remote_event_1.id)
+  expect(event.subject).to.be.equal(events.remote_event_1.subject)
+  expect(event.type).to.be.equal('microsoft_calendar_events')
+  expect(event.event_start).to.deep.equal(events.remote_event_1.start)
+  expect(event.event_end).to.deep.equal(events.remote_event_1.end)
+
+  return event
+}
+
+
 module.exports = {
   createMicrosoftCredential,
-  createMicrosoftMessages
+  createMicrosoftMessages,
+  createMicrosoftCalendar,
+  createMicrosoftCalendarEvent
 }

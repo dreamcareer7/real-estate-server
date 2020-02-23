@@ -4,6 +4,7 @@ INSERT INTO email_threads (
   "user",
   brand,
   "subject",
+  last_message_id,
   first_message_in_reply_to,
   first_message_date,
   last_message_date,
@@ -29,13 +30,14 @@ INSERT INTO email_threads (
     microsoft_credentials."user",
     microsoft_credentials.brand,
     last_value(subject) OVER (w ORDER BY message_date) AS "subject",
+    last_value(message_id) OVER (w ORDER BY message_date) AS last_message_id,
     first_value(microsoft_messages.in_reply_to) OVER (w ORDER BY message_date) AS first_message_in_reply_to,
     min(message_date) OVER (w) AS first_message_date,
     max(message_date) OVER (w) AS last_message_date,
     thread_recipients.recipients AS recipients,
     count(*) OVER (w) AS message_count,
     SUM(has_attachments::int) OVER (w) > 0 AS has_attachments,
-    SUM(is_read::int) OVER (w) > 0 AS is_read
+    AVG(is_read::int) OVER (w) = 1 AS is_read
   FROM
     microsoft_messages
     JOIN microsoft_credentials
@@ -51,6 +53,8 @@ INSERT INTO email_threads (
 ON CONFLICT (id) DO UPDATE SET
   deleted_at = null,
   updated_at = now(),
+  subject = EXCLUDED.subject,
+  last_message_id = EXCLUDED.last_message_id,
   last_message_date = EXCLUDED.last_message_date,
   recipients = (
     SELECT

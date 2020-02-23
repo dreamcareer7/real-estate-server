@@ -102,7 +102,7 @@ async function getByIdFailed() {
 
 async function updateTokens() {
   const createdCredential = await create()
-  const TS = Math.round(new Date().getTime() / 1000)
+  const TS = Math.round(new Date().getTime())
 
   const tokens = {
     access_token: 'new-access-token',
@@ -135,7 +135,7 @@ async function updateAccesshToken() {
 
   const new_access_token = 'new_access_token'
 
-  await GoogleCredential.updateAccesshToken(createdCredential.id, new_access_token)
+  await GoogleCredential.updateAccesshToken(createdCredential.id, new_access_token, new Date().getTime())
 
   const updatedCredential = await GoogleCredential.get(createdCredential.id)
 
@@ -185,10 +185,10 @@ async function updateSyncStatus() {
   expect(updatedCredential_2.sync_status).to.be.equal(null)
 }
 
-async function postponeSync() {
+async function postponeGmailSync() {
   const createdCredential = await create()
 
-  await GoogleCredential.postponeSync(createdCredential.id)
+  await GoogleCredential.postponeGmailSync(createdCredential.id)
 
   const updatedCredential = await GoogleCredential.get(createdCredential.id)
 
@@ -320,7 +320,7 @@ async function updateRechatGoogleCalendar() {
 async function updateCalendarsLastSyncAt() {
   const createdCredential = await create()
 
-  await GoogleCredential.updateCalendarsLastSyncAt(createdCredential.id)
+  await GoogleCredential.updateCalendarsLastSyncAt(createdCredential.id, new Date())
 
   const updatedCredential = await GoogleCredential.get(createdCredential.id)
 
@@ -349,7 +349,7 @@ describe('Google', () => {
     it('should revoke a google-credential', updateAsRevoked)
     it('should update a google-credential last sync time', updateLastSync)
     it('should update a google-credential sync status', updateSyncStatus)
-    it('should postpone a google-credential sync', postponeSync)
+    it('should postpone a google-credential sync', postponeGmailSync)
     
     it('should disable/enable a google-credential', disableEnableSync)
     it('should handle returned exception from disable/enable google-credential', disableEnableSyncFailed)
