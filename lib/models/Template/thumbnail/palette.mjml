@@ -46,6 +46,12 @@
   />
 
   <mj-class
+    name="container"
+    background-color="{{get('inverted-container-bg-color')}}"
+    color="{{get('inverted-container-text-color')}}"
+  />
+
+  <mj-class
     name="h1"
     color="{{get('h1-text-color')}}"
     font-family="{{get('h1-font-family')}}"

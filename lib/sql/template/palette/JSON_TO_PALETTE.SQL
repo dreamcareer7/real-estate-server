@@ -52,7 +52,9 @@ RETURNS palette AS $$
       $1->>'inverted-h2-text-color',
       $1->>'inverted-h3-text-color',
       $1->>'inverted-logo-wide',
-      $1->>'inverted-logo-square'
+      $1->>'inverted-logo-square',
+      $1->>'inverted-container-bg-color',
+      $1->>'inverted-container-text-color'
     )::palette
 $$
 LANGUAGE SQL
