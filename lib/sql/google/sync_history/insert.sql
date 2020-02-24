@@ -9,8 +9,6 @@ INSERT INTO google_sync_histories
     threads_total,
     synced_contacts_num,
     contacts_total,
-    synced_calendar_events_num,
-    calendar_events_total,
     sync_duration,
     status
   )
@@ -26,8 +24,6 @@ VALUES
     $8,
     $9,
     $10,
-    $11,
-    $12,
-    $13
+    $11
   )
 RETURNING id

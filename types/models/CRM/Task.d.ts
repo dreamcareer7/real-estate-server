@@ -53,9 +53,6 @@ declare interface ITaskInput {
   associations?: ICrmTaskAssociationInput[]
   assignees?: UUID[]
 
-  google_event_id?: UUID;
-  microsoft_event_id?: UUID;
-
   metadata?: any;
 }
 
@@ -105,8 +102,6 @@ declare interface ITaskFilters extends IAssociationFilters {
   task_type?: TTaskType
   due_gte?: number
   due_lte?: number
-  google_event_ids?: UUID[]
-  microsoft_event_ids?: UUID[]
 }
 
 declare interface IUnreadTaskNotification {

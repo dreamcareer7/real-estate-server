@@ -58,6 +58,7 @@ ON CONFLICT ("user", brand, email) DO UPDATE SET
   revoked = false,
   sync_status = NULL,
   last_sync_at = NULL,
+  watcher_exp = NULL,
 
   updated_at = now(),
   deleted_at = null

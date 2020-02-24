@@ -1,0 +1,1 @@
+SELECT id FROM calendar_integration WHERE microsoft_id = ANY($1::uuid[])
