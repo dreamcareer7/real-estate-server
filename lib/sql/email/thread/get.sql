@@ -13,6 +13,7 @@ SELECT
   message_count,
   has_attachments,
   is_read,
+  last_message_id,
 
   (
     CASE
