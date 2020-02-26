@@ -1,6 +1,7 @@
 {
   "remote_event_1": {
     "id": "remote_event_id_1",
+    "etag": "3165302543916000",
 
     "description": "description",
     "summary": "summary",
