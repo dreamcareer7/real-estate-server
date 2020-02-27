@@ -2,9 +2,7 @@ INSERT INTO sso_users (
   "user", provider, foreign_id, profile, trusted_at
 ) VALUES (
   $1,
-  (
-    SELECT id FROM sso_providers WHERE identifier = $2
-  ),
+  $2,
   $3,
   $4,
   (

@@ -10,6 +10,7 @@ SELECT
   extract(epoch from first_message_date) AS first_message_date,
   extract(epoch from last_message_date) AS last_message_date,
   recipients,
+  recipients_raw,
   message_count,
   has_attachments,
   is_read,
