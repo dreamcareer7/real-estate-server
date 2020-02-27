@@ -662,6 +662,16 @@ function batchUpdateIsRead(cb) {
     .expectStatus(202)
 }
 
+function batchTrash(cb) {
+  return frisby.create('Update isRead')
+    .post(`/emails/google/${results.google.createGoogleCredential}/trash`, { status: false, messageIds: [results.email.getThread.data.messages[0].id] })
+    .addHeader('X-RECHAT-BRAND', results.email.getThread.data.brand)
+    .after(function(err, res, json) {
+      cb(err, res, json)
+    })
+    .expectStatus(202)
+}
+
 
 module.exports = {
   schedule,
@@ -693,5 +703,6 @@ module.exports = {
   updateMailgunToGmail,
   getThread,
   updateIsRead,
-  batchUpdateIsRead
+  batchUpdateIsRead,
+  batchTrash
 }
