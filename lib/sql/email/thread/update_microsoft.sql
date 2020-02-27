@@ -21,6 +21,28 @@ INSERT INTO email_threads (
       microsoft_messages, unnest(recipients) AS t(recipient)
     WHERE
       microsoft_messages.thread_key = ANY($1::text[])
+      AND microsoft_messages.deleted_at IS NULL
+    GROUP BY
+      thread_key
+  ), distinct_recipients_raw AS (
+    SELECT DISTINCT ON (thread_key, address)
+      thread_key, name, address
+    FROM
+      microsoft_messages,
+      jsonb_to_recordset(to_raw || from_raw) AS recipients_raw(name text, address text)
+    WHERE
+      microsoft_messages.thread_key = ANY($1::text[])
+      AND microsoft_messages.deleted_at IS NULL
+    ORDER BY
+      thread_key, address
+  ), thread_recipients_raw AS (
+    SELECT
+      thread_key, jsonb_agg(jsonb_build_object(
+        'name', name,
+        'address', address
+      )) AS recipients_raw
+    FROM
+      distinct_recipients_raw
     GROUP BY
       thread_key
   )
