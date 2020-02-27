@@ -1,13 +1,12 @@
 const { expect } = require('chai')
 const { createContext } = require('../helper')
 
+
 const Context             = require('../../../lib/models/Context')
 const User                = require('../../../lib/models/User')
 const BrandHelper         = require('../brand/helper')
 const ThreadMessage       = require('../../../lib/models/Email/thread')
 const GoogleMessage       = require('../../../lib/models/Google/message')
-// const MicrosoftCredential = require('../../../lib/models/Microsoft/credential')
-// const MicrosoftMessage    = require('../../../lib/models/Microsoft/message')
 
 const { createGoogleMessages } = require('../google/helper')
 
@@ -72,6 +71,12 @@ async function get() {
   expect(thread_2.message_count).to.be.equal(2)
   expect(thread_1.google_credential).to.be.equal(messages[1].google_credential)
   expect(thread_1.microsoft_credential).to.be.equal(null)
+
+  expect(thread_1.recipients_raw).to.be.eql([ { name: 'Saeed Vayghan', address: 'saeed.vayghan@gmail.com' } ])
+  expect(thread_2.recipients_raw).to.be.eql([
+    { name: 'Saeed Vayghan', address: 'saeed.uni68@gmail.com' },
+    { name: 'Saeed Vayghan', address: 'saeed.vayghan@gmail.com' }
+  ])
 }
 
 
