@@ -71,26 +71,6 @@ function deleteAccountFailed(cb) {
     .expectStatus(404)
 }
 
-function disableSyncFailed(cb) {
-  return frisby.create('disableSync Failed')
-    .delete(`/users/self/google/${results.user.create.data.id}/sync`)
-    .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
-    .after(function(err, res, json) {
-      cb(err, res, json)
-    })
-    .expectStatus(404)
-}
-
-function enableSyncFailed(cb) {
-  return frisby.create('enableSync Failed')
-    .put(`/users/self/google/${results.user.create.data.id}/sync`)
-    .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
-    .after(function(err, res, json) {
-      cb(err, res, json)
-    })
-    .expectStatus(404)
-}
-
 function forceSyncFailed(cb) {
   return frisby.create('forceSync Failed')
     .post(`/users/self/google/${results.user.create.data.id}/sync`)
@@ -358,8 +338,6 @@ module.exports = {
   grantAccessWithMissedState,
   grantAccessWithMissedScope,
   deleteAccountFailed,
-  disableSyncFailed,
-  enableSyncFailed,
   forceSyncFailed,
   createGoogleCredential,
   addGoogleSyncHistory,
