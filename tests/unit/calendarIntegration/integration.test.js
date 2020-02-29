@@ -107,6 +107,7 @@ async function setup() {
       deal_context: null,
       object_type: 'crm_task',
       event_type: 'Other',
+      origin: 'google',
       etag: 'etag',
       local_etag: 'local_etag'
     }
