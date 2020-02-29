@@ -226,32 +226,6 @@ function deleteAccountFailedCauseOfInvalidBrand(cb) {
     .expectStatus(404)
 }
 
-function disableSync(cb) {
-  return frisby.create('disable sync')
-    .delete(`/users/self/google/${results.google.createGoogleCredential}/sync`)
-    .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
-    .after(function(err, res, json) {
-      cb(err, res, json)
-    })
-    .expectJSON({
-      code: 'OK',
-      data: google_credential_json
-    })
-}
-
-function enableSync(cb) {
-  return frisby.create('enable sync')
-    .put(`/users/self/google/${results.google.createGoogleCredential}/sync`)
-    .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
-    .after(function(err, res, json) {
-      cb(err, res, json)
-    })
-    .expectJSON({
-      code: 'OK',
-      data: google_credential_json
-    })
-}
-
 function forceSync(cb) {
   return frisby.create('force sync')
     .post(`/users/self/google/${results.google.createGoogleCredential}/sync`)
@@ -345,8 +319,6 @@ module.exports = {
   getGoogleProfiles,
   deleteAccount,
   deleteAccountFailedCauseOfInvalidBrand,
-  disableSync,
-  enableSync,
   forceSync,
   getGCredentialLastSyncHistory,
   getRemoteCalendars,
