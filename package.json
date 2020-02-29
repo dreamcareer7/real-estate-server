@@ -53,6 +53,7 @@
     "colors": "^1.4.0",
     "commander": "^3.0.0",
     "compression": "^1.7.4",
+    "concat-stream": "^2.0.0",
     "content-disposition": "^0.5.3",
     "convert-units": "^2.3.4",
     "csv-write-stream": "2.0.0",
