@@ -10,7 +10,7 @@ WHERE
     )
     OR
     (
-      (last_sync_at <= (NOW() - '3600 seconds'::interval))
+      (last_sync_at <= (NOW() - '24 hours'::interval))
       AND (sync_status = 'pending' OR sync_status = 'failed')
     )
   )
