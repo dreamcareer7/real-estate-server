@@ -180,32 +180,6 @@ function getMicrosoftProfiles(cb) {
     })
 }
 
-function disableSync(cb) {
-  return frisby.create('disable sync')
-    .delete(`/users/self/microsoft/${results.microsoft.createMicrosoftCredential}/sync`)
-    .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
-    .after(function(err, res, json) {
-      cb(err, res, json)
-    })
-    .expectJSON({
-      code: 'OK',
-      data: microsoft_credential_json
-    })
-}
-
-function enableSync(cb) {
-  return frisby.create('enable dync')
-    .put(`/users/self/microsoft/${results.microsoft.createMicrosoftCredential}/sync`)
-    .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
-    .after(function(err, res, json) {
-      cb(err, res, json)
-    })
-    .expectJSON({
-      code: 'OK',
-      data: microsoft_credential_json
-    })
-}
-
 function forceSync(cb) {
   return frisby.create('force sync')
     .post(`/users/self/microsoft/${results.microsoft.createMicrosoftCredential}/sync`)
@@ -290,8 +264,6 @@ module.exports = {
   addMicrosoftSyncHistory,
   getMicrosoftProfile,
   getMicrosoftProfiles,
-  disableSync,
-  enableSync,
   forceSync,
   deleteAccount,
   deleteAccountFailedCauseOfInvalidBrand,
