@@ -25,19 +25,11 @@ async function addSyncHistory() {
     user: credential.user,
     brand: credential.brand,
     microsoft_credential: credential.id,
-
-    extract_contacts_error: 'error',
-
     synced_contacts_num: 104,
     contacts_total: 105,
-
-    sync_messages_error: 'error',
-
     synced_messages_num: 100,
     messages_total: 101,
-
     sync_duration: 106,
-
     status: true
   })
   
@@ -48,7 +40,6 @@ async function addSyncHistory() {
   expect(history.user).to.be.equal(credential.user)
   expect(history.synced_messages_num).to.be.equal(100)
   expect(history.sync_duration).to.be.equal(106)
-  expect(history.extract_contacts_error).to.be.equal('error')
 
   return history
 }

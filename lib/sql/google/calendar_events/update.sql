@@ -24,7 +24,8 @@ SET
   event_start = $22,
   event_end = $23,
   recurrence = $24,
-  original_start_time = $25
+  original_start_time = $25,
+  etag = $26
 WHERE
   id = $1
 RETURNING id
