@@ -200,6 +200,20 @@ function getGoogleProfiles(cb) {
     })
 }
 
+function forceSync(cb) {
+  return frisby.create('force sync')
+    .post(`/users/self/google/${results.google.createGoogleCredential}/sync`)
+    .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
+    .after(function(err, res, json) {
+      cb(err, res, json)
+    })
+    .expectJSON({
+      http: 400,
+      message: 'Please wait until current sync job is finished.',
+      code: 'BadRequest'
+    })
+}
+
 function deleteAccount(cb) {
   return frisby.create('Delete Google account')
     .delete(`/users/self/google/${results.google.createGoogleCredential}`)
@@ -224,20 +238,6 @@ function deleteAccountFailedCauseOfInvalidBrand(cb) {
       cb(err, res, json)
     })
     .expectStatus(404)
-}
-
-function forceSync(cb) {
-  return frisby.create('force sync')
-    .post(`/users/self/google/${results.google.createGoogleCredential}/sync`)
-    .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
-    .after(function(err, res, json) {
-      cb(err, res, json)
-    })
-    .expectJSON({
-      http: 400,
-      message: 'Please wait until current sync job is finished.',
-      code: 'BadRequest'
-    })
 }
 
 function getGCredentialLastSyncHistory(cb) {
@@ -317,9 +317,9 @@ module.exports = {
   addGoogleSyncHistory,
   getGoogleProfile,
   getGoogleProfiles,
+  forceSync,
   deleteAccount,
   deleteAccountFailedCauseOfInvalidBrand,
-  forceSync,
   getGCredentialLastSyncHistory,
   getRemoteCalendars,
   configureCaledars,
