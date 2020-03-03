@@ -1,13 +1,17 @@
 CREATE OR REPLACE VIEW crm_last_touches AS (
-  SELECT
+  SELECT DISTINCT ON (contact)
     contact,
-    MAX(timestamp) AS last_touch
+    max(timestamp) OVER (PARTITION BY contact) AS last_touch,
+    action,
+    reference
   FROM
     (
       (
         SELECT
           ca.contact,
-          ct.due_date AS "timestamp"
+          ct.due_date AS "timestamp",
+          ct.task_type AS action,
+          ct.id AS reference
         FROM
           crm_associations AS ca
           JOIN crm_tasks AS ct
@@ -20,23 +24,57 @@ CREATE OR REPLACE VIEW crm_last_touches AS (
       ) UNION ALL (
         SELECT
           c.id,
-          last_message_date AS "timestamp"
+          message_date AS "timestamp",
+          'email' AS action,
+          google_messages.id AS reference
         FROM
-          email_threads
+          google_messages
+          JOIN google_credentials
+            ON google_messages.google_credential = google_credentials.id
           CROSS JOIN LATERAL (
             SELECT
               contacts.id
             FROM
               contacts
             WHERE
-              contacts.email && email_threads.recipients
-              AND contacts.brand = email_threads.brand
+              contacts.email && google_messages.recipients
+              AND contacts.brand = google_credentials.brand
               AND contacts.deleted_at IS NULL
+              AND google_messages.deleted_at IS NULL
           ) AS c
+        WHERE
+          google_credentials.deleted_at IS NULL
+          AND google_credentials.revoked IS NOT TRUE
+      ) UNION ALL (
+        SELECT
+          c.id,
+          message_date AS "timestamp",
+          'email' AS action,
+          microsoft_messages.id AS reference
+        FROM
+          microsoft_messages
+          JOIN microsoft_credentials
+            ON microsoft_messages.microsoft_credential = microsoft_credentials.id
+          CROSS JOIN LATERAL (
+            SELECT
+              contacts.id
+            FROM
+              contacts
+            WHERE
+              contacts.email && microsoft_messages.recipients
+              AND contacts.brand = microsoft_credentials.brand
+              AND contacts.deleted_at IS NULL
+              AND microsoft_messages.deleted_at IS NULL
+          ) AS c
+        WHERE
+          microsoft_credentials.deleted_at IS NULL
+          AND microsoft_credentials.revoked IS NOT TRUE
       ) UNION ALL (
         SELECT
           c.id AS contact,
-          executed_at AS "timestamp"
+          executed_at AS "timestamp",
+          'email' AS action,
+          ec.id AS reference
         FROM
           email_campaigns AS ec
           JOIN email_campaign_emails AS ece
@@ -50,6 +88,7 @@ CREATE OR REPLACE VIEW crm_last_touches AS (
           AND ec.executed_at IS NOT NULL
       )
     ) AS touches
-  GROUP BY
-    contact
+  ORDER BY
+    contact,
+    "timestamp" DESC
 )
