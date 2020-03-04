@@ -4,6 +4,7 @@ interface ICrmTaskEventArgs {
   user_id: UUID;
   brand_id: UUID;
   task_ids: UUID[];
+  reason?: string;
 }
 
 declare class CrmTaskEventEmitter extends EventEmitter {
