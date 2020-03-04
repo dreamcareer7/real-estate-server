@@ -1303,15 +1303,13 @@ const migrations = [
   RETURNS void AS
   $$
     BEGIN
-      DELETE FROM current_deal_context WHERE deal = deal_id;
-  
-      INSERT INTO current_deal_context
-  
+      UPDATE current_deal_context SET deleted_at = NOW() WHERE deal = deal_id AND deleted_at IS NULL;
+
       WITH definitions AS (
         SELECT * FROM brands_contexts
         WHERE brand IN (SELECT brand_parents((SELECT brand FROM deals WHERE id = $1)))
       ),
-  
+
       last_deal_context AS (
         SELECT
           DISTINCT ON (deal_context.deal, deal_context.key)
@@ -1372,10 +1370,12 @@ const migrations = [
         SELECT * FROM mls_context
       )
   
-      SELECT DISTINCT ON(key)
-      merged.*,
-      definitions.id as definition,
-      to_tsvector('english', COALESCE(text, number::text))
+      INSERT INTO
+        current_deal_context
+      (SELECT DISTINCT ON(key)
+        merged.*,
+        definitions.id as definition,
+        to_tsvector('english', COALESCE(text, number::text))
       FROM merged
       JOIN definitions ON merged.key = definitions.key
       ORDER BY
@@ -1385,7 +1385,25 @@ const migrations = [
             WHEN preffered_source::text = source::text THEN 1
             ELSE 2
           END
-        ) ASC;
+        ) ASC)
+  
+      ON CONFLICT (deal, checklist, key) DO UPDATE
+      SET
+        deleted_at = NULL,
+        id = EXCLUDED.id,
+        type = EXCLUDED.type,
+        created_at = EXCLUDED.created_at,
+        created_by = EXCLUDED.created_by,
+        approved_by = EXCLUDED.approved_by,
+        approved_at = EXCLUDED.approved_at,
+        key = EXCLUDED.key,
+        text = EXCLUDED.text,
+        number = EXCLUDED.number,
+        date = EXCLUDED.date,
+        data_type = EXCLUDED.data_type,
+        deal = EXCLUDED.deal,
+        checklist = EXCLUDED.checklist,
+        source = EXCLUDED.source;
   
     END;
   $$

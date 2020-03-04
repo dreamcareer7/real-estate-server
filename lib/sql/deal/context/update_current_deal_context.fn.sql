@@ -2,7 +2,7 @@ CREATE OR REPLACE FUNCTION update_current_deal_context(deal_id uuid)
 RETURNS void AS
 $$
   BEGIN
-    UPDATE current_deal_context SET deleted_at = NOW() WHERE deal = deal_id;
+    UPDATE current_deal_context SET deleted_at = NOW() WHERE deal = deal_id AND deleted_at IS NULL;
 
     WITH definitions AS (
       SELECT * FROM brands_contexts
