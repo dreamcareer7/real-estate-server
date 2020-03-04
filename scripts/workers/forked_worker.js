@@ -22,12 +22,14 @@ const attachContactEvents = require('../../lib/models/Contact/events')
 const attachFlowEvents = require('../../lib/models/Flow/events')
 const attachTaskEventHandler = require('../../lib/models/CRM/Task/events')
 const attachTouchEventHandler = require('../../lib/models/CRM/Touch/events')
+const attachCalIntEventHandler = require('../../lib/models/CalendarIntegration/event')
 
 attachCalendarEvents()
 attachContactEvents()
 attachFlowEvents()
 attachTaskEventHandler()
 attachTouchEventHandler()
+attachCalIntEventHandler()
 
 const context = Context.create({
   id: 'peanar-workers-child'
