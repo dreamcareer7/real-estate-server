@@ -17,5 +17,6 @@ AS $$
       deals.deal_type = 'Buying'
       AND cdc.key = 'contract_status'
     ))
+    AND cdc.deleted_at IS NULL
   LIMIT 1
 $$;
