@@ -70,8 +70,6 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       ) AS metadata
     FROM
       crm_tasks
-    WHERE
-      deleted_at IS NULL
   )
   UNION ALL
   (
@@ -309,8 +307,8 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       contacts.created_by,
       ca.created_at,
       ca.updated_at,
-      ca.deleted_at,
-      GREATEST(ca.created_at, ca.updated_at, ca.deleted_at) AS last_updated_at,
+      LEAST(contacts.deleted_at, ca.deleted_at) AS deleted_at,
+      GREATEST(ca.created_at, ca.updated_at, LEAST(contacts.deleted_at, ca.deleted_at)) AS last_updated_at,
       'contact_attribute' AS object_type,
       COALESCE(cad.name, cad.label) AS event_type,
       (CASE
@@ -364,9 +362,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       JOIN contacts_attribute_defs AS cad
         ON ca.attribute_def = cad.id
     WHERE
-      contacts.deleted_at IS NULL
-      AND ca.deleted_at IS NULL
-      AND cad.deleted_at IS NULL
+      cad.deleted_at IS NULL
       AND data_type = 'date'
   )
   UNION ALL
