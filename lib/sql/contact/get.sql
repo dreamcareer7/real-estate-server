@@ -31,6 +31,7 @@ SELECT
   "user",
   sort_field,
   extract(epoch FROM last_touch) AS last_touch,
+  last_touch_action,
   extract(epoch FROM next_touch) AS next_touch,
   (SELECT MIN(touch_freq) FROM touch_freqs AS tf WHERE tf.id = contacts.id) AS touch_freq,
   id AS summary,

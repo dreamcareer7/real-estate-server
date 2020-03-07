@@ -27,6 +27,7 @@ SELECT deals.*,
 
       FROM current_deal_context
       WHERE deal = deals.id
+      AND   deleted_at IS NULL
     )
 
     SELECT

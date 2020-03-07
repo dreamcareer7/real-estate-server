@@ -38,6 +38,7 @@ INSERT INTO google_calendar_events
     recurrence,
     recurring_event_id,
     original_start_time,
+    etag,
     origin
   )
 VALUES
@@ -80,7 +81,8 @@ VALUES
     $36,
     $37,
     $38,
-    $39
+    $39,
+    $40
   )
 ON CONFLICT (google_credential, google_calendar, event_id) DO UPDATE SET
   description = $4,
@@ -118,7 +120,8 @@ ON CONFLICT (google_credential, google_calendar, event_id) DO UPDATE SET
   recurrence = $36,
   recurring_event_id = $37,
   original_start_time = $38,
-  origin = $39,
+  etag = $39,
+  origin = $40,
   updated_at = now(),
   deleted_at = null
 RETURNING id

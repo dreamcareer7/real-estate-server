@@ -47,6 +47,7 @@ WHERE (
   AND   (text   IS NULL OR text   = (SELECT text   FROM definition))
   AND   (number IS NULL OR number = (SELECT number FROM definition))
   AND   (date   IS NULL OR date   = (SELECT date   FROM definition))
+  AND   current_deal_context.deleted_at IS NULL
 )
 
 RETURNING *

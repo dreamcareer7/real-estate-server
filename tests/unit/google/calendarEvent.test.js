@@ -68,7 +68,7 @@ async function bulkUpsert() {
 
 async function deleteLocal() {
   const event = await createLocal()
-  await GoogleCalendarEvent.deleteLocal(event.id)
+  await GoogleCalendarEvent.deleteMany([event.id])
   const updated = await GoogleCalendarEvent.get(event.id)
 
   expect(updated.status).to.be.equal('canceled')
@@ -153,89 +153,6 @@ async function getByCalendarIds() {
   expect(ids[0]).to.be.equal(event.id)
 }
 
-async function create() {
-  const body = {
-    'summary': 'Google I/O 2015',
-    'location': '800 Howard St., San Francisco, CA 94103',
-    'description': 'A chance to hear more about Google\'s developer products.',
-    'start': {
-      'dateTime': '2015-05-28T09:00:00-07:00',
-      'timeZone': 'America/Los_Angeles'
-    },
-    'end': {
-      'dateTime': '2015-05-28T17:00:00-07:00',
-      'timeZone': 'America/Los_Angeles'
-    },
-    'attendees': [
-      {'email': 'lpage@example.com'},
-      {'email': 'sbrin@example.com'}
-    ],
-    'reminders': {
-      'useDefault': false
-    }
-  }
-  
-  const {id}  = await GoogleCalendarEvent.insert(googleCalendar, body)
-  const event = await GoogleCalendarEvent.get(id)
-
-  expect(event.id).to.be.equal(id)
-  expect(event.google_credential).to.be.equal(googleCalendar.google_credential)
-  expect(event.google_calendar).to.be.equal(googleCalendar.id)
-  expect(event.summary).to.be.equal(body.summary)
-  expect(event.event_start).to.be.deep.equal(body.start)
-  expect(event.event_end).to.be.deep.equal(body.end)
-  expect(event.reminders).to.be.deep.equal(body.reminders)
-
-  return event
-}
-
-async function update() {
-  const event = await create()
-
-  const body = {
-    'summary': 'Google I/O 2015 - xxxx',
-    'location': '800 Howard St., San Francisco, CA 94103 - xxxx',
-    'description': 'A chance to hear more about Google\'s developer products - xxxx',
-    'start': {
-      'dateTime': '2016-05-28T09:00:00-07:00',
-      'timeZone': 'America/Los_Angeles'
-    },
-    'end': {
-      'dateTime': '2016-05-28T17:00:00-07:00',
-      'timeZone': 'America/Los_Angeles'
-    },
-    'attendees': [
-      {'email': 'lpagexxx@example.com'},
-      {'email': 'sbrinxxx@example.com'}
-    ],
-    'reminders': {
-      'useDefault': false
-    }
-  }
-  
-  await GoogleCalendarEvent.update(event.id, googleCalendar, body)
-  const updated = await GoogleCalendarEvent.get(event.id)
-
-  expect(updated.google_credential).to.be.equal(googleCalendar.google_credential)
-  expect(updated.google_calendar).to.be.equal(googleCalendar.id)
-  expect(updated.summary).to.be.equal(body.summary)
-  expect(updated.event_start).to.be.deep.equal(body.start)
-  expect(updated.event_end).to.be.deep.equal(body.end)
-  expect(updated.reminders).to.be.deep.equal(body.reminders)
-}
-
-async function deleteEvent() {
-  const event = await create()
-  
-  await GoogleCalendarEvent.delete(event.id, googleCalendar)
-  const updated = await GoogleCalendarEvent.get(event.id)
-
-  expect(updated.google_credential).to.be.equal(googleCalendar.google_credential)
-  expect(updated.google_calendar).to.be.equal(googleCalendar.id)
-  expect(updated.status).to.be.equal('canceled')
-  expect(updated.deleted_at).to.be.not.equal(null)
-}
-
 
 describe('Google', () => {
   describe('Google Calendars Events', () => {
@@ -254,9 +171,5 @@ describe('Google', () => {
     it('should returns an array of google calendar events - by calendar id', getByCalendar)
     it('should returns an array of google calendar events - by calendar and event ids', getByCalendarAndEventRemoteIds)
     it('should returns an array of google calendar event ids - by calendar id', getByCalendarIds)
-
-    it('should create a remote google calendar event', create)
-    it('should update a remote google calendar event', update)
-    it('should delete a remote google calendar event', deleteEvent)
   })
 })
