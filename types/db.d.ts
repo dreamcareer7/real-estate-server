@@ -602,4 +602,7 @@ declare type TDbSqlAddress =
   | 'website/get_user'
   | 'website/insert'
   | 'website/insert_hostname'
-  | 'website/update';
+  | 'website/update'  
+  | 'users_job/get'
+  | 'users_job/get_by_gcredential'
+  | 'users_job/upsert_by_gcredential';

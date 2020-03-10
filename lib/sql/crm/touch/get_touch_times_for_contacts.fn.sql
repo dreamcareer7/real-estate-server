@@ -2,23 +2,30 @@ CREATE OR REPLACE FUNCTION get_touch_times_for_contacts(uuid[])
 RETURNS TABLE (
   contact uuid,
   last_touch timestamptz,
+  last_touch_action text,
   next_touch timestamptz
 )
 LANGUAGE SQL
 AS $$
-  WITH last_touches AS (
+  WITH clt AS (
+    SELECT
+      contact,
+      last_touch,
+      action
+    FROM
+      crm_last_touches
+    WHERE
+      contact = ANY($1::uuid[])
+  ),
+  last_touches AS (
     SELECT
       cids.id AS contact,
-      (
-        SELECT
-          last_touch
-        FROM
-          crm_last_touches
-        WHERE
-          crm_last_touches.contact = cids.id
-      ) AS last_touch
+      last_touch,
+      action AS last_touch_action
     FROM
       unnest($1::uuid[]) AS cids(id)
+      LEFT JOIN clt
+        ON cids.id = clt.contact
   ),
   next_touches AS (
     SELECT
@@ -36,6 +43,7 @@ AS $$
   SELECT
     cids.id AS contact,
     lt.last_touch,
+    lt.last_touch_action,
     nt.next_touch
   FROM
     unnest($1::uuid[]) AS cids(id)

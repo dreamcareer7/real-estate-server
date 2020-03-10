@@ -59,26 +59,6 @@ function deleteAccountFailed(cb) {
     .expectStatus(404)
 }
 
-function disableSyncFailed(cb) {
-  return frisby.create('disableSync Failed')
-    .delete(`/users/self/microsoft/${results.user.create.data.id}/sync`)
-    .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
-    .after(function(err, res, json) {
-      cb(err, res, json)
-    })
-    .expectStatus(404)
-}
-
-function enableSyncFailed(cb) {
-  return frisby.create('enableSync Failed')
-    .put(`/users/self/microsoft/${results.user.create.data.id}/sync`)
-    .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
-    .after(function(err, res, json) {
-      cb(err, res, json)
-    })
-    .expectStatus(404)
-}
-
 function forceSyncFailed(cb) {
   return frisby.create('forceSync Failed')
     .post(`/users/self/microsoft/${results.user.create.data.id}/sync`)
@@ -200,32 +180,6 @@ function getMicrosoftProfiles(cb) {
     })
 }
 
-function disableSync(cb) {
-  return frisby.create('disable sync')
-    .delete(`/users/self/microsoft/${results.microsoft.createMicrosoftCredential}/sync`)
-    .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
-    .after(function(err, res, json) {
-      cb(err, res, json)
-    })
-    .expectJSON({
-      code: 'OK',
-      data: microsoft_credential_json
-    })
-}
-
-function enableSync(cb) {
-  return frisby.create('enable dync')
-    .put(`/users/self/microsoft/${results.microsoft.createMicrosoftCredential}/sync`)
-    .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
-    .after(function(err, res, json) {
-      cb(err, res, json)
-    })
-    .expectJSON({
-      code: 'OK',
-      data: microsoft_credential_json
-    })
-}
-
 function forceSync(cb) {
   return frisby.create('force sync')
     .post(`/users/self/microsoft/${results.microsoft.createMicrosoftCredential}/sync`)
@@ -305,15 +259,11 @@ module.exports = {
   grantAccessWithMissedCode,
   grantAccessWithMissedState,
   deleteAccountFailed,
-  disableSyncFailed,
-  enableSyncFailed,
   forceSyncFailed,
   createMicrosoftCredential,
   addMicrosoftSyncHistory,
   getMicrosoftProfile,
   getMicrosoftProfiles,
-  disableSync,
-  enableSync,
   forceSync,
   deleteAccount,
   deleteAccountFailedCauseOfInvalidBrand,

@@ -97,7 +97,7 @@ CREATE OR REPLACE VIEW analytics.deals AS
           'lease_end',
           'year_built',
           'listing_status'
-        )
+        ) AND ctx.deleted_at IS NULL
       ),
       ctx_roles_union AS (
         (

@@ -71,11 +71,7 @@ const queues = [
 
 const forks = [
   {
-    queues: ['google'],
-    concurrency: 5
-  },
-  {
-    queues: ['google_cal'],
+    queues: ['google', 'google_cal'],
     concurrency: 5
   },
   {

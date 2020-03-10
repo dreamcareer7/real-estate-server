@@ -530,7 +530,8 @@ const addStatus = cb => {
     property_types: [
       'Resale'
     ],
-    admin_only: false
+    admin_only: false,
+    archived: true
   }
 
   return frisby.create('add a deal status')
@@ -555,7 +556,8 @@ const updateStatus = cb => {
       'Resale',
       'New Home'
     ],
-    admin_only: true
+    admin_only: true,
+    archived: false
   }
 
   return frisby.create('update a deal status')
