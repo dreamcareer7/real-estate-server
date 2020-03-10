@@ -87,6 +87,8 @@ CREATE OR REPLACE VIEW analytics.mini_deals AS
       current_deal_context cdc
       JOIN deal_info di
         ON cdc.deal = di.id
+      WHERE
+        cdc.deleted_at IS NULL
   )
   SELECT
     di.title,

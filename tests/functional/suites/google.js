@@ -293,7 +293,7 @@ function getRemoteCalendarsAfterConfiguring(cb) {
 }
 
 function reCconfigCaledars(cb) {
-  return frisby.create('Configure Google Calendars')
+  return frisby.create('Reconfig Google Calendars')
     .post(`/users/google/${results.google.createGoogleCredential}/conf`, {
       toSync: ['en.usa#holiday@group.v.calendar.google.com'],
       toStopSync: ['my_gmail@gmail.com']
@@ -302,7 +302,7 @@ function reCconfigCaledars(cb) {
     .after(function(err, res, json) {
       cb(err, res, json)
     })
-    .expectStatus(204)
+    .expectStatus(404)
 }
 
 

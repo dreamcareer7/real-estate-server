@@ -11,6 +11,7 @@ AS $$
     WHERE
       deal = deal_id
       AND key = 'full_address'
+      AND deleted_at IS NULL
     LIMIT 1
   ), mc AS (
     SELECT

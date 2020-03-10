@@ -7,14 +7,24 @@ RETURNS TABLE (
 )
 LANGUAGE SQL
 AS $$
-  WITH last_touches AS (
+  WITH clt AS (
+    SELECT
+      contact,
+      last_touch,
+      action
+    FROM
+      crm_last_touches
+    WHERE
+      contact = ANY($1::uuid[])
+  ),
+  last_touches AS (
     SELECT
       cids.id AS contact,
       last_touch,
       action AS last_touch_action
     FROM
       unnest($1::uuid[]) AS cids(id)
-      LEFT JOIN crm_last_touches clt
+      LEFT JOIN clt
         ON cids.id = clt.contact
   ),
   next_touches AS (
