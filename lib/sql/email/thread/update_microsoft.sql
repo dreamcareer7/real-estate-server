@@ -93,3 +93,5 @@ ON CONFLICT (id) DO UPDATE SET
   message_count = EXCLUDED.message_count,
   has_attachments = EXCLUDED.has_attachments,
   is_read = EXCLUDED.is_read
+RETURNING
+  email_threads.id
