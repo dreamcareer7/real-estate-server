@@ -10,6 +10,7 @@ INSERT INTO email_threads (
   last_message_date,
   recipients,
   recipients_raw,
+  senders_raw,
   message_count,
   has_attachments,
   is_read
@@ -36,6 +37,17 @@ INSERT INTO email_threads (
       AND google_messages.deleted_at IS NULL
     ORDER BY
       thread_key, address
+  ), distinct_senders_raw AS (
+    SELECT DISTINCT ON (thread_key, address)
+      thread_key, name, address
+    FROM
+      google_messages,
+      jsonb_to_record(from_raw) AS recipients_raw(name text, address text)
+    WHERE
+      google_messages.thread_key = ANY($1::text[])
+      AND google_messages.deleted_at IS NULL
+    ORDER BY
+      thread_key, address
   ), thread_recipients_raw AS (
     SELECT
       thread_key, jsonb_agg(jsonb_build_object(
@@ -44,6 +56,16 @@ INSERT INTO email_threads (
       )) AS recipients_raw
     FROM
       distinct_recipients_raw
+    GROUP BY
+      thread_key
+  ), thread_senders_raw AS (
+    SELECT
+      thread_key, jsonb_agg(jsonb_build_object(
+        'name', name,
+        'address', address
+      )) AS senders_raw
+    FROM
+      distinct_senders_raw
     GROUP BY
       thread_key
   )
@@ -59,6 +81,7 @@ INSERT INTO email_threads (
     max(message_date) OVER (w) AS last_message_date,
     thread_recipients.recipients,
     thread_recipients_raw.recipients_raw,
+    thread_senders_raw.senders_raw,
     count(*) OVER (w) AS message_count,
     SUM(has_attachments::int) OVER (w) > 0 AS has_attachments,
     AVG(is_read::int) OVER (w) = 1 AS is_read
@@ -70,6 +93,8 @@ INSERT INTO email_threads (
       ON google_messages.thread_key = thread_recipients.thread_key
     JOIN thread_recipients_raw
       ON google_messages.thread_key = thread_recipients_raw.thread_key
+    JOIN thread_senders_raw
+      ON google_messages.thread_key = thread_senders_raw.thread_key
   WHERE
     google_messages.thread_key = ANY($1::text[])
     AND google_messages.deleted_at IS NULL
@@ -93,3 +118,5 @@ ON CONFLICT (id) DO UPDATE SET
   message_count = EXCLUDED.message_count,
   has_attachments = EXCLUDED.has_attachments,
   is_read = EXCLUDED.is_read
+RETURNING
+  email_threads.id
