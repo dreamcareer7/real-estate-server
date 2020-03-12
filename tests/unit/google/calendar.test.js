@@ -169,7 +169,7 @@ async function getRemoteGoogleCalendars() {
   const result = await GoogleCalendar.getRemoteGoogleCalendars(googleCredential)
 
   expect(result.calendars.length).to.be.equal(5)
-  expect(result.currentSelectedCal).to.be.equal(null)
+  expect(result.primaryCalendar).to.be.equal(null)
 
   return result
 }
