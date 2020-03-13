@@ -252,7 +252,7 @@ const uploadAttachment = (cb) => {
   const logo = fs.createReadStream(path.resolve(__dirname, 'data/logo.png'))
 
   return frisby.create('upload a file')
-    .post('/emails/attachments', {
+    .post('/emails/attachments?origin=gmail', {
       file: logo
     },
     {
