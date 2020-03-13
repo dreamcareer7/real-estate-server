@@ -137,7 +137,7 @@ An `email_campaign_attachments` object type looks like this:
 | deleted_at   | timestamp |             |
 
 
-### uploadAttachment [POST /emails/attachments]
+### Upload an Attachment [POST /emails/attachments]
 * Tip: `origin` query parameter can be either of `gmail`, `outlook`, or `mailgun`.
 * Gmail limit: 26 MB
 * Outlook limit: 4 MB
