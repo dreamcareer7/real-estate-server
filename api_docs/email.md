@@ -137,6 +137,12 @@ An `email_campaign_attachments` object type looks like this:
 | deleted_at   | timestamp |             |
 
 
+### Upload an Attachment [POST /emails/attachments]
+* Tip: `origin` query parameter can be either of `gmail`, `outlook`, or `mailgun`.
+* Gmail limit: 26 MB
+* Outlook limit: 4 MB
+* Mailgun limit: 15 MB
+<!-- include(tests/email/uploadAttachment.md) -->
 
 ### Schedule an email campaign [POST /emails]
 <!-- include(tests/email/schedule.md) -->
