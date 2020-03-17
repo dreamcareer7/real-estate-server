@@ -3,7 +3,6 @@ UPDATE
 SET
   deleted_at = now()
 WHERE
-  google_credential = $1
-  AND message_id = ANY($2)
+  id = ANY($1::uuid[])
 RETURNING
   thread_key

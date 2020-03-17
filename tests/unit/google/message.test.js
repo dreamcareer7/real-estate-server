@@ -5,12 +5,13 @@ const { createContext } = require('../helper')
 const Context          = require('../../../lib/models/Context')
 const User             = require('../../../lib/models/User')
 const BrandHelper      = require('../brand/helper')
+const GoogleCredential = require('../../../lib/models/Google/credential')
 const GoogleMessage    = require('../../../lib/models/Google/message')
+const EmailThread      = require('../../../lib/models/Email/thread')
 
 const { createGoogleMessages } = require('./helper')
 
 let user, brand
-
 
 
 async function setup() {
@@ -75,19 +76,90 @@ async function getGCredentialMessagesNum() {
   expect(result[0]['count']).to.be.equal(googleMessages.length)
 }
 
-async function deleteByMessageIds() {
-  const googleMessages = await create()
+async function deleteMany() {
+  const messages   = await create()
+  const credential = await GoogleCredential.get(messages[0].google_credential)
+  const resutl     = await EmailThread.filter(credential.user, credential.brand, {})
 
-  for (const gMessage of googleMessages) {
-    await GoogleMessage.deleteByMessageIds(gMessage.google_credential, [gMessage.message_id])
+  const ids = []
+
+  for (const message of messages) {
+    ids.push(message.id)
   }
 
-  for (const gMessage of googleMessages) {
-    const googleMessage = await GoogleMessage.getByMessageId(gMessage.message_id, gMessage.google_credential)
+  for (const message of messages) {
+    const googleMessage = await GoogleMessage.get(message.id)
 
     expect(googleMessage.type).to.be.equal('google_message')
-    expect(googleMessage.google_credential).to.be.equal(gMessage.google_credential)
+    expect(googleMessage.deleted_at).to.be.equal(null)
+    expect(resutl.ids.includes(googleMessage.thread_key)).to.be.equal(true)
+  }
+
+  await GoogleMessage.deleteMany(credential.id, ids)
+  const resutlNew = await EmailThread.filter(credential.user, credential.brand, {})
+
+  for (const message of messages) {
+    const googleMessage = await GoogleMessage.get(message.id)
+
+    expect(googleMessage.type).to.be.equal('google_message')
+    expect(googleMessage.google_credential).to.be.equal(message.google_credential)
     expect(googleMessage.deleted_at).not.to.be.equal(null)
+    expect(resutlNew.ids.includes(googleMessage.thread_key)).to.be.equal(false)
+  }
+}
+
+async function deleteByCredential() {
+  const messages   = await create()
+  const credential = await GoogleCredential.get(messages[0].google_credential)
+  const resutl     = await EmailThread.filter(credential.user, credential.brand, {})
+
+  for (const message of messages) {
+    const googleMessage = await GoogleMessage.get(message.id)
+    
+    expect(googleMessage.type).to.be.equal('google_message')
+    expect(googleMessage.deleted_at).to.be.equal(null)
+    expect(resutl.ids.includes(googleMessage.thread_key)).to.be.equal(true)
+  }
+
+  await GoogleMessage.deleteByCredential(messages[0].google_credential)
+  const resutlNew = await EmailThread.filter(credential.user, credential.brand, {})
+
+  for (const message of messages) {
+    const googleMessage = await GoogleMessage.get(message.id)
+
+    expect(googleMessage.type).to.be.equal('google_message')
+    expect(googleMessage.google_credential).to.be.equal(message.google_credential)
+    expect(googleMessage.deleted_at).not.to.be.equal(null)
+    expect(resutlNew.ids.includes(googleMessage.thread_key)).to.be.equal(false)
+  }
+}
+
+async function deleteByMessageIds() {
+  const messages   = await create()
+  const credential = await GoogleCredential.get(messages[0].google_credential)
+  const resutl     = await EmailThread.filter(credential.user, credential.brand, {})
+
+  for (const message of messages) {
+    const googleMessage = await GoogleMessage.getByMessageId(message.message_id, message.google_credential)
+
+    expect(googleMessage.type).to.be.equal('google_message')
+    expect(googleMessage.deleted_at).to.be.equal(null)
+    expect(resutl.ids.includes(googleMessage.thread_key)).to.be.equal(true)
+  }
+
+  for (const message of messages) {
+    await GoogleMessage.deleteByMessageIds(message.google_credential, [message.message_id])
+  }
+
+  const resutlNew = await EmailThread.filter(credential.user, credential.brand, {})
+
+  for (const message of messages) {
+    const googleMessage = await GoogleMessage.getByMessageId(message.message_id, message.google_credential)
+
+    expect(googleMessage.type).to.be.equal('google_message')
+    expect(googleMessage.google_credential).to.be.equal(message.google_credential)
+    expect(googleMessage.deleted_at).not.to.be.equal(null)
+    expect(resutlNew.ids.includes(googleMessage.thread_key)).to.be.equal(false)
   }
 }
 
@@ -171,6 +243,8 @@ describe('Google', () => {
     it('should create some google-messages', create)
     it('should return google-message by messages_id', getByMessageId)
     it('should handle failure of google-contact get by messages_id', getByMessageIdFailed)
+    it('should delete google-messages by ids', deleteMany)
+    it('should delete google-messages by credential', deleteByCredential)
     it('should delete google-messages by messages_ids', deleteByMessageIds)
     it('should return number of messages of specific credential', getGCredentialMessagesNum)
     it('should handle failure of downloadAttachment', downloadAttachmentFailed)
