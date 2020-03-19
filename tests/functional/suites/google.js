@@ -302,7 +302,7 @@ function reCconfigCaledars(cb) {
     .after(function(err, res, json) {
       cb(err, res, json)
     })
-    .expectStatus(404)
+    .expectStatus(204)
 }
 
 
