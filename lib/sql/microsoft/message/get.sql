@@ -3,6 +3,7 @@ SELECT
   extract(epoch FROM message_date) AS message_date,
   extract(epoch FROM created_at) AS created_at,
   extract(epoch FROM updated_at) AS updated_at,
+  extract(epoch FROM deleted_at) AS deleted_at,
   microsoft_credential,
   message_id,
   thread_id,
