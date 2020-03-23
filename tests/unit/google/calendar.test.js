@@ -29,29 +29,6 @@ async function createLocal() {
   return await createGoogleCalendar(googleCredential)
 }
 
-async function updateLocal() {
-  const toUpdate = {
-    summary: 'summary_updated',
-    description: 'description_updated',
-    location: 'location_updated',
-    timeZone: 'timeZone_updated'
-  }
-
-  const cal = await createLocal()
-  const ids = await GoogleCalendar.updateLocal(cal.id, toUpdate)
-
-  const updated = await GoogleCalendar.get(ids[0])
-
-  expect(updated.id).to.be.equal(cal.id)
-  expect(updated.calendar_id).to.be.equal(cal.calendar_id)
-  expect(updated.summary).to.be.equal(toUpdate.summary)
-  expect(updated.description).to.be.equal(toUpdate.description)
-  expect(updated.location).to.be.equal(toUpdate.location)
-  expect(updated.timeZone).to.be.equal(toUpdate.time_zone)
-
-  return cal
-}
-
 async function persistRemoteCalendar() {
   const id  = await GoogleCalendar.persistRemoteCalendar(googleCredential.id, calendars.remote_cal_1)
   const cal = await GoogleCalendar.get(id)
@@ -109,11 +86,6 @@ async function getFailed() {
   } catch (err) {
     expect(err.message).to.be.equal(`Google calendar by id ${googleCredential.id} not found.`)
   }
-}
-
-async function getByWatcherChannelId() {
-  const cal = await GoogleCalendar.getByWatcherChannelId(googleCredential.id)
-  expect(cal).to.be.equal(null)
 }
 
 async function getAllByGoogleCredential() {
@@ -196,8 +168,8 @@ async function create() {
 async function getRemoteGoogleCalendars() {
   const result = await GoogleCalendar.getRemoteGoogleCalendars(googleCredential)
 
-  expect(result.calendars.length).to.be.equal(5)
-  expect(result.currentSelectedCal).to.be.equal(null)
+  expect(result.calendars.length).to.be.equal(3)
+  expect(result.primaryCalendar).to.be.equal(null)
 
   return result
 }
@@ -245,13 +217,11 @@ describe('Google', () => {
     beforeEach(setup)
 
     it('should create a google calendar', createLocal)
-    it('should update a google calendar', updateLocal)
     it('should persist a remote google calendar into disk', persistRemoteCalendar)
     it('should fail in get by remote calendar id', getByRemoteCalendarIdFiled)
     it('should return a calendar by remote calendar id', getByRemoteCalendarId)
     it('should delete a local calendar by remote calendar id', deleteLocalByRemoteCalendarId)
     it('should fail in get by id', getFailed)
-    it('should return a calendar by channel id', getByWatcherChannelId)
     it('should return calendars by channel credential id', getAllByGoogleCredential)
     it('should update a calendar\'s sync_token', updateSyncToken)
     it('should update watcher status', updateWatcher)

@@ -48,7 +48,7 @@ const queues = [
   },
   { queues: ['contact_import'], concurrency: 15 },
   {
-    queues: ['MLS.Listing', 'MLS.Office', 'MLS.Room', 'MLS.Agent'],
+    queues: ['MLS.Office', 'MLS.Room', 'MLS.Agent'],
     concurrency: 50
   },
   {
@@ -56,7 +56,7 @@ const queues = [
     concurrency: 20
   },
   {
-    queues: ['MLS.OpenHouse', 'MLS.Unit', 'MLS.Listing.Photos.Validate'],
+    queues: ['MLS.OpenHouse', 'MLS.Unit'],
     concurrency: 20
   },
   {
@@ -83,8 +83,8 @@ const forks = [
     concurrency: 20
   },
   {
-    queues: ['MLS.Photo'],
-    concurrency: 20
+    queues: ['MLS.Photo', 'MLS.Listing', 'MLS.Listing.Photos.Validate'],
+    concurrency: 50
   }
 ]
 
