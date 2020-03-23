@@ -414,6 +414,7 @@ declare type TDbSqlAddress =
   | 'microsoft/credential/update_contacts_last_sync_at'
   | 'microsoft/credential/update_last_sync'
   | 'microsoft/credential/update_last_sync_status'
+  | 'microsoft/credential/update_send_email_after'
   | 'microsoft/credential/update_messages_last_sync_at'
   | 'microsoft/credential/update_profile'
   | 'microsoft/credential/update_rechat_mcalendar'
