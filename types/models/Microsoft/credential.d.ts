@@ -10,4 +10,5 @@ declare interface IMicrosoftCredential extends IIntegrationCredential {
   microsoft_calendar: UUID;
   calendars_last_sync_at: string;
   scope_summary: string[];
+  send_email_after?: number;
 }
