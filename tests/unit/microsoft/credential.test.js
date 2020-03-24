@@ -154,7 +154,7 @@ async function updateSendEmailAfter() {
   const updatedCredential = await MicrosoftCredential.get(createdCredential.id)
 
   expect(createdCredential.id).to.be.equal(updatedCredential.id)
-  expect(updatedCredential.send_email_after).to.be.equal(ts)
+  expect(Number(updatedCredential.send_email_after)).to.be.equal(ts)
 }
 
 async function postponeOutlookSync() {
