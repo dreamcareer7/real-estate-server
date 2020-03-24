@@ -1,6 +1,6 @@
 CREATE OR REPLACE FUNCTION propose_brand_agents(brand_id uuid, "user_id" uuid) RETURNS TABLE(
   "agent" uuid,
-  mui    integer,
+  mui    bigint,
   mls    mls,
   "user" uuid,
   is_me boolean,
