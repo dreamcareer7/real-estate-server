@@ -128,6 +128,13 @@ const updateThumbnails = (cb) => {
     .expectStatus(200)
 }
 
+const deleteTemplate = cb => {
+  return frisby.create('delete a template (from brand)')
+    .delete(`/brands/${results.brand.createParent.data.id}/templates/${results.template.getForBrand.data[0].id}`)
+    .after(cb)
+    .expectStatus(204)
+}
+
 module.exports = {
   create,
   getForBrand,
@@ -136,5 +143,6 @@ module.exports = {
   getMine,
   createAsset,
   deleteInstance,
-  updateThumbnails
+  updateThumbnails,
+  deleteTemplate
 }
