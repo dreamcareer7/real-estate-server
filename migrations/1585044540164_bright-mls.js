@@ -4,8 +4,6 @@ const migrations = [
   'ALTER TYPE mls ADD VALUE IF NOT EXISTS \'BRIGHT\'',
 
   'BEGIN',
-  'ALTER TABLE mls_data ALTER COLUMN matrix_unique_id TYPE bigint USING matrix_unique_id::bigint',
-
   'DROP MATERIALIZED VIEW agents_phones',
   'DROP MATERIALIZED VIEW agents_emails',
 
