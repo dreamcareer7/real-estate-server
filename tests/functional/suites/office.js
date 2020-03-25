@@ -21,7 +21,7 @@ const getByMlsId = (cb) => {
       data: {
         mls_id: office.mls_id,
         name: office.name,
-        matrix_unique_id: office.matrix_unique_id
+        matrix_unique_id: office.matrix_unique_id.toString()
       }
     })
 }

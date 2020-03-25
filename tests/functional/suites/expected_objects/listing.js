@@ -9,7 +9,7 @@ module.exports = {
   'cover_image_url': v.optionalString,
   'price': v.optionalNumber,
   'gallery_image_urls': v.optionalStringArray,
-  'matrix_unique_id': Number,
+  'matrix_unique_id': String,
   'original_price': v.optionalNumber,
   'last_price': v.optionalNumber,
   'status': String,
