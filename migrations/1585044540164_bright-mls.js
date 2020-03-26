@@ -8,7 +8,12 @@ const migrations = [
 
   'DROP MATERIALIZED VIEW agents_phones',
   'DROP MATERIALIZED VIEW agents_emails',
+  'DROP VIEW analytics.calendar',
+  'DROP VIEW email_campaigns_recipient_emails',
+  'DROP FUNCTION get_brand_agents(uuid)',
+  'DROP FUNCTION propose_brand_agents(uuid, uuid)',
 
+  'ALTER TABLE mls_data ALTER COLUMN matrix_unique_id TYPE bigint USING matrix_unique_id::bigint',
   'ALTER TABLE listings ALTER COLUMN matrix_unique_id TYPE bigint USING matrix_unique_id::bigint',
   'ALTER TABLE listings_filters ALTER COLUMN matrix_unique_id TYPE bigint USING matrix_unique_id::bigint',
   'ALTER TABLE agents ALTER COLUMN matrix_unique_id TYPE bigint USING matrix_unique_id::bigint',
@@ -170,18 +175,12 @@ const migrations = [
     SELECT * FROM co_selling_agents
   )`,
 
-  'CREATE UNIQUE INDEX agents_phones_idx ON agents_phones (id)',
-  'CREATE INDEX agents_phones_phone ON agents_phones (phone)',
-  'CREATE INDEX agents_phones_agent ON agents_phones (mui, mls)',
-
-  'CREATE UNIQUE INDEX agents_emails_idx ON agents_emails (id)',
-  'CREATE INDEX agents_emails_email ON agents_emails (LOWER(email))',
-  'CREATE INDEX agents_emails_agent ON agents_emails (mui, mls)',
-
-  'DROP VIEW analytics.calendar',
-  'DROP VIEW email_campaigns_recipient_emails',
-  'DROP FUNCTION get_brand_agents(uuid)',
-  'DROP FUNCTION propose_brand_agents(uuid, uuid)',
+  'CREATE UNIQUE INDEX IF NOT EXISTS agents_phones_idx ON agents_phones (id)',
+  'CREATE INDEX IF NOT EXISTS agents_phones_phone ON agents_phones (phone)',
+  'CREATE INDEX IF NOT EXISTS agents_phones_agent ON agents_phones (mui, mls)',
+  'CREATE UNIQUE INDEX IF NOT EXISTS agents_emails_idx ON agents_emails (id)',
+  'CREATE INDEX IF NOT EXISTS agents_emails_email ON agents_emails (LOWER(email))',
+  'CREATE INDEX IF NOT EXISTS agents_emails_agent ON agents_emails (mui, mls)',
   
   `CREATE OR REPLACE FUNCTION get_brand_agents(id uuid) RETURNS TABLE (
     "user"     uuid,
