@@ -768,12 +768,10 @@ async function testGmailLoadOfRecipients() {
     attachments: []
   }
 
-  try {
-    const result = await EmailCampaign.createMany([campaignObj])
-    expect(result).to.be.equal(null)
-  } catch (ex) {
-    expect(ex.message).to.be.equal('Recipients number should not be greater than 100.')
-  }
+  const result = await EmailCampaign.createMany([campaignObj])
+  const campaign = await EmailCampaign.get(result[0])
+
+  expect(campaign.google_credential).to.be.equal(googleCredential.id)
 }
 
 async function testOutlookLoadOfRecipients() {
@@ -811,12 +809,10 @@ async function testOutlookLoadOfRecipients() {
     attachments: []
   }
 
-  try {
-    const result = await EmailCampaign.createMany([campaignObj])
-    expect(result).to.be.equal(null)
-  } catch (ex) {
-    expect(ex.message).to.be.equal('Recipients number should not be greater than 500.')
-  }
+  const result = await EmailCampaign.createMany([campaignObj])
+  const campaign = await EmailCampaign.get(result[0])
+
+  expect(campaign.microsoft_credential).to.be.equal(microsoftCredential.id)
 }
 
 async function createEmailCampaignEmail() {
