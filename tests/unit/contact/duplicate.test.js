@@ -112,6 +112,8 @@ async function testMergeAll() {
 
   const contacts = await Contact.filter(brand.id, [], {})
   expect(contacts.ids).to.have.members(clusters.map(cl => cl.contacts[0]))
+
+  expect(await Duplicates.findForBrand(brand_id)).to.be.empty
 }
 
 async function testIgnoreAll() {

@@ -513,7 +513,7 @@ async function testCampaignWithLArgeAttachments() {
   } catch (ex) {
 
     const limit    = config.mailgun_integration.attachment_size_limit
-    const limitMsg = `${Math.round((limit / (1024 * 1024)) * (3 / 4))}MB`
+    const limitMsg = `${Math.round(limit / (1024 * 1024))}MB`
 
     expect(ex.message).to.be.equal(`Files size could not be greater than ${limitMsg}!`)
   }

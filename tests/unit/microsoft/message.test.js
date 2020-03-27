@@ -6,7 +6,8 @@ const Context             = require('../../../lib/models/Context')
 const User                = require('../../../lib/models/User')
 const BrandHelper         = require('../brand/helper')
 const MicrosoftMessage    = require('../../../lib/models/Microsoft/message')
-const MicrosoftCredential    = require('../../../lib/models/Microsoft/credential')
+const MicrosoftCredential = require('../../../lib/models/Microsoft/credential')
+const EmailThread         = require('../../../lib/models/Email/thread')
 
 const { createMicrosoftMessages } = require('./helper')
 
@@ -67,19 +68,119 @@ async function getMCredentialMessagesNum() {
   expect(result[0]['count']).to.be.equal(microsoftMessages.length)
 }
 
-async function deleteByInternetMessageIds() {
-  const microsoftMessages = await create()
+async function deleteMany() {
+  const messages   = await create()
+  const credential = await MicrosoftCredential.get(messages[0].microsoft_credential)
+  const resutl     = await EmailThread.filter(credential.user, credential.brand, {})
 
-  for (const mMessage of microsoftMessages) {
-    await MicrosoftMessage.deleteByInternetMessageIds(mMessage.microsoft_credential, [mMessage.internet_message_id])
+  const ids = []
+
+  for (const message of messages) {
+    ids.push(message.id)
   }
 
-  for (const mMessage of microsoftMessages) {
-    const microsoftMessage = await MicrosoftMessage.getByMessageId(mMessage.message_id, mMessage.microsoft_credential)
+  for (const message of messages) {
+    const microsoftMessage = await MicrosoftMessage.get(message.id)
 
     expect(microsoftMessage.type).to.be.equal('microsoft_message')
-    expect(microsoftMessage.microsoft_credential).to.be.equal(mMessage.microsoft_credential)
+    expect(microsoftMessage.deleted_at).to.be.equal(null)
+    expect(resutl.ids.includes(microsoftMessage.thread_key)).to.be.equal(true)
+  }
+
+  await MicrosoftMessage.deleteMany(credential.id, ids)
+  const resutlNew = await EmailThread.filter(credential.user, credential.brand, {})
+
+  for (const message of messages) {
+    const microsoftMessage = await MicrosoftMessage.get(message.id)
+
+    expect(microsoftMessage.type).to.be.equal('microsoft_message')
+    expect(microsoftMessage.microsoft_credential).to.be.equal(message.microsoft_credential)
     expect(microsoftMessage.deleted_at).not.to.be.equal(null)
+    expect(resutlNew.ids.includes(microsoftMessage.thread_key)).to.be.equal(false)
+  }
+}
+
+async function deleteByCredential() {
+  const messages   = await create()
+  const credential = await MicrosoftCredential.get(messages[0].microsoft_credential)
+  const resutl     = await EmailThread.filter(credential.user, credential.brand, {})
+
+  for (const message of messages) {
+    const microsoftMessage = await MicrosoftMessage.get(message.id)
+
+    expect(microsoftMessage.type).to.be.equal('microsoft_message')
+    expect(microsoftMessage.deleted_at).to.be.equal(null)
+    expect(resutl.ids.includes(microsoftMessage.thread_key)).to.be.equal(true)
+  }
+
+  await MicrosoftMessage.deleteByCredential(credential.id)
+  const resutlNew = await EmailThread.filter(credential.user, credential.brand, {})
+
+  for (const message of messages) {
+    const microsoftMessage = await MicrosoftMessage.get(message.id)
+
+    expect(microsoftMessage.type).to.be.equal('microsoft_message')
+    expect(microsoftMessage.microsoft_credential).to.be.equal(message.microsoft_credential)
+    expect(microsoftMessage.deleted_at).not.to.be.equal(null)
+    expect(resutlNew.ids.includes(microsoftMessage.thread_key)).to.be.equal(false)
+  }
+}
+
+async function deleteByInternetMessageIds() {
+  const messages   = await create()
+  const credential = await MicrosoftCredential.get(messages[0].microsoft_credential)
+  const resutl     = await EmailThread.filter(credential.user, credential.brand, {})
+
+  for (const message of messages) {
+    const microsoftMessage = await MicrosoftMessage.get(message.id)
+
+    expect(microsoftMessage.type).to.be.equal('microsoft_message')
+    expect(microsoftMessage.deleted_at).to.be.equal(null)
+    expect(resutl.ids.includes(microsoftMessage.thread_key)).to.be.equal(true)
+  }
+
+  for (const message of messages) {
+    await MicrosoftMessage.deleteByInternetMessageIds(message.microsoft_credential, [message.internet_message_id])
+  }
+
+  const resutlNew = await EmailThread.filter(credential.user, credential.brand, {})
+
+  for (const message of messages) {
+    const microsoftMessage = await MicrosoftMessage.get(message.id)
+
+    expect(microsoftMessage.type).to.be.equal('microsoft_message')
+    expect(microsoftMessage.microsoft_credential).to.be.equal(message.microsoft_credential)
+    expect(microsoftMessage.deleted_at).not.to.be.equal(null)
+    expect(resutlNew.ids.includes(microsoftMessage.thread_key)).to.be.equal(false)
+  }
+}
+
+async function deleteByRemoteMessageIds() {
+  const messages   = await create()
+  const credential = await MicrosoftCredential.get(messages[0].microsoft_credential)
+  const resutl     = await EmailThread.filter(credential.user, credential.brand, {})
+
+  for (const message of messages) {
+    const microsoftMessage = await MicrosoftMessage.get(message.id)
+
+    expect(microsoftMessage.type).to.be.equal('microsoft_message')
+    expect(microsoftMessage.deleted_at).to.be.equal(null)
+    expect(resutl.ids.includes(microsoftMessage.thread_key)).to.be.equal(true)
+  }
+
+  for (const message of messages) {
+    await MicrosoftMessage.deleteByRemoteMessageIds(message.microsoft_credential, [message.message_id])
+  }
+
+  const resutlNew = await EmailThread.filter(credential.user, credential.brand, {})
+
+  for (const message of messages) {
+    const microsoftMessage = await MicrosoftMessage.get(message.id)
+
+    expect(microsoftMessage.type).to.be.equal('microsoft_message')
+    expect(microsoftMessage.microsoft_credential).to.be.equal(message.microsoft_credential)
+    expect(microsoftMessage.deleted_at).not.to.be.equal(null)
+    expect(resutlNew.ids.includes(microsoftMessage.thread_key)).to.be.equal(false)
   }
 }
 
@@ -105,19 +206,20 @@ async function downloadAttachmentFailed() {
 }
 
 async function updateIsRead() {
-  const messages = await create()
+  const messages   = await create()
+  const credential = await MicrosoftCredential.get(messages[0].microsoft_credential)
 
   const message = await MicrosoftMessage.get(messages[0].id)
   expect(message.is_read).to.be.equal(false)
 
-  await MicrosoftMessage.updateIsRead([messages[0].id], true, messages[0].microsoft_credential)
+  await MicrosoftMessage.updateIsRead([messages[0].id], true, credential.id)
 
   const updated = await MicrosoftMessage.get(messages[0].id)
   expect(updated.is_read).to.be.equal(true)
 }
 
 async function updateReadStatus() {
-  const messages = await create()
+  const messages   = await create()
   const credential = await MicrosoftCredential.get(messages[0].microsoft_credential)
 
   await MicrosoftMessage.updateReadStatus(credential, [messages[0].id], true)
@@ -136,7 +238,10 @@ describe('Microsoft', () => {
     it('should return microsoft-message by messages_id', getByMessageId)
     it('should handle failure of microsoft-contact get by messages_id', getByMessageIdFailed)
     it('should return number of messages of specific credential', getMCredentialMessagesNum)
+    it('should delete microsoft-messages by ids', deleteMany)
+    it('should delete microsoft-messages by credential', deleteByCredential)
     it('should delete microsoft-messages by internet_messages_ids', deleteByInternetMessageIds)
+    it('should delete microsoft-messages by remote_message_id', deleteByRemoteMessageIds)
     it('should handle failure of downloadAttachment', downloadAttachmentFailed)
     it('should update message is_read', updateIsRead)
     it('should update message read status', updateReadStatus)
