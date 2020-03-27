@@ -742,7 +742,7 @@ async function testGmailLoadOfRecipients() {
   const to = []
 
   let i = 1
-  for (i; i < 105; i++) {
+  for (i; i < 1005; i++) {
     to.push({
       email: `gholi_${i}@rechat.com`,
       recipient_type: Email.EMAIL      
@@ -768,10 +768,11 @@ async function testGmailLoadOfRecipients() {
     attachments: []
   }
 
-  const result = await EmailCampaign.createMany([campaignObj])
-  const campaign = await EmailCampaign.get(result[0])
-
-  expect(campaign.google_credential).to.be.equal(googleCredential.id)
+  try {
+    await EmailCampaign.createMany([campaignObj])
+  } catch (ex) {
+    expect(ex.message).to.be.equal('Recipients number should not be greater than 1000 in normal campaigns.')
+  }
 }
 
 async function testOutlookLoadOfRecipients() {
@@ -781,7 +782,7 @@ async function testOutlookLoadOfRecipients() {
   const to = []
 
   let i = 1
-  for (i; i < 205; i++) {
+  for (i; i < 1005; i++) {
     to.push({
       email: `gholi_${i}@rechat.com`,
       recipient_type: Email.EMAIL      
@@ -809,10 +810,11 @@ async function testOutlookLoadOfRecipients() {
     attachments: []
   }
 
-  const result = await EmailCampaign.createMany([campaignObj])
-  const campaign = await EmailCampaign.get(result[0])
-
-  expect(campaign.microsoft_credential).to.be.equal(microsoftCredential.id)
+  try {
+    await EmailCampaign.createMany([campaignObj])
+  } catch (ex) {
+    expect(ex.message).to.be.equal('Recipients number should not be greater than 1000 in normal campaigns.')
+  }
 }
 
 async function createEmailCampaignEmail() {
@@ -1018,7 +1020,7 @@ describe('Email', () => {
   it('should handle an outlook-message', testMicrosoftEmail)
   it('should fail when both of google and microsoft are present', testGMFailure)
 
-  it('should fail when recipients num are more than 100', testGmailLoadOfRecipients)
+  it('should fail when recipients num are more than 1000', testGmailLoadOfRecipients)
   it('should fail when recipients num are more than 500', testOutlookLoadOfRecipients)
 
   it('should create an email_campaing_email record', createEmailCampaignEmail)
