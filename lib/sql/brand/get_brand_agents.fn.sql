@@ -1,7 +1,7 @@
 CREATE OR REPLACE FUNCTION get_brand_agents(id uuid) RETURNS TABLE (
    "user"     uuid,
    agent      uuid,
-   mui        integer,
+   mui        bigint,
    mls        mls,
    brand_user uuid,
    brand_role uuid,

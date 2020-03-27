@@ -81,6 +81,7 @@ listing_settings AS (
 ),
 property AS (
   SELECT 'property' AS TYPE,
+        listing.is_address_public,
         properties.*,
         EXTRACT(EPOCH FROM properties.created_at) AS created_at,
         EXTRACT(EPOCH FROM properties.updated_at) AS updated_at
@@ -132,6 +133,7 @@ address AS (
       ) AS street_address
   FROM addresses
   JOIN property ON property.address_id = addresses.id
+  WHERE $5::boolean OR property.is_address_public
 ),
 property_object AS (
   SELECT property.*, row_to_json(address) as address FROM property

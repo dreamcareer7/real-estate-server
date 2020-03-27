@@ -144,6 +144,19 @@ async function updateSyncStatus() {
   expect(updatedCredential_2.sync_status).to.be.equal(null)
 }
 
+async function updateSendEmailAfter() {
+  const createdCredential = await create()
+
+  const ts = new Date().getTime()
+
+  await MicrosoftCredential.updateSendEmailAfter(createdCredential.id, ts)
+
+  const updatedCredential = await MicrosoftCredential.get(createdCredential.id)
+
+  expect(createdCredential.id).to.be.equal(updatedCredential.id)
+  expect(Number(updatedCredential.send_email_after)).to.be.equal(ts)
+}
+
 async function postponeOutlookSync() {
   const createdCredential = await create()
 
@@ -265,6 +278,7 @@ describe('Microsoft', () => {
     it('should revoke a microsoft-credential', updateAsRevoked)
     it('should update a microsoft-credential last sync status', updateLastSync)
     it('should update a microsoft-credential sync status', updateSyncStatus)
+    it('should update a microsoft-credential send_email_after', updateSendEmailAfter)
     it('should postpone a microsoft-credential sync', postponeOutlookSync)
 
     it('should disable/enable a microsoft-credential', disableEnableSync)
