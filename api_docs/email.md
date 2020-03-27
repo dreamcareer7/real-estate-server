@@ -139,8 +139,8 @@ An `email_campaign_attachments` object type looks like this:
 
 ### Upload an Attachment [POST /emails/attachments]
 * Tip: `origin` query parameter can be either of `gmail`, `outlook`, or `mailgun`.
-* Gmail limit: 26 MB
-* Outlook limit: 26 MB
+* Gmail limit: 26 MB (Single Attachment up to 26MB  or Several attachments with the sum of file sizes up to 26MB)
+* Outlook limit: Same as Gmail
 * Mailgun limit: 15 MB
 <!-- include(tests/email/uploadAttachment.md) -->
 
