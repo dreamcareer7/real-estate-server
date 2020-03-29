@@ -4,6 +4,7 @@
       "attributes": {
         "first_name": "John",
         "last_name": "Doe",
+        "birthday": 0,
         "email": {
           "text": "john@doe.com",
           "label": "Personal",
