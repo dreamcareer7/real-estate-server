@@ -46,7 +46,10 @@ const queues = [
     queues: ['flows', 'contacts', 'contact_lists', 'contact_duplicates', 'crm_tasks'],
     concurrency: 10
   },
-  { queues: ['contact_import'], concurrency: 15 },
+  {
+    queues: ['contact_import'],
+    concurrency: 15
+  },
   {
     queues: ['MLS.Office', 'MLS.Room', 'MLS.Agent'],
     concurrency: 50
@@ -65,6 +68,10 @@ const queues = [
   },
   {
     queues: ['microsoft_notifications'],
+    concurrency: 1
+  },
+  {
+    queues: ['gmail_webhooks'],
     concurrency: 1
   }
 ]
