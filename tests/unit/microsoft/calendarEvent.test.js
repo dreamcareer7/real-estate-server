@@ -67,14 +67,6 @@ async function bulkUpsert() {
   }
 }
 
-async function deleteLocal() {
-  const event = await createLocal()
-  await MicrosoftCalendarEvent.deleteLocal(event.id)
-  const updated = await MicrosoftCalendarEvent.get(event.id)
-
-  expect(updated.deleted_at).to.be.not.equal(null)
-}
-
 async function deleteLocalByRemoteIds() {
   const event = await createLocal()
   const cal   = await MicrosoftCalendar.get(event.microsoft_calendar)
@@ -82,15 +74,6 @@ async function deleteLocalByRemoteIds() {
   const updated = await MicrosoftCalendarEvent.get(event.id)
 
   expect(updated.deleted_at).to.be.not.equal(null)
-}
-
-async function restoreLocalByRemoteIds() {
-  const event = await createLocal()
-  const cal   = await MicrosoftCalendar.get(event.microsoft_calendar)
-  await MicrosoftCalendarEvent.restoreLocalByRemoteIds(cal, [event.event_id])
-  const updated = await MicrosoftCalendarEvent.get(event.id)
-
-  expect(updated.deleted_at).to.be.equal(null)
 }
 
 async function deleteLocalByCalendar() {
@@ -117,17 +100,6 @@ async function getFailed() {
   } catch (err) {
     expect(err.message).to.be.equal(`Microsoft calendar event by ${microsoftCredential.id} not found.`)
   }
-}
-
-async function getByCalendar() {
-  const event  = await createLocal()
-  const cal    = await MicrosoftCalendar.get(event.microsoft_calendar)
-  const events = await MicrosoftCalendarEvent.getByCalendar(cal)
-
-  expect(events.length).to.be.equal(1)
-  expect(events[0].id).to.be.equal(event.id)
-  expect(events[0].microsoft_credential).to.be.equal(event.microsoft_credential)
-  expect(events[0].microsoft_calendar).to.be.equal(event.microsoft_calendar)
 }
 
 async function getByCalendarAndEventRemoteIds() {
@@ -253,13 +225,10 @@ describe('Microsoft', () => {
     it('should create a microsoft calendar event', createLocal)
     it('should update a microsoft calendar event', updateLocal)
     it('should upsert a batch of microsoft calendar events', bulkUpsert)
-    it('should delete a microsoft calendar event', deleteLocal)
     it('should delete some microsoft calendars by remote ids', deleteLocalByRemoteIds)
-    it('should restore some microsoft calendars by remote ids', restoreLocalByRemoteIds)
     it('should delete some microsoft remote by calendar id', deleteLocalByCalendar)
     it('should returns an array of microsoft calendar events', getAll)
     it('should handle get event', getFailed)
-    it('should returns an array of microsoft calendar events - by calendar id', getByCalendar)
     it('should returns an array of microsoft calendar events - by calendar and event ids', getByCalendarAndEventRemoteIds)
     it('should returns an array of microsoft calendar event ids - by calendar id', getByCalendarIds)
 
