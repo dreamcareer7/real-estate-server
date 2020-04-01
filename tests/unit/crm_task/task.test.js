@@ -78,31 +78,57 @@ async function testUpdateAssociation() {
 async function createTwoTasks() {
   const [contact] = await createContact()
   
-  return CrmTask.createMany([{
-    ...base_task,
-    associations: [{
-      association_type: 'contact',
-      contact
-    }],
-    reminders: [{
-      is_relative: false,
-      timestamp: base_task.due_date - 3600
-    }]
-  }, {
-    ...base_task,
-    due_date: Date.now() / 1000 + 86400,
-    assignees: []
-  }])
+  return CrmTask.createMany([
+    {
+      ...base_task,
+      title: 'all_day true',
+      associations: [{
+        association_type: 'contact',
+        contact
+      }],
+      reminders: [{
+        is_relative: false,
+        timestamp: base_task.due_date - 3600
+      }],
+      metadata: { all_day: true }
+    },
+    {
+      ...base_task,
+      title: 'all_day false',
+      due_date: Date.now() / 1000 + 86400,
+      assignees: [],
+      metadata: { all_day: false }
+    },
+    {
+      ...base_task,
+      title: 'empty metadata',
+      due_date: Date.now() / 1000 + 86400,
+      assignees: [],
+      metadata: {}
+    },
+    {
+      ...base_task,
+      title: 'undefined metadata',
+      due_date: Date.now() / 1000 + 86400
+    }
+  ])
 }
 
 async function testCreateMany() {
   const task_ids = await createTwoTasks()
-  expect(task_ids).to.have.length(2)
+  expect(task_ids).to.have.length(4)
+
+  const tasks = await CrmTask.getAll(task_ids)
+
+  expect(tasks[0].metadata.all_day).to.be.equal(true)
+  expect(tasks[1].metadata.all_day).to.be.equal(false)
+  expect(tasks[2].metadata.toString()).to.be.equal({}.toString())
+  expect(tasks[3].metadata).to.be.equal(null)
 }
 
 function testCreateManyEmitsCreateEvent(done) {
   CrmTask.once('create', ({ task_ids, user_id, brand_id }) => {
-    expect(task_ids).to.have.length(2)
+    expect(task_ids).to.have.length(4)
     expect(user_id).to.be.equal(user.id)
     expect(brand_id).to.be.equal(brand.id)
 
