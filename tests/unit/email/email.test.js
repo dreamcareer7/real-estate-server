@@ -513,7 +513,7 @@ async function testCampaignWithLArgeAttachments() {
   } catch (ex) {
 
     const limit    = config.mailgun_integration.attachment_size_limit
-    const limitMsg = `${Math.round((limit / (1024 * 1024)) * (3 / 4))}MB`
+    const limitMsg = `${Math.round(limit / (1024 * 1024))}MB`
 
     expect(ex.message).to.be.equal(`Files size could not be greater than ${limitMsg}!`)
   }
@@ -742,7 +742,7 @@ async function testGmailLoadOfRecipients() {
   const to = []
 
   let i = 1
-  for (i; i < 105; i++) {
+  for (i; i < 1005; i++) {
     to.push({
       email: `gholi_${i}@rechat.com`,
       recipient_type: Email.EMAIL      
@@ -769,10 +769,9 @@ async function testGmailLoadOfRecipients() {
   }
 
   try {
-    const result = await EmailCampaign.createMany([campaignObj])
-    expect(result).to.be.equal(null)
+    await EmailCampaign.createMany([campaignObj])
   } catch (ex) {
-    expect(ex.message).to.be.equal('Recipients number should not be greater than 100.')
+    expect(ex.message).to.be.equal('Recipients number should not be greater than 1000 in normal campaigns.')
   }
 }
 
@@ -783,7 +782,7 @@ async function testOutlookLoadOfRecipients() {
   const to = []
 
   let i = 1
-  for (i; i < 205; i++) {
+  for (i; i < 1005; i++) {
     to.push({
       email: `gholi_${i}@rechat.com`,
       recipient_type: Email.EMAIL      
@@ -812,10 +811,9 @@ async function testOutlookLoadOfRecipients() {
   }
 
   try {
-    const result = await EmailCampaign.createMany([campaignObj])
-    expect(result).to.be.equal(null)
+    await EmailCampaign.createMany([campaignObj])
   } catch (ex) {
-    expect(ex.message).to.be.equal('Recipients number should not be greater than 500.')
+    expect(ex.message).to.be.equal('Recipients number should not be greater than 1000 in normal campaigns.')
   }
 }
 
@@ -1022,7 +1020,7 @@ describe('Email', () => {
   it('should handle an outlook-message', testMicrosoftEmail)
   it('should fail when both of google and microsoft are present', testGMFailure)
 
-  it('should fail when recipients num are more than 100', testGmailLoadOfRecipients)
+  it('should fail when recipients num are more than 1000', testGmailLoadOfRecipients)
   it('should fail when recipients num are more than 500', testOutlookLoadOfRecipients)
 
   it('should create an email_campaing_email record', createEmailCampaignEmail)

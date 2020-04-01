@@ -200,12 +200,12 @@ async function postponeGmailSync() {
 async function disableEnableSync() {
   const createdCredential = await create()
 
-  await GoogleCredential.disableEnableSync(createdCredential.id, 'disable')
+  await GoogleCredential.disableSync(createdCredential.id)
   const updatedCredential_1 = await GoogleCredential.get(createdCredential.id)
   expect(updatedCredential_1.deleted_at).not.to.be.equal(null)
 
 
-  await GoogleCredential.disableEnableSync(createdCredential.id, 'enable')
+  await GoogleCredential.enableSync(createdCredential.id)
   const updatedCredential_2 = await GoogleCredential.get(createdCredential.id)
   expect(updatedCredential_2.deleted_at).to.be.equal(null)
 }
@@ -214,7 +214,7 @@ async function disableEnableSyncFailed() {
   const not_exist_credential_id = user.id
 
   try {
-    await GoogleCredential.disableEnableSync(not_exist_credential_id, 'disable')
+    await GoogleCredential.disableSync(not_exist_credential_id)
 
   } catch (ex) {
     const message = `Google-Credential ${user.id} not found`
