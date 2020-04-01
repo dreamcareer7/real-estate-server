@@ -1,3 +1,5 @@
+const fs = require('fs')
+const path = require('path')
 const brand = require('./data/brand.js')
 const contexts = require('./data/context.js')
 
@@ -588,6 +590,47 @@ const deleteStatus = cb => {
     .expectStatus(204)
 }
 
+function createAsset(cb) {
+  const logo = fs.createReadStream(path.resolve(__dirname, 'data/logo.png'))
+
+  return frisby
+    .create('create an asset')
+    .post(
+      `/brands/${results.brand.create.data.id}/assets`,
+      {
+        file: logo
+      },
+      {
+        json: false,
+        form: true
+      }
+    )
+    .addHeader('content-type', 'multipart/form-data')
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK'
+    })
+}
+
+const getAssets = cb => {
+  return frisby.create('get brand assets')
+    .get(`/brands/${brand_id}/assets`)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      data: [results.brand.createAsset.data]
+    })
+}
+
+const deleteAsset = cb => {
+  return frisby.create('delete a brand asset')
+    .delete(`/brands/${brand_id}/assets/${results.brand.getAssets.data[0].id}`)
+    .after(cb)
+    .expectStatus(204)
+}
+
 module.exports = {
   createParent,
   create,
@@ -643,6 +686,10 @@ module.exports = {
   updateStatus,
   getStatuses,
   deleteStatus,
+
+  createAsset,
+  getAssets,
+  deleteAsset,
 
   removeBrand
 }
