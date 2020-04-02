@@ -408,7 +408,7 @@ const resetPasswordByShadowTokenPhoneInvalidPhone = (cb) => {
 }
 
 const upgradeToAgentWithEmail = (cb) => {
-  const agent = results.agent.getByMlsId.data
+  const agent = results.agent.getByMlsId.data[0]
   return frisby.create('upgrade user to agent with email')
     .patch('/users/self/upgrade', {
       agent: agent.id,
@@ -419,7 +419,7 @@ const upgradeToAgentWithEmail = (cb) => {
 }
 
 const upgradeToAgentWithPhoneNumber = (cb) => {
-  const agent = results.agent.getByMlsId.data
+  const agent = results.agent.getByMlsId.data[0]
   return frisby.create('upgrade user to agent with phone number')
     .patch('/users/self/upgrade', {
       agent: agent.id,
@@ -430,7 +430,7 @@ const upgradeToAgentWithPhoneNumber = (cb) => {
 }
 
 const upgradeToAgentInvalidSecret = (cb) => {
-  const agent = results.agent.getByMlsId.data
+  const agent = results.agent.getByMlsId.data[0]
   return frisby.create('upgrade user to agent with invalid secret')
     .patch('/users/self/upgrade', {
       agent: agent.id,
@@ -441,7 +441,7 @@ const upgradeToAgentInvalidSecret = (cb) => {
 }
 
 const upgradeToAgentSecretMissing = (cb) => {
-  const agent = results.agent.getByMlsId.data
+  const agent = results.agent.getByMlsId.data[0]
   return frisby.create('upgrade user to agent secret missing')
     .patch('/users/self/upgrade', {
       agent: agent.id
