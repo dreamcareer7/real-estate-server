@@ -33,12 +33,12 @@ const getByMlsId = (cb) => {
 
 const getById = cb => {
   return frisby.create('get an agent by id')
-    .get(`/agents/${results.agent.getByMlsId.data.id}`)
+    .get(`/agents/${results.agent.getByMlsId.data[0].id}`)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
-      data: results.agent.getByMlsId.data
+      data: results.agent.getByMlsId.data[0]
     })
 }
 
