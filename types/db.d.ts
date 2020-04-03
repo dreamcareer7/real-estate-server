@@ -445,6 +445,7 @@ declare type TDbSqlAddress =
   | 'microsoft/subscription/get'
   | 'microsoft/subscription/get_by_remote_id'
   | 'microsoft/subscription/get_by_resource'
+  | 'microsoft/subscription/get_by_credential'
   | 'microsoft/subscription/insert'
   | 'microsoft/subscription/update_expiration_time'
   | 'microsoft/sync_history/credential_last_sync'
