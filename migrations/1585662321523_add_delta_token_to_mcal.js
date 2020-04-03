@@ -3,7 +3,7 @@ const db = require('../lib/utils/db')
 const migrations = [
   'BEGIN',
 
-  'ALTER TABLE microsoft_calendars ADD COLUMN IF NOT EXISTS delta_token',
+  'ALTER TABLE microsoft_calendars ADD COLUMN IF NOT EXISTS delta_token TEXT',
 
   'COMMIT'
 ]
