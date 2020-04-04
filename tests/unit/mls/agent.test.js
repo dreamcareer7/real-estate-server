@@ -64,7 +64,7 @@ const getByMls = async () => {
 
   const fetched = await Agent.getByMLSID(json.mlsid)
 
-  expect(fetched[0].id).to.equal(saved)
+  expect(fetched.id).to.equal(saved)
 }
 
 const getByOfficeMls = async () => {
