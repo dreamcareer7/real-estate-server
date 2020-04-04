@@ -7,7 +7,7 @@ const BrandHelper = require('../brand/helper')
 const MicrosoftCalendar      = require('../../../lib/models/Microsoft/calendar')
 const MicrosoftCalendarEvent = require('../../../lib/models/Microsoft/calendar_events')
 
-const { generateCalendarEventRecord } = require('../../../lib/models/Microsoft/workers/subscriptions/common')
+const { generateCalendarEvent } = require('../../../lib/models/Microsoft/workers/subscriptions/common')
 
 const { createMicrosoftMessages, createMicrosoftCalendar, createMicrosoftCalendarEvent } = require('./helper')
 const events = require('./data/calendar_events.json')
@@ -51,7 +51,7 @@ async function updateLocal() {
 async function bulkUpsert() {
   const records = []
 
-  const record = generateCalendarEventRecord(microsoftCalendar, events.remote_event_1)
+  const record = generateCalendarEvent(microsoftCalendar, events.remote_event_1)
 
   if (record)
     records.push()
