@@ -20,12 +20,14 @@ const getByMlsId = (cb) => {
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
-      data: {
-        mlsid: agent.mlsid,
-        first_name: agent.first_name,
-        last_name: agent.last_name,
-        email: agent.email
-      }
+      data: [
+        {
+          mlsid: agent.mlsid,
+          first_name: agent.first_name,
+          last_name: agent.last_name,
+          email: agent.email
+        }
+      ]
     })
 }
 
