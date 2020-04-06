@@ -135,6 +135,13 @@ const deleteTemplate = cb => {
     .expectStatus(204)
 }
 
+const invalidateThumbnails = cb => {
+  return frisby.create('invalidate thumbnails for a brand')
+    .post(`/brands/${results.brand.createParent.data.id}/templates/thumbnails/invalidate`)
+    .after(cb)
+    .expectStatus(204)
+}
+
 module.exports = {
   create,
   getForBrand,
@@ -144,5 +151,6 @@ module.exports = {
   createAsset,
   deleteInstance,
   updateThumbnails,
+  invalidateThumbnails,
   deleteTemplate
 }
