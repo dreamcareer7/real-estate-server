@@ -2,7 +2,7 @@ INSERT INTO users_jobs
   (
     "user",
     brand,
-    microsoft_credential,
+    google_credential,
     microsoft_credential,
     job_name,
     status,
