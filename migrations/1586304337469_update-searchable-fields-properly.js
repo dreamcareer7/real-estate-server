@@ -1,4 +1,8 @@
-CREATE OR REPLACE FUNCTION update_current_deal_context(deal_id uuid)
+const db = require('../lib/utils/db')
+
+const migrations = [
+  'BEGIN',
+  `CREATE OR REPLACE FUNCTION update_current_deal_context(deal_id uuid)
 RETURNS void AS
 $$
   BEGIN
@@ -103,8 +107,29 @@ $$
       deal = EXCLUDED.deal,
       checklist = EXCLUDED.checklist,
       source = EXCLUDED.source,
-      searchable = to_tsvector('english', COALESCE(EXCLUDED.text, EXCLUDED.number::text));
+      searchable = to_tsvector('english', COALESCE(EXCLUDED.text, number::text));
 
   END;
 $$
-LANGUAGE PLPGSQL;
+LANGUAGE PLPGSQL;`,
+  `UPDATE current_deal_context
+    SET searchable = to_tsvector('english', COALESCE(text, number::text))`,
+  'COMMIT'
+]
+
+
+const run = async () => {
+  const { conn } = await db.conn.promise()
+
+  for(const sql of migrations) {
+    await conn.query(sql)
+  }
+
+  conn.release()
+}
+
+exports.up = cb => {
+  run().then(cb).catch(cb)
+}
+
+exports.down = () => {}
