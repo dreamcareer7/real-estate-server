@@ -396,6 +396,7 @@ declare type TDbSqlAddress =
   | 'microsoft/calendar/remote_insert'
   | 'microsoft/calendar/update_delta_token'
   | 'microsoft/calendar/update_to_sync'
+  | 'microsoft/calendar/update_delta_token'
   | 'microsoft/calendar_events/count'
   | 'microsoft/calendar_events/delete'
   | 'microsoft/calendar_events/delete_by_cal_id'
