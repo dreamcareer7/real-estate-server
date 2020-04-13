@@ -1,5 +1,5 @@
 {% extends "../email.mjml" %}
-{% set layout = { top_image: "https://assets.rechat.com/mail/v2/09_Confirm-Your-Email.png", title: "Accept Terms & Verify Email", action_title: "Confirm Your Email" } %}
+{% set layout = { top_image: "https://assets.rechat.com/mail/v2/Confirm-email.png", title: "Accept Terms & Verify Email", action_title: "Confirm Your Email" } %}
 {% set url = branch %}
 
 {% block content %}

@@ -1,5 +1,5 @@
 {% extends "../email.mjml" %}
-{% set layout = { top_image: "https://assets.rechat.com/mail/v2/08_Welcome-To-Rechat.png", title: "Welcome to Rechat", action_title: "Activate Your Account" } %}
+{% set layout = { top_image: "https://assets.rechat.com/mail/v2/Welcome.png", title: "Welcome to Rechat", action_title: "Activate Your Account" } %}
 
 {% block content %}
     <mj-section background-color="#ffffff" padding="0 32px">
