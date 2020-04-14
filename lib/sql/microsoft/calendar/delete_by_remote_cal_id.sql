@@ -1,6 +1,8 @@
 UPDATE
   microsoft_calendars
 SET
+  to_sync = false,
+  delta_token = null,
   deleted_at = now(),
   updated_at = now()
 WHERE

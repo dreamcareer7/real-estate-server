@@ -66,6 +66,10 @@ const queues = [
   {
     queues: ['microsoft_notifications'],
     concurrency: 1
+  },
+  {
+    queues: ['microsoft_cal_notifications'],
+    concurrency: 1
   }
 ]
 
@@ -75,7 +79,7 @@ const forks = [
     concurrency: 5
   },
   {
-    queues: ['microsoft'],
+    queues: ['microsoft', 'microsoft_cal'],
     concurrency: 5
   },
   {
