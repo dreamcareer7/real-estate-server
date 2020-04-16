@@ -172,12 +172,12 @@ async function postponeOutlookSync() {
 async function disableEnableSync() {
   const createdCredential = await create()
 
-  await MicrosoftCredential.disableEnableSync(createdCredential.id, 'disable')
+  await MicrosoftCredential.disableSync(createdCredential.id)
   const updatedCredential_1 = await MicrosoftCredential.get(createdCredential.id)
   expect(updatedCredential_1.deleted_at).not.to.be.equal(null)
 
 
-  await MicrosoftCredential.disableEnableSync(createdCredential.id, 'enable')
+  await MicrosoftCredential.enableSync(createdCredential.id)
   const updatedCredential_2 = await MicrosoftCredential.get(createdCredential.id)
   expect(updatedCredential_2.deleted_at).to.be.equal(null)
 }
@@ -186,7 +186,7 @@ async function disableEnableSyncFailed() {
   const not_exist_credential_id = user.id
 
   try {
-    await MicrosoftCredential.disableEnableSync(not_exist_credential_id, 'disable')
+    await MicrosoftCredential.disableSync(not_exist_credential_id)
 
   } catch (ex) {
     const message = `Microsoft-Credential ${user.id} not found`
