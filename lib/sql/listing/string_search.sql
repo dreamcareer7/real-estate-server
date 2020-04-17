@@ -8,7 +8,7 @@ WITH r AS (
   ORDER BY order_listings(status)
 )
 
-SELECT * FROM r LIMIT $3
+SELECT *, (COUNT(*) OVER())::INT as total FROM r LIMIT $3
 
 -- This used to be a simple query with no CTE.
 -- But the LIMIT was causing a major slowdown.
