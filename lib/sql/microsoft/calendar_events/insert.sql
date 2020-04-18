@@ -20,6 +20,7 @@ INSERT INTO microsoft_calendar_events
     attendees,
     categories,
     response_status,
+    extensions,
     has_attachments,
     is_all_day,
     is_cancelled,
