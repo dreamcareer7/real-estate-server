@@ -77,7 +77,7 @@ async function deleteLocalByRemoteCalendarId() {
 
   expect(updated.id).to.be.equal(cal.id)
   expect(updated.deleted_at).to.be.not.equal(null)
-  expect(updated.deleted).to.be.not.equal(true)
+  expect(updated.deleted).to.be.equal(true)
 }
 
 async function getFailed() {
