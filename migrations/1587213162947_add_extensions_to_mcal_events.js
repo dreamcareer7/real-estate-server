@@ -3,7 +3,7 @@ const db = require('../lib/utils/db')
 const migrations = [
   'BEGIN',
 
-  'ALTER TABLE microsoft_calendar_events DROP COLUMN IF EXISTS original_start',
+  'ALTER TABLE microsoft_calendar_events ADD COLUMN IF NOT EXISTS extensions JSONB',
 
   'COMMIT'
 ]
