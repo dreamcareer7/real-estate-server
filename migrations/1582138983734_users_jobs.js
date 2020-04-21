@@ -10,7 +10,7 @@ const migrations = [
     brand uuid NOT NULL REFERENCES brands(id),
 
     google_credential uuid NULL REFERENCES google_credentials(id),
-    microsoft_credential uuid NULL REFERENCES google_credentials(id),
+    microsoft_credential uuid NULL REFERENCES microsoft_credentials(id),
 
     job_name TEXT,
     status TEXT,

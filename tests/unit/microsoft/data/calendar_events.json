@@ -88,6 +88,16 @@
         }
       }
     ],
+    "extensions": [{
+      "@odata.type": "Microsoft.Graph.OpenTypeExtension",
+      "extensionName": "Rechat_Outlook_Cal_Ex",
+      "shared": true,
+      "origin": "rechat",
+      "object_type": "crm_task",
+      "event_type": "event.event_type",
+      "rechat_cal_event_id": "event.id",
+      "rechat_cal_orginal_id": "event.orginal_id"
+    }],
     "organizer": {
       "emailAddress": {
         "name": "Alex Wilber",

@@ -1,1 +1,1 @@
-DELETE FROM microsoft_subscriptions WHERE id = $1
+DELETE FROM microsoft_subscriptions WHERE id = ANY($1::uuid[])
