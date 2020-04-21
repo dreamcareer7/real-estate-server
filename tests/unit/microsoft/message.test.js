@@ -60,6 +60,19 @@ async function getByMessageIdFailed() {
   }
 }
 
+async function getDistinctCredential() {
+  const microsoftMessages = await create()
+
+  const thread_keys = microsoftMessages.map(msg => msg.thread_key)
+  const credentials = microsoftMessages.map(msg => msg.microsoft_credential)
+
+  const resutl = await MicrosoftMessage.getDistinctCredential(thread_keys)
+
+  const status = resutl.every(entry => credentials.includes(entry))
+
+  expect(status).to.equal(true)
+}
+
 async function getMCredentialMessagesNum() {
   const microsoftMessages = await create()
 
@@ -184,6 +197,25 @@ async function deleteByRemoteMessageIds() {
   }
 }
 
+async function deleteByThreadKeys() {
+  const messages   = await create()
+  const threadKeys = messages.map(msg => msg.thread_key)
+  const credential = await MicrosoftCredential.get(messages[0].microsoft_credential)
+
+  await MicrosoftMessage.deleteByThreadKeys(credential.id, threadKeys)
+
+  const resutlNew = await EmailThread.filter(credential.user, credential.brand, {})
+
+  for (const message of messages) {
+    const microsoftMessage = await MicrosoftMessage.get(message.id)
+
+    expect(microsoftMessage.type).to.be.equal('microsoft_message')
+    expect(microsoftMessage.microsoft_credential).to.be.equal(message.microsoft_credential)
+    expect(microsoftMessage.deleted_at).not.to.be.equal(null)
+    expect(resutlNew.ids.includes(microsoftMessage.thread_key)).to.be.equal(false)
+  }
+}
+
 async function downloadAttachmentFailed() {
   const microsoftMessages = await create()
   const microsoftMessage_min = microsoftMessages[0]
@@ -237,11 +269,13 @@ describe('Microsoft', () => {
     it('should create some microsoft-messages', create)
     it('should return microsoft-message by messages_id', getByMessageId)
     it('should handle failure of microsoft-contact get by messages_id', getByMessageIdFailed)
+    it('should return a list of credential ids based on thread_keys', getDistinctCredential)
     it('should return number of messages of specific credential', getMCredentialMessagesNum)
     it('should delete microsoft-messages by ids', deleteMany)
     it('should delete microsoft-messages by credential', deleteByCredential)
     it('should delete microsoft-messages by internet_messages_ids', deleteByInternetMessageIds)
     it('should delete microsoft-messages by remote_message_id', deleteByRemoteMessageIds)
+    it('should delete microsoft-messages by thread keys', deleteByThreadKeys)
     it('should handle failure of downloadAttachment', downloadAttachmentFailed)
     it('should update message is_read', updateIsRead)
     it('should update message read status', updateReadStatus)
