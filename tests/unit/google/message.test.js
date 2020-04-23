@@ -68,13 +68,26 @@ async function getByMessageIdFailed() {
   }
 }
 
-async function getDistinctCredential() {
+async function getDistinctCredentialByThread() {
   const googleMessages = await create()
 
   const thread_keys = googleMessages.map(msg => msg.thread_key)
   const credentials = googleMessages.map(msg => msg.google_credential)
 
-  const resutl = await GoogleMessage.getDistinctCredential(thread_keys)
+  const resutl = await GoogleMessage.getDistinctCredentialByThread(thread_keys)
+
+  const status = resutl.every(entry => credentials.includes(entry))
+
+  expect(status).to.equal(true)
+}
+
+async function getDistinctCredentialByMessage() {
+  const googleMessages = await create()
+
+  const ids = googleMessages.map(msg => msg.id)
+  const credentials = googleMessages.map(msg => msg.google_credential)
+
+  const resutl = await GoogleMessage.getDistinctCredentialByMessage(ids)
 
   const status = resutl.every(entry => credentials.includes(entry))
 
@@ -275,7 +288,8 @@ describe('Google', () => {
     it('should create some google-messages', create)
     it('should return google-message by messages_id', getByMessageId)
     it('should handle failure of google-contact get by messages_id', getByMessageIdFailed)
-    it('should return a list of credential ids based on thread_keys', getDistinctCredential)
+    it('should return a list of unique credential ids based on thread_keys', getDistinctCredentialByThread)
+    it('should return a list of unique credential ids based on ids', getDistinctCredentialByMessage)
     it('should delete google-messages by ids', deleteMany)
     it('should delete google-messages by credential', deleteByCredential)
     it('should delete google-messages by messages_ids', deleteByMessageIds)

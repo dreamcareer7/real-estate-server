@@ -60,13 +60,26 @@ async function getByMessageIdFailed() {
   }
 }
 
-async function getDistinctCredential() {
+async function getDistinctCredentialByThread() {
   const microsoftMessages = await create()
 
   const thread_keys = microsoftMessages.map(msg => msg.thread_key)
   const credentials = microsoftMessages.map(msg => msg.microsoft_credential)
 
-  const resutl = await MicrosoftMessage.getDistinctCredential(thread_keys)
+  const resutl = await MicrosoftMessage.getDistinctCredentialByThread(thread_keys)
+
+  const status = resutl.every(entry => credentials.includes(entry))
+
+  expect(status).to.equal(true)
+}
+
+async function getDistinctCredentialByMessage() {
+  const microsoftMessages = await create()
+
+  const ids = microsoftMessages.map(msg => msg.id)
+  const credentials = microsoftMessages.map(msg => msg.microsoft_credential)
+
+  const resutl = await MicrosoftMessage.getDistinctCredentialByMessage(ids)
 
   const status = resutl.every(entry => credentials.includes(entry))
 
@@ -269,7 +282,8 @@ describe('Microsoft', () => {
     it('should create some microsoft-messages', create)
     it('should return microsoft-message by messages_id', getByMessageId)
     it('should handle failure of microsoft-contact get by messages_id', getByMessageIdFailed)
-    it('should return a list of credential ids based on thread_keys', getDistinctCredential)
+    it('should return a list of unique credential ids based on thread_keys', getDistinctCredentialByThread)
+    it('should return a list of unique credential ids based on message ids', getDistinctCredentialByMessage)
     it('should return number of messages of specific credential', getMCredentialMessagesNum)
     it('should delete microsoft-messages by ids', deleteMany)
     it('should delete microsoft-messages by credential', deleteByCredential)
