@@ -2,7 +2,7 @@ const db = require('../lib/utils/db')
 
 const migrations = [
   'BEGIN',
-  'ALTER TABLE offices ALTER COLUMN office_mui TYPE bigint USING office_mui::bigint',
+  'ALTER TABLE agents ALTER COLUMN office_mui TYPE bigint USING office_mui::bigint',
   'COMMIT'
 ]
 
