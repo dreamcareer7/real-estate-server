@@ -63,7 +63,7 @@ const migrations = [
     is_all_day Boolean,
     is_cancelled Boolean,
     is_organizer Boolean,
-    is_reminderOn Boolean,
+    is_reminder_on Boolean,
     response_requested Boolean,
 
     change_key TEXT,
@@ -72,7 +72,7 @@ const migrations = [
     online_meeting_url TEXT,
     reminder_minutes_before_start BIGINT,
     sensitivity TEXT,
-    series_masterId TEXT,
+    series_master_id TEXT,
     show_as TEXT,
     web_link TEXT,
 
