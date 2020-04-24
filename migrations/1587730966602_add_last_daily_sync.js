@@ -5,6 +5,7 @@ const migrations = [
   'BEGIN',
 
   'ALTER TABLE google_credentials ADD COLUMN IF NOT EXISTS last_daily_sync timestamp with time zone',
+  'update google_credentials set last_daily_sync = now()',
 
   'COMMIT'
 ]
