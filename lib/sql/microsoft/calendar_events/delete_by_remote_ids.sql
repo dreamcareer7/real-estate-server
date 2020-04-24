@@ -6,5 +6,5 @@ SET
 WHERE
   (microsoft_credential = $1 AND microsoft_calendar = $2)
   AND
-  (event_id = ANY($3::text[]) OR series_masterid = ANY($3::text[]) )
+  (event_id = ANY($3::text[]) OR series_master_id = ANY($3::text[]) )
 RETURNING id
