@@ -2,7 +2,6 @@ require('../connection.js')
 require('../../lib/models/index.js')
 const db = require('../../lib/utils/db')
 const promisify = require('../../lib/utils/promisify')
-const fs = require('fs')
 
 const run = async () => {
   const query = 'SELECT id FROM deals WHERE brokerwolf_id IS NULL AND deleted_at IS NULL'
