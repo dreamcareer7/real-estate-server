@@ -150,7 +150,7 @@ poll({
 poll({
   fn: MicrosoftWorker.Calendar.syncDue,
   name: 'MicrosoftWorker.calendar.syncDue'
-})*/
+})
 
 poll({
   fn: BrandTemplate.updateThumbnails,
