@@ -12,4 +12,3 @@ SELECT
   ) as brand
 FROM brands_allowed_templates bat
 WHERE thumbnail_requested_at IS NOT NULL
-LIMIT 20 -- We want to take small bites.

@@ -10,6 +10,7 @@ const EmailCampaign = require('../../lib/models/Email/campaign')
 const GoogleWorkers = require('../../lib/models/Google/workers')
 const MicrosoftWorker = require('../../lib/models/Microsoft/workers')
 const Task = require('../../lib/models/Task')
+const BrandTemplate = require('../../lib/models/Template/brand')
 // const ShowingsWorker = require('../../lib/models/Showings/worker')
 
 let i = 1
@@ -149,11 +150,11 @@ poll({
 poll({
   fn: MicrosoftWorker.Calendar.syncDue,
   name: 'MicrosoftWorker.calendar.syncDue'
-})
+})*/
 
 poll({
-  fn: Template.updateThumbnails,
-  name: 'Template.updateThumbnails'
+  fn: BrandTemplate.updateThumbnails,
+  name: 'BrandTemplate.updateThumbnails'
 })
 
 // poll({
