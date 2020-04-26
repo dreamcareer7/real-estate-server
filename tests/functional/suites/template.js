@@ -122,7 +122,7 @@ const deleteInstance = cb => {
 const updateThumbnails = (cb) => {
   return frisby.create('Update Thumbnails')
     .post('/jobs', {
-      name: 'Template.updateThumbnails'
+      name: 'BrandTemplate.updateThumbnails'
     })
     .after(cb)
     .expectStatus(200)
