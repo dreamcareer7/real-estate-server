@@ -153,7 +153,7 @@
     "jasmine-node": "^1.16.2",
     "mocha": "^6.2.2",
     "nock": "^10.0.6",
-    "nyc": "^14.1.1",
+    "nyc": "^15.0.1",
     "request-as-curl": "^0.1.0",
     "rimraf": "^3.0.0",
     "typescript": "^3.7.3"
