@@ -17,7 +17,8 @@ let user, brand, credential
 async function setup() {
   user   = await User.getByEmail('test@rechat.com')
   brand  = await BrandHelper.create({ roles: { Admin: [user.id] } })
-  result = await createGoogleMessages(user, brand)
+
+  const result = await createGoogleMessages(user, brand)
 
   credential = result.credential
 
@@ -27,8 +28,7 @@ async function setup() {
 async function createGoogleMailLabels() {
   const id = await GoogleMailLabel.upsertLabels(credential.id, mailLabels)
 
-  // expect(id).to.be(uuid)
-  console.log('----- createGoogleMailLabels', id)
+  expect(id).to.be.uuid
 
   return id
 }
@@ -36,19 +36,22 @@ async function createGoogleMailLabels() {
 async function getById() {
   const id = await createGoogleMailLabels()
 
-  const labels = await GoogleMailLabel.get(id)
+  const record = await GoogleMailLabel.get(id)
 
-  console.log('getById', labels)
+  expect(record.id).to.be.equal(id)
+  expect(record.credential).to.be.equal(credential.id)
+  expect(record.labels.length).to.not.be.equal(0)
 
-  return labels
+  return record
 }
 
 async function getByCredential() {
-  const labels = await GoogleMailLabel.getByCredential(credential.id)
+  const created = await getById()
+  const record  = await GoogleMailLabel.getByCredential(created.credential)
 
-  console.log('getByCredential', labels)
-
-  return labels
+  expect(record.id).to.be.equal(created.id)
+  expect(record.credential).to.be.equal(credential.id)
+  expect(record.labels.length).to.not.be.equal(0)
 }
 
 

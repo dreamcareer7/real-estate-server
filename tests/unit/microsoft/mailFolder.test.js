@@ -4,41 +4,54 @@ const { createContext } = require('../helper')
 const Context  = require('../../../lib/models/Context')
 const User     = require('../../../lib/models/User')
 const BrandHelper         = require('../brand/helper')
-const MicrosoftMailFolder = require('../../../lib/models/Microsoft/mail_folders')
+const MicrosoftMaiFolder = require('../../../lib/models/Microsoft/mail_folders')
 
 const { createMicrosoftMessages } = require('./helper')
 
-const mailFfolders = require('./data/mail_folders.json')
+const maiFolders = require('./data/mail_folders.json')
 
-let user, brand
+let user, brand, credential
 
 
 
 async function setup() {
-  user  = await User.getByEmail('test@rechat.com')
-  brand = await BrandHelper.create({ roles: { Admin: [user.id] } })
+  user   = await User.getByEmail('test@rechat.com')
+  brand  = await BrandHelper.create({ roles: { Admin: [user.id] } })
 
-  Context.set({ user, brand })
+  const result = await createMicrosoftMessages(user, brand)
+
+  credential = result.credential
+
+  Context.set({ user, brand, credential })
 }
 
-async function createMicrosoftMailFolders() {
-  const { credential } = await createMicrosoftMessages(user, brand)
+async function createMicrosoftMaiFolders() {
+  const id = await MicrosoftMaiFolder.upsertFolders(credential.id, maiFolders)
 
-  const folders = await MicrosoftMailFolder.upsertFolders(credential.id, mailFfolders)
+  expect(id).to.be.uuid
 
-  console.log('createMicrosoftMailFolders', folders)
+  return id
+}
 
-  return folders
+async function getById() {
+  const id = await createMicrosoftMaiFolders()
+
+  const record = await MicrosoftMaiFolder.get(id)
+
+  expect(record.id).to.be.equal(id)
+  expect(record.credential).to.be.equal(credential.id)
+  expect(record.folders.length).to.not.be.equal(0)
+
+  return record
 }
 
 async function getByCredential() {
-  const { credential } = await createMicrosoftMessages(user, brand)
+  const created = await getById()
+  const record  = await MicrosoftMaiFolder.getByCredential(created.credential)
 
-  const folders = await MicrosoftMailFolder.getByCredential(credential.id)
-
-  console.log('getByCredential', folders)
-
-  return folders
+  expect(record.id).to.be.equal(created.id)
+  expect(record.credential).to.be.equal(credential.id)
+  expect(record.folders.length).to.not.be.equal(0)
 }
 
 
@@ -47,7 +60,8 @@ describe('Microsoft', () => {
     createContext()
     beforeEach(setup)
 
-    it('should create mail folders record', createMicrosoftMailFolders)
+    it('should create mail folders record', createMicrosoftMaiFolders)
+    it('should return mail folders by id', getById)
     it('should return mail folders by credential id', getByCredential)
   })
 })
