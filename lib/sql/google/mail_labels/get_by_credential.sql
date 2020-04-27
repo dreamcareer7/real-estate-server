@@ -1,0 +1,1 @@
+SELECT id FROM google_mail_labels WHERE credential = $1::uuid
