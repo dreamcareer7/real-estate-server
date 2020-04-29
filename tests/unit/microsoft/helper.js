@@ -4,7 +4,7 @@ const MicrosoftCredential    = require('../../../lib/models/Microsoft/credential
 const MicrosoftMessage       = require('../../../lib/models/Microsoft/message')
 const MicrosoftCalendar      = require('../../../lib/models/Microsoft/calendar')
 const MicrosoftCalendarEvent = require('../../../lib/models/Microsoft/calendar_events')
-const { generateMMesssageRecord } = require('../../../lib/models/Microsoft/workers/messages/common')
+const { generateRecord } = require('../../../lib/models/Microsoft/workers/messages/common')
 
 const microsoft_messages_offline = require('./data/microsoft_messages.json')
 const calendars = require('./data/calendars.json')
@@ -33,7 +33,7 @@ async function createMicrosoftMessages(user, brand) {
   const microsoftMessages = []
 
   for ( const message of microsoft_messages_offline ) {
-    microsoftMessages.push(generateMMesssageRecord(credential, message))
+    microsoftMessages.push(generateRecord(credential, message))
   }
 
   const createdMessages = await MicrosoftMessage.create(microsoftMessages, credential.id)

@@ -1,5 +1,5 @@
 WITH insert AS (
-  INSERT INTO emails_events (email, event, created_at, recipient)
+  INSERT INTO emails_events (email, event, created_at, recipient, object)
   VALUES
   (
     (
@@ -7,7 +7,8 @@ WITH insert AS (
     ),
     $2::email_event,
     to_timestamp($3),
-    $4
+    $4,
+    $5
   )
 )
 
