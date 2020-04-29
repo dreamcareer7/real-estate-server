@@ -410,6 +410,7 @@ declare type TDbSqlAddress =
   | 'microsoft/calendar_events/get'
   | 'microsoft/calendar_events/get_by_calendar_and_event_ids'
   | 'microsoft/calendar_events/get_by_calendar_ids'
+  | 'microsoft/calendar_events/delete_many'
   | 'microsoft/calendar_events/insert'
   | 'microsoft/contact/count'
   | 'microsoft/contact/get'
