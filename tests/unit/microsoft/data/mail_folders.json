@@ -1,0 +1,110 @@
+[
+  {
+      "id": "AAMkAGMzNDg4YmM0LTc5ZTYtNGFlYy1hNzlmLTVkODM2ZDM0MzU5OQAuAAAAAAAuCbsCt-UNSalguiOYZHWEAQDC2sKTjOSNTpsi5KIF1ip6AAAAAAFJAAA=",
+      "displayName": "Archive",
+      "parentFolderId": "AAMkAGMzNDg4YmM0LTc5ZTYtNGFlYy1hNzlmLTVkODM2ZDM0MzU5OQAuAAAAAAAuCbsCt-UNSalguiOYZHWEAQDC2sKTjOSNTpsi5KIF1ip6AAAAAAEIAAA=",
+      "childFolderCount": 1,
+      "unreadItemCount": 0,
+      "totalItemCount": 1,
+      "wellKnownName": "archive"
+  },
+  {
+      "id": "AAMkAGMzNDg4YmM0LTc5ZTYtNGFlYy1hNzlmLTVkODM2ZDM0MzU5OQAuAAAAAAAuCbsCt-UNSalguiOYZHWEAQDC2sKTjOSNTpsi5KIF1ip6AAFtY88cAAA=",
+      "displayName": "Archive_sub_1",
+      "parentFolderId": "AAMkAGMzNDg4YmM0LTc5ZTYtNGFlYy1hNzlmLTVkODM2ZDM0MzU5OQAuAAAAAAAuCbsCt-UNSalguiOYZHWEAQDC2sKTjOSNTpsi5KIF1ip6AAAAAAFJAAA=",
+      "childFolderCount": 2,
+      "unreadItemCount": 1,
+      "totalItemCount": 1,
+      "wellKnownName": null
+  },
+  {
+      "id": "AAMkAGMzNDg4YmM0LTc5ZTYtNGFlYy1hNzlmLTVkODM2ZDM0MzU5OQAuAAAAAAAuCbsCt-UNSalguiOYZHWEAQDC2sKTjOSNTpsi5KIF1ip6AAFtY88dAAA=",
+      "displayName": "Archive_sub_1.1",
+      "parentFolderId": "AAMkAGMzNDg4YmM0LTc5ZTYtNGFlYy1hNzlmLTVkODM2ZDM0MzU5OQAuAAAAAAAuCbsCt-UNSalguiOYZHWEAQDC2sKTjOSNTpsi5KIF1ip6AAFtY88cAAA=",
+      "childFolderCount": 0,
+      "unreadItemCount": 0,
+      "totalItemCount": 0,
+      "wellKnownName": null
+  },
+  {
+      "id": "AAMkAGMzNDg4YmM0LTc5ZTYtNGFlYy1hNzlmLTVkODM2ZDM0MzU5OQAuAAAAAAAuCbsCt-UNSalguiOYZHWEAQDC2sKTjOSNTpsi5KIF1ip6AAFtY88eAAA=",
+      "displayName": "Archive_sub_1.2",
+      "parentFolderId": "AAMkAGMzNDg4YmM0LTc5ZTYtNGFlYy1hNzlmLTVkODM2ZDM0MzU5OQAuAAAAAAAuCbsCt-UNSalguiOYZHWEAQDC2sKTjOSNTpsi5KIF1ip6AAFtY88cAAA=",
+      "childFolderCount": 1,
+      "unreadItemCount": 0,
+      "totalItemCount": 0,
+      "wellKnownName": null
+  },
+  {
+      "id": "AAMkAGMzNDg4YmM0LTc5ZTYtNGFlYy1hNzlmLTVkODM2ZDM0MzU5OQAuAAAAAAAuCbsCt-UNSalguiOYZHWEAQDC2sKTjOSNTpsi5KIF1ip6AAFtY88fAAA=",
+      "displayName": "Archive_sub_1.2.1",
+      "parentFolderId": "AAMkAGMzNDg4YmM0LTc5ZTYtNGFlYy1hNzlmLTVkODM2ZDM0MzU5OQAuAAAAAAAuCbsCt-UNSalguiOYZHWEAQDC2sKTjOSNTpsi5KIF1ip6AAFtY88eAAA=",
+      "childFolderCount": 0,
+      "unreadItemCount": 0,
+      "totalItemCount": 0,
+      "wellKnownName": null
+  },
+  {
+      "id": "AAMkAGMzNDg4YmM0LTc5ZTYtNGFlYy1hNzlmLTVkODM2ZDM0MzU5OQAuAAAAAAAuCbsCt-UNSalguiOYZHWEAQDC2sKTjOSNTpsi5KIF1ip6AAAAAAEfAAA=",
+      "displayName": "Conversation History",
+      "parentFolderId": "AAMkAGMzNDg4YmM0LTc5ZTYtNGFlYy1hNzlmLTVkODM2ZDM0MzU5OQAuAAAAAAAuCbsCt-UNSalguiOYZHWEAQDC2sKTjOSNTpsi5KIF1ip6AAAAAAEIAAA=",
+      "childFolderCount": 1,
+      "unreadItemCount": 0,
+      "totalItemCount": 0,
+      "wellKnownName": "conversationhistory"
+  },
+  {
+      "id": "AAMkAGMzNDg4YmM0LTc5ZTYtNGFlYy1hNzlmLTVkODM2ZDM0MzU5OQAuAAAAAAAuCbsCt-UNSalguiOYZHWEAQDC2sKTjOSNTpsi5KIF1ip6AAAAAAEKAAA=",
+      "displayName": "Deleted Items",
+      "parentFolderId": "AAMkAGMzNDg4YmM0LTc5ZTYtNGFlYy1hNzlmLTVkODM2ZDM0MzU5OQAuAAAAAAAuCbsCt-UNSalguiOYZHWEAQDC2sKTjOSNTpsi5KIF1ip6AAAAAAEIAAA=",
+      "childFolderCount": 23,
+      "unreadItemCount": 0,
+      "totalItemCount": 583,
+      "wellKnownName": "deleteditems"
+  },
+  {
+      "id": "AAMkAGMzNDg4YmM0LTc5ZTYtNGFlYy1hNzlmLTVkODM2ZDM0MzU5OQAuAAAAAAAuCbsCt-UNSalguiOYZHWEAQDC2sKTjOSNTpsi5KIF1ip6AAAAAAEPAAA=",
+      "displayName": "Drafts",
+      "parentFolderId": "AAMkAGMzNDg4YmM0LTc5ZTYtNGFlYy1hNzlmLTVkODM2ZDM0MzU5OQAuAAAAAAAuCbsCt-UNSalguiOYZHWEAQDC2sKTjOSNTpsi5KIF1ip6AAAAAAEIAAA=",
+      "childFolderCount": 0,
+      "unreadItemCount": 0,
+      "totalItemCount": 0,
+      "wellKnownName": "drafts"
+  },
+  {
+      "id": "AAMkAGMzNDg4YmM0LTc5ZTYtNGFlYy1hNzlmLTVkODM2ZDM0MzU5OQAuAAAAAAAuCbsCt-UNSalguiOYZHWEAQDC2sKTjOSNTpsi5KIF1ip6AAAAAAEMAAA=",
+      "displayName": "Inbox",
+      "parentFolderId": "AAMkAGMzNDg4YmM0LTc5ZTYtNGFlYy1hNzlmLTVkODM2ZDM0MzU5OQAuAAAAAAAuCbsCt-UNSalguiOYZHWEAQDC2sKTjOSNTpsi5KIF1ip6AAAAAAEIAAA=",
+      "childFolderCount": 0,
+      "unreadItemCount": 9,
+      "totalItemCount": 190,
+      "wellKnownName": "inbox"
+  },
+  {
+      "id": "AAMkAGMzNDg4YmM0LTc5ZTYtNGFlYy1hNzlmLTVkODM2ZDM0MzU5OQAuAAAAAAAuCbsCt-UNSalguiOYZHWEAQDC2sKTjOSNTpsi5KIF1ip6AAAAAAEUAAA=",
+      "displayName": "Junk Email",
+      "parentFolderId": "AAMkAGMzNDg4YmM0LTc5ZTYtNGFlYy1hNzlmLTVkODM2ZDM0MzU5OQAuAAAAAAAuCbsCt-UNSalguiOYZHWEAQDC2sKTjOSNTpsi5KIF1ip6AAAAAAEIAAA=",
+      "childFolderCount": 0,
+      "unreadItemCount": 4,
+      "totalItemCount": 4,
+      "wellKnownName": "junkemail"
+  },
+  {
+      "id": "AAMkAGMzNDg4YmM0LTc5ZTYtNGFlYy1hNzlmLTVkODM2ZDM0MzU5OQAuAAAAAAAuCbsCt-UNSalguiOYZHWEAQDC2sKTjOSNTpsi5KIF1ip6AAAAAAELAAA=",
+      "displayName": "Outbox",
+      "parentFolderId": "AAMkAGMzNDg4YmM0LTc5ZTYtNGFlYy1hNzlmLTVkODM2ZDM0MzU5OQAuAAAAAAAuCbsCt-UNSalguiOYZHWEAQDC2sKTjOSNTpsi5KIF1ip6AAAAAAEIAAA=",
+      "childFolderCount": 0,
+      "unreadItemCount": 0,
+      "totalItemCount": 0,
+      "wellKnownName": "outbox"
+  },
+  {
+      "id": "AAMkAGMzNDg4YmM0LTc5ZTYtNGFlYy1hNzlmLTVkODM2ZDM0MzU5OQAuAAAAAAAuCbsCt-UNSalguiOYZHWEAQDC2sKTjOSNTpsi5KIF1ip6AAAAAAEJAAA=",
+      "displayName": "Sent Items",
+      "parentFolderId": "AAMkAGMzNDg4YmM0LTc5ZTYtNGFlYy1hNzlmLTVkODM2ZDM0MzU5OQAuAAAAAAAuCbsCt-UNSalguiOYZHWEAQDC2sKTjOSNTpsi5KIF1ip6AAAAAAEIAAA=",
+      "childFolderCount": 0,
+      "unreadItemCount": 0,
+      "totalItemCount": 357,
+      "wellKnownName": "sentitems"
+  }
+]

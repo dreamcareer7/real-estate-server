@@ -135,7 +135,8 @@ const updateStatus = cb => {
 
   const headers = {
     'Content-Type': 'text/xml',
-    'Content-Length': body.length
+    'Content-Length': body.length,
+    'x-handle-jobs': 'yes'
   }
 
   return frisby.create('update status')
