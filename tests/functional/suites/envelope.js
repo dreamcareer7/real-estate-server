@@ -135,7 +135,8 @@ const updateStatus = cb => {
 
   const headers = {
     'Content-Type': 'text/xml',
-    'Content-Length': body.length
+    'Content-Length': body.length,
+    'x-handle-jobs': 'yes'
   }
 
   return frisby.create('update status')
@@ -144,8 +145,23 @@ const updateStatus = cb => {
       headers,
       body
     })
-    .addHeader('x-handle-jobs', 'yes')
     .after(cb)
+    .expectStatus(200)
+}
+
+const checkEnvelope = cb => {
+  return frisby.create('Check if envelope is updated properly')
+    .get(`/envelopes/${results.envelope.create.data.id}`)
+    .after(cb)
+    .expectJSON({
+      data: {
+        status: 'Completed',
+        recipients: [
+          { status: 'Completed' },
+          { status: 'Completed' }
+        ]
+      }
+    })
     .expectStatus(200)
 }
 
@@ -180,5 +196,6 @@ module.exports = {
   voidit,
   resend,
   updateStatus,
+  checkEnvelope,
   checkTask
 }
