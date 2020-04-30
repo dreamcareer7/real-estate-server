@@ -1,0 +1,1 @@
+SELECT id FROM microsoft_mail_folders WHERE credential = $1

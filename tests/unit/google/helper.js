@@ -5,7 +5,7 @@ const GoogleMessage       = require('../../../lib/models/Google/message')
 const GoogleCalendar      = require('../../../lib/models/Google/calendar')
 const GoogleCalendarEvent = require('../../../lib/models/Google/calendar_events')
 
-const { generateGMesssageRecord } = require('../../../lib/models/Google/workers/gmail/common')
+const { generateRecord, processLabels } = require('../../../lib/models/Google/workers/gmail/common')
 
 const google_messages_offline = require('./data/google_messages.json')
 const calendars = require('./data/calendars.json')
@@ -34,8 +34,10 @@ async function createGoogleMessages(user, brand) {
   const googleMessages = []
 
   for (const message of google_messages_offline) {
-    googleMessages.push(generateGMesssageRecord(credential.id, message))
+    googleMessages.push(generateRecord(credential.id, message))
   }
+
+  await processLabels(credential.id, googleMessages)
 
   const createdMessages = await GoogleMessage.create(googleMessages, credential.id)
 
