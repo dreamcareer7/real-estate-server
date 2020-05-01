@@ -6,7 +6,7 @@ SELECT brands_allowed_templates.*,
 
   (
     thumbnail IS NOT NULL AND thumbnail_rendered_at > thumbnail_requested_at
-  ) as is_thumbnail_ready
+  )::BOOLEAN as is_thumbnail_ready
 
 FROM brands_allowed_templates
 JOIN templates on brands_allowed_templates.template = templates.id
