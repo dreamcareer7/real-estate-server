@@ -75,7 +75,12 @@ const queues = [
   {
     queues: ['brand_template_thumbnail'],
     concurrency: 200
-  }
+  },
+
+  {
+    queues: ['envelope_update'],
+    concurrency: 5
+  },
 ]
 
 const forks = [
