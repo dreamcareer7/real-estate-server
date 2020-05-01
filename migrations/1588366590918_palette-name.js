@@ -2,7 +2,7 @@ const db = require('../lib/utils/db')
 
 const migrations = [
   'BEGIN',
-  'ALTER TYPE palette ADD name TEXT',
+  'ALTER TYPE palette ADD ATTRIBUTE name TEXT',
   `CREATE OR REPLACE FUNCTION PALETTE_TO_JSON(input palette)
 RETURNS JSON AS $$
 
