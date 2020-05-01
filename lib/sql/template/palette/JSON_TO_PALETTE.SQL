@@ -56,7 +56,8 @@ RETURNS palette AS $$
       $1->>'inverted-container-bg-color',
       $1->>'inverted-container-text-color',
 
-      $1->>'website'
+      $1->>'website',
+      $1->>'name'
     )::palette
 $$
 LANGUAGE SQL
