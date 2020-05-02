@@ -70,7 +70,17 @@ const queues = [
   {
     queues: ['microsoft_cal_notifications'],
     concurrency: 1
-  }
+  },
+
+  {
+    queues: ['brand_template_thumbnail'],
+    concurrency: 200
+  },
+
+  {
+    queues: ['envelope_update'],
+    concurrency: 5
+  },
 ]
 
 const forks = [

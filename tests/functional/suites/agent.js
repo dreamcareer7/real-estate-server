@@ -20,23 +20,25 @@ const getByMlsId = (cb) => {
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
-      data: {
-        mlsid: agent.mlsid,
-        first_name: agent.first_name,
-        last_name: agent.last_name,
-        email: agent.email
-      }
+      data: [
+        {
+          mlsid: agent.mlsid,
+          first_name: agent.first_name,
+          last_name: agent.last_name,
+          email: agent.email
+        }
+      ]
     })
 }
 
 const getById = cb => {
   return frisby.create('get an agent by id')
-    .get(`/agents/${results.agent.getByMlsId.data.id}`)
+    .get(`/agents/${results.agent.getByMlsId.data[0].id}`)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
-      data: results.agent.getByMlsId.data
+      data: results.agent.getByMlsId.data[0]
     })
 }
 
