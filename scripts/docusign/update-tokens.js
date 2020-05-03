@@ -3,6 +3,8 @@
 require('../connection.js')
 require('../../lib/models/index.js')
 
+const promisify = require('../../lib/utils/promisify')
+
 const refresh = async docusign_user => {
   try {
     await Envelope.refreshToken(docusign_user)
@@ -22,7 +24,7 @@ const update = async () => {
   await Promise.all(promises)
 
   await promisify(MLSJob.insert)({
-      name: 'update_tokens'
+    name: 'update_tokens'
   })
 
   process.exit()
