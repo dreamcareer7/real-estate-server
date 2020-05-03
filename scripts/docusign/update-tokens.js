@@ -3,8 +3,6 @@
 require('../connection.js')
 require('../../lib/models/index.js')
 
-const promisify = require('../../lib/utils/promisify')
-
 const refresh = async docusign_user => {
   try {
     await Envelope.refreshToken(docusign_user)
