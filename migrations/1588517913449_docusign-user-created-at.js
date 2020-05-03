@@ -3,6 +3,7 @@ const db = require('../lib/utils/db')
 const migrations = [
   'BEGIN',
   'ALTER TABLE docusign_users ADD COLUMN created_at timestamp without time zone NOT NULL DEFAULT NOW()',
+  'ALTER TABLE docusign_users ADD COLUMN updated_at timestamp without time zone NOT NULL DEFAULT NOW()',
   'COMMIT'
 ]
 
