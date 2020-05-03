@@ -23,6 +23,10 @@ const update = async () => {
   const promises = expiring.map(refresh)
   await Promise.all(promises)
 
+  await promisify(MLSJob.insert)({
+      name: 'update_tokens'
+  })
+
   process.exit()
 }
 
