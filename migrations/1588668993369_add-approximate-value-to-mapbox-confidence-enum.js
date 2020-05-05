@@ -1,9 +1,7 @@
 const db = require('../lib/utils/db')
 
 const migrations = [
-  'BEGIN',
   'ALTER TYPE geo_confidence_mapbox ADD VALUE IF NOT EXISTS \'approximate\'',
-  'COMMIT'
 ]
 
 
