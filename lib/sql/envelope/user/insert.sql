@@ -3,5 +3,6 @@ ON CONFLICT ("user") DO UPDATE SET
   access_token = $2,
   refresh_token = $3,
   account_id = $4,
-  base_url = $5
+  base_url = $5,
+  updated_at = NOW()
   WHERE docusign_users."user" = $1

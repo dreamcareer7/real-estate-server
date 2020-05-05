@@ -56,7 +56,10 @@ RETURNS JSON AS $$
         'inverted-h2-text-color',        ($1)."inverted-h2-text-color",
         'inverted-h3-text-color',        ($1)."inverted-h3-text-color",
         'inverted-logo-wide',            ($1)."inverted-logo-wide",
-        'inverted-logo-square',          ($1)."inverted-logo-square"
+        'inverted-logo-square',          ($1)."inverted-logo-square",
+
+        'website',                       ($1)."website",
+        'name',                          ($1)."name"
       )
     ) as palette
   )

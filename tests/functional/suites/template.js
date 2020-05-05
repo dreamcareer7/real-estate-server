@@ -29,7 +29,7 @@ const getForBrand = cb => {
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
-      data: [template]
+      data: [{template}]
     })
 }
 
@@ -122,10 +122,24 @@ const deleteInstance = cb => {
 const updateThumbnails = (cb) => {
   return frisby.create('Update Thumbnails')
     .post('/jobs', {
-      name: 'Template.updateThumbnails'
+      name: 'BrandTemplate.updateThumbnails'
     })
     .after(cb)
     .expectStatus(200)
+}
+
+const deleteTemplate = cb => {
+  return frisby.create('delete a template (from brand)')
+    .delete(`/brands/${results.brand.createParent.data.id}/templates/${results.template.getForBrand.data[0].id}`)
+    .after(cb)
+    .expectStatus(204)
+}
+
+const invalidateThumbnails = cb => {
+  return frisby.create('invalidate thumbnails for a brand')
+    .post(`/brands/${results.brand.createParent.data.id}/templates/thumbnails/invalidate`)
+    .after(cb)
+    .expectStatus(204)
 }
 
 module.exports = {
@@ -136,5 +150,7 @@ module.exports = {
   getMine,
   createAsset,
   deleteInstance,
-  updateThumbnails
+  updateThumbnails,
+  invalidateThumbnails,
+  deleteTemplate
 }

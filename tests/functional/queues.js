@@ -7,7 +7,7 @@ const GoogleCredential     = require('../../lib/models/Google/credential')
 const GoogleSyncHistory    = require('../../lib/models/Google/sync_history')
 const MicrosoftCredential  = require('../../lib/models/Microsoft/credential')
 const MicrosoftSyncHistory = require('../../lib/models/Microsoft/sync_history')
-
+const BrandTemplate = require('../../lib/models/Template/brand')
 
 const saveBrokerwolfSettings = (job, cb) => {
   BrokerWolf.Settings.save(job.data).nodeify(cb)
@@ -74,7 +74,7 @@ const addMicrosoftSyncHistory = (job, cb) => {
 }
 
 const updateTemplateThumbnails = (job, cb) => {
-  Template.updateThumbnails().nodeify(cb)
+  BrandTemplate.updateThumbnails().nodeify(cb)
 }
 
 const list = {
@@ -103,7 +103,7 @@ const list = {
   'GoogleSyncHistory.addSyncHistory': addGoogleSyncHistory,
   'MicrosoftCredential.create': CreateMicrosoftCredential,
   'MicrosoftSyncHistory.addSyncHistory': addMicrosoftSyncHistory,
-  'Template.updateThumbnails': updateTemplateThumbnails
+  'BrandTemplate.updateThumbnails': updateTemplateThumbnails
 }
 
 const queues = {}

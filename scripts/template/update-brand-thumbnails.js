@@ -2,6 +2,7 @@
 
 require('../../lib/models/index.js')()
 const db = require('../../lib/utils/db')
+const BrandTemplate = require('../../lib/models/Template/brand')
 
 const getDb = async () => {
   return new Promise((resolve, reject) => {
@@ -22,14 +23,12 @@ const run = async () => {
   })
   context.enter()
 
-  const brand = await Brand.get(process.argv[2])
-
-  const templates = await Template.getForBrand({
-    brand: brand.id
+  const templates = await BrandTemplate.getForBrand({
+    brand: process.argv[2]
   })
 
-  for(const template of templates)
-    await Template.generateThumbnailForBrand({template, brand})
+  for(const brand_template of templates)
+    await BrandTemplate.generateThumbnail(brand_template)
 }
 
 run()

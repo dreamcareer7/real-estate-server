@@ -1,4 +1,6 @@
 SELECT
+  id,
+  template,
   (
     SELECT id FROM brands
     WHERE brand_type = 'Brokerage'
@@ -9,4 +11,4 @@ SELECT
     LIMIT 1
   ) as brand
 FROM brands_allowed_templates bat
-WHERE template = $1
+WHERE thumbnail_requested_at IS NOT NULL

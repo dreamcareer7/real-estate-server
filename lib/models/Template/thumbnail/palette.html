@@ -1,34 +1,86 @@
 <style>
-  .alpha-bg {
-    background: {{ brand.palette.marketing.alpha.bg }};
+  {% if get('body-font-family') %}
+    @import url('https://fonts.googleapis.com/css?family={{get('body-font-family')}}');
+  {% endif %}
+
+  {% if get('container-font-family') %}
+    @import url('https://fonts.googleapis.com/css?family={{get('container-font-family')}}');
+  {% endif %}
+
+  {% if get('h1-font-family') %}
+    @import url('https://fonts.googleapis.com/css?family={{get('h1-font-family')}}');
+  {% endif %}
+
+  {% if get('h2-font-family') %}
+    @import url('https://fonts.googleapis.com/css?family={{get('h2-font-family')}}');
+  {% endif %}
+
+  {% if get('h3-font-family') %}
+    @import url('https://fonts.googleapis.com/css?family={{get('h3-font-family')}}');
+  {% endif %}
+
+  body {
+    background:  {{ get('body-bg-color') }};
+    color:       {{ get('body-text-color') }};
+    font-family: {{ get('body-font-family') }};
+    font-size:   {{ get('body-font-size') }};
+    font-weight: {{ get('body-font-weight') }};
   }
 
-  .alpha-ta {
-    color: {{ brand.palette.marketing.alpha.ta }};
+  .container {
+    background:  {{ get('container-bg-color') }};
+    color:       {{ get('container-text-color') }};
+    font-family: {{ get('container-font-family') }};
+    font-size:   {{ get('container-font-size') }};
+    font-weight: {{ get('container-font-weight') }};
   }
 
-  .beta-bg {
-    background: {{ brand.palette.marketing.beta.bg }};
+  .container .light {
+    color:       {{ get('light-text-color') }};
+    font-family: {{ get('light-font-family') }};
+    font-size:   {{ get('light-font-size') }};
+    font-weight: {{ get('light-font-weight') }};
   }
 
-  .beta-ta {
-    color: {{ brand.palette.marketing.beta.ta }};
+  .container h1 {
+    color:       {{ get('h1-text-color') }};
+    font-family: {{ get('h1-font-family') }};
+    font-size:   {{ get('h1-font-size') }};
+    font-weight: {{ get('h1-font-weight') }};
   }
 
-  .beta-tb {
-    color: {{ brand.palette.marketing.beta.tb }};
+  .container h2 {
+    color:       {{ get('h2-text-color') }};
+    font-family: {{ get('h2-font-family') }};
+    font-size:   {{ get('h2-font-size') }};
+    font-weight: {{ get('h2-font-weight') }};
   }
 
-  .theta-bg {
-    background: {{ brand.palette.marketing.theta.bg }};
+  .container h3 {
+    color:       {{ get('h3-text-color') }};
+    font-family: {{ get('h3-font-family') }};
+    font-size:   {{ get('h3-font-size') }};
+    font-weight: {{ get('h3-font-weight') }};
   }
 
-  .theta-ta {
-    color: {{ brand.palette.marketing.theta.ta }};
+  .container.inverted {
+    background:  {{ get('inverted-container-bg-color') }};
+    color:       {{ get('inverted-container-text-color') }};
   }
 
-  .theta-tb {
-    color: {{ brand.palette.marketing.theta.tb }};
+  .container.inverted .light {
+    color:       {{ get('inverted-light-text-color') }};
   }
 
+  .container.inverted h1 {
+    color:       {{ get('inverted-h1-text-color') }};
+  }
+
+  .container.inverted h2 {
+    color:       {{ get('inverted-h2-text-color') }};
+  }
+
+  .container.inverted h3 {
+    color:       {{ get('inverted-h3-text-color') }};
+  }
 </style>

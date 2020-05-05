@@ -1,1 +1,1 @@
-SELECT * FROM docusign_users WHERE "user" = $1
+SELECT * FROM docusign_users WHERE "user" = ANY($1)
