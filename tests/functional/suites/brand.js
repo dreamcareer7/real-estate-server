@@ -533,7 +533,7 @@ const addStatus = cb => {
       'Resale'
     ],
     admin_only: false,
-    archived: true
+    is_archived: true
   }
 
   return frisby.create('add a deal status')
