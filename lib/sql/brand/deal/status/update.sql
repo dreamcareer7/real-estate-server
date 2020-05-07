@@ -4,5 +4,7 @@ UPDATE brands_deal_statuses SET
   property_types = $4,
   color = $5,
   admin_only = $6,
-  archived = $7
+  is_archived = $7,
+  is_active = $8,
+  is_pending = $9
 WHERE id = $1

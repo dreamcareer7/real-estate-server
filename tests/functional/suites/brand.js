@@ -533,7 +533,7 @@ const addStatus = cb => {
       'Resale'
     ],
     admin_only: false,
-    archived: true
+    is_archived: true
   }
 
   return frisby.create('add a deal status')
@@ -559,7 +559,9 @@ const updateStatus = cb => {
       'New Home'
     ],
     admin_only: true,
-    archived: false
+    is_archived: false,
+    is_active: true,
+    is_pending: false
   }
 
   return frisby.create('update a deal status')
