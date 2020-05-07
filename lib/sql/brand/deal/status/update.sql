@@ -6,5 +6,5 @@ UPDATE brands_deal_statuses SET
   admin_only = $6,
   is_archived = $7,
   is_active = $8,
-  is_pending = $9,
+  is_pending = $9
 WHERE id = $1
