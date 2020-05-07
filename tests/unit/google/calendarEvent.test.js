@@ -7,7 +7,7 @@ const BrandHelper = require('../brand/helper')
 const GoogleCalendar      = require('../../../lib/models/Google/calendar')
 const GoogleCalendarEvent = require('../../../lib/models/Google/calendar_events')
 
-const { generateCalendarEventRecord } = require('../../../lib/models/Google/workers/calendars/common.js')
+const { generateCalendarEvent } = require('../../../lib/models/Google/workers/calendars/common.js')
 
 const { createGoogleMessages, createGoogleCalendar, createGoogleCalendarEvent } = require('./helper')
 const events = require('./data/calendar_events.json')
@@ -35,7 +35,7 @@ async function createLocal() {
 async function bulkUpsert() {
   const records = []
 
-  records.push(generateCalendarEventRecord(googleCalendar, events.remote_event_1))
+  records.push(generateCalendarEvent(googleCalendar, events.remote_event_1))
 
   const result = await GoogleCalendarEvent.bulkUpsert(records)
 

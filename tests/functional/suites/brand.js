@@ -614,7 +614,9 @@ const updateStatus = cb => {
       'New Home'
     ],
     admin_only: true,
-    archived: false
+    is_archived: false,
+    is_active: true,
+    is_pending: false
   }
 
   return frisby.create('update a deal status')
