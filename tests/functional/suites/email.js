@@ -74,6 +74,7 @@ const addEvent = cb => {
   return frisby
     .create('Add an event to the email')
     .post('/emails/events', data)
+    .addHeader('x-handle-jobs', 'yes')
     .after(cb)
     .expectStatus(200)
 }
