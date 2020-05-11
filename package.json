@@ -16,7 +16,7 @@
     "heroku-postbuild": "npm run migrate:up"
   },
   "engines": {
-    "node": "12.x"
+    "node": "14.x"
   },
   "nyc": {
     "extension": [
@@ -106,7 +106,7 @@
     "password-generator": "^2.2.3",
     "pdfjs-dist": "git+https://github.com/rechat/pdfjs-dist.git",
     "peanar": "^0.9.27",
-    "pg": "^8.0.2",
+    "pg": "^8.1.0",
     "redis": "^2.8.0",
     "request": "^2.88.0",
     "request-as-curl": "^0.1.0",
