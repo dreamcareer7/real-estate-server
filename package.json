@@ -112,7 +112,7 @@
     "request-promise-native": "^1.0.8",
     "s3-download-stream": "^1.1.1",
     "s3-upload-stream": "^1.0.7",
-    "socket.io": "^2.2.0",
+    "socket.io": "^2.3.0",
     "socket.io-redis": "^5.2.0",
     "string-pixel-width": "^1.10.0",
     "stripe": "^4.25.0",
