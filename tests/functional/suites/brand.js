@@ -525,7 +525,6 @@ const deleteEmail = cb => {
 const addStatus = cb => {
   const status = {
     label: 'Active',
-    color: 'green',
     deal_types: [
       'Buying'
     ],
@@ -549,7 +548,6 @@ const addStatus = cb => {
 const updateStatus = cb => {
   const status = {
     label: 'Active Contingent',
-    color: 'yellow',
     deal_types: [
       'Buying',
       'Selling'
