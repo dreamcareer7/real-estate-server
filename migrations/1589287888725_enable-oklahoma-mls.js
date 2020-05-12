@@ -1,9 +1,7 @@
 const db = require('../lib/utils/db')
 
 const migrations = [
-  'BEGIN',
   'ALTER TYPE mls ADD VALUE \'OKCMAR\'',
-  'COMMIT'
 ]
 
 
