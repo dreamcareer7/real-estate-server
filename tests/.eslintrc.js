@@ -9,4 +9,4 @@ module.exports = {
     'Run': false,
     'expect': false,
   }
-};
+}
