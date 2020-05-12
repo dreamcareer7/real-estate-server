@@ -96,7 +96,7 @@ module.exports = {
     'indent': [
       'error',
       2,
-      {"SwitchCase": 1}
+      {'SwitchCase': 1}
     ],
     'linebreak-style': [
       'error',
@@ -111,7 +111,6 @@ module.exports = {
       'error',
       'never'
     ],
-    'no-extra-semi': 'error',
     'prefer-const': 'error',
     'no-unused-vars': [
       'error',
@@ -122,10 +121,6 @@ module.exports = {
     'require-atomic-updates': 'off',
     'no-async-promise-executor': 'warn',
     'no-console': 'off',
-    'no-empty': [
-      'error',
-      {'allowEmptyCatch':true}
-    ],
     'key-spacing': [
       'error'
     ],

@@ -42,7 +42,6 @@
     "aws-cloudfront-sign": "^2.2.0",
     "aws-sdk": "^2.517.0",
     "base64url": "^3.0.1",
-    "batchelor": "^2.0.2",
     "bcrypt": "^4.0.1",
     "body-parser": "^1.19.0",
     "busboy": "^0.3.1",
@@ -62,16 +61,14 @@
     "debug": "^4.1.1",
     "docker-names": "^1.1.1",
     "emojify.js": "^1.1.0",
-    "eslint": "^6.7.2",
+    "eslint": "^7.0.0",
     "exceljs": "^1.15.0",
-    "exif-parser": "^0.1.12",
     "express": "^4.17.1",
     "forever": "^1.0.0",
     "godaddy": "^0.2.1",
     "google-libphonenumber": "^3.2.6",
     "googleapis": "^42.0.0",
-    "googlemaps": "^1.12.0",
-    "gulp-eslint": "^5.0.0",
+    "gulp-eslint": "^6.0.0",
     "html-to-text": "^5.1.1",
     "ical": "git+https://github.com/peterbraden/ical.js.git#a8b44f3",
     "ical-generator": "^1.8.2",
@@ -123,7 +120,6 @@
     "twilio": "^3.33.4",
     "underscore": "^1.9.1",
     "urban-airship-push": "^0.1.0",
-    "wtfnode": "^0.8.0",
     "xml2js": "^0.4.22"
   },
   "devDependencies": {
@@ -146,7 +142,7 @@
     "assertion-error": "^1.1.0",
     "copy-dir": "^1.2.0",
     "deepmerge": "^4.0.0",
-    "eslint-config-standard": "^14.1.0",
+    "eslint-config-standard": "^14.1.1",
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.1",
     "frisby": "git+https://github.com/emilsedgh/frisby.git#b74d835",
@@ -156,7 +152,6 @@
     "nock": "^10.0.6",
     "nyc": "^15.0.1",
     "request-as-curl": "^0.1.0",
-    "rimraf": "^3.0.0",
     "typescript": "^3.7.3"
   }
 }
