@@ -6,6 +6,7 @@ declare interface ICalendarFilter {
 }
 
 declare interface ICalendarFilterQuery {
+  ids?: UUID;
   deal?: UUID;
   contact?: UUID;
   low?: number;
