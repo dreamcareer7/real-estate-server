@@ -74,6 +74,7 @@ const addEvent = cb => {
   return frisby
     .create('Add an event to the email')
     .post('/emails/events', data)
+    .addHeader('x-handle-jobs', 'yes')
     .after(cb)
     .expectStatus(200)
 }
@@ -653,7 +654,7 @@ function updateIsRead(cb) {
 }
 
 function batchUpdateIsRead(cb) {
-  return frisby.create('Update isRead')
+  return frisby.create('Batch update isRead')
     .put(`/emails/google/${results.google.createGoogleCredential}/messages`, { status: false, messageIds: [results.email.getThread.data.messages[0].id] })
     .addHeader('X-RECHAT-BRAND', results.email.getThread.data.brand)
     .after(function(err, res, json) {
@@ -663,7 +664,7 @@ function batchUpdateIsRead(cb) {
 }
 
 function batchTrash(cb) {
-  return frisby.create('Update isRead')
+  return frisby.create('Batch trash')
     .post(`/emails/google/${results.google.createGoogleCredential}/trash`, { status: false, messageIds: [results.email.getThread.data.messages[0].id] })
     .addHeader('X-RECHAT-BRAND', results.email.getThread.data.brand)
     .after(function(err, res, json) {

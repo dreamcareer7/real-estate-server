@@ -1,6 +1,10 @@
 UPDATE
   google_calendars
 SET
+  sync_token = null,
+  watcher_channel_id = null,
+  watcher = null,
+  deleted = true,
   deleted_at = now(),
   updated_at = now()
 WHERE

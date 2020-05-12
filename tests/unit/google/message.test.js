@@ -68,6 +68,32 @@ async function getByMessageIdFailed() {
   }
 }
 
+async function getDistinctCredentialByThread() {
+  const googleMessages = await create()
+
+  const thread_keys = googleMessages.map(msg => msg.thread_key)
+  const credentials = googleMessages.map(msg => msg.google_credential)
+
+  const resutl = await GoogleMessage.getDistinctCredentialByThread(thread_keys)
+
+  const status = resutl.every(entry => credentials.includes(entry))
+
+  expect(status).to.equal(true)
+}
+
+async function getDistinctCredentialByMessage() {
+  const googleMessages = await create()
+
+  const ids = googleMessages.map(msg => msg.id)
+  const credentials = googleMessages.map(msg => msg.google_credential)
+
+  const resutl = await GoogleMessage.getDistinctCredentialByMessage(ids)
+
+  const status = resutl.every(entry => credentials.includes(entry))
+
+  expect(status).to.equal(true)
+}
+
 async function getGCredentialMessagesNum() {
   const googleMessages = await create()
 
@@ -163,6 +189,25 @@ async function deleteByMessageIds() {
   }
 }
 
+async function deleteByThreadKeys() {
+  const messages   = await create()
+  const threadKeys = messages.map(msg => msg.thread_key)
+  const credential = await GoogleCredential.get(messages[0].google_credential)
+
+  await GoogleMessage.deleteByThreadKeys(credential.id, threadKeys)
+
+  const resutlNew = await EmailThread.filter(credential.user, credential.brand, {})
+
+  for (const message of messages) {
+    const googleMessage = await GoogleMessage.get(message.id)
+
+    expect(googleMessage.type).to.be.equal('google_message')
+    expect(googleMessage.google_credential).to.be.equal(message.google_credential)
+    expect(googleMessage.deleted_at).not.to.be.equal(null)
+    expect(resutlNew.ids.includes(googleMessage.thread_key)).to.be.equal(false)
+  }
+}
+
 async function downloadAttachmentFailed() {
   const googleMessages = await create()
   const googleMessage_min = googleMessages[0]
@@ -243,9 +288,12 @@ describe('Google', () => {
     it('should create some google-messages', create)
     it('should return google-message by messages_id', getByMessageId)
     it('should handle failure of google-contact get by messages_id', getByMessageIdFailed)
+    it('should return a list of unique credential ids based on thread_keys', getDistinctCredentialByThread)
+    it('should return a list of unique credential ids based on ids', getDistinctCredentialByMessage)
     it('should delete google-messages by ids', deleteMany)
     it('should delete google-messages by credential', deleteByCredential)
     it('should delete google-messages by messages_ids', deleteByMessageIds)
+    it('should delete google-messages by thread keys', deleteByThreadKeys)
     it('should return number of messages of specific credential', getGCredentialMessagesNum)
     it('should handle failure of downloadAttachment', downloadAttachmentFailed)
     it('should get a message by remote id', getRemoteMessage)

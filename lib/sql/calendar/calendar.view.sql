@@ -30,7 +30,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
         FROM
           crm_tasks_assignees
         WHERE
-          crm_task = crm_tasks.id
+          crm_task = ct.id
           AND deleted_at IS NULL
       ) AS users,
       NULL::uuid[] AS accessible_to,
@@ -47,7 +47,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
             FROM
               crm_associations
             WHERE
-              crm_task = crm_tasks.id
+              crm_task = ct.id
               AND deleted_at IS NULL
               AND association_type = 'contact'
             LIMIT 5
@@ -59,7 +59,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
         FROM
           crm_associations
         WHERE
-          crm_task = crm_tasks.id
+          crm_task = ct.id
           AND deleted_at IS NULL
           AND association_type = 'contact'
         LIMIT 5
@@ -67,10 +67,11 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       brand,
       status,
       jsonb_build_object(
-        'status', status
+        'status', status,
+        'all_day', (ct.metadata->>'all_day')::bool
       ) AS metadata
     FROM
-      crm_tasks
+      crm_tasks AS ct
   )
   UNION ALL
   (
@@ -140,7 +141,8 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       ct.brand,
       ct.status,
       jsonb_build_object(
-        'status', ct.status
+        'status', ct.status,
+        'all_day', (ct.metadata->>'all_day')::bool
       ) AS metadata
     FROM
       crm_associations AS ca

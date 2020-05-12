@@ -66,14 +66,29 @@ const queues = [
     queues: ['sms'],
     concurrency: config.twilio.parallel
   },
+
   {
     queues: ['microsoft_notifications'],
     concurrency: 1
   },
   {
+    queues: ['microsoft_cal_notifications'],
+    concurrency: 1
+  },
+
+  {
     queues: ['gmail_webhooks'],
     concurrency: 1
-  }
+  },
+
+  {
+    queues: ['brand_template_thumbnail'],
+    concurrency: 200
+  },
+  {
+    queues: ['envelope_update'],
+    concurrency: 5
+  },
 ]
 
 const forks = [
@@ -82,7 +97,7 @@ const forks = [
     concurrency: 5
   },
   {
-    queues: ['microsoft'],
+    queues: ['microsoft', 'microsoft_cal'],
     concurrency: 5
   },
   {

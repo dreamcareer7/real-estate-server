@@ -50,7 +50,6 @@ async function deleteLocalByRemoteCalendarId() {
 
   expect(updated.id).to.be.equal(cal.id)
   expect(updated.deleted_at).to.be.not.equal(null)
-  expect(updated.deleted).to.be.not.equal(true)
 }
 
 async function getFailed() {
@@ -79,7 +78,7 @@ async function listRemoteCalendars() {
 }
 
 async function persistRemoteCalendarsSimple() {
-  const result = await MicrosoftCalendar.persistRemoteCalendars(microsoftCredential.id, [])
+  const result = await MicrosoftCalendar.persistRemoteCalendars(microsoftCredential, [])
 
   expect(result.activeCalendarIds.length).to.be.equal(0)
 }
@@ -87,12 +86,12 @@ async function persistRemoteCalendarsSimple() {
 async function persistRemoteCalendars() {
   const remoteCals = await listRemoteCalendars()
   const toSyncRemoteCalendarIds = remoteCals.map(cal => cal.id)
-  const result      = await MicrosoftCalendar.persistRemoteCalendars(microsoftCredential.id, toSyncRemoteCalendarIds)
+  const result      = await MicrosoftCalendar.persistRemoteCalendars(microsoftCredential, toSyncRemoteCalendarIds)
   const pesistedCal = await MicrosoftCalendar.get(result.activeCalendarIds[0])
   expect(result.activeCalendarIds.length).to.be.equal(toSyncRemoteCalendarIds.length)
   expect(pesistedCal.id).to.be.equal(result.activeCalendarIds[0])
   expect(pesistedCal.microsoft_credential).to.be.equal(microsoftCredential.id)
-  expect(pesistedCal.origin).to.be.equal('rechat')
+  expect(pesistedCal.origin).to.be.equal('microsoft')
   expect(pesistedCal.type).to.be.equal('microsoft_calendars')
 }
 
@@ -110,8 +109,8 @@ async function create() {
 async function getRemoteMicrosoftCalendars() {
   const result = await MicrosoftCalendar.getRemoteMicrosoftCalendars(microsoftCredential)
 
-  expect(result.calendars.length).to.be.equal(3)
-  expect(result.currentSelectedCal).to.be.equal(null)
+  expect(result.calendars.length).to.be.equal(2)
+  expect(result.primaryCalendar).to.be.equal(null)
 
   return result
 }

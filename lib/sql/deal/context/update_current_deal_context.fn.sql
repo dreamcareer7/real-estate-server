@@ -102,7 +102,8 @@ $$
       data_type = EXCLUDED.data_type,
       deal = EXCLUDED.deal,
       checklist = EXCLUDED.checklist,
-      source = EXCLUDED.source;
+      source = EXCLUDED.source,
+      searchable = to_tsvector('english', COALESCE(EXCLUDED.text, EXCLUDED.number::text));
 
   END;
 $$
