@@ -1,6 +1,8 @@
 {
   "id": "0d1761bc-ee69-4344-9610-709e7b857c3b",
   "display_name": "Jane Smith",
+  "first_name": "Jane",
+  "last_name": "Smith",
   "partner_name": null,
   "user": {
     "type": "user",
@@ -79,31 +81,6 @@
   "sort_field": "Smith Jane",
   "last_touch": null,
   "next_touch": null,
-  "summary": {
-    "id": "0d1761bc-ee69-4344-9610-709e7b857c3b",
-    "is_partner": false,
-    "title": "Ms.",
-    "first_name": "Jane",
-    "middle_name": null,
-    "last_name": "Smith",
-    "marketing_name": null,
-    "nickname": null,
-    "email": "janesmith@gmail.com",
-    "phone_number": null,
-    "company": null,
-    "birthday": 1474848000,
-    "profile_image_url": "https://d2dzyv4cb7po1i.cloudfront.net/0d1761bc-ee69-4344-9610-709e7b857c3b/e3c37950-a7e8-11e8-b56d-f1eec5d39de5.jpg",
-    "cover_image_url": null,
-    "job_title": null,
-    "source_type": "ExplicitlyCreated",
-    "source": null,
-    "tags": [
-      "General"
-    ],
-    "display_name": "Jane Smith",
-    "abbreviated_display_name": "Jane",
-    "type": "contact_summary"
-  },
   "sub_contacts": [
     {
       "id": "0d1761bc-ee69-4344-9610-709e7b857c3b",
