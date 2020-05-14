@@ -10,6 +10,7 @@ const refresh = async docusign_user => {
     await Envelope.refreshToken(docusign_user)
   } catch(e) {
     Context.log('Failed to refresh tokens for', docusign_user.user, e)
+    return
   }
 
   Context.log('Token updated for', docusign_user.user)
