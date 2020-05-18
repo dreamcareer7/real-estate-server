@@ -81,7 +81,7 @@ const queues = [
     concurrency: 2
   },
   {
-    queues: ['google_calendar_webhooks'],
+    queues: ['google_cal_webhooks'],
     concurrency: 2
   },
 
