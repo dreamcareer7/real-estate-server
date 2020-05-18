@@ -78,7 +78,11 @@ const queues = [
 
   {
     queues: ['gmail_webhooks'],
-    concurrency: 1
+    concurrency: 2
+  },
+  {
+    queues: ['google_calendar_webhooks'],
+    concurrency: 2
   },
 
   {
@@ -93,11 +97,11 @@ const queues = [
 
 const forks = [
   {
-    queues: ['google', 'google_cal'],
+    queues: ['google', 'google_cal'], // gmail, google_calendar
     concurrency: 5
   },
   {
-    queues: ['microsoft', 'microsoft_cal'],
+    queues: ['microsoft', 'microsoft_cal'], // outlook, outlook_calendar
     concurrency: 5
   },
   {
