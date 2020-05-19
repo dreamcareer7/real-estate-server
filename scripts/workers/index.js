@@ -32,8 +32,6 @@ attachTaskEventHandler()
 attachTouchEventHandler()
 attachCalIntEventHandler()
 
-db.enableMetrics()
-
 process.on('unhandledRejection', (err, promise) => {
   Context.trace('Unhanled Rejection on request', err)
   Slack.send({
@@ -60,7 +58,7 @@ Object.keys(queues).forEach(queue_name => {
   const definition = queues[queue_name]
 
   const handler = async (job, done) => {
-    const id = `job-${queue_name}-${job.id}`
+    const id = `process-${process.pid}-job-${queue_name}-${job.id}`
 
     const { rollback, commit } = await createContext({
       id
