@@ -84,7 +84,7 @@ CREATE OR REPLACE VIEW crm_last_touches AS (
         WHERE
           ec.deleted_at IS NULL
           AND c.deleted_at IS NULL
-          AND c.email && ARRAY[ece.email_address]
+          AND ece.email_address = ANY(c.email)
           AND ec.executed_at IS NOT NULL
       )
     ) AS touches

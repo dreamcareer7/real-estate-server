@@ -1,4 +1,4 @@
-image: node:12-alpine
+image: node:14-alpine
 
 variables:
   ENV: development
@@ -108,7 +108,7 @@ unit_coverage:
 
 docs:
   stage: deploy
-  image: node:12-alpine
+  image: node:14-alpine
   only:
     - master
     - testing

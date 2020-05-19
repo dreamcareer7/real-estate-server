@@ -46,7 +46,10 @@ const queues = [
     queues: ['flows', 'contacts', 'contact_lists', 'contact_duplicates', 'crm_tasks'],
     concurrency: 10
   },
-  { queues: ['contact_import'], concurrency: 15 },
+  {
+    queues: ['contact_import'],
+    concurrency: 15
+  },
   {
     queues: ['MLS.Office', 'MLS.Room', 'MLS.Agent'],
     concurrency: 50
@@ -63,6 +66,7 @@ const queues = [
     queues: ['sms'],
     concurrency: config.twilio.parallel
   },
+
   {
     queues: ['microsoft_notifications'],
     concurrency: 1
@@ -73,10 +77,18 @@ const queues = [
   },
 
   {
+    queues: ['gmail_webhooks'],
+    concurrency: 2
+  },
+  {
+    queues: ['google_cal_webhooks'],
+    concurrency: 2
+  },
+
+  {
     queues: ['brand_template_thumbnail'],
     concurrency: 200
   },
-
   {
     queues: ['envelope_update'],
     concurrency: 5
@@ -85,11 +97,11 @@ const queues = [
 
 const forks = [
   {
-    queues: ['google', 'google_cal'],
+    queues: ['google', 'google_cal'], // gmail, google_calendar
     concurrency: 5
   },
   {
-    queues: ['microsoft', 'microsoft_cal'],
+    queues: ['microsoft', 'microsoft_cal'], // outlook, outlook_calendar
     concurrency: 5
   },
   {
