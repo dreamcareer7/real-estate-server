@@ -32,8 +32,6 @@ attachTaskEventHandler()
 attachTouchEventHandler()
 attachCalIntEventHandler()
 
-db.enableMetrics()
-
 process.on('unhandledRejection', (err, promise) => {
   Context.trace('Unhanled Rejection on request', err)
   Slack.send({
