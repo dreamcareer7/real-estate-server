@@ -70,7 +70,7 @@ const poll = ({ fn, name }) => {
       polling_timeouts.delete(name)
     }
 
-    const id = `${name}-${++i}`
+    const id = `process-${process.pid}-${name}-${++i}`
 
     try {
       const ctxRes = await createContext({ id })
