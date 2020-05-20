@@ -44,7 +44,7 @@ const getById = cb => {
 
 const getByOffice = (cb) => {
   return frisby.create('get all agents of an office')
-    .get(`/agents/search?officemlsid=${agent.office_mlsid}`)
+    .get(`/agents/search?officemlsid=${agent.office_mlsid}&mls=${agent.mls}`)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
