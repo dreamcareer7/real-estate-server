@@ -17,7 +17,8 @@ SELECT id,
           NULLIF(state, ''),
           NULLIF(postal_code, '')
         ], ' ', NULL
-      ) AS address_line2
+      ) AS address_line2,
+      mls
 FROM offices
 JOIN unnest($1::uuid[]) WITH ORDINALITY t(oid, ord) ON offices.id = oid
 ORDER BY t.ord

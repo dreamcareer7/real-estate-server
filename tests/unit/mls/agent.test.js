@@ -77,12 +77,12 @@ const getByOfficeMls = async () => {
    */
   const saved = await save()
 
-  let fetched = await Agent.getByOfficeId(json.office_mlsid)
+  let fetched = await Agent.getByOfficeId(json.office_mlsid, json.mls)
   expect(fetched).not.to.include(saved)
 
   await Office.create(officeJson)
 
-  fetched = await Agent.getByOfficeId(json.office_mlsid)
+  fetched = await Agent.getByOfficeId(json.office_mlsid, json.mls)
   expect(fetched).not.to.include(saved)
 }
 
