@@ -36,7 +36,7 @@ SELECT deals.*,
   ) as context,
 
   (
-    SELECT ARRAY_AGG(id) FROM envelopes WHERE deal = deals.id
+    SELECT ARRAY_AGG(id ORDER BY created_at DESC) FROM envelopes WHERE deal = deals.id
   ) as envelopes,
 
   CASE WHEN $2::uuid IS NULL THEN
