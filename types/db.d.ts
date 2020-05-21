@@ -325,7 +325,7 @@ declare type TDbSqlAddress =
   | 'google/calendar_events/get_by_calendar_and_event_ids'
   | 'google/calendar_events/get_by_calendar_ids'
   | 'google/calendar_events/get_by_calendar'
-  | 'google/calendar_events/get_by_credential_and_remote_ids'
+  | 'google/calendar_events/get_moved_events'
   | 'google/calendar_events/update_calendar'
   | 'google/calendar_events/insert'
   | 'google/contact/count'
