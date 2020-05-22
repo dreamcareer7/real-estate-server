@@ -26,7 +26,7 @@ require('../../lib/models/SMS')
 let shutdowns = []
 
 const context = Context.create({
-  id: 'peanar-workers-main'
+  id: `worker-${process.pid}-peanar-workers-main`
 })
 
 const queues = [
