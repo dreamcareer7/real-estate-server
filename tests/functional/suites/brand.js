@@ -258,6 +258,22 @@ const updateTask = cb => {
     .expectStatus(200)
 }
 
+const sortChecklist = cb => {
+  const task = results.brand.addTask.data.tasks[0]
+
+  const data = [
+    {
+      id: task.id,
+      order: 3
+    }
+  ]
+
+  return frisby.create('sort a checklist')
+    .put(`/brands/${brand_id}/checklists/${results.brand.addChecklist.data.id}/sort`, data)
+    .after(cb)
+    .expectStatus(200)
+}
+
 const deleteTask = cb => {
   return frisby.create('delete a task from a brand checklist')
     .delete(`/brands/${brand_id}/checklists/${results.brand.addChecklist.data.id}/tasks/${results.brand.addTask.data.id}`)
@@ -712,6 +728,7 @@ module.exports = {
   updateChecklist,
   addTask,
   updateTask,
+  sortChecklist,
   getChecklists,
   deleteTask,
   deleteChecklist,
