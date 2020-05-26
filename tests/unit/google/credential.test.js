@@ -197,24 +197,19 @@ async function postponeGmailSync() {
   expect(updatedCredential.last_sync_duration).to.be.equal(0)
 }
 
-async function disableEnableSync() {
+async function disconnect() {
   const createdCredential = await create()
 
-  await GoogleCredential.disableSync(createdCredential.id)
+  await GoogleCredential.disconnect(createdCredential.id)
   const updatedCredential_1 = await GoogleCredential.get(createdCredential.id)
   expect(updatedCredential_1.deleted_at).not.to.be.equal(null)
-
-
-  await GoogleCredential.enableSync(createdCredential.id)
-  const updatedCredential_2 = await GoogleCredential.get(createdCredential.id)
-  expect(updatedCredential_2.deleted_at).to.be.equal(null)
 }
 
-async function disableEnableSyncFailed() {
+async function disconnectFailed() {
   const not_exist_credential_id = user.id
 
   try {
-    await GoogleCredential.disableSync(not_exist_credential_id)
+    await GoogleCredential.disconnect(not_exist_credential_id)
 
   } catch (ex) {
     const message = `Google-Credential ${user.id} not found`
@@ -223,11 +218,11 @@ async function disableEnableSyncFailed() {
   }
 }
 
-async function forceSync() {
+async function forceSyncGmail() {
   const createdCredential = await create()
 
   try {
-    await GoogleCredential.forceSync(createdCredential.id)
+    await GoogleCredential.forceSyncGmail(createdCredential.id)
   } catch (ex) {
     expect(ex.message).to.be.equal('Please wait until current sync job is finished.')
   }
@@ -351,10 +346,10 @@ describe('Google', () => {
     it('should update a google-credential sync status', updateSyncStatus)
     it('should postpone a google-credential sync', postponeGmailSync)
     
-    it('should disable/enable a google-credential', disableEnableSync)
-    it('should handle returned exception from disable/enable google-credential', disableEnableSyncFailed)
+    it('should disconnect a google-credential', disconnect)
+    it('should handle returned exception from disconnect google-credential', disconnectFailed)
     
-    it('should handle force sync request', forceSync)
+    it('should handle force sync request', forceSyncGmail)
     it('should update a google-credential profile', updateProfile)
     it('should update a google-credential gmail-profile', updateGmailProfile)
     it('should update a google-credential contact_last_sync_At', updateContactsLastSyncAt)

@@ -1,3 +1,5 @@
+-- deprecated, we used users_jobs row level lock technique
+
 SELECT
   id
 FROM 
