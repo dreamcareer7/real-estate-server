@@ -345,7 +345,6 @@ declare type TDbSqlAddress =
   | 'google/contact_group/get'
   | 'google/contact_group/get_by_credential'
   | 'google/contact_group/insert'
-  | 'google/credential/cal_sync_due'
   | 'google/credential/disconnect'
   | 'google/credential/get'
   | 'google/credential/get_by_brand'
