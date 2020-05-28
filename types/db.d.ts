@@ -184,6 +184,7 @@ declare type TDbSqlAddress =
   | 'contact/tag/create'
   | 'contact/tag/delete'
   | 'contact/tag/get'
+  | 'contact/tag/recreate'
   | 'contact/tag/rename'
   | 'contact/tag/support_delete_all'
   | 'contact/tag/update_touch_freq'
