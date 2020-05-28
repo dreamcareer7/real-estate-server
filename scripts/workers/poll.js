@@ -143,6 +143,11 @@ poll({
 })
 
 poll({
+  fn: GoogleWorkers.Contacts.syncDue,
+  name: 'GoogleWorkers.contacts.syncDue'
+})
+
+poll({
   fn: MicrosoftWorker.Outlook.syncDue,
   name: 'MicrosoftWorker.outlook.syncDue'
 })

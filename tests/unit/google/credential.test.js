@@ -44,7 +44,6 @@ async function publicize() {
   expect(updatedCredential.contacts_sync_token).to.be.equal(undefined)
   expect(updatedCredential.contact_groups_sync_token).to.be.equal(undefined)
   expect(updatedCredential.messages_sync_history_id).to.be.equal(undefined)
-  expect(updatedCredential.threads_sync_history_id).to.be.equal(undefined)
 }
 
 async function getByUser() {
@@ -261,17 +260,6 @@ async function updateGmailProfile() {
   expect(updatedCredential.messages_total).to.be.equal(profile.messagesTotal)
 }
 
-async function updateContactsLastSyncAt() {
-  const createdCredential = await create()
-
-  await GoogleCredential.updateContactsLastSyncAt(createdCredential.id)
-
-  const updatedCredential = await GoogleCredential.get(createdCredential.id)
-
-  expect(createdCredential.id).to.be.equal(updatedCredential.id)
-  expect(updatedCredential.contacts_last_sync_at).not.to.be.equal(null)
-}
-
 async function updateMessagesSyncHistoryId() {
   const createdCredential = await create()
 
@@ -341,7 +329,6 @@ describe('Google', () => {
     it('should handle force sync request', forceSyncGmail)
     it('should update a google-credential profile', updateProfile)
     it('should update a google-credential gmail-profile', updateGmailProfile)
-    it('should update a google-credential contact_last_sync_At', updateContactsLastSyncAt)
     it('should update a google-credential messages sync token', updateMessagesSyncHistoryId)
     it('should update a google-credential messages sync token', updateMessagesSyncHistoryIdWithThirdParam)
 

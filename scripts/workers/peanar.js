@@ -97,11 +97,11 @@ const queues = [
 
 const forks = [
   {
-    queues: ['google', 'google_cal'], // gmail, google_calendar
+    queues: ['google', 'google_cal', 'google_contacts'],
     concurrency: 5
   },
   {
-    queues: ['microsoft', 'microsoft_cal'], // outlook, outlook_calendar
+    queues: ['microsoft', 'microsoft_cal'],
     concurrency: 5
   },
   {
