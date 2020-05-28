@@ -14,9 +14,6 @@ module.exports = {
   history_id: Number,
   scope: Array,
   revoked: Boolean,
-  sync_status: String,
-  last_sync_at: Date,
-  last_sync_duration: Number,
   created_at: Date,
   updated_at: Date,
   deleted_at: Date

@@ -120,7 +120,6 @@ async function updateLastSync() {
   const updatedCredential = await MicrosoftCredential.get(createdCredential.id)
 
   expect(createdCredential.id).to.be.equal(updatedCredential.id)
-  expect(updatedCredential.last_sync_duration).to.be.equal(duration)
 }
 
 async function updateSyncStatus() {
@@ -166,7 +165,6 @@ async function postponeOutlookSync() {
 
   expect(createdCredential.id).to.be.equal(updatedCredential.id)
   expect(updatedCredential.sync_status).to.be.equal('failed')
-  expect(updatedCredential.last_sync_duration).to.be.equal(0)
 }
 
 async function disableEnableSync() {
@@ -206,7 +204,6 @@ async function forceSync() {
   expect(createdCredential.id).to.be.equal(updatedCredential.id)
   expect(updatedCredential.sync_status).to.be.equal(null)
   expect(updatedCredential.last_sync_at).to.be.equal(null)
-  expect(updatedCredential.last_sync_duration).to.be.equal(null)
 }
 
 async function updateProfile() {

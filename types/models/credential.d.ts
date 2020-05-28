@@ -10,9 +10,6 @@ declare interface IIntegrationCredential {
   expiry_date: number;
   scope: string[];
   revoked: boolean;
-  sync_status: string;
-  last_sync_at: string;
-  last_sync_duration: number;
   created_at: string;
   updated_at: string;
   deleted_at: string;

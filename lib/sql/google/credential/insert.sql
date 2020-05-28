@@ -56,8 +56,6 @@ ON CONFLICT ("user", brand, email) DO UPDATE SET
   scope_summary = $16,
 
   revoked = false,
-  sync_status = NULL,
-  last_sync_at = NULL,
   messages_sync_history_id = null,
   watcher_exp = NULL,
 
