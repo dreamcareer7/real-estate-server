@@ -151,51 +151,6 @@ async function updateAsRevoked() {
   expect(updatedCredential.revoked).to.be.equal(true)
 }
 
-async function updateLastSync() {
-  const createdCredential = await create()
-
-  const duration = 100
-  await GoogleCredential.updateLastSync(createdCredential.id, duration)
-
-  const updatedCredential = await GoogleCredential.get(createdCredential.id)
-
-  expect(createdCredential.id).to.be.equal(updatedCredential.id)
-  expect(updatedCredential.last_sync_duration).to.be.equal(duration)
-}
-
-async function updateSyncStatus() {
-  const createdCredential = await create()
-
-  const status = 'success'
-
-  await GoogleCredential.updateSyncStatus(createdCredential.id, status)
-
-  const updatedCredential_1 = await GoogleCredential.get(createdCredential.id)
-
-  expect(createdCredential.id).to.be.equal(updatedCredential_1.id)
-  expect(updatedCredential_1.sync_status).to.be.equal(status)
-
-
-  await GoogleCredential.updateSyncStatus(createdCredential.id, null)
-
-  const updatedCredential_2 = await GoogleCredential.get(createdCredential.id)
-
-  expect(createdCredential.id).to.be.equal(updatedCredential_2.id)
-  expect(updatedCredential_2.sync_status).to.be.equal(null)
-}
-
-async function postponeGmailSync() {
-  const createdCredential = await create()
-
-  await GoogleCredential.postponeGmailSync(createdCredential.id)
-
-  const updatedCredential = await GoogleCredential.get(createdCredential.id)
-
-  expect(createdCredential.id).to.be.equal(updatedCredential.id)
-  expect(updatedCredential.sync_status).to.be.equal('failed')
-  expect(updatedCredential.last_sync_duration).to.be.equal(0)
-}
-
 async function disconnect() {
   const createdCredential = await create()
 
@@ -214,16 +169,6 @@ async function disconnectFailed() {
     const message = `Google-Credential ${user.id} not found`
 
     expect(ex.message).to.be.equal(message)
-  }
-}
-
-async function forceSyncGmail() {
-  const createdCredential = await create()
-
-  try {
-    await GoogleCredential.forceSyncGmail(createdCredential.id)
-  } catch (ex) {
-    expect(ex.message).to.be.equal('Please wait until current sync job is finished.')
   }
 }
 
@@ -319,14 +264,10 @@ describe('Google', () => {
     it('should update a google-credential refresh-token', updateRefreshToken)
     it('should update a google-credential access-token', updateAccesshToken)
     it('should revoke a google-credential', updateAsRevoked)
-    it('should update a google-credential last sync time', updateLastSync)
-    it('should update a google-credential sync status', updateSyncStatus)
-    it('should postpone a google-credential sync', postponeGmailSync)
     
     it('should disconnect a google-credential', disconnect)
     it('should handle returned exception from disconnect google-credential', disconnectFailed)
     
-    it('should handle force sync request', forceSyncGmail)
     it('should update a google-credential profile', updateProfile)
     it('should update a google-credential gmail-profile', updateGmailProfile)
     it('should update a google-credential messages sync token', updateMessagesSyncHistoryId)
