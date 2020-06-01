@@ -173,11 +173,6 @@ async function disableEnableSync() {
   await MicrosoftCredential.disableSync(createdCredential.id)
   const updatedCredential_1 = await MicrosoftCredential.get(createdCredential.id)
   expect(updatedCredential_1.deleted_at).not.to.be.equal(null)
-
-
-  await MicrosoftCredential.enableSync(createdCredential.id)
-  const updatedCredential_2 = await MicrosoftCredential.get(createdCredential.id)
-  expect(updatedCredential_2.deleted_at).to.be.equal(null)
 }
 
 async function disableEnableSyncFailed() {
@@ -191,19 +186,6 @@ async function disableEnableSyncFailed() {
 
     expect(ex.message).to.be.equal(message)
   }
-}
-
-async function forceSync() {
-  const createdCredential = await create()
-
-  await MicrosoftCredential.updateLastSync(createdCredential.id)
-  await MicrosoftCredential.forceSync(createdCredential.id)
-
-  const updatedCredential = await MicrosoftCredential.get(createdCredential.id)
-
-  expect(createdCredential.id).to.be.equal(updatedCredential.id)
-  expect(updatedCredential.sync_status).to.be.equal(null)
-  expect(updatedCredential.last_sync_at).to.be.equal(null)
 }
 
 async function updateProfile() {
@@ -280,8 +262,6 @@ describe('Microsoft', () => {
 
     it('should disable/enable a microsoft-credential', disableEnableSync)
     it('should handle returned exception from disable/enable microsoft-credential', disableEnableSyncFailed)
-
-    it('should handle force sync request', forceSync)
     it('should update a microsoft-credential profile', updateProfile)
 
     it('should update a microsoft-credential contacts_last_sync_At', updateContactsLastSyncAt)
