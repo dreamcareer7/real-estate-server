@@ -1,12 +1,10 @@
--- deprecated, we use users_jobs row level lock technique
-
 SELECT
-  id
-FROM 
-  users_jobs
+  *
+FROM
+  users_jobs 
 WHERE
-  (executed_at <= (NOW() - $1::interval) OR executed_at IS NULL)
-  AND google_credential IS NOT NULL
+  google_credential IS NOT NULL
   AND job_name = 'gmail'
-  AND status <> 'pending'
+  AND (start_at <= (NOW() - $1::interval) OR start_at IS NULL)
   AND deleted_at IS NULL
+FOR UPDATE SKIP LOCKED
