@@ -158,6 +158,11 @@ poll({
 })
 
 poll({
+  fn: MicrosoftWorker.Contacts.syncDue,
+  name: 'MicrosoftWorker.contacts.syncDue'
+})
+
+poll({
   fn: BrandTemplate.updateThumbnails,
   name: 'BrandTemplate.updateThumbnails'
 })
