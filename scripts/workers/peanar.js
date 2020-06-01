@@ -101,7 +101,7 @@ const forks = [
     concurrency: 5
   },
   {
-    queues: ['microsoft', 'microsoft_cal'],
+    queues: ['microsoft', 'microsoft_cal', 'microsoft_contacts'],
     concurrency: 5
   },
   {
