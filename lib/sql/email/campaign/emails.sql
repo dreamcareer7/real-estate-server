@@ -19,14 +19,18 @@
 -- So now, by ordering by send_type, we make sure
 -- a recipient will be a TO recipient if he is both a TO and CC/BCC.
 
-SELECT DISTINCT ON(LOWER(email))
-  *
+SELECT DISTINCT ON(LOWER(TRIM(email)))
+  campaign,
+  TRIM(email) AS email,
+  contact,
+  agent,
+  send_type
 FROM
   email_campaigns_recipient_emails
 WHERE
   email IS NOT NULL
   AND campaign = $1
-ORDER BY LOWER(email), (
+ORDER BY LOWER(TRIM(email)), (
   CASE
     WHEN send_type = 'To'::email_campaign_send_type THEN 0
     ELSE 1
