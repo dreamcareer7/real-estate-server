@@ -111,38 +111,6 @@ async function updateAsRevoked() {
   expect(updatedCredential.revoked).to.be.equal(true)
 }
 
-async function updateLastSync() {
-  const createdCredential = await create()
-
-  const duration = 100
-  await MicrosoftCredential.updateLastSync(createdCredential.id, duration)
-
-  const updatedCredential = await MicrosoftCredential.get(createdCredential.id)
-
-  expect(createdCredential.id).to.be.equal(updatedCredential.id)
-}
-
-async function updateSyncStatus() {
-  const createdCredential = await create()
-
-  const status = 'success'
-
-  await MicrosoftCredential.updateSyncStatus(createdCredential.id, status)
-
-  const updatedCredential_1 = await MicrosoftCredential.get(createdCredential.id)
-
-  expect(createdCredential.id).to.be.equal(updatedCredential_1.id)
-  expect(updatedCredential_1.sync_status).to.be.equal(status)
-
-
-  await MicrosoftCredential.updateSyncStatus(createdCredential.id, null)
-
-  const updatedCredential_2 = await MicrosoftCredential.get(createdCredential.id)
-
-  expect(createdCredential.id).to.be.equal(updatedCredential_2.id)
-  expect(updatedCredential_2.sync_status).to.be.equal(null)
-}
-
 async function updateSendEmailAfter() {
   const createdCredential = await create()
 
@@ -156,54 +124,25 @@ async function updateSendEmailAfter() {
   expect(Number(updatedCredential.send_email_after)).to.be.equal(ts)
 }
 
-async function postponeOutlookSync() {
+async function disconnect() {
   const createdCredential = await create()
 
-  await MicrosoftCredential.postponeOutlookSync(createdCredential.id)
-
-  const updatedCredential = await MicrosoftCredential.get(createdCredential.id)
-
-  expect(createdCredential.id).to.be.equal(updatedCredential.id)
-  expect(updatedCredential.sync_status).to.be.equal('failed')
-}
-
-async function disableEnableSync() {
-  const createdCredential = await create()
-
-  await MicrosoftCredential.disableSync(createdCredential.id)
+  await MicrosoftCredential.disconnect(createdCredential.id)
   const updatedCredential_1 = await MicrosoftCredential.get(createdCredential.id)
   expect(updatedCredential_1.deleted_at).not.to.be.equal(null)
-
-
-  await MicrosoftCredential.enableSync(createdCredential.id)
-  const updatedCredential_2 = await MicrosoftCredential.get(createdCredential.id)
-  expect(updatedCredential_2.deleted_at).to.be.equal(null)
 }
 
-async function disableEnableSyncFailed() {
+async function disconnectFailed() {
   const not_exist_credential_id = user.id
 
   try {
-    await MicrosoftCredential.disableSync(not_exist_credential_id)
+    await MicrosoftCredential.disconnect(not_exist_credential_id)
 
   } catch (ex) {
     const message = `Microsoft-Credential ${user.id} not found`
 
     expect(ex.message).to.be.equal(message)
   }
-}
-
-async function forceSync() {
-  const createdCredential = await create()
-
-  await MicrosoftCredential.updateLastSync(createdCredential.id)
-  await MicrosoftCredential.forceSync(createdCredential.id)
-
-  const updatedCredential = await MicrosoftCredential.get(createdCredential.id)
-
-  expect(createdCredential.id).to.be.equal(updatedCredential.id)
-  expect(updatedCredential.sync_status).to.be.equal(null)
-  expect(updatedCredential.last_sync_at).to.be.equal(null)
 }
 
 async function updateProfile() {
@@ -223,39 +162,6 @@ async function updateProfile() {
   expect(updatedCredential.display_name).to.be.equal(profile.displayName)
 }
 
-async function updateContactsLastSyncAt() {
-  const createdCredential = await create()
-
-  await MicrosoftCredential.updateContactsLastSyncAt(createdCredential.id)
-
-  const updatedCredential = await MicrosoftCredential.get(createdCredential.id)
-
-  expect(createdCredential.id).to.be.equal(updatedCredential.id)
-  expect(updatedCredential.contacts_last_sync_at).not.to.be.equal(null)
-}
-
-async function updateContactsLastExtractAt() {
-  const createdCredential = await create()
-
-  await MicrosoftCredential.updateContactsLastExtractAt(createdCredential.id)
-
-  const updatedCredential = await MicrosoftCredential.get(createdCredential.id)
-
-  expect(createdCredential.id).to.be.equal(updatedCredential.id)
-  expect(updatedCredential.contacts_last_extract_at).not.to.be.equal(null)
-}
-
-async function updateMessagesLastSyncAt() {
-  const createdCredential = await create()
-
-  await MicrosoftCredential.updateMessagesLastSyncAt(createdCredential.id)
-
-  const updatedCredential = await MicrosoftCredential.get(createdCredential.id)
-
-  expect(createdCredential.id).to.be.equal(updatedCredential.id)
-  expect(updatedCredential.messages_last_sync_at).not.to.be.equal(null)
-}
-
 
 describe('Microsoft', () => {
   describe('Microsoft Account', () => {
@@ -273,19 +179,10 @@ describe('Microsoft', () => {
     
     it('should update a microsoft-credential tokens', updateTokens)
     it('should revoke a microsoft-credential', updateAsRevoked)
-    it('should update a microsoft-credential last sync status', updateLastSync)
-    it('should update a microsoft-credential sync status', updateSyncStatus)
     it('should update a microsoft-credential send_email_after', updateSendEmailAfter)
-    it('should postpone a microsoft-credential sync', postponeOutlookSync)
 
-    it('should disable/enable a microsoft-credential', disableEnableSync)
-    it('should handle returned exception from disable/enable microsoft-credential', disableEnableSyncFailed)
-
-    it('should handle force sync request', forceSync)
+    it('should disable/enable a microsoft-credential', disconnect)
+    it('should handle returned exception from disable/enable microsoft-credential', disconnectFailed)
     it('should update a microsoft-credential profile', updateProfile)
-
-    it('should update a microsoft-credential contacts_last_sync_At', updateContactsLastSyncAt)
-    it('should update a microsoft-credential contacts_last_extract_At', updateContactsLastExtractAt)
-    it('should update a microsoft-credential messages_last_sync_At', updateMessagesLastSyncAt)
   })
 })

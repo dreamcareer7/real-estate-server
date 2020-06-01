@@ -4,14 +4,7 @@ declare interface IMicrosoftCredential extends IIntegrationCredential {
   photo: string;
   id_token: string;
   ext_expires_in: number;
-  contacts_last_sync_at: string;
-  contacts_last_extract_at: string;
-  messages_last_sync_at: string;
   microsoft_calendar: UUID;
-  calendars_last_sync_at: string;
-  last_sync_duration: number;
-  last_sync_at: string;
-  sync_status: string;
   scope_summary: string[];
   send_email_after: number;
 }
