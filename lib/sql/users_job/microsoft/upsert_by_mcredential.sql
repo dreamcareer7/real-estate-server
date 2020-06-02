@@ -21,5 +21,6 @@ VALUES
 ON CONFLICT (microsoft_credential, job_name) DO UPDATE SET
   status = $6,
   start_at = $7,
-  updated_at = now()
+  updated_at = now(),
+  deleted_at = null
 RETURNING id
