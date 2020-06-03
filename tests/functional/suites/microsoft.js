@@ -187,7 +187,7 @@ function forceSync(cb) {
     .after(function(err, res, json) {
       cb(err, res, json)
     })
-    .expectJSON({ http: 400, message: 'Please wait until current sync job is finished.', code: 'BadRequest' })
+    .expectStatus(200)
 }
 
 function deleteAccount(cb) {
