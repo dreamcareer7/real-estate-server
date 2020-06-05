@@ -3,7 +3,7 @@ const db = require('../lib/utils/db')
 const migrations = [
   'BEGIN',
   
-  'ALTER TABLE crm_tasks ADD COLUMN IF NOT EXISTS all_day BOOLEAN NULL',
+  'ALTER TABLE crm_tasks ADD COLUMN IF NOT EXISTS all_day BOOLEAN DEFAULT FALSE NOT NULL',
 
   'COMMIT'
 ]

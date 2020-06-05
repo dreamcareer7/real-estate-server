@@ -34,7 +34,7 @@ declare interface ITask extends ICrmAssociationsCategorized {
   reminders: UUID[]
   associations?: UUID[]
   files?: any[],
-  all_day?: Boolean
+  all_day: Boolean
 }
 
 declare interface ITaskInput {
@@ -49,12 +49,13 @@ declare interface ITaskInput {
   end_date?: number
   status: TTaskStatus
   task_type: TTaskType
-
+  
   reminders?: IReminderInput[]
   associations?: ICrmTaskAssociationInput[]
   assignees?: UUID[]
-
+  
   metadata?: any;
+  all_day: Boolean
 }
 
 declare type TBaseTaskInputKeys = 'title' | 'description' | 'status' | 'due_date' | 'end_date' | 'task_type' | 'metadata';

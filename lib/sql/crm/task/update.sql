@@ -8,9 +8,10 @@ SET
   status=$6,
   task_type=$7,
   metadata=$8::json,
+  all_day=$9::boolean,
   searchable_field=COALESCE($2, '') || ' ' || COALESCE($3, ''),
   updated_at=now(),
-  updated_by = $9::uuid,
+  updated_by = $10::uuid,
   needs_notification = (CASE
     WHEN $4::timestamptz <> due_date THEN
       $4::timestamptz > now()
