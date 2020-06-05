@@ -33,7 +33,8 @@ declare interface ITask extends ICrmAssociationsCategorized {
 
   reminders: UUID[]
   associations?: UUID[]
-  files?: any[]
+  files?: any[],
+  all_day?: Boolean
 }
 
 declare interface ITaskInput {
