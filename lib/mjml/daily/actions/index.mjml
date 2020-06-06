@@ -1,0 +1,8 @@
+{% if event.event_type === 'child_birthday' or event.event_type === 'birthday' or event.event_type === 'wedding_anniversary' %}
+  {% include './crm_task.mjml' %}
+{% endif %}
+
+{% if event.object_type === 'deal_context' %}
+  {% set deal = deals[event.deal] %}
+  {% include './deal.mjml' %}
+{% endif %}

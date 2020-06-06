@@ -1,0 +1,20 @@
+<mj-section background-color="#ffffff" padding="0px 32px">
+  <mj-column width="25%">
+    <mj-image padding-left=0 padding-bottom=0 src="{{deal.context.photo.text or ''}}">
+    </mj-image>
+  </mj-column>
+  <mj-column width="75%">
+    <mj-text padding-left=0>
+      {{ deal.title }}
+      <div style="color: #c6c6c6;">
+        {{ deal.deal_type }}, {{ deal.context.contract_status.text or deal.context.listing_status.text }}
+      </div>
+      <div style="color: #c6c6c6;">
+        {{ deal.context.list_price.number | price }}
+      </div>
+    </mj-text>
+
+    {% set align = 'left' %}
+    {% include '../actions/deal.mjml' %}
+  </mj-column>
+</mj-section>

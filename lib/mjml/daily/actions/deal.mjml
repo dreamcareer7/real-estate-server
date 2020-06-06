@@ -1,0 +1,11 @@
+<mj-button
+  width="120px"
+  font-family="Helvetica"
+  background-color="#39ccaa"
+  color="white"
+  font-size="13px"
+  align="{{ align or 'right'}}"
+  padding=0
+>
+  Promote
+</mj-button>

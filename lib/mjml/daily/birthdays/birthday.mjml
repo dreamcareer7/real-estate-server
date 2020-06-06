@@ -1,0 +1,32 @@
+<mj-section background-color="#ffffff" padding="0px 32px">
+  <mj-column width="25%">
+    <mj-image padding-left=0 padding-bottom=0 src="{{contact.profile_image_url or 'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcRsuX8DpuDiUuFAMWfXKVW6P9X6VOvIGjPzuzXy0QTTmfBiAmfn&usqp=CAU'}}">
+    </mj-image>
+  </mj-column>
+  <mj-column width="60%">
+    <mj-text padding-left=0>
+      {{ birthday.title }}
+      <div>
+        <br>
+        <span style="color: #c6c6c6;">Last Touch:</span>
+        {{ contact. last_touch | calendar }}
+      <div>
+        <br>
+        {% for tag in contact.
+        tags %}
+         {% include './tag.mjml' %}
+         &nbsp;
+        {% endfor %}
+      </div>
+    </mj-text>
+
+    {% set event = birthday %}
+    {% set align = 'left' %}
+    {% include '../actions/crm_task.mjml' %}
+  </mj-column>
+  <mj-column width="15%">
+    <mj-text padding=0>
+      {{ birthday.date | time('MMMM Do')}}
+    </mj-text>
+  </mj-column>
+</mj-section>
