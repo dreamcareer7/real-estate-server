@@ -15,19 +15,25 @@
 
   <mj-column width="50%">
     {% if event.object_type === 'deal_context' %}
-      <mj-text height="35px">
+      <mj-text height="25px">
+        {% set uri %}/dashboard/deals/{{event.deal}}{% endset %}
+        {% set url = uri | url %}
         {{ event.type_label }}
-        <div style="color: #c6c6c6; padding-top: 2px;">
-          {{ event.title }}
+        <div style="padding-top: 2px;">
+          <a style="color: #c6c6c6;" href="{{url}}">
+            {{ event.title }}
+          </a>
         </div>
       </mj-text>
     {% else %}
-      <mj-text height="35px">
+      <mj-text height="25px">
         {{ event.title }}
         <div style="color: #c6c6c6; padding-top: 2px;">
           {% if event.people %}
             {% set contact = contacts[event.people[0].id] %}
-            {{ contact.display_name }}
+            {% set uri %}/dashboard/contacts/{{contact.id}}{% endset %}
+            {% set url = uri | url %}
+            <a href="{{url}}" style="color: #c6c6c6;">{{ contact.display_name }}</a>
             {% if event.people.length > 1 %}
               and {{event.people.length - 1}} other people
             {% endif %}
@@ -37,7 +43,7 @@
     {% endif %}
   </mj-column>
 
-  <mj-column width="30%">
+  <mj-group width="30%" css-class="actions">
     {% include '../actions/index.mjml' %}
-  </mj-column>
+  </mj-group>
 </mj-section>

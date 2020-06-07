@@ -1,14 +1,8 @@
-<mj-section background-color="#ffffff" padding="50px 32px 10px">
+<mj-section background-color="#ffffff" padding="50px 32px 20px">
   <mj-column>
     <mj-text css-class="title" padding="0" align="left" font-family="Lato" font-size="20px">
-      Today's Schedule
-    </mj-text>
-  </mj-column>
-
-  <mj-column>
-    <mj-text align="right" font-size="13px" padding=0>
-      <a href="">
-        Open in Rechat
+      <a href="{{ '/dashboard/calendar' | url }}">
+        Today's Schedule
       </a>
     </mj-text>
   </mj-column>

@@ -1,11 +1,23 @@
-<mj-section background-color="#ffffff" padding="0px 32px">
+{% set uri %}/dashboard/contacts/{{contact.id}}{% endset %}
+{% set url = uri | url %}
+
+<mj-section background-color="#ffffff" padding="10px 32px">
   <mj-column width="25%">
-    <mj-image padding-left=0 padding-bottom=0 src="{{contact.profile_image_url or 'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcRsuX8DpuDiUuFAMWfXKVW6P9X6VOvIGjPzuzXy0QTTmfBiAmfn&usqp=CAU'}}">
+    <mj-image
+      padding-left=0
+      padding-bottom=0
+      src="{{contact.profile_image_url or 'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcRsuX8DpuDiUuFAMWfXKVW6P9X6VOvIGjPzuzXy0QTTmfBiAmfn&usqp=CAU'}}"
+      href="{{ url }}"
+    >
     </mj-image>
   </mj-column>
-  <mj-column width="60%">
+  <mj-column width="45%">
     <mj-text padding-left=0>
-      {{ birthday.title }}
+      {{ birthday.date | time('MMMM Do')}}
+      <div>
+        <br>
+        <a href="{{ url }}">{{ birthday.title }}</a>
+      </div>
       <div>
         <br>
         <span style="color: #c6c6c6;">Last Touch:</span>
@@ -19,14 +31,9 @@
         {% endfor %}
       </div>
     </mj-text>
-
+  </mj-column>
+  <mj-group width="30%" css-class="actions">
     {% set event = birthday %}
-    {% set align = 'left' %}
-    {% include '../actions/crm_task.mjml' %}
-  </mj-column>
-  <mj-column width="15%">
-    <mj-text padding=0>
-      {{ birthday.date | time('MMMM Do')}}
-    </mj-text>
-  </mj-column>
+    {% include '../actions/index.mjml' %}
+  </mj-group>
 </mj-section>

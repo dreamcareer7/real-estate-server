@@ -1,4 +1,4 @@
-<mj-column padding=0 width="72px">
+<mj-column padding=0 width="87px">
   <mj-button
     font-family="Helvetica"
     background-color="#39ccaa"
@@ -6,9 +6,9 @@
     font-size="13px"
     padding=0
     inner-padding="5px 10px"
-    width="70px"
+    width="85px"
     padding-left="2px"
   >
-    Promote
+    Send Card
   </mj-button>
 </mj-column>

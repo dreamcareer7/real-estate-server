@@ -6,6 +6,14 @@
 
 {% set layout = { top_image: "https://assets.rechat.com/mail/v2/Welcome.png", title: title } %}
 
+{% block header %}
+  <mj-style>
+    .actions {
+      text-align: right !important;
+    }
+  </mj-style>
+{% endblock %}
+
 {% block content %}
     {% include './events/index.mjml' %}
     {% include './birthdays/index.mjml' %}
