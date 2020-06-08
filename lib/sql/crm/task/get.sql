@@ -9,6 +9,7 @@ SELECT
   EXTRACT(EPOCH FROM end_date) AS end_date,
   "status",
   task_type,
+  all_day,
   metadata,
   (
     SELECT
