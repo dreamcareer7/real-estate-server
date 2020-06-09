@@ -3,6 +3,8 @@ const db = require('../lib/utils/db')
 const migrations = [
   'BEGIN',
 
+  'DELETE FROM users_jobs',
+
   'ALTER TABLE google_credentials DROP COLUMN IF EXISTS calendars_last_sync_at',
   'ALTER TABLE google_credentials DROP COLUMN IF EXISTS threads_sync_history_id',
   'ALTER TABLE google_credentials DROP COLUMN IF EXISTS contacts_last_sync_at',
@@ -25,6 +27,11 @@ const run = async () => {
     const record = [row.user, row.brand, row.id, null, 'contacts', null, null ]
 
     await conn.query('INSERT INTO users_jobs("user", brand, google_credential, microsoft_credential, job_name, status, start_at) VALUES ($1, $2, $3, $4, $5, $6, $7 ) ON CONFLICT (google_credential, job_name) DO UPDATE SET status = null, start_at = null, updated_at = null', record)
+
+    if (row.google_calendar) {
+      const record_2 = [row.user, row.brand, row.id, null, 'calendar', null, null ]
+      await conn.query('INSERT INTO users_jobs("user", brand, google_credential, microsoft_credential, job_name, status, start_at) VALUES ($1, $2, $3, $4, $5, $6, $7 ) ON CONFLICT (google_credential, job_name) DO UPDATE SET status = null, start_at = null, updated_at = null', record_2)
+    }
   }
 
   conn.release()
