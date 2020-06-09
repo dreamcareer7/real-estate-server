@@ -1,0 +1,10 @@
+SELECT
+  *
+FROM
+  users_jobs 
+WHERE
+  microsoft_credential IS NOT NULL
+  AND job_name = 'outlook'
+  AND ((start_at <= (NOW() - $1::interval) OR start_at IS NULL) OR status = 'waiting')
+  AND deleted_at IS NULL
+FOR UPDATE SKIP LOCKED

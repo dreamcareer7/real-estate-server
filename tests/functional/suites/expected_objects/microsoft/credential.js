@@ -11,12 +11,6 @@ module.exports = {
   photo: String,
   scope: Array,
   revoked: Boolean,
-  sync_status: String,
-  last_sync_at: Date,
-  last_sync_duration: Number,
-  contacts_last_sync_at: Date,
-  contacts_last_extract_at: Date,
-  messages_last_sync_at: Date,
   created_at: Date,
   updated_at: Date,
   deleted_at: Date

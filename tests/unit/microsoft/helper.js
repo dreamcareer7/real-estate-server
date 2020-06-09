@@ -4,7 +4,7 @@ const MicrosoftCredential    = require('../../../lib/models/Microsoft/credential
 const MicrosoftMessage       = require('../../../lib/models/Microsoft/message')
 const MicrosoftCalendar      = require('../../../lib/models/Microsoft/calendar')
 const MicrosoftCalendarEvent = require('../../../lib/models/Microsoft/calendar_events')
-const { generateRecord } = require('../../../lib/models/Microsoft/workers/messages/common')
+const { generateRecord } = require('../../../lib/models/Microsoft/workers/outlook/common')
 
 const microsoft_messages_offline = require('./data/microsoft_messages.json')
 const calendars = require('./data/calendars.json')
