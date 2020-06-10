@@ -138,6 +138,7 @@ declare type TDbSqlAddress =
   | 'calendar_integration/get_by_microsoft_ids'
   | 'calendar_integration/insert'
   | 'calendar_integration/reset_etag_by_crm_task'
+  | 'calendar_integration/reset_etag_by_crm_task_and_origin'
   | 'client/get'
   | 'contact/attribute/clear_primaries'
   | 'contact/attribute/delete'
