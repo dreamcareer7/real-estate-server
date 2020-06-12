@@ -8,6 +8,7 @@ INSERT INTO crm_tasks (
   status,
   task_type,
   metadata,
+  all_day,
   searchable_field,
   needs_notification
 )
@@ -21,6 +22,7 @@ VALUES (
   $7,
   $8,
   $9,
+  $10,
   COALESCE($3, '') || ' ' || COALESCE($4, ''),
   ($5::timestamptz > now() AND $7 <> 'DONE')
 )

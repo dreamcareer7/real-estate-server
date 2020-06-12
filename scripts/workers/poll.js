@@ -143,6 +143,11 @@ poll({
 })
 
 poll({
+  fn: GoogleWorkers.Contacts.syncDue,
+  name: 'GoogleWorkers.contacts.syncDue'
+})
+
+poll({
   fn: MicrosoftWorker.Outlook.syncDue,
   name: 'MicrosoftWorker.outlook.syncDue'
 })
@@ -150,6 +155,11 @@ poll({
 poll({
   fn: MicrosoftWorker.Calendar.syncDue,
   name: 'MicrosoftWorker.calendar.syncDue'
+})
+
+poll({
+  fn: MicrosoftWorker.Contacts.syncDue,
+  name: 'MicrosoftWorker.contacts.syncDue'
 })
 
 poll({

@@ -20,9 +20,6 @@ A _microsoft_credential_ is a simple and small object that contains:
 | scope                    | jsonb                    |          |
 | scope_summary            | jsonb                    |          |
 | revoked                  | boolean                  | not null |
-| sync_status              | text                     |          |
-| last_sync_at             | timestamp with time zone |          |
-| last_sync_duration       | integer                  |          |
 | created_at               | timestamp with time zone | not null |
 | updated_at               | timestamp with time zone | not null |
 | deleted_at               | timestamp with time zone |          |

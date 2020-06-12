@@ -8,6 +8,7 @@ SET
   end_date = u.end_date,
   task_type = u.task_type,
   metadata = u.metadata,
+  all_day = u.all_day,
   updated_at = now(),
   updated_by = $1::uuid
 FROM
@@ -19,7 +20,8 @@ FROM
     due_date timestamptz,
     end_date timestamptz,
     task_type text,
-    metadata json
+    metadata json,
+    all_day boolean
   )
 WHERE
   t.id = u.id
