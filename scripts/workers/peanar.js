@@ -21,6 +21,7 @@ require('../../lib/models/Deal/email')
 require('../../lib/models/Deal/brokerwolf')
 require('../../lib/models/Email')
 require('../../lib/models/SMS')
+require('../../lib/models/Daily')
 
 /** @type {(() => Promise<void>)[]} */
 let shutdowns = []
@@ -101,6 +102,10 @@ const queues = [
     queues: ['envelope_update'],
     concurrency: 5
   },
+  {
+    queues: ['daily_email'],
+    concurrency: 5
+  }
 ]
 
 const forks = [

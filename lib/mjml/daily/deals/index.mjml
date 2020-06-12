@@ -1,0 +1,19 @@
+<mj-section background-color="#ffffff" padding="50px 32px 10px">
+  <mj-column>
+    <mj-text
+      css-class="title"
+      padding="0"
+      align="left"
+      font-family="Lato"
+      font-size="20px"
+    >
+      <a href="{{ '/dashboard/deals' | url }}">
+        Active Deals
+      </a>
+    </mj-text>
+  </mj-column>
+</mj-section>
+
+{% for deal_id, deal in deals %}
+  {% include './deal.mjml' %}
+{% endfor %}

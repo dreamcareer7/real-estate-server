@@ -1,0 +1,19 @@
+<mj-section background-color="#ffffff" padding="50px 32px 20px">
+  <mj-column>
+    <mj-text css-class="title" padding="0" align="left" font-family="Lato" font-size="20px">
+      <a href="{{ '/dashboard/calendar' | url }}">
+        Today's Schedule
+      </a>
+    </mj-text>
+  </mj-column>
+
+  <mj-column padding-right=0>
+    <mj-text align="right" padding-right=0>
+      {{ '' | time('dddd MMMM Mo') }}
+    </mj-text>
+  </mj-column>
+</mj-section>
+
+{% for event in today %}
+  {% include './event.mjml' %}
+{% endfor %}

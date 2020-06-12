@@ -21,23 +21,25 @@
         }
       }
     </mj-style>
+
+    {% block header %}{% endblock %}
   </mj-head>
   <mj-body background-color="#E5E5E5">
-    <mj-section background-color="#ffffff" padding="60px 32px 20px">
+    <mj-section background-color="#ffffff" padding="20px 32px 20px">
       <mj-column>
         <mj-image padding="0" src="{{layout.top_image}}"></mj-image>
       </mj-column>
     </mj-section>
     <mj-section background-color="#ffffff" padding="0 32px 25px">
       <mj-column>
-        <mj-text css-class="title" padding="0" align="center" font-family="Abril Fatface" font-size="32px">{{layout.title}}</mj-text>
+        <mj-text css-class="title" padding="0" align="center" font-family="Lato" font-size="32px">{{layout.title}}</mj-text>
       </mj-column>
     </mj-section>
 
     {% block content %}{% endblock %}
 
     {% if url %}
-    <mj-section background-color="#ffffff" padding="40px 0 30px">
+    <mj-section background-color="#ffffff" padding="40px 0 10px">
       <mj-column padding="0px">
         <mj-button href="{{url}}" width="258px" height="48px" href="#" background-color="#39CCAA" color="#fff" border-radius="10px" font-family="Roboto" font-size="12px" font-weight="700" text-transform="uppercase">
           {{layout.action_title}}
@@ -46,29 +48,31 @@
     </mj-section>
     {% endif %}
 
-    <mj-section background-color="#fff" padding="30px 32px 0">
-      <mj-column>
-        <mj-divider border-width="1px" border-style="solid" border-color="#e5e5e5" width="100%" padding="0"></mj-divider>
+    <mj-section padding=0>
+      <mj-column padding="0px">
+        <mj-image width="180px" padding="10px 0 12px 0" src=""></mj-image>
+        <mj-text color="#7f7f7f" padding="0px" align="center" >
+          <p>Powered by Rechat™</p>
+        </mj-text>
+        <mj-text color="#7f7f7f" padding="0px" align="center" >
+          <p>Rechat ® 2020, All Rights Reserved.<a style="color: #7f7f7f;" href="http://tinyurl.com/mls-terms-of-use" target="_blank" style="text-decoration:underline;"> MLS ®
+            Terms</a></p>
+        </mj-text>
       </mj-column>
     </mj-section>
-    <mj-section background-color="#fff" padding="26px 0 0">
-      <mj-group>
-        <mj-column>
-          <mj-text padding="3px 0" align="center" color="#000" font-weight="400" font-size="7px" font-family="Roboto">
-            Powered by Rechat™
-          </mj-text>
-          <mj-text padding="3px 0" align="center" color="#000" font-weight="400" font-size="7px" font-family="Roboto">
-            Rechat ® 2020, All Rights Reserved.
-          </mj-text>
-        </mj-column>
-      </mj-group>
-    </mj-section>
-    <mj-section background-color="#ffffff" padding="10px 0 65px">
+
+    <mj-section padding="0 0 5px">
       <mj-group>
         <mj-column padding="0px">
-          <mj-text align="center" padding="0px" color="#000" font-weight="300" font-size="7px" font-family="Roboto">
-            <a style="text-decoration:underline;" href="https://itunes.apple.com/us/app/rechat/id974093560?mt=8">Download
-              the iOS app</a>
+          <mj-text color="#7f7f7f" align="right" padding="0px" align="center" >
+            <p style="margin-bottom:10px"><a style="color: #7f7f7f; margin-right: 30px;" href="https://itunes.apple.com/us/app/rechat/id974093560?mt=8">Download
+              the iOS app</a></p>
+          </mj-text>
+        </mj-column>
+        <mj-column padding="0px">
+          <mj-text color="#7f7f7f" align="left" padding="0px" align="center" >
+            <p style="margin-bottom:10px"> <a style="color: #7f7f7f;" href="%tag_unsubscribe_url%">Unsubscribe
+              from this list</a></p>
           </mj-text>
         </mj-column>
       </mj-group>
