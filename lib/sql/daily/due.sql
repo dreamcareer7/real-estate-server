@@ -12,3 +12,4 @@ FULL JOIN dailies ON  dailies.user             = user_schedules.user
                   AND dailies.created_at::date = user_schedules.scheduled_time::date
 WHERE local_time > scheduled_time
 AND dailies.id IS NULL
+AND users.daily_enabled IS TRUE
