@@ -1,27 +1,30 @@
 {% set uri %}/dashboard/contacts/{{contact.id}}{% endset %}
 {% set url = uri | url %}
 
+{% set default_icon %}https://assets.rechat.com/daily/{{celebration.event_type}}.png{%endset%}
+
 <mj-section background-color="#ffffff" padding="10px 32px">
   <mj-column width="25%">
     <mj-image
       padding-left=0
       padding-bottom=0
-      src="{{contact.profile_image_url or 'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcRsuX8DpuDiUuFAMWfXKVW6P9X6VOvIGjPzuzXy0QTTmfBiAmfn&usqp=CAU'}}"
+      src="{{contact.profile_image_url or default_icon}}"
       href="{{ url }}"
+      border-radius="48px"
     >
     </mj-image>
   </mj-column>
-  <mj-column width="45%">
+  <mj-column width="50%">
     <mj-text padding-left=0>
-      {{ birthday.date | time('MMMM Do')}}
+      {{ celebration.date | time('MMMM Do')}}
       <div>
         <br>
-        <a href="{{ url }}">{{ birthday.title }}</a>
+        <a href="{{ url }}">{{ celebration.title }}</a>
       </div>
       <div>
         <br>
         <span style="color: #c6c6c6;">Last Touch:</span>
-        {{ contact. last_touch | calendar }}
+        {{ contact.last_touch | calendar }}
       <div>
         <br>
         {% for tag in contact.
@@ -32,8 +35,8 @@
       </div>
     </mj-text>
   </mj-column>
-  <mj-group width="30%" css-class="actions">
-    {% set event = birthday %}
+  <mj-group width="25%" css-class="actions">
+    {% set event = celebration %}
     {% include '../actions/index.mjml' %}
   </mj-group>
 </mj-section>

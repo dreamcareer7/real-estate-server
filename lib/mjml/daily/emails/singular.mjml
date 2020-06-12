@@ -1,0 +1,28 @@
+{% set email = emails[campaign.emails[0]] %}
+
+<span style="color: #c6c6c6;">
+  {{ email.email_address }}
+</span>
+
+<div>
+  <br>
+  {% if email.failed > 0 %}
+    <img style="height: 24px;" src="https://assets.rechat.com/daily/failed.png" title="Failed" />
+  {% endif %}
+
+  {% if email.delivered > 0 %}
+    <img style="height: 24px;" src="https://assets.rechat.com/daily/delivered.png" title="Delivered" />
+  {% endif %}
+
+  {% if email.opened > 0 %}
+    <img style="height: 24px;" src="https://assets.rechat.com/daily/opened.png" title="Opened" />
+  {% endif %}
+
+  {% if email.clicked > 0 %}
+    <img style="height: 24px;" src="https://assets.rechat.com/daily/clicked.png" title="Clicked" />
+  {% endif %}
+
+  {% if email.unsubscribed > 0 %}
+    <img style="height: 24px;" src="https://assets.rechat.com/daily/unsubscribed.png" title="Unsubscribed" />
+  {% endif %}
+</div>

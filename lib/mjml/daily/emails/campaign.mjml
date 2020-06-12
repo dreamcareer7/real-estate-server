@@ -1,0 +1,40 @@
+{% set uri %}/dashboard/insights/{{campaign.id}}{% endset %}
+{% set url = uri | url %}
+
+<mj-section background-color="#ffffff" padding="10px 32px">
+  <mj-column width="25%">
+    <mj-image
+      href="{{url}}"
+      padding-left=0
+      padding-bottom=0
+      src="https://assets.rechat.com/daily/birthday.png"
+      border-radius="48px"
+    >
+    </mj-image>
+  </mj-column>
+  <mj-column width="75%">
+    <mj-text padding-left=0 padding-right=0>
+      <div>
+        <div style="float: left;">
+          <a href="{{url}}">{{ campaign.subject or '(untitled)' }}</a>
+        </div>
+
+        <div style="color: #c6c6c6; float: right;">
+          Sent on {{ campaign.executed_at | calendar }}
+        </div>
+      </div>
+      <div style="clear: both;">
+        <br>
+        {% if campaign.delivered === 1 %}
+          {% include './singular.mjml' %}
+        {% else %}
+          {% include './plural.mjml' %}
+        {% endif %}
+      </div>
+    </mj-text>
+  </mj-column>
+
+  <mj-group width="30%" css-class="actions">
+
+  </mj-group>
+</mj-section>

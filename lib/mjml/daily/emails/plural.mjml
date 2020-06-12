@@ -1,0 +1,82 @@
+<span style="color: #c6c6c6;">
+  {{ campaign.delivered }} Recipients
+</span>
+
+<div style="font-size: 15px;">
+  <br>
+  <table style="text-align: center;">
+    <tr>
+      <td>
+        <a href="{{url}}">
+          <img
+            style="height: 24px;"
+            src="https://assets.rechat.com/daily/delivered.png"
+            title="Delivered to {{ campaign.delivered }} recipients"
+          />
+        </a>
+      </td>
+
+      <td style="padding-left: 25px;">
+        <a href="{{url}}">
+          <img
+            style="height: 24px;"
+            src="https://assets.rechat.com/daily/opened.png"
+            title="Opened by {{ campaign.delivered }} recipients{% if campaign.delivered > 0 and campaign.opened > 0 %} ({{ ((campaign.opened / campaign.delivered)*100) | round(1)}}%){% endif %}"
+          />
+        </a>
+      </td>
+
+      <td style="padding-left: 25px;">
+        <a href="{{url}}">
+          <img
+            style="height: 24px;"
+            src="https://assets.rechat.com/daily/clicked.png"
+            title="Clicked by {{ campaign.delivered }} recipients{% if campaign.delivered > 0 and campaign.clicked > 0 %} ({{ ((campaign.clicked / campaign.delivered)*100) | round(1)}}%){% endif %}"
+          />
+        </a>
+      </td>
+
+      <td style="padding-left: 25px; {% if campaign.failed === 0 %}opacity: 0.15; {% endif %}">
+        <a href="{{url}}">
+          <img
+            style="height: 24px;"
+            src="https://assets.rechat.com/daily/failed.png"
+            title="Failed to deliver to {{ campaign.delivered }} recipients"
+          />
+        </a>
+      </td>
+
+      <td style="padding-left: 25px; {% if campaign.unsubscribed === 0 %}opacity: 0.15; {% endif %}">
+        <a href="{{url}}">
+          <img
+            style="height: 24px;"
+            src="https://assets.rechat.com/daily/unsubscribed.png"
+            title="Unsubscribed by {{ campaign.delivered }} recipients"
+          />
+        </a>
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+          {{ campaign.delivered }}
+      </td>
+
+      <td style="padding-left: 25px;">
+          {{ campaign.opened }}
+      </td>
+
+      <td style="padding-left: 25px;">
+          {{ campaign.clicked }}
+      </td>
+
+      <td style="padding-left: 25px; {% if campaign.failed === 0 %}opacity: 0.15; {% endif %}">
+        {{ campaign.failed }}
+      </td>
+
+      <td style="padding-left: 25px; {% if campaign.unsubscribed === 0 %}opacity: 0.15; {% endif %}">
+          {{ campaign.unsubscribed }}
+      </td>
+    </tr>
+  </table>
+</div>

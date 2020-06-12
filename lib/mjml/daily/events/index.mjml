@@ -6,6 +6,12 @@
       </a>
     </mj-text>
   </mj-column>
+
+  <mj-column padding-right=0>
+    <mj-text align="right" padding-right=0>
+      {{ '' | time('dddd MMMM Mo') }}
+    </mj-text>
+  </mj-column>
 </mj-section>
 
 {% for event in today %}

@@ -3,10 +3,16 @@
 
 <mj-section background-color="#ffffff" padding="10px 32px">
   <mj-column width="25%">
-    <mj-image href="{{url}}" padding-left=0 padding-bottom=0 src="{{deal.context.photo.text or ''}}">
+    <mj-image
+      href="{{url}}"
+      padding-left=0
+      padding-bottom=0
+      src="{{deal.context.photo.text or ''}}"
+      border-radius="24px"
+    >
     </mj-image>
   </mj-column>
-  <mj-column width="45%">
+  <mj-column width="50%">
     <mj-text padding-left=0>
       <a href="{{url}}">{{ deal.title }}</a>
       <div style="color: #c6c6c6;">
@@ -20,7 +26,7 @@
     </mj-text>
   </mj-column>
 
-  <mj-group width="30%" css-class="actions">
+  <mj-group width="25%" css-class="actions">
     {% include '../actions/deal.mjml' %}
   </mj-group>
 </mj-section>

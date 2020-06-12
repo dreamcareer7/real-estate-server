@@ -4,7 +4,7 @@
     Good Morning {{user.abbreviated_display_name}}
 {% endset %}
 
-{% set layout = { top_image: "https://assets.rechat.com/mail/v2/Welcome.png", title: title } %}
+{% set layout = { title: title } %}
 
 {% block header %}
   <mj-style>
@@ -16,6 +16,7 @@
 
 {% block content %}
     {% include './events/index.mjml' %}
-    {% include './birthdays/index.mjml' %}
+    {% include './celebrations/index.mjml' %}
     {% include './deals/index.mjml' %}
+    {% include './emails/index.mjml' %}
 {% endblock %}

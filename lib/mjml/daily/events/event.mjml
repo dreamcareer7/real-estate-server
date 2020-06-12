@@ -13,7 +13,7 @@
     </mj-text>
   </mj-column>
 
-  <mj-column width="50%">
+  <mj-column width="55%">
     {% if event.object_type === 'deal_context' %}
       <mj-text height="25px">
         {% set uri %}/dashboard/deals/{{event.deal}}{% endset %}
@@ -43,7 +43,7 @@
     {% endif %}
   </mj-column>
 
-  <mj-group width="30%" css-class="actions">
+  <mj-group width="25%" css-class="actions">
     {% include '../actions/index.mjml' %}
   </mj-group>
 </mj-section>

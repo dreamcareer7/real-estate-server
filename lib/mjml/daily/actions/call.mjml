@@ -11,7 +11,7 @@
         width="43px"
         padding-left="2px"
       >
-        Call
+        📞
     </mj-button>
   </mj-column>
 {% endif %}
