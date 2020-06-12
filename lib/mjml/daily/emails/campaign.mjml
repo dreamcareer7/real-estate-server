@@ -20,16 +20,22 @@
           <a href="{{url}}">{{ campaign.subject or '(untitled)' }}</a>
         </div>
 
-        <div style="color: #c6c6c6; float: right;">
-          {{ campaign.executed_at | calendar }}
-        </div>
+        {% if campaign.executed_at %}
+          <div style="color: #c6c6c6; float: right;">
+            {{ campaign.executed_at | calendar }}
+          </div>
+        {% endif %}
       </div>
       <div style="clear: both;">
         <br>
-        {% if campaign.delivered === 1 %}
-          {% include './singular.mjml' %}
+        {% if campaign.executed_at %}
+          {% if campaign.delivered === 1 %}
+            {% include './singular.mjml' %}
+          {% else %}
+            {% include './plural.mjml' %}
+          {% endif %}
         {% else %}
-          {% include './plural.mjml' %}
+          Scheduled for {{ campaign.due_at | calendar }}
         {% endif %}
       </div>
     </mj-text>
