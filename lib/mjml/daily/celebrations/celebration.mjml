@@ -11,6 +11,7 @@
       src="{{contact.profile_image_url or default_icon}}"
       href="{{ url }}"
       border-radius="48px"
+      width="64px"
     >
     </mj-image>
   </mj-column>

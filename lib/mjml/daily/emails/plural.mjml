@@ -9,7 +9,7 @@
       <td>
         <a href="{{url}}">
           <img
-            style="height: 24px;"
+            style="height: 16px;"
             src="https://assets.rechat.com/daily/delivered.png"
             title="Delivered to {{ campaign.delivered }} recipients"
           />
@@ -19,9 +19,9 @@
       <td style="padding-left: 25px;">
         <a href="{{url}}">
           <img
-            style="height: 24px;"
+            style="height: 16px;"
             src="https://assets.rechat.com/daily/opened.png"
-            title="Opened by {{ campaign.delivered }} recipients{% if campaign.delivered > 0 and campaign.opened > 0 %} ({{ ((campaign.opened / campaign.delivered)*100) | round(1)}}%){% endif %}"
+            title="Opened by {{ campaign.opened }} recipients{% if campaign.delivered > 0 and campaign.opened > 0 %} ({{ ((campaign.opened / campaign.delivered)*100) | round(1)}}%){% endif %}"
           />
         </a>
       </td>
@@ -29,29 +29,29 @@
       <td style="padding-left: 25px;">
         <a href="{{url}}">
           <img
-            style="height: 24px;"
+            style="height: 16px;"
             src="https://assets.rechat.com/daily/clicked.png"
-            title="Clicked by {{ campaign.delivered }} recipients{% if campaign.delivered > 0 and campaign.clicked > 0 %} ({{ ((campaign.clicked / campaign.delivered)*100) | round(1)}}%){% endif %}"
+            title="Clicked by {{ campaign.clicked }} recipients{% if campaign.delivered > 0 and campaign.clicked > 0 %} ({{ ((campaign.clicked / campaign.delivered)*100) | round(1)}}%){% endif %}"
           />
         </a>
       </td>
 
-      <td style="padding-left: 25px; {% if campaign.failed === 0 %}opacity: 0.15; {% endif %}">
+      <td style="padding-left: 25px; {% if campaign.failed === 0 %}opacity: 0.1; {% endif %}">
         <a href="{{url}}">
           <img
-            style="height: 24px;"
+            style="height: 16px;"
             src="https://assets.rechat.com/daily/failed.png"
-            title="Failed to deliver to {{ campaign.delivered }} recipients"
+            title="Failed to deliver to {{ campaign.failed }} recipients"
           />
         </a>
       </td>
 
-      <td style="padding-left: 25px; {% if campaign.unsubscribed === 0 %}opacity: 0.15; {% endif %}">
+      <td style="padding-left: 25px; {% if campaign.unsubscribed === 0 %}opacity: 0.1; {% endif %}">
         <a href="{{url}}">
           <img
-            style="height: 24px;"
+            style="height: 16px;"
             src="https://assets.rechat.com/daily/unsubscribed.png"
-            title="Unsubscribed by {{ campaign.delivered }} recipients"
+            title="Unsubscribed by {{ campaign.unsubscribed }} recipients"
           />
         </a>
       </td>
@@ -70,11 +70,11 @@
           {{ campaign.clicked }}
       </td>
 
-      <td style="padding-left: 25px; {% if campaign.failed === 0 %}opacity: 0.15; {% endif %}">
+      <td style="padding-left: 25px; {% if campaign.failed === 0 %}opacity: 0.1; {% endif %}">
         {{ campaign.failed }}
       </td>
 
-      <td style="padding-left: 25px; {% if campaign.unsubscribed === 0 %}opacity: 0.15; {% endif %}">
+      <td style="padding-left: 25px; {% if campaign.unsubscribed === 0 %}opacity: 0.1; {% endif %}">
           {{ campaign.unsubscribed }}
       </td>
     </tr>

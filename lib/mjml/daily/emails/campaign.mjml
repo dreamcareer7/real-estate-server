@@ -9,6 +9,7 @@
       padding-bottom=0
       src="https://assets.rechat.com/daily/birthday.png"
       border-radius="48px"
+      width="64px"
     >
     </mj-image>
   </mj-column>
@@ -20,7 +21,7 @@
         </div>
 
         <div style="color: #c6c6c6; float: right;">
-          Sent on {{ campaign.executed_at | calendar }}
+          {{ campaign.executed_at | calendar }}
         </div>
       </div>
       <div style="clear: both;">
