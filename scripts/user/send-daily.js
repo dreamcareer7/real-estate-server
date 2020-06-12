@@ -2,15 +2,16 @@
 
 require('../connection.js')
 require('../../lib/models/index.js')
+const fs = require('fs')
 const Daily = require('../../lib/models/Daily')
 const Job = require('../../lib/models/Job')
 
 const send = async () => {
-  console.log(Daily.sendForUser)
-  await Daily.sendForUser(process.argv[2])
+  const { rows } = await Daily.sendForUser(process.argv[2])
   await Job.handleContextJobs()
-  console.log('Sent')
-  process.exit()
+  const email = await Email.get(rows[0].email)
+  fs.writeFileSync('/tmp/1.html', email.html)
+  setTimeout(process.exit, 3000)
 }
 
 send()
