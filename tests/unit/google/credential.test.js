@@ -44,7 +44,6 @@ async function publicize() {
   expect(updatedCredential.contacts_sync_token).to.be.equal(undefined)
   expect(updatedCredential.contact_groups_sync_token).to.be.equal(undefined)
   expect(updatedCredential.messages_sync_history_id).to.be.equal(undefined)
-  expect(updatedCredential.threads_sync_history_id).to.be.equal(undefined)
 }
 
 async function getByUser() {
@@ -152,84 +151,24 @@ async function updateAsRevoked() {
   expect(updatedCredential.revoked).to.be.equal(true)
 }
 
-async function updateLastSync() {
+async function disconnect() {
   const createdCredential = await create()
 
-  const duration = 100
-  await GoogleCredential.updateLastSync(createdCredential.id, duration)
-
-  const updatedCredential = await GoogleCredential.get(createdCredential.id)
-
-  expect(createdCredential.id).to.be.equal(updatedCredential.id)
-  expect(updatedCredential.last_sync_duration).to.be.equal(duration)
-}
-
-async function updateSyncStatus() {
-  const createdCredential = await create()
-
-  const status = 'success'
-
-  await GoogleCredential.updateSyncStatus(createdCredential.id, status)
-
-  const updatedCredential_1 = await GoogleCredential.get(createdCredential.id)
-
-  expect(createdCredential.id).to.be.equal(updatedCredential_1.id)
-  expect(updatedCredential_1.sync_status).to.be.equal(status)
-
-
-  await GoogleCredential.updateSyncStatus(createdCredential.id, null)
-
-  const updatedCredential_2 = await GoogleCredential.get(createdCredential.id)
-
-  expect(createdCredential.id).to.be.equal(updatedCredential_2.id)
-  expect(updatedCredential_2.sync_status).to.be.equal(null)
-}
-
-async function postponeGmailSync() {
-  const createdCredential = await create()
-
-  await GoogleCredential.postponeGmailSync(createdCredential.id)
-
-  const updatedCredential = await GoogleCredential.get(createdCredential.id)
-
-  expect(createdCredential.id).to.be.equal(updatedCredential.id)
-  expect(updatedCredential.sync_status).to.be.equal('failed')
-  expect(updatedCredential.last_sync_duration).to.be.equal(0)
-}
-
-async function disableEnableSync() {
-  const createdCredential = await create()
-
-  await GoogleCredential.disableSync(createdCredential.id)
+  await GoogleCredential.disconnect(createdCredential.id)
   const updatedCredential_1 = await GoogleCredential.get(createdCredential.id)
   expect(updatedCredential_1.deleted_at).not.to.be.equal(null)
-
-
-  await GoogleCredential.enableSync(createdCredential.id)
-  const updatedCredential_2 = await GoogleCredential.get(createdCredential.id)
-  expect(updatedCredential_2.deleted_at).to.be.equal(null)
 }
 
-async function disableEnableSyncFailed() {
+async function disconnectFailed() {
   const not_exist_credential_id = user.id
 
   try {
-    await GoogleCredential.disableSync(not_exist_credential_id)
+    await GoogleCredential.disconnect(not_exist_credential_id)
 
   } catch (ex) {
     const message = `Google-Credential ${user.id} not found`
 
     expect(ex.message).to.be.equal(message)
-  }
-}
-
-async function forceSync() {
-  const createdCredential = await create()
-
-  try {
-    await GoogleCredential.forceSync(createdCredential.id)
-  } catch (ex) {
-    expect(ex.message).to.be.equal('Please wait until current sync job is finished.')
   }
 }
 
@@ -264,17 +203,6 @@ async function updateGmailProfile() {
 
   expect(createdCredential.id).to.be.equal(updatedCredential.id)
   expect(updatedCredential.messages_total).to.be.equal(profile.messagesTotal)
-}
-
-async function updateContactsLastSyncAt() {
-  const createdCredential = await create()
-
-  await GoogleCredential.updateContactsLastSyncAt(createdCredential.id)
-
-  const updatedCredential = await GoogleCredential.get(createdCredential.id)
-
-  expect(createdCredential.id).to.be.equal(updatedCredential.id)
-  expect(updatedCredential.contacts_last_sync_at).not.to.be.equal(null)
 }
 
 async function updateMessagesSyncHistoryId() {
@@ -317,17 +245,6 @@ async function updateRechatGoogleCalendar() {
   expect(updatedCredential.google_calendar).to.be.equal(rechatCalendarId)
 }
 
-async function updateCalendarsLastSyncAt() {
-  const createdCredential = await create()
-
-  await GoogleCredential.updateCalendarsLastSyncAt(createdCredential.id, new Date())
-
-  const updatedCredential = await GoogleCredential.get(createdCredential.id)
-
-  expect(createdCredential.id).to.be.equal(updatedCredential.id)
-  expect(updatedCredential.calendars_last_sync_at).not.to.be.equal(null)
-}
-
 describe('Google', () => {
   describe('Google Account', () => {
     createContext()
@@ -347,21 +264,15 @@ describe('Google', () => {
     it('should update a google-credential refresh-token', updateRefreshToken)
     it('should update a google-credential access-token', updateAccesshToken)
     it('should revoke a google-credential', updateAsRevoked)
-    it('should update a google-credential last sync time', updateLastSync)
-    it('should update a google-credential sync status', updateSyncStatus)
-    it('should postpone a google-credential sync', postponeGmailSync)
     
-    it('should disable/enable a google-credential', disableEnableSync)
-    it('should handle returned exception from disable/enable google-credential', disableEnableSyncFailed)
+    it('should disconnect a google-credential', disconnect)
+    it('should handle returned exception from disconnect google-credential', disconnectFailed)
     
-    it('should handle force sync request', forceSync)
     it('should update a google-credential profile', updateProfile)
     it('should update a google-credential gmail-profile', updateGmailProfile)
-    it('should update a google-credential contact_last_sync_At', updateContactsLastSyncAt)
     it('should update a google-credential messages sync token', updateMessagesSyncHistoryId)
     it('should update a google-credential messages sync token', updateMessagesSyncHistoryIdWithThirdParam)
 
     it('should update a google-credential rechat-google-Calendar', updateRechatGoogleCalendar)
-    it('should update a google-credential calendars_last_sync_at', updateCalendarsLastSyncAt)
   })
 })

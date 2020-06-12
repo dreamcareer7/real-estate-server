@@ -18,6 +18,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       False AS recurring,
       title,
       id AS crm_task,
+      all_day,
       NULL::uuid AS deal,
       NULL::uuid AS contact,
       NULL::uuid AS campaign,
@@ -68,7 +69,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       status,
       jsonb_build_object(
         'status', status,
-        'all_day', (ct.metadata->>'all_day')::bool
+        'all_day', all_day
       ) AS metadata
     FROM
       crm_tasks AS ct
@@ -93,6 +94,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       False AS recurring,
       ct.title,
       ct.id AS crm_task,
+      ct.all_day as all_day,
       ca.deal,
       ca.contact,
       ca.email AS campaign,
@@ -142,7 +144,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       ct.status,
       jsonb_build_object(
         'status', ct.status,
-        'all_day', (ct.metadata->>'all_day')::bool
+        'all_day', ct.all_day
       ) AS metadata
     FROM
       crm_associations AS ca
@@ -172,6 +174,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       False AS recurring,
       deals.title,
       NULL::uuid AS crm_task,
+      TRUE as all_day,
       cdc.deal,
       NULL::uuid AS contact,
       NULL::uuid AS campaign,
@@ -245,6 +248,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       True AS recurring,
       deals.title,
       NULL::uuid AS crm_task,
+      TRUE as all_day,
       cdc.deal,
       cr.contact,
       NULL::uuid AS campaign,
@@ -347,6 +351,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
           contacts.display_name
       END) AS title,
       NULL::uuid AS crm_task,
+      TRUE as all_day,
       NULL::uuid AS deal,
       contact,
       NULL::uuid AS campaign,
@@ -392,6 +397,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       False AS recurring,
       display_name AS title,
       NULL::uuid AS crm_task,
+      TRUE as all_day,
       NULL::uuid AS deal,
       id AS contact,
       NULL::uuid AS campaign,
@@ -431,6 +437,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       False AS recurring,
       subject AS title,
       NULL::uuid AS crm_task,
+      FALSE as all_day,
       ec.deal,
       NULL::uuid AS contact,
       id AS campaign,
@@ -498,6 +505,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       False AS recurring,
       subject AS title,
       NULL::uuid AS crm_task,
+      FALSE as all_day,
       ec.deal,
       NULL::uuid AS contact,
       id AS campaign,
@@ -568,6 +576,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
   --     False AS recurring,
   --     ec.subject AS title,
   --     NULL::uuid AS crm_task,
+  --     FALSE as all_day,
   --     ec.deal,
   --     c.id AS contact,
   --     ec.id AS campaign,
@@ -638,6 +647,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       False AS recurring,
       subject AS title,
       NULL::uuid AS crm_task,
+      FALSE as all_day,
       ec.deal,
       c.id AS contact,
       ec.id AS campaign,
@@ -716,6 +726,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       False AS recurring,
       COALESCE(subject, '(no subject)') AS "title",
       NULL::uuid AS crm_task,
+      FALSE as all_day,
       NULL::uuid AS deal,
       NULL::uuid AS contact,
       NULL::uuid AS campaign,
@@ -744,6 +755,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
             LIMIT 5
           ) t
       ) AS people,
+
       (
         SELECT
           count(DISTINCT contacts.id)::int
@@ -783,6 +795,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       False AS recurring,
       COALESCE(subject, '(no subject)') AS "title",
       NULL::uuid AS crm_task,
+      FALSE as all_day,
       NULL::uuid AS deal,
       c.id AS contact,
       NULL::uuid AS campaign,
@@ -839,9 +852,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
     WHERE
       email_threads.deleted_at IS NULL
   )
-
   UNION ALL
-
   (
     SELECT
       a.id::text,
@@ -861,6 +872,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       False AS recurring,
       "action"::text AS title,
       NULL::uuid AS crm_task,
+      FALSE as all_day,
       NULL::uuid AS deal,
       contact,
       NULL::uuid AS campaign,

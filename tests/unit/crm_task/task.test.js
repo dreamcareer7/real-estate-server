@@ -90,14 +90,14 @@ async function createTwoTasks() {
         is_relative: false,
         timestamp: base_task.due_date - 3600
       }],
-      metadata: { all_day: true }
+      all_day: true
     },
     {
       ...base_task,
       title: 'all_day false',
       due_date: Date.now() / 1000 + 86400,
       assignees: [],
-      metadata: { all_day: false }
+      all_day: false
     },
     {
       ...base_task,
@@ -120,8 +120,8 @@ async function testCreateMany() {
 
   const tasks = await CrmTask.getAll(task_ids)
 
-  expect(tasks[0].metadata.all_day).to.be.equal(true)
-  expect(tasks[1].metadata.all_day).to.be.equal(false)
+  expect(tasks[0].all_day).to.be.equal(true)
+  expect(tasks[1].all_day).to.be.equal(false)
   expect(tasks[2].metadata.toString()).to.be.equal({}.toString())
   expect(tasks[3].metadata).to.be.equal(null)
 }
