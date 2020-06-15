@@ -82,11 +82,11 @@ const queues = [
 
   {
     queues: ['gmail_webhooks'],
-    concurrency: 2
+    concurrency: 3
   },
   {
     queues: ['google_cal_webhooks'],
-    concurrency: 2
+    concurrency: 3
   },
   {
     queues: ['google_contacts'],
@@ -106,7 +106,7 @@ const queues = [
 const forks = [
   {
     queues: ['google', 'google_cal'],
-    concurrency: 5
+    concurrency: 7
   },
   {
     queues: ['microsoft', 'microsoft_cal'],
