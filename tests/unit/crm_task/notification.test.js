@@ -239,14 +239,8 @@ describe('CrmTask', () => {
     context('when user A assigns an event to user B', () => {
       it('should send user A a notification when a task is due', testTaskIsDue)
       it('should send user A a notification when a reminder is due', testReminderIsDue)
-      it(
-        'should send user B a notification when user A assigns them to a task',
-        testAssignment
-      )
-      it(
-        'should send user B a notification when user A updates a task assigned to them',
-        testUpdateAssignedTask
-      )
+      it('should send user B a notification when user A assigns them to a task', testAssignment)
+      it('should send user B a notification when user A updates a task assigned to them', testUpdateAssignedTask)
     })
   })
 })

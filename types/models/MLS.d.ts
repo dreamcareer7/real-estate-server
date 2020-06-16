@@ -1,4 +1,4 @@
-export interface IRechatGeocode {
+export type IRechatGeocode = {
   latitude: number;
   longitude: number;
   approximate: boolean;
@@ -6,4 +6,8 @@ export interface IRechatGeocode {
   geo_source: 'Google' | 'Bing' | 'Mapbox';
   formatted_address: string;
   accurate_enough: boolean;
+} | {
+  geo_source: 'MLS';
+  latitude: number;
+  longitude: number;
 }

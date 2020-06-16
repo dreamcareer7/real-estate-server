@@ -55,7 +55,7 @@ declare interface ITaskInput {
   assignees?: UUID[]
   
   metadata?: any;
-  all_day: Boolean
+  all_day?: Boolean
 }
 
 declare type TBaseTaskInputKeys = 'title' | 'description' | 'status' | 'due_date' | 'end_date' | 'task_type' | 'metadata';
