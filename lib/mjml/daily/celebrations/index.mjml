@@ -1,0 +1,14 @@
+{% if celebrations.length > 0 %}
+  <mj-section background-color="#ffffff" padding="50px 32px 0px">
+    <mj-column>
+      <mj-text css-class="title" padding="0" align="left" font-family="Lato" font-size="20px">
+        <a href="{{ '/dashboard/calendar' | url }}">Upcoming Celebrations</a>
+      </mj-text>
+    </mj-column>
+  </mj-section>
+
+  {% for celebration in celebrations %}
+    {% set contact = contacts[celebration.people[0].id] %}
+    {% include './celebration.mjml' %}
+  {% endfor %}
+{% endif %}

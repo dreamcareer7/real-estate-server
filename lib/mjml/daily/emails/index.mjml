@@ -1,0 +1,21 @@
+{% if email_campaigns.length > 0 %}
+  <mj-section background-color="#ffffff" padding="50px 32px 10px">
+    <mj-column>
+      <mj-text
+        css-class="title"
+        padding="0"
+        align="left"
+        font-family="Lato"
+        font-size="20px"
+      >
+        <a href="{{ '/dashboard/emails' | url }}">
+          Email Insights
+        </a>
+      </mj-text>
+    </mj-column>
+  </mj-section>
+
+  {% for campaign in email_campaigns %}
+    {% include './campaign.mjml' %}
+  {% endfor %}
+{% endif %}

@@ -1,0 +1,49 @@
+<mj-section background-color="#ffffff" padding="0 32px">
+  <mj-column width="20%">
+    <mj-text padding-left="0" padding-right="0">
+      {% if event.all_day %}
+        All Day
+      {% else %}
+        {{ event.date | time('hh A', user.timezone)}}
+
+        {% if event.end_date %}
+          - {{ event.end_date | time('hh A', user.timezone)}}
+        {% endif %}
+      {% endif %}
+    </mj-text>
+  </mj-column>
+
+  <mj-column width="55%">
+    {% if event.object_type === 'deal_context' %}
+      <mj-text height="25px">
+        {% set uri %}/dashboard/deals/{{event.deal}}{% endset %}
+        {% set url = uri | url %}
+        {{ event.type_label }}
+        <div style="padding-top: 2px;">
+          <a style="color: #c6c6c6;" href="{{url}}">
+            {{ event.title }}
+          </a>
+        </div>
+      </mj-text>
+    {% else %}
+      <mj-text height="25px">
+        {{ event.title }}
+        <div style="color: #c6c6c6; padding-top: 2px;">
+          {% if event.people %}
+            {% set contact = contacts[event.people[0].id] %}
+            {% set uri %}/dashboard/contacts/{{contact.id}}{% endset %}
+            {% set url = uri | url %}
+            <a href="{{url}}" style="color: #c6c6c6;">{{ contact.display_name }}</a>
+            {% if event.people.length > 1 %}
+              and {{event.people.length - 1}} other people
+            {% endif %}
+          {% endif %}
+        </div>
+      </mj-text>
+    {% endif %}
+  </mj-column>
+
+  <mj-group width="25%" css-class="actions">
+    {% include '../actions/index.mjml' %}
+  </mj-group>
+</mj-section>
