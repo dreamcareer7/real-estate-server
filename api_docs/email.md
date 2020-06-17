@@ -200,3 +200,6 @@ When a user wants to update email IsRead flag, two conditions should be met.
 
 ### Batch move to trash [POST /emails/google/:credentialId/trash}]
 <!-- include(tests/email/batchTrash.md) -->
+
+### Batch archive [POST /emails/google/:credentialId/archive}]
+<!-- include(tests/email/batchArchive.md) -->
