@@ -102,10 +102,10 @@ const queues = [
     queues: ['envelope_update'],
     concurrency: 5
   },
-  // {
-  //   queues: ['daily_email'],
-  //   concurrency: 5
-  // }
+  {
+    queues: ['daily_email'],
+    concurrency: 5
+  }
 ]
 
 const forks = [

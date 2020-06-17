@@ -167,6 +167,11 @@ poll({
   name: 'BrandTemplate.updateThumbnails'
 })
 
+poll({
+  fn: Daily.sendDue,
+  name: 'Daily.sendDue'
+})
+
 // poll({
 //   fn: ShowingsWorker.startDue,
 //   name: 'ShowingsWorker.crawlerJob'
