@@ -1,0 +1,17 @@
+{% if contact.phone_number %}
+  <mj-column padding=0 width="45px">
+    <mj-button
+        font-family="Helvetica"
+        background-color="#39ccaa"
+        color="white"
+        font-size="13px"
+        padding=0
+        inner-padding="5px 10px"
+        href="tel: {{ contact.phone_number }}"
+        width="43px"
+        padding-left="2px"
+      >
+        📞
+    </mj-button>
+  </mj-column>
+{% endif %}
