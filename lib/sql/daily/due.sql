@@ -3,7 +3,7 @@ WITH user_schedules AS
   SELECT
     users.id as user,
     NOW() at time zone users.timezone as local_time,
-    (NOW() at time zone users.timezone)::date + time '08:00' as scheduled_time
+    (NOW() at time zone users.timezone)::date + time '06:00' as scheduled_time
   FROM users
   WHERE daily_enabled IS TRUE
 )
