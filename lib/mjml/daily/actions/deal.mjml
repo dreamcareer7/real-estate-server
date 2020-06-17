@@ -1,3 +1,14 @@
+{% set status = deal.context.contract_status.text or deal.context.listing_status.text or 'Active' %}
+
+{% set url = {
+    uri: '/dashboard/marketing',
+    query: {
+      listingId: deal.listing,
+      medium: 'Email',
+      templateType: 'JustListed'
+    }
+  } %}
+
 <mj-column padding=0 width="72px">
   <mj-button
     font-family="Helvetica"
@@ -8,6 +19,7 @@
     inner-padding="5px 10px"
     width="70px"
     padding-left="2px"
+    href="{{url | url}}"
   >
     Promote
   </mj-button>
