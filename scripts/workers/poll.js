@@ -11,6 +11,7 @@ const GoogleWorkers = require('../../lib/models/Google/workers')
 const MicrosoftWorker = require('../../lib/models/Microsoft/workers')
 const Task = require('../../lib/models/Task')
 const BrandTemplate = require('../../lib/models/Template/brand')
+const Daily = require('../../lib/models/Daily')
 // const ShowingsWorker = require('../../lib/models/Showings/worker')
 
 let i = 1
