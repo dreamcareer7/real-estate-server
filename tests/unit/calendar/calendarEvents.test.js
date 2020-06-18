@@ -138,7 +138,7 @@ async function testContactEvent() {
     object_type: 'contact',
     event_type: 'next_touch',
     type_label: 'Next Touch',
-    title: 'saeed rechat',
+    title: 'Touch reminder: saeed rechat',
     type: 'calendar_event'
   })
 }
@@ -168,7 +168,7 @@ async function testContactAttributeEvent() {
     object_type: 'contact_attribute',
     event_type: 'child_birthday',
     type_label: 'Child Birthday (Matthew)',
-    title: 'Child Birthday (Matthew) - saeed rechat',
+    title: 'saeed rechat\'s Child\'s Birthday (Matthew)',
     type: 'calendar_event'
   })
 }
