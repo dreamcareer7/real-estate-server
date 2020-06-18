@@ -78,7 +78,7 @@ const queues = [
   },
   {
     queues: ['microsoft_contacts'],
-    concurrency: 3
+    concurrency: 5
   },
 
   {
@@ -91,7 +91,7 @@ const queues = [
   },
   {
     queues: ['google_contacts'],
-    concurrency: 3
+    concurrency: 5
   },
 
   {
