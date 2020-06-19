@@ -1,11 +1,5 @@
 {% extends "../email.mjml" %}
 
-{% set title %}
-    Good Morning {{user.abbreviated_display_name}}
-{% endset %}
-
-{% set layout = { title: title } %}
-
 {% block header %}
   <mj-style>
     .actions {
@@ -15,6 +9,25 @@
 {% endblock %}
 
 {% block content %}
+    <mj-section background-color="#fff" padding-top="0">
+      <mj-column>
+        <mj-image height="24px" width="141px" padding-top=0 padding-bottom="20px" src="https://assets.rechat.com/daily/logo.png" />
+
+        <mj-text padding="0" align="center" font-family="Lato" font-size="22px">
+          Good Morning {{user.abbreviated_display_name}}
+        </mj-text>
+      </mj-column>
+    </mj-section>
+
+
+    <mj-section background-color="#FAF9EA" padding-top="0">
+      <mj-column>
+          <mj-spacer height="200px" />
+      </mj-column>
+    </mj-section>
+
+    <mj-section background-color="#fff"></mj-section>
+
     {% include './events/index.mjml' %}
     {% include './celebrations/index.mjml' %}
     {% include './deals/index.mjml' %}

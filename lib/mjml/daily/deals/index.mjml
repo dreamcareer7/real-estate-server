@@ -1,13 +1,7 @@
 {% if active_deals.length > 0 %}
-  <mj-section background-color="#ffffff" padding="50px 32px 10px">
+  <mj-section background-color="#ffffff" padding="0px 32px 20px">
     <mj-column>
-      <mj-text
-        css-class="title"
-        padding="0"
-        align="left"
-        font-family="Lato"
-        font-size="20px"
-      >
+      <mj-text css-class="title" padding="0" align="center" font-family="Lato" font-size="18px">
         <a href="{{ '/dashboard/deals' | url }}">
           Active Deals
         </a>
