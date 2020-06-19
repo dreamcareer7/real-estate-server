@@ -334,13 +334,13 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       True AS recurring,
       (CASE
         WHEN attribute_type = 'birthday' AND ca.is_partner IS TRUE THEN
-          array_to_string(ARRAY['Spouse Birthday', '(' || contacts.partner_name || ')', '- ' || contacts.display_name], ' ')
+          array_to_string(ARRAY[contacts.display_name || $$'s Spouse's Birthday$$, '(' || contacts.partner_name || ')'], ' ')
         WHEN attribute_type = 'birthday' AND ca.is_partner IS NOT TRUE THEN
           contacts.display_name || $$'s Birthday$$
         WHEN attribute_type = 'child_birthday' AND ca.label IS NOT NULL AND LENGTH(ca.label) > 0 THEN
-          array_to_string(ARRAY['Child Birthday', '(' || ca.label || ')', '- ' || contacts.display_name], ' ')
+          array_to_string(ARRAY[contacts.display_name || $$'s$$, $$Child's Birthday$$, '(' || ca.label || ')'], ' ')
         WHEN attribute_type = 'child_birthday' AND (ca.label IS NULL OR LENGTH(ca.label) = 0) THEN
-          'Child Birthday - ' || contacts.display_name
+          contacts.display_name || $$'s Child's Birthday$$
         WHEN attribute_type = ANY('{
           work_anniversary,
           wedding_anniversary,
@@ -395,7 +395,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       next_touch AS next_occurence,
       NULL::timestamptz AS end_date,
       False AS recurring,
-      display_name AS title,
+      'Touch reminder: ' || display_name AS title,
       NULL::uuid AS crm_task,
       TRUE as all_day,
       NULL::uuid AS deal,

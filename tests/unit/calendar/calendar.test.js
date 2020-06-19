@@ -280,7 +280,7 @@ async function testSpouseBirthday() {
   const events = await fetchEvents()
 
   expect(events).to.have.length(1)
-  expect(events[0].title).to.be.equal('Spouse Birthday (Jane) - John Doe')
+  expect(events[0].title).to.be.equal('John Doe\'s Spouse\'s Birthday (Jane)')
 }
 
 async function testSpouseBirthdayWithEmptySpouseName() {
@@ -298,7 +298,7 @@ async function testSpouseBirthdayWithEmptySpouseName() {
   const events = await fetchEvents()
 
   expect(events).to.have.length(1)
-  expect(events[0].title).to.be.equal('Spouse Birthday - John Doe')
+  expect(events[0].title).to.be.equal('John Doe\'s Spouse\'s Birthday')
 }
 
 async function testChildBirthday() {
@@ -319,7 +319,7 @@ async function testChildBirthday() {
   const events = await fetchEvents()
 
   expect(events).to.have.length(1)
-  expect(events[0].title).to.be.equal('Child Birthday (Matthew) - John Doe')
+  expect(events[0].title).to.be.equal('John Doe\'s Child\'s Birthday (Matthew)')
 }
 
 async function testNamelessChildBirthday() {
@@ -340,7 +340,7 @@ async function testNamelessChildBirthday() {
   const events = await fetchEvents()
 
   expect(events).to.have.length(1)
-  expect(events[0].title).to.be.equal('Child Birthday - John Doe')
+  expect(events[0].title).to.be.equal('John Doe\'s Child\'s Birthday')
 }
 
 async function testChildBirthdayWithEmptyChildName() {
@@ -358,7 +358,7 @@ async function testChildBirthdayWithEmptyChildName() {
   const events = await fetchEvents()
 
   expect(events).to.have.length(1)
-  expect(events[0].title).to.be.equal('Child Birthday - John Doe')
+  expect(events[0].title).to.be.equal('John Doe\'s Child\'s Birthday')
 }
 
 async function testCampaignToAgents() {

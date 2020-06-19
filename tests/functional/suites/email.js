@@ -673,6 +673,16 @@ function batchTrash(cb) {
     .expectStatus(202)
 }
 
+function batchArchive(cb) {
+  return frisby.create('Batch archive')
+    .post(`/emails/google/${results.google.createGoogleCredential}/archive`, { status: false, messageIds: [results.email.getThread.data.messages[0].id] })
+    .addHeader('X-RECHAT-BRAND', results.email.getThread.data.brand)
+    .after(function(err, res, json) {
+      cb(err, res, json)
+    })
+    .expectStatus(202)
+}
+
 
 module.exports = {
   schedule,
@@ -705,5 +715,6 @@ module.exports = {
   getThread,
   updateIsRead,
   batchUpdateIsRead,
-  batchTrash
+  batchTrash,
+  batchArchive
 }

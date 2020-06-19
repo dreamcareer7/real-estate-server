@@ -1,6 +1,6 @@
 <mj-section background-color="#ffffff" padding="0 32px">
   <mj-column width="20%">
-    <mj-text padding-left="0" padding-right="0">
+    <mj-text padding-left="0" padding-right="0" color="#c6c6c6">
       {% if event.all_day %}
         All Day
       {% else %}
