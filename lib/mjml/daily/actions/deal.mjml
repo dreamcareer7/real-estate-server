@@ -9,17 +9,19 @@
     }
   } %}
 
-<mj-column padding=0 width="72px">
+<mj-column padding=0 width="87px">
   <mj-button
-    font-family="Helvetica"
-    background-color="#39ccaa"
-    color="white"
+    font-family="Lato"
+    font-weight="bold"
+    color="black"
     font-size="13px"
+    background-color="white"
     padding=0
     inner-padding="5px 10px"
-    width="70px"
-    padding-left="2px"
+    width="87px"
+    padding-left="0"
     href="{{url | url}}"
+    border="1px solid #D7D9DC"
   >
     Promote
   </mj-button>
