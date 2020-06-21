@@ -3,40 +3,40 @@
 
 {% set default_icon %}https://assets.rechat.com/daily/{{celebration.event_type}}.png{%endset%}
 
-<mj-section background-color="#ffffff" padding="10px 32px">
-  <mj-column width="25%">
-    <mj-image
-      padding-left=0
-      padding-bottom=0
-      src="{{contact.profile_image_url or default_icon}}"
-      href="{{ url }}"
-      border-radius="48px"
-      width="64px"
-    >
-    </mj-image>
-  </mj-column>
-  <mj-column width="50%">
-    <mj-text padding-left=0>
-      {{ celebration.date | time('MMMM Do')}}
-      <div>
-        <br>
-        <a href="{{ url }}">{{ celebration.title }}</a>
-      </div>
-      <div>
-        <br>
-        <span style="color: #c6c6c6;">Last Touch:</span>
-        {{ contact.last_touch | calendar }}
-      <div>
-        <br>
-        {% for tag in contact.
-        tags %}
-         {% include './tag.mjml' %}
-         &nbsp;
-        {% endfor %}
-      </div>
-    </mj-text>
-  </mj-column>
-  <mj-group width="25%" css-class="actions">
+<mj-section background-color="#ffffff" padding="0 5px 32px 5px">
+  <mj-group>
+    <mj-column width="15%">
+      <mj-image
+        padding-left=0
+        padding-bottom=0
+        src="{{contact.profile_image_url or default_icon}}"
+        href="{{ url }}"
+        border-radius="48px"
+        width="64px"
+      >
+      </mj-image>
+    </mj-column>
+    <mj-column width="55%">
+      <mj-text padding-left=0>
+        {{ celebration.date | time('MMMM Do')}}
+        <div>
+          <br>
+          <a href="{{ url }}">{{ celebration.title }}</a>
+        </div>
+        <div>
+          <br>
+          <span style="color: #c6c6c6;">Last Touch:</span>
+          {{ contact.last_touch | calendar }}
+        <div>
+          <br>
+          {% for tag in contact.
+          tags %}
+          {% include './tag.mjml' %}
+          &nbsp;
+          {% endfor %}
+        </div>
+      </mj-text>
+    </mj-column>
     {% set event = celebration %}
     {% include '../actions/index.mjml' %}
   </mj-group>

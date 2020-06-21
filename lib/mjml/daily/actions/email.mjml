@@ -19,20 +19,20 @@
       templateType: template_type
     }
   } %}
-  <mj-column padding=0 width="87px">
-    <mj-button
-      font-family="Lato"
-      background-color="white"
-      font-weight="bold"
-      font-size="13px"
-      color="black"
-      padding=0
-      inner-padding="5px 10px"
-      width="87px"
-      href="{{url | url}}"
-      border="1px solid #D7D9DC"
-    >
-      Send Card
-    </mj-button>
-  </mj-column>
+
+  <mj-button
+    font-family="Lato"
+    background-color="white"
+    font-weight="bold"
+    font-size="13px"
+    color="black"
+    padding=0
+    inner-padding="5px 10px"
+    href="{{url | url}}"
+    border="1px solid #D7D9DC"
+    align="right"
+    mj-class="actions"
+  >
+    Send Card
+  </mj-button>
 {% endif %}
