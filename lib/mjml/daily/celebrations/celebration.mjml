@@ -7,12 +7,12 @@
   <mj-group>
     <mj-column width="15%">
       <mj-image
-        padding-left=0
-        padding-bottom=0
+        padding="5px"
         src="{{contact.profile_image_url or default_icon}}"
         href="{{ url }}"
         border-radius="48px"
         width="64px"
+        align="center"
       >
       </mj-image>
     </mj-column>
