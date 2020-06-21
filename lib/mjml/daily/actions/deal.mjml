@@ -9,20 +9,19 @@
     }
   } %}
 
-<mj-column padding=0 width="87px">
-  <mj-button
-    font-family="Lato"
-    font-weight="bold"
-    color="black"
-    font-size="13px"
-    background-color="white"
-    padding=0
-    inner-padding="5px 10px"
-    width="87px"
-    padding-left="0"
-    href="{{url | url}}"
-    border="1px solid #D7D9DC"
-  >
-    Promote
-  </mj-button>
-</mj-column>
+<mj-button
+  font-family="Lato"
+  font-weight="bold"
+  color="black"
+  font-size="13px"
+  background-color="white"
+  padding=0
+  inner-padding="5px 10px"
+  width="87px"
+  padding-left="0"
+  href="{{url | url}}"
+  border="1px solid #D7D9DC"
+  align="right"
+>
+  Promote
+</mj-button>
