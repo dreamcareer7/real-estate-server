@@ -1,9 +1,15 @@
-{% if event.event_type === 'child_birthday' or event.event_type === 'birthday' %}
-    {% include './call.mjml' %}
+{% if event.event_type === 'child_birthday' or event.event_type === 'birthday'
+      or event.event_type === 'wedding_anniversary' or event.event_type === 'home_anniversary' %}
+  <mj-column padding=0 width="30%">
     {% include './email.mjml' %}
+    <!-- {% include './call.mjml' %} !-->
+  </mj-column>
 {% endif %}
 
 {% if event.object_type === 'deal_context' %}
   {% set deal = deals[event.deal] %}
-  {% include './deal.mjml' %}
+
+  <mj-column padding=0 width="30%">
+    {% include './deal.mjml' %}
+  </mj-column>
 {% endif %}

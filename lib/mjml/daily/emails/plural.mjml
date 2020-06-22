@@ -1,82 +1,46 @@
+{% set deliver_percent = ((campaign.delivered / ((campaign.delivered or 0) + campaign.failed))*100) | round(1)  %}
+{% set open_percent = ((campaign.opened / campaign.delivered)*100) | round(1)  %}
+{% set click_percent = ((campaign.clicked / campaign.delivered)*100) | round(1)  %}
+
 <span style="color: #c6c6c6;">
   {{ campaign.delivered }} Recipients
 </span>
 
 <div style="font-size: 15px;">
   <br>
-  <table style="text-align: center;">
-    <tr>
-      <td>
-        <a href="{{url}}">
-          <img
-            style="height: 16px;"
-            src="https://assets.rechat.com/daily/delivered.png"
-            title="Delivered to {{ campaign.delivered }} recipients"
-          />
-        </a>
-      </td>
+  <div style="width: 30%; float: left; margin-right: 5%;">
+    <b>{{ deliver_percent }}%</b>
+    <div style="color: #c6c6c6;">
+      Deliver Rate
+    </div>
 
-      <td style="padding-left: 25px;">
-        <a href="{{url}}">
-          <img
-            style="height: 16px;"
-            src="https://assets.rechat.com/daily/opened.png"
-            title="Opened by {{ campaign.opened }} recipients{% if campaign.delivered > 0 and campaign.opened > 0 %} ({{ ((campaign.opened / campaign.delivered)*100) | round(1)}}%){% endif %}"
-          />
-        </a>
-      </td>
+    {% set percent = deliver_percent %}
+    {% set medium = 95 %}
+    {% set high = 98 %}
+    {% include './progress-bar.mjml' %}
+  </div>
 
-      <td style="padding-left: 25px;">
-        <a href="{{url}}">
-          <img
-            style="height: 16px;"
-            src="https://assets.rechat.com/daily/clicked.png"
-            title="Clicked by {{ campaign.clicked }} recipients{% if campaign.delivered > 0 and campaign.clicked > 0 %} ({{ ((campaign.clicked / campaign.delivered)*100) | round(1)}}%){% endif %}"
-          />
-        </a>
-      </td>
+  <div style="width: 30%; float: left; margin-right: 5%;">
+    <b>{{ open_percent }}%</b>
+    <div style="color: #c6c6c6;">
+      Open Rate
+    </div>
 
-      <td style="padding-left: 25px; {% if campaign.failed === 0 %}opacity: 0.1; {% endif %}">
-        <a href="{{url}}">
-          <img
-            style="height: 16px;"
-            src="https://assets.rechat.com/daily/failed.png"
-            title="Failed to deliver to {{ campaign.failed }} recipients"
-          />
-        </a>
-      </td>
+    {% set percent = open_percent * 4 %}
+    {% set medium = 15 %}
+    {% set high = 25 %}
+    {% include './progress-bar.mjml' %}
+  </div>
 
-      <td style="padding-left: 25px; {% if campaign.unsubscribed === 0 %}opacity: 0.1; {% endif %}">
-        <a href="{{url}}">
-          <img
-            style="height: 16px;"
-            src="https://assets.rechat.com/daily/unsubscribed.png"
-            title="Unsubscribed by {{ campaign.unsubscribed }} recipients"
-          />
-        </a>
-      </td>
-    </tr>
+  <div style="width: 30%; float: left;">
+    <b>{{ click_percent }}%</b>
+    <div style="color: #c6c6c6;">
+      Click Rate
+    </div>
 
-    <tr>
-      <td>
-          {{ campaign.delivered }}
-      </td>
-
-      <td style="padding-left: 25px;">
-          {{ campaign.opened }}
-      </td>
-
-      <td style="padding-left: 25px;">
-          {{ campaign.clicked }}
-      </td>
-
-      <td style="padding-left: 25px; {% if campaign.failed === 0 %}opacity: 0.1; {% endif %}">
-        {{ campaign.failed }}
-      </td>
-
-      <td style="padding-left: 25px; {% if campaign.unsubscribed === 0 %}opacity: 0.1; {% endif %}">
-          {{ campaign.unsubscribed }}
-      </td>
-    </tr>
-  </table>
+    {% set percent = click_percent * 25 %}
+    {% set medium = 1.5 %}
+    {% set high = 2.5 %}
+    {% include './progress-bar.mjml' %}
+  </div>
 </div>

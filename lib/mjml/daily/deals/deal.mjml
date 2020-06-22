@@ -1,33 +1,35 @@
 {% set uri %}/dashboard/deals/{{deal.id}}{% endset %}
 {% set url = uri | url %}
 
-<mj-section background-color="#ffffff" padding="10px 32px">
-  <mj-column width="25%">
-    <mj-image
-      href="{{url}}"
-      padding-left=0
-      padding-bottom=0
-      src="{{deal.context.photo.text or ''}}"
-      width="80px"
-      border-radius="5px"
-    >
-    </mj-image>
-  </mj-column>
-  <mj-column width="50%">
-    <mj-text padding-left=0>
-      <a href="{{url}}">{{ deal.title }}</a>
-      <div style="color: #c6c6c6;">
-        <br>
-        {{ deal.deal_type }}, {{ deal.context.contract_status.text or deal.context.listing_status.text }}
-      </div>
-      <div style="color: #c6c6c6;">
-        <br>
-        {{ deal.context.list_price.number | price }}
-      </div>
-    </mj-text>
-  </mj-column>
+<mj-section background-color="#ffffff" padding="0 5px 32px 5px">
+  <mj-group>
+    <mj-column width="15%">
+      <mj-image
+        href="{{url}}"
+        padding-left=0
+        padding-bottom=0
+        src="{{deal.context.photo.text or ''}}"
+        width="80px"
+        border-radius="5px"
+      >
+      </mj-image>
+    </mj-column>
+    <mj-column width="55%">
+      <mj-text padding-left=0>
+        <a href="{{url}}">{{ deal.title }}</a>
+        <div style="color: #c6c6c6;">
+          <br>
+          {{ deal.deal_type }}, {{ deal.context.contract_status.text or deal.context.listing_status.text }}
+        </div>
+        <div style="color: #c6c6c6;">
+          <br>
+          {{ deal.context.list_price.number | price }}
+        </div>
+      </mj-text>
+    </mj-column>
 
-  <mj-group width="25%" css-class="actions">
-    {% include '../actions/deal.mjml' %}
+    <mj-column width="30%">
+      {% include '../actions/deal.mjml' %}
+    </mj-column>
   </mj-group>
 </mj-section>

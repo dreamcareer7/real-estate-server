@@ -13,7 +13,26 @@ SELECT 'user' AS type,
        (
         SELECT count(*) > 0 FROM docusign_users WHERE "user" = users.id
        ) as has_docusign,
-       COALESCE((SELECT brand FROM users_settings WHERE "user" = users.id ORDER BY updated_at DESC LIMIT 1), users.brand) AS active_brand
+       COALESCE((
+          SELECT
+            us.brand
+          FROM
+            users_settings AS us
+            JOIN brands_users AS bu
+              ON us."user" = bu."user"
+            JOIN brands_roles AS br
+              ON br.id = bu.role
+          WHERE
+            us."user" = users.id
+            AND us.brand = br.brand
+            AND br.deleted_at IS NULL
+            AND bu.deleted_at IS NULL
+          ORDER BY
+            us.updated_at DESC
+          LIMIT 1
+         ),
+         users.brand
+       ) AS active_brand
 FROM users
 JOIN unnest($1::uuid[]) WITH ORDINALITY t(uid, ord) ON users.id = uid
 ORDER BY t.ord

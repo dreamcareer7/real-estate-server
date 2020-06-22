@@ -1,13 +1,5 @@
 {% extends "../email.mjml" %}
 
-{% block header %}
-  <mj-style>
-    .actions {
-      text-align: right !important;
-    }
-  </mj-style>
-{% endblock %}
-
 {% block content %}
     <mj-section background-color="#fff" padding-top="0">
       <mj-column>
