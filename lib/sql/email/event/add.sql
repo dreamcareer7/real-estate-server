@@ -12,4 +12,4 @@ WITH insert AS (
   )
 )
 
-SELECT campaign FROM emails WHERE mailgun_id = $1
+SELECT campaign::uuid FROM COALESCE((SELECT campaign FROM emails WHERE mailgun_id = $1::text), (SELECT campaign FROM emails WHERE id = $1::uuid)) AS campaign
