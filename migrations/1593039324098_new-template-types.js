@@ -1,7 +1,6 @@
 const db = require('../lib/utils/db')
 
 const migrations = [
-  'BEGIN',
   'ALTER TYPE template_type ADD VALUE \'FathersDay\'',
   'ALTER TYPE template_type ADD VALUE \'MothersDay\'',
   'ALTER TYPE template_type ADD VALUE \'MemorialDay\'',
@@ -19,8 +18,7 @@ const migrations = [
   'ALTER TYPE template_type ADD VALUE \'Rosh Hashanah\'',
   'ALTER TYPE template_type ADD VALUE \'Kwanzaa\'',
   'ALTER TYPE template_type ADD VALUE \'WeddingAnniversary\'',
-  'ALTER TYPE template_type ADD VALUE \'HomeAnniversary\'',
-  'COMMIT'
+  'ALTER TYPE template_type ADD VALUE \'HomeAnniversary\''
 ]
 
 
