@@ -1,24 +1,24 @@
 const db = require('../lib/utils/db')
 
 const migrations = [
-  'ALTER TYPE template_type ADD VALUE \'FathersDay\'',
-  'ALTER TYPE template_type ADD VALUE \'MothersDay\'',
-  'ALTER TYPE template_type ADD VALUE \'MemorialDay\'',
-  'ALTER TYPE template_type ADD VALUE \'Passover\'',
-  'ALTER TYPE template_type ADD VALUE \'ChineseNewYear\'',
-  'ALTER TYPE template_type ADD VALUE \'LaborDay\'',
-  'ALTER TYPE template_type ADD VALUE \'Hannukkah\'',
-  'ALTER TYPE template_type ADD VALUE \'FourthOfJuly\'',
-  'ALTER TYPE template_type ADD VALUE \'VeteransDay\'',
-  'ALTER TYPE template_type ADD VALUE \'Thanksgiving\'',
-  'ALTER TYPE template_type ADD VALUE \'Halloween\'',
-  'ALTER TYPE template_type ADD VALUE \'MLKDay\'',
-  'ALTER TYPE template_type ADD VALUE \'IndependenceDay\'',
-  'ALTER TYPE template_type ADD VALUE \'Diwaly\'',
-  'ALTER TYPE template_type ADD VALUE \'Rosh Hashanah\'',
-  'ALTER TYPE template_type ADD VALUE \'Kwanzaa\'',
-  'ALTER TYPE template_type ADD VALUE \'WeddingAnniversary\'',
-  'ALTER TYPE template_type ADD VALUE \'HomeAnniversary\''
+  'ALTER TYPE template_type ADD VALUE \'FathersDay\'         IF NOT EXISTS',
+  'ALTER TYPE template_type ADD VALUE \'MothersDay\'         IF NOT EXISTS',
+  'ALTER TYPE template_type ADD VALUE \'MemorialDay\'        IF NOT EXISTS',
+  'ALTER TYPE template_type ADD VALUE \'Passover\'           IF NOT EXISTS',
+  'ALTER TYPE template_type ADD VALUE \'ChineseNewYear\'     IF NOT EXISTS',
+  'ALTER TYPE template_type ADD VALUE \'LaborDay\'           IF NOT EXISTS',
+  'ALTER TYPE template_type ADD VALUE \'Hannukkah\'          IF NOT EXISTS',
+  'ALTER TYPE template_type ADD VALUE \'FourthOfJuly\'       IF NOT EXISTS',
+  'ALTER TYPE template_type ADD VALUE \'VeteransDay\'        IF NOT EXISTS',
+  'ALTER TYPE template_type ADD VALUE \'Thanksgiving\'       IF NOT EXISTS',
+  'ALTER TYPE template_type ADD VALUE \'Halloween\'          IF NOT EXISTS',
+  'ALTER TYPE template_type ADD VALUE \'MLKDay\'             IF NOT EXISTS',
+  'ALTER TYPE template_type ADD VALUE \'IndependenceDay\'    IF NOT EXISTS',
+  'ALTER TYPE template_type ADD VALUE \'Diwaly\'             IF NOT EXISTS',
+  'ALTER TYPE template_type ADD VALUE \'Rosh Hashanah\'      IF NOT EXISTS',
+  'ALTER TYPE template_type ADD VALUE \'Kwanzaa\'            IF NOT EXISTS',
+  'ALTER TYPE template_type ADD VALUE \'WeddingAnniversary\' IF NOT EXISTS',
+  'ALTER TYPE template_type ADD VALUE \'HomeAnniversary\'    IF NOT EXISTS'
 ]
 
 
