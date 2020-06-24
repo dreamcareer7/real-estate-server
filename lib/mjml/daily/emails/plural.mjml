@@ -1,7 +1,6 @@
-{% set deliver_percent = ((campaign.opened / campaign.delivered)*100) | round(1)  %}
-{% set deliver_percent = 98  %}
-{% set open_percent = 20  %}
-{% set click_percent = 3  %}
+{% set deliver_percent = ((campaign.delivered / ((campaign.delivered or 0) + campaign.failed))*100) | round(1)  %}
+{% set open_percent = ((campaign.opened / campaign.delivered)*100) | round(1)  %}
+{% set click_percent = ((campaign.clicked / campaign.delivered)*100) | round(1)  %}
 
 <span style="color: #c6c6c6;">
   {{ campaign.delivered }} Recipients
@@ -9,36 +8,39 @@
 
 <div style="font-size: 15px;">
   <br>
-  <div style="width: 30%; float: left; margin-right: .5%;">
+  <div style="width: 30%; float: left; margin-right: 5%;">
     <b>{{ deliver_percent }}%</b>
     <div style="color: #c6c6c6;">
       Deliver Rate
     </div>
 
-    <div style="background: #c6c6c6; height: 4px; border-radius: 4px; width: 100%">
-      <div style="background: #00B286; height: 4px; border-radius: 4px; width: {{deliver_percent}}%;"></div>
-    </div>
+    {% set percent = deliver_percent %}
+    {% set medium = 95 %}
+    {% set high = 98 %}
+    {% include './progress-bar.mjml' %}
   </div>
 
-  <div style="width: 30%; float: left; margin-right: .5%;">
+  <div style="width: 30%; float: left; margin-right: 5%;">
     <b>{{ open_percent }}%</b>
     <div style="color: #c6c6c6;">
       Open Rate
     </div>
 
-    <div style="background: #c6c6c6; height: 4px; border-radius: 4px; width: 100%">
-      <div style="background: #FF9800; height: 4px; border-radius: 4px; width: {{open_percent}}%;"></div>
-    </div>
+    {% set percent = open_percent * 4 %}
+    {% set medium = 15 %}
+    {% set high = 25 %}
+    {% include './progress-bar.mjml' %}
   </div>
 
-  <div style="width: 30%; float: left; margin-right: .5%;">
+  <div style="width: 30%; float: left;">
     <b>{{ click_percent }}%</b>
     <div style="color: #c6c6c6;">
       Click Rate
     </div>
 
-    <div style="background: #c6c6c6; height: 4px; border-radius: 4px; width: 100%">
-      <div style="background: #F44336; height: 4px; border-radius: 4px; width: {{click_percent}}%;"></div>
-    </div>
+    {% set percent = click_percent * 25 %}
+    {% set medium = 1.5 %}
+    {% set high = 2.5 %}
+    {% include './progress-bar.mjml' %}
   </div>
 </div>
