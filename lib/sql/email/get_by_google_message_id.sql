@@ -1,0 +1,1 @@
+SELECT id FROM emails WHERE google_id = ANY($1)

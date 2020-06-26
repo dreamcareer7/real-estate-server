@@ -1,0 +1,1 @@
+SELECT id FROM email_campaign_emails WHERE id = ANY($1::uuid[])
