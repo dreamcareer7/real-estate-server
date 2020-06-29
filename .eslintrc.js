@@ -1,6 +1,5 @@
 const globals = [
   'BigInt',
-  'Context',
   'Error',
   'Orm',
   'Job',
