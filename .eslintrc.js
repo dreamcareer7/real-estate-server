@@ -2,7 +2,6 @@ const globals = [
   'BigInt',
   'Error',
   'Orm',
-  'Job',
   'Template',
   'TemplateInstance',
   'TemplateAsset',
