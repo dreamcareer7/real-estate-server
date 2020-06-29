@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 require('../connection.js')
-require('../../lib/models/index.js')
+const Envelope = require('../../lib/models/Envelope')
 
 const promisify = require('../../lib/utils/promisify')
 

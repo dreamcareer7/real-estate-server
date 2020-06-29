@@ -56,15 +56,7 @@ const globals = [
   'Form',
   'Deal',
   'DealContext',
-  'DealRole',
-  'Envelope',
-  'EnvelopeRecipient',
-  'EnvelopeDocument',
-  'Activity',
-  'AttachedFile',
-  'Submission',
-  'Task',
-  'Review'
+  'DealRole'
 ]
 
 const global_object = {}
