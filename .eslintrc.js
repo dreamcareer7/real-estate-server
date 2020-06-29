@@ -18,7 +18,6 @@ const globals = [
   'Url',
   'Contact',
   'Alert',
-  'Email',
   'EmailCampaign',
   'EmailCampaignEmail',
   'EmailCampaignRecipient',
