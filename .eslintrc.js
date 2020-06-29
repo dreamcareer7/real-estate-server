@@ -45,7 +45,6 @@ const globals = [
   'Brand',
   'School',
   'Intercom',
-  'Google',
   'Notification',
   'Message',
   'Slack',
