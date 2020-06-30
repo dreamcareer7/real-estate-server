@@ -3,6 +3,8 @@ const { createContext } = require('../helper')
 const DealHelper = require('./helper')
 const BrandHelper = require('../brand/helper')
 const Context = require('../../../lib/models/Context')
+const Deal = require('../../../lib/models/Deal')
+const DealRole = require('../../../lib/models/Deal/role')
 
 const full_address = '5050 Main Street'
 
@@ -62,7 +64,7 @@ const byRole = async () => {
 
   expect(found).not.to.deep.include(deal)
 
-  await Deal.addRole({
+  await DealRole.create({
     role: 'BuyerAgent',
     legal_first_name: user.first_name,
     legal_last_name: user.last_name,
@@ -98,7 +100,7 @@ const byPrimaryAgent = async () => {
 
   expect(found).not.to.deep.include(deal)
 
-  await Deal.addRole({
+  await DealRole.create({
     role: 'BuyerAgent',
     legal_first_name: user.first_name,
     legal_last_name: user.last_name,
@@ -136,7 +138,7 @@ const byContextQuery = async () => {
 const byRoleQuery = async () => {
   const { deal, user } = await createDeal()
 
-  await Deal.addRole({
+  await DealRole.create({
     role: 'BuyerAgent',
     legal_first_name: user.first_name,
     legal_last_name: user.last_name,

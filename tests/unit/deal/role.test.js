@@ -5,7 +5,8 @@ const BrandHelper = require('../brand/helper')
 const promisify = require('../../../lib/utils/promisify')
 const DealChecklist = require('../../../lib/models/Deal/checklist')
 const Context = require('../../../lib/models/Context')
-
+const Deal = require('../../../lib/models/Deal')
+const DealRole = require('../../../lib/models/Deal/role')
 
 const buyer = {
   role: 'Buyer',
@@ -55,7 +56,7 @@ const get = async () => {
 const add = async () => {
   const deal = await createDeal()
 
-  const added = await Deal.addRole({
+  const added = await DealRole.create({
     ...seller,
     deal: deal.id,
     created_by: deal.created_by,
@@ -73,7 +74,7 @@ const add = async () => {
 const update = async() => {
   const role = await add()
 
-  await Deal.updateRole({
+  await DealRole.update({
     ...role,
     ...buyer
   })

@@ -1,5 +1,5 @@
 const db = require('../lib/utils/db')
-require('../lib/models/Crypto')
+const Crypto = require('../lib/models/Crypto')
 
 
 const run = async () => {

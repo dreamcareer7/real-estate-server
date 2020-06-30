@@ -1,6 +1,6 @@
 const db = require('../lib/utils/db')
 const KMS = require('../lib/models/KMS')
-require('../lib/models/Crypto')
+const Crypto = require('../lib/models/Crypto')
 
 const migrations = []
 

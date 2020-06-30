@@ -6,7 +6,7 @@ const fs = require('fs')
 const path = require('path')
 
 const config = require('../../../lib/config')
-require('../../../lib/models/Crypto')
+const Crypto = require('../../../lib/models/Crypto')
 
 registerSuite('listing', ['getListing'])
 registerSuite('brokerwolf', [

@@ -3,6 +3,7 @@
 require('../connection.js')
 const Context = require('../../lib/models/Context')
 const Envelope = require('../../lib/models/Envelope')
+const MLSJob = require('../../lib/models/MLSJob')
 const promisify = require('../../lib/utils/promisify')
 
 

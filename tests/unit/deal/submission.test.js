@@ -4,6 +4,7 @@ const DealHelper = require('./helper')
 const BrandHelper = require('../brand/helper')
 const DealChecklist = require('../../../lib/models/Deal/checklist')
 const Task = require('../../../lib/models/Task')
+const Form = require('../../../lib/models/Form')
 const Submission = require('../../../lib/models/Form/submission')
 const Context = require('../../../lib/models/Context')
 
@@ -46,7 +47,7 @@ const set = async() => {
   expect(submission.author).to.equal(user.id)
   expect(submission.revision_count).to.equal(1)
 
-  const revision = await Form.getRevision(submission.last_revision)
+  const revision = await Submission.getRevision(submission.last_revision)
 
   expect(revision.values).to.deep.equal(values)
   expect(revision.author).to.equal(user.id)
@@ -70,7 +71,7 @@ const update = async() => {
   expect(updated.last_revision).not.to.equal(submission.last_revision)
   expect(updated.revision_count).to.equal(2)
 
-  const revision = await Form.getRevision(updated.last_revision)
+  const revision = await Submission.getRevision(updated.last_revision)
 
   expect(revision.values).to.deep.equal(values)
   expect(revision.author).to.equal(user.id)

@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 require('../connection.js')
-require('../../lib/models/index.js')
+const Branch = require('../models/Branch')
 
 const create = async(action, uri) => {
   const url = uri ? Url.web({

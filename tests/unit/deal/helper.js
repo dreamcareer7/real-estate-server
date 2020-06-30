@@ -3,6 +3,7 @@ const promisify = require('../../../lib/utils/promisify')
 
 const Deal = require('../../../lib/models/Deal')
 const DealChecklist = require('../../../lib/models/Deal/checklist')
+const DealRole = require('../../../lib/models/Deal/checklist')
 
 const BrandHelper = require('../brand/helper')
 
@@ -77,7 +78,7 @@ async function create(user_id, brand_id, data) {
   }
 
   for (const r of roles) {
-    await Deal.addRole({
+    await DealRole.create({
       ...r,
       deal: deal.id,
       created_by: user_id,
