@@ -11,7 +11,6 @@ const Message = require('../../../lib/models/Message')
 const Room = require('../../../lib/models/Room')
 const Task = require('../../../lib/models/Task')
 const User = require('../../../lib/models/User')
-const Review = require('../../../lib/models/Review')
 
 const createTask = async () => {
   const user = await User.getByEmail('test@rechat.com')

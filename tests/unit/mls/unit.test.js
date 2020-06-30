@@ -1,5 +1,4 @@
 const { expect } = require('chai')
-const PropertyUnit = require('../../../lib/models/PropertyUnit')
 
 const { createContext } = require('../helper')
 

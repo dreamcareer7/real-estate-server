@@ -1,10 +1,9 @@
 const { expect } = require('chai')
 
 const { createContext } = require('../helper')
-const Office = require('../../../lib/models/Office')
-const Agent = require('../../../lib/models/Agent')
 
 const json = require('./json/agent')
+
 const officeJson = require('./json/office')
 
 const save = async (props = {}) => {

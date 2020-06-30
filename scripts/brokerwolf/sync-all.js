@@ -1,10 +1,9 @@
 #!/usr/bin/env node
 
 require('../connection.js')
+require('../../lib/models/index.js')
 const db = require('../../lib/utils/db')
 const promisify = require('../../lib/utils/promisify')
-const BrokerWolf = require('../../lib/models/Brokerwolf')
-const Deal = require('../../lib/models/Deal')
 
 const syncMembers = async () => {
   const { rows } = await db.executeSql.promise('SELECT brand FROM brokerwolf_settings')

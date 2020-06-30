@@ -1,5 +1,4 @@
 const { expect } = require('chai')
-const PropertyRoom = require('../../../lib/models/PropertyRoom')
 
 const { createContext } = require('../helper')
 

@@ -1,7 +1,5 @@
 const _ = require('lodash')
 const db = require('../../lib/utils/db')
-const AttachedFile = require('../../lib/models/AttachedFile')
-
 require('../connection')
 
 const sql = `SELECT

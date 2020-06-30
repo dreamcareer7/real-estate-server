@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 
 require('../connection.js')
-const Envelope = require('../../lib/models/Envelope')
+require('../../lib/models/index.js')
+
 const promisify = require('../../lib/utils/promisify')
 
 const update = async () => {

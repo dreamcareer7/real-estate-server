@@ -4,9 +4,6 @@ require('../../connection.js')
 require('../../../lib/utils/db.js')
 require('../../../lib/models/index.js')
 
-const School = require('../../../lib/models/School')
-const MLSJob = require('../../../lib/models/MLSJob')
-
 School.refresh(err => {
   if (err)
     console.log(err)
