@@ -8,6 +8,7 @@ const Notification = require('../../lib/models/Notification')
 const CrmTaskWorker = require('../../lib/models/CRM/Task/worker/notification')
 const CalendarWorker = require('../../lib/models/Calendar/worker/notification')
 const EmailCampaign = require('../../lib/models/Email/campaign')
+const EmailCampaignStats = require('../../lib/models/Email/campaign/stats')
 const GoogleWorkers = require('../../lib/models/Google/workers')
 const MicrosoftWorker = require('../../lib/models/Microsoft/workers')
 const Task = require('../../lib/models/Task')
@@ -130,8 +131,8 @@ poll({
 })
 
 poll({
-  fn: EmailCampaign.updateStats,
-  name: 'EmailCampaign.updateStats'
+  fn: EmailCampaignStats.updateStats,
+  name: 'EmailCampaignStats.updateStats'
 })
 
 poll({

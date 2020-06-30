@@ -4,6 +4,7 @@ const { Listing }   = require('../../lib/models/Listing')
 const Notification  = require('../../lib/models/Notification')
 const School = require('../../lib/models/School')
 const EmailCampaign = require('../../lib/models/Email/campaign')
+const EmailCampaignStats = require('../../lib/models/Email/campaign/stats')
 const GoogleCredential     = require('../../lib/models/Google/credential')
 const GoogleSyncHistory    = require('../../lib/models/Google/sync_history')
 const MicrosoftCredential  = require('../../lib/models/Microsoft/credential')
@@ -57,7 +58,7 @@ const sendDueEmailCampaigns = (job, cb) => {
 }
 
 const updateEmailCampaginStats = (job, cb) => {
-  EmailCampaign.updateStats().nodeify(cb)
+  EmailCampaignStats.updateStats().nodeify(cb)
 }
 
 const CreateGoogleCredential = (job, cb) => {
@@ -101,7 +102,7 @@ const list = {
   'BrokerWolf.ContactTypes.map': mapBrokerwolfContact,
   'Task.sendNotifications': sendTaskNotifications,
   'EmailCampaign.sendDue': sendDueEmailCampaigns,
-  'EmailCampaign.updateStats': updateEmailCampaginStats,
+  'EmailCampaignStats.updateStats': updateEmailCampaginStats,
   'GoogleCredential.create': CreateGoogleCredential,
   'GoogleSyncHistory.addSyncHistory': addGoogleSyncHistory,
   'MicrosoftCredential.create': CreateMicrosoftCredential,

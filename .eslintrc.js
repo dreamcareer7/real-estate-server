@@ -11,11 +11,7 @@ const globals = [
   'Room',
   'Recommendation',
   'Url',
-  'Contact',
-  'Alert',
-  'EmailCampaign',
-  'EmailCampaignEmail',
-  'EmailCampaignRecipient'
+  'Alert'
 ]
 
 const global_object = {}
