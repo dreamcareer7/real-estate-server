@@ -1,8 +1,5 @@
 #!/usr/bin/env node
 
-const Email = require('../../lib/models/Email')
-
-
 require('../connection.js')
 require('../../lib/models/index.js')
 const fs = require('fs')

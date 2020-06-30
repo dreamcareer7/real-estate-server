@@ -1,10 +1,9 @@
 #!/usr/bin/env node
 
 require('../connection.js')
-const Context = require('../../lib/models/Context')
 const Envelope = require('../../lib/models/Envelope')
-const promisify = require('../../lib/utils/promisify')
 
+const promisify = require('../../lib/utils/promisify')
 
 const refresh = async docusign_user => {
   try {

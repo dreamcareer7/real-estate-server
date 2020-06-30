@@ -4,8 +4,6 @@ const DealHelper = require('./helper')
 const BrandHelper = require('../brand/helper')
 const DealChecklist = require('../../../lib/models/Deal/checklist')
 const Task = require('../../../lib/models/Task')
-const Context = require('../../../lib/models/Context')
-
 
 const createChecklist = async () => {
   const user = await User.getByEmail('test@rechat.com')

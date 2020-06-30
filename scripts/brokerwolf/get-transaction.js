@@ -2,7 +2,7 @@
 
 require('../connection.js')
 const request = require('request-promise-native')
-const BrokerWolf = require('../../lib/models/BrokerWolf')
+const BrokerWolf = require('../../lib/models/Brokerwolf')
 const Deal = require('../../lib/models/Deal')
 const promisify = require('../../lib/utils/promisify')
 

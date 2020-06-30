@@ -2,8 +2,6 @@ const { expect } = require('chai')
 const { createContext } = require('../helper')
 const DealHelper = require('./helper')
 const BrandHelper = require('../brand/helper')
-const Context = require('../../../lib/models/Context')
-
 
 const setupBrand = async () => {
   const brand = await BrandHelper.create()

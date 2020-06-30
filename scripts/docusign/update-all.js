@@ -5,8 +5,6 @@ const Envelope = require('../../lib/models/Envelope')
 
 const promisify = require('../../lib/utils/promisify')
 const db = require('../../lib/utils/db')
-const Context = require('../../lib/models/Context')
-
 
 const save = async () => {
   await db.executeSql.promise('BEGIN')

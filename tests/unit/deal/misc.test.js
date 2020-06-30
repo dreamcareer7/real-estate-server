@@ -3,7 +3,6 @@ const { createContext } = require('../helper')
 const DealHelper = require('./helper')
 const BrandHelper = require('../brand/helper')
 const promisify = require('../../../lib/utils/promisify')
-const Context = require('../../../lib/models/Context')
 
 const createDeal = async () => {
   const user = await User.getByEmail('test@rechat.com')
