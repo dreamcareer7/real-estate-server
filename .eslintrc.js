@@ -4,7 +4,6 @@ const globals = [
   'Address',
   'User',
   'CompactUser',
-  'Client',
   'Token',
   'Property',
   'Listing',

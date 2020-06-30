@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 
 require('../connection.js')
-require('../../lib/models/index.js')
+const Client = require('../models/Client')
+const User = require('../models/User')
 
 const update = async () => {
   const user = await User.getByEmail(process.argv[2])
