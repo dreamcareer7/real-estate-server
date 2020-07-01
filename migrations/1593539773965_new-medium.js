@@ -1,10 +1,8 @@
 const db = require('../lib/utils/db')
 
 const migrations = [
-  'BEGIN',
   `ALTER TYPE template_medium
-    ADD VALUE 'Letter'`,
-  'COMMIT'
+    ADD VALUE 'Letter'`
 ]
 
 
