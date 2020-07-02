@@ -1,7 +1,6 @@
 const globals = [
   'BigInt',
   'User',
-  'CompactUser',
   'Listing',
   'CompactListing'
 ]
