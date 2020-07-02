@@ -3,8 +3,7 @@ const globals = [
   'User',
   'CompactUser',
   'Listing',
-  'CompactListing',
-  'Url'
+  'CompactListing'
 ]
 
 const global_object = {}
