@@ -1,6 +1,5 @@
 const globals = [
   'BigInt',
-  'User',
 ]
 
 const global_object = {}
