@@ -6,7 +6,6 @@ const globals = [
   'Property',
   'Listing',
   'CompactListing',
-  'Recommendation',
   'Url',
   'Alert'
 ]
