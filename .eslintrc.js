@@ -1,9 +1,7 @@
 const globals = [
   'BigInt',
   'User',
-  'CompactUser',
-  'Listing',
-  'CompactListing'
+  'Listing'
 ]
 
 const global_object = {}
