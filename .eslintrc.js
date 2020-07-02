@@ -2,7 +2,6 @@ const globals = [
   'BigInt',
   'User',
   'CompactUser',
-  'Token',
   'Property',
   'Listing',
   'CompactListing',

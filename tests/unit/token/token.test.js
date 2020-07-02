@@ -2,6 +2,8 @@ const { expect } = require('chai')
 
 const { createContext } = require('../helper')
 const config = require('../../../lib/config')
+const Token = require('../../../lib/models/Token')
+
 
 const create = async () => {
   const user = await User.getByEmail(config.tests.username)
