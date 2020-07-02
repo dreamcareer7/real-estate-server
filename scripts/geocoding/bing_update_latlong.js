@@ -1,7 +1,8 @@
 require('../connection.js')
 
-const async = require('async')
-const config = require('../../lib/config.js')
+const Address = require('../../lib/models/Address')
+const async   = require('async')
+const config  = require('../../lib/config.js')
 
 Address.getBatchOfAddressesWithoutLatLongBing(config.bing.address_batch_size, function (err, address_ids) {
   if (err) {

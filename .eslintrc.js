@@ -1,7 +1,5 @@
 const globals = [
   'BigInt',
-  'Error',
-  'Address',
   'User',
   'CompactUser',
   'Token',
