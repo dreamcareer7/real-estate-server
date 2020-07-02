@@ -7,6 +7,7 @@ const DealChecklist = require('../../../lib/models/Deal/checklist')
 const Context = require('../../../lib/models/Context')
 const Deal = require('../../../lib/models/Deal')
 const DealRole = require('../../../lib/models/Deal/role')
+const User = require('../../../lib/models/User')
 
 const buyer = {
   role: 'Buyer',

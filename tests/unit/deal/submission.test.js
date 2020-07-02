@@ -6,6 +6,7 @@ const DealChecklist = require('../../../lib/models/Deal/checklist')
 const Task = require('../../../lib/models/Task')
 const Form = require('../../../lib/models/Form')
 const Submission = require('../../../lib/models/Form/submission')
+const User = require('../../../lib/models/User')
 const Context = require('../../../lib/models/Context')
 
 

@@ -6,6 +6,7 @@ const { createContext } = require('../helper')
 const { Deals: DealsCube } = require('../../../lib/models/Analytics/OLAP/cubes')
 const { DealsQueryBuilder } = require('../../../lib/models/Analytics/OLAP')
 const Context = require('../../../lib/models/Context')
+const User = require('../../../lib/models/User')
 
 const BrandHelper = require('../brand/helper')
 

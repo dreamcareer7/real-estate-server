@@ -6,6 +6,8 @@ const ListingHelper = require('../mls/helpers/listing')
 const promisify = require('../../../lib/utils/promisify')
 const Context = require('../../../lib/models/Context')
 const Deal = require('../../../lib/models/Deal')
+const User = require('../../../lib/models/User')
+
 
 const manualContext = async () => {
   const street_address = '12345 Munger Avenue'

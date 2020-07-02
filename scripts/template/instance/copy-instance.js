@@ -4,6 +4,8 @@
 /* Usage: node copy-instance.js <template-id> <email-address>
  */
 
+const User = require('../../../lib/models/User')
+
 require('../../connection.js')
 require('../../../lib/models/index.js')
 const Template = require('../../../lib/models/Template/index')

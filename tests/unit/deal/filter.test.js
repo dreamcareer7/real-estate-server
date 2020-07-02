@@ -3,6 +3,7 @@ const { createContext } = require('../helper')
 const DealHelper = require('./helper')
 const BrandHelper = require('../brand/helper')
 const Context = require('../../../lib/models/Context')
+const User = require('../../../lib/models/User')
 const Deal = require('../../../lib/models/Deal')
 const DealRole = require('../../../lib/models/Deal/role')
 

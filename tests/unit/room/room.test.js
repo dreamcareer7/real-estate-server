@@ -3,6 +3,7 @@ const { expect } = require('chai')
 const { createContext } = require('../helper')
 const promisify = require('../../../lib/utils/promisify')
 const Room = require('../../../lib/models/Room')
+const User = require('../../../lib/models/User')
 const config = require('../../../lib/config')
 
 const _createRoom = async () => {

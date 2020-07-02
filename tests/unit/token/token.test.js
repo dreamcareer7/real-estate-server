@@ -3,6 +3,7 @@ const { expect } = require('chai')
 const { createContext } = require('../helper')
 const config = require('../../../lib/config')
 const Token = require('../../../lib/models/Token')
+const User = require('../../../lib/models/User')
 
 
 const create = async () => {

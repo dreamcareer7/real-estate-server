@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
+const User  = require('../../lib/models/User')
 const Email = require('../../lib/models/Email')
-
 
 require('../connection.js')
 require('../../lib/models/index.js')
