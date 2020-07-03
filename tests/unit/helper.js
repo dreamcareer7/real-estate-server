@@ -7,7 +7,6 @@ const promisify = require('../../lib/utils/promisify')
 const Context = require('../../lib/models/Context')
 const Metric = require('../../lib/models/Metric')
 const { handleJob } = require('../functional/jobs')
-require('../../lib/models/index')()
 
 const attachCalendarEvents = require('../../lib/models/Calendar/events')
 const attachContactEvents = require('../../lib/models/Contact/events')

@@ -1,5 +1,3 @@
-require('../../lib/models/index.js')()
-
 const config = require('../../lib/config')
 
 const Notification = require('../../lib/models/Notification')

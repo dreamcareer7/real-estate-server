@@ -1,6 +1,5 @@
 const { peanar } = require('../../lib/utils/peanar')
 
-require('../../lib/models/index.js')()
 const Context = require('../../lib/models/Context')
 
 require('../../lib/models/Calendar/worker')

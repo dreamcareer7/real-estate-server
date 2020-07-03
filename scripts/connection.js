@@ -6,7 +6,6 @@ const Peanar = require('peanar')
 
 const deasync = require('deasync')
 require('colors')
-require('../lib/models/index.js')()
 const Job = require('../lib/models/Job')
 const Context = require('../lib/models/Context')
 
@@ -17,7 +16,7 @@ const context = Context.create()
 
 const getConnection = deasync(db.conn)
 const jobs = []
-jobs.push = job => Job.handle([job], () => {})
+jobs.push = job => { Job.handle([job], () => {}); return 1 }
 
 context.set({
   db: getConnection(),
