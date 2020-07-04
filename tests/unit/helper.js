@@ -22,12 +22,6 @@ attachTouchEventHandler()
 attachTaskEventHandler()
 attachCalIntEventHandler()
 
-// Mock Socket so Notification can work in unit tests
-global['Socket'] = {
-  send(_event, _room, _args, cb) { if (typeof cb === 'function') return cb() },
-  join(_user, _room_id) {}
-}
-
 const getDb = async () => {
   return new Promise((resolve, reject) => {
     db.conn((err, conn, release) => {

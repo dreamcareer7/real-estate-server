@@ -3,7 +3,7 @@ const promisify = require('../../../lib/utils/promisify')
 
 const Deal = require('../../../lib/models/Deal')
 const DealChecklist = require('../../../lib/models/Deal/checklist')
-const DealRole = require('../../../lib/models/Deal/checklist')
+const DealRole = require('../../../lib/models/Deal/role')
 
 const BrandHelper = require('../brand/helper')
 

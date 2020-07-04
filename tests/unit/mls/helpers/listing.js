@@ -1,4 +1,4 @@
-const Listing = require('../../../../lib/models/Listing')
+const { Listing } = require('../../../../lib/models/Listing')
 const promisify = require('../../../../lib/utils/promisify')
 
 const listing  = require('../json/listing.json')
