@@ -17,7 +17,7 @@ module.exports = {
   'country_code': v.optionalString,
   'created_at': Number,
   'updated_at': Number,
-  'location_google': v.optionalObject,
+  'location_google': v.optionalString,
   'matrix_unique_id': Number,
   'geocoded': v.optionalBoolean,
   'geo_source': v.optionalString,
