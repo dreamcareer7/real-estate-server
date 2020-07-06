@@ -13,10 +13,16 @@ const {
   updateTaskSubmission
 } = require('../../../lib/models/Deal/form')
 
-const seller = {
+const seller1 = {
   role: 'Seller',
   legal_first_name: 'Dan',
   legal_last_name: 'Hogan'
+}
+
+const seller2  = {
+  role: 'Seller',
+  legal_first_name: 'Kevin',
+  legal_last_name: 'Smith'
 }
 
 const full_address = '12345 Munger Avenue, Dallas, TX'
@@ -36,7 +42,8 @@ const createTask = async () => {
       }
     }],
     roles: [
-      seller
+      seller1,
+      seller2
     ]
   })
 
@@ -110,11 +117,20 @@ const generatePdf = async() => {
   const { values } = await Submission.getRevision(updated.last_revision)
 
   /*
-   * The Mock PDF File is a copy of 1-4 Family Contract
+   * The Mock PDF File is a copy of Residential Listing Agreement (TAR 1101)
    */
 
-  expect(values['Form1']).to.equal(`${seller.legal_first_name} ${seller.legal_last_name}`)
-  expect(values['Form8']).to.equal(full_address)
+  // This is a Roles field. Should list all Seller Names
+  expect(values['Form1']).to.equal(`${seller1.legal_first_name} ${seller1.legal_last_name}, ${seller2.legal_first_name} ${seller2.legal_last_name}`)
+
+  // This is a Role field. Should be first Seller's name
+  expect(values['Form163']).to.equal(`${seller1.legal_first_name} ${seller1.legal_last_name}`)
+
+  // This is a Role field. Should be second Seller's name
+  expect(values['Form167']).to.equal(`${seller2.legal_first_name} ${seller2.legal_last_name}`)
+
+  // Context field.
+  expect(values['Form33']).to.equal(full_address)
 }
 
 describe('Deal Form', () => {
