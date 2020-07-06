@@ -9,6 +9,17 @@ const Submission = require('../../../lib/models/Form/submission')
 const User = require('../../../lib/models/User')
 const Context = require('../../../lib/models/Context')
 
+const {
+  updateTaskSubmission
+} = require('../../../lib/models/Deal/form')
+
+const seller = {
+  role: 'Seller',
+  legal_first_name: 'Dan',
+  legal_last_name: 'Hogan'
+}
+
+const full_address = '12345 Munger Avenue, Dallas, TX'
 
 const createTask = async () => {
   const user = await User.getByEmail('test@rechat.com')
@@ -17,19 +28,28 @@ const createTask = async () => {
   Context.set({ brand, user })
 
   const deal = await DealHelper.create(user.id, brand.id, {
-    checklists: [{}]
+    checklists: [{
+      context: {
+        full_address: {
+          value: full_address
+        }
+      }
+    }],
+    roles: [
+      seller
+    ]
   })
 
   const checklist = await DealChecklist.get(deal.checklists[0])
 
   const task = await Task.get(checklist.tasks[0])
 
-  return { task, user }
+  return { task, user, deal }
 }
 
 
 const set = async() => {
-  const { task, user } = await createTask()
+  const { task, user, deal } = await createTask()
 
   const values = {
     f1: 'v1'
@@ -53,7 +73,7 @@ const set = async() => {
   expect(revision.values).to.deep.equal(values)
   expect(revision.author).to.equal(user.id)
 
-  return { submission, task, user }
+  return { submission, task, user, deal }
 }
 
 const update = async() => {
@@ -78,9 +98,29 @@ const update = async() => {
   expect(revision.author).to.equal(user.id)
 }
 
+const generatePdf = async() => {
+  const { task, user, deal } = await set()
+
+  const updated = await updateTaskSubmission({
+    task,
+    user,
+    deal
+  })
+
+  const { values } = await Submission.getRevision(updated.last_revision)
+
+  /*
+   * The Mock PDF File is a copy of 1-4 Family Contract
+   */
+
+  expect(values['Form1']).to.equal(`${seller.legal_first_name} ${seller.legal_last_name}`)
+  expect(values['Form8']).to.equal(full_address)
+}
+
 describe('Deal Form', () => {
   createContext()
 
   it('set submission on a task', set)
   it('update submission on a task', update)
+  it('generate pdf for a task', generatePdf)
 })
