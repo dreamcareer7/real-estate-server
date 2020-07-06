@@ -3,6 +3,7 @@ const { createContext } = require('../helper')
 const promisify = require('../../../lib/utils/promisify')
 const Alert = require('../../../lib/models/Alert')
 const AlertHelper = require('./helper')
+const ListingHelper = require('../mls/helpers/listing')
 
 const createAlert = async () => {
   const alert = await AlertHelper.create()
@@ -65,6 +66,19 @@ const remove = async () => {
   expect(room_alerts).to.have.length(0)
 }
 
+const matchUsers = async () => {
+  const { created, room, user } = await createAlert()
+  const listing = await ListingHelper.create()
+
+  const by_user = await promisify(Alert.matchingUsersByAlerts)(listing)
+  expect(by_user.alert_ids).to.include(created.id)
+  expect(by_user.user_ids).to.include(user.id)
+
+  const [ found ] = await promisify(Alert.matchingRoomsByAlerts)(listing)
+  expect(found.id).to.equal(created.id)
+  expect(found.room).to.equal(room.id)
+}
+
 describe('Alert', () => {
   createContext()
 
@@ -75,4 +89,5 @@ describe('Alert', () => {
   it('get alerts by search', search)
   it('get alerts by room', getByRoom)
   it('get alerts by user', getByUser)
+  it('find matching users', matchUsers)
 })
