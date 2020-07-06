@@ -1,4 +1,3 @@
-const deepmerge = require('deepmerge')
 const promisify = require('../../../lib/utils/promisify')
 const Alert = require('../../../lib/models/Alert')
 const RoomHelper = require('../room/helper')
