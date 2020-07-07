@@ -2,6 +2,7 @@ UPDATE
   google_calendars
 SET
   sync_token = null,
+  watcher_status = null,
   watcher_channel_id = null,
   watcher = null,
   deleted = true,
