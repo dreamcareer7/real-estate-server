@@ -382,6 +382,7 @@ declare type TDbSqlAddress =
   | 'google/message/find_by_message_id'
   | 'google/message/find_distinc_credential'
   | 'google/message/find_distinc_credential_by_msg'
+  | 'google/message/get_by_internet_message_id'
   | 'google/message/get'
   | 'google/message/get_by_credential'
   | 'google/message/get_by_credential_and_thread_keys'
