@@ -33,6 +33,10 @@ ON CONFLICT (google_credential, calendar_id) DO UPDATE SET
   conference_properties = $8,
   access_role = $9,
   origin = $10,
+  sync_token = null,
+  watcher_status = null,
+  watcher_channel_id = null,
+  watcher = null,
   updated_at = now(),
   deleted_at = null
 RETURNING id

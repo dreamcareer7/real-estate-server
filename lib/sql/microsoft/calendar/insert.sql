@@ -33,6 +33,7 @@ ON CONFLICT (microsoft_credential, calendar_id) DO UPDATE SET
   can_edit = $8,
   owner = $9,
   origin = $10,
+  delta_token = null,
   updated_at = now(),
   deleted_at = null
 RETURNING id
