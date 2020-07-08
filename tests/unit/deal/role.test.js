@@ -3,6 +3,7 @@ const { createContext } = require('../helper')
 const DealHelper = require('./helper')
 const BrandHelper = require('../brand/helper')
 const promisify = require('../../../lib/utils/promisify')
+const DealChecklist = require('../../../lib/models/Deal/checklist')
 
 const buyer = {
   role: 'Buyer',

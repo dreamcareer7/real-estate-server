@@ -2,6 +2,9 @@ const { expect } = require('chai')
 const { createContext } = require('../helper')
 const DealHelper = require('./helper')
 const BrandHelper = require('../brand/helper')
+const DealChecklist = require('../../../lib/models/Deal/checklist')
+const Task = require('../../../lib/models/Task')
+const Submission = require('../../../lib/models/Form/submission')
 
 const createTask = async () => {
   const user = await User.getByEmail('test@rechat.com')
