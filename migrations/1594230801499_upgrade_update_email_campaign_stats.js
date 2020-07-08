@@ -135,7 +135,7 @@ const migrations = [
           count(DISTINCT recipient) filter(WHERE events.event = 'stored' AND recipient is NOT NULL)
           +
           count(*) filter(WHERE events.event = 'stored' AND recipient is NULL)
-        ) as stored,
+        ) as stored
       FROM events
     )
 
