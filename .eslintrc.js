@@ -1,9 +1,7 @@
 const globals = [
   'BigInt',
-  'Context',
   'Error',
   'Orm',
-  'Job',
   'Template',
   'TemplateInstance',
   'TemplateAsset',
@@ -20,7 +18,6 @@ const globals = [
   'Url',
   'Contact',
   'Alert',
-  'Email',
   'EmailCampaign',
   'EmailCampaignEmail',
   'EmailCampaignRecipient',

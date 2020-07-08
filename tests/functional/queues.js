@@ -9,7 +9,7 @@ const GoogleSyncHistory    = require('../../lib/models/Google/sync_history')
 const MicrosoftCredential  = require('../../lib/models/Microsoft/credential')
 const MicrosoftSyncHistory = require('../../lib/models/Microsoft/sync_history')
 const BrandTemplate = require('../../lib/models/Template/brand')
-const BrokerWolf = require('../../lib/models/Brokerwolf')
+const BrokerWolf = require('../../lib/models/BrokerWolf')
 
 const saveBrokerwolfSettings = (job, cb) => {
   BrokerWolf.Settings.save(job.data).nodeify(cb)
