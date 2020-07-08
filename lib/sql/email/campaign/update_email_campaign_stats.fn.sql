@@ -8,38 +8,38 @@ $$
     WHERE emails.campaign = $1
   ),
 
-    recipient_counts AS (
-      SELECT
-        recipient,
-        count(*) filter(WHERE events.event = 'accepted')     as accepted,
-        count(*) filter(WHERE events.event = 'rejected')     as rejected,
-        count(*) filter(WHERE events.event = 'delivered')    as delivered,
-        count(*) filter(WHERE events.event = 'failed')       as failed,
-        count(*) filter(WHERE events.event = 'opened')       as opened,
-        count(*) filter(WHERE events.event = 'clicked')      as clicked,
-        count(*) filter(WHERE events.event = 'unsubscribed') as unsubscribed,
-        count(*) filter(WHERE events.event = 'complained')   as complained,
-        count(*) filter(WHERE events.event = 'stored')       as stored
-      FROM events
-      GROUP BY recipient
-      ORDER BY recipient
-    ),
+  recipient_counts AS (
+    SELECT
+      recipient,
+      count(*) filter(WHERE events.event = 'accepted')     as accepted,
+      count(*) filter(WHERE events.event = 'rejected')     as rejected,
+      count(*) filter(WHERE events.event = 'delivered')    as delivered,
+      count(*) filter(WHERE events.event = 'failed')       as failed,
+      count(*) filter(WHERE events.event = 'opened')       as opened,
+      count(*) filter(WHERE events.event = 'clicked')      as clicked,
+      count(*) filter(WHERE events.event = 'unsubscribed') as unsubscribed,
+      count(*) filter(WHERE events.event = 'complained')   as complained,
+      count(*) filter(WHERE events.event = 'stored')       as stored
+    FROM events
+    GROUP BY recipient
+    ORDER BY recipient
+  ),
 
-    update_recipients AS (
-      UPDATE email_campaign_emails ece SET
-        accepted     = rc.accepted,
-        rejected     = rc.rejected,
-        delivered    = rc.delivered,
-        failed       = rc.failed,
-        opened       = rc.opened,
-        clicked      = rc.clicked,
-        unsubscribed = rc.unsubscribed,
-        complained   = rc.complained,
-        stored       = rc.stored
-      FROM recipient_counts rc
-      WHERE ece.campaign = $1
-      AND ece.email_address = rc.recipient
-    ),
+  update_recipients AS (
+    UPDATE email_campaign_emails ece SET
+      accepted     = rc.accepted,
+      rejected     = rc.rejected,
+      delivered    = rc.delivered,
+      failed       = rc.failed,
+      opened       = rc.opened,
+      clicked      = rc.clicked,
+      unsubscribed = rc.unsubscribed,
+      complained   = rc.complained,
+      stored       = rc.stored
+    FROM recipient_counts rc
+    WHERE ece.campaign = $1
+    AND ece.email_address = rc.recipient
+  ),
 
   email_counts AS (
     SELECT
@@ -76,15 +76,69 @@ $$
 
   campaign_counts AS (
     SELECT
-      count(DISTINCT recipient) filter(WHERE events.event = 'accepted')     as accepted,
-      count(DISTINCT recipient) filter(WHERE events.event = 'rejected')     as rejected,
-      count(DISTINCT recipient) filter(WHERE events.event = 'delivered')    as delivered,
-      count(DISTINCT recipient) filter(WHERE events.event = 'failed')       as failed,
-      count(DISTINCT recipient) filter(WHERE events.event = 'opened')       as opened,
-      count(DISTINCT recipient) filter(WHERE events.event = 'clicked')      as clicked,
-      count(DISTINCT recipient) filter(WHERE events.event = 'unsubscribed') as unsubscribed,
-      count(DISTINCT recipient) filter(WHERE events.event = 'complained')   as complained,
-      count(DISTINCT recipient) filter(WHERE events.event = 'stored')       as stored
+      (
+        count(DISTINCT recipient) filter(WHERE events.event = 'accepted' AND recipient is NOT NULL)
+        +
+        count(*) filter(WHERE events.event = 'accepted' AND recipient is NULL)
+      ) as accepted,
+
+      (
+        count(DISTINCT recipient) filter(WHERE events.event = 'rejected' AND recipient is NOT NULL)
+        +
+        count(*) filter(WHERE events.event = 'rejected' AND recipient is NULL)
+      ) as rejected,
+
+      (
+        count(DISTINCT recipient) filter(WHERE events.event = 'delivered' AND recipient is NOT NULL)
+        +
+        count(*) filter(WHERE events.event = 'delivered' AND recipient is NULL)
+      ) as delivered,
+
+      (
+        count(DISTINCT recipient) filter(WHERE events.event = 'failed' AND recipient is NOT NULL)
+        +
+        count(*) filter(WHERE events.event = 'failed' AND recipient is NULL)
+      ) as failed,
+
+      (
+        count(DISTINCT recipient) filter(WHERE events.event = 'opened' AND recipient is NOT NULL)
+        +
+        count(*) filter(WHERE events.event = 'opened' AND recipient is NULL)
+      ) as opened,
+
+      (
+        count(DISTINCT recipient) filter(WHERE events.event = 'clicked' AND recipient is NOT NULL)
+        +
+        count(*) filter(WHERE events.event = 'clicked' AND recipient is NULL)
+      ) as clicked,
+
+      (
+        count(DISTINCT recipient) filter(WHERE events.event = 'unsubscribed' AND recipient is NOT NULL)
+        +
+        count(*) filter(WHERE events.event = 'unsubscribed' AND recipient is NULL)
+      ) as unsubscribed,
+
+      (
+        count(DISTINCT recipient) filter(WHERE events.event = 'complained' AND recipient is NOT NULL)
+        +
+        count(*) filter(WHERE events.event = 'complained' AND recipient is NULL)
+      ) as complained,
+
+      (
+        count(DISTINCT recipient) filter(WHERE events.event = 'stored' AND recipient is NOT NULL)
+        +
+        count(*) filter(WHERE events.event = 'stored' AND recipient is NULL)
+      ) as stored,
+
+      -- count(DISTINCT recipient) filter(WHERE events.event = 'accepted')     as accepted,
+      -- count(DISTINCT recipient) filter(WHERE events.event = 'rejected')     as rejected,
+      -- count(DISTINCT recipient) filter(WHERE events.event = 'delivered')    as delivered,
+      -- count(DISTINCT recipient) filter(WHERE events.event = 'failed')       as failed,
+      -- count(DISTINCT recipient) filter(WHERE events.event = 'opened')       as opened,
+      -- count(DISTINCT recipient) filter(WHERE events.event = 'clicked')      as clicked,
+      -- count(DISTINCT recipient) filter(WHERE events.event = 'unsubscribed') as unsubscribed,
+      -- count(DISTINCT recipient) filter(WHERE events.event = 'complained')   as complained,
+      -- count(DISTINCT recipient) filter(WHERE events.event = 'stored')       as stored
     FROM events
   )
 
