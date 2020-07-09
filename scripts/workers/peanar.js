@@ -56,10 +56,6 @@ const queues = [
     concurrency: 50
   },
   {
-    queues: ['email_high', 'email_event'],
-    concurrency: 20
-  },
-  {
     queues: ['MLS.OpenHouse', 'MLS.Unit'],
     concurrency: 20
   },
@@ -101,6 +97,10 @@ const queues = [
   {
     queues: ['envelope_update'],
     concurrency: 5
+  },
+  {
+    queues: ['email_high', 'email_event'],
+    concurrency: 20
   },
   {
     queues: ['daily_email'],
