@@ -1,10 +1,7 @@
-require('../../lib/models/index.js')()
-
 const config = require('../../lib/config')
 
 const Notification = require('../../lib/models/Notification')
 const User = require('../../lib/models/User')
-
 
 const airship = (job, done) => {
   const {

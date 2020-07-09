@@ -1,9 +1,10 @@
 const { expect } = require('chai')
 
+const Property = require('../../../lib/models/Property')
 const { createContext } = require('../helper')
 const AddressHelper = require('./helpers/address')
 
-const json = require('./json/property')
+const json = require('./json/property.json')
 
 const save = async () => {
   const address = await AddressHelper.create()

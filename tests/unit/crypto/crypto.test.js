@@ -1,6 +1,8 @@
 const { expect } = require('chai')
 const { createContext } = require('../helper')
 
+const Crypto = require('../../../lib/models/Crypto')
+
 const string = 'some random string'
 
 const encrypt = async () => {

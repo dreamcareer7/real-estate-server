@@ -4,8 +4,12 @@
 /* Usage: node copy-instance.js <template-id> <email-address>
  */
 
+const User = require('../../../lib/models/User')
+
 require('../../connection.js')
 require('../../../lib/models/index.js')
+const Template = require('../../../lib/models/Template/index')
+const TemplateInstance = require('../../../lib/models/Template/instance')
 
 const update = async () => {
   const instance = await TemplateInstance.get(process.argv[2])

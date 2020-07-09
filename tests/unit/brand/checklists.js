@@ -1,3 +1,5 @@
+const Task = require('../../../lib/models/Task')
+
 const tasks = [
   {
     title: 'Test Task',

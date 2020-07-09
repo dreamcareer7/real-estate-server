@@ -1,5 +1,5 @@
 const config = require('../../lib/config')
-require('../../lib/models/Crypto')
+const Crypto = require('../../lib/models/Crypto')
 
 for (const req_id of (process.argv[2] || '').split('\n').map(arg => arg.trim()).filter(x => x && x.length > 0)) {
   let enc_rechat_id

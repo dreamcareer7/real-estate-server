@@ -4,7 +4,6 @@ const path = require('path')
 const { peanar } = require('../../lib/utils/peanar')
 const { fork } = require('../../lib/utils/fork')
 
-require('../../lib/models/index.js')()
 const Context = require('../../lib/models/Context')
 const config = require('../../lib/config')
 

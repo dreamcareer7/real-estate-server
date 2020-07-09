@@ -1,26 +1,11 @@
 const { expect } = require('chai')
-
 const { createContext } = require('../helper')
 const promisify = require('../../../lib/utils/promisify')
-const config = require('../../../lib/config')
-
-const _createRoom = async () => {
-  const user = await User.getByEmail(config.tests.username)
-
-  const base = {
-    room_type: 'Group',
-    title: 'Room Title',
-    owner: user.id
-  }
-
-  const id = await Room.create(base)
-  const created = await promisify(Room.get)(id)
-
-  return { base, created, user }
-}
+const RoomHelper = require('./helper')
+const Room = require('../../../lib/models/Room')
 
 const createRoom = async () => {
-  const { base, created, user } = await _createRoom()
+  const { base, created, user } = await RoomHelper.create()
 
   expect(created.title).to.equal(base.title)
   expect(created.room_type).to.equal(base.room_type)
@@ -28,7 +13,7 @@ const createRoom = async () => {
 }
 
 const updateRoom = async () => {
-  const { base, created } = await _createRoom()
+  const { base, created } = await RoomHelper.create()
 
   const title = 'Updated'
 
@@ -41,7 +26,7 @@ const updateRoom = async () => {
 }
 
 const addUserConflict = async () => {
-  const { created, user } = await _createRoom()
+  const { created, user } = await RoomHelper.create()
 
   try {
     await promisify(Room.addUser)({
@@ -54,7 +39,7 @@ const addUserConflict = async () => {
 }
 
 const getUserRooms = async () => {
-  const { created, user } = await _createRoom()
+  const { created, user } = await RoomHelper.create()
 
   const rooms = await Room.getUserRoomIds(user.id)
   expect(rooms).to.include(created.id)
