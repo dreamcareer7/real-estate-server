@@ -476,20 +476,41 @@ const getUserRoles = cb => {
 }
 
 const createBillingPlan = (cb) => {
+  const plan = {
+    addon_applicability: 'all',
+    charge_model: 'flat_fee',
+    currency_code: 'USD',
+    enabled_in_hosted_pages: true,
+    enabled_in_portal: true,
+    free_quantity: 0,
+    giftable: false,
+    id: 'cbdemo_scale',
+    invoice_name: 'sample plan',
+    is_shippable: false,
+    name: 'Silver',
+    object: 'plan',
+    period: 1,
+    period_unit: 'month',
+    price: 5000,
+    pricing_model: 'flat_fee',
+    resource_version: 1517469217000,
+    status: 'active',
+    taxable: true,
+    updated_at: 1517469217
+  }
+
+  const content = {
+    plan
+  }
+
   return frisby.create('Create a billing plan')
-    .post('/jobs', {
-      name: 'BillingPlan.create',
-      data: {
-        acl: ['Admin', 'Marketing'],
-        chargebee_id: 'cbdemo_hustle'
-      }
-    })
+    .post('/chargebee/webhook', {content})
     .after(cb)
     .expectStatus(200)
 }
 
 const createSubscription = cb => {
-  const plan = results.brand.createBillingPlan
+  const { plan } = results.brand.createBillingPlan
 
   const subscription = {
     plan: plan.id,
@@ -501,6 +522,7 @@ const createSubscription = cb => {
     .after(cb)
     .expectStatus(200)
 }
+
 
 const updateSubscription = cb => {
   const created = results.brand.createSubscription.data
@@ -514,7 +536,7 @@ const updateSubscription = cb => {
   }
 
   return frisby.create('update a subscription (webhook)')
-    .post('/brands/chargebee/webhook', data)
+    .post('/chargebee/webhook', data)
     .after(cb)
     .expectStatus(200)
 }
