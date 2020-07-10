@@ -9,12 +9,16 @@ const sql     = require('../../../lib/utils/sql')
 const config  = require('../../../lib/config')
 const Contact = require('../../../lib/models/Contact')
 const Context = require('../../../lib/models/Context')
-const Email   = require('../../../lib/models/Email')
 const User    = require('../../../lib/models/User')
 const EmailCampaign = require('../../../lib/models/Email/campaign')
 const EmailCampaignAttachment = require('../../../lib/models/Email/campaign/attachments')
 const EmailCampaignEmail = require('../../../lib/models/Email/campaign/email')
 const AttachedFile = require('../../../lib/models/AttachedFile')
+
+const Email   = {
+  ...require('../../../lib/models/Email/constants'),
+  ...require('../../../lib/models/Email/create'),
+}
 
 const BrandHelper    = require('../brand/helper')
 const { attributes } = require('../contact/helper')
