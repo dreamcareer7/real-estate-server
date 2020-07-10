@@ -2,7 +2,11 @@ const { expect } = require('chai')
 const { createContext } = require('../helper')
 const promisify = require('../../../lib/utils/promisify')
 const RoomHelper = require('./helper')
-const Room = require('../../../lib/models/Room')
+const Room = {
+  ...require('../../../lib/models/Room/update'),
+  ...require('../../../lib/models/Room/users/get'),
+  ...require('../../../lib/models/Room/users/add'),
+}
 
 const createRoom = async () => {
   const { base, created, user } = await RoomHelper.create()
