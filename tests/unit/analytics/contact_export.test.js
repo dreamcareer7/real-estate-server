@@ -4,7 +4,7 @@ const { createContext, handleJobs } = require('../helper')
 
 const Contact = require('../../../lib/models/Contact')
 const Context = require('../../../lib/models/Context')
-const User = require('../../../lib/models/User')
+const User = require('../../../lib/models/User/get')
 const {
   ContactJointExportQueryBuilder,
   ContactEmailExportQueryBuilder,

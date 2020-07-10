@@ -9,7 +9,7 @@ const EmailCampaign = require('../../../lib/models/Email/campaign')
 const Calendar = require('../../../lib/models/Calendar')
 const Flow = require('../../../lib/models/Flow')
 const Orm = require('../../../lib/models/Orm')
-const User = require('../../../lib/models/User')
+const User = require('../../../lib/models/User/get')
 
 const { createContext, handleJobs } = require('../helper')
 const BrandHelper = require('../brand/helper')

@@ -4,7 +4,7 @@ const DealHelper = require('./helper')
 const BrandHelper = require('../brand/helper')
 const DealChecklist = require('../../../lib/models/Deal/checklist')
 const Task = require('../../../lib/models/Task')
-const User = require('../../../lib/models/User')
+const User = require('../../../lib/models/User/get')
 const Context = require('../../../lib/models/Context')
 
 

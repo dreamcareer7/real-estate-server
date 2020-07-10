@@ -6,7 +6,7 @@ const ListingHelper = require('../mls/helpers/listing')
 const promisify = require('../../../lib/utils/promisify')
 const Context = require('../../../lib/models/Context')
 const Deal = require('../../../lib/models/Deal')
-const User = require('../../../lib/models/User')
+const User = require('../../../lib/models/User/get')
 
 
 const manualContext = async () => {

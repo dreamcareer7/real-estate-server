@@ -1,7 +1,10 @@
 const config = require('../../../lib/config')
 const promisify = require('../../../lib/utils/promisify')
-const User = require('../../../lib/models/User')
-const Room = require('../../../lib/models/Room')
+const User = require('../../../lib/models/User/get')
+const Room = {
+  ...require('../../../lib/models/Room/create'),
+  ...require('../../../lib/models/Room/get'),
+}
 
 const create = async () => {
   const user = await User.getByEmail(config.tests.username)

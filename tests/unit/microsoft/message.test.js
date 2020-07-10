@@ -3,7 +3,7 @@ const { expect }        = require('chai')
 const { createContext } = require('../helper')
 
 const Context             = require('../../../lib/models/Context')
-const User                = require('../../../lib/models/User')
+const User                = require('../../../lib/models/User/get')
 const BrandHelper         = require('../brand/helper')
 const MicrosoftMessage    = require('../../../lib/models/Microsoft/message')
 const MicrosoftCredential = require('../../../lib/models/Microsoft/credential')

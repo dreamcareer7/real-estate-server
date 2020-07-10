@@ -1,4 +1,4 @@
-const User = require('../../../lib/models/User')
+const User = require('../../../lib/models/User/get')
 
 /**
  * @param {string} email 

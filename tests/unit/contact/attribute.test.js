@@ -9,7 +9,7 @@ const AttributeDef = require('../../../lib/models/Contact/attribute_def')
 const ContactAttribute = require('../../../lib/models/Contact/attribute')
 const Context = require('../../../lib/models/Context')
 const Metric = require('../../../lib/models/Metric')
-const User = require('../../../lib/models/User')
+const User = require('../../../lib/models/User/get')
 
 
 const BrandHelper = require('../brand/helper')
