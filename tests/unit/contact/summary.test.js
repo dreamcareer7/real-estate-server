@@ -6,7 +6,7 @@ const Contact = require('../../../lib/models/Contact')
 const ContactAttribute = require('../../../lib/models/Contact/attribute')
 const Context = require('../../../lib/models/Context')
 const Orm = require('../../../lib/models/Orm')
-const User = require('../../../lib/models/User')
+const User = require('../../../lib/models/User/get')
 
 const sql = require('../../../lib/utils/sql')
 

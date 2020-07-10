@@ -1,7 +1,7 @@
 const config = require('../../lib/config')
 
 const Notification = require('../../lib/models/Notification')
-const User = require('../../lib/models/User')
+const User = require('../../lib/models/User/last-seen')
 
 const airship = (job, done) => {
   const {

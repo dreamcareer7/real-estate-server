@@ -5,7 +5,7 @@ const queue = require('../lib/utils/queue')
 const program = require('commander')
 const Brand = require('../lib/models/Brand')
 const Job = require('../lib/models/Job')
-const User = require('../lib/models/User')
+const User = require('../lib/models/User/get')
 
 program
   .usage('npm run shell [options]')

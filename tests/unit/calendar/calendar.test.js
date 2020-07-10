@@ -11,7 +11,7 @@ const EmailCampaign = require('../../../lib/models/Email/campaign')
 const { Listing } = require('../../../lib/models/Listing')
 const Deal = require('../../../lib/models/Deal')
 const Orm = require('../../../lib/models/Orm')
-const User = require('../../../lib/models/User')
+const User = require('../../../lib/models/User/get')
 const CrmTask = require('../../../lib/models/CRM/Task')
 
 const sql = require('../../../lib/utils/sql')

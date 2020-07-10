@@ -2,7 +2,7 @@ const { expect }        = require('chai')
 const { createContext } = require('../helper')
 
 const Context        = require('../../../lib/models/Context')
-const User           = require('../../../lib/models/User')
+const User           = require('../../../lib/models/User/get')
 const BrandHelper    = require('../brand/helper')
 const GoogleAuthLink = require('../../../lib/models/Google/auth_link')
 

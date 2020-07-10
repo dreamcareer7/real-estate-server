@@ -8,7 +8,7 @@ const AttachedFile = require('../../../lib/models/AttachedFile')
 const Contact = require('../../../lib/models/Contact')
 const ImportWorker = require('../../../lib/models/Contact/worker/import')
 const Context = require('../../../lib/models/Context')
-const User = require('../../../lib/models/User')
+const User = require('../../../lib/models/User/get')
 
 const BrandHelper = require('../brand/helper')
 

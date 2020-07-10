@@ -15,7 +15,7 @@ const Context = require('../../../lib/models/Context')
 const Deal = require('../../../lib/models/Deal')
 const { Listing } = require('../../../lib/models/Listing')
 const Notification = require('../../../lib/models/Notification')
-const User = require('../../../lib/models/User')
+const User = require('../../../lib/models/User/get')
 
 const BrandHelper = require('../brand/helper')
 const DealHelper = require('../deal/helper')

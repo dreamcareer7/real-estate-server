@@ -10,7 +10,7 @@ const DealChecklist = require('../../../lib/models/Deal/checklist')
 const Message = require('../../../lib/models/Message')
 const Room = require('../../../lib/models/Room/get')
 const Task = require('../../../lib/models/Task')
-const User = require('../../../lib/models/User')
+const User = require('../../../lib/models/User/get')
 const Review = require('../../../lib/models/Review')
 
 const createTask = async () => {

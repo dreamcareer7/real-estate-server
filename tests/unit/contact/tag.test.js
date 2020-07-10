@@ -9,7 +9,7 @@ const ListMember = require('../../../lib/models/Contact/list_members')
 const ContactTag = require('../../../lib/models/Contact/tag')
 const Context = require('../../../lib/models/Context')
 const Orm = require('../../../lib/models/Orm')
-const User = require('../../../lib/models/User')
+const User = require('../../../lib/models/User/get')
 
 const BrandHelper = require('../brand/helper')
 const ContactHelper = require('../contact/helper')
