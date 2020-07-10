@@ -25,6 +25,16 @@ const createContext = require('./create-context')
 const shutdownPollers = require('./poll')
 const shutdownPeanarWorkers = require('./peanar')
 
+const Blocked = require('blocked-at')
+
+const blocked = (time, stack, {type, resource}) => {
+  Context.log(`Blocked for ${time}ms:`, type, resource, stack)
+}
+
+Blocked(blocked, {
+  threshold: 2000
+})
+
 attachCalendarEvents()
 attachContactEvents()
 attachFlowEvents()
