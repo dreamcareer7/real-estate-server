@@ -9,6 +9,7 @@ const GoogleCredential     = require('../../lib/models/Google/credential')
 const GoogleSyncHistory    = require('../../lib/models/Google/sync_history')
 const MicrosoftCredential  = require('../../lib/models/Microsoft/credential')
 const MicrosoftSyncHistory = require('../../lib/models/Microsoft/sync_history')
+const BillingPlan = require('../../lib/models/BillingPlan')
 const BrandTemplate = require('../../lib/models/Template/brand')
 const BrokerWolf = require('../../lib/models/BrokerWolf')
 const Message = require('../../lib/models/Message')
@@ -81,6 +82,10 @@ const updateTemplateThumbnails = (job, cb) => {
   BrandTemplate.updateThumbnails().nodeify(cb)
 }
 
+const createBillingPlan = (job, cb) => {
+  BillingPlan.create(job.data).nodeify(cb)
+}
+
 const list = {
   socket_emit: (job, cb) => cb(),
   socket_join: (job, cb) => cb(),
@@ -107,7 +112,8 @@ const list = {
   'GoogleSyncHistory.addSyncHistory': addGoogleSyncHistory,
   'MicrosoftCredential.create': CreateMicrosoftCredential,
   'MicrosoftSyncHistory.addSyncHistory': addMicrosoftSyncHistory,
-  'BrandTemplate.updateThumbnails': updateTemplateThumbnails
+  'BrandTemplate.updateThumbnails': updateTemplateThumbnails,
+  'BillingPlan.create': createBillingPlan
 }
 
 const queues = {}

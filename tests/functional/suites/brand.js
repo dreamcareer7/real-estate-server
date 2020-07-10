@@ -44,7 +44,7 @@ const create = (cb) => {
           user: results.authorize.token.data.id
         }
       ],
-      acl: ['Admin']
+      acl: ['Admin', 'Marketing', 'Deals', 'CRM']
     }
   ]
 
@@ -475,6 +475,61 @@ const getUserRoles = cb => {
     .expectStatus(200)
 }
 
+const createBillingPlan = (cb) => {
+  return frisby.create('Create a billing plan')
+    .post('/jobs', {
+      name: 'BillingPlan.create',
+      data: {
+        acl: ['Admin', 'Marketing'],
+        chargebee_id: 'cbdemo_hustle'
+      }
+    })
+    .after(cb)
+    .expectStatus(200)
+}
+
+const createSubscription = cb => {
+  const plan = results.brand.createBillingPlan
+
+  const subscription = {
+    plan: plan.id,
+    user: results.authorize.token.data.id
+  }
+
+  return frisby.create('create a subscription')
+    .post(`/brands/${brand_id}/subscriptions`, subscription)
+    .after(cb)
+    .expectStatus(200)
+}
+
+const updateSubscription = cb => {
+  const created = results.brand.createSubscription.data
+
+  const data = {
+    content: {
+      subscription: {
+        id: created.chargebee_id
+      }
+    }
+  }
+
+  return frisby.create('update a subscription (webhook)')
+    .post('/brands/chargebee/webhook', data)
+    .after(cb)
+    .expectStatus(200)
+}
+
+const checkoutSubscription = cb => {
+  const { id } = results.brand.createSubscription.data
+
+  return frisby.create('get checkout page')
+    .get(`/brands/${brand_id}/subscriptions/${id}/checkout`, {
+      followRedirect: false
+    })
+    .after(cb)
+    .expectStatus(302)
+}
+
 const removeBrand = cb => {
   return frisby.create('delete a brand')
     .delete(`/brands/${brand_id}`)
@@ -697,6 +752,12 @@ module.exports = {
 
   updateBrandSettings,
   updateUserSettings,
+
+  createBillingPlan,
+  createSubscription,
+  updateSubscription,
+  checkoutSubscription,
+
   getUserRoles,
 
   addStatus,

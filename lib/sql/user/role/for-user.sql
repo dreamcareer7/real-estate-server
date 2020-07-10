@@ -2,11 +2,27 @@ WITH r AS (
   SELECT
     ($1 || '_' || brand) as id,
     brand,
-    ARRAY_AGG(access) AS acl,
+
+    ARRAY_REMOVE(ARRAY_AGG(
+      (
+        SELECT roles.acl
+        INTERSECT
+        (
+          SELECT UNNEST(billing_plans.acl)
+          FROM brands_subscriptions bs
+          JOIN chargebee_subscriptions cs ON bs.chargebee = cs.id
+          JOIN billing_plans ON cs.plan = billing_plans.id
+          WHERE bs.user = $1
+          AND   bs.brand IN (
+            SELECT * FROM brand_parents(brand)
+          )
+          AND cs.status IN('in_trial', 'active')
+        )
+      )
+    ), NULL) as acl,
     'user_role' as type
     FROM (
-      SELECT
-        DISTINCT UNNEST(brands_roles.acl) as access,
+        SELECT DISTINCT UNNEST(brands_roles.acl) as acl,
         brands_roles.brand
       FROM users
       JOIN brands_users ON users.id = brands_users.user
