@@ -1,5 +1,5 @@
 SELECT
-  count(*)
+  count(*)::INT
 FROM
   email_campaign_emails AS ece
   JOIN email_campaigns AS ec
