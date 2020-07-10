@@ -1,11 +1,7 @@
 const db = require('../lib/utils/db')
 
 const migrations = [
-  'BEGIN',
-
-  `ALTER TYPE emails_events_device ADD VALUE 'desktop'`,
-
-  'COMMIT'
+  `ALTER TYPE emails_events_device ADD VALUE 'desktop'`
 ]
 
 
