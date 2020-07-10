@@ -40,16 +40,6 @@ const create = (cb) => {
     })
 }
 
-const createWithID = (cb) => {
-  const bogus = _u.cloneDeep(client)
-  bogus.id = '123456'
-
-  return frisby.create('create user with ID')
-    .post('/users', bogus)
-    .after(cb)
-    .expectStatus(400)
-}
-
 const create401 = (cb) => {
   return frisby.create('expect 401 with empty model')
     .post('/users')
@@ -639,7 +629,6 @@ function patchUserProfileImage(cb) {
 
 module.exports = {
   lookupExpect404,
-  createWithID,
   create,
   create401,
   getUser,
