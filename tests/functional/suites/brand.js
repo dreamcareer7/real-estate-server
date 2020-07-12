@@ -3,6 +3,8 @@ const path = require('path')
 const brand = require('./data/brand.js')
 const contexts = require('./data/context.js')
 
+const mock_plan = require('../../../lib/models/Brand/chargebee/mock/plan')
+
 registerSuite('office', ['add'])
 registerSuite('form', ['create'])
 
@@ -476,31 +478,8 @@ const getUserRoles = cb => {
 }
 
 const createBillingPlan = (cb) => {
-  const plan = {
-    addon_applicability: 'all',
-    charge_model: 'flat_fee',
-    currency_code: 'USD',
-    enabled_in_hosted_pages: true,
-    enabled_in_portal: true,
-    free_quantity: 0,
-    giftable: false,
-    id: 'cbdemo_scale',
-    invoice_name: 'sample plan',
-    is_shippable: false,
-    name: 'Silver',
-    object: 'plan',
-    period: 1,
-    period_unit: 'month',
-    price: 5000,
-    pricing_model: 'flat_fee',
-    resource_version: 1517469217000,
-    status: 'active',
-    taxable: true,
-    updated_at: 1517469217
-  }
-
   const content = {
-    plan
+    plan: mock_plan
   }
 
   return frisby.create('Create a billing plan')
