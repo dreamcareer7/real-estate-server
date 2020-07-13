@@ -8,7 +8,7 @@ const CrmTask = require('../../../lib/models/CRM/Task')
 const EmailCampaign = require('../../../lib/models/Email/campaign')
 const Calendar = require('../../../lib/models/Calendar')
 const Flow = require('../../../lib/models/Flow')
-const Orm = require('../../../lib/models/Orm')
+const Orm = require('../../../lib/models/Orm/index')
 const User = require('../../../lib/models/User/get')
 
 const { createContext, handleJobs } = require('../helper')

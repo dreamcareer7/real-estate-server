@@ -11,7 +11,7 @@ const MicrosoftCredential  = require('../../lib/models/Microsoft/credential')
 const MicrosoftSyncHistory = require('../../lib/models/Microsoft/sync_history')
 const BrandTemplate = require('../../lib/models/Template/brand')
 const BrokerWolf = require('../../lib/models/BrokerWolf')
-const Message = require('../../lib/models/Message')
+const Message = require('../../lib/models/Message/email')
 
 const saveBrokerwolfSettings = (job, cb) => {
   BrokerWolf.Settings.save(job.data).nodeify(cb)

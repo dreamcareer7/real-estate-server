@@ -6,7 +6,7 @@ const Contact = require('../../../lib/models/Contact')
 const DuplicateWorker = require('../../../lib/models/Contact/worker/duplicate')
 const ContactDuplicate = require('../../../lib/models/Contact/duplicate')
 const Context = require('../../../lib/models/Context')
-const Orm = require('../../../lib/models/Orm')
+const Orm = require('../../../lib/models/Orm/index')
 const User = require('../../../lib/models/User/get')
 
 const BrandHelper = require('../brand/helper')

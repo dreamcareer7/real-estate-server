@@ -10,7 +10,7 @@ const Context = require('../../../lib/models/Context')
 const EmailCampaign = require('../../../lib/models/Email/campaign')
 const { Listing } = require('../../../lib/models/Listing')
 const Deal = require('../../../lib/models/Deal')
-const Orm = require('../../../lib/models/Orm')
+const Orm = require('../../../lib/models/Orm/index')
 const User = require('../../../lib/models/User/get')
 const CrmTask = require('../../../lib/models/CRM/Task')
 

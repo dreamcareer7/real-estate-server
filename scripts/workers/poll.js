@@ -2,7 +2,7 @@ const promisify = require('../../lib/utils/promisify')
 const createContext = require('./create-context')
 const Context = require('../../lib/models/Context')
 const Slack = require('../../lib/models/Slack')
-const Message = require('../../lib/models/Message')
+const Message = require('../../lib/models/Message/email')
 
 const Notification = require('../../lib/models/Notification')
 const CrmTaskWorker = require('../../lib/models/CRM/Task/worker/notification')
