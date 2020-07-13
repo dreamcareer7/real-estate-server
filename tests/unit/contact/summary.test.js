@@ -5,7 +5,10 @@ const { createContext, handleJobs } = require('../helper')
 const Contact = require('../../../lib/models/Contact')
 const ContactAttribute = require('../../../lib/models/Contact/attribute')
 const Context = require('../../../lib/models/Context')
-const Orm = require('../../../lib/models/Orm/index')
+const Orm = {
+  ...require('../../../lib/models/Orm/index'),
+  ...require('../../../lib/models/Orm/context'),
+}
 const User = require('../../../lib/models/User/get')
 
 const sql = require('../../../lib/utils/sql')
