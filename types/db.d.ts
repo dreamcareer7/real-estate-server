@@ -386,6 +386,7 @@ declare type TDbSqlAddress =
   | 'google/message/get'
   | 'google/message/get_by_credential'
   | 'google/message/get_by_credential_and_thread_keys'
+  | 'google/message/set_campaign'
   | 'google/message/get_by_message_id'
   | 'google/message/update_is_read'
   | 'google/sync_history/get'
