@@ -1,4 +1,3 @@
-const _u = require('lodash')
 const config = require('../../../lib/config.js')
 const user = require('./data/user.js')
 const uuid = require('node-uuid')
