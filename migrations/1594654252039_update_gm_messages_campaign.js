@@ -6,7 +6,7 @@ const run = async () => {
   conn.query('BEGIN')
 
 
-  const m_result = await conn.query('SELECT id,thread_key,google_credential,microsoft_credential FROM email_campaigns WHERE (google_credential IS NOT NULL OR microsoft_credential IS NOT NULL) AND thread_key IS NOT NULL AND deleted_at IS NULL')
+  const m_result = await conn.query('SELECT id,thread_key,google_credential,microsoft_credential FROM email_campaigns WHERE (google_credential IS NOT NULL OR microsoft_credential IS NOT NULL) AND thread_key IS NOT NULL')
 
   for(const row of m_result.rows) {
     const data = [row.id, row.thread_key ]
