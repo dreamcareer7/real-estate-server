@@ -30,6 +30,7 @@ FROM
           ON crm_associations.deal = deals.id
       WHERE
         crm_associations.association_type = 'deal'
+        AND crm_associations.id = ANY($1::uuid[])
         AND (
           EXISTS (
             SELECT
@@ -74,6 +75,7 @@ FROM
           ON crm_associations.contact = contacts.id
       WHERE
         crm_associations.association_type = 'contact'
+        AND crm_associations.id = ANY($1::uuid[])
         AND EXISTS (
           SELECT
             brand
@@ -95,6 +97,7 @@ FROM
           ON crm_associations.email = email_campaigns.id
       WHERE
         crm_associations.association_type = 'email'
+        AND crm_associations.id = ANY($1::uuid[])
         AND EXISTS (
           SELECT
             brand
@@ -116,6 +119,7 @@ FROM
           ON listings.id = crm_associations.listing
       WHERE
         crm_associations.association_type = 'listing'
+        AND crm_associations.id = ANY($1::uuid[])
     )
   ) AS a_ids
 JOIN unnest($1::uuid[]) WITH ORDINALITY t(did, ord) ON a_ids.id = did
