@@ -18,7 +18,7 @@
   <mj-section background-color="#ffffff" padding="0px 32px 20px">
     <mj-column padding-right=0>
       <mj-text align="center" color="#bdbdbd">
-        {{ '' | time('dddd MMMM Mo') }}
+        {{ now | time('dddd MMMM Do', user.timezone) }}
       </mj-text>
     </mj-column>
   </mj-section>
