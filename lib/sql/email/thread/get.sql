@@ -76,6 +76,9 @@ SELECT
       ELSE NULL
     END
   ) AS contacts,
+
+  (SELECT id FROM email_campaigns WHERE thread_key = email_threads.id) AS email_campaign,
+
   'email_thread' AS "type"
 FROM
   email_threads
