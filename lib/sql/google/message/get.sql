@@ -24,6 +24,7 @@ SELECT
   bcc,
   thread_key,
   is_read,
+  campaign,
   'google_message' AS "type"
 FROM
   google_messages
