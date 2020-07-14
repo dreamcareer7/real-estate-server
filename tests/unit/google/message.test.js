@@ -9,9 +9,9 @@ const GoogleCredential = require('../../../lib/models/Google/credential')
 const GoogleMessage    = require('../../../lib/models/Google/message')
 const EmailThread      = require('../../../lib/models/Email/thread')
 
-const { createGoogleMessages } = require('./helper')
+const { createGoogleMessages, testEmailToTags } = require('./helper')
 
-let user, brand
+let user, brand, gcredential
 
 
 async function setup() {
@@ -31,6 +31,8 @@ async function getByIdFailed() {
 
 async function create() {
   const { createdMessages, credential } = await createGoogleMessages(user, brand)
+
+  gcredential = credential
 
   for (const createdGoogleMessage of createdMessages) {
     expect(createdGoogleMessage.google_credential).to.be.equal(credential.id)
@@ -91,6 +93,50 @@ async function getDistinctCredentialByMessage() {
 
   const status = resutl.every(entry => credentials.includes(entry))
 
+  expect(status).to.equal(true)
+}
+
+async function getByInternetMessageIds() {
+  const googleMessages = await create()
+
+  const ids = googleMessages.map(msg => msg.id)
+  
+  const messages = await GoogleMessage.getAll(ids)
+  const internet_message_ids = messages.map(msg => msg.internet_message_id)
+  
+  const resutl = await GoogleMessage.getByInternetMessageIds(gcredential.id, internet_message_ids)
+
+  const status = resutl.every(entry => internet_message_ids.includes(entry.internet_message_id))
+  expect(resutl.length).to.equal(messages.length)
+  expect(status).to.equal(true)
+}
+
+async function getByThreadKeys() {
+  const googleMessages = await create()
+
+  const ids = googleMessages.map(msg => msg.id)
+  
+  const messages = await GoogleMessage.getAll(ids)
+  const thread_keys = messages.map(msg => msg.thread_key)
+  
+  const resutl = await GoogleMessage.getByThreadKeys(gcredential.id, thread_keys)
+
+  const status = resutl.every(entry => ids.includes(entry))
+  expect(resutl.length).to.equal(messages.length)
+  expect(status).to.equal(true)
+}
+
+async function filterMessageIds() {
+  const googleMessages = await create()
+
+  const ids = googleMessages.map(msg => msg.id)
+  ids.push(uuid.v4()) // pushing non exist message id
+  
+  const messages = await GoogleMessage.getAll(ids)  
+  const resutl   = await GoogleMessage.filterMessageIds(gcredential.id, ids)
+
+  const status = resutl.every(entry => ids.includes(entry))
+  expect(resutl.length).to.equal(messages.length)
   expect(status).to.equal(true)
 }
 
@@ -254,6 +300,19 @@ async function updateIsRead() {
   expect(updated.is_read).to.be.equal(true)
 }
 
+async function setCampaign() {
+  const campaign = await testEmailToTags(user, brand)
+  const messages = await create()
+
+  const message = await GoogleMessage.get(messages[0].id)
+  expect(message.is_read).to.be.equal(false)
+
+  await GoogleMessage.setCampaign(messages[0].id, campaign)
+  
+  const updated = await GoogleMessage.get(messages[0].id)
+  expect(updated.campaign).to.be.equal(campaign)
+}
+
 async function updateReadStatus() {
   const messages = await create()
 
@@ -290,6 +349,9 @@ describe('Google', () => {
     it('should handle failure of google-contact get by messages_id', getByMessageIdFailed)
     it('should return a list of unique credential ids based on thread_keys', getDistinctCredentialByThread)
     it('should return a list of unique credential ids based on ids', getDistinctCredentialByMessage)
+    it('should return a list of unique messages ids based on internet_message_ids', getByInternetMessageIds)
+    it('should return a list of unique messages ids based on thread_keys', getByThreadKeys)
+    it('should filter a list of unique messages ids based on thread_keys', filterMessageIds)
     it('should delete google-messages by ids', deleteMany)
     it('should delete google-messages by credential', deleteByCredential)
     it('should delete google-messages by messages_ids', deleteByMessageIds)
@@ -298,6 +360,7 @@ describe('Google', () => {
     it('should handle failure of downloadAttachment', downloadAttachmentFailed)
     it('should get a message by remote id', getRemoteMessage)
     it('should update message is_read', updateIsRead)
+    it('should update message campaign', setCampaign)
     it('should update message read status', updateReadStatus)
     it('should handle watch mail-box', watchMailBox)
     it('should handle stop watch mail-box', stopWatchMailBox)
