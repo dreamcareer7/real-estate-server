@@ -14,7 +14,7 @@
 
     <mj-section background-color="#FAF9EA" padding-top="0">
       <mj-column>
-          <mj-spacer height="200px" />
+          <mj-image padding=0 width="400px" src="https://assets.rechat.com/daily/header.png" />
       </mj-column>
     </mj-section>
 

@@ -23,14 +23,16 @@
           <br>
           <a href="{{ url }}">{{ celebration.title }}</a>
         </div>
+        {% if contact.last_touch %}
+          <div>
+            <br>
+            <span style="color: #c6c6c6;">Last Touch:</span>
+            {{ contact.last_touch | calendar }}
+          </div>
+        {% endif %}
         <div>
           <br>
-          <span style="color: #c6c6c6;">Last Touch:</span>
-          {{ contact.last_touch | calendar }}
-        <div>
-          <br>
-          {% for tag in contact.
-          tags %}
+          {% for tag in contact.tags %}
           {% include './tag.mjml' %}
           &nbsp;
           {% endfor %}
