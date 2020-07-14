@@ -5,11 +5,11 @@
         {% if event.all_day %}
           All Day
         {% else %}
-          {{ event.date | time('hh A', user.timezone)}}
+          {{ event.timestamp | time('h:mm A', user.timezone)}}
 
           {% if event.end_date %}
             <br>
-            {{ event.end_date | time('hh A', user.timezone)}}
+            {{ event.end_date | time('h:mm A', user.timezone)}}
           {% endif %}
         {% endif %}
       </mj-text>
