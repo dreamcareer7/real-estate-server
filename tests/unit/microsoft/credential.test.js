@@ -42,6 +42,26 @@ async function publicize() {
   expect(updatedCredential.ext_expires_in).to.be.equal(undefined)
 }
 
+async function findByUser() {
+  const createdCredential = await create()
+  const credentialIds     = await MicrosoftCredential.findByUser(createdCredential.user, createdCredential.brand)
+
+  expect(credentialIds).not.to.be.equal(0)
+}
+
+async function getByBrand() {
+  const createdCredential = await create()
+  const credentials       = await MicrosoftCredential.getByBrand(createdCredential.brand)
+
+  expect(credentials.length).not.to.be.equal(0)
+
+  for (const record of credentials) {
+    expect(record.type).to.be.equal('microsoft_credential')
+    expect(record.user).to.be.equal(createdCredential.user)
+    expect(record.brand).to.be.equal(createdCredential.brand)
+  }
+}
+
 async function getByUser() {
   const createdCredential = await create()
   const credentials       = await MicrosoftCredential.getByUser(createdCredential.user, createdCredential.brand)
@@ -171,6 +191,8 @@ describe('Microsoft', () => {
     it('should create a microsoft credential', create)
     it('should publicize a microsoft-credential', publicize)
 
+    it('should return microsoft-credential ids by user-brand', findByUser)
+    it('should return a microsoft credential by brand', getByBrand)
     it('should return a microsoft credential by user-brand', getByUser)
     it('should handle returned exception from microsoft-credential by user-brand', getByUserFailed)
 
