@@ -1,7 +1,7 @@
 {% extends "../email.mjml" %}
 
 {% block content %}
-    <mj-section background-color="#fff" padding-top="0">
+    <mj-section background-color="#fff" padding-top="10px">
       <mj-column>
         <mj-image height="24px" width="141px" padding-top=0 padding-bottom="20px" src="https://assets.rechat.com/daily/logo.png" />
 

@@ -5,7 +5,7 @@
     query: {
       listingId: deal.listing,
       medium: 'Email',
-      templateType: 'JustListed'
+      templateType: 'JustListed,ComingSoon,OpenHouse,PriceImprovement'
     }
   } %}
 

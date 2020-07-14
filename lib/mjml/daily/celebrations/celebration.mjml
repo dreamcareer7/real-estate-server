@@ -5,18 +5,18 @@
 
 <mj-section background-color="#ffffff" padding="0 5px 32px 5px">
   <mj-group>
-    <mj-column width="15%">
+    <mj-column width="17%">
       <mj-image
         padding="5px"
         src="{{contact.profile_image_url or default_icon}}"
         href="{{ url }}"
-        border-radius="48px"
+        border-radius="5px"
         width="64px"
         align="center"
       >
       </mj-image>
     </mj-column>
-    <mj-column width="55%">
+    <mj-column width="53%">
       <mj-text padding-left=0>
         {{ celebration.timestamp | time('MMMM Do')}}
         <div>
@@ -34,7 +34,6 @@
           <br>
           {% for tag in contact.tags %}
           {% include './tag.mjml' %}
-          &nbsp;
           {% endfor %}
         </div>
       </mj-text>
