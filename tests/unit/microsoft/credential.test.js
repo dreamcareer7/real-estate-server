@@ -182,6 +182,37 @@ async function updateProfile() {
   expect(updatedCredential.display_name).to.be.equal(profile.displayName)
 }
 
+async function updateRechatMicrosoftCalendar() {
+  const createdCredential = await create()
+
+  const rechatCalendarId = null
+
+  await MicrosoftCredential.updateRechatMicrosoftCalendar(createdCredential.id, rechatCalendarId)
+
+  const updatedCredential = await MicrosoftCredential.get(createdCredential.id)
+
+  expect(createdCredential.id).to.be.equal(updatedCredential.id)
+  expect(updatedCredential.microsoft_calendar).to.be.equal(rechatCalendarId)
+}
+
+async function resetRechatMicrosoftCalendar() {
+  const createdCredential = await create()
+
+  await MicrosoftCredential.resetRechatMicrosoftCalendar(createdCredential.id)
+
+  const updatedCredential = await MicrosoftCredential.get(createdCredential.id)
+
+  expect(createdCredential.id).to.be.equal(updatedCredential.id)
+  expect(updatedCredential.microsoft_calendar).to.be.equal(null)
+}
+
+async function hasSendEmailAccess() {
+  const createdCredential = await create()
+  const credential = await MicrosoftCredential.hasSendEmailAccess(createdCredential.id)
+
+  expect(credential.id).to.be.equal(createdCredential.id)
+}
+
 
 describe('Microsoft', () => {
   describe('Microsoft Account', () => {
@@ -199,12 +230,16 @@ describe('Microsoft', () => {
     it('should return a microsoft credential by id', getById)
     it('should handle returned exception from microsoft-credential by id', getByIdFailed)
     
-    it('should update a microsoft-credential tokens', updateTokens)
-    it('should revoke a microsoft-credential', updateAsRevoked)
-    it('should update a microsoft-credential send_email_after', updateSendEmailAfter)
+    it('should update microsoft-credential\'s tokens', updateTokens)
+    it('should update microsoft-credential\'s send_email_after', updateSendEmailAfter)
+    it('should revoke microsoft-credential\'s', updateAsRevoked)
 
     it('should disable/enable a microsoft-credential', disconnect)
     it('should handle returned exception from disable/enable microsoft-credential', disconnectFailed)
-    it('should update a microsoft-credential profile', updateProfile)
+    it('should update microsoft-credential\'s profile', updateProfile)
+
+    it('should update microsoft-credential\'s rechat-microsoft-Calendar', updateRechatMicrosoftCalendar)
+    it('should update google-credential\'s rechat-google-Calendar as null', resetRechatMicrosoftCalendar)
+    it('should check the access of sending emails', hasSendEmailAccess)
   })
 })

@@ -283,6 +283,13 @@ async function resetRechatGoogleCalendar() {
   expect(updatedCredential.google_calendar).to.be.equal(null)
 }
 
+async function hasSendEmailAccess() {
+  const createdCredential = await create()
+  const credential = await GoogleCredential.hasSendEmailAccess(createdCredential.id)
+
+  expect(credential.id).to.be.equal(createdCredential.id)
+}
+
 
 describe('Google', () => {
   describe('Google Account', () => {
@@ -317,5 +324,6 @@ describe('Google', () => {
 
     it('should update google-credential\'s rechat-google-Calendar', updateRechatGoogleCalendar)
     it('should update google-credential\'s rechat-google-Calendar as null', resetRechatGoogleCalendar)
+    it('should check the access of sending emails', hasSendEmailAccess)
   })
 })
