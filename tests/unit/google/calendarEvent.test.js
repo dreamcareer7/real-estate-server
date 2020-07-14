@@ -45,6 +45,33 @@ async function bulkUpsert() {
   expect(result[0].event_id).to.be.equal(events.remote_event_1.id)
 }
 
+async function bulkDelete() {
+  const records = []
+  records.push(generateCalendarEvent(googleCalendar, events.remote_event_1))
+  const result = await GoogleCalendarEvent.bulkUpsert(records)
+
+  const ids = result.map(e => e.id)
+  const created = await GoogleCalendarEvent.getAll(ids)
+
+  for (const rec of created) {
+    expect(rec.deleted_at).to.be.equal(null)
+  }
+
+  const toBeDeleted = result.map(e => ({
+    google_credential: e.google_credential,
+    google_calendar: e.google_calendar,
+    event_id: e.event_id
+  }))
+  await GoogleCalendarEvent.bulkDelete(toBeDeleted)
+
+  const deletedIds = result.map(e => e.id)
+  const deleted = await GoogleCalendarEvent.getAll(deletedIds)
+
+  for (const rec of deleted) {
+    expect(rec.deleted_at).to.be.not.equal(null)
+  }
+}
+
 async function deleteLocalByRemoteIds() {
   const event = await createLocal()
   const cal   = await GoogleCalendar.get(event.google_calendar)
@@ -110,6 +137,7 @@ describe('Google', () => {
 
     it('should create a google calendar event', createLocal)
     it('should upsert a batch of google calendar events', bulkUpsert)
+    it('should delete a batch of google calendar events', bulkDelete)
     it('should delete some google calendars by remote ids', deleteLocalByRemoteIds)
     it('should delete some google remote by calendar id', deleteLocalByCalendar)
     it('should returns an array of google calendar events', getAll)
