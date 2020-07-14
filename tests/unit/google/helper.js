@@ -102,7 +102,7 @@ async function createGoogleCalendarEvent(googleCredential) {
   return event
 }
 
-async function testEmailToTags(user, brand) {
+async function createCampaign(user, brand) {
   /** @type {IEmailCampaignInput} */
   const campaign = {
     created_by: user.id,
@@ -134,5 +134,5 @@ module.exports = {
   createGoogleMessages,
   createGoogleCalendar,
   createGoogleCalendarEvent,
-  testEmailToTags
+  createCampaign
 }

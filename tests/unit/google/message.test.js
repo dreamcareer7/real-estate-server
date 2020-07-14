@@ -9,7 +9,7 @@ const GoogleCredential = require('../../../lib/models/Google/credential')
 const GoogleMessage    = require('../../../lib/models/Google/message')
 const EmailThread      = require('../../../lib/models/Email/thread')
 
-const { createGoogleMessages, testEmailToTags } = require('./helper')
+const { createGoogleMessages, createCampaign } = require('./helper')
 
 let user, brand, gcredential
 
@@ -301,7 +301,7 @@ async function updateIsRead() {
 }
 
 async function setCampaign() {
-  const campaign = await testEmailToTags(user, brand)
+  const campaign = await createCampaign(user, brand)
   const messages = await create()
 
   const message = await GoogleMessage.get(messages[0].id)
@@ -351,7 +351,7 @@ describe('Google', () => {
     it('should return a list of unique credential ids based on ids', getDistinctCredentialByMessage)
     it('should return a list of unique messages ids based on internet_message_ids', getByInternetMessageIds)
     it('should return a list of unique messages ids based on thread_keys', getByThreadKeys)
-    it('should filter a list of unique messages ids based on thread_keys', filterMessageIds)
+    it('should filter a list of unique messages ids based on ids', filterMessageIds)
     it('should delete google-messages by ids', deleteMany)
     it('should delete google-messages by credential', deleteByCredential)
     it('should delete google-messages by messages_ids', deleteByMessageIds)
