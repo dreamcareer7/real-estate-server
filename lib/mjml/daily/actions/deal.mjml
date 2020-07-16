@@ -1,11 +1,9 @@
-{% set status = deal.context.contract_status.text or deal.context.listing_status.text or 'Active' %}
-
 {% set url = {
-    uri: '/dashboard/marketing',
+    uri: '/dashboard/marketing/editor',
     query: {
       listingId: deal.listing,
       medium: 'Email',
-      templateType: 'JustListed'
+      templateType: 'JustListed,ComingSoon,OpenHouse,PriceImprovement'
     }
   } %}
 
@@ -21,7 +19,7 @@
   padding-left="0"
   href="{{url | url}}"
   border="1px solid #D7D9DC"
-  align="right"
+  align="center"
 >
   Promote
 </mj-button>
