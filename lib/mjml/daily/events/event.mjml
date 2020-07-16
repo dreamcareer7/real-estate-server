@@ -1,21 +1,16 @@
-<mj-section background-color="#ffffff" padding="0 5px 32px 5px">
+<mj-section padding="0 5px 32px 5px">
   <mj-group>
-    <mj-column width="15%" vertical-align="top">
+    <mj-column width="17%" vertical-align="top">
       <mj-text padding=0 color="#c6c6c6" align="center">
         {% if event.all_day %}
           All Day
         {% else %}
-          {{ event.date | time('hh A', user.timezone)}}
-
-          {% if event.end_date %}
-            <br>
-            {{ event.end_date | time('hh A', user.timezone)}}
-          {% endif %}
+          {{ event.timestamp | time('h:mm A', user.timezone)}}
         {% endif %}
       </mj-text>
     </mj-column>
 
-    <mj-column width="55%">
+    <mj-column width="53%">
       {% if event.object_type === 'deal_context' %}
         <mj-text height="25px" padding=0>
           {% set uri %}/dashboard/deals/{{event.deal}}{% endset %}

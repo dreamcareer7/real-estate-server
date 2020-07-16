@@ -30,7 +30,7 @@
     inner-padding="5px 10px"
     href="{{url | url}}"
     border="1px solid #D7D9DC"
-    align="right"
+    align="center"
     mj-class="actions"
   >
     Send Card
