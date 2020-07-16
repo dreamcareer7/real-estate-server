@@ -1,5 +1,5 @@
 {% set url = {
-    uri: '/dashboard/marketing',
+    uri: '/dashboard/marketing/editor',
     query: {
       listingId: deal.listing,
       medium: 'Email',

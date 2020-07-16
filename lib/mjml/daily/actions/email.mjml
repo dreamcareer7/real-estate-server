@@ -12,7 +12,7 @@
 
 {% if template_type %}
   {% set url = {
-    uri: '/dashboard/marketing',
+    uri: '/dashboard/marketing/editor',
     query: {
       contactId: event.people[0].id,
       medium: 'Email',
