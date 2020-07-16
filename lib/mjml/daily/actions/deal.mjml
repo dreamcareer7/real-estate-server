@@ -1,5 +1,3 @@
-{% set status = deal.context.contract_status.text or deal.context.listing_status.text or 'Active' %}
-
 {% set url = {
     uri: '/dashboard/marketing',
     query: {

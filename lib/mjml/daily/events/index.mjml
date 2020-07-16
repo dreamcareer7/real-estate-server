@@ -1,5 +1,5 @@
 {% if today.length > 0 %}
-  <mj-wrapper background-color="white" padding="0px" border-radius="0px 0px 16px 16px">
+  <mj-wrapper background-color="white" border-radius="0px 0px 16px 16px">
     <mj-section>
       <mj-column>
         <mj-text css-class="title" padding="0" align="center" font-family="Lato" font-size="18px">
