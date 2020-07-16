@@ -18,8 +18,6 @@
       </mj-column>
     </mj-section>
 
-    <mj-section background-color="#fff"></mj-section>
-
     {% include './events/index.mjml' %}
     {% include './celebrations/index.mjml' %}
     {% include './deals/index.mjml' %}
