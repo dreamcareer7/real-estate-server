@@ -1,7 +1,7 @@
 {% set uri %}/dashboard/deals/{{deal.id}}{% endset %}
 {% set url = uri | url %}
 
-<mj-section background-color="#ffffff" padding="0 5px 32px 5px">
+<mj-section padding="0 5px 32px 5px">
   <mj-group>
     <mj-column width="17%">
       <mj-image

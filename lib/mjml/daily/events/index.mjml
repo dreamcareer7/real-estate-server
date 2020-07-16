@@ -1,31 +1,25 @@
 {% if today.length > 0 %}
-  <mj-section background-color="#ffffff" padding="0px 32px 20px">
-    <mj-column>
-      <mj-text css-class="title" padding="0" align="center" font-family="Lato" font-size="18px">
-        <a href="{{ '/dashboard/calendar' | url }}">
-          Today's Schedule
-        </a>
-      </mj-text>
-    </mj-column>
-  </mj-section>
+  <mj-wrapper background-color="white" padding="0px" border-radius="0px 0px 16px 16px">
+    <mj-section>
+      <mj-column>
+        <mj-text css-class="title" padding="0" align="center" font-family="Lato" font-size="18px">
+          <a href="{{ '/dashboard/calendar' | url }}">
+            Today's Schedule
+          </a>
+        </mj-text>
+      </mj-column>
+    </mj-section>
 
-  <mj-section background-color="#ffffff" padding=0>
-    <mj-column>
-      <mj-divider padding=0 width="280px" border-width="1px" border-color="#bdbdbd" />
-    </mj-column>
-  </mj-section>
+    <mj-section padding="0px 32px 20px">
+      <mj-column padding-right=0>
+        <mj-text align="center" color="#bdbdbd">
+          {{ now | time('dddd MMMM Do', user.timezone) }}
+        </mj-text>
+      </mj-column>
+    </mj-section>
 
-  <mj-section background-color="#ffffff" padding="0px 32px 20px">
-    <mj-column padding-right=0>
-      <mj-text align="center" color="#bdbdbd">
-        {{ now | time('dddd MMMM Do', user.timezone) }}
-      </mj-text>
-    </mj-column>
-  </mj-section>
-
-  {% for event in today %}
-    {% include './event.mjml' %}
-  {% endfor %}
-
-  <mj-section background-color="#fff"></mj-section>
+    {% for event in today %}
+      {% include './event.mjml' %}
+    {% endfor %}
+  </mj-wrapper>
 {% endif %}

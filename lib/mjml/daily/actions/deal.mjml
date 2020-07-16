@@ -21,7 +21,7 @@
   padding-left="0"
   href="{{url | url}}"
   border="1px solid #D7D9DC"
-  align="right"
+  align="center"
 >
   Promote
 </mj-button>
