@@ -52,6 +52,13 @@ async function deleteLocalByRemoteCalendarId() {
   expect(updated.deleted_at).to.be.not.equal(null)
 }
 
+async function get() {
+  const created = await createLocal()
+  const cal = await MicrosoftCalendar.get(created.id)
+
+  expect(created.id).to.be.equal(cal.id)
+}
+
 async function getFailed() {
   try {
     await MicrosoftCalendar.get(microsoftCredential.id)
@@ -66,6 +73,24 @@ async function getAllByMicrosoftCredential() {
 
   expect(calendars.length).to.be.equal(1)
   expect(calendars[0].type).to.be.equal('microsoft_calendars')
+}
+
+async function updateToSync() {
+  const cal = await createLocal()
+  await MicrosoftCalendar.updateToSync([cal.id], true)
+  const updated = await MicrosoftCalendar.get(cal.id)
+
+  expect(updated.id).to.be.equal(cal.id)
+  expect(updated.to_sync).to.be.equal(true)
+}
+
+async function updateDeltaToken() {
+  const cal = await createLocal()
+  await MicrosoftCalendar.updateDeltaToken(cal.id, 'syncToken')
+  const updated = await MicrosoftCalendar.get(cal.id)
+
+  expect(updated.id).to.be.equal(cal.id)
+  expect(updated.delta_token).to.be.equal('syncToken')
 }
 
 async function listRemoteCalendars() {
@@ -161,8 +186,11 @@ describe('Microsoft', () => {
     it('should fail in get by remote calendar id', getByRemoteCalendarIdFiled)
     it('should return a calendar by remote calendar id', getByRemoteCalendarId)
     it('should delete a local calendar by remote calendar id', deleteLocalByRemoteCalendarId)
-    it('should fail in get by id', getFailed)
+    it('should return a calendar by id', get)
+    it('should handle get by id failure', getFailed)
     it('should return calendars by channel credential id', getAllByMicrosoftCredential)
+    it('should update a calendar\'s to_sync', updateToSync)
+    it('should update a calendar\'s delta_token', updateDeltaToken)
     
     it('should return a list of remote microsoft calendars', listRemoteCalendars)
     it('should persist remote microsoft calendars without any ToSync calendars', persistRemoteCalendarsSimple)
