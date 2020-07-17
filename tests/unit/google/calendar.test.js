@@ -80,6 +80,13 @@ async function deleteLocalByRemoteCalendarId() {
   expect(updated.deleted).to.be.equal(true)
 }
 
+async function get() {
+  const created = await createLocal()
+  const cal = await GoogleCalendar.get(created.id)
+
+  expect(created.id).to.be.equal(cal.id)
+}
+
 async function getFailed() {
   try {
     await GoogleCalendar.get(googleCredential.id)
@@ -221,6 +228,7 @@ describe('Google', () => {
     it('should fail in get by remote calendar id', getByRemoteCalendarIdFiled)
     it('should return a calendar by remote calendar id', getByRemoteCalendarId)
     it('should delete a local calendar by remote calendar id', deleteLocalByRemoteCalendarId)
+    it('should handle get by id', get)
     it('should fail in get by id', getFailed)
     it('should return calendars by channel credential id', getAllByGoogleCredential)
     it('should update a calendar\'s sync_token', updateSyncToken)

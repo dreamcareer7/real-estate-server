@@ -1,3 +1,4 @@
+const uuid = require('node-uuid')
 const { expect } = require('chai')
 const { createContext } = require('../helper')
 
@@ -101,6 +102,13 @@ async function getAll() {
   expect(events.length).to.be.equal(ids.length)
 }
 
+async function get() {
+  const created = await createLocal()
+  const cal = await GoogleCalendarEvent.get(created.id)
+
+  expect(created.id).to.be.equal(cal.id)
+}
+
 async function getFailed() {
   try {
     await GoogleCalendarEvent.get(googleCredential.id)
@@ -129,6 +137,74 @@ async function getByCalendarIds() {
   expect(ids[0]).to.be.equal(event.id)
 }
 
+async function getMovedEvents() {
+  const other_google_calendar = uuid.v4()
+
+  const event   = await createLocal()
+  const cal     = await GoogleCalendar.get(event.google_calendar)
+  const resuult = await GoogleCalendarEvent.getMovedEvents(cal.google_credential, other_google_calendar, [event.event_id])
+
+  expect(resuult[0]).to.be.equal(event.id)
+}
+
+async function updateCalendar() {
+  const event   = await createLocal()
+  const cal     = await GoogleCalendar.get(event.google_calendar)
+
+  const id      = await GoogleCalendarEvent.updateCalendar([event.id], cal.id)
+  const updated = await GoogleCalendarEvent.get(event.id)
+
+  expect(updated.id).to.be.equal(event.id)
+}
+
+async function deleteMany() {
+  const event  = await createLocal()
+  await GoogleCalendarEvent.deleteMany([event.id])
+
+  expect(event.deleted_at).to.be.equal(null)
+
+  const deleted = await GoogleCalendarEvent.get(event.id)
+
+  expect(deleted.id).to.be.equal(event.id)
+  expect(deleted.deleted_at).to.not.be.equal(null)
+}
+
+async function deleteLocalByRemoteIds() {
+  const event  = await createLocal()
+  const cal     = await GoogleCalendar.get(event.google_calendar)
+
+  await GoogleCalendarEvent.deleteLocalByRemoteIds(cal, [event.event_id])
+
+  expect(event.deleted_at).to.be.equal(null)
+
+  const deleted = await GoogleCalendarEvent.get(event.id)
+
+  expect(deleted.id).to.be.equal(event.id)
+  expect(deleted.deleted_at).to.not.be.equal(null)
+}
+
+async function deleteLocalByCalendar() {
+  const event  = await createLocal()
+  const cal     = await GoogleCalendar.get(event.google_calendar)
+
+  await GoogleCalendarEvent.deleteLocalByCalendar(cal)
+
+  expect(event.deleted_at).to.be.equal(null)
+
+  const deleted = await GoogleCalendarEvent.get(event.id)
+
+  expect(deleted.id).to.be.equal(event.id)
+  expect(deleted.deleted_at).to.not.be.equal(null)
+}
+
+async function getGCredentialEventsNum() {
+  const event = await createLocal()
+  const cal   = await GoogleCalendar.get(event.google_calendar)
+  const res   = await GoogleCalendarEvent.getGCredentialEventsNum(cal.google_credential)
+
+  expect(res[0].count).to.be.equal(1)
+}
+
 
 describe('Google', () => {
   describe('Google Calendars Events', () => {
@@ -141,8 +217,15 @@ describe('Google', () => {
     it('should delete some google calendars by remote ids', deleteLocalByRemoteIds)
     it('should delete some google remote by calendar id', deleteLocalByCalendar)
     it('should returns an array of google calendar events', getAll)
-    it('should handle get event', getFailed)
+    it('should handle get', get)
+    it('should handle get failure', getFailed)
     it('should returns an array of google calendar events - by calendar and event ids', getByCalendarAndEventRemoteIds)
     it('should returns an array of google calendar event ids - by calendar id', getByCalendarIds)
+    it('should returns moved events', getMovedEvents)
+    it('should update even\'s calendar', updateCalendar)
+    it('should delete events', deleteMany)
+    it('should delete events by remote_ids', deleteLocalByRemoteIds)
+    it('should delete events by calendar', deleteLocalByRemoteIds)
+    it('should return number of events', getGCredentialEventsNum)
   })
 })
