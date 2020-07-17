@@ -233,7 +233,6 @@ describe('Google', () => {
     it('should return calendars by channel credential id', getAllByGoogleCredential)
     it('should update a calendar\'s sync_token', updateSyncToken)
     it('should update watcher status', updateWatcher)
-    
     it('should return a list of remote google calendars', listRemoteCalendars)
     it('should persist remote google calendars without any ToSync calendars', persistRemoteCalendarsSimple)
     it('should persist remote google calendars', persistRemoteCalendars)

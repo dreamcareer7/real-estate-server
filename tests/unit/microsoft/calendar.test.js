@@ -191,7 +191,6 @@ describe('Microsoft', () => {
     it('should return calendars by channel credential id', getAllByMicrosoftCredential)
     it('should update a calendar\'s to_sync', updateToSync)
     it('should update a calendar\'s delta_token', updateDeltaToken)
-    
     it('should return a list of remote microsoft calendars', listRemoteCalendars)
     it('should persist remote microsoft calendars without any ToSync calendars', persistRemoteCalendarsSimple)
     it('should persist remote microsoft calendars', persistRemoteCalendars)

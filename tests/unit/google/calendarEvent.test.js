@@ -190,7 +190,6 @@ describe('Google', () => {
     it('should create a google calendar event', createLocal)
     it('should upsert a batch of google calendar events', bulkUpsert)
     it('should delete a batch of google calendar events', bulkDelete)
-    it('should delete some google calendars by remote ids', deleteLocalByRemoteIds)
     it('should delete some google remote by calendar id', deleteLocalByCalendar)
     it('should returns an array of google calendar events', getAll)
     it('should handle get', get)
