@@ -83,16 +83,6 @@ async function deleteLocalByRemoteIds() {
   expect(updated.deleted_at).to.be.not.equal(null)
 }
 
-async function deleteLocalByCalendar() {
-  const event = await createLocal()
-  const cal   = await GoogleCalendar.get(event.google_calendar)
-  await GoogleCalendarEvent.deleteLocalByCalendar(cal)
-  const updated = await GoogleCalendarEvent.get(event.id)
-
-  expect(updated.status).to.be.equal('canceled')
-  expect(updated.deleted_at).to.be.not.equal(null)
-}
-
 async function getAll() {
   const event = await createLocal()
 
@@ -148,10 +138,10 @@ async function getMovedEvents() {
 }
 
 async function updateCalendar() {
-  const event   = await createLocal()
-  const cal     = await GoogleCalendar.get(event.google_calendar)
+  const event = await createLocal()
+  const cal   = await GoogleCalendar.get(event.google_calendar)
 
-  const id      = await GoogleCalendarEvent.updateCalendar([event.id], cal.id)
+  await GoogleCalendarEvent.updateCalendar([event.id], cal.id)
   const updated = await GoogleCalendarEvent.get(event.id)
 
   expect(updated.id).to.be.equal(event.id)
@@ -160,20 +150,6 @@ async function updateCalendar() {
 async function deleteMany() {
   const event  = await createLocal()
   await GoogleCalendarEvent.deleteMany([event.id])
-
-  expect(event.deleted_at).to.be.equal(null)
-
-  const deleted = await GoogleCalendarEvent.get(event.id)
-
-  expect(deleted.id).to.be.equal(event.id)
-  expect(deleted.deleted_at).to.not.be.equal(null)
-}
-
-async function deleteLocalByRemoteIds() {
-  const event  = await createLocal()
-  const cal     = await GoogleCalendar.get(event.google_calendar)
-
-  await GoogleCalendarEvent.deleteLocalByRemoteIds(cal, [event.event_id])
 
   expect(event.deleted_at).to.be.equal(null)
 
@@ -225,7 +201,6 @@ describe('Google', () => {
     it('should update even\'s calendar', updateCalendar)
     it('should delete events', deleteMany)
     it('should delete events by remote_ids', deleteLocalByRemoteIds)
-    it('should delete events by calendar', deleteLocalByRemoteIds)
     it('should return number of events', getGCredentialEventsNum)
   })
 })
