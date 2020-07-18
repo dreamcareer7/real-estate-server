@@ -1,12 +1,12 @@
 {% set uri %}/dashboard/deals/{{deal.id}}{% endset %}
 {% set url = uri | url %}
 
-<mj-section padding="0 5px 32px 5px">
+<mj-section padding="0 5px 20px 5px">
   <mj-group>
     <mj-column width="17%">
       <mj-image
         padding="5px"
-        src="{{deal.context.photo.text or ''}}"
+        src="{{deal.context.photo.text or 'https://assets.rechat.com/daily/listing.png'}}"
         href="{{ url }}"
         border-radius="5px"
         width="64px"
@@ -20,10 +20,6 @@
         <div style="color: #c6c6c6;">
           <br>
           {{ deal.deal_type }}, {{ deal.context.contract_status.text or deal.context.listing_status.text }}
-        </div>
-        <div style="color: #c6c6c6;">
-          <br>
-          {{ deal.context.list_price.number | price }}
         </div>
       </mj-text>
     </mj-column>
