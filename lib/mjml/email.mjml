@@ -25,7 +25,7 @@
 
     {% block header %}{% endblock %}
   </mj-head>
-  <mj-body background-color="#E5E5E5">
+  <mj-body background-color="#EEF0F2">
     {% if layout %}
       <mj-section background-color="#ffffff" padding="20px 32px 20px">
         <mj-column>
