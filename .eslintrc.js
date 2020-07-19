@@ -15,7 +15,7 @@ module.exports = {
   },
   'parserOptions': {
     // 'sourceType': 'module',
-    'ecmaVersion': 10
+    'ecmaVersion': 2020
   },
   'extends': 'eslint:recommended',
   'rules': {
