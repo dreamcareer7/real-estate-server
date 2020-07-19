@@ -16,7 +16,24 @@
     </mj-column>
     <mj-column width="53%">
       <mj-text padding-left=0>
-        <a href="{{url}}">{{ deal.title }}</a>
+        <a href="{{url}}">
+          {{ deal.title }}
+          {% if deal.new_notifications %}
+            <span style="
+                background: #E57373;
+                color: white;
+                border-radius: 100%;
+                min-width: 15px;
+                display: inline-block;
+                text-align: center;
+                padding: 3px;
+              "
+              title="{{deal.new_notifications | length}} Unread Messages"
+            >
+              {{deal.new_notifications | length}}
+            </span>
+          {% endif %}
+        </a>
         <div style="color: #c6c6c6;">
           <br>
           {{ deal.deal_type }}, {{ deal.context.contract_status.text or deal.context.listing_status.text }}
