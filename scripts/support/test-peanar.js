@@ -13,7 +13,7 @@ const enqueue = peanar.job({
 })
 
 async function main() {
-  const { commit, rollback } = await createContext({ id: 'test-rabbit' })
+  const { commit } = await createContext({ id: 'test-rabbit' })
   await peanar.declareAmqResources()
 
   Context.log('declared amq resources.')
