@@ -33,7 +33,7 @@ async function main() {
     id: `support-campaign-${CAMPAIGN_ID}`
   })
 
-  await run()
+  await run(parseInt(process.argv[2] || '15000'))
   await commit()
 }
 
