@@ -35,7 +35,7 @@
         {{campaign.clicked}}
       </td>
 
-      <td style="
+      <td width="20%" style="
         {% if campaign.failed === 0 %}
           opacity: 0.2;
         {% endif %}
@@ -51,7 +51,7 @@
           &nbsp;
       </td>
 
-      <td style="
+      <td width="20%" style="
         {% if campaign.unsubscribed === 0 %}
           opacity: 0.2;
         {% endif %}
