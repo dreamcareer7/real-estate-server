@@ -1,12 +1,12 @@
 {% set email = emails[campaign.emails[0]] %}
 
-<div style="font-size: 16px;">
+<div style="font-size: 12px;">
   <br>
   <table width="100%">
     <tr>
-      <td>
+      <td width="20%">
         <img
-          style="height: 16px;"
+          style="height: 12px;"
           src="https://assets.rechat.com/daily/delivered.png"
           title="Delivered to {{campaign.delivered}} recipients"
         />
@@ -15,9 +15,9 @@
         </span>
       </td>
 
-      <td>
+      <td width="20%">
         <img
-          style="height: 16px;"
+          style="height: 12px;"
           src="https://assets.rechat.com/daily/opened.png"
           title="Opened by {{campaign.opened}} recipients"
         />
@@ -26,22 +26,22 @@
         </span>
       </td>
 
-      <td>
+      <td width="20%">
         <img
-          style="height: 16px;"
+          style="height: 12px;"
           src="https://assets.rechat.com/daily/clicked.png"
           title="Clicked by {{campaign.clicked}} recipients"
         />
         {{campaign.clicked}}
       </td>
 
-      <td style="
+      <td width="20%" style="
         {% if campaign.failed === 0 %}
           opacity: 0.2;
         {% endif %}
       ">
           <img
-            style="height: 16px;"
+            style="height: 12px;"
             src="https://assets.rechat.com/daily/failed.png"
             title="Bounced for {{campaign.failed}} recipients"
           />
@@ -51,13 +51,13 @@
           &nbsp;
       </td>
 
-      <td style="
+      <td width="20%" style="
         {% if campaign.unsubscribed === 0 %}
           opacity: 0.2;
         {% endif %}
       ">
         <img
-          style="height: 16px;"
+          style="height: 12px;"
           src="https://assets.rechat.com/daily/unsubscribed.png"
           title="Unsubscribed by {{campaign.unsubscribed}} recipients"
         />
