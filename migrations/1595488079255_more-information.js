@@ -1,7 +1,7 @@
 const db = require('../lib/utils/db')
 
-require('../lib/models/Envelope')
-require('../lib/models/Context')
+const Envelope = require('../lib/models/Envelope')
+const Content = require('../lib/models/Context')
 
 const createContext = (conn, cb) => {
   const context = Context.create()
