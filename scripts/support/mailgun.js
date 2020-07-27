@@ -11,7 +11,7 @@ function sleep(ms) {
 }
 
 async function run(limit = 1010) {
-  const ids = await sql.selectIds(`select id from emails where campaign = $1 AND mailgun_id IS NULL LIMIT $2`, [CAMPAIGN_ID, limit])
+  const ids = await sql.selectIds('select id from emails where campaign = $1 AND mailgun_id IS NULL LIMIT $2', [CAMPAIGN_ID, limit])
 
   for (let i = 0; i < ids.length; i += 1000) {
     await send(ids.slice(i, i + 1000))
