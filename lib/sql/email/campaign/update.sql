@@ -1,5 +1,5 @@
 UPDATE email_campaigns SET
-  "from" = $2,
+  "from" = COALESCE ($2, "from")
   subject = $3,
   include_signature = COALESCE($4, false),
   html = $5,
