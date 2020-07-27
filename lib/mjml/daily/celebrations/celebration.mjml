@@ -3,7 +3,7 @@
 
 {% set default_icon %}https://assets.rechat.com/daily/{{celebration.event_type}}.png{%endset%}
 
-<mj-section padding="0 5px 32px 5px">
+<mj-section padding="0 5px 20px 5px">
   <mj-group>
     <mj-column width="17%">
       <mj-image
