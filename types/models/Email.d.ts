@@ -77,6 +77,9 @@ declare interface IEmailCampaignInput {
 declare interface IEmailCampaign extends IEmailCampaignInput {
   text: string;
   id: UUID;
+  failed_at?: string | null;
+  failed_within?: string;
+  failure?: string;
 }
 
 declare interface IEmail {
