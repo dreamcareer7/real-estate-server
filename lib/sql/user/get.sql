@@ -11,8 +11,8 @@ SELECT 'user' AS type,
         SELECT client_type FROM clients WHERE id = users.last_seen_by
        ) as last_seen_type,
        (
-        SELECT count(*) > 0 FROM docusign_users WHERE "user" = users.id
-       ) as has_docusign,
+        SELECT id FROM docusign_users WHERE "user" = users.id
+       ) as docusign,
        COALESCE((
           SELECT
             us.brand
