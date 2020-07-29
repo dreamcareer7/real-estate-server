@@ -35,6 +35,7 @@ declare interface IContactBase {
   android_address_book_id?: string;
   google_id?: string;
   microsoft_id?: string;
+  parked?: Boolean;
 }
 
 declare interface IContactInput extends IContactBase {
