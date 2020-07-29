@@ -1,7 +1,7 @@
 SELECT 'docusign_account' AS type,
   EXTRACT(EPOCH FROM created_at)   AS created_at,
   EXTRACT(EPOCH FROM updated_at)   AS updated_at,
-
+  id,
   first_name,
   last_name,
   email
