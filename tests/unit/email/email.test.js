@@ -902,6 +902,45 @@ async function emailSaveError() {
   expect(updated.error).to.be.equal(err.message)
 }
 
+async function saveError() {
+  const gResult = await createGoogleCredential(userA, brand1)
+  const googleCredential = gResult.credential
+
+  /** @type {IEmailCampaignInput} */
+  const campaignObj = {
+    subject: 'Test subject',
+    from: userA.id,
+    to: [{
+      email: 'gholi@rechat.com',
+      recipient_type: Email.EMAIL
+    }],
+    created_by: userA.id,
+    brand: brand1.id,
+    due_at: new Date().toISOString(),
+    html: '<html></html>',
+    headers: {
+      message_id: 'message_id',
+      in_reply_to: 'in_reply_to',
+      thread_id: 'thread_id',
+    },
+    google_credential: googleCredential.id,
+    microsoft_credential: null,
+    attachments: []
+  }
+
+  const result   = await EmailCampaign.createMany([campaignObj])
+  const campaign = await EmailCampaign.get(result[0])
+
+  const failure = 'failure'
+
+  await EmailCampaign.saveError(campaign, failure)
+
+  const updated = await EmailCampaign.get(campaign.id)
+
+  expect(updated.id).to.be.equal(campaign.id)
+  expect(updated.failure).to.be.equal(failure)
+}
+
 async function saveThreadKey() {
   const gResult = await createGoogleCredential(userA, brand1)
   const googleCredential = gResult.credential
@@ -1029,7 +1068,8 @@ describe('Email', () => {
 
   it('should create an email_campaing_email record', createEmailCampaignEmail)
   it('should save error message on an email_campaing_email record', emailSaveError)
-  it('should save error thread key on an email_campaing record', saveThreadKey)
+  it('should save error message on an email_campaing record', saveError)
+  it('should save thread key on an email_campaing record', saveThreadKey)
 
   it('should update a campaign record', update)
 })
