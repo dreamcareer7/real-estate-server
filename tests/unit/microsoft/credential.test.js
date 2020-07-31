@@ -145,6 +145,14 @@ async function disconnectFailed() {
   }
 }
 
+async function revoke() {
+  const createdCredential = await create()
+
+  await MicrosoftCredential.revoke(createdCredential.id)
+  const updatedCredential_1 = await MicrosoftCredential.get(createdCredential.id)
+  expect(updatedCredential_1.revoked).to.be.equal(true)
+}
+
 async function updateProfile() {
   const createdCredential = await create()
 
@@ -181,8 +189,9 @@ describe('Microsoft', () => {
     it('should revoke a microsoft-credential', updateAsRevoked)
     it('should update a microsoft-credential send_email_after', updateSendEmailAfter)
 
-    it('should disable/enable a microsoft-credential', disconnect)
-    it('should handle returned exception from disable/enable microsoft-credential', disconnectFailed)
+    it('should disconnect a microsoft-credential', disconnect)
+    it('should handle returned exception from disconnect microsoft-credential', disconnectFailed)
+    it('should revoke a microsoft-credential', revoke)
     it('should update a microsoft-credential profile', updateProfile)
   })
 })

@@ -172,6 +172,14 @@ async function disconnectFailed() {
   }
 }
 
+async function revoke() {
+  const createdCredential = await create()
+
+  await GoogleCredential.revoke(createdCredential.id)
+  const updatedCredential_1 = await GoogleCredential.get(createdCredential.id)
+  expect(updatedCredential_1.revoked).to.be.equal(true)
+}
+
 async function updateProfile() {
   const createdCredential = await create()
 
@@ -267,6 +275,7 @@ describe('Google', () => {
     
     it('should disconnect a google-credential', disconnect)
     it('should handle returned exception from disconnect google-credential', disconnectFailed)
+    it('should revoke a google-credential', revoke)
     
     it('should update a google-credential profile', updateProfile)
     it('should update a google-credential gmail-profile', updateGmailProfile)
