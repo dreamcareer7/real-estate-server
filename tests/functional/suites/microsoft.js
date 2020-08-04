@@ -2,7 +2,6 @@ const uuid = require('uuid')
 
 const microsoft_auth_link_json   = require('./expected_objects/microsoft/auth_link.js')
 const microsoft_credential_json  = require('./expected_objects/microsoft/credential.js')
-const microsoft_syncHistory_json = require('./expected_objects/microsoft/sync_history.js')
 // const microsoft_profile_json  = require('./expected_objects/microsoft/profile.js')
 
 registerSuite('agent', ['add'])
@@ -216,20 +215,6 @@ function deleteAccountFailedCauseOfInvalidBrand(cb) {
     .expectStatus(404)
 }
 
-function getMCredentialLastSyncHistory(cb) {
-  return frisby.create('get microsoft credential LastSyncHistory')
-    .get(`/users/self/microsoft/sync_history/${results.microsoft.createMicrosoftCredential}`)
-    .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
-    .after(function(err, res, json) {
-      cb(err, res, json)
-    })
-    .expectStatus(200)
-    .expectJSON({
-      code: 'OK',
-      data: microsoft_syncHistory_json
-    })
-}
-
 function getRemoteCalendars(cb) {
   return frisby.create('List Microsoft Remote Calendars - initial')
     .get(`/users/microsoft/${results.microsoft.createMicrosoftCredential}/calendars`)
@@ -267,7 +252,6 @@ module.exports = {
   forceSync,
   deleteAccount,
   deleteAccountFailedCauseOfInvalidBrand,
-  getMCredentialLastSyncHistory,
   getRemoteCalendars
   // configureCaledars,
   // getRemoteCalendarsAfterConfiguring,

@@ -6,9 +6,7 @@ const School = require('../../lib/models/School')
 const EmailCampaign = require('../../lib/models/Email/campaign')
 const EmailCampaignStats = require('../../lib/models/Email/campaign/stats')
 const GoogleCredential     = require('../../lib/models/Google/credential')
-const GoogleSyncHistory    = require('../../lib/models/Google/sync_history')
 const MicrosoftCredential  = require('../../lib/models/Microsoft/credential')
-const MicrosoftSyncHistory = require('../../lib/models/Microsoft/sync_history')
 const BrandTemplate = require('../../lib/models/Template/brand')
 const BrokerWolf = require('../../lib/models/BrokerWolf')
 const Message = require('../../lib/models/Message/email')
@@ -65,16 +63,8 @@ const CreateGoogleCredential = (job, cb) => {
   GoogleCredential.create(job.data).nodeify(cb)
 }
 
-const addGoogleSyncHistory = (job, cb) => {
-  GoogleSyncHistory.addSyncHistory(job.data).nodeify(cb)
-}
-
 const CreateMicrosoftCredential = (job, cb) => {
   MicrosoftCredential.create(job.data).nodeify(cb)
-}
-
-const addMicrosoftSyncHistory = (job, cb) => {
-  MicrosoftSyncHistory.addSyncHistory(job.data).nodeify(cb)
 }
 
 const updateTemplateThumbnails = (job, cb) => {
@@ -104,9 +94,7 @@ const list = {
   'EmailCampaign.sendDue': sendDueEmailCampaigns,
   'EmailCampaignStats.updateStats': updateEmailCampaginStats,
   'GoogleCredential.create': CreateGoogleCredential,
-  'GoogleSyncHistory.addSyncHistory': addGoogleSyncHistory,
   'MicrosoftCredential.create': CreateMicrosoftCredential,
-  'MicrosoftSyncHistory.addSyncHistory': addMicrosoftSyncHistory,
   'BrandTemplate.updateThumbnails': updateTemplateThumbnails
 }
 
