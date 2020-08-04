@@ -10,6 +10,7 @@ WITH r AS (
         SELECT * FROM brand_parents(brand)
       )
     ) as subscription,
+    ARRAY_AGG(roles.acl) as acl,
     'user_role' as type
     FROM (
         SELECT DISTINCT UNNEST(brands_roles.acl) as acl,
