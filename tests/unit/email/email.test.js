@@ -932,13 +932,23 @@ async function saveError() {
   const campaign = await EmailCampaign.get(result[0])
 
   const failure = 'failure'
-
   await EmailCampaign.saveError(campaign, failure)
-
   const updated = await EmailCampaign.get(campaign.id)
 
   expect(updated.id).to.be.equal(campaign.id)
   expect(updated.failure).to.be.equal(failure)
+
+  try {
+    throw new Error('Maximum marketing email quota per month exceeded.')
+
+  } catch (ex) {
+
+    await EmailCampaign.saveError(campaign, ex.message)
+    const updated = await EmailCampaign.get(campaign.id)
+  
+    expect(updated.id).to.be.equal(campaign.id)
+    expect(updated.failure).to.be.equal(ex.message)
+  }
 }
 
 async function saveThreadKey() {
