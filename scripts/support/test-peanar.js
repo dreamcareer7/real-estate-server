@@ -23,7 +23,7 @@ async function main() {
 
   Context.log('declared amq resources.')
 
-  const timer = setInterval(() => { Context.log('Hey!') }, 100)
+  setInterval(() => { Context.log('Hey!') }, 100)
 
   for (let i = 0; i < 100000; i++) {
     enqueue(data)
