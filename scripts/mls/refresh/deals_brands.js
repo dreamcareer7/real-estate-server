@@ -2,7 +2,7 @@
 
 require('../../connection.js')
 const db = require('../../../lib/utils/db.js')
-require('../../../lib/models/index.js')
+const MLSJob = require('../../../lib/models/MLSJob')
 
 db.executeSql('REFRESH MATERIALIZED VIEW CONCURRENTLY deals_brands', [], err => {
   if (err)

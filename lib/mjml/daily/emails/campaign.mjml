@@ -1,32 +1,40 @@
 {% set uri %}/dashboard/insights/{{campaign.id}}{% endset %}
 {% set url = uri | url %}
+{% set email = emails[campaign.emails[0]] %}
 
-<mj-section background-color="#ffffff" padding="10px 32px">
-    <mj-column width="85%">
-      <mj-text padding-left=0 padding-right=0>
-        <div>
-          <div style="float: left;">
-            <a href="{{url}}">{{ campaign.subject or '(untitled)' }}</a>
-          </div>
-
-          {% if campaign.executed_at %}
-            <div style="color: #c6c6c6; float: right;">
-              {{ campaign.executed_at | calendar }}
-            </div>
-          {% endif %}
-        </div>
-        <div style="clear: both;">
-          <br>
-          {% if campaign.executed_at %}
-            {% if campaign.delivered === 1 %}
-              {% include './singular.mjml' %}
+<mj-section padding="0 5px 20px 5px">
+  <mj-group>
+    <mj-column width="17%">
+      <mj-image
+        padding="5px"
+        src="{{'https://assets.rechat.com/daily/email.png'}}"
+        href="{{ url }}"
+        border-radius="5px"
+        width="64px"
+        align="center"
+      >
+      </mj-image>
+    </mj-column>
+    <mj-column width="83%">
+      <mj-text padding-left=0>
+        <a href="{{url}}">{{ campaign.subject or '(untitled)' }}</a>
+        <div style="color: #c6c6c6;">
+            <br>
+            {% if campaign.executed_at %}
+              {% if campaign.delivered === 1 %}
+                {{ email.email_address }}
+              {% else %}
+                {{ campaign.delivered }} Recipients
+              {% endif %}
+              -  {{ campaign.executed_at | calendar }}
             {% else %}
-              {% include './plural.mjml' %}
+              Scheduled for {{ campaign.due_at | calendar }}
             {% endif %}
-          {% else %}
-            Scheduled for {{ campaign.due_at | calendar }}
-          {% endif %}
         </div>
+
+        {% if campaign.executed_at %}
+          {% include './plural.mjml'%}
+        {% endif %}
       </mj-text>
     </mj-column>
 </mj-section>

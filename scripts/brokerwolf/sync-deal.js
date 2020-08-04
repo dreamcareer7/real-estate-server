@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 require('../connection.js')
-require('../../lib/models/index.js')
+const Deal = require('../../lib/models/Deal')
 const promisify = require('../../lib/utils/promisify')
 
 const sync = async () => {

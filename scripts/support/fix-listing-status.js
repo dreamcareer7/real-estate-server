@@ -1,5 +1,6 @@
 const promisify = require('../../lib/utils/promisify')
 const { runInContext } = require('../../lib/models/Context/util')
+const Deal = require('../../lib/models/Deal')
 
 async function addContext(deal_id, checklist_id, user_id) {
   await Deal.saveContext({

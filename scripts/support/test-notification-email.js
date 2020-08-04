@@ -8,7 +8,7 @@ const { runInContext } = require('../../lib/models/Context/util')
 require('../../lib/models/CRM/Task/index')
 const TaskMailer = require('../../lib/models/CRM/Task/mailer')
 const Notification = require('../../lib/models/Notification')
-const Orm = require('../../lib/models/Orm')
+const Orm = require('../../lib/models/Orm/index')
 
 const HOME = os.homedir()
 

@@ -1,29 +1,42 @@
 {% set uri %}/dashboard/deals/{{deal.id}}{% endset %}
 {% set url = uri | url %}
 
-<mj-section background-color="#ffffff" padding="0 5px 32px 5px">
+<mj-section padding="0 5px 20px 5px">
   <mj-group>
-    <mj-column width="15%">
+    <mj-column width="17%">
       <mj-image
-        href="{{url}}"
-        padding-left=0
-        padding-bottom=0
-        src="{{deal.context.photo.text or ''}}"
-        width="80px"
+        padding="5px"
+        src="{{deal.context.photo.text or 'https://assets.rechat.com/daily/listing.png'}}"
+        href="{{ url }}"
         border-radius="5px"
+        width="64px"
+        align="center"
       >
       </mj-image>
     </mj-column>
-    <mj-column width="55%">
+    <mj-column width="53%">
       <mj-text padding-left=0>
-        <a href="{{url}}">{{ deal.title }}</a>
+        <a href="{{url}}">
+          {{ deal.title }}
+          {% if deal.new_notifications %}
+            <span style="
+                background: #E57373;
+                color: white;
+                border-radius: 100%;
+                min-width: 15px;
+                display: inline-block;
+                text-align: center;
+                padding: 3px;
+              "
+              title="{{deal.new_notifications | length}} Unread Messages"
+            >
+              {{deal.new_notifications | length}}
+            </span>
+          {% endif %}
+        </a>
         <div style="color: #c6c6c6;">
           <br>
-          {{ deal.deal_type }}, {{ deal.context.contract_status.text or deal.context.listing_status.text }}
-        </div>
-        <div style="color: #c6c6c6;">
-          <br>
-          {{ deal.context.list_price.number | price }}
+          {{ deal.context.contract_status.text or deal.context.listing_status.text }}
         </div>
       </mj-text>
     </mj-column>

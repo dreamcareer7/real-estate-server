@@ -3,7 +3,7 @@ const { createContext } = require('../helper')
 
 
 const Context             = require('../../../lib/models/Context')
-const User                = require('../../../lib/models/User')
+const User                = require('../../../lib/models/User/get')
 const BrandHelper         = require('../brand/helper')
 const ThreadMessage       = require('../../../lib/models/Email/thread')
 const GoogleMessage       = require('../../../lib/models/Google/message')

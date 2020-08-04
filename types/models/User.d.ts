@@ -8,11 +8,11 @@ declare interface IUserBase {
   fake_email?: boolean;
   profile_image_url?: string;
   cover_image_url?: string;
-  password: string;
+  password?: string;
 }
 declare interface IUserInput extends IUserBase {
   agent?: UUID;
-  brand?: UUID | null;
+  brand?: UUID;
   skip_confirmation?: boolean;
 
   user_connect?: UUID;

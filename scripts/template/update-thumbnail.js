@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 
-require('../../lib/models/index.js')()
+const Context = require('../../lib/models/Context')
 const db = require('../../lib/utils/db')
 const BrandTemplate = require('../../lib/models/Template/brand')
+
 
 const getDb = async () => {
   return new Promise((resolve, reject) => {

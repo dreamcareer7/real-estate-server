@@ -23,6 +23,7 @@ SELECT
   bcc,
   thread_key,
   is_read,
+  campaign,
   'microsoft_message' AS "type"
 FROM
   microsoft_messages

@@ -4,7 +4,8 @@ const { createContext } = require('../helper')
 
 const BrandHelper = require('../brand/helper')
 
-const Orm = require('../../../lib/models/Orm')
+const Orm = require('../../../lib/models/Orm/context')
+
 const Context = require('../../../lib/models/Context')
 const CrmTask = require('../../../lib/models/CRM/Task')
 const CrmAssociation = require('../../../lib/models/CRM/Association')

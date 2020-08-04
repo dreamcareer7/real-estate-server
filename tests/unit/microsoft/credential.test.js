@@ -2,7 +2,7 @@ const { expect }        = require('chai')
 const { createContext } = require('../helper')
 
 const Context             = require('../../../lib/models/Context')
-const User                = require('../../../lib/models/User')
+const User                = require('../../../lib/models/User/get')
 const BrandHelper         = require('../brand/helper')
 const MicrosoftCredential = require('../../../lib/models/Microsoft/credential')
 
@@ -40,6 +40,26 @@ async function publicize() {
   expect(updatedCredential.id_token).to.be.equal(undefined)
   expect(updatedCredential.expires_in).to.be.equal(undefined)
   expect(updatedCredential.ext_expires_in).to.be.equal(undefined)
+}
+
+async function findByUser() {
+  const createdCredential = await create()
+  const credentialIds     = await MicrosoftCredential.findByUser(createdCredential.user, createdCredential.brand)
+
+  expect(credentialIds).not.to.be.equal(0)
+}
+
+async function getByBrand() {
+  const createdCredential = await create()
+  const credentials       = await MicrosoftCredential.getByBrand(createdCredential.brand)
+
+  expect(credentials.length).not.to.be.equal(0)
+
+  for (const record of credentials) {
+    expect(record.type).to.be.equal('microsoft_credential')
+    expect(record.user).to.be.equal(createdCredential.user)
+    expect(record.brand).to.be.equal(createdCredential.brand)
+  }
 }
 
 async function getByUser() {
@@ -162,6 +182,37 @@ async function updateProfile() {
   expect(updatedCredential.display_name).to.be.equal(profile.displayName)
 }
 
+async function updateRechatMicrosoftCalendar() {
+  const createdCredential = await create()
+
+  const rechatCalendarId = null
+
+  await MicrosoftCredential.updateRechatMicrosoftCalendar(createdCredential.id, rechatCalendarId)
+
+  const updatedCredential = await MicrosoftCredential.get(createdCredential.id)
+
+  expect(createdCredential.id).to.be.equal(updatedCredential.id)
+  expect(updatedCredential.microsoft_calendar).to.be.equal(rechatCalendarId)
+}
+
+async function resetRechatMicrosoftCalendar() {
+  const createdCredential = await create()
+
+  await MicrosoftCredential.resetRechatMicrosoftCalendar(createdCredential.id)
+
+  const updatedCredential = await MicrosoftCredential.get(createdCredential.id)
+
+  expect(createdCredential.id).to.be.equal(updatedCredential.id)
+  expect(updatedCredential.microsoft_calendar).to.be.equal(null)
+}
+
+async function hasSendEmailAccess() {
+  const createdCredential = await create()
+  const credential = await MicrosoftCredential.hasSendEmailAccess(createdCredential.id)
+
+  expect(credential.id).to.be.equal(createdCredential.id)
+}
+
 
 describe('Microsoft', () => {
   describe('Microsoft Account', () => {
@@ -171,18 +222,24 @@ describe('Microsoft', () => {
     it('should create a microsoft credential', create)
     it('should publicize a microsoft-credential', publicize)
 
+    it('should return microsoft-credential ids by user-brand', findByUser)
+    it('should return a microsoft credential by brand', getByBrand)
     it('should return a microsoft credential by user-brand', getByUser)
     it('should handle returned exception from microsoft-credential by user-brand', getByUserFailed)
 
     it('should return a microsoft credential by id', getById)
     it('should handle returned exception from microsoft-credential by id', getByIdFailed)
     
-    it('should update a microsoft-credential tokens', updateTokens)
-    it('should revoke a microsoft-credential', updateAsRevoked)
-    it('should update a microsoft-credential send_email_after', updateSendEmailAfter)
+    it('should update microsoft-credential\'s tokens', updateTokens)
+    it('should update microsoft-credential\'s send_email_after', updateSendEmailAfter)
+    it('should revoke microsoft-credential\'s', updateAsRevoked)
 
     it('should disable/enable a microsoft-credential', disconnect)
     it('should handle returned exception from disable/enable microsoft-credential', disconnectFailed)
-    it('should update a microsoft-credential profile', updateProfile)
+    it('should update microsoft-credential\'s profile', updateProfile)
+
+    it('should update microsoft-credential\'s rechat-microsoft-Calendar', updateRechatMicrosoftCalendar)
+    it('should update google-credential\'s rechat-google-Calendar as null', resetRechatMicrosoftCalendar)
+    it('should check the access of sending emails', hasSendEmailAccess)
   })
 })

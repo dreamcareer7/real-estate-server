@@ -3,7 +3,7 @@ const { createContext } = require('../helper')
 const BrandHelper       = require('../brand/helper')
 
 const Context = require('../../../lib/models/Context')
-const User    = require('../../../lib/models/User')
+const User    = require('../../../lib/models/User/get')
 const CrmTask = require('../../../lib/models/CRM/Task')
 const Contact = require('../../../lib/models/Contact')
 const CalendarIntegration = require('../../../lib/models/CalendarIntegration')

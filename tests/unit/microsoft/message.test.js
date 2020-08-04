@@ -3,15 +3,15 @@ const { expect }        = require('chai')
 const { createContext } = require('../helper')
 
 const Context             = require('../../../lib/models/Context')
-const User                = require('../../../lib/models/User')
+const User                = require('../../../lib/models/User/get')
 const BrandHelper         = require('../brand/helper')
 const MicrosoftMessage    = require('../../../lib/models/Microsoft/message')
 const MicrosoftCredential = require('../../../lib/models/Microsoft/credential')
 const EmailThread         = require('../../../lib/models/Email/thread')
 
-const { createMicrosoftMessages } = require('./helper')
+const { createMicrosoftMessages, createCampaign } = require('./helper')
 
-let user, brand
+let user, brand, mcredential
 
 
 async function setup() {
@@ -23,6 +23,8 @@ async function setup() {
 
 async function create() {
   const { createdMessages, credential } = await createMicrosoftMessages(user, brand)
+
+  mcredential = credential
 
   for (const createdMicrosoftMessage of createdMessages) {
     expect(createdMicrosoftMessage.microsoft_credential).to.be.equal(credential.id)
@@ -83,6 +85,50 @@ async function getDistinctCredentialByMessage() {
 
   const status = resutl.every(entry => credentials.includes(entry))
 
+  expect(status).to.equal(true)
+}
+
+async function getByInternetMessageIds() {
+  const microsoftMessages = await create()
+
+  const ids = microsoftMessages.map(msg => msg.id)
+  
+  const messages = await MicrosoftMessage.getAll(ids)
+  const internet_message_ids = messages.map(msg => msg.internet_message_id)
+  
+  const resutl = await MicrosoftMessage.getByInternetMessageIds(mcredential.id, internet_message_ids)
+
+  const status = resutl.every(entry => internet_message_ids.includes(entry.internet_message_id))
+  expect(resutl.length).to.equal(messages.length)
+  expect(status).to.equal(true)
+}
+
+async function getByThreadKeys() {
+  const microsoftMessages = await create()
+
+  const ids = microsoftMessages.map(msg => msg.id)
+  
+  const messages = await MicrosoftMessage.getAll(ids)
+  const thread_keys = messages.map(msg => msg.thread_key)
+  
+  const resutl = await MicrosoftMessage.getByThreadKeys(mcredential.id, thread_keys)
+
+  const status = resutl.every(entry => ids.includes(entry))
+  expect(resutl.length).to.equal(messages.length)
+  expect(status).to.equal(true)
+}
+
+async function filterMessageIds() {
+  const microsoftMessages = await create()
+
+  const ids = microsoftMessages.map(msg => msg.id)
+  ids.push(uuid.v4()) // pushing non exist message id
+  
+  const messages = await MicrosoftMessage.getAll(ids)  
+  const resutl   = await MicrosoftMessage.filterMessageIds(mcredential.id, ids)
+
+  const status = resutl.every(entry => ids.includes(entry))
+  expect(resutl.length).to.equal(messages.length)
   expect(status).to.equal(true)
 }
 
@@ -263,6 +309,22 @@ async function updateIsRead() {
   expect(updated.is_read).to.be.equal(true)
 }
 
+async function setCampaigns() {
+  const campaign = await createCampaign(user, brand)
+  const messages = await create()
+
+  const records = [{
+    campaign,
+    microsoft_credential: mcredential.id,
+    message_id: messages[0].message_id
+  }]
+
+  await MicrosoftMessage.setCampaigns(records)
+  
+  const updated = await MicrosoftMessage.get(messages[0].id)
+  expect(updated.campaign).to.be.equal(campaign)
+}
+
 async function updateReadStatus() {
   const messages   = await create()
   const credential = await MicrosoftCredential.get(messages[0].microsoft_credential)
@@ -284,6 +346,9 @@ describe('Microsoft', () => {
     it('should handle failure of microsoft-contact get by messages_id', getByMessageIdFailed)
     it('should return a list of unique credential ids based on thread_keys', getDistinctCredentialByThread)
     it('should return a list of unique credential ids based on message ids', getDistinctCredentialByMessage)
+    it('should return a list of unique messages ids based on internet_message_ids', getByInternetMessageIds)
+    it('should return a list of unique messages ids based on thread_keys', getByThreadKeys)
+    it('should filter a list of unique messages ids based on ids', filterMessageIds)
     it('should return number of messages of specific credential', getMCredentialMessagesNum)
     it('should delete microsoft-messages by ids', deleteMany)
     it('should delete microsoft-messages by credential', deleteByCredential)
@@ -292,6 +357,7 @@ describe('Microsoft', () => {
     it('should delete microsoft-messages by thread keys', deleteByThreadKeys)
     it('should handle failure of downloadAttachment', downloadAttachmentFailed)
     it('should update message is_read', updateIsRead)
+    it('should update message campaign', setCampaigns)
     it('should update message read status', updateReadStatus)
   })
 })

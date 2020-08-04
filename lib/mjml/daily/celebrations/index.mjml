@@ -1,18 +1,19 @@
 {% if celebrations.length > 0 %}
-  <mj-section background-color="#ffffff" padding="0px 32px 20px">
-    <mj-column>
-      <mj-text css-class="title" padding="0" align="center" font-family="Lato" font-size="18px">
-        <a href="{{ '/dashboard/calendar' | url }}">
-          <a href="{{ '/dashboard/calendar' | url }}">Upcoming Celebrations</a>
-        </a>
-      </mj-text>
-    </mj-column>
-  </mj-section>
+  <mj-section padding="16px 0 0 0"></mj-section>
+  <mj-wrapper background-color="#ffffff" padding="0px" border-radius="16px">
+    <mj-section>
+      <mj-column>
+        <mj-text css-class="title" padding="0" align="center" font-family="Lato" font-size="18px">
+          <a href="{{ '/dashboard/calendar' | url }}">
+            <a href="{{ '/dashboard/calendar' | url }}">Upcoming Celebrations</a>
+          </a>
+        </mj-text>
+      </mj-column>
+    </mj-section>
 
-  {% for celebration in celebrations %}
-    {% set contact = contacts[celebration.people[0].id] %}
-    {% include './celebration.mjml' %}
-  {% endfor %}
-
-  <mj-section background-color="#fff"></mj-section>
+    {% for celebration in celebrations %}
+      {% set contact = contacts[celebration.people[0].id] %}
+      {% include './celebration.mjml' %}
+    {% endfor %}
+  </mj-wrapper>
 {% endif %}

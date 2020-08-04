@@ -20,6 +20,7 @@ const redis = require('redis')
 const AssertionError = require('assertion-error')
 
 const Context = require('../../lib/models/Context')
+const Notification = require('../../lib/models/Notification')
 
 const {handleJob, installJobsRoute} = require('./jobs')
 

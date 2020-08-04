@@ -11,6 +11,7 @@ const BrandEmail = require('../../../lib/models/Brand/email')
 const BrandFlow = require('../../../lib/models/Brand/flow')
 const BrandList = require('../../../lib/models/Brand/list')
 const Context = require('../../../lib/models/Context')
+const Form = require('../../../lib/models/Form')
 
 const default_data = {
   name: 'Test Brand',

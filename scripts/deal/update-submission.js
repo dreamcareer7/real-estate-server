@@ -1,8 +1,11 @@
 #!/usr/bin/env node
 
-require('../../lib/models/index.js')()
+const Context = require('../../lib/models/Context')
 const promisify = require('../../lib/utils/promisify')
 const db = require('../../lib/utils/db')
+const Deal = require('../../lib/models/Deal')
+const User = require('../../lib/models/User/get')
+
 
 const getDb = async () => {
   return new Promise((resolve, reject) => {

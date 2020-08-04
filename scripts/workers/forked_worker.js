@@ -1,6 +1,5 @@
 const { peanar } = require('../../lib/utils/peanar')
 
-require('../../lib/models/index.js')()
 const Context = require('../../lib/models/Context')
 
 require('../../lib/models/Calendar/worker')
@@ -14,7 +13,8 @@ require('../../lib/models/Google/workers')
 require('../../lib/models/Microsoft/workers')
 require('../../lib/models/Deal/email')
 require('../../lib/models/Deal/brokerwolf')
-require('../../lib/models/Email')
+require('../../lib/models/Email/send')
+require('../../lib/models/Email/events')
 require('../../lib/models/SMS')
 
 const attachCalendarEvents = require('../../lib/models/Calendar/events')

@@ -1,10 +1,14 @@
 <span
   style="
-    background: #e1e3e7;
-    font-size: 0.8125rem;
+    background: white;
+    font-size: 11px;
     border-radius: 16px;
-    padding: 0 8px 0 8px;
+    padding: 2px 8px 2px 8px;
     text-align: center;
+    margin-top: 2px;
+    color: #8d8d8e;
+    border: 1px solid #dcdddf;
+    display: inline-block;
 ">
   {{tag}}
 </span>
