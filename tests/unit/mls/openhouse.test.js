@@ -1,7 +1,10 @@
 const { expect } = require('chai')
 
 const { createContext } = require('../helper')
-const OpenHouse = require('../../../lib/models/OpenHouse')
+const OpenHouse = {
+  ...require('../../../lib/models/OpenHouse/get'),
+  ...require('../../../lib/models/OpenHouse/create')
+}
 
 const json = require('./json/openhouse')
 
