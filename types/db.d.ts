@@ -662,4 +662,7 @@ declare type TDbSqlAddress =
   | 'website/get_user'
   | 'website/insert'
   | 'website/insert_hostname'
-  | 'website/update';
+  | 'website/update'
+  | 'billing_plan/get'
+  | 'billing_plan/get-by-chargebee-id'
+  | 'billing_plan/set';
