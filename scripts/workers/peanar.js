@@ -22,6 +22,7 @@ require('../../lib/models/Email/send')
 require('../../lib/models/Email/events')
 require('../../lib/models/SMS')
 require('../../lib/models/Daily')
+require('../../lib/models/Envelope')
 
 /** @type {(() => Promise<void>)[]} */
 let shutdowns = []
