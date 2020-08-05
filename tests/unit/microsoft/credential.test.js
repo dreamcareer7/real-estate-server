@@ -31,17 +31,6 @@ async function create() {
   return credential
 }
 
-async function publicize() {
-  const createdCredential = await create()
-  const updatedCredential = await MicrosoftCredential.publicize(createdCredential)
-
-  expect(updatedCredential.access_token).to.be.equal(undefined)
-  expect(updatedCredential.refresh_token).to.be.equal(undefined)
-  expect(updatedCredential.id_token).to.be.equal(undefined)
-  expect(updatedCredential.expires_in).to.be.equal(undefined)
-  expect(updatedCredential.ext_expires_in).to.be.equal(undefined)
-}
-
 async function findByUser() {
   const createdCredential = await create()
   const credentialIds     = await MicrosoftCredential.findByUser(createdCredential.user, createdCredential.brand)
@@ -220,8 +209,6 @@ describe('Microsoft', () => {
     beforeEach(setup)
 
     it('should create a microsoft credential', create)
-    it('should publicize a microsoft-credential', publicize)
-
     it('should return microsoft-credential ids by user-brand', findByUser)
     it('should return a microsoft credential by brand', getByBrand)
     it('should return a microsoft credential by user-brand', getByUser)
