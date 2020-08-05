@@ -2,7 +2,10 @@ const { expect } = require('chai')
 
 const { createContext } = require('../helper')
 const config = require('../../../lib/config')
-const Client = require('../../../lib/models/Client/get')
+const Client = {
+  ...require('../../../lib/models/Client/get'),
+  ...require('../../../lib/models/Client/orm')
+}
 
 const get = async () => {
   const client = await Client.get(config.tests.client_id)
