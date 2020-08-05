@@ -34,18 +34,6 @@ async function create() {
   return credential
 }
 
-async function publicize() {
-  const createdCredential = await create()
-  const updatedCredential = await GoogleCredential.publicize(createdCredential)
-
-  expect(updatedCredential.access_token).to.be.equal(undefined)
-  expect(updatedCredential.refresh_token).to.be.equal(undefined)
-  expect(updatedCredential.expiry_date).to.be.equal(undefined)
-  expect(updatedCredential.contacts_sync_token).to.be.equal(undefined)
-  expect(updatedCredential.contact_groups_sync_token).to.be.equal(undefined)
-  expect(updatedCredential.messages_sync_history_id).to.be.equal(undefined)
-}
-
 async function findByUser() {
   const createdCredential = await create()
   const credentialIds     = await GoogleCredential.findByUser(createdCredential.user, createdCredential.brand)
@@ -297,8 +285,6 @@ describe('Google', () => {
     beforeEach(setup)
 
     it('should create a google-credential', create)
-    it('should publicize a google-credential', publicize)
-
     it('should return google-credential ids by user-brand', findByUser)
     it('should return a google-credential by brand', getByBrand)
     it('should return a google-credential by user-brand', getByUser)
