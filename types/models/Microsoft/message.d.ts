@@ -5,6 +5,8 @@ declare interface IOutlookAttachment {
   size?: number;
   isInline?: boolean;
   url?: string;
+  cid?: string;
+  contentId?: string;
   type: 'microsoft_message_attachment'
 }
 
