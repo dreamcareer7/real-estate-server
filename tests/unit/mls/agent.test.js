@@ -1,7 +1,7 @@
 const { expect } = require('chai')
 
 const { createContext } = require('../helper')
-const Office = require('../../../lib/models/Office')
+const Office = require('../../../lib/models/Office/create')
 
 const Agent = {
   ...require('../../../lib/models/Agent'),

@@ -3,7 +3,11 @@ const { expect } = require('chai')
 const { createContext } = require('../helper')
 
 const json = require('./json/office')
-const Office = require('../../../lib/models/Office')
+
+const Office = {
+  ...require('../../../lib/models/Office/get'),
+  ...require('../../../lib/models/Office/create')
+}
 
 const saveOffice = async () => {
   const id = await Office.create(json)
