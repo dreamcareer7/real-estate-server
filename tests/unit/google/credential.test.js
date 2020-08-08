@@ -25,7 +25,6 @@ async function setup() {
 async function create() {
   const { credential, body } = await createGoogleCredential(user, brand)
 
-  expect(credential.type).to.be.equal('google_credential')
   expect(credential.user).to.be.equal(user.id)
   expect(credential.brand).to.be.equal(brand.id)
   expect(credential.email).to.be.equal(body.profile.emailAddress)
@@ -48,7 +47,6 @@ async function getByBrand() {
   expect(credentials.length).not.to.be.equal(0)
 
   for (const record of credentials) {
-    expect(record.type).to.be.equal('google_credential')
     expect(record.user).to.be.equal(createdCredential.user)
     expect(record.brand).to.be.equal(createdCredential.brand)
   }
@@ -61,7 +59,6 @@ async function getByUser() {
   expect(credentials.length).not.to.be.equal(0)
 
   for (const record of credentials) {
-    expect(record.type).to.be.equal('google_credential')
     expect(record.user).to.be.equal(createdCredential.user)
     expect(record.brand).to.be.equal(createdCredential.brand)
   }
@@ -74,7 +71,6 @@ async function getByEmail() {
   expect(credentials.length).to.be.equal(1)
 
   for (const record of credentials) {
-    expect(record.type).to.be.equal('google_credential')
     expect(record.user).to.be.equal(createdCredential.user)
     expect(record.brand).to.be.equal(createdCredential.brand)
   }
@@ -90,7 +86,6 @@ async function getById() {
   const createdCredential = await create()
   const credential        = await GoogleCredential.get(createdCredential.id)
 
-  expect(credential.type).to.be.equal('google_credential')
   expect(credential.user).to.be.equal(createdCredential.user)
   expect(credential.brand).to.be.equal(createdCredential.brand)
 }
