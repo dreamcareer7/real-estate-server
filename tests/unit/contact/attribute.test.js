@@ -6,7 +6,7 @@ const { createContext, handleJobs } = require('../helper')
 
 const Contact = require('../../../lib/models/Contact')
 const AttributeDef = require('../../../lib/models/Contact/attribute_def')
-const ContactAttribute = require('../../../lib/models/Contact/attribute')
+const ContactAttribute = require('../../../lib/models/Contact/attribute/get')
 const Context = require('../../../lib/models/Context')
 const Metric = require('../../../lib/models/Metric')
 const User = require('../../../lib/models/User/get')
