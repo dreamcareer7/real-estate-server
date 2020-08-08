@@ -1,42 +1,54 @@
-const createContext = require('../workers/create-context')
-const { peanar } = require('../../lib/utils/peanar')
-const data = require('./test-peanar-data')
-const Context = require('../../lib/models/Context')
-require('../../lib/models/Job')
+const amqplib = require('amqplib')
+const fs = require('fs')
+const content = fs.readFileSync('/home/abbas/examples.desktop')
 
-const enqueue = peanar.job({
-  async handler(payload) {
-    Context.log('handled.')
-  },
-  queue: 'test',
-  name: 'test_fn',
-  exchange: 'test'
-})
+const QUEUE_NAME = `queue_${process.pid}`
 
-// for (let i = 0; i < 10; i++) {
-//   data.args[0].html += data.args[0].html
-// }
+console.log(QUEUE_NAME)
 
-async function main() {
-  const { commit } = await createContext({ id: 'test-rabbit' })
-  await peanar.declareAmqResources()
+const MAX = 50000
 
-  Context.log('declared amq resources.')
+const run = async () => {
+  const conn = await amqplib.connect('amqp://guest:guest@localhost/')
+  const channel = await conn.createChannel()
 
-  setInterval(() => { Context.log('Hey!') }, 100)
+  channel.assertQueue(QUEUE_NAME)
 
-  for (let i = 0; i < 100000; i++) {
-    enqueue(data)
+
+  let i = 0
+  const enqueue = () => {
+    i++
+    console.time(`${i}`)
+    channel.sendToQueue(QUEUE_NAME, content)
+
+    if (i >= MAX) {
+      clearInterval(interval)
+      console.time('end')
+    }
+
   }
 
-  // clearInterval(timer)
+  const interval = setInterval(enqueue, 1)
 
-  await commit()
-  Context.log('Shutting down peanar')
-  await peanar.shutdown()
+  let j = 0
+
+  const consume = msg => {
+    j++
+    console.timeEnd(`${j}`)
+
+    if (j >= MAX) {
+      console.log('End')
+      channel.nackAll(false)
+      console.timeEnd('end')
+    }
+  }
+
+  channel.consume(QUEUE_NAME, consume)
 }
 
-console.log('script started...')
-main().catch(ex => {
-  console.error(ex)
+run().catch(e => {
+  console.log(e)
+  process.exit()
+}).then(() => {
+//   process.exit()
 })

@@ -4,10 +4,15 @@ const checklists = require('./checklists')
 const contexts = require('./contexts')
 
 const Brand = require('../../../lib/models/Brand')
-const BrandRole = require('../../../lib/models/Brand/role')
+
+const BrandRole = {
+  ...require('../../../lib/models/Brand/role/save'),
+  ...require('../../../lib/models/Brand/role/members')
+}
+
 const BrandContext = require('../../../lib/models/Brand/deal/context')
 const BrandChecklist = require('../../../lib/models/Brand/deal/checklist')
-const BrandEmail = require('../../../lib/models/Brand/email')
+const BrandEmail = require('../../../lib/models/Brand/email/save')
 const BrandFlow = require('../../../lib/models/Brand/flow')
 const BrandList = require('../../../lib/models/Brand/list')
 const Context = require('../../../lib/models/Context')
