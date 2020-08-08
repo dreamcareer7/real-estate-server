@@ -11,7 +11,7 @@ const Contact = require('../../../lib/models/Contact')
 const Context = require('../../../lib/models/Context')
 const User    = require('../../../lib/models/User/get')
 const EmailCampaign = require('../../../lib/models/Email/campaign')
-const EmailCampaignAttachment = require('../../../lib/models/Email/campaign/attachments')
+const EmailCampaignAttachment = require('../../../lib/models/Email/campaign/attachment')
 const EmailCampaignEmail = require('../../../lib/models/Email/campaign/email')
 const AttachedFile = require('../../../lib/models/AttachedFile')
 
