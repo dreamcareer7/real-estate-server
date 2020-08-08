@@ -145,10 +145,11 @@ poll({
   name: 'GoogleWorkers.calendar.syncDue'
 })
 
-poll({
-  fn: GoogleWorkers.Contacts.syncDue,
-  name: 'GoogleWorkers.contacts.syncDue'
-})
+// Moved to /scripts/mls/credentials
+// poll({
+//   fn: GoogleWorkers.Contacts.syncDue,
+//   name: 'GoogleWorkers.contacts.syncDue'
+// })
 
 poll({
   fn: MicrosoftWorker.Outlook.syncDue,
@@ -160,10 +161,11 @@ poll({
   name: 'MicrosoftWorker.calendar.syncDue'
 })
 
-poll({
-  fn: MicrosoftWorker.Contacts.syncDue,
-  name: 'MicrosoftWorker.contacts.syncDue'
-})
+// Moved to /scripts/mls/credentials
+// poll({
+//   fn: MicrosoftWorker.Contacts.syncDue,
+//   name: 'MicrosoftWorker.contacts.syncDue'
+// })
 
 poll({
   fn: BrandTemplate.updateThumbnails,
