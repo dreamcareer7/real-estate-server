@@ -2,7 +2,7 @@ const { expect } = require('chai')
 const moment = require('moment-timezone')
 
 const BrandFlow = require('../../../lib/models/Brand/flow')
-const Contact = require('../../../lib/models/Contact')
+const Contact = require('../../../lib/models/Contact/manipulate')
 const Context = require('../../../lib/models/Context')
 const CrmTask = require('../../../lib/models/CRM/Task')
 const EmailCampaign = require('../../../lib/models/Email/campaign')

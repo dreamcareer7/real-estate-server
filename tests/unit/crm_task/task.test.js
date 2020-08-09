@@ -9,7 +9,7 @@ const Orm = require('../../../lib/models/Orm/context')
 const Context = require('../../../lib/models/Context')
 const CrmTask = require('../../../lib/models/CRM/Task')
 const CrmAssociation = require('../../../lib/models/CRM/Association')
-const Contact = require('../../../lib/models/Contact')
+const Contact = require('../../../lib/models/Contact/manipulate')
 
 const UserHelper = require('../user/helper')
 

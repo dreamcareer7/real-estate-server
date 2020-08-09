@@ -4,8 +4,8 @@ const expect = chai.expect
 
 const { createContext, handleJobs } = require('../helper')
 
-const Contact = require('../../../lib/models/Contact')
-const AttributeDef = require('../../../lib/models/Contact/attribute_def')
+const Contact = require('../../../lib/models/Contact/manipulate')
+const AttributeDef = require('../../../lib/models/Contact/attribute_def/get')
 const ContactAttribute = require('../../../lib/models/Contact/attribute/get')
 const Context = require('../../../lib/models/Context')
 const Metric = require('../../../lib/models/Metric')

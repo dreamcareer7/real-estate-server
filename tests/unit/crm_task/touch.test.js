@@ -3,10 +3,10 @@ const moment = require('moment-timezone')
 
 const { createContext, handleJobs } = require('../helper')
 
-const AttributeDef = require('../../../lib/models/Contact/attribute_def')
+const AttributeDef = require('../../../lib/models/Contact/attribute_def/get')
 const Contact = require('../../../lib/models/Contact')
 const ContactTag = require('../../../lib/models/Contact/tag')
-const List = require('../../../lib/models/Contact/list')
+const List = require('../../../lib/models/Contact/list/manipulate')
 const Context = require('../../../lib/models/Context')
 const Orm = require('../../../lib/models/Orm/context')
 const CrmTask = require('../../../lib/models/CRM/Task')

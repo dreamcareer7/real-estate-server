@@ -3,7 +3,7 @@ const { expect } = require('chai')
 const { createContext, handleJobs } = require('../helper')
 
 const Contact = require('../../../lib/models/Contact')
-const ContactAttribute = require('../../../lib/models/Contact/attribute')
+const ContactAttribute = require('../../../lib/models/Contact/attribute/manipulate')
 const Context = require('../../../lib/models/Context')
 const Orm = {
   ...require('../../../lib/models/Orm/index'),
