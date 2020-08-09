@@ -10,7 +10,7 @@ const render_filters = require('../../../lib/utils/render/filters')
 
 const CalendarNotification = require('../../../lib/models/Calendar/notification')
 const CalendarWorker = require('../../../lib/models/Calendar/worker/notification')
-const Contact = require('../../../lib/models/Contact')
+const Contact = require('../../../lib/models/Contact/manipulate')
 const Context = require('../../../lib/models/Context')
 const Deal = require('../../../lib/models/Deal')
 const { Listing } = require('../../../lib/models/Listing')
