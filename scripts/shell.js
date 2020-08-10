@@ -5,15 +5,13 @@ const queue = require('../lib/utils/queue')
 const program = require('commander')
 const Brand = require('../lib/models/Brand')
 const Job = require('../lib/models/Job')
-const User = require('../lib/models/User')
+const User = require('../lib/models/User/get')
 
 program
   .usage('npm run shell [options]')
   .option('-u, --user <user>', 'user-id to be preset on context')
   .option('-b, --brand <brand>', 'brand-id to be preset on context')
   .parse(process.argv)
-
-require('../lib/models/index')()
 
 const db = require('../lib/utils/db')
 const sql = require('../lib/utils/sql')

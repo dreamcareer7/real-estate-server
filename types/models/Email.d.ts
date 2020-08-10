@@ -69,8 +69,8 @@ declare interface IEmailCampaignInput {
   include_signature?: boolean;
   individual?: boolean;
   headers?: Record<string, string>;
-  google_credential?: UUID;
-  microsoft_credential?: UUID;
+  google_credential?: UUID | null;
+  microsoft_credential?: UUID | null;
   thread_key?: string;
 }
 

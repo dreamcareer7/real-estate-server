@@ -4,7 +4,6 @@ const path = require('path')
 const { peanar } = require('../../lib/utils/peanar')
 const { fork } = require('../../lib/utils/fork')
 
-require('../../lib/models/index.js')()
 const Context = require('../../lib/models/Context')
 const config = require('../../lib/config')
 
@@ -19,9 +18,11 @@ require('../../lib/models/Google/workers')
 require('../../lib/models/Microsoft/workers')
 require('../../lib/models/Deal/email')
 require('../../lib/models/Deal/brokerwolf')
-require('../../lib/models/Email')
+require('../../lib/models/Email/send')
+require('../../lib/models/Email/events')
 require('../../lib/models/SMS')
 require('../../lib/models/Daily')
+require('../../lib/models/Envelope')
 
 /** @type {(() => Promise<void>)[]} */
 let shutdowns = []

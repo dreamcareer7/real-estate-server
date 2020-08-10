@@ -2,7 +2,8 @@
 
 require('../../connection.js')
 require('../../../lib/utils/db.js')
-require('../../../lib/models/index.js')
+const MLSJob = require('../../../lib/models/MLSJob')
+const Alert = require('../../../lib/models/Alert')
 
 Alert.refreshFilters(err => {
   if (err)

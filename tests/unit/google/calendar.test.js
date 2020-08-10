@@ -3,7 +3,7 @@ const { expect } = require('chai')
 const { createContext } = require('../helper')
 
 const Context          = require('../../../lib/models/Context')
-const User             = require('../../../lib/models/User')
+const User             = require('../../../lib/models/User/get')
 const BrandHelper      = require('../brand/helper')
 const GoogleCredential = require('../../../lib/models/Google/credential')
 const GoogleCalendar   = require('../../../lib/models/Google/calendar')
@@ -78,6 +78,13 @@ async function deleteLocalByRemoteCalendarId() {
   expect(updated.id).to.be.equal(cal.id)
   expect(updated.deleted_at).to.be.not.equal(null)
   expect(updated.deleted).to.be.equal(true)
+}
+
+async function get() {
+  const created = await createLocal()
+  const cal = await GoogleCalendar.get(created.id)
+
+  expect(created.id).to.be.equal(cal.id)
 }
 
 async function getFailed() {
@@ -221,11 +228,11 @@ describe('Google', () => {
     it('should fail in get by remote calendar id', getByRemoteCalendarIdFiled)
     it('should return a calendar by remote calendar id', getByRemoteCalendarId)
     it('should delete a local calendar by remote calendar id', deleteLocalByRemoteCalendarId)
-    it('should fail in get by id', getFailed)
+    it('should return a calendar by id', get)
+    it('should handle get by id failure', getFailed)
     it('should return calendars by channel credential id', getAllByGoogleCredential)
     it('should update a calendar\'s sync_token', updateSyncToken)
     it('should update watcher status', updateWatcher)
-    
     it('should return a list of remote google calendars', listRemoteCalendars)
     it('should persist remote google calendars without any ToSync calendars', persistRemoteCalendarsSimple)
     it('should persist remote google calendars', persistRemoteCalendars)

@@ -1,4 +1,6 @@
-const json = require('../json/address')
+const Address = require('../../../../lib/models/Address')
+const json = require('../json/address.json')
+
 
 const create = async () => {
   const id = await Address.create(json)

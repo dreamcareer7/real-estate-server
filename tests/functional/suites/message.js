@@ -5,7 +5,7 @@ const info_response = require('./expected_objects/info.js')
 const config = require('../../../lib/config')
 const sms = require('./message/sms.js')
 
-require('../../../lib/models/Crypto')
+const Crypto = require('../../../lib/models/Crypto')
 
 registerSuite('recommendation', ['feed'])
 

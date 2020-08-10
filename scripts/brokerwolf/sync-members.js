@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 require('../connection.js')
-require('../../lib/models/index.js')
+const BrokerWolf = require('../../lib/models/BrokerWolf')
 
 const sync = async () => {
   await BrokerWolf.Members.sync(process.argv[2])

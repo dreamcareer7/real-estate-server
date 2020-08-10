@@ -2,7 +2,8 @@
 
 require('../../connection.js')
 require('../../../lib/utils/db.js')
-require('../../../lib/models/index.js')
+const MLSJob = require('../../../lib/models/MLSJob')
+const Address = require('../../../lib/models/Address')
 
 const async = require('async')
 

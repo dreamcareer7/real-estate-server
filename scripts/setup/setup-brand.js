@@ -2,7 +2,12 @@
 
 const promisify = require('../../lib/utils/promisify')
 const Brand = require('../../lib/models/Brand/index')
-const BrandRole = require('../../lib/models/Brand/role')
+
+const BrandRole = {
+  ...require('../../lib/models/Brand/role/save'),
+  ...require('../../lib/models/Brand/role/members'),
+}
+
 const sql = require('../../lib/utils/sql')
 
 /**

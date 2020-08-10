@@ -7,14 +7,18 @@ const { createContext, handleJobs } = require('../helper')
 const db      = require('../../../lib/utils/db')
 const sql     = require('../../../lib/utils/sql')
 const config  = require('../../../lib/config')
-const Contact = require('../../../lib/models/Contact')
+const Contact = require('../../../lib/models/Contact/manipulate')
 const Context = require('../../../lib/models/Context')
-const Email   = require('../../../lib/models/Email')
-const User    = require('../../../lib/models/User')
+const User    = require('../../../lib/models/User/get')
 const EmailCampaign = require('../../../lib/models/Email/campaign')
-const EmailCampaignAttachment = require('../../../lib/models/Email/campaign/attachments')
+const EmailCampaignAttachment = require('../../../lib/models/Email/campaign/attachment')
 const EmailCampaignEmail = require('../../../lib/models/Email/campaign/email')
 const AttachedFile = require('../../../lib/models/AttachedFile')
+
+const Email   = {
+  ...require('../../../lib/models/Email/constants'),
+  ...require('../../../lib/models/Email/create'),
+}
 
 const BrandHelper    = require('../brand/helper')
 const { attributes } = require('../contact/helper')
@@ -928,13 +932,23 @@ async function saveError() {
   const campaign = await EmailCampaign.get(result[0])
 
   const failure = 'failure'
-
   await EmailCampaign.saveError(campaign, failure)
-
   const updated = await EmailCampaign.get(campaign.id)
 
   expect(updated.id).to.be.equal(campaign.id)
   expect(updated.failure).to.be.equal(failure)
+
+  try {
+    throw new Error('Maximum marketing email quota per month exceeded.')
+
+  } catch (ex) {
+
+    await EmailCampaign.saveError(campaign, ex.message)
+    const updated = await EmailCampaign.get(campaign.id)
+  
+    expect(updated.id).to.be.equal(campaign.id)
+    expect(updated.failure).to.be.equal(ex.message)
+  }
 }
 
 async function saveThreadKey() {
