@@ -138,12 +138,14 @@ poll({
 
 poll({
   fn: GoogleWorkers.Gmail.syncDue,
-  name: 'GoogleWorkers.gmail.syncDue'
+  name: 'GoogleWorkers.gmail.syncDue',
+  wait: 60000
 })
 
 poll({
   fn: GoogleWorkers.Calendar.syncDue,
-  name: 'GoogleWorkers.calendar.syncDue'
+  name: 'GoogleWorkers.calendar.syncDue',
+  wait: 60000
 })
 
 poll({
@@ -154,19 +156,22 @@ poll({
 
 poll({
   fn: MicrosoftWorker.Outlook.syncDue,
-  name: 'MicrosoftWorker.outlook.syncDue'
+  name: 'MicrosoftWorker.outlook.syncDue',
+  wait: 60000
 })
 
 poll({
   fn: MicrosoftWorker.Calendar.syncDue,
-  name: 'MicrosoftWorker.calendar.syncDue'
+  name: 'MicrosoftWorker.calendar.syncDue',
+  wait: 60000
 })
 
 // Moved to /scripts/mls/credentials
-// poll({
-//   fn: MicrosoftWorker.Contacts.syncDue,
-//   name: 'MicrosoftWorker.contacts.syncDue'
-// })
+poll({
+  fn: MicrosoftWorker.Contacts.syncDue,
+  name: 'MicrosoftWorker.contacts.syncDue',
+  wait: 60000
+})
 
 poll({
   fn: BrandTemplate.updateThumbnails,
