@@ -166,7 +166,6 @@ poll({
   wait: 60000
 })
 
-// Moved to /scripts/mls/credentials
 poll({
   fn: MicrosoftWorker.Contacts.syncDue,
   name: 'MicrosoftWorker.contacts.syncDue',
