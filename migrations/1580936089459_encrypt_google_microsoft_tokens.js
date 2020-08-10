@@ -11,8 +11,8 @@ const encryptTokens = async (tokens) => {
   const decrypted_aToken = Crypto.decrypt(tokens.access_token)
   const decrypted_rToken = Crypto.decrypt(tokens.refresh_token)
 
-  promises.push(KMS.encrypt(new Buffer(decrypted_aToken, 'utf-8')))
-  promises.push(KMS.encrypt(new Buffer(decrypted_rToken, 'utf-8')))
+  promises.push(KMS.encrypt(Buffer.from(decrypted_aToken, 'utf-8')))
+  promises.push(KMS.encrypt(Buffer.from(decrypted_rToken, 'utf-8')))
 
   const result = await Promise.all(promises)
 
