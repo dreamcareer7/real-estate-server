@@ -35,13 +35,14 @@ async function shutdown() {
   Context.log('Pollers shutdown successful!')
 }
 
-const poll = ({ fn, name }) => {
+const poll = ({ fn, name, wait = 5000 }) => {
   async function again() {
     if (shutting_down) return
 
     poll({
       fn,
-      name
+      name,
+      wait
     })
   }
 
@@ -88,7 +89,7 @@ const poll = ({ fn, name }) => {
       if (shutting_down) {
         Context.log('Pollers: shutdown completed')
       } else {
-        polling_timeouts.set(name, setTimeout(again, 5000))
+        polling_timeouts.set(name, setTimeout(again, wait))
       }
     }
   }
@@ -145,11 +146,11 @@ poll({
   name: 'GoogleWorkers.calendar.syncDue'
 })
 
-// Moved to /scripts/mls/credentials
-// poll({
-//   fn: GoogleWorkers.Contacts.syncDue,
-//   name: 'GoogleWorkers.contacts.syncDue'
-// })
+poll({
+  fn: GoogleWorkers.Contacts.syncDue,
+  name: 'GoogleWorkers.contacts.syncDue',
+  wait: 60000
+})
 
 poll({
   fn: MicrosoftWorker.Outlook.syncDue,
