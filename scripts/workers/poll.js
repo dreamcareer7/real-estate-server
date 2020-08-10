@@ -39,7 +39,8 @@ const poll = ({ fn, name, wait = 5000 }) => {
 
     poll({
       fn,
-      name
+      name,
+      wait
     })
   }
 
