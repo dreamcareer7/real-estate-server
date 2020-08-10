@@ -164,17 +164,11 @@ poll({
   wait: 60000
 })
 
-<<<<<<< HEAD
-poll({
-  fn: MicrosoftWorker.Contacts.syncDue,
-  name: 'MicrosoftWorker.contacts.syncDue'
-=======
 // Moved to /scripts/mls/credentials
 poll({
   fn: MicrosoftWorker.Contacts.syncDue,
   name: 'MicrosoftWorker.contacts.syncDue',
   wait: 60000
->>>>>>> bae57cd35... Upgrade Google and Microsoft pollers, add customized wait
 })
 
 poll({
