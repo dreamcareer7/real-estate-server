@@ -76,21 +76,24 @@ const poll = ({ fn, name, wait = 5000 }) => {
 
     const id = `process-${process.pid}-${name}-${++i}`
 
-    try {
-      const ctxRes = await createContext({ id })
-      await execute(ctxRes)
-    } catch (ex) {
-      Context.error(ex)
-      Slack.send({
-        channel: '7-server-errors',
-        text: `Poller error (${name}): Error while creating context!\n\`${ex}\``
-      })
-    } finally {
-      if (shutting_down) {
-        Context.log('Pollers: shutdown completed')
-      } else {
-        polling_timeouts.set(name, setTimeout(again, wait))
+    const ctxRes = await createContext({ id })
+
+    await ctxRes.run(async () => {
+      try {
+        await execute(ctxRes)
+      } catch (ex) {
+        Context.error(ex)
+        Slack.send({
+          channel: '7-server-errors',
+          text: `Poller error (${name}): Error while creating context!\n\`${ex}\``
+        })
       }
+    })
+
+    if (shutting_down) {
+      Context.log('Pollers: shutdown completed')
+    } else {
+      polling_timeouts.set(name, setTimeout(again, wait))
     }
   }
 
@@ -166,6 +169,7 @@ poll({
   wait: 60000
 })
 
+// Moved to /scripts/mls/credentials
 poll({
   fn: MicrosoftWorker.Contacts.syncDue,
   name: 'MicrosoftWorker.contacts.syncDue',
