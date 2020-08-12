@@ -78,7 +78,7 @@ const poll = ({ fn, name, wait = 5000 }) => {
 
     const ctxRes = await createContext({ id })
 
-    ctxRes.run(async () => {
+    await ctxRes.run(async () => {
       try {
         await execute(ctxRes)
       } catch (ex) {
