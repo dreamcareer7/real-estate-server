@@ -8,8 +8,6 @@ const createContext = async c => {
     ...c
   })
 
-  context.enter()
-
   const { conn, done } = await db.conn.promise()
 
   const rollback = err => {
@@ -46,6 +44,13 @@ const createContext = async c => {
     Context.log('⚠ Panic:'.yellow, e, e.stack)
     rollback(e.message)
   })
+
+  /*
+   *  It is important that we enter the context "after" defining all the functions.
+   *  If we enter the domain before function definitions, specially commit,
+   *  the commit function will be bound to this domain. Calling it will get activate the domain anyways.
+   */
+  context.enter()
 
   await conn.query('BEGIN')
 
