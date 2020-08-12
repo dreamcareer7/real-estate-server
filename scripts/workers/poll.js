@@ -87,14 +87,14 @@ const poll = ({ fn, name, wait = 5000 }) => {
           channel: '7-server-errors',
           text: `Poller error (${name}): Error while creating context!\n\`${ex}\``
         })
-      } finally {
-        if (shutting_down) {
-          Context.log('Pollers: shutdown completed')
-        } else {
-          polling_timeouts.set(name, setTimeout(again, wait))
-        }
       }
     })
+
+    if (shutting_down) {
+      Context.log('Pollers: shutdown completed')
+    } else {
+      polling_timeouts.set(name, setTimeout(again, wait))
+    }
   }
 
   poll_promises.set(name, _poll())
