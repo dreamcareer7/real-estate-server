@@ -8,8 +8,6 @@ const createContext = async c => {
     ...c
   })
 
-  context.enter()
-
   const { conn, done } = await db.conn.promise()
 
   const rollback = err => {
@@ -33,8 +31,8 @@ const createContext = async c => {
 
     await Job.handleContextJobs()
 
-    done()
     context.exit()
+    done()
   }
 
   context.on('error', function (e) {
@@ -55,7 +53,9 @@ const createContext = async c => {
     rabbit_jobs: [],
   })
 
-  return { rollback, commit }
+  const run = context.run
+
+  return { rollback, commit, run }
 }
 
 module.exports = createContext

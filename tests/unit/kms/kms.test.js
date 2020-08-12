@@ -6,8 +6,8 @@ const KMS = require('../../../lib/models/KMS')
 async function test() {
   const Plaintext = 'text-to-decrypt-and-encrypt'
 
-  const encrypted = await KMS.encrypt(new Buffer(Plaintext, 'utf-8'))
-  const decrypted = await KMS.decrypt(new Buffer(encrypted, 'base64'))
+  const encrypted = await KMS.encrypt(Buffer.from(Plaintext, 'utf-8'))
+  const decrypted = await KMS.decrypt(Buffer.from(encrypted, 'base64'))
 
   console.log('encrypted', encrypted)
   console.log('decrypted', decrypted)
@@ -20,7 +20,7 @@ async function mockTest() {
   const Plaintext = 'text-to-decrypt-and-encrypt'
 
   const encrypted = await KMS.encrypt(Plaintext)
-  expect(encrypted).to.be.equal(new Buffer(Plaintext).toString('base64'))
+  expect(encrypted).to.be.equal(Buffer.from(Plaintext).toString('base64'))
 
   const decrypted = await KMS.decrypt(encrypted)
   expect(decrypted).to.be.equal(Plaintext)

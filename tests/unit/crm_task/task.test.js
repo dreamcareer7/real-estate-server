@@ -8,6 +8,7 @@ const Orm = require('../../../lib/models/Orm/context')
 
 const Context = require('../../../lib/models/Context')
 const CrmTask = require('../../../lib/models/CRM/Task')
+const CrmTaskEmitter = require('../../../lib/models/CRM/Task/emitter')
 const CrmAssociation = require('../../../lib/models/CRM/Association')
 const Contact = require('../../../lib/models/Contact/manipulate')
 
@@ -128,7 +129,7 @@ async function testCreateMany() {
 }
 
 function testCreateManyEmitsCreateEvent(done) {
-  CrmTask.once('create', ({ task_ids, user_id, brand_id }) => {
+  CrmTaskEmitter.once('create', ({ task_ids, user_id, brand_id }) => {
     expect(task_ids).to.have.length(4)
     expect(user_id).to.be.equal(user.id)
     expect(brand_id).to.be.equal(brand.id)

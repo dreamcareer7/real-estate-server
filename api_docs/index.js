@@ -34,6 +34,8 @@ if (options.tests) {
   generate()
 
 function generate() {
+  console.log('Generating documentation')
+
   const files = fs.readdirSync('docs')
     .filter(filename => {
       if (filename.substr(0,1) === '.')
@@ -60,6 +62,8 @@ function generate() {
 function generateMd(docName, cb) {
   const md = fs.readFileSync(`docs/${docName}.md`).toString()
 
+  console.log('Generating', docName)
+
   aglio.render(md, {
     theme: options.theme || 'olio',
     //     themeTemplate:'triple',
@@ -69,6 +73,7 @@ function generateMd(docName, cb) {
     if (err)
       return cb(err)
 
+    console.log('Done Generating', docName)
     fs.writeFile(`docs/${docName}.html`, html, cb)
   })
 }

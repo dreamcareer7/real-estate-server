@@ -129,11 +129,13 @@ docs:
     - NODE_ENV="$ENV" npm install
     - npm install aglio --no-optional
     - node api_docs/index.js -o
+    - echo $?
   after_script:
     - apk --no-cache --update add ca-certificates wget
     - wget https://dl.minio.io/client/mc/release/linux-amd64/mc
     - chmod +x mc
     - ./mc config host add rechat https://minio.rechat.com "$MINIO_ACCESS_KEY" "$MINIO_SECRET_KEY"
     - ./mc cp --recursive docs/ rechat/docs/$CI_COMMIT_REF_NAME
+    - echo "Done."
   tags:
     - docker
