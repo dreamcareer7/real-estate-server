@@ -135,5 +135,6 @@ docs:
     - chmod +x mc
     - ./mc config host add rechat https://minio.rechat.com "$MINIO_ACCESS_KEY" "$MINIO_SECRET_KEY"
     - ./mc cp --recursive docs/ rechat/docs/$CI_COMMIT_REF_NAME
+    - echo "Done."
   tags:
     - docker
