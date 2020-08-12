@@ -33,8 +33,8 @@ const createContext = async c => {
 
     await Job.handleContextJobs()
 
-    done()
     context.exit()
+    done()
   }
 
   context.on('error', function (e) {
