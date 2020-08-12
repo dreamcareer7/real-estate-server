@@ -129,7 +129,6 @@ docs:
     - NODE_ENV="$ENV" npm install
     - npm install aglio --no-optional
     - node api_docs/index.js -o
-    - echo  Exit Code: $?
   after_script:
     - apk --no-cache --update add ca-certificates wget
     - wget https://dl.minio.io/client/mc/release/linux-amd64/mc
