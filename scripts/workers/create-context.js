@@ -45,13 +45,6 @@ const createContext = async c => {
     rollback(e.message)
   })
 
-  /*
-   *  It is important that we enter the context "after" defining all the functions.
-   *  If we enter the domain before function definitions, specially commit,
-   *  the commit function will be bound to this domain. Calling it will get activate the domain anyways.
-   */
-  context.enter()
-
   await conn.query('BEGIN')
 
   context.set({
@@ -60,7 +53,9 @@ const createContext = async c => {
     rabbit_jobs: [],
   })
 
-  return { rollback, commit }
+  const run = context.run
+
+  return { rollback, commit, run }
 }
 
 module.exports = createContext

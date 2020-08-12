@@ -78,7 +78,9 @@ const poll = ({ fn, name, wait = 5000 }) => {
 
     try {
       const ctxRes = await createContext({ id })
-      await execute(ctxRes)
+      await ctxRes.run(() => {
+        return execute(ctxRes)
+      })
     } catch (ex) {
       Context.error(ex)
       Slack.send({
