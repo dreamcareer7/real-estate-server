@@ -76,24 +76,25 @@ const poll = ({ fn, name, wait = 5000 }) => {
 
     const id = `process-${process.pid}-${name}-${++i}`
 
-    try {
-      const ctxRes = await createContext({ id })
-      await ctxRes.run(() => {
-        return execute(ctxRes)
-      })
-    } catch (ex) {
-      Context.error(ex)
-      Slack.send({
-        channel: '7-server-errors',
-        text: `Poller error (${name}): Error while creating context!\n\`${ex}\``
-      })
-    } finally {
-      if (shutting_down) {
-        Context.log('Pollers: shutdown completed')
-      } else {
-        polling_timeouts.set(name, setTimeout(again, wait))
+    const ctxRes = await createContext({ id })
+
+    ctxRes.run(async () => {
+      try {
+        await execute(ctxRes)
+      } catch (ex) {
+        Context.error(ex)
+        Slack.send({
+          channel: '7-server-errors',
+          text: `Poller error (${name}): Error while creating context!\n\`${ex}\``
+        })
+      } finally {
+        if (shutting_down) {
+          Context.log('Pollers: shutdown completed')
+        } else {
+          polling_timeouts.set(name, setTimeout(again, wait))
+        }
       }
-    }
+    })
   }
 
   poll_promises.set(name, _poll())
