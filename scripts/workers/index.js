@@ -74,18 +74,22 @@ Object.keys(queues).forEach(queue_name => {
       id
     })
 
-    await run(async () => {
-      try {
-        const result = await promisify(definition.handler)(job)
-        Metric.increment(`Job.${queue_name}`)
-        await commit()
-        done(null, result)
-      } catch(err) {
-        await rollback(err)
-        done(err)
-        return
-      }
-    })
+    try {
+      const result = await run(async () => {
+        try {
+          const result = await promisify(definition.handler)(job)
+          Metric.increment(`Job.${queue_name}`)
+          await commit()
+          return result
+        } catch(err) {
+          await rollback(err)
+          throw err
+        }
+      })
+      done(null, result)
+    } catch(e) {
+      done(e)
+    }
   }
 
   queue.process(queue_name, definition.parallel, handler)
