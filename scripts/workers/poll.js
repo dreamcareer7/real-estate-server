@@ -169,11 +169,16 @@ poll({
   wait: 60000
 })
 
-// Moved to /scripts/mls/credentials
 poll({
   fn: MicrosoftWorker.Contacts.syncDue,
   name: 'MicrosoftWorker.contacts.syncDue',
   wait: 60000
+})
+
+poll({
+  fn: MicrosoftWorker.Outlook.parseNotifications,
+  name: 'MicrosoftWorker.Outlook.parseNotifications',
+  wait: 5000
 })
 
 poll({
