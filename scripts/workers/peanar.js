@@ -4,7 +4,6 @@ const path = require('path')
 const { peanar } = require('../../lib/utils/peanar')
 const { fork } = require('../../lib/utils/fork')
 
-const Context = require('../../lib/models/Context')
 const config = require('../../lib/config')
 
 require('../../lib/models/Calendar/worker')
@@ -26,10 +25,6 @@ require('../../lib/models/Envelope')
 
 /** @type {(() => Promise<void>)[]} */
 let shutdowns = []
-
-const context = Context.create({
-  id: `worker-${process.pid}-peanar-workers-main`
-})
 
 const queues = [
   {
@@ -170,8 +165,6 @@ function shutdownForks() {
 //   })
 // })
 
-context.run(() => {
-  startPeanar().catch(ex => context.error(ex))
-})
+startPeanar().catch(ex => console.error(ex))
 
 module.exports = shutdownForks
