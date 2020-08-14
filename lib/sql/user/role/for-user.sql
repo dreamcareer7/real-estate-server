@@ -5,7 +5,7 @@ WITH r AS (
     (
       SELECT bs.id
       FROM brands_subscriptions bs
-      JOIN chargebee_subscription cs ON bs.chargebee = cs.id
+      JOIN chargebee_subscriptions cs ON bs.chargebee = cs.id
       WHERE bs.user = $1
       AND   bs.brand IN (
         SELECT * FROM brand_parents(brand)
