@@ -2,7 +2,7 @@ const db = require('../lib/utils/db')
 
 const migrations = [
   'BEGIN',
-  'ALTER TABLE chargebee_subscriptions DROP CONSTRAINT chargebee_active_subscriptions;',
+  'ALTER TABLE chargebee_subscriptions DROP INDEX chargebee_active_subscriptions;',
   `CREATE UNIQUE INDEX chargebee_active_subscriptions
     ON chargebee_subscriptions(customer, plan) WHERE (status = 'active' OR status = 'in_trial')`,
   'COMMIT'
