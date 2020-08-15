@@ -17,6 +17,7 @@ require('../../lib/models/Google/workers')
 require('../../lib/models/Microsoft/workers')
 require('../../lib/models/Deal/email')
 require('../../lib/models/Deal/brokerwolf')
+require('../../lib/models/Email/campaign/worker')
 require('../../lib/models/Email/send')
 require('../../lib/models/Email/events')
 require('../../lib/models/SMS')
@@ -112,6 +113,10 @@ const forks = [
   {
     queues: ['microsoft', 'microsoft_cal'],
     concurrency: 5
+  },
+  {
+    queues: ['email_campaign'],
+    concurrency: 1
   },
   {
     queues: ['email'],

@@ -4,8 +4,8 @@ SELECT
   extract(epoch from email_threads.updated_at) AS updated_at,
   email_threads.brand,
   email_threads."user",
-  google_credential,
-  microsoft_credential,
+  email_threads.google_credential,
+  email_threads.microsoft_credential,
   email_threads.subject,
   extract(epoch from first_message_date) AS first_message_date,
   extract(epoch from last_message_date) AS last_message_date,
@@ -34,7 +34,7 @@ SELECT
           END
         ) || (
           CASE
-            WHEN google_credential IS NOT NULL THEN
+            WHEN email_threads.google_credential IS NOT NULL THEN
               (SELECT
                 jsonb_agg(jsonb_build_object('id', google_messages.id, 'type', 'google_message') ORDER BY message_date)
               FROM
@@ -43,7 +43,7 @@ SELECT
                 thread_key = email_threads.id
                 AND google_messages.google_credential = email_threads.google_credential
                 AND google_messages.deleted_at IS NULL)
-            WHEN microsoft_credential IS NOT NULL THEN
+            WHEN email_threads.microsoft_credential IS NOT NULL THEN
               (SELECT
                 jsonb_agg(jsonb_build_object('id', microsoft_messages.id, 'type', 'microsoft_message') ORDER BY message_date)
               FROM
