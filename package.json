@@ -105,6 +105,7 @@
     "pdfjs-dist": "git+https://github.com/rechat/pdfjs-dist.git",
     "peanar": "^0.9.30",
     "pg": "^8.2.1",
+    "pm2": "^4.4.0",
     "redis": "^3.0.2",
     "request": "^2.88.2",
     "request-as-curl": "^0.1.0",
