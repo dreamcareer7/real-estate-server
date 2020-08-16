@@ -4,7 +4,6 @@ const queue = require('../../../lib/utils/queue')
 const promisify = require('../../../lib/utils/promisify')
 const { peanar } = require('../../../lib/utils/peanar')
 const db = require('../../../lib/utils/db')
-const redisDataService = require('../../../lib/data-service/redis')
 
 const Context = require('../../../lib/models/Context')
 const Slack = require('../../../lib/models/Slack')
@@ -36,7 +35,6 @@ async function shutdown() {
     cb()
   }))()
 
-  redisDataService.shutdown()
   await db.close()
 
   wtfnode.dump()
