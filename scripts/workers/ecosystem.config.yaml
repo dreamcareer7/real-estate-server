@@ -1,4 +1,7 @@
 apps:
+  - script   : ./scripts/workers/index.js
+    name:    : 'workers'
+    kill_timeout : 15000
   - script   : ./scripts/workers/pollers/brand_template_thumbnails.js
     name     : 'thumbnails'
     kill_timeout : 15000
