@@ -17,29 +17,14 @@ apps:
   - script   : ./scripts/workers/pollers/email_campaigns.js
     name     : 'email_campaigns'
     kill_timeout : 15000
-  - script   : ./scripts/workers/pollers/gmail_sync.js
-    name     : 'gmail_sync'
+  - script   : ./scripts/workers/pollers/google.js
+    name     : 'google'
     kill_timeout : 15000
-  - script   : ./scripts/workers/pollers/google_calendar_sync.js
-    name     : 'google_calendar_sync'
-    kill_timeout : 15000
-  - script   : ./scripts/workers/pollers/google_contacts_sync.js
-    name     : 'google_contacts_sync'
-    kill_timeout : 15000
-  - script   : ./scripts/workers/pollers/microsoft_calendar_sync.js
-    name     : 'microsoft_calendar_sync'
-    kill_timeout : 15000
-  - script   : ./scripts/workers/pollers/microsoft_contacts_sync.js
-    name     : 'microsoft_contacts_sync'
+  - script   : ./scripts/workers/pollers/microsoft.js
+    name     : 'microsoft'
     kill_timeout : 15000
   - script   : ./scripts/workers/pollers/notifications.js
     name     : 'notifications'
-    kill_timeout : 15000
-  - script   : ./scripts/workers/pollers/outlook_live.js
-    name     : 'outlook_live'
-    kill_timeout : 15000
-  - script   : ./scripts/workers/pollers/outlook_sync.js
-    name     : 'outlook_sync'
     kill_timeout : 15000
   - script   : ./scripts/workers/pollers/deal_notifications.js
     name     : 'deal_notifications'
