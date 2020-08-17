@@ -116,7 +116,6 @@
     "socket.io-redis": "^5.2.0",
     "string-pixel-width": "^1.10.0",
     "stripe": "^4.25.0",
-    "throng": "^4.0.0",
     "to-pascal-case": "^1.0.0",
     "to-snake-case": "^1.0.0",
     "twilio": "^3.33.4",
