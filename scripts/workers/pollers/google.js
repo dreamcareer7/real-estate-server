@@ -19,3 +19,15 @@ poll({
   name: 'GoogleWorkers.gmail.syncDue',
   wait: 60000
 })
+
+poll({
+  fn: GoogleWorkers.Gmail.parseNotifications,
+  name: 'GoogleWorkers.Gmail.parseNotifications',
+  wait: 5000
+})
+
+poll({
+  fn: GoogleWorkers.Calendar.parseNotifications,
+  name: 'GoogleWorkers.Calendar.parseNotifications',
+  wait: 5000
+})
