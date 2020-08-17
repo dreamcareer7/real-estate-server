@@ -6,10 +6,7 @@ const {app, start} = require('./lib/bootstrap.js')
 require('./lib/utils/logger.js')(app)
 require('./lib/utils/atomic.js')(app)
 
-
-const start = () => {
+migrate(() => {
   start(config.http.port)
   console.log(`Listening on http://localhost:${config.http.port}`)
-}
-
-migrate(starter)
+})
