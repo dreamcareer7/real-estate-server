@@ -158,6 +158,18 @@ poll({
 })
 
 poll({
+  fn: GoogleWorkers.Gmail.parseNotifications,
+  name: 'GoogleWorkers.Gmail.parseNotifications',
+  wait: 5000
+})
+
+poll({
+  fn: GoogleWorkers.Calendar.parseNotifications,
+  name: 'GoogleWorkers.Calendar.parseNotifications',
+  wait: 5000
+})
+
+poll({
   fn: MicrosoftWorker.Outlook.syncDue,
   name: 'MicrosoftWorker.outlook.syncDue',
   wait: 60000
