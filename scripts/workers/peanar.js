@@ -4,7 +4,6 @@ const path = require('path')
 const { peanar } = require('../../lib/utils/peanar')
 const { fork } = require('../../lib/utils/fork')
 
-const Context = require('../../lib/models/Context')
 const config = require('../../lib/config')
 
 require('../../lib/models/Calendar/worker')
@@ -18,6 +17,7 @@ require('../../lib/models/Google/workers')
 require('../../lib/models/Microsoft/workers')
 require('../../lib/models/Deal/email')
 require('../../lib/models/Deal/brokerwolf')
+require('../../lib/models/Email/campaign/worker')
 require('../../lib/models/Email/send')
 require('../../lib/models/Email/events')
 require('../../lib/models/SMS')
@@ -26,10 +26,6 @@ require('../../lib/models/Envelope')
 
 /** @type {(() => Promise<void>)[]} */
 let shutdowns = []
-
-const context = Context.create({
-  id: `worker-${process.pid}-peanar-workers-main`
-})
 
 const queues = [
   {
@@ -119,6 +115,10 @@ const forks = [
     concurrency: 5
   },
   {
+    queues: ['email_campaign'],
+    concurrency: 1
+  },
+  {
     queues: ['email'],
     concurrency: 20
   },
@@ -170,8 +170,6 @@ function shutdownForks() {
 //   })
 // })
 
-context.run(() => {
-  startPeanar().catch(ex => context.error(ex))
-})
+startPeanar().catch(ex => console.error(ex))
 
 module.exports = shutdownForks

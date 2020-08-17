@@ -531,6 +531,15 @@ const checkoutSubscription = cb => {
     .expectStatus(302)
 }
 
+const cancelSubscription = cb => {
+  const { id } = results.brand.createSubscription.data
+
+  return frisby.create('cancel a subscription')
+    .post(`/brands/${brand_id}/subscriptions/${id}/cancel`)
+    .after(cb)
+    .expectStatus(204)
+}
+
 const removeBrand = cb => {
   return frisby.create('delete a brand')
     .delete(`/brands/${brand_id}`)
@@ -758,6 +767,7 @@ module.exports = {
   createSubscription,
   updateSubscription,
   checkoutSubscription,
+  cancelSubscription,
 
   getUserRoles,
 

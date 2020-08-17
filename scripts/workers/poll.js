@@ -4,7 +4,7 @@ const Context = require('../../lib/models/Context')
 const Slack = require('../../lib/models/Slack')
 const Message = require('../../lib/models/Message/email')
 
-const Notification = require('../../lib/models/Notification')
+const Notification = require('../../lib/models/Notification/send')
 const CrmTaskWorker = require('../../lib/models/CRM/Task/worker/notification')
 const CalendarWorker = require('../../lib/models/Calendar/worker/notification')
 const EmailCampaign = require('../../lib/models/Email/campaign')
@@ -158,6 +158,18 @@ poll({
 })
 
 poll({
+  fn: GoogleWorkers.Gmail.parseNotifications,
+  name: 'GoogleWorkers.Gmail.parseNotifications',
+  wait: 5000
+})
+
+poll({
+  fn: GoogleWorkers.Calendar.parseNotifications,
+  name: 'GoogleWorkers.Calendar.parseNotifications',
+  wait: 5000
+})
+
+poll({
   fn: MicrosoftWorker.Outlook.syncDue,
   name: 'MicrosoftWorker.outlook.syncDue',
   wait: 60000
@@ -169,11 +181,16 @@ poll({
   wait: 60000
 })
 
-// Moved to /scripts/mls/credentials
 poll({
   fn: MicrosoftWorker.Contacts.syncDue,
   name: 'MicrosoftWorker.contacts.syncDue',
   wait: 60000
+})
+
+poll({
+  fn: MicrosoftWorker.Outlook.parseNotifications,
+  name: 'MicrosoftWorker.Outlook.parseNotifications',
+  wait: 5000
 })
 
 poll({
