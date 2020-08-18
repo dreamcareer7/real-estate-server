@@ -3,9 +3,9 @@ const db = require('../lib/utils/db')
 const migrations = [
   'BEGIN',
 
-  `ALTER TYPE notification_object_class ADD VALUE 'EmailCampaign'`,
-  `ALTER TYPE notification_action ADD VALUE 'EmailClicked'`,
-  `ALTER TYPE notification_action ADD VALUE 'EmailOpened'`,
+  'ALTER TYPE notification_object_class ADD VALUE \'EmailCampaign\'',
+  'ALTER TYPE notification_action ADD VALUE \'EmailClicked\'',
+  'ALTER TYPE notification_action ADD VALUE \'EmailOpened\'',
 
   'COMMIT'
 ]
