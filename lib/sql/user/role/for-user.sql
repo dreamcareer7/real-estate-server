@@ -5,12 +5,10 @@ WITH r AS (
     (
       SELECT bs.id
       FROM brands_subscriptions bs
-      JOIN chargebee_subscriptions cs ON bs.chargebee = cs.id
-      WHERE bs.user = $1
-      AND   bs.brand IN (
+      WHERE bs.brand IN (
         SELECT * FROM brand_parents(brand)
       )
-      AND cs.status IN('active', 'in_trial')
+      AND bs.status IN('active', 'in_trial')
     ) as subscription,
     ARRAY_AGG(roles.acl) as acl,
     'user_role' as type
