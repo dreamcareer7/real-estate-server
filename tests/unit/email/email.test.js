@@ -516,7 +516,7 @@ async function testCampaignWithLArgeAttachments() {
     await EmailCampaign.createMany([campaignObj])
   } catch (ex) {
 
-    const limit    = config.mailgun_integration.attachment_size_limit
+    const limit    = config.email_composer.attachment_upload_limit.mailgun
     const limitMsg = `${Math.round(limit / (1024 * 1024))}MB`
 
     expect(ex.message).to.be.equal(`Files size could not be greater than ${limitMsg}!`)
@@ -570,7 +570,7 @@ async function testGmailWithLArgeAttachments() {
     await EmailCampaign.createMany([campaignObj])
   } catch (ex) {
 
-    const limit    = config.google_integration.attachment_size_limit
+    const limit    = config.email_composer.attachment_upload_limit.gmail
     const limitMsg = `${Math.round((limit / (1024 * 1024)) * (3 / 4))}MB`
 
     expect(ex.message).to.be.equal(`Files size could not be greater than ${limitMsg}!`)
@@ -624,7 +624,7 @@ async function testOutlookWithLArgeAttachments() {
     await EmailCampaign.createMany([campaignObj])
   } catch (ex) {
 
-    const limit    = config.microsoft_integration.attachment_size_limit
+    const limit    = config.email_composer.attachment_upload_limit.outlook
     const limitMsg = `${Math.round((limit / (1024 * 1024)) * (3 / 4))}MB`
 
     expect(ex.message).to.be.equal(`Files size could not be greater than ${limitMsg}!`)
