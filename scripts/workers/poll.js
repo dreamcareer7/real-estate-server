@@ -14,6 +14,7 @@ const MicrosoftWorker = require('../../lib/models/Microsoft/workers')
 const Task = require('../../lib/models/Task')
 const BrandTemplate = require('../../lib/models/Template/brand')
 const Daily = require('../../lib/models/Daily')
+const EmailEventsNotif = require('../../lib/models/Email/workers')
 // const ShowingsWorker = require('../../lib/models/Showings/worker')
 
 let i = 1
@@ -201,6 +202,12 @@ poll({
 poll({
   fn: Daily.sendDue,
   name: 'Daily.sendDue'
+})
+
+poll({
+  fn: EmailEventsNotif.parseNotifications,
+  name: 'EmailEventsNotif.parseNotifications',
+  wait: 5000
 })
 
 // poll({
