@@ -1,4 +1,3 @@
-const _u = require('lodash')
 const config = require('../../../lib/config.js')
 const user = require('./data/user.js')
 const uuid = require('node-uuid')
@@ -38,16 +37,6 @@ const create = (cb) => {
       code: String,
       data: user_response
     })
-}
-
-const createWithID = (cb) => {
-  const bogus = _u.cloneDeep(client)
-  bogus.id = '123456'
-
-  return frisby.create('create user with ID')
-    .post('/users', bogus)
-    .after(cb)
-    .expectStatus(400)
 }
 
 const create401 = (cb) => {
@@ -639,7 +628,6 @@ function patchUserProfileImage(cb) {
 
 module.exports = {
   lookupExpect404,
-  createWithID,
   create,
   create401,
   getUser,

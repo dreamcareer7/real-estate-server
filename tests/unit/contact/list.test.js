@@ -3,14 +3,17 @@ const uuid = require('uuid')
 
 const { createContext, handleJobs } = require('../helper')
 
-const AttributeDef = require('../../../lib/models/Contact/attribute_def')
+const AttributeDef = require('../../../lib/models/Contact/attribute_def/get')
 const BrandList = require('../../../lib/models/Brand/list')
 const Contact = require('../../../lib/models/Contact')
 const Context = require('../../../lib/models/Context')
 const List = require('../../../lib/models/Contact/list')
-const ListMember = require('../../../lib/models/Contact/list_members')
-const Orm = require('../../../lib/models/Orm')
-const User = require('../../../lib/models/User')
+const ListMember = require('../../../lib/models/Contact/list/members')
+const Orm = {
+  ...require('../../../lib/models/Orm/index'),
+  ...require('../../../lib/models/Orm/context'),
+}
+const User = require('../../../lib/models/User/get')
 
 const BrandHelper = require('../brand/helper')
 

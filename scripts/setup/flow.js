@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 const BrandFlow = require('../../lib/models/Brand/flow')
-const BrandEmail = require('../../lib/models/Brand/email')
+const BrandEmail = require('../../lib/models/Brand/email/save')
 const { runInContext } = require('../../lib/models/Context/util')
 
 const Context = require('../../lib/models/Context')

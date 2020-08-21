@@ -14,7 +14,7 @@ const sql = require('../../../lib/utils/sql')
 const Context = require('../../../lib/models/Context')
 const CrmTask = require('../../../lib/models/CRM/Task')
 const Notification = require('../../../lib/models/Notification')
-const User = require('../../../lib/models/User')
+const User = require('../../../lib/models/User/get')
 const Worker = require('../../../lib/models/CRM/Task/worker/notification')
 
 let userA, userB, brand

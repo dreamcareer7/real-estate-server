@@ -1,7 +1,7 @@
 const sql = require('../../lib/utils/sql')
 const Context = require('../../lib/models/Context/index')
 const { runInContext } = require('../../lib/models/Context/util')
-const ContactSummary = require('../../lib/models/Contact/summary')
+const Contact = require('../../lib/models/Contact/manipulate')
 
 async function run() {
   const { count } = await sql.selectOne(`
@@ -35,7 +35,7 @@ async function run() {
       bulk_size
     ])
 
-    affected_rows += await ContactSummary.update(contact_ids)
+    affected_rows += await Contact.updateSummary(contact_ids)
   }
 
   if (count - affected_rows > 0) {

@@ -1,7 +1,6 @@
 SELECT
     'microsoft_credential' AS type,
     microsoft_credentials.*,
-    (SELECT ARRAY( SELECT id FROM microsoft_sync_histories WHERE microsoft_credential = microsoft_credentials.id ORDER BY created_at DESC LIMIT 3 )) AS histories,
     (SELECT ARRAY( SELECT id FROM users_jobs WHERE microsoft_credential = microsoft_credentials.id )) AS jobs
 FROM
     microsoft_credentials

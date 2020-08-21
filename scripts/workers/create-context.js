@@ -2,11 +2,11 @@ const Context = require('../../lib/models/Context')
 const db = require('../../lib/utils/db')
 
 const createContext = async c => {
+  const Job = require('../../lib/models/Job')
+
   const context = Context.create({
     ...c
   })
-
-  context.enter()
 
   const { conn, done } = await db.conn.promise()
 
@@ -31,8 +31,8 @@ const createContext = async c => {
 
     await Job.handleContextJobs()
 
-    done()
     context.exit()
+    done()
   }
 
   context.on('error', function (e) {
@@ -53,7 +53,9 @@ const createContext = async c => {
     rabbit_jobs: [],
   })
 
-  return { rollback, commit }
+  const run = context.run
+
+  return { rollback, commit, run }
 }
 
 module.exports = createContext

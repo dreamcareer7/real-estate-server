@@ -2,7 +2,6 @@ const uuid = require('uuid')
 
 const google_auth_link_json   = require('./expected_objects/google/auth_link.js')
 const google_credential_json  = require('./expected_objects/google/credential.js')
-const google_syncHistory_json = require('./expected_objects/google/sync_history.js')
 // const google_profile_json  = require('./expected_objects/google/profile.js')
 
 registerSuite('agent', ['add'])
@@ -236,20 +235,6 @@ function deleteAccountFailedCauseOfInvalidBrand(cb) {
     .expectStatus(404)
 }
 
-function getGCredentialLastSyncHistory(cb) {
-  return frisby.create('get Google credential lastSyncHistory')
-    .get(`/users/self/google/sync_history/${results.google.createGoogleCredential}`)
-    .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
-    .after(function(err, res, json) {
-      cb(err, res, json)
-    })
-    .expectStatus(200)
-    .expectJSON({
-      code: 'OK',
-      data: google_syncHistory_json
-    })
-}
-
 function getRemoteCalendars(cb) {
   return frisby.create('List Google Remote Calendars - initial')
     .get(`/users/google/${results.google.createGoogleCredential}/calendars`)
@@ -316,7 +301,6 @@ module.exports = {
   forceSync,
   deleteAccount,
   deleteAccountFailedCauseOfInvalidBrand,
-  getGCredentialLastSyncHistory,
   getRemoteCalendars,
   configureCaledars,
   getRemoteCalendarsAfterConfiguring,

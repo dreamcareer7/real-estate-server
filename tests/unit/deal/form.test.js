@@ -1,6 +1,7 @@
 const { expect } = require('chai')
 const { createContext } = require('../helper')
 const BrandHelper = require('../brand/helper')
+const Form = require('../../../lib/models/Form')
 
 const add = async (form = {}) => {
   const name = 'Test Form'

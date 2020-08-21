@@ -10,7 +10,7 @@ function sleep(ms) {
   return new Promise(res => setTimeout(res, ms))
 }
 
-async function run(limit = 1010) {
+async function execute(limit = 1010) {
   const ids = await sql.selectIds('select id from emails where campaign = $1 AND mailgun_id IS NULL LIMIT $2', [CAMPAIGN_ID, limit])
 
   for (let i = 0; i < ids.length; i += 1000) {
@@ -29,12 +29,14 @@ async function send(ids) {
 }
 
 async function main() {
-  const { commit } = await createContext({
+  const { commit, run } = await createContext({
     id: `support-campaign-${CAMPAIGN_ID}`
   })
 
-  await run(parseInt(process.argv[2] || '15000'))
-  await commit()
+  await run(async () => {
+    await execute(parseInt(process.argv[2] || '15000'))
+    await commit()
+  })
 }
 
 main().catch(ex => {

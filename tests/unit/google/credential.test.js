@@ -2,7 +2,7 @@ const { expect } = require('chai')
 const { createContext } = require('../helper')
 
 const Context          = require('../../../lib/models/Context')
-const User             = require('../../../lib/models/User')
+const User             = require('../../../lib/models/User/get')
 const BrandHelper      = require('../brand/helper')
 const GoogleCredential = require('../../../lib/models/Google/credential')
 
@@ -25,7 +25,6 @@ async function setup() {
 async function create() {
   const { credential, body } = await createGoogleCredential(user, brand)
 
-  expect(credential.type).to.be.equal('google_credential')
   expect(credential.user).to.be.equal(user.id)
   expect(credential.brand).to.be.equal(brand.id)
   expect(credential.email).to.be.equal(body.profile.emailAddress)
@@ -34,16 +33,23 @@ async function create() {
   return credential
 }
 
-async function publicize() {
+async function findByUser() {
   const createdCredential = await create()
-  const updatedCredential = await GoogleCredential.publicize(createdCredential)
+  const credentialIds     = await GoogleCredential.findByUser(createdCredential.user, createdCredential.brand)
 
-  expect(updatedCredential.access_token).to.be.equal(undefined)
-  expect(updatedCredential.refresh_token).to.be.equal(undefined)
-  expect(updatedCredential.expiry_date).to.be.equal(undefined)
-  expect(updatedCredential.contacts_sync_token).to.be.equal(undefined)
-  expect(updatedCredential.contact_groups_sync_token).to.be.equal(undefined)
-  expect(updatedCredential.messages_sync_history_id).to.be.equal(undefined)
+  expect(credentialIds).not.to.be.equal(0)
+}
+
+async function getByBrand() {
+  const createdCredential = await create()
+  const credentials       = await GoogleCredential.getByBrand(createdCredential.brand)
+
+  expect(credentials.length).not.to.be.equal(0)
+
+  for (const record of credentials) {
+    expect(record.user).to.be.equal(createdCredential.user)
+    expect(record.brand).to.be.equal(createdCredential.brand)
+  }
 }
 
 async function getByUser() {
@@ -53,7 +59,6 @@ async function getByUser() {
   expect(credentials.length).not.to.be.equal(0)
 
   for (const record of credentials) {
-    expect(record.type).to.be.equal('google_credential')
     expect(record.user).to.be.equal(createdCredential.user)
     expect(record.brand).to.be.equal(createdCredential.brand)
   }
@@ -66,7 +71,6 @@ async function getByEmail() {
   expect(credentials.length).to.be.equal(1)
 
   for (const record of credentials) {
-    expect(record.type).to.be.equal('google_credential')
     expect(record.user).to.be.equal(createdCredential.user)
     expect(record.brand).to.be.equal(createdCredential.brand)
   }
@@ -82,7 +86,6 @@ async function getById() {
   const createdCredential = await create()
   const credential        = await GoogleCredential.get(createdCredential.id)
 
-  expect(credential.type).to.be.equal('google_credential')
   expect(credential.user).to.be.equal(createdCredential.user)
   expect(credential.brand).to.be.equal(createdCredential.brand)
 }
@@ -149,6 +152,15 @@ async function updateAsRevoked() {
   await GoogleCredential.updateAsRevoked(createdCredential.id)
   const updatedCredential = await GoogleCredential.get(createdCredential.id)
   expect(updatedCredential.revoked).to.be.equal(true)
+}
+
+async function updateLastDailySync() {
+  const createdCredential = await create()
+  expect(createdCredential.revoked).to.be.equal(false)
+
+  await GoogleCredential.updateLastDailySync(createdCredential.id)
+  const updatedCredential = await GoogleCredential.get(createdCredential.id)
+  expect(updatedCredential.last_daily_sync).to.not.be.equal(createdCredential.last_daily_sync)
 }
 
 async function disconnect() {
@@ -245,14 +257,31 @@ async function updateRechatGoogleCalendar() {
   expect(updatedCredential.google_calendar).to.be.equal(rechatCalendarId)
 }
 
+async function resetRechatGoogleCalendar() {
+  const createdCredential = await create()
+  expect(createdCredential.revoked).to.be.equal(false)
+
+  await GoogleCredential.resetRechatGoogleCalendar(createdCredential.id)
+  const updatedCredential = await GoogleCredential.get(createdCredential.id)
+  expect(updatedCredential.google_calendar).to.be.equal(null)
+}
+
+async function hasSendEmailAccess() {
+  const createdCredential = await create()
+  const credential = await GoogleCredential.hasSendEmailAccess(createdCredential.id)
+
+  expect(credential.id).to.be.equal(createdCredential.id)
+}
+
+
 describe('Google', () => {
   describe('Google Account', () => {
     createContext()
     beforeEach(setup)
 
     it('should create a google-credential', create)
-    it('should publicize a google-credential', publicize)
-
+    it('should return google-credential ids by user-brand', findByUser)
+    it('should return a google-credential by brand', getByBrand)
     it('should return a google-credential by user-brand', getByUser)
     it('should return a google-credential by email', getByEmail)
     it('should handle returned exception from google-credential by user-brand', getByUserFailed)
@@ -260,19 +289,22 @@ describe('Google', () => {
     it('should return a google-credential by id', getById)
     it('should handle returned exception from google-credential by id', getByIdFailed)
     
-    it('should update a google-credential tokens', updateTokens)
-    it('should update a google-credential refresh-token', updateRefreshToken)
-    it('should update a google-credential access-token', updateAccesshToken)
+    it('should update google-credential\'s tokens', updateTokens)
+    it('should update google-credential\'s refresh-token', updateRefreshToken)
+    it('should update google-credential\'s access-token', updateAccesshToken)
     it('should revoke a google-credential', updateAsRevoked)
+    it('should update google-credential LastDailySync', updateLastDailySync)
     
     it('should disconnect a google-credential', disconnect)
     it('should handle returned exception from disconnect google-credential', disconnectFailed)
     
-    it('should update a google-credential profile', updateProfile)
-    it('should update a google-credential gmail-profile', updateGmailProfile)
-    it('should update a google-credential messages sync token', updateMessagesSyncHistoryId)
-    it('should update a google-credential messages sync token', updateMessagesSyncHistoryIdWithThirdParam)
+    it('should update google-credential\'s profile', updateProfile)
+    it('should update google-credential\'s gmail-profile', updateGmailProfile)
+    it('should update google-credential\'s messages sync_token', updateMessagesSyncHistoryId)
+    it('should update google-credential\'s messages sync_token', updateMessagesSyncHistoryIdWithThirdParam)
 
-    it('should update a google-credential rechat-google-Calendar', updateRechatGoogleCalendar)
+    it('should update google-credential\'s rechat-google-Calendar', updateRechatGoogleCalendar)
+    it('should update google-credential\'s rechat-google-Calendar as null', resetRechatGoogleCalendar)
+    it('should check the access of sending emails', hasSendEmailAccess)
   })
 })

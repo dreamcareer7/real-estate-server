@@ -2,11 +2,13 @@ const promisify = require('../../lib/utils/promisify')
 const createContext = require('./create-context')
 const Context = require('../../lib/models/Context')
 const Slack = require('../../lib/models/Slack')
+const Message = require('../../lib/models/Message/email')
 
-const Notification = require('../../lib/models/Notification')
+const Notification = require('../../lib/models/Notification/send')
 const CrmTaskWorker = require('../../lib/models/CRM/Task/worker/notification')
 const CalendarWorker = require('../../lib/models/Calendar/worker/notification')
 const EmailCampaign = require('../../lib/models/Email/campaign')
+const EmailCampaignStats = require('../../lib/models/Email/campaign/stats')
 const GoogleWorkers = require('../../lib/models/Google/workers')
 const MicrosoftWorker = require('../../lib/models/Microsoft/workers')
 const Task = require('../../lib/models/Task')
@@ -74,21 +76,24 @@ const poll = ({ fn, name, wait = 5000 }) => {
 
     const id = `process-${process.pid}-${name}-${++i}`
 
-    try {
-      const ctxRes = await createContext({ id })
-      await execute(ctxRes)
-    } catch (ex) {
-      Context.error(ex)
-      Slack.send({
-        channel: '7-server-errors',
-        text: `Poller error (${name}): Error while creating context!\n\`${ex}\``
-      })
-    } finally {
-      if (shutting_down) {
-        Context.log('Pollers: shutdown completed')
-      } else {
-        polling_timeouts.set(name, setTimeout(again, wait))
+    const ctxRes = await createContext({ id })
+
+    await ctxRes.run(async () => {
+      try {
+        await execute(ctxRes)
+      } catch (ex) {
+        Context.error(ex)
+        Slack.send({
+          channel: '7-server-errors',
+          text: `Poller error (${name}): Error while creating context!\n\`${ex}\``
+        })
       }
+    })
+
+    if (shutting_down) {
+      Context.log('Pollers: shutdown completed')
+    } else {
+      polling_timeouts.set(name, setTimeout(again, wait))
     }
   }
 
@@ -130,8 +135,8 @@ poll({
 })
 
 poll({
-  fn: EmailCampaign.updateStats,
-  name: 'EmailCampaign.updateStats'
+  fn: EmailCampaignStats.updateStats,
+  name: 'EmailCampaignStats.updateStats'
 })
 
 poll({
@@ -153,6 +158,18 @@ poll({
 })
 
 poll({
+  fn: GoogleWorkers.Gmail.parseNotifications,
+  name: 'GoogleWorkers.Gmail.parseNotifications',
+  wait: 5000
+})
+
+poll({
+  fn: GoogleWorkers.Calendar.parseNotifications,
+  name: 'GoogleWorkers.Calendar.parseNotifications',
+  wait: 5000
+})
+
+poll({
   fn: MicrosoftWorker.Outlook.syncDue,
   name: 'MicrosoftWorker.outlook.syncDue',
   wait: 60000
@@ -164,11 +181,16 @@ poll({
   wait: 60000
 })
 
-// Moved to /scripts/mls/credentials
 poll({
   fn: MicrosoftWorker.Contacts.syncDue,
   name: 'MicrosoftWorker.contacts.syncDue',
   wait: 60000
+})
+
+poll({
+  fn: MicrosoftWorker.Outlook.parseNotifications,
+  name: 'MicrosoftWorker.Outlook.parseNotifications',
+  wait: 5000
 })
 
 poll({
