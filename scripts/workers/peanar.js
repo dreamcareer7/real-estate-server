@@ -102,25 +102,21 @@ const queues = [
   {
     queues: ['daily_email'],
     concurrency: 5
-  }
-]
-
-const forks = [
-  {
-    queues: ['google', 'google_cal'],
-    concurrency: 7
-  },
-  {
-    queues: ['microsoft', 'microsoft_cal'],
-    concurrency: 5
-  },
-  {
-    queues: ['email_campaign'],
-    concurrency: 1
   },
   {
     queues: ['email'],
     concurrency: 20
+  },
+]
+
+const forks = [
+  {
+    queues: ['google', 'google_cal', 'microsoft', 'microsoft_cal'],
+    concurrency: 7
+  },
+  {
+    queues: ['email_campaign'],
+    concurrency: 1
   },
   {
     queues: ['MLS.Photo', 'MLS.Listing', 'MLS.Listing.Photos.Validate'],
