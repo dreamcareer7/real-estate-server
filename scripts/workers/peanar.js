@@ -116,7 +116,8 @@ const forks = [
   },
   {
     queues: ['email_campaign'],
-    concurrency: 1
+    concurrency: 1,
+    wait: 20000
   },
   {
     queues: ['email'],
