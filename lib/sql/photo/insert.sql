@@ -9,7 +9,7 @@ INSERT INTO photos(
   mls
 )
 VALUES (
-  $1::bigint,
+  $1::text,
   $2,
   $3,
   $4,
@@ -25,6 +25,6 @@ ON CONFLICT (matrix_unique_id, mls) WHERE (revision < $7) DO UPDATE SET
   exif = $6,
   revision = $7
 
-WHERE photos.matrix_unique_id = $1::bigint AND photos.mls = $8::mls
+WHERE photos.matrix_unique_id = $1::text AND photos.mls = $8::mls
 
 RETURNING id
