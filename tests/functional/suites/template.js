@@ -60,16 +60,21 @@ const instantiate = cb => {
 const renderTemplate = cb => {
   const id = results.template.create.data.id
 
-  const html = 'SOME HTML {{ palette | safe }}'
+  const variables = {
+    'user.first_name': 'FIRST_NAME',
+    'listing.property.address.state': 'STATE'
+  }
 
   const data = {
-    html,
+    variables
   }
+
+  const expected = 'HTML FIRST_NAME STATE'
 
   return frisby.create('create an instance of a template')
     .post(`/templates/${id}/render`, data)
     .after(cb)
-    .expectStatus(200)
+    .expectBodyContains(expected)
 }
 
 const share = cb => {
