@@ -13,7 +13,7 @@ INSERT INTO email_campaigns (
   headers,
   google_credential,
   microsoft_credential,
-  event_notifications
+  notifications_enabled
 )
 SELECT
   due_at,
@@ -30,6 +30,6 @@ SELECT
   headers,
   google_credential,
   microsoft_credential,
-  COALESCE(event_notifications, true)
+  COALESCE(notifications_enabled, true)
 FROM json_populate_recordset(NULL::email_campaigns, $1::json)
 RETURNING id

@@ -26,7 +26,7 @@ const email = {
   due_at: new Date(),
   html: '<div>Hi</div>',
   subject: 'Email Subject',
-  event_notifications: false
+  notifications_enabled: false
 }
 
 const individual = {
@@ -104,7 +104,7 @@ const get = cb => {
         html: email.html,
         delivered: 1,
         recipients: email.to,
-        event_notifications: false
+        notifications_enabled: false
       }
     })
 }
@@ -223,7 +223,7 @@ const update = cb => {
         recipient_type: 'Email'
       }
     ],
-    event_notifications: false
+    notifications_enabled: false
   }
 
   return frisby
@@ -236,7 +236,7 @@ const update = cb => {
       data: {
         subject: campaign.subject,
         html: campaign.html,
-        event_notifications: false,
+        notifications_enabled: false,
         recipients: [
           {
             email: campaign.to[0].email

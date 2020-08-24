@@ -7,5 +7,5 @@ UPDATE email_campaigns SET
   due_at = $7,
   google_credential = $8,
   microsoft_credential = $9,
-  event_notifications = COALESCE($10, true)
+  notifications_enabled = COALESCE($10, true)
 WHERE id = $1

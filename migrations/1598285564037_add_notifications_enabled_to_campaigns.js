@@ -3,7 +3,7 @@ const db = require('../lib/utils/db')
 const migrations = [
   'BEGIN',
 
-  'ALTER TABLE email_campaigns ADD COLUMN IF NOT EXISTS event_notifications BOOLEAN DEFAULT TRUE',
+  'ALTER TABLE email_campaigns ADD COLUMN IF NOT EXISTS notifications_enabled BOOLEAN DEFAULT TRUE',
 
   'COMMIT'
 ]
