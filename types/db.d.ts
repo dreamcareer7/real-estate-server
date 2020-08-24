@@ -279,6 +279,7 @@ declare type TDbSqlAddress =
   | 'email/store_microsoft_id'
   | 'email/get_by_google_message_id'
   | 'email/get_by_microsoft_message_id'
+  | 'email/get_by_mailgun_id'
   | 'email/thread/get'
   | 'email/thread/prune'
   | 'email/thread/update_google'

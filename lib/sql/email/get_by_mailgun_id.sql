@@ -1,0 +1,1 @@
+SELECT id FROM emails WHERE mailgun_id = $1
