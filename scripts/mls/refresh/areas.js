@@ -3,7 +3,7 @@
 require('../../connection.js')
 require('../../../lib/utils/db.js')
 const MLSJob = require('../../../lib/models/MLSJob')
-const Listing = require('../../../lib/models/Listing')
+const { Listing } = require('../../../lib/models/Listing')
 
 Listing.refreshAreas(err => {
   if (err)

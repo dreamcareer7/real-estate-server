@@ -1,4 +1,5 @@
-INSERT INTO
-brands_subscriptions(created_by, created_within, brand, "user", chargebee)
-VALUES ($1, $2, $3, $4, $5)
+INSERT INTO brands_subscriptions
+(created_within, brand, plan, customer, status, plan_quantity, chargebee_id, chargebee_object)
+VALUES
+($1, $2, $3, $4, $5, $6, $7, $8)
 RETURNING id

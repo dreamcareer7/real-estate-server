@@ -1,9 +1,8 @@
 const db = require('../lib/utils/db')
 
 const migrations = [
-  'ALTER TYPE mls ADD VALUE \'DASH\''
+  'ALTER TYPE mls ADD VALUE IF NOT EXISTS \'DASH\''
 ]
-
 
 const run = async () => {
   const { conn } = await db.conn.promise()

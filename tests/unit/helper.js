@@ -69,6 +69,73 @@ function createContext() {
   })
 }
 
+const prepareContext = async c => {
+  const context = Context.create({
+    ...c
+  })
+
+  const { conn, done } = await db.conn.promise()
+
+  const rollback = err => {
+    Context.trace('<- Rolling back on worker'.red, err)
+    return conn.query('ROLLBACK')
+  }
+
+  const commit = async () => {
+    try {
+      await conn.query('COMMIT')
+    } catch(err) {
+      Context.trace('<- Commit failed!'.red)
+      return rollback(err)
+    }
+
+    Context.log('Committed 👌')
+  }
+
+  context.on('error', function (e) {
+    delete e.domain
+    delete e.domainThrown
+    delete e.domainEmitter
+    delete e.domainBound
+
+    Context.log('⚠ Panic:'.yellow, e, e.stack)
+    rollback(e.message)
+  })
+
+  await conn.query('BEGIN')
+
+  context.set({
+    db: conn,
+    jobs: [],
+    rabbit_jobs: [],
+  })
+
+  return {
+    done: () => context.run(async () => {
+      try {
+        await commit()
+        done()
+      } catch(err) {
+        await rollback(err)
+        done()
+        throw err
+      }
+    }),
+    run: context.run
+  }
+}
+
+async function executeInContext(c, fn) {
+  const { run, done } = await prepareContext(c)
+
+  try {
+    return await run(fn)
+  } finally {
+    await run(handleJobs)
+    await done()
+  }
+}
+
 async function handleJobs() {
   while (Context.get('jobs').length > 0 || Context.get('rabbit_jobs').length > 0) {
     while (Context.get('jobs').length > 0) {
@@ -79,4 +146,10 @@ async function handleJobs() {
   }
 }
 
-module.exports = { createContext, handleJobs }
+module.exports = {
+  getDb,
+  handleJobs,
+  executeInContext,
+  prepareContext,
+  createContext,
+}

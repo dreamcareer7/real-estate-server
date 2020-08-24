@@ -492,8 +492,7 @@ const createSubscription = cb => {
   const { plan } = results.brand.createBillingPlan
 
   const subscription = {
-    plan: plan.id,
-    user: results.authorize.token.data.id
+    plan: plan.id
   }
 
   return frisby.create('create a subscription')
