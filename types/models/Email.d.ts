@@ -72,6 +72,7 @@ declare interface IEmailCampaignInput {
   google_credential?: UUID | null;
   microsoft_credential?: UUID | null;
   thread_key?: string;
+  event_notifications?: Boolean
 }
 
 declare interface IEmailCampaign extends IEmailCampaignInput {
