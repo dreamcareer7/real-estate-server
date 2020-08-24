@@ -1,9 +1,9 @@
-const EmailEventsNotif = require('../../../lib/models/Email/workers')
+const EmailCampaign = require('../../../lib/models/Email/campaign/notification')
 const { poll } = require('../poll')
 require('./entrypoint')
 
 poll({
-  fn: EmailEventsNotif.parseNotifications,
-  name: 'EmailEventsNotif.parseNotifications',
+  fn: EmailCampaign.sentNotifications,
+  name: 'EmailCampaign.sentNotifications',
   wait: 5000
 })
