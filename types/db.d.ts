@@ -443,6 +443,7 @@ declare type TDbSqlAddress =
   | 'microsoft/contact_folder/insert'
   | 'microsoft/credential/disconnect'
   | 'microsoft/credential/revoke'
+  | 'microsoft/credential/revoke'
   | 'microsoft/credential/get'
   | 'microsoft/credential/get_by_brand'
   | 'microsoft/credential/get_by_user'
