@@ -35,7 +35,7 @@ declare interface IContactBase {
   android_address_book_id?: string;
   google_id?: string;
   microsoft_id?: string;
-  parked?: Boolean;
+  parked?: boolean;
 }
 
 declare interface IContactInput extends IContactBase {
@@ -210,6 +210,7 @@ declare interface IContactFilterOptions {
   microsoft_id?: string;
   microsoft_ids?: string[];
 
+  parked?: boolean;
   forUpdate?: boolean;
 }
 
