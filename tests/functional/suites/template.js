@@ -57,6 +57,21 @@ const instantiate = cb => {
     })
 }
 
+const renderTemplate = cb => {
+  const id = results.template.create.data.id
+
+  const html = 'SOME HTML {{ palette | safe }}'
+
+  const data = {
+    html,
+  }
+
+  return frisby.create('create an instance of a template')
+    .post(`/templates/${id}/render`, data)
+    .after(cb)
+    .expectStatus(200)
+}
+
 const share = cb => {
   const text = 'Please share this'
 
@@ -146,11 +161,12 @@ module.exports = {
   create,
   getForBrand,
   instantiate,
+  renderTemplate,
   share,
   getMine,
   createAsset,
   deleteInstance,
   updateThumbnails,
   invalidateThumbnails,
-  deleteTemplate
+  deleteTemplate,
 }
