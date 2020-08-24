@@ -3,6 +3,8 @@ const path = require('path')
 const brand = require('./data/brand.js')
 const contexts = require('./data/context.js')
 
+const mock_plan = require('../../../lib/models/Brand/chargebee/mock/plan')
+
 registerSuite('office', ['add'])
 registerSuite('form', ['create'])
 
@@ -44,7 +46,7 @@ const create = (cb) => {
           user: results.authorize.token.data.id
         }
       ],
-      acl: ['Admin']
+      acl: ['Admin', 'Marketing', 'Deals', 'CRM']
     }
   ]
 
@@ -475,6 +477,69 @@ const getUserRoles = cb => {
     .expectStatus(200)
 }
 
+const createBillingPlan = (cb) => {
+  const content = {
+    plan: mock_plan
+  }
+
+  return frisby.create('Create a billing plan')
+    .post('/chargebee/webhook', {content})
+    .after(cb)
+    .expectStatus(200)
+}
+
+const createSubscription = cb => {
+  const { plan } = results.brand.createBillingPlan
+
+  const subscription = {
+    plan: plan.id,
+    user: results.authorize.token.data.id
+  }
+
+  return frisby.create('create a subscription')
+    .post(`/brands/${brand_id}/subscriptions`, subscription)
+    .after(cb)
+    .expectStatus(200)
+}
+
+
+const updateSubscription = cb => {
+  const created = results.brand.createSubscription.data
+
+  const data = {
+    content: {
+      subscription: {
+        id: created.chargebee_id
+      }
+    }
+  }
+
+  return frisby.create('update a subscription (webhook)')
+    .post('/chargebee/webhook', data)
+    .after(cb)
+    .expectStatus(200)
+}
+
+const checkoutSubscription = cb => {
+  const { id } = results.brand.createSubscription.data
+
+  return frisby.create('get checkout page')
+    .get(`/brands/${brand_id}/subscriptions/${id}/checkout`, {
+      followRedirect: false
+    })
+    .after(cb)
+    .expectStatus(302)
+}
+
+const cancelSubscription = cb => {
+  const { id } = results.brand.createSubscription.data
+
+  return frisby.create('cancel a subscription')
+    .post(`/brands/${brand_id}/subscriptions/${id}/cancel`)
+    .after(cb)
+    .expectStatus(204)
+}
+
 const removeBrand = cb => {
   return frisby.create('delete a brand')
     .delete(`/brands/${brand_id}`)
@@ -697,6 +762,13 @@ module.exports = {
 
   updateBrandSettings,
   updateUserSettings,
+
+  createBillingPlan,
+  createSubscription,
+  updateSubscription,
+  checkoutSubscription,
+  cancelSubscription,
+
   getUserRoles,
 
   addStatus,

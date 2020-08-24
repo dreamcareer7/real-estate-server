@@ -1,8 +1,5 @@
 const { peanar } = require('../../lib/utils/peanar')
 
-require('../../lib/models/index.js')()
-const Context = require('../../lib/models/Context')
-
 require('../../lib/models/Calendar/worker')
 require('../../lib/models/Contact/worker')
 require('../../lib/models/Flow/worker')
@@ -14,7 +11,9 @@ require('../../lib/models/Google/workers')
 require('../../lib/models/Microsoft/workers')
 require('../../lib/models/Deal/email')
 require('../../lib/models/Deal/brokerwolf')
-require('../../lib/models/Email')
+require('../../lib/models/Email/campaign/worker')
+require('../../lib/models/Email/send')
+require('../../lib/models/Email/events')
 require('../../lib/models/SMS')
 
 const attachCalendarEvents = require('../../lib/models/Calendar/events')
@@ -31,10 +30,6 @@ attachTaskEventHandler()
 attachTouchEventHandler()
 attachCalIntEventHandler()
 
-const context = Context.create({
-  id: 'peanar-workers-child'
-})
-
 /** @type {NodeJS.Timeout} */
 let heartbeat_timer
 
@@ -42,7 +37,7 @@ function sendHeartbeat() {
   if (process.send) {
     process.send({ action: 'HEARTBEAT' })
   } else {
-    context.log('Heartbeat!')
+    console.log('Heartbeat!')
   }
 }
 
@@ -62,7 +57,7 @@ async function shutdown() {
     process.exit()
   }
   catch (ex) {
-    context.error(ex)
+    console.error(ex)
     process.exit()
   }
 }
@@ -87,11 +82,9 @@ async function main(args) {
     await peanar.worker({ queues, concurrency })
     startHeatbeater()
   } catch (ex) {
-    context.error(ex)
+    console.error(ex)
     await shutdown()
   }
 }
 
-context.run(() => {
-  main(process.argv[2]).catch(ex => console.error(ex))
-})
+main(process.argv[2]).catch(ex => console.error(ex))

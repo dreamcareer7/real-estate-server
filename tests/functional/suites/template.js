@@ -9,7 +9,7 @@ const create = cb => {
   return frisby.create('create a template')
     .post('/templates', {
       ...template,
-      html: 'HTML',
+      html: 'HTML {{ user.first_name }} {{ listing.property.address.state }}',
       brands: [
         results.brand.createParent.data.id
       ]

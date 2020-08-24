@@ -6,7 +6,7 @@ const contactsData = require('./data/filter.json')
 const Contact = require('../../../lib/models/Contact')
 const Context = require('../../../lib/models/Context')
 const CrmTask = require('../../../lib/models/CRM/Task')
-const User = require('../../../lib/models/User')
+const User = require('../../../lib/models/User/get')
 
 const BrandHelper = require('../brand/helper')
 

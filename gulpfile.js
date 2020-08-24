@@ -1,6 +1,6 @@
 require('colors')
 const gulp = require('gulp')
-const eslint = require('gulp-eslint')
+const eslint = require('gulp-eslint7')
 const spawn = require('child_process').spawn
 
 gulp.task('lint', () => {

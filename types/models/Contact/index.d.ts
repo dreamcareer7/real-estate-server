@@ -111,6 +111,10 @@ declare interface IContactAttribute {
   label?: string;
   is_primary: boolean;
   is_partner: boolean;
+
+  created_for?: string;
+  updated_for?: string;
+  deleted_for?: string;
 }
 
 declare interface IContactAttributeInput {

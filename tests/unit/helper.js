@@ -7,7 +7,6 @@ const promisify = require('../../lib/utils/promisify')
 const Context = require('../../lib/models/Context')
 const Metric = require('../../lib/models/Metric')
 const { handleJob } = require('../functional/jobs')
-require('../../lib/models/index')()
 
 const attachCalendarEvents = require('../../lib/models/Calendar/events')
 const attachContactEvents = require('../../lib/models/Contact/events')
@@ -22,12 +21,6 @@ attachFlowEvents()
 attachTouchEventHandler()
 attachTaskEventHandler()
 attachCalIntEventHandler()
-
-// Mock Socket so Notification can work in unit tests
-global['Socket'] = {
-  send(_event, _room, _args, cb) { if (typeof cb === 'function') return cb() },
-  join(_user, _room_id) {}
-}
 
 const getDb = async () => {
   return new Promise((resolve, reject) => {

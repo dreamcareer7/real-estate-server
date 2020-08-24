@@ -4,8 +4,14 @@ const GoogleCredential    = require('../../../lib/models/Google/credential')
 const GoogleMessage       = require('../../../lib/models/Google/message')
 const GoogleCalendar      = require('../../../lib/models/Google/calendar')
 const GoogleCalendarEvent = require('../../../lib/models/Google/calendar_events')
+const EmailCampaign = require('../../../lib/models/Email/campaign')
 
 const { generateRecord, processLabels } = require('../../../lib/models/Google/workers/gmail/common')
+
+const Email   = {
+  ...require('../../../lib/models/Email/constants'),
+  ...require('../../../lib/models/Email/create'),
+}
 
 const google_messages_offline = require('./data/google_messages.json')
 const calendars = require('./data/calendars.json')
@@ -96,10 +102,37 @@ async function createGoogleCalendarEvent(googleCredential) {
   return event
 }
 
+async function createCampaign(user, brand) {
+  /** @type {IEmailCampaignInput} */
+  const campaign = {
+    created_by: user.id,
+    brand: brand.id,
+    from: user.id,
+    to: [
+      {
+        tag: 'Tag1',
+        recipient_type: Email.TAG
+      },
+      {
+        tag: 'Tag2',
+        recipient_type: Email.TAG
+      }
+    ],
+    subject: '2',
+    html: 'test',
+    due_at: '2019-03-07'
+  }
+
+  const result = await EmailCampaign.createMany([campaign])
+
+  return result[0]
+}
+
 
 module.exports = {
   createGoogleCredential,
   createGoogleMessages,
   createGoogleCalendar,
-  createGoogleCalendarEvent
+  createGoogleCalendarEvent,
+  createCampaign
 }

@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 const path = require('path')
 const fs = require('fs')
 
@@ -83,7 +85,7 @@ const updateStats = cb => {
   return frisby
     .create('Update campaign stats')
     .post('/jobs', {
-      name: 'EmailCampaign.updateStats',
+      name: 'EmailCampaignStats.updateStats',
     })
     .after(cb)
     .expectStatus(200)

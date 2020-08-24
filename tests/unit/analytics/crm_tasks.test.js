@@ -5,7 +5,7 @@ const { createContext } = require('../helper')
 const CrmTask = require('../../../lib/models/CRM/Task')
 const { CrmTaskQueryBuilder } = require('../../../lib/models/Analytics/OLAP')
 const Context = require('../../../lib/models/Context')
-const User = require('../../../lib/models/User')
+const User = require('../../../lib/models/User/get')
 
 const BrandHelper = require('../brand/helper')
 

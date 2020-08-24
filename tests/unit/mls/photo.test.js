@@ -1,5 +1,5 @@
 const { expect } = require('chai')
-
+const Photo = require('../../../lib/models/Photo')
 const { createContext } = require('../helper')
 
 const json = require('./json/photo')

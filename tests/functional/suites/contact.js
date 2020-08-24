@@ -166,9 +166,7 @@ const createCompanyContact = cb => {
     .expectJSON({
       data: [
         {
-          summary: {
-            display_name: company_name
-          }
+          display_name: company_name
         }
       ]
     })
@@ -195,9 +193,7 @@ const createSingleAttrContact = cb => {
     .expectJSON({
       data: [
         {
-          summary: {
-            display_name: 'Guest'
-          }
+          display_name: 'Guest'
         }
       ]
     })
@@ -448,7 +444,7 @@ const addBulkAttributes = cb => {
       attributes: [a]
     })
     .after((err, res, json) => {
-      if (json.data.some(c => c.summary.tags && c.summary.tags.includes('BulkTag'))) {
+      if (json.data.some(c => c.tags && c.tags.includes('BulkTag'))) {
         return cb(err, res, json)
       }
 
@@ -950,24 +946,6 @@ function checkIfNextTouchIsNull(cb) {
     .expectJSONLength('data', manyContacts.length)
 }
 
-const getTimeline = (cb) => {
-  return frisby.create('get list of contact activities (timeline)')
-    .get(`/contacts/${results.contact.create.data[0].id}/timeline`)
-    .after(cb)
-    .expectStatus(200)
-    .expectJSON({
-      code: 'OK',
-      data: [{
-        type: 'contact_attribute',
-        attribute_type: 'note'
-      }],
-      info: {
-        count: 2,
-        total: 2
-      }
-    })
-}
-
 const getAllTags = (cb) => {
   return frisby.create('get all Tags')
     .get('/contacts/tags')
@@ -1247,7 +1225,6 @@ module.exports = {
   getContactsInManyContactsList,
   unsetTouchFreqOnManyContactsList,
   checkIfNextTouchIsNull,
-  getTimeline,
   getAllTags,
   addTag,
   checkTagIsAdded,
