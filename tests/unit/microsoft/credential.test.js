@@ -108,16 +108,6 @@ async function updateTokens() {
   expect(updatedCredential.access_token).to.be.equal(tokens.access_token)
 }
 
-async function updateAsRevoked() {
-  const createdCredential = await create()
-  expect(createdCredential.revoked).to.be.equal(false)
-
-  await MicrosoftCredential.updateAsRevoked(createdCredential.id)
-  const updatedCredential = await MicrosoftCredential.get(createdCredential.id)
-
-  expect(updatedCredential.revoked).to.be.equal(true)
-}
-
 async function updateSendEmailAfter() {
   const createdCredential = await create()
 
@@ -225,7 +215,6 @@ describe('Microsoft', () => {
     
     it('should update microsoft-credential\'s tokens', updateTokens)
     it('should update microsoft-credential\'s send_email_after', updateSendEmailAfter)
-    it('should revoke microsoft-credential\'s', updateAsRevoked)
 
     it('should disable/enable a microsoft-credential', disconnect)
     it('should handle returned exception from disable/enable microsoft-credential', disconnectFailed)

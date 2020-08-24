@@ -145,15 +145,6 @@ async function updateAccesshToken() {
   expect(updatedCredential.access_token).to.be.equal(new_access_token)
 }
 
-async function updateAsRevoked() {
-  const createdCredential = await create()
-  expect(createdCredential.revoked).to.be.equal(false)
-
-  await GoogleCredential.updateAsRevoked(createdCredential.id)
-  const updatedCredential = await GoogleCredential.get(createdCredential.id)
-  expect(updatedCredential.revoked).to.be.equal(true)
-}
-
 async function updateLastDailySync() {
   const createdCredential = await create()
   expect(createdCredential.revoked).to.be.equal(false)
@@ -300,7 +291,6 @@ describe('Google', () => {
     it('should update google-credential\'s tokens', updateTokens)
     it('should update google-credential\'s refresh-token', updateRefreshToken)
     it('should update google-credential\'s access-token', updateAccesshToken)
-    it('should revoke a google-credential', updateAsRevoked)
     it('should update google-credential LastDailySync', updateLastDailySync)
     
     it('should disconnect a google-credential', disconnect)
