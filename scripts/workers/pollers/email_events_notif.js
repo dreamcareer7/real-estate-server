@@ -3,7 +3,7 @@ const { poll } = require('../poll')
 require('./entrypoint')
 
 poll({
-  fn: EmailCampaign.sentNotifications,
-  name: 'EmailCampaign.sentNotifications',
+  fn: EmailCampaign.sendNotifications,
+  name: 'EmailCampaign.sendNotifications',
   wait: 5000
 })
