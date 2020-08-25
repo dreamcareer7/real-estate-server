@@ -3,8 +3,6 @@ const path = require('path')
 const brand = require('./data/brand.js')
 const contexts = require('./data/context.js')
 
-const mock_plan = require('../../../lib/models/Brand/chargebee/mock/plan')
-
 registerSuite('office', ['add'])
 registerSuite('form', ['create'])
 registerSuite('billing_plan', ['create'])
