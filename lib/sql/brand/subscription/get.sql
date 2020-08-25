@@ -9,11 +9,8 @@ SELECT
   plan_quantity,
   chargebee_id,
   (chargebee_object->'trial_end')::int as trial_ends_at,
-  (chargebee_object->'price')::int as price,
-  (chargebee_object->>'name') as name,
-  (chargebee_object->>'description') as description,
-  (chargebee_object->>'period') as period,
-  (chargebee_object->>'price_unit') as price_unit
+  (chargebee_object->>'billing_period') as billing_period,
+  (chargebee_object->>'plan_unit_price') as plan_unit_price
 
 FROM brands_subscriptions
 JOIN unnest($1::uuid[]) WITH ORDINALITY t(bsid, ord) ON brands_subscriptions.id = bsid
