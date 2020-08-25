@@ -1,4 +1,5 @@
 SELECT
+  id,
   'billing_plan' AS TYPE,
   chargebee_object->'name' as name,
   chargebee_object->'currency_code' as currency_code,
