@@ -3,10 +3,9 @@ const path = require('path')
 const brand = require('./data/brand.js')
 const contexts = require('./data/context.js')
 
-const mock_plan = require('../../../lib/models/Brand/chargebee/mock/plan')
-
 registerSuite('office', ['add'])
 registerSuite('form', ['create'])
+registerSuite('billing_plan', ['create'])
 
 const hostname = 'testhost'
 let brand_id
@@ -477,19 +476,9 @@ const getUserRoles = cb => {
     .expectStatus(200)
 }
 
-const createBillingPlan = (cb) => {
-  const content = {
-    plan: mock_plan
-  }
-
-  return frisby.create('Create a billing plan')
-    .post('/chargebee/webhook', {content})
-    .after(cb)
-    .expectStatus(200)
-}
 
 const createSubscription = cb => {
-  const { plan } = results.brand.createBillingPlan
+  const { plan } = results.billing_plan.create
 
   const subscription = {
     plan: plan.id
@@ -762,7 +751,6 @@ module.exports = {
   updateBrandSettings,
   updateUserSettings,
 
-  createBillingPlan,
   createSubscription,
   updateSubscription,
   checkoutSubscription,
