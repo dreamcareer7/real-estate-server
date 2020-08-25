@@ -8,7 +8,7 @@ SELECT
   status,
   plan_quantity,
   chargebee_id,
-  (chargebee_object->'trial_end')::int as trial_ends_at,
+  (chargebee_object->>'trial_end')::int as trial_ends_at,
   (chargebee_object->>'billing_period') as billing_period,
   (chargebee_object->>'plan_unit_price') as plan_unit_price
 
