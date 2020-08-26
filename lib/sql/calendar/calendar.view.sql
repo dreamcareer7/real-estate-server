@@ -376,6 +376,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
     WHERE
       cad.deleted_at IS NULL
       AND data_type = 'date'
+      AND contacts.parked IS NOT TRUE
   )
   UNION ALL
   (
@@ -416,6 +417,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
     WHERE
       deleted_at IS NULL
       AND next_touch IS NOT NULL
+      AND parked IS NOT TRUE
   )
   UNION ALL
   (
@@ -533,6 +535,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
             WHERE
               ece.campaign = ec.id
               AND (ece.agent IS NOT NULL OR c.id IS NOT NULL)
+              AND c.parked IS NOT TRUE
             LIMIT 5
           ) t
       ) AS people,
@@ -674,6 +677,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
                 ON ((contacts.email @> ARRAY[email_campaign_emails.email_address]) OR (contacts.id = email_campaign_emails.contact))
                    AND contacts.brand = ec.brand
                    AND contacts.deleted_at IS NULL
+                   AND contacts.parked IS NOT TRUE
             WHERE
               email_campaign_emails.campaign = ec.id
               AND (email_campaign_emails.agent IS NOT NULL OR contacts.id IS NOT NULL)
@@ -702,6 +706,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
     WHERE
       ec.deleted_at IS NULL
       AND c.deleted_at IS NULL
+      AND c.parked IS NOT TRUE
       AND c.email @> ARRAY[ece.email_address]
       AND ec.executed_at IS NOT NULL
       AND ec.thread_key IS NULL
@@ -752,6 +757,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
               contacts.brand = email_threads.brand
               AND contacts.email && recipients
               AND contacts.deleted_at IS NULL
+              AND contacts.parked IS NOT TRUE
             LIMIT 5
           ) t
       ) AS people,
@@ -765,6 +771,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
           contacts.brand = email_threads.brand
           AND contacts.email && recipients
           AND contacts.deleted_at IS NULL
+          AND contacts.parked IS NOT TRUE
       ) AS people_len,
 
       email_threads.brand,
@@ -821,6 +828,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
               contacts.brand = email_threads.brand
               AND contacts.email && recipients
               AND contacts.deleted_at IS NULL
+              AND contacts.parked IS NOT TRUE
             LIMIT 5
           ) t
       ) AS people,
@@ -834,6 +842,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
           contacts.brand = email_threads.brand
           AND contacts.email && recipients
           AND contacts.deleted_at IS NULL
+          AND contacts.parked IS NOT TRUE
       ) AS people_len,
 
       brand,
@@ -848,6 +857,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
           contacts
         WHERE
           contacts.email && recipients
+          AND contacts.parked IS NOT TRUE
       ) AS c
     WHERE
       email_threads.deleted_at IS NULL
@@ -896,6 +906,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
         ON a.reference = u.id AND a.reference_type = 'User'
     WHERE
       contacts.deleted_at IS NULL
+      AND contacts.parked IS NOT TRUE
       AND u.is_shadow IS NOT TRUE
       AND u.deleted_at IS NULL
       AND u.user_type = 'Client'
