@@ -12,7 +12,7 @@ SELECT
   (bs.chargebee_object->>'billing_period') as billing_period,
   (bs.chargebee_object->>'plan_unit_price') as plan_unit_price,
   (bs.chargebee_object->>'plan_unit_price') as plan_unit_price,
-  (bc.chargebee_object->>'card_status') as card_status
+  (bc.chargebee_object->'customer'->>'card_status') as card_status
 
 FROM brands_subscriptions bs
 JOIN brands_customers bc ON bs.customer = bc.id
