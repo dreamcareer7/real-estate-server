@@ -58,6 +58,7 @@ SELECT
   email[1] AS email,
   email[1] AS primary_email,
   email AS emails,
+  parked,
   partner_email,
   phone_number[1] AS phone_number,
   phone_number[1] AS primary_phone_number,
