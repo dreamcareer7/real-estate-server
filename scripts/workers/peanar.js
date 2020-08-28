@@ -73,6 +73,10 @@ const queues = [
     queues: ['microsoft_contacts'],
     concurrency: 5
   },
+  {
+    queues: ['microsoft_disconnect'],
+    concurrency: 1
+  },
 
   {
     queues: ['gmail_webhooks'],
@@ -85,6 +89,10 @@ const queues = [
   {
     queues: ['google_contacts'],
     concurrency: 5
+  },
+  {
+    queues: ['google_disconnect'],
+    concurrency: 1
   },
 
   {
