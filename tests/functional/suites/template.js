@@ -73,6 +73,7 @@ const renderTemplate = cb => {
 
   return frisby.create('create an instance of a template')
     .post(`/templates/${id}/render`, data)
+    .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
     .after(cb)
     .expectBodyContains(expected)
 }

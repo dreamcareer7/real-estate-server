@@ -8,7 +8,7 @@ const createContext = async c => {
     ...c
   })
 
-  const { conn, done } = await db.conn.promise()
+  const { conn, done } = await context.run(db.conn.promise)
 
   const rollback = err => {
     Context.trace('<- Rolling back on worker'.red, err)
