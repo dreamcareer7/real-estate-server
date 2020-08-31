@@ -103,7 +103,7 @@
     "passport-saml": "^1.2.0",
     "password-generator": "^2.3.2",
     "pdfjs-dist": "git+https://github.com/rechat/pdfjs-dist.git",
-    "peanar": "^0.9.30",
+    "peanar": "^0.9.31",
     "pg": "^8.3.2",
     "pm2": "^4.4.0",
     "redis": "^3.0.2",
@@ -126,6 +126,7 @@
     "xml2js": "^0.4.23"
   },
   "devDependencies": {
+    "@types/amqplib": "^0.5.13",
     "@types/chai": "^4.2.11",
     "@types/cheerio": "^0.22.18",
     "@types/exceljs": "^0.5.3",
@@ -145,6 +146,7 @@
     "assertion-error": "^1.1.0",
     "copy-dir": "^1.2.0",
     "deepmerge": "^4.2.2",
+    "dotenv": "^8.2.0",
     "eslint": "^7.6.0",
     "eslint-config-standard": "^14.1.1",
     "eslint-plugin-promise": "^4.2.1",
