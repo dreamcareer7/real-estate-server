@@ -70,6 +70,10 @@ const queues = [
     concurrency: 1
   },
   {
+    queues: ['microsoft_contacts_notifications'],
+    concurrency: 1
+  },
+  {
     queues: ['microsoft_contacts'],
     concurrency: 5
   },
