@@ -90,6 +90,10 @@ const queues = [
     queues: ['google_cal_webhooks'],
     concurrency: 3
   },
+  // {
+  //   queues: ['google_contacts_webhooks'],
+  //   concurrency: 1
+  // },
   {
     queues: ['google_contacts'],
     concurrency: 5
