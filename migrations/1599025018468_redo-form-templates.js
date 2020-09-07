@@ -11,7 +11,7 @@ const migrations = [
   'ALTER TABLE brands_form_templates ADD created_by uuid NOT NULL REFERENCES users(id)',
   'ALTER TABLE brands_form_templates ADD field TEXT NOT NULL',
   'ALTER TABLE brands_form_templates ADD value TEXT NOT NULL',
-  'ALTER TABLE brands_form_templates ADD CONSTRAINT unique_brand_form UNIQUE(brand,form,field)'
+  'ALTER TABLE brands_form_templates ADD CONSTRAINT unique_brand_form UNIQUE(brand,form,field)',
   'COMMIT'
 ]
 
