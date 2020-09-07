@@ -1070,6 +1070,18 @@ async function update() {
   }
 }
 
+async function enableDisableNotification() {
+  const campaign = await testGoogleEmail()
+
+  await EmailCampaign.enableDisableNotification(campaign.id, true)
+  const updated_one = await EmailCampaign.get(campaign.id)
+  expect(updated_one.notifications_enabled).to.be.equal(true)
+
+  await EmailCampaign.enableDisableNotification(campaign.id, false)
+  const updated_two = await EmailCampaign.get(campaign.id)
+  expect(updated_two.notifications_enabled).to.be.equal(false)  
+}
+
 
 describe('Email', () => {
   createContext()
@@ -1103,4 +1115,5 @@ describe('Email', () => {
   it('should save thread key on an email_campaing record', saveThreadKey)
 
   it('should update a campaign record', update)
+  it('should update campaign\'s notifications_enabled status', enableDisableNotification)
 })

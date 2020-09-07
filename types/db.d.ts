@@ -271,6 +271,7 @@ declare type TDbSqlAddress =
   | 'email/campaign/save_thread_key'
   | 'email/campaign/update-stats'
   | 'email/campaign/update'
+  | 'email/campaign/notifications_enabled'
   | 'email/event/rechat_add'
   | 'email/event/mailgun_add'
   | 'email/get'
