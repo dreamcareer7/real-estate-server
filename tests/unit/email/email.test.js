@@ -1100,6 +1100,11 @@ async function getCampaignRecipientsNum() {
   const mcampaign = await testMicrosoftEmail()
   const mnum      = await EmailCampaign.getCampaignRecipientsNum(mcampaign.id)
   expect(mnum).to.be.equal(microsoftToRecipients.length)
+
+
+  const badId = userA.id
+  const num   = await EmailCampaign.getCampaignRecipientsNum(badId)
+  expect(num).to.be.equal(0)
 }
 
 
