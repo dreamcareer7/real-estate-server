@@ -411,6 +411,16 @@ const getTemplates = cb => {
     })
 }
 
+const deleteTemplate = cb => {
+  const form = results.brand.addTemplate.data.form
+  const field = results.brand.addTemplate.data.field
+
+  return frisby.create('delete a template')
+    .get(`/brands/${brand_id}/forms/templates/${form}/${field}`)
+    .after(cb)
+    .expectStatus(204)
+}
+
 const updateBrandSettings = cb => {
   return frisby.create('update a brand setting')
     .put(`/brands/${brand_id}/settings/palette`, {
@@ -708,6 +718,7 @@ module.exports = {
 
   addTemplate,
   getTemplates,
+  deleteTemplate,
 
   addEmail,
   updateEmail,
