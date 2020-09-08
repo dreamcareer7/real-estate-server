@@ -150,6 +150,9 @@ An `email_campaign_attachments` object type looks like this:
 ### Update an email campaign [PUT /emails/:id]
 <!-- include(tests/email/update.md) -->
 
+### Update an email campaign's notifications_enabled [PUT /emails/:id/notifications]
+<!-- include(tests/email/enableDisableNotification.md) -->
+
 ### Get an email campaign [GET /emails/:id?associations[]=email_campaign.emails]
 <!-- include(tests/email/get.md) -->
 
@@ -203,3 +206,6 @@ When a user wants to update email IsRead flag, two conditions should be met.
 
 ### Batch archive [POST /emails/google/:credentialId/archive}]
 <!-- include(tests/email/batchArchive.md) -->
+
+
+

@@ -1,0 +1,1 @@
+UPDATE email_campaigns SET notifications_enabled = $2 WHERE id = $1

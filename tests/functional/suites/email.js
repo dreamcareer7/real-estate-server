@@ -31,7 +31,8 @@ const email = {
 
 const individual = {
   ...email,
-  subject: 'Individual Email'
+  subject: 'Individual Email',
+  notifications_enabled: true
 }
 
 const mailgun_id = 'example-mailgun-id-email-1'
@@ -242,6 +243,29 @@ const update = cb => {
             email: campaign.to[0].email
           }
         ]
+      }
+    })
+}
+
+const enableDisableNotification = cb => {
+  return frisby
+    .create('Update campaign\'s notifications_enabled')
+    .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
+    .put(`/emails/${results.email.scheduleIndividual.data.id}/notifications`, { status: false })
+    .after(cb)
+    .expectStatus(200)
+}
+
+const checkNotificationEnabled = cb => {
+  return frisby
+    .create('Check updated notifications_enabled')
+    .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
+    .get(`/emails/${results.email.scheduleIndividual.data.id}`)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      data: {
+        notifications_enabled: false
       }
     })
 }
@@ -695,6 +719,8 @@ module.exports = {
   scheduleIndividual,
   scheduleBrand,
   update,
+  enableDisableNotification,
+  checkNotificationEnabled,
   sendDue,
   addEvent,
   updateStats,
