@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 
 require('../connection.js')
-const Client = require('../../lib/models/Client/get')
 const User = require('../../lib/models/User')
 
 const update = async () => {
