@@ -60,7 +60,8 @@ async function createContactForUserA() {
         attributes: attributes({
           first_name: 'Abbas',
           email: ['abbas@rechat.com'],
-          tag: ['Tag1', 'Tag4']
+          tag: ['Tag1', 'Tag4'],
+          spouse_email: ['soha@gmail.com']
         })
       },
       {
@@ -68,7 +69,8 @@ async function createContactForUserA() {
         attributes: attributes({
           first_name: 'Emil',
           email: ['emil@rechat.com'],
-          tag: ['Tag2']
+          tag: ['Tag2'],
+          spouse_email: ['emily@gmail.com']
         })
       },
       {
@@ -185,6 +187,10 @@ async function testDuplicateEmailWithTag() {
       {
         tag: 'Tag4',
         recipient_type: Email.TAG
+      },
+      {
+        email: 'SoHa@gmail.com',
+        recipient_type: Email.EMAIL,
       }
     ],
     subject: 'testDuplicateEmail',
@@ -198,8 +204,38 @@ async function testDuplicateEmailWithTag() {
   const [id] = await EmailCampaign.createMany([campaign])
   const recipients = await db.select('email/campaign/emails', [id])
 
-  expect(recipients).to.have.length(1)
-  expect(recipients[0].email).to.be.equal('abbas@rechat.com')
+  expect(recipients).to.have.length(2)
+  expect(recipients[0].email.toLowerCase()).to.be.equal('abbas@rechat.com')
+  expect(recipients[1].email.toLowerCase()).to.be.equals('soha@gmail.com')
+}
+
+async function testCampaignToAllContacts() {
+  /** @type {IEmailCampaignInput} */
+  const campaign = {
+    from: userA.id,
+    to: [
+      {
+        recipient_type: Email.ALL_CONTACTS
+      }
+    ],
+    subject: 'send to all contacts',
+    html: 'test',
+    brand: brand1.id,
+    due_at: null,
+    created_by: userA.id
+  }
+
+  const [id] = await EmailCampaign.createMany([campaign])
+  const recipients = await db.select('email/campaign/emails', [id])
+
+  expect(recipients).to.have.length(5)
+  expect(recipients.map(e => e.email)).to.have.members([
+    'abbas@rechat.com',
+    'emil@rechat.com',
+    'naser@rechat.com',
+    'soha@gmail.com',
+    'emily@gmail.com',
+  ])
 }
 
 async function testDuplicateEmailWithEmail() {
@@ -463,12 +499,12 @@ async function testCampaignWithAttachments() {
   const result   = await EmailCampaign.createMany([campaignObj])
   const campaign = await EmailCampaign.get(result[0])
 
-  expect(campaign.headers.google_credential).to.be.equal(campaignObj.headers.google_credential)
-  expect(campaign.headers.microsoft_credential).to.be.equal(campaignObj.headers.microsoft_credential)
+  expect(campaign.headers?.google_credential).to.be.equal(campaignObj.headers?.google_credential)
+  expect(campaign.headers?.microsoft_credential).to.be.equal(campaignObj.headers?.microsoft_credential)
 
-  expect(campaign.headers.message_id).to.be.equal(campaignObj.headers.message_id)
-  expect(campaign.headers.in_reply_to).to.be.equal(campaignObj.headers.in_reply_to)
-  expect(campaign.headers.thread_id).to.be.equal(campaignObj.headers.thread_id)
+  expect(campaign.headers?.message_id).to.be.equal(campaignObj.headers?.message_id)
+  expect(campaign.headers?.in_reply_to).to.be.equal(campaignObj.headers?.in_reply_to)
+  expect(campaign.headers?.thread_id).to.be.equal(campaignObj.headers?.thread_id)
   expect(campaign.notifications_enabled).to.be.equal(campaignObj.notifications_enabled)
 
   const attachments = await EmailCampaignAttachment.getByCampaign(campaign.id)
@@ -480,7 +516,7 @@ async function testCampaignWithAttachments() {
   expect(attachments[0].content_id).to.be.equal(attachmentsObj.content_id)
 }
 
-async function testCampaignWithLArgeAttachments() {
+async function testCampaignWithLargeAttachments() {
   const attachments = []
 
   let i = 0
@@ -532,7 +568,7 @@ async function testCampaignWithLArgeAttachments() {
   }
 }
 
-async function testGmailWithLArgeAttachments() {
+async function testGmailWithLargeAttachments() {
   const gResult = await createGoogleCredential(userA, brand1)
   const googleCredential = gResult.credential
 
@@ -587,7 +623,7 @@ async function testGmailWithLArgeAttachments() {
   }
 }
 
-async function testOutlookWithLArgeAttachments() {
+async function testOutlookWithLargeAttachments() {
   const mResult = await createMicrosoftCredential(userA, brand1)
   const microsoftCredential = mResult.credential
 
@@ -1092,15 +1128,16 @@ describe('Email', () => {
   it('should not send duplicate emails to two contacts with same email', testDuplicateEmailWithEmail)
   it('should send only to specified emails if no list or tag were given', testEmailsOnly)
   it('should prevent contacts from other brands to get the email', testCampaignRecipients)
+  it('should prevent contacts from other brands to get the email', testCampaignToAllContacts)
 
   it('should create new attachments record', testInsertAttachments)
   it('should test get attachments', testAttachmentsGetByCampaign)
   it('should test deleted attachments', testDeleteAttachments)
 
   it('should give correct attachments and headers for a specific campaing', testCampaignWithAttachments)
-  it('should fail after attaching large files for mailgun', testCampaignWithLArgeAttachments)
-  it('should fail after attaching large files for gmail', testGmailWithLArgeAttachments)
-  it('should fail after attaching large files for outlook', testOutlookWithLArgeAttachments)
+  it('should fail after attaching large files for mailgun', testCampaignWithLargeAttachments)
+  it('should fail after attaching large files for gmail', testGmailWithLargeAttachments)
+  it('should fail after attaching large files for outlook', testOutlookWithLargeAttachments)
   
   it('should handle a gmail-message', testGoogleEmail)
   it('should handle an outlook-message', testMicrosoftEmail)

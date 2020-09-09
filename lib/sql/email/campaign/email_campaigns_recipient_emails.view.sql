@@ -40,6 +40,27 @@ CREATE OR REPLACE VIEW email_campaigns_recipient_emails AS (
   ) UNION (
     SELECT
       email_campaigns.id AS campaign,
+      contacts.partner_email AS email,
+      contacts.id AS contact,
+      null::uuid AS agent,
+      email_campaigns_recipients.send_type as send_type
+    FROM
+      email_campaigns
+      JOIN email_campaigns_recipients
+        ON email_campaigns.id = email_campaigns_recipients.campaign
+      JOIN crm_lists_members
+        ON email_campaigns_recipients.list = crm_lists_members.list
+      JOIN contacts
+        ON (crm_lists_members.contact = contacts.id AND email_campaigns.brand = contacts.brand)
+    WHERE
+      email_campaigns_recipients.recipient_type = 'List'
+      AND contacts.deleted_at IS NULL
+      AND contacts.parked IS NOT TRUE
+      AND crm_lists_members.deleted_at IS NULL
+      AND contacts.partner_email IS NOT NULL
+  ) UNION (
+    SELECT
+      email_campaigns.id AS campaign,
       contacts.email[1] AS email,
       contacts.id AS contact,
       NULL::uuid AS agent,
@@ -54,6 +75,24 @@ CREATE OR REPLACE VIEW email_campaigns_recipient_emails AS (
       email_campaigns_recipients.recipient_type = 'Tag'
       AND contacts.deleted_at IS NULL
       AND contacts.parked IS NOT TRUE
+  ) UNION (
+    SELECT
+      email_campaigns.id AS campaign,
+      contacts.partner_email AS email,
+      contacts.id AS contact,
+      NULL::uuid AS agent,
+      email_campaigns_recipients.send_type as send_type
+    FROM
+      email_campaigns
+      JOIN email_campaigns_recipients
+        ON email_campaigns.id =  email_campaigns_recipients.campaign
+      JOIN contacts
+        ON (ARRAY[email_campaigns_recipients.tag] <@ contacts.tag AND email_campaigns.brand = contacts.brand)
+    WHERE
+      email_campaigns_recipients.recipient_type = 'Tag'
+      AND contacts.deleted_at IS NULL
+      AND contacts.parked IS NOT TRUE
+      AND contacts.partner_email IS NOT NULL
   ) UNION (
     SELECT
       email_campaigns.id AS campaign,
@@ -89,6 +128,25 @@ CREATE OR REPLACE VIEW email_campaigns_recipient_emails AS (
       AND contacts.deleted_at IS NULL
       AND contacts.parked IS NOT TRUE
       AND LENGTH(contacts.email[1]) > 0
+  ) UNION (
+    SELECT
+      email_campaigns.id     AS campaign,
+      contacts.partner_email AS email,
+      contacts.id            AS contact,
+      NULL::uuid             AS agent,
+      email_campaigns_recipients.send_type
+    FROM
+      email_campaigns
+      JOIN email_campaigns_recipients
+        ON email_campaigns.id = email_campaigns_recipients.campaign
+      JOIN contacts
+        ON email_campaigns.brand = contacts.brand
+    WHERE
+      email_campaigns_recipients.recipient_type = 'AllContacts'
+      AND contacts.deleted_at IS NULL
+      AND contacts.parked IS NOT TRUE
+      AND LENGTH(contacts.email[1]) > 0
+      AND contacts.partner_email IS NOT NULL
   ) UNION (
     SELECT
       ec.id         AS campaign,

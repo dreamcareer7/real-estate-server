@@ -39,7 +39,9 @@ declare type IEmailRecipientInput =
   | IEmailRecipientListInput
   | IEmailRecipientTagInput
   | IEmailRecipientBrandInput
-  | IEmailRecipientAgentInput;
+  | IEmailRecipientAgentInput
+  | IEmailRecipientAllContactsInput
+  ;
 
 declare type TIsTagPresent = TIsPropertyPresent<IEmailRecipientInput, IEmailRecipientTagInput, 'tag'>;
 declare type TIsListPresent = TIsPropertyPresent<IEmailRecipientInput, IEmailRecipientListInput, 'list'>;
