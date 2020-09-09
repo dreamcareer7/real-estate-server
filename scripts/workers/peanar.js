@@ -12,7 +12,6 @@ require('../../lib/models/Flow/worker')
 require('../../lib/models/CRM/Task/worker')
 require('../../lib/models/CRM/Touch/worker')
 require('../../lib/models/MLS/workers')
-// require('../../lib/models/Showings/worker')
 require('../../lib/models/Google/workers')
 require('../../lib/models/Microsoft/workers')
 require('../../lib/models/Deal/email')
@@ -23,6 +22,7 @@ require('../../lib/models/Email/events')
 require('../../lib/models/SMS')
 require('../../lib/models/Daily')
 require('../../lib/models/Envelope')
+// require('../../lib/models/Showings/worker')
 
 /** @type {(() => Promise<void>)[]} */
 let shutdowns = []
