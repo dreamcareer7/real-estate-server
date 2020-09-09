@@ -64,7 +64,7 @@ const _sms = {
   Body: 'Prescott Avenue',
   From: '+14243828604',
   To: '+12148806266',
-  MediaUrl0: null,
+  MediaUrl0: 'https://upload.wikimedia.org/wikipedia/en/4/48/Blank.JPG',
 }
 
 const sms = cb => {
