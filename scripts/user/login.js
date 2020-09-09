@@ -6,9 +6,8 @@ const User = require('../../lib/models/User')
 
 const update = async () => {
   const user = await User.getByEmail(process.argv[2])
-  const client = await Client.get(process.argv[3])
 
-  const link = await User.getLoginLink(user, client)
+  const link = await User.getLoginLink({user})
   console.log(link)
 
   process.exit()
