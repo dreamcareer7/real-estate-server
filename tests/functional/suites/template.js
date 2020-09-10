@@ -57,6 +57,24 @@ const instantiate = cb => {
     })
 }
 
+const _sms = {
+  MediaContentType0: 'image/gif',
+  SmsMessageSid: 'MM120f640a61ea4b4f0d7bffbb04554084',
+  NumMedia: '1',
+  Body: 'Prescott Avenue',
+  From: '+14243828604',
+  To: '+12148806266',
+  MediaUrl0: 'https://upload.wikimedia.org/wikipedia/en/4/48/Blank.JPG',
+}
+
+const sms = cb => {
+  return frisby.create('text marketing')
+    .post('/templates/sms', _sms, {json: false})
+    .addHeader('x-handle-jobs', 'yes')
+    .after(cb)
+    .expectStatus(200)
+}
+
 const renderTemplate = cb => {
   const id = results.template.create.data.id
 
@@ -167,6 +185,7 @@ module.exports = {
   create,
   getForBrand,
   instantiate,
+  sms,
   renderTemplate,
   share,
   getMine,
