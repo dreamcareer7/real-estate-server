@@ -262,7 +262,6 @@ declare type TDbSqlAddress =
   | 'email/campaign/email/get'
   | 'email/campaign/email/get_by_emails'
   | 'email/campaign/emails'
-  | 'email/campaign/count_emails'
   | 'email/campaign/get'
   | 'email/campaign/insert'
   | 'email/campaign/mark-as-executed'

@@ -1092,21 +1092,6 @@ async function enableDisableNotification() {
   expect(updated_two.notifications_enabled).to.be.equal(false)  
 }
 
-async function getCampaignRecipientsNum() {
-  const gcampaign = await testGoogleEmail()
-  const gnum      = await EmailCampaign.getCampaignRecipientsNum(gcampaign.id)
-  expect(gnum).to.be.equal(googleToRecipients.length)
-
-  const mcampaign = await testMicrosoftEmail()
-  const mnum      = await EmailCampaign.getCampaignRecipientsNum(mcampaign.id)
-  expect(mnum).to.be.equal(microsoftToRecipients.length)
-
-
-  const badId = userA.id
-  const num   = await EmailCampaign.getCampaignRecipientsNum(badId)
-  expect(num).to.be.equal(0)
-}
-
 
 describe('Email', () => {
   createContext()
@@ -1141,5 +1126,4 @@ describe('Email', () => {
 
   it('should update a campaign record', update)
   it('should update campaign\'s notifications_enabled status', enableDisableNotification)
-  it('should return a valid number of campaign\'s recipients', getCampaignRecipientsNum)
 })
