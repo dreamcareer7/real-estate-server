@@ -32,6 +32,6 @@ apps:
   - script   : ./scripts/workers/pollers/deal_notifications.js
     name     : 'deal_notifications'
     kill_timeout : 15000
-  - script   : ./scripts/workers/pollers/email_events_notif.js
-    name     : 'email_events_notif'
-    kill_timeout : 15000
+  # - script   : ./scripts/workers/pollers/email_events_notifications.js
+  #   name     : 'email_events_notifications'
+  #   kill_timeout : 15000
