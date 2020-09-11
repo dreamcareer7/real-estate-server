@@ -20,6 +20,24 @@ const Email   = {
   ...require('../../../lib/models/Email/create'),
 }
 
+const googleToRecipients = [
+  {
+    email: 'gholi@rechat.com',
+    recipient_type: Email.EMAIL
+  }
+]
+
+const microsoftToRecipients = [
+  {
+    email: 'gholi@rechat.com',
+    recipient_type: Email.EMAIL
+  },
+  {
+    email: 'jefri@rechat.com',
+    recipient_type: Email.EMAIL
+  }
+]
+
 const BrandHelper    = require('../brand/helper')
 const { attributes } = require('../contact/helper')
 
@@ -650,12 +668,7 @@ async function testGoogleEmail() {
   const campaignObj = {
     subject: 'Test subject',
     from: userA.id,
-    to: [
-      {
-        email: 'gholi@rechat.com',
-        recipient_type: Email.EMAIL
-      }
-    ],
+    to: googleToRecipients,
     created_by: userA.id,
     brand: brand1.id,
     due_at: new Date().toISOString(),
@@ -687,12 +700,7 @@ async function testMicrosoftEmail() {
   const campaignObj = {
     subject: 'Test subject',
     from: userA.id,
-    to: [
-      {
-        email: 'gholi@rechat.com',
-        recipient_type: Email.EMAIL
-      }
-    ],
+    to: microsoftToRecipients,
     created_by: userA.id,
     brand: brand1.id,
     due_at: new Date().toISOString(),
@@ -712,6 +720,8 @@ async function testMicrosoftEmail() {
   const campaign = await EmailCampaign.get(result[0])
 
   expect(campaign.microsoft_credential).to.be.equal(microsoftCredential.id)
+
+  return campaign
 }
 
 async function testGMFailure() {
