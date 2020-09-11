@@ -1,12 +1,5 @@
 const db = require('../lib/utils/db')
 
-      address: mls_office.StreetAddress,
-      city: mls_office.,
-      postal_code: mls_office.,
-      postal_code_plus4: mls_office.,
-      state: mls_office.,
-
-
 const migrations = [
   `UPDATE offices SET
     address = mls_data.value->>'StreetAddress',
