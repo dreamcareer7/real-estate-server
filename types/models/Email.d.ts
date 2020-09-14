@@ -83,6 +83,7 @@ declare interface IEmailCampaign extends IEmailCampaignInput {
   failed_at?: string | null;
   failed_within?: string;
   failure?: string;
+  sent: Number;
 }
 
 declare interface IEmail {
