@@ -1,1 +1,5 @@
-Email campaign {{ data.subject }} has been {{ data.event }}{% if data.recipient %} by {{ data.recipient }}.{% endif %}
+{% if data.recipient %}
+  {{ data.recipient }}, {{ data.action }} " {{ data.subject }} ".
+{% else %}
+  {{ data.eventNum }} people, {{ data.action }} " {{ data.subject }} ".
+{% endif %}
