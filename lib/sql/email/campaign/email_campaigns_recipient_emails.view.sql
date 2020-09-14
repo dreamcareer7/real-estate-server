@@ -11,7 +11,7 @@ CREATE OR REPLACE VIEW email_campaigns_recipient_emails AS (
       JOIN email_campaigns_recipients AS ecr
         ON ec.id = ecr.campaign
       LEFT JOIN contacts AS c
-        ON ((c.email && ARRAY[ecr.email]) AND (c.brand = ec.brand) AND (c.deleted_at IS NULL))
+        ON ((c.email && ARRAY[ecr.email]) AND (c.brand = ec.brand) AND (c.deleted_at IS NULL) AND (c.parked IS NOT TRUE))
     WHERE
       ecr.email IS NOT NULL
       AND ecr.contact IS NULL
@@ -35,6 +35,7 @@ CREATE OR REPLACE VIEW email_campaigns_recipient_emails AS (
     WHERE
       email_campaigns_recipients.recipient_type = 'List'
       AND contacts.deleted_at IS NULL
+      AND contacts.parked IS NOT TRUE
       AND crm_lists_members.deleted_at IS NULL
   ) UNION (
     SELECT
@@ -52,6 +53,7 @@ CREATE OR REPLACE VIEW email_campaigns_recipient_emails AS (
     WHERE
       email_campaigns_recipients.recipient_type = 'Tag'
       AND contacts.deleted_at IS NULL
+      AND contacts.parked IS NOT TRUE
   ) UNION (
     SELECT
       email_campaigns.id AS campaign,
@@ -68,6 +70,7 @@ CREATE OR REPLACE VIEW email_campaigns_recipient_emails AS (
     WHERE
       email_campaigns_recipients.recipient_type = 'Email'
       AND contacts.deleted_at IS NULL
+      AND contacts.parked IS NOT TRUE
   ) UNION (
     SELECT
       email_campaigns.id AS campaign,
@@ -84,6 +87,7 @@ CREATE OR REPLACE VIEW email_campaigns_recipient_emails AS (
     WHERE
       email_campaigns_recipients.recipient_type = 'AllContacts'
       AND contacts.deleted_at IS NULL
+      AND contacts.parked IS NOT TRUE
       AND LENGTH(contacts.email[1]) > 0
   ) UNION (
     SELECT
@@ -102,7 +106,7 @@ CREATE OR REPLACE VIEW email_campaigns_recipient_emails AS (
       LEFT JOIN contacts_users AS cu
         ON cu."user" = u.id
       LEFT JOIN contacts AS c
-        ON c.id = cu.contact AND c.brand = ec.brand AND c.deleted_at IS NULL
+        ON c.id = cu.contact AND c.brand = ec.brand AND c.deleted_at IS NULL AND c.parked IS NOT TRUE
     WHERE
       ecr.recipient_type = 'Brand'
       AND ecr.deleted_at IS NULL

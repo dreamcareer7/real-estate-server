@@ -25,12 +25,14 @@ const email = {
   ],
   due_at: new Date(),
   html: '<div>Hi</div>',
-  subject: 'Email Subject'
+  subject: 'Email Subject',
+  notifications_enabled: false
 }
 
 const individual = {
   ...email,
-  subject: 'Individual Email'
+  subject: 'Individual Email',
+  notifications_enabled: true
 }
 
 const mailgun_id = 'example-mailgun-id-email-1'
@@ -102,7 +104,8 @@ const get = cb => {
         subject: email.subject,
         html: email.html,
         delivered: 1,
-        recipients: email.to
+        recipients: email.to,
+        notifications_enabled: false
       }
     })
 }
@@ -220,7 +223,8 @@ const update = cb => {
         email: 'foo@bar.com',
         recipient_type: 'Email'
       }
-    ]
+    ],
+    notifications_enabled: false
   }
 
   return frisby
@@ -233,11 +237,35 @@ const update = cb => {
       data: {
         subject: campaign.subject,
         html: campaign.html,
+        notifications_enabled: false,
         recipients: [
           {
             email: campaign.to[0].email
           }
         ]
+      }
+    })
+}
+
+const enableDisableNotification = cb => {
+  return frisby
+    .create('Update campaign\'s notifications_enabled')
+    .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
+    .put(`/emails/${results.email.scheduleIndividual.data.id}/notifications`, { status: false })
+    .after(cb)
+    .expectStatus(200)
+}
+
+const checkNotificationEnabled = cb => {
+  return frisby
+    .create('Check updated notifications_enabled')
+    .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
+    .get(`/emails/${results.email.scheduleIndividual.data.id}`)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      data: {
+        notifications_enabled: false
       }
     })
 }
@@ -691,6 +719,8 @@ module.exports = {
   scheduleIndividual,
   scheduleBrand,
   update,
+  enableDisableNotification,
+  checkNotificationEnabled,
   sendDue,
   addEvent,
   updateStats,

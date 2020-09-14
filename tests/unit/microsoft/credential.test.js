@@ -108,16 +108,6 @@ async function updateTokens() {
   expect(updatedCredential.access_token).to.be.equal(tokens.access_token)
 }
 
-async function updateAsRevoked() {
-  const createdCredential = await create()
-  expect(createdCredential.revoked).to.be.equal(false)
-
-  await MicrosoftCredential.updateAsRevoked(createdCredential.id)
-  const updatedCredential = await MicrosoftCredential.get(createdCredential.id)
-
-  expect(updatedCredential.revoked).to.be.equal(true)
-}
-
 async function updateSendEmailAfter() {
   const createdCredential = await create()
 
@@ -150,6 +140,14 @@ async function disconnectFailed() {
 
     expect(ex.message).to.be.equal(message)
   }
+}
+
+async function revoke() {
+  const createdCredential = await create()
+
+  await MicrosoftCredential.revoke(createdCredential.id)
+  const updatedCredential_1 = await MicrosoftCredential.get(createdCredential.id)
+  expect(updatedCredential_1.revoked).to.be.equal(true)
 }
 
 async function updateProfile() {
@@ -217,10 +215,10 @@ describe('Microsoft', () => {
     
     it('should update microsoft-credential\'s tokens', updateTokens)
     it('should update microsoft-credential\'s send_email_after', updateSendEmailAfter)
-    it('should revoke microsoft-credential\'s', updateAsRevoked)
 
     it('should disable/enable a microsoft-credential', disconnect)
     it('should handle returned exception from disable/enable microsoft-credential', disconnectFailed)
+    it('should revoke a microsoft-credential', revoke)
     it('should update microsoft-credential\'s profile', updateProfile)
 
     it('should update microsoft-credential\'s rechat-microsoft-Calendar', updateRechatMicrosoftCalendar)

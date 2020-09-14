@@ -22,7 +22,6 @@ const attachCalIntEventHandler = require('../../lib/models/CalendarIntegration/e
 
 const createContext = require('./create-context')
 
-const shutdownPollers = require('./poll')
 const shutdownPeanarWorkers = require('./peanar')
 
 const Blocked = require('blocked-at')
@@ -127,7 +126,6 @@ const timeout = (seconds) => {
 }
 
 async function shutdownWorkers() {
-  await shutdownPollers()
   await peanar.shutdown()
   await shutdownPeanarWorkers()
   await promisify(cb => queue.shutdown(5 * 60 * 1000, (err) => {

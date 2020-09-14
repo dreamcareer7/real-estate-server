@@ -12,7 +12,6 @@ require('../../lib/models/Flow/worker')
 require('../../lib/models/CRM/Task/worker')
 require('../../lib/models/CRM/Touch/worker')
 require('../../lib/models/MLS/workers')
-// require('../../lib/models/Showings/worker')
 require('../../lib/models/Google/workers')
 require('../../lib/models/Microsoft/workers')
 require('../../lib/models/Deal/email')
@@ -23,6 +22,7 @@ require('../../lib/models/Email/events')
 require('../../lib/models/SMS')
 require('../../lib/models/Daily')
 require('../../lib/models/Envelope')
+// require('../../lib/models/Showings/worker')
 
 /** @type {(() => Promise<void>)[]} */
 let shutdowns = []
@@ -70,8 +70,16 @@ const queues = [
     concurrency: 1
   },
   {
+    queues: ['microsoft_contacts_notifications'],
+    concurrency: 1
+  },
+  {
     queues: ['microsoft_contacts'],
     concurrency: 5
+  },
+  {
+    queues: ['microsoft_disconnect'],
+    concurrency: 1
   },
 
   {
@@ -82,9 +90,17 @@ const queues = [
     queues: ['google_cal_webhooks'],
     concurrency: 3
   },
+  // {
+  //   queues: ['google_contacts_webhooks'],
+  //   concurrency: 1
+  // },
   {
     queues: ['google_contacts'],
     concurrency: 5
+  },
+  {
+    queues: ['google_disconnect'],
+    concurrency: 1
   },
 
   {
@@ -102,25 +118,21 @@ const queues = [
   {
     queues: ['daily_email'],
     concurrency: 5
-  }
-]
-
-const forks = [
-  {
-    queues: ['google', 'google_cal'],
-    concurrency: 7
-  },
-  {
-    queues: ['microsoft', 'microsoft_cal'],
-    concurrency: 5
-  },
-  {
-    queues: ['email_campaign'],
-    concurrency: 1
   },
   {
     queues: ['email'],
     concurrency: 20
+  },
+]
+
+const forks = [
+  {
+    queues: ['google', 'google_cal', 'microsoft', 'microsoft_cal'],
+    concurrency: 7
+  },
+  {
+    queues: ['email_campaign'],
+    concurrency: 1
   },
   {
     queues: ['MLS.Photo', 'MLS.Listing', 'MLS.Listing.Photos.Validate'],

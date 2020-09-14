@@ -3,10 +3,9 @@ const path = require('path')
 const brand = require('./data/brand.js')
 const contexts = require('./data/context.js')
 
-const mock_plan = require('../../../lib/models/Brand/chargebee/mock/plan')
-
 registerSuite('office', ['add'])
 registerSuite('form', ['create'])
+registerSuite('billing_plan', ['create'])
 
 const hostname = 'testhost'
 let brand_id
@@ -379,47 +378,12 @@ const getAgents = cb => {
 }
 
 const addTemplate = cb => {
-  const submission = {
-    state: 'Fair',
-    values: {
-      51821682: '11112 New Orleans Drive'
-    }
-  }
-
-  const template = {
-    name: 'Form Template',
-    submission,
-    deal_types: null,
-    property_types: null,
-    form: results.form.create.data.id
-  }
+  const form = results.form.create.data.id
+  const field = 51821682
+  const value = 'Template Value'
 
   return frisby.create('add a form template')
-    .post(`/brands/${brand_id}/forms/templates`, template)
-    .after(cb)
-    .expectStatus(200)
-    .expectJSON({
-      code: 'OK',
-    })
-}
-
-const updateTemplate = cb => {
-  const submission = {
-    state: 'Fair',
-    values: {
-      51821682: 'Updated 11112 New Orleans Drive'
-    }
-  }
-
-  const template = {
-    name: 'Updated Form Template',
-    submission,
-    deal_types: ['Buying'],
-    property_types: ['Resale']
-  }
-
-  return frisby.create('update a form template')
-    .put(`/brands/${brand_id}/forms/templates/${results.brand.addTemplate.data.id}`, template)
+    .post(`/brands/${brand_id}/forms/templates/${form}/${field}`, {value})
     .after(cb)
     .expectStatus(200)
     .expectJSON({
@@ -429,20 +393,32 @@ const updateTemplate = cb => {
 
 const getTemplates = cb => {
   return frisby.create('get all templates for a brand (and its parents)')
-    .get(`/brands/${brand_id}/forms/templates?form=${results.form.create.data.id}`)
+    .get(`/brands/${brand_id}/forms/templates/${results.form.create.data.id}`)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
       data: [
         {
-          name: results.brand.updateTemplate.data.name
+          form: results.brand.addTemplate.data.form,
+          field: results.brand.addTemplate.data.field,
+          value: results.brand.addTemplate.data.value,
         }
       ],
       info: {
         count: 1
       }
     })
+}
+
+const deleteTemplate = cb => {
+  const form = results.brand.addTemplate.data.form
+  const field = results.brand.addTemplate.data.field
+
+  return frisby.create('delete a template')
+    .get(`/brands/${brand_id}/forms/templates/${form}/${field}`)
+    .after(cb)
+    .expectStatus(204)
 }
 
 const updateBrandSettings = cb => {
@@ -477,23 +453,12 @@ const getUserRoles = cb => {
     .expectStatus(200)
 }
 
-const createBillingPlan = (cb) => {
-  const content = {
-    plan: mock_plan
-  }
-
-  return frisby.create('Create a billing plan')
-    .post('/chargebee/webhook', {content})
-    .after(cb)
-    .expectStatus(200)
-}
 
 const createSubscription = cb => {
-  const { plan } = results.brand.createBillingPlan
+  const { plan } = results.billing_plan.create
 
   const subscription = {
-    plan: plan.id,
-    user: results.authorize.token.data.id
+    plan: plan.id
   }
 
   return frisby.create('create a subscription')
@@ -752,8 +717,8 @@ module.exports = {
   deleteContext,
 
   addTemplate,
-  updateTemplate,
   getTemplates,
+  deleteTemplate,
 
   addEmail,
   updateEmail,
@@ -763,7 +728,6 @@ module.exports = {
   updateBrandSettings,
   updateUserSettings,
 
-  createBillingPlan,
   createSubscription,
   updateSubscription,
   checkoutSubscription,

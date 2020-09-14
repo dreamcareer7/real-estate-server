@@ -164,7 +164,8 @@ async function testEmailToTags() {
     ],
     subject: '2',
     html: 'test',
-    due_at: '2019-03-07'
+    due_at: '2019-03-07',
+    notifications_enabled: false
   }
 
   await EmailCampaign.createMany([campaign])
@@ -190,7 +191,8 @@ async function testDuplicateEmailWithTag() {
     html: 'test',
     brand: brand1.id,
     due_at: null,
-    created_by: userA.id
+    created_by: userA.id,
+    notifications_enabled: false
   }
 
   const [id] = await EmailCampaign.createMany([campaign])
@@ -238,7 +240,8 @@ async function testEmailsOnly() {
     subject: 'testEmailOnly',
     html: 'test',
     brand: brand1.id,
-    created_by: userA.id
+    created_by: userA.id,
+    notifications_enabled: false
   }
 
   await EmailCampaign.createMany([campaign])
@@ -313,7 +316,8 @@ async function testInsertAttachments() {
     created_by: userA.id,
     brand: brand1.id,
     due_at: new Date().toISOString(),
-    html: '<html></html>'
+    html: '<html></html>',
+    notifications_enabled: false
   }
 
   const result = await EmailCampaign.createMany([campaignObj])
@@ -356,7 +360,8 @@ async function testAttachmentsGetByCampaign() {
     created_by: userA.id,
     brand: brand1.id,
     due_at: new Date().toISOString(),
-    html: '<html></html>'
+    html: '<html></html>',
+    notifications_enabled: false
   }
 
   const result = await EmailCampaign.createMany([campaignObj])
@@ -396,7 +401,8 @@ async function testDeleteAttachments() {
     created_by: userA.id,
     brand: brand1.id,
     due_at: new Date().toISOString(),
-    html: '<html></html>'
+    html: '<html></html>',
+    notifications_enabled: false
   }
 
   const result = await EmailCampaign.createMany([campaignObj])
@@ -450,7 +456,8 @@ async function testCampaignWithAttachments() {
     },
     google_credential: null,
     microsoft_credential: null,
-    attachments: [attachmentsObj]
+    attachments: [attachmentsObj],
+    notifications_enabled: false
   }
 
   const result   = await EmailCampaign.createMany([campaignObj])
@@ -462,6 +469,7 @@ async function testCampaignWithAttachments() {
   expect(campaign.headers.message_id).to.be.equal(campaignObj.headers.message_id)
   expect(campaign.headers.in_reply_to).to.be.equal(campaignObj.headers.in_reply_to)
   expect(campaign.headers.thread_id).to.be.equal(campaignObj.headers.thread_id)
+  expect(campaign.notifications_enabled).to.be.equal(campaignObj.notifications_enabled)
 
   const attachments = await EmailCampaignAttachment.getByCampaign(campaign.id)
 
@@ -509,7 +517,8 @@ async function testCampaignWithLArgeAttachments() {
     },
     google_credential: null,
     microsoft_credential: null,
-    attachments: attachments
+    attachments: attachments,
+    notifications_enabled: false
   }
 
   try {
@@ -563,7 +572,8 @@ async function testGmailWithLArgeAttachments() {
     },
     google_credential: googleCredential.id,
     microsoft_credential: null,
-    attachments: attachments
+    attachments: attachments,
+    notifications_enabled: false
   }
 
   try {
@@ -617,7 +627,8 @@ async function testOutlookWithLArgeAttachments() {
     },
     google_credential: null,
     microsoft_credential: microsoftCredential.id,
-    attachments: attachments
+    attachments: attachments,
+    notifications_enabled: false
   }
 
   try {
@@ -656,7 +667,8 @@ async function testGoogleEmail() {
     },
     google_credential: googleCredential.id,
     microsoft_credential: null,
-    attachments: []
+    attachments: [],
+    notifications_enabled: false
   }
 
   const result   = await EmailCampaign.createMany([campaignObj])
@@ -692,7 +704,8 @@ async function testMicrosoftEmail() {
     },
     google_credential: null,
     microsoft_credential: microsoftCredential.id,
-    attachments: []
+    attachments: [],
+    notifications_enabled: false
   }
 
   const result   = await EmailCampaign.createMany([campaignObj])
@@ -729,7 +742,8 @@ async function testGMFailure() {
     },
     google_credential: googleCredential.id,
     microsoft_credential: microsoftCredential.id,
-    attachments: []
+    attachments: [],
+    notifications_enabled: false
   }
 
   try {
@@ -769,7 +783,8 @@ async function testGmailLoadOfRecipients() {
     },
     google_credential: googleCredential.id,
     microsoft_credential: null,
-    attachments: []
+    attachments: [],
+    notifications_enabled: false
   }
 
   try {
@@ -811,7 +826,8 @@ async function testOutlookLoadOfRecipients() {
     },
     google_credential: null,
     microsoft_credential: microsoftCredential.id,
-    attachments: []
+    attachments: [],
+    notifications_enabled: false
   }
 
   try {
@@ -844,7 +860,8 @@ async function createEmailCampaignEmail() {
     },
     google_credential: googleCredential.id,
     microsoft_credential: null,
-    attachments: []
+    attachments: [],
+    notifications_enabled: false
   }
 
   const result     = await EmailCampaign.createMany([campaignObj])
@@ -925,7 +942,8 @@ async function saveError() {
     },
     google_credential: googleCredential.id,
     microsoft_credential: null,
-    attachments: []
+    attachments: [],
+    notifications_enabled: false
   }
 
   const result   = await EmailCampaign.createMany([campaignObj])
@@ -974,7 +992,8 @@ async function saveThreadKey() {
     },
     google_credential: googleCredential.id,
     microsoft_credential: null,
-    attachments: []
+    attachments: [],
+    notifications_enabled: false
   }
 
   const result   = await EmailCampaign.createMany([campaignObj])
@@ -1015,11 +1034,13 @@ async function update() {
     subject: 'custom_subject',
     due_at: new Date(campaign.due_at),
     google_credential: googleCredential.id,
-    microsoft_credential: null
+    microsoft_credential: null,
+    notifications_enabled: true
   })
   
   expect(updated_two.google_credential).to.be.equal(googleCredential.id)
   expect(updated_two.microsoft_credential).to.be.equal(null)
+  expect(updated_two.notifications_enabled).to.be.equal(true)
 
 
   const updated_three = await EmailCampaign.update({
@@ -1047,6 +1068,18 @@ async function update() {
 
     expect(err.message).to.be.equal('It is not allowed to send both google and microsoft ceredentials.')
   }
+}
+
+async function enableDisableNotification() {
+  const campaign = await testGoogleEmail()
+
+  await EmailCampaign.enableDisableNotification(campaign.id, true)
+  const updated_one = await EmailCampaign.get(campaign.id)
+  expect(updated_one.notifications_enabled).to.be.equal(true)
+
+  await EmailCampaign.enableDisableNotification(campaign.id, false)
+  const updated_two = await EmailCampaign.get(campaign.id)
+  expect(updated_two.notifications_enabled).to.be.equal(false)  
 }
 
 
@@ -1082,4 +1115,5 @@ describe('Email', () => {
   it('should save thread key on an email_campaing record', saveThreadKey)
 
   it('should update a campaign record', update)
+  it('should update campaign\'s notifications_enabled status', enableDisableNotification)
 })

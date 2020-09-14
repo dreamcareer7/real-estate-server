@@ -22,6 +22,7 @@ WITH p AS (
             INNER JOIN contacts_emails
             ON contacts.id = contacts_emails.contact
             WHERE contacts."user" = cid AND
+                  contacts.parked IS NOT TRUE AND
                   LOWER(contacts_emails.email) = (SELECT lower(email) FROM users WHERE id = cid LIMIT 1)
           ) +
           (
@@ -30,6 +31,7 @@ WITH p AS (
             INNER JOIN contacts_phone_numbers
             ON contacts.id = contacts_phone_numbers.contact
             WHERE contacts."user" = cid AND
+                  contacts.parked IS NOT TRUE AND
                   contacts_phone_numbers.phone_number = (SELECT phone_number FROM users WHERE id = cid LIMIT 1)
           )
         )

@@ -1,5 +1,7 @@
-INSERT INTO brands_forms_templates
-(name, deal_types, property_types, brand, form, submission)
-VALUES
-($1, $2, $3, $4, $5, $6)
+INSERT INTO brands_form_templates (created_by, brand, form, field, value)
+VALUES ($1, $2, $3, $4, $5)
+
+ON CONFLICT(brand, form, field) DO UPDATE
+SET value = $4 WHERE brands_form_templates.id = EXCLUDED.id
+
 RETURNING id

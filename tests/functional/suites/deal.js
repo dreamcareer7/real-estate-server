@@ -19,7 +19,15 @@ registerSuite('brokerwolf', [
   'syncContactTypes',
   'mapContactType'
 ])
-registerSuite('brand', ['addChecklist', 'addDateContext', 'addTextContext', 'addForm', 'addTask', 'addAnotherTask'])
+registerSuite('brand', [
+  'addChecklist',
+  'addDateContext',
+  'addTextContext',
+  'addForm',
+  'addTemplate',
+  'addTask',
+  'addAnotherTask'
+])
 registerSuite('user', ['upgradeToAgentWithEmail'])
 
 const pdf = 'https://s3-us-west-2.amazonaws.com/rechat-forms/2672324.pdf'
@@ -870,9 +878,9 @@ module.exports = {
   removeTask,
   makeSureAnotherTaskIsDeleted,
   makeSureAnotherTaskIsntReturnedInDealContext,
+  getSubmissionPdf,
   setSubmission,
   updateSubmission,
-  getSubmissionPdf,
   getContextHistory,
   addActivity,
   getRevision,

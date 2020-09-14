@@ -96,7 +96,24 @@ SELECT 'compact_listing' AS TYPE,
           'street_dir_prefix', addresses.street_dir_prefix,
           'street_dir_suffix', addresses.street_dir_suffix,
           'created_at', EXTRACT(EPOCH FROM addresses.created_at),
-          'updated_at', EXTRACT(EPOCH FROM addresses.updated_at)
+          'updated_at', EXTRACT(EPOCH FROM addresses.updated_at),
+
+          'street_address',
+          (
+            SELECT ARRAY_TO_STRING
+            (
+              ARRAY[
+                street_number,
+                street_dir_prefix,
+                street_name,
+                street_suffix,
+                CASE
+                  WHEN addresses.unit_number IS NULL THEN NULL
+                  WHEN addresses.unit_number = '' THEN NULL
+                  ELSE 'Unit ' || addresses.unit_number END
+              ], ' ', NULL
+            )
+          )
        ) AS address,
        (
          SELECT json_agg(a) FROM (
