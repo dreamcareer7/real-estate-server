@@ -70,7 +70,6 @@ SELECT
           contacts AS c
         WHERE
           c.deleted_at IS NULL
-          AND c.parked IS NOT TRUE
           AND c.brand = email_threads.brand
           AND c.email && email_threads.recipients
       )
