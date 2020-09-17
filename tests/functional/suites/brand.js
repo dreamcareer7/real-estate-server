@@ -416,7 +416,7 @@ const deleteTemplate = cb => {
   const field = results.brand.addTemplate.data.field
 
   return frisby.create('delete a template')
-    .get(`/brands/${brand_id}/forms/templates/${form}/${field}`)
+    .delete(`/brands/${brand_id}/forms/templates/${form}/${field}`)
     .after(cb)
     .expectStatus(204)
 }
