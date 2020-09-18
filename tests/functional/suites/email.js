@@ -247,6 +247,84 @@ const update = cb => {
     })
 }
 
+const setIndividualAsTrue = cb => {
+  const html = ``
+  const subject = ''
+
+  const campaign = {
+    id: results.email.scheduleIndividual.data.id,
+    ...individual,
+    subject,
+    html,
+    to: [{ email: 'foo@bar.com', recipient_type: 'Email' } ],
+    individual: true
+  }
+
+  return frisby
+    .create('Update campaign\'s individual property as true')
+    .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
+    .put(`/emails/${results.email.scheduleIndividual.data.id}?associations[]=email_campaign.recipients`, campaign)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      data: {
+        subject: campaign.subject,
+        individual: true
+      }
+    })
+}
+
+const setIndividualAsFalse = cb => {
+  const html = ``
+  const subject = ''
+
+  const campaign = {
+    id: results.email.scheduleIndividual.data.id,
+    ...individual,
+    subject,
+    html,
+    to: [{ email: 'foo@bar.com', recipient_type: 'Email' } ],
+    individual: false
+  }
+
+  return frisby
+    .create('Update campaign\'s individual property as false')
+    .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
+    .put(`/emails/${results.email.scheduleIndividual.data.id}?associations[]=email_campaign.recipients`, campaign)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      data: {
+        subject: campaign.subject,
+        individual: false
+      }
+    })
+}
+
+const setIndividualFailed = cb => {
+  const html = ``
+  const subject = ''
+
+  const campaign = {
+    id: results.email.scheduleIndividual.data.id,
+    ...individual,
+    subject,
+    html,
+    to: [{ email: 'foo@bar.com', recipient_type: 'Email' } ],
+    individual: 'false'
+  }
+
+  return frisby
+    .create('Update campaign\'s individual property will be failed!')
+    .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
+    .put(`/emails/${results.email.scheduleIndividual.data.id}?associations[]=email_campaign.recipients`, campaign)
+    .after(cb)
+    .expectStatus(400)
+    .expectJSON({
+      message: 'Individual property must be either a Boolean or Undefined!'
+    })
+}
+
 const enableDisableNotification = cb => {
   return frisby
     .create('Update campaign\'s notifications_enabled')
@@ -719,6 +797,9 @@ module.exports = {
   scheduleIndividual,
   scheduleBrand,
   update,
+  setIndividualAsTrue,
+  setIndividualAsFalse,
+  setIndividualFailed,
   enableDisableNotification,
   checkNotificationEnabled,
   sendDue,

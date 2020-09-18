@@ -8,5 +8,6 @@ UPDATE email_campaigns SET
   google_credential = $8,
   microsoft_credential = $9,
   notifications_enabled = COALESCE($10, true),
-  template = $11
+  template = $11,
+  individual = $12
 WHERE id = $1
