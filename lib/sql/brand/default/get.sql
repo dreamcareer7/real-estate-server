@@ -1,1 +1,1 @@
-SELECT id FROM default_brands
+SELECT brand FROM default_brands
