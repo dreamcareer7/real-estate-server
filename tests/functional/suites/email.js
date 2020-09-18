@@ -248,7 +248,7 @@ const update = cb => {
 }
 
 const setIndividualAsTrue = cb => {
-  const html = ``
+  const html = ''
   const subject = ''
 
   const campaign = {
@@ -275,7 +275,7 @@ const setIndividualAsTrue = cb => {
 }
 
 const setIndividualAsFalse = cb => {
-  const html = ``
+  const html = ''
   const subject = ''
 
   const campaign = {
@@ -302,7 +302,7 @@ const setIndividualAsFalse = cb => {
 }
 
 const setIndividualFailed = cb => {
-  const html = ``
+  const html = ''
   const subject = ''
 
   const campaign = {
