@@ -248,8 +248,13 @@ const update = cb => {
 }
 
 const setIndividualAsTrue = cb => {
-  const html = ''
-  const subject = ''
+  const html = `<div>
+  From: {{sender.display_name or "me"}}
+  </div>
+  <div>
+  To: {{recipient.display_name or "there"}}
+  </div>`
+  const subject = 'Individual Email From {{sender.display_name}}'
 
   const campaign = {
     id: results.email.scheduleIndividual.data.id,
@@ -275,8 +280,13 @@ const setIndividualAsTrue = cb => {
 }
 
 const setIndividualAsFalse = cb => {
-  const html = ''
-  const subject = ''
+  const html = `<div>
+  From: {{sender.display_name or "me"}}
+  </div>
+  <div>
+  To: {{recipient.display_name or "there"}}
+  </div>`
+  const subject = 'Individual Email From {{sender.display_name}}'
 
   const campaign = {
     id: results.email.scheduleIndividual.data.id,
