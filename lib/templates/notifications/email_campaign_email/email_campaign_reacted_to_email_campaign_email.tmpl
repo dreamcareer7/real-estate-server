@@ -1,5 +1,9 @@
 {% if data.recipient %}
-  {{ data.recipient }}, {{ data.action }} "{{ data.subject }}".
+
+  {{ data.recipient }}, {{ data.action }} {{ data.subject }}.
+
 {% else %}
-  {{ data.eventNum }} people, {{ data.action }} "{{ data.subject }}".
+
+  {{ data.subject }} has been {{ data.action }}.
+
 {% endif %}
