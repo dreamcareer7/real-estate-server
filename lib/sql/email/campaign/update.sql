@@ -9,5 +9,5 @@ UPDATE email_campaigns SET
   microsoft_credential = $9,
   notifications_enabled = COALESCE($10, true),
   template = $11,
-  individual = $12
+  individual = COALESCE($12, individual)
 WHERE id = $1

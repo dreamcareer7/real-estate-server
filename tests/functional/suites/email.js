@@ -330,9 +330,6 @@ const setIndividualFailed = cb => {
     .put(`/emails/${results.email.scheduleIndividual.data.id}?associations[]=email_campaign.recipients`, campaign)
     .after(cb)
     .expectStatus(400)
-    .expectJSON({
-      message: 'Individual property must be either a Boolean or Undefined!'
-    })
 }
 
 const enableDisableNotification = cb => {
