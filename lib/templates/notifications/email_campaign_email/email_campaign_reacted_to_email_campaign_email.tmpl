@@ -4,14 +4,6 @@
 
 {% else %}
 
-  {% if data.eventNum %}
-
-    {{ data.subject }} has been {{ data.action }} {{ data.eventNum }} {% if data.eventNum > 1 %}times{% else %}time{% endif %}.
-
-  {% else %}
-
-    {{ data.subject }} has been {{ data.action }}.
-
-  {% endif %}
+  {{ data.subject }} has been {{ data.action }}.
 
 {% endif %}
