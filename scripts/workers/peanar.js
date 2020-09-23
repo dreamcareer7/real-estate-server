@@ -105,7 +105,7 @@ const queues = [
 
   {
     queues: ['brand_template_thumbnail'],
-    concurrency: 200
+    concurrency: 100
   },
   {
     queues: ['envelope_update'],

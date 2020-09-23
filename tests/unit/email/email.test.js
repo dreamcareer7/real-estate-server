@@ -1101,6 +1101,17 @@ async function update() {
   expect(updated_three.microsoft_credential).to.be.equal(microsoftCredential.id)
 
 
+  const updated_four = await EmailCampaign.update({
+    ...campaign,
+    subject: 'custom_subject',
+    due_at: new Date(campaign.due_at),
+    google_credential: null,
+    microsoft_credential: microsoftCredential.id,
+    individual: true
+  })
+  
+  expect(updated_four.individual).to.be.equal(true)
+
   try {
     await EmailCampaign.update({
       ...campaign,
