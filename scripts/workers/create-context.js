@@ -8,9 +8,12 @@ const createContext = async c => {
     ...c
   })
 
+  let handled = false
+
   const { conn, done } = await context.run(db.conn.promise)
 
   const rollback = err => {
+    handled = true
     Context.trace('<- Rolling back on worker'.red, err)
     return conn.query('ROLLBACK', (err) => {
       done(err)
@@ -19,6 +22,8 @@ const createContext = async c => {
   }
 
   const commit = async () => {
+    handled = true
+
     try {
       await conn.query('COMMIT')
     } catch(err) {
@@ -35,14 +40,22 @@ const createContext = async c => {
     done()
   }
 
-  context.on('error', function (e) {
+  const errorHandler = e => {
     delete e.domain
     delete e.domainThrown
     delete e.domainEmitter
     delete e.domainBound
 
     Context.log('⚠ Panic:'.yellow, e, e.stack)
+
+    if (handled)
+      return
+
     rollback(e.message)
+  }
+
+  context.on('error', async e => {
+    context.run(errorHandler, e)
   })
 
   await conn.query('BEGIN')
