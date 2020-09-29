@@ -10,4 +10,5 @@ declare interface IGoogleCredential extends IIntegrationCredential {
   scope_summary?: string[];
   watcher_exp?: number;
   last_daily_sync?: Date;
+  type?: String;
 }
