@@ -121,13 +121,13 @@ async function insert() {
 
   expect(result.length).to.be.equal(integration_records.length)
   
-  expect(result[0].google_id).to.be.equal(googleEvent.id);
-  expect(result[0].microsoft_id).to.be.equal(null);
-  expect(result[0].object_type).to.be.equal('crm_task');
+  expect(result[0].google_id).to.be.equal(googleEvent.id)
+  expect(result[0].microsoft_id).to.be.equal(null)
+  expect(result[0].object_type).to.be.equal('crm_task')
   
-  expect(result[1].object_type).to.be.equal('crm_task');
-  expect(result[1].microsoft_id).to.be.equal(microsoftEvent.id);
-  expect(result[1].google_id).to.be.equal(null);
+  expect(result[1].object_type).to.be.equal('crm_task')
+  expect(result[1].microsoft_id).to.be.equal(microsoftEvent.id)
+  expect(result[1].google_id).to.be.equal(null)
 
   return result
 
@@ -176,10 +176,10 @@ async function gupsert() {
   
   const record = await CalendarIntegration.get(result[0].id)
 
-  expect(record.google_id).to.be.equal(googleEvent.id);
-  expect(record.microsoft_id).to.be.equal(null);
-  expect(record.etag).to.be.equal('updated_etag');
-  expect(record.local_etag).to.be.equal('updated_etag');  
+  expect(record.google_id).to.be.equal(googleEvent.id)
+  expect(record.microsoft_id).to.be.equal(null)
+  expect(record.etag).to.be.equal('updated_etag')
+  expect(record.local_etag).to.be.equal('updated_etag')  
 }
 
 async function mupsert() {
@@ -197,10 +197,10 @@ async function mupsert() {
 
   const record = await CalendarIntegration.get(result[1].id)
 
-  expect(record.microsoft_id).to.be.equal(microsoftEvent.id);
-  expect(record.google_id).to.be.equal(null);
-  expect(record.etag).to.be.equal('updated_etag_x');
-  expect(record.local_etag).to.be.equal('updated_etag_x'); 
+  expect(record.microsoft_id).to.be.equal(microsoftEvent.id)
+  expect(record.google_id).to.be.equal(null)
+  expect(record.etag).to.be.equal('updated_etag_x')
+  expect(record.local_etag).to.be.equal('updated_etag_x') 
 }
 
 async function getAll() {
@@ -210,13 +210,13 @@ async function getAll() {
 
   expect(records.length).to.be.equal(integration_records.length)
 
-  expect(records[1].google_id).to.be.equal(googleEvent.id);
-  expect(records[1].microsoft_id).to.be.equal(null);
-  expect(records[1].object_type).to.be.equal('crm_task');
+  expect(records[1].google_id).to.be.equal(googleEvent.id)
+  expect(records[1].microsoft_id).to.be.equal(null)
+  expect(records[1].object_type).to.be.equal('crm_task')
   
-  expect(records[0].object_type).to.be.equal('crm_task');
-  expect(records[0].microsoft_id).to.be.equal(microsoftEvent.id);
-  expect(records[0].google_id).to.be.equal(null);
+  expect(records[0].object_type).to.be.equal('crm_task')
+  expect(records[0].microsoft_id).to.be.equal(microsoftEvent.id)
+  expect(records[0].google_id).to.be.equal(null)
 
   return records
 }
@@ -225,9 +225,9 @@ async function get() {
   const result = await insert()
   const record = await CalendarIntegration.get(result[0].id)
 
-  expect(record.google_id).to.be.equal(googleEvent.id);
-  expect(record.microsoft_id).to.be.equal(null);
-  expect(record.object_type).to.be.equal('crm_task');
+  expect(record.google_id).to.be.equal(googleEvent.id)
+  expect(record.microsoft_id).to.be.equal(null)
+  expect(record.object_type).to.be.equal('crm_task')
 
   return record
 }
@@ -246,9 +246,9 @@ async function getByGoogleIds() {
 
   expect(records.length).to.be.equal(1)
   
-  expect(records[0].google_id).to.be.equal(googleEvent.id);
-  expect(records[0].microsoft_id).to.be.equal(null);
-  expect(records[0].object_type).to.be.equal('crm_task');
+  expect(records[0].google_id).to.be.equal(googleEvent.id)
+  expect(records[0].microsoft_id).to.be.equal(null)
+  expect(records[0].object_type).to.be.equal('crm_task')
 
   return records
 }
@@ -259,9 +259,9 @@ async function getByMicrosoftIds() {
 
   expect(records.length).to.be.equal(1)
   
-  expect(records[0].microsoft_id).to.be.equal(microsoftEvent.id);
-  expect(records[0].google_id).to.be.equal(null);
-  expect(records[0].object_type).to.be.equal('crm_task');
+  expect(records[0].microsoft_id).to.be.equal(microsoftEvent.id)
+  expect(records[0].google_id).to.be.equal(null)
+  expect(records[0].object_type).to.be.equal('crm_task')
 
   return records
 }
@@ -270,9 +270,9 @@ async function getByCrmTasks() {
   const allRecords = await getAll()
   const records    = await CalendarIntegration.getByCrmTasks([allRecords[1].crm_task])
 
-  expect(records[0].google_id).to.be.equal(googleEvent.id);
-  expect(records[0].microsoft_id).to.be.equal(null);
-  expect(records[0].object_type).to.be.equal('crm_task');
+  expect(records[0].google_id).to.be.equal(googleEvent.id)
+  expect(records[0].microsoft_id).to.be.equal(null)
+  expect(records[0].object_type).to.be.equal('crm_task')
 
   return records
 }
