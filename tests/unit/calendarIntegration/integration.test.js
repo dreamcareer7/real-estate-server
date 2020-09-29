@@ -107,7 +107,7 @@ async function setup() {
       deal_context: null,
       object_type: 'crm_task',
       event_type: 'Other',
-      origin: 'google',
+      origin: 'microsoft',
       etag: 'etag',
       local_etag: 'local_etag'
     }
@@ -117,7 +117,20 @@ async function setup() {
 }
 
 async function insert() {
-  return await CalendarIntegration.insert(integration_records)
+  const result = await CalendarIntegration.insert(integration_records)
+
+  expect(result.length).to.be.equal(integration_records.length)
+  
+  expect(result[0].google_id).to.be.equal(googleEvent.id)
+  expect(result[0].microsoft_id).to.be.equal(null)
+  expect(result[0].object_type).to.be.equal('crm_task')
+  
+  expect(result[1].object_type).to.be.equal('crm_task')
+  expect(result[1].microsoft_id).to.be.equal(microsoftEvent.id)
+  expect(result[1].google_id).to.be.equal(null)
+
+  return result
+
   /*
     [
       {
@@ -142,10 +155,52 @@ async function insert() {
         deal_context: null,
         object_type: 'crm_task',
         event_type: 'Other',
-        origin: 'google'
+        origin: 'microsoft'
       }
     ]
   */
+}
+
+async function gupsert() {
+  const result = await insert()
+
+  const arr = [{
+    google_id: result[0].google_id,
+    etag: 'updated_etag',
+    local_etag: 'updated_etag',
+    crm_task: result[0].crm_task
+  }]
+
+  const upserted = await CalendarIntegration.gupsert(arr)
+  expect(upserted.length).to.be.equal(arr.length)
+  
+  const record = await CalendarIntegration.get(result[0].id)
+
+  expect(record.google_id).to.be.equal(googleEvent.id)
+  expect(record.microsoft_id).to.be.equal(null)
+  expect(record.etag).to.be.equal('updated_etag')
+  expect(record.local_etag).to.be.equal('updated_etag')  
+}
+
+async function mupsert() {
+  const result = await insert()
+
+  const arr = [{
+    microsoft_id: result[1].microsoft_id,
+    etag: 'updated_etag_x',
+    local_etag: 'updated_etag_x',
+    crm_task: result[1].crm_task
+  }]
+
+  const upserted = await CalendarIntegration.mupsert(arr)
+  expect(upserted.length).to.be.equal(arr.length)
+
+  const record = await CalendarIntegration.get(result[1].id)
+
+  expect(record.microsoft_id).to.be.equal(microsoftEvent.id)
+  expect(record.google_id).to.be.equal(null)
+  expect(record.etag).to.be.equal('updated_etag_x')
+  expect(record.local_etag).to.be.equal('updated_etag_x') 
 }
 
 async function getAll() {
@@ -154,8 +209,14 @@ async function getAll() {
   const records = await CalendarIntegration.getAll(ids)
 
   expect(records.length).to.be.equal(integration_records.length)
-  expect(records[0].type).to.be.equal('calendar_integration')
-  expect(records[0].deleted_at).to.be.equal(null)
+
+  expect(records[1].google_id).to.be.equal(googleEvent.id)
+  expect(records[1].microsoft_id).to.be.equal(null)
+  expect(records[1].object_type).to.be.equal('crm_task')
+  
+  expect(records[0].object_type).to.be.equal('crm_task')
+  expect(records[0].microsoft_id).to.be.equal(microsoftEvent.id)
+  expect(records[0].google_id).to.be.equal(null)
 
   return records
 }
@@ -163,6 +224,10 @@ async function getAll() {
 async function get() {
   const result = await insert()
   const record = await CalendarIntegration.get(result[0].id)
+
+  expect(record.google_id).to.be.equal(googleEvent.id)
+  expect(record.microsoft_id).to.be.equal(null)
+  expect(record.object_type).to.be.equal('crm_task')
 
   return record
 }
@@ -179,12 +244,35 @@ async function getByGoogleIds() {
   const allRecords = await getAll()
   const records    = await CalendarIntegration.getByGoogleIds([allRecords[1].google_id])
 
+  expect(records.length).to.be.equal(1)
+  
+  expect(records[0].google_id).to.be.equal(googleEvent.id)
+  expect(records[0].microsoft_id).to.be.equal(null)
+  expect(records[0].object_type).to.be.equal('crm_task')
+
+  return records
+}
+
+async function getByMicrosoftIds() {
+  const allRecords = await getAll()
+  const records    = await CalendarIntegration.getByMicrosoftIds([allRecords[0].microsoft_id])
+
+  expect(records.length).to.be.equal(1)
+  
+  expect(records[0].microsoft_id).to.be.equal(microsoftEvent.id)
+  expect(records[0].google_id).to.be.equal(null)
+  expect(records[0].object_type).to.be.equal('crm_task')
+
   return records
 }
 
 async function getByCrmTasks() {
   const allRecords = await getAll()
   const records    = await CalendarIntegration.getByCrmTasks([allRecords[1].crm_task])
+
+  expect(records[0].google_id).to.be.equal(googleEvent.id)
+  expect(records[0].microsoft_id).to.be.equal(null)
+  expect(records[0].object_type).to.be.equal('crm_task')
 
   return records
 }
@@ -193,21 +281,28 @@ async function getByContacts() {
   const allRecords = await getAll()
   const records    = await CalendarIntegration.getByContacts([allRecords[1].contact])
 
-  return records
+  expect(records.length).to.be.equal(0)
 }
 
 async function getByContactAttributes() {
   const allRecords = await getAll()
   const records    = await CalendarIntegration.getByContactAttributes([allRecords[1].contact_attribute])
 
-  return records
+  expect(records.length).to.be.equal(0)
 }
 
 async function getByDealContexts() {
   const allRecords = await getAll()
   const records    = await CalendarIntegration.getByDealContexts([allRecords[1].deal_context])
 
-  return records
+  expect(records.length).to.be.equal(0)
+}
+
+async function getByHomeAnniversaries() {
+  const allRecords = await getAll()
+  const records    = await CalendarIntegration.getByHomeAnniversaries([allRecords[1].deal_context])
+
+  expect(records.length).to.be.equal(0)
 }
 
 async function deleteMany() {
@@ -222,21 +317,25 @@ async function deleteMany() {
 }
 
 
-
 describe('Google', () => {
   describe('Google Calendars', () => {
     createContext()
     beforeEach(setup)
 
     it('should create several calendar integration records', insert)
+    it('should create several Google calendar integration records', gupsert)
+    it('should create several Microsoft calendar integration records', mupsert)
+
     it('should return several calendar integration records', getAll)
     it('should return a calendar integration record', get)
     it('should fail in get by id', getFailed)
     it('should return several calendar integration records by google_ids', getByGoogleIds)
+    it('should return several calendar integration records by microsoft_ids', getByMicrosoftIds)
     it('should return a calendar integration records by crm_task', getByCrmTasks)
     it('should return a calendar integration records by contact', getByContacts)
     it('should return a calendar integration records by contact_attribute', getByContactAttributes)
     it('should return a calendar integration records by deal_context', getByDealContexts)
+    it('should return a calendar integration records by home_anniversary', getByHomeAnniversaries)
     it('should delete several calendar integration records', deleteMany)
   })
 })

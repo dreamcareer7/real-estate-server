@@ -7,4 +7,5 @@ declare interface IMicrosoftCredential extends IIntegrationCredential {
   microsoft_calendar: UUID;
   scope_summary: string[];
   send_email_after: number;
+  type?: String;
 }
