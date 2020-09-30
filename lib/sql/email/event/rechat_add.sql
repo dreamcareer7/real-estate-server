@@ -19,11 +19,14 @@ WITH inserted AS (
   RETURNING id
 ),
 
-campaignx AS (
+current_campaign AS (
   SELECT campaign FROM emails WHERE id = $1::uuid
 )
 
 SELECT
   t1.id AS email_event_id, t2.campaign AS campaign_id
 FROM
-  inserted t1 CROSS JOIN campaignx t2
+  inserted t1 CROSS JOIN current_campaign t2
+
+
+-- SELECT campaign FROM emails WHERE id = $1::uuid

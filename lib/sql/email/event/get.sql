@@ -1,0 +1,1 @@
+SELECT * FROM emails_events WHERE id = $1
