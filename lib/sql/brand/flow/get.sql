@@ -20,7 +20,7 @@ SELECT
 
   (
     SELECT
-      (count(id))::INT
+      (count(flows.id))::INT
     FROM
       flows
       JOIN contacts
