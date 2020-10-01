@@ -30,7 +30,9 @@ async function setup() {
   brand = await BrandHelper.create({
     roles: {
       Admin: [user.id]
-    }
+    },
+    checklists: [],
+    contexts: []
   })
   Context.set({ user, brand })
   await handleJobs()
