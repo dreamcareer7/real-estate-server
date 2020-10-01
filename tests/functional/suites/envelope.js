@@ -186,6 +186,13 @@ const checkTask = cb => {
     .expectStatus(200)
 }
 
+const disconnect = cb => {
+  return frisby.create('Disconnect docusign account')
+    .delete('/users/self/docusign')
+    .after(cb)
+    .expectStatus(204)
+}
+
 module.exports = {
   create412,
   saveToken,
@@ -197,5 +204,6 @@ module.exports = {
   resend,
   updateStatus,
   checkEnvelope,
-  checkTask
+  checkTask,
+  disconnect
 }
