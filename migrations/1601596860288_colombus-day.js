@@ -4,7 +4,7 @@ const migrations = [
   `ALTER TYPE template_type
     ADD VALUE 'ColombusDay'`,
   `ALTER TYPE template_type
-    RENAME VALUE 'Diwaly' TO 'Diwaly'`
+    RENAME VALUE 'Diwaly' TO 'Diwali'`
 ]
 
 
