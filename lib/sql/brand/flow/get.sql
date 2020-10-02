@@ -20,11 +20,15 @@ SELECT
 
   (
     SELECT
-      (count(id))::INT
+      (count(flows.id))::INT
     FROM
       flows
+      JOIN contacts
+        ON contacts.id = flows.contact
     WHERE
       origin = brands_flows.id
+      AND contacts.deleted_at IS NULL
+      AND contacts.brand = flows.brand
       AND flows.deleted_at IS NULL
       AND (CASE WHEN $2::uuid IS NULL THEN TRUE ELSE flows.brand = $2::uuid END)
   ) AS active_flows,
