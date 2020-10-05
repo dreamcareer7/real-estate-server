@@ -263,7 +263,7 @@ BEGIN
     SELECT
       'Text' as data_type,
       'mls_number' AS key,
-      r1.mls_number AS text,
+      r1.mls_number AS text
       INTO c;
 
     RETURN NEXT c;
