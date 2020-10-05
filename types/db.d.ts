@@ -274,6 +274,7 @@ declare type TDbSqlAddress =
   | 'email/campaign/notifications_enabled'
   | 'email/event/rechat_add'
   | 'email/event/mailgun_add'
+  | 'email/event/get'
   | 'email/get'
   | 'email/store-id'
   | 'email/store_google_id'

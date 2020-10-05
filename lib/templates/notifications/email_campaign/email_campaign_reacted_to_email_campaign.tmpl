@@ -1,9 +1,9 @@
-{% if data.eventNum %}
+{% if data.count %}
 
-  {{ data.subject }} has been {{ data.action }} {{ data.eventNum }} {% if data.eventNum > 1 %}times{% else %}time{% endif %}.
+  {{ data.subject }} has been {{ data.event }} {{ data.count }} {% if data.count > 1 %}times{% else %}time{% endif %}.
 
 {% else %}
 
-  {{ data.subject }} has been {{ data.action }}.
+  {{ data.subject }} has been {{ data.event }}.
 
 {% endif %}
