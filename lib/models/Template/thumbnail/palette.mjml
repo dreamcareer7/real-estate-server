@@ -104,4 +104,6 @@
     background-color="{{get('inverted-button-bg-color')}}"
     color="{{get('inverted-button-text-color')}}"
   ></mj-class>
+
+  {{extra_attributes | safe}}
 </mj-attribues>
