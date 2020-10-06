@@ -1,6 +1,6 @@
 # Introduction
 
-Welcome. Rechat's API is broken into several small components to be readable.
+[![Rechat](https://app.rechat.com/static/images/logo.svg)
 
 ## Basics
 
