@@ -163,7 +163,18 @@ SELECT deals.*,
     WHERE
       "role" = 'Deal'
       AND role_id = deals.id
-  ) AS files
+  ) AS files,
+
+  (
+    SELECT
+      ARRAY_AGG(id)
+    FROM
+      triggers
+    WHERE
+      triggers.deal = deals.id
+      AND deleted_at IS NULL
+      AND executed_at IS NULL
+  )
 
 FROM deals
 JOIN unnest($1::uuid[]) WITH ORDINALITY t(did, ord) ON deals.id = did

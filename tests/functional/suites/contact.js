@@ -2,7 +2,13 @@ const _ = require('lodash')
 const uuid = require('uuid')
 const { contact, companyContact } = require('./data/contact.js')
 const manyContacts = require('./data/manyContacts.js')
-const brand = require('./data/brand.js')
+
+registerSuite('brand', [
+  'createParent',
+  'create',
+  'addRole',
+  'addMember'
+])
 
 registerSuite('user', ['create', 'upgradeToAgentWithEmail', 'markAsNonShadow'])
 
@@ -16,33 +22,9 @@ function _fixContactAttributeDefs(contact) {
   }
 }
 
-const brandCreateParent = (cb) => {
-  brand.name = 'Parent Brand'
-  brand.roles = [
-    {
-      role: 'Admin',
-      members: [
-        {
-          user: results.authorize.token.data.id
-        }
-      ],
-      acl: ['Admin']
-    }
-  ]
-
-  return frisby.create('create a brand')
-    .post('/brands', brand)
-    .addHeader('x-handle-jobs', 'yes')
-    .after(cb)
-    .expectStatus(200)
-    .expectJSON({
-      code: 'OK',
-    })
-}
-
 const createBrandLists = cb => {
   return frisby.create('create brand lists')
-    .post(`/brands/${results.contact.brandCreateParent.data.id}/lists`, [{
+    .post(`/brands/${results.brand.create.data.id}/lists`, [{
       name: 'Warm List',
       filters: [{
         attribute_def: defs.tag.id,
@@ -74,44 +56,11 @@ const createBrandLists = cb => {
     .expectJSONLength('data', 4)
 }
 
-const brandCreate = (cb) => {
-  brand.parent = results.contact.brandCreateParent.data.id
-  brand.name = 'Brand'
-  brand.roles = [
-    {
-      role: 'Agent',
-      members: [
-        {
-          user: results.authorize.token.data.id
-        }
-      ],
-      acl: ['Agent']
-    }
-  ]
-
-  return frisby.create('create a child brand')
-    .post('/brands?associations[]=brand.roles', brand)
-    .addHeader('x-handle-jobs', 'yes')
-    .after((err, res, body) => {
-      const setup = frisby.globalSetup()
-
-      setup.request.headers['X-RECHAT-BRAND'] = body.data.id
-      setup.request.headers['x-handle-jobs'] = 'yes'
-
-      frisby.globalSetup(setup)
-      cb(err, res, body)
-    })
-    .expectStatus(200)
-    .expectJSON({
-      code: 'OK',
-    })
-}
-
 function getAttributeDefs(cb) {
   return frisby
     .create('get all attribute defs, global or user-defined')
     .get('/contacts/attribute_defs')
-    .addHeader('X-RECHAT-BRAND', results.contact.brandCreateParent.data.id)
+    .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
     .after(function(err, res, json) {
       defs = _.keyBy(json.data, 'name')
 
@@ -121,6 +70,13 @@ function getAttributeDefs(cb) {
         c.user = results.authorize.token.data.id
         _fixContactAttributeDefs(c)
       }
+
+      const setup = frisby.globalSetup()
+
+      setup.request.headers['X-RECHAT-BRAND'] = results.brand.create.data.id
+      setup.request.headers['x-handle-jobs'] = 'yes'
+
+      frisby.globalSetup(setup)
 
       cb(err, res, json)
     })
@@ -1180,10 +1136,10 @@ const sendEmailsToList = cb => {
 }
 
 module.exports = {
-  brandCreateParent,
+  // brandCreateParent,
   getAttributeDefs,
   createBrandLists,
-  brandCreate,
+  // brandCreate,
   create,
   createCompanyContact,
   createSingleAttrContact,
