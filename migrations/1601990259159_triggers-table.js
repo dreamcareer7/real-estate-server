@@ -9,7 +9,7 @@ const migrations = [
 
   `CREATE TYPE trigger_action AS ENUM (
     'create_event',
-    'schedule_email',
+    'schedule_email'
   )
   
   CREATE TABLE IF NOT EXISTS triggers (
