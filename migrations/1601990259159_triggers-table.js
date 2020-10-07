@@ -7,11 +7,6 @@ const migrations = [
     'schedule_email'
   )`,
 
-  `CREATE TYPE trigger_action AS ENUM (
-    'create_event',
-    'schedule_email'
-  )`,
-  
   `CREATE TABLE IF NOT EXISTS triggers (
     id uuid NOT NULL PRIMARY KEY DEFAULT uuid_generate_v4(),
     created_at timestamptz NOT NULL DEFAULT now(),
