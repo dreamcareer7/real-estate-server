@@ -1,7 +1,7 @@
 const db = require('../lib/utils/db')
 
 const migrations = [
-  ‍‍`ALTER TYPE template_type
+  `ALTER TYPE template_type
     RENAME VALUE 'ColombusDay' TO 'ColumbusDay'`
 ]
 
