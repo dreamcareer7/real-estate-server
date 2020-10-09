@@ -2,10 +2,6 @@
 
 Welcome. Rechat's API is broken into several small components to be readable.
 
-[![build status](https://gitlab.com/rechat/server/badges/develop/build.svg)](https://gitlab.com/rechat/server/commits/develop)
-[![coverage report](https://gitlab.com/rechat/server/badges/develop/coverage.svg?job=coverage)](https://gitlab.com/rechat/server/commits/develop)
-[![coverage report](https://gitlab.com/rechat/server/badges/develop/coverage.svg?job=unit_coverage)](https://gitlab.com/rechat/server/commits/develop)
-
 ## Basics
 
 * [Authorization](authorize.html)
