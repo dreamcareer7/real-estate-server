@@ -94,10 +94,8 @@ const execute = async() => {
   ]
 
 
-  const promises = brands.map(sendForBrand)
-
-  await Promise.all(promises)
-
+  for(const brand of brands)
+    await sendForBrand(brand)
 }
 
 async function main() {
