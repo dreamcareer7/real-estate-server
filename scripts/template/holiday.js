@@ -59,7 +59,7 @@ const sendForBrand = async id => {
     }),
     html,
     tags: ['holiday'],
-    subject: 'Columbus Day',
+    subject: 'Happy Columbus Day',
     brand: brand.id,
     from: 'f2e2be50-927b-11e8-bb13-0a95998482ac',
     individual: true,
@@ -94,10 +94,8 @@ const execute = async() => {
   ]
 
 
-  const promises = brands.map(sendForBrand)
-
-  await Promise.all(promises)
-
+  for(const brand of brands)
+    await sendForBrand(brand)
 }
 
 async function main() {
