@@ -1,5 +1,4 @@
 const Context = require('../../lib/models/Context/index')
-const Email = require('../../lib/models/Email/index')
 const EmailCampaign = require('../../lib/models/Email/campaign/create')
 const createContext = require('../workers/create-context')
 const BrandTemplate = require('../../lib/models/Template/brand/get')
