@@ -5,6 +5,8 @@ const manyContacts = require('./data/manyContacts.js')
 
 registerSuite('brand', [
   'createParent',
+  'attributeDefs',
+  'createBrandLists',
   'create',
   'addRole',
   'addMember'
@@ -20,40 +22,6 @@ function _fixContactAttributeDefs(contact) {
     attr.attribute_def = defs[attr.attribute_type].id
     delete attr.attribute_type
   }
-}
-
-const createBrandLists = cb => {
-  return frisby.create('create brand lists')
-    .post(`/brands/${results.brand.create.data.id}/lists`, [{
-      name: 'Warm List',
-      filters: [{
-        attribute_def: defs.tag.id,
-        value: 'Warm List'
-      }],
-      touch_freq: 60
-    }, {
-      name: 'Hot List',
-      filters: [{
-        attribute_def: defs.tag.id,
-        value: 'Hot List'
-      }],
-      touch_freq: 30
-    }, {
-      name: 'Past Client',
-      filters: [{
-        attribute_def: defs.tag.id,
-        value: 'Past Client'
-      }]
-    }, {
-      name: 'iOS',
-      filters: [{
-        attribute_def: defs.source_type.id,
-        value: 'IOSAddressBook'
-      }]
-    }])
-    .after(cb)
-    .expectStatus(200)
-    .expectJSONLength('data', 4)
 }
 
 function getAttributeDefs(cb) {
@@ -1136,10 +1104,7 @@ const sendEmailsToList = cb => {
 }
 
 module.exports = {
-  // brandCreateParent,
   getAttributeDefs,
-  createBrandLists,
-  // brandCreate,
   create,
   createCompanyContact,
   createSingleAttrContact,

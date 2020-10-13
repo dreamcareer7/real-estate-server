@@ -3,8 +3,6 @@ const fs = require('fs')
 const mappings = require('./data/csv_mappings')
 
 registerSuite('contact', [
-  'brandCreateParent',
-  'brandCreate',
   'getAttributeDefs'
 ])
 

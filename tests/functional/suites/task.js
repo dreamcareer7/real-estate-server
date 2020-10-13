@@ -9,8 +9,6 @@ const anotherUser = require('./data/user')
 const brand = require('./data/brand.js')
 
 registerSuite('contact', [
-  'brandCreateParent',
-  'brandCreate',
   'getAttributeDefs',
   'create',
   'createCompanyContact',
@@ -43,8 +41,8 @@ function registerNewUser(cb) {
 }
 
 function addAbbasToBrand(cb) {
-  const brand_id = results.contact.brandCreate.data.id
-  const role_id = results.contact.brandCreate.data.roles[0].id
+  const brand_id = results.brand.create.data.id
+  const role_id = results.brand.addRole.data.id
 
   return frisby
     .create('add Abbas to the team')
@@ -882,7 +880,7 @@ function anotherUserCantRemoveAttachment(cb) {
       setup.request.headers['Authorization'] =
         'Bearer ' + results.authorize.token.access_token
       setup.request.headers['X-RECHAT-BRAND'] =
-        results.contact.brandCreate.data.id
+        results.brand.create.data.id
 
       frisby.globalSetup(setup)
       cb(err, res, body)

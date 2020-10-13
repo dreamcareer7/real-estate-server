@@ -1,4 +1,4 @@
-registerSuite('contact', ['brandCreateParent', 'brandCreate', 'getAttributeDefs', 'create'])
+registerSuite('contact', ['getAttributeDefs', 'create'])
 
 function create(cb) {
   const def = {

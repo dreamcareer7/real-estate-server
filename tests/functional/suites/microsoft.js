@@ -6,7 +6,6 @@ const microsoft_credential_json  = require('./expected_objects/microsoft/credent
 
 registerSuite('agent', ['add'])
 registerSuite('brand', ['createParent', 'create'])
-registerSuite('contact', ['brandCreateParent', 'brandCreate'])
 
 
 

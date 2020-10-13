@@ -6,7 +6,6 @@ const google_credential_json  = require('./expected_objects/google/credential.js
 
 registerSuite('agent', ['add'])
 registerSuite('brand', ['createParent', 'create'])
-registerSuite('contact', ['brandCreateParent', 'brandCreate'])
 
 
 
