@@ -15,6 +15,7 @@ function requestOutlookAccess(cb) {
       redirect: 'http://localhost:3078/dashboard/contacts/',
       body: ['Contacts.Read', 'Mail.Read', 'Mail.Send']
     })
+    .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
     .after(function(err, res, json) {
       cb(err, res, json)
     })
@@ -49,7 +50,7 @@ function grantAccessWithMissedState(cb) {
 
 function deleteAccountFailed(cb) {
   return frisby.create('deleteAccount Failed')
-    .delete(`/users/self/microsoft/${results.user.create.data.id}`)
+    .delete(`/users/self/microsoft/${results.authorize.token.data.id}`)
     .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
     .after(function(err, res, json) {
       cb(err, res, json)
@@ -59,7 +60,7 @@ function deleteAccountFailed(cb) {
 
 function forceSyncFailed(cb) {
   return frisby.create('forceSync Failed')
-    .post(`/users/self/microsoft/${results.user.create.data.id}/sync`)
+    .post(`/users/self/microsoft/${results.authorize.token.data.id}/sync`)
     .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
     .after(function(err, res, json) {
       cb(err, res, json)

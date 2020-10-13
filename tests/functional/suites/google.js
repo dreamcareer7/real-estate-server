@@ -15,6 +15,7 @@ function requestGmailAccess(cb) {
       redirect: 'http://localhost:3078/dashboard/contacts/',
       body: ['contacts.readonly']
     })
+    .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
@@ -61,7 +62,7 @@ function grantAccessWithMissedScope(cb) {
 
 function deleteAccountFailed(cb) {
   return frisby.create('deleteAccount Failed')
-    .delete(`/users/self/google/${results.user.create.data.id}`)
+    .delete(`/users/self/google/${results.authorize.token.data.id}`)
     .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
     .after(function(err, res, json) {
       cb(err, res, json)
@@ -71,7 +72,7 @@ function deleteAccountFailed(cb) {
 
 function forceSyncFailed(cb) {
   return frisby.create('forceSync Failed')
-    .post(`/users/self/google/${results.user.create.data.id}/sync`)
+    .post(`/users/self/google/${results.authorize.token.data.id}/sync`)
     .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
     .after(function(err, res, json) {
       cb(err, res, json)
