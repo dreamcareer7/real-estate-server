@@ -53,7 +53,6 @@
 
     <mj-section padding=0>
       <mj-column padding="0px">
-        <mj-image width="180px" padding="10px 0 12px 0" src=""></mj-image>
         <mj-text color="#7f7f7f" padding="0px" align="center" >
           <p>Powered by Rechat™</p>
         </mj-text>

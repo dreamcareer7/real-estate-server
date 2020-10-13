@@ -1,0 +1,47 @@
+{% extends "../email.mjml" %}
+
+{% block content %}
+    <mj-section padding="8px 0 0 0"></mj-section>
+
+    <mj-wrapper background-color="#ffffff" padding="0" border-radius="16px">
+      <mj-section padding-top="24px" padding-bottom=0>
+        <mj-column>
+          <mj-image height="24px" width="141px" padding-top=0 padding-bottom="24px" src="https://assets.rechat.com/daily/logo.png" />
+
+
+          <mj-text align="justify" font-family="Lato" font-size="14px" line-height="1.5">
+            <p>
+              Hi {% raw %}{{recipient.first_name or "there"}}{% endraw %},
+            </p>
+            <p>
+              Rechat has a selection of Columbus Day social posts available for you to share.  Click any of the images below to view them.
+            </p>
+            <p>
+              Happy Columbus Day.
+            </p>
+            </span>
+          </mj-text>
+        </mj-column>
+      </mj-section>
+
+      {% for thumbnails in thumbnails | batch(2) %}
+        <mj-section padding-top=0 padding-bottom=0>
+          <mj-column width="49.5%">
+            <mj-image border="1px solid #eef0f2" href="{{'/dashboard/marketing/ColumbusDay/Social' | url}}" padding-bottom=0 padding-top="10px" src="{{thumbnails[0].url}}" />
+          </mj-column>
+
+          <mj-column width="49.5%">
+            {% if thumbnails[1] %}
+              <mj-image border="1px solid #eef0f2" href="{{'/dashboard/marketing/ColumbusDay/Social' | url}}" padding-bottom=0 padding-top="10px" src="{{thumbnails[1].url}}" />
+            {% endif %}
+          </mj-column>
+        </mj-section>
+      {% endfor %}
+
+      <mj-section padding=0>
+        <mj-column padding=0>
+          <mj-spacer height="20px" />
+        </mj-column>
+      </mj-section>
+    </mj-wrapper>
+{% endblock %}
