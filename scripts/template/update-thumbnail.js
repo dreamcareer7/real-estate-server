@@ -25,7 +25,7 @@ const run = async () => {
   context.enter()
 
   const brand_template = await BrandTemplate.get(process.argv[2])
-  await BrandTemplate.generateThumbnail(brand_template)
+  await BrandTemplate.generateThumbnail(brand_template.id)
 
 }
 

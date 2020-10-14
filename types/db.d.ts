@@ -590,7 +590,6 @@ declare type TDbSqlAddress =
   | 'template/asset/insert'
   | 'template/brand/allow-shared'
   | 'template/brand/allow'
-  | 'template/brand/allowed-brands'
   | 'template/brand/delete'
   | 'template/brand/for-brand'
   | 'template/brand/get-invalids'
