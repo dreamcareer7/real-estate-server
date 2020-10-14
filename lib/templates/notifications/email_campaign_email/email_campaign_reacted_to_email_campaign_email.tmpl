@@ -1,9 +1,17 @@
-{% if data.recipient %}
+{% if data.count == 1 %}
 
-  {{ data.recipient }}, {{ data.event }} {{ data.subject }}.
+  {% if data.recipient %}
+
+    {{ data.recipient }}, {{ data.event }} {{ data.subject }}.
+
+  {% else %}
+
+    {{ data.subject }} has been {{ data.event }} one time.
+
+  {% endif %}
 
 {% else %}
 
-  {{ data.subject }} has been {{ data.event }}.
+  {{ data.subject }} has been {{ data.event }} {{ data.count }} times.
 
 {% endif %}
