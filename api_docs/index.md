@@ -31,6 +31,7 @@ Welcome. Rechat's API is broken into several small components to be readable.
 * [Email Threads](email_thread.html)
 * [Flows](flow.html)
 * [Tasks](task.html)
+* [Triggers](trigger.html)
 
 ## Marketing
 
