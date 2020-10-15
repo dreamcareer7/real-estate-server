@@ -22,6 +22,7 @@ require('../../lib/models/Email/events')
 require('../../lib/models/SMS')
 require('../../lib/models/Daily')
 require('../../lib/models/Envelope')
+require('../../lib/models/Trigger/worker')
 // require('../../lib/models/Showings/worker')
 
 /** @type {(() => Promise<void>)[]} */
@@ -90,10 +91,10 @@ const queues = [
     queues: ['google_cal_webhooks'],
     concurrency: 3
   },
-  // {
-  //   queues: ['google_contacts_webhooks'],
-  //   concurrency: 1
-  // },
+  {
+    queues: ['trigger'],
+    concurrency: 5
+  },
   {
     queues: ['google_contacts'],
     concurrency: 5
