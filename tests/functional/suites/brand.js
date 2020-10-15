@@ -30,12 +30,59 @@ const createParent = (cb) => {
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
-      //       data: brand
+      // data: brand
     })
+}
+
+function attributeDefs(cb) {
+  return frisby
+    .create('get all global attribute defs')
+    .get('/contacts/attribute_defs')
+    .addHeader('X-RECHAT-BRAND', results.brand.createParent.data.id)
+    .after(cb)
+    .expectStatus(200)
+}
+
+const createBrandLists = cb => {
+  const defs = Object.fromEntries(results.brand.attributeDefs.data.map(a => [a.name, a.id]))
+
+  return frisby.create('create brand lists')
+    .post(`/brands/${results.brand.createParent.data.id}/lists`, [{
+      name: 'Warm List',
+      filters: [{
+        attribute_def: defs.tag,
+        value: 'Warm List'
+      }],
+      touch_freq: 60
+    }, {
+      name: 'Hot List',
+      filters: [{
+        attribute_def: defs.tag,
+        value: 'Hot List'
+      }],
+      touch_freq: 30
+    }, {
+      name: 'Past Client',
+      filters: [{
+        attribute_def: defs.tag,
+        value: 'Past Client'
+      }]
+    }, {
+      name: 'iOS',
+      filters: [{
+        attribute_def: defs.tag,
+        value: 'IOSAddressBook'
+      }]
+    }])
+    .addHeader('X-RECHAT-BRAND', results.brand.createParent.data.id)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSONLength('data', 4)
 }
 
 const create = (cb) => {
   brand.parent = results.brand.createParent.data.id
+  brand.name = 'Child Brand'
 
   brand.roles = [
     {
@@ -53,6 +100,7 @@ const create = (cb) => {
 
   return frisby.create('create a child brand')
     .post('/brands', brand)
+    .addHeader('x-handle-jobs', 'yes')
     .after((err, res, body) => {
       brand_id = body.data.id
       cb(err, res, body)
@@ -679,6 +727,8 @@ const deleteAsset = cb => {
 
 module.exports = {
   createParent,
+  attributeDefs,
+  createBrandLists,
   create,
 
   get,

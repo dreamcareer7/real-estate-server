@@ -103,6 +103,17 @@ SELECT
   ) as flows,
   (
     SELECT
+      array_agg(triggers.id)
+    FROM
+      triggers
+    WHERE
+      triggers.deleted_at IS NULL
+      AND triggers.executed_at IS NULL
+      AND triggers.contact = contacts.id
+      AND $3::text[] @> ARRAY['contact.triggers']
+  ) as triggers,
+  (
+    SELECT
       array_agg("user")
     FROM
       contacts_users

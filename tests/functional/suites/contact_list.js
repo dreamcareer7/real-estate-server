@@ -1,8 +1,5 @@
 registerSuite('contact', [
-  'brandCreateParent',
-  'brandCreate',
   'getAttributeDefs',
-  'createBrandLists'
 ])
 
 function checkDefaultLists(cb) {

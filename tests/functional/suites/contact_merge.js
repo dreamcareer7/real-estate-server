@@ -1,8 +1,6 @@
 const _ = require('lodash')
 
 registerSuite('contact', [
-  'brandCreateParent',
-  'brandCreate',
   'getAttributeDefs',
   'create',
   'createCompanyContact',

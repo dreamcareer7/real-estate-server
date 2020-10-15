@@ -74,7 +74,7 @@ declare interface IEmailCampaignInput {
   google_credential?: UUID | null;
   microsoft_credential?: UUID | null;
   thread_key?: string;
-  notifications_enabled?: Boolean
+  notifications_enabled?: boolean
 }
 
 declare interface IEmailCampaign extends IEmailCampaignInput {
@@ -83,8 +83,9 @@ declare interface IEmailCampaign extends IEmailCampaignInput {
   failed_at?: string | null;
   failed_within?: string;
   failure?: string;
-  sent: Number;
-  opened: Number;
+  opened: number;
+  sent: number;
+  executed_at: number;
 }
 
 declare interface IEmail {
