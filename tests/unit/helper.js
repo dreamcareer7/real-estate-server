@@ -71,7 +71,8 @@ function createContext() {
 
 const prepareContext = async c => {
   const context = Context.create({
-    ...c
+    ...c,
+    logger() {}
   })
 
   const { conn, done } = await db.conn.promise()

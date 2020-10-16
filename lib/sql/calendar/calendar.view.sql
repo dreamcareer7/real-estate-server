@@ -25,6 +25,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       NULL::uuid AS credential_id,
       NULL::text AS thread_key,
       NULL::uuid AS activity,
+      NULL::uuid AS flow,
       (
         SELECT
           ARRAY_AGG("user")
@@ -101,6 +102,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       NULL::uuid AS credential_id,
       NULL::text AS thread_key,
       NULL::uuid AS activity,
+      NULL::uuid AS flow,
       (
         SELECT
           ARRAY_AGG("user")
@@ -181,6 +183,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       NULL::uuid AS credential_id,
       NULL::text AS thread_key,
       NULL::uuid AS activity,
+      NULL::uuid AS flow,
       (
         SELECT
           ARRAY_AGG(DISTINCT r."user")
@@ -255,6 +258,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       NULL::uuid AS credential_id,
       NULL::text AS thread_key,
       NULL::uuid AS activity,
+      NULL::uuid AS flow,
       (
         SELECT
           ARRAY_AGG(DISTINCT r."user")
@@ -358,6 +362,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       NULL::uuid AS credential_id,
       NULL::text AS thread_key,
       NULL::uuid AS activity,
+      NULL::uuid AS flow,
       ARRAY[contacts."user"] AS users,
       NULL::uuid[] AS accessible_to,
       ARRAY[json_build_object('id', contact, 'type', 'contact')]::json[] AS people,
@@ -405,6 +410,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       NULL::uuid AS credential_id,
       NULL::text AS thread_key,
       NULL::uuid AS activity,
+      NULL::uuid AS flow,
       ARRAY[contacts."user"] AS users,
       NULL::uuid[] AS accessible_to,
       ARRAY[json_build_object('id', id, 'type', 'contact')]::json[] AS people,
@@ -446,6 +452,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       NULL::uuid AS credential_id,
       NULL::text AS thread_key,
       NULL::uuid AS activity,
+      NULL::uuid AS flow,
       ARRAY[ec.from] AS users,
       NULL::uuid[] AS accessible_to,
 
@@ -514,6 +521,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       NULL::uuid AS credential_id,
       NULL::text AS thread_key,
       NULL::uuid AS activity,
+      NULL::uuid AS flow,
       ARRAY[ec.from] AS users,
       NULL::uuid[] AS accessible_to,
 
@@ -657,6 +665,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       NULL::uuid AS credential_id,
       NULL::text AS thread_key,
       NULL::uuid AS activity,
+      NULL::uuid AS flow,
       ARRAY[ec.from] AS users,
       NULL::uuid[] AS accessible_to,
 
@@ -738,6 +747,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       COALESCE(google_credential, microsoft_credential) AS credential_id,
       email_threads.id AS thread_key,
       NULL::uuid AS activity,
+      NULL::uuid AS flow,
       ARRAY[email_threads."user"] AS users,
       ARRAY[email_threads."user"] AS accessible_to,
 
@@ -809,6 +819,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       google_credential AS credential_id,
       email_threads.id AS thread_key,
       NULL::uuid AS activity,
+      NULL::uuid AS flow,
       ARRAY[email_threads."user"] AS users,
       ARRAY[email_threads."user"] AS accessible_to,
 
@@ -889,6 +900,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       NULL::uuid AS credential_id,
       NULL::text AS thread_key,
       a.id AS activity,
+      NULL::uuid AS flow,
       ARRAY[contacts."user"] AS users,
       NULL::uuid[] AS accessible_to,
       ARRAY[json_build_object('id', contact, 'type', 'contact')]::json[] AS people,
@@ -911,5 +923,45 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       AND u.deleted_at IS NULL
       AND u.user_type = 'Client'
       AND a.deleted_at IS NULL
+  )
+  UNION ALL
+  (
+    SELECT
+      id::text,
+      created_by,
+      created_at,
+      updated_at,
+      deleted_at,
+      NULL AS parent_deleted_at,
+      GREATEST(created_at, updated_at, deleted_at) AS last_updated_at,
+      'flow' AS object_type,
+      'flow_start' AS event_type,
+      'Flow Start' AS type_label,
+      starts_at::timestamptz AS "timestamp",
+      starts_at AS "date",
+      NULL as next_occurence,
+      NULL::timestamptz AS end_date,
+      False AS recurring,
+      name::text AS title,
+      NULL::uuid AS crm_task,
+      TRUE AS all_day,
+      NULL::uuid AS deal,
+      contact,
+      NULL::uuid AS campaign,
+      NULL::uuid AS credential_id,
+      NULL::text AS thread_key,
+      NULL::uuid AS activity,
+      id AS flow,
+      ARRAY[created_by] AS users,
+      NULL::uuid[] AS accessible_to,
+      NULL::json[] AS people,
+      0 AS people_len,
+      brand, 
+      NULL::text AS status,
+      NULL AS metadata
+    FROM
+      flows
+    WHERE
+      flows.deleted_at IS NULL
   )
 )

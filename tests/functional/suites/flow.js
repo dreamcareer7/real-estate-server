@@ -1,6 +1,4 @@
 registerSuite('contact', [
-  'brandCreateParent',
-  'brandCreate',
   'getAttributeDefs',
   'create'
 ])
@@ -18,7 +16,7 @@ const addEmail = cb => {
   }
 
   return frisby.create('add an email template to a brand')
-    .post(`/brands/${results.contact.brandCreateParent.data.id}/emails/templates`, email)
+    .post(`/brands/${results.brand.createParent.data.id}/emails/templates`, email)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
@@ -56,7 +54,7 @@ const addFlow = cb => {
   }
 
   return frisby.create('add a brand flow')
-    .post(`/brands/${results.contact.brandCreateParent.data.id}/flows?associations[]=brand_flow.steps&associations[]=brand_flow_step.event&associations[]=brand_flow_step.email`, flow)
+    .post(`/brands/${results.brand.createParent.data.id}/flows?associations[]=brand_flow.steps&associations[]=brand_flow_step.event&associations[]=brand_flow_step.email`, flow)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
@@ -78,7 +76,7 @@ const addFlow = cb => {
 
 const getBrandFlows = cb => {
   return frisby.create('get brand flows')
-    .get(`/brands/${results.contact.brandCreate.data.id}/flows?associations[]=brand_flow.steps&associations[]=brand_flow_step.event&associations[]=brand_flow_step.email`)
+    .get(`/brands/${results.brand.create.data.id}/flows?associations[]=brand_flow.steps&associations[]=brand_flow_step.event&associations[]=brand_flow_step.email`)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
@@ -91,7 +89,7 @@ const getBrandFlows = cb => {
 }
 
 const updateFlow = cb => {
-  const brand = results.contact.brandCreateParent.data.id
+  const brand = results.brand.createParent.data.id
   const flow = results.flow.getBrandFlows.data[0].id
 
   return frisby.create('update a brand flow')
@@ -111,7 +109,7 @@ const updateFlow = cb => {
 }
 
 const addStepToFlow = cb => {
-  const brand = results.contact.brandCreateParent.data.id
+  const brand = results.brand.createParent.data.id
   const flow = results.flow.getBrandFlows.data[0].id
 
   const step = {
@@ -136,7 +134,7 @@ const addStepToFlow = cb => {
 }
 
 const editBrandFlowStep = cb => {
-  const brand = results.contact.brandCreateParent.data.id
+  const brand = results.brand.createParent.data.id
   const flow = results.flow.getBrandFlows.data[0].id
   const step_id = results.flow.addStepToFlow.data[0].id
 
@@ -160,7 +158,7 @@ const editBrandFlowStep = cb => {
 }
 
 const getBrandFlowById = cb => {
-  const brand = results.contact.brandCreate.data.id
+  const brand = results.brand.create.data.id
   const flow = results.flow.getBrandFlows.data[0].id
   const steps = [
     ...results.flow.getBrandFlows.data[0].steps,
@@ -182,7 +180,7 @@ const getBrandFlowById = cb => {
 }
 
 const deleteFlowStep = cb => {
-  const brand = results.contact.brandCreateParent.data.id
+  const brand = results.brand.createParent.data.id
   const flow = results.flow.getBrandFlows.data[0].id
   const step = results.flow.addStepToFlow.data[0].id
 
@@ -213,7 +211,7 @@ const enroll = cb => {
 }
 
 const deleteFlowWithActiveFlows = cb => {
-  const brand = results.contact.brandCreateParent.data.id
+  const brand = results.brand.createParent.data.id
   const flow = results.flow.getBrandFlows.data[0].id
 
   return frisby.create('delete a brand flow with active flows')
@@ -254,7 +252,7 @@ const checkStoppedFlowAssociation = cb => {
 }
 
 const deleteFlow = cb => {
-  const brand = results.contact.brandCreateParent.data.id
+  const brand = results.brand.createParent.data.id
   const flow = results.flow.getBrandFlows.data[0].id
 
   return frisby.create('delete a brand flow')

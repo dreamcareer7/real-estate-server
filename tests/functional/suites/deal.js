@@ -591,7 +591,7 @@ const seamlessAttention = cb => {
   })) + '@' + config.email.seamless_address
 
   const body = {
-    domain: config.mailgun.General.domain, //mailgun is property of config object. Contains API keys for mailgun.
+    domain: config.mailgun.domain, //mailgun is property of config object. Contains API keys for mailgun.
     'stripped-text': 'Foobar',
     recipient: address,
   }

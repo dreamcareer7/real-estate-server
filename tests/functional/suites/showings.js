@@ -2,7 +2,6 @@ const showings_credential = require('./expected_objects/showings_credential.js')
 
 registerSuite('agent', ['add'])
 registerSuite('brand', ['createParent', 'create'])
-registerSuite('contact', ['brandCreateParent', 'brandCreate'])
 
 
 
@@ -16,7 +15,17 @@ function createCredential(cb) {
 
   return frisby.create('create a showings credential')
     .post('/users/self/showings/credentials', body)
-    .after(cb)
+    .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
+    .after(function(err, res, json) {
+      const setup = frisby.globalSetup()
+
+      setup.request.headers['X-RECHAT-BRAND'] = results.brand.create.data.id
+      setup.request.headers['x-handle-jobs'] = 'yes'
+
+      frisby.globalSetup(setup)
+
+      cb(err, res, json)
+    })
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
