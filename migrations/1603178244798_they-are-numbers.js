@@ -1,4 +1,7 @@
-CREATE OR REPLACE FUNCTION get_mls_context(id uuid) RETURNS SETOF mls_context AS
+const db = require('../lib/utils/db')
+
+const migrations = [
+  `CREATE OR REPLACE FUNCTION get_mls_context(id uuid) RETURNS SETOF mls_context AS
 $$
 DECLARE
   c mls_context;
@@ -323,5 +326,22 @@ BEGIN
 
 END;
 $$
-LANGUAGE plpgsql;
+LANGUAGE plpgsql;`
+]
 
+
+const run = async () => {
+  const { conn } = await db.conn.promise()
+
+  for(const sql of migrations) {
+    await conn.query(sql)
+  }
+
+  conn.release()
+}
+
+exports.up = cb => {
+  run().then(cb).catch(cb)
+}
+
+exports.down = () => {}
