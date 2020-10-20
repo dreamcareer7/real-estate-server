@@ -1,4 +1,7 @@
-CREATE OR REPLACE FUNCTION get_mls_context(id uuid) RETURNS SETOF mls_context AS
+const db = require('../lib/utils/db')
+
+const migrations = [
+  `CREATE OR REPLACE FUNCTION get_mls_context(id uuid) RETURNS SETOF mls_context AS
 $$
 DECLARE
   c mls_context;
@@ -245,26 +248,6 @@ BEGIN
     RETURN NEXT c;
   END IF;
 
-  IF r1.location IS NOT NULL THEN
-    SELECT
-      'Number' as data_type,
-      'longitude' AS key,
-      ST_X(r1.location) AS number
-      INTO c;
-
-    RETURN NEXT c;
-  END IF;
-
-  IF r1.location IS NOT NULL THEN
-    SELECT
-      'Number' as data_type,
-      'latitude' AS key,
-      ST_Y(r1.location) AS number
-      INTO c;
-
-    RETURN NEXT c;
-  END IF;
-
   IF r1.photo IS NOT NULL THEN
     SELECT
       'Text' as data_type,
@@ -343,5 +326,22 @@ BEGIN
 
 END;
 $$
-LANGUAGE plpgsql;
+LANGUAGE plpgsql;`
+]
 
+
+const run = async () => {
+  const { conn } = await db.conn.promise()
+
+  for(const sql of migrations) {
+    await conn.query(sql)
+  }
+
+  conn.release()
+}
+
+exports.up = cb => {
+  run().then(cb).catch(cb)
+}
+
+exports.down = () => {}
