@@ -245,6 +245,26 @@ BEGIN
     RETURN NEXT c;
   END IF;
 
+  IF r1.longitude IS NOT NULL THEN
+    SELECT
+      'Number' as data_type,
+      'longitude' AS key,
+      r1.longitude AS number
+      INTO c;
+
+    RETURN NEXT c;
+  END IF;
+
+  IF r1.latitude IS NOT NULL THEN
+    SELECT
+      'Number' as data_type,
+      'latitude' AS key,
+      r1.latitude AS number
+      INTO c;
+
+    RETURN NEXT c;
+  END IF;
+
   IF r1.photo IS NOT NULL THEN
     SELECT
       'Text' as data_type,
