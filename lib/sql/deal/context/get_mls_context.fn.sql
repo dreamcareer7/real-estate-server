@@ -280,6 +280,7 @@ BEGIN
   IF r1.location IS NOT NULL THEN
     SELECT
       'Number' as data_type,
+      null as text,
       'latitude' AS key,
       ST_Y(r1.location) AS number
       INTO c;
