@@ -248,21 +248,21 @@ BEGIN
     RETURN NEXT c;
   END IF;
 
-  IF r1.longitude IS NOT NULL THEN
+  IF r1.location IS NOT NULL THEN
     SELECT
       'Number' as data_type,
       'longitude' AS key,
-      r1.longitude AS number
+      ST_X(r1.location) AS number
       INTO c;
 
     RETURN NEXT c;
   END IF;
 
-  IF r1.latitude IS NOT NULL THEN
+  IF r1.location IS NOT NULL THEN
     SELECT
       'Number' as data_type,
       'latitude' AS key,
-      r1.latitude AS number
+      ST_Y(r1.location) AS number
       INTO c;
 
     RETURN NEXT c;
