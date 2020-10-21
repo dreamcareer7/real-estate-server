@@ -38,7 +38,7 @@ $$
       stored       = rc.stored
     FROM recipient_counts rc
     WHERE ece.campaign = $1
-    AND ece.email_address = rc.recipient
+    AND LOWER(ece.email_address) = LOWER(rc.recipient)
   ),
 
   email_counts AS (
