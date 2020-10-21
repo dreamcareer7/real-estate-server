@@ -246,14 +246,15 @@ LANGUAGE SQL;`,
         WHERE
           ec.deleted_at IS NULL
           AND c.deleted_at IS NULL
-          AND LOWER(ece.email_address) = ANY(LOWER(c.email))
+          AND LOWER(ece.email_address) = ANY(LOWER(c.email::text)::text[])
           AND ec.executed_at IS NOT NULL
       )
     ) AS touches
   ORDER BY
     contact,
     "timestamp" DESC
-)`,
+)
+`,
   `CREATE OR REPLACE VIEW analytics.calendar AS (
   (
     SELECT
@@ -795,7 +796,7 @@ LANGUAGE SQL;`,
             FROM
               email_campaign_emails AS ece
               LEFT JOIN contacts AS c
-                ON (((c.id = ece.contact) OR (LOWER(c.email) @> ARRAY[LOWER(ece.email_address)])) AND c.brand = ec.brand AND c.deleted_at IS NULL)
+                ON (((c.id = ece.contact) OR (LOWER(c.email::text)::text[] @> ARRAY[LOWER(ece.email_address)])) AND c.brand = ec.brand AND c.deleted_at IS NULL)
             WHERE
               ece.campaign = ec.id
               AND (ece.agent IS NOT NULL OR c.id IS NOT NULL)
@@ -939,7 +940,7 @@ LANGUAGE SQL;`,
             FROM
               email_campaign_emails
               LEFT JOIN contacts
-                ON ((LOWER(contacts.email) @> ARRAY[LOWER(email_campaign_emails.email_address)]) OR (contacts.id = email_campaign_emails.contact))
+                ON ((LOWER(contacts.email::text)::text[] @> ARRAY[LOWER(email_campaign_emails.email_address)]) OR (contacts.id = email_campaign_emails.contact))
                    AND contacts.brand = ec.brand
                    AND contacts.deleted_at IS NULL
                    AND contacts.parked IS NOT TRUE
@@ -972,7 +973,7 @@ LANGUAGE SQL;`,
       ec.deleted_at IS NULL
       AND c.deleted_at IS NULL
       AND c.parked IS NOT TRUE
-      AND LOWER(c.email) @> ARRAY[LOWER(ece.email_address)]
+      AND LOWER(c.email::text)::text[] @> ARRAY[LOWER(ece.email_address)]
       AND ec.executed_at IS NOT NULL
       AND ec.thread_key IS NULL
   )
