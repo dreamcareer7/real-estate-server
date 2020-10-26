@@ -151,6 +151,9 @@ declare type TContactActionReason =
   | 'microsoft_integration'
   | 'system';
 
+declare type TLeadProtocol =
+  | 'LeadTransmissionStandard'
+
 declare interface IAddContactOptions {
   /** Return {ParentContact} object or just id */
   get?: boolean;
