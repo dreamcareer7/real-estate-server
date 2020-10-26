@@ -1,7 +1,7 @@
 {% if data.Approved.length > 0 %}{{data.Approved.length}} Approved{% endif %}
 {% if data.Declined.length > 0 %}{% if data.Approved.length > 0 %}, {% endif %}Declined: {{data.Declined.length}}{% endif %}
 <br>
-{% if data.Decined.length > 0 %}
+{% if data.Declined.length > 0 %}
   {% for declined in data.Declined %}
     ❌ {{declined}}<br>
   {% endfor %}
