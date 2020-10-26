@@ -263,6 +263,20 @@ const getForms = cb => {
     })
 }
 
+const getTemplates = cb => {
+  const form = results.brand.addTemplate.data.form
+  const deal = results.deal.create.data.id
+
+  return frisby.create('get form templates applicable to a deal form')
+    .get(`/deals/${deal}/forms/templates/${form}`)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      data: [results.brand.addTemplate.data]
+    })
+}
+
 const getContexts = cb => {
   return frisby.create('get context applicable to a deal')
     .get(`/deals/${results.deal.create.data.id}/contexts`)
@@ -867,6 +881,7 @@ module.exports = {
   getBrandXls,
   getForms,
   getContexts,
+  getTemplates,
   filter,
   filterByContext,
   filterByContextEmpty,
