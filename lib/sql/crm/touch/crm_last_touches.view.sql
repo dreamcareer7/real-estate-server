@@ -84,7 +84,7 @@ CREATE OR REPLACE VIEW crm_last_touches AS (
         WHERE
           ec.deleted_at IS NULL
           AND c.deleted_at IS NULL
-          AND LOWER(ece.email_address) = ANY(LOWER(c.email::text)::text[])
+          AND ece.email_address = ANY(c.email)
           AND ec.executed_at IS NOT NULL
       )
     ) AS touches
