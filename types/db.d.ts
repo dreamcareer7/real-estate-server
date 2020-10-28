@@ -185,6 +185,7 @@ declare type TDbSqlAddress =
   | 'contact/export/max_indices'
   | 'contact/get'
   | 'contact/has_access'
+  | 'contact/lead/save'
   | 'contact/list/create'
   | 'contact/list/create_default_lists'
   | 'contact/list/delete'

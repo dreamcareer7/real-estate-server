@@ -1,11 +1,14 @@
-{% if data.Approved.length > 0 %}{{data.Approved.length}} Approved: <br>
-{% for approved in data.Approved %}
- ✔️ {{approved}}<br>
-{% endfor %}
+{% if data.Approved.length > 0 %}{{data.Approved.length}} Approved{% endif %}
+{% if data.Declined.length > 0 %}{% if data.Approved.length > 0 %}, {% endif %}{{data.Declined.length}} Declined{% endif %}
+<br>
+{% if data.Declined.length > 0 %}
+  {% for declined in data.Declined %}
+    ❌ {{declined}}<br>
+  {% endfor %}
 {% endif %}
 
-{% if data.Declined.length > 0 %}{{data.Declined.length}} Declined: <br>
-{% for declined in data.Declined %}
- ❌ {{declined}}<br>
-{% endfor %}
+{% if data.Approved.length > 0 %}
+  {% for approved in data.Approved %}
+    ✔️ {{approved}}<br>
+  {% endfor %}
 {% endif %}

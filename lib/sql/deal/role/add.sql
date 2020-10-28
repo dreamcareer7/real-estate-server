@@ -27,41 +27,41 @@ INSERT INTO deals_roles (
   office_address,
   searchable
 ) VALUES (
-  $1,
-  $2,
-  $3,
-  $4,
-  COALESCE($5, (
+  /* created_by */ $1,
+  /* role_type */ $2,
+  /* role */ $3,
+  /* deal */ $4,
+  /* "user */ COALESCE($5, (
     SELECT id FROM users WHERE LOWER(email) = LOWER($14)
   )),
-  $6,
-  $7,
-  $8,
-  $9,
-  $10,
-  $11,
-  $12,
-  $13,
-  $14,
-  $15,
-  JSON_TO_STDADDR($16),
-  JSON_TO_STDADDR($17),
-  $18,
-  $19,
-  $20,
-  $21,
-  $22,
-  $23,
-  $24,
-  $25,
-  JSON_TO_STDADDR($26),
-  to_tsvector('english',
+  /* brand */ $6,
+  /* checklist */ $7,
+  /* agent */ $8,
+  /* company_title */ $9,
+  /* legal_prefix */ $10,
+  /* legal_first_name */ $11,
+  /* legal_middle_name */ $12,
+  /* legal_last_name */ $13,
+  /* email */ lower($14),
+  /* phone_number */ $15,
+  /* current_address */ JSON_TO_STDADDR($16),
+  /* future_address */ JSON_TO_STDADDR($17),
+  /* commission_dollar */ $18,
+  /* commission_percentage */ $19,
+  /* office_name */ $20,
+  /* office_email */ $21,
+  /* office_phone */ $22,
+  /* office_fax */ $23,
+  /* office_license_number */ $24,
+  /* office_mls_id */ $25,
+  /* office_address */ JSON_TO_STDADDR($26),
+  /* searchable */ to_tsvector('english',
     COALESCE($9, '')  || ' ' ||
     COALESCE($10, '') || ' ' ||
     COALESCE($11, '') || ' ' ||
     COALESCE($12, '') || ' ' ||
     COALESCE($13, '') || ' ' ||
-    COALESCE($14, '') || ' ' ||
+    COALESCE(lower($14), '') || ' ' ||
     COALESCE($15, '') || ' ' ||
     COALESCE($20, '') || ' ' ||
     COALESCE($21, '') || ' ' ||

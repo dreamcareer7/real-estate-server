@@ -7,7 +7,7 @@ UPDATE deals_roles SET
   "user" = COALESCE($7, (
     SELECT id FROM users WHERE LOWER(email) = LOWER($8)
   )),
-  email = $8,
+  email = lower($8),
   agent = $9,
   phone_number = $10,
   current_address = JSON_TO_STDADDR($11),

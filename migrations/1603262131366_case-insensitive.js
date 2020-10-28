@@ -1,4 +1,261 @@
-CREATE OR REPLACE VIEW analytics.calendar AS (
+const db = require('../lib/utils/db')
+
+const migrations = [
+  'BEGIN',
+  `CREATE OR REPLACE FUNCTION update_email_campaign_stats(campaign_id uuid)
+RETURNS void AS
+$$
+  WITH events AS (
+    SELECT recipient, event, email, campaign
+    FROM emails_events
+    JOIN emails ON emails.id = emails_events.email
+    WHERE emails.campaign = $1
+  ),
+
+  recipient_counts AS (
+    SELECT
+      recipient,
+      count(*) filter(WHERE events.event = 'accepted')     as accepted,
+      count(*) filter(WHERE events.event = 'rejected')     as rejected,
+      count(*) filter(WHERE events.event = 'delivered')    as delivered,
+      count(*) filter(WHERE events.event = 'failed')       as failed,
+      count(*) filter(WHERE events.event = 'opened')       as opened,
+      count(*) filter(WHERE events.event = 'clicked')      as clicked,
+      count(*) filter(WHERE events.event = 'unsubscribed') as unsubscribed,
+      count(*) filter(WHERE events.event = 'complained')   as complained,
+      count(*) filter(WHERE events.event = 'stored')       as stored
+    FROM events
+    GROUP BY recipient
+    ORDER BY recipient
+  ),
+
+  update_recipients AS (
+    UPDATE email_campaign_emails ece SET
+      accepted     = rc.accepted,
+      rejected     = rc.rejected,
+      delivered    = rc.delivered,
+      failed       = rc.failed,
+      opened       = rc.opened,
+      clicked      = rc.clicked,
+      unsubscribed = rc.unsubscribed,
+      complained   = rc.complained,
+      stored       = rc.stored
+    FROM recipient_counts rc
+    WHERE ece.campaign = $1
+    AND LOWER(ece.email_address) = LOWER(rc.recipient)
+  ),
+
+  email_counts AS (
+    SELECT
+        email,
+        count(DISTINCT email) filter(WHERE events.event = 'accepted')     as accepted,
+        count(DISTINCT email) filter(WHERE events.event = 'rejected')     as rejected,
+        count(DISTINCT email) filter(WHERE events.event = 'delivered')    as delivered,
+        count(DISTINCT email) filter(WHERE events.event = 'failed')       as failed,
+        count(DISTINCT email) filter(WHERE events.event = 'opened')       as opened,
+        count(DISTINCT email) filter(WHERE events.event = 'clicked')      as clicked,
+        count(DISTINCT email) filter(WHERE events.event = 'unsubscribed') as unsubscribed,
+        count(DISTINCT email) filter(WHERE events.event = 'complained')   as complained,
+        count(DISTINCT email) filter(WHERE events.event = 'stored')       as stored
+      FROM events
+      GROUP BY email
+      ORDER BY email
+  ),
+
+  update_emails AS (
+    UPDATE emails SET
+      accepted     = ec.accepted,
+      rejected     = ec.rejected,
+      delivered    = ec.delivered,
+      failed       = ec.failed,
+      opened       = ec.opened,
+      clicked      = ec.clicked,
+      unsubscribed = ec.unsubscribed,
+      complained   = ec.complained,
+      stored       = ec.stored
+    FROM email_counts ec
+    WHERE emails.campaign = $1
+    AND emails.id = ec.email
+  ),
+
+  campaign_counts AS (
+    SELECT
+      (
+        count(DISTINCT recipient) filter(WHERE events.event = 'accepted' AND recipient is NOT NULL)
+        +
+        count(*) filter(WHERE events.event = 'accepted' AND recipient is NULL)
+      ) as accepted,
+
+      (
+        count(DISTINCT recipient) filter(WHERE events.event = 'rejected' AND recipient is NOT NULL)
+        +
+        count(*) filter(WHERE events.event = 'rejected' AND recipient is NULL)
+      ) as rejected,
+
+      (
+        count(DISTINCT recipient) filter(WHERE events.event = 'delivered' AND recipient is NOT NULL)
+        +
+        count(*) filter(WHERE events.event = 'delivered' AND recipient is NULL)
+      ) as delivered,
+
+      (
+        count(DISTINCT recipient) filter(WHERE events.event = 'failed' AND recipient is NOT NULL)
+        +
+        count(*) filter(WHERE events.event = 'failed' AND recipient is NULL)
+      ) as failed,
+
+      (
+        count(DISTINCT recipient) filter(WHERE events.event = 'opened' AND recipient is NOT NULL)
+        +
+        count(*) filter(WHERE events.event = 'opened' AND recipient is NULL)
+      ) as opened,
+
+      (
+        count(DISTINCT recipient) filter(WHERE events.event = 'clicked' AND recipient is NOT NULL)
+        +
+        count(*) filter(WHERE events.event = 'clicked' AND recipient is NULL)
+      ) as clicked,
+
+      (
+        count(DISTINCT recipient) filter(WHERE events.event = 'unsubscribed' AND recipient is NOT NULL)
+        +
+        count(*) filter(WHERE events.event = 'unsubscribed' AND recipient is NULL)
+      ) as unsubscribed,
+
+      (
+        count(DISTINCT recipient) filter(WHERE events.event = 'complained' AND recipient is NOT NULL)
+        +
+        count(*) filter(WHERE events.event = 'complained' AND recipient is NULL)
+      ) as complained,
+
+      (
+        count(DISTINCT recipient) filter(WHERE events.event = 'stored' AND recipient is NOT NULL)
+        +
+        count(*) filter(WHERE events.event = 'stored' AND recipient is NULL)
+      ) as stored
+
+      -- count(DISTINCT recipient) filter(WHERE events.event = 'accepted')     as accepted,
+      -- count(DISTINCT recipient) filter(WHERE events.event = 'rejected')     as rejected,
+      -- count(DISTINCT recipient) filter(WHERE events.event = 'delivered')    as delivered,
+      -- count(DISTINCT recipient) filter(WHERE events.event = 'failed')       as failed,
+      -- count(DISTINCT recipient) filter(WHERE events.event = 'opened')       as opened,
+      -- count(DISTINCT recipient) filter(WHERE events.event = 'clicked')      as clicked,
+      -- count(DISTINCT recipient) filter(WHERE events.event = 'unsubscribed') as unsubscribed,
+      -- count(DISTINCT recipient) filter(WHERE events.event = 'complained')   as complained,
+      -- count(DISTINCT recipient) filter(WHERE events.event = 'stored')       as stored
+    FROM events
+  )
+
+  UPDATE email_campaigns SET
+    accepted     = cc.accepted,
+    rejected     = cc.rejected,
+    delivered    = cc.delivered,
+    failed       = cc.failed,
+    opened       = cc.opened,
+    clicked      = cc.clicked,
+    unsubscribed = cc.unsubscribed,
+    complained   = cc.complained,
+    stored       = cc.stored
+  FROM campaign_counts cc
+  WHERE email_campaigns.id = $1
+$$
+LANGUAGE SQL;`,
+  `CREATE OR REPLACE VIEW crm_last_touches AS (
+  SELECT DISTINCT ON (contact)
+    contact,
+    max(timestamp) OVER (PARTITION BY contact) AS last_touch,
+    action,
+    reference
+  FROM
+    (
+      (
+        SELECT
+          ca.contact,
+          ct.due_date AS "timestamp",
+          ct.task_type AS action,
+          ct.id AS reference
+        FROM
+          crm_associations AS ca
+          JOIN crm_tasks AS ct
+            ON ca.crm_task = ct.id
+        WHERE
+          ca.deleted_at IS NULL
+          AND ct.deleted_at IS NULL
+          AND ct.task_type <> ALL('{Note,Other}')
+          AND ct.due_date <= NOW()
+      ) UNION ALL (
+        SELECT
+          c.id,
+          message_date AS "timestamp",
+          'email' AS action,
+          google_messages.id AS reference
+        FROM
+          google_messages
+          JOIN google_credentials
+            ON google_messages.google_credential = google_credentials.id
+          CROSS JOIN LATERAL (
+            SELECT
+              contacts.id
+            FROM
+              contacts
+            WHERE
+              contacts.email && google_messages.recipients
+              AND contacts.brand = google_credentials.brand
+              AND contacts.deleted_at IS NULL
+              AND google_messages.deleted_at IS NULL
+          ) AS c
+        WHERE
+          google_credentials.deleted_at IS NULL
+          AND google_credentials.revoked IS NOT TRUE
+      ) UNION ALL (
+        SELECT
+          c.id,
+          message_date AS "timestamp",
+          'email' AS action,
+          microsoft_messages.id AS reference
+        FROM
+          microsoft_messages
+          JOIN microsoft_credentials
+            ON microsoft_messages.microsoft_credential = microsoft_credentials.id
+          CROSS JOIN LATERAL (
+            SELECT
+              contacts.id
+            FROM
+              contacts
+            WHERE
+              contacts.email && microsoft_messages.recipients
+              AND contacts.brand = microsoft_credentials.brand
+              AND contacts.deleted_at IS NULL
+              AND microsoft_messages.deleted_at IS NULL
+          ) AS c
+        WHERE
+          microsoft_credentials.deleted_at IS NULL
+          AND microsoft_credentials.revoked IS NOT TRUE
+      ) UNION ALL (
+        SELECT
+          c.id AS contact,
+          executed_at AS "timestamp",
+          'email' AS action,
+          ec.id AS reference
+        FROM
+          email_campaigns AS ec
+          JOIN email_campaign_emails AS ece
+            ON ece.campaign = ec.id
+          JOIN contacts c
+            ON (c.brand = ec.brand)
+        WHERE
+          ec.deleted_at IS NULL
+          AND c.deleted_at IS NULL
+          AND LOWER(ece.email_address) = ANY(LOWER(c.email::text)::text[])
+          AND ec.executed_at IS NOT NULL
+      )
+    ) AS touches
+  ORDER BY
+    contact,
+    "timestamp" DESC
+)
+`,
+  `CREATE OR REPLACE VIEW analytics.calendar AS (
   (
     SELECT
       id::text,
@@ -956,7 +1213,7 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
       NULL::uuid[] AS accessible_to,
       NULL::json[] AS people,
       0 AS people_len,
-      brand, 
+      brand,
       NULL::text AS status,
       NULL AS metadata
     FROM
@@ -964,4 +1221,24 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
     WHERE
       flows.deleted_at IS NULL
   )
-)
+)`,
+  'SELECT update_email_campaign_stats(id) FROM email_campaigns',
+  'COMMIT'
+]
+
+
+const run = async () => {
+  const { conn } = await db.conn.promise()
+
+  for(const sql of migrations) {
+    await conn.query(sql)
+  }
+
+  conn.release()
+}
+
+exports.up = cb => {
+  run().then(cb).catch(cb)
+}
+
+exports.down = () => {}
