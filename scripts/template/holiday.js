@@ -22,7 +22,7 @@ const sendForBrand = async id => {
   Context.log('Sending for', brand.name)
 
   const brand_templates = await BrandTemplate.getForBrand({
-    types: ['ColumbusDay'],
+    types: ['Halloween'],
     mediums: ['Social'],
     brand: brand.id
   })
@@ -59,11 +59,11 @@ const sendForBrand = async id => {
     }),
     html,
     tags: ['holiday'],
-    subject: 'Happy Columbus Day',
+    subject: 'Happy Halloween',
     brand: brand.id,
     from: 'f2e2be50-927b-11e8-bb13-0a95998482ac',
     individual: true,
-    due_at: '2020-10-12T12:00:00Z',
+    due_at: new Date()
   }])
 
   Context.log('Saved Campaign', saved)
