@@ -71,6 +71,7 @@ const sendForBrand = async id => {
 
 const execute = async() => {
   const brands = [
+    '8cb4a358-8973-11e7-9089-0242ac110003',
     '30a4a60c-5e60-11ea-8cd8-1650ce91b517',
     '745e77aa-4ddf-11e6-a07d-f23c91b0d077',
     '0937af58-e537-11e9-b0f2-0a653b6fef3e',
