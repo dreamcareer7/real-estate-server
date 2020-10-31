@@ -2,6 +2,12 @@ const db = require('../lib/utils/db')
 
 const migrations = [
   'BEGIN',
+  `WITH dupes AS (
+    SELECT * FROM email_campaign_emails
+    EXCEPT SELECT DISTINCT ON(campaign, email_address) * FROM email_campaign_emails
+    ORDER BY campaign, email_address, opened DESC
+   )
+   DELETE FROM email_campaign_emails WHERE id IN(SELECT id FROM dupes)`,
   'ALTER TABLE email_campaign_emails ADD CONSTRAINT email_campaign_email_unique UNIQUE(campaign, email_address)',
   'COMMIT'
 ]
