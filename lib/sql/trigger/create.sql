@@ -20,27 +20,28 @@ INSERT INTO triggers (
   brand_event,
   campaign
 )
-VALUES (
-  $1  /* created_within */,
-  $1  /* updated_within */,
+SELECT
+  $1,
+  $1,
 
-  $2  /* created_by */,
-  $3  /* "user" */,
-  $4  /* brand */,
+  created_by,
+  "user",
+  brand,
 
-  $5  /* event_type */,
-  $6  /* wait_for */,
-  $7  /* "action" */,
-  $8  /* recurring */,
+  event_type,
+  wait_for,
+  "action",
+  COALESCE(recurring, FALSE) AS recurring,
 
-  $9  /* contact */,
-  $10 /* deal */,
+  contact,
+  deal,
 
-  $11 /* flow */,
-  $12 /* flow_step */,
+  flow,
+  flow_step,
 
-  $13 /* brand_event */,
-  $14 /* campaign */
-)
+  brand_event,
+  campaign
+FROM
+  json_populate_recordset(null::triggers, $2::json)
 RETURNING
   id
