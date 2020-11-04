@@ -123,7 +123,7 @@ declare interface INotification {
   title: string;
   image_url?: string
   data?: any;
-  sound?: any;
+  sound?: Object;
 
   notified_user?: UUID;
   room?: UUID;

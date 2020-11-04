@@ -78,6 +78,12 @@ async function testAssignment() {
 
   const notifications = await getNotifications(userB.id)
 
+  notifications[0].sound = {
+    name: 'default',
+    volume: 0,
+    critical: false
+  }
+
   expect(notifications).to.have.length(1)
   expect(notifications[0].action).to.equal('Assigned')
   expect(notifications[0].subject).to.equal(userA.id)
