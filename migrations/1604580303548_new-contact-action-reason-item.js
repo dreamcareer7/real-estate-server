@@ -1,9 +1,7 @@
 const db = require('../lib/utils/db')
 
 const migrations = [
-  'BEGIN',
   'ALTER TYPE contact_action_reason ADD VALUE IF NOT EXISTS \'lts_lead\'',
-  'COMMIT'
 ]
 
 
