@@ -3,7 +3,8 @@ const db = require('../lib/utils/db')
 const migrations = [
   'BEGIN',
 
-  'ALTER TABLE notifications ADD COLUMN IF NOT EXISTS sound JSONB DEFAULT NULL',
+  'ALTER TABLE notifications DROP COLUMN IF EXISTS sound',
+  'ALTER TABLE notifications ADD COLUMN IF NOT EXISTS sound TEXT DEFAULT NULL',
 
   'COMMIT'
 ]
