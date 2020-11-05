@@ -67,7 +67,7 @@ function update(cb) {
 
   return frisby
     .create('update a user-defined trigger')
-    .put(`/triggers/${results.trigger.create.data.id}`, toUpdate)
+    .patch(`/triggers/${results.trigger.create.data.id}`, toUpdate)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
