@@ -5,7 +5,7 @@
 ### Create a user-defined trigger [POST /triggers]
 <!-- include(tests/trigger/create.md) -->
 
-### Update a trigger [PUT /triggers/:id]
+### Update a trigger [PATCH /triggers/:id]
 <!-- include(tests/trigger/update.md) -->
 
 ### Get all triggers on a contact [GET /contacts/:id?associations[]=contact.triggers]
