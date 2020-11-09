@@ -16,7 +16,7 @@ export interface ILtsLead {
 }
 
 export type ELeadSourceType =
-  | 'AgentWebsite'
+  | 'Website'
   | 'Zillow'
   | 'Realtor'
   ;
