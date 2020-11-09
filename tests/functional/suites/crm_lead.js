@@ -51,6 +51,7 @@ const checkContactForLead = cb => {
     .after(cb)
     .expectJSON({
       data: [{
+        parked: true,
         first_name: 'Test',
         last_name: 'Rechat3'
       }]
