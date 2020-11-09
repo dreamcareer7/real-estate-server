@@ -121,12 +121,13 @@ interface IModel {
   created_at: number;
   updated_at: number;
   deleted_at: number;
-  executed_at: number;
 
   created_by: UUID;
 }
 
-export type IStoredTrigger = IModel & IRawTrigger;
+export type IStoredTrigger = IModel & IRawTrigger & {
+  executed_at: number;
+};
 
 export type IDueTrigger = IStoredTrigger & {
   timestamp: number;

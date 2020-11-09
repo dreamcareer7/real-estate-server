@@ -149,7 +149,9 @@ declare type TContactActionReason =
   | 'deleted_definition'
   | 'google_integration'
   | 'microsoft_integration'
-  | 'system';
+  | 'system'
+  | 'lts_lead'
+  ;
 
 declare type TLeadProtocol =
   | 'LeadTransmissionStandard'
