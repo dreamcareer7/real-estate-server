@@ -2,8 +2,6 @@ const _ = require('lodash')
 const uuid = require('uuid')
 const { contact, companyContact } = require('./data/contact.js')
 const manyContacts = require('./data/manyContacts.js')
-const Crypto = require('../../../lib/models/Crypto')
-const b64 = require('base64url').default
 
 registerSuite('brand', [
   'createParent',
@@ -1105,27 +1103,8 @@ const sendEmailsToList = cb => {
     .expectStatus(200)
 }
 
-const dumpLtsLead = cb => {
-  const payload = '<?xml version="1.0"?><LeadList></LeadList>'
-  const keyData = {
-    user: results.authorize.token.data.id,
-    brand: results.brand.create.data.id,
-    protocol: 'LeadTransmissionStandard'
-  }
-
-  const key = b64.encode(Crypto.encrypt(JSON.stringify(keyData)))
-
-  return frisby
-    .create('create a LTS lead')
-    .post(`/contacts/leads/${key}`, payload)
-    .addHeader('content-type', 'application/xml?charset=utf-8')
-    .after(cb)
-    .expectStatus(204)
-}
-
 module.exports = {
   getAttributeDefs,
-  dumpLtsLead,
   create,
   createCompanyContact,
   createSingleAttrContact,

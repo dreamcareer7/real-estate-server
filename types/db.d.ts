@@ -646,6 +646,7 @@ declare type TDbSqlAddress =
   | 'user/confirm_phone'
   | 'user/delete'
   | 'user/get'
+  | 'user/get_by_agent'
   | 'user/get_by_email'
   | 'user/get_by_phone'
   | 'user/insert'
