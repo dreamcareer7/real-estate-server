@@ -47,7 +47,7 @@ const dumpLtsLead = cb => {
 const checkContactForLead = cb => {
   return frisby
     .create('check if the lead was added to the contacts')
-    .post('/contacts/filter')
+    .post('/contacts/filter', { parked: true })
     .after(cb)
     .expectJSON({
       data: [{
@@ -66,7 +66,7 @@ const checkNotifications = cb => {
     .expectStatus(200)
     .expectJSON({
       data: [{
-        title: 'New Lead: Test Rechat3',
+        title: 'Website Lead: Test Rechat3',
         message: 'This a test from Rechat! I would like to schedule a showing for 8904 Maple Glen Drive, Dallas, TX 75231 (14446066)',
         notification_type: 'UserCapturedContact',
       }]
