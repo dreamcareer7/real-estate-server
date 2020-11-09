@@ -1,5 +1,6 @@
 declare interface IAgent extends IModel {
   email: string
+  mls: string
   mlsid: string
   fax: string
   full_name: string

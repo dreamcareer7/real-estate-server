@@ -57,7 +57,23 @@ const checkContactForLead = cb => {
     })
 }
 
+const checkNotifications = cb => {
+  return frisby
+    .create('check if the was notified of the new lead')
+    .get('/notifications')
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      data: [{
+        title: 'New Lead: Test Rechat3',
+        message: 'This a test from Rechat! I would like to schedule a showing for 8904 Maple Glen Drive, Dallas, TX 75231 (14446066)',
+        notification_type: 'UserCapturedContact',
+      }]
+    })
+}
+
 module.exports = {
   dumpLtsLead,
   checkContactForLead,
+  checkNotifications
 }
