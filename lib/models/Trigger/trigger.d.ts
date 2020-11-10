@@ -133,3 +133,10 @@ export type IDueTrigger = IStoredTrigger & {
   timestamp: number;
   due_at: number;
 }
+
+export interface ITriggerFilterParams {
+  contact?: UUID;
+  flow?: UUID;
+  flow_step?: UUID;
+  deal?: UUID;
+}

@@ -13,16 +13,6 @@ declare interface IBrandFlowStep {
   is_automated: boolean;
 }
 
-declare interface IBrandFlowStepInput {
-  title: string;
-  description?: string;
-  due_in: number;
-  event?: IBrandEventInput;
-  event_id?: UUID;
-  email?: UUID;
-  is_automated: boolean;
-}
-
 declare interface IBrandFlow {
   id: UUID;
   created_at: number;
@@ -36,8 +26,8 @@ declare interface IBrandFlow {
   active_flows: number;
 }
 
-declare interface IBrandFlowInput {
-  name: string;
-  description: string;
-  steps: IBrandFlowStepInput[];
-}
+// declare interface IBrandFlowInput {
+//   name: string;
+//   description: string;
+//   steps: IBrandFlowStepInput[];
+// }

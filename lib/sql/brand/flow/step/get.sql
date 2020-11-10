@@ -6,11 +6,14 @@ SELECT
   updated_by,
   flow,
   is_automated,
+  "order",
   title,
   description,
-  EXTRACT(epoch FROM due_in) AS due_in,
+  EXTRACT(epoch FROM wait_for) AS wait_for,
   event,
   email,
+  template,
+  template_instance,
 
   'brand_flow_step' AS type
 FROM

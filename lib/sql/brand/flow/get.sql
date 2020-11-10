@@ -10,7 +10,7 @@ SELECT
 
   (
     SELECT
-      array_agg(id ORDER BY due_in)
+      array_agg(id ORDER BY "order")
     FROM
       brands_flow_steps
     WHERE

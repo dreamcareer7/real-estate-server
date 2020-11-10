@@ -47,7 +47,7 @@ CREATE TABLE brands_flow_steps (
 
   title text NOT NULL,
   description text,
-  due_in interval NOT NULL,
+  wait_for interval NOT NULL,
   is_automated boolean NOT NULL,
 
   flow uuid REFERENCES brands_flows (id),

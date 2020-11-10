@@ -17,6 +17,7 @@ export interface IStoredBrandFlowStep extends IModel, IBaseBrandFlowStep {
 
 export interface IBrandFlowStepInput extends IBaseBrandFlowStep {
   event?: IBrandEventInput;
+  event_id?: UUID;
 }
 
 export interface IPopulatedBrandFlowStep<T extends 'brand_flow.steps' | 'brand_flow_step.event' | 'brand_flow_step.email' | 'brand_flow_step.template' | 'brand_flow_step.template_instance'> {
