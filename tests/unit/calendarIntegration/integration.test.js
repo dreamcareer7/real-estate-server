@@ -305,6 +305,40 @@ async function getByHomeAnniversaries() {
   expect(records.length).to.be.equal(0)
 }
 
+async function microsoft_resetEtagByCrmTask() {
+  const result_1 = await insert()
+  const record_1 = await CalendarIntegration.get(result_1[0].id)
+  expect(record_1.local_etag).to.be.equal('local_etag')
+
+  await CalendarIntegration.resetEtagByCrmTask([record_1.crm_task], 'microsoft')
+  const updated_1 = await CalendarIntegration.get(result_1[0].id)
+  expect(updated_1.local_etag).to.be.equal(null)
+}
+
+async function google_resetEtagByCrmTask() {
+  const result = await insert()
+  const record = await CalendarIntegration.get(result[1].id)
+  expect(record.local_etag).to.be.equal('local_etag')
+
+  await CalendarIntegration.resetEtagByCrmTask([record.crm_task], 'google')
+  const updated = await CalendarIntegration.get(result[1].id)
+  expect(updated.local_etag).to.be.equal(null)
+}
+
+async function rechat_resetEtagByCrmTask() {
+  const result  = await insert()
+  const records = await CalendarIntegration.getAll([result[0].id, result[1].id])
+
+  expect(records[0].local_etag).to.be.equal('local_etag')
+  expect(records[1].local_etag).to.be.equal('local_etag')
+
+  await CalendarIntegration.resetEtagByCrmTask([result[0].crm_task, result[1].crm_task], 'rechat')
+  const updated = await CalendarIntegration.getAll([result[0].id, result[1].id])
+
+  expect(updated[0].local_etag).to.be.equal(null)
+  expect(updated[1].local_etag).to.be.equal(null)
+}
+
 async function deleteMany() {
   const records = await insert()
   
@@ -336,6 +370,9 @@ describe('Google', () => {
     it('should return a calendar integration records by contact_attribute', getByContactAttributes)
     it('should return a calendar integration records by deal_context', getByDealContexts)
     it('should return a calendar integration records by home_anniversary', getByHomeAnniversaries)
+    it('should reset etag property, caused by microsoft', microsoft_resetEtagByCrmTask)
+    it('should reset etag property, caused by google', google_resetEtagByCrmTask)
+    it('should reset etag property, caused by rechat', rechat_resetEtagByCrmTask)
     it('should delete several calendar integration records', deleteMany)
   })
 })

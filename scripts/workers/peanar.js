@@ -105,6 +105,11 @@ const queues = [
   },
 
   {
+    queues: ['calendar_integration'],
+    concurrency: 2
+  },
+
+  {
     queues: ['brand_template_thumbnail'],
     concurrency: 100
   },

@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<LeadList>
+  <Version>2.05</Version>
+  <Status Code="200" Description="Success"/>
+  <Lead>
+    <ThisDataProvider>
+      <DataProviderName>http://www.ihomefinder.com/</DataProviderName>
+      <Snapshot>
+        <Date>11/4/2020</Date>
+        <Time>6:58:50 AM</Time>
+        <RecordID>6654261</RecordID>
+      </Snapshot>
+    </ThisDataProvider>
+    <Contact>
+      <Note><![CDATA[This a test from Rechat! I would like to schedule a showing for 8904 Maple Glen Drive, Dallas, TX 75231 (14446066)]]></Note>
+      <Name>
+        <First>Test</First>
+        <Last>Rechat3</Last>
+      </Name>
+      <Email>test3@rechat.com</Email>
+      <Address>
+        <UnitNumber></UnitNumber>
+        <StreetNumber></StreetNumber>
+        <Country></Country>
+      </Address>
+      <PhoneList>
+        <Phone>
+          <Number>(310) 474-7405</Number>
+          <Description></Description>
+        </Phone>
+      </PhoneList>
+      <PreferredWayToContact></PreferredWayToContact>
+      <Role></Role>
+    </Contact>
+    <ProgressStatus>Lead</ProgressStatus>
+    <LeadOwnerID>126677</LeadOwnerID>
+    <OwnerAccountType>Agent</OwnerAccountType>
+    <LeadSource>Website Schedule a Showing Request</LeadSource>
+    <LeadSubsource>iHomefinder</LeadSubsource>
+    <ListingNumber>14446066</ListingNumber>
+    <ListingAgentMLSID>0667123</ListingAgentMLSID>
+    <ListingOfficeMLSID>EASYG00TO</ListingOfficeMLSID>
+  </Lead>
+</LeadList>
