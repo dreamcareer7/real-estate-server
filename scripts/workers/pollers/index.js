@@ -9,6 +9,6 @@ require('./email_events_notifications.js')
 require('./google.js')
 require('./microsoft.js')
 require('./notifications.js')
-// require('./triggers.js')
+require('./triggers.js')
 
 require('./entrypoint')
