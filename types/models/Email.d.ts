@@ -86,6 +86,7 @@ declare interface IEmailCampaign extends IEmailCampaignInput {
   opened: number;
   sent: number;
   executed_at: number;
+  created_at: number;
 }
 
 declare interface IEmail {
