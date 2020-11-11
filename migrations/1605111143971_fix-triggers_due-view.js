@@ -2,6 +2,7 @@ const db = require('../lib/utils/db')
 
 const migrations = [
   'BEGIN',
+  'DROP VIEW IF EXISTS triggers_due',
   `CREATE OR REPLACE VIEW triggers_due AS (
     (
       SELECT
