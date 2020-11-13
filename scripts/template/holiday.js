@@ -22,7 +22,7 @@ const sendForBrand = async id => {
   Context.log('Sending for', brand.name)
 
   const brand_templates = await BrandTemplate.getForBrand({
-    types: ['Halloween'],
+    types: ['VeteransDay'],
     mediums: ['Social'],
     brand: brand.id
   })
@@ -59,7 +59,7 @@ const sendForBrand = async id => {
     }),
     html,
     tags: ['holiday'],
-    subject: 'Happy Halloween',
+    subject: 'Happy Veterans Day',
     brand: brand.id,
     from: 'f2e2be50-927b-11e8-bb13-0a95998482ac',
     individual: true,
@@ -91,7 +91,8 @@ const execute = async() => {
     '27cac7fa-8b33-11ea-972c-1650ce91b517',
     '3e6bc15a-fcd8-11ea-8fa2-1650ce91b517',
     '3cd7d796-9c31-11ea-99cc-1650ce91b517',
-    '29aae8c2-fdfa-11ea-9ee6-1650ce91b517'
+    '29aae8c2-fdfa-11ea-9ee6-1650ce91b517',
+    '029bb52a-0e23-11eb-bd54-1650ce91b517',
   ]
 
 
