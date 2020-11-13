@@ -126,7 +126,9 @@ interface IModel {
 }
 
 export type IStoredTrigger = IModel & IRawTrigger & {
-  executed_at: number;
+  executed_at?: number;
+  failed_at?: number;
+  failure?: string;
 };
 
 export type IDueTrigger = IStoredTrigger & {

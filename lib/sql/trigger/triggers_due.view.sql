@@ -17,6 +17,7 @@ CREATE OR REPLACE VIEW triggers_due AS (
       AND t.contact IS NOT NULL
       AND t.event_type = c.event_type
       AND t.executed_at IS NULL
+      AND t.failed_at IS NULL
       AND t.deleted_at IS NULL
   )
   UNION ALL
@@ -38,6 +39,7 @@ CREATE OR REPLACE VIEW triggers_due AS (
       AND t.deal IS NOT NULL
       AND t.event_type = c.event_type
       AND t.executed_at IS NULL
+      AND t.failed_at IS NULL
       AND t.deleted_at IS NULL
   )
   UNION ALL
@@ -59,5 +61,6 @@ CREATE OR REPLACE VIEW triggers_due AS (
       AND t.event_type = 'flow_start'
       AND t.deleted_at IS NULL
       AND t.executed_at IS NULL
+      AND t.failed_at IS NULL
   )
 )
