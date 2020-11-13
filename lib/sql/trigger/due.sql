@@ -4,7 +4,7 @@ WITH due_items AS (
   FROM
     triggers_due
   WHERE
-    due_at > NOW()
+    due_at < NOW()
 )
 SELECT
   id
