@@ -4,8 +4,8 @@ CREATE OR REPLACE VIEW triggers_due AS (
       t.*,
       'contact' AS trigger_object_type,
       c.object_type,
-      c.date + t.wait_for AS timestamp,
-      c.date + t.wait_for - interval '3 days' AS due_at
+      c.next_occurence + t.wait_for AS timestamp,
+      c.next_occurence + t.wait_for - interval '3 days' AS due_at
     FROM
       triggers AS t
       JOIN analytics.calendar AS c
@@ -25,8 +25,8 @@ CREATE OR REPLACE VIEW triggers_due AS (
       t.*,
       'deal' AS trigger_object_type,
       c.object_type,
-      c.date + t.wait_for AS timestamp,
-      c.date + t.wait_for - interval '3 days' AS due_at
+      c.next_occurence + t.wait_for AS timestamp,
+      c.next_occurence + t.wait_for - interval '3 days' AS due_at
     FROM
       triggers AS t
       JOIN analytics.calendar AS c
@@ -46,8 +46,8 @@ CREATE OR REPLACE VIEW triggers_due AS (
       t.*,
       (CASE WHEN t.contact IS NOT NULL THEN 'contact' WHEN t.deal IS NOT NULL THEN 'deal' ELSE NULL END) AS trigger_object_type,
       c.object_type,
-      c.date + t.wait_for AS timestamp,
-      c.date + t.wait_for - interval '3 days' AS due_at
+      c.next_occurence + t.wait_for AS timestamp,
+      c.next_occurence + t.wait_for - interval '3 days' AS due_at
     FROM
       triggers AS t
       JOIN analytics.calendar AS c
