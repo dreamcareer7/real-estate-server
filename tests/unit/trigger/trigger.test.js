@@ -21,7 +21,7 @@ const UserHelper = require('../user/helper')
 
 const { createContext, handleJobs } = require('../helper')
 
-const BIRTHDAY = moment.utc().startOf('day').add(-20, 'years')
+const BIRTHDAY = moment.utc().add(3, 'days').startOf('day').add(-20, 'years')
 let brand
 
 async function setup() {
