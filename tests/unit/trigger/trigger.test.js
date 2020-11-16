@@ -13,7 +13,7 @@ const Contact = {
 }
 const Context = require('../../../lib/models/Context')
 const EmailCampaign = require('../../../lib/models/Email/campaign/create')
-// const sql = require('../../../lib/utils/sql')
+const sql = require('../../../lib/utils/sql')
 
 const BrandHelper = require('../brand/helper')
 const { attributes } = require('../contact/helper')
@@ -111,6 +111,21 @@ const createTrigger = async () => {
 const testDueTrigger = async () => {
   const trigger = await createTrigger()
   const due = await Trigger.getDueTriggers()
+
+  console.log(await sql.select('SELECT * FROM analytics.calendar'))
+  console.log(await sql.select('SELECT * FROM triggers_due'))
+  console.log(await sql.select(`
+    SELECT
+      t.*,
+      'contact' AS trigger_object_type,
+      c.object_type,
+      c.next_occurence + t.wait_for AS timestamp,
+      c.next_occurence + t.wait_for - interval '3 days' AS due_at
+    FROM
+      triggers AS t
+      JOIN analytics.calendar AS c
+        ON t.contact = c.contact
+  `))
 
   expect(due).to.have.members([trigger.id])
 }
