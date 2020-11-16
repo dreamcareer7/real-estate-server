@@ -46,6 +46,8 @@ const byBrand = async () => {
     user
   })
 
+  delete found[0].total // Messes with include :(
+
   expect(found).to.deep.include(deal)
 }
 
@@ -132,6 +134,8 @@ const byContextQuery = async () => {
     filter,
     user
   })
+
+  delete found[0].total // Messes with include
 
   expect(found).to.deep.include(deal)
 }
