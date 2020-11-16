@@ -1,6 +1,6 @@
 const moment = require('moment-timezone')
 const { expect } = require('chai')
-const _ = require('lodash')
+// const _ = require('lodash')
 
 const Trigger = {
   ...require('../../../lib/models/Trigger/create'),
@@ -13,7 +13,7 @@ const Contact = {
 }
 const Context = require('../../../lib/models/Context')
 const EmailCampaign = require('../../../lib/models/Email/campaign/create')
-const sql = require('../../../lib/utils/sql')
+// const sql = require('../../../lib/utils/sql')
 
 const BrandHelper = require('../brand/helper')
 const { attributes } = require('../contact/helper')
