@@ -684,7 +684,7 @@ const filter = (cb) => {
       query: 'Imaginary',
       $order: ['deals.updated_at', 'DESC'],
       limit: 100,
-      start: 50
+      start: 0
     })
     .after(cb)
     .expectStatus(200)
