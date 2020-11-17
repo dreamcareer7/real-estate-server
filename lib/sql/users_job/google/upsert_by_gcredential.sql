@@ -22,5 +22,6 @@ ON CONFLICT (google_credential, job_name) DO UPDATE SET
   status = $6,
   start_at = $7,
   updated_at = now(),
-  deleted_at = null
+  deleted_at = null,
+  resume_at = null
 RETURNING id
