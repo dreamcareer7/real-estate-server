@@ -149,6 +149,23 @@ async function lockByMicrosoftCredential() {
   await UsersJob.checkLockByMicrosoftCredential(record.microsoft_credential, record.jobName)
 }
 
+async function postponeByMicrosoftCredential() {
+  const id = await create()
+  
+  const before = await UsersJob.get(id)
+
+  expect(before.type).to.be.equal('users_jobs')
+  expect(before.resume_at).to.be.equal(null)
+
+  await UsersJob.postponeByMicrosoftCredential(microsoftCredential.id, 'calendar', '5 minutes')
+  
+  const after = await UsersJob.get(id)
+  
+  expect(after.type).to.be.equal('users_jobs')
+  expect(after.resume_at).to.not.be.equal(null)
+}
+
+
 
 describe('Users Jobs - Microsoft', () => {
   createContext()
@@ -163,4 +180,5 @@ describe('Users Jobs - Microsoft', () => {
   it('should not delete by Microsoft credential and job name', deleteByMicrosoftCredentialAndJobFailed)
   it('should sync by Microsoft credential and job name', forceSyncByMicrosoftCredential)
   it('should lock anc check a record', lockByMicrosoftCredential)
+  it('should postpone by Microsoft credential and job name', postponeByMicrosoftCredential)
 })
