@@ -63,6 +63,7 @@ AS $function$
           'unit_number',
           'state'
         ])
+        AND ca.deleted_at IS NULL
       WINDOW w AS (PARTITION BY (contact, index))
       ORDER BY
         2, 3, 4
