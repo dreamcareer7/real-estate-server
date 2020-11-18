@@ -635,6 +635,7 @@ declare type TDbSqlAddress =
   | 'trigger/get_due'
   | 'trigger/lock'
   | 'trigger/mark_executed'
+  | 'trigger/mark_failed'
   | 'trigger/update'
   | 'user/bulk_search_email'
   | 'user/bulk_search_phone'
