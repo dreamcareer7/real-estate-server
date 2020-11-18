@@ -149,6 +149,23 @@ async function lockByGoogleCredential() {
   await UsersJob.checkLockByGoogleCredential(record.google_credential, record.jobName)
 }
 
+async function postponeByGoogleCredential() {
+  const id = await create()
+  
+  const before = await UsersJob.get(id)
+
+  expect(before.type).to.be.equal('users_jobs')
+  expect(before.resume_at).to.be.equal(null)
+
+  await UsersJob.postponeByGoogleCredential(googleCredential.id, 'calendar', '5 minutes')
+  
+  const after = await UsersJob.get(id)
+  
+  expect(after.type).to.be.equal('users_jobs')
+  expect(after.resume_at).to.not.be.equal(null)
+}
+
+
 
 describe('Users Jobs - Google', () => {
   createContext()
@@ -163,4 +180,5 @@ describe('Users Jobs - Google', () => {
   it('should not delete by Google credential and job name', deleteByGoogleCredentialAndJobFailed)
   it('should sync by Google credential and job name', forceSyncByGoogleCredential)
   it('should lock anc check a record', lockByGoogleCredential)
+  it('should postpone by Google credential and job name', postponeByGoogleCredential)
 })

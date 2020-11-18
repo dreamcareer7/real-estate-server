@@ -47,11 +47,10 @@ const dumpLtsLead = cb => {
 const checkContactForLead = cb => {
   return frisby
     .create('check if the lead was added to the contacts')
-    .post('/contacts/filter', { parked: true })
+    .post('/contacts/filter')
     .after(cb)
     .expectJSON({
       data: [{
-        parked: true,
         first_name: 'Test',
         last_name: 'Rechat3'
       }]

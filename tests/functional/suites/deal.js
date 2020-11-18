@@ -682,7 +682,9 @@ const filter = (cb) => {
   return frisby.create('search for a deal')
     .post('/deals/filter', {
       query: 'Imaginary',
-      $order: ['deals.updated_at', 'DESC']
+      $order: ['deals.updated_at', 'DESC'],
+      limit: 100,
+      start: 0
     })
     .after(cb)
     .expectStatus(200)
