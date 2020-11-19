@@ -4,9 +4,10 @@ SET
   "user" = $3::uuid,
   event_type = $4,
   wait_for = $5,
-  recurring = $6,
-  brand_event = $7,
-  campaign = $8
+  "time" = $6,
+  recurring = $7,
+  brand_event = $8,
+  campaign = $9
 WHERE
   id = $1::uuid
   AND executed_at IS NULL
