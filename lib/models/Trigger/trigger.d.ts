@@ -45,6 +45,7 @@ interface IRawTriggerBase {
   brand: UUID;
   user: UUID;
   wait_for: number;
+  time?: number;
   recurring: boolean;
 }
 

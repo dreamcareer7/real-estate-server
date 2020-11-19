@@ -8,6 +8,7 @@ INSERT INTO triggers (
 
   event_type,
   wait_for,
+  "time",
   "action",
   recurring,
 
@@ -30,6 +31,7 @@ SELECT
 
   event_type,
   wait_for,
+  "time",
   "action",
   COALESCE(recurring, FALSE) AS recurring,
 
