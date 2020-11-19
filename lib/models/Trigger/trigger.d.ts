@@ -3,6 +3,7 @@ export interface ITriggerUpdateInput {
 
   event_type: string;
   wait_for?: number;
+  time?: number;
   recurring?: boolean;
 
   brand_event?: UUID;
@@ -28,6 +29,7 @@ export interface ITriggerInput {
   event_type: string;
   action: 'create_event' | 'schedule_email',
   wait_for?: number;
+  time?: number;
   recurring?: boolean;
 
   flow?: UUID;
