@@ -12,6 +12,7 @@ SELECT
 
   event_type,
   extract(epoch from wait_for) AS wait_for,
+  extract(epoch from "time") AS "time",
   "action",
   recurring,
   failure,

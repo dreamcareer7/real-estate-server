@@ -21,6 +21,7 @@ CREATE TABLE IF NOT EXISTS triggers (
 
   event_type text NOT NULL,
   wait_for interval NOT NULL,
+  "time" time,
   "action" trigger_action NOT NULL,
   recurring boolean NOT NULL,
 

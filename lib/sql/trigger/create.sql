@@ -8,6 +8,7 @@ INSERT INTO triggers (
 
   event_type,
   wait_for,
+  "time",
   "action",
   recurring,
 
@@ -30,17 +31,18 @@ VALUES (
 
   $5  /* event_type */,
   $6  /* wait_for */,
-  $7  /* "action" */,
-  $8  /* recurring */,
+  $7  /* time */,
+  $8  /* "action" */,
+  $9  /* recurring */,
 
-  $9  /* contact */,
-  $10 /* deal */,
+  $10  /* contact */,
+  $11 /* deal */,
 
-  $11 /* flow */,
-  $12 /* flow_step */,
+  $12 /* flow */,
+  $13 /* flow_step */,
 
-  $13 /* brand_event */,
-  $14 /* campaign */
+  $14 /* brand_event */,
+  $15 /* campaign */
 )
 RETURNING
   id
