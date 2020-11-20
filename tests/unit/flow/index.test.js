@@ -191,9 +191,9 @@ describe('Flow', () => {
   createContext()
   beforeEach(setup)
 
-  // it('should setup brand flows correctly', testBrandFlows)
+  it('should setup brand flows correctly', testBrandFlows)
   it('should enroll a contact to a flow', testEnrollContact)
-  // it('should prevent duplicate enrollment', testDuplicateEnroll)
+  it('should prevent duplicate enrollment', testDuplicateEnroll)
   // it('should stop a flow instance and delete all future events', testStopFlow)
   // it('should stop a flow instance if contact deleted', testStopFlowByDeleteContact)
 })
