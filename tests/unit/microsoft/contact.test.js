@@ -120,6 +120,33 @@ async function getRefinedContactFolders() {
   }
 }
 
+async function removeFoldersByCredential() {
+  const { credential } = await createMicrosoftCredential(user, brand)
+
+  const contactFolders = []
+
+  for (const record of microsoft_contact_folders_offline) {
+    contactFolders.push({
+      folder_id: record.id,
+      parent_folder_id: record.parentFolderId,
+      display_name: record.displayName
+    })
+  }
+
+  for (const contactGroup of contactFolders) {
+    const result = await MicrosoftContact.addContactFolder(credential, contactGroup)
+    expect(result).to.be.uuid
+  }
+
+  const before_delete = await MicrosoftContact.getCredentialFolders(credential.id)
+  expect(before_delete.length).to.not.be.equal(0)
+
+  await MicrosoftContact.removeFoldersByCredential(credential.id)
+
+  const after_delete = await MicrosoftContact.getCredentialFolders(credential.id)
+  expect(after_delete.length).to.be.equal(0)
+}
+
 
 
 describe('Microsoft', () => {
@@ -131,7 +158,8 @@ describe('Microsoft', () => {
     it('should return microsoft contact by remote_id', getByEntryId)
     it('should handle failure of microsoft contact get by remote_id', getByEntryIdFailed)
     it('should return number of contacts of specific credential', getMCredentialContactsNum)
-    it('should handle add contact folder', addContactFolder)
-    it('should return number of contacts of specific credential', getRefinedContactFolders)
+    it('should handle add contact-folder', addContactFolder)
+    it('should return number of contact-folders of specific credential', getRefinedContactFolders)
+    it('should remove contact-folders by credential', removeFoldersByCredential)
   })
 })

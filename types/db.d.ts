@@ -465,6 +465,7 @@ declare type TDbSqlAddress =
   | 'microsoft/contact_folder/get'
   | 'microsoft/contact_folder/get_by_credential'
   | 'microsoft/contact_folder/insert'
+  | 'microsoft/contact_folder/remove_by_credential'
   | 'microsoft/credential/disconnect'
   | 'microsoft/credential/get'
   | 'microsoft/credential/get_by_brand'
