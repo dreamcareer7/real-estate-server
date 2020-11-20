@@ -3,7 +3,7 @@ export interface ITriggerUpdateInput {
 
   event_type: string;
   wait_for?: number;
-  time?: number;
+  time?: string;
   recurring?: boolean;
 
   brand_event?: UUID;
@@ -14,7 +14,8 @@ export type ITriggerEndpointInput = {
   user: UUID;
 
   event_type: string;
-  wait_for?: number;
+  wait_for: number;
+  time?: string;
   recurring?: boolean;
 
   contact?: UUID;
@@ -28,8 +29,8 @@ export interface ITriggerInput {
 
   event_type: string;
   action: 'create_event' | 'schedule_email',
-  wait_for?: number;
-  time?: number;
+  wait_for: number;
+  time?: string;
   recurring?: boolean;
 
   flow?: UUID;
@@ -47,7 +48,7 @@ interface IRawTriggerBase {
   brand: UUID;
   user: UUID;
   wait_for: number;
-  time?: number;
+  time?: string;
   recurring: boolean;
 }
 
