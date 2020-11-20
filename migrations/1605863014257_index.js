@@ -1,7 +1,7 @@
 const db = require('../lib/utils/db')
 
 const migrations = [
-  'CREATE INDEX email_campaign_emails_campaign_email_address ON email_campaign_email(campaign, LOWER(email_address))'
+  'CREATE INDEX email_campaign_emails_campaign_email_address ON email_campaign_emails(campaign, LOWER(email_address))'
 ]
 
 
