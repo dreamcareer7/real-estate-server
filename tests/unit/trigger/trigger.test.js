@@ -98,6 +98,7 @@ const createTrigger = async () => {
     campaign: campaign_id,
     contact: contact.id,
     wait_for: 0,
+    time: '10:00:00'
   }
 
   const id = await Trigger.create(trigger_data)
@@ -112,20 +113,20 @@ const testDueTrigger = async () => {
   const trigger = await createTrigger()
   const due = await Trigger.getDueTriggers()
 
-  console.log(await sql.select('SELECT * FROM analytics.calendar'))
-  console.log(await sql.select('SELECT * FROM triggers_due'))
-  console.log(await sql.select(`
-    SELECT
-      t.*,
-      'contact' AS trigger_object_type,
-      c.object_type,
-      c.next_occurence + t.wait_for AS timestamp,
-      c.next_occurence + t.wait_for - interval '3 days' AS due_at
-    FROM
-      triggers AS t
-      JOIN analytics.calendar AS c
-        ON t.contact = c.contact
-  `))
+  // console.log(await sql.select('SELECT * FROM analytics.calendar'))
+  // console.log(await sql.select('SELECT * FROM triggers_due'))
+  // console.log(await sql.select(`
+  //   SELECT
+  //     t.*,
+  //     'contact' AS trigger_object_type,
+  //     c.object_type,
+  //     c.next_occurence + t.wait_for AS timestamp,
+  //     c.next_occurence + t.wait_for - interval '3 days' AS due_at
+  //   FROM
+  //     triggers AS t
+  //     JOIN analytics.calendar AS c
+  //       ON t.contact = c.contact
+  // `))
 
   expect(due).to.have.members([trigger.id])
 }
