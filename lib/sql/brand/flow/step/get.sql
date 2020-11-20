@@ -10,6 +10,7 @@ SELECT
   title,
   description,
   EXTRACT(epoch FROM wait_for) AS wait_for,
+  "time",
   event,
   email,
   template,
