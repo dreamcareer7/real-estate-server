@@ -4,6 +4,7 @@ export interface IBaseBrandFlowStep {
   description?: string;
   order: number;
   wait_for: number;
+  time: string;
   event_type: string;
   flow: UUID;
   email?: UUID;

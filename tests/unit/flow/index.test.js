@@ -38,7 +38,8 @@ async function setup() {
       steps: [{
         title: 'Create Rechat email',
         description: 'Create a Rechat email address for the new guy to use in other services',
-        wait_for: 8 * HOUR + DAY,
+        wait_for: DAY,
+        time: '08:00:00',
         is_automated: false,
         event: {
           title: 'Create Rechat email',
@@ -47,7 +48,8 @@ async function setup() {
       }, {
         title: 'Send them a test email',
         description: 'Automatically send them a test email to make sure it\'s working',
-        wait_for: 8 * HOUR + DAY,
+        wait_for: DAY,
+        time: '08:00:00',
         is_automated: true,
         email: {
           name: 'Onboarding Email',
@@ -59,7 +61,8 @@ async function setup() {
       }, {
         title: 'Demo of Rechat',
         description: 'Dan gives a quick demo of the Rechat system and explains how it works',
-        wait_for: 2 * DAY + 10 * HOUR,
+        wait_for: 2 * DAY,
+        time: '10:00:00',
         is_automated: false,
         event: {
           title: 'Demo of Rechat',
