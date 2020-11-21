@@ -178,6 +178,27 @@ const virtual = (cb) => {
     })
 }
 
+const virtualByAgent = (cb) => {
+  const criteria = {
+    property_types: vcriteria.property_types,
+    property_subtypes: vcriteria.property_subtypes,
+    agents: [
+      results.agent.getByMlsId.data[0].id
+    ]
+  }
+
+  return frisby.create('get a list of listings of an agent')
+    .post('/valerts', criteria)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK'
+    })
+    .expectJSONTypes({
+      info
+    })
+}
+
 const deleteAlert = (cb) => {
   return frisby.create('delete alert')
     .delete('/rooms/' + results.alert.create.data.room + '/alerts/' + results.alert.create.data.id)
@@ -238,6 +259,7 @@ module.exports = {
   patchAlert404,
   patchAlertWorked,
   virtual,
+  virtualByAgent,
   deleteAlert404,
   deleteAlert,
   deleteAlertWorked,
