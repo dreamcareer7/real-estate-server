@@ -129,11 +129,38 @@ interface IModel {
   created_by: UUID;
 }
 
-export type IStoredTrigger = IModel & IRawTrigger & {
-  executed_at?: number;
-  failed_at?: number;
-  failure?: string;
+type ExecutedTrigger = {
+  executed_at: number;
+  action: 'create_event';
+  campaign: null;
+  event: UUID;
+} | {
+  event: null;
+  executed_at: number;
+  action: 'schedule_email';
+  campaign: UUID;
 };
+
+type PendingTrigger = {
+  executed_at: null;
+  event: null;
+  failed_at: null;
+  failure: null;
+} & ({
+  action: 'create_event';
+  campaign: null;
+} | {
+  action: 'schedule_email';
+  campaign: UUID;
+});
+
+interface FailedTrigger {
+  failed_at: number;
+  failure: string;
+}
+
+export type IStoredTrigger = IModel & IRawTrigger & (ExecutedTrigger | PendingTrigger);
+export type TIsTriggerExecuted = (x: IStoredTrigger) => x is (IModel & IRawTrigger & ExecutedTrigger)
 
 export type IDueTrigger = IStoredTrigger & {
   timestamp: number;
