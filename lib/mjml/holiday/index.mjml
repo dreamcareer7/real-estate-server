@@ -14,10 +14,10 @@
               Hi {% raw %}{{recipient.first_name or "there"}}{% endraw %},
             </p>
             <p>
-              Rechat has a selection of Veterans Day social posts available for you to share.  Click any of the images below to view them.
+              Rechat has a selection of Thanksgiving social posts available for you to share.  Click any of the images below to view them.
             </p>
             <p>
-              Happy Veterans Day.
+              Happy Thanksgiving.
             </p>
             </span>
           </mj-text>
@@ -27,12 +27,12 @@
       {% for thumbnails in thumbnails | batch(2) %}
         <mj-section padding-top=0 padding-bottom=0>
           <mj-column width="49.5%">
-            <mj-image border="1px solid #eef0f2" href="{{'/dashboard/marketing/VeteransDay/Social' | url}}" padding-bottom=0 padding-top="10px" src="{{thumbnails[0].url}}" />
+            <mj-image border="1px solid #eef0f2" href="{{'/dashboard/marketing/Thanksgiving/Social' | url}}" padding-bottom=0 padding-top="10px" src="{{thumbnails[0].url}}" />
           </mj-column>
 
           <mj-column width="49.5%">
             {% if thumbnails[1] %}
-              <mj-image border="1px solid #eef0f2" href="{{'/dashboard/marketing/VeteransDay/Social' | url}}" padding-bottom=0 padding-top="10px" src="{{thumbnails[1].url}}" />
+              <mj-image border="1px solid #eef0f2" href="{{'/dashboard/marketing/Thanksgiving/Social' | url}}" padding-bottom=0 padding-top="10px" src="{{thumbnails[1].url}}" />
             {% endif %}
           </mj-column>
         </mj-section>
