@@ -9,6 +9,8 @@ const UsersJob      = require('../../../lib/models/UsersJob')
 
 const { createGoogleCredential } = require('../google/helper')
 
+const metadata = { contact_address: 'contact_address' }
+
 let user, brand, googleCredential
 
 
@@ -38,7 +40,7 @@ async function setup() {
 }
 
 async function upsert(jobName, status) {
-  const result = await UsersJob.upsertByGoogleCredential(googleCredential, jobName, status)
+  const result = await UsersJob.upsertByGoogleCredential(googleCredential, jobName, status, metadata)
 
   const id = result[0].id
 
@@ -49,8 +51,8 @@ async function upsert(jobName, status) {
 }
 
 async function create() {
-  const jobName = 'calendar'
-  const status  = 'pending'
+  const jobName = 'gmail_query'
+  const status  = null
 
   const id = await upsert(jobName, status)
 
@@ -65,10 +67,24 @@ async function get() {
   const record = await UsersJob.get(id)
 
   expect(record.type).to.be.equal('users_jobs')
-  expect(record.status).to.be.equal('pending')
   expect(record.google_credential).to.be.equal(googleCredential.id)
   expect(record.microsoft_credential).to.be.equal(null)
   expect(record.deleted_at).to.be.equal(null)
+}
+
+async function find() {
+  const id = await create()
+  const record  = await UsersJob.get(id)
+  const userJob = await UsersJob.find({ gcid: googleCredential.id, mcid: null, jobName: 'gmail_query', metadata })
+
+  expect(record.type).to.be.equal('users_jobs')
+  expect(record.google_credential).to.be.equal(googleCredential.id)
+  expect(record.microsoft_credential).to.be.equal(null)
+  expect(record.deleted_at).to.be.equal(null)
+
+  expect(record.id).to.be.equal(userJob.id)
+  expect(record.job_name).to.be.equal(userJob.job_name)
+  expect(record.metadata).to.be.deep.equal(userJob.metadata)
 }
 
 async function deleteById() {
@@ -89,5 +105,6 @@ describe('Users Jobs - Google', () => {
   beforeEach(setup)
 
   it('should return a record by id', get)
+  it('should return a record by find method', find)
   it('should delete a record by id', deleteById)
 })
