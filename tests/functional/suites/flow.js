@@ -32,7 +32,8 @@ const addFlow = cb => {
     steps: [{
       title: 'Create Rechat email',
       description: 'Create a Rechat email address for the new guy to use in other services',
-      wait_for: 10 * HOUR,
+      wait_for: 0,
+      time: '10:00:00',
       event: {
         title: 'Create Rechat email',
         task_type: 'Other',
@@ -41,13 +42,15 @@ const addFlow = cb => {
     }, {
       title: 'Send them a test email',
       description: 'Automatically send them a test email to make sure it\'s working',
-      wait_for: 8 * HOUR + DAY,
+      wait_for: DAY,
+      time: '08:00:00',
       email: results.flow.addEmail.data.id,
       order: 2
     }, {
       title: 'Demo of Rechat',
       description: 'Dan gives a quick demo of the Rechat system and explains how it works',
-      wait_for: 3 * DAY + 14 * HOUR,
+      wait_for: 3 * DAY,
+      time: '14:00:00',
       event: {
         title: 'Demo of Rechat',
         task_type: 'Call',
@@ -118,7 +121,8 @@ const addStepToFlow = cb => {
   const step = {
     title: 'Call to check on them',
     description: 'Call to check on them',
-    wait_for: 7 * DAY + 10 * HOUR,
+    wait_for: 7 * DAY,
+    time: '10:00:00',
     event: {
       title: 'Call to check on them',
       task_type: 'Call',
@@ -144,7 +148,8 @@ const editBrandFlowStep = cb => {
   const step = {
     title: 'Meet with them to catch up',
     description: 'Meet with them to catch up',
-    wait_for: 10 * DAY + 11 * HOUR,
+    wait_for: 10 * DAY,
+    time: '11:00:00',
     event: {
       title: 'Meet with them to catch up',
       task_type: 'In-Person Meeting',
@@ -207,9 +212,34 @@ const enroll = cb => {
     .expectStatus(200)
     .expectJSON({
       data: [{
-        steps: [{}, {}, {}],
+        steps: [{}],
         contact: results.contact.create.data[0].id
       }]
+    })
+}
+
+const executeTriggers = cb => {
+  return frisby.create('execute scheduled triggers')
+    .post('/jobs', {
+      name: 'Trigger.executeDue',
+      data: {}
+    })
+    .after(cb)
+    .expectStatus(200)
+}
+
+const getFlowWithExecutedStep = cb => {
+  return frisby.create('get the flow after first step is executed')
+    .get(`/contacts/${results.contact.create.data[0].id}?associations[]=contact.flows&associations[]=flow_step.crm_task&associations[]=flow_step.email`)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      data: {
+        flows: [{
+          steps: [{}],
+          contact: results.contact.create.data[0].id
+        }]
+      }
     })
 }
 
@@ -275,6 +305,8 @@ module.exports = {
   getBrandFlowById,
   deleteFlowStep,
   enroll,
+  executeTriggers,
+  getFlowWithExecutedStep,
   deleteFlowWithActiveFlows,
   checkFlowAssociation,
   stop,

@@ -1,4 +1,5 @@
 export interface IStoredFlowStep extends IModel {
+  executed_at?: number;
   deleted_by: UUID;
   flow: UUID;
   origin: UUID;
