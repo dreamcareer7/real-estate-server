@@ -6,7 +6,8 @@ INSERT INTO users_jobs
     microsoft_credential,
     job_name,
     status,
-    start_at
+    start_at,
+    metadata
   )
 VALUES
   (
@@ -16,11 +17,13 @@ VALUES
     $4,
     $5,
     $6,
-    $7
+    $7,
+    $8
   )
 ON CONFLICT (microsoft_credential, job_name) DO UPDATE SET
   status = $6,
   start_at = $7,
+  metadata = $8,
   updated_at = now(),
   deleted_at = null,
   resume_at = null

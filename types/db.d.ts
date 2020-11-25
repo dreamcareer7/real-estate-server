@@ -669,6 +669,7 @@ declare type TDbSqlAddress =
   | 'user/update_personal_room'
   | 'user/upgrade_to_agent'
   | 'users_job/get'
+  | 'users_job/delete'
   | 'users_job/google/chk_lock_by_gcredential'
   | 'users_job/google/delete_by_gcredential'
   | 'users_job/google/delete_by_gcredential_and_job'

@@ -9,6 +9,9 @@ const UsersJob      = require('../../../lib/models/UsersJob')
 
 const { createMicrosoftCredential } = require('../microsoft/helper')
 
+const metadata = { contact_address: 'contact_address' }
+
+
 let user, brand, microsoftCredential
 
 
@@ -38,7 +41,7 @@ async function setup() {
 }
 
 async function upsert(jobName, status) {
-  const result = await UsersJob.upsertByMicrosoftCredential(microsoftCredential, jobName, status)
+  const result = await UsersJob.upsertByMicrosoftCredential(microsoftCredential, jobName, status, metadata)
 
   const id = result[0].id
 
@@ -66,6 +69,7 @@ async function get() {
 
   expect(record.type).to.be.equal('users_jobs')
   expect(record.status).to.be.equal('pending')
+  expect(record.metadata).to.be.deep.equal(metadata)
   expect(record.microsoft_credential).to.be.equal(microsoftCredential.id)
   expect(record.google_credential).to.be.equal(null)
   expect(record.deleted_at).to.be.equal(null)
