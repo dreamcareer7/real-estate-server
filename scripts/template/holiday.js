@@ -22,7 +22,7 @@ const sendForBrand = async id => {
   Context.log('Sending for', brand.name)
 
   const brand_templates = await BrandTemplate.getForBrand({
-    types: ['VeteransDay'],
+    types: ['Thanksgiving'],
     mediums: ['Social'],
     brand: brand.id
   })
@@ -59,7 +59,7 @@ const sendForBrand = async id => {
     }),
     html,
     tags: ['holiday'],
-    subject: 'Happy Veterans Day',
+    subject: 'Happy Thanksgiving',
     brand: brand.id,
     from: 'f2e2be50-927b-11e8-bb13-0a95998482ac',
     individual: true,
