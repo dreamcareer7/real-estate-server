@@ -684,6 +684,33 @@ const deleteStatus = cb => {
     .expectStatus(204)
 }
 
+const addPropertyType = cb => {
+  const property_type = {
+    label: 'Residential Lease',
+    is_lease: true
+  }
+
+  return frisby.create('add a property type')
+    .post(`/brands/${brand_id}/deals/property_types`, property_type)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      data: property_type
+    })
+}
+
+const getPropertyTypes = cb => {
+  return frisby.create('get property types')
+    .get(`/brands/${brand_id}/deals/property_types`)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      data: [results.brand.addPropertyType.data]
+    })
+}
+
 function createAsset(cb) {
   const logo = fs.createReadStream(path.resolve(__dirname, 'data/logo.png'))
 
@@ -789,6 +816,9 @@ module.exports = {
   updateStatus,
   getStatuses,
   deleteStatus,
+
+  addPropertyType,
+  getPropertyTypes,
 
   createAsset,
   getAssets,
