@@ -10,7 +10,13 @@ poll({
 
 poll({
   fn: MicrosoftWorker.Contacts.syncDue,
-  name: 'MicrosoftWorker.contacts.syncDue',
+  name: 'MicrosoftWorker.Contacts.syncDue',
+  wait: 60000
+})
+
+poll({
+  fn: MicrosoftWorker.Outlook.syncDue,
+  name: 'MicrosoftWorker.outlook.syncDue',
   wait: 60000
 })
 
@@ -21,7 +27,7 @@ poll({
 })
 
 poll({
-  fn: MicrosoftWorker.Outlook.syncDue,
-  name: 'MicrosoftWorker.outlook.syncDue',
-  wait: 60000
+  fn: MicrosoftWorker.Outlook.syncByQuery,
+  name: 'MicrosoftWorker.Outlook.syncByQuery',
+  wait: 5000
 })
