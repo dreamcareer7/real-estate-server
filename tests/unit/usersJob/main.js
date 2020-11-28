@@ -1,4 +1,3 @@
-const uuid       = require('uuid')
 const { expect } = require('chai')
 const { createContext } = require('../helper')
 

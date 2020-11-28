@@ -800,7 +800,7 @@ function batchArchive(cb) {
 
 function syncThreadsByContact(cb) {
   return frisby.create('Send request to sync threads')
-    .post(`/emails/threads`, { contact_address: 'contact_address@domain.com' })
+    .post('/emails/threads', { contact_address: 'contact_address@domain.com' })
     .addHeader('X-RECHAT-BRAND', results.google.getGoogleProfile.data.brand)
     .after(function(err, res, json) {
       cb(err, res, json)
