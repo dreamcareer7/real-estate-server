@@ -8,8 +8,8 @@ const migrations = [
 
   'ALTER TABLE users_jobs ADD COLUMN IF NOT EXISTS recurrence BOOLEAN DEFAULT TRUE',
 
-  'CREATE UNIQUE INDEX IF NOT EXISTS users_jobs_gc_jname ON users_jobs (google_credential, jname)    WHERE recurrence IS TRUE',
-  'CREATE UNIQUE INDEX IF NOT EXISTS users_jobs_mc_jname ON users_jobs (microsoft_credential, jname) WHERE recurrence IS TRUE',
+  'CREATE UNIQUE INDEX IF NOT EXISTS users_jobs_gc_jname ON users_jobs (google_credential, job_name)    WHERE recurrence IS TRUE',
+  'CREATE UNIQUE INDEX IF NOT EXISTS users_jobs_mc_jname ON users_jobs (microsoft_credential, job_name) WHERE recurrence IS TRUE',
 
   'COMMIT'
 ]

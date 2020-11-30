@@ -668,6 +668,8 @@ declare type TDbSqlAddress =
   | 'user/update'
   | 'user/update_personal_room'
   | 'user/upgrade_to_agent'
+  | 'users_job/chk_lock'
+  | 'users_job/lock'
   | 'users_job/get'
   | 'users_job/delete'
   | 'users_job/update_status'
