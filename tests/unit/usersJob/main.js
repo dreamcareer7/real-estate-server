@@ -86,6 +86,16 @@ async function find() {
   expect(record.metadata).to.be.deep.equal(userJob.metadata)
 }
 
+async function updateStatus() {
+  const id = await create()
+  await UsersJob.updateStatus(id, 'failed')
+
+  const record = await UsersJob.get(id)
+
+  expect(record.type).to.be.equal('users_jobs')
+  expect(record.status).to.be.equal('failed')
+}
+
 async function deleteById() {
   const id = await create()
 
@@ -105,5 +115,6 @@ describe('Users Jobs - Google', () => {
 
   it('should return a record by id', get)
   it('should return a record by find method', find)
+  it('should update a record\'s status by id', updateStatus)
   it('should delete a record by id', deleteById)
 })

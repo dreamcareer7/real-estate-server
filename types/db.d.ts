@@ -670,6 +670,7 @@ declare type TDbSqlAddress =
   | 'user/upgrade_to_agent'
   | 'users_job/get'
   | 'users_job/delete'
+  | 'users_job/update_status'
   | 'users_job/google/chk_lock_by_gcredential'
   | 'users_job/google/delete_by_gcredential'
   | 'users_job/google/delete_by_gcredential_and_job'
