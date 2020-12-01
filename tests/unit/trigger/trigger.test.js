@@ -101,8 +101,8 @@ const createTrigger = async () => {
     time: '10:00:00'
   }
 
-  const id = await Trigger.create(trigger_data)
-  const trigger = await Trigger.get(id)
+  const ids = await Trigger.create([trigger_data])
+  const [trigger] = await Trigger.getAll(ids)
 
   expect(trigger).to.include(trigger_data)
 
