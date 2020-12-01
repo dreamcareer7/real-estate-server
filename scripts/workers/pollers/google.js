@@ -4,19 +4,25 @@ require('./entrypoint')
 
 poll({
   fn: GoogleWorkers.Calendar.syncDue,
-  name: 'GoogleWorkers.calendar.syncDue',
+  name: 'GoogleWorkers.Calendar.syncDue',
   wait: 60000
 })
 
 poll({
+  fn: GoogleWorkers.Calendar.parseNotifications,
+  name: 'GoogleWorkers.Calendar.parseNotifications',
+  wait: 5000
+})
+
+poll({
   fn: GoogleWorkers.Contacts.syncDue,
-  name: 'GoogleWorkers.contacts.syncDue',
+  name: 'GoogleWorkers.Contacts.syncDue',
   wait: 60000
 })
 
 poll({
   fn: GoogleWorkers.Gmail.syncDue,
-  name: 'GoogleWorkers.gmail.syncDue',
+  name: 'GoogleWorkers.Gmail.syncDue',
   wait: 60000
 })
 
@@ -27,7 +33,7 @@ poll({
 })
 
 poll({
-  fn: GoogleWorkers.Calendar.parseNotifications,
-  name: 'GoogleWorkers.Calendar.parseNotifications',
+  fn: GoogleWorkers.Gmail.syncByQuery,
+  name: 'GoogleWorkers.Gmail.syncByQuery',
   wait: 5000
 })

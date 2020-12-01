@@ -59,6 +59,7 @@ AS $function$
           'postal_code',
           'street_number',
           'street_name',
+          'street_prefix',
           'street_suffix',
           'unit_number',
           'state'

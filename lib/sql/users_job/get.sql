@@ -3,8 +3,8 @@ SELECT
 FROM
   users_jobs
 JOIN 
-  unnest($1::uuid[]) WITH ORDINALITY t(gcid, ord)
+  unnest($1::uuid[]) WITH ORDINALITY t(ucid, ord)
 ON 
-  users_jobs.id = gcid
+  users_jobs.id = ucid
 ORDER BY 
   users_jobs.created_at DESC
