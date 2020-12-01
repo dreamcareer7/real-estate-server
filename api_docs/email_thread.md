@@ -43,5 +43,5 @@ The type `EmailThreadMessage` is defined as one of:
 - `Email` (type: `email`)
 
 
-### Batch archive [POST /emails/threads}]
+### Request to partial sync [POST /emails/threads]
 <!-- include(tests/email/syncThreadsByContact.md) -->
