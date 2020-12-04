@@ -8,7 +8,7 @@ const migrations = [
   'ALTER TABLE microsoft_contacts ADD COLUMN processed_photo BOOLEAN DEFAULT FALSE',
   'ALTER TABLE microsoft_contacts ADD COLUMN photo TEXT DEFAULT NULL',
   
-  `UPDATE microsoft_contacts SET photo = data->>'photo'`,
+  'UPDATE microsoft_contacts SET photo = data->>\'photo\'',
   'UPDATE microsoft_contacts SET processed_photo = TRUE WHERE photo IS NOT NULL',
 
   'COMMIT'
