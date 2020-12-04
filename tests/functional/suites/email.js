@@ -798,6 +798,16 @@ function batchArchive(cb) {
     .expectStatus(202)
 }
 
+function syncThreadsByContact(cb) {
+  return frisby.create('Send request to sync threads')
+    .post('/emails/threads', { contact_address: 'contact_address@domain.com' })
+    .addHeader('X-RECHAT-BRAND', results.google.getGoogleProfile.data.brand)
+    .after(function(err, res, json) {
+      cb(err, res, json)
+    })
+    .expectStatus(200)
+}
+
 
 module.exports = {
   schedule,
@@ -836,5 +846,6 @@ module.exports = {
   updateIsRead,
   batchUpdateIsRead,
   batchTrash,
-  batchArchive
+  batchArchive,
+  syncThreadsByContact
 }

@@ -82,6 +82,10 @@ const queues = [
     queues: ['microsoft_disconnect'],
     concurrency: 1
   },
+  {
+    queues: ['outlook_by_query'],
+    concurrency: 2
+  },
 
   {
     queues: ['gmail_webhooks'],
@@ -102,6 +106,10 @@ const queues = [
   {
     queues: ['google_disconnect'],
     concurrency: 1
+  },
+  {
+    queues: ['gmail_by_query'],
+    concurrency: 2
   },
 
   {

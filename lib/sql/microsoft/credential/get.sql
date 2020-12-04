@@ -1,7 +1,7 @@
 SELECT
     'microsoft_credential' AS type,
     microsoft_credentials.*,
-    (SELECT ARRAY( SELECT id FROM users_jobs WHERE microsoft_credential = microsoft_credentials.id )) AS jobs
+    (SELECT ARRAY( SELECT id FROM users_jobs WHERE microsoft_credential = microsoft_credentials.id AND job_name <> 'outlook_query' )) AS jobs
 FROM
     microsoft_credentials
 JOIN 

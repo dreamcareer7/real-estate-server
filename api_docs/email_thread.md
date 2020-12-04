@@ -10,7 +10,7 @@ Rechat has 3 repositories of emails:
 - Outlook integration
 - Emails sent from Mailgun
 
-Based on this, email threads will always be either Gmail-only or Outlook-only, but with a potential Mailgun email at the very beginning of the thread.
+Based on this, email threads will always be either Gmail-only or Outlook-only, with a potential Mailgun email at the very beginning of the thread.
 
 ##### Data model
 
@@ -41,3 +41,7 @@ The type `EmailThreadMessage` is defined as one of:
 - `GoogleMessage` (type: `google_message`)
 - `MicrosoftMessage` (type: `microsoft_message`)
 - `Email` (type: `email`)
+
+
+### Request partial sync [POST /emails/threads]
+<!-- include(tests/email/syncThreadsByContact.md) -->
