@@ -10,7 +10,5 @@ UPDATE brands_contexts SET
   default_value = $10,
   data_type = $11,
   format = $12,
-  required = $13,
-  optional = $14,
-  triggers_brokerwolf = $15
+  triggers_brokerwolf = $13
 WHERE id = $1

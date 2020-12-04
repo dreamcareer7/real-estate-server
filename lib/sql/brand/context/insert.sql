@@ -11,8 +11,6 @@ INSERT INTO brands_contexts (
   default_value,
   data_type,
   format,
-  required,
-  optional,
   triggers_brokerwolf
-) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)
+) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
 RETURNING id
