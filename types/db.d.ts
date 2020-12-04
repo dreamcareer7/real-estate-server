@@ -673,6 +673,7 @@ declare type TDbSqlAddress =
   | 'users_job/get'
   | 'users_job/postpone'
   | 'users_job/delete'
+  | 'users_job/restore'
   | 'users_job/update_status'
   | 'users_job/google/chk_lock_by_gcredential'
   | 'users_job/google/delete_by_gcredential'

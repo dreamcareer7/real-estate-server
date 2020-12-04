@@ -40,7 +40,7 @@ async function setup() {
 }
 
 async function upsert(jobName, status) {
-  const result = await UsersJob.upsertByGoogleCredential(googleCredential, jobName, status, metadata)
+  const result = await UsersJob.upsertByGoogleCredential(googleCredential, jobName, status, metadata, true)
 
   const id = result[0].id
 
