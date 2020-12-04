@@ -15,6 +15,12 @@ poll({
 })
 
 poll({
+  fn: MicrosoftWorker.Contacts.syncContactsAvatars,
+  name: 'MicrosoftWorker.Contacts.syncContactsAvatars',
+  wait: 60000
+})
+
+poll({
   fn: MicrosoftWorker.Outlook.syncDue,
   name: 'MicrosoftWorker.outlook.syncDue',
   wait: 60000
