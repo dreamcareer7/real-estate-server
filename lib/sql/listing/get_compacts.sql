@@ -81,6 +81,13 @@ SELECT 'compact_listing' AS TYPE,
           AND photos.deleted_at IS NULL
          ORDER BY "order" LIMIT 1
        ) as cover_image_url,
+       (
+          SELECT COALESCE(ARRAY_AGG(url ORDER BY "order"), '{}'::text[]) FROM photos
+          WHERE photos.listing_mui = listings.matrix_unique_id
+          AND   photos.mls = listings.mls
+          AND   photos.url IS NOT NULL
+          AND   photos.deleted_at IS NULL
+        ) as gallery_image_urls,
        json_build_object(
           'type', 'compact_address',
           'street_number', addresses.street_number,
