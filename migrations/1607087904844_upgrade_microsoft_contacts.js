@@ -8,18 +8,24 @@ const migrations = [
   'ALTER TABLE microsoft_contacts ADD COLUMN processed_photo BOOLEAN DEFAULT FALSE',
   'ALTER TABLE microsoft_contacts ADD COLUMN photo TEXT DEFAULT NULL',
   
-  'UPDATE microsoft_contacts SET photo = data->>\'photo\'',
-  'UPDATE microsoft_contacts SET processed_photo = TRUE WHERE photo IS NOT NULL',
-
-
   'ALTER TABLE google_contacts ADD COLUMN processed_photo BOOLEAN DEFAULT FALSE',
   'ALTER TABLE google_contacts ADD COLUMN photo TEXT DEFAULT NULL',
-  
-  'UPDATE google_contacts SET photo = entry->>\'photo\'',
-  'UPDATE google_contacts SET processed_photo = TRUE WHERE photo IS NOT NULL',
+
+
+  'UPDATE microsoft_contacts SET photo = null, processed_photo = true',
+  'UPDATE google_contacts    SET photo = null, processed_photo = true',
+
+  'UPDATE microsoft_contacts SET photo = data->>\'photo\'  WHERE data->>\'photo\' <> \'\'  AND data->>\'photo\'  IS NOT NULL',
+  'UPDATE google_contacts    SET photo = entry->>\'photo\' WHERE entry->>\'photo\' <> \'\' AND entry->>\'photo\' IS NOT NULL',
 
   'COMMIT'
 ]
+
+// update microsoft_contacts set photo = null, processed_photo = true;
+// update google_contacts    set photo = null, processed_photo = true;
+
+// UPDATE microsoft_contacts SET photo = data->>'photo'  WHERE data->>'photo' <> ''  AND data->>'photo'  IS NOT NULL;
+// UPDATE google_contacts    SET photo = entry->>'photo' WHERE entry->>'photo' <> '' AND entry->>'photo' IS NOT NULL
 
 
 const run = async () => {
