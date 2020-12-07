@@ -40,7 +40,16 @@ SELECT
       AND deleted_at IS NULL
     LIMIT $3
   ) as associations,
-  NULL as files,
+  (
+    SELECT
+      array_agg(id)
+    FROM
+      role_files
+    WHERE
+      $2 @> ARRAY['crm_task.files']
+      AND "role" = 'CrmTask'
+      AND role_id = crm_tasks.id
+  ) as files,
   (
     SELECT
       ARRAY_AGG(id ORDER BY "created_at")
