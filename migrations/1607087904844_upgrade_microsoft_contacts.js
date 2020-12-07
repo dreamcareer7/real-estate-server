@@ -21,12 +21,6 @@ const migrations = [
   'COMMIT'
 ]
 
-// update microsoft_contacts set photo = null, processed_photo = true;
-// update google_contacts    set photo = null, processed_photo = true;
-
-// UPDATE microsoft_contacts SET photo = data->>'photo'  WHERE data->>'photo' <> ''  AND data->>'photo'  IS NOT NULL;
-// UPDATE google_contacts    SET photo = entry->>'photo' WHERE entry->>'photo' <> '' AND entry->>'photo' IS NOT NULL
-
 
 const run = async () => {
   const { conn } = await db.conn.promise()
