@@ -11,8 +11,11 @@ const Contact = {
   ...require('../../../lib/models/Contact/manipulate'),
   ...require('../../../lib/models/Contact/get'),
 }
+const EmailCampaign = {
+  ...require('../../../lib/models/Email/campaign/create'),
+  ...require('../../../lib/models/Email/campaign/get'),
+}
 const Context = require('../../../lib/models/Context')
-const EmailCampaign = require('../../../lib/models/Email/campaign/create')
 // const sql = require('../../../lib/utils/sql')
 
 const BrandHelper = require('../brand/helper')
@@ -23,6 +26,8 @@ const { createContext, handleJobs } = require('../helper')
 
 const BIRTHDAY = moment.utc().add(3, 'days').startOf('day').add(-20, 'years')
 let brand
+
+const DAY = 86400000
 
 async function setup() {
   const user = await UserHelper.TestUser()
@@ -113,22 +118,28 @@ const testDueTrigger = async () => {
   const trigger = await createTrigger()
   const due = await Trigger.getDueTriggers()
 
-  // console.log(await sql.select('SELECT * FROM analytics.calendar'))
-  // console.log(await sql.select('SELECT * FROM triggers_due'))
-  // console.log(await sql.select(`
-  //   SELECT
-  //     t.*,
-  //     'contact' AS trigger_object_type,
-  //     c.object_type,
-  //     c.next_occurence + t.wait_for AS timestamp,
-  //     c.next_occurence + t.wait_for - interval '3 days' AS due_at
-  //   FROM
-  //     triggers AS t
-  //     JOIN analytics.calendar AS c
-  //       ON t.contact = c.contact
-  // `))
-
   expect(due).to.have.members([trigger.id])
+}
+
+const testExecuteTrigger = async () => {
+  const user = await UserHelper.TestUser()
+  const { id } = await createTrigger()
+  await Trigger.executeDue()
+  await handleJobs()
+
+  const trigger = await Trigger.get(id)
+  expect(trigger.executed_at).not.be.null
+
+  if (!trigger.campaign) {
+    throw new Error('Trigger should have a campaign!')
+  }
+
+  const campaign = await EmailCampaign.get(trigger.campaign)
+
+  const actual = moment(campaign.due_at * 1000).tz(user.timezone)
+  const expected = BIRTHDAY.clone().year(moment().year()).add(12, 'hours').tz(user.timezone).startOf('day').add(10, 'hours')
+
+  expect(campaign.due_at, `Expected "${actual.format()}" to be equal "${expected.format()}" which is the same day as "${BIRTHDAY.format()}"`).to.be.eq(expected.unix())
 }
 
 describe('Trigger', () => {
@@ -137,4 +148,5 @@ describe('Trigger', () => {
 
   it('should create a trigger successfully', createTrigger)
   it('should identify due tiggers', testDueTrigger)
+  it('should execute triggers 3 days before due', testExecuteTrigger)
 })
