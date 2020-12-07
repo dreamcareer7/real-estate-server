@@ -1,7 +1,7 @@
 SELECT
     'google_credential' AS type,
     google_credentials.*,
-    (SELECT ARRAY( SELECT id FROM users_jobs WHERE google_credential = google_credentials.id AND job_name <> 'gmail_query' )) AS jobs
+    (SELECT ARRAY( SELECT id FROM users_jobs WHERE google_credential = google_credentials.id AND recurrence IS TRUE )) AS jobs
 FROM
     google_credentials
 JOIN 
