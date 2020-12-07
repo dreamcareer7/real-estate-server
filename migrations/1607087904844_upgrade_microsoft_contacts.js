@@ -11,6 +11,13 @@ const migrations = [
   'UPDATE microsoft_contacts SET photo = data->>\'photo\'',
   'UPDATE microsoft_contacts SET processed_photo = TRUE WHERE photo IS NOT NULL',
 
+
+  'ALTER TABLE google_contacts ADD COLUMN processed_photo BOOLEAN DEFAULT FALSE',
+  'ALTER TABLE google_contacts ADD COLUMN photo TEXT DEFAULT NULL',
+  
+  'UPDATE google_contacts SET photo = entry->>\'photo\'',
+  'UPDATE google_contacts SET processed_photo = TRUE WHERE photo IS NOT NULL',
+
   'COMMIT'
 ]
 
