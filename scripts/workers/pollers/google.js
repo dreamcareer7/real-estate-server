@@ -21,6 +21,12 @@ poll({
 })
 
 poll({
+  fn: GoogleWorkers.Contacts.syncContactsAvatars,
+  name: 'GoogleWorkers.Contacts.syncContactsAvatars',
+  wait: 60000
+})
+
+poll({
   fn: GoogleWorkers.Gmail.syncDue,
   name: 'GoogleWorkers.Gmail.syncDue',
   wait: 60000

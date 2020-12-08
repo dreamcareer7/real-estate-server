@@ -102,10 +102,23 @@ async function deleteById() {
   const before = await UsersJob.get(id)
   expect(before.deleted_at).to.be.equal(null)
 
-  await UsersJob.deletebyId(id)
+  await UsersJob.deleteById(id)
 
   const after = await UsersJob.get(id)
   expect(after.deleted_at).to.not.be.equal(null)
+}
+
+async function restoreById() {
+  const id = await create()
+
+  const before = await UsersJob.get(id)
+  expect(before.deleted_at).to.be.equal(null)
+
+  await UsersJob.deleteById(id)
+  await UsersJob.restoreById(id)
+
+  const after = await UsersJob.get(id)
+  expect(after.deleted_at).to.be.equal(null)
 }
 
 
@@ -117,4 +130,5 @@ describe('Users Jobs - Google', () => {
   it('should return a record by find method', find)
   it('should update a record\'s status by id', updateStatus)
   it('should delete a record by id', deleteById)
+  it('should restore a record by id', restoreById)
 })
