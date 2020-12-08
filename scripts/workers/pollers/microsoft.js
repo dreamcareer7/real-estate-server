@@ -15,8 +15,8 @@ poll({
 })
 
 poll({
-  fn: MicrosoftWorker.Contacts.syncContactsAvatars,
-  name: 'MicrosoftWorker.Contacts.syncContactsAvatars',
+  fn: MicrosoftWorker.Contacts.syncAvatars,
+  name: 'MicrosoftWorker.Contacts.syncAvatars',
   wait: 60000
 })
 
