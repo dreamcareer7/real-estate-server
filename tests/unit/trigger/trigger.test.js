@@ -6,6 +6,8 @@ const Trigger = {
   ...require('../../../lib/models/Trigger/create'),
   ...require('../../../lib/models/Trigger/due'),
   ...require('../../../lib/models/Trigger/get'),
+  ...require('../../../lib/models/Trigger/filter'),
+  ...require('../../../lib/models/Trigger/delete'),
 }
 const Contact = {
   ...require('../../../lib/models/Contact/manipulate'),
@@ -15,8 +17,9 @@ const EmailCampaign = {
   ...require('../../../lib/models/Email/campaign/create'),
   ...require('../../../lib/models/Email/campaign/get'),
 }
+const Orm = require('../../../lib/models/Orm/context')
 const Context = require('../../../lib/models/Context')
-// const sql = require('../../../lib/utils/sql')
+const sql = require('../../../lib/utils/sql')
 
 const BrandHelper = require('../brand/helper')
 const { attributes } = require('../contact/helper')
@@ -86,7 +89,11 @@ async function createCampaign() {
   return id
 }
 
-const createTrigger = async () => {
+/**
+ * @param {Partial<import('../../../lib/models/Trigger/trigger').ITriggerInput>} triggerProps 
+ * @returns {Promise<import('../../../lib/models/Trigger/trigger').IStoredTrigger & { trigger_object_type: 'contact' }>}
+ */
+const createTrigger = async (triggerProps = {}) => {
   const user = await UserHelper.TestUser()
   const campaign_id = await createCampaign()
   const contact = await createContact()
@@ -101,7 +108,8 @@ const createTrigger = async () => {
     campaign: campaign_id,
     contact: contact.id,
     wait_for: -86400,
-    time: '10:00:00'
+    time: '10:00:00',
+    ...triggerProps
   }
 
   const ids = await Trigger.create([trigger_data])
@@ -134,10 +142,43 @@ const testExecuteTrigger = async () => {
 
   const campaign = await EmailCampaign.get(trigger.campaign)
 
+  if (!campaign.due_at) {
+    throw new Error('Trigger\'s campaign should have a due date!')
+  }
+
   const actual = moment(campaign.due_at * 1000).tz(user.timezone)
   const expected = BIRTHDAY.clone().year(moment().year()).add(12, 'hours').tz(user.timezone).startOf('day').add(-1, 'day').add(10, 'hours')
 
   expect(campaign.due_at, `Expected "${actual.format()}" to be equal "${expected.format()}" which is the same day as "${BIRTHDAY.format()}"`).to.be.eq(expected.unix())
+
+  return { trigger, campaign }
+}
+
+const testExecuteRecurringTrigger = async () => {
+  const user = await UserHelper.TestUser()
+  const trigger = await createTrigger({ recurring: true })
+
+  Orm.setEnabledAssociations(['contact.triggers'])
+  const { triggers: triggersBeforeExecute } = await Contact.get(trigger.contact)
+  expect(triggersBeforeExecute).to.have.members([trigger.id])
+
+  await Trigger.executeDue()
+  await handleJobs()
+
+  const contactTriggers = await Trigger.filter({ contacts: [ trigger.contact ] })
+  expect(contactTriggers).to.have.length(2)
+
+  const { triggers: triggersAfterExecute } = await Contact.get(trigger.contact)
+  expect(triggersAfterExecute).to.have.members([ trigger.id ])
+}
+
+const testDeleteExecutedTrigger = async () => {
+  const { trigger } = await testExecuteTrigger()
+
+  await Trigger.delete([trigger.id], trigger.user)
+
+  const campaign = await EmailCampaign.get(trigger.campaign)
+  expect(campaign.deleted_at).not.be.null
 }
 
 describe('Trigger', () => {
@@ -147,4 +188,6 @@ describe('Trigger', () => {
   it('should create a trigger successfully', createTrigger)
   it('should identify due tiggers', testDueTrigger)
   it('should execute triggers 3 days before due', testExecuteTrigger)
+  it('should delete associated campaign if not executed yet', testDeleteExecutedTrigger)
+  it('should create another trigger after recurring trigger is executed', testExecuteRecurringTrigger)
 })
