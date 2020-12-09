@@ -155,7 +155,6 @@ const testExecuteTrigger = async () => {
 }
 
 const testExecuteRecurringTrigger = async () => {
-  const user = await UserHelper.TestUser()
   const trigger = await createTrigger({ recurring: true })
 
   Orm.setEnabledAssociations(['contact.triggers'])
