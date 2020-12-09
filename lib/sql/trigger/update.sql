@@ -1,5 +1,6 @@
 UPDATE triggers
 SET
+  updated_at = NOW(),
   updated_within = $2,
   "user" = $3::uuid,
   event_type = $4,
@@ -10,4 +11,3 @@ SET
   campaign = $9
 WHERE
   id = $1::uuid
-  AND executed_at IS NULL
