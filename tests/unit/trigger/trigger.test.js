@@ -19,7 +19,7 @@ const EmailCampaign = {
 }
 const Orm = require('../../../lib/models/Orm/context')
 const Context = require('../../../lib/models/Context')
-const sql = require('../../../lib/utils/sql')
+// const sql = require('../../../lib/utils/sql')
 
 const BrandHelper = require('../brand/helper')
 const { attributes } = require('../contact/helper')
