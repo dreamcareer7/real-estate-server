@@ -11,6 +11,7 @@ const BrandHelper = require('../brand/helper')
 
 const sql = require('../../../lib/utils/sql')
 
+const Orm = require('../../../lib/models/Orm/context')
 const Context = require('../../../lib/models/Context')
 const CrmTask = require('../../../lib/models/CRM/Task')
 const Notification = require('../../../lib/models/Notification')
@@ -57,6 +58,7 @@ async function expectEmailWithSubject(subject) {
 }
 
 async function testAssignment() {
+  Orm.setEnabledAssociations(['crm_task.assignees'])
   const task = await CrmTask.create(
     {
       created_by: userA.id,
@@ -99,6 +101,7 @@ async function testAssignment() {
 }
 
 async function testUpdateAssignedTask() {
+  Orm.setEnabledAssociations(['crm_task.assignees'])
   let task = await CrmTask.create(
     {
       created_by: userB.id,
@@ -158,6 +161,7 @@ async function testUpdateAssignedTask() {
 }
 
 async function testTaskIsDue() {
+  Orm.setEnabledAssociations(['crm_task.assignees'])
   const task = await CrmTask.create(
     {
       created_by: userA.id,
@@ -192,6 +196,7 @@ async function testTaskIsDue() {
 }
 
 async function testReminderIsDue() {
+  Orm.setEnabledAssociations(['crm_task.assignees'])
   const task = await CrmTask.create(
     {
       created_by: userA.id,

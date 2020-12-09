@@ -1,7 +1,6 @@
 UPDATE triggers
 SET
   updated_within = $2,
-  updated_at = NOW(),
   "user" = $3::uuid,
   event_type = $4,
   wait_for = $5,
