@@ -87,7 +87,7 @@ declare interface IContact extends IContactBase {
   deals?: UUID[];
   lists?: UUID[];
   flows?: UUID[];
-  summary: UUID;
+  triggers?: UUID[];
 }
 
 declare interface IContactAttribute {
