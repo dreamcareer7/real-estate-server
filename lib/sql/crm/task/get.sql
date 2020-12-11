@@ -17,7 +17,8 @@ SELECT
     FROM
       crm_tasks_assignees
     WHERE
-      crm_task = crm_tasks.id
+      $2 && ARRAY['crm_task.assignees']
+      AND crm_task = crm_tasks.id
       AND deleted_at IS NULL
       AND EXISTS (
         SELECT
@@ -40,7 +41,14 @@ SELECT
     LIMIT $3
   ) as associations,
   (
-    get_files_by_role('CrmTask', crm_tasks.id)
+    SELECT
+      array_agg(id)
+    FROM
+      role_files
+    WHERE
+      $2 @> ARRAY['crm_task.files']
+      AND "role" = 'CrmTask'
+      AND role_id = crm_tasks.id
   ) as files,
   (
     SELECT
