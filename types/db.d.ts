@@ -396,6 +396,8 @@ declare type TDbSqlAddress =
   | 'google/credential/update_gmail_profile'
   | 'google/credential/update_last_daily_sync'
   | 'google/credential/update_messages_sync_history_id'
+  | 'google/credential/update_contact_groups_sync_token'
+  | 'google/credential/update_contacts_sync_token'
   | 'google/credential/update_profile'
   | 'google/credential/update_rechat_gcalendar'
   | 'google/credential/update_refresh_token'

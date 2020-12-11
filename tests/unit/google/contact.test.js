@@ -82,10 +82,11 @@ async function addContactGroup() {
 
   const contactGroups = []
 
-  for (const record of google_contact_groups_offline) {
+  for (const group of google_contact_groups_offline) {
     contactGroups.push({
-      entry_id: record.entry_id,
-      entry: record.entry
+      resource_id: group.resourceName,
+      resource_name: group.name,
+      resource: group
     })
   }
 
@@ -101,10 +102,11 @@ async function getRefinedContactGroups() {
 
   const contactGroups = []
 
-  for (const record of google_contact_groups_offline) {
+  for (const group of google_contact_groups_offline) {
     contactGroups.push({
-      entry_id: record.entry_id,
-      entry: record.entry
+      resource_id: group.resourceName,
+      resource_name: group.name,
+      resource: group
     })
   }
 
@@ -114,11 +116,9 @@ async function getRefinedContactGroups() {
 
   const result = await GoogleContact.getRefinedContactGroups(googleContacts[0]['google_credential'])
 
-  const arr = ['Coworkers', 'Contacts']
-
-  for ( const key in result ) {
-    expect(arr.includes(result[key])).to.be.equal(true)
-  }
+  expect(result['contactGroups/29feafa40ce31955']).to.be.equal('label custom')
+  expect(result['contactGroups/22f91a7f0c902036']).to.be.equal('labelx')
+  expect(result['contactGroups/friends']).to.be.equal('friends')
 }
 
 

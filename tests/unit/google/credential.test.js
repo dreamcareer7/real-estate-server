@@ -229,6 +229,30 @@ async function updateMessagesSyncHistoryId() {
   expect(updatedCredential.watcher_exp).to.be.equal(null)
 }
 
+async function updateContactGroupsSyncToken() {
+  const createdCredential = await create()
+
+  const syncToken = 'syncToken'
+  await GoogleCredential.updateContactGroupsSyncToken(createdCredential.id, syncToken)
+
+  const updatedCredential = await GoogleCredential.get(createdCredential.id)
+
+  expect(createdCredential.id).to.be.equal(updatedCredential.id)
+  expect(updatedCredential.cgroups_sync_token).to.be.equal(syncToken)
+}
+
+async function updateContactsSyncToken() {
+  const createdCredential = await create()
+
+  const syncToken = 'syncToken'
+  await GoogleCredential.updateContactsSyncToken(createdCredential.id, syncToken)
+
+  const updatedCredential = await GoogleCredential.get(createdCredential.id)
+
+  expect(createdCredential.id).to.be.equal(updatedCredential.id)
+  expect(updatedCredential.contacts_sync_token).to.be.equal(syncToken)
+}
+
 async function updateMessagesSyncHistoryIdWithThirdParam() {
   const createdCredential = await create()
 
@@ -301,6 +325,8 @@ describe('Google', () => {
     it('should update google-credential\'s gmail-profile', updateGmailProfile)
     it('should update google-credential\'s messages sync_token', updateMessagesSyncHistoryId)
     it('should update google-credential\'s messages sync_token', updateMessagesSyncHistoryIdWithThirdParam)
+    it('should update google-credential\'s contact groups sync_token', updateContactGroupsSyncToken)
+    it('should update google-credential\'s contacts sync_token', updateContactsSyncToken)
 
     it('should update google-credential\'s rechat-google-Calendar', updateRechatGoogleCalendar)
     it('should update google-credential\'s rechat-google-Calendar as null', resetRechatGoogleCalendar)
