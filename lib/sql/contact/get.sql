@@ -103,14 +103,23 @@ SELECT
   ) as flows,
   (
     SELECT
-      array_agg(triggers.id)
+      array_agg(t.id)
     FROM
-      triggers
+      (
+        SELECT DISTINCT ON (event_type)
+          id
+        FROM
+          triggers
+        WHERE
+          deleted_at IS NULL
+          AND (executed_at IS NULL OR (executed_at > NOW() - interval '3 days'))
+          AND contact = contacts.id
+          AND $3::text[] @> ARRAY['contact.triggers']
+        ORDER BY
+          event_type, executed_at
+      ) AS t
     WHERE
-      triggers.deleted_at IS NULL
-      AND triggers.executed_at IS NULL
-      AND triggers.contact = contacts.id
-      AND $3::text[] @> ARRAY['contact.triggers']
+      $3::text[] @> ARRAY['contact.triggers']
   ) as triggers,
   (
     SELECT
