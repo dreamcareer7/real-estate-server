@@ -4,7 +4,7 @@ const migrations = [
   'BEGIN',
   'ALTER TABLE triggers ADD COLUMN effective_at timestamptz NOT NULL DEFAULT now()',
 
-  `DROP VIEW IF EXISTS triggers_due`,
+  'DROP VIEW IF EXISTS triggers_due',
   `CREATE OR REPLACE VIEW triggers_due AS (
     (
       SELECT
