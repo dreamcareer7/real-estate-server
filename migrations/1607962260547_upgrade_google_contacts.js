@@ -6,8 +6,10 @@ const migrations = [
 
   // 'ALTER TABLE google_contacts DROP CONSTRAINT IF EXISTS google_contacts_google_credential_entry_id_key',
 
+  'ALTER TABLE google_contacts ADD COLUMN IF NOT EXISTS etag        TEXT',
   'ALTER TABLE google_contacts ADD COLUMN IF NOT EXISTS resource_id TEXT',
   'ALTER TABLE google_contacts ADD COLUMN IF NOT EXISTS resource    JSONB',
+  'ALTER TABLE google_contacts ADD COLUMN IF NOT EXISTS other       BOOLEAN DEFAULT TRUE',
 
   // 'ALTER TABLE google_contacts ADD CONSTRAINT IF NOT EXISTS gcontacts_gcredential_resource_id UNIQUE (google_credential, resource_id)',
 

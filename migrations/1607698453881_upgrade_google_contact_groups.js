@@ -17,6 +17,7 @@ const migrations = [
 
   'ALTER TABLE google_credentials ADD COLUMN IF NOT EXISTS cgroups_sync_token TEXT',
   'ALTER TABLE google_credentials ADD COLUMN IF NOT EXISTS contacts_sync_token TEXT',
+  'ALTER TABLE google_credentials ADD COLUMN IF NOT EXISTS other_contacts_sync_token TEXT',
 
 
   'COMMIT'
