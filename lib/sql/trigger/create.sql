@@ -11,6 +11,7 @@ INSERT INTO triggers (
   "time",
   "action",
   recurring,
+  effective_at,
 
   contact,
   deal,
@@ -34,6 +35,7 @@ SELECT
   "time",
   "action",
   COALESCE(recurring, FALSE) AS recurring,
+  COALESCE(effective_at, NOW()) AS effective_at,
 
   contact,
   deal,
