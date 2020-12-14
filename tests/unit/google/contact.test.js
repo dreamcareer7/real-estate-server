@@ -77,23 +77,22 @@ async function getGCredentialContactsNum() {
   expect(result[0]['count']).to.be.equal(googleContacts.length)
 }
 
-async function addContactGroup() {
+async function addContactGroups() {
   const { credential } = await createGoogleMessages(user, brand)
 
   const contactGroups = []
 
   for (const group of google_contact_groups_offline) {
     contactGroups.push({
+      google_credential: credential.id,
       resource_id: group.resourceName,
       resource_name: group.name,
-      resource: group
+      resource: JSON.stringify(group)
     })
   }
 
-  for (const contactGroup of contactGroups) {
-    const result = await GoogleContact.addContactGroup(credential, contactGroup)
-    expect(result).to.be.uuid
-  }
+  const result = await GoogleContact.addContactGroups(contactGroups)
+  expect(contactGroups.length).to.be.equal(result.length)
 }
 
 async function getRefinedContactGroups() {
@@ -104,15 +103,14 @@ async function getRefinedContactGroups() {
 
   for (const group of google_contact_groups_offline) {
     contactGroups.push({
+      google_credential: credential.id,
       resource_id: group.resourceName,
       resource_name: group.name,
-      resource: group
+      resource: JSON.stringify(group)
     })
   }
 
-  for (const contactGroup of contactGroups) {
-    await GoogleContact.addContactGroup(credential, contactGroup)
-  }
+  await GoogleContact.addContactGroups(contactGroups)
 
   const result = await GoogleContact.getRefinedContactGroups(googleContacts[0]['google_credential'])
 
@@ -132,7 +130,7 @@ describe('Google', () => {
     it('should return google-contact by entry_id', getByEntryId)
     it('should handle failure of google-contact get by entry_id', getByEntryIdFailed)
     it('should return number of contacts of specific credential', getGCredentialContactsNum)
-    it('should handle add contact group', addContactGroup)
+    it('should handle add contact groups', addContactGroups)
     it('should return number of contacts of specific credential', getRefinedContactGroups)
   })
 })
