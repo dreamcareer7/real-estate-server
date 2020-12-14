@@ -36,7 +36,7 @@ async function create() {
   for (const createdGoogleContact of createdGoogleContacts) {
     expect(createdGoogleContact.google_credential).to.be.equal(credential.id)
 
-    const googleContact = await GoogleContact.get(createdGoogleContact.entry_id, createdGoogleContact.google_credential)
+    const googleContact = await GoogleContact.getByEntryId(createdGoogleContact.google_credential, createdGoogleContact.entry_id)
 
     expect(googleContact.type).to.be.equal('google_contact')
     expect(googleContact.google_credential).to.be.equal(createdGoogleContact.google_credential)
@@ -52,7 +52,7 @@ async function getByEntryId() {
 
   for (const gContact of googleContacts) {
 
-    const googleContact = await GoogleContact.get(gContact.entry_id, gContact.google_credential)
+    const googleContact = await GoogleContact.getByEntryId(gContact.google_credential, gContact.entry_id)
 
     expect(googleContact.type).to.be.equal('google_contact')
     expect(googleContact.google_credential).to.be.equal(gContact.google_credential)
@@ -64,7 +64,7 @@ async function getByEntryId() {
 async function getByEntryIdFailed() {
   const bad_id = user.id
 
-  const googleContact = await GoogleContact.get(bad_id, bad_id)
+  const googleContact = await GoogleContact.getByEntryId(bad_id, bad_id)
 
   expect(googleContact).to.be.equal(null)
 }

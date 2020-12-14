@@ -380,6 +380,7 @@ declare type TDbSqlAddress =
   | 'google/calendar_events/update_calendar'
   | 'google/contact/count'
   | 'google/contact/get'
+  | 'google/contact/get_by_entry_ids'
   | 'google/contact_group/get'
   | 'google/contact_group/get_by_credential'
   | 'google/contact_group/insert'
