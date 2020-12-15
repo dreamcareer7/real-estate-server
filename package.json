@@ -90,7 +90,7 @@
     "mkdirp": "^0.5.1",
     "mock-aws-s3": "^4.0.1",
     "moment": "^2.24.0",
-    "moment-timezone": "^0.5.31",
+    "moment-timezone": "^0.5.32",
     "node-uuid": "^1.4.8",
     "nodemailer": "^6.4.6",
     "numeral": "^1.5.3",

@@ -155,6 +155,7 @@ const testExecuteTrigger = async () => {
 }
 
 const testExecuteRecurringTrigger = async () => {
+  const user = await UserHelper.TestUser()
   const trigger = await createTrigger({ recurring: true })
 
   Orm.setEnabledAssociations(['contact.triggers'])
@@ -164,11 +165,15 @@ const testExecuteRecurringTrigger = async () => {
   await Trigger.executeDue()
   await handleJobs()
 
-  const contactTriggers = await Trigger.filter({ contacts: [ trigger.contact ] })
+  const contactTriggers = await Trigger.filter({ contacts: [ trigger.contact ], order: '-created_at' })
   expect(contactTriggers).to.have.length(2)
 
   const { triggers: triggersAfterExecute } = await Contact.get(trigger.contact)
   expect(triggersAfterExecute).to.have.members([ trigger.id ])
+
+  const clonedTrigger = await Trigger.get(contactTriggers[0])
+  const expected = BIRTHDAY.clone().year(moment().year()).add(12, 'hours').tz(user.timezone).startOf('day').add(-1, 'day').add(10, 'hours')
+  expect(clonedTrigger.effective_at).to.be.equal(expected.unix())
 }
 
 const testDeleteExecutedTrigger = async () => {
