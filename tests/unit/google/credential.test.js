@@ -262,20 +262,20 @@ async function updateOtherContactsSyncToken() {
   const updatedCredential = await GoogleCredential.get(createdCredential.id)
 
   expect(createdCredential.id).to.be.equal(updatedCredential.id)
-  expect(updatedCredential.contacts_sync_token).to.be.equal(syncToken)
+  expect(updatedCredential.other_contacts_sync_token).to.be.equal(syncToken)
 }
 
 async function updateMessagesSyncHistoryIdWithThirdParam() {
   const createdCredential = await create()
 
-  const syncToken   = 'syncToken'
+  const historyId   = 123456
   const watcher_exp = new Date().getTime()
-  await GoogleCredential.updateMessagesSyncHistoryId(createdCredential.id, syncToken, watcher_exp)
+  await GoogleCredential.updateMessagesSyncHistoryId(createdCredential.id, historyId, watcher_exp)
 
   const updatedCredential = await GoogleCredential.get(createdCredential.id)
 
   expect(createdCredential.id).to.be.equal(updatedCredential.id)
-  expect(updatedCredential.messages_sync_history_id).to.be.equal(syncToken)
+  expect(Number(updatedCredential.messages_sync_history_id)).to.be.equal(historyId)
   expect(Number(updatedCredential.watcher_exp)).to.be.equal(watcher_exp)
 }
 
