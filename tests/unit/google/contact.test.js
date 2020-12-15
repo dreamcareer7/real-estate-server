@@ -35,7 +35,7 @@ async function create() {
       etag: gContact.etag,
       resource_id: gContact.resource_id,
       resource: JSON.stringify(gContact),
-      other: false
+      parked: gContact.parked
     })
   }
 

@@ -1,6 +1,7 @@
 [
   {
     "etag": "%EhMFEEAHNwk+AQI9Cg0MCz8DNS4GGgQCAQcFIgxYb3lzeG03Q2k0az0=",
+    "parked": false,
     "resource_id": "people/c6630837791810714451",
     "entry_id": "5c0577d7081cfb53",
     "names": {
@@ -79,6 +80,7 @@
 
   {
     "etag": "%EhMFEEAHNwk+AQI9Cg0MCz8DNS4GGgQCAQcFIgxYb3lzeG03Q2k0az0=",
+    "parked": true,
     "resource_id": "people/c6630837791810714452",
     "entry_id": "5c0577d7081cfb54",
     "names": {
