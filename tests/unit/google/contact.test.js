@@ -28,7 +28,15 @@ async function create() {
   const records = []
 
   for (const gContact of google_contacts_offline) {
-    records.push({ google_credential: credential.id, entry_id: gContact.entry_id, entry: JSON.stringify(gContact.entry) })
+    records.push({
+      google_credential: credential.id,
+      entry_id: gContact.entry_id,
+
+      etag: gContact.etag,
+      resource_id: gContact.resource_id,
+      resource: JSON.stringify(gContact),
+      other: false
+    })
   }
 
   const createdGoogleContacts = await GoogleContact.create(records)
@@ -36,57 +44,32 @@ async function create() {
   for (const createdGoogleContact of createdGoogleContacts) {
     expect(createdGoogleContact.google_credential).to.be.equal(credential.id)
 
-    const googleContact = await GoogleContact.getByEntryId(createdGoogleContact.google_credential, createdGoogleContact.entry_id)
+    const googleContact = await GoogleContact.getByResourceId(createdGoogleContact.google_credential, createdGoogleContact.resource_id)
 
     expect(googleContact.type).to.be.equal('google_contact')
     expect(googleContact.google_credential).to.be.equal(createdGoogleContact.google_credential)
-    expect(googleContact.entry_id).to.be.equal(createdGoogleContact.entry_id)
-    expect(googleContact.entry.names.fullName).to.be.equal(createdGoogleContact.entry.names.fullName)
   }
 
   return createdGoogleContacts
-}
-
-async function getByEntryId() {
-  const googleContacts = await create()
-
-  for (const gContact of googleContacts) {
-
-    const googleContact = await GoogleContact.getByEntryId(gContact.google_credential, gContact.entry_id)
-
-    expect(googleContact.type).to.be.equal('google_contact')
-    expect(googleContact.google_credential).to.be.equal(gContact.google_credential)
-    expect(googleContact.entry_id).to.be.equal(gContact.entry_id)
-    expect(googleContact.entry.names.fullName).to.be.equal(gContact.entry.names.fullName)
-  }
-}
-
-async function getByEntryIdFailed() {
-  const bad_id = user.id
-
-  const googleContact = await GoogleContact.getByEntryId(bad_id, bad_id)
-
-  expect(googleContact).to.be.equal(null)
 }
 
 async function getByResourceId() {
   const googleContacts = await create()
 
   for (const gContact of googleContacts) {
-
     const googleContact = await GoogleContact.getByResourceId(gContact.google_credential, gContact.resource_id)
 
     expect(googleContact.type).to.be.equal('google_contact')
     expect(googleContact.google_credential).to.be.equal(gContact.google_credential)
     expect(googleContact.resource_id).to.be.equal(gContact.resource_id)
-    expect(googleContact.entry.names.fullName).to.be.equal(gContact.entry.names.fullName)
+    expect(googleContact.resource.names.fullName).to.be.equal(gContact.resource.names.fullName)
   }
 }
 
-async function getGCredentialContactsNum() {
+async function getContactsNum() {
   const googleContacts = await create()
 
-  const result = await GoogleContact.getGCredentialContactsNum(googleContacts[0]['google_credential'])
+  const result = await GoogleContact.getContactsNum(googleContacts[0]['google_credential'])
 
   expect(result[0]['count']).to.be.equal(googleContacts.length)
 }
@@ -134,17 +117,14 @@ async function getRefinedContactGroups() {
 }
 
 
-
 describe('Google', () => {
   describe('Google Contacts', () => {
     createContext()
     beforeEach(setup)
 
     it('should create some google-contacts', create)
-    it('should return google-contact by entry_id', getByEntryId)
-    it('should handle failure of google-contact get by entry_id', getByEntryIdFailed)
     it('should return google-contact by resource_id', getByResourceId)
-    it('should return number of contacts of specific credential', getGCredentialContactsNum)
+    it('should return number of contacts of specific credential', getContactsNum)
     it('should handle add contact groups', addContactGroups)
     it('should return a refined object of contact groups', getRefinedContactGroups)
   })
