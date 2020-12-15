@@ -131,6 +131,6 @@ describe('Google', () => {
     it('should handle failure of google-contact get by entry_id', getByEntryIdFailed)
     it('should return number of contacts of specific credential', getGCredentialContactsNum)
     it('should handle add contact groups', addContactGroups)
-    it('should return number of contacts of specific credential', getRefinedContactGroups)
+    it('should return a refined object of contact groups', getRefinedContactGroups)
   })
 })

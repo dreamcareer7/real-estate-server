@@ -1,5 +1,5 @@
 SELECT
-  google_contacts.*, 'google_contacts' AS type
+  google_contacts.*, 'google_contact' AS type
 FROM
   google_contacts
 JOIN 
