@@ -275,7 +275,7 @@ async function updateMessagesSyncHistoryIdWithThirdParam() {
   const updatedCredential = await GoogleCredential.get(createdCredential.id)
 
   expect(createdCredential.id).to.be.equal(updatedCredential.id)
-  expect(updatedCredential.messages_sync_history_id).to.be.equal(historyId)
+  expect(Number(updatedCredential.messages_sync_history_id)).to.be.equal(historyId)
   expect(Number(updatedCredential.watcher_exp)).to.be.equal(watcher_exp)
 }
 
