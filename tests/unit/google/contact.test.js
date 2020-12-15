@@ -146,6 +146,6 @@ describe('Google', () => {
     it('should return google-contact by resource_id', getByResourceId)
     it('should return number of contacts of specific credential', getGCredentialContactsNum)
     it('should handle add contact groups', addContactGroups)
-    it('should return number of contacts of specific credential', getRefinedContactGroups)
+    it('should return a refined object of contact groups', getRefinedContactGroups)
   })
 })

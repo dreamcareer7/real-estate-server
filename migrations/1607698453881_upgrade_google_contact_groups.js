@@ -10,14 +10,14 @@ const migrations = [
   'ALTER TABLE google_contact_groups RENAME COLUMN entry_id TO resource_id',
   'ALTER TABLE google_contact_groups RENAME COLUMN entry    TO resource',
 
-  'ALTER TABLE google_contact_groups ADD COLUMN IF NOT EXISTS resource_name TEXT',
+  'ALTER TABLE google_contact_groups ADD COLUMN resource_name TEXT',
 
-  'ALTER TABLE google_contact_groups ADD CONSTRAINT IF NOT EXISTS gcgroups_gcredential_resource_id UNIQUE (google_credential, resource_id)',
+  'ALTER TABLE google_contact_groups ADD CONSTRAINT gcgroups_gcredential_resource_id UNIQUE (google_credential, resource_id)',
 
 
-  'ALTER TABLE google_credentials ADD COLUMN IF NOT EXISTS cgroups_sync_token TEXT',
-  'ALTER TABLE google_credentials ADD COLUMN IF NOT EXISTS contacts_sync_token TEXT',
-  'ALTER TABLE google_credentials ADD COLUMN IF NOT EXISTS other_contacts_sync_token TEXT',
+  'ALTER TABLE google_credentials ADD COLUMN cgroups_sync_token TEXT',
+  'ALTER TABLE google_credentials ADD COLUMN contacts_sync_token TEXT',
+  'ALTER TABLE google_credentials ADD COLUMN other_contacts_sync_token TEXT',
 
 
   'COMMIT'
