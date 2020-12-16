@@ -548,12 +548,12 @@ async function testAddressSummaryWithoutPrimary() {
 async function updateParkedProperty() {
   const ids = await Contact.create(
     [{
-        user: user.id,
-        attributes: [
-          { attribute_type: 'first_name', text: 'parked_contactd' },
-          { attribute_type: 'tag', text: 'Tag1' }
-        ],
-        parked: true
+      user: user.id,
+      attributes: [
+        { attribute_type: 'first_name', text: 'parked_contactd' },
+        { attribute_type: 'tag', text: 'Tag1' }
+      ],
+      parked: true
     }],
     user.id,
     brand.id,
