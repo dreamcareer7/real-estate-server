@@ -36,7 +36,7 @@
   "license": "ISC",
   "dependencies": {
     "@microsoft/microsoft-graph-client": "^2.0.0",
-    "@rechat/squel": "^5.14.1",
+    "@rechat/squel": "^5.14.2",
     "amanda": "^1.0.1",
     "amqplib": "^0.5.5",
     "async": "^1.5.2",

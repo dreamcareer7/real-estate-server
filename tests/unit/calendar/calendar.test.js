@@ -251,7 +251,7 @@ function testContactEvent(event_type, type_label) {
       attributes: attributes({
         first_name: 'John',
         last_name: 'Doe',
-        [event_type]: moment().add(10, 'days').year(1800).unix()
+        [event_type]: moment.utc().startOf('day').add(10, 'days').add(12, 'hours').year(1800).unix()
       }),
     }], user.id, brand.id)
   

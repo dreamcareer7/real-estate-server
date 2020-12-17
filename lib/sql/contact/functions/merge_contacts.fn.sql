@@ -53,7 +53,6 @@ AS $$
       isp.index_offset,
       ca.text,
       ca.date,
-      ca.number,
       ca.index,
       ca.label,
       COALESCE(attr_primary.is_primary, FALSE) AS is_primary,
@@ -107,17 +106,6 @@ AS $$
         data_type = 'date'
       ORDER BY
         attribute_def, date, index, label, is_parent_attr desc, is_primary desc
-    )
-    UNION ALL
-    (
-      SELECT DISTINCT ON (attribute_def, number, index, label)
-        id, index_offset, is_primary
-      FROM
-        attrs
-      WHERE
-        data_type = 'number'
-      ORDER BY
-        attribute_def, number, index, label, is_parent_attr desc, is_primary desc
     )
   )
   UPDATE
