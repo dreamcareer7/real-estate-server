@@ -10,11 +10,6 @@ module.exports = {
     default_value: null,
     data_type: 'Date',
     format: null,
-    required: [
-      'Selling',
-      'Resale'
-    ],
-    optional: [],
     triggers_brokerwolf: true,
     order: 1
   },
@@ -26,11 +21,6 @@ module.exports = {
     default_value: null,
     data_type: 'Text',
     preffered_source: 'Provided',
-    required: [
-      'Selling',
-      'Resale'
-    ],
-    optional: [],
     order: 2,
     triggers_brokerwolf: true
   }

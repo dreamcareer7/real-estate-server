@@ -169,9 +169,19 @@ const removeHostname = cb => {
 }
 
 const addDateContext = cb => {
-  const { list_date } = contexts
+  const list_date = {
+    ...contexts.list_date,
+    property_types: [
+      {
+        property_type: results.brand.addPropertyType.data.id,
+        is_required: true,
+        when_buying: true
+      }
+    ]
+  }
+
   return frisby.create('add a context definition to a brand')
-    .post(`/brands/${brand_id}/contexts`, list_date)
+    .post(`/brands/${brand_id}/contexts?associations[]=brand_context.property_types`, list_date)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
@@ -183,7 +193,7 @@ const addDateContext = cb => {
 const addTextContext = cb => {
   const { contract_status }  = contexts
   return frisby.create('add a context definition to a brand')
-    .post(`/brands/${brand_id}/contexts`, contract_status)
+    .post(`/brands/${brand_id}/contexts?associations[]=brand_context.property_types`, contract_status)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
@@ -204,11 +214,20 @@ const getContexts = cb => {
 }
 
 const updateContext = cb => {
-  const data = results.brand.addDateContext.data
-  data.label = 'Updated Context'
+  const data = {
+    ...results.brand.addDateContext.data,
+    label: 'Updated Context',
+    property_types: [
+      {
+        property_type: results.brand.addPropertyType.data.id,
+        is_required: false,
+        when_selling: true
+      }
+    ]
+  }
 
   return frisby.create('update a context')
-    .put(`/brands/${brand_id}/contexts/${data.id}`, data)
+    .put(`/brands/${brand_id}/contexts/${data.id}?associations[]=brand_context.property_types`, data)
     .after(cb)
     .expectStatus(200)
 }
@@ -236,7 +255,7 @@ const addChecklist = cb => {
     .post(`/brands/${brand_id}/checklists`, {
       title: 'Checklist 1',
       deal_type: 'Buying',
-      property_type: 'Resale',
+      property_type: results.brand.addPropertyType.data.id,
       order: 2,
       is_terminatable: true,
       is_deactivatable: true,
@@ -776,12 +795,14 @@ module.exports = {
   deleteRole,
 
   addHostname,
+  addPropertyType,
   addChecklist,
   updateChecklist,
   addTask,
   updateTask,
   sortChecklist,
   getChecklists,
+  getPropertyTypes,
   deleteTask,
   deleteChecklist,
   getByHostname,
@@ -816,9 +837,6 @@ module.exports = {
   updateStatus,
   getStatuses,
   deleteStatus,
-
-  addPropertyType,
-  getPropertyTypes,
 
   createAsset,
   getAssets,

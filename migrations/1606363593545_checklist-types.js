@@ -19,6 +19,9 @@ const migrations = [
     FROM brands_deal_statuses
     ORDER BY brand`,
 
+  /*
+   * Deals
+   */
   'ALTER TABLE deals ADD dynamic_property_type uuid REFERENCES brands_property_types(id)',
 
   `UPDATE deals SET dynamic_property_type = (
@@ -36,6 +39,9 @@ const migrations = [
 
   'ALTER TABLE deals RENAME dynamic_property_type TO property_type',
 
+  /*
+   * Contexts
+   */
   `CREATE TABLE brands_contexts_property_types (
     id uuid NOT NULL PRIMARY KEY DEFAULT uuid_generate_v4(),
     brand uuid NOT NULL REFERENCES brands(id),
@@ -94,6 +100,9 @@ JOIN brands_property_types bpt
   'ALTER TABLE brands_contexts DROP required',
   'ALTER TABLE brands_contexts DROP optional',
 
+  /*
+   * Checklists
+   */
   'ALTER TABLE brands_checklists ADD COLUMN dynamic_property_type uuid REFERENCES brands_property_types(id)',
 
   `UPDATE brands_checklists SET dynamic_property_type = (
@@ -107,6 +116,9 @@ JOIN brands_property_types bpt
 
   'ALTER TABLE brands_checklists ALTER dynamic_property_type SET NOT NULL',
 
+  /*
+   * View
+   */
   'DROP VIEW analytics.mini_deals',
   'ALTER TABLE brands_checklists DROP property_type',
   'ALTER TABLE brands_checklists RENAME dynamic_property_type TO property_type',
