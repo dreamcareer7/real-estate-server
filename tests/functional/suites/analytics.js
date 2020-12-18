@@ -10,7 +10,7 @@ const calendarObj = require('./expected_objects/calendar.js')
 let defs
 
 registerSuite('listing', ['getListing'])
-registerSuite('brand', ['createParent', 'create'])
+registerSuite('brand', ['createParent', 'create', 'addPropertyType'])
 registerSuite('user', ['upgradeToAgentWithEmail'])
 
 function prepareContactRequest(defs) {
@@ -46,6 +46,7 @@ function getAttributeDefs(cb) {
 
 const createDeal = (cb) => {
   deal.listing = results.listing.getListing.data.id
+  deal.property_type = results.brand.addPropertyType.data.id
 
   return frisby.create('create a deal')
     .post('/deals', deal)
