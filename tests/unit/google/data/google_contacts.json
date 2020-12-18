@@ -1,10 +1,159 @@
 [
   {
-    "entry_id": "1110831708cc501e",
-    "entry": {"names": {"name": "Yaber Three", "fullName": "Yaber Three", "givenName": "Yaber", "familyName": "Three"}, "photo": "", "phones": [], "emailes": [{"label": "other", "address": "yaber-three@gmail.com"}], "entry_id": "1110831708cc501e", "addresses": [], "organization": {}, "groupMembership": "http://www.google.com/m8/feeds/groups/yaber.azimi%40gmail.com/base/6"}
+    "etag": "%EhMFEEAHNwk+AQI9Cg0MCz8DNS4GGgQCAQcFIgxYb3lzeG03Q2k0az0=",
+    "parked": false,
+    "resource_id": "people/c6630837791810714451",
+    "entry_id": "5c0577d7081cfb53",
+    "names": {
+      "displayName": "Matthew Perry Suffix",
+      "fullName": "Matthew Perry Suffix",
+      "familyName": "Perry",
+      "givenName": "Matthew",
+      "middleName": ""
+    },
+    "nickName": "nickname",
+    "photo": "https://lh3.googleusercontent.com/-aYVczmGKcxo/X8-ww3FoX_I/AAAAAAAAAAA/2ix4NpQg-s8VsZovPqVAS2ph-jh38gmcwCOQCEAE/s100/photo.jpg",
+    "birthday": "10/15/1980",
+    "website": "profile.com",
+    "organization": {
+      "jobTitle": "company",
+      "company": "job-title"
+    },
+    "note": "Notes v.1",
+    "phones": [
+      {
+        "value": "12345678",
+        "type": "home"
+      },
+      {
+        "value": "987654321",
+        "type": "work"
+      }
+    ],
+    "emailes": [
+      {
+        "value": "email-home@domain.com",
+        "type": "home"
+      },
+      {
+        "value": "email-work@domain.com",
+        "type": "work"
+      },
+      {
+        "value": "email-other@domain.com",
+        "type": "other"
+      },
+      {
+        "value": "email-custom@domain.com",
+        "type": "custom-label"
+      },
+      {
+        "value": "email@domain.com"
+      }
+    ],
+    "addresses": [
+      {
+        "streetAddress": "street address line",
+        "extendedAddress": "street address line 2",
+        "city": "city",
+        "postalCode": "POSTAL CODE",
+        "country": "NL",
+        "countryCode": "NL",
+        "type": "home"
+      }
+    ],
+    "memberships": [
+      {
+        "contactGroupId": "22f91a7f0c902036",
+        "contactGroupResourceName": "contactGroups/22f91a7f0c902036"
+      },
+      {
+        "contactGroupId": "29feafa40ce31955",
+        "contactGroupResourceName": "contactGroups/29feafa40ce31955"
+      },
+      {
+        "contactGroupId": "myContacts",
+        "contactGroupResourceName": "contactGroups/myContacts"
+      }
+    ]
   },
+
   {
-    "entry_id": "15e1c7ed8e026310",
-    "entry": {"names": {"name": "duplicate contact", "fullName": "duplicate contact", "givenName": "duplicate", "familyName": "contact"}, "photo": "", "phones": [], "emailes": [{"label": "other", "address": "yaber-five@gmial.com"}], "entry_id": "15e1c7ed8e026310", "addresses": [], "organization": {}, "groupMembership": "http://www.google.com/m8/feeds/groups/yaber.azimi%40gmail.com/base/6"}
+    "etag": "%EhMFEEAHNwk+AQI9Cg0MCz8DNS4GGgQCAQcFIgxYb3lzeG03Q2k0az0=",
+    "parked": true,
+    "resource_id": "people/c6630837791810714452",
+    "entry_id": "5c0577d7081cfb54",
+    "names": {
+      "displayName": "Matthew Perry Suffix",
+      "fullName": "Matthew Perry Suffix",
+      "familyName": "Perry",
+      "givenName": "Matthew",
+      "middleName": ""
+    },
+    "nickName": "nickname",
+    "photo": "https://lh3.googleusercontent.com/-aYVczmGKcxo/X8-ww3FoX_I/AAAAAAAAAAA/2ix4NpQg-s8VsZovPqVAS2ph-jh38gmcwCOQCEAE/s100/photo.jpg",
+    "birthday": "10/15/1980",
+    "website": "profile.com",
+    "organization": {
+      "jobTitle": "company",
+      "company": "job-title"
+    },
+    "note": "Notes v.1",
+    "phones": [
+      {
+        "value": "12345678",
+        "type": "home"
+      },
+      {
+        "value": "987654321",
+        "type": "work"
+      }
+    ],
+    "emailes": [
+      {
+        "value": "email-home@domain.com",
+        "type": "home"
+      },
+      {
+        "value": "email-work@domain.com",
+        "type": "work"
+      },
+      {
+        "value": "email-other@domain.com",
+        "type": "other"
+      },
+      {
+        "value": "email-custom@domain.com",
+        "type": "custom-label"
+      },
+      {
+        "value": "email@domain.com"
+      }
+    ],
+    "addresses": [
+      {
+        "streetAddress": "street address line",
+        "extendedAddress": "street address line 2",
+        "city": "city",
+        "postalCode": "POSTAL CODE",
+        "country": "NL",
+        "countryCode": "NL",
+        "type": "home"
+      }
+    ],
+    "memberships": [
+      {
+        "contactGroupId": "22f91a7f0c902036",
+        "contactGroupResourceName": "contactGroups/22f91a7f0c902036"
+      },
+      {
+        "contactGroupId": "29feafa40ce31955",
+        "contactGroupResourceName": "contactGroups/29feafa40ce31955"
+      },
+      {
+        "contactGroupId": "myContacts",
+        "contactGroupResourceName": "contactGroups/myContacts"
+      }
+    ]
   }
 ]

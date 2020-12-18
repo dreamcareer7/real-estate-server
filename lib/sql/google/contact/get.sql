@@ -1,11 +1,10 @@
 SELECT
-    id, google_credential, entry_id, entry, 'google_contact' AS type
+  google_contacts.*, 'google_contact' AS type
 FROM
-    google_contacts
+  google_contacts
 JOIN 
-    unnest($1::text[]) WITH ORDINALITY t(gc_ei, ord)
+  unnest($1::uuid[]) WITH ORDINALITY t(gcid, ord)
 ON 
-    google_contacts.entry_id = gc_ei
-    AND google_contacts.google_credential = $2
+  google_contacts.id = gcid
 ORDER BY 
-    t.ord
+  google_contacts.created_at DESC
