@@ -14,7 +14,6 @@ const default_checklist_values = {
 
 const default_values = {
   deal_type: 'Buying',
-  property_type: 'Resale',
 
   checklists: [],
   roles: []
@@ -27,11 +26,13 @@ async function create(user_id, brand_id, data) {
 
   const brand_contexts = await BrandHelper.getContexts(brand_id)
   const brand_checklists = await BrandHelper.getChecklists(brand_id)
+  const [ brand_property_type ] = await BrandHelper.getPropertyTypes(brand_id)
 
   let deal = await Deal.create({
     ...deal_props,
     created_by: user_id,
-    brand: brand_id
+    brand: brand_id,
+    property_type: brand_property_type.id
   })
 
   for (let i = 0; i < checklists.length; i++) {

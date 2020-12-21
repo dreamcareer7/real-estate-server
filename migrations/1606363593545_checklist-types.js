@@ -117,6 +117,25 @@ JOIN brands_property_types bpt
   'ALTER TABLE brands_checklists ALTER dynamic_property_type SET NOT NULL',
 
   /*
+   * Statuses
+   */
+  `CREATE TABLE brands_deal_statuses_property_types (
+    id uuid NOT NULL PRIMARY KEY DEFAULT uuid_generate_v4(),
+    brand uuid NOT NULL REFERENCES brands(id),
+    status uuid NOT NULL REFERENCES brands_deal_statuses(id),
+    property_type uuid NOT NULL REFERENCES brands_property_types(id),
+    when_offer BOOLEAN NOT NULL,
+    when_buying BOOLEAN NOT NULL,
+    when_selling BOOLEAN NOT NULL
+  )`,
+
+  `INSERT INTO brands_deal_statuses_property_types
+  (brand, status, property_type, when_offer, when_buying, when_selling)
+  `,
+
+  'ALTER TABLE brands_deal_statuses DROP property_type',
+
+  /*
    * View
    */
   'DROP VIEW analytics.mini_deals',

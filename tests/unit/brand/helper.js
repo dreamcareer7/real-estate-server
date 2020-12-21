@@ -11,6 +11,10 @@ const BrandRole = {
 }
 
 const BrandContext = require('../../../lib/models/Brand/deal/context')
+const BrandPropertyType = {
+  ...require('../../../lib/models/Brand/deal/property_type/create'),
+  ...require('../../../lib/models/Brand/deal/property_type/get')
+}
 const BrandChecklist = require('../../../lib/models/Brand/deal/checklist')
 const BrandEmail = require('../../../lib/models/Brand/email/save')
 const BrandFlow = require('../../../lib/models/Brand/flow')
@@ -48,6 +52,12 @@ async function create(data) {
 
   const b = await Brand.create(brand_props)
 
+  const property_type = await BrandPropertyType.create({
+    label: 'Resale',
+    brand: b.id,
+    is_lease: false
+  })
+
   for (const r in roles) {
     const role = await BrandRole.create({
       brand: b.id,
@@ -70,7 +80,8 @@ async function create(data) {
   for(const checklist of checklists) {
     const saved = await BrandChecklist.create({
       ...checklist,
-      brand: b.id
+      brand: b.id,
+      property_type: property_type.id
     })
 
     const { tasks } = checklist
@@ -88,7 +99,16 @@ async function create(data) {
     await BrandContext.create({
       ...contexts[key],
       key,
-      brand: b.id
+      brand: b.id,
+      property_types: [
+        {
+          when_buying: true,
+          when_selling: true,
+          when_offer: true,
+          is_required: true,
+          property_type: property_type.id
+        }
+      ]
     })
   }
 
@@ -151,8 +171,13 @@ function getChecklists(brand_id) {
   return BrandChecklist.getByBrand(brand_id)
 }
 
+function getPropertyTypes(brand_id) {
+  return BrandPropertyType.getByBrand(brand_id)
+}
+
 module.exports = {
   create,
   getContexts,
-  getChecklists
+  getChecklists,
+  getPropertyTypes
 }

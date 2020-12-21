@@ -159,7 +159,7 @@ CREATE OR REPLACE VIEW analytics.deals AS
     $$) t(
       id uuid,
       deal_type deal_type,
-      property_type deal_property_type,
+      property_type uuid,
       listing uuid,
       brand uuid,
       title text,
