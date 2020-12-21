@@ -351,28 +351,26 @@ async function deleteMany() {
 }
 
 
-describe('Google', () => {
-  describe('Google Calendars', () => {
-    createContext()
-    beforeEach(setup)
+describe('Calendar Integration', () => {
+  createContext()
+  beforeEach(setup)
 
-    it('should create several calendar integration records', insert)
-    it('should create several Google calendar integration records', gupsert)
-    it('should create several Microsoft calendar integration records', mupsert)
+  it('should create several calendar integration records', insert)
+  it('should create several Google calendar integration records', gupsert)
+  it('should create several Microsoft calendar integration records', mupsert)
 
-    it('should return several calendar integration records', getAll)
-    it('should return a calendar integration record', get)
-    it('should fail in get by id', getFailed)
-    it('should return several calendar integration records by google_ids', getByGoogleIds)
-    it('should return several calendar integration records by microsoft_ids', getByMicrosoftIds)
-    it('should return a calendar integration records by crm_task', getByCrmTasks)
-    it('should return a calendar integration records by contact', getByContacts)
-    it('should return a calendar integration records by contact_attribute', getByContactAttributes)
-    it('should return a calendar integration records by deal_context', getByDealContexts)
-    it('should return a calendar integration records by home_anniversary', getByHomeAnniversaries)
-    it('should reset etag property, caused by microsoft', microsoft_resetEtagByCrmTask)
-    it('should reset etag property, caused by google', google_resetEtagByCrmTask)
-    it('should reset etag property, caused by rechat', rechat_resetEtagByCrmTask)
-    it('should delete several calendar integration records', deleteMany)
-  })
+  it('should return several calendar integration records', getAll)
+  it('should return a calendar integration record', get)
+  it('should fail in get by id', getFailed)
+  it('should return several calendar integration records by google_ids', getByGoogleIds)
+  it('should return several calendar integration records by microsoft_ids', getByMicrosoftIds)
+  it('should return a calendar integration records by crm_task', getByCrmTasks)
+  it('should return a calendar integration records by contact', getByContacts)
+  it('should return a calendar integration records by contact_attribute', getByContactAttributes)
+  it('should return a calendar integration records by deal_context', getByDealContexts)
+  it('should return a calendar integration records by home_anniversary', getByHomeAnniversaries)
+  it('should reset etag property, caused by microsoft', microsoft_resetEtagByCrmTask)
+  it('should reset etag property, caused by google', google_resetEtagByCrmTask)
+  it('should reset etag property, caused by rechat', rechat_resetEtagByCrmTask)
+  it('should delete several calendar integration records', deleteMany)
 })
