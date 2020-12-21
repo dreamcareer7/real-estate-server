@@ -6,7 +6,7 @@ const User             = require('../../../lib/models/User/get')
 const BrandHelper      = require('../brand/helper')
 const GoogleContact    = require('../../../lib/models/Google/contact')
 
-const { createGoogleMessages } = require('./helper')
+const { createGoogleCredential } = require('./helper')
 
 const google_contacts_offline       = require('./data/google_contacts.json')
 const google_contact_groups_offline = require('./data/google_contact_groups.json')
@@ -23,7 +23,7 @@ async function setup() {
 }
 
 async function create() {
-  const { credential } = await createGoogleMessages(user, brand)
+  const { credential } = await createGoogleCredential(user, brand)
 
   const records = []
 
@@ -75,7 +75,7 @@ async function getContactsNum() {
 }
 
 async function addContactGroups() {
-  const { credential } = await createGoogleMessages(user, brand)
+  const { credential } = await createGoogleCredential(user, brand)
 
   const contactGroups = []
 
@@ -94,7 +94,7 @@ async function addContactGroups() {
 
 async function getRefinedContactGroups() {
   const googleContacts = await create()
-  const { credential } = await createGoogleMessages(user, brand)
+  const { credential } = await createGoogleCredential(user, brand)
 
   const contactGroups = []
 

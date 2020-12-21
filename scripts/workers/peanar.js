@@ -126,6 +126,11 @@ const queues = [
   },
 
   {
+    queues: ['contact_integration'],
+    concurrency: 2
+  },
+
+  {
     queues: ['brand_template_thumbnail'],
     concurrency: 100
   },

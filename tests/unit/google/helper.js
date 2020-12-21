@@ -3,6 +3,7 @@ const { expect } = require('chai')
 const GoogleCredential    = require('../../../lib/models/Google/credential')
 const GoogleMessage       = require('../../../lib/models/Google/message')
 const GoogleCalendar      = require('../../../lib/models/Google/calendar')
+const GoogleContact       = require('../../../lib/models/Google/contact')
 const GoogleCalendarEvent = require('../../../lib/models/Google/calendar_events')
 const EmailCampaign = require('../../../lib/models/Email/campaign')
 
@@ -13,6 +14,7 @@ const Email   = {
   ...require('../../../lib/models/Email/create'),
 }
 
+const google_contacts_offline = require('./data/google_contacts.json')
 const google_messages_offline = require('./data/google_messages.json')
 const calendars = require('./data/calendars.json')
 const events    = require('./data/calendar_events.json')
@@ -128,11 +130,43 @@ async function createCampaign(user, brand) {
   return result[0]
 }
 
+async function createGoogleContact(user, brand) {
+  const { credential } = await createGoogleCredential(user, brand)
+
+  const records = []
+
+  for (const gContact of google_contacts_offline) {
+    records.push({
+      google_credential: credential.id,
+      entry_id: gContact.entry_id,
+
+      etag: gContact.etag,
+      resource_id: gContact.resource_id,
+      resource: JSON.stringify(gContact),
+      parked: gContact.parked
+    })
+  }
+
+  const createdGoogleContacts = await GoogleContact.create(records)
+
+  for (const createdGoogleContact of createdGoogleContacts) {
+    expect(createdGoogleContact.google_credential).to.be.equal(credential.id)
+
+    const googleContact = await GoogleContact.getByResourceId(createdGoogleContact.google_credential, createdGoogleContact.resource_id)
+
+    expect(googleContact.type).to.be.equal('google_contact')
+    expect(googleContact.google_credential).to.be.equal(createdGoogleContact.google_credential)
+  }
+
+  return createdGoogleContacts[0]
+}
+
 
 module.exports = {
   createGoogleCredential,
   createGoogleMessages,
   createGoogleCalendar,
   createGoogleCalendarEvent,
-  createCampaign
+  createCampaign,
+  createGoogleContact
 }
