@@ -17,7 +17,7 @@ const migrations = [
     origin public.contact_integration_origin NOT NULL,
     etag TEXT NOT NULL,
     local_etag TEXT,
-    
+
     created_at timestamptz NOT NULL DEFAULT clock_timestamp(),
     updated_at timestamptz NOT NULL DEFAULT clock_timestamp(),
     deleted_at timestamptz
