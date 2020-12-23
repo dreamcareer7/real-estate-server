@@ -2,6 +2,7 @@ const _ = require('lodash')
 
 const checklists = require('./checklists')
 const contexts = require('./contexts')
+const property_types = require('./property_types')
 
 const Brand = require('../../../lib/models/Brand')
 
@@ -31,7 +32,8 @@ const default_data = {
   },
 
   contexts,
-  checklists
+  checklists,
+  property_types,
 }
 
 async function create(data) {
@@ -44,6 +46,7 @@ async function create(data) {
     roles,
     contexts,
     checklists,
+    property_types,
     emails,
     flows,
     lists,
@@ -52,11 +55,16 @@ async function create(data) {
 
   const b = await Brand.create(brand_props)
 
-  const property_type = await BrandPropertyType.create({
-    label: 'Resale',
-    brand: b.id,
-    is_lease: false
-  })
+  const property_types_by_label = {}
+  for (const { label, is_lease } of property_types) {
+    const property_type = await BrandPropertyType.create({
+      label,
+      is_lease,
+      brand: b.id,
+    })
+
+    property_types_by_label[label] = property_type.id
+  }
 
   for (const r in roles) {
     const role = await BrandRole.create({
@@ -78,11 +86,11 @@ async function create(data) {
   })
 
   const saved_checklists = []
-  for(const checklist of checklists) {
+  for(const { property_type, ...checklist } of checklists) {
     const saved = await BrandChecklist.create({
       ...checklist,
       brand: b.id,
-      property_type: property_type.id
+      property_type: property_types_by_label[property_type]
     })
     saved_checklists.push(saved)
 
@@ -170,8 +178,9 @@ function getChecklists(brand_id) {
   return BrandChecklist.getByBrand(brand_id)
 }
 
-function getPropertyTypes(brand_id) {
-  return BrandPropertyType.getByBrand(brand_id)
+async function getPropertyTypes(brand_id) {
+  const property_types = await BrandPropertyType.getByBrand(brand_id)
+  return _.keyBy(property_types, 'label')
 }
 
 module.exports = {

@@ -15,6 +15,7 @@ module.exports = async function(sellerAgent, buyerAgent, brand, mls_number) {
   return DealHelper.create(sellerAgent.id, brand.id, {
     is_draft: false,
     deal_type: 'Selling',
+    property_type: 'New Home',
     checklists: [
       {},
       {

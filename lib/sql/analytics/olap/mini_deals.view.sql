@@ -14,6 +14,7 @@ CREATE OR REPLACE VIEW analytics.mini_deals AS
       d.brand,
       d.deal_type,
       bc.checklist_type,
+      d.property_type,
       dc.id AS checklist
     FROM
       deals d
@@ -97,6 +98,7 @@ CREATE OR REPLACE VIEW analytics.mini_deals AS
     di.brand,
     di.deal_type,
     di.checklist_type,
+    di.property_type,
     bo.branch_title,
     (SELECT name FROM agent_info AS ri WHERE role = 'BuyerAgent'::deal_role AND ri.deal = di.id AND (ri.checklist IS NULL OR ri.checklist = di.checklist) LIMIT 1) AS buyer_agent,
     (SELECT name FROM agent_info AS ri WHERE role = 'SellerAgent'::deal_role AND ri.deal = di.id AND (ri.checklist IS NULL OR ri.checklist = di.checklist) LIMIT 1) AS seller_agent,

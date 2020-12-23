@@ -44,17 +44,19 @@ async function createDeals() {
 }
 
 async function contractsReport(user_id, brand_id) {
+  const property_types = await BrandHelper.getPropertyTypes(brand_id)
+
   const filter = [
     {
-      key: 'deal_type',
-      type: 'point',
-      point: 'Buying',
+      key: 'checklist_type',
+      type: 'set',
+      set: ['Buying', 'Offer'],
       invert: false
     },
     {
       key: 'property_type',
       type: 'set',
-      set: ['Residential Lease', 'Commercial Lease'],
+      set: [property_types['Residential Lease'].id, property_types['Commercial Lease'].id],
       invert: true
     },
     {
@@ -86,9 +88,11 @@ async function contractsReport(user_id, brand_id) {
 }
 
 async function listingsReport(user_id, brand_id) {
+  const property_types = await BrandHelper.getPropertyTypes(brand_id)
+
   const filter = [
     {
-      key: 'deal_type',
+      key: 'checklist_type',
       type: 'point',
       point: 'Selling',
       invert: false
@@ -96,7 +100,7 @@ async function listingsReport(user_id, brand_id) {
     {
       key: 'property_type',
       type: 'set',
-      set: ['Residential Lease', 'Commercial Lease'],
+      set: [property_types['Residential Lease'].id, property_types['Commercial Lease'].id],
       invert: true
     },
     {
