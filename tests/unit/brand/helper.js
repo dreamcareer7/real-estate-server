@@ -77,12 +77,14 @@ async function create(data) {
     name: 'Test Form'
   })
 
+  const saved_checklists = []
   for(const checklist of checklists) {
     const saved = await BrandChecklist.create({
       ...checklist,
       brand: b.id,
       property_type: property_type.id
     })
+    saved_checklists.push(saved)
 
     const { tasks } = checklist
 
@@ -100,15 +102,12 @@ async function create(data) {
       ...contexts[key],
       key,
       brand: b.id,
-      property_types: [
-        {
-          when_buying: true,
-          when_selling: true,
-          when_offer: true,
-          is_required: true,
-          property_type: property_type.id
+      checklists: saved_checklists.map(c => {
+        return {
+          checklist: c.id,
+          is_required: true
         }
-      ]
+      })
     })
   }
 

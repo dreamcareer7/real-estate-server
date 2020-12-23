@@ -1,7 +1,7 @@
 INSERT INTO brands_checklists (
   brand,
   title,
-  deal_type,
+  checklist_type,
   property_type,
   "order",
   is_deactivatable,

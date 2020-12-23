@@ -43,8 +43,9 @@ async function create(user_id, brand_id, data) {
       ...c
     } = checklists[i]
 
+
     const origin = brand_checklists.find(
-      bc => bc.deal_type === deal_type && bc.property_type === property_type
+      bc => bc.checklist_type === deal_type && bc.property_type === property_type
     )
 
     const cl_data = deepmerge.all([

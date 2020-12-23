@@ -2,6 +2,7 @@ const fs = require('fs')
 const path = require('path')
 const brand = require('./data/brand.js')
 const contexts = require('./data/context.js')
+const { omit } = require('lodash')
 
 registerSuite('office', ['add'])
 registerSuite('form', ['create'])
@@ -171,29 +172,28 @@ const removeHostname = cb => {
 const addDateContext = cb => {
   const list_date = {
     ...contexts.list_date,
-    property_types: [
+    checklists: [
       {
-        property_type: results.brand.addPropertyType.data.id,
-        is_required: true,
-        when_buying: true
+        checklist: results.brand.addChecklist.data.id,
+        is_required: true
       }
     ]
   }
 
   return frisby.create('add a context definition to a brand')
-    .post(`/brands/${brand_id}/contexts?associations[]=brand_context.property_types`, list_date)
+    .post(`/brands/${brand_id}/contexts?associations[]=brand_context.checklists`, list_date)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
-      data: list_date
+      data: omit(list_date, 'checklists')
     })
 }
 
 const addTextContext = cb => {
   const { contract_status }  = contexts
   return frisby.create('add a context definition to a brand')
-    .post(`/brands/${brand_id}/contexts?associations[]=brand_context.property_types`, contract_status)
+    .post(`/brands/${brand_id}/contexts?associations[]=brand_context.checklists`, contract_status)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
@@ -217,11 +217,10 @@ const updateContext = cb => {
   const data = {
     ...results.brand.addDateContext.data,
     label: 'Updated Context',
-    property_types: [
+    checklists: [
       {
-        property_type: results.brand.addPropertyType.data.id,
-        is_required: false,
-        when_selling: true
+        checklist: results.brand.addChecklist.data.id,
+        is_required: false
       }
     ]
   }
@@ -254,7 +253,7 @@ const addChecklist = cb => {
   return frisby.create('add a checklist to a brand')
     .post(`/brands/${brand_id}/checklists`, {
       title: 'Checklist 1',
-      deal_type: 'Buying',
+      checklist_type: 'Offer',
       property_type: results.brand.addPropertyType.data.id,
       order: 2,
       is_terminatable: true,
@@ -638,14 +637,11 @@ const deleteEmail = cb => {
 const addStatus = cb => {
   const status = {
     label: 'Active',
-    deal_types: [
-      'Buying'
-    ],
-    property_types: [
-      'Resale'
-    ],
     admin_only: false,
-    is_archived: true
+    is_archived: true,
+    checklists: [
+      results.brand.addChecklist.data.id
+    ]
   }
 
   return frisby.create('add a deal status')
@@ -654,25 +650,20 @@ const addStatus = cb => {
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
-      data: status
+      data: omit(status, 'checklists')
     })
 }
 
 const updateStatus = cb => {
   const status = {
     label: 'Active Contingent',
-    deal_types: [
-      'Buying',
-      'Selling'
-    ],
-    property_types: [
-      'Resale',
-      'New Home'
-    ],
     admin_only: true,
     is_archived: false,
     is_active: true,
-    is_pending: false
+    is_pending: false,
+    checklists: [
+      results.brand.addChecklist.data.id
+    ]
   }
 
   return frisby.create('update a deal status')
@@ -681,7 +672,7 @@ const updateStatus = cb => {
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
-      data: status
+      data: omit(status, 'checklists')
     })
 }
 
@@ -721,12 +712,14 @@ const addPropertyType = cb => {
 
 const getPropertyTypes = cb => {
   return frisby.create('get property types')
-    .get(`/brands/${brand_id}/deals/property_types`)
+    .get(`/brands/${brand_id}/deals/property_types?associaions[]=brand_property_type.checklists`)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
-      data: [results.brand.addPropertyType.data]
+      data: [
+        omit(results.brand.addPropertyType.data, 'checklists')
+      ]
     })
 }
 

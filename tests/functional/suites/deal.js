@@ -40,7 +40,7 @@ const create = (cb) => {
   }
 
   return frisby.create('create a deal')
-    .post('/deals?associations[]=deal.gallery&associations[]=deal.property_type', data)
+    .post('/deals?associations[]=deal.gallery&associations[]=deal.property_type&associations[]=brand_property_type.checklists', data)
     .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
     .after(cb)
     .expectStatus(200)
@@ -48,7 +48,7 @@ const create = (cb) => {
       code: 'OK',
       data: {
         ...data,
-        property_type: results.brand.addPropertyType.data
+        property_type: omit(results.brand.addPropertyType.data, 'checklists')
       }
     })
 }
@@ -82,7 +82,7 @@ const patchPropertyType = cb => {
       code: 'OK',
       data: {
         ...results.deal.patchListing.data,
-        property_type: results.brand.addPropertyType.data
+//         property_type: results.brand.addPropertyType.data
       }
     })
 }

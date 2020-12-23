@@ -12,7 +12,7 @@ module.exports = [
   {
     title: 'Contract',
     order: 1,
-    deal_type: 'Buying',
+    checklist_type: 'Buying',
     is_terminatable: true,
     tab_name: 'Contract Inbox',
     is_deactivatable: true,
@@ -21,7 +21,7 @@ module.exports = [
   {
     title: 'Contract',
     order: 1,
-    deal_type: 'Buying',
+    checklist_type: 'Buying',
     is_terminatable: true,
     tab_name: 'Contract Inbox',
     is_deactivatable: true,
@@ -30,7 +30,7 @@ module.exports = [
   {
     title: 'Contract',
     order: 1,
-    deal_type: 'Buying',
+    checklist_type: 'Buying',
     is_terminatable: true,
     tab_name: 'Contract Inbox',
     is_deactivatable: true,
@@ -39,7 +39,7 @@ module.exports = [
   {
     title: 'Contract',
     order: 1,
-    deal_type: 'Buying',
+    checklist_type: 'Buying',
     is_terminatable: true,
     tab_name: 'Contract Inbox',
     is_deactivatable: true,
@@ -48,7 +48,7 @@ module.exports = [
   {
     title: 'Contract',
     order: 1,
-    deal_type: 'Buying',
+    checklist_type: 'Buying',
     is_terminatable: true,
     tab_name: 'Contract Inbox',
     is_deactivatable: true,
@@ -57,7 +57,7 @@ module.exports = [
   {
     title: 'Listing',
     order: 1,
-    deal_type: 'Selling',
+    checklist_type: 'Selling',
     is_terminatable: false,
     tab_name: 'Listing Inbox',
     is_deactivatable: false,
@@ -66,7 +66,7 @@ module.exports = [
   {
     title: 'Listing',
     order: 1,
-    deal_type: 'Selling',
+    checklist_type: 'Selling',
     is_terminatable: false,
     tab_name: 'Listing Inbox',
     is_deactivatable: false,
@@ -75,7 +75,7 @@ module.exports = [
   {
     title: 'Listing',
     order: 1,
-    deal_type: 'Selling',
+    checklist_type: 'Selling',
     is_terminatable: false,
     tab_name: 'Listing Inbox',
     is_deactivatable: false,
@@ -84,7 +84,7 @@ module.exports = [
   {
     title: 'Listing',
     order: 1,
-    deal_type: 'Selling',
+    checklist_type: 'Selling',
     is_terminatable: false,
     tab_name: 'Listing Inbox',
     is_deactivatable: false,
@@ -93,7 +93,7 @@ module.exports = [
   {
     title: 'Contract',
     order: 1,
-    deal_type: 'Buying',
+    checklist_type: 'Buying',
     is_terminatable: false,
     tab_name: 'Contract Inbox',
     is_deactivatable: false,
@@ -102,7 +102,7 @@ module.exports = [
   {
     title: 'Listing',
     order: 1,
-    deal_type: 'Selling',
+    checklist_type: 'Selling',
     is_terminatable: false,
     tab_name: 'Listing Inbox',
     is_deactivatable: false,
@@ -111,7 +111,7 @@ module.exports = [
   {
     title: 'Listing',
     order: 1,
-    deal_type: 'Selling',
+    checklist_type: 'Selling',
     is_terminatable: false,
     tab_name: 'Listing Inbox',
     is_deactivatable: false,

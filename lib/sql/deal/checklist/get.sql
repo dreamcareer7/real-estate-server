@@ -1,8 +1,8 @@
 SELECT deals_checklists.*,
   'deal_checklist' AS type,
-  EXTRACT(EPOCH FROM created_at) AS created_at,
-  EXTRACT(EPOCH FROM updated_at) AS updated_at,
-  EXTRACT(EPOCH FROM deleted_at) AS deleted_at,
+  EXTRACT(EPOCH FROM deals_checklists.created_at) AS created_at,
+  EXTRACT(EPOCH FROM deals_checklists.updated_at) AS updated_at,
+  EXTRACT(EPOCH FROM deals_checklists.deleted_at) AS deleted_at,
 
   deactivated_at IS NOT NULL is_deactivated,
   terminated_at  IS NOT NULL is_terminated,
@@ -16,46 +16,26 @@ SELECT deals_checklists.*,
       AND tasks.deleted_at IS NULL
   ) AS tasks,
 
-  -- The only reason we terminate or deactivate a checklist
-  -- is to open room for new offers.
-  -- But since there are no offers on a Buying deal
-  -- terminating their checklists results in an emppy deal
-  -- with no context, no status, no roles, etc
-  -- Therefore, we only allow deactivation and termination on
-  -- Seller side deals
+  -- Only offers can be deactivated
   (
-    SELECT
-      brands_checklists.is_deactivatable AND deals.deal_type = 'Selling'
-      FROM brands_checklists
-      JOIN deals_checklists dc ON dc.origin = brands_checklists.id
-      JOIN deals               ON dc.deal   = deals.id
-      WHERE dc.id = deals_checklists.id
+    origins.checklist_type = 'Offer'
   ) as is_deactivatable,
 
+  -- Only offers can be terminated
   (
-    SELECT
-      brands_checklists.is_terminatable AND deals.deal_type = 'Selling'
-      FROM brands_checklists
-      JOIN deals_checklists dc ON dc.origin = brands_checklists.id
-      JOIN deals               ON dc.deal   = deals.id
-      WHERE dc.id = deals_checklists.id
+    origins.checklist_type = 'Offer'
   ) as is_terminatable,
 
-  (
-    SELECT tab_name FROM brands_checklists WHERE id = deals_checklists.origin
-  ) as tab_name,
+  origins.tab_name,
 
   (
-    SELECT deal_type FROM brands_checklists WHERE id = deals_checklists.origin
-  ) as checklist_type,
-
-  (
-    deactivated_at     IS NULL
-    AND terminated_at  IS NULL
-    AND deleted_at     IS NULL
-    AND (SELECT deal_type FROM brands_checklists WHERE id = deals_checklists.origin) = 'Buying'
+    deals_checklists.deactivated_at     IS NULL
+    AND deals_checklists.terminated_at  IS NULL
+    AND deals_checklists.deleted_at     IS NULL
+    AND origins.checklist_type = 'Offer'
   ) as is_active_offer
 
 FROM deals_checklists
+FULL JOIN brands_checklists origins ON deals_checklists.origin = origins.id
 JOIN unnest($1::uuid[]) WITH ORDINALITY t(did, ord) ON deals_checklists.id = did
 ORDER BY t.ord
