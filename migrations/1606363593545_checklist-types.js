@@ -29,7 +29,8 @@ const migrations = [
   /*
    * Checklists
    */
-  `CREATE TYPE checklist_type AS ENUM('Buying', 'Selling', 'Offer')`,
+  `CREATE TYPE checklist_type
+    AS ENUM('Buying', 'Selling', 'Offer')`,
   'ALTER TABLE brands_checklists ADD COLUMN dynamic_property_type uuid REFERENCES brands_property_types(id)',
   'ALTER TABLE brands_checklists ADD COLUMN checklist_type checklist_type',
 

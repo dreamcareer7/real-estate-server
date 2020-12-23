@@ -10,7 +10,27 @@ SELECT brands_checklists.*,
     WHERE
       checklist = brands_checklists.id
       AND deleted_at IS NULL
-  ) as tasks
+  ) as tasks,
+
+  (
+    SELECT
+      ARRAY_AGG(context)
+    FROM
+      brands_contexts_checklists
+    WHERE
+      checklist = brands_checklists.id
+      AND is_required IS TRUE
+  ) as required_contexts,
+
+  (
+    SELECT
+      ARRAY_AGG(context)
+    FROM
+      brands_contexts_checklists
+    WHERE
+      checklist = brands_checklists.id
+      AND is_required IS FALSE
+  ) as optional_contexts
 
 FROM brands_checklists
 JOIN unnest($1::uuid[]) WITH ORDINALITY t(bid, ord) ON brands_checklists.id = bid

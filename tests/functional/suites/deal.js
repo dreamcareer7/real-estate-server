@@ -81,8 +81,7 @@ const patchPropertyType = cb => {
     .expectJSON({
       code: 'OK',
       data: {
-        ...results.deal.patchListing.data,
-//         property_type: results.brand.addPropertyType.data
+        ...results.deal.patchListing.data
       }
     })
 }
