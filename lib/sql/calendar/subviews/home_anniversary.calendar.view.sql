@@ -1,6 +1,6 @@
 CREATE OR REPLACE VIEW calendar.home_anniversary AS (
   SELECT
-    c.id::text || ':' || cdc.id::text AS id,
+    c.contact::text || ':' || cdc.id::text AS id,
     cdc.created_by,
     cdc.created_at,
     cdc.created_at AS updated_at,
@@ -19,7 +19,7 @@ CREATE OR REPLACE VIEW calendar.home_anniversary AS (
     NULL::uuid AS crm_task,
     TRUE as all_day,
     cdc.deal,
-    c.id AS contact,
+    c.contact,
     NULL::uuid AS campaign,
     NULL::uuid AS credential_id,
     NULL::text AS thread_key,
@@ -37,7 +37,7 @@ CREATE OR REPLACE VIEW calendar.home_anniversary AS (
     ) AS users,
     NULL::uuid[] AS accessible_to,
     ARRAY[json_build_object(
-      'id', c.id,
+      'id', c.contact,
       'type', 'contact'
     )] AS people,
     1 AS people_len,
@@ -45,10 +45,9 @@ CREATE OR REPLACE VIEW calendar.home_anniversary AS (
     NULL::text AS status,
     NULL::jsonb AS metadata
   FROM
-    contacts AS c
+    contacts_emails AS c
     JOIN calendar.deals_closed_buyers AS cdc
-      ON ((cdc.email = ANY(c.email)) OR (cdc.phone_number = ANY(c.phone_number)))
+      ON cdc.email = c.email
   WHERE
-    c.deleted_at IS NULL
-    AND c.brand = cdc.brand
+    c.brand = cdc.brand
 )

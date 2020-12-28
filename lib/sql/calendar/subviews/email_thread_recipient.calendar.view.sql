@@ -44,7 +44,6 @@ CREATE OR REPLACE VIEW calendar.email_thread_recipient AS (
             contacts.brand = email_threads.brand
             AND contacts.email && recipients
             AND contacts.deleted_at IS NULL
-            AND contacts.parked IS NOT TRUE
           LIMIT 5
         ) t
     ) AS people,
@@ -58,23 +57,16 @@ CREATE OR REPLACE VIEW calendar.email_thread_recipient AS (
         contacts.brand = email_threads.brand
         AND contacts.email && recipients
         AND contacts.deleted_at IS NULL
-        AND contacts.parked IS NOT TRUE
     ) AS people_len,
 
-    brand,
+    c.brand,
     NULL::text AS status,
     NULL::jsonb AS metadata
   FROM
     email_threads
-    CROSS JOIN LATERAL (
-      SELECT
-        contacts.id
-      FROM
-        contacts
-      WHERE
-        contacts.email && recipients
-        AND contacts.parked IS NOT TRUE
-    ) AS c
+    JOIN contacts AS c
+      ON c.email && recipients
   WHERE
     email_threads.deleted_at IS NULL
+    AND email_threads.brand = c.brand
 )

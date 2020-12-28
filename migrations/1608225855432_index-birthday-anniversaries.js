@@ -11,7 +11,7 @@ const migrations = [
       SELECT date_part('month', $1)::int * 100 + date_part('day', $1)::int
     $$`,
 
-    'CREATE INDEX contacts_attributes_date_month_day_idx ON contacts_attributes_date (indexable_month_day(date))',
+  'CREATE INDEX contacts_attributes_date_month_day_idx ON contacts_attributes_date (indexable_month_day(date))',
 
   'COMMIT'
 ]
