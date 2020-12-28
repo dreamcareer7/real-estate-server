@@ -2,7 +2,7 @@ WITH d AS (
   DELETE FROM
     contacts_emails
   WHERE
-    contact = $1::uuid[]
+    contact = ANY($1::uuid[])
 )
 INSERT INTO
   contacts_emails (
