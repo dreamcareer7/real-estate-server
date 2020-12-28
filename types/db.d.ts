@@ -426,7 +426,6 @@ declare type TDbSqlAddress =
   | 'listing/get_compacts'
   | 'listing/get_mls_number'
   | 'listing/get_mui'
-  | 'listing/get_statuses'
   | 'listing/insert'
   | 'listing/interested'
   | 'listing/lock'
