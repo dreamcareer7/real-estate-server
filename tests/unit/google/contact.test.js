@@ -75,14 +75,16 @@ async function getContactsNum() {
 }
 
 async function deleteMany() {
-  const googleContacts = await create()
+  const created = await create()
+  const ids = created.map(c => c.id)
+
+  const googleContacts = await GoogleContact.getAll(ids)
 
   for (const gContact of googleContacts) {
     expect(gContact.type).to.be.equal('google_contact')
     expect(gContact.deleted_at).to.be.equal(null)
   }
 
-  const ids = googleContacts.map(c => c.id)
   await GoogleContact.deleteMany(ids)
   const deletedContacts = await GoogleContact.getAll(ids)
 
