@@ -15,7 +15,9 @@ CREATE MATERIALIZED VIEW calendar.deals_closed_buyers AS (
     JOIN current_deal_context cdc
       ON cdc.deal = d.deal
   WHERE
-    cdc.key = ANY('{closing_date,lease_end}'::text[])
-    AND cdc.date < now()
+    (
+      (cdc.key = 'closing_date' AND cdc.date < now())
+      OR cdc.key = 'lease_end'
+    )
     AND deal_status_mask(d.deal, '{Withdrawn,Cancelled,"Contract Terminated"}'::text[], cdc.key, '{expiration_date}'::text[], '{Sold,Leased}'::text[]) IS NOT FALSE
 )

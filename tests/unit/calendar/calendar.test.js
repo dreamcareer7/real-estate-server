@@ -174,6 +174,8 @@ async function testDealClosingDateHomeAnniversary() {
 
   await handleJobs()
   await sql.update('REFRESH MATERIALIZED VIEW CONCURRENTLY deals_brands')
+  await sql.update('REFRESH MATERIALIZED VIEW calendar.deals_buyers')
+  await sql.update('REFRESH MATERIALIZED VIEW calendar.deals_closed_buyers')
 
   const events = await fetchEvents()
   expect(events).to.have.length(3)
@@ -217,6 +219,8 @@ async function testDealLeaseEndHomeAnniversary() {
 
   await handleJobs()
   await sql.update('REFRESH MATERIALIZED VIEW CONCURRENTLY deals_brands')
+  await sql.update('REFRESH MATERIALIZED VIEW calendar.deals_buyers')
+  await sql.update('REFRESH MATERIALIZED VIEW calendar.deals_closed_buyers')
 
   const events = await fetchEvents()
   expect(events.map(e => e.event_type)).to.have.members([ 'lease_begin', 'lease_end', 'home_anniversary' ])
