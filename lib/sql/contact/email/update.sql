@@ -3,6 +3,7 @@ WITH d AS (
     contacts_emails
   WHERE
     contact = ANY($1::uuid[])
+  RETURNING id
 )
 INSERT INTO
   contacts_emails (
@@ -26,6 +27,8 @@ FROM
   contacts_attributes AS a
   JOIN contacts AS c
     ON c.id = a.contact
+  LEFT JOIN d
+    ON d.id = a.id
 WHERE
   c.deleted_at IS NULL
   AND a.deleted_at IS NULL
