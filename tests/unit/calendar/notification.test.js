@@ -141,7 +141,7 @@ async function createContact() {
             date: moment
               .utc()
               .startOf('day')
-              .add(2, 'days')
+              .add(3, 'days')
               .year(1800)
               .unix()
           },
@@ -151,7 +151,7 @@ async function createContact() {
             date: moment
               .utc()
               .startOf('day')
-              .add(1, 'days')
+              .add(2, 'days')
               .add(-10, 'years')
               .unix()
           }
@@ -225,6 +225,8 @@ async function findDueHomeAnniversaries() {
 
   await handleJobs()
   await sql.update('REFRESH MATERIALIZED VIEW CONCURRENTLY deals_brands')
+  await sql.update('REFRESH MATERIALIZED VIEW calendar.deals_buyers')
+  await sql.update('REFRESH MATERIALIZED VIEW calendar.deals_closed_buyers')
 
   const events = await CalendarWorker.getNotificationDueEvents()
 
@@ -241,12 +243,12 @@ async function sendNotificationForContact() {
 
   const birthday1 = moment()
     .tz(user.timezone)
-    .add(1, 'days')
+    .add(2, 'days')
     .add(-10, 'years')
     .unix()
   const birthday2 = moment()
     .tz(user.timezone)
-    .add(2, 'days')
+    .add(3, 'days')
     .year(1800)
     .unix()
   expect(notifications.map(n => n.message)).to.have.members([
