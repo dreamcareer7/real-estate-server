@@ -29,6 +29,9 @@ const migrations = [
   'COMMIT'
 ]
 
+// update google_credentials set contacts_sync_token = null;
+// update google_contacts set etag = null;
+
 
 const run = async () => {
   const { conn } = await db.conn.promise()
