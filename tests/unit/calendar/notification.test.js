@@ -53,12 +53,12 @@ async function setup(without_checklists = false) {
       {
         object_type: 'contact_attribute',
         event_type: 'birthday',
-        reminder: 2 * 24 * 3600 // 2 days
+        reminder: 3 * 24 * 3600 // 3 days
       },
       {
         object_type: 'contact_attribute',
         event_type: 'child_birthday',
-        reminder: 1 * 24 * 3600 // 1 day
+        reminder: 2 * 24 * 3600 // 2 days
       },
       {
         object_type: 'deal_context',
@@ -172,10 +172,7 @@ function findDueContactEvents() {
     const events = await CalendarWorker.getNotificationDueEvents()
 
     expect(events.length).to.be.eq(2, 'events.length')
-    expect(events[0]).to.include({
-      event_type: 'child_birthday',
-      object_type: 'contact_attribute'
-    })
+    expect(events.map(e => e.event_type)).to.have.members(['child_birthday', 'birthday'])
   }
 }
 
