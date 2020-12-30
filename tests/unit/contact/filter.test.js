@@ -78,12 +78,12 @@ async function testFilterFirstNameEquals() {
 }
 
 async function testFFQuery(q, expected_length) {
-  const filter_res = await Contact.fastFilter(brand.id, [], { q })
+  const filter_res = await Contact.fastFilter(brand.id, [], { q, order: 'display_name' })
   expect(filter_res.total).to.equal(expected_length)
   return filter_res
 }
 async function testFQuery(q, expected_length) {
-  const filter_res = await Contact.filter(brand.id, [], { q })
+  const filter_res = await Contact.filter(brand.id, [], { q, order: 'display_name' })
   expect(filter_res.total).to.equal(expected_length)
   return filter_res
 }
