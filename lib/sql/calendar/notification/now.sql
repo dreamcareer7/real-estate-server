@@ -19,7 +19,7 @@ FROM
         calendar.contact_attribute,
         unnest(calendar.contact_attribute.users) cu("user")
       WHERE
-        range_contains_birthday(now(), now() + interval '1 month', "timestamp")
+        range_contains_imd(CURRENT_DATE, (CURRENT_DATE + interval '1 month')::date, indexable_month_day("date"))
     ) UNION ALL (
       SELECT
         *
@@ -35,7 +35,7 @@ FROM
         calendar.home_anniversary,
         unnest(calendar.home_anniversary.users) cu("user")
       WHERE
-        range_contains_birthday(now(), now() + interval '1 month', "timestamp")
+        range_contains_imd(CURRENT_DATE, (CURRENT_DATE + interval '1 month')::date, indexable_month_day("date"))
     )
   ) AS c
   JOIN calendar_notification_settings AS cns
