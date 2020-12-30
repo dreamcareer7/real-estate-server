@@ -259,6 +259,23 @@ async function deleteMany() {
   expect(updated.deleted_at).to.be.not.equal(null)
 }
 
+async function restoreMany() {
+  const records = await insert()
+  
+  await ContactIntegration.deleteMany([records[0].id])
+  const updated = await ContactIntegration.get(records[0].id)
+
+  expect(updated.id).to.be.equal(records[0].id)
+  expect(updated.deleted_at).to.be.not.equal(null)
+
+
+  await ContactIntegration.restoreMany([records[0].id])
+  const restored = await ContactIntegration.get(records[0].id)
+
+  expect(restored.id).to.be.equal(records[0].id)
+  expect(restored.deleted_at).to.be.equal(null)
+}
+
 
 describe('Contact Integration', () => {
   createContext()
@@ -278,4 +295,5 @@ describe('Contact Integration', () => {
   it('should reset etag property, caused by google', google_resetEtagByContact)
   it('should reset etag property, caused by rechat', rechat_resetEtagByContact)
   it('should delete several Contact integration records', deleteMany)
+  it('should restore several Contact integration records', restoreMany)
 })

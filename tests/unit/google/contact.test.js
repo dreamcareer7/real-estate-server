@@ -94,6 +94,27 @@ async function deleteMany() {
   }
 }
 
+async function restoreMany() {
+  const created = await create()
+  const ids = created.map(c => c.id)
+
+  await GoogleContact.deleteMany(ids)
+  const deletedContacts = await GoogleContact.getAll(ids)
+
+  for (const gContact of deletedContacts) {
+    expect(gContact.type).to.be.equal('google_contact')
+    expect(gContact.deleted_at).to.not.be.equal(null)
+  }
+
+  await GoogleContact.restoreMany(ids)
+  const restoredContacts = await GoogleContact.getAll(ids)
+
+  for (const gContact of restoredContacts) {
+    expect(gContact.type).to.be.equal('google_contact')
+    expect(gContact.deleted_at).to.be.equal(null)
+  }
+}
+
 async function addContactGroups() {
   const { credential } = await createGoogleCredential(user, brand)
 
@@ -146,6 +167,7 @@ describe('Google', () => {
     it('should return Google contact by resource_id', getByResourceId)
     it('should return several Google contacts owned by a specific credential', getContactsNum)
     it('should delete Google contacts by id', deleteMany)
+    it('should restore Google contacts by id', restoreMany)
     it('should handle add Google contact groups', addContactGroups)
     it('should return a refined object of Google contact groups', getRefinedContactGroups)
   })
