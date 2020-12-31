@@ -26,11 +26,12 @@ const migrations = [
   'CREATE UNIQUE INDEX IF NOT EXISTS contact_integration_gid ON contact_integration (google_id) WHERE google_id is NOT NULL',
   'CREATE UNIQUE INDEX IF NOT EXISTS contact_integration_mid ON contact_integration (microsoft_id) WHERE microsoft_id is NOT NULL',
 
+  'UPDATE google_credentials SET contacts_sync_token = NULL, other_contacts_sync_token = NULL',
+  'UPDATE google_contacts SET etag = NULL',
+
   'COMMIT'
 ]
 
-// update google_credentials set contacts_sync_token = null;
-// update google_contacts set etag = null;
 
 
 const run = async () => {
