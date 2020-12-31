@@ -6,7 +6,6 @@ require('../../lib/models/Flow/worker')
 require('../../lib/models/CRM/Task/worker')
 require('../../lib/models/CRM/Touch/worker')
 require('../../lib/models/MLS/workers')
-// require('../../lib/models/Showings/worker')
 require('../../lib/models/Google/workers')
 require('../../lib/models/Microsoft/workers')
 require('../../lib/models/Deal/email')
@@ -15,13 +14,16 @@ require('../../lib/models/Email/campaign/worker')
 require('../../lib/models/Email/send')
 require('../../lib/models/Email/events')
 require('../../lib/models/SMS')
+// require('../../lib/models/Showings/worker')
 
 const attachCalendarEvents = require('../../lib/models/Calendar/events')
 const attachContactEvents = require('../../lib/models/Contact/events')
 const attachFlowEvents = require('../../lib/models/Flow/events')
 const attachTaskEventHandler = require('../../lib/models/CRM/Task/events')
 const attachTouchEventHandler = require('../../lib/models/CRM/Touch/events')
-const attachCalIntEventHandler = require('../../lib/models/CalendarIntegration/event')
+const attachCalIntEventHandler = require('../../lib/models/CalendarIntegration/events')
+const attachContactIntEventHandler = require('../../lib/models/ContactIntegration/events')
+
 
 attachCalendarEvents()
 attachContactEvents()
@@ -29,6 +31,7 @@ attachFlowEvents()
 attachTaskEventHandler()
 attachTouchEventHandler()
 attachCalIntEventHandler()
+attachContactIntEventHandler()
 
 /** @type {NodeJS.Timeout} */
 let heartbeat_timer
