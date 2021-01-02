@@ -4,6 +4,6 @@ WITH inserted AS (
 )
 
 INSERT INTO websites_snapshots
-  (brand, template, attributes, website)
-VALUES ($3,$1, $4, (SELECT id FROM inserted))
+  (brand, template, attributes, website, title, template_instance)
+VALUES ($3,$1, $4, (SELECT id FROM inserted), $5, $6)
 RETURNING (SELECT id FROM inserted)
