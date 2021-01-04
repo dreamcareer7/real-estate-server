@@ -63,5 +63,21 @@
         "text": "Tag3"
       }
     ]
+  },
+  {
+    "attributes": [
+      {
+        "attribute_type": "first_name",
+        "text": "Mark"
+      },
+      {
+        "attribute_type": "last_name",
+        "text": "Twain"
+      },
+      {
+        "attribute_type": "email",
+        "text": "marktwain@gmail.com"
+      }
+    ]
   }
 ]
