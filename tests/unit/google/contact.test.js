@@ -6,7 +6,7 @@ const User             = require('../../../lib/models/User/get')
 const BrandHelper      = require('../brand/helper')
 const GoogleContact    = require('../../../lib/models/Google/contact')
 
-const { createGoogleMessages } = require('./helper')
+const { createGoogleCredential } = require('./helper')
 
 const google_contacts_offline       = require('./data/google_contacts.json')
 const google_contact_groups_offline = require('./data/google_contact_groups.json')
@@ -23,7 +23,7 @@ async function setup() {
 }
 
 async function create() {
-  const { credential } = await createGoogleMessages(user, brand)
+  const { credential } = await createGoogleCredential(user, brand)
 
   const records = []
 
@@ -74,8 +74,49 @@ async function getContactsNum() {
   expect(result[0]['count']).to.be.equal(googleContacts.length)
 }
 
+async function deleteMany() {
+  const created = await create()
+  const ids = created.map(c => c.id)
+
+  const googleContacts = await GoogleContact.getAll(ids)
+
+  for (const gContact of googleContacts) {
+    expect(gContact.type).to.be.equal('google_contact')
+    expect(gContact.deleted_at).to.be.equal(null)
+  }
+
+  await GoogleContact.deleteMany(ids)
+  const deletedContacts = await GoogleContact.getAll(ids)
+
+  for (const gContact of deletedContacts) {
+    expect(gContact.type).to.be.equal('google_contact')
+    expect(gContact.deleted_at).to.not.be.equal(null)
+  }
+}
+
+async function restoreMany() {
+  const created = await create()
+  const ids = created.map(c => c.id)
+
+  await GoogleContact.deleteMany(ids)
+  const deletedContacts = await GoogleContact.getAll(ids)
+
+  for (const gContact of deletedContacts) {
+    expect(gContact.type).to.be.equal('google_contact')
+    expect(gContact.deleted_at).to.not.be.equal(null)
+  }
+
+  await GoogleContact.restoreMany(ids)
+  const restoredContacts = await GoogleContact.getAll(ids)
+
+  for (const gContact of restoredContacts) {
+    expect(gContact.type).to.be.equal('google_contact')
+    expect(gContact.deleted_at).to.be.equal(null)
+  }
+}
+
 async function addContactGroups() {
-  const { credential } = await createGoogleMessages(user, brand)
+  const { credential } = await createGoogleCredential(user, brand)
 
   const contactGroups = []
 
@@ -94,7 +135,7 @@ async function addContactGroups() {
 
 async function getRefinedContactGroups() {
   const googleContacts = await create()
-  const { credential } = await createGoogleMessages(user, brand)
+  const { credential } = await createGoogleCredential(user, brand)
 
   const contactGroups = []
 
@@ -122,10 +163,12 @@ describe('Google', () => {
     createContext()
     beforeEach(setup)
 
-    it('should create some google-contacts', create)
-    it('should return google-contact by resource_id', getByResourceId)
-    it('should return number of contacts of specific credential', getContactsNum)
-    it('should handle add contact groups', addContactGroups)
-    it('should return a refined object of contact groups', getRefinedContactGroups)
+    it('should create several Google contacts', create)
+    it('should return Google contact by resource_id', getByResourceId)
+    it('should return several Google contacts owned by a specific credential', getContactsNum)
+    it('should delete Google contacts by id', deleteMany)
+    it('should restore Google contacts by id', restoreMany)
+    it('should handle add Google contact groups', addContactGroups)
+    it('should return a refined object of Google contact groups', getRefinedContactGroups)
   })
 })

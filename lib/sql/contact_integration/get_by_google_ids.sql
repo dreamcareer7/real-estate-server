@@ -1,0 +1,1 @@
+SELECT id FROM contact_integration WHERE google_id = ANY($1::uuid[])

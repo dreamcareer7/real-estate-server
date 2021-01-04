@@ -23,7 +23,9 @@ const attachContactEvents = require('../lib/models/Contact/events')
 const attachTouchEventHandler = require('../lib/models/CRM/Touch/events')
 const attachTaskEventHandler = require('../lib/models/CRM/Task/events')
 const attachFlowEventHandler = require('../lib/models/Flow/events')
-const attachCalIntEventHandler = require('../lib/models/CalendarIntegration/event')
+const attachCalIntEventHandler = require('../lib/models/CalendarIntegration/events')
+const attachContactIntEventHandler = require('../lib/models/ContactIntegration/events')
+
 
 attachCalendarEvents()
 attachContactEvents()
@@ -31,6 +33,7 @@ attachTouchEventHandler()
 attachTaskEventHandler()
 attachFlowEventHandler()
 attachCalIntEventHandler()
+attachContactIntEventHandler()
 
 const context = Context.create({
   id: '<rechat-shell>',
