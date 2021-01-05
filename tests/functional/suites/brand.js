@@ -692,7 +692,8 @@ function createAsset(cb) {
     .post(
       `/brands/${results.brand.create.data.id}/assets`,
       {
-        file: logo
+        file: logo,
+        label: 'Asset Label'
       },
       {
         json: false,
