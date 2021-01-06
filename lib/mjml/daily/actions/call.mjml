@@ -1,17 +1,32 @@
 {% if contact.phone_number %}
-  <mj-button
+  <!-- <mj-button
       font-family="Lato"
       font-weight="bold"
       color="black"
       font-size="13px"
       background-color="white"
-      padding=0
+      padding="0"
       inner-padding="5px 10px"
       href="tel: {{ contact.phone_number }}"
-      padding-left=0
-      padding-right=0
+      padding-left="0"
+      padding-right="0"
       align="center"
     >
       📞
+  </mj-button> -->
+    <mj-button
+    font-family="Lato"
+    background-color="#E7E9EC"
+    font-weight="bold"
+    font-size="13px"
+    color="black"
+    padding="3px"
+    inner-padding="0"
+    border-radius="50%"
+    href="{{url | url}}"
+    align="center"
+    mj-class="actions"
+  >
+    <img src="https://assets.rechat.com/daily/phone.png" style="width:35px;width:35px;object-fit:contain;vertical-align:middle;" />
   </mj-button>
 {% endif %}

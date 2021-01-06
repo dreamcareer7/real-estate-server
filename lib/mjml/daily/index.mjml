@@ -3,21 +3,20 @@
 {% block content %}
     <mj-section padding="16px 0 0 0"></mj-section>
 
-    <mj-wrapper background-color="#ffffff" padding="0" border-radius="16px">
-      <mj-section padding-top="24px">
-        <mj-column>
-          <mj-image height="24px" width="141px" padding-top=0 padding-bottom="24px" src="https://assets.rechat.com/daily/logo.png" />
+    <mj-wrapper background-color="#ffffff" padding="0">
 
-          <mj-text padding="0" align="center" font-family="Lato" font-size="22px">
-            Good Morning {{user.abbreviated_display_name}}
-          </mj-text>
+          <mj-section background-color="#FAF9EA" padding-top="0">
+        <mj-column>
+            <mj-image padding="0" width="400px" src="https://assets.rechat.com/daily/header.png" />
         </mj-column>
       </mj-section>
 
 
-      <mj-section background-color="#FAF9EA" padding-top="0">
+      <mj-section padding-top="27px">
         <mj-column>
-            <mj-image padding=0 width="400px" src="https://assets.rechat.com/daily/header.png" />
+          <mj-text padding="0" align="center" font-family="Lato" font-size="27px" font-weight="900">
+            Good Morning {{user.abbreviated_display_name}}
+          </mj-text>
         </mj-column>
       </mj-section>
     </mj-wrapper>
