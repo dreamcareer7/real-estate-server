@@ -116,6 +116,13 @@ const update = cb => {
     })
 }
 
+const deleteWebsite = cb => {
+  return frisby.create('delete a website')
+    .delete(`/websites/${results.website.create.data.id}`)
+    .after(cb)
+    .expectStatus(204)
+}
+
 module.exports = {
   create,
   get,
@@ -123,5 +130,6 @@ module.exports = {
   addHostname,
   getByHostname,
   deleteHostname,
-  update
+  update,
+  deleteWebsite
 }

@@ -147,7 +147,7 @@ const testExecuteTrigger = async () => {
   }
 
   const actual = moment(campaign.due_at * 1000).tz(user.timezone)
-  const expected = BIRTHDAY.clone().year(moment().year()).add(12, 'hours').tz(user.timezone).startOf('day').add(-1, 'day').add(10, 'hours')
+  const expected = BIRTHDAY.clone().year(BIRTHDAY.year() + 20).add(12, 'hours').tz(user.timezone).startOf('day').add(-1, 'day').add(10, 'hours')
 
   expect(campaign.due_at, `Expected "${actual.format()}" to be equal "${expected.format()}" which is the same day as "${BIRTHDAY.format()}"`).to.be.eq(expected.unix())
 
@@ -172,7 +172,7 @@ const testExecuteRecurringTrigger = async () => {
   expect(triggersAfterExecute).to.have.members([ trigger.id ])
 
   const clonedTrigger = await Trigger.get(contactTriggers[0])
-  const expected = BIRTHDAY.clone().year(moment().year()).add(12, 'hours').tz(user.timezone).startOf('day').add(-1, 'day').add(10, 'hours')
+  const expected = BIRTHDAY.clone().year(BIRTHDAY.year() + 20).add(12, 'hours').tz(user.timezone).startOf('day').add(-1, 'day').add(10, 'hours')
   expect(clonedTrigger.effective_at).to.be.equal(expected.unix())
 }
 

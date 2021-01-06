@@ -23,3 +23,6 @@ Website endpoints are responsible for manipulating the data for our website buil
 
 ### Delete hostname from a website [DELETE /websites/hostnames?hostname=:hostname]
 <!-- include(tests/website/deleteHostname.md) -->
+
+### Delete a website [DELETE /websites/:id]
+<!-- include(tests/website/deleteWebsite.md) -->
