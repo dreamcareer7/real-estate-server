@@ -266,7 +266,8 @@ AS $$
     updated_at = NOW(),
     updated_by = user_id,
     updated_within = _context,
-    updated_for = 'merge'
+    updated_for = 'merge',
+    parked = false
   WHERE
     id = parent;
 
