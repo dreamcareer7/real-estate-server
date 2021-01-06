@@ -17,7 +17,7 @@
     "heroku-postbuild": "npm run migrate:up"
   },
   "engines": {
-    "node": "14.x"
+    "node": "^14.14.0"
   },
   "nyc": {
     "extension": [
