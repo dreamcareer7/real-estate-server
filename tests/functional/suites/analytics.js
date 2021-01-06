@@ -76,6 +76,7 @@ function createContacts(cb) {
 function getCalendar(cb) {
   const low = moment().subtract(10, 'day').startOf('day').unix()
   const high = moment().add(20, 'day').startOf('day').unix()
+
   return frisby
     .create('get calendar events')
     .get(`/calendar?low=${low}&high=${high}`, {

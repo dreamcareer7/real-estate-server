@@ -36,7 +36,6 @@ AS $function$
         contacts_attributes.attribute_type,
         COALESCE(
           contacts_attributes.text,
-          contacts_attributes.number::text,
           contacts_attributes.date::text
         ) AS "value"
       FROM

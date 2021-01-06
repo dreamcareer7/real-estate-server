@@ -65,6 +65,7 @@ AS $function$
           'state'
         ])
         AND ca.deleted_at IS NULL
+        AND ca.data_type = 'text'
       WINDOW w AS (PARTITION BY (contact, index))
       ORDER BY
         2, 3, 4
@@ -79,7 +80,6 @@ AS $function$
               contacts_attributes.attribute_type,
               COALESCE(
                 contacts_attributes.text,
-                contacts_attributes.number::text,
                 contacts_attributes.date::text
               ) AS "value"
             FROM
