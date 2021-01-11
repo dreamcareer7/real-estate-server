@@ -5,33 +5,30 @@
 
 <mj-section padding="0 5px 20px 5px">
   <mj-group>
-    <mj-column width="17%">
+    <mj-column width="13%">
       <mj-image
         padding="5px"
         src="{{contact.profile_image_url or default_icon}}"
         href="{{ url }}"
-        border-radius="5px"
-        width="64px"
+        border-radius="50%"
+        width="45px"
         align="center"
       >
       </mj-image>
     </mj-column>
-    <mj-column width="53%">
-      <mj-text padding-left=0 padding-right=0>
-        {{ celebration.timestamp | time('MMMM Do')}}
-        <div>
-          <br>
-          <a href="{{ url }}">{{ celebration.title }}</a>
+    <mj-column width="65%">
+      <mj-text padding-left="0" padding-right="0" color="#949598" font-family="Lato" font-size="13px" font-weight="400">
+        {{ celebration.timestamp | time('MMMM DD')}}
+        <div style="margin:5px 0;">
+          <a style="color:#000000;" href="{{ url }}">{{ celebration.title }}</a>
         </div>
         {% if contact.last_touch %}
           <div>
-            <br>
-            <span style="color: #c6c6c6;">Last Touch:</span>
-            {{ contact.last_touch | calendar }}
+            <span style="color:#949598;">Last Touch:</span>
+            {{ contact.last_touch | time('MMMM DD, YYYY', user.timezone) }}
           </div>
         {% endif %}
         <div>
-          <br>
           {% for tag in contact.tags %}
           {% include './tag.mjml' %}
           {% endfor %}

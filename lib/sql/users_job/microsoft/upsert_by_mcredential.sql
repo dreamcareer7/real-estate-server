@@ -26,5 +26,6 @@ ON CONFLICT (microsoft_credential, job_name) WHERE recurrence IS TRUE DO UPDATE 
   status = $6,
   start_at = $7,
   updated_at = now(),
-  resume_at = null
+  resume_at = null,
+  deleted_at = null
 RETURNING id

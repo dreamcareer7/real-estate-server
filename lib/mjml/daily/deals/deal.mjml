@@ -3,20 +3,20 @@
 
 <mj-section padding="0 5px 20px 5px">
   <mj-group>
-    <mj-column width="17%">
+    <mj-column width="13%">
       <mj-image
         padding="5px"
         src="{{deal.context.photo.text or 'https://assets.rechat.com/daily/listing.png'}}"
         href="{{ url }}"
         border-radius="5px"
-        width="64px"
+        width="45px"
         align="center"
       >
       </mj-image>
     </mj-column>
-    <mj-column width="53%">
-      <mj-text padding-left=0>
-        <a href="{{url}}">
+    <mj-column width="76%">
+      <mj-text padding-left="0">
+        <a href="{{url}}" style="font-family:'Lato'; font-size: 13px; font-weight:400; color: #000000;">
           {{ deal.title }}
           {% if deal.new_notifications %}
             <span style="
@@ -34,14 +34,14 @@
             </span>
           {% endif %}
         </a>
-        <div style="color: #c6c6c6;">
+        <div style="color: #949598;font-family:'Lato'; font-size: 13px; font-weight:400; ">
           <br>
           {{ deal.context.contract_status.text or deal.context.listing_status.text }}
         </div>
       </mj-text>
     </mj-column>
 
-    <mj-column width="30%">
+    <mj-column width="11%">
       {% include '../actions/deal.mjml' %}
     </mj-column>
   </mj-group>

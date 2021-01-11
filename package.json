@@ -17,7 +17,7 @@
     "heroku-postbuild": "npm run migrate:up"
   },
   "engines": {
-    "node": "14.x"
+    "node": "^14.14.0"
   },
   "nyc": {
     "extension": [
@@ -36,7 +36,7 @@
   "license": "ISC",
   "dependencies": {
     "@microsoft/microsoft-graph-client": "^2.0.0",
-    "@rechat/squel": "^5.14.1",
+    "@rechat/squel": "^5.14.2",
     "amanda": "^1.0.1",
     "amqplib": "^0.5.5",
     "async": "^1.5.2",
@@ -68,13 +68,14 @@
     "geoip-lite": "^1.4.2",
     "godaddy": "^0.2.1",
     "google-libphonenumber": "^3.2.9",
-    "googleapis": "^42.0.0",
+    "googleapis": "^66.0.0",
     "gulp-eslint7": "^0.3.0",
     "html-to-text": "^5.1.1",
-    "ical": "git+https://github.com/peterbraden/ical.js.git#a8b44f3",
+    "ical": "https://emilsedgh:09c4811f0d62635f7f777cab41c228352c2b2235@github.com/peterbraden/ical.js.git#a8b44f3",
     "ical-generator": "^1.10.0",
     "indefinite": "^2.3.2",
     "intercom-client": "^2.11.0",
+    "is-valid-hostname": "^1.0.0",
     "isomorphic-fetch": "^2.2.1",
     "js-base64": "^2.5.2",
     "jszip": "^3.4.0",
@@ -90,7 +91,7 @@
     "mkdirp": "^0.5.1",
     "mock-aws-s3": "^4.0.1",
     "moment": "^2.24.0",
-    "moment-timezone": "^0.5.31",
+    "moment-timezone": "^0.5.32",
     "node-uuid": "^1.4.8",
     "nodemailer": "^6.4.6",
     "numeral": "^1.5.3",
@@ -102,10 +103,10 @@
     "passport-oauth2-client-password": "^0.1.2",
     "passport-saml": "^1.2.0",
     "password-generator": "^2.3.2",
-    "pdfjs-dist": "git+https://github.com/rechat/pdfjs-dist.git",
+    "pdfjs-dist": "https://emilsedgh:09c4811f0d62635f7f777cab41c228352c2b2235@github.com/rechat/pdfjs-dist.git",
     "peanar": "^0.10.0",
     "pg": "^8.4.1",
-    "pm2": "^4.5.0",
+    "pm2": "^4.5.1",
     "redis": "^3.0.2",
     "request": "^2.88.2",
     "request-as-curl": "^0.1.0",
@@ -150,7 +151,7 @@
     "eslint-config-standard": "^14.1.1",
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.1",
-    "frisby": "git+https://github.com/emilsedgh/frisby.git#b74d835",
+    "frisby": "https://emilsedgh:09c4811f0d62635f7f777cab41c228352c2b2235@github.com/emilsedgh/frisby.git#b74d835",
     "gulp": "^4.0.2",
     "jasmine-node": "^1.16.2",
     "madge": "^3.11.0",

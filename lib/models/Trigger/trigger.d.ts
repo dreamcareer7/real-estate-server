@@ -32,6 +32,7 @@ export interface ITriggerInput {
   wait_for: number;
   time?: string;
   recurring?: boolean;
+  effective_at?: number;
 
   flow?: UUID;
   flow_step?: UUID;
@@ -50,6 +51,7 @@ interface IRawTriggerBase {
   wait_for: number;
   time?: string;
   recurring: boolean;
+  effective_at: number;
 }
 
 type TContactEventTypes =

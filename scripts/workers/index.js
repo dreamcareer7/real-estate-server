@@ -18,7 +18,8 @@ const attachContactEvents = require('../../lib/models/Contact/events')
 const attachFlowEvents = require('../../lib/models/Flow/events')
 const attachTaskEventHandler = require('../../lib/models/CRM/Task/events')
 const attachTouchEventHandler = require('../../lib/models/CRM/Touch/events')
-const attachCalIntEventHandler = require('../../lib/models/CalendarIntegration/event')
+const attachCalIntEventHandler = require('../../lib/models/CalendarIntegration/events')
+const attachContactIntEventHandler = require('../../lib/models/ContactIntegration/events')
 
 const createContext = require('./create-context')
 
@@ -40,6 +41,7 @@ attachFlowEvents()
 attachTaskEventHandler()
 attachTouchEventHandler()
 attachCalIntEventHandler()
+attachContactIntEventHandler()
 
 process.on('unhandledRejection', (err, promise) => {
   Context.trace('Unhanled Rejection on request', err)

@@ -54,9 +54,8 @@ declare interface IEmailRecipient {
   email: string;
 }
 
-declare interface IEmailCampaignInput {
+declare interface IEmailCampaignBase {
   id?: UUID;
-  due_at: string | null;
   created_by: UUID;
   brand: UUID;
   template?: UUID;
@@ -74,10 +73,15 @@ declare interface IEmailCampaignInput {
   google_credential?: UUID | null;
   microsoft_credential?: UUID | null;
   thread_key?: string;
-  notifications_enabled?: boolean
+  notifications_enabled?: boolean;
+  archive?: boolean;
 }
 
-declare interface IEmailCampaign extends IEmailCampaignInput {
+declare interface IEmailCampaignInput extends IEmailCampaignBase {
+  due_at: string | null;
+}
+
+declare interface IEmailCampaign extends IEmailCampaignBase {
   text: string;
   id: UUID;
   failed_at?: string | null;
@@ -85,6 +89,7 @@ declare interface IEmailCampaign extends IEmailCampaignInput {
   failure?: string;
   opened: number;
   sent: number;
+  due_at: number | null;
   executed_at: number;
   created_at: number;
 }

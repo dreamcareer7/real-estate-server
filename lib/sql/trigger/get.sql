@@ -4,6 +4,7 @@ SELECT
   extract(epoch FROM updated_at) AS updated_at,
   extract(epoch FROM deleted_at) AS deleted_at,
   extract(epoch FROM executed_at) AS executed_at,
+  extract(epoch FROM effective_at) AS effective_at,
   extract(epoch FROM failed_at) AS failed_at,
 
   created_by,

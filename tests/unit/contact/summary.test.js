@@ -545,6 +545,37 @@ async function testAddressSummaryWithoutPrimary() {
   })
 }
 
+async function updateParkedProperty() {
+  const ids = await Contact.create(
+    [{
+      user: user.id,
+      attributes: [
+        { attribute_type: 'first_name', text: 'parked_contactd' },
+        { attribute_type: 'tag', text: 'Tag1' }
+      ],
+      parked: true
+    }],
+    user.id,
+    brand.id,
+    'google_integration',
+    { activity: false, get: false, relax: false }
+  )
+
+  await handleJobs()
+
+  const contact = await Contact.get(ids[0])
+  expect(contact.parked).to.be.equal(true)
+
+  const attributes = [{ attribute_type: 'email', text: 'abbas@rechat.com' }]
+  const updatedContacts = [{ id: contact.id, attributes, parked: false }]
+
+  await Contact.update(updatedContacts, user.id, brand.id, 'google_integration')
+
+  const updated = await Contact.get(contact.id)
+  expect(updated.parked).to.be.equal(false)
+}
+
+
 describe('Contact', () => {
   createContext()
   beforeEach(setup)
@@ -560,5 +591,6 @@ describe('Contact', () => {
     it('should calculate partner summary fields', testPartner)
     it('should create stdaddr array for address summaries', testAddressSummary)
     it('should create stdaddr array for address summaries without primary', testAddressSummaryWithoutPrimary)
+    it('should update the parked property of a created contact', updateParkedProperty)
   })
 })

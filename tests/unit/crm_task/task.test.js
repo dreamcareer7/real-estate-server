@@ -120,6 +120,7 @@ async function testCreateMany() {
   const task_ids = await createTwoTasks()
   expect(task_ids).to.have.length(4)
 
+  Orm.setEnabledAssociations(['crm_task.assignees'])
   const tasks = await CrmTask.getAll(task_ids)
 
   expect(tasks[0].all_day).to.be.equal(true)

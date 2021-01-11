@@ -16,6 +16,7 @@ AS $$
       contact = ANY(contact_ids)
       AND contacts_attributes.deleted_at IS NULL
       AND (attribute_type = 'first_name' OR attribute_type = 'last_name' OR attribute_type = 'email' OR attribute_type = 'phone_number')
+      AND contacts_attributes.data_type = 'text'
       AND is_partner IS FALSE
     GROUP BY
       contact
@@ -28,6 +29,7 @@ AS $$
     WHERE
       contact = ANY(contact_ids)
       AND contacts_attributes.deleted_at IS NULL
+      AND contacts_attributes.data_type = 'text'
       AND (
         (is_partner IS TRUE AND (attribute_type = 'first_name' OR attribute_type = 'last_name' OR attribute_type = 'email' OR attribute_type = 'phone_number'))
         OR attribute_type = 'marketing_name'
@@ -45,7 +47,7 @@ AS $$
     WHERE
       contact = ANY(contact_ids)
       AND searchable IS True
-      AND data_type = 'text'
+      AND contacts_attributes.data_type = 'text'
       AND contacts_attributes.deleted_at IS NULL
       AND contacts_attribute_defs.deleted_at IS NULL
       AND attribute_type <> ALL('{

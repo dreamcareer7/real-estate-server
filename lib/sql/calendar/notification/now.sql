@@ -12,18 +12,31 @@ SELECT
   c.deal
 FROM
   (
-    SELECT
-      *
-    FROM
-      analytics.calendar,
-      unnest(analytics.calendar.users) cu("user")
-    WHERE
-      CASE
-        WHEN recurring IS TRUE THEN
-          range_contains_birthday(now(), now() + interval '1 month', "timestamp")
-        ELSE
-          "timestamp" BETWEEN NOW() AND NOW() + interval '1 month'
-      END
+    (
+      SELECT
+        *
+      FROM
+        calendar.contact_attribute,
+        unnest(calendar.contact_attribute.users) cu("user")
+      WHERE
+        range_contains_imd(CURRENT_DATE, (CURRENT_DATE + interval '1 month')::date, indexable_month_day("date"))
+    ) UNION ALL (
+      SELECT
+        *
+      FROM
+        calendar.deal_context,
+        unnest(calendar.deal_context.users) cu("user")
+      WHERE
+        "timestamp" BETWEEN NOW() AND NOW() + interval '1 month'
+    ) UNION ALL (
+      SELECT
+        *
+      FROM
+        calendar.home_anniversary,
+        unnest(calendar.home_anniversary.users) cu("user")
+      WHERE
+        range_contains_imd(CURRENT_DATE, (CURRENT_DATE + interval '1 month')::date, indexable_month_day("date"))
+    )
   ) AS c
   JOIN calendar_notification_settings AS cns
     ON c."user" = cns."user"
@@ -40,6 +53,7 @@ WHERE
   AND (c.object_type::calendar_object_type = cns.object_type OR cns.object_type IS NULL)
   AND c.event_type = cns.event_type
   AND (c.object_type = 'deal_context' OR c.object_type = 'contact_attribute')
+  AND c.brand = cns.brand
   AND NOT EXISTS (
     SELECT
       *

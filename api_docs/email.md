@@ -168,7 +168,7 @@ When a user wants to send an email through Gmail or Outlook, two conditions shou
 * `credential.scope_summary` includes `mail.send`
 
 Every Google and Microsoft connected account has a field with the name `scope_summary`.
-This is all of our avaailable scopes: `["profile", "contacts.read", "mail.read", "mail.send", "mail.modify", "calendar"]`
+This is all of our avaailable scopes: `["profile", "contacts", "mail.read", "mail.send", "mail.modify", "calendar"]`
 
 When a user wants to update email IsRead flag, two conditions should be met.
 * `credential.deleted_at is null` and `credentila.revoked is false`

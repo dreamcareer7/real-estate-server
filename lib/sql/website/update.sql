@@ -1,7 +1,4 @@
 INSERT INTO websites_snapshots
-  (template, brand, attributes, website, created_at)
+  (template, brand, attributes, created_at, title, template_instance, website)
 VALUES
-  ($1, $2, $3, $4, statement_timestamp())
-
--- We user statement_timestamp() instead of NOW() because NOW() uses the current transaction's time
--- On our unit tests, we use the same transaction for a lot of endpoint calls and that messes with them
+  ($1, $2, $3, CLOCK_TIMESTAMP(), $4, $5, $6)

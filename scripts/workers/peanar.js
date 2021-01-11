@@ -79,6 +79,10 @@ const queues = [
     concurrency: 5
   },
   {
+    queues: ['microsoft_contacts_avatars'],
+    concurrency: 5
+  },
+  {
     queues: ['microsoft_disconnect'],
     concurrency: 1
   },
@@ -104,6 +108,10 @@ const queues = [
     concurrency: 5
   },
   {
+    queues: ['google_contacts_avatars'],
+    concurrency: 5
+  },
+  {
     queues: ['google_disconnect'],
     concurrency: 1
   },
@@ -114,6 +122,11 @@ const queues = [
 
   {
     queues: ['calendar_integration'],
+    concurrency: 2
+  },
+
+  {
+    queues: ['contact_integration'],
     concurrency: 2
   },
 

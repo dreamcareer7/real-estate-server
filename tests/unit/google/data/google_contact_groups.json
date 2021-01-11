@@ -1,10 +1,73 @@
 [
   {
-    "entry_id": "http://www.google.com/m8/feeds/groups/yaber.azimi%40gmail.com/base/f",
-    "entry": {"id": {"$t": "http://www.google.com/m8/feeds/groups/yaber.azimi%40gmail.com/base/f"}, "link": [{"rel": "self", "href": "https://www.google.com/m8/feeds/groups/yaber.azimi%40gmail.com/full/f", "type": "application/atom+xml"}], "title": {"$t": "System Group: Coworkers"}, "content": {"$t": "System Group: Coworkers"}, "gd$etag": "\"YDwreyM.\"", "updated": {"$t": "1970-01-01T00:00:00.000Z"}, "category": [{"term": "http://schemas.google.com/contact/2008#group", "scheme": "http://schemas.google.com/g/2005#kind"}], "gContact$systemGroup": {"id": "Coworkers"}}
+    "resourceName": "contactGroups/29feafa40ce31955",
+    "etag": "jqTDbPJs+kg=",
+    "metadata": {
+      "updateTime": "2020-12-11T15:23:29.949Z"
+    },
+    "groupType": "USER_CONTACT_GROUP",
+    "name": "label custom",
+    "formattedName": "label custom"
   },
   {
-    "entry_id": "http://www.google.com/m8/feeds/groups/saeed.uni68%40gmail.com/base/6",
-    "entry": {"id": {"$t": "http://www.google.com/m8/feeds/groups/saeed.uni68%40gmail.com/base/6"}, "link": [{"rel": "self", "href": "https://www.google.com/m8/feeds/groups/saeed.uni68%40gmail.com/full/6", "type": "application/atom+xml"}], "title": {"$t": "System Group: My Contacts"}, "content": {"$t": "System Group: My Contacts"}, "gd$etag": "\"YDwreyM.\"", "updated": {"$t": "1970-01-01T00:00:00.000Z"}, "category": [{"term": "http://schemas.google.com/contact/2008#group", "scheme": "http://schemas.google.com/g/2005#kind"}], "gContact$systemGroup": {"id": "Contacts"}}
+    "resourceName": "contactGroups/22f91a7f0c902036",
+    "etag": "6a2zfJSo76c=",
+    "metadata": {
+      "updateTime": "2020-12-11T14:46:34.615Z"
+    },
+    "groupType": "USER_CONTACT_GROUP",
+    "name": "labelx",
+    "formattedName": "labelx",
+    "memberCount": 1
+  },
+  {
+    "resourceName": "contactGroups/chatBuddies",
+    "groupType": "SYSTEM_CONTACT_GROUP",
+    "name": "chatBuddies",
+    "formattedName": "Chat contacts"
+  },
+  {
+    "resourceName": "contactGroups/all",
+    "groupType": "SYSTEM_CONTACT_GROUP",
+    "name": "all",
+    "formattedName": "All Contacts",
+    "memberCount": 9
+  },
+  {
+    "resourceName": "contactGroups/myContacts",
+    "groupType": "SYSTEM_CONTACT_GROUP",
+    "name": "myContacts",
+    "formattedName": "My Contacts",
+    "memberCount": 9
+  },
+  {
+    "resourceName": "contactGroups/friends",
+    "groupType": "SYSTEM_CONTACT_GROUP",
+    "name": "friends",
+    "formattedName": "Friends"
+  },
+  {
+    "resourceName": "contactGroups/family",
+    "groupType": "SYSTEM_CONTACT_GROUP",
+    "name": "family",
+    "formattedName": "Family"
+  },
+  {
+    "resourceName": "contactGroups/coworkers",
+    "groupType": "SYSTEM_CONTACT_GROUP",
+    "name": "coworkers",
+    "formattedName": "Coworkers"
+  },
+  {
+    "resourceName": "contactGroups/blocked",
+    "groupType": "SYSTEM_CONTACT_GROUP",
+    "name": "blocked",
+    "formattedName": "Blocked"
+  },
+  {
+    "resourceName": "contactGroups/starred",
+    "groupType": "SYSTEM_CONTACT_GROUP",
+    "name": "starred",
+    "formattedName": "Starred"
   }
 ]
