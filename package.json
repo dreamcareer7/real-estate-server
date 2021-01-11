@@ -75,6 +75,7 @@
     "ical-generator": "^1.10.0",
     "indefinite": "^2.3.2",
     "intercom-client": "^2.11.0",
+    "is-valid-hostname": "^1.0.0",
     "isomorphic-fetch": "^2.2.1",
     "js-base64": "^2.5.2",
     "jszip": "^3.4.0",
