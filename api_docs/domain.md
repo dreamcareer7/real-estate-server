@@ -4,13 +4,13 @@
 An API to purchase domains
 
 ### Get some domain suggestions [GET /domains/suggest?q={q}]
-<!-- include(tests/domains/suggest.md) -->
+<!-- include(tests/domain/suggest.md) -->
 
 ### Get legal agreements for a domain [GET /domains/agreements?domain={domain}]
-<!-- include(tests/domains/agreements.md) -->
+<!-- include(tests/domain/agreements.md) -->
 
 ### Purchase a domain [POST /domains]
-<!-- include(tests/domains/purchase.md) -->
+<!-- include(tests/domain/purchase.md) -->
 
 
 
