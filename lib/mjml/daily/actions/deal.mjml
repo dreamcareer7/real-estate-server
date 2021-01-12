@@ -7,19 +7,18 @@
     }
   } %}
 
-<mj-button
-  font-family="Lato"
-  font-weight="bold"
-  color="black"
-  font-size="13px"
-  background-color="white"
-  padding=0
-  inner-padding="5px 10px"
-  width="87px"
-  padding-left="0"
-  href="{{url | url}}"
-  border="1px solid #D7D9DC"
-  align="center"
->
-  Promote
-</mj-button>
+  <mj-button
+    font-family="Lato"
+    background-color="#E7E9EC"
+    font-weight="bold"
+    font-size="13px"
+    color="black"
+    padding="3px"
+    inner-padding="0"
+    border-radius="50%"
+    href="{{url | url}}"
+    align="center"
+    mj-class="actions"
+  >
+    <img src="https://assets.rechat.com/daily/announce.png" style="width:35px;width:35px;object-fit:contain;vertical-align:middle;" />
+  </mj-button>
