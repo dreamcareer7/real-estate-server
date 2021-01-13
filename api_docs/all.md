@@ -15,4 +15,5 @@
 <!-- include(email.md) -->
 <!-- include(website.md) -->
 <!-- include(domain.md) -->
+<!-- include(payment.md) -->
 <!-- include(socket.md) -->
