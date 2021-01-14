@@ -142,12 +142,12 @@ async function testEnrollContact() {
   const tasks = await CrmTask.getForUser(user.id, brand.id, {})
 
   expect(tasks).to.have.length(1)
-  
-  const due_date = tasks[0].due_date
-  expect(due_date).to.be.equal(moment().tz(user.timezone).startOf('day').add(1, 'days').add(8, 'hours').unix())
 
-  // const campaigns = await EmailCampaign.getByBrand(brand.id)
-  // expect(campaigns).to.have.length(1)
+  const due_date = tasks[0].due_date
+  expect(due_date).to.be.equal(moment.tz(user.timezone).startOf('day').add(1, 'days').add(8, 'hours').unix())
+
+  const campaigns = await EmailCampaign.getByBrand(brand.id)
+  expect(campaigns).to.have.length(1)
 
   return flow
 }
