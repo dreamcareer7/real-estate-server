@@ -1,6 +1,6 @@
 {% if today.length > 0 %}
   <mj-wrapper background-color="white" border-radius="0px 0px 16px 16px">
-    <mj-section padding-bottom="0">
+    <mj-section padding-bottom="0" padding-top="0">
       <mj-column>
         <mj-text css-class="title" padding="0" align="center" font-family="Lato" font-size="16px" color="#949598" font-weight="400">
           <a style="color:#949598;" href="{{ '/dashboard/calendar' | url }}">
