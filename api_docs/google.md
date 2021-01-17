@@ -27,7 +27,7 @@ A _google_credential_ is a simple and small object that contains:
 
 
 ### Request to add google account [POST /users/self/google]
-- Valid scopes: ['contacts.readonly', 'gmail.readonly', 'gmail.send']
+- Valid scopes: ['contacts', 'gmail.readonly', 'gmail.send']
 - To redirect back user to an specific address, use `redirect` key to set your custom address.
 <!-- include(tests/google/requestGmailAccess.md) -->
 

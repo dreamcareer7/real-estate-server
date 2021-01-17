@@ -1,0 +1,1 @@
+SELECT id FROM contact_integration WHERE contact = ANY($1::uuid[]) AND deleted_at IS NULL

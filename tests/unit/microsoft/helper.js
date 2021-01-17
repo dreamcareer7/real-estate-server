@@ -3,6 +3,7 @@ const { expect } = require('chai')
 const MicrosoftCredential    = require('../../../lib/models/Microsoft/credential')
 const MicrosoftMessage       = require('../../../lib/models/Microsoft/message')
 const MicrosoftCalendar      = require('../../../lib/models/Microsoft/calendar')
+const MicrosoftContact       = require('../../../lib/models/Microsoft/contact')
 const MicrosoftCalendarEvent = require('../../../lib/models/Microsoft/calendar_events')
 const EmailCampaign = require('../../../lib/models/Email/campaign')
 
@@ -13,6 +14,7 @@ const Email   = {
   ...require('../../../lib/models/Email/create'),
 }
 
+const microsoft_contacts_offline = require('./data/microsoft_contacts.json')
 const microsoft_messages_offline = require('./data/microsoft_messages.json')
 const calendars = require('./data/calendars.json')
 const events    = require('./data/calendar_events.json')
@@ -109,11 +111,36 @@ async function createCampaign(user, brand) {
   return result[0]
 }
 
+async function createMicrosoftContact(user, brand) {
+  const { credential } = await createMicrosoftCredential(user, brand)
+
+  const records = []
+
+  for (const mContact of microsoft_contacts_offline) {
+    records.push({ microsoft_credential: credential.id, remote_id: mContact.id, data: JSON.stringify(mContact.data), source: mContact.source })
+  }
+
+  const createdMicrosoftContacts = await MicrosoftContact.create(records)
+
+  for (const createdMicrosoftContact of createdMicrosoftContacts) {
+    expect(createdMicrosoftContact.microsoft_credential).to.be.equal(credential.id)
+
+    const microsoftContact = await MicrosoftContact.get(createdMicrosoftContact.remote_id, createdMicrosoftContact.microsoft_credential)
+
+    expect(microsoftContact.type).to.be.equal('microsoft_contact')
+    expect(microsoftContact.microsoft_credential).to.be.equal(createdMicrosoftContact.microsoft_credential)
+    expect(microsoftContact.remote_id).to.be.equal(createdMicrosoftContact.remote_id)
+  }
+
+  return createdMicrosoftContacts[0]
+}
+
 
 module.exports = {
   createMicrosoftCredential,
   createMicrosoftMessages,
   createMicrosoftCalendar,
   createMicrosoftCalendarEvent,
-  createCampaign
+  createCampaign,
+  createMicrosoftContact
 }

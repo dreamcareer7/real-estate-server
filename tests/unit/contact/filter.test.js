@@ -48,6 +48,15 @@ async function testFilterTagEquals() {
   expect(filter_res.total).to.equal(1)
 }
 
+async function testFilterNoTags() {
+  const filter_res = await Contact.fastFilter(brand.id, [{
+    attribute_type: 'tag',
+    value: null
+  }], {})
+
+  expect(filter_res.total).to.equal(1)
+}
+
 async function testFilterTagAny() {
   const filter_res = await Contact.fastFilter(brand.id, [{
     attribute_type: 'tag',
@@ -78,12 +87,12 @@ async function testFilterFirstNameEquals() {
 }
 
 async function testFFQuery(q, expected_length) {
-  const filter_res = await Contact.fastFilter(brand.id, [], { q })
+  const filter_res = await Contact.fastFilter(brand.id, [], { q, order: 'display_name' })
   expect(filter_res.total).to.equal(expected_length)
   return filter_res
 }
 async function testFQuery(q, expected_length) {
-  const filter_res = await Contact.filter(brand.id, [], { q })
+  const filter_res = await Contact.filter(brand.id, [], { q, order: 'display_name' })
   expect(filter_res.total).to.equal(expected_length)
   return filter_res
 }
@@ -250,6 +259,7 @@ describe('Contact', () => {
 
   describe('Filter', () => {
     it('should filter by has a tag', testFilterTagEquals)
+    it('should filter by has no tags', testFilterNoTags)
     it('should filter by has any of tags', testFilterTagAny)
     it('should filter by has all tags', testFilterTagAll)
     it('should filter by first name is', testFilterFirstNameEquals)

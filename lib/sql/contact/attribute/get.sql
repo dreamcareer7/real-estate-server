@@ -14,7 +14,6 @@ SELECT
   attribute_type,
   "text",
   EXTRACT(EPOCH FROM "date") AS "date",
-  "number",
   'contact_attribute' as "type"
 FROM
   contacts_attributes

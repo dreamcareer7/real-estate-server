@@ -18,8 +18,11 @@ Website endpoints are responsible for manipulating the data for our website buil
 ### Add hostname to a website [POST /websites/:id/hostnames]
 <!-- include(tests/website/addHostname.md) -->
 
+### Delete hostname from a website [DELETE /websites/:id/hostnames?hostname=:hostname]
+<!-- include(tests/website/deleteHostname.md) -->
+
+### Delete a website [DELETE /websites/:id]
+<!-- include(tests/website/deleteWebsite.md) -->
+
 ### Find a website by its hostname [GET /websites/search?hostname=:hostname]
 <!-- include(tests/website/getByHostname.md) -->
-
-### Delete hostname from a website [DELETE /websites/hostnames?hostname=:hostname]
-<!-- include(tests/website/deleteHostname.md) -->
