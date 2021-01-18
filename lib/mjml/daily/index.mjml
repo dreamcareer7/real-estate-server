@@ -12,7 +12,7 @@
       </mj-section>
 
 
-      <mj-section padding-top="27px">
+      <mj-section padding-top="27px" padding-bottom="15px">
         <mj-column>
           <mj-text padding="0" align="center" font-family="Lato" font-size="27px" font-weight="900">
             Good Morning {{user.abbreviated_display_name}}

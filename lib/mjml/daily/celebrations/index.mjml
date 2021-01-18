@@ -5,7 +5,7 @@
       <mj-column>
         <mj-text css-class="title" padding="0" align="center" font-family="Lato" font-size="18px" font-weight="900" color="#000000">
           <a href="{{ '/dashboard/calendar' | url }}">
-            <a href="{{ '/dashboard/calendar' | url }}">Upcoming Celebrations</a>
+            <a href="{{ '/dashboard/calendar' | url }}">Send Celebration Cards</a>
           </a>
         </mj-text>
       </mj-column>

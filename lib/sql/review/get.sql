@@ -9,6 +9,7 @@ WITH reviews AS (
   reviews_history.created_by as updated_by
   FROM reviews
   JOIN reviews_history ON reviews.id = reviews_history.review
+  WHERE reviews.id = ANY($1::uuid[])
   ORDER BY reviews.id DESC, reviews_history.created_at DESC
 )
 SELECT reviews.* FROM reviews
