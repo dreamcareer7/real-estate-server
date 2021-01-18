@@ -352,6 +352,8 @@ declare type TDbSqlAddress =
   | 'flow/set_last_executed_at'
   | 'flow/step/delete'
   | 'flow/step/get'
+  | 'flow/step/mark_executed'
+  | 'flow/step/mark_failed'
   | 'flow/step/update'
   | 'form/by-brand'
   | 'form/context/insert'

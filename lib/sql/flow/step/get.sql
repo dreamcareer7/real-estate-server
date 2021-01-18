@@ -10,6 +10,9 @@ SELECT
   origin,
   campaign,
   crm_task,
+  extract(epoch FROM executed_at) AS executed_at,
+  extract(epoch FROM failed_at) AS failed_at,
+  failure,
 
   'flow_step' AS type
 FROM
