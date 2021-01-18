@@ -145,7 +145,7 @@ async function testFlowProgress() {
 
   const tasks = await CrmTask.getForUser(user.id, brand.id, {})
 
-  expect(tasks, "A crm task should've been created as the result of the first step").to.have.length(1)
+  expect(tasks, 'A crm task should\'ve been created as the result of the first step').to.have.length(1)
 
   const due_date = tasks[0].due_date
   expect(due_date).to.be.equal(moment.tz(user.timezone).startOf('day').add(1, 'days').add(8, 'hours').unix())
@@ -158,7 +158,7 @@ async function testFlowProgress() {
   expect(contact.triggers).to.have.length(1)
 
   const { steps } = await Flow.get(flow.id)
-  expect(steps, "Two steps should be present after the first one was executed").to.have.length(2)
+  expect(steps, 'Two steps should be present after the first one was executed').to.have.length(2)
 
   const flow_steps = await FlowStep.getAll(steps)
   expect(flow_steps[0].crm_task).to.be.equal(tasks[0].id)
@@ -182,7 +182,7 @@ async function testFlowProgressFail() {
   await handleJobs()
 
   const { steps } = await Flow.get(flow.id)
-  expect(steps, "Three steps should be present after the second one failed to be schedule").to.have.length(3)
+  expect(steps, 'Three steps should be present after the second one failed to be schedule').to.have.length(3)
 
   const flow_steps = await FlowStep.getAll(steps)
 
