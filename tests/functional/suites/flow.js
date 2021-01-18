@@ -200,7 +200,7 @@ const deleteFlowStep = cb => {
 
 const enroll = cb => {
   return frisby.create('enroll a contact to a flow')
-    .post('/crm/flows?associations[]=contact.flows&associations[]=flow_step.crm_task&associations[]=flow_step.email', {
+    .post('/crm/flows?associations[]=flow.contact&associations[]=flow_step.crm_task&associations[]=flow_step.email', {
       origin: results.flow.getBrandFlows.data[0].id,
       starts_at: Date.now() / 1000,
       steps: results.flow.getBrandFlows.data[0].steps.map(s => s.id),
@@ -213,7 +213,9 @@ const enroll = cb => {
     .expectJSON({
       data: [{
         steps: [{}],
-        contact: results.contact.create.data[0].id
+        contact: {
+          id: results.contact.create.data[0].id
+        }
       }]
     })
 }
@@ -237,7 +239,7 @@ const getFlowWithExecutedStep = cb => {
       data: {
         flows: [{
           steps: [{}],
-          contact: results.contact.create.data[0].id
+          id: results.flow.enroll.data[0].id
         }]
       }
     })
@@ -260,7 +262,7 @@ const checkFlowAssociation = cb => {
     .expectJSON({
       data: {
         flows: [{
-          steps: [{}, {}, {}]
+          steps: [{}, {}]
         }]
       }
     })

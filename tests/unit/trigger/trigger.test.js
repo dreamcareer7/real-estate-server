@@ -30,8 +30,6 @@ const { createContext, handleJobs } = require('../helper')
 const BIRTHDAY = moment.utc().add(3, 'days').startOf('day').add(-20, 'years')
 let brand
 
-const DAY = 86400000
-
 async function setup() {
   const user = await UserHelper.TestUser()
   brand = await createBrand()
