@@ -7,7 +7,7 @@ const Contact = {
 }
 const CrmTask = require('../../../lib/models/CRM/Task/upsert')
 const Context = require('../../../lib/models/Context')
-const Flow = require('../../../lib/models/Flow/upsert')
+const Flow = require('../../../lib/models/Flow/enroll')
 const User = require('../../../lib/models/User/get')
 
 const BrandHelper = require('../brand/helper')
