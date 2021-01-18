@@ -517,9 +517,9 @@ AND (
   JOIN brands_branches AS bo
     ON ct.brand = bo.id`,
 
-    /*
-     * analytics.roles
-     */
+  /*
+   * analytics.roles
+   */
   `CREATE OR REPLACE VIEW analytics.roles AS
   SELECT
     roles.id,
