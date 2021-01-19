@@ -133,6 +133,38 @@ async function addContactGroups() {
   expect(contactGroups.length).to.be.equal(result.length)
 }
 
+async function deleteManyCGroups() {
+  const { credential } = await createGoogleCredential(user, brand)
+
+  const contactGroups = []
+
+  for (const group of google_contact_groups_offline) {
+    contactGroups.push({
+      google_credential: credential.id,
+      resource_id: group.resourceName,
+      resource_name: group.name,
+      resource: JSON.stringify(group)
+    })
+  }
+
+  const result = await GoogleContact.addContactGroups(contactGroups)
+  expect(contactGroups.length).to.be.equal(result.length)
+  console.log('result', result)
+
+  const deletedGroups = result.map(group => {
+    return {
+      google_credential: group.google_credential,
+      resource_id: group.resource_id
+    }
+  })
+
+  await GoogleContact.deleteManyCGroups(deletedGroups)
+
+
+  const groups = await GoogleContact.getRefinedContactGroups(credential.id)
+  console.log('groups', groups)
+}
+
 async function getRefinedContactGroups() {
   const googleContacts = await create()
   const { credential } = await createGoogleCredential(user, brand)
@@ -169,6 +201,7 @@ describe('Google', () => {
     it('should delete Google contacts by id', deleteMany)
     it('should restore Google contacts by id', restoreMany)
     it('should handle add Google contact groups', addContactGroups)
+    it('should deleted Google contact groups', deleteManyCGroups)
     it('should return a refined object of Google contact groups', getRefinedContactGroups)
   })
 })
