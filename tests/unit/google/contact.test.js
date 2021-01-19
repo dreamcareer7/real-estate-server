@@ -149,7 +149,6 @@ async function deleteManyCGroups() {
 
   const result = await GoogleContact.addContactGroups(contactGroups)
   expect(contactGroups.length).to.be.equal(result.length)
-  console.log('result', result)
 
   const deletedGroups = result.map(group => {
     return {
@@ -160,9 +159,8 @@ async function deleteManyCGroups() {
 
   await GoogleContact.deleteManyCGroups(deletedGroups)
 
-
   const groups = await GoogleContact.getRefinedContactGroups(credential.id)
-  console.log('groups', groups)
+  expect(groups).to.be.deep.equal({})
 }
 
 async function getRefinedContactGroups() {
