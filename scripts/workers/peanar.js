@@ -122,12 +122,12 @@ const queues = [
 
   {
     queues: ['calendar_integration'],
-    concurrency: 2
+    concurrency: 10
   },
 
   {
     queues: ['contact_integration'],
-    concurrency: 2
+    concurrency: 10
   },
 
   {
