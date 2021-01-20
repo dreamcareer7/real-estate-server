@@ -556,6 +556,7 @@ AND (
     AND bpt.is_lease IS FALSE`,
 
   'ALTER TABLE brokerwolf_property_types DROP property_types',
+  'ALTER TABLE brokerwolf_property_types ADD property_type uuid REFERENCES brands_property_types(id)',
   'DROP TYPE deal_property_type',
   'COMMIT'
 ]

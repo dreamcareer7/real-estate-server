@@ -310,7 +310,7 @@ const addChecklist = cb => {
       checklist,
 
       conditions: {
-        deal_type: results.brand.addChecklist.data.deal_type,
+        checklist_type: results.brand.addChecklist.data.checklist_type,
         property_type: results.brand.addChecklist.data.property_type,
       }
     })

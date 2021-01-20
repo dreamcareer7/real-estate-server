@@ -2,7 +2,8 @@ const settings = require('./data/brokerwolf/settings')
 
 registerSuite('brand', [
   'createParent',
-  'create'
+  'create',
+  'addPropertyType',
 ])
 
 let brand
@@ -71,7 +72,7 @@ const mapPropertyType = (cb) => {
       name: 'BrokerWolf.PropertyTypes.map',
       data: {
         brokerwolf_id: results.brokerwolf.syncPropertyTypes[0].Id,
-        property_types: ['Resale']
+        property_type: results.brand.addPropertyType.data.id
       }
     })
     .after(cb)
