@@ -5,7 +5,7 @@ const migrations = [
   'ALTER TABLE brands_flow_steps RENAME COLUMN due_in TO wait_for',
   `ALTER TABLE brands_flow_steps
     ADD COLUMN "order" smallint,
-    ADD COLUMN event_type text NOT NULL DEFAULT 'flow_start',
+    ADD COLUMN event_type text NOT NULL DEFAULT 'last_step_date',
     ADD COLUMN template uuid REFERENCES templates(id),
     ADD COLUMN "time" time,
     ADD COLUMN template_instance uuid REFERENCES templates_instances(id)`,
