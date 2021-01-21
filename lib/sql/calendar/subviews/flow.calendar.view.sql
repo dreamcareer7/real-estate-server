@@ -12,7 +12,7 @@ CREATE OR REPLACE VIEW calendar.flow AS (
     'Last Step Date' AS type_label,
     last_step_date AS "timestamp",
     last_step_date::date AS "date",
-    last_step_date as next_occurence,
+    last_step_date::date as next_occurence,
     NULL::timestamptz AS end_date,
     False AS recurring,
     name::text AS title,
