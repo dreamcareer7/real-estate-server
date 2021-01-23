@@ -5,7 +5,7 @@
     border-radius: 16px;
     padding: 2px 8px 2px 8px;
     text-align: center;
-    margin-top: 2px;
+    margin-top: 7px;
     color: #8d8d8e;
     border: 1px solid #dcdddf;
     display: inline-block;

@@ -4,22 +4,22 @@
 
 <mj-section padding="0 5px 20px 5px">
   <mj-group>
-    <mj-column width="17%">
+    <mj-column width="13%">
       <mj-image
         padding="5px"
         src="{{'https://assets.rechat.com/daily/email.png'}}"
         href="{{ url }}"
         border-radius="5px"
-        width="64px"
+        width="45px"
         align="center"
       >
       </mj-image>
     </mj-column>
-    <mj-column width="83%">
-      <mj-text padding-left=0>
+    <mj-column width="87%">
+      <mj-text padding-left="0" font-family="Lato" font-size="13px" font-weight="400" color="#000000">
         <a href="{{url}}">{{ campaign.subject or '(untitled)' }}</a>
-        <div style="color: #c6c6c6;">
-            <br>
+        <div style="color: #949598;margin-top:5px;">
+           
             {% if campaign.executed_at %}
               {% if campaign.delivered === 1 %}
                 {{ email.email_address }}

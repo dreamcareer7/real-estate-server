@@ -4,7 +4,7 @@
   <mj-wrapper background-color="#ffffff" padding="0" border-radius="16px">
     <mj-section>
       <mj-column>
-        <mj-text css-class="title" padding="0" align="center" font-family="Lato" font-size="18px">
+        <mj-text css-class="title" padding="0" align="center" font-family="Lato" font-size="18px" font-weight="900">
           <a href="{{ '/dashboard/emails' | url }}">
             Email Insights
           </a>
