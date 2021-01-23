@@ -941,7 +941,7 @@ const migrations = [
         NULL AS parent_deleted_at,
         GREATEST(created_at, updated_at, deleted_at) AS last_updated_at,
         'flow' AS object_type,
-        'flow_start' AS event_type,
+        'last_step_date' AS event_type,
         'Flow Start' AS type_label,
         starts_at::timestamptz AS "timestamp",
         starts_at AS "date",
@@ -986,7 +986,7 @@ const migrations = [
           ON t.contact = c.contact
       WHERE
         c.object_type = 'contact_attribute'
-        AND t.event_type <> 'flow_start'
+        AND t.event_type <> 'last_step_date'
         AND c.brand = t.brand
         AND t.contact IS NOT NULL
         AND t.event_type = c.event_type
@@ -1008,7 +1008,7 @@ const migrations = [
           ON t.deal = c.deal
       WHERE
         c.object_type = 'deal_context'
-        AND t.event_type <> 'flow_start'
+        AND t.event_type <> 'last_step_date'
         AND c.brand = t.brand
         AND t.deal IS NOT NULL
         AND t.event_type = c.event_type
@@ -1031,8 +1031,8 @@ const migrations = [
       WHERE
         c.object_type = 'flow'
         AND c.brand = t.brand
-        AND c.event_type = 'flow_start'
-        AND t.event_type = 'flow_start'
+        AND c.event_type = 'last_step_date'
+        AND t.event_type = 'last_step_date'
         AND t.deleted_at IS NULL
         AND t.executed_at IS NULL
         AND c.timestamp > now()

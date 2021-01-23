@@ -5,10 +5,14 @@ INSERT INTO
     updated_within,
     title,
     description,
-    due_in,
+    wait_for,
+    "time",
+    "order",
     flow,
     event,
     email,
+    template,
+    template_instance,
     is_automated
   )
 SELECT
@@ -17,19 +21,27 @@ SELECT
   $3::text,
   title,
   description,
-  due_in,
+  wait_for,
+  "time",
+  "order",
   flow,
   event_id,
   email,
+  template,
+  template_instance,
   email IS NOT NULL AS is_automated
 FROM
   json_to_recordset($2) AS bs (
     title text,
     description text,
-    due_in interval,
+    wait_for interval,
+    "time" time,
+    "order" smallint,
     flow uuid,
     event_id uuid,
-    email uuid
+    email uuid,
+    template uuid,
+    template_instance uuid
   )
 RETURNING
   id

@@ -18,7 +18,7 @@ const BrandPropertyType = {
 }
 const BrandChecklist = require('../../../lib/models/Brand/deal/checklist')
 const BrandEmail = require('../../../lib/models/Brand/email/save')
-const BrandFlow = require('../../../lib/models/Brand/flow')
+const BrandFlow = require('../../../lib/models/Brand/flow/create')
 const BrandList = require('../../../lib/models/Brand/list')
 const Context = require('../../../lib/models/Context')
 const Form = require('../../../lib/models/Form')

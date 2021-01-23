@@ -8,8 +8,11 @@ SELECT
   deleted_by,
   flow,
   origin,
-  (SELECT flows_emails.email FROM flows_emails WHERE flows_emails.id = flows_steps.email LIMIT 1) AS email,
-  (SELECT flows_events.crm_task FROM flows_events WHERE flows_events.id = flows_steps.event LIMIT 1) AS crm_task,
+  campaign,
+  crm_task,
+  extract(epoch FROM executed_at) AS executed_at,
+  extract(epoch FROM failed_at) AS failed_at,
+  failure,
 
   'flow_step' AS type
 FROM

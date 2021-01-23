@@ -62,7 +62,7 @@ async function cleanup() {
     const { user, brand } = globalState
     const campaigns = await EmailCampaign.getByBrand(brand.id)
     
-    await EmailCampaign.deleteMany(campaigns.map(c => c.id), user, brand.id)
+    await EmailCampaign.deleteMany(campaigns.map(c => c.id), user.id, brand.id)
   })
 }
 

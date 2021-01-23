@@ -10,6 +10,7 @@ const MicrosoftCredential  = require('../../lib/models/Microsoft/credential')
 const BrandTemplate = require('../../lib/models/Template/brand')
 const BrokerWolf = require('../../lib/models/BrokerWolf')
 const Message = require('../../lib/models/Message/email')
+const Trigger = require('../../lib/models/Trigger/due')
 
 const saveBrokerwolfSettings = (job, cb) => {
   BrokerWolf.Settings.save(job.data).nodeify(cb)
@@ -55,6 +56,10 @@ const sendDueEmailCampaigns = (job, cb) => {
   EmailCampaign.sendDue().nodeify(cb)
 }
 
+const executedDueTriggers = (job, cb) => {
+  Trigger.executeDue().nodeify(cb)
+}
+
 const updateEmailCampaginStats = (job, cb) => {
   EmailCampaignStats.updateStats().nodeify(cb)
 }
@@ -92,6 +97,7 @@ const list = {
   'BrokerWolf.ContactTypes.map': mapBrokerwolfContact,
   'Task.sendNotifications': sendTaskNotifications,
   'EmailCampaign.sendDue': sendDueEmailCampaigns,
+  'Trigger.executeDue': executedDueTriggers,
   'EmailCampaignStats.updateStats': updateEmailCampaginStats,
   'GoogleCredential.create': CreateGoogleCredential,
   'MicrosoftCredential.create': CreateMicrosoftCredential,
