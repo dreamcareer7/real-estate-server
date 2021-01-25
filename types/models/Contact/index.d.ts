@@ -34,7 +34,6 @@ declare interface IContactBase {
   ios_address_book_id?: string;
   android_address_book_id?: string;
   google_id?: string;
-  microsoft_id?: string;
   parked?: boolean;
 }
 
@@ -212,8 +211,6 @@ declare interface IContactFilterOptions {
   filter_type?: 'and' | 'or';
   google_id?: string;
   google_ids?: string[];
-  microsoft_id?: string;
-  microsoft_ids?: string[];
 
   parked?: boolean;
   forUpdate?: boolean;
