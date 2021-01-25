@@ -5,6 +5,11 @@ const migrations = [
 
   'ALTER TABLE microsoft_contacts ADD COLUMN IF NOT EXISTS contact UUID NULL REFERENCES contacts(id)',
 
+  `UPDATE microsoft_contacts
+    SET contact = contacts.id
+    FROM contacts
+    WHERE contacts.microsoft_id = microsoft_contacts.id`,
+
   'COMMIT'
 ]
 
@@ -14,8 +19,8 @@ const migrations = [
   UPDATE microsoft_contacts
   SET contact = contacts.id
   FROM contacts
-  WHERE contacts.microsoft_id = microsoft_contacts.id 
-  AND microsoft_contacts.microsoft_credential = 'b359f96c-0e85-4f91-aee2-c2af9b391e54'
+  WHERE contacts.microsoft_id = microsoft_contacts.id
+  AND microsoft_contacts.microsoft_credential = '2d03fe0f-97ce-4d9b-bd63-329d29a1710b'
 */
 
 const run = async () => {
