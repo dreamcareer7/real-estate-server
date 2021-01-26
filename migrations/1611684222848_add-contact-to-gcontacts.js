@@ -18,6 +18,18 @@ const migrations = [
 
   We dont have to run the below query:
   ALTER TABLE contacts DROP COLUMN IF EXISTS google_id
+
+
+  
+  Fix Query:
+
+  update google_contacts
+  set contact = contact_integration.contact
+  from contact_integration
+  where
+  contact_integration.google_id = google_contacts.id
+  and google_contacts.contact is null
+  and google_contacts.deleted_at is not null;
 */
 
 const run = async () => {
