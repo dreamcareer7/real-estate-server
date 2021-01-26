@@ -14,6 +14,8 @@ const migrations = [
 ]
 
 /*
+  DROP NOT NULL on microsoft_contacts.contact
+
   We dont have to run the below query:
   ALTER TABLE contacts DROP COLUMN IF EXISTS microsoft_id
 */
