@@ -76,7 +76,7 @@ async function update() {
   for (const gcontact of result) {
     expect(gcontact.google_credential).to.be.equal(credential.id)
     expect(gcontact.contact).to.be.equal(null)
-    expect(gcontact.data).to.be.deep.equal(sample)
+    expect(gcontact.resource).to.be.deep.equal(sample)
   }
 }
 
