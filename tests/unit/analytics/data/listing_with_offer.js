@@ -19,7 +19,7 @@ module.exports = async function(sellerAgent, buyerAgent, brand, mls_number) {
     checklists: [
       {},
       {
-        deal_type: 'Buying',
+        checklist_type: 'Offer',
         context: {
           closing_date: {
             value: moment()
