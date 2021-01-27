@@ -1,11 +1,10 @@
 SELECT
-    microsoft_contacts.*, 'microsoft_contact' AS type
+  microsoft_contacts.*, 'microsoft_contact' AS type
 FROM
-    microsoft_contacts
+  microsoft_contacts
 JOIN 
-    unnest($1::text[]) WITH ORDINALITY t(mc_ri, ord)
+  unnest($1::uuid[]) WITH ORDINALITY t(gcid, ord)
 ON 
-    microsoft_contacts.remote_id = mc_ri
-    AND microsoft_contacts.microsoft_credential = $2
+  microsoft_contacts.id = gcid
 ORDER BY 
-    t.ord
+  microsoft_contacts.created_at DESC

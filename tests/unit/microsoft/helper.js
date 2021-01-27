@@ -125,7 +125,7 @@ async function createMicrosoftContact(user, brand) {
   for (const createdMicrosoftContact of createdMicrosoftContacts) {
     expect(createdMicrosoftContact.microsoft_credential).to.be.equal(credential.id)
 
-    const microsoftContact = await MicrosoftContact.get(createdMicrosoftContact.remote_id, createdMicrosoftContact.microsoft_credential)
+    const microsoftContact = await MicrosoftContact.getByRemoteId(createdMicrosoftContact.microsoft_credential, createdMicrosoftContact.remote_id)
 
     expect(microsoftContact.type).to.be.equal('microsoft_contact')
     expect(microsoftContact.microsoft_credential).to.be.equal(createdMicrosoftContact.microsoft_credential)

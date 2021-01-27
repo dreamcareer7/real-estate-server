@@ -1,11 +1,13 @@
 const { expect } = require('chai')
 const { createContext } = require('../helper')
 
-const Context          = require('../../../lib/models/Context')
-const User             = require('../../../lib/models/User/get')
-const BrandHelper      = require('../brand/helper')
-const GoogleContact    = require('../../../lib/models/Google/contact')
+const Context       = require('../../../lib/models/Context')
+const Contact       = require('../../../lib/models/Contact/manipulate')
+const User          = require('../../../lib/models/User/get')
+const BrandHelper   = require('../brand/helper')
+const GoogleContact = require('../../../lib/models/Google/contact')
 
+const { attributes } = require('../contact/helper')
 const { createGoogleCredential } = require('./helper')
 
 const google_contacts_offline       = require('./data/google_contacts.json')
@@ -14,6 +16,17 @@ const google_contact_groups_offline = require('./data/google_contact_groups.json
 let user, brand
 
 
+
+async function createContact() {
+  return Contact.create([{
+    user: user.id,
+    attributes: attributes({
+      first_name: 'John',
+      last_name: 'Doe',
+      email: 'john@doe.com',
+    }),
+  }], user.id, brand.id)
+}
 
 async function setup() {
   user  = await User.getByEmail('test@rechat.com')
@@ -28,10 +41,13 @@ async function create() {
   const records = []
 
   for (const gContact of google_contacts_offline) {
+
+    const contactIds = await createContact()
+
     records.push({
       google_credential: credential.id,
       entry_id: gContact.entry_id,
-      contact: null,
+      contact: contactIds[0],
       etag: gContact.etag,
       resource_id: gContact.resource_id,
       resource: JSON.stringify(gContact),
@@ -48,6 +64,7 @@ async function create() {
 
     expect(googleContact.type).to.be.equal('google_contact')
     expect(googleContact.google_credential).to.be.equal(createdGoogleContact.google_credential)
+    expect(googleContact.contact).to.not.be.equal(null)
   }
 
   return createdGoogleContacts
@@ -75,7 +92,7 @@ async function update() {
 
   for (const gcontact of result) {
     expect(gcontact.google_credential).to.be.equal(credential.id)
-    expect(gcontact.contact).to.be.equal(null)
+    expect(gcontact.contact).to.not.be.equal(null)
     expect(gcontact.resource).to.be.deep.equal(sample)
   }
 }
@@ -91,6 +108,20 @@ async function getByResourceId() {
     expect(googleContact.resource_id).to.be.equal(gContact.resource_id)
     expect(googleContact.resource.names.fullName).to.be.equal(gContact.resource.names.fullName)
   }
+}
+
+async function getByRechatContacts() {
+  const googleContacts = await create()
+  const gContact = googleContacts[0]
+
+  const gcontacts = await GoogleContact.getByRechatContacts(gContact.google_credential, [gContact.contact])
+
+  expect(gcontacts.length).to.be.equal(1)
+  expect(gcontacts[0].type).to.be.equal('google_contact')
+  expect(gcontacts[0].google_credential).to.be.equal(gContact.google_credential)
+  expect(gcontacts[0].resource_id).to.be.equal(gContact.resource_id)
+  expect(gcontacts[0].contact).to.be.equal(gContact.contact)
+  expect(gcontacts[0].resource.names.fullName).to.be.equal(gContact.resource.names.fullName)
 }
 
 async function getContactsNum() {
@@ -223,6 +254,7 @@ describe('Google', () => {
     it('should create several Google contacts', create)
     it('should update several Google contacts', update)
     it('should return Google contact by resource_id', getByResourceId)
+    it('should return Google contact by rechat contacts', getByRechatContacts)
     it('should return several Google contacts owned by a specific credential', getContactsNum)
     it('should delete Google contacts by id', deleteMany)
     it('should restore Google contacts by id', restoreMany)
