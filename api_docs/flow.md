@@ -36,9 +36,14 @@ created_by   | User       | `brand_flow_step.created_by` | User who created this
 updated_by   | User       | `brand_flow_step.updated_by` | User who created this object
 title        | string     |                              | Title of the step
 description  | string     |                              | A description of what the step is about
-due_in       | number     |                              | Duration from flow starting point
+order        | number     |                              | Step's execution order in the flow
+event_type   | string     |                              | A calendar event type, e.g. `birthday`
+wait_for     | number     |                              | wait time from the actual time of the event trigger
+time         | string     |                              | time of the day the action is supposed to be executed
 email        | BrandEmail | `brand_flow_step.email`      | Link to an email template
 event        | BrandEvent | `brand_flow_step.event`      | An event template
+template     | Template   | `brand_flow_step.template`   | A raw marketing template
+template_instance | TemplateInstance | `brand_flow_step.template_instance` | A rendered template instance from my designs
 is_automated | boolean    |                              | Whether the step is automated or not
 
 ### Flow
@@ -76,7 +81,7 @@ created_by | User          | `flow_step.created_by` | User who created this obje
 updated_by | User          | `flow_step.updated_by` | User who created this object
 flow       | uuid          |                        | Parent flow of the step
 origin     | BrandFlowStep | `flow.origin`          | Link to the brand flow step
-email      | EmailCampaign | `flow_step.email`      | Link to an actual email campaign
+campaign   | EmailCampaign | `flow_step.campaign    | Link to an actual email campaign
 crm_task   | CrmTask       | `flow_step.crm_task`   | Link to an actual CrmTask object
 
 
