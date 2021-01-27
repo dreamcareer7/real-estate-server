@@ -14,13 +14,10 @@ const migrations = [
 ]
 
 /*
-  ALTER TABLE contacts DROP COLUMN IF EXISTS microsoft_id
+  DROP NOT NULL on microsoft_contacts.contact
 
-  UPDATE microsoft_contacts
-  SET contact = contacts.id
-  FROM contacts
-  WHERE contacts.microsoft_id = microsoft_contacts.id
-  AND microsoft_contacts.microsoft_credential = '2d03fe0f-97ce-4d9b-bd63-329d29a1710b'
+  We dont have to run the below query:
+  ALTER TABLE contacts DROP COLUMN IF EXISTS microsoft_id
 */
 
 const run = async () => {

@@ -76,7 +76,6 @@ async function update() {
   }
 }
 
-
 async function getByEntryId() {
   const microsoftContacts = await create()
 

@@ -31,7 +31,7 @@ async function create() {
     records.push({
       google_credential: credential.id,
       entry_id: gContact.entry_id,
-
+      contact: null,
       etag: gContact.etag,
       resource_id: gContact.resource_id,
       resource: JSON.stringify(gContact),
@@ -51,6 +51,33 @@ async function create() {
   }
 
   return createdGoogleContacts
+}
+
+async function update() {
+  const { credential } = await createGoogleCredential(user, brand)
+  const googleContacts = await create()
+
+  const sample  = { key: 'val' }
+  const records = []
+
+  for (const gContact of googleContacts) {
+    records.push({
+      google_credential: credential.id,
+      entry_id: gContact.entry_id,
+      etag: gContact.etag,
+      resource_id: gContact.resource_id,
+      resource: JSON.stringify(sample),
+      parked: true
+    })
+  }
+
+  const result = await GoogleContact.update(records)
+
+  for (const gcontact of result) {
+    expect(gcontact.google_credential).to.be.equal(credential.id)
+    expect(gcontact.contact).to.be.equal(null)
+    expect(gcontact.resource).to.be.deep.equal(sample)
+  }
 }
 
 async function getByResourceId() {
@@ -194,6 +221,7 @@ describe('Google', () => {
     beforeEach(setup)
 
     it('should create several Google contacts', create)
+    it('should update several Google contacts', update)
     it('should return Google contact by resource_id', getByResourceId)
     it('should return several Google contacts owned by a specific credential', getContactsNum)
     it('should delete Google contacts by id', deleteMany)
