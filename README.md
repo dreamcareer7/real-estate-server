@@ -6,9 +6,11 @@ If you want to setup development Env via docker-compose [click-here](./README.DO
 ### Prerequisites
 
 + Git
-+ Node.js version v8.x.x
++ Node.js version v14.x.x
 + Postgres >= 9.6
 + Postgis
++ RabbitMQ Server
++ Redis
 
 ### Getting started
 

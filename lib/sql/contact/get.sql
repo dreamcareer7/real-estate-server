@@ -37,7 +37,6 @@ SELECT
   id AS summary,
   ios_address_book_id,
   android_address_book_id,
-  google_id,
   extract(epoch FROM created_at) as created_at,
   extract(epoch FROM updated_at) as updated_at,
   extract(epoch FROM deleted_at) as deleted_at,

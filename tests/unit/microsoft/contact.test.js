@@ -27,7 +27,13 @@ async function create() {
   const records = []
 
   for (const mContact of microsoft_contacts_offline) {
-    records.push({ microsoft_credential: credential.id, remote_id: mContact.id, data: JSON.stringify(mContact.data), source: mContact.source })
+    records.push({
+      microsoft_credential: credential.id,
+      contact: null,
+      remote_id: mContact.id,
+      data: JSON.stringify(mContact.data),
+      source: mContact.source
+    })
   }
 
   const createdMicrosoftContacts = await MicrosoftContact.create(records)
@@ -43,6 +49,31 @@ async function create() {
   }
 
   return createdMicrosoftContacts
+}
+
+async function update() {
+  const { credential } = await createMicrosoftCredential(user, brand)
+  const microsoftContacts = await create()
+
+  const sample  = { key: 'val' }
+  const records = []
+
+  for (const mContact of microsoftContacts) {
+    records.push({
+      microsoft_credential: credential.id,
+      remote_id: mContact.id,
+      data: JSON.stringify(sample),
+      source: mContact.source
+    })
+  }
+
+  const result = await MicrosoftContact.update(records)
+
+  for (const mcontact of result) {
+    expect(mcontact.microsoft_credential).to.be.equal(credential.id)
+    expect(mcontact.contact).to.be.equal(null)
+    expect(mcontact.data).to.be.deep.equal(sample)
+  }
 }
 
 async function getByEntryId() {
@@ -155,6 +186,7 @@ describe('Microsoft', () => {
     beforeEach(setup)
 
     it('should create some microsoft contacts', create)
+    it('should update some microsoft contacts', update)
     it('should return microsoft contact by remote_id', getByEntryId)
     it('should handle failure of microsoft contact get by remote_id', getByEntryIdFailed)
     it('should return number of contacts of specific credential', getMCredentialContactsNum)
