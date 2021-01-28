@@ -37,7 +37,6 @@ async function setup() {
   Context.set({ user, brand })
 
   await handleJobs()
-
 }
 
 const createBrand = async () => {
@@ -130,6 +129,7 @@ const testDueTrigger = async () => {
 const testExecuteTrigger = async () => {
   const user = await UserHelper.TestUser()
   const { id } = await createTrigger()
+
   await Trigger.executeDue()
   await handleJobs()
 
@@ -155,8 +155,8 @@ const testExecuteTrigger = async () => {
 }
 
 const testExecuteRecurringTrigger = async () => {
-  const user = await UserHelper.TestUser()
   const trigger = await createTrigger({ recurring: true })
+  const { timestamp } = await Trigger.getDue(trigger.id)
 
   Orm.setEnabledAssociations(['contact.triggers'])
   const { triggers: triggersBeforeExecute } = await Contact.get(trigger.contact)
@@ -172,8 +172,10 @@ const testExecuteRecurringTrigger = async () => {
   expect(triggersAfterExecute).to.have.members([ trigger.id ])
 
   const clonedTrigger = await Trigger.get(contactTriggers[0])
-  const expected = BIRTHDAY.clone().year(BIRTHDAY.year() + 20).add(12, 'hours').tz(user.timezone).startOf('day').add(-1, 'day').add(10, 'hours')
-  expect(clonedTrigger.effective_at).to.be.equal(expected.unix())
+  const expected = timestamp - clonedTrigger.wait_for + 86400
+  expect(clonedTrigger.effective_at, `expected ${new Date(clonedTrigger.effective_at * 1000).toISOString()} be equal to ${new Date(expected * 1000).toISOString()}`).to.be.equal(expected)
+
+  expect(await Trigger.getDueTriggers(), 'The next recurrence should not go into effect until after the first one').to.be.empty
 }
 
 const testDeleteExecutedTrigger = async () => {
