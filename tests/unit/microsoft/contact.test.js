@@ -1,11 +1,13 @@
 const { expect }        = require('chai')
 const { createContext } = require('../helper')
 
-const Context             = require('../../../lib/models/Context')
-const User                = require('../../../lib/models/User/get')
-const BrandHelper         = require('../brand/helper')
-const MicrosoftContact    = require('../../../lib/models/Microsoft/contact')
+const Context          = require('../../../lib/models/Context')
+const Contact          = require('../../../lib/models/Contact/manipulate')
+const User             = require('../../../lib/models/User/get')
+const BrandHelper      = require('../brand/helper')
+const MicrosoftContact = require('../../../lib/models/Microsoft/contact')
 
+const { attributes } = require('../contact/helper')
 const { createMicrosoftCredential } = require('./helper')
 
 const microsoft_contacts_offline        = require('./data/microsoft_contacts.json')
@@ -13,6 +15,18 @@ const microsoft_contact_folders_offline = require('./data/microsoft_contact_fold
 
 let user, brand
 
+
+
+async function createContact() {
+  return Contact.create([{
+    user: user.id,
+    attributes: attributes({
+      first_name: 'John',
+      last_name: 'Doe',
+      email: 'john@doe.com',
+    }),
+  }], user.id, brand.id)
+}
 
 async function setup() {
   user  = await User.getByEmail('test@rechat.com')
@@ -26,13 +40,15 @@ async function create() {
 
   const records = []
 
-  for (const mContact of microsoft_contacts_offline) {
+  for (const mcontact of microsoft_contacts_offline) {
+    const contactIds = await createContact()
+
     records.push({
       microsoft_credential: credential.id,
-      contact: null,
-      remote_id: mContact.id,
-      data: JSON.stringify(mContact.data),
-      source: mContact.source
+      contact: contactIds[0],
+      remote_id: mcontact.id,
+      data: JSON.stringify(mcontact.data),
+      source: mcontact.source
     })
   }
 
@@ -41,11 +57,12 @@ async function create() {
   for (const createdMicrosoftContact of createdMicrosoftContacts) {
     expect(createdMicrosoftContact.microsoft_credential).to.be.equal(credential.id)
 
-    const microsoftContact = await MicrosoftContact.get(createdMicrosoftContact.remote_id, createdMicrosoftContact.microsoft_credential)
+    const microsoftContact = await MicrosoftContact.getByRemoteId(createdMicrosoftContact.microsoft_credential, createdMicrosoftContact.remote_id)
 
     expect(microsoftContact.type).to.be.equal('microsoft_contact')
     expect(microsoftContact.microsoft_credential).to.be.equal(createdMicrosoftContact.microsoft_credential)
     expect(microsoftContact.remote_id).to.be.equal(createdMicrosoftContact.remote_id)
+    expect(microsoftContact.contact).to.not.be.equal(null)
   }
 
   return createdMicrosoftContacts
@@ -58,20 +75,20 @@ async function update() {
   const sample  = { key: 'val' }
   const records = []
 
-  for (const mContact of microsoftContacts) {
+  for (const mcontact of microsoftContacts) {
     records.push({
       microsoft_credential: credential.id,
-      remote_id: mContact.id,
+      remote_id: mcontact.remote_id,
       data: JSON.stringify(sample),
-      source: mContact.source
+      source: mcontact.source
     })
   }
 
   const result = await MicrosoftContact.update(records)
-
+  
   for (const mcontact of result) {
     expect(mcontact.microsoft_credential).to.be.equal(credential.id)
-    expect(mcontact.contact).to.be.equal(null)
+    expect(mcontact.contact).to.not.be.equal(null)
     expect(mcontact.data).to.be.deep.equal(sample)
   }
 }
@@ -81,20 +98,34 @@ async function getByEntryId() {
 
   for (const gContact of microsoftContacts) {
 
-    const googleContact = await MicrosoftContact.get(gContact.remote_id, gContact.microsoft_credential)
+    const microsoftContact = await MicrosoftContact.getByRemoteId(gContact.microsoft_credential, gContact.remote_id)
 
-    expect(googleContact.type).to.be.equal('microsoft_contact')
-    expect(googleContact.microsoft_credential).to.be.equal(gContact.microsoft_credential)
-    expect(googleContact.remote_id).to.be.equal(gContact.remote_id)
+    expect(microsoftContact.type).to.be.equal('microsoft_contact')
+    expect(microsoftContact.microsoft_credential).to.be.equal(gContact.microsoft_credential)
+    expect(microsoftContact.remote_id).to.be.equal(gContact.remote_id)
   }
+}
+
+async function getByRechatContacts() {
+  const microsoftContacts = await create()
+  const gContact = microsoftContacts[0]
+
+  const gcontacts = await MicrosoftContact.getByRechatContacts(gContact.microsoft_credential, [gContact.contact])
+
+  expect(gcontacts.length).to.be.equal(1)
+  expect(gcontacts[0].type).to.be.equal('microsoft_contact')
+  expect(gcontacts[0].id).to.be.equal(gContact.id)
+  expect(gcontacts[0].microsoft_credential).to.be.equal(gContact.microsoft_credential)
+  expect(gcontacts[0].contact).to.be.equal(gContact.contact)
+  expect(gcontacts[0].remote_id).to.be.equal(gContact.remote_id)
 }
 
 async function getByEntryIdFailed() {
   const bad_id = user.id
 
-  const googleContact = await MicrosoftContact.get(bad_id, bad_id)
+  const microsoftContact = await MicrosoftContact.getByRemoteId(bad_id, bad_id)
 
-  expect(googleContact).to.be.equal(null)
+  expect(microsoftContact).to.be.equal(null)
 }
 
 async function getMCredentialContactsNum() {
@@ -188,6 +219,7 @@ describe('Microsoft', () => {
     it('should create some microsoft contacts', create)
     it('should update some microsoft contacts', update)
     it('should return microsoft contact by remote_id', getByEntryId)
+    it('should return microsoft contact by rechat contacts', getByRechatContacts)
     it('should handle failure of microsoft contact get by remote_id', getByEntryIdFailed)
     it('should return number of contacts of specific credential', getMCredentialContactsNum)
     it('should handle add contact-folder', addContactFolder)
