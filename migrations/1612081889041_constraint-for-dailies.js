@@ -2,6 +2,8 @@ const db = require('../lib/utils/db')
 
 const migrations = [
   'BEGIN',
+  `DELETE FROM dailies WHERE
+    created_at < (NOW() - '1 day'::interval)`,
   `CREATE UNIQUE INDEX
     dailies_unique ON dailies("user", date_trunc('day', created_at))`,
   'COMMIT'
