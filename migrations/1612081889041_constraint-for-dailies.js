@@ -3,7 +3,7 @@ const db = require('../lib/utils/db')
 const migrations = [
   'BEGIN',
   `CREATE UNIQUE INDEX
-    dailies_unique ON dailies("user", date_trunc('day', created_at)`,
+    dailies_unique ON dailies("user", date_trunc('day', created_at))`,
   'COMMIT'
 ]
 
