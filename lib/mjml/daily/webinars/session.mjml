@@ -1,0 +1,61 @@
+<mj-section padding="0 5px 20px 5px">
+  <mj-group>
+    <mj-column width="13%">
+      <mj-image
+        padding="5px"
+        src="{{session.host.avatar}}"
+        href="{{ session.url }}"
+        border-radius="50%"
+        width="45px"
+        align="center"
+      >
+      </mj-image>
+    </mj-column>
+    <mj-column width="65%">
+      <mj-text
+        padding-left="0"
+        padding-right="0"
+        color="#949598"
+        font-family="Lato"
+        font-size="13px"
+        font-weight="400"
+      >
+        <div style="color: #000">
+          {{session.topic}}
+          <br><br>
+        </div>
+
+        <a href="{{ session.url }}">{{ session.date | time('dddd MMMM Do, hh:mm A', user.timezone) }}</a>
+
+        <div style="margin:5px 0;">
+          <a style="color: #949598" href="{{ session.url }}">By: <span style="color:#000000;">{{ session.host.name }}</span> &nbsp; &nbsp; ({{ session.host.role }})</a>
+        </div>
+        <div>
+
+        </div>
+      </mj-text>
+    </mj-column>
+
+    <mj-column padding="0" width="11%">
+      <mj-button
+        font-family="Lato"
+        background-color="#E7E9EC"
+        font-weight="bold"
+        font-size="13px"
+        color="black"
+        padding="3px"
+        inner-padding="0"
+        border-radius="50%"
+        href="{{session.url}}"
+        align="center"
+        mj-class="actions"
+      >
+        <img
+          src="https://assets.rechat.com/daily/signup.png"
+          title="Sign up for Webinar"
+          style="width:35px;width:35px;object-fit:contain;vertical-align:middle;"
+        />
+      </mj-button>
+    </mj-column>
+  </mj-group>
+</mj-section>
