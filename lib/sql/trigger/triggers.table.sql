@@ -35,6 +35,8 @@ CREATE TABLE IF NOT EXISTS triggers (
   event uuid REFERENCES crm_tasks (id),
   campaign uuid REFERENCES email_campaigns (id),
 
+  scheduled_after uuid REFERENCES triggers (id),
+
   CHECK (contact IS NOT NULL OR deal IS NOT NULL),
   CHECK ((flow IS NULL AND flow_step IS NULL) OR (flow IS NOT NULL AND flow_step IS NOT NULL)),
   CHECK (("action" = 'create_event' AND brand_event IS NOT NULL) OR ("action" = 'schedule_email' AND campaign IS NOT NULL)),
