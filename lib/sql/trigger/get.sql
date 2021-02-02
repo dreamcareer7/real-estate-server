@@ -28,6 +28,8 @@ SELECT
   event,
   campaign,
 
+  scheduled_after,
+
   'trigger' AS type
 FROM
   triggers

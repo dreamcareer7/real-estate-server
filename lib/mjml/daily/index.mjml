@@ -25,4 +25,5 @@
     {% include './celebrations/index.mjml' %}
     {% include './deals/index.mjml' %}
     {% include './emails/index.mjml' %}
+    {% include './webinars/index.mjml' %}
 {% endblock %}

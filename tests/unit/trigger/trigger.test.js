@@ -172,6 +172,8 @@ const testExecuteRecurringTrigger = async () => {
   expect(triggersAfterExecute).to.have.members([ trigger.id ])
 
   const clonedTrigger = await Trigger.get(contactTriggers[0])
+  expect(clonedTrigger.scheduled_after).to.be.equal(trigger.id)
+
   const expected = timestamp - clonedTrigger.wait_for + 86400
   expect(clonedTrigger.effective_at, `expected ${new Date(clonedTrigger.effective_at * 1000).toISOString()} be equal to ${new Date(expected * 1000).toISOString()}`).to.be.equal(expected)
 

@@ -14,7 +14,7 @@
    version="1.1"
    id="svg838"
    sodipodi:docname="icons.svg"
-   inkscape:version="0.92.3 (2405546, 2018-03-11)">
+   inkscape:version="0.92.5 (2060ec1f9f, 2020-04-08)">
   <metadata
      id="metadata844">
     <rdf:RDF>
@@ -23,7 +23,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -39,19 +39,19 @@
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
      inkscape:window-width="2560"
-     inkscape:window-height="1359"
+     inkscape:window-height="1391"
      id="namedview840"
      showgrid="false"
      inkscape:zoom="2.5610524"
-     inkscape:cx="7.195167"
-     inkscape:cy="4.504567"
+     inkscape:cx="-77.340393"
+     inkscape:cy="-11.114012"
      inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:window-maximized="1"
      inkscape:current-layer="svg838" />
   <g
      id="g1071"
-     transform="matrix(0.49999997,0,0,0.49999997,-239.10292,122.8133)"
+     transform="matrix(0.49999997,0,0,0.49999997,-241.31582,122.8133)"
      inkscape:export-filename="/tmp/icons/child_birthday.png"
      inkscape:export-xdpi="300"
      inkscape:export-ydpi="300">
@@ -75,7 +75,7 @@
      inkscape:export-filename="/tmp/icons/wedding_anniversary.png"
      inkscape:export-xdpi="300"
      inkscape:export-ydpi="300"
-     transform="matrix(0.49999997,0,0,0.49999997,-166.97026,33.885608)">
+     transform="matrix(0.49999997,0,0,0.49999997,-169.18317,33.885608)">
     <g
        inkscape:export-ydpi="100"
        inkscape:export-xdpi="100"
@@ -98,7 +98,7 @@
   </g>
   <g
      id="g1077"
-     transform="matrix(0.49999997,0,0,0.49999997,-285.67146,80.10937)"
+     transform="matrix(0.49999997,0,0,0.49999997,-287.88436,80.10937)"
      inkscape:export-filename="/tmp/icons/home_anniversary.png"
      inkscape:export-xdpi="300"
      inkscape:export-ydpi="300">
@@ -130,7 +130,7 @@
   <g
      style="fill:none"
      id="g1067"
-     transform="translate(-239.10292,-26.486839)"
+     transform="translate(-241.31582,-26.486839)"
      inkscape:export-filename="/tmp/icons/listing.png"
      inkscape:export-xdpi="300"
      inkscape:export-ydpi="300">
@@ -180,25 +180,17 @@
      inkscape:export-filename="/tmp/icons/opened.png"
      inkscape:export-xdpi="300"
      inkscape:export-ydpi="300" />
-  <g
-     style="fill:none"
-     id="g1226"
-     transform="translate(-241.78383,148.46282)"
-     inkscape:export-filename="/tmp/icons/email.png"
-     inkscape:export-xdpi="300"
-     inkscape:export-ydpi="300">
-    <circle
-       id="circle1212"
-       r="20"
-       cy="20"
-       cx="20"
-       style="fill:#e7e9ec" />
-    <path
-       id="path1214"
-       d="m 28.3334,15 c 0,-0.9166 -0.75,-1.6666 -1.6667,-1.6666 H 13.3334 c -0.9167,0 -1.6667,0.75 -1.6667,1.6666 v 10 c 0,0.9167 0.75,1.6667 1.6667,1.6667 h 13.3333 c 0.9167,0 1.6667,-0.75 1.6667,-1.6667 z M 26.6667,15 20.0001,19.1667 13.3334,15 Z m 0,10 H 13.3334 v -8.3333 l 6.6667,4.1667 6.6666,-4.1667 z"
-       inkscape:connector-curvature="0"
-       style="fill:#000000" />
-  </g>
+  <circle
+     style="fill:#e7e9ec"
+     cx="-221.31583"
+     cy="168.46281"
+     r="20"
+     id="circle1212" />
+  <path
+     style="fill:#000000"
+     inkscape:connector-curvature="0"
+     d="m -212.98247,163.46282 c 0,-0.9166 -0.75,-1.6666 -1.6667,-1.6666 h -13.3333 c -0.9167,0 -1.6667,0.75 -1.6667,1.6666 v 10 c 0,0.9167 0.75,1.6667 1.6667,1.6667 h 13.3333 c 0.9167,0 1.6667,-0.75 1.6667,-1.6667 z m -1.6667,0 -6.6666,4.1667 -6.6667,-4.1667 z m 0,10 h -13.3333 v -8.3333 l 6.6667,4.1667 6.6666,-4.1667 z"
+     id="path1214" />
   <path
      style="fill:#f44336"
      inkscape:connector-curvature="0"
@@ -215,4 +207,22 @@
      inkscape:export-filename="/tmp/icons/failed.png"
      inkscape:export-xdpi="300"
      inkscape:export-ydpi="300" />
+  <g
+     id="g1490"
+     transform="translate(-129.7641,46.465273)"
+     inkscape:export-filename="/tmp/signup.png"
+     inkscape:export-xdpi="300"
+     inkscape:export-ydpi="300">
+    <circle
+       id="circle1212-3"
+       r="20"
+       cy="164.74121"
+       cx="-91.551727"
+       style="fill:#e7e9ec" />
+    <path
+       style="fill:#000000;stroke-width:1.00503778"
+       id="path2"
+       d="m -99.551727,163.74121 v 2 h 12.121212 l -5.555555,5.5 1.434343,1.42 8,-7.92 -8,-7.92 -1.434343,1.42 5.555555,5.5 z"
+       inkscape:connector-curvature="0" />
+  </g>
 </svg>
