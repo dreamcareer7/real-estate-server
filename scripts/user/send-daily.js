@@ -13,9 +13,9 @@ const send = async () => {
   if (!user)
     throw Error.ResourceNotFound()
 
-  const { rows } = await Daily.sendForUser(user.id)
+  const id = await Daily.sendForUser(user.id)
   await Job.handleContextJobs()
-  const email = await Email.get(rows[0].email)
+  const email = await Email.get(id)
   fs.writeFileSync('/tmp/1.html', email.html)
   setTimeout(process.exit, 3000)
 }

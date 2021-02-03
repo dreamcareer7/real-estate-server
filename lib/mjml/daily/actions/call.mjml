@@ -8,7 +8,7 @@
     padding="3px"
     inner-padding="0"
     border-radius="50%"
-    href="{{url | url}}"
+    href="tel:{{contact.phone_number}}"
     align="center"
     mj-class="actions"
   >

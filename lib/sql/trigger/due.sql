@@ -5,6 +5,7 @@ WITH due_items AS (
     triggers_due
   WHERE
     due_at < NOW()
+    AND effective_at <= "timestamp"
 )
 SELECT
   id
