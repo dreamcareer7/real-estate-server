@@ -30,7 +30,14 @@ SELECT brands_checklists.*,
     WHERE
       checklist = brands_checklists.id
       AND is_required IS FALSE
-  ) as optional_contexts
+  ) as optional_contexts,
+
+  (
+    SELECT ARRAY_AGG(status)
+    FROM
+      brands_deal_statuses_checklists
+    WHERE checklist = brands_checklists.id
+  ) as statuses
 
 FROM brands_checklists
 JOIN unnest($1::uuid[]) WITH ORDINALITY t(bid, ord) ON brands_checklists.id = bid
