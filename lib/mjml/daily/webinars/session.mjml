@@ -28,10 +28,7 @@
         <a href="{{ session.url }}">{{ session.date | time('dddd MMMM Do, hh:mm A', user.timezone) }}</a>
 
         <div style="margin:5px 0;">
-          <a style="color: #949598" href="{{ session.url }}">By: <span style="color:#000000;">{{ session.host.name }}</span> &nbsp; &nbsp; ({{ session.host.role }})</a>
-        </div>
-        <div>
-
+          <a style="color: #949598" href="{{ session.url }}">By: {{ session.host.name }}, {{ session.host.role }}</a>
         </div>
       </mj-text>
     </mj-column>
