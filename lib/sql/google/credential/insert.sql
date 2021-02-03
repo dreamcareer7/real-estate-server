@@ -59,6 +59,10 @@ ON CONFLICT ("user", brand, email) DO UPDATE SET
   messages_sync_history_id = null,
   watcher_exp = NULL,
 
+  cgroups_sync_token = NULL,
+  contacts_sync_token = NULL,
+  other_contacts_sync_token = NULL,
+
   updated_at = now(),
   deleted_at = null
 RETURNING id
