@@ -1,7 +1,7 @@
 require('./brand_template_thumbnails.js')
 require('./calendar_notifications.js')
 require('./crm_task_notifications.js')
-// require('./dailies.js')
+require('./dailies.js')
 require('./deal_notifications.js')
 require('./email_campaigns.js')
 require('./email_campaign_stats.js')
