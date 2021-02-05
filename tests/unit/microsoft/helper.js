@@ -5,8 +5,10 @@ const MicrosoftMessage       = require('../../../lib/models/Microsoft/message')
 const MicrosoftCalendar      = require('../../../lib/models/Microsoft/calendar')
 const MicrosoftContact       = require('../../../lib/models/Microsoft/contact')
 const MicrosoftCalendarEvent = require('../../../lib/models/Microsoft/calendar_events')
-const EmailCampaign = require('../../../lib/models/Email/campaign')
+const EmailCampaign          = require('../../../lib/models/Email/campaign')
+const Contact                = require('../../../lib/models/Contact/manipulate')
 
+const { attributes } = require('../contact/helper')
 const { generateRecord } = require('../../../lib/models/Microsoft/workers/outlook/common')
 
 const Email   = {
@@ -20,6 +22,35 @@ const calendars = require('./data/calendars.json')
 const events    = require('./data/calendar_events.json')
 
 
+
+async function createContacts(user, brand) {
+  return Contact.create([
+    {
+      user: user.id,
+      attributes: attributes({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john@doe.com',
+      }),
+    },
+    {
+      user: user.id,
+      attributes: attributes({
+        first_name: 'John',
+        last_name: 'smith',
+        email: 'john@smith.com',
+      }),
+    },
+    {
+      user: user.id,
+      attributes: attributes({
+        first_name: 'name',
+        last_name: 'family',
+        email: 'name@family.com',
+      }),
+    }
+  ], user.id, brand.id)
+}
 
 async function createMicrosoftCredential(user, brand) {
   const body = require('./data/microsoft_credential')
@@ -112,12 +143,20 @@ async function createCampaign(user, brand) {
 }
 
 async function createMicrosoftContact(user, brand) {
+  const result = await createContacts(user, brand)
+
   const { credential } = await createMicrosoftCredential(user, brand)
 
   const records = []
 
   for (const mContact of microsoft_contacts_offline) {
-    records.push({ microsoft_credential: credential.id, remote_id: mContact.id, data: JSON.stringify(mContact.data), source: mContact.source })
+    records.push({
+      microsoft_credential: credential.id,
+      remote_id: mContact.id,
+      data: JSON.stringify(mContact.data),
+      contact: result.pop(),
+      source: mContact.source
+    })
   }
 
   const createdMicrosoftContacts = await MicrosoftContact.create(records)
