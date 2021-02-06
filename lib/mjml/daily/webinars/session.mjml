@@ -20,12 +20,12 @@
         font-size="13px"
         font-weight="400"
       >
-        <div style="color: #000">
-          {{session.topic}}
+        <div>
+          {{ session.date | time('dddd MMMM Do, hh:mm A', user.timezone) }}
           <br><br>
         </div>
 
-        <a href="{{ session.url }}">{{ session.date | time('dddd MMMM Do, hh:mm A', user.timezone) }}</a>
+        <a style="color: #000" href="{{ session.url }}">{{session.topic}}</a>
 
         <div style="margin:5px 0;">
           <a style="color: #949598" href="{{ session.url }}">By: {{ session.host.name }}, {{ session.host.role }}</a>
