@@ -17,9 +17,6 @@ const { create } = require('./data/attribute.json')
 
 let user, brand
 
-const HOUR = 3600
-const DAY = 24 * HOUR
-
 /**
  * @param {any[]} data
  */

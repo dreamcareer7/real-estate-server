@@ -9,7 +9,6 @@ const Contact = {
 }
 const Context = require('../../../lib/models/Context')
 const CrmTask = require('../../../lib/models/CRM/Task')
-const EmailCampaign = require('../../../lib/models/Email/campaign')
 const Calendar = require('../../../lib/models/Calendar')
 const Flow = require('../../../lib/models/Flow')
 const FlowStep = require('../../../lib/models/Flow/step/get')

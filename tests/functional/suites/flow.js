@@ -3,9 +3,6 @@ registerSuite('contact', [
   'create'
 ])
 
-const HOUR = 3600
-const DAY = 24 * HOUR
-
 const addEmail = cb => {
   const email = {
     name: 'Email Name',
