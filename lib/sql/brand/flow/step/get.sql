@@ -9,7 +9,7 @@ SELECT
   "order",
   title,
   description,
-  EXTRACT(epoch FROM wait_for) AS wait_for,
+  wait_for,
   "time",
   event,
   email,

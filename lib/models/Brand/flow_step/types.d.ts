@@ -3,7 +3,7 @@ export interface IBaseBrandFlowStep {
   title: string;
   description?: string;
   order: number;
-  wait_for: number;
+  wait_for: Record<'hours' | 'days' | 'weeks' | 'months' | 'years', number>;
   time: string;
   event_type: string;
   flow: UUID;
@@ -26,7 +26,7 @@ export interface IPopulatedBrandFlowStep<T extends 'brand_flow.steps' | 'brand_f
   title: string;
   description?: string;
   order: number;
-  wait_for: number;
+  wait_for: Record<'hours' | 'days' | 'weeks' | 'months' | 'years', number>;
   event_type: string;
   flow: UUID;
   event: T extends 'brand_flow_step.event' ? IBrandEvent : never;

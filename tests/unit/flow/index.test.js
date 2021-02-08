@@ -1,6 +1,7 @@
 const { expect } = require('chai')
 const moment = require('moment-timezone')
 
+const sql = require('../../../lib/utils/sql')
 const BrandFlow = require('../../../lib/models/Brand/flow/get')
 const Contact = {
   ...require('../../../lib/models/Contact/manipulate'),
@@ -52,7 +53,7 @@ async function setup() {
       steps: [{
         title: 'Create Rechat email',
         description: 'Create a Rechat email address for the new guy to use in other services',
-        wait_for: DAY,
+        wait_for: {days: 1},
         time: '08:00:00',
         is_automated: false,
         event: {
@@ -62,7 +63,7 @@ async function setup() {
       }, {
         title: 'Send them a test email',
         description: 'Automatically send them a test email to make sure it\'s working',
-        wait_for: DAY,
+        wait_for: {days: 1},
         time: '08:00:00',
         is_automated: true,
         email: {
@@ -75,7 +76,7 @@ async function setup() {
       }, {
         title: 'Demo of Rechat',
         description: 'Dan gives a quick demo of the Rechat system and explains how it works',
-        wait_for: 2 * DAY,
+        wait_for: { days: 2},
         time: '10:00:00',
         is_automated: false,
         event: {
@@ -150,7 +151,7 @@ async function testFlowProgress() {
   const due_date = tasks[0].due_date
   expect(due_date).to.be.equal(moment.tz(user.timezone).startOf('day').add(1, 'days').add(8, 'hours').unix())
 
-  const campaigns = await EmailCampaign.getByBrand(brand.id)
+  const campaigns = await sql.select('SELECT id FROM email_campaigns WHERE brand = $1', [brand.id])
   expect(campaigns).to.have.length(1)
 
   Orm.setEnabledAssociations(['contact.triggers'])
