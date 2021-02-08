@@ -53,7 +53,7 @@ async function setup() {
       steps: [{
         title: 'Create Rechat email',
         description: 'Create a Rechat email address for the new guy to use in other services',
-        wait_for: DAY,
+        wait_for: { days: 1},
         time: '08:00:00',
         is_automated: false,
         event: {

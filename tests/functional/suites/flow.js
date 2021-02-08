@@ -67,7 +67,10 @@ const addFlow = cb => {
       data: {
         ...flow,
         steps: [
-          flow.steps[0],
+          {
+            ...flow.steps[0],
+            wait_for: {}
+          },
           {
             ...flow.steps[1],
             email: {
@@ -262,7 +265,7 @@ const checkFlowAssociation = cb => {
     .expectJSON({
       data: {
         flows: [{
-          steps: [{}, {}]
+          steps: [{}]
         }]
       }
     })
