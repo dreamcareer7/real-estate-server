@@ -32,7 +32,7 @@ const addFlow = cb => {
     steps: [{
       title: 'Create Rechat email',
       description: 'Create a Rechat email address for the new guy to use in other services',
-      wait_for: 0,
+      wait_for: { days: 0 },
       time: '10:00:00',
       event: {
         title: 'Create Rechat email',
@@ -42,14 +42,14 @@ const addFlow = cb => {
     }, {
       title: 'Send them a test email',
       description: 'Automatically send them a test email to make sure it\'s working',
-      wait_for: DAY,
+      wait_for: { days: 1 },
       time: '08:00:00',
       email: results.flow.addEmail.data.id,
       order: 2
     }, {
       title: 'Demo of Rechat',
       description: 'Dan gives a quick demo of the Rechat system and explains how it works',
-      wait_for: 3 * DAY,
+      wait_for: { days: 3 },
       time: '14:00:00',
       event: {
         title: 'Demo of Rechat',
@@ -121,7 +121,7 @@ const addStepToFlow = cb => {
   const step = {
     title: 'Call to check on them',
     description: 'Call to check on them',
-    wait_for: 7 * DAY,
+    wait_for: { days: 7 },
     time: '10:00:00',
     event: {
       title: 'Call to check on them',
@@ -148,7 +148,7 @@ const editBrandFlowStep = cb => {
   const step = {
     title: 'Meet with them to catch up',
     description: 'Meet with them to catch up',
-    wait_for: 10 * DAY,
+    wait_for: { days: 10 },
     time: '11:00:00',
     event: {
       title: 'Meet with them to catch up',
