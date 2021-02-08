@@ -5,8 +5,10 @@ const GoogleMessage       = require('../../../lib/models/Google/message')
 const GoogleCalendar      = require('../../../lib/models/Google/calendar')
 const GoogleContact       = require('../../../lib/models/Google/contact')
 const GoogleCalendarEvent = require('../../../lib/models/Google/calendar_events')
-const EmailCampaign = require('../../../lib/models/Email/campaign')
+const EmailCampaign       = require('../../../lib/models/Email/campaign')
+const Contact             = require('../../../lib/models/Contact/manipulate')
 
+const { attributes } = require('../contact/helper')
 const { generateRecord, processLabels } = require('../../../lib/models/Google/workers/gmail/common')
 
 const Email   = {
@@ -20,6 +22,35 @@ const calendars = require('./data/calendars.json')
 const events    = require('./data/calendar_events.json')
 
 
+
+async function createContacts(user, brand) {
+  return Contact.create([
+    {
+      user: user.id,
+      attributes: attributes({
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'john@doe.com',
+      }),
+    },
+    {
+      user: user.id,
+      attributes: attributes({
+        first_name: 'John',
+        last_name: 'smith',
+        email: 'john@smith.com',
+      }),
+    },
+    {
+      user: user.id,
+      attributes: attributes({
+        first_name: 'name',
+        last_name: 'family',
+        email: 'name@family.com',
+      }),
+    }
+  ], user.id, brand.id)
+}
 
 async function createGoogleCredential(user, brand) {
   const body = require('./data/google_credential')
@@ -131,6 +162,8 @@ async function createCampaign(user, brand) {
 }
 
 async function createGoogleContact(user, brand) {
+  const result = await createContacts(user, brand)
+
   const { credential } = await createGoogleCredential(user, brand)
 
   const records = []
@@ -139,10 +172,10 @@ async function createGoogleContact(user, brand) {
     records.push({
       google_credential: credential.id,
       entry_id: gContact.entry_id,
-
       etag: gContact.etag,
       resource_id: gContact.resource_id,
       resource: JSON.stringify(gContact),
+      contact: result.pop(),
       parked: gContact.parked
     })
   }

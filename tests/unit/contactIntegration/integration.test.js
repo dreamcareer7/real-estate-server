@@ -4,40 +4,16 @@ const BrandHelper       = require('../brand/helper')
 
 const Context = require('../../../lib/models/Context')
 const User    = require('../../../lib/models/User/get')
-const Contact = require('../../../lib/models/Contact/manipulate')
 const ContactIntegration = require('../../../lib/models/ContactIntegration')
 
 const { createGoogleContact }    = require('../google/helper')
 const { createMicrosoftContact } = require('../microsoft/helper')
-
-const { attributes } = require('../contact/helper')
 
 /** @type {RequireProp<ITaskInput, 'brand' | 'created_by'>} */
 let user, brand, googleContact, microsoftContact
 let integration_records = []
 
 
-
-async function createContacts() {
-  return Contact.create([
-    {
-      user: user.id,
-      attributes: attributes({
-        first_name: 'John',
-        last_name: 'Doe',
-        email: 'john@doe.com',
-      }),
-    },
-    {
-      user: user.id,
-      attributes: attributes({
-        first_name: 'John',
-        last_name: 'smith',
-        email: 'john@smith.com',
-      }),
-    }
-  ], user.id, brand.id)
-}
 
 async function setup() {
   user  = await User.getByEmail('test@rechat.com')
@@ -46,13 +22,11 @@ async function setup() {
   googleContact    = await createGoogleContact(user, brand)
   microsoftContact = await createMicrosoftContact(user, brand)
 
-  const result = await createContacts()
-
   integration_records = [
     {
       google_id: googleContact.id,
       microsoft_id: null,
-      contact: result[0],
+      contact: googleContact.contact,
       origin: 'google',
       etag: 'etag',
       local_etag: 'local_etag'
@@ -60,7 +34,7 @@ async function setup() {
     {
       google_id: null,
       microsoft_id: microsoftContact.id,
-      contact: result[1],
+      contact: microsoftContact.contact,
       origin: 'microsoft',
       etag: 'etag',
       local_etag: 'local_etag'
