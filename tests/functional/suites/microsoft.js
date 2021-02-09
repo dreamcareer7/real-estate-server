@@ -229,7 +229,7 @@ function getRemoteCalendars(cb) {
 }
 
 /*
-function configureCaledars(cb) {
+function configureCalendars(cb) {
 }
 
 function getRemoteCalendarsAfterConfiguring(cb) {
@@ -253,7 +253,7 @@ module.exports = {
   deleteAccount,
   deleteAccountFailedCauseOfInvalidBrand,
   getRemoteCalendars
-  // configureCaledars,
+  // configureCalendars,
   // getRemoteCalendarsAfterConfiguring,
   // reCconfigCaledars
 }

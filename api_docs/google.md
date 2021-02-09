@@ -47,7 +47,7 @@ A _google_credential_ is a simple and small object that contains:
 <!-- include(tests/google/getRemoteCalendarsAfterConfiguring.md) -->
 
 ### Request to config google calendars  [POST /users/google/:gcid/conf]
-<!-- include(tests/google/configureCaledars.md) -->
+<!-- include(tests/google/configureCalendars.md) -->
 
 ### Request to reconfig google calendars  [POST /users/google/:gcid/conf]
 <!-- include(tests/google/reCconfigCaledars.md) -->

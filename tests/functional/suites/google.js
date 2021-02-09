@@ -248,7 +248,7 @@ function getRemoteCalendars(cb) {
     })
 }
 
-function configureCaledars(cb) {
+function configureCalendars(cb) {
   return frisby.create('Configure Google Calendars')
     .post(`/users/google/${results.google.createGoogleCredential}/conf`, {
       toSync: ['my_gmail@gmail.com']
@@ -302,7 +302,7 @@ module.exports = {
   deleteAccount,
   deleteAccountFailedCauseOfInvalidBrand,
   getRemoteCalendars,
-  configureCaledars,
+  configureCalendars,
   getRemoteCalendarsAfterConfiguring,
   reCconfigCaledars
 }
