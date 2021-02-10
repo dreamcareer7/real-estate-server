@@ -1,3 +1,4 @@
+const _ = require('lodash')
 require('colors')
 
 const redisDataService = require('../../lib/data-service/redis')
@@ -16,40 +17,50 @@ const attachCalIntEventHandler = require('../../lib/models/CalendarIntegration/e
 const attachContactIntEventHandler = require('../../lib/models/ContactIntegration/events')
 
 const Blocked = require('blocked-at')
+const moduleControls = {
+  /** @type {Array<() => Promise<void>>} */
+  starts: [],
 
-const blocked = (time, stack, {type, resource}) => {
+  /** @type {Array<() => Promise<void>>} */
+  shutdowns: [],
+}
+
+const blocked = (time, stack, { type, resource }) => {
   Context.log(`Blocked for ${time}ms:`, type, resource, stack)
 }
 
-Blocked(blocked, {
-  threshold: 2000
-})
+function attachModelEventHandlers() {
+  attachCalendarEvents()
+  attachContactEvents()
+  attachFlowEvents()
+  attachTaskEventHandler()
+  attachTouchEventHandler()
+  attachCalIntEventHandler()
+  attachContactIntEventHandler()
+}
 
-attachCalendarEvents()
-attachContactEvents()
-attachFlowEvents()
-attachTaskEventHandler()
-attachTouchEventHandler()
-attachCalIntEventHandler()
-attachContactIntEventHandler()
-
-process.on('unhandledRejection', (err, promise) => {
-  Context.trace('Unhanled Rejection on request', err)
-  Slack.send({
-    channel: '7-server-errors',
-    text: `Workers: Unhandled rejection: \`${err}\``,
-    emoji: ':skull:'
+function attachProcessEventHandlers() {
+  process.on('unhandledRejection', (err, promise) => {
+    Context.trace('Unhanled Rejection on request', err)
+    Slack.send({
+      channel: '7-server-errors',
+      text: `Workers: Unhandled rejection: \`${err}\``,
+      emoji: ':skull:',
+    })
   })
-})
 
-process.on('uncaughtException', (err) => {
-  Context.trace('Uncaught Exception:', err)
-  Slack.send({
-    channel: '7-server-errors',
-    text: `Workers: Uncaught exception: \`${err}\``,
-    emoji: ':skull:'
+  process.on('uncaughtException', (err) => {
+    Context.trace('Uncaught Exception:', err)
+    Slack.send({
+      channel: '7-server-errors',
+      text: `Workers: Uncaught exception: \`${err}\``,
+      emoji: ':skull:',
+    })
   })
-})
+
+  process.once('SIGTERM', shutdown)
+  process.once('SIGINT', shutdown)
+}
 
 // We have proper error handling here. No need for auto reports.
 Error.autoReport = false
@@ -63,29 +74,58 @@ const timeout = (seconds) => {
   })
 }
 
-async function shutdownWorkers() {
+async function shutdownModules() {
+  await Promise.all(moduleControls.shutdowns.map(shutdown => shutdown()))
   await db.close()
 }
 
-const shutdown = async () => {
+async function shutdown() {
   Context.log('Shutting down')
   try {
-    await Promise.race([
-      timeout(5.2 * 60 * 1000),
-      shutdownWorkers()
-    ])
+    await Promise.race([timeout(5.2 * 60 * 1000), shutdownModules()])
 
     Context.log('Race finished.')
 
     clearTimeout(shutdownRaceTimeout)
     redisDataService.shutdown()
     process.exit()
-  }
-  catch (ex) {
+  } catch (ex) {
     Context.log('Race timed out!')
     Context.error(ex)
     process.exit(1)
   }
 }
-process.once('SIGTERM', shutdown)
-process.once('SIGINT', shutdown)
+
+async function start() {
+  await Promise.all(moduleControls.starts.map(start => start()))
+}
+
+/**
+ * @param {string[]} modules
+ */
+function registerModules(modules) {
+  const [starts, shutdowns] = _.zip(...modules.map((module_path) => Object.values(require(module_path))))
+
+  moduleControls.starts = starts
+  moduleControls.shutdowns = shutdowns
+}
+
+async function main() {
+  attachProcessEventHandlers()
+  Blocked(blocked, { threshold: 2000 })
+
+  attachModelEventHandlers()
+
+  if (process.argv.length > 2) {
+    registerModules(process.argv.slice(2))
+  } else {
+    registerModules(['./peanar', './kue'])
+  }
+
+  await start()
+}
+
+main().catch((ex) => {
+  console.error(ex)
+  process.exit(1)
+})

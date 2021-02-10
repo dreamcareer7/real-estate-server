@@ -1,29 +1,29 @@
 const path = require('path')
 // const { dump } = require('wtfnode')
 
-const { peanar } = require('../../lib/utils/peanar')
-const { fork } = require('../../lib/utils/fork')
+const { peanar } = require('../../../lib/utils/peanar')
+const { fork } = require('../../../lib/utils/fork')
 
-const config = require('../../lib/config')
+const config = require('../../../lib/config')
 
-require('../../lib/models/Calendar/worker')
-require('../../lib/models/Contact/worker')
-require('../../lib/models/Flow/worker')
-require('../../lib/models/CRM/Task/worker')
-require('../../lib/models/CRM/Touch/worker')
-require('../../lib/models/MLS/workers')
-require('../../lib/models/Google/workers')
-require('../../lib/models/Microsoft/workers')
-require('../../lib/models/Deal/email')
-require('../../lib/models/Deal/brokerwolf')
-require('../../lib/models/Email/campaign/worker')
-require('../../lib/models/Email/send')
-require('../../lib/models/Email/events')
-require('../../lib/models/SMS')
-require('../../lib/models/Daily')
-require('../../lib/models/Envelope')
-require('../../lib/models/Trigger/worker')
-// require('../../lib/models/Showings/worker')
+require('../../../lib/models/Calendar/worker')
+require('../../../lib/models/Contact/worker')
+require('../../../lib/models/Flow/worker')
+require('../../../lib/models/CRM/Task/worker')
+require('../../../lib/models/CRM/Touch/worker')
+require('../../../lib/models/MLS/workers')
+require('../../../lib/models/Google/workers')
+require('../../../lib/models/Microsoft/workers')
+require('../../../lib/models/Deal/email')
+require('../../../lib/models/Deal/brokerwolf')
+require('../../../lib/models/Email/campaign/worker')
+require('../../../lib/models/Email/send')
+require('../../../lib/models/Email/events')
+require('../../../lib/models/SMS')
+require('../../../lib/models/Daily')
+require('../../../lib/models/Envelope')
+require('../../../lib/models/Trigger/worker')
+// require('../../../lib/models/Showings/worker')
 
 /** @type {(() => Promise<void>)[]} */
 let shutdowns = []
@@ -63,14 +63,17 @@ const queues = [
   },
 
   {
+    // Does not scale
     queues: ['microsoft_notifications'],
     concurrency: 1
   },
   {
+    // Scale?
     queues: ['microsoft_cal_notifications'],
     concurrency: 1
   },
   {
+    // Scale?
     queues: ['microsoft_contacts_notifications'],
     concurrency: 1
   },
@@ -154,7 +157,16 @@ const queues = [
 
 const forks = [
   {
-    queues: ['google', 'google_cal', 'microsoft', 'microsoft_cal'],
+    queues: [
+      // For email integration
+      'google',
+      // Actual calendar synchronization
+      'google_cal',
+      // For email integration
+      'microsoft',
+      // Actual calendar synchronization
+      'microsoft_cal'
+    ],
     concurrency: 7
   },
   {
@@ -181,7 +193,7 @@ async function series(arr) {
   return res
 }
 
-async function startPeanar() {
+async function start() {
   try {
     await peanar.declareAmqResources()
   } catch (ex) {
@@ -195,20 +207,11 @@ async function startPeanar() {
   shutdowns = await series(forks.map(q => fork(path.resolve(__dirname, './forked_worker'), q)))
 }
 
-function shutdownForks() {
-  return Promise.all(shutdowns.map(s => s()))
+async function shutdown() {
+  await peanar.shutdown()
+  await Promise.all(shutdowns.map(s => s()))
 }
 
-// process.on('SIGINT', () => {
-//   Promise.all([
-//     shutdown(),
-//     peanar.shutdown()
-//   ]).then(() => {
-//     dump()
-//     process.exit()
-//   })
-// })
-
-startPeanar().catch(ex => console.error(ex))
-
-module.exports = shutdownForks
+module.exports = {
+  start, shutdown
+}

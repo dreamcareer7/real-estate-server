@@ -1,7 +1,7 @@
 const kue = require('kue')
 const promisify = require('../../../lib/utils/promisify.js')
 const queue = require('../../../lib/utils/queue')
-const queues = require('./kue/queues')
+const queues = require('./queues')
 
 const Context = require('../../../lib/models/Context')
 const Metric = require('../../../lib/models/Metric')
