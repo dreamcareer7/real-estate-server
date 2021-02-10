@@ -1,8 +1,14 @@
 const BrandTemplate = require('../../../lib/models/Template/brand')
-const { poll } = require('../poll')
-require('./entrypoint')
+const { poll } = require('../utils/poll')
 
-poll({
-  fn: BrandTemplate.updateThumbnails,
-  name: 'BrandTemplate.updateThumbnails'
-})
+function start() {
+  poll({
+    fn: BrandTemplate.updateThumbnails,
+    name: 'BrandTemplate.updateThumbnails'
+  })
+}
+
+module.exports = {
+  start,
+  shutdown: require('../utils/poll').shutdown
+}

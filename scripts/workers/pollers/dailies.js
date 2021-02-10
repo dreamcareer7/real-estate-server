@@ -1,8 +1,14 @@
 const Daily = require('../../../lib/models/Daily')
-const { poll } = require('../poll')
-require('./entrypoint')
+const { poll } = require('../utils/poll')
 
-poll({
-  fn: Daily.sendDue,
-  name: 'Daily.sendDue'
-})
+function start() {
+  poll({
+    fn: Daily.sendDue,
+    name: 'Daily.sendDue',
+  })
+}
+
+module.exports = {
+  start,
+  shutdown: require('../utils/poll').shutdown
+}

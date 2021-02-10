@@ -1,6 +1,6 @@
 const createContext = require('./create-context')
-const Context = require('../../lib/models/Context')
-const Slack = require('../../lib/models/Slack')
+const Context = require('../../../lib/models/Context')
+const Slack = require('../../../lib/models/Slack')
 
 let i = 1
 

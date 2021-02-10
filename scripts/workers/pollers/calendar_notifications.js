@@ -1,8 +1,14 @@
 const CalendarWorker = require('../../../lib/models/Calendar/worker/notification')
-const { poll } = require('../poll')
-require('./entrypoint')
+const { poll } = require('../utils/poll')
 
-poll({
-  fn: CalendarWorker.sendEmailForUnread.bind(CalendarWorker),
-  name: 'CalendarWorker.sendEmailForUnread'
-})
+function start() {
+  poll({
+    fn: CalendarWorker.sendEmailForUnread.bind(CalendarWorker),
+    name: 'CalendarWorker.sendEmailForUnread',
+  })
+}
+
+module.exports = {
+  start,
+  shutdown: require('../utils/poll').shutdown
+}

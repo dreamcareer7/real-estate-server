@@ -1,8 +1,8 @@
-const Context = require('../../lib/models/Context')
-const db = require('../../lib/utils/db')
+const Context = require('../../../lib/models/Context')
+const db = require('../../../lib/utils/db')
 
 const createContext = async c => {
-  const Job = require('../../lib/models/Job')
+  const Job = require('../../../lib/models/Job')
 
   const context = Context.create({
     ...c

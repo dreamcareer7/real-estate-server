@@ -1,5 +1,5 @@
 const db = require('../lib/utils/db')
-const createContext = require('../scripts/workers/create-context')
+const createContext = require('../scripts/workers/utils/create-context')
 const request = require('request-promise-native')
 const extractVariables = require('../lib/models/Template/extract-variables')
 const Context = require('../lib/models/Context')

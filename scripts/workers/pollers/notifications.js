@@ -2,8 +2,7 @@ const Message = require('../../../lib/models/Message/email')
 const Notification = require('../../../lib/models/Notification/send')
 const promisify = require('../../../lib/utils/promisify')
 
-const { poll } = require('../poll')
-require('./entrypoint')
+const { poll } = require('../utils/poll')
 
 const notifications = async () => {
   /*
@@ -14,7 +13,14 @@ const notifications = async () => {
   await promisify(Message.sendEmailForUnread)()
 }
 
-poll({
-  fn: notifications,
-  name: 'Notifications'
-})
+function start() {
+  poll({
+    fn: notifications,
+    name: 'Notifications',
+  })
+}
+
+module.exports = {
+  start,
+  shutdown: require('../utils/poll').shutdown
+}
