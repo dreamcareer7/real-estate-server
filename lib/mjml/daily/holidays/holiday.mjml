@@ -15,7 +15,7 @@
   <mj-section padding-top="10px" padding-bottom="26px">
       <mj-column padding-right="0">
         <mj-text align="center" color="#b8b9bd" font-family="Lato" font-size="16px" font-weight="400" padding-top="0" >
-          {{ holiday.starts_at | time('dddd MMMM DD') }}
+          {{ holiday.starts_at | time('dddd MMMM DD', 'UTC') }}
         </mj-text>
       </mj-column>
     </mj-section>
