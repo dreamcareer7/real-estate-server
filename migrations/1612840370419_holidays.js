@@ -19,7 +19,7 @@ const migrations = [
 
 const rules = [
   {
-    name: "New Year's Eve",
+    name: 'New Year\'s Eve',
     template_type: 'NewYear',
     rule: '12-31',
   },
@@ -44,7 +44,7 @@ const rules = [
 
   {
     template_type: 'Valentines',
-    name: "Valentine's Day",
+    name: 'Valentine\'s Day',
     rule: '02-14'
   },
 
@@ -56,13 +56,13 @@ const rules = [
 
   {
     template_type: 'FathersDay',
-    name: "Father's Day",
+    name: 'Father\'s Day',
     rule: '3rd sunday in June'
   },
 
   {
     template_type: 'MothersDay',
-    name: "Mother's Day",
+    name: 'Mother\'s Day',
     rule: '2nd sunday in May'
   },
 
@@ -110,7 +110,7 @@ const rules = [
 
   {
     template_type: 'WomansDay',
-    name: "International Woman's Day",
+    name: 'International Woman\'s Day',
     rule: '03-08'
   },
 
@@ -134,7 +134,7 @@ const rules = [
 
   {
     template_type: 'PatriotsDay',
-    name: "Patriot's Day",
+    name: 'Patriot\'s Day',
     rule: '3rd monday in April'
   },
 
@@ -153,7 +153,7 @@ const rules = [
 const load = async () => {
   const holidays = new Holidays
 
-  for(holiday of rules) {
+  for(const holiday of rules) {
     const set = holidays.setHoliday(holiday.rule, {
       name: holiday.name,
       type: 'observance'
