@@ -1,0 +1,3 @@
+{% for holiday in holidays %}
+  {% include './holiday.mjml' %}
+{% endfor %}

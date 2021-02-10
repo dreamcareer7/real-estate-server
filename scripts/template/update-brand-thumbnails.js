@@ -24,8 +24,8 @@ const run = async () => {
   })
   context.enter()
 
-  const templates = await BrandTemplate.getForBrand({
-    brand: process.argv[2]
+  const templates = await BrandTemplate.getForBrands({
+    brands: [process.argv[2]]
   })
 
   for(const brand_template of templates)
