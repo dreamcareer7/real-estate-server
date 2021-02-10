@@ -7,7 +7,7 @@ const Context = require('../../../lib/models/Context')
 const Metric = require('../../../lib/models/Metric')
 const Slack = require('../../../lib/models/Slack')
 
-const createContext = require('../create-context')
+const createContext = require('../utils/create-context')
 
 function reportQueueStatistics () {
   // @ts-ignore

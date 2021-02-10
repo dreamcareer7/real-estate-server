@@ -1,8 +1,14 @@
 const EmailCampaignStats = require('../../../lib/models/Email/campaign/stats')
-const { poll } = require('../poll')
-require('./entrypoint')
+const { poll } = require('../utils/poll')
 
-poll({
-  fn: EmailCampaignStats.updateStats,
-  name: 'EmailCampaignStats.updateStats'
-})
+function start() {
+  poll({
+    fn: EmailCampaignStats.updateStats,
+    name: 'EmailCampaignStats.updateStats',
+  })
+}
+
+module.exports = {
+  start,
+  shutdown: require('../utils/poll').shutdown
+}

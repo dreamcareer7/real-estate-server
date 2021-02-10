@@ -1,7 +1,7 @@
 const _ = require('lodash')
 const sql = require('../lib/utils/sql')
 const CrmTask = require('../lib/models/CRM/Task')
-const createContext = require('../scripts/workers/create-context')
+const createContext = require('../scripts/workers/utils/create-context')
 
 const run = async () => {
   const { commit, run } = await createContext({

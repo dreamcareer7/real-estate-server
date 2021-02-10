@@ -1,8 +1,14 @@
 const Trigger = require('../../../lib/models/Trigger/due')
-const { poll } = require('../poll')
-require('./entrypoint')
+const { poll } = require('../utils/poll')
 
-poll({
-  fn: Trigger.executeDue,
-  name: 'Trigger.executeDue'
-})
+function start() {
+  poll({
+    fn: Trigger.executeDue,
+    name: 'Trigger.executeDue',
+  })
+}
+
+module.exports = {
+  start,
+  shutdown: require('../utils/poll').shutdown
+}

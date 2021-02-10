@@ -1,8 +1,14 @@
 const Task = require('../../../lib/models/Task/notifications')
-const { poll } = require('../poll')
-require('./entrypoint')
+const { poll } = require('../utils/poll')
 
-poll({
-  fn: Task.sendNotifications,
-  name: 'Task.sendNotifications'
-})
+function start() {
+  poll({
+    fn: Task.sendNotifications,
+    name: 'Task.sendNotifications',
+  })
+}
+
+module.exports = {
+  start,
+  shutdown: require('../utils/poll').shutdown
+}

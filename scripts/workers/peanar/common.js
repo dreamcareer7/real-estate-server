@@ -1,8 +1,4 @@
-const path = require('path')
-// const { dump } = require('wtfnode')
-
 const { peanar } = require('../../../lib/utils/peanar')
-const { fork } = require('../../../lib/utils/fork')
 
 const config = require('../../../lib/config')
 
@@ -16,7 +12,6 @@ require('../../../lib/models/Google/workers')
 require('../../../lib/models/Microsoft/workers')
 require('../../../lib/models/Deal/email')
 require('../../../lib/models/Deal/brokerwolf')
-require('../../../lib/models/Email/campaign/worker')
 require('../../../lib/models/Email/send')
 require('../../../lib/models/Email/events')
 require('../../../lib/models/SMS')
@@ -24,9 +19,6 @@ require('../../../lib/models/Daily')
 require('../../../lib/models/Envelope')
 require('../../../lib/models/Trigger/worker')
 // require('../../../lib/models/Showings/worker')
-
-/** @type {(() => Promise<void>)[]} */
-let shutdowns = []
 
 const queues = [
   {
@@ -60,22 +52,6 @@ const queues = [
   {
     queues: ['sms'],
     concurrency: config.twilio.parallel
-  },
-
-  {
-    // Does not scale
-    queues: ['microsoft_notifications'],
-    concurrency: 1
-  },
-  {
-    // Scale?
-    queues: ['microsoft_cal_notifications'],
-    concurrency: 1
-  },
-  {
-    // Scale?
-    queues: ['microsoft_contacts_notifications'],
-    concurrency: 1
   },
   {
     queues: ['microsoft_contacts'],
@@ -155,44 +131,6 @@ const queues = [
   },
 ]
 
-const forks = [
-  {
-    queues: [
-      // For email integration
-      'google',
-      // Actual calendar synchronization
-      'google_cal',
-      // For email integration
-      'microsoft',
-      // Actual calendar synchronization
-      'microsoft_cal'
-    ],
-    concurrency: 7
-  },
-  {
-    queues: ['email_campaign'],
-    concurrency: 1
-  },
-  {
-    queues: ['MLS.Photo', 'MLS.Listing', 'MLS.Listing.Photos.Validate'],
-    concurrency: 50
-  }
-]
-
-/**
- * @template T
- * @param {Promise<T>[]} arr 
- */
-async function series(arr) {
-  const res = []
-
-  for (const x of arr) {
-    res.push(await x)
-  }
-
-  return res
-}
-
 async function start() {
   try {
     await peanar.declareAmqResources()
@@ -203,13 +141,10 @@ async function start() {
   for (const q of queues) {
     await peanar.worker(q)
   }
-
-  shutdowns = await series(forks.map(q => fork(path.resolve(__dirname, './forked_worker'), q)))
 }
 
 async function shutdown() {
   await peanar.shutdown()
-  await Promise.all(shutdowns.map(s => s()))
 }
 
 module.exports = {
