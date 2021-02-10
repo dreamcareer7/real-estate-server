@@ -1,0 +1,42 @@
+{% set uri = '/dashboard/marketing/' + holiday.template_type + '/Social' %}
+{% set url = uri | url %}
+
+<mj-section padding="16px 0 0 0"></mj-section>
+
+<mj-wrapper background-color="#ffffff" padding="0px" border-radius="16px">
+  <mj-section padding-bottom="0" padding-top="24px">
+    <mj-column>
+      <mj-text css-class="title" padding="0" align="center" font-family="Lato" font-size="18px" font-weight="900" color="#000000">
+          <a href="{{ url }}">{{holiday.name}}</a>
+      </mj-text>
+    </mj-column>
+  </mj-section>
+
+  <mj-section padding-top="10px" padding-bottom="26px">
+      <mj-column padding-right="0">
+        <mj-text align="center" color="#b8b9bd" font-family="Lato" font-size="16px" font-weight="400" padding-top="0" >
+          {{ holiday.starts_at | time('dddd MMMM DD') }}
+        </mj-text>
+      </mj-column>
+    </mj-section>
+
+  {% for thumbnails in holiday.thumbnails | batch(2) %}
+    <mj-section padding-top=0 padding-bottom=0>
+      <mj-column width="49.5%">
+        <mj-image border="1px solid #eef0f2" href="{{url}}" padding-bottom=0 padding-top="10px" src="{{thumbnails[0].url}}" />
+      </mj-column>
+
+      <mj-column width="49.5%">
+        {% if thumbnails[1] %}
+          <mj-image border="1px solid #eef0f2" href="{{url}}" padding-bottom=0 padding-top="10px" src="{{thumbnails[1].url}}" />
+        {% endif %}
+      </mj-column>
+    </mj-section>
+  {% endfor %}
+
+  <mj-section padding=0>
+    <mj-column padding=0>
+      <mj-spacer height="20px" />
+    </mj-column>
+  </mj-section>
+</mj-wrapper>

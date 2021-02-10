@@ -21,10 +21,10 @@ const sendForBrand = async id => {
 
   Context.log('Sending for', brand.name)
 
-  const brand_templates = await BrandTemplate.getForBrand({
+  const brand_templates = await BrandTemplate.getForBrands({
     types: ['Christmas'],
     mediums: ['Social'],
-    brand: brand.id
+    brands: [brand.id]
   })
 
   if (brand_templates.length < 1) {
