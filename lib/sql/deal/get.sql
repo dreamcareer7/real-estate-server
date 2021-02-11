@@ -83,11 +83,12 @@ SELECT deals.*,
 
   (
     SELECT
-      ARRAY_AGG(DISTINCT COALESCE(forms.tab_name, brands_checklists.tab_name))
+      ARRAY_AGG(DISTINCT COALESCE(forms.tab_name, brands_checklists_tasks.tab_name, brands_checklists.tab_name))
     FROM tasks
-    JOIN deals_checklists  ON tasks.checklist = deals_checklists.id
-    JOIN brands_checklists ON deals_checklists.origin = brands_checklists.id
-    LEFT JOIN forms        ON tasks.form = forms.id
+    JOIN deals_checklists             ON tasks.checklist = deals_checklists.id
+    JOIN brands_checklists            ON deals_checklists.origin = brands_checklists.id
+    LEFT JOIN brands_checklists_tasks ON tasks.origin = brands_checklists_tasks.id
+    LEFT JOIN forms                   ON tasks.form = forms.id
     WHERE
       deals_checklists.deal = deals.id
       AND deals_checklists.deleted_at IS NULL
