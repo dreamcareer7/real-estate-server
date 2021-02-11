@@ -18,7 +18,7 @@
     </mj-column>
     <mj-column width="65%">
       <mj-text padding-left="0" padding-right="0" color="#949598" font-family="Lato" font-size="13px" font-weight="400">
-        {{ celebration.timestamp | time('MMMM DD')}}
+        {{ celebration.timestamp | time('MMMM DD', 'UTC')}}
         <div style="margin:5px 0;">
           <a style="color:#000000;" href="{{ url }}">{{ celebration.title }}</a>
         </div>
