@@ -6,9 +6,11 @@ const Contact       = require('../../../lib/models/Contact/manipulate')
 const User          = require('../../../lib/models/User/get')
 const BrandHelper   = require('../brand/helper')
 const GoogleContact = require('../../../lib/models/Google/contact')
+const ContactIntegration = require('../../../lib/models/ContactIntegration')
 
 const { attributes } = require('../contact/helper')
 const { createGoogleCredential } = require('./helper')
+const { hardDelete: deleteIntegrations } = require('../../../lib/models/ContactIntegration/delete')
 
 const google_contacts_offline       = require('./data/google_contacts.json')
 const google_contact_groups_offline = require('./data/google_contact_groups.json')
@@ -39,6 +41,7 @@ async function create() {
   const { credential } = await createGoogleCredential(user, brand)
 
   const records = []
+  const integration_records = []
 
   for (const gContact of google_contacts_offline) {
 
@@ -58,14 +61,25 @@ async function create() {
   const createdGoogleContacts = await GoogleContact.create(records)
 
   for (const createdGoogleContact of createdGoogleContacts) {
-    expect(createdGoogleContact.google_credential).to.be.equal(credential.id)
-
     const googleContact = await GoogleContact.getByResourceId(createdGoogleContact.google_credential, createdGoogleContact.resource_id)
+    
+    integration_records.push({
+      google_id: googleContact.id,
+      microsoft_id: null,
+      contact: createdGoogleContact.contact,
+      origin: 'google',
+      etag: 'etag',
+      local_etag: 'local_etag'
+    })
 
+    expect(createdGoogleContact.google_credential).to.be.equal(credential.id)
     expect(googleContact.type).to.be.equal('google_contact')
     expect(googleContact.google_credential).to.be.equal(createdGoogleContact.google_credential)
     expect(googleContact.contact).to.not.be.equal(null)
   }
+
+  const result = await ContactIntegration.insert(integration_records)
+  expect(result.length).to.be.equal(integration_records.length)
 
   return createdGoogleContacts
 }
@@ -247,7 +261,9 @@ async function getRefinedContactGroups() {
 
 async function hardDelete() {
   const created = await create()
+  const integrations = await ContactIntegration.getByGoogleIds([created[0].id])
 
+  await deleteIntegrations([integrations[0].id])
   await GoogleContact.hardDelete([created[0].id])
 
   try {
@@ -255,6 +271,24 @@ async function hardDelete() {
   } catch (ex) {
     expect(ex.message).to.be.equal(`Google contact by id ${created[0].id} not found.`)
   }
+}
+
+async function resetContactIntegration() {
+  const created = await create()
+
+  const before = await ContactIntegration.getByGoogleIds([created[0].id])
+  expect(before.length).to.be.equal(1)
+
+  await GoogleContact.resetContactIntegration(user.id, brand.id)
+
+  try {
+    await GoogleContact.get(created[0].id)
+  } catch (ex) {
+    expect(ex.message).to.be.equal(`Google contact by id ${created[0].id} not found.`)
+  }
+
+  const after = await ContactIntegration.getByGoogleIds([created[0].id])
+  expect(after.length).to.be.equal(0)
 }
 
 
@@ -274,5 +308,6 @@ describe('Google', () => {
     it('should deleted Google contact groups', deleteManyCGroups)
     it('should return a refined object of Google contact groups', getRefinedContactGroups)
     it('should permanently delete several Google contact records', hardDelete)
+    it('should reset contact integration links', resetContactIntegration)
   })
 })
