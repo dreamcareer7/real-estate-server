@@ -30,9 +30,9 @@ async function create() {
   return credential
 }
 
-async function findByUser() {
+async function findByUserBrand() {
   const createdCredential = await create()
-  const credentialIds     = await MicrosoftCredential.findByUser(createdCredential.user, createdCredential.brand)
+  const credentialIds     = await MicrosoftCredential.findByUserBrand(createdCredential.user, createdCredential.brand)
 
   expect(credentialIds).not.to.be.equal(0)
 }
@@ -205,7 +205,7 @@ describe('Microsoft', () => {
     beforeEach(setup)
 
     it('should create a microsoft credential', create)
-    it('should return microsoft-credential ids by user-brand', findByUser)
+    it('should return microsoft-credential ids by user-brand', findByUserBrand)
     it('should return a microsoft credential by brand', getByBrand)
     it('should return a microsoft credential by user-brand', getByUser)
     it('should handle returned exception from microsoft-credential by user-brand', getByUserFailed)

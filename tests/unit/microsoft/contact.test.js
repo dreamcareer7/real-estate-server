@@ -209,6 +209,17 @@ async function removeFoldersByCredential() {
   expect(after_delete.length).to.be.equal(0)
 }
 
+async function hardDelete() {
+  const created = await create()
+
+  await MicrosoftContact.hardDelete([created[0].id])
+
+  try {
+    await MicrosoftContact.get(created[0].id)
+  } catch (ex) {
+    expect(ex.message).to.be.equal(`Microsoft contact by id ${created[0].id} not found.`)
+  }
+}
 
 
 describe('Microsoft', () => {
@@ -225,5 +236,6 @@ describe('Microsoft', () => {
     it('should handle add contact-folder', addContactFolder)
     it('should return number of contact-folders of specific credential', getRefinedContactFolders)
     it('should remove contact-folders by credential', removeFoldersByCredential)
+    it('should permanently delete several Microsoft contact records', hardDelete)
   })
 })
