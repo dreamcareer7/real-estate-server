@@ -245,6 +245,18 @@ async function getRefinedContactGroups() {
   expect(result['contactGroups/friends']).to.be.equal('friends')
 }
 
+async function hardDelete() {
+  const created = await create()
+
+  await GoogleContact.hardDelete([created[0].id])
+
+  try {
+    await GoogleContact.get(created[0].id)
+  } catch (ex) {
+    expect(ex.message).to.be.equal(`Google contact by id ${created[0].id} not found.`)
+  }
+}
+
 
 describe('Google', () => {
   describe('Google Contacts', () => {
@@ -261,5 +273,6 @@ describe('Google', () => {
     it('should handle add Google contact groups', addContactGroups)
     it('should deleted Google contact groups', deleteManyCGroups)
     it('should return a refined object of Google contact groups', getRefinedContactGroups)
+    it('should permanently delete several Google contact records', hardDelete)
   })
 })
