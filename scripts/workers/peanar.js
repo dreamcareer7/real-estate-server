@@ -76,11 +76,11 @@ const queues = [
   },
   {
     queues: ['microsoft_contacts'],
-    concurrency: 1 // 5
+    concurrency: 5
   },
   {
     queues: ['microsoft_contacts_avatars'],
-    concurrency: 1 // 5
+    concurrency: 5
   },
   {
     queues: ['microsoft_disconnect'],
@@ -88,24 +88,24 @@ const queues = [
   },
   {
     queues: ['outlook_by_query'],
-    concurrency: 1 // 5
+    concurrency: 5
   },
 
   {
     queues: ['gmail_webhooks'],
-    concurrency: 1 // 3
+    concurrency: 3
   },
   {
     queues: ['google_cal_webhooks'],
-    concurrency: 1 // 3
+    concurrency: 3
   },
   {
     queues: ['google_contacts'],
-    concurrency: 1 // 5
+    concurrency: 5
   },
   {
     queues: ['google_contacts_avatars'],
-    concurrency: 1 // 5
+    concurrency: 5
   },
   {
     queues: ['google_disconnect'],
@@ -113,17 +113,17 @@ const queues = [
   },
   {
     queues: ['gmail_by_query'],
-    concurrency: 1 // 2
+    concurrency: 2
   },
 
   {
     queues: ['calendar_integration'],
-    concurrency: 1 // 10
+    concurrency: 10
   },
 
   {
     queues: ['contact_integration'],
-    concurrency: 1 // 10
+    concurrency: 10
   },
 
   {
@@ -155,7 +155,7 @@ const queues = [
 const forks = [
   {
     queues: ['google', 'google_cal', 'microsoft', 'microsoft_cal'],
-    concurrency: 1 // 7
+    concurrency: 7
   },
   {
     queues: ['email_campaign'],
