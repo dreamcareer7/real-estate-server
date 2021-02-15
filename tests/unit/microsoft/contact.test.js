@@ -51,7 +51,9 @@ async function create() {
       contact: contactIds[0],
       remote_id: mcontact.id,
       data: JSON.stringify(mcontact.data),
-      source: mcontact.source
+      source: mcontact.source,
+      etag: 'etag',
+      parked: false
     })
   }
 
@@ -94,7 +96,9 @@ async function update() {
       microsoft_credential: credential.id,
       remote_id: mcontact.remote_id,
       data: JSON.stringify(sample),
-      source: mcontact.source
+      source: mcontact.source,
+      etag: 'etag',
+      parked: false
     })
   }
 
