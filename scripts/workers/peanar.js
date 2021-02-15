@@ -88,7 +88,7 @@ const queues = [
   },
   {
     queues: ['outlook_by_query'],
-    concurrency: 2
+    concurrency: 5
   },
 
   {
@@ -98,10 +98,6 @@ const queues = [
   {
     queues: ['google_cal_webhooks'],
     concurrency: 3
-  },
-  {
-    queues: ['trigger'],
-    concurrency: 5
   },
   {
     queues: ['google_contacts'],
@@ -131,6 +127,10 @@ const queues = [
   },
 
   {
+    queues: ['trigger'],
+    concurrency: 5
+  },
+  {
     queues: ['brand_template_thumbnail'],
     concurrency: 100
   },
@@ -144,7 +144,7 @@ const queues = [
   },
   {
     queues: ['daily_email'],
-    concurrency: 5
+    concurrency: 20
   },
   {
     queues: ['email'],
