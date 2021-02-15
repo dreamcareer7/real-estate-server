@@ -58,7 +58,7 @@ coverage:
     - modules
   services:
     - alias: postgres
-      name: mdillon/postgis:11
+      name: postgis/postgis:12-master
     - alias: redis
       name: redis:latest
   script:
