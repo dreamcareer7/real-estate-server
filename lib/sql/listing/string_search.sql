@@ -1,4 +1,4 @@
-WITH r AS (
+WITH r AS MATERIALIZED (
   SELECT id FROM search_listings(to_tsquery('english', $1))
   WHERE
     CASE

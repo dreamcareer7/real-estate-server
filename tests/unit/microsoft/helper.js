@@ -155,7 +155,9 @@ async function createMicrosoftContact(user, brand) {
       remote_id: mContact.id,
       data: JSON.stringify(mContact.data),
       contact: result.pop(),
-      source: mContact.source
+      source: mContact.source,
+      etag: 'etag',
+      parked: false
     })
   }
 

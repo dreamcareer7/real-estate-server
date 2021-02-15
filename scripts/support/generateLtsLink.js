@@ -3,7 +3,7 @@ const Crypto = require('../../lib/models/Crypto')
 const Url = require('../../lib/models/Url')
 
 // eslint-disable-next-line no-unused-vars
-function generateLtsLink({
+module.exports = function generateLtsLink({
   brand,
   user,
   protocol = 'LeadTransmissionProtocol',
