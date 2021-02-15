@@ -6,9 +6,11 @@ const Contact          = require('../../../lib/models/Contact/manipulate')
 const User             = require('../../../lib/models/User/get')
 const BrandHelper      = require('../brand/helper')
 const MicrosoftContact = require('../../../lib/models/Microsoft/contact')
+const ContactIntegration = require('../../../lib/models/ContactIntegration')
 
 const { attributes } = require('../contact/helper')
 const { createMicrosoftCredential } = require('./helper')
+const { hardDelete: deleteIntegrations } = require('../../../lib/models/ContactIntegration/delete')
 
 const microsoft_contacts_offline        = require('./data/microsoft_contacts.json')
 const microsoft_contact_folders_offline = require('./data/microsoft_contact_folders.json')
@@ -39,6 +41,7 @@ async function create() {
   const { credential } = await createMicrosoftCredential(user, brand)
 
   const records = []
+  const integration_records = []
 
   for (const mcontact of microsoft_contacts_offline) {
     const contactIds = await createContact()
@@ -54,16 +57,27 @@ async function create() {
 
   const createdMicrosoftContacts = await MicrosoftContact.create(records)
 
-  for (const createdMicrosoftContact of createdMicrosoftContacts) {
-    expect(createdMicrosoftContact.microsoft_credential).to.be.equal(credential.id)
-
+  for (const createdMicrosoftContact of createdMicrosoftContacts) {    
     const microsoftContact = await MicrosoftContact.getByRemoteId(createdMicrosoftContact.microsoft_credential, createdMicrosoftContact.remote_id)
+    
+    integration_records.push({
+      microsoft_id: microsoftContact.id,
+      google_id: null,
+      contact: createdMicrosoftContact.contact,
+      origin: 'microsoft',
+      etag: 'etag',
+      local_etag: 'local_etag'
+    })
 
+    expect(createdMicrosoftContact.microsoft_credential).to.be.equal(credential.id)
     expect(microsoftContact.type).to.be.equal('microsoft_contact')
     expect(microsoftContact.microsoft_credential).to.be.equal(createdMicrosoftContact.microsoft_credential)
     expect(microsoftContact.remote_id).to.be.equal(createdMicrosoftContact.remote_id)
     expect(microsoftContact.contact).to.not.be.equal(null)
   }
+
+  const result = await ContactIntegration.insert(integration_records)
+  expect(result.length).to.be.equal(integration_records.length)
 
   return createdMicrosoftContacts
 }
@@ -209,6 +223,37 @@ async function removeFoldersByCredential() {
   expect(after_delete.length).to.be.equal(0)
 }
 
+async function hardDelete() {
+  const created = await create()
+  const integrations = await ContactIntegration.getByMicrosoftIds([created[0].id])
+
+  await deleteIntegrations([integrations[0].id])
+  await MicrosoftContact.hardDelete([created[0].id])
+
+  try {
+    await MicrosoftContact.get(created[0].id)
+  } catch (ex) {
+    expect(ex.message).to.be.equal(`Microsoft contact by id ${created[0].id} not found.`)
+  }
+}
+
+async function resetContactIntegration() {
+  const created = await create()
+
+  const before = await ContactIntegration.getByMicrosoftIds([created[0].id])
+  expect(before.length).to.be.equal(1)
+
+  await MicrosoftContact.resetContactIntegration(user.id, brand.id)
+
+  try {
+    await MicrosoftContact.get(created[0].id)
+  } catch (ex) {
+    expect(ex.message).to.be.equal(`Microsoft contact by id ${created[0].id} not found.`)
+  }
+
+  const after = await ContactIntegration.getByMicrosoftIds([created[0].id])
+  expect(after.length).to.be.equal(0)
+}
 
 
 describe('Microsoft', () => {
@@ -225,5 +270,7 @@ describe('Microsoft', () => {
     it('should handle add contact-folder', addContactFolder)
     it('should return number of contact-folders of specific credential', getRefinedContactFolders)
     it('should remove contact-folders by credential', removeFoldersByCredential)
+    it('should permanently delete several Microsoft contact records', hardDelete)
+    it('should reset contact integration links', resetContactIntegration)
   })
 })
