@@ -8,4 +8,6 @@ declare interface IMicrosoftCredential extends IIntegrationCredential {
   scope_summary: string[];
   send_email_after: number;
   type?: String;
+  cfolders_sync_token?: String;
+  contacts_sync_token?: String;
 }
