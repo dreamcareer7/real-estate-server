@@ -211,19 +211,6 @@ async function updateContactFoldersSyncToken() {
   expect(updatedCredential.cfolders_sync_token).to.be.equal(token)
 }
 
-async function updateContactsSyncToken() {
-  const createdCredential = await create()
-
-  const token = 'token'
-
-  await MicrosoftCredential.updateContactsSyncToken(createdCredential.id, token)
-
-  const updatedCredential = await MicrosoftCredential.get(createdCredential.id)
-
-  expect(createdCredential.id).to.be.equal(updatedCredential.id)
-  expect(updatedCredential.contacts_sync_token).to.be.equal(token)
-}
-
 
 describe('Microsoft', () => {
   describe('Microsoft Account', () => {
@@ -252,6 +239,5 @@ describe('Microsoft', () => {
     it('should check the access of sending emails', hasSendEmailAccess)
 
     it('should update microsoft-credential\'s cfolders_sync_token', updateContactFoldersSyncToken)
-    it('should update microsoft-credential\'s contacts_sync_token', updateContactsSyncToken)
   })
 })

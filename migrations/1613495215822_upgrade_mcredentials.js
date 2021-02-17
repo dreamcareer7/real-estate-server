@@ -4,7 +4,6 @@ const migrations = [
   'BEGIN',
 
   'ALTER TABLE microsoft_credentials ADD COLUMN IF NOT EXISTS cfolders_sync_token TEXT DEFAULT NULL',
-  'ALTER TABLE microsoft_credentials ADD COLUMN IF NOT EXISTS contacts_sync_token TEXT DEFAULT NULL',
   'ALTER TABLE microsoft_credentials ADD COLUMN IF NOT EXISTS people_apis_enabled BOOLEAN DEFAULT FALSE',
 
   'COMMIT'
