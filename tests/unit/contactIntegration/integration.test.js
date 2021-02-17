@@ -250,6 +250,18 @@ async function restoreMany() {
   expect(restored.deleted_at).to.be.equal(null)
 }
 
+async function hardDelete() {
+  const records = await insert()
+  
+  await ContactIntegration.hardDelete([records[0].id])
+
+  try {
+    await ContactIntegration.get(records[0].id)
+  } catch (ex) {
+    expect(ex.message).to.be.equal(`Contact integration by id ${records[0].id} not found.`)
+  }
+}
+
 
 describe('Contact Integration', () => {
   createContext()
@@ -270,4 +282,5 @@ describe('Contact Integration', () => {
   it('should reset etag property, caused by rechat', rechat_resetEtagByContact)
   it('should delete several Contact integration records', deleteMany)
   it('should restore several Contact integration records', restoreMany)
+  it('should permanently delete several Contact integration records', hardDelete)
 })

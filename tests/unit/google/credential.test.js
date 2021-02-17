@@ -33,9 +33,9 @@ async function create() {
   return credential
 }
 
-async function findByUser() {
+async function findByUserBrand() {
   const createdCredential = await create()
-  const credentialIds     = await GoogleCredential.findByUser(createdCredential.user, createdCredential.brand)
+  const credentialIds     = await GoogleCredential.findByUserBrand(createdCredential.user, createdCredential.brand)
 
   expect(credentialIds).not.to.be.equal(0)
 }
@@ -315,7 +315,7 @@ describe('Google', () => {
     beforeEach(setup)
 
     it('should create a google-credential', create)
-    it('should return google-credential ids by user-brand', findByUser)
+    it('should return google-credential ids by user-brand', findByUserBrand)
     it('should return a google-credential by brand', getByBrand)
     it('should return a google-credential by user-brand', getByUser)
     it('should return a google-credential by email', getByEmail)

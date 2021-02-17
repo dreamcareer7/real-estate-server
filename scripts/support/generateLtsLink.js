@@ -2,8 +2,7 @@ const b64 = require('base64url').default
 const Crypto = require('../../lib/models/Crypto')
 const Url = require('../../lib/models/Url')
 
-// eslint-disable-next-line no-unused-vars
-module.exports = function generateLtsLink({
+function generateLtsLink({
   brand,
   user,
   protocol = 'LeadTransmissionProtocol',
@@ -14,4 +13,14 @@ module.exports = function generateLtsLink({
   const encrypted = Crypto.encrypt(payload)
 
   return Url.api({ uri: b64.encode(encrypted) })
+}
+
+function decodeLtsLink(key) {
+  const decrypted = Crypto.decrypt(b64.decode(key))
+  return JSON.parse(decrypted)
+}
+
+module.exports = {
+  generateLtsLink,
+  decodeLtsLink,
 }
