@@ -5,7 +5,7 @@ require('../../lib/models/CRM/Touch/worker')
 require('../../lib/models/Trigger/worker')
 
 const queues = Object.assign(
-  require('../../scripts/workers/queues.js'),
+  require('../../scripts/workers/kue/queues.js'),
   require('./queues.js')
 )
 const { peanar } = require('../../lib/utils/peanar')
