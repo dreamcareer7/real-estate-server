@@ -144,6 +144,7 @@ async function create(data) {
             goal: step.email.goal,
             subject: step.email.subject,
             include_signature: step.email.include_signature,
+            event_type: 'last_step_date',
             body: step.email.body,
           })
 
