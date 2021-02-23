@@ -9,6 +9,7 @@ SELECT
   "order",
   title,
   description,
+  event_type,
   wait_for,
   "time",
   event,

@@ -5,6 +5,7 @@ INSERT INTO
     updated_within,
     title,
     description,
+    event_type,
     wait_for,
     "time",
     "order",
@@ -21,6 +22,7 @@ SELECT
   $3::text,
   title,
   description,
+  event_type,
   wait_for,
   "time",
   "order",
@@ -34,6 +36,7 @@ FROM
   json_to_recordset($2) AS bs (
     title text,
     description text,
+    event_type text,
     wait_for interval,
     "time" time,
     "order" smallint,
