@@ -1,7 +1,5 @@
 const { peanar } = require('../../../lib/utils/peanar')
 
-const config = require('../../../lib/config')
-
 require('../../../lib/models/Microsoft/workers')
 
 const queues = [
