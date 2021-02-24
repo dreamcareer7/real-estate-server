@@ -43,39 +43,39 @@ export namespace Microsoft {
    */
   export interface Contact {
     /** The name of the contact's assistant. */
-    assistantName: string;
+    assistantName?: string;
 
     /**
      * The contact's birthday. The Timestamp type represents date and time
      * information using ISO 8601 format and is always in UTC time. For example,
      * midnight UTC on Jan 1, 2014 would look like this: '2014-01-01T00:00:00Z'
      */
-    birthday: string;
+    birthday?: string;
 
     /** The contact's business address. */
-    businessAddress: PhysicalAddress;
+    businessAddress?: PhysicalAddress;
 
     /** The business home page of the contact. */
-    businessHomePage: string;
+    businessHomePage?: string;
 
     /** The contact's business phone numbers. */
-    businessPhones: string[];
+    businessPhones?: string[];
 
     /** The categories associated with the contact. */
-    categories: string[];
+    categories?: string[];
 
     /**
      * Identifies the version of the contact. Every time the contact is changed,
      * ChangeKey changes as well. This allows Exchange to apply changes to the
      * correct version of the object.
      */
-    changeKey: string;
+    changeKey?: string;
 
     /** The names of the contact's children. */
-    children: string[];
+    children?: string[];
 
     /** The name of the contact's company. */
-    companyName: string;
+    companyName?: string;
 
     /**
      * The time the contact was created. The Timestamp type represents date and
@@ -83,10 +83,10 @@ export namespace Microsoft {
      * example, midnight UTC on Jan 1, 2014 would look like this:
      * '2014-01-01T00:00:00Z'
      */
-    createdDateTime: string;
+    createdDateTime?: string;
 
     /** The contact's department. */
-    department: string;
+    department?: string;
 
     /**
      * The contact's display name. You can specify the display name in a create
@@ -95,37 +95,37 @@ export namespace Microsoft {
      * you have specified. To preserve a pre-existing value, always include it
      * as displayName in an update operation.
      */
-    displayName: string;
+    displayName?: string;
 
     /** The contact's email addresses. */
-    emailAddresses: EmailAddress[];
+    emailAddresses?: EmailAddress[];
 
     /** The name the contact is filed under. */
-    fileAs: string;
+    fileAs?: string;
 
     /** The contact's generation. */
-    generation: string;
+    generation?: string;
 
     /** The contact's given name. */
-    givenName: string;
+    givenName?: string;
 
     /** The contact's home address. */
-    homeAddress: PhysicalAddress;
+    homeAddress?: PhysicalAddress;
 
     /** The contact's home phone numbers. */
-    homePhones: string[];
+    homePhones?: string[];
 
     /** The contact's unique identifier. Read-only. */
-    id: string;
+    id?: string;
 
     /** The contact's instant messaging (IM) addresses. */
-    imAddresses: string[];
+    imAddresses?: string[];
 
     /** The contact's initials. */
-    initials: string;
+    initials?: string;
 
     /** The contact’s job title. */
-    jobTitle: string;
+    jobTitle?: string;
 
     /**
      * The time the contact was modified. The Timestamp type represents date and
@@ -133,51 +133,51 @@ export namespace Microsoft {
      * example, midnight UTC on Jan 1, 2014 would look like this:
      * '2014-01-01T00:00:00Z'
      */
-    lastModifiedDateTime: string;
+    lastModifiedDateTime?: string;
 
     /** The name of the contact's manager. */
-    manager: string;
+    manager?: string;
 
     /** The contact's middle name. */
-    middleName: string;
+    middleName?: string;
 
     /** The contact's mobile phone number. */
-    mobilePhone: string;
+    mobilePhone?: string;
 
     /** The contact's nickname. */
-    nickName: string;
+    nickName?: string;
 
     /** The location of the contact's office. */
-    officeLocation: string;
+    officeLocation?: string;
 
     /** Other addresses for the contact. */
-    otherAddress: PhysicalAddress;
+    otherAddress?: PhysicalAddress;
 
     /** The ID of the contact's parent folder. */
-    parentFolderId: string;
+    parentFolderId?: string;
 
     /** The user's notes about the contact. */
-    personalNotes: string;
+    personalNotes?: string;
 
     /** The contact's profession. */
-    profession: string;
+    profession?: string;
 
     /** The name of the contact's spouse/partner. */
-    spouseName: string;
+    spouseName?: string;
 
     /** The contact's surname. */
-    surname: string;
+    surname?: string;
 
     /** The contact's title. */
-    title: string;
+    title?: string;
 
     /** The phonetic Japanese company name of the contact. */
-    yomiCompanyName: string;
+    yomiCompanyName?: string;
 
     /** The phonetic Japanese given name (first name) of the contact. */
-    yomiGivenName: string;
+    yomiGivenName?: string;
 
     /** The phonetic Japanese surname (last name) of the contact. */
-    yomiSurname: string;
+    yomiSurname?: string;
   }
 }
