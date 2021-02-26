@@ -6,6 +6,16 @@ describe('utils/array-utils', () => {
     it('needs two required arguments', () => {
       expect(haveSameMembers).to.have.lengthOf(2)
     })
+
+    it('returns false for non-array argument(s)', () => {
+      const arr = ['foo', 'bar']
+
+      expect(haveSameMembers(arr, null)).to.be.false
+      expect(haveSameMembers(undefined, arr)).to.be.false
+      expect(haveSameMembers(1, arr)).to.be.false
+      expect(haveSameMembers(arr, true)).to.be.false
+      expect(haveSameMembers(arr, {})).to.be.false
+    })
     
     it('returns true when the arguments have same members', () => {
       const obj1 = { baz: ['qux', 'nux'], qux: { bar: 'foo' }, foo: 'bar' }
