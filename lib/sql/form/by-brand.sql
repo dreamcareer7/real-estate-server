@@ -6,7 +6,7 @@ WITH f AS (
   WHERE forms.deleted_at IS NULL
   AND (
     (
-      forms.brand IS NULL
+      (forms.brand IS NULL AND forms.library IS NULL)
       OR forms.brand IN (
         SELECT brand_parents($1::uuid)
       )
