@@ -7,6 +7,7 @@ export interface ILtsLead {
   unit_number: string;
   street_number: string;
   country: string;
+  tag: string;
   owner_id: string;
   lead_source: string;
   lead_subsource: string;

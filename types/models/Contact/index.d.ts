@@ -153,6 +153,9 @@ declare type TContactActionReason =
 
 declare type TLeadProtocol =
   | 'LeadTransmissionStandard'
+  | 'FormData'
+  | 'JSON'
+  ;
 
 declare interface IAddContactOptions {
   /** Return {ParentContact} object or just id */
