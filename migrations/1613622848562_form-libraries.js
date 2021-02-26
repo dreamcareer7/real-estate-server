@@ -14,6 +14,7 @@ const migrations = [
     library uuid NOT NULL REFERENCES form_libraries(id),
     brand uuid NOT NULL REFERENCES brands(id)
   )`,
+  'ALTER TABLE forms ADD library uuid REFERENCES form_libraries(id)',
   'COMMIT'
 ]
 
