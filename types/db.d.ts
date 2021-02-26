@@ -507,6 +507,8 @@ declare type TDbSqlAddress =
   | 'microsoft/credential/revoked'
   | 'microsoft/credential/update_profile'
   | 'microsoft/credential/update_rechat_mcalendar'
+  | 'microsoft/credential/update_contact_folders_sync_token'
+  | 'microsoft/credential/update_contacts_sync_token'
   | 'microsoft/credential/update_send_email_after'
   | 'microsoft/credential/update_tokens'
   | 'microsoft/mail_folders/get'
