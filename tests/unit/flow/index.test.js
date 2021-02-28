@@ -55,6 +55,7 @@ async function setup() {
         wait_for: {days: 1},
         time: '08:00:00',
         is_automated: false,
+        event_type: 'last_step_date',
         event: {
           title: 'Create Rechat email',
           task_type: 'Other',
@@ -65,6 +66,7 @@ async function setup() {
         wait_for: {days: 1},
         time: '08:00:00',
         is_automated: true,
+        event_type: 'last_step_date',
         email: {
           name: 'Onboarding Email',
           goal: 'Test email for new team members',
@@ -78,6 +80,7 @@ async function setup() {
         wait_for: { days: 2},
         time: '10:00:00',
         is_automated: false,
+        event_type: 'last_step_date',
         event: {
           title: 'Demo of Rechat',
           task_type: 'Call',
