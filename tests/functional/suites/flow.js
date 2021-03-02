@@ -127,6 +127,7 @@ const addStepToFlow = cb => {
     wait_for: { days: 7 },
     time: '10:00:00',
     event_type: 'last_step_date',
+    order: 4,
     event: {
       title: 'Call to check on them',
       task_type: 'Call',
