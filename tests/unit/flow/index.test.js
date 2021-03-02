@@ -2,7 +2,14 @@ const { expect } = require('chai')
 const moment = require('moment-timezone')
 
 const sql = require('../../../lib/utils/sql')
-const BrandFlow = require('../../../lib/models/Brand/flow/get')
+const BrandFlow = {
+  ...require('../../../lib/models/Brand/flow/get'),
+}
+const BrandFlowStep = {
+  ...require('../../../lib/models/Brand/flow_step/create'),
+  ...require('../../../lib/models/Brand/flow_step/get'),
+  ...require('../../../lib/models/Brand/flow_step/manipulate'),
+}
 const Contact = {
   ...require('../../../lib/models/Contact/manipulate'),
   ...require('../../../lib/models/Contact/get'),
@@ -54,6 +61,7 @@ async function setup() {
         description: 'Create a Rechat email address for the new guy to use in other services',
         wait_for: {days: 1},
         time: '08:00:00',
+        order: 1,
         is_automated: false,
         event_type: 'last_step_date',
         event: {
@@ -65,6 +73,7 @@ async function setup() {
         description: 'Automatically send them a test email to make sure it\'s working',
         wait_for: {days: 1},
         time: '08:00:00',
+        order: 2,
         is_automated: true,
         event_type: 'last_step_date',
         email: {
@@ -79,6 +88,7 @@ async function setup() {
         description: 'Dan gives a quick demo of the Rechat system and explains how it works',
         wait_for: { days: 2},
         time: '10:00:00',
+        order: 3,
         is_automated: false,
         event_type: 'last_step_date',
         event: {
@@ -91,7 +101,7 @@ async function setup() {
 
   Context.set({ user, brand })
 
-  await loadFlow()
+  brand_flow = await loadFlow()
 }
 
 async function loadFlow() {
@@ -106,7 +116,7 @@ async function loadFlow() {
     ]
   })
 
-  brand_flow = populated[0]
+  return populated[0]
 }
 
 async function testBrandFlows() {
@@ -192,6 +202,87 @@ async function testFlowProgressFail() {
   expect(flow_steps[1].failed_at).to.be.a('number')
 }
 
+async function testStepOrderCollisionOnUpdate() {
+  await BrandFlowStep.update(user.id, brand_flow.steps[2].id, {
+    ...brand_flow.steps[2],
+    order: 1
+  })
+
+  const updated_flow = await loadFlow()
+  expect(updated_flow.steps[0].id).to.be.equal(brand_flow.steps[2].id)
+  expect(updated_flow.steps[1].id).to.be.equal(brand_flow.steps[0].id)
+  expect(updated_flow.steps[2].id).to.be.equal(brand_flow.steps[1].id)
+}
+
+async function testStepOrderNoCollisionOnUpdate() {
+  await BrandFlowStep.update(user.id, brand_flow.steps[2].id, {
+    ...brand_flow.steps[2],
+    order: 0
+  })
+
+  const updated_flow = await loadFlow()
+  expect(updated_flow.steps[0].id).to.be.equal(brand_flow.steps[2].id)
+  expect(updated_flow.steps[0].order).to.be.equal(0)  // was 3
+  expect(updated_flow.steps[1].id).to.be.equal(brand_flow.steps[0].id)
+  expect(updated_flow.steps[1].order).to.be.equal(1)  // remained 1
+  expect(updated_flow.steps[2].id).to.be.equal(brand_flow.steps[1].id)
+  expect(updated_flow.steps[2].order).to.be.equal(2)  // remained 2
+}
+
+async function testStepOrderNoCollisionOnCreate() {
+  const new_step = await BrandFlowStep.create(user.id, brand.id, {
+    flow: brand_flow.id,
+    title: 'Another demo',
+    description: 'This time by Reza',
+    wait_for: { days: 1},
+    time: '04:00:00',
+    order: 4,
+    is_automated: false,
+    event_type: 'last_step_date',
+    event: {
+      title: 'Demo with Reza',
+      task_type: 'Call',
+    }
+  })
+
+  const updated_flow = await loadFlow()
+  expect(updated_flow.steps[0].id).to.be.equal(brand_flow.steps[0].id)
+  expect(updated_flow.steps[0].order).to.be.equal(1)  // remained 1
+  expect(updated_flow.steps[1].id).to.be.equal(brand_flow.steps[1].id)
+  expect(updated_flow.steps[1].order).to.be.equal(2)  // remained 2
+  expect(updated_flow.steps[2].id).to.be.equal(brand_flow.steps[2].id)
+  expect(updated_flow.steps[2].order).to.be.equal(3)  // remained 3
+  expect(updated_flow.steps[3].id).to.be.equal(new_step)
+  expect(updated_flow.steps[3].order).to.be.equal(4)  // remained 4
+}
+
+async function testStepOrderCollisionOnCreate() {
+  const new_step = await BrandFlowStep.create(user.id, brand.id, {
+    flow: brand_flow.id,
+    title: 'Add to Gitlab',
+    description: 'Give them access to Gitlab',
+    wait_for: { days: 1},
+    time: '08:00:00',
+    order: 3,
+    is_automated: false,
+    event_type: 'last_step_date',
+    event: {
+      title: 'Add to Gitlab',
+      task_type: 'Other',
+    }
+  })
+
+  const updated_flow = await loadFlow()
+  expect(updated_flow.steps[0].id).to.be.equal(brand_flow.steps[0].id)
+  expect(updated_flow.steps[0].order).to.be.equal(1)  // remained 1
+  expect(updated_flow.steps[1].id).to.be.equal(brand_flow.steps[1].id)
+  expect(updated_flow.steps[1].order).to.be.equal(2)  // remained 2
+  expect(updated_flow.steps[2].id).to.be.equal(new_step)
+  expect(updated_flow.steps[2].order).to.be.equal(3)  // placed on position 3
+  expect(updated_flow.steps[3].id).to.be.equal(brand_flow.steps[2].id)
+  expect(updated_flow.steps[3].order).to.be.equal(4)  // was 3
+}
+
 async function testDuplicateEnroll() {
   const id = await createContact()
 
@@ -238,4 +329,14 @@ describe('Flow', () => {
   it('should prevent duplicate enrollment', testDuplicateEnroll)
   it('should stop a flow instance and delete all future events', testStopFlow)
   it('should stop a flow instance if contact deleted', testStopFlowByDeleteContact)
+})
+
+describe('Brand Flow', () => {
+  createContext()
+  beforeEach(setup)
+
+  it('should not touch step orders when no collision on create', testStepOrderNoCollisionOnCreate)
+  it('should resolve order collision on create', testStepOrderCollisionOnCreate)
+  it('should not touch step orders when no collision on update', testStepOrderNoCollisionOnUpdate)
+  it('should resolve order collision on update', testStepOrderCollisionOnUpdate)
 })

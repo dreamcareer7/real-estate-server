@@ -134,21 +134,18 @@ const addStepToFlow = cb => {
   }
 
   return frisby.create('add a step to a brand flow')
-    .post(`/brands/${brand}/flows/${flow}/steps?associations[]=brand_flow_step.event&associations[]=brand_flow_step.email`, {
-      steps: [step]
-    })
+    .post(`/brands/${brand}/flows/${flow}/steps?associations[]=brand_flow_step.event&associations[]=brand_flow_step.email`, step)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
-      data: [step]
+      data: step
     })
 }
 
 const editBrandFlowStep = cb => {
   const brand = results.brand.createParent.data.id
   const flow = results.flow.getBrandFlows.data[0].id
-  const step_id = results.flow.addStepToFlow.data[0].id
-
+  const step_id = results.flow.addStepToFlow.data.id
   const step = {
     title: 'Meet with them to catch up',
     description: 'Meet with them to catch up',
@@ -178,7 +175,7 @@ const getBrandFlowById = cb => {
     results.flow.editBrandFlowStep.data
   ]
 
-  return frisby.create('get brand flows')
+  return frisby.create('get brand flow by id')
     .get(`/brands/${brand}/flows/${flow}?associations[]=brand_flow.steps&associations[]=brand_flow_step.event&associations[]=brand_flow_step.email`)
     .after(cb)
     .expectStatus(200)
@@ -195,7 +192,7 @@ const getBrandFlowById = cb => {
 const deleteFlowStep = cb => {
   const brand = results.brand.createParent.data.id
   const flow = results.flow.getBrandFlows.data[0].id
-  const step = results.flow.addStepToFlow.data[0].id
+  const step = results.flow.addStepToFlow.data.id
 
   return frisby.create('delete a brand flow step')
     .delete(`/brands/${brand}/flows/${flow}/steps/${step}`)

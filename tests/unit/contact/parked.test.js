@@ -53,6 +53,7 @@ async function setup() {
         wait_for: { days: 1},
         time: '08:00:00',
         is_automated: false,
+        order: 1,
         event_type: 'last_step_date',
         event: {
           title: 'Create Rechat email',

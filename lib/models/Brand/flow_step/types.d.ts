@@ -1,9 +1,12 @@
+export type TPostgresInterval = {
+  [P in 'hours' | 'days' | 'weeks' | 'months' | 'years']?: number;
+}
 export interface IBaseBrandFlowStep {
   is_automated: boolean;
   title: string;
   description?: string;
   order: number;
-  wait_for: Record<'hours' | 'days' | 'weeks' | 'months' | 'years', number>;
+  wait_for: TPostgresInterval;
   time: string;
   event_type: string;
   flow: UUID;
