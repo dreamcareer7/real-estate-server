@@ -1,6 +1,6 @@
-const { expect } = require('chai')
+const { expect } = require('chai') // eslint-disable-line no-unused-vars
 
-const { chooseAddressAmongAttributes } = require('../../../lib/models/Microsoft/workers/contacts/people/helpers/attributes')
+const { chooseAddressAmongAttributes } = require('../../../lib/models/Microsoft/workers/contacts/people/helpers/attributes') // eslint-disable-line no-unused-vars
 
 describe('Microsoft', () => {
   describe('Contact Attributes', () => {
