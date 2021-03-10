@@ -23,7 +23,8 @@ ON CONFLICT (matrix_unique_id, mls) WHERE (revision < $7) DO UPDATE SET
   url = $4,
   "order" = $5,
   exif = $6,
-  revision = $7
+  revision = $7,
+  deleted_at = NULL
 
 WHERE photos.matrix_unique_id = $1::text AND photos.mls = $8::mls
 
