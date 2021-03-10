@@ -1,10 +1,10 @@
-const { expect, assert } = require('chai')
+const { expect } = require('chai')
 
-const { generateMContacts } = require('../../../lib/models/Microsoft/workers/contacts/people/helpers/attributes')
+const { chooseAddressAmongAttributes } = require('../../../lib/models/Microsoft/workers/contacts/people/helpers/attributes')
 
 describe('Microsoft', () => {
   describe('Contact Attributes', () => {
-    describe('.normzlizeAttributes()')
+    describe('.normzlizeAttributes()', () => {})
     
     describe('.chooseAddressAmongAttributes()', () => {
       it('returns null when attributes are empty')
@@ -12,6 +12,6 @@ describe('Microsoft', () => {
       it('prefers to choose a primary address with highest index...')
     })
 
-    describe('.generateMContacts()')
+    describe('.generateMContacts()', () => {})
   })
 })
