@@ -1,6 +1,9 @@
 const { expect } = require('chai')
 
-const { chooseAddressAmongAttributes } = require('../../../lib/models/Microsoft/workers/contacts/people/helpers/attributes')
+const {
+  chooseAddressAmongAttributes,
+  normalizeAttributes,
+} = require('../../../lib/models/Microsoft/workers/contacts/people/helpers/attributes')
 
 const addressAttr = (
   label, type, text, index = 0, updatedAt = 0, isPrimary = false
@@ -13,11 +16,52 @@ const addressAttr = (
   is_primary: isPrimary
 })
 
+const attr = (type, text, updatedAt = 0, isPrimary = false) => ({
+  attribute_type: type,
+  text,
+  updated_at: updatedAt,
+  is_primary: isPrimary
+})
+
 describe('Microsoft', () => {
   describe('Contact Attributes', () => {
     describe('.normzlizeAttributes()', () => {
-      it('returns empty object for nil/empty argument')
-      it('sorts the array and groups item by their attribute-type')
+      it('returns empty object for nil/empty argument', () => {
+        for (const input of [undefined, null, []]) {
+          expect(normalizeAttributes(input)).to.be.an('object').and.be.empty
+        }
+      })
+      
+      it('sorts the array and groups item by their attribute-type', () => {
+        const attributes = [
+          attr('one', 'foo', 1, false),
+          attr('one', 'bar', 2, true),
+          attr('one', 'baz', 3, false),
+          attr('one', 'qux', 4, true),
+
+          attr('two', 'foo', 4, false),
+          attr('two', 'bar', 3, true),
+          attr('two', 'baz', 2, false),
+          attr('two', 'qux', 1, true),
+        ]
+
+        const expectedResult = {
+          one: [
+            attr('one', 'qux', 4, true),
+            attr('one', 'bar', 2, true),
+            attr('one', 'baz', 3, false),
+            attr('one', 'foo', 1, false),
+          ],
+          two: [
+            attr('two', 'bar', 3, true),
+            attr('two', 'qux', 1, true),
+            attr('two', 'foo', 4, false),
+            attr('two', 'baz', 2, false),
+          ],
+        }
+
+        expect(normalizeAttributes(attributes)).to.be.deep.equal(expectedResult)
+      })
     })
     
     describe('.chooseAddressAmongAttributes()', () => {
