@@ -5,6 +5,15 @@ const {
   normalizeAttributes,
 } = require('../../../lib/models/Microsoft/workers/contacts/people/helpers/attributes')
 
+/**
+ * Creates an address attribute object
+ * @param {string} label
+ * @param {string} type
+ * @param {number} index
+ * @param {number} updatedAt
+ * @param {boolean} isPrimary
+ * @returns {{label: string, attribute_type: string, text: string, index: number, updated_at: number, is_primary: boolean}}
+ */
 const addressAttr = (
   label, type, text, index = 0, updatedAt = 0, isPrimary = false
 ) => ({
@@ -16,6 +25,14 @@ const addressAttr = (
   is_primary: isPrimary
 })
 
+/**
+ * Creates a text attribute object
+ * @param {string} type
+ * @param {string} text
+ * @param {number} updatedAt
+ * @param {boolean} isPrimary
+ * @returns {{attribute_type: string, text: string, updated_at: number, is_primary: boolean}}
+ */
 const attr = (type, text, updatedAt = 0, isPrimary = false) => ({
   attribute_type: type,
   text,
