@@ -15,7 +15,10 @@ const addressAttr = (
 
 describe('Microsoft', () => {
   describe('Contact Attributes', () => {
-    describe('.normzlizeAttributes()', () => {})
+    describe('.normzlizeAttributes()', () => {
+      it('returns empty object for nil/empty argument')
+      it('sorts the array and groups item by their attribute-type')
+    })
     
     describe('.chooseAddressAmongAttributes()', () => {
       it('returns null when attributes are empty', () => {
