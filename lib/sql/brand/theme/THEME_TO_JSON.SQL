@@ -4,7 +4,7 @@ RETURNS JSON AS $$
   WITH theme AS (
     SELECT JSON_STRIP_NULLS(
       JSON_BUILD_OBJECT(
-        'navbar-logo',           ($1)."navbar-logo",
+        'navbar_logo',           ($1)."navbar-logo",
 
         'palette',
         JSON_BUILD_OBJECT(

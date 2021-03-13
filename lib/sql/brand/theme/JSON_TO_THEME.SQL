@@ -50,7 +50,7 @@ RETURNS theme AS $$
       $1->'palette'->'navbar'->>'background',
       $1->'palette'->'navbar'->>'contrastText',
 
-      $1->>'navbar-logo'
+      $1->>'navbar_logo'
     )::theme
 $$
 LANGUAGE SQL
