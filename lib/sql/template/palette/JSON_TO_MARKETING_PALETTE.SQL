@@ -1,5 +1,5 @@
-CREATE OR REPLACE FUNCTION JSON_TO_PALETTE(input JSONB)
-RETURNS palette AS $$
+CREATE OR REPLACE FUNCTION JSON_TO_MARKETING_PALETTE(input JSONB)
+RETURNS marketing_palette AS $$
   SELECT
     ROW(
       $1->>'body-bg-color',
@@ -58,6 +58,6 @@ RETURNS palette AS $$
 
       $1->>'website',
       $1->>'name'
-    )::palette
+    )::marketing_palette
 $$
 LANGUAGE SQL

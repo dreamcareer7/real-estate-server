@@ -470,15 +470,20 @@ const deleteTemplate = cb => {
 }
 
 const updateBrandSettings = cb => {
+  const marketing_palette = {
+    'body-bg-color': '#eee'
+  }
+
   return frisby.create('update a brand setting')
-    .put(`/brands/${brand_id}/settings/palette`, {
-      palette: {
-        'body-bg-color': '#eee'
-      }
-    })
+    .put(`/brands/${brand_id}/settings/marketing_palette`, marketing_palette)
     .addHeader('X-Rechat-Brand', brand_id)
     .after(cb)
-    .expectStatus(204)
+    .expectJSON({
+      data: {
+        marketing_palette
+      }
+    })
+    .expectStatus(200)
 }
 
 const updateUserSettings = cb => {

@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION PALETTE_TO_JSON(input palette)
+CREATE OR REPLACE FUNCTION MARKETING_PALETTE_TO_JSON(input marketing_palette)
 RETURNS JSON AS $$
 
   WITH palette AS (
@@ -70,7 +70,7 @@ RETURNS JSON AS $$
 
       ELSE (
         SELECT
-          (palette::jsonb || '{"type":"palette"}'::jsonb)::json
+          (palette::jsonb || '{"type":"marketing_palette"}'::jsonb)::json
         FROM palette
       )
     END
