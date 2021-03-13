@@ -4,5 +4,5 @@ UPDATE brand_settings SET
   enable_liveby                                = $4,
   disable_sensitive_integrations_for_nonagents = $5,
   marketing_palette                            = JSON_TO_MARKETING_PALETTE($6),
-  ui_palette                                   = JSON_TO_UI_PALETTE($7)
+  theme                                        = JSON_TO_THEME($7)
 WHERE brand = $1

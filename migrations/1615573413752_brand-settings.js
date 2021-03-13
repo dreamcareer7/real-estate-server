@@ -65,164 +65,168 @@ $$
 LANGUAGE SQL
 `
 
-const json_to_ui_palette = `CREATE OR REPLACE FUNCTION JSON_TO_UI_PALETTE(input JSONB)
-RETURNS ui_palette AS $$
+const json_to_theme = `CREATE OR REPLACE FUNCTION JSON_TO_THEME(input JSONB)
+RETURNS theme AS $$
   SELECT
     ROW(
-      $1->'common'->>'black',
-      $1->'common'->>'white',
+      $1->'palette'->'common'->>'black',
+      $1->'palette'->'common'->>'white',
 
-      $1->'primary'->>'main',
-      $1->'primary'->>'light',
-      $1->'primary'->>'dark',
-      $1->'primary'->>'contrastText',
+      $1->'palette'->'primary'->>'main',
+      $1->'palette'->'primary'->>'light',
+      $1->'palette'->'primary'->>'dark',
+      $1->'palette'->'primary'->>'contrastText',
 
-      $1->'secondary'->>'main',
-      $1->'secondary'->>'light',
-      $1->'secondary'->>'dark',
-      $1->'secondary'->>'contrastText',
+      $1->'palette'->'secondary'->>'main',
+      $1->'palette'->'secondary'->>'light',
+      $1->'palette'->'secondary'->>'dark',
+      $1->'palette'->'secondary'->>'contrastText',
 
-      $1->'error'->>'main',
-      $1->'error'->>'light',
-      $1->'error'->>'dark',
-      $1->'error'->>'contrastText',
+      $1->'palette'->'error'->>'main',
+      $1->'palette'->'error'->>'light',
+      $1->'palette'->'error'->>'dark',
+      $1->'palette'->'error'->>'contrastText',
 
-      $1->'warning'->>'main',
-      $1->'warning'->>'light',
-      $1->'warning'->>'dark',
-      $1->'warning'->>'contrastText',
+      $1->'palette'->'warning'->>'main',
+      $1->'palette'->'warning'->>'light',
+      $1->'palette'->'warning'->>'dark',
+      $1->'palette'->'warning'->>'contrastText',
 
-      $1->'info'->>'main',
-      $1->'info'->>'light',
-      $1->'info'->>'dark',
-      $1->'info'->>'contrastText',
+      $1->'palette'->'info'->>'main',
+      $1->'palette'->'info'->>'light',
+      $1->'palette'->'info'->>'dark',
+      $1->'palette'->'info'->>'contrastText',
 
-      $1->'success'->>'main',
-      $1->'success'->>'light',
-      $1->'success'->>'dark',
-      $1->'success'->>'contrastText',
+      $1->'palette'->'success'->>'main',
+      $1->'palette'->'success'->>'light',
+      $1->'palette'->'success'->>'dark',
+      $1->'palette'->'success'->>'contrastText',
 
-      $1->'text'->>'primary',
-      $1->'text'->>'secondary',
-      $1->'text'->>'disabled',
-      $1->'info'->>'hint',
+      $1->'palette'->'text'->>'primary',
+      $1->'palette'->'text'->>'secondary',
+      $1->'palette'->'text'->>'disabled',
+      $1->'palette'->'info'->>'hint',
 
-      $1->'divider',
+      $1->'palette'->'divider',
 
-      $1->'background'->>'paper',
-      $1->'background'->>'default',
-      $1->'background'->>'level2',
-      $1->'background'->>'level1',
+      $1->'palette'->'background'->>'paper',
+      $1->'palette'->'background'->>'default',
+      $1->'palette'->'background'->>'level2',
+      $1->'palette'->'background'->>'level1',
 
-      $1->'navbar'->>'background',
-      $1->'navbar'->>'contrastText',
-      $1->'navbar'->>'logo'
-    )::ui_palette
+      $1->'palette'->'navbar'->>'background',
+      $1->'palette'->'navbar'->>'contrastText',
+
+      $1->>'navbar-logo'
+    )::theme
 $$
 LANGUAGE SQL`
 
-const ui_palette_to_json = `CREATE OR REPLACE FUNCTION UI_PALETTE_TO_JSON(input ui_palette)
+const theme_to_json = `CREATE OR REPLACE FUNCTION THEME_TO_JSON(input theme)
 RETURNS JSON AS $$
 
-  WITH palette AS (
+  WITH theme AS (
     SELECT JSON_STRIP_NULLS(
       JSON_BUILD_OBJECT(
-        'common',
-        JSON_STRIP_NULLS(JSON_BUILD_OBJECT(
-          'black',             ($1)."common-black",
-          'white',             ($1)."common-white"
-        )),
+        'navbar-logo',           ($1)."navbar-logo",
 
-        'primary',
-        JSON_STRIP_NULLS(JSON_BUILD_OBJECT(
-          'main',             ($1)."primary-main",
-          'light',            ($1)."primary-light",
-          'dark',             ($1)."primary-dark",
-          'contrast-text',     ($1)."primary-contrast-text"
-        )),
+        'palette',
+        JSON_BUILD_OBJECT(
+          'common',
+          JSON_STRIP_NULLS(JSON_BUILD_OBJECT(
+            'black',             ($1)."common-black",
+            'white',             ($1)."common-white"
+          )),
 
-        'secondary',
-        JSON_STRIP_NULLS(JSON_BUILD_OBJECT(
-          'main',             ($1)."secondary-main",
-          'light',            ($1)."secondary-light",
-          'dark',             ($1)."secondary-dark",
-          'contrast-text',     ($1)."secondary-contrast-text"
-        )),
+          'primary',
+          JSON_STRIP_NULLS(JSON_BUILD_OBJECT(
+            'main',             ($1)."primary-main",
+            'light',            ($1)."primary-light",
+            'dark',             ($1)."primary-dark",
+            'contrastText',    ($1)."primary-contrast-text"
+          )),
 
-        'error',
-        JSON_STRIP_NULLS(JSON_BUILD_OBJECT(
-          'main',             ($1)."error-main",
-          'light',            ($1)."error-light",
-          'dark',             ($1)."error-dark",
-          'contrast-text',     ($1)."error-contrast-text"
-        )),
+          'secondary',
+          JSON_STRIP_NULLS(JSON_BUILD_OBJECT(
+            'main',             ($1)."secondary-main",
+            'light',            ($1)."secondary-light",
+            'dark',             ($1)."secondary-dark",
+            'contrastText',     ($1)."secondary-contrast-text"
+          )),
 
-        'warning',
-        JSON_STRIP_NULLS(JSON_BUILD_OBJECT(
-          'main',             ($1)."warning-main",
-          'light',            ($1)."warning-light",
-          'dark',             ($1)."warning-dark",
-          'contrast-text',     ($1)."warning-contrast-text"
-        )),
+          'error',
+          JSON_STRIP_NULLS(JSON_BUILD_OBJECT(
+            'main',             ($1)."error-main",
+            'light',            ($1)."error-light",
+            'dark',             ($1)."error-dark",
+            'contrastText',     ($1)."error-contrast-text"
+          )),
 
-        'info',
-        JSON_STRIP_NULLS(JSON_BUILD_OBJECT(
-          'main',             ($1)."info-main",
-          'light',            ($1)."info-light",
-          'dark',             ($1)."info-dark",
-          'contrast-text',     ($1)."info-contrast-text"
-        )),
+          'warning',
+          JSON_STRIP_NULLS(JSON_BUILD_OBJECT(
+            'main',             ($1)."warning-main",
+            'light',            ($1)."warning-light",
+            'dark',             ($1)."warning-dark",
+            'contrastText',     ($1)."warning-contrast-text"
+          )),
 
-        'success',
-        JSON_STRIP_NULLS(JSON_BUILD_OBJECT(
-          'main',             ($1)."success-main",
-          'light',            ($1)."success-light",
-          'dark',             ($1)."success-dark",
-          'contrast-text',     ($1)."success-contrast-text"
-        )),
+          'info',
+          JSON_STRIP_NULLS(JSON_BUILD_OBJECT(
+            'main',             ($1)."info-main",
+            'light',            ($1)."info-light",
+            'dark',             ($1)."info-dark",
+            'contrastText',     ($1)."info-contrast-text"
+          )),
 
-        'text',
-        JSON_STRIP_NULLS(JSON_BUILD_OBJECT(
-          'main',             ($1)."text-primary",
-          'light',            ($1)."text-secondary",
-          'dark',             ($1)."text-disabled",
-          'contrast-text',     ($1)."text-hint"
-        )),
+          'success',
+          JSON_STRIP_NULLS(JSON_BUILD_OBJECT(
+            'main',             ($1)."success-main",
+            'light',            ($1)."success-light",
+            'dark',             ($1)."success-dark",
+            'contrastText',     ($1)."success-contrast-text"
+          )),
 
-        'divider',
-        ($1)."divider",
+          'text',
+          JSON_STRIP_NULLS(JSON_BUILD_OBJECT(
+            'main',             ($1)."text-primary",
+            'light',            ($1)."text-secondary",
+            'dark',             ($1)."text-disabled",
+            'contrastText',     ($1)."text-hint"
+          )),
 
-        'background',
-        JSON_STRIP_NULLS(JSON_BUILD_OBJECT(
-          'paper',            ($1)."background-paper",
-          'default',          ($1)."background-default",
-          'level1',           ($1)."background-level1",
-          'level2',           ($1)."background-level2"
-        )),
+          'divider',
+          ($1)."divider",
 
-        'navbar',
-        JSON_STRIP_NULLS(JSON_BUILD_OBJECT(
-          'background',       ($1)."navbar-background",
-          'contrast-text',    ($1)."navbar-contrast-text",
-          'logo',             ($1)."navbar-logo"
-        ))
+          'background',
+          JSON_STRIP_NULLS(JSON_BUILD_OBJECT(
+            'paper',            ($1)."background-paper",
+            'default',          ($1)."background-default",
+            'level1',           ($1)."background-level1",
+            'level2',           ($1)."background-level2"
+          )),
+
+          'navbar',
+          JSON_STRIP_NULLS(JSON_BUILD_OBJECT(
+            'background',       ($1)."navbar-background",
+            'contrastText',     ($1)."navbar-contrast-text"
+          ))
+        )
       )
-    ) as palette
+    ) as theme
   )
 
   SELECT
     CASE
-      WHEN (SELECT NULLIF(palette::jsonb, '{}'::jsonb) FROM palette) IS NULL THEN NULL
+      WHEN (SELECT NULLIF(theme::jsonb, '{}'::jsonb) FROM theme) IS NULL THEN NULL
 
       ELSE (
         SELECT
-          (palette::jsonb || '{"type":"ui_palette"}'::jsonb)::json
-        FROM palette
+          (theme::jsonb || '{"type":"theme"}'::jsonb)::json
+        FROM theme
       )
     END
 $$
-LANGUAGE SQL;
-`
+LANGUAGE SQL;`
 
 const marketing_palette_to_json = `CREATE OR REPLACE FUNCTION MARKETING_PALETTE_TO_JSON(input marketing_palette)
 RETURNS JSON AS $$
@@ -306,7 +310,7 @@ LANGUAGE SQL;`
 const migrations = [
   'BEGIN',
 
-  `CREATE TYPE ui_palette AS (
+  `CREATE TYPE theme AS (
     "common-black" TEXT,
     "common-white" TEXT,
 
@@ -365,8 +369,8 @@ const migrations = [
   json_to_marketing_palette,
   marketing_palette_to_json,
 
-  json_to_ui_palette,
-  ui_palette_to_json,
+  json_to_theme,
+  theme_to_json,
 
   `CREATE TABLE brand_settings (
     id uuid NOT NULL PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -378,7 +382,7 @@ const migrations = [
     enable_liveby boolean,
     disable_sensitive_integrations_for_nonagents boolean,
     marketing_palette marketing_palette,
-    ui_palette ui_palette
+    theme theme
   )`,
 
   'INSERT INTO brand_settings (id, brand) SELECT id, id FROM brands',
