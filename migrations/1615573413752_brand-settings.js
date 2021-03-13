@@ -372,7 +372,7 @@ const migrations = [
     id uuid NOT NULL PRIMARY KEY DEFAULT uuid_generate_v4(),
     created_at  timestamp with time zone NOT NULL DEFAULT NOW(),
     updated_at  timestamp with time zone NOT NULL DEFAULT NOW(),
-    brand uuid NOT NULL REFERENCES brands(id),
+    brand uuid NOT NULL REFERENCES brands(id) CHECK (brand = id),
     enable_open_house_requests boolean,
     enable_yard_sign_requests boolean,
     enable_liveby boolean,
