@@ -1,37 +1,8 @@
-INSERT INTO
-  brands_settings (
-    created_by,
-    updated_by,
-    created_within,
-    updated_within,
-    brand,
-    "key",
-    number,
-    text,
-    boolean,
-    date,
-    palette
-  )
-VALUES (
-  $1::uuid,
-  $1::uuid,
-  $2,
-  $2,
-  $3::uuid,
-  $4,
-  $5,
-  $6,
-  $7,
-  $8,
-  JSON_TO_PALETTE($9)
-)
-ON CONFLICT (brand, "key") DO UPDATE
-  SET
-    updated_at = now(),
-    updated_by = $1,
-    updated_within = $2,
-    number = $5,
-    text = $6,
-    boolean = $7,
-    date = $8,
-    palette = JSON_TO_PALETTE($9)
+UPDATE brand_settings SET
+  enable_open_house_requests                   = $2,
+  enable_yard_sign_requests                    = $3,
+  enable_liveby                                = $4,
+  disable_sensitive_integrations_for_nonagents = $5,
+  marketing_palette                            = JSON_TO_MARKETING_PALETTE($6),
+  theme                                        = JSON_TO_THEME($7)
+WHERE brand = $1

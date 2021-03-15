@@ -12,20 +12,8 @@ SELECT brands.*,
   ) as roles,
 
   (
-    SELECT
-      JSON_OBJECT_AGG(bs.key, (
-        SELECT JSON_STRIP_NULLS(
-          JSON_BUILD_OBJECT(
-            'text', text,
-            'number', number,
-            'boolean', boolean,
-            'date', EXTRACT(EPOCH FROM date),
-            'palette', PALETTE_TO_JSON(palette)
-          )
-        )
-      )) AS settings
-      FROM brands_settings bs WHERE brand = brands.id AND deleted_at IS NULL
-  ),
+    SELECT id FROM brand_settings WHERE brand = brands.id
+  ) as settings,
 
   (
     SELECT
