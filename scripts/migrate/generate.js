@@ -10,7 +10,7 @@ const TO_REPLACE = `'DO SOMETHING',
  * @param {string} fileContents
  */
 function extract(fileContents) {
-  return fileContents.split(/\s+;\s+/)
+  return fileContents.split(/\s*;\s+/)
 }
 
 /**
