@@ -480,7 +480,9 @@ const updateBrandSettings = cb => {
     .after(cb)
     .expectJSON({
       data: {
-        marketing_palette
+        value: {
+          marketing_palette
+        }
       }
     })
     .expectStatus(200)
