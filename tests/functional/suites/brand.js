@@ -469,16 +469,50 @@ const deleteTemplate = cb => {
     .expectStatus(204)
 }
 
-const updateBrandSettings = cb => {
-  return frisby.create('update a brand setting')
-    .put(`/brands/${brand_id}/settings/palette`, {
-      palette: {
-        'body-bg-color': '#eee'
-      }
+const updateMarketingPalette = cb => {
+  const marketing_palette = {
+    'body-bg-color': '#eee'
+  }
+
+  return frisby.create('update marketing palette')
+    .put(`/brands/${brand_id}/settings/marketing_palette`, {
+      value: marketing_palette
     })
     .addHeader('X-Rechat-Brand', brand_id)
     .after(cb)
-    .expectStatus(204)
+    .expectJSON({
+      data: {
+        marketing_palette
+      }
+    })
+    .expectStatus(200)
+}
+
+const updateBrandTheme = cb => {
+  const theme = {
+    palette: {
+      primary: {
+        main: '#ffffff',
+        contrastText: 'rgba(191,81,81,0.87)'
+      },
+      secondary: {
+        main: '#f50057'
+      }
+    }
+  }
+
+  return frisby.create('update marketing palette')
+    .put(`/brands/${brand_id}/settings/theme`, {
+      value: theme
+    })
+    .addHeader('X-Rechat-Brand', brand_id)
+    .after(cb)
+    .expectJSON({
+      data: {
+        theme
+      }
+    })
+    .expectStatus(200)
 }
 
 const updateUserSettings = cb => {
@@ -776,7 +810,8 @@ module.exports = {
   getEmails,
   deleteEmail,
 
-  updateBrandSettings,
+  updateMarketingPalette,
+  updateBrandTheme,
   updateUserSettings,
 
   createSubscription,

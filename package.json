@@ -13,6 +13,7 @@
     "coverage:unit": "npx nyc mocha --exit --timeout 5000 tests/unit/**/*.test.js",
     "migrate:up": "node ./scripts/migrate/up.js",
     "migrate:create": "node_modules/migratus/bin/create --dir migrations --template scripts/migrate/template.js",
+    "migrate:generate": "node ./scripts/migrate/generate.js",
     "shell": "node --experimental-repl-await --input-type=module scripts/shell.js",
     "heroku-postbuild": "npm run migrate:up"
   },
