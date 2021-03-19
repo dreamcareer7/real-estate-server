@@ -1,4 +1,4 @@
-# Showings
+# Group Showings
 
 ## Overview
 A Showing is an event that a seller agent makes on Rechat and usually a buyer
