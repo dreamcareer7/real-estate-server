@@ -24,6 +24,7 @@ CREATE OR REPLACE VIEW calendar.email_campaign_email_executed AS (
     NULL::uuid AS credential_id,
     NULL::text AS thread_key,
     NULL::uuid AS activity,
+    NULL::uuid AS showing,
     NULL::uuid AS flow,
     ARRAY[ec.from] AS users,
     NULL::uuid[] AS accessible_to,

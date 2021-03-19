@@ -50,4 +50,8 @@ CREATE OR REPLACE VIEW analytics.calendar AS (
   (
     SELECT * FROM calendar.home_anniversary
   )
+  UNION ALL
+  (
+    SELECT * FROM calendar.showing
+  )
 )
