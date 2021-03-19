@@ -13,6 +13,7 @@
     "coverage:unit": "npx nyc mocha --exit --timeout 5000 tests/unit/**/*.test.js",
     "migrate:up": "node ./scripts/migrate/up.js",
     "migrate:create": "node_modules/migratus/bin/create --dir migrations --template scripts/migrate/template.js",
+    "migrate:generate": "node ./scripts/migrate/generate.js",
     "shell": "node --experimental-repl-await --input-type=module scripts/shell.js",
     "heroku-postbuild": "npm run migrate:up"
   },
@@ -107,6 +108,7 @@
     "peanar": "^0.10.0",
     "pg": "^8.4.1",
     "pm2": "^4.5.1",
+    "postgres-range": "^1.0.1",
     "redis": "^3.0.2",
     "request": "^2.88.2",
     "request-as-curl": "^0.1.0",
@@ -160,6 +162,6 @@
     "nyc": "^15.1.0",
     "request-as-curl": "^0.1.0",
     "rimraf": "^3.0.2",
-    "typescript": "^4.0.3"
+    "typescript": "^4.2.3"
   }
 }

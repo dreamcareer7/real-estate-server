@@ -3,4 +3,4 @@ workers_scalable: npx pm2 start scripts/workers/pm2/workers-scalable.config.yaml
 workers: npx pm2 start scripts/workers/pm2/workers-non-scalable.config.yaml && npx pm2 logs --raw
 pollers: npx pm2 start scripts/workers/pm2/pollers.config.yaml && npx pm2 logs --raw
 workers_singular: npx pm2 start scripts/workers/index.js && npx pm2 logs --raw
-ntreis:  npx pm2 start scripts/mls/schedule.js
+ntreis:  npx pm2 start scripts/mls/schedule.js && npx pm2 logs --raw

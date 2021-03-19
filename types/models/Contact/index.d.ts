@@ -209,6 +209,7 @@ declare interface IContactFilterOptions {
   list?: UUID;
   lists?: UUID[];
   flows?: UUID[];
+  showings?: UUID[];
   users?: UUID[];
   filter_type?: 'and' | 'or';
 

@@ -24,6 +24,7 @@ CREATE OR REPLACE VIEW calendar.email_thread_recipient AS (
     google_credential AS credential_id,
     email_threads.id AS thread_key,
     NULL::uuid AS activity,
+    NULL::uuid AS showing,
     NULL::uuid AS flow,
     ARRAY[email_threads."user"] AS users,
     ARRAY[email_threads."user"] AS accessible_to,

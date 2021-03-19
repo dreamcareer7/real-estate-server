@@ -42,6 +42,8 @@ const migrations = [
       flows.deleted_at IS NULL
   )`,
 
+  'DROP VIEW IF EXISTS triggers_due',
+
   `CREATE OR REPLACE VIEW triggers_due AS (
     (
       SELECT
