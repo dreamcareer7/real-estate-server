@@ -150,6 +150,10 @@ const queues = [
     queues: ['email'],
     concurrency: 20
   },
+  {
+    queues: ['register_domain', 'create_zone', 'update_nameservers', 'capture_charge'],
+    concurrency: 20
+  }
 ]
 
 const forks = [
