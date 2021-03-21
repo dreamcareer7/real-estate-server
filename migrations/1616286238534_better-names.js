@@ -4,7 +4,7 @@ const migrations = [
   'BEGIN',
   'ALTER TABLE godaddy_domains RENAME order_id TO "order"',
   'ALTER TABLE godaddy_domains RENAME hosted_zone TO zone',
-  'ALTER TABLE godaddy_domains ADD COLUMN charge uuid NOT NULL REFERENCES stripe_charges(id)'
+  'ALTER TABLE godaddy_domains ADD COLUMN charge uuid NOT NULL REFERENCES stripe_charges(id)',
   'COMMIT'
 ]
 
