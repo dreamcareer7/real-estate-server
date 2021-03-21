@@ -23,6 +23,9 @@ require('../../lib/models/SMS')
 require('../../lib/models/Daily')
 require('../../lib/models/Envelope')
 require('../../lib/models/Trigger/worker')
+require('../../lib/models/Stripe')
+require('../../lib/models/Godaddy/zone')
+require('../../lib/models/Godaddy/purchase')
 // require('../../lib/models/Showings/worker')
 
 /** @type {(() => Promise<void>)[]} */
