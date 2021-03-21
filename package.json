@@ -67,7 +67,7 @@
     "exceljs": "^1.15.0",
     "express": "^4.17.1",
     "geoip-lite": "^1.4.2",
-    "godaddy": "^0.2.1",
+    "godaddy": "^0.3.1",
     "google-libphonenumber": "^3.2.9",
     "googleapis": "^66.0.0",
     "gulp-eslint7": "^0.3.0",
