@@ -37,6 +37,7 @@ Welcome. Rechat's API is broken into several small components to be readable.
 
 * [Templates](template.html)
 * [Emails](email.html)
+* [Showings](showing.html)
 
 ## Sharing
 
