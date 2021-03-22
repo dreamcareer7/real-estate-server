@@ -18,7 +18,7 @@ SELECT
   feedback_template,
   deal,
   listing,
-  STDADDR_TO_JSON(address),
+  STDADDR_TO_JSON(address) AS address,
   gallery,
 
   (
