@@ -48,6 +48,7 @@ const purchase = (cb) => {
         ]
       }
     })
+    .addHeader('x-handle-jobs', 'yes')
     .after(cb)
     .expectStatus(200)
 }
