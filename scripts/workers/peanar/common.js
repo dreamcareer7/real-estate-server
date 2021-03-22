@@ -18,7 +18,9 @@ require('../../../lib/models/SMS')
 require('../../../lib/models/Daily')
 require('../../../lib/models/Envelope')
 require('../../../lib/models/Trigger/worker')
-// require('../../../lib/models/Showings/worker')
+require('../../../lib/models/Stripe')
+require('../../../lib/models/Godaddy/zone')
+require('../../../lib/models/Godaddy/purchase')
 
 const queues = [
   {
@@ -127,6 +129,10 @@ const queues = [
   },
   {
     queues: ['email'],
+    concurrency: 20
+  },
+  {
+    queues: ['register_domain', 'create_zone', 'update_nameservers', 'capture_charge'],
     concurrency: 20
   },
 ]
