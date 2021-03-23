@@ -147,7 +147,7 @@ const queues = [
   },
   {
     queues: ['daily_email'],
-    concurrency: 20
+    concurrency: 5
   },
   {
     queues: ['email'],

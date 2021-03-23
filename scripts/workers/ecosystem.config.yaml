@@ -11,9 +11,9 @@ apps:
   - script   : ./scripts/workers/pollers/crm_task_notifications.js
     name     : 'crm_task_notifications'
     kill_timeout : 15000
-  # - script   : ./scripts/workers/pollers/dailies.js
-  #   name     : 'dailies'
-  #   kill_timeout : 15000
+  - script   : ./scripts/workers/pollers/dailies.js
+    name     : 'dailies'
+    kill_timeout : 15000
   - script   : ./scripts/workers/pollers/triggers.js
     name     : 'triggers'
     kill_timeout : 15000
