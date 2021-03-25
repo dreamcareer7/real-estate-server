@@ -5,28 +5,30 @@ WITH added AS (
     /*  $4 */ brand,
     /*  $5 */ start_date,
     /*  $6 */ end_date,
-    /*  $7 */ duration,
-    /*  $8 */ notice_period,
-    /*  $9 */ approval_type,
-    /* $10 */ feedback_template,
-    /* $11 */ deal,
-    /* $12 */ listing,
-    /* $13 */ address,
-    /* $14 */ gallery
+    /*  $7 */ aired_at,
+    /*  $8 */ duration,
+    /*  $9 */ notice_period,
+    /* $10 */ approval_type,
+    /* $11 */ feedback_template,
+    /* $12 */ deal,
+    /* $13 */ listing,
+    /* $14 */ address,
+    /* $15 */ gallery
   ) VALUES (
     $3::uuid,
     $3::uuid,
     $4::uuid,
     $5::timestamptz,
     $6::timestamptz,
-    $7::int * '1 second'::interval,
+    $7::timestamp,
     $8::int * '1 second'::interval,
-    $9::showing_approval_type,
-    $10::uuid,
+    $9::int * '1 second'::interval,
+    $10::showing_approval_type,
     $11::uuid,
     $12::uuid,
-    JSON_TO_STDADDR($13::jsonb),
-    $14::uuid
+    $13::uuid,
+    JSON_TO_STDADDR($14::jsonb),
+    $15::uuid
   )
   RETURNING
     id

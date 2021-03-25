@@ -1,7 +1,7 @@
 INSERT INTO showings_appointments (
   source,
   time,
-  status,
+  showing,
   contact
 ) VALUES (
   $1::text,
@@ -9,3 +9,4 @@ INSERT INTO showings_appointments (
   $3::uuid,
   $4::uuid
 )
+RETURNING id

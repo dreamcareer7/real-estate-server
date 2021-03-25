@@ -11,6 +11,7 @@ SELECT
   brand,
   start_date,
   end_date,
+  aired_at,
   extract(epoch FROM duration) AS duration,
   extract(epoch FROM notice_period) AS notice_period,
   approval_type,

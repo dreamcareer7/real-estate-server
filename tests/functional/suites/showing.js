@@ -1,4 +1,5 @@
 const merge = require('deepmerge')
+const moment = require('moment')
 
 registerSuite('brand', ['createParent', 'attributeDefs', 'createBrandLists', 'create', 'addRole', 'addMember'])
 
@@ -15,6 +16,7 @@ function _create(description, override, cb) {
         availability: [7 * 60, 10 * 60],
       },
     ],
+    aired_at: new Date().toISOString(),
     duration: 15 * 60,
     roles: [
       {
@@ -79,7 +81,71 @@ function createWithValidationError(cb) {
   ).expectStatus(400)
 }
 
+function filter(cb) {
+  return frisby.create('get all showings')
+    .post('/showings/filter?associations[]=showing.availabilities&associations[]=showing.roles')
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      data: [results.showing.create.data]
+    })
+}
+
+function filterByStatus(cb) {
+  return frisby.create('filter showings by status')
+    .post('/showings/filter?associations[]=showing.availabilities&associations[]=showing.roles', {
+      status: 'Approved'
+    })
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      data: []
+    })
+}
+
+function requestAppointment(cb) {
+  return frisby.create('Request an appointment')
+    .post(`/showings/${results.showing.create.data.id}/appointments`, {
+      source: 'Website',
+      time: moment().startOf('hour').day(8).hour(9).format(),
+      contact: {
+        first_name: 'John',
+        last_name: 'Smith',
+        email: 'john.smith@gmail.com'
+      }
+    })
+    .removeHeader('X-RECHAT-BRAND')
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      data: {
+        showing: results.showing.create.data.id
+      }
+    })
+}
+
+function upcomingAppointments(cb) {
+  const low = moment().startOf('day').unix()
+  const high = moment().add(20, 'day').startOf('day').unix()
+
+  return frisby.create('View upcoming appointments')
+    .get(`/calendar?object_types[]=showing_appointment&low=${low}&high=${high}`)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      data: [{
+	type: 'calendar_event'
+      }]
+    })
+}
+
 module.exports = {
   create,
+  filter,
+  filterByStatus,
+
+  requestAppointment,
+  upcomingAppointments,
+
   createWithValidationError,
 }

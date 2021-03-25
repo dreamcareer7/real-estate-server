@@ -108,7 +108,7 @@
     "peanar": "^0.10.0",
     "pg": "^8.4.1",
     "pm2": "^4.5.5",
-    "postgres-range": "^1.0.1",
+    "postgres-range": "^1.0.2",
     "redis": "^3.0.2",
     "request": "^2.88.2",
     "request-as-curl": "^0.1.0",

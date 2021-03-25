@@ -1,5 +1,6 @@
-import { ShowingAvailabilityInput } from "../availability/types";
-import { ShowingRoleInput } from "../role/types";
+import { ShowingAppointment } from "../appointment/types";
+import { ShowingAvailabilityInput, ShowingAvailabilityPopulated } from "../availability/types";
+import { ShowingRole, ShowingRoleInput } from "../role/types";
 
 interface StdAddr {
 
@@ -28,6 +29,25 @@ export interface Showing extends IModel {
   roles: UUID[];
   availabilities: UUID[];
   appointments: UUID[];
+}
+
+export interface ShowingPopulated extends IModel {
+  brand: UUID;
+  aired_at?: number;
+  start_date: string;
+  end_date?: string;
+  duration: number;
+  notice_period?: number;
+  approval_type: ApprovalType;
+  feedback_template?: UUID;
+  deal?: UUID;
+  listing?: UUID;
+  address?: StdAddr;
+  gallery?: UUID;
+
+  roles: ShowingRole[];
+  availabilities: ShowingAvailabilityPopulated[];
+  appointments: ShowingAppointment[];
 }
 
 export interface ShowingInput {

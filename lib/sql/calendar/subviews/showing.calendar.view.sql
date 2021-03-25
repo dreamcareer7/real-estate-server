@@ -63,6 +63,4 @@ CREATE OR REPLACE VIEW calendar.showing AS (
 
       (SELECT s.brand)
     ) AS sr
-  WHERE
-    a.status = 'Pending'::showing_appointment_status
 )
