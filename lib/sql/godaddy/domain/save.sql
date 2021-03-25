@@ -1,3 +1,3 @@
 INSERT INTO godaddy_domains
-(name, owner, order_id, hosted_zone) VALUES ($1, $2, $3, $4)
+(name, owner, charge) VALUES ($1, $2, $3)
 RETURNING id

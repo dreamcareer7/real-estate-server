@@ -24,6 +24,7 @@ CREATE OR REPLACE VIEW calendar.flow AS (
     NULL::uuid AS credential_id,
     NULL::text AS thread_key,
     NULL::uuid AS activity,
+    NULL::uuid AS showing,
     id AS flow,
     ARRAY[created_by] AS users,
     NULL::uuid[] AS accessible_to,
