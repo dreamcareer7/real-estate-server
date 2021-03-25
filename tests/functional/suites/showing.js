@@ -134,7 +134,7 @@ function upcomingAppointments(cb) {
     .expectStatus(200)
     .expectJSON({
       data: [{
-	type: 'calendar_event'
+        type: 'calendar_event'
       }]
     })
 }
