@@ -21,3 +21,10 @@ agent can book from available times.
 
 ### View upcoming showing appointments [GET /calendar]
 <!-- include(tests/showing/upcomingAppointments.md) -->
+
+### Cancel a showing appointment (on buyer side) [POST /showings/appointments/:token/cancel]
+<!-- include(tests/showing/cancelAppointment.md) -->
+
+### Cancel a showing appointment (on seller side) [DELETE /showings/:id/appointments/:appointment]
+<!-- include(tests/showing/sellerAgentCancelAppointment.md) -->
+
