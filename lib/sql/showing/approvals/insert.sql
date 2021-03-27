@@ -11,3 +11,8 @@ INSERT INTO showings_approvals (
   $4::timestamptz,
   $5
 )
+ON CONFLICT ON CONSTRAINT
+  showings_approvals_appointment_role_time_key
+DO UPDATE SET
+  approved = $3::boolean,
+  comment = $5

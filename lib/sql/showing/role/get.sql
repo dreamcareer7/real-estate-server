@@ -6,7 +6,7 @@ SELECT
   created_by,
   showing,
   role,
-  user,
+  "user",
   brand,
   confirm_notification_type,
   cancel_notification_type,

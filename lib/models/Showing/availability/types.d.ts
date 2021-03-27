@@ -8,6 +8,14 @@ export interface ShowingAvailability {
   availability: Range<number>;
 }
 
+export interface ShowingAvailabilityPopulated {
+  id: UUID;
+  showing: UUID;
+  weekday: DayOfWeek;
+  // A half-closed range [lower, upper)
+  availability: [number, number];
+}
+
 export interface ShowingAvailabilityInput {
   weekday: DayOfWeek;
   // A half-closed range [lower, upper)

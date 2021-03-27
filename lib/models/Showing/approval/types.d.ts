@@ -8,3 +8,8 @@ export interface ShowingApproval {
   time: string;
   comment?: string;
 }
+
+export interface ShowingApprovalInput {
+  approved: boolean;
+  comment?: string;
+}
