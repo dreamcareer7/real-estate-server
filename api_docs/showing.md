@@ -1,4 +1,4 @@
-# Group Showings
+# Group Showings Seller-side
 
 ## Overview
 A Showing is an event that a seller agent makes on Rechat and usually a buyer
@@ -19,15 +19,23 @@ agent can book from available times.
 ### Get a showing [GET /showings/:id]
 <!-- include(tests/showing/create.md) -->
 
-### Request a showing appointment [POST /showings/:id/appointments]
-<!-- include(tests/showing/requestAppointment.md) -->
-
 ### View upcoming showing appointments [GET /calendar]
 <!-- include(tests/showing/upcomingAppointments.md) -->
 
-### Cancel a showing appointment (on buyer side) [POST /showings/appointments/:token/cancel]
-<!-- include(tests/showing/cancelAppointment.md) -->
-
 ### Cancel a showing appointment (on seller side) [DELETE /showings/:id/appointments/:appointment]
 <!-- include(tests/showing/sellerAgentCancelAppointment.md) -->
+
+# Group Showings Buyer-side
+
+## Overview
+APIs used for the buyer experience.
+
+### Get a showing's public data [GET /showings/public/:token]
+<!-- include(tests/showing/getShowingPublic.md) -->
+
+### Request a showing appointment [POST /showings/public/:token/appointments]
+<!-- include(tests/showing/requestAppointment.md) -->
+
+### Cancel a showing appointment (on buyer side) [POST /showings/public/appointments/:token/cancel]
+<!-- include(tests/showing/cancelAppointment.md) -->
 
