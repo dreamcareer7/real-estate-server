@@ -2,6 +2,7 @@ const merge = require('deepmerge')
 const moment = require('moment')
 
 const AppointmentToken = require('../../../lib/models/Showing/appointment/token')
+const ShowingToken = require('../../../lib/models/Showing/showing/token')
 
 registerSuite('brand', ['createParent', 'attributeDefs', 'createBrandLists', 'create', 'addRole', 'addMember'])
 
@@ -121,11 +122,28 @@ function filterByStatus(cb) {
     })
 }
 
+
+function getShowingPublic(cb) {
+  const showing_token = ShowingToken.encodeToken(results.showing.create.data)
+  return frisby
+    .create('get showing public info')
+    .get(`/showings/public/${showing_token}`)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      data: {
+        id: results.showing.create.data.id,
+        type: 'showing_public'
+      }
+    })
+}
+
 function _makeAppointment(msg) {
   return (cb) => {
+    const showing_token = ShowingToken.encodeToken(results.showing.create.data)
     return frisby
       .create(msg)
-      .post(`/showings/${results.showing.create.data.id}/appointments?associations[]=showing_appointment.contact`, {
+      .post(`/showings/public/${showing_token}/appointments?associations[]=showing_appointment.contact`, {
         source: 'Website',
         time: moment().startOf('hour').day(8).hour(9).format(),
         contact: {
@@ -174,7 +192,7 @@ function cancelAppointment(cb) {
   })
   return frisby
     .create('cancel an appointment')
-    .post(`/showings/appointments/${token}/cancel`)
+    .post(`/showings/public/appointments/${token}/cancel`)
     .after(cb)
     .expectStatus(204)
 }
@@ -195,6 +213,7 @@ module.exports = {
   filter,
   filterByStatus,
 
+  getShowingPublic,
   requestAppointment: _makeAppointment('request an appointment'),
   upcomingAppointments,
   cancelAppointment,

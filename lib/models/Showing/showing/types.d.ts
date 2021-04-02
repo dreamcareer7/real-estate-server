@@ -31,6 +31,18 @@ export interface Showing extends IModel {
   appointments: UUID[];
 }
 
+export interface ShowingPublic {
+  id: UUID;
+  start_date: string;
+  end_date?: string;
+  duration: number;
+  notice_period?: number;
+  agent: UUID;
+  listing: UUID;
+  unavailable_times: string[];
+  availabilities: UUID[];
+}
+
 export interface ShowingPopulated extends IModel {
   brand: UUID;
   aired_at?: number;
