@@ -33,6 +33,11 @@ const migrations = [
   )`,
   'ALTER TABLE sso_providers ADD COLUMN domain TEXT',
   'ALTER TABLE users ADD website TEXT',
+  'ALTER TABLE users ADD instagram TEXT',
+  'ALTER TABLE users ADD twitter TEXT',
+  'ALTER TABLE users ADD linkedin TEXT',
+  'ALTER TABLE users ADD youtube TEXT',
+  'ALTER TABLE users ADD facebook TEXT',
   'COMMIT'
 ]
 
