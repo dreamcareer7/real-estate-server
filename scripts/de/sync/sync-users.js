@@ -34,6 +34,12 @@ WITH data AS (
   ${MAP}
 ),
 
+links AS (
+  INSERT INTO de.users (username)
+  SELECT username FROM data
+  ON CONFLICT (username) DO NOTHING
+),
+
 saved AS (
   INSERT INTO users (
     first_name,
@@ -56,7 +62,8 @@ saved AS (
     (
       SELECT id FROM agents WHERE mls = data.mls::mls AND mlsid = data.mlsid
     )
-  FROM data
+  FROM de.users
+  JOIN data ON de.users.username = data.username
   ON CONFLICT (email) DO UPDATE SET
       first_name = EXCLUDED.first_name,
       last_name = EXCLUDED.last_name,
@@ -66,11 +73,12 @@ saved AS (
   RETURNING id, email
 )
 
-INSERT INTO de.users (username, "user")
-SELECT data.username, saved.id FROM saved
-JOIN data ON LOWER(data.email) = LOWER(saved.email)
-ON CONFLICT DO NOTHING
-RETURNING *
+UPDATE de.users
+SET "user" = saved.id
+FROM data
+JOIN saved ON LOWER(data.email) = LOWER(saved.email)
+WHERE de.users."user" IS NULL
+AND de.users.username = data.username
 `
 
 const NULL_PHONES = `

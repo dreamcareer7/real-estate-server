@@ -62,7 +62,8 @@ const sync = async () => {
   const token = await getToken()
   const { users, regions, offices } = await getData(token)
 
-  require('fs').writeFileSync('/tmp/4.json', JSON.stringify(users))
+  const date = new Date()
+  require('fs').writeFileSync(`/tmp/${date}.json`, JSON.stringify(users))
 
   await getRoot() // Ensure root exists
   await syncRegions(regions)
