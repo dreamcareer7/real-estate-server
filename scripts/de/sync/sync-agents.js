@@ -1,6 +1,4 @@
 const _ = require('lodash')
-const pnu = require('google-libphonenumber').PhoneNumberUtil.getInstance()
-// const Brand = require('../../lib/models/Brand')
 const db = require('../../../lib/utils/db')
 const Brand = require('../../../lib/models/Brand')
 const BrandRole = {

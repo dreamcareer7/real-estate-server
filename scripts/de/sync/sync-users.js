@@ -174,7 +174,7 @@ const syncUsers = async users => {
   const data = JSON.stringify(users.map(setPhone).map(setSocials))
 
   await db.executeSql.promise(INSERT_USERNAMES, [data])
-  const { rows: updated } = await db.executeSql.promise(SAVE_USERS, [data])
+  await db.executeSql.promise(SAVE_USERS, [data])
   await db.executeSql.promise(NULL_PHONES)
   await db.executeSql.promise(SET_PHONES, [data])
 }
