@@ -744,6 +744,23 @@ const addPropertyType = cb => {
     })
 }
 
+const updatePropertyType = cb => {
+  const property_type = {
+    ...results.brand.addPropertyType.data,
+    label: 'Residential',
+    is_lease: false
+  }
+
+  return frisby.create('update a property type')
+    .put(`/brands/${brand_id}/deals/property_types/${property_type.id}`, property_type)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      data: property_type
+    })
+}
+
 const getPropertyTypes = cb => {
   return frisby.create('get property types')
     .get(`/brands/${brand_id}/deals/property_types?associaions[]=brand_property_type.checklists`)
@@ -752,9 +769,17 @@ const getPropertyTypes = cb => {
     .expectJSON({
       code: 'OK',
       data: [
-        omit(results.brand.addPropertyType.data, 'checklists')
+        omit(results.brand.updatePropertyType.data, 'checklists')
       ]
     })
+}
+
+const deletePropertyType = cb => {
+  const id = results.brand.addPropertyType.data.id
+  return frisby.create('delete a property type')
+    .delete(`/brands/${brand_id}/deals/property_types/${id}`)
+    .after(cb)
+    .expectStatus(204)
 }
 
 function createAsset(cb) {
@@ -824,6 +849,7 @@ module.exports = {
 
   addHostname,
   addPropertyType,
+  updatePropertyType,
   addChecklist,
   updateChecklist,
   addTask,
@@ -831,6 +857,7 @@ module.exports = {
   sortChecklist,
   getChecklists,
   getPropertyTypes,
+  deletePropertyType,
   deleteTask,
   deleteChecklist,
   getByHostname,

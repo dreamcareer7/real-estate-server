@@ -13,7 +13,7 @@ const BrandRole = {
 
 const BrandContext = require('../../../lib/models/Brand/deal/context')
 const BrandPropertyType = {
-  ...require('../../../lib/models/Brand/deal/property_type/create'),
+  ...require('../../../lib/models/Brand/deal/property_type/save'),
   ...require('../../../lib/models/Brand/deal/property_type/get')
 }
 const BrandChecklist = require('../../../lib/models/Brand/deal/checklist')
