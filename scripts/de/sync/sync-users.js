@@ -83,7 +83,7 @@ saved AS (
     twitter,
     user_type,
     (
-      SELECT id FROM agents WHERE mls = data.mls::mls AND mlsid = data.mlsid
+      SELECT id FROM agents WHERE mls::text = data.mls AND mlsid = data.mlsid
     )
   FROM de.users
   JOIN data ON de.users.username = data.username
