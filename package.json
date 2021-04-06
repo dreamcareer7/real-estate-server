@@ -107,7 +107,7 @@
     "pdfjs-dist": "https://emilsedgh:09c4811f0d62635f7f777cab41c228352c2b2235@github.com/rechat/pdfjs-dist.git",
     "peanar": "^0.10.0",
     "pg": "^8.4.1",
-    "pm2": "^4.5.5",
+    "pm2": "^4.5.6",
     "postgres-range": "^1.0.2",
     "redis": "^3.0.2",
     "request": "^2.88.2",
