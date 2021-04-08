@@ -87,7 +87,7 @@ export interface ShowingAppointment {
   time: string;
   status: AppointmentStatus;
   showing: UUID;
-  contact: Contact;
+  contact: IContact;
   approvals?: ShowingApproval[];
 
   type: 'showing_appointment';
@@ -137,7 +137,11 @@ export interface ShowingInput {
   end_date?: string;
   duration: number;
   notice_period?: number;
+  aired_at?: number;
   approval_type: ApprovalType;
+  allow_appraisal: boolean;
+  allow_inspection: boolean;
+  instructions?: string;
   feedback_template?: UUID;
   deal?: UUID;
   listing?: UUID;

@@ -8,6 +8,9 @@ SET
   duration = $4 * '1 second'::interval,
   notice_period = $5 * '1 second'::interval,
   feedback_template = $6::uuid,
-  address = JSON_TO_STDADDR($7::json)
+  address = JSON_TO_STDADDR($7::json),
+  allow_appraisal = $8::boolean,
+  allow_inspection = $9::boolean,
+  instructions = $10
 WHERE
   id = $1::uuid
