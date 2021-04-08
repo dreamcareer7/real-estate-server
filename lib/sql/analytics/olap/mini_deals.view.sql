@@ -97,7 +97,8 @@ CREATE OR REPLACE VIEW analytics.mini_deals AS
     di.brand,
     di.deal_type,
     di.property_type,
-    bo.branch_title,
+    br.office,
+    br.region,
     (SELECT name FROM agent_info AS ri WHERE role = 'BuyerAgent'::deal_role AND ri.deal = di.id AND (ri.checklist IS NULL OR ri.checklist = di.checklist) LIMIT 1) AS buyer_agent,
     (SELECT name FROM agent_info AS ri WHERE role = 'SellerAgent'::deal_role AND ri.deal = di.id AND (ri.checklist IS NULL OR ri.checklist = di.checklist) LIMIT 1) AS seller_agent,
     (SELECT info FROM role_info AS ri WHERE role = 'Seller'::deal_role AND ri.deal = di.id AND (ri.checklist IS NULL OR ri.checklist = di.checklist) LIMIT 1) AS sellers,
@@ -110,5 +111,5 @@ CREATE OR REPLACE VIEW analytics.mini_deals AS
     (SELECT date FROM context_info AS ci WHERE key = 'list_date' AND ci.deal = di.id LIMIT 1) AS list_date
   FROM
     deal_info di
-    JOIN brands_branches AS bo
-      ON di.brand = bo.id
+    JOIN brands_relations AS br
+      ON di.brand = br.id
