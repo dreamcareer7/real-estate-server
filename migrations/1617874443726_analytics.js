@@ -1,9 +1,10 @@
 const db = require('../lib/utils/db')
 
 const migrations = [
-  'BEGIN',
   `ALTER TYPE brand_type
-    ADD VALUE 'Region'`,
+    ADD VALUE IF NOT EXISTS 'Region'`,
+
+  'BEGIN',
 
   'DROP VIEW analytics.roles',
   'DROP VIEW analytics.deals',
