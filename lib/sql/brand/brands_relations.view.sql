@@ -7,7 +7,7 @@ CREATE OR REPLACE VIEW brands_relations AS (
       brands as b
       JOIN brand_parents(brands.id) bp(id) using (id)
     WHERE
-      brands.brand_type = 'Office'
+      b.brand_type = 'Office'
     LIMIT 1
   ) AS office,
 
@@ -18,7 +18,7 @@ CREATE OR REPLACE VIEW brands_relations AS (
       brands as b
       JOIN brand_parents(brands.id) bp(id) using (id)
     WHERE
-      brands.brand_type = 'Region'
+      b.brand_type = 'Region'
     LIMIT 1
   ) AS region
 
