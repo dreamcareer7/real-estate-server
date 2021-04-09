@@ -67,7 +67,7 @@ export interface ShowingInput {
   end_date?: string;
   duration: number;
   notice_period?: number;
-  aired_at?: number;
+  aired_at?: string;
   approval_type: ApprovalType;
   allow_appraisal: boolean;
   allow_inspection: boolean;

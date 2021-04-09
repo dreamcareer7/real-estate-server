@@ -118,7 +118,11 @@ export interface Showing {
   end_date?: string;
   duration: number;
   notice_period?: number;
+  aired_at?: number;
   approval_type: ApprovalType;
+  allow_appraisal: boolean;
+  allow_inspection: boolean;
+  instructions?: string;
   feedback_template?: TemplateInstance;
   deal?: Deal;
   listing?: Listing;
