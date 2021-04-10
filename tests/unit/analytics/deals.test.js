@@ -73,7 +73,7 @@ async function contractsReport(user_id, brand_id) {
     fields: [
       'title',
       'buyer_agent',
-      'branch_title',
+      'office',
       'sales_price',
       'closing_date',
       'seller_agent',
@@ -112,7 +112,7 @@ async function listingsReport(user_id, brand_id) {
 
   const queryBuilder = new DealsModel(null, filter, user_id, brand_id)
   const options = {
-    fields: ['title', 'seller_agent', 'branch_title', 'list_price', 'sellers'],
+    fields: ['title', 'seller_agent', 'office', 'list_price', 'sellers'],
     order: 'contract_date'
   }
 
