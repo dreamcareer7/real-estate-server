@@ -1,4 +1,4 @@
-CREATE OR REPLACE VIEW analytics.deals AS
+CREATE MATERIALIZED VIEW analytics.deals AS
   WITH ct AS (
     SELECT * FROM
     crosstab($$
@@ -219,3 +219,5 @@ CREATE OR REPLACE VIEW analytics.deals AS
     ct
   JOIN brands_relations AS br
     ON ct.brand = br.id
+
+CREATE UNIQUE INDEX analytics_deals_idx ON analytics.deals(id);
