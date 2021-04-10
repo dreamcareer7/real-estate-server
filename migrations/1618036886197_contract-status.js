@@ -222,7 +222,8 @@ const migrations = [
     ct.lease_begin,
     ct.lease_end,
     ct.year_built,
-    ct.listing_status
+    ct.listing_status,
+    ct.contract_status
   FROM
     ct
   JOIN brands_relations AS br
