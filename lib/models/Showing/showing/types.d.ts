@@ -2,10 +2,6 @@ import { ShowingAppointment } from "../appointment/types";
 import { ShowingAvailabilityInput, ShowingAvailabilityPopulated } from "../availability/types";
 import { ShowingRole, ShowingRoleInput } from "../role/types";
 
-interface StdAddr {
-
-}
-
 export type ApprovalType =
   | 'All'
   | 'Any'
@@ -52,8 +48,8 @@ export interface ShowingPopulated extends IModel {
   notice_period?: number;
   approval_type: ApprovalType;
   feedback_template?: UUID;
-  deal?: UUID;
-  listing?: UUID;
+  deal?: IDeal;
+  listing?: IListing;
   address?: StdAddr;
   gallery?: UUID;
 
@@ -67,7 +63,11 @@ export interface ShowingInput {
   end_date?: string;
   duration: number;
   notice_period?: number;
+  aired_at?: string;
   approval_type: ApprovalType;
+  allow_appraisal: boolean;
+  allow_inspection: boolean;
+  instructions?: string;
   feedback_template?: UUID;
   deal?: UUID;
   listing?: UUID;

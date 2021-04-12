@@ -1,4 +1,6 @@
 import { ILtsLead } from "../../Contact/lead/types";
+import { ShowingApproval } from "../approval/types";
+import { ShowingPopulated } from "../showing/types";
 
 export interface ShowingAppointmentInput {
   source: string;
@@ -22,6 +24,18 @@ export interface ShowingAppointment {
   showing: UUID;
   contact: UUID;
   approvals?: UUID[];
+}
+
+export interface ShowingAppointmentPopulated {
+  id: UUID;
+  created_at: number;
+  updated_at: number;
+  source: string;
+  time: string;
+  status: AppointmentStatus;
+  showing: ShowingPopulated;
+  contact: IContact;
+  approvals?: ShowingApproval[];
 }
 
 export type AppointmentStatus =

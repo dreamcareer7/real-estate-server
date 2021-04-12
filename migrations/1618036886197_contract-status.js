@@ -1,4 +1,9 @@
-CREATE OR REPLACE VIEW analytics.deals AS
+const db = require('../lib/utils/db')
+
+const migrations = [
+  'BEGIN',
+  'DROP MATERIALIZED VIEW analytics.deals',
+  `CREATE MATERIALIZED VIEW analytics.deals AS
   WITH ct AS (
     SELECT * FROM
     crosstab($$
@@ -21,16 +26,9 @@ CREATE OR REPLACE VIEW analytics.deals AS
           AND brands.deleted_at IS NULL
           AND deals.deleted_at IS NULL
       ),
-      roles AS (
+      agent AS (
         SELECT
           deals_roles.deal,
-          (
-            CASE deals_roles.role
-              WHEN 'SellerAgent' THEN 'seller_agent'
-              WHEN 'BuyerAgent' THEN 'buyer_agent'
-              ELSE deals_roles.role::text
-            END
-          ) AS role,
           (
             CASE WHEN
               (deals_roles.legal_prefix      <> '') IS NOT TRUE AND
@@ -53,15 +51,18 @@ CREATE OR REPLACE VIEW analytics.deals AS
           real_deals.property_type,
           real_deals.listing,
           real_deals.brand,
-          real_deals.title
+          real_deals.title,
+          deals_roles.role
         FROM
           deals_roles
           JOIN real_deals
             ON real_deals.id = deals_roles.deal
         WHERE
-          role IN (
-            'BuyerAgent',
-            'SellerAgent'
+          role = (
+            CASE
+              WHEN real_deals.deal_type = 'Selling' THEN 'SellerAgent'::deal_role
+              WHEN real_deals.deal_type = 'Buying'  THEN 'BuyerAgent'::deal_role
+            END
           )
       ),
       contexts AS (
@@ -96,7 +97,8 @@ CREATE OR REPLACE VIEW analytics.deals AS
           'lease_begin',
           'lease_end',
           'year_built',
-          'listing_status'
+          'listing_status',
+          'contract_status'
         ) AND ctx.deleted_at IS NULL
       ),
       ctx_roles_union AS (
@@ -115,16 +117,16 @@ CREATE OR REPLACE VIEW analytics.deals AS
         )
         UNION ALL (
           SELECT
-            roles.deal AS id,
-            roles.deal_type,
-            roles.property_type,
-            roles.listing,
-            roles.brand,
-            roles.title,
-            roles.role,
+            agent.deal AS id,
+            agent.deal_type,
+            agent.property_type,
+            agent.listing,
+            agent.brand,
+            agent.title,
+            'agent' as role,
             legal_full_name as "value"
           FROM
-            roles
+            agent
         )
       )
       SELECT
@@ -139,8 +141,7 @@ CREATE OR REPLACE VIEW analytics.deals AS
       ('sales_price'),
       ('leased_price'),
       ('original_price'),
-      ('seller_agent'),
-      ('buyer_agent'),
+      ('agent'),
       ('list_date'),
       ('expiration_date'),
       ('contract_date'),
@@ -155,11 +156,12 @@ CREATE OR REPLACE VIEW analytics.deals AS
       ('lease_begin'),
       ('lease_end'),
       ('year_built'),
-      ('listing_status')
+      ('listing_status'),
+      ('contract_status')
     $$) t(
       id uuid,
       deal_type deal_type,
-      property_type uuid,
+      property_type deal_property_type,
       listing uuid,
       brand uuid,
       title text,
@@ -168,8 +170,7 @@ CREATE OR REPLACE VIEW analytics.deals AS
       sales_price double precision,
       leased_price double precision,
       original_price double precision,
-      seller_agent text,
-      buyer_agent text,
+      agent text,
       list_date timestamptz,
       expiration_date timestamptz,
       contract_date timestamptz,
@@ -184,7 +185,8 @@ CREATE OR REPLACE VIEW analytics.deals AS
       lease_begin timestamptz,
       lease_end timestamptz,
       year_built double precision,
-      listing_status text
+      listing_status text,
+      contract_status text
     )
   )
   SELECT ct.id,
@@ -193,14 +195,14 @@ CREATE OR REPLACE VIEW analytics.deals AS
     ct.listing,
     ct.brand,
     ct.title,
-    bo.branch_title,
+    br.office,
+    br.region,
     ct.full_address,
     ct.list_price,
     ct.sales_price,
     ct.leased_price,
     ct.original_price,
-    ct.seller_agent,
-    ct.buyer_agent,
+    ct.agent,
     ct.list_date::date,
     ct.expiration_date,
     ct.contract_date::date,
@@ -220,8 +222,30 @@ CREATE OR REPLACE VIEW analytics.deals AS
     ct.lease_begin,
     ct.lease_end,
     ct.year_built,
-    ct.listing_status
+    ct.listing_status,
+    ct.contract_status
   FROM
     ct
-  JOIN brands_branches AS bo
-    ON ct.brand = bo.id
+  JOIN brands_relations AS br
+    ON ct.brand = br.id;
+
+CREATE UNIQUE INDEX analytics_deals_idx ON analytics.deals(id);`,
+  'COMMIT'
+]
+
+
+const run = async () => {
+  const { conn } = await db.conn.promise()
+
+  for(const sql of migrations) {
+    await conn.query(sql)
+  }
+
+  conn.release()
+}
+
+exports.up = cb => {
+  run().then(cb).catch(cb)
+}
+
+exports.down = () => {}

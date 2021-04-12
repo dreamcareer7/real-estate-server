@@ -22,7 +22,7 @@ agent can book from available times.
 ### View upcoming showing appointments [GET /calendar]
 <!-- include(tests/showing/upcomingAppointments.md) -->
 
-### Cancel a showing appointment (on seller side) [DELETE /showings/:id/appointments/:appointment]
+### Cancel a showing appointment (on seller side) [POST /showings/:id/appointments/:appointment]
 <!-- include(tests/showing/sellerAgentCancelAppointment.md) -->
 
 # Group Showings Buyer-side
@@ -37,5 +37,5 @@ APIs used for the buyer experience.
 <!-- include(tests/showing/requestAppointment.md) -->
 
 ### Cancel a showing appointment (on buyer side) [POST /showings/public/appointments/:token/cancel]
-<!-- include(tests/showing/cancelAppointment.md) -->
+<!-- include(tests/showing/buyerAgentCancelAppointment.md) -->
 

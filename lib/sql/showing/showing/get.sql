@@ -16,6 +16,10 @@ SELECT
   extract(epoch FROM notice_period) AS notice_period,
   approval_type,
 
+  allow_appraisal,
+  allow_inspection,
+  instructions,
+
   feedback_template,
   deal,
   listing,

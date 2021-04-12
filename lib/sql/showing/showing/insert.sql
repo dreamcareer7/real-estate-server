@@ -13,7 +13,10 @@ WITH added AS (
     /* $12 */ deal,
     /* $13 */ listing,
     /* $14 */ address,
-    /* $15 */ gallery
+    /* $15 */ gallery,
+    /* $16 */ allow_appraisal,
+    /* $17 */ allow_inspection,
+    /* $18 */ instructions
   ) VALUES (
     $3::uuid,
     $3::uuid,
@@ -28,7 +31,10 @@ WITH added AS (
     $12::uuid,
     $13::uuid,
     JSON_TO_STDADDR($14::jsonb),
-    $15::uuid
+    $15::uuid,
+    $16::boolean,
+    $17::boolean,
+    $18
   )
   RETURNING
     id
