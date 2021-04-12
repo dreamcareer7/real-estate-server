@@ -1,4 +1,8 @@
 declare interface IDeal extends IModel {
+  title: string;
+  listing?: UUID;
+  brand: UUID;
+  faired_at?: number;
 }
 
 declare type TDealRole =

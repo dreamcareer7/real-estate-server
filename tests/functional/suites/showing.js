@@ -16,7 +16,7 @@ function _create(description, override, cb) {
     availabilities: [
       {
         weekday: 'Monday',
-        availability: [7 * 60, 10 * 60],
+        availability: [7 * 3600, 10 * 3600],
       },
     ],
     aired_at: new Date().toISOString(),
@@ -83,11 +83,11 @@ function createWithValidationError(cb) {
       availabilities: [
         {
           weekday: 'Monday',
-          availability: [7 * 60, 10 * 60],
+          availability: [7 * 3600, 10 * 3600],
         },
         {
           weekday: 'Monday',
-          availability: [7 * 60, 10 * 60],
+          availability: [7 * 3600, 10 * 3600],
         },
       ],
     },
@@ -180,6 +180,27 @@ function _makeAppointment(msg) {
   }
 }
 
+function checkAppointmentNotifications(cb) {
+  const appt = results.showing.requestAppointment.data
+  return frisby
+    .create('check appointment request notification')
+    .get('/notifications')
+    .after(cb)
+    .expectJSON({
+      data: [
+        {
+          object_class: 'ShowingAppointment',
+          object: appt.id,
+          action: 'Created',
+          subject_class: 'Contact',
+          title: '5020  Junius Street',
+          message: 'John Smith requested a showing',
+          type: 'notification',
+        },
+      ],
+    })
+}
+
 function upcomingAppointments(cb) {
   const low = moment().startOf('day').unix()
   const high = moment().add(20, 'day').startOf('day').unix()
@@ -226,6 +247,7 @@ function checkBuyerCancelNotifications(cb) {
         {
           object_class: 'ShowingAppointment',
           object: appt.id,
+          action: 'Cancelled',
           subject_class: 'Contact',
           message: 'Sorry something came up',
           type: 'notification',
@@ -255,6 +277,7 @@ module.exports = {
 
   getShowingPublic,
   requestAppointment: _makeAppointment('request an appointment'),
+  checkAppointmentNotifications,
   upcomingAppointments,
   buyerAgentCancelAppointment,
   checkBuyerCancelNotifications,

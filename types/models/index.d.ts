@@ -1,5 +1,6 @@
 /// <reference path="common.d.ts" />
 /// <reference path="Orm.d.ts" />
+/// <reference path="MLS.d.ts" />
 /// <reference path="Agent.d.ts" />
 /// <reference path="User.d.ts" />
 /// <reference path="Brand/index.d.ts" />
