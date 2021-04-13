@@ -2,7 +2,7 @@ CREATE OR REPLACE VIEW brands_relations AS (
   SELECT id,
   (
     SELECT
-      brands.name
+      b.name
     FROM
       brands as b
       JOIN brand_parents(brands.id) bp(id) using (id)
@@ -13,7 +13,7 @@ CREATE OR REPLACE VIEW brands_relations AS (
 
   (
     SELECT
-      brands.name
+      b.name
     FROM
       brands as b
       JOIN brand_parents(brands.id) bp(id) using (id)
