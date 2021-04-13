@@ -1,6 +1,6 @@
 import { ShowingAppointment } from "../appointment/types";
 import { ShowingAvailabilityInput, ShowingAvailabilityPopulated } from "../availability/types";
-import { ShowingRole, ShowingRoleInput } from "../role/types";
+import { ShowingRoleInput, ShowingRolePopulated } from "../role/types";
 
 export type ApprovalType =
   | 'All'
@@ -53,7 +53,7 @@ export interface ShowingPopulated extends IModel {
   address?: StdAddr;
   gallery?: UUID;
 
-  roles: ShowingRole[];
+  roles: ShowingRolePopulated[];
   availabilities: ShowingAvailabilityPopulated[];
   appointments: ShowingAppointment[];
 }
