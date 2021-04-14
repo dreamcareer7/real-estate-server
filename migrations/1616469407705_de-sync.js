@@ -14,7 +14,9 @@ const migrations = [
   )`,
   `CREATE TABLE de.users (
       username TEXT NOT NULL UNIQUE,
-      "user" uuid UNIQUE REFERENCES public.users(id)
+      "user" uuid UNIQUE REFERENCES public.users(id),
+      object JSONB NOT NULL,
+      updated_at timestamp with time zone NOT NULL
    )`,
   `CREATE TABLE de.admins_offices (
     username TEXT REFERENCES de.users(username),

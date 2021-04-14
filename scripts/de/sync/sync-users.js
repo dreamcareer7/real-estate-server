@@ -44,9 +44,11 @@ WITH data AS (
   ${MAP}
 )
 
-INSERT INTO de.users (username)
-SELECT username FROM data
-ON CONFLICT (username) DO NOTHING`
+INSERT INTO de.users (username, object, updated_at)
+SELECT username, ROW_TO_JSON(data), NOW() FROM data
+ON CONFLICT (username) DO UPDATE SET
+  object = EXCLUDED.object,
+  updated_at = NOW()`
 
 const SAVE_USERS = `
 WITH data AS (
@@ -109,27 +111,43 @@ JOIN saved ON LOWER(data.email) = LOWER(saved.email)
 WHERE de.users."user" IS NULL
 AND de.users.username = data.username`
 
-const NULL_PHONES = `
+const NULLIFY = `
 UPDATE users SET
-  phone_number = NULL
+  phone_number = NULL,
+  email = uuid_generate_v4() || '@elimman.com',
+  fake_email = true
 FROM de.users
 WHERE public.users.id = de.users.user
 RETURNING *`
 
 const SET_PHONES = `
-WITH data AS (
-  ${MAP}
-),
-
-phone_numbers AS (
-  SELECT DISTINCT ON(phone_number) phone_number, email FROM data
+WITH phones AS (
+  SELECT
+    DISTINCT ON(de.users.object->>'phone_number')
+    de.users.object->>'phone_number' as phone_number,
+    "user"
+  FROM de.users ORDER BY de.users.object->>'phone_number', updated_at DESC
 )
-
 UPDATE users SET
-  phone_number = phone_numbers.phone_number,
+  phone_number = phones.phone_number,
   phone_confirmed = TRUE
-FROM phone_numbers
-WHERE LOWER(users.email) = LOWER(phone_numbers.email)
+FROM phones
+WHERE users.id = phones.user
+RETURNING *`
+
+const SET_EMAILS = `
+WITH emails AS (
+  SELECT
+    DISTINCT ON(de.users.object->>'email')
+    de.users.object->>'email' as email,
+    "user"
+  FROM de.users ORDER BY de.users.object->>'email', updated_at DESC
+)
+UPDATE users SET
+  email = emails.email,
+  email_confirmed = TRUE
+FROM emails
+WHERE users.id = emails.user
 RETURNING *`
 
 const setPhone = user => {
@@ -175,8 +193,9 @@ const syncUsers = async users => {
 
   await db.executeSql.promise(INSERT_USERNAMES, [data])
   await db.executeSql.promise(SAVE_USERS, [data])
-  await db.executeSql.promise(NULL_PHONES)
-  await db.executeSql.promise(SET_PHONES, [data])
+  await db.executeSql.promise(NULLIFY)
+  await db.executeSql.promise(SET_PHONES)
+  await db.executeSql.promise(SET_EMAILS)
 }
 
 
