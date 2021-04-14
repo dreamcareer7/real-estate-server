@@ -7,7 +7,7 @@ declare interface IModelAssociation {
     model: string;
 }
 
-declare interface IAddress {
+declare interface StdAddr {
   building?: string;
   house_num?: string;
   predir?: string;
@@ -24,6 +24,11 @@ declare interface IAddress {
   postalcode?: string;
   box?: string;
   unit?: string;
+
+  // Formatted addresses
+  line1: string;
+  line2: string;
+  full: string;
 }
 
 declare interface StringMap<T> {

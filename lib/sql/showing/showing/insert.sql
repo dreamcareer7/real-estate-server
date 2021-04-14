@@ -7,13 +7,17 @@ WITH added AS (
     /*  $6 */ end_date,
     /*  $7 */ aired_at,
     /*  $8 */ duration,
-    /*  $9 */ notice_period,
-    /* $10 */ approval_type,
-    /* $11 */ feedback_template,
-    /* $12 */ deal,
-    /* $13 */ listing,
-    /* $14 */ address,
-    /* $15 */ gallery
+    /*  $9 */ same_day_allowed,
+    /* $10 */ notice_period,
+    /* $11 */ approval_type,
+    /* $12 */ feedback_template,
+    /* $13 */ deal,
+    /* $14 */ listing,
+    /* $15 */ address,
+    /* $16 */ gallery,
+    /* $17 */ allow_appraisal,
+    /* $18 */ allow_inspection,
+    /* $19 */ instructions
   ) VALUES (
     $3::uuid,
     $3::uuid,
@@ -22,13 +26,17 @@ WITH added AS (
     $6::timestamptz,
     $7::timestamp,
     $8::int * '1 second'::interval,
-    $9::int * '1 second'::interval,
-    $10::showing_approval_type,
-    $11::uuid,
+    $9::boolean,
+    $10::int * '1 second'::interval,
+    $11::showing_approval_type,
     $12::uuid,
     $13::uuid,
-    JSON_TO_STDADDR($14::jsonb),
-    $15::uuid
+    $14::uuid,
+    JSON_TO_STDADDR($15::jsonb),
+    $16::uuid,
+    $17::boolean,
+    $18::boolean,
+    $19
   )
   RETURNING
     id

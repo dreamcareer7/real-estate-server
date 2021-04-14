@@ -1,4 +1,9 @@
-CREATE MATERIALIZED VIEW analytics.deals AS
+const db = require('../lib/utils/db')
+
+const migrations = [
+  'BEGIN',
+  'DROP MATERIALIZED VIEW analytics.deals',
+  `CREATE MATERIALIZED VIEW analytics.deals AS
   WITH ct AS (
     SELECT * FROM
     crosstab($$
@@ -24,8 +29,24 @@ CREATE MATERIALIZED VIEW analytics.deals AS
       agent AS (
         SELECT
           deals_roles.deal,
-          real_deals.created_at as deal_created_at,
-          deals_roles.user,
+          (
+            CASE WHEN
+              (deals_roles.legal_prefix      <> '') IS NOT TRUE AND
+              (deals_roles.legal_first_name  <> '') IS NOT TRUE AND
+              (deals_roles.legal_middle_name <> '') IS NOT TRUE AND
+              (deals_roles.legal_last_name   <> '') IS NOT TRUE
+            THEN company_title
+            ELSE
+              ARRAY_TO_STRING(
+                ARRAY[
+                  deals_roles.legal_prefix,
+                  deals_roles.legal_first_name,
+                  deals_roles.legal_middle_name,
+                  deals_roles.legal_last_name
+                ], ' ', NULL
+              )
+            END
+          ) as legal_full_name,
           real_deals.deal_type,
           real_deals.property_type,
           real_deals.listing,
@@ -47,7 +68,6 @@ CREATE MATERIALIZED VIEW analytics.deals AS
       contexts AS (
         SELECT
           ctx.*,
-          real_deals.created_at as deal_created_at,
           real_deals.deal_type,
           real_deals.property_type,
           real_deals.listing,
@@ -85,7 +105,6 @@ CREATE MATERIALIZED VIEW analytics.deals AS
         (
           SELECT
             ctx.deal AS id,
-            ctx.deal_created_at,
             ctx.deal_type,
             ctx.property_type,
             ctx.listing,
@@ -99,14 +118,13 @@ CREATE MATERIALIZED VIEW analytics.deals AS
         UNION ALL (
           SELECT
             agent.deal AS id,
-            agent.deal_created_at as created_at,
             agent.deal_type,
             agent.property_type,
             agent.listing,
             agent.brand,
             agent.title,
             'agent' as role,
-            "user"::text as "value"
+            legal_full_name as "value"
           FROM
             agent
         )
@@ -142,7 +160,6 @@ CREATE MATERIALIZED VIEW analytics.deals AS
       ('contract_status')
     $$) t(
       id uuid,
-      created_at timestamptz,
       deal_type deal_type,
       property_type deal_property_type,
       listing uuid,
@@ -173,7 +190,6 @@ CREATE MATERIALIZED VIEW analytics.deals AS
     )
   )
   SELECT ct.id,
-    ct.created_at,
     ct.deal_type,
     ct.property_type,
     ct.listing,
@@ -213,4 +229,23 @@ CREATE MATERIALIZED VIEW analytics.deals AS
   JOIN brands_relations AS br
     ON ct.brand = br.id;
 
-CREATE UNIQUE INDEX analytics_deals_idx ON analytics.deals(id);
+CREATE UNIQUE INDEX analytics_deals_idx ON analytics.deals(id);`,
+  'COMMIT'
+]
+
+
+const run = async () => {
+  const { conn } = await db.conn.promise()
+
+  for(const sql of migrations) {
+    await conn.query(sql)
+  }
+
+  conn.release()
+}
+
+exports.up = cb => {
+  run().then(cb).catch(cb)
+}
+
+exports.down = () => {}

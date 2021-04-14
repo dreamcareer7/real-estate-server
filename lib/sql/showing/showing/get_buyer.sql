@@ -4,6 +4,7 @@ SELECT
   start_date,
   end_date,
   extract(epoch FROM duration) AS duration,
+  same_day_allowed,
   extract(epoch FROM notice_period) AS notice_period,
 
   listing,

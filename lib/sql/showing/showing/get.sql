@@ -13,8 +13,13 @@ SELECT
   end_date,
   aired_at,
   extract(epoch FROM duration) AS duration,
+  same_day_allowed,
   extract(epoch FROM notice_period) AS notice_period,
   approval_type,
+
+  allow_appraisal,
+  allow_inspection,
+  instructions,
 
   feedback_template,
   deal,

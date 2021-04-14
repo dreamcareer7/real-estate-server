@@ -42,6 +42,9 @@ const instantiate = cb => {
     deals: [
       results.deal.patchListing.data.id
     ],
+    listings: [
+      results.deal.patchListing.data.listing
+    ],
     contacts: []
   }
 

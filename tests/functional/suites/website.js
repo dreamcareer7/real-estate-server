@@ -3,9 +3,14 @@ const website_response = require('./expected_objects/website.js')
 
 const hostname = 'localsite'
 
+registerSuite('template', ['create', 'instantiate'])
+
 const create = (cb) => {
   return frisby.create('create a website')
-    .post('/websites', website)
+    .post('/websites', {
+      ...website,
+      template_instance: results.template.instantiate.data.id
+    })
     .after(cb)
     .expectStatus(200)
     .expectJSON({
