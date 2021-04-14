@@ -1,4 +1,7 @@
-CREATE OR REPLACE VIEW brands_relations AS (
+const db = require('../lib/utils/db')
+
+const migrations = [
+  `CREATE OR REPLACE VIEW brands_relations AS (
   SELECT id,
   (
     SELECT
@@ -24,4 +27,22 @@ CREATE OR REPLACE VIEW brands_relations AS (
 
   FROM
     brands
-)
+)`
+]
+
+
+const run = async () => {
+  const { conn } = await db.conn.promise()
+
+  for(const sql of migrations) {
+    await conn.query(sql)
+  }
+
+  conn.release()
+}
+
+exports.up = cb => {
+  run().then(cb).catch(cb)
+}
+
+exports.down = () => {}
