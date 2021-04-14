@@ -14,6 +14,7 @@ export interface Showing extends IModel {
   start_date: string;
   end_date?: string;
   duration: number;
+  same_day_allowed: boolean;
   notice_period?: number;
   approval_type: ApprovalType;
   feedback_template?: UUID;
@@ -32,6 +33,7 @@ export interface ShowingPublic {
   start_date: string;
   end_date?: string;
   duration: number;
+  same_day_allowed: boolean;
   notice_period?: number;
   agent: UUID;
   listing: UUID;
@@ -62,6 +64,7 @@ export interface ShowingInput {
   start_date: string;
   end_date?: string;
   duration: number;
+  same_day_allowed: boolean;
   notice_period?: number;
   aired_at?: string;
   approval_type: ApprovalType;

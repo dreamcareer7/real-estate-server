@@ -1,5 +1,5 @@
 const merge = require('deepmerge')
-const moment = require('moment')
+const moment = require('moment-timezone')
 
 const AppointmentToken = require('../../../lib/models/Showing/appointment/token')
 const ShowingToken = require('../../../lib/models/Showing/showing/token')
@@ -52,7 +52,7 @@ function _create(description, override, cb) {
 }
 
 function create(cb) {
-  return _create('create a showing', {}, function (err, res, json) {
+  return _create('create a showing', { same_day_allowed: true }, function (err, res, json) {
     const setup = frisby.globalSetup()
 
     setup.request.headers['X-RECHAT-BRAND'] = results.brand.create.data.id
@@ -155,7 +155,7 @@ function _makeAppointment(msg) {
         `/showings/public/${showing_token}/appointments?associations[]=showing_appointment.contact&associations[]=showing_appointment.showing`,
         {
           source: 'Website',
-          time: moment().startOf('hour').day(8).hour(9).format(),
+          time: moment().tz('America/Chicago').startOf('hour').day(8).hour(9).format(),
           contact: {
             first_name: 'John',
             last_name: 'Smith',
