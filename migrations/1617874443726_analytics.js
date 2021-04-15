@@ -6,9 +6,9 @@ const migrations = [
 
   'BEGIN',
 
-  'DROP VIEW IF EXISTS analytics.deals',
-  'DROP VIEW IF EXISTS analytics.mini_deals',
   'DROP VIEW IF EXISTS analytics.roles',
+  'DROP VIEW IF EXISTS analytics.mini_deals',
+  'DROP VIEW IF EXISTS analytics.deals',
 
   'DROP VIEW brands_branches',
 
