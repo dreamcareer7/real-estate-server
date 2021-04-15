@@ -7,7 +7,12 @@ SELECT
   same_day_allowed,
   extract(epoch FROM notice_period) AS notice_period,
 
-  listing,
+  (CASE WHEN deal IS NOT NULL THEN (SELECT listing FROM deals WHERE id = deal) ELSE listing END) AS listing,
+  (
+    CASE WHEN deal IS NOT NULL THEN (
+      SELECT gallery FROM deals WHERE id = deal
+    ) ELSE gallery END
+  ) AS gallery,
 
   (
     SELECT
