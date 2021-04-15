@@ -156,7 +156,7 @@ const migrations = [
       id uuid,
       created_at timestamptz,
       deal_type deal_type,
-      property_type uuid,
+      property_type text,
       listing uuid,
       brand uuid,
       title text,
