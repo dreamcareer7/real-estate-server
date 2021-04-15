@@ -1,6 +1,6 @@
 import { ShowingAppointment } from "../appointment/types";
 import { ShowingAvailabilityInput, ShowingAvailabilityPopulated } from "../availability/types";
-import { ShowingRole, ShowingRoleInput } from "../role/types";
+import { ShowingRoleInput, ShowingRolePopulated } from "../role/types";
 
 export type ApprovalType =
   | 'All'
@@ -14,6 +14,7 @@ export interface Showing extends IModel {
   start_date: string;
   end_date?: string;
   duration: number;
+  same_day_allowed: boolean;
   notice_period?: number;
   approval_type: ApprovalType;
   feedback_template?: UUID;
@@ -32,6 +33,7 @@ export interface ShowingPublic {
   start_date: string;
   end_date?: string;
   duration: number;
+  same_day_allowed: boolean;
   notice_period?: number;
   agent: UUID;
   listing: UUID;
@@ -53,7 +55,7 @@ export interface ShowingPopulated extends IModel {
   address?: StdAddr;
   gallery?: UUID;
 
-  roles: ShowingRole[];
+  roles: ShowingRolePopulated[];
   availabilities: ShowingAvailabilityPopulated[];
   appointments: ShowingAppointment[];
 }
@@ -62,6 +64,7 @@ export interface ShowingInput {
   start_date: string;
   end_date?: string;
   duration: number;
+  same_day_allowed: boolean;
   notice_period?: number;
   aired_at?: string;
   approval_type: ApprovalType;

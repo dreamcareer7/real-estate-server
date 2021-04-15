@@ -16,3 +16,4 @@ WHERE
       AND r.brand = ANY(SELECT brand FROM user_brands)
     )
   )
+  AND ($3::boolean OR can_approve)
