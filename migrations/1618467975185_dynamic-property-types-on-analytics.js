@@ -2,17 +2,19 @@ const db = require('../lib/utils/db')
 
 const migrations = [
   'BEGIN',
-  'DROP MATERIALIZED VIEW analytics.deals',
+  'DROP MATERIALIZED VIEW IF EXISTS analytics.deals',
   `CREATE MATERIALIZED VIEW analytics.deals AS
   WITH ct AS (
     SELECT * FROM
     crosstab($$
       WITH real_deals AS (
         SELECT
-          deals.*
+          deals.*,
+          brands_property_types.label as property_type
         FROM
           deals
           JOIN brands ON brands.id = deals.brand
+          JOIN brands_property_types ON deal.property_type = brands_property_types.id
         WHERE
           deals.brand NOT IN(
             SELECT
@@ -29,24 +31,8 @@ const migrations = [
       agent AS (
         SELECT
           deals_roles.deal,
-          (
-            CASE WHEN
-              (deals_roles.legal_prefix      <> '') IS NOT TRUE AND
-              (deals_roles.legal_first_name  <> '') IS NOT TRUE AND
-              (deals_roles.legal_middle_name <> '') IS NOT TRUE AND
-              (deals_roles.legal_last_name   <> '') IS NOT TRUE
-            THEN company_title
-            ELSE
-              ARRAY_TO_STRING(
-                ARRAY[
-                  deals_roles.legal_prefix,
-                  deals_roles.legal_first_name,
-                  deals_roles.legal_middle_name,
-                  deals_roles.legal_last_name
-                ], ' ', NULL
-              )
-            END
-          ) as legal_full_name,
+          real_deals.created_at as deal_created_at,
+          deals_roles.user,
           real_deals.deal_type,
           real_deals.property_type,
           real_deals.listing,
@@ -68,6 +54,7 @@ const migrations = [
       contexts AS (
         SELECT
           ctx.*,
+          real_deals.created_at as deal_created_at,
           real_deals.deal_type,
           real_deals.property_type,
           real_deals.listing,
@@ -105,6 +92,7 @@ const migrations = [
         (
           SELECT
             ctx.deal AS id,
+            ctx.deal_created_at,
             ctx.deal_type,
             ctx.property_type,
             ctx.listing,
@@ -118,13 +106,14 @@ const migrations = [
         UNION ALL (
           SELECT
             agent.deal AS id,
+            agent.deal_created_at as created_at,
             agent.deal_type,
             agent.property_type,
             agent.listing,
             agent.brand,
             agent.title,
             'agent' as role,
-            legal_full_name as "value"
+            "user"::text as "value"
           FROM
             agent
         )
@@ -160,8 +149,9 @@ const migrations = [
       ('contract_status')
     $$) t(
       id uuid,
+      created_at timestamptz,
       deal_type deal_type,
-      property_type deal_property_type,
+      property_type uuid,
       listing uuid,
       brand uuid,
       title text,
@@ -190,6 +180,7 @@ const migrations = [
     )
   )
   SELECT ct.id,
+    ct.created_at,
     ct.deal_type,
     ct.property_type,
     ct.listing,
