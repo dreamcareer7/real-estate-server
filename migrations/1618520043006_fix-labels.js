@@ -16,13 +16,13 @@ const migrations = [
 const rules = [
   {
     template_type: 'PatriotsDay',
-    name: "Patriots' Day",
+    name: 'Patriots\' Day',
     rule: '3rd monday in April'
   },
 
   {
     template_type: 'September11',
-    name: "September 11",
+    name: 'September 11',
     rule: '09-11'
   }
 ]
@@ -30,7 +30,7 @@ const rules = [
 const load = async () => {
   const holidays = new Holidays
 
-  for(holiday of rules) {
+  for(const holiday of rules) {
     const set = holidays.setHoliday(holiday.rule, {
       name: holiday.name,
       type: 'observance'
