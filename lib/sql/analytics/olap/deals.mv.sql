@@ -4,12 +4,17 @@ CREATE MATERIALIZED VIEW analytics.deals AS
     crosstab($$
       WITH real_deals AS (
         SELECT
-          deals.*,
+          deals.id,
+          deals.created_at,
+          deals.deal_type,
+          deals.listing,
+          deals.brand,
+          deals.title,
           brands_property_types.label as property_type
         FROM
           deals
           JOIN brands ON brands.id = deals.brand
-          JOIN brands_property_types ON deal.property_type = brands_property_types.id
+          JOIN brands_property_types ON deals.property_type = brands_property_types.id
         WHERE
           deals.brand NOT IN(
             SELECT
