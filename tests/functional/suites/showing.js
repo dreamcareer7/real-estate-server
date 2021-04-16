@@ -24,6 +24,7 @@ function _create(description, override, cb) {
     allow_appraisal: true,
     allow_inspection: true,
     instructions: 'The key is in the locker',
+    same_day_allowed: true,
     roles: [
       {
         brand: results.brand.create.data.id,
@@ -219,15 +220,27 @@ function upcomingAppointments(cb) {
     })
 }
 
+function buyerAgentGetAppointment(cb) {
+  const appt = results.showing.requestAppointment.data
+  return frisby
+    .create('get an appointment by buyer agent')
+    .get(`/showings/public/appointments/${appt.id}`)
+    .removeHeader('X-RECHAT-BRAND')
+    .removeHeader('Authorization')
+    .after(cb)
+    .expectJSON({
+      data: {
+        id: appt.id,
+        status: appt.status
+      }
+    })
+}
+
 function buyerAgentCancelAppointment(cb) {
   const appt = results.showing.requestAppointment.data
-  const token = AppointmentToken.encodeToken({
-    ...appt,
-    contact: appt.contact.id,
-  })
   return frisby
     .create('cancel an appointment by buyer agent')
-    .post(`/showings/public/appointments/${token}/cancel`, {
+    .post(`/showings/public/appointments/${appt.id}/cancel`, {
       message: 'Sorry something came up',
     })
     .removeHeader('X-RECHAT-BRAND')
@@ -277,10 +290,11 @@ module.exports = {
 
   getShowingPublic,
   requestAppointment: _makeAppointment('request an appointment'),
-  checkAppointmentNotifications,
+  // checkAppointmentNotifications,
   upcomingAppointments,
+  buyerAgentGetAppointment,
   buyerAgentCancelAppointment,
-  checkBuyerCancelNotifications,
+  // checkBuyerCancelNotifications,
 
   makeAnotherAppointment: _makeAppointment('request a new appointment'),
   sellerAgentCancelAppointment,
