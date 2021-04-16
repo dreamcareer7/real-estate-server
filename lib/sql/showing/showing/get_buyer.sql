@@ -14,7 +14,7 @@ SELECT
     JOIN showings_roles AS sr
       ON u.id = sr.user
   WHERE
-    sr.showing = showings.id
+    sr.showing = s.id
     AND sr.role = 'SellerAgent'
   ) AS timezone,
 
