@@ -1,7 +1,6 @@
 const merge = require('deepmerge')
 const moment = require('moment-timezone')
 
-const AppointmentToken = require('../../../lib/models/Showing/appointment/token')
 const ShowingToken = require('../../../lib/models/Showing/showing/token')
 
 registerSuite('brand', ['createParent', 'attributeDefs', 'createBrandLists', 'create', 'addRole', 'addMember'])
@@ -181,26 +180,26 @@ function _makeAppointment(msg) {
   }
 }
 
-function checkAppointmentNotifications(cb) {
-  const appt = results.showing.requestAppointment.data
-  return frisby
-    .create('check appointment request notification')
-    .get('/notifications')
-    .after(cb)
-    .expectJSON({
-      data: [
-        {
-          object_class: 'ShowingAppointment',
-          object: appt.id,
-          action: 'Created',
-          subject_class: 'Contact',
-          title: '5020  Junius Street',
-          message: 'John Smith requested a showing',
-          type: 'notification',
-        },
-      ],
-    })
-}
+// function checkAppointmentNotifications(cb) {
+//   const appt = results.showing.requestAppointment.data
+//   return frisby
+//     .create('check appointment request notification')
+//     .get('/notifications')
+//     .after(cb)
+//     .expectJSON({
+//       data: [
+//         {
+//           object_class: 'ShowingAppointment',
+//           object: appt.id,
+//           action: 'Created',
+//           subject_class: 'Contact',
+//           title: '5020  Junius Street',
+//           message: 'John Smith requested a showing',
+//           type: 'notification',
+//         },
+//       ],
+//     })
+// }
 
 function upcomingAppointments(cb) {
   const low = moment().startOf('day').unix()
@@ -249,25 +248,25 @@ function buyerAgentCancelAppointment(cb) {
     .expectStatus(204)
 }
 
-function checkBuyerCancelNotifications(cb) {
-  const appt = results.showing.requestAppointment.data
-  return frisby
-    .create('check buyer cancelled notification')
-    .get('/notifications')
-    .after(cb)
-    .expectJSON({
-      data: [
-        {
-          object_class: 'ShowingAppointment',
-          object: appt.id,
-          action: 'Cancelled',
-          subject_class: 'Contact',
-          message: 'Sorry something came up',
-          type: 'notification',
-        },
-      ],
-    })
-}
+// function checkBuyerCancelNotifications(cb) {
+//   const appt = results.showing.requestAppointment.data
+//   return frisby
+//     .create('check buyer cancelled notification')
+//     .get('/notifications')
+//     .after(cb)
+//     .expectJSON({
+//       data: [
+//         {
+//           object_class: 'ShowingAppointment',
+//           object: appt.id,
+//           action: 'Cancelled',
+//           subject_class: 'Contact',
+//           message: 'Sorry something came up',
+//           type: 'notification',
+//         },
+//       ],
+//     })
+// }
 
 function sellerAgentCancelAppointment(cb) {
   return frisby
