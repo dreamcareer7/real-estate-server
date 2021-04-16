@@ -4,6 +4,7 @@ SELECT
   extract(epoch FROM updated_at) AS updated_at,
   "time",
   status,
+  showing,
 
   'showing_appointment_public' AS type
 FROM
