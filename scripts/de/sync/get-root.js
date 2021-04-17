@@ -7,7 +7,7 @@ const SET = `WITH bs AS (
 UPDATE brands SET id = $1 WHERE id = $2 RETURNING *`
 
 module.exports = async () => {
-  const id = '96a6ca28-0281-11eb-b7a9-1650ce91b517'
+  const id = 'a1daa4ea-6fb4-4a6f-81a4-5fe9ea7f6e83'
 
   try {
     const brand = await Brand.get(id)
