@@ -1,7 +1,7 @@
 const db = require('../lib/utils/db')
 
 const migrations = [
-  'ALTER TABLE mls_data SET PRIMARY KEY (id)'
+  'ALTER TABLE mls_data ADD PRIMARY KEY (id)'
 ]
 
 
