@@ -7,6 +7,17 @@ SELECT
   same_day_allowed,
   extract(epoch FROM notice_period) AS notice_period,
 
+  (SELECT
+    timezone
+  FROM
+    users AS u
+    JOIN showings_roles AS sr
+      ON u.id = sr.user
+  WHERE
+    sr.showing = s.id
+    AND sr.role = 'SellerAgent'
+  ) AS timezone,
+
   (CASE WHEN deal IS NOT NULL THEN (SELECT listing FROM deals WHERE id = deal) ELSE listing END) AS listing,
   (
     CASE WHEN deal IS NOT NULL THEN (

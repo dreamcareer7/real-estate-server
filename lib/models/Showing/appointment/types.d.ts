@@ -26,6 +26,15 @@ export interface ShowingAppointment {
   approvals?: UUID[];
 }
 
+export interface ShowingAppointmentPublic {
+  id: UUID;
+  created_at: number;
+  updated_at: number;
+  time: string;
+  status: AppointmentStatus;
+  showing: UUID;
+}
+
 export interface ShowingAppointmentPopulated {
   id: UUID;
   created_at: number;
