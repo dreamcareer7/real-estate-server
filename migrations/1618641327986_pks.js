@@ -8,7 +8,7 @@ const migrations = [
   'ALTER TABLE godaddy_domains ADD PRIMARY KEY (id)',
   'ALTER TABLE migrations ADD COLUMN id uuid NOT NULL DEFAULT uuid_generate_v4() PRIMARY KEY',
   'ALTER TABLE mls_jobs ADD PRIMARY KEY (id)',
-  'ALTER TABLE open_house ADD PRIMARY KEY (id)',
+  'ALTER TABLE open_houses ADD PRIMARY KEY (id)',
   'COMMIT'
 ]
 
