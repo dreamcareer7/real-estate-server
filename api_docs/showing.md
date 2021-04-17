@@ -36,6 +36,9 @@ APIs used for the buyer experience.
 ### Request a showing appointment [POST /showings/public/:token/appointments]
 <!-- include(tests/showing/requestAppointment.md) -->
 
-### Cancel a showing appointment (on buyer side) [POST /showings/public/appointments/:token/cancel]
+### Get a showing appointment (on buyer side) [GET /showings/public/appointments/:id]
+<!-- include(tests/showing/buyerAgentGetAppointment.md) -->
+
+### Cancel a showing appointment (on buyer side) [POST /showings/public/appointments/:id/cancel]
 <!-- include(tests/showing/buyerAgentCancelAppointment.md) -->
 

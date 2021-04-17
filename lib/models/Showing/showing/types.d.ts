@@ -39,6 +39,8 @@ export interface ShowingPublic {
   listing: UUID;
   unavailable_times: string[];
   availabilities: UUID[];
+  timezone: string;
+  timezone_offset?: number;
 }
 
 export interface ShowingPopulated extends IModel {

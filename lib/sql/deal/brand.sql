@@ -10,6 +10,17 @@ WHERE
       AND deals_roles.deleted_at          IS NULL
       AND deals_checklists.deactivated_at IS NULL
       AND deals_checklists.terminated_at  IS NULL
+      AND ( -- This part prevents double ended deals from seeing each other
+        (
+          deals.deal_type = 'Selling' AND
+          NOT (deals_roles.role IN('BuyerAgent', 'CoBuyerAgent'))
+        )
+        OR
+        (
+          deals.deal_type = 'Buying'  AND
+          NOT (deals_roles.role IN ('SellerAgent'::deal_role, 'CoSellerAgent'::deal_role))
+        )
+      )
     )
   )
   AND deals.deleted_at       IS NULL

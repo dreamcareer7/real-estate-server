@@ -44,7 +44,7 @@ $$
 
     mls_context AS (
       SELECT
-        NULL::uuid as id,
+        null::uuid as id,
         'deal_context_item' as type,
         NULL::timestamp with time zone as created_at,
         NULL::uuid AS created_by,
