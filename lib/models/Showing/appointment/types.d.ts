@@ -23,7 +23,7 @@ export interface ShowingAppointment {
   status: AppointmentStatus;
   showing: UUID;
   contact: UUID;
-  approvals?: UUID[];
+  approvals: UUID[] | null;
 }
 
 export interface ShowingAppointmentPublic {
@@ -48,12 +48,11 @@ export interface ShowingAppointmentPopulated {
 }
 
 export type AppointmentStatus =
-  | 'Pending'
-  | 'Approved'
-  | 'NeedsRescheduling'
+  | 'Requested'
+  | 'Confirmed'
   | 'Rescheduled'
-  | 'Cancelled'
-  | 'Finished'
+  | 'Canceled'
+  | 'Completed'
   ;
 
 export interface AppointmentFilterOptions {

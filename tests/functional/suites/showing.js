@@ -152,7 +152,7 @@ function _makeAppointment(msg) {
     return frisby
       .create(msg)
       .post(
-        `/showings/public/${showing_token}/appointments?associations[]=showing_appointment.contact&associations[]=showing_appointment.showing`,
+        `/showings/public/${showing_token}/appointments?associations[]=showing_appointment_public.showing`,
         {
           source: 'Website',
           time: moment().tz('America/Chicago').startOf('hour').day(8).hour(9).format(),
@@ -171,9 +171,6 @@ function _makeAppointment(msg) {
         data: {
           showing: {
             id: results.showing.create.data.id,
-          },
-          contact: {
-            type: 'contact',
           },
         },
       })
