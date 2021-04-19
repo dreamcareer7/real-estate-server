@@ -132,7 +132,7 @@ function filterByStatus(cb) {
 }
 
 function getShowingPublic(cb) {
-  const showing_token = ShowingToken.encodeToken(results.showing.create.data)
+  const showing_token = ShowingToken.encodeToken(results.showing.create.data.id)
   return frisby
     .create('get showing public info')
     .get(`/showings/public/${showing_token}`)
@@ -148,7 +148,7 @@ function getShowingPublic(cb) {
 
 function _makeAppointment(msg) {
   return (cb) => {
-    const showing_token = ShowingToken.encodeToken(results.showing.create.data)
+    const showing_token = ShowingToken.encodeToken(results.showing.create.data.id)
     return frisby
       .create(msg)
       .post(
