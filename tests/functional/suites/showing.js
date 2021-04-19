@@ -132,7 +132,7 @@ function filterByStatus(cb) {
 }
 
 function getShowingPublic(cb) {
-  const showing_token = ShowingToken.encodeToken(results.showing.create.data)
+  const showing_token = ShowingToken.encodeToken(results.showing.create.data.id)
   return frisby
     .create('get showing public info')
     .get(`/showings/public/${showing_token}`)
@@ -148,11 +148,11 @@ function getShowingPublic(cb) {
 
 function _makeAppointment(msg) {
   return (cb) => {
-    const showing_token = ShowingToken.encodeToken(results.showing.create.data)
+    const showing_token = ShowingToken.encodeToken(results.showing.create.data.id)
     return frisby
       .create(msg)
       .post(
-        `/showings/public/${showing_token}/appointments?associations[]=showing_appointment.contact&associations[]=showing_appointment.showing`,
+        `/showings/public/${showing_token}/appointments?associations[]=showing_appointment_public.showing`,
         {
           source: 'Website',
           time: moment().tz('America/Chicago').startOf('hour').day(8).hour(9).format(),
@@ -171,9 +171,6 @@ function _makeAppointment(msg) {
         data: {
           showing: {
             id: results.showing.create.data.id,
-          },
-          contact: {
-            type: 'contact',
           },
         },
       })

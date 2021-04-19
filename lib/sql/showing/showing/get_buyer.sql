@@ -54,6 +54,15 @@ SELECT
       showing = s.id
   ) AS agent,
 
+  (
+    SELECT
+      marketing_palette
+    FROM
+      brand_settings
+    WHERE
+      brand = s.brand
+  ) AS palette,
+
   'showing_public' AS "type"
 FROM
   showings AS s
