@@ -78,6 +78,7 @@ VALUES ($1, $2, (
 RETURNING *`
 
 const addUserToOffice = async ({user, office}) => {
+  console.log('Creating brand for', user.email)
   const brand = await Brand.create({
     name: `${user.firstName} ${user.lastName}`,
     brand_type: Brand.PERSONAL

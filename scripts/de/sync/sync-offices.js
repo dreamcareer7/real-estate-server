@@ -12,6 +12,7 @@ const add = async id => {
     name: 'New & Untitled',
   })
 
+  console.log('Creating brand', id)
   const admin = await BrandRole.create({
     brand: brand.id,
     role: 'Admin',
