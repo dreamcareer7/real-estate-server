@@ -12,7 +12,7 @@ const migrations = [
   'BEGIN',
   'ALTER TABLE showings_appointments RENAME status TO old_status',
   `ALTER TABLE showings_appointments
-      ADD COLUMN status showing_appointment_status NOT NULL DEFAULT \'Requested\'::showing_appointment_status`,
+      ADD COLUMN status showing_appointment_status NOT NULL DEFAULT 'Requested'::showing_appointment_status`,
   `UPDATE
     showings_appointments
   SET
