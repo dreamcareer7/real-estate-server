@@ -1,14 +1,14 @@
 const db = require('../lib/utils/db')
 
 const migrations = [
-  // 'ALTER TYPE showing_appointment_status RENAME TO showing_appointment_status_old',
-  // `CREATE TYPE showing_appointment_status AS ENUM (
-  //   'Canceled',
-  //   'Completed',
-  //   'Confirmed',
-  //   'Requested',
-  //   'Rescheduled'
-  // )`,
+  'ALTER TYPE showing_appointment_status RENAME TO showing_appointment_status_old',
+  `CREATE TYPE showing_appointment_status AS ENUM (
+    'Canceled',
+    'Completed',
+    'Confirmed',
+    'Requested',
+    'Rescheduled'
+  )`,
   'BEGIN',
   'ALTER TABLE showings_appointments RENAME status TO old_status',
   `ALTER TABLE showings_appointments
