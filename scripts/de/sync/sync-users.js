@@ -132,7 +132,9 @@ UPDATE users SET
   phone_number = phones.phone_number,
   phone_confirmed = TRUE
 FROM phones
-WHERE users.id = phones.user
+WHERE users.id = phones.user AND (
+  SELECT count(*) FROM users WHERE phone_number = phones.phone_number
+) < 1
 RETURNING *`
 
 const SET_EMAILS = `
@@ -147,7 +149,9 @@ UPDATE users SET
   email = emails.email,
   email_confirmed = TRUE
 FROM emails
-WHERE users.id = emails.user
+WHERE users.id = emails.user AND (
+  SELECT count(*) FROM users WHERE LOWER(email) = LOWER(emails.email)
+) < 1
 RETURNING *`
 
 const setPhone = user => {
@@ -162,7 +166,7 @@ const setPhone = user => {
 
   return {
     ...user,
-    phone_number,
+    phone_number: phone_number?.length > 0 ? phone_number : null,
     user_type: user.isAgent ? 'Agent' : 'Client'
   }
 }
