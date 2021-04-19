@@ -63,6 +63,7 @@
     "deasync": "^0.1.20",
     "debug": "^4.1.1",
     "docker-names": "^1.1.1",
+    "email-addresses": "^4.0.0",
     "emojify.js": "^1.1.0",
     "exceljs": "^4.2.1",
     "express": "^4.17.1",
