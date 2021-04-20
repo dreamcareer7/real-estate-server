@@ -57,6 +57,24 @@ SELECT
       AND $2::text[] @> ARRAY['showing.roles']
   ) AS roles,
 
+  (
+    SELECT
+      count(*)::int
+    FROM
+      showings_appointments AS a
+    WHERE
+      a.status = 'Confirmed'::showing_appointment_status
+      AND a.showing = s.id
+  ) AS confirmed,
+  (
+    SELECT
+      count(*)::int
+    FROM
+      showings_appointments AS a
+    WHERE
+      a.showing = s.id
+  ) AS visits,
+
   'showing' AS "type"
 FROM
   showings AS s

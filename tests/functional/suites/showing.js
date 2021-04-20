@@ -225,6 +225,19 @@ function requestAppointmentAutoConfirm(cb) {
   return _makeAppointment('request an auto-confirm appointment', results.showing.createWithNoApprovalRequired.data.id)(cb)
 }
 
+function checkShowingTotalCount(cb) {
+  const showing_id = results.showing.createWithNoApprovalRequired.data.id
+  return frisby.create('check total appointment count on showing')
+    .get(`/showings/${showing_id}`)
+    .after(cb)
+    .expectJSON({
+      data: {
+        visits: 1,
+        confirmed: 1
+      }
+    })
+}
+
 function upcomingAppointments(cb) {
   const low = moment().startOf('day').unix()
   const high = moment().add(20, 'day').startOf('day').unix()
@@ -316,6 +329,7 @@ module.exports = {
   requestAppointment: _makeAppointment('request an appointment'),
   // checkAppointmentNotifications,
   requestAppointmentAutoConfirm,
+  checkShowingTotalCount,
   upcomingAppointments,
   buyerAgentGetAppointment,
   buyerAgentCancelAppointment,

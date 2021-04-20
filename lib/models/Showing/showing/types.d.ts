@@ -26,6 +26,9 @@ export interface Showing extends IModel {
   roles: UUID[];
   availabilities: UUID[];
   appointments: UUID[];
+
+  confirmed: number;
+  visits: number;
 }
 
 export interface ShowingPublic {
