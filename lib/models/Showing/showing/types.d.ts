@@ -36,9 +36,11 @@ export interface ShowingPublic {
   same_day_allowed: boolean;
   notice_period?: number;
   agent: UUID;
-  listing: UUID;
+  listing?: UUID;
   unavailable_times: string[];
   availabilities: UUID[];
+  address?: StdAddr;
+  gallery?: UUID;
   timezone: string;
   timezone_offset?: number;
 }
