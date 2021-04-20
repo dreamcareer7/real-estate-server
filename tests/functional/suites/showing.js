@@ -8,6 +8,8 @@ registerSuite('brand', ['createParent', 'attributeDefs', 'createBrandLists', 'cr
 registerSuite('user', ['create', 'upgradeToAgentWithEmail', 'markAsNonShadow'])
 registerSuite('listing', ['getListing'])
 
+const showings = {}
+
 function _create(description, override, cb) {
   /** @type {import("../../../lib/models/Showing/showing/types").ShowingInput} */
   const showing = {
@@ -48,7 +50,13 @@ function _create(description, override, cb) {
     .post('/showings?associations[]=showing.roles&associations[]=showing.availabilities', merge(showing, override))
     .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
     .addHeader('x-handle-jobs', 'yes')
-    .after(cb)
+    .after((err, res, json) => {
+      if (res.statusCode == 200) {
+        showings[json.data.id] = json.data
+      }
+
+      return cb(err, res, json)
+    })
 }
 
 function create(cb) {
@@ -85,6 +93,16 @@ function createHippocket(cb) {
     suftype: 'St',
   }
   return _create('create a showing', { address, listing: undefined }, cb)
+    .expectStatus(200)
+    .expectJSON({
+      data: {
+        type: 'showing',
+      },
+    })
+}
+
+function createWithNoApprovalRequired(cb) {
+  return _create('create a showing with no approvals required', { approval_type: 'None' }, cb)
     .expectStatus(200)
     .expectJSON({
       data: {
@@ -150,9 +168,12 @@ function getShowingPublic(cb) {
     })
 }
 
-function _makeAppointment(msg) {
+function _makeAppointment(msg, showing_id) {
   return (cb) => {
-    const showing_token = ShowingToken.encodeToken(results.showing.create.data.id)
+    if (!showing_id) {
+      showing_id = results.showing.create.data.id
+    }
+    const showing_token = ShowingToken.encodeToken(showing_id)
     return frisby
       .create(msg)
       .post(`/showings/public/${showing_token}/appointments?associations[]=showing_appointment_public.showing`, {
@@ -170,8 +191,9 @@ function _makeAppointment(msg) {
       .expectStatus(200)
       .expectJSON({
         data: {
+          status: showings[showing_id].approval_type === 'None' ? 'Confirmed' : 'Requested',
           showing: {
-            id: results.showing.create.data.id,
+            id: showing_id,
           },
         },
       })
@@ -199,12 +221,16 @@ function _makeAppointment(msg) {
 //     })
 // }
 
+function requestAppointmentAutoConfirm(cb) {
+  return _makeAppointment('request an auto-confirm appointment', results.showing.createWithNoApprovalRequired.data.id)(cb)
+}
+
 function upcomingAppointments(cb) {
   const low = moment().startOf('day').unix()
   const high = moment().add(20, 'day').startOf('day').unix()
 
   return frisby
-    .create('View upcoming appointments')
+    .create('view upcoming appointments')
     .get(`/calendar?object_types[]=showing_appointment&low=${low}&high=${high}`)
     .after(cb)
     .expectStatus(200)
@@ -281,6 +307,7 @@ function sellerAgentCancelAppointment(cb) {
 
 module.exports = {
   create,
+  createWithNoApprovalRequired,
   createHippocket,
   getShowing,
   filter,
@@ -288,6 +315,7 @@ module.exports = {
   getShowingPublic,
   requestAppointment: _makeAppointment('request an appointment'),
   // checkAppointmentNotifications,
+  requestAppointmentAutoConfirm,
   upcomingAppointments,
   buyerAgentGetAppointment,
   buyerAgentCancelAppointment,
