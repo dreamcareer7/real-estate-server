@@ -111,6 +111,38 @@ function createWithNoApprovalRequired(cb) {
     })
 }
 
+function createWithTenantRole(cb) {
+  return _create(
+    'create a showing with no approvals required',
+    {
+      roles: [
+        {
+          brand: results.brand.create.data.id,
+          can_approve: true,
+          role: 'SellerAgent',
+          cancel_notification_type: ['email'],
+          confirm_notification_type: ['push', 'email'],
+          first_name: 'John',
+          last_name: 'Doe',
+          email: 'john@doe.org',
+          phone_number: '(888) 452-1505',
+        },
+      ],
+    },
+    cb
+  )
+    .expectStatus(200)
+    .expectJSONTypes({
+      data: {
+        roles: [{
+          user_id: String
+        }, {
+          user_id: String
+        }]
+      }
+    })
+}
+
 function createWithValidationError(cb) {
   return _create(
     'create a showing with invalid data',
@@ -222,19 +254,23 @@ function checkAppointmentNotifications(cb) {
 }
 
 function requestAppointmentAutoConfirm(cb) {
-  return _makeAppointment('request an auto-confirm appointment', results.showing.createWithNoApprovalRequired.data.id)(cb)
+  return _makeAppointment(
+    'request an auto-confirm appointment',
+    results.showing.createWithNoApprovalRequired.data.id
+  )(cb)
 }
 
 function checkShowingTotalCount(cb) {
   const showing_id = results.showing.createWithNoApprovalRequired.data.id
-  return frisby.create('check total appointment count on showing')
+  return frisby
+    .create('check total appointment count on showing')
     .get(`/showings/${showing_id}`)
     .after(cb)
     .expectJSON({
       data: {
         visits: 1,
-        confirmed: 1
-      }
+        confirmed: 1,
+      },
     })
 }
 
@@ -322,6 +358,7 @@ module.exports = {
   create,
   createWithNoApprovalRequired,
   createHippocket,
+  createWithTenantRole,
   getShowing,
   filter,
 
