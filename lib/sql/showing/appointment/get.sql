@@ -10,12 +10,22 @@ SELECT
 
   (
     SELECT
+      array_agg(id) AS ids
+    FROM
+      showings_approvals
+    WHERE
+      appointment = a.id
+      AND showings_approvals.time = a.time
+  ) AS approvals,
+
+  (
+    SELECT
       array_agg(id order by "time") AS ids
     FROM
       showings_approvals
     WHERE
       appointment = a.id
-  ) AS approvals,
+  ) AS approval_history,
 
   'showing_appointment' AS type
 FROM

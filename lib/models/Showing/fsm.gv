@@ -1,0 +1,17 @@
+digraph finite_state_machine {
+	rankdir=LR;
+	size="8,5"
+	node [shape = doublecircle]; Canceled Completed Confirmed;
+	node [shape = circle];
+	Requested -> Confirmed [label = "Seller Approve"];
+	Requested -> Canceled [label = "Seller Reject"];
+	Requested -> Rescheduled [label = "Buyer Reschedule"];
+	Confirmed -> Rescheduled [label = "Buyer Reschedule"];
+	Confirmed -> Completed [label = "Automatically"];
+	Rescheduled -> Confirmed [label = "Seller Approve"];
+	Rescheduled -> Canceled [label = "Seller Reject"];
+	Requested -> Canceled [label = "Buyer Cancel"]; 
+	Confirmed -> Canceled [label = "Buyer Cancel"];
+	Confirmed -> Canceled [label = "Seller Cancel"];
+	Rescheduled -> Canceled [label = "Buyer Cancel"];
+}

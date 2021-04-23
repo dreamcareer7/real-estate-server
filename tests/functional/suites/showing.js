@@ -76,6 +76,23 @@ function create(cb) {
     })
 }
 
+function createHippocket(cb) {
+  /** @type {StdAddrInput} */
+  const address = {
+    city: 'Dallas',
+    building: '1200',
+    name: 'Main',
+    suftype: 'St',
+  }
+  return _create('create a showing', { address, listing: undefined }, cb)
+    .expectStatus(200)
+    .expectJSON({
+      data: {
+        type: 'showing',
+      },
+    })
+}
+
 function createWithValidationError(cb) {
   return _create(
     'create a showing with invalid data',
@@ -118,21 +135,8 @@ function filter(cb) {
     })
 }
 
-function filterByStatus(cb) {
-  return frisby
-    .create('filter showings by status')
-    .post('/showings/filter?associations[]=showing.availabilities&associations[]=showing.roles', {
-      status: 'Approved',
-    })
-    .after(cb)
-    .expectStatus(200)
-    .expectJSON({
-      data: [],
-    })
-}
-
 function getShowingPublic(cb) {
-  const showing_token = ShowingToken.encodeToken(results.showing.create.data)
+  const showing_token = ShowingToken.encodeToken(results.showing.create.data.id)
   return frisby
     .create('get showing public info')
     .get(`/showings/public/${showing_token}`)
@@ -148,21 +152,18 @@ function getShowingPublic(cb) {
 
 function _makeAppointment(msg) {
   return (cb) => {
-    const showing_token = ShowingToken.encodeToken(results.showing.create.data)
+    const showing_token = ShowingToken.encodeToken(results.showing.create.data.id)
     return frisby
       .create(msg)
-      .post(
-        `/showings/public/${showing_token}/appointments?associations[]=showing_appointment.contact&associations[]=showing_appointment.showing`,
-        {
-          source: 'Website',
-          time: moment().tz('America/Chicago').startOf('hour').day(8).hour(9).format(),
-          contact: {
-            first_name: 'John',
-            last_name: 'Smith',
-            email: 'john.smith@gmail.com',
-          },
-        }
-      )
+      .post(`/showings/public/${showing_token}/appointments?associations[]=showing_appointment_public.showing`, {
+        source: 'Website',
+        time: moment().tz('America/Chicago').startOf('hour').day(8).hour(9).format(),
+        contact: {
+          first_name: 'John',
+          last_name: 'Smith',
+          email: 'john.smith@gmail.com',
+        },
+      })
       .removeHeader('X-RECHAT-BRAND')
       .removeHeader('Authorization')
       .after(cb)
@@ -171,9 +172,6 @@ function _makeAppointment(msg) {
         data: {
           showing: {
             id: results.showing.create.data.id,
-          },
-          contact: {
-            type: 'contact',
           },
         },
       })
@@ -230,8 +228,8 @@ function buyerAgentGetAppointment(cb) {
     .expectJSON({
       data: {
         id: appt.id,
-        status: appt.status
-      }
+        status: appt.status,
+      },
     })
 }
 
@@ -283,9 +281,9 @@ function sellerAgentCancelAppointment(cb) {
 
 module.exports = {
   create,
+  createHippocket,
   getShowing,
   filter,
-  filterByStatus,
 
   getShowingPublic,
   requestAppointment: _makeAppointment('request an appointment'),

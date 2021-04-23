@@ -13,9 +13,6 @@ agent can book from available times.
 ### Get a single showings [GET /showings/:id]
 <!-- include(tests/showing/getShowing.md) -->
 
-### Filter by status [POST /showings/filter]
-<!-- include(tests/showing/filterByStatus.md) -->
-
 ### Get a showing [GET /showings/:id]
 <!-- include(tests/showing/create.md) -->
 

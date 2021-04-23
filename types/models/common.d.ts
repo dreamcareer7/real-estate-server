@@ -7,7 +7,7 @@ declare interface IModelAssociation {
     model: string;
 }
 
-declare interface StdAddr {
+declare interface StdAddrInput {
   building?: string;
   house_num?: string;
   predir?: string;
@@ -24,7 +24,9 @@ declare interface StdAddr {
   postalcode?: string;
   box?: string;
   unit?: string;
+}
 
+declare interface StdAddr extends StdAddrInput {
   // Formatted addresses
   line1: string;
   line2: string;
