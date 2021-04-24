@@ -8,8 +8,8 @@ const async = require('async')
 
 async.series([
   cb => db.executeSql('REFRESH MATERIALIZED VIEW CONCURRENTLY deals_brands', [], null, cb),
-  cb => db.executeSql('REFRESH MATERIALIZED VIEW calendar.deals_buyers', [], null, cb),
-  cb => db.executeSql('REFRESH MATERIALIZED VIEW calendar.deals_closed_buyers', [], null, cb),
+  cb => db.executeSql('REFRESH MATERIALIZED VIEW CONCURRENTLY calendar.deals_buyers', [], null, cb),
+  cb => db.executeSql('REFRESH MATERIALIZED VIEW CONCURRENTLY calendar.deals_closed_buyers', [], null, cb),
 ], err => {
   if (err)
     console.error(err)
