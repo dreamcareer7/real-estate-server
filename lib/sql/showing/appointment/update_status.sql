@@ -1,8 +1,7 @@
 UPDATE
   showings_appointments
 SET
-  status = 'Cancelled'::showing_appointment_status,
+  status = $2::showing_appointment_status,
   updated_at = NOW()
 WHERE
   id = $1::uuid
-  AND status != 'Finished'
