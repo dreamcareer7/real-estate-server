@@ -6,6 +6,7 @@ export interface ShowingAppointmentInput {
   source: string;
   time: string;
   contact: UUID;
+  status: AppointmentStatus;
 }
 
 export interface ShowingAppointmentRequestPayload {

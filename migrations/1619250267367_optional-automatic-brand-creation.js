@@ -2,8 +2,7 @@ const db = require('../lib/utils/db')
 
 const migrations = [
   'BEGIN',
-  'ALTER TYPE notification_action ADD VALUE IF NOT EXISTS \'Canceled\'',
-  'ALTER TYPE notification_object_class ADD VALUE IF NOT EXISTS \'ShowingAppointment\'',
+  'ALTER TABLE sso_providers ADD create_brand BOOLEAN NOT NULL DEFAULT TRUE',
   'COMMIT'
 ]
 

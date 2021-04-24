@@ -12,7 +12,7 @@ export interface ShowingRole {
   created_by: number;
   showing: UUID;
   role: TDealRole;
-  user: UUID;
+  user_id: UUID;
   brand: UUID;
   can_approve: boolean;
   confirm_notification_type: NotificationDeliveryType[];
@@ -31,6 +31,7 @@ export interface ShowingRolePopulated {
   created_by: number;
   showing: UUID;
   role: TDealRole;
+  user_id: UUID;
   user: IUser;
   brand: UUID;
   can_approve: boolean;
