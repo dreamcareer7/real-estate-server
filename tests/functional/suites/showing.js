@@ -1,5 +1,6 @@
 const merge = require('deepmerge')
 const moment = require('moment-timezone')
+const Crypto = require('../../../lib/models/Crypto')
 
 const ShowingToken = require('../../../lib/models/Showing/showing/token')
 
@@ -296,7 +297,7 @@ function buyerAgentGetAppointment(cb) {
   const appt = results.showing.requestAppointment.data
   return frisby
     .create('get an appointment by buyer agent')
-    .get(`/showings/public/appointments/${appt.id}`)
+    .get(`/showings/public/appointments/${appt.token}`)
     .removeHeader('X-RECHAT-BRAND')
     .removeHeader('Authorization')
     .after(cb)
@@ -312,7 +313,7 @@ function buyerAgentCancelAppointment(cb) {
   const appt = results.showing.requestAppointment.data
   return frisby
     .create('cancel an appointment by buyer agent')
-    .post(`/showings/public/appointments/${appt.id}/cancel`, {
+    .post(`/showings/public/appointments/${appt.cancel_token}/cancel`, {
       message: 'Sorry something came up',
     })
     .removeHeader('X-RECHAT-BRAND')
@@ -324,7 +325,7 @@ function buyerAgentCancelAppointment(cb) {
 function checkBuyerCancelNotifications(cb) {
   const appt = results.showing.requestAppointment.data
   return frisby
-    .create('check buyer cancelled notification')
+    .create('check buyer canceled notification')
     .get('/notifications')
     .after(cb)
     .expectJSON({
@@ -332,9 +333,9 @@ function checkBuyerCancelNotifications(cb) {
         {
           object_class: 'ShowingAppointment',
           object: appt.id,
-          action: 'Cancelled',
+          action: 'Canceled',
           subject_class: 'Contact',
-          message: 'Sorry something came up',
+          message: 'John Smith canceled the showing: Sorry something came up',
           type: 'notification',
         },
       ],
