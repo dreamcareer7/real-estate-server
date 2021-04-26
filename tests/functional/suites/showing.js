@@ -1,6 +1,5 @@
 const merge = require('deepmerge')
 const moment = require('moment-timezone')
-const Crypto = require('../../../lib/models/Crypto')
 
 const ShowingToken = require('../../../lib/models/Showing/showing/token')
 
@@ -52,7 +51,7 @@ function _create(description, override, cb) {
     .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
     .addHeader('x-handle-jobs', 'yes')
     .after((err, res, json) => {
-      if (res.statusCode == 200) {
+      if (res.statusCode === 200) {
         showings[json.data.id] = json.data
       }
 
