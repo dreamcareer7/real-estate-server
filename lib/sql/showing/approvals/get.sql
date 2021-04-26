@@ -1,5 +1,5 @@
 SELECT
-  id,
+  a.id,
   extract(epoch FROM created_at) AS created_at,
   extract(epoch FROM updated_at) AS updated_at,
   appointment,
