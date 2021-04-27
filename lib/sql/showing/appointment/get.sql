@@ -24,8 +24,26 @@ SELECT
     FROM
       showings_approvals
     WHERE
-      appointment = a.id
+      $3::text[] @> ARRAY['showing_appointment.approval_history']
+      AND appointment = a.id
   ) AS approval_history,
+
+  (
+    SELECT
+      array_agg(n.id) AS ids
+    FROM
+      notifications_users AS nu
+      JOIN notifications AS n
+        ON nu.notification = n.id
+    WHERE
+      $3::text[] @> ARRAY['showing_appointment.notifications']
+      AND $2::uuid IS NOT NULL
+      AND "object" = a.id
+      AND object_class = 'ShowingAppointment'
+      AND n.deleted_at IS NULL
+      AND nu.deleted_at IS NULL
+      AND nu.user = $2::uuid
+  ) AS notifications,
 
   'showing_appointment' AS type
 FROM
