@@ -324,7 +324,7 @@ function buyerAgentGetAppointment(cb) {
     .expectJSON({
       data: {
         id: appt.id,
-        status: appt.status,
+        status: 'Confirmed',
       },
     })
 }
