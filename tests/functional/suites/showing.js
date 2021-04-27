@@ -257,6 +257,23 @@ function checkAppointmentNotifications(cb) {
     })
 }
 
+function confirmAppointment(cb) {
+  const appt = results.showing.requestAppointment.data
+  return frisby
+    .create('confirm an appointment')
+    .put(`/showings/${appt.showing.id}/appointments/${appt.id}/approval`, {
+      approved: true,
+      comment: 'You\'re welcome!'
+    })
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      data: {
+        status: 'Confirmed'
+      }
+    })
+}
+
 function requestAppointmentAutoConfirm(cb) {
   return _makeAppointment(
     'request an auto-confirm appointment',
@@ -369,6 +386,7 @@ module.exports = {
   getShowingPublic,
   requestAppointment: _makeAppointment('request an appointment'),
   checkAppointmentNotifications,
+  confirmAppointment,
   requestAppointmentAutoConfirm,
   checkShowingTotalCount,
   upcomingAppointments,
