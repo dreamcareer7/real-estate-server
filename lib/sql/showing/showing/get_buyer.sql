@@ -17,6 +17,7 @@ SELECT
   WHERE
     sr.showing = s.id
     AND sr.role = 'SellerAgent'
+    AND sr.deleted_at IS NULL
   ) AS timezone,
 
   (CASE WHEN deal IS NOT NULL THEN (SELECT listing FROM deals WHERE id = deal) ELSE listing END) AS listing,

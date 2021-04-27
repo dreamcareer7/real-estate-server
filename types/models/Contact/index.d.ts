@@ -215,6 +215,7 @@ declare interface IContactFilterOptions {
 
   parked?: boolean;
   forUpdate?: boolean;
+  skipTotal?: boolean;
 }
 
 declare interface ICSVImporterMappingDef {
