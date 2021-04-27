@@ -6,6 +6,7 @@ SELECT
   extract(epoch FROM duration) AS duration,
   same_day_allowed,
   extract(epoch FROM notice_period) AS notice_period,
+  deal,
 
   (SELECT
     timezone
@@ -16,6 +17,7 @@ SELECT
   WHERE
     sr.showing = s.id
     AND sr.role = 'SellerAgent'
+    AND sr.deleted_at IS NULL
   ) AS timezone,
 
   (CASE WHEN deal IS NOT NULL THEN (SELECT listing FROM deals WHERE id = deal) ELSE listing END) AS listing,

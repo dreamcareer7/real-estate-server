@@ -6,6 +6,7 @@ export interface ShowingAppointmentInput {
   source: string;
   time: string;
   contact: UUID;
+  status: AppointmentStatus;
 }
 
 export interface ShowingAppointmentRequestPayload {
@@ -19,7 +20,7 @@ export interface ShowingAppointment {
   created_at: number;
   updated_at: number;
   source: string;
-  time: string;
+  time: Date;
   status: AppointmentStatus;
   showing: UUID;
   contact: UUID;
@@ -40,7 +41,7 @@ export interface ShowingAppointmentPopulated {
   created_at: number;
   updated_at: number;
   source: string;
-  time: string;
+  time: Date;
   status: AppointmentStatus;
   showing: ShowingPopulated;
   contact: IContact;

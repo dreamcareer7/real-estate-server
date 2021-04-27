@@ -43,7 +43,10 @@ function importCSV(cb) {
 function getContacts(cb) {
   return frisby.create('check if contacts all contacts are imported')
     .get('/contacts?limit=1')
-    .after(cb)
+    .after((err, res, body) => {
+      
+      cb(err, res, body)
+    })
     .expectJSON({
       info: {
         total: 192

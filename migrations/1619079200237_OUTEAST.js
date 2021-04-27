@@ -1,10 +1,7 @@
 const db = require('../lib/utils/db')
 
 const migrations = [
-  'BEGIN',
-  'ALTER TYPE notification_action ADD VALUE IF NOT EXISTS \'Canceled\'',
-  'ALTER TYPE notification_object_class ADD VALUE IF NOT EXISTS \'ShowingAppointment\'',
-  'COMMIT'
+  'ALTER TYPE mls ADD VALUE IF NOT EXISTS \'OUTEAST\'',
 ]
 
 
