@@ -156,13 +156,13 @@ RETURNING *`
 
 const CONFIRM = `
 UPDATE users SET
-  phone_confirmed = (email IS NULL),
-  email_confirmed = (phone_number IS NULL)
+  phone_confirmed = (phone_number IS NULL),
+  email_confirmed = true
 FROM de.users
 WHERE public.users.id = de.users.user`
 
 const setPhone = user => {
-  const { number } = _.find(user.phoneNumbers, { type: 'Mobile' }) || {}
+  const { number } = _.find(user.phoneNumbers, { type: 'Mobile' }) || _.find(user.phoneNumbers, { type: 'Direct' }) || {}
 
   let phone_number
 
@@ -203,9 +203,9 @@ const syncUsers = async users => {
   const data = JSON.stringify(users.map(setPhone).map(setSocials))
 
 
-  await db.executeSql.promise(NULLIFY)
   await db.executeSql.promise(INSERT_USERNAMES, [data])
   await db.executeSql.promise(SAVE_USERS, [data])
+  await db.executeSql.promise(NULLIFY)
   await db.executeSql.promise(SET_PHONES)
   await db.executeSql.promise(SET_EMAILS)
   await db.executeSql.promise(CONFIRM)
