@@ -1,4 +1,3 @@
-const merge = require('deepmerge')
 const moment = require('moment-timezone')
 
 const ShowingToken = require('../../../lib/models/Showing/showing/token')
@@ -9,8 +8,22 @@ registerSuite('user', ['create', 'upgradeToAgentWithEmail', 'markAsNonShadow'])
 registerSuite('listing', ['getListing'])
 
 const showings = {}
+let sellerAgent
 
 function _create(description, override, cb) {
+  sellerAgent = {
+    brand: results.brand.create.data.id,
+    can_approve: true,
+    role: 'SellerAgent',
+    cancel_notification_type: ['email'],
+    confirm_notification_type: ['push', 'email'],
+    first_name: 'John',
+    last_name: 'Doe',
+    email: results.authorize.token.data.email,
+    phone_number: results.authorize.token.data.phone_number,
+    user: results.authorize.token.data.id,
+  }
+
   /** @type {import("../../../lib/models/Showing/showing/types").ShowingInput} */
   const showing = {
     approval_type: 'All',
@@ -26,20 +39,7 @@ function _create(description, override, cb) {
     allow_inspection: true,
     instructions: 'The key is in the locker',
     same_day_allowed: true,
-    roles: [
-      {
-        brand: results.brand.create.data.id,
-        can_approve: true,
-        role: 'SellerAgent',
-        cancel_notification_type: ['email'],
-        confirm_notification_type: ['push', 'email'],
-        first_name: 'John',
-        last_name: 'Doe',
-        email: results.authorize.token.data.email,
-        phone_number: results.authorize.token.data.phone_number,
-        user: results.authorize.token.data.id,
-      },
-    ],
+    roles: [sellerAgent],
     start_date: new Date().toISOString(),
     listing: results.listing.getListing.data.id,
     notice_period: 3 * 3600,
@@ -47,7 +47,7 @@ function _create(description, override, cb) {
 
   return frisby
     .create(description)
-    .post('/showings?associations[]=showing.roles&associations[]=showing.availabilities', merge(showing, override))
+    .post('/showings?associations[]=showing.roles&associations[]=showing.availabilities', { ...showing, ...override })
     .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
     .addHeader('x-handle-jobs', 'yes')
     .after((err, res, json) => {
@@ -113,19 +113,20 @@ function createWithNoApprovalRequired(cb) {
 
 function createWithTenantRole(cb) {
   return _create(
-    'create a showing with no approvals required',
+    'create a showing with a tenant role',
     {
       roles: [
+        sellerAgent,
         {
           brand: results.brand.create.data.id,
           can_approve: true,
-          role: 'SellerAgent',
+          role: 'Tenant',
           cancel_notification_type: ['email'],
           confirm_notification_type: ['push', 'email'],
-          first_name: 'John',
-          last_name: 'Doe',
-          email: 'john@doe.org',
-          phone_number: '(888) 452-1505',
+          first_name: 'James',
+          last_name: 'Maddison',
+          email: 'jamesmaddison@gmail.org',
+          phone_number: '(888) 452-1504',
         },
       ],
     },
@@ -134,12 +135,15 @@ function createWithTenantRole(cb) {
     .expectStatus(200)
     .expectJSONTypes({
       data: {
-        roles: [{
-          user_id: String
-        }, {
-          user_id: String
-        }]
-      }
+        roles: [
+          {
+            user_id: String,
+          },
+          {
+            user_id: String,
+          },
+        ],
+      },
     })
 }
 
@@ -253,6 +257,23 @@ function checkAppointmentNotifications(cb) {
     })
 }
 
+function confirmAppointment(cb) {
+  const appt = results.showing.requestAppointment.data
+  return frisby
+    .create('confirm an appointment')
+    .put(`/showings/${appt.showing.id}/appointments/${appt.id}/approval`, {
+      approved: true,
+      comment: 'You\'re welcome!'
+    })
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      data: {
+        status: 'Confirmed'
+      }
+    })
+}
+
 function requestAppointmentAutoConfirm(cb) {
   return _makeAppointment(
     'request an auto-confirm appointment',
@@ -303,7 +324,7 @@ function buyerAgentGetAppointment(cb) {
     .expectJSON({
       data: {
         id: appt.id,
-        status: appt.status,
+        status: 'Confirmed',
       },
     })
 }
@@ -365,6 +386,7 @@ module.exports = {
   getShowingPublic,
   requestAppointment: _makeAppointment('request an appointment'),
   checkAppointmentNotifications,
+  confirmAppointment,
   requestAppointmentAutoConfirm,
   checkShowingTotalCount,
   upcomingAppointments,

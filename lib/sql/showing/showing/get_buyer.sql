@@ -54,6 +54,7 @@ SELECT
         ON r.user = u.id
     WHERE
       showing = s.id
+    LIMIT 1
   ) AS agent,
 
   (
