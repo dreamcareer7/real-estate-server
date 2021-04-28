@@ -43,6 +43,7 @@ SELECT
       AND n.deleted_at IS NULL
       AND nu.deleted_at IS NULL
       AND nu.user = $2::uuid
+      AND nu.acked_at IS NULL
   ) AS notifications,
 
   'showing_appointment' AS type
