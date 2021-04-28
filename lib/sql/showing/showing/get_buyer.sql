@@ -63,6 +63,7 @@ SELECT
       brand_settings
     WHERE
       brand = s.brand
+    LIMIT 1
   ) AS palette,
 
   'showing_public' AS "type"
