@@ -365,14 +365,20 @@ function checkBuyerCancelNotifications(cb) {
 function sellerAgentCancelAppointment(cb) {
   return frisby
     .create('cancel an appointment by seller agent')
-    .post(
-      `/showings/${results.showing.create.data.id}/appointments/${results.showing.makeAnotherAppointment.data.id}/cancel`,
+    .put(
+      `/showings/${results.showing.create.data.id}/appointments/${results.showing.makeAnotherAppointment.data.id}/approval`,
       {
-        message: 'Sorry something came up I have to cancel this',
+        approved: false,
+        comment: 'Sorry something came up I have to cancel this',
       }
     )
     .after(cb)
-    .expectStatus(204)
+    .expectStatus(200)
+    .expectJSON({
+      data: {
+        status: 'Canceled'
+      }
+    })
 }
 
 module.exports = {
