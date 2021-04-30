@@ -240,20 +240,22 @@ function checkAppointmentNotifications(cb) {
   const appt = results.showing.requestAppointment.data
   return frisby
     .create('check appointment request notification')
-    .get('/notifications')
+    .get(`/showings/${appt.showing.id}/appointments/${appt.id}/?associations[]=showing_appointment.notifications`)
     .after(cb)
     .expectJSON({
-      data: [
-        {
-          object_class: 'ShowingAppointment',
-          object: appt.id,
-          action: 'Created',
-          subject_class: 'Contact',
-          title: '5020  Junius Street',
-          message: 'John Smith requested a showing',
-          type: 'notification',
-        },
-      ],
+      data: {
+        notifications: [
+          {
+            object_class: 'ShowingAppointment',
+            object: appt.id,
+            action: 'Created',
+            subject_class: 'Contact',
+            title: '5020  Junius Street',
+            message: 'John Smith requested a showing',
+            type: 'showing_appointment_notification',
+          },
+        ],
+      }
     })
 }
 

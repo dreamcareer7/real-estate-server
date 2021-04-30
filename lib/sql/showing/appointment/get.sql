@@ -30,20 +30,16 @@ SELECT
 
   (
     SELECT
-      array_agg(n.id) AS ids
+      array_agg(nn.id ORDER BY created_at DESC) AS ids
     FROM
-      notifications_users AS nu
-      JOIN notifications AS n
-        ON nu.notification = n.id
+      new_notifications AS nn
     WHERE
       $3::text[] @> ARRAY['showing_appointment.notifications']
       AND $2::uuid IS NOT NULL
       AND "object" = a.id
       AND object_class = 'ShowingAppointment'
-      AND n.deleted_at IS NULL
-      AND nu.deleted_at IS NULL
-      AND nu.user = $2::uuid
-      AND nu.acked_at IS NULL
+      AND nn.deleted_at IS NULL
+      AND nn.user = $2::uuid
   ) AS notifications,
 
   'showing_appointment' AS type

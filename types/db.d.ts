@@ -632,6 +632,7 @@ declare type TDbSqlAddress =
   | 'showing/availability/get'
   | 'showing/availability/insert'
   | 'showing/availability/table'
+  | 'showing/notification/get'
   | 'showing/role/delete'
   | 'showing/role/find_by_user'
   | 'showing/role/get'
