@@ -8,6 +8,7 @@ SELECT
   created_by,
   updated_by,
 
+  title,
   brand,
   start_date,
   end_date,

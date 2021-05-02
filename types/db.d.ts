@@ -646,6 +646,7 @@ declare type TDbSqlAddress =
   | 'showing/showing/insert'
   | 'showing/showing/table'
   | 'showing/showing/update'
+  | 'showing/showing/update_title'
   | 'stripe/charge/get'
   | 'stripe/charge/save'
   | 'stripe/customer/delete'

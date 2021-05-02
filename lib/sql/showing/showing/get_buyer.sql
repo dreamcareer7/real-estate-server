@@ -1,6 +1,7 @@
 SELECT
   s.id,
 
+  title,
   start_date,
   end_date,
   extract(epoch FROM duration) AS duration,
