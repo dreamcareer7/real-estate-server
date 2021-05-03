@@ -14,6 +14,7 @@ WITH to_delete AS (
     WHERE
       google_messages.deleted_at IS NULL
       AND google_credentials.deleted_at IS NULL
+      AND google_credentials.id = $2::uuid
   ) EXCEPT (
     SELECT
       thread_key
@@ -24,6 +25,7 @@ WITH to_delete AS (
     WHERE
       microsoft_messages.deleted_at IS NULL
       AND microsoft_credentials.deleted_at IS NULL
+      AND microsoft_credentials.id = $3::uuid
   )
 )
 UPDATE
