@@ -4,8 +4,7 @@ const room = require('./mls/room.js')
 const unit = require('./mls/unit.js')
 const photo = require('./mls/photo.js')
 
-registerSuite('user', ['upgradeToAgentWithEmail'])
-// registerSuite('room', ['create'])
+registerSuite('room', ['create'])
 
 const saveAlert = cb => {
   const criteria = {
@@ -26,9 +25,6 @@ const saveAlert = cb => {
 }
 
 const addListing = (cb) => {
-  const agent = results.user.upgradeToAgentWithEmail.data.agent
-  listing.listing.list_agent_mui = agent.matrix_unique_id
-
   return frisby.create('add a listing')
     .post('/jobs', {
       name: 'mls_listing',
