@@ -2,39 +2,39 @@ apps:
   - script   : ./scripts/workers/index.js
     name     : 'workers'
     kill_timeout : 15000
-  - script   : ./scripts/workers/pollers/brand_template_thumbnails.js
-    name     : 'thumbnails'
-    kill_timeout : 15000
-  - script   : ./scripts/workers/pollers/calendar_notifications.js
-    name     : 'calendar_notifications'
-    kill_timeout : 15000
-  - script   : ./scripts/workers/pollers/crm_task_notifications.js
-    name     : 'crm_task_notifications'
-    kill_timeout : 15000
-  - script   : ./scripts/workers/pollers/dailies.js
-    name     : 'dailies'
-    kill_timeout : 15000
-  - script   : ./scripts/workers/pollers/triggers.js
-    name     : 'triggers'
-    kill_timeout : 15000
-  - script   : ./scripts/workers/pollers/email_campaign_stats.js
-    name     : 'email_campaign_stats'
-    kill_timeout : 15000
-  - script   : ./scripts/workers/pollers/email_campaigns.js
-    name     : 'email_campaigns'
-    kill_timeout : 15000
-  - script   : ./scripts/workers/pollers/google.js
-    name     : 'google'
-    kill_timeout : 15000
-  - script   : ./scripts/workers/pollers/microsoft.js
-    name     : 'microsoft'
-    kill_timeout : 15000
-  - script   : ./scripts/workers/pollers/notifications.js
-    name     : 'notifications'
-    kill_timeout : 15000
-  - script   : ./scripts/workers/pollers/deal_notifications.js
-    name     : 'deal_notifications'
-    kill_timeout : 15000
-  - script   : ./scripts/workers/pollers/email_events_notifications.js
-    name     : 'email_events_notifications'
-    kill_timeout : 15000
+  # - script   : ./scripts/workers/pollers/brand_template_thumbnails.js
+  #   name     : 'thumbnails'
+  #   kill_timeout : 15000
+  # - script   : ./scripts/workers/pollers/calendar_notifications.js
+  #   name     : 'calendar_notifications'
+  #   kill_timeout : 15000
+  # - script   : ./scripts/workers/pollers/crm_task_notifications.js
+  #   name     : 'crm_task_notifications'
+  #   kill_timeout : 15000
+  # - script   : ./scripts/workers/pollers/dailies.js
+  #   name     : 'dailies'
+  #   kill_timeout : 15000
+  # - script   : ./scripts/workers/pollers/triggers.js
+  #   name     : 'triggers'
+  #   kill_timeout : 15000
+  # - script   : ./scripts/workers/pollers/email_campaign_stats.js
+  #   name     : 'email_campaign_stats'
+  #   kill_timeout : 15000
+  # - script   : ./scripts/workers/pollers/email_campaigns.js
+  #   name     : 'email_campaigns'
+  #   kill_timeout : 15000
+  # - script   : ./scripts/workers/pollers/google.js
+  #   name     : 'google'
+  #   kill_timeout : 15000
+  # - script   : ./scripts/workers/pollers/microsoft.js
+  #   name     : 'microsoft'
+  #   kill_timeout : 15000
+  # - script   : ./scripts/workers/pollers/notifications.js
+  #   name     : 'notifications'
+  #   kill_timeout : 15000
+  # - script   : ./scripts/workers/pollers/deal_notifications.js
+  #   name     : 'deal_notifications'
+  #   kill_timeout : 15000
+  # - script   : ./scripts/workers/pollers/email_events_notifications.js
+  #   name     : 'email_events_notifications'
+  #   kill_timeout : 15000
