@@ -30,7 +30,7 @@ const migrations = [
           'opened' events, N being somewhere between 1 and number of images in that email.
   
           That means when someone opens an email once, but that email has 5 images, we'll show
-          `5 opened`. This is obviously wrong.
+          \`5 opened\`. This is obviously wrong.
   
           So, the following code, tries to group the opened events.
           It does so by `5 minute` range of time and user's client OS.
