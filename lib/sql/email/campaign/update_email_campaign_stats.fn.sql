@@ -18,52 +18,48 @@ $$
       count(*) filter(WHERE events.event = 'clicked')      as clicked,
       count(*) filter(WHERE events.event = 'unsubscribed') as unsubscribed,
       count(*) filter(WHERE events.event = 'complained')   as complained,
-      count(*) filter(WHERE events.event = 'stored')       as stored
+      count(*) filter(WHERE events.event = 'stored')       as stored,
+
+      /*
+        Mailgun's Opened events happen for each image existing in an email.
+        That means when an email with several images is opened, we will receive N
+        'opened' events, N being somewhere between 1 and number of images in that email.
+
+        That means when someone opens an email once, but that email has 5 images, we'll show
+        `5 opened`. This is obviously wrong.
+
+        So, the following code, tries to group the opened events.
+        It does so by `5 minute` range of time and user's client OS.
+
+        Another bug this prevents is this: Some clients (Like Rechat's own email viewer)
+        have rerendering issues. That means they rerender the contents of emails more than once.
+        This type of error is quite common on react-based code.
+
+        When that happens, we'll capcure N opened events, N being number of rerenders rather than opens.
+
+        So as you can see, the number of 'opened' events we receive is quite unreliable. Grouping
+        them with this logic is not flawless but a massive improvement.
+      */
+      (
+        SELECT
+          count(
+            DISTINCT (
+              ('epoch'::timestamptz + '300 seconds'::INTERVAL * (EXTRACT(epoch FROM (
+                (TIMESTAMP 'epoch' + (object->'timestamp')::int * INTERVAL '1 second')
+              ))::int4 / 300))::text
+              ||
+              '-'
+              ||
+              client_os
+            )
+          ) filter(WHERE events.event = 'opened')
+      ) as opened
+
     FROM events
     GROUP BY recipient
     ORDER BY recipient
   ),
 
-  /*
-    Mailgun's Opened events happen for each image existing in an email.
-    That means when an email with several images is opened, we will receive N
-    'opened' events, N being somewhere between 1 and number of images in that email.
-
-    That means when someone opens an email once, but that email has 5 images, we'll show
-    `5 opened`. This is obviously wrong.
-
-    So, the following code, tries to group the opened events.
-    It does so by `5 minute` range of time and user's client OS.
-
-    Another bug this prevents is this: Some clients (Like Rechat's own email viewer)
-    have rerendering issues. That means they rerender the contents of emails more than once.
-    This type of error is quite common on react-based code.
-
-    When that happens, we'll capcure N opened events, N being number of rerenders rather than opens.
-
-    So as you can see, the number of 'opened' events we receive is quite unreliable. Grouping
-    them with this logic is not flawless but a massive improvement.
-  */
-
-  grouped_opens AS (
-    SELECT
-      recipient,
-      (
-        ('epoch'::timestamptz + '300 seconds'::INTERVAL * (EXTRACT(epoch FROM (
-          (TIMESTAMP 'epoch' + (object->'timestamp')::int * INTERVAL '1 second')
-        ))::int4 / 300))::text
-        ||
-        '-'
-        ||
-        client_os
-      ),
-      count(*)
-    FROM events
-    WHERE event = 'opened'
-    GROUP BY 1,2
-  ),
-
-  /* Update all stats available from recipient_counts. Open events are NOT updated here. */
   update_recipients AS (
     UPDATE email_campaign_emails ece SET
       accepted     = rc.accepted,
@@ -73,28 +69,11 @@ $$
       clicked      = rc.clicked,
       unsubscribed = rc.unsubscribed,
       complained   = rc.complained,
-      stored       = rc.stored
+      stored       = rc.stored,
+      opened       = rc.opened
     FROM recipient_counts rc
     WHERE ece.campaign = $1
     AND LOWER(ece.email_address) = LOWER(rc.recipient)
-  ),
-
-  /* Update open counts using grouped_opens for every recipient */
-  update_recipient_opens AS (
-    WITH recipient_opens AS (
-      SELECT
-        go.recipient,
-        count(go.*) AS opens
-      FROM
-        grouped_opens AS go
-      GROUP BY
-        go.recipient
-    )
-    UPDATE email_campaign_emails ece SET
-      opened = ro.opens
-    FROM recipient_opens ro
-    WHERE ece.campaign = $1
-    AND LOWER(ece.email_address) = LOWER(ro.recipient)
   ),
 
   email_counts AS (
