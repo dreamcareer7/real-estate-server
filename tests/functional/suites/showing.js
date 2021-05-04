@@ -1,7 +1,5 @@
 const moment = require('moment-timezone')
 
-const ShowingToken = require('../../../lib/models/Showing/showing/token')
-
 registerSuite('brand', ['createParent', 'attributeDefs', 'createBrandLists', 'create', 'addRole', 'addMember'])
 
 registerSuite('user', ['create', 'upgradeToAgentWithEmail', 'markAsNonShadow'])
@@ -190,29 +188,28 @@ function filter(cb) {
 }
 
 function getShowingPublic(cb) {
-  const showing_token = ShowingToken.encodeToken(results.showing.create.data.id)
+  const showing_id = results.showing.create.data.human_readable_id
   return frisby
     .create('get showing public info')
-    .get(`/showings/public/${showing_token}`)
+    .get(`/showings/public/${showing_id}`)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
       data: {
-        id: results.showing.create.data.id,
+        id: results.showing.create.data.human_readable_id,
         type: 'showing_public',
       },
     })
 }
 
-function _makeAppointment(msg, showing_id) {
+function _makeAppointment(msg, showing_id, expected_status = 'Requested') {
   return (cb) => {
     if (!showing_id) {
-      showing_id = results.showing.create.data.id
+      showing_id = results.showing.create.data.human_readable_id
     }
-    const showing_token = ShowingToken.encodeToken(showing_id)
     return frisby
       .create(msg)
-      .post(`/showings/public/${showing_token}/appointments?associations[]=showing_appointment_public.showing`, {
+      .post(`/showings/public/${showing_id}/appointments?associations[]=showing_appointment_public.showing`, {
         source: 'Website',
         time: moment().tz('America/Chicago').startOf('hour').day(8).hour(9).format(),
         contact: {
@@ -227,7 +224,7 @@ function _makeAppointment(msg, showing_id) {
       .expectStatus(200)
       .expectJSON({
         data: {
-          status: showings[showing_id].approval_type === 'None' ? 'Confirmed' : 'Requested',
+          status: expected_status,
           showing: {
             id: showing_id,
           },
@@ -240,7 +237,7 @@ function checkAppointmentNotifications(cb) {
   const appt = results.showing.requestAppointment.data
   return frisby
     .create('check appointment request notification')
-    .get(`/showings/${appt.showing.id}/appointments/${appt.id}/?associations[]=showing_appointment.notifications`)
+    .get(`/showings/${results.showing.create.data.id}/appointments/${appt.id}/?associations[]=showing_appointment.notifications`)
     .after(cb)
     .expectJSON({
       data: {
@@ -263,7 +260,7 @@ function confirmAppointment(cb) {
   const appt = results.showing.requestAppointment.data
   return frisby
     .create('confirm an appointment')
-    .put(`/showings/${appt.showing.id}/appointments/${appt.id}/approval`, {
+    .put(`/showings/${results.showing.create.data.id}/appointments/${appt.id}/approval`, {
       approved: true,
       comment: 'You\'re welcome!'
     })
@@ -279,7 +276,8 @@ function confirmAppointment(cb) {
 function requestAppointmentAutoConfirm(cb) {
   return _makeAppointment(
     'request an auto-confirm appointment',
-    results.showing.createWithNoApprovalRequired.data.id
+    results.showing.createWithNoApprovalRequired.data.human_readable_id,
+    'Confirmed'
   )(cb)
 }
 

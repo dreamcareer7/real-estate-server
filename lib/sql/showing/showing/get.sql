@@ -1,5 +1,6 @@
 SELECT
   s.id,
+  s.human_readable_id,
 
   extract(epoch FROM created_at) AS created_at,
   extract(epoch FROM updated_at) AS updated_at,

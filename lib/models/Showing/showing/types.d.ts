@@ -10,6 +10,7 @@ export type ApprovalType =
 
 export interface Showing extends IModel {
   brand: UUID;
+  human_readable_id: number;
   title: string;
   slug: string;
   aired_at?: number;
@@ -34,7 +35,7 @@ export interface Showing extends IModel {
 }
 
 export interface ShowingPublic {
-  id: UUID;
+  id: number;
   title: string;
   slug: string;
   start_date: string;
@@ -54,6 +55,7 @@ export interface ShowingPublic {
 
 export interface ShowingPopulated extends IModel {
   brand: UUID;
+  human_readable_id: number;
   title: string;
   slug: string;
   aired_at?: number;

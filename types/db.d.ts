@@ -643,6 +643,7 @@ declare type TDbSqlAddress =
   | 'showing/showing/delete'
   | 'showing/showing/get'
   | 'showing/showing/get_buyer'
+  | 'showing/showing/get_by_human_readable_id'
   | 'showing/showing/insert'
   | 'showing/showing/table'
   | 'showing/showing/update'
