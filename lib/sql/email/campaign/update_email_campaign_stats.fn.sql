@@ -63,13 +63,13 @@ $$
     GROUP BY 1,2
   ),
 
+  /* Update all stats available from recipient_counts. Open events are NOT updated here. */
   update_recipients AS (
     UPDATE email_campaign_emails ece SET
       accepted     = rc.accepted,
       rejected     = rc.rejected,
       delivered    = rc.delivered,
       failed       = rc.failed,
-      opened       = (SELECT count(*) FROM grouped_opens WHERE LOWER(recipient) = LOWER(ece.email_address)),
       clicked      = rc.clicked,
       unsubscribed = rc.unsubscribed,
       complained   = rc.complained,
@@ -77,6 +77,24 @@ $$
     FROM recipient_counts rc
     WHERE ece.campaign = $1
     AND LOWER(ece.email_address) = LOWER(rc.recipient)
+  ),
+
+  /* Update open counts using grouped_opens for every recipient */
+  update_recipient_opens AS (
+    WITH recipient_opens AS (
+      SELECT
+        go.recipient,
+        count(go.*) AS opens
+      FROM
+        grouped_opens AS go
+      GROUP BY
+        go.recipient
+    )
+    UPDATE email_campaign_emails ece SET
+      opened = ro.opens
+    FROM recipient_opens ro
+    WHERE ece.campaign = $1
+    AND LOWER(ece.email_address) = LOWER(ro.recipient)
   ),
 
   email_counts AS (
