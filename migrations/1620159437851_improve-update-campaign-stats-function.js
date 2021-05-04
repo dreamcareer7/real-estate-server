@@ -4,7 +4,7 @@ const migrations = [
   'BEGIN',
   `CREATE OR REPLACE FUNCTION update_email_campaign_stats(campaign_id uuid)
   RETURNS void AS
-  $
+  $$
     WITH events AS (
       SELECT recipient, event, email, campaign, object, client_os
       FROM emails_events
@@ -27,28 +27,7 @@ const migrations = [
       GROUP BY recipient
       ORDER BY recipient
     ),
-  
-    /*
-      Mailgun's Opened events happen for each image existing in an email.
-      That means when an email with several images is opened, we will receive N
-      'opened' events, N being somewhere between 1 and number of images in that email.
-  
-      That means when someone opens an email once, but that email has 5 images, we'll show
-      5 opened. This is obviously wrong.
-  
-      So, the following code, tries to group the opened events.
-      It does so by 5 minute range of time and user's client OS.
-  
-      Another bug this prevents is this: Some clients (Like Rechat's own email viewer)
-      have rerendering issues. That means they rerender the contents of emails more than once.
-      This type of error is quite common on react-based code.
-  
-      When that happens, we'll capcure N opened events, N being number of rerenders rather than opens.
-  
-      So as you can see, the number of 'opened' events we receive is quite unreliable. Grouping
-      them with this logic is not flawless but a massive improvement.
-    */
-  
+
     grouped_opens AS (
       SELECT
         recipient,
@@ -204,8 +183,8 @@ const migrations = [
       complained   = cc.complained,
       stored       = cc.stored
     FROM campaign_counts cc
-    WHERE email_campaigns.id = $1 RETURNING *`,
-  `$
+    WHERE email_campaigns.id = $1 RETURNING *;
+  $$
   LANGUAGE SQL`,
 
   'COMMIT'
