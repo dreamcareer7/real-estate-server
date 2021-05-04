@@ -1,4 +1,4 @@
-EXPLAIN ANALYZE SELECT
+SELECT
   id,
   "action",
   "object",
