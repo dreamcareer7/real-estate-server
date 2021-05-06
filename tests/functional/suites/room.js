@@ -1,7 +1,7 @@
 const raw = require('./data/room.js')
 const room_response = require('./expected_objects/room.js')
 const info_response = require('./expected_objects/info.js')
-const uuid = require('node-uuid')
+const uuid = require('uuid')
 
 registerSuite('user', ['create'])
 
