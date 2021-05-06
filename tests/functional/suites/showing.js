@@ -329,8 +329,27 @@ function buyerAgentGetAppointment(cb) {
     })
 }
 
+function buyerAgentRescheduleAppointment(cb) {
+  const appt = results.showing.buyerAgentGetAppointment.data
+  return frisby
+    .create('reschedule an appointment by buyer agent')
+    .post(`/showings/public/appointments/${appt.cancel_token}/reschedule`, {
+      message: 'Sorry something came up',
+      time: moment().tz('America/Chicago').startOf('hour').day(8).hour(11).format()
+    })
+    .removeHeader('X-RECHAT-BRAND')
+    .removeHeader('Authorization')
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      data: {
+        // status: 'Rescheduled'
+      }
+    })
+}
+
 function buyerAgentCancelAppointment(cb) {
-  const appt = results.showing.requestAppointment.data
+  const appt = results.showing.buyerAgentRescheduleAppointment.data
   return frisby
     .create('cancel an appointment by buyer agent')
     .post(`/showings/public/appointments/${appt.cancel_token}/cancel`, {
@@ -397,6 +416,7 @@ module.exports = {
   checkShowingTotalCount,
   upcomingAppointments,
   buyerAgentGetAppointment,
+  buyerAgentRescheduleAppointment,
   buyerAgentCancelAppointment,
   checkBuyerCancelNotifications,
 
