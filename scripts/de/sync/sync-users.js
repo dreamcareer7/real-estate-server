@@ -1,6 +1,7 @@
 const _ = require('lodash')
 const pnu = require('google-libphonenumber').PhoneNumberUtil.getInstance()
 const db = require('../../../lib/utils/db')
+const Context = require('../../../lib/models/Context')
 
 const MAP = `
 SELECT
@@ -38,6 +39,23 @@ SELECT
     twitter TEXT,
     offices jsonb
   )`
+
+const ORPHANIZE = `
+  WITH data AS (
+    ${MAP}
+  )
+
+  UPDATE users SET
+    email = uuid_generate_v4() || '@elimman.cm',
+    fake_email = TRUE,
+    phone_number = NULL
+  FROM de.users
+  WHERE de.users.user = public.users.id
+  AND de.users.username NOT IN(
+    SELECT username FROM data
+  )
+  RETURNING *
+`
 
 const INSERT_USERNAMES = `
 WITH data AS (
@@ -202,6 +220,12 @@ const setSocials = user => {
 const syncUsers = async users => {
   const data = JSON.stringify(users.map(setPhone).map(setSocials))
 
+
+  const { rows } = await db.executeSql.promise(ORPHANIZE, [data])
+
+  rows.forEach(r => {
+    Context.log('Removing', r.username)
+  })
 
   await db.executeSql.promise(INSERT_USERNAMES, [data])
   await db.executeSql.promise(SAVE_USERS, [data])
