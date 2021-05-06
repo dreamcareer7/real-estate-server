@@ -1,7 +1,7 @@
 const { expect } = require('chai')
 const fs = require('fs')
 const path = require('path')
-const uuid = require('node-uuid')
+const uuid = require('uuid')
 
 const config = require('../../../lib/config.js')
 const { task, fixed_reminder, relative_reminder, abbasUser } = require('./data/task')

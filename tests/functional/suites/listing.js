@@ -4,7 +4,7 @@ const subdivision_response = require('./expected_objects/subdivision.js')
 const county_response = require('./expected_objects/county.js')
 const area_response = require('./expected_objects/area.js')
 
-const uuid = require('node-uuid')
+const uuid = require('uuid')
 
 const by_mls = (cb) => {
   return frisby.create('search for a listing by mls')
