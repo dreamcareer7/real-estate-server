@@ -1,6 +1,7 @@
 SELECT
-  s.id,
+  s.human_readable_id AS id,
 
+  title,
   start_date,
   end_date,
   extract(epoch FROM duration) AS duration,
@@ -69,7 +70,7 @@ SELECT
   'showing_public' AS "type"
 FROM
   showings AS s
-  JOIN unnest($1::uuid[]) WITH ORDINALITY t(id, ord)
-    ON t.id = s.id
+  JOIN unnest($1::integer[]) WITH ORDINALITY t(id, ord)
+    ON t.id = s.human_readable_id
 ORDER BY
   t.ord
