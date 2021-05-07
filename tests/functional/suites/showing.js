@@ -348,6 +348,31 @@ function buyerAgentRescheduleAppointment(cb) {
     })
 }
 
+function checkBuyerRescheduleNotifications(cb) {
+  const appt = results.showing.requestAppointment.data
+  return frisby
+    .create('check buyer rescheduled notification')
+    .get(`/showings/${results.showing.create.data.id}/appointments/${appt.id}/?associations[]=showing_appointment.notifications`)
+    .after(cb)
+    .expectJSON({
+      data: {
+        notifications: [
+          {
+            object_class: 'ShowingAppointment',
+            object: appt.id,
+            action: 'Rescheduled',
+            subject_class: 'Contact',
+            message: 'John Smith rescheduled the showing for "Sep 30, 16:00": Sorry something came up',
+            type: 'showing_appointment_notification',
+          },
+          {
+            action: 'Created'
+          }
+        ],
+      }
+    })
+}
+
 function buyerAgentCancelAppointment(cb) {
   const appt = results.showing.buyerAgentRescheduleAppointment.data
   return frisby
@@ -417,6 +442,7 @@ module.exports = {
   upcomingAppointments,
   buyerAgentGetAppointment,
   buyerAgentRescheduleAppointment,
+  checkBuyerRescheduleNotifications,
   buyerAgentCancelAppointment,
   checkBuyerCancelNotifications,
 
