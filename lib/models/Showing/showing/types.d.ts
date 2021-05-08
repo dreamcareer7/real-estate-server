@@ -76,6 +76,7 @@ export interface ShowingPopulated extends IModel {
 }
 
 export interface ShowingInput {
+  brand?: UUID;
   start_date: string;
   end_date?: string;
   duration: number;
