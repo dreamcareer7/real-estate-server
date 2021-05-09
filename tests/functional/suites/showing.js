@@ -1,4 +1,5 @@
 const moment = require('moment-timezone')
+const { formatPhoneNumberForDialing } = require('../../../lib/models/ObjectUtil')
 
 registerSuite('brand', ['createParent', 'attributeDefs', 'createBrandLists', 'create', 'addRole', 'addMember'])
 
@@ -7,6 +8,8 @@ registerSuite('listing', ['getListing'])
 
 const showings = {}
 let sellerAgent
+
+const BUYER_PHONE_NUMBER = '(972) 481-1312'
 
 function _create(description, override, cb) {
   sellerAgent = {
@@ -202,6 +205,8 @@ function getShowingPublic(cb) {
     })
 }
 
+const APPOINTMENT_TIME = moment().tz('America/Chicago').startOf('hour').day(8).hour(9)
+
 function _makeAppointment(msg, showing_id, expected_status = 'Requested') {
   return (cb) => {
     if (!showing_id) {
@@ -211,11 +216,12 @@ function _makeAppointment(msg, showing_id, expected_status = 'Requested') {
       .create(msg)
       .post(`/showings/public/${showing_id}/appointments?associations[]=showing_appointment_public.showing`, {
         source: 'Website',
-        time: moment().tz('America/Chicago').startOf('hour').day(8).hour(9).format(),
+        time: APPOINTMENT_TIME.format(),
         contact: {
           first_name: 'John',
           last_name: 'Smith',
           email: 'john.smith@gmail.com',
+          phone_number: BUYER_PHONE_NUMBER
         },
       })
       .removeHeader('X-RECHAT-BRAND')
@@ -256,6 +262,19 @@ function checkAppointmentNotifications(cb) {
     })
 }
 
+function checkAppointmentReceiptSmsForBuyer(cb) {
+  return frisby
+    .create('check appointment receipt text message from buyer inbox')
+    .get(`/sms/inbox/${BUYER_PHONE_NUMBER}`)
+    .after(cb)
+    .expectJSON({
+      data: [{
+        to: formatPhoneNumberForDialing(BUYER_PHONE_NUMBER),
+        body: `Your showing request for 5020  Junius Street at ${APPOINTMENT_TIME.format('MMM D, HH:mm')} has been received.`
+      }]
+    })
+}
+
 function confirmAppointment(cb) {
   const appt = results.showing.requestAppointment.data
   return frisby
@@ -273,12 +292,39 @@ function confirmAppointment(cb) {
     })
 }
 
+function checkAppointmentConfirmationSmsForBuyer(cb) {
+  return frisby
+    .create('check appointment confirmation text message from buyer inbox')
+    .get(`/sms/inbox/${BUYER_PHONE_NUMBER}`)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      data: [{
+        to: formatPhoneNumberForDialing(BUYER_PHONE_NUMBER),
+        body: `Your showing for 5020  Junius Street at ${APPOINTMENT_TIME.format('MMM D, HH:mm')} has been confirmed.`
+      }]
+    })
+}
+
 function requestAppointmentAutoConfirm(cb) {
   return _makeAppointment(
     'request an auto-confirm appointment',
     results.showing.createWithNoApprovalRequired.data.human_readable_id,
     'Confirmed'
   )(cb)
+}
+
+function checkAppointmentAutoConfirmationTextMessagesForBuyer(cb) {
+  return frisby
+    .create('check appointment confirmation text message from buyer inbox')
+    .get(`/sms/inbox/${BUYER_PHONE_NUMBER}`)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      data: [{
+        body: `Your showing request for 5020  Junius Street at ${APPOINTMENT_TIME.format('MMM D, HH:mm')} has been received.`
+      }]
+    })
 }
 
 function checkShowingTotalCount(cb) {
@@ -328,14 +374,14 @@ function buyerAgentGetAppointment(cb) {
       },
     })
 }
-
+const RESCHEDULED_TIME = moment().tz('America/Chicago').startOf('hour').day(8).hour(11)
 function buyerAgentRescheduleAppointment(cb) {
   const appt = results.showing.buyerAgentGetAppointment.data
   return frisby
     .create('reschedule an appointment by buyer agent')
     .post(`/showings/public/appointments/${appt.cancel_token}/reschedule`, {
       message: 'Sorry something came up',
-      time: moment().tz('America/Chicago').startOf('hour').day(8).hour(11).format()
+      time: RESCHEDULED_TIME.format()
     })
     .removeHeader('X-RECHAT-BRAND')
     .removeHeader('Authorization')
@@ -362,7 +408,7 @@ function checkBuyerRescheduleNotifications(cb) {
             object: appt.id,
             action: 'Rescheduled',
             subject_class: 'Contact',
-            message: 'John Smith rescheduled the showing for "Sep 30, 16:00": Sorry something came up',
+            message: `John Smith rescheduled the showing for "${RESCHEDULED_TIME.tz(results.authorize.token.data.timezone).format('MMM D, HH:mm')}": Sorry something came up`,
             type: 'showing_appointment_notification',
           },
           {
@@ -435,9 +481,12 @@ module.exports = {
 
   getShowingPublic,
   requestAppointment: _makeAppointment('request an appointment'),
+  checkAppointmentReceiptSmsForBuyer,
   checkAppointmentNotifications,
   confirmAppointment,
+  checkAppointmentConfirmationSmsForBuyer,
   requestAppointmentAutoConfirm,
+  checkAppointmentAutoConfirmationTextMessagesForBuyer,
   checkShowingTotalCount,
   upcomingAppointments,
   buyerAgentGetAppointment,

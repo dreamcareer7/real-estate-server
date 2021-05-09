@@ -2,6 +2,7 @@ process.env.ORIGINAL_NODE_ENV = process.env.NODE_ENV || 'development'
 process.env.NODE_ENV = 'tests' // So we read the proper config file
 
 require('colors')
+const sortBy = require('lodash/sortBy')
 
 const path = require('path')
 const fs = require('fs')
@@ -21,6 +22,7 @@ const AssertionError = require('assertion-error')
 
 const Context = require('../../lib/models/Context')
 const Notification = require('../../lib/models/Notification')
+const { formatPhoneNumberForDialing } = require('../../lib/models/ObjectUtil.js')
 
 const {handleJob, installJobsRoute} = require('./jobs')
 
@@ -85,6 +87,10 @@ function spawnSuite (suite, cb) {
 
   runner.on('message', (m) => {
     Run.emit('message', suite, m)
+  })
+
+  runner.on('suite error', (m) => {
+    Run.emit('suite error', m.suite)
   })
 
   runner.on('exit', () => {
@@ -222,6 +228,38 @@ app.use(database)
 
 app.post('_/rollback', (req, res) => {
   rollback(req.query.suite)
+  res.end()
+})
+
+app.get('/sms/inbox/:number', (req, res) => {
+  const suite = req.header('x-suite')
+  const number = formatPhoneNumberForDialing(req.params.number)
+  
+  if (!suite) {
+    res.status(500)
+    return res.end()
+  }
+  const TEMP_PATH = path.resolve(__dirname, '../temp')
+  const dir = path.resolve(TEMP_PATH, 'sms', suite, number)
+
+  try {
+    const files = fs.readdirSync(dir)
+    const messages = files.map(f => {
+      return {
+        ...JSON.parse(fs.readFileSync(path.resolve(dir, f), { encoding: 'utf-8' })),
+        timestamp: parseInt(f.replace(/\.json$/, ''))
+      }
+    })
+    for (const f of files) {
+      fs.unlinkSync(path.resolve(dir, f))
+    }
+    res.json({
+      data: sortBy(messages, 'timestamp')
+    })
+  } catch {
+    res.status(404)
+  }
+
   res.end()
 })
 
