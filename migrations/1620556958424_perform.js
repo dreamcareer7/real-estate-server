@@ -1,4 +1,23 @@
-CREATE OR REPLACE FUNCTION get_brand_agents(id uuid) RETURNS TABLE (
+const db = require('../lib/utils/db')
+
+const migrations = [
+  'BEGIN',
+  `CREATE OR REPLACE FUNCTION brand_children(id uuid) RETURNS
+   setof uuid
+AS
+$$
+  WITH RECURSIVE children AS (
+    SELECT id as brand FROM brands WHERE parent = $1 AND deleted_at IS NULL
+    UNION
+    SELECT id as brand FROM brands JOIN children ON brands.parent = children.brand AND deleted_at IS NULL
+  )
+
+  SELECT $1 AS brand UNION SELECT brand FROM children
+$$
+STABLE
+PARALLEL SAFE
+LANGUAGE sql;`,
+  `CREATE OR REPLACE FUNCTION get_brand_agents(id uuid) RETURNS TABLE (
    "user"     uuid,
    agent      uuid,
    mui        bigint,
@@ -32,4 +51,23 @@ $$
 $$
 STABLE
 PARALLEL SAFE
-LANGUAGE sql;
+LANGUAGE sql;`,
+  'COMMIT'
+]
+
+
+const run = async () => {
+  const { conn } = await db.conn.promise()
+
+  for(const sql of migrations) {
+    await conn.query(sql)
+  }
+
+  conn.release()
+}
+
+exports.up = cb => {
+  run().then(cb).catch(cb)
+}
+
+exports.down = () => {}

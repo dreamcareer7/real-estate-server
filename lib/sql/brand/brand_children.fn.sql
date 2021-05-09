@@ -10,4 +10,6 @@ $$
 
   SELECT $1 AS brand UNION SELECT brand FROM children
 $$
+STABLE
+PARALLEL SAFE
 LANGUAGE sql;
