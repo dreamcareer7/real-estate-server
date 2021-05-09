@@ -3,7 +3,7 @@ registerSuite('mls', ['saveAlert', 'addListing'])
 // const notification_response = require('./expected_objects/notification.js')
 // const info_response = require('./expected_objects/info.js')
 const user_response = require('./expected_objects/user.js')
-const uuid = require('node-uuid')
+const uuid = require('uuid')
 
 const getUsersNotification = (cb) => {
   return frisby.create('get all notifications for a user')

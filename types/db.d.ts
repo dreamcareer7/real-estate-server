@@ -714,6 +714,7 @@ declare type TDbSqlAddress =
   | 'user/settings/update'
   | 'user/sso/connect'
   | 'user/sso/get-user'
+  | 'user/sso/provider/get-by-domain'
   | 'user/sso/provider/get-by-identifier'
   | 'user/sso/provider/get-by-user'
   | 'user/sso/provider/get'

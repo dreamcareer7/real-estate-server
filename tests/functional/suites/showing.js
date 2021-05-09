@@ -329,8 +329,52 @@ function buyerAgentGetAppointment(cb) {
     })
 }
 
-function buyerAgentCancelAppointment(cb) {
+function buyerAgentRescheduleAppointment(cb) {
+  const appt = results.showing.buyerAgentGetAppointment.data
+  return frisby
+    .create('reschedule an appointment by buyer agent')
+    .post(`/showings/public/appointments/${appt.cancel_token}/reschedule`, {
+      message: 'Sorry something came up',
+      time: moment().tz('America/Chicago').startOf('hour').day(8).hour(11).format()
+    })
+    .removeHeader('X-RECHAT-BRAND')
+    .removeHeader('Authorization')
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      data: {
+        // status: 'Rescheduled'
+      }
+    })
+}
+
+function checkBuyerRescheduleNotifications(cb) {
   const appt = results.showing.requestAppointment.data
+  return frisby
+    .create('check buyer rescheduled notification')
+    .get(`/showings/${results.showing.create.data.id}/appointments/${appt.id}/?associations[]=showing_appointment.notifications`)
+    .after(cb)
+    .expectJSON({
+      data: {
+        notifications: [
+          {
+            object_class: 'ShowingAppointment',
+            object: appt.id,
+            action: 'Rescheduled',
+            subject_class: 'Contact',
+            message: 'John Smith rescheduled the showing for "Sep 30, 16:00": Sorry something came up',
+            type: 'showing_appointment_notification',
+          },
+          {
+            action: 'Created'
+          }
+        ],
+      }
+    })
+}
+
+function buyerAgentCancelAppointment(cb) {
+  const appt = results.showing.buyerAgentRescheduleAppointment.data
   return frisby
     .create('cancel an appointment by buyer agent')
     .post(`/showings/public/appointments/${appt.cancel_token}/cancel`, {
@@ -397,6 +441,8 @@ module.exports = {
   checkShowingTotalCount,
   upcomingAppointments,
   buyerAgentGetAppointment,
+  buyerAgentRescheduleAppointment,
+  checkBuyerRescheduleNotifications,
   buyerAgentCancelAppointment,
   checkBuyerCancelNotifications,
 
