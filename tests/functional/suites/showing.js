@@ -1,16 +1,37 @@
-const merge = require('deepmerge')
 const moment = require('moment-timezone')
+const { formatPhoneNumberForDialing } = require('../../../lib/models/ObjectUtil')
 
-const ShowingToken = require('../../../lib/models/Showing/showing/token')
-
-registerSuite('brand', ['createParent', 'attributeDefs', 'createBrandLists', 'create', 'addRole', 'addMember'])
+registerSuite('brand', [
+  'createParent',
+  'attributeDefs',
+  'createBrandLists',
+  'create',
+  'addRole',
+  'addMember',
+])
 
 registerSuite('user', ['create', 'upgradeToAgentWithEmail', 'markAsNonShadow'])
 registerSuite('listing', ['getListing'])
 
 const showings = {}
+let sellerAgent
+
+const BUYER_PHONE_NUMBER = '(972) 481-1312'
 
 function _create(description, override, cb) {
+  sellerAgent = {
+    brand: results.brand.create.data.id,
+    can_approve: true,
+    role: 'SellerAgent',
+    cancel_notification_type: ['email'],
+    confirm_notification_type: ['push', 'email'],
+    first_name: 'John',
+    last_name: 'Doe',
+    email: results.authorize.token.data.email,
+    phone_number: results.authorize.token.data.phone_number,
+    user: results.authorize.token.data.id,
+  }
+
   /** @type {import("../../../lib/models/Showing/showing/types").ShowingInput} */
   const showing = {
     approval_type: 'All',
@@ -26,20 +47,7 @@ function _create(description, override, cb) {
     allow_inspection: true,
     instructions: 'The key is in the locker',
     same_day_allowed: true,
-    roles: [
-      {
-        brand: results.brand.create.data.id,
-        can_approve: true,
-        role: 'SellerAgent',
-        cancel_notification_type: ['email'],
-        confirm_notification_type: ['push', 'email'],
-        first_name: 'John',
-        last_name: 'Doe',
-        email: results.authorize.token.data.email,
-        phone_number: results.authorize.token.data.phone_number,
-        user: results.authorize.token.data.id,
-      },
-    ],
+    roles: [sellerAgent],
     start_date: new Date().toISOString(),
     listing: results.listing.getListing.data.id,
     notice_period: 3 * 3600,
@@ -47,7 +55,10 @@ function _create(description, override, cb) {
 
   return frisby
     .create(description)
-    .post('/showings?associations[]=showing.roles&associations[]=showing.availabilities', merge(showing, override))
+    .post('/showings?associations[]=showing.roles&associations[]=showing.availabilities', {
+      ...showing,
+      ...override,
+    })
     .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
     .addHeader('x-handle-jobs', 'yes')
     .after((err, res, json) => {
@@ -113,19 +124,20 @@ function createWithNoApprovalRequired(cb) {
 
 function createWithTenantRole(cb) {
   return _create(
-    'create a showing with no approvals required',
+    'create a showing with a tenant role',
     {
       roles: [
+        sellerAgent,
         {
           brand: results.brand.create.data.id,
           can_approve: true,
-          role: 'SellerAgent',
+          role: 'Tenant',
           cancel_notification_type: ['email'],
           confirm_notification_type: ['push', 'email'],
-          first_name: 'John',
-          last_name: 'Doe',
-          email: 'john@doe.org',
-          phone_number: '(888) 452-1505',
+          first_name: 'James',
+          last_name: 'Maddison',
+          email: 'jamesmaddison@gmail.org',
+          phone_number: '(888) 452-1504',
         },
       ],
     },
@@ -134,12 +146,15 @@ function createWithTenantRole(cb) {
     .expectStatus(200)
     .expectJSONTypes({
       data: {
-        roles: [{
-          user_id: String
-        }, {
-          user_id: String
-        }]
-      }
+        roles: [
+          {
+            user_id: String,
+          },
+          {
+            user_id: String,
+          },
+        ],
+      },
     })
 }
 
@@ -186,44 +201,49 @@ function filter(cb) {
 }
 
 function getShowingPublic(cb) {
-  const showing_token = ShowingToken.encodeToken(results.showing.create.data.id)
+  const showing_id = results.showing.create.data.human_readable_id
   return frisby
     .create('get showing public info')
-    .get(`/showings/public/${showing_token}`)
+    .get(`/showings/public/${showing_id}`)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
       data: {
-        id: results.showing.create.data.id,
+        id: results.showing.create.data.human_readable_id,
         type: 'showing_public',
       },
     })
 }
 
-function _makeAppointment(msg, showing_id) {
+const APPOINTMENT_TIME = moment().tz('America/Chicago').startOf('hour').day(8).hour(9)
+
+function _makeAppointment(msg, showing_id, expected_status = 'Requested') {
   return (cb) => {
     if (!showing_id) {
-      showing_id = results.showing.create.data.id
+      showing_id = results.showing.create.data.human_readable_id
     }
-    const showing_token = ShowingToken.encodeToken(showing_id)
     return frisby
       .create(msg)
-      .post(`/showings/public/${showing_token}/appointments?associations[]=showing_appointment_public.showing`, {
-        source: 'Website',
-        time: moment().tz('America/Chicago').startOf('hour').day(8).hour(9).format(),
-        contact: {
-          first_name: 'John',
-          last_name: 'Smith',
-          email: 'john.smith@gmail.com',
-        },
-      })
+      .post(
+        `/showings/public/${showing_id}/appointments?associations[]=showing_appointment_public.showing`,
+        {
+          source: 'Website',
+          time: APPOINTMENT_TIME.format(),
+          contact: {
+            first_name: 'John',
+            last_name: 'Smith',
+            email: 'john.smith@gmail.com',
+            phone_number: BUYER_PHONE_NUMBER,
+          },
+        }
+      )
       .removeHeader('X-RECHAT-BRAND')
       .removeHeader('Authorization')
       .after(cb)
       .expectStatus(200)
       .expectJSON({
         data: {
-          status: showings[showing_id].approval_type === 'None' ? 'Confirmed' : 'Requested',
+          status: expected_status,
           showing: {
             id: showing_id,
           },
@@ -236,18 +256,80 @@ function checkAppointmentNotifications(cb) {
   const appt = results.showing.requestAppointment.data
   return frisby
     .create('check appointment request notification')
-    .get('/notifications')
+    .get(
+      `/showings/${results.showing.create.data.id}/appointments/${appt.id}/?associations[]=showing_appointment.notifications`
+    )
+    .after(cb)
+    .expectJSON({
+      data: {
+        notifications: [
+          {
+            object_class: 'ShowingAppointment',
+            object: appt.id,
+            action: 'Created',
+            subject_class: 'Contact',
+            title: '5020  Junius Street',
+            message: 'John Smith requested a showing',
+            type: 'showing_appointment_notification',
+          },
+        ],
+      },
+    })
+}
+
+function checkAppointmentReceiptSmsForBuyer(cb) {
+  return frisby
+    .create('check appointment receipt text message from buyer inbox')
+    .get(`/sms/inbox/${BUYER_PHONE_NUMBER}`)
     .after(cb)
     .expectJSON({
       data: [
         {
-          object_class: 'ShowingAppointment',
-          object: appt.id,
-          action: 'Created',
-          subject_class: 'Contact',
-          title: '5020  Junius Street',
-          message: 'John Smith requested a showing',
-          type: 'notification',
+          to: formatPhoneNumberForDialing(BUYER_PHONE_NUMBER),
+          body:
+            `Your showing request for 5020  Junius Street at ${APPOINTMENT_TIME.format(
+              'MMM D, HH:mm'
+            )} has been received.` +
+            '\n\n' +
+            'Cancel via http://mock-branch-url, reschedule via http://mock-branch-url',
+        },
+      ],
+    })
+}
+
+function confirmAppointment(cb) {
+  const appt = results.showing.requestAppointment.data
+  return frisby
+    .create('confirm an appointment')
+    .put(`/showings/${results.showing.create.data.id}/appointments/${appt.id}/approval`, {
+      approved: true,
+      comment: 'You\'re welcome!',
+    })
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      data: {
+        status: 'Confirmed',
+      },
+    })
+}
+
+function checkAppointmentConfirmationSmsForBuyer(cb) {
+  return frisby
+    .create('check appointment confirmation text message from buyer inbox')
+    .get(`/sms/inbox/${BUYER_PHONE_NUMBER}`)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      data: [
+        {
+          to: formatPhoneNumberForDialing(BUYER_PHONE_NUMBER),
+          body:
+            `Your showing for 5020  Junius Street at ${APPOINTMENT_TIME.format(
+              'MMM D, HH:mm'
+            )} has been confirmed.` +
+            '\n\n' +
+            'Cancel via http://mock-branch-url, reschedule via http://mock-branch-url',
         },
       ],
     })
@@ -256,8 +338,29 @@ function checkAppointmentNotifications(cb) {
 function requestAppointmentAutoConfirm(cb) {
   return _makeAppointment(
     'request an auto-confirm appointment',
-    results.showing.createWithNoApprovalRequired.data.id
+    results.showing.createWithNoApprovalRequired.data.human_readable_id,
+    'Confirmed'
   )(cb)
+}
+
+function checkAppointmentAutoConfirmationTextMessagesForBuyer(cb) {
+  return frisby
+    .create('check appointment confirmation text message from buyer inbox')
+    .get(`/sms/inbox/${BUYER_PHONE_NUMBER}`)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      data: [
+        {
+          body:
+            `Your showing request for 5020  Junius Street at ${APPOINTMENT_TIME.format(
+              'MMM D, HH:mm'
+            )} has been received.` +
+            '\n\n' +
+            'Cancel via http://mock-branch-url, reschedule via http://mock-branch-url',
+        },
+      ],
+    })
 }
 
 function checkShowingTotalCount(cb) {
@@ -303,13 +406,61 @@ function buyerAgentGetAppointment(cb) {
     .expectJSON({
       data: {
         id: appt.id,
-        status: appt.status,
+        status: 'Confirmed',
+      },
+    })
+}
+const RESCHEDULED_TIME = moment().tz('America/Chicago').startOf('hour').day(8).hour(11)
+function buyerAgentRescheduleAppointment(cb) {
+  const appt = results.showing.buyerAgentGetAppointment.data
+  return frisby
+    .create('reschedule an appointment by buyer agent')
+    .post(`/showings/public/appointments/${appt.cancel_token}/reschedule`, {
+      message: 'Sorry something came up',
+      time: RESCHEDULED_TIME.format(),
+    })
+    .removeHeader('X-RECHAT-BRAND')
+    .removeHeader('Authorization')
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      data: {
+        // status: 'Rescheduled'
+      },
+    })
+}
+
+function checkBuyerRescheduleNotifications(cb) {
+  const appt = results.showing.requestAppointment.data
+  return frisby
+    .create('check buyer rescheduled notification')
+    .get(
+      `/showings/${results.showing.create.data.id}/appointments/${appt.id}/?associations[]=showing_appointment.notifications`
+    )
+    .after(cb)
+    .expectJSON({
+      data: {
+        notifications: [
+          {
+            object_class: 'ShowingAppointment',
+            object: appt.id,
+            action: 'Rescheduled',
+            subject_class: 'Contact',
+            message: `John Smith rescheduled the showing for "${RESCHEDULED_TIME.tz(
+              results.authorize.token.data.timezone
+            ).format('MMM D, HH:mm')}": Sorry something came up`,
+            type: 'showing_appointment_notification',
+          },
+          {
+            action: 'Created',
+          },
+        ],
       },
     })
 }
 
 function buyerAgentCancelAppointment(cb) {
-  const appt = results.showing.requestAppointment.data
+  const appt = results.showing.buyerAgentRescheduleAppointment.data
   return frisby
     .create('cancel an appointment by buyer agent')
     .post(`/showings/public/appointments/${appt.cancel_token}/cancel`, {
@@ -344,14 +495,20 @@ function checkBuyerCancelNotifications(cb) {
 function sellerAgentCancelAppointment(cb) {
   return frisby
     .create('cancel an appointment by seller agent')
-    .post(
-      `/showings/${results.showing.create.data.id}/appointments/${results.showing.makeAnotherAppointment.data.id}/cancel`,
+    .put(
+      `/showings/${results.showing.create.data.id}/appointments/${results.showing.makeAnotherAppointment.data.id}/approval`,
       {
-        message: 'Sorry something came up I have to cancel this',
+        approved: false,
+        comment: 'Sorry something came up I have to cancel this',
       }
     )
     .after(cb)
-    .expectStatus(204)
+    .expectStatus(200)
+    .expectJSON({
+      data: {
+        status: 'Canceled',
+      },
+    })
 }
 
 module.exports = {
@@ -364,11 +521,17 @@ module.exports = {
 
   getShowingPublic,
   requestAppointment: _makeAppointment('request an appointment'),
+  checkAppointmentReceiptSmsForBuyer,
   checkAppointmentNotifications,
+  confirmAppointment,
+  checkAppointmentConfirmationSmsForBuyer,
   requestAppointmentAutoConfirm,
+  checkAppointmentAutoConfirmationTextMessagesForBuyer,
   checkShowingTotalCount,
   upcomingAppointments,
   buyerAgentGetAppointment,
+  buyerAgentRescheduleAppointment,
+  checkBuyerRescheduleNotifications,
   buyerAgentCancelAppointment,
   checkBuyerCancelNotifications,
 

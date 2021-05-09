@@ -1,4 +1,4 @@
-const uuid = require('node-uuid')
+const uuid = require('uuid')
 const message = require('./data/message.js')
 const message_response = require('./expected_objects/message.js')
 const info_response = require('./expected_objects/info.js')
