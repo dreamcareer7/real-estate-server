@@ -1,0 +1,13 @@
+{% for couple in thumbnails | batch(2) %}
+  <mj-section padding-top="10px" padding-bottom=0>
+    <mj-column width="49.5%">
+      <mj-image border="1px solid #d5d6d8" padding-bottom=0 padding-top="10px" src="{{couple[0].url}}" />
+    </mj-column>
+
+    <mj-column width="49.5%">
+      {% if couple[1] %}
+        <mj-image border="1px solid #d5d6d8" padding-bottom=0 padding-top="10px" src="{{couple[1].url}}" />
+      {% endif %}
+    </mj-column>
+  </mj-section>
+{% endfor %}
