@@ -4,6 +4,7 @@ const room = require('./mls/room.js')
 const unit = require('./mls/unit.js')
 const photo = require('./mls/photo.js')
 
+registerSuite('user', ['upgradeToAgentWithEmail'])
 registerSuite('room', ['create'])
 
 const saveAlert = cb => {
@@ -25,6 +26,9 @@ const saveAlert = cb => {
 }
 
 const addListing = (cb) => {
+  const agent = results.user.upgradeToAgentWithEmail.data.agent
+  listing.listing.list_agent_mui = agent.matrix_unique_id
+
   return frisby.create('add a listing')
     .post('/jobs', {
       name: 'mls_listing',
@@ -145,6 +149,7 @@ const refreshAgents = refresher('Refresh.Agents', 'Refresh Agent Contacts')
 
 module.exports = {
   saveAlert,
+  addPhoto,
   addListing,
   getFeed,
   addOpenHouse,
@@ -152,7 +157,6 @@ module.exports = {
   statusChange,
   addRoom,
   addUnit,
-  addPhoto,
 
   refreshSubdivisions,
   refreshSchools,

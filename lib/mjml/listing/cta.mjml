@@ -1,0 +1,21 @@
+{% if not url %}
+  {% set url = {
+    uri: '/dashboard/marketing/wizard',
+    brand: brand,
+    query: {
+      listingId: listing.id,
+      medium: medium,
+      templateType: type
+    }
+  } %}
+{% endif %}
+
+<mj-button
+  font-family="Lato"
+  font-weight="bold"
+  href="{{url | url}}"
+  width="100%"
+  background-color="#39CCAA"
+>
+  {{ text }}
+</mj-button>
