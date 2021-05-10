@@ -10,4 +10,6 @@ $$
 
   SELECT $1 AS brand UNION SELECT brand FROM parents WHERE brand IS NOT NULL
 $$
+STABLE
+PARALLEL SAFE
 LANGUAGE sql;
