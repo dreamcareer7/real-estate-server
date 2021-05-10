@@ -4,7 +4,7 @@ registerSuite('alert', ['create'])
 
 const recommendation_response = require('./expected_objects/recommendation.js')
 const info_response = require('./expected_objects/info.js')
-const uuid = require('node-uuid')
+const uuid = require('uuid')
 
 const feed = (cb) => {
   return frisby.create('get feed')

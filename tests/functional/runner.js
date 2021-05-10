@@ -35,6 +35,11 @@ const runFrisbies = function (tasks) {
       f.toss()
     }
     catch (ex) {
+      process.send({
+        code: 'suite error',
+        suite: process.argv[2],
+        error: ex
+      })
       console.error(ex)
       throw ex
     }

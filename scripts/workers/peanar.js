@@ -9,6 +9,7 @@ const config = require('../../lib/config')
 require('../../lib/models/Calendar/worker')
 require('../../lib/models/Contact/worker')
 require('../../lib/models/Flow/worker')
+require('../../lib/models/Showing/showing/worker')
 require('../../lib/models/CRM/Task/worker')
 require('../../lib/models/CRM/Touch/worker')
 require('../../lib/models/MLS/workers')
@@ -41,7 +42,7 @@ const queues = [
     concurrency: 5
   },
   {
-    queues: ['calendar', 'touches'],
+    queues: ['calendar', 'touches', 'showings'],
     concurrency: 2
   },
   {

@@ -17,7 +17,8 @@ WITH added AS (
     /* $15 */ gallery,
     /* $16 */ allow_appraisal,
     /* $17 */ allow_inspection,
-    /* $18 */ instructions
+    /* $18 */ instructions,
+    /* $19 */ title
   ) VALUES (
     $2::uuid,
     $2::uuid,
@@ -36,7 +37,8 @@ WITH added AS (
     $15::uuid,
     $16::boolean,
     $17::boolean,
-    $18
+    $18,
+    $19
   )
   RETURNING
     id

@@ -3,7 +3,7 @@ const vcriteria = require('./data/valert_criteria.js')
 const alert_response = require('./expected_objects/alert.js')
 const info = require('./expected_objects/info.js')
 const compact_listing = require('./expected_objects/compact_listing.js')
-const uuid = require('node-uuid')
+const uuid = require('uuid')
 
 registerSuite('room', ['create', 'addUser'])
 const maximum_price = 100000

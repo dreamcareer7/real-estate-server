@@ -22,3 +22,5 @@ jsdoc/docs
 .vscode
 scripts/setup/status.json
 .env
+tests/temp/*
+!tests/temp/.gitkeep
