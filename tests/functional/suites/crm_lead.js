@@ -2,6 +2,8 @@ const fs = require('fs')
 const path = require('path')
 const Crypto = require('../../../lib/models/Crypto')
 const b64 = require('base64url').default
+const mailgunPayload = require('./data/mailgun_payload')
+const config = require('../../../lib/config')
 
 registerSuite('brand', [
   'createParent',
@@ -44,6 +46,24 @@ const dumpLtsLead = cb => {
     .expectStatus(204)
 }
 
+/**
+ * We need this to ensure the user will be notified
+ */
+const patchUserLastSeen = cb => {
+  return frisby.create('patch user last_seen')
+    .post('/jobs', {
+      queue: 'save_last_seen',
+      name: 'save_last_seen',
+      data: {
+        user_id: results.authorize.token.data.id,
+        client_id: config.tests.client_id,
+        time: new Date()
+      }
+    })
+    .after(cb)
+    .expectStatus(200)
+}
+
 const checkContactForLead = cb => {
   return frisby
     .create('check if the lead was added to the contacts')
@@ -72,8 +92,41 @@ const checkNotifications = cb => {
     })
 }
 
+const checkLeadEmailParser = cb => {
+  return frisby
+    .create('check lead email parser')
+    .post('/webhook/contacts/leads/email', {
+      'body-html': mailgunPayload,
+      'recipient': 'test@rechat.com',
+    })
+    .after(cb)
+    .expectStatus(204)
+}
+
+const checkContactCreated = cb => {
+  return frisby
+    .create('check if last contact exists with email capture')
+    .get('/contacts')
+    .after((err, res, json) => {
+      const email = 'scgators7@gmail.com'
+      let exists = false
+      for (const i in json.data) {
+        if (json.data[i].email === email) {
+          exists = true
+          break
+        }
+      }
+      if (!exists) throw `email ${email} must exists due lead email parser body`
+      cb(err, res, json)
+    })
+    .expectStatus(200)
+}
+
 module.exports = {
   dumpLtsLead,
   checkContactForLead,
-  checkNotifications
+  checkNotifications,  
+  patchUserLastSeen,
+  checkLeadEmailParser,
+  checkContactCreated
 }
