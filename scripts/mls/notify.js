@@ -3,8 +3,7 @@
 const { justListed, openHouse, priceImprovement } = require('../../lib/models/Listing/notify-agents')
 const Listing = require('../../lib/models/Listing/get')
 const promisify = require('../../lib/utils/promisify')
-
-require('../connection.js')
+const createContext = require('../workers/create-context')
 
 const send = async () => {
   const listing = await promisify(Listing.get)(process.argv[2])
@@ -17,7 +16,16 @@ const send = async () => {
   await openHouse(listing)
 }
 
-send()
+async function main() {
+  const { commit, run } = await createContext()
+
+  await run(async () => {
+    await send()
+    await commit()
+  })
+}
+
+main()
   .then(() => {
     setTimeout(process.exit, 2000)
   })
