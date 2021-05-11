@@ -185,8 +185,12 @@ const setPhone = user => {
   let phone_number
 
   if (number) {
-    const parsed = pnu.parse(number, 'US')
-    phone_number = pnu.formatNumberForMobileDialing(parsed)
+    try {
+      const parsed = pnu.parse(number, 'US')
+      phone_number = pnu.formatNumberForMobileDialing(parsed)
+    } catch(e) {
+      Context.log('Invalid phone', number, 'for', user.email)
+    }
   }
 
   return {
