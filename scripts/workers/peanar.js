@@ -161,7 +161,7 @@ const queues = [
   },
 
   {
-    queues: ['listing_justlisted', 'listing_openhouse', 'listing_priceimprovement'],
+    queues: ['listing_notifications'],
     concurrency: 20
   }
 ]
