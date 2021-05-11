@@ -6,6 +6,7 @@ SELECT
   "time",
   status,
   showing,
+  showing_id,
   contact,
 
   (
