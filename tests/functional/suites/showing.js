@@ -71,7 +71,7 @@ function _create(description, override, cb) {
 }
 
 function create(cb) {
-  return _create('create a showing', { same_day_allowed: true }, function (err, res, json) {
+  return _create('create a showing', {}, function (err, res, json) {
     const setup = frisby.globalSetup()
 
     setup.request.headers['X-RECHAT-BRAND'] = results.brand.create.data.id

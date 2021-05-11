@@ -92,7 +92,7 @@ const create = (cb) => {
           user: results.authorize.token.data.id
         }
       ],
-      acl: ['Admin', 'Marketing', 'Deals', 'CRM']
+      acl: ['Admin', 'Marketing', 'Deals', 'CRM', 'Showings']
     }
   ]
 
