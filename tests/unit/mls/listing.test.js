@@ -47,9 +47,9 @@ const getCompacts = async () => {
 
 const getByMLSNumber = async () => {
   const id = await save()
-  const listing = await Listing.getByMLSNumber(json.mls_number)
+  const listings = await Listing.getByMLSNumber(json.mls_number)
 
-  expect(listing.id).to.equal(id)
+  expect(listings[0].id).to.equal(id)
 }
 
 const getByMUI = async () => {

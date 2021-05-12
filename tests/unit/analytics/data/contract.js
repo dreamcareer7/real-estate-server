@@ -4,7 +4,7 @@ const DealHelper = require('../../deal/helper')
 const { Listing } = require('../../../../lib/models/Listing')
 
 module.exports = async function(buyerAgent, brand, mls_number) {
-  const listing = await Listing.getByMLSNumber(mls_number)
+  const listings = await Listing.getByMLSNumber(mls_number)
 
   return DealHelper.create(buyerAgent.id, brand.id, {
     is_draft: false,
@@ -40,6 +40,6 @@ module.exports = async function(buyerAgent, brand, mls_number) {
         legal_last_name: buyerAgent.last_name
       }
     ],
-    listing: listing.id
+    listing: listings[0].id
   })
 }
