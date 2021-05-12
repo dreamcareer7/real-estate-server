@@ -48,11 +48,25 @@ SELECT
 
   (
     SELECT
-      u.agent
+      JSON_BUILD_OBJECT(
+        'id', u.agent,
+        'first_name', r.first_name,
+        'last_name', r.last_name,
+        'full_name', r.first_name || ' ' || r.last_name,
+        'email', r.email,
+        'phone_number', r.phone_number,
+        'profile_image_url', u.profile_image_url,
+        'office', o.name,
+        'type', 'showing_agent'
+      )
     FROM
       showings_roles AS r
       JOIN users AS u
         ON r.user = u.id
+      LEFT JOIN agents AS a
+        ON u.agent = a.id
+      LEFT JOIN offices AS o
+        ON (a.office_mui = o.matrix_unique_id AND a.mls = o.mls)
     WHERE
       showing = s.id
     LIMIT 1

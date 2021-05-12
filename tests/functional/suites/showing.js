@@ -210,6 +210,12 @@ function getShowingPublic(cb) {
     .expectJSON({
       data: {
         id: results.showing.create.data.human_readable_id,
+        agent: {
+          first_name: 'John',
+          last_name: 'Doe',
+          full_name: 'John Doe',
+          type: 'showing_agent'
+        },
         type: 'showing_public',
       },
     })
