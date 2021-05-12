@@ -30,4 +30,6 @@ $$
       SELECT brand_children($1)
     )
 $$
+STABLE
+PARALLEL SAFE
 LANGUAGE sql;

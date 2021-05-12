@@ -22,6 +22,7 @@ require('../../../lib/models/Trigger/worker')
 require('../../../lib/models/Stripe')
 require('../../../lib/models/Godaddy/zone')
 require('../../../lib/models/Godaddy/purchase')
+require('../../../lib/models/Listing/notify-agents')
 
 const queues = [
   {
@@ -134,6 +135,11 @@ const queues = [
   },
   {
     queues: ['register_domain', 'create_zone', 'update_nameservers', 'capture_charge'],
+    concurrency: 20
+  },
+
+  {
+    queues: ['listing_notifications'],
     concurrency: 20
   },
 ]

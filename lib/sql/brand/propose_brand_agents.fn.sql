@@ -28,4 +28,6 @@ $$
   FROM get_brand_agents(brand_id) brand_agents
   WHERE enabled IS TRUE
 $$
+STABLE
+PARALLEL SAFE
 LANGUAGE sql;

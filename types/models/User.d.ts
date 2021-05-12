@@ -9,6 +9,7 @@ declare interface IUserBase {
   profile_image_url?: string;
   cover_image_url?: string;
   password?: string;
+  last_seen_at?: number;
 }
 declare interface IUserInput extends IUserBase {
   agent?: UUID;
