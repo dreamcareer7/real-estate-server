@@ -74,7 +74,7 @@ function create(cb) {
     associations: [
       {
         association_type: 'listing',
-        listing: results.listing.by_mls.data.id
+        listing: results.listing.by_mls.data[0].id
       }
     ],
     assignees: [
@@ -91,7 +91,7 @@ function create(cb) {
     assignees: [{
       id: results.task.registerNewUser.data.id
     }],
-    listings: [results.listing.by_mls.data.id]
+    listings: [results.listing.by_mls.data[0].id]
   })
 
   return frisby
@@ -312,7 +312,7 @@ function fetchAssociations(cb) {
       ])
 
       expect(json.data.filter(a => a.association_type === 'listing')).to.have.length(1)
-      expect(json.data.find(a => a.association_type === 'listing').listing.id).to.be.equal(results.listing.by_mls.data.id)
+      expect(json.data.find(a => a.association_type === 'listing').listing.id).to.be.equal(results.listing.by_mls.data[0].id)
 
       cb(undefined, res, json)
     })
