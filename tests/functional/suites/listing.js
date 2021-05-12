@@ -13,11 +13,11 @@ const by_mls = (cb) => {
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
-      data: [listing]
+      data: listing
     })
     .expectJSONTypes({
       code: String,
-      data: [listing_response]
+      data: listing_response
     })
 }
 
