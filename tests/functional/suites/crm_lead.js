@@ -109,14 +109,21 @@ const checkContactCreated = cb => {
     .get('/contacts')
     .after((err, res, json) => {
       const email = 'scgators7@gmail.com'
-      let exists = false
-      for (const i in json.data) {
+      let exists = -1
+      for (let i = 0 ; i < json.data.length; i++) {
         if (json.data[i].email === email) {
-          exists = true
+          exists = i
           break
         }
       }
-      if (!exists) throw `email ${email} must exists due lead email parser body`
+      if (exists < 0) throw `email ${email} must exists due lead email parser body`
+
+      const contact = json.data[exists]
+      if (!contact.email || !contact.last_name || !contact.first_name) 
+        throw `contact hast issue email not well parsed ${JSON.stringify(contact)}`
+      
+      
+
       cb(err, res, json)
     })
     .expectStatus(200)
