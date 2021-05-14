@@ -514,6 +514,7 @@ declare type TDbSqlAddress =
   | 'microsoft/credential/update_contact_folders_sync_token'
   | 'microsoft/credential/update_contacts_sync_token'
   | 'microsoft/credential/update_profile'
+  | 'microsoft/credential/update_primary_email'
   | 'microsoft/credential/update_rechat_mcalendar'
   | 'microsoft/credential/update_send_email_after'
   | 'microsoft/credential/update_tokens'
