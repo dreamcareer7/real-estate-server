@@ -447,7 +447,7 @@ function buyerAgentRescheduleAppointment(cb) {
     .expectStatus(200)
     .expectJSON({
       data: {
-        // status: 'Rescheduled'
+        status: 'Rescheduled'
       },
     })
 }
