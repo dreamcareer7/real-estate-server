@@ -2,8 +2,8 @@ const HOUR = 3600
 const DAY = 24 * HOUR
 
 module.exports = {
-  name: 'Warm List',
-  description: 'Warm List',
+  name: 'Warm',
+  description: 'Warm',
   steps: [
     {
       title: 'Email',

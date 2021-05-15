@@ -13,7 +13,7 @@ function checkDefaultLists(cb) {
       code: 'OK',
       data: [
         {
-          name: 'Warm List'
+          name: 'Warm'
         },
         {
           name: 'Hot List'

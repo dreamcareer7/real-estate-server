@@ -712,11 +712,11 @@ const updateAttribute = cb => {
 
 function moveContactToWarmListStage(cb) {
   return frisby
-    .create('change contact stage to warm list')
+    .create('change contact stage to Warm')
     .patch('/contacts/' + results.contact.create.data[0].id, {
       attributes: [{
         attribute_type: 'tag',
-        text: 'Warm List'
+        text: 'Warm'
       }]
     })
     .after(cb)
@@ -734,13 +734,13 @@ function patchOwner(cb) {
 }
 
 function contactShouldBeInWarmList(cb) {
-  return frisby.create('check if contact is a member of warm list')
+  return frisby.create('check if contact is a member of Warm')
     .get('/contacts/' + results.contact.create.data[0].id + '?associations[]=contact.lists')
     .after(cb)
     .expectJSON({
       data: {
         lists: [{
-          name: 'Warm List'
+          name: 'Warm'
         }]
       }
     })
@@ -749,14 +749,14 @@ function contactShouldBeInWarmList(cb) {
 function deleteWarmList(cb) {
   const warmListId = results.contact.contactShouldBeInWarmList.data.lists[0].id
 
-  return frisby.create('delete warm list')
+  return frisby.create('delete Warm')
     .delete('/contacts/lists/' + warmListId)
     .after(cb)
     .expectStatus(204)
 }
 
 function confirmNoContactListMembership(cb) {
-  return frisby.create('check if contact does not belong to warm list anymore')
+  return frisby.create('check if contact does not belong to Warm anymore')
     .get('/contacts/' + results.contact.create.data[0].id + '?associations[]=contact.lists')
     .after(cb)
     .expectJSON({

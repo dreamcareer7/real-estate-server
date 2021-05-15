@@ -18,7 +18,7 @@ AS $function$
         t.title AS value
       FROM
         contacts_attribute_defs AS cad
-        CROSS JOIN unnest('{"Warm List", "Hot List", "Past Client"}'::text[]) AS t(title)
+        CROSS JOIN unnest('{"Warm", "Hot", "Past Client"}'::text[]) AS t(title)
       WHERE
         cad.name = 'tag'
     ) AS j
