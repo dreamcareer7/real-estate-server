@@ -388,12 +388,12 @@ async function testBrandLists() {
       ]
     },
     {
-      name: 'Hot List',
+      name: 'Hot',
       touch_freq: 30,
       filters: [
         {
           attribute_def: TAG,
-          value: 'Hot List'
+          value: 'Hot'
         }
       ]
     }
@@ -414,7 +414,7 @@ async function testBrandLists() {
 
   expect(lists).to.have.length(2)
   expect(lists[0].name).to.be.equal('Warm')
-  expect(lists[1].name).to.be.equal('Hot List')
+  expect(lists[1].name).to.be.equal('Hot')
 }
 
 function testBrandListNameValidation(done) {

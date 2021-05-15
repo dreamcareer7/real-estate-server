@@ -110,13 +110,13 @@ async function createList() {
 }
 
 function prepareHotListTag() {
-  return ContactTag.update_touch_frequency(brand.id, user.id, 'Hot List', HOT_LIST_TOUCH_FREQ)
+  return ContactTag.update_touch_frequency(brand.id, user.id, 'Hot', HOT_LIST_TOUCH_FREQ)
 }
 
 async function testTouchDatesAfterGmailSync() {
   const contact_ids = await createContact([{
     first_name: 'Saeed',
-    tag: ['Hot List'],
+    tag: ['Hot'],
     email: ['saeed.vayghan@gmail.com']
   }])
 
@@ -139,7 +139,7 @@ async function testTouchDatesAfterGmailSync() {
 async function testTouchDatesAfterOutlookSync() {
   const contact_ids = await createContact([{
     first_name: 'Saeed',
-    tag: ['Hot List'],
+    tag: ['Hot'],
     email: ['saeed.vayghan@gmail.com']
   }])
 

@@ -37,7 +37,7 @@ async function setup() {
 async function testCheckDefaultTags() {
   const DEFAULT_TAGS = [
     'Warm',
-    'Hot List',
+    'Hot',
     'Past Client',
     'Seller',
     'Agent',

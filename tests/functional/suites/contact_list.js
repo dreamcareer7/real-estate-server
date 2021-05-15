@@ -16,7 +16,7 @@ function checkDefaultLists(cb) {
           name: 'Warm'
         },
         {
-          name: 'Hot List'
+          name: 'Hot'
         },
         {
           name: 'Past Client'

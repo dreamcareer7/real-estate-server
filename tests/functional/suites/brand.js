@@ -55,10 +55,10 @@ const createBrandLists = cb => {
       }],
       touch_freq: 60
     }, {
-      name: 'Hot List',
+      name: 'Hot',
       filters: [{
         attribute_def: defs.tag,
-        value: 'Hot List'
+        value: 'Hot'
       }],
       touch_freq: 30
     }, {
