@@ -167,6 +167,19 @@ async function updateProfile() {
   expect(updatedCredential.display_name).to.be.equal(profile.displayName)
 }
 
+async function updatePrimaryEmail() {
+  const createdCredential = await create()
+
+  const email = 'new-email@outlook.com'
+
+  await MicrosoftCredential.updatePrimaryEmail(createdCredential.id, email)
+
+  const updatedCredential = await MicrosoftCredential.get(createdCredential.id)
+
+  expect(createdCredential.id).to.be.equal(updatedCredential.id)
+  expect(updatedCredential.email).to.be.equal(email)
+}
+
 async function updateRechatMicrosoftCalendar() {
   const createdCredential = await create()
 
@@ -247,6 +260,7 @@ describe('Microsoft', () => {
     it('should handle returned exception from disable/enable microsoft-credential', disconnectFailed)
     it('should revoke a microsoft-credential', revoke)
     it('should update microsoft-credential\'s profile', updateProfile)
+    it('should update microsoft-credential\'s primary email address', updatePrimaryEmail)
 
     it('should update microsoft-credential\'s rechat-microsoft-Calendar', updateRechatMicrosoftCalendar)
     it('should update google-credential\'s rechat-google-Calendar as null', resetRechatMicrosoftCalendar)
