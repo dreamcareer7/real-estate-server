@@ -6,6 +6,7 @@ export interface ILtsLead {
   phone_number: string;
   unit_number: string;
   street_number: string;
+  company: string;
   country: string;
   tag: string;
   owner_id: string;
