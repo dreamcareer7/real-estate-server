@@ -33,7 +33,7 @@ const considerTask = async task => {
   Context.log('Task', task.id, task.title, rows.length)
 
   for(const row of rows) {
-    const added = await Task.create({
+    await Task.create({
       ...task,
       checklist: row.id,
       origin: task.id
@@ -46,7 +46,7 @@ const considerChecklist = async id => {
 
   const { rows } = await db.executeSql.promise('SELECT * FROM brands_checklists_tasks WHERE checklist = $1 AND deleted_at IS NULL', [id])
 
-  for(task of rows)
+  for(const task of rows)
     await considerTask(task)
 }
 
@@ -54,12 +54,12 @@ const considerBrand = async id => {
   Context.log('Brand', id)
 
   const { rows } = await db.executeSql.promise('SELECT * FROM brands_checklists WHERE brand = $1 AND deleted_at IS NULL', [id])
-  for(checklist of rows)
+  for(const checklist of rows)
     await considerChecklist(checklist.id)
 }
 
 const run = async() => {
-  const { commit, run, rollback } = await createContext()
+  const { commit, run } = await createContext()
 
   await run(async () => {
     await considerBrand(process.argv[2])
