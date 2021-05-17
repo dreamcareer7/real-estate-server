@@ -4,6 +4,7 @@ SELECT
   extract(epoch FROM updated_at) AS updated_at,
   "time",
   status,
+  buyer_message,
   (SELECT human_readable_id FROM showings WHERE showings.id = a.showing) AS showing,
 
   'showing_appointment_public' AS type
