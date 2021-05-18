@@ -17,10 +17,11 @@ SELECT brands_checklists.*,
       ARRAY_AGG(context)
     FROM
       brands_contexts_checklists
+      JOIN brands_contexts ON brands_contexts.id = brands_contexts_checklists.context
     WHERE
       checklist = brands_checklists.id
       AND is_required IS TRUE
-      AND deleted_at IS NULL
+      AND brands_contexts.deleted_at IS NULL
   ) as required_contexts,
 
   (
@@ -28,10 +29,11 @@ SELECT brands_checklists.*,
       ARRAY_AGG(context)
     FROM
       brands_contexts_checklists
+      JOIN brands_contexts ON brands_contexts.id = brands_contexts_checklists.context
     WHERE
       checklist = brands_checklists.id
       AND is_required IS FALSE
-      AND deleted_at IS NULL
+      AND brands_contexts.deleted_at IS NULL
   ) as optional_contexts,
 
   (
