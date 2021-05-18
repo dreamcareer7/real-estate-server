@@ -1,8 +1,8 @@
 SELECT
-  id, (COUNT(*) OVER ())::int AS total
+  un.id, (COUNT(*) OVER ())::int AS total
 FROM
   unread_notifications un
-  JOIN showing_appointments AS a
+  JOIN showings_appointments AS a
     ON un.object = a.id
   JOIN showings AS s
     ON a.showing = s.id
@@ -11,5 +11,5 @@ WHERE
   AND object_class = 'ShowingAppointment'
   AND s.deleted_at IS NULL
 ORDER BY
-  created_at
+  un.created_at
 LIMIT $2
