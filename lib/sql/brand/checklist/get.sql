@@ -20,6 +20,7 @@ SELECT brands_checklists.*,
     WHERE
       checklist = brands_checklists.id
       AND is_required IS TRUE
+      AND deleted_at IS NULL
   ) as required_contexts,
 
   (
@@ -30,6 +31,7 @@ SELECT brands_checklists.*,
     WHERE
       checklist = brands_checklists.id
       AND is_required IS FALSE
+      AND deleted_at IS NULL
   ) as optional_contexts,
 
   (
