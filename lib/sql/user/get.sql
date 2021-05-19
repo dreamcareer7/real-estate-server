@@ -22,9 +22,12 @@ SELECT 'user' AS type,
               ON us."user" = bu."user"
             JOIN brands_roles AS br
               ON br.id = bu.role
+            JOIN brands AS b
+              ON br.brand = b.id
           WHERE
             us."user" = users.id
             AND us.brand = br.brand
+            AND b.deleted_at IS NULL
             AND br.deleted_at IS NULL
             AND bu.deleted_at IS NULL
           ORDER BY
