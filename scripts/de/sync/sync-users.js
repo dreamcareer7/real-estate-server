@@ -6,7 +6,8 @@ const Context = require('../../../lib/models/Context')
 const MAP = `
 SELECT
     username,
-    id as mlsid,
+    id,
+    mlsid,
     "firstName" as first_name,
     "lastName" as last_name,
     LOWER(email) as email,
@@ -26,6 +27,7 @@ SELECT
   as input(
     username TEXT,
     id TEXT,
+    mlsid TEXT,
     "firstName" TEXT,
     "lastName" TEXT,
     "email" TEXT,
@@ -99,7 +101,7 @@ saved AS (
     true,
     profile_image_url,
     cover_image_url,
-    'https://elliman.com/' || mlsid,
+    'https://elliman.com/' || id,
     linkedin,
     facebook,
     youtube,
@@ -107,7 +109,7 @@ saved AS (
     twitter,
     user_type,
     (
-      SELECT id FROM agents WHERE mls::text = data.mls AND mlsid = data.mlsid
+      SELECT id FROM agents WHERE mls::text = data.mls AND LOWER(mlsid) = LOWER(data.mlsid)
     )
   FROM de.users
   JOIN data ON de.users.username = data.username
@@ -122,7 +124,8 @@ saved AS (
       facebook = EXCLUDED.facebook,
       youtube = EXCLUDED.youtube,
       instagram = EXCLUDED.instagram,
-      twitter = EXCLUDED.twitter
+      twitter = EXCLUDED.twitter,
+      agent = COALESCE(users.agent, EXCLUDED.agent)
 
   RETURNING id, email
 )
@@ -198,8 +201,11 @@ const setPhone = user => {
     }
   }
 
+  const mlsid = user.id.split('.').pop()
+
   return {
     ...user,
+    mlsid,
     phone_number: phone_number?.length > 0 ? phone_number : null,
     user_type: user.isAgent ? 'Agent' : 'Client'
   }
