@@ -99,6 +99,12 @@ Object.keys(queues).forEach(queue_name => {
 })
 
 queue.on('job failed', (id, err) => {
+  kue.Job.get(id, function(err, job) {
+    if (err) return
+
+    Context.log('Kue job failed', id, err, job)
+  })
+
   Slack.send({
     channel: '7-server-errors',
     text: `Job Error (${id}): \`${err}\``,
