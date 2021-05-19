@@ -16,9 +16,9 @@ INSERT INTO agents
   generational_name,
   matrix_unique_id,
   matrix_modified_dt,
-  mls,
   license_number,
-  designation
+  designation,
+  mls
 )
 VALUES
 (
