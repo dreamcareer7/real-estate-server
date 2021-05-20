@@ -622,6 +622,7 @@ declare type TDbSqlAddress =
   | 'school/search'
   | 'school/search_districts'
   | 'showing/appointment/approve'
+  | 'showing/appointment/clear_notifications'
   | 'showing/appointment/get'
   | 'showing/appointment/get_public'
   | 'showing/appointment/insert'

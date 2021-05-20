@@ -7,7 +7,7 @@ FROM
   JOIN showings AS s
     ON a.showing = s.id
 WHERE
-  "user" = $1::uuid
+  un."user" = $1::uuid
   AND object_class = 'ShowingAppointment'
   AND s.deleted_at IS NULL
 ORDER BY
