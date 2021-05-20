@@ -98,7 +98,21 @@ Object.keys(queues).forEach(queue_name => {
   queue.process(queue_name, definition.parallel, handler)
 })
 
+queue.on('job failed attempt', (id, err) => {
+  kue.Job.get(id, function(err, job) {
+    if (err) return
+
+    Context.log('Kue job attempt failed', id, err, job)
+  })
+})
+
 queue.on('job failed', (id, err) => {
+  kue.Job.get(id, function(err, job) {
+    if (err) return
+
+    Context.log('Kue job failed forever', id, err, job)
+  })
+
   Slack.send({
     channel: '7-server-errors',
     text: `Job Error (${id}): \`${err}\``,
