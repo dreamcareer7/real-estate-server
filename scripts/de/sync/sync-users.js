@@ -182,7 +182,7 @@ RETURNING *`
 
 const CONFIRM = `
 UPDATE users SET
-  phone_confirmed = (phone_number IS NULL),
+  phone_confirmed = (phone_number IS NOT NULL),
   email_confirmed = true
 FROM de.users
 WHERE public.users.id = de.users.user`
