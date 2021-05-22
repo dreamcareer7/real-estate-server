@@ -255,6 +255,7 @@ declare type TDbSqlAddress =
   | 'crm/task/unread'
   | 'crm/task/update'
   | 'crm/task/update_many'
+  | 'crm/touch/increase_touch_times_for_contacts'
   | 'crm/touch/update_touch_times_for_contacts'
   | 'daily/due'
   | 'daily/get'
