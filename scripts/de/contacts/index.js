@@ -40,8 +40,15 @@ SET contact = pairs.contact
 FROM json_populate_recordset(NULL::de.contacts, $1) pairs
 WHERE de.contacts.id = pairs.id`
 
+const timeout = ms => {
+  return new Promise(resolve => {
+    setTimeout(resolve, ms)
+  })
+}
+
 const brand_id = 'aea06fd2-bb66-11eb-8eb7-d5797ff4de7c'
 const user_id = '80a227b2-29a0-11e7-b636-e4a7a08e15d4'
+const ExternalAuthenticationToken = 'YwBc4k2U5P75bdQreeGxqv6P'
 
 const insertContacts = async contacts => {
   const emails = _.chain(contacts).map('object.agentEmail').uniq().filter(Boolean).value()
@@ -82,13 +89,40 @@ const save = async contacts => {
   return { updated, inserted }
 }
 
-const sync = async ({
+const sync = async opts => {
+  const res = await request(opts)
+  const { Data, TotalContacts } = res
+
+  const { inserted, updated } = await save(Data)
+
+  await insertContacts(inserted)
+  await updateContacts(updated)
+
+  return res
+}
+
+const paginate = async({
+  ScrollId
+}) => {
+  const opts = {
+    url: config.url,
+    qs: {
+      ExternalAuthenticationToken,
+      ScrollId
+    },
+    json: true
+  }
+
+  const res = await sync(opts)
+  return res
+}
+
+const dateSync = async ({
   StartDate,
   EndDate,
   From,
   Size
 }) => {
-  const ExternalAuthenticationToken = 'YwBc4k2U5P75bdQreeGxqv6P'
 
   const opts = {
     url: config.url,
@@ -101,45 +135,48 @@ const sync = async ({
     },
     json: true
   }
-  const res = await request(opts)
-  const { Data, TotalContacts } = res
 
-  const { inserted, updated } = await save(Data)
+  let results = 0
 
-  await insertContacts(inserted)
-  await updateContacts(updated)
+  Context.log('Date', StartDate, EndDate, From, Size)
 
-  console.log(Data.length + From, TotalContacts)
-  return Data.length
+  const res = await sync(opts)
+  results += res.Data.length
+
+  let lastPage = res
+
+  while(lastPage.Data.length >= Size) {
+    await timeout(2000)
+    Context.log('Pagination', results, '/', lastPage.TotalContacts)
+    lastPage = await paginate({
+      ScrollId: lastPage.ScrollId
+    })
+
+    results += lastPage.Data.length
+  }
+
+  return results
 }
 
 const run = async() => {
   const { commit, run } = await createContext()
 
   const name = 'de-contacts'
-  const step = 1
-  const limit = 1000
+  const step = 365
+  const limit = 100
 
   await run(async () => {
     const last = await promisify(MLSJob.getLastRun)(name) || {
-      query: '2019-12-29',
-      limit,
+      query: '2012-12-29',
       offset: 0,
       results: 0
     }
 
     const format = 'YYYY-MM-DD'
 
-    let StartDate, EndDate, From
-    if (last.results < limit) {
-      StartDate = moment(last.query).format(format)
-      EndDate = moment(last.query).add(step, 'day').format(format)
-      From = 0
-    } else {
-      StartDate = moment(last.query).subtract(step, 'day').format(format)
-      EndDate = moment(last.query).format(format)
-      From = last.results + last.offset
-    }
+    const StartDate = moment(last.query).format(format)
+    const EndDate = moment(last.query).add(step, 'day').format(format)
+    const From = 0
 
     const opts = {
       StartDate,
@@ -148,7 +185,7 @@ const run = async() => {
       From
     }
 
-    const results = await sync(opts)
+    const results = await dateSync(opts)
 
     Context.log('Synced', StartDate, EndDate, results, 'results')
 
@@ -156,8 +193,7 @@ const run = async() => {
       name,
       query: EndDate,
       offset: From,
-      results,
-      limit
+      results
     })
 
     await commit()
@@ -169,6 +205,6 @@ run()
     process.exit()
   })
   .catch(e => {
-    console.log(e)
+    Context.log(e)
     process.exit()
   })
