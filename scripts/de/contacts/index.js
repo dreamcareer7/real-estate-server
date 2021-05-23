@@ -66,6 +66,8 @@ const insertContacts = async contacts => {
     const mapped = agent_contacts.map(map)
     const created = await Contact.create(mapped, user_id, brand_id, 'lts_lead')
 
+    await Contact.updateTags(created, ['Imported From Studio'], user_id, brand_id)
+
     for(const i in agent_contacts)
       pairs.push({
         id: agent_contacts[i].id, // Studio ID
