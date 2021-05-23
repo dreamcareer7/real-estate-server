@@ -3,6 +3,11 @@ const parser = require('parse-address')
 const map = ({object}) => {
   const attributes = []
 
+  attributes.push({
+    attribute_type: 'source',
+    text: 'Imported From Studio'
+  })
+
   if (object.email)
     attributes.push({
       attribute_type: 'email',
