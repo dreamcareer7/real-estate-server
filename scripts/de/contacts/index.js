@@ -24,11 +24,11 @@ const SAVE = `INSERT INTO de.contacts (id, object)
  ON CONFLICT (id) DO UPDATE SET object = EXCLUDED.object
  RETURNING *`
 
-const FIND_AGENTS = `SELECT de.users."user", de.agents_offices.brand FROM de.users
+const FIND_AGENTS = `SELECT de.users.user, LOWER(de.users.object->>'email') as email, de.agents_offices.brand FROM de.users
   JOIN de.agents_offices ON de.users.username = de.agents_offices.username
-WHERE de.users.object->>'email' IN(
-  SELECT LOWER(UNNEST($1::text[]))
-)`
+  WHERE de.users.object->>'email' IN(
+    SELECT LOWER(UNNEST($1::text[]))
+  )`
 
 const SET_IDS = `
 UPDATE de.contacts
@@ -42,8 +42,6 @@ const timeout = ms => {
   })
 }
 
-const brand_id = 'aea06fd2-bb66-11eb-8eb7-d5797ff4de7c'
-const user_id = '80a227b2-29a0-11e7-b636-e4a7a08e15d4'
 const ExternalAuthenticationToken = 'YwBc4k2U5P75bdQreeGxqv6P'
 
 const groupByAgent = async contacts => {
@@ -51,21 +49,28 @@ const groupByAgent = async contacts => {
   const { rows } = await db.executeSql.promise(FIND_AGENTS, [emails])
   const grouped = _.chain(contacts).filter('object.agentEmail').groupBy('object.agentEmail').value()
 
-  return { grouped, agents: rows }
+  return { grouped, agents: _.keyBy(rows, 'email') }
 }
 
 const insertContacts = async contacts => {
   const { grouped, agents } = await groupByAgent(contacts)
 
-  //TODO: Read user_id and brand_id from agents
-
   const pairs = []
 
   for(const email of Object.keys(grouped)) {
+    if (!agents[email])
+      continue
+
+    const { brand, user } = agents[email]
+
     const agent_contacts = grouped[email]
 
-    const mapped = agent_contacts.map(map)
-    const created = await Contact.create(mapped, user_id, brand_id, 'lts_lead')
+    const mapped = agent_contacts.map(map).map(contact => {
+      return { contact, user }
+    })
+    const created = await Contact.create(mapped, user, brand, 'lts_lead', {
+      activity: false
+    })
 
     for(const i in agent_contacts)
       pairs.push({
@@ -82,6 +87,11 @@ const updateContacts = async contacts => {
 
 
   for(const email of Object.keys(grouped)) {
+    if (!agents[email])
+      continue
+
+    const { brand, user } = agents[email]
+
     const agent_contacts = grouped[email]
 
     const mapped = agent_contacts.map(contact => {
@@ -89,11 +99,12 @@ const updateContacts = async contacts => {
 
       return {
         attributes,
-        id: contact.contact
+        id: contact.contact,
+        user
       }
     })
 
-    await Contact.update(mapped, user_id, brand_id, 'lts_lead')
+    await Contact.update(mapped, user, brand, 'lts_lead')
   }
 }
 
@@ -178,7 +189,7 @@ const dateSync = async ({
 const run = async() => {
   const { commit, run } = await createContext()
 
-  const name = 'de-contacts'
+  const name = 'de_contacts'
   const step = 20
   const limit = 50
 
