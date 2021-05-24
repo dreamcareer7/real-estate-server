@@ -10,6 +10,7 @@ const promisify = require('../../../lib/utils/promisify')
 const MLSJob = require('../../../lib/models/MLSJob')
 const Context = require('../../../lib/models/Context')
 const Contact = require('../../../lib/models/Contact/manipulate')
+const ContactAttribute = require('../../../lib/models/Contact/attribute/get')
 
 const createContext = require('../../workers/create-context')
 
@@ -65,9 +66,10 @@ const insertContacts = async contacts => {
 
     const agent_contacts = grouped[email]
 
-    const mapped = agent_contacts.map(map).map(contact => {
-      return { contact, user }
+    const mapped = agent_contacts.map(c => map(c)).map(contact => {
+      return { ...contact, user }
     })
+
     const created = await Contact.create(mapped, user, brand, 'lts_lead', {
       activity: false
     })
@@ -85,6 +87,8 @@ const insertContacts = async contacts => {
 const updateContacts = async contacts => {
   const { grouped, agents } = await groupByAgent(contacts)
 
+  const attributes = await ContactAttribute.getForContacts(contacts.map(c => c.contact))
+  const indexed_attributes = _.groupBy(attributes, 'contact')
 
   for(const email of Object.keys(grouped)) {
     if (!agents[email])
@@ -95,10 +99,12 @@ const updateContacts = async contacts => {
     const agent_contacts = grouped[email]
 
     const mapped = agent_contacts.map(contact => {
-      const { attributes } = map(contact)
+      const attributes = indexed_attributes[contact.contact]
+
+      const mapped = map(contact, attributes)
 
       return {
-        attributes,
+        ...mapped,
         id: contact.contact,
         user
       }
@@ -124,7 +130,7 @@ const sync = async opts => {
   const { inserted, updated } = await save(Data)
 
   await insertContacts(inserted)
-  //await updateContacts(updated)
+  await updateContacts(updated)
 
   return res
 }
