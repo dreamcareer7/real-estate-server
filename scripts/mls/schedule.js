@@ -16,6 +16,10 @@ Object.keys(definitions).forEach(queue_name => {
 
   Object.keys(definitions[queue_name]).forEach(task_name => {
     const definition = definitions[queue_name][task_name]
+
+    if (definition.enabled === false) // Some are explicitly disabled
+      return
+
     definition.name = task_name
     definition.queue = queue_name
     tasks[task_name] = definition
