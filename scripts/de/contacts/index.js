@@ -7,7 +7,6 @@ const _ = require('lodash')
 const db = require('../../../lib/utils/db')
 const promisify = require('../../../lib/utils/promisify')
 
-const User = require('../../../lib/models/User/get')
 const MLSJob = require('../../../lib/models/MLSJob')
 const Context = require('../../../lib/models/Context')
 const Contact = require('../../../lib/models/Contact/manipulate')
@@ -25,10 +24,7 @@ const SAVE = `INSERT INTO de.contacts (id, object)
  ON CONFLICT (id) DO UPDATE SET object = EXCLUDED.object
  RETURNING *`
 
-const NEW_RECORDS = `SELECT id FROM de.contacts WHERE contact IS NULL`
-
-const FIND_AGENTS = `
-SELECT de.users."user", de.agents_offices.brand FROM de.users
+const FIND_AGENTS = `SELECT de.users."user", de.agents_offices.brand FROM de.users
   JOIN de.agents_offices ON de.users.username = de.agents_offices.username
 WHERE de.users.object->>'email' IN(
   SELECT LOWER(UNNEST($1::text[]))
@@ -50,13 +46,18 @@ const brand_id = 'aea06fd2-bb66-11eb-8eb7-d5797ff4de7c'
 const user_id = '80a227b2-29a0-11e7-b636-e4a7a08e15d4'
 const ExternalAuthenticationToken = 'YwBc4k2U5P75bdQreeGxqv6P'
 
-const insertContacts = async contacts => {
+const groupByAgent = async contacts => {
   const emails = _.chain(contacts).map('object.agentEmail').uniq().filter(Boolean).value()
   const { rows } = await db.executeSql.promise(FIND_AGENTS, [emails])
   const grouped = _.chain(contacts).filter('object.agentEmail').groupBy('object.agentEmail').value()
 
+  return { grouped, agents: rows }
+}
 
-  //TODO: Read user_id and brand_id from rows
+const insertContacts = async contacts => {
+  const { grouped, agents } = await groupByAgent(contacts)
+
+  //TODO: Read user_id and brand_id from agents
 
   const pairs = []
 
@@ -77,26 +78,42 @@ const insertContacts = async contacts => {
 }
 
 const updateContacts = async contacts => {
+  const { grouped, agents } = await groupByAgent(contacts)
 
+
+  for(const email of Object.keys(grouped)) {
+    const agent_contacts = grouped[email]
+
+    const mapped = agent_contacts.map(contact => {
+      const { attributes } = map(contact)
+
+      return {
+        attributes,
+        id: contact.contact
+      }
+    })
+
+    await Contact.update(mapped, user_id, brand_id, 'lts_lead')
+  }
 }
 
 const save = async contacts => {
   const { rows } = await db.executeSql.promise(SAVE, [ JSON.stringify(contacts) ])
 
   const updated = rows.filter(record => Boolean(record.contact))
-  const inserted = rows.filter(record => !Boolean(record.contact))
+  const inserted = rows.filter(record => !record.contact)
 
   return { updated, inserted }
 }
 
 const sync = async opts => {
   const res = await request(opts)
-  const { Data, TotalContacts } = res
+  const { Data } = res
 
   const { inserted, updated } = await save(Data)
 
   await insertContacts(inserted)
-  await updateContacts(updated)
+  //await updateContacts(updated)
 
   return res
 }
@@ -162,8 +179,8 @@ const run = async() => {
   const { commit, run } = await createContext()
 
   const name = 'de-contacts'
-  const step = 365
-  const limit = 100
+  const step = 20
+  const limit = 50
 
   await run(async () => {
     const last = await promisify(MLSJob.getLastRun)(name) || {

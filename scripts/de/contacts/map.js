@@ -1,5 +1,7 @@
 const parser = require('parse-address')
 
+const Context = require('../../../lib/models/Context')
+
 const map = ({object}) => {
   const attributes = []
 
@@ -15,13 +17,15 @@ const map = ({object}) => {
     })
 
   if (object.phone)
-    attributes.push({attribute_type: 'phone_number',
+    attributes.push({
+      attribute_type: 'phone_number',
       text: object.phone,
       label: 'Phone',
     })
 
   if (object.mobilePhone)
-    attributes.push({attribute_type: 'phone_number',
+    attributes.push({
+      attribute_type: 'phone_number',
       text: object.mobilePhone,
       label: 'Cell Phone',
     })
