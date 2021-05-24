@@ -2,10 +2,14 @@ const parser = require('parse-address')
 
 const Context = require('../../../lib/models/Context')
 
-const map = ({object}) => {
+const { find } = require('lodash')
+
+const map = ({object}, attrs) => {
   const attributes = []
 
-  attributes.push({
+  const isNew = !attrs
+
+  isNew && attributes.push({
     attribute_type: 'source',
     text: 'Imported From Studio'
   })
@@ -13,7 +17,8 @@ const map = ({object}) => {
   if (object.email)
     attributes.push({
       attribute_type: 'email',
-      text: object.email
+      text: object.email,
+      id: find(attrs, { attribute_type: 'email' })?.id
     })
 
   if (object.phone)
@@ -21,6 +26,7 @@ const map = ({object}) => {
       attribute_type: 'phone_number',
       text: object.phone,
       label: 'Phone',
+      id: find(attrs, { attribute_type: 'phone', label: 'Phone' })?.id
     })
 
   if (object.mobilePhone)
@@ -28,6 +34,7 @@ const map = ({object}) => {
       attribute_type: 'phone_number',
       text: object.mobilePhone,
       label: 'Cell Phone',
+      id: find(attrs, { attribute_type: 'phone', label: 'Cell Phone' })?.id
     })
 
   if (object.workPhone)
@@ -35,64 +42,77 @@ const map = ({object}) => {
       attribute_type: 'phone_number',
       text: object.workPhone,
       label: 'Work Phone',
+      id: find(attrs, { attribute_type: 'phone', label: 'Work Phone' })?.id
     })
 
   if (object.firstName)
     attributes.push({
       attribute_type: 'first_name',
-      text: object.firstName
+      text: object.firstName,
+      id: find(attrs, { attribute_type: 'first_name' })?.id
     })
 
   if (object.lastName)
     attributes.push({
       attribute_type: 'last_name',
-      text: object.lastName
+      text: object.lastName,
+      id: find(attrs, { attribute_type: 'last_name' })?.id
     })
 
   if (object.title)
     attributes.push({
       attribute_type: 'title',
-      text: object.title
+      text: object.title,
+      id: find(attrs, { attribute_type: 'title' })?.id
     })
 
   if (object.birthday)
     attributes.push({
       attribute_type: 'birthday',
-      date: new Date(object.birthday)
+      date: new Date(object.birthday),
+      id: find(attrs, { attribute_type: 'birthday' })?.id
     })
 
   if (object.anniversary)
     attributes.push({
       attribute_type: 'wedding_anniversary',
-      date: new Date(object.anniversary)
+      date: new Date(object.anniversary),
+      id: find(attrs, { attribute_type: 'wedding_anniversary' })?.id
     })
 
   if (object.zip)
     attributes.push({
       attribute_type: 'postal_code',
       text: object.zip,
-      index: 0
+      index: 0,
+      id: find(attrs, { attribute_type: 'postal_code', index: 0 })?.id
     })
 
   if (object.city)
     attributes.push({
       attribute_type: 'city',
       text: object.city,
-      index: 0
+      index: 0,
+      id: find(attrs, { attribute_type: 'city', index: 0 })?.id
     })
 
   if (object.state)
     attributes.push({
       attribute_type: 'state',
       text: object.state,
-      index: 0
+      index: 0,
+      id: find(attrs, { attribute_type: 'state', index: 0 })?.id
     })
 
-  if (object.notes)
-    attributes.push({
+
+  if (object.notes) {
+    const found = find(attrs, { attribute_type: 'note', text: object.notes })
+
+    !found && attributes.push({
       attribute_type: 'notes',
-      text: object.notes
+      text: object.notes,
     })
+  }
 
   try {
     if (object.address1) {
@@ -102,28 +122,32 @@ const map = ({object}) => {
         attributes.push({
           attribute_type: 'street_number',
           text: parsed1.number,
-          index: 0
+          index: 0,
+          id: find(attrs, { attribute_type: 'street_number', index: 0 })?.id
         })
 
       if (parsed1.street)
         attributes.push({
           attribute_type: 'street_name',
           text: parsed1.street,
-          index: 0
+          index: 0,
+          id: find(attrs, { attribute_type: 'street_name', index: 0 })?.id
         })
 
       if (parsed1.prefix)
         attributes.push({
           attribute_type: 'street_prefix',
           text: parsed1.prefix,
-          index: 0
+          index: 0,
+          id: find(attrs, { attribute_type: 'street_prefix', index: 0 })?.id
         })
 
       if (parsed1.type)
         attributes.push({
           attribute_type: 'street_suffix',
           text: parsed1.type,
-          index: 0
+          index: 0,
+          id: find(attrs, { attribute_type: 'street_suffix', index: 0 })?.id
         })
     }
   } catch(e) {
@@ -138,28 +162,32 @@ const map = ({object}) => {
         attributes.push({
           attribute_type: 'street_number',
           text: parsed2.number,
-          index: 1
+          index: 1,
+          id: find(attrs, { attribute_type: 'street_number', index: 1 })?.id
         })
 
       if (parsed2.street)
         attributes.push({
           attribute_type: 'street_name',
           text: parsed2.street,
-          index: 1
+          index: 1,
+          id: find(attrs, { attribute_type: 'street_name', index: 1 })?.id
         })
 
       if (parsed2.prefix)
         attributes.push({
           attribute_type: 'street_prefix',
           text: parsed2.prefix,
-          index: 1
+          index: 1,
+          id: find(attrs, { attribute_type: 'street_prefix', index: 1 })?.id
         })
 
       if (parsed2.type)
         attributes.push({
           attribute_type: 'street_suffix',
           text: parsed2.type,
-          index: 1
+          index: 1,
+          id: find(attrs, { attribute_type: 'street_suffix', index: 1 })?.id
         })
     }
   } catch(e) {
