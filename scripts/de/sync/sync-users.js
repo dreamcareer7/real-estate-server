@@ -110,6 +110,8 @@ saved AS (
     user_type,
     (
       SELECT id FROM agents WHERE mls::text = data.mls AND LOWER(mlsid) = LOWER(data.mlsid)
+      ORDER BY status = 'Active', matrix_modified_dt
+      LIMIT 1
     )
   FROM de.users
   JOIN data ON de.users.username = data.username
