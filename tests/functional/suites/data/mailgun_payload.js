@@ -603,7 +603,7 @@ module.exports = `
                   beaches. This bright and open four bedroom and four bathroom
                   home is perfect for summer beach living. The spacious and open
                   living and dining rooms have a wonderful flow to the outdoor
-                  dining and pool area... 
+                  dining and pool area...
                   <div>
                     <a
                       target="_blank"
