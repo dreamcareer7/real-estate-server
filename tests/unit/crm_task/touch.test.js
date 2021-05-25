@@ -50,7 +50,7 @@ async function setup() {
 const DEFAULT_CONTACTS = [{
   first_name: 'Abbas',
   email: ['abbas@rechat.com'],
-  tag: ['Warm List']
+  tag: ['Warm']
 }, {
   first_name: 'Emil',
   email: ['emil@rechat.com']
@@ -96,11 +96,11 @@ async function createList() {
   const defs = await AttributeDef.getDefsByName(brand.id)
 
   const id = List.create(user.id, brand.id, {
-    name: 'Warm List',
+    name: 'Warm',
     touch_freq: WARM_LIST_TOUCH_FREQ,
     filters: [{
       attribute_def: /** @type {UUID} */ (defs.get('tag')),
-      value: 'Warm List'
+      value: 'Warm'
     }]
   })
 
@@ -110,13 +110,13 @@ async function createList() {
 }
 
 function prepareHotListTag() {
-  return ContactTag.update_touch_frequency(brand.id, user.id, 'Hot List', HOT_LIST_TOUCH_FREQ)
+  return ContactTag.update_touch_frequency(brand.id, user.id, 'Hot', HOT_LIST_TOUCH_FREQ)
 }
 
 async function testTouchDatesAfterGmailSync() {
   const contact_ids = await createContact([{
     first_name: 'Saeed',
-    tag: ['Hot List'],
+    tag: ['Hot'],
     email: ['saeed.vayghan@gmail.com']
   }])
 
@@ -139,7 +139,7 @@ async function testTouchDatesAfterGmailSync() {
 async function testTouchDatesAfterOutlookSync() {
   const contact_ids = await createContact([{
     first_name: 'Saeed',
-    tag: ['Hot List'],
+    tag: ['Hot'],
     email: ['saeed.vayghan@gmail.com']
   }])
 
@@ -329,7 +329,7 @@ async function testSortByLastTouch() {
 async function testTouchReminderOnContact() {
   const [id] = await createContact()
 
-  await ContactTag.update_touch_frequency(brand.id, user.id, 'Warm List', 10)
+  await ContactTag.update_touch_frequency(brand.id, user.id, 'Warm', 10)
   const contact = await Contact.get(id)
 
   expect(contact.touch_freq).to.be.equal(10)

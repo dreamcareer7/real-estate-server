@@ -36,8 +36,8 @@ async function setup() {
 
 async function testCheckDefaultTags() {
   const DEFAULT_TAGS = [
-    'Warm List',
-    'Hot List',
+    'Warm',
+    'Hot',
     'Past Client',
     'Seller',
     'Agent',
@@ -295,7 +295,7 @@ async function testAddExistingTagsToContacts() {
     attributes: ContactHelper.attributes({
       first_name: 'John',
       last_name: 'Doe',
-      tag: ['Warm List']
+      tag: ['Warm']
     })
   }], user.id, brand.id)
 

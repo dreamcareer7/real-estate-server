@@ -4,9 +4,9 @@ export interface ILtsLead {
   last_name: string;
   email: string;
   phone_number: string;
-  unit_number: string;
-  street_number: string;
-  country: string;
+  company: string;
+  address: string;
+  message: string;
   tag: string;
   owner_id: string;
   lead_source: string;

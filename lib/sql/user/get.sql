@@ -13,8 +13,8 @@ SELECT 'user' AS type,
        (
         SELECT id FROM docusign_users WHERE "user" = users.id
        ) as docusign,
-       COALESCE((
-          SELECT
+       COALESCE(
+          COALESCE((SELECT
             us.brand
           FROM
             users_settings AS us
@@ -22,17 +22,37 @@ SELECT 'user' AS type,
               ON us."user" = bu."user"
             JOIN brands_roles AS br
               ON br.id = bu.role
+            JOIN brands AS b
+              ON br.brand = b.id
           WHERE
             us."user" = users.id
             AND us.brand = br.brand
+            AND b.deleted_at IS NULL
             AND br.deleted_at IS NULL
             AND bu.deleted_at IS NULL
           ORDER BY
             us.updated_at DESC
           LIMIT 1
-         ),
-         users.brand
-       ) AS active_brand
+         ), (
+          SELECT
+            b.id
+          FROM
+            brands_users AS bu
+            JOIN brands_roles AS br
+              ON br.id = bu.role
+            JOIN brands AS b
+              ON br.brand = b.id
+          WHERE
+            bu."user" = users.id
+            AND b.deleted_at IS NULL
+            AND br.deleted_at IS NULL
+            AND bu.deleted_at IS NULL
+          ORDER BY
+            b.created_at DESC
+          LIMIT 1
+        )),
+        users.brand
+      ) AS active_brand
 FROM users
 JOIN unnest($1::uuid[]) WITH ORDINALITY t(uid, ord) ON users.id = uid
 ORDER BY t.ord

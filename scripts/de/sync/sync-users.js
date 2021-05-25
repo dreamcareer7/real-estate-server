@@ -6,12 +6,14 @@ const Context = require('../../../lib/models/Context')
 const MAP = `
 SELECT
     username,
-    id as mlsid,
+    id,
+    mlsid,
     "firstName" as first_name,
     "lastName" as last_name,
     LOWER(email) as email,
     phone_number,
-    "imageURL" as profile_image_url,
+    "imageURLRound" as profile_image_url,
+    "imageURL" as cover_image_url,
     id as mls_number,
     "mlsSystem" as mls,
     user_type,
@@ -25,10 +27,12 @@ SELECT
   as input(
     username TEXT,
     id TEXT,
+    mlsid TEXT,
     "firstName" TEXT,
     "lastName" TEXT,
     "email" TEXT,
     "imageURL" TEXT,
+    "imageURLRound" TEXT,
     "mlsSystem" TEXT,
     phone_number TEXT,
     user_type user_type,
@@ -80,6 +84,7 @@ saved AS (
     email,
     email_confirmed,
     profile_image_url,
+    cover_image_url,
     website,
     linkedin,
     facebook,
@@ -95,7 +100,8 @@ saved AS (
     email,
     true,
     profile_image_url,
-    'https://elliman.com/' || mlsid,
+    cover_image_url,
+    'https://elliman.com/' || id,
     linkedin,
     facebook,
     youtube,
@@ -103,7 +109,7 @@ saved AS (
     twitter,
     user_type,
     (
-      SELECT id FROM agents WHERE mls::text = data.mls AND mlsid = data.mlsid
+      SELECT id FROM agents WHERE mls::text = data.mls AND LOWER(mlsid) = LOWER(data.mlsid)
     )
   FROM de.users
   JOIN data ON de.users.username = data.username
@@ -112,12 +118,14 @@ saved AS (
       last_name = EXCLUDED.last_name,
       email = EXCLUDED.email,
       profile_image_url = EXCLUDED.profile_image_url,
+      cover_image_url = EXCLUDED.cover_image_url,
       user_type = EXCLUDED.user_type,
       linkedin = EXCLUDED.linkedin,
       facebook = EXCLUDED.facebook,
       youtube = EXCLUDED.youtube,
       instagram = EXCLUDED.instagram,
-      twitter = EXCLUDED.twitter
+      twitter = EXCLUDED.twitter,
+      agent = COALESCE(users.agent, EXCLUDED.agent)
 
   RETURNING id, email
 )
@@ -174,7 +182,7 @@ RETURNING *`
 
 const CONFIRM = `
 UPDATE users SET
-  phone_confirmed = (phone_number IS NULL),
+  phone_confirmed = (phone_number IS NOT NULL),
   email_confirmed = true
 FROM de.users
 WHERE public.users.id = de.users.user`
@@ -193,8 +201,11 @@ const setPhone = user => {
     }
   }
 
+  const mlsid = user.id.split('.').pop()
+
   return {
     ...user,
+    mlsid,
     phone_number: phone_number?.length > 0 ? phone_number : null,
     user_type: user.isAgent ? 'Agent' : 'Client'
   }

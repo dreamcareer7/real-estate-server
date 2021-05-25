@@ -10,7 +10,7 @@ module.exports = async function(sellerAgent, brand, mls_number) {
     mls_number
   ])
 
-  const listing = await Listing.getByMLSNumber(mls_number)
+  const listings = await Listing.getByMLSNumber(mls_number)
 
   return DealHelper.create(sellerAgent.id, brand.id, {
     is_draft: false,
@@ -38,6 +38,6 @@ module.exports = async function(sellerAgent, brand, mls_number) {
         legal_last_name: sellerAgent.last_name
       }
     ],
-    listing: listing.id
+    listing: listings[0].id
   })
 }

@@ -258,16 +258,32 @@ function _makeAppointment(msg, showing_id, expected_status = 'Requested') {
   }
 }
 
+function checkNotificationCount(cb) {
+  return frisby
+    .create('check notifications count')
+    .get('/showings/notifications?limit=1')
+    .after(cb)
+    .expectJSON({
+      info: {
+        total: 1
+      }
+    })
+}
+
 function checkAppointmentNotifications(cb) {
   const appt = results.showing.requestAppointment.data
   return frisby
     .create('check appointment request notification')
     .get(
-      `/showings/${results.showing.create.data.id}/appointments/${appt.id}/?associations[]=showing_appointment.notifications`
+      `/showings/${results.showing.create.data.id}/appointments/${appt.id}/?associations[]=showing_appointment.notifications&associations[]=showing_appointment.contact`
     )
     .after(cb)
     .expectJSON({
       data: {
+        contact: {
+          source_type: 'Showing',
+          type: 'contact'
+        },
         notifications: [
           {
             object_class: 'ShowingAppointment',
@@ -431,7 +447,7 @@ function buyerAgentRescheduleAppointment(cb) {
     .expectStatus(200)
     .expectJSON({
       data: {
-        // status: 'Rescheduled'
+        status: 'Rescheduled'
       },
     })
 }
@@ -456,10 +472,7 @@ function checkBuyerRescheduleNotifications(cb) {
               results.authorize.token.data.timezone
             ).format('MMM D, HH:mm')}": Sorry something came up`,
             type: 'showing_appointment_notification',
-          },
-          {
-            action: 'Created',
-          },
+          }
         ],
       },
     })
@@ -528,6 +541,7 @@ module.exports = {
   getShowingPublic,
   requestAppointment: _makeAppointment('request an appointment'),
   checkAppointmentReceiptSmsForBuyer,
+  checkNotificationCount,
   checkAppointmentNotifications,
   confirmAppointment,
   checkAppointmentConfirmationSmsForBuyer,

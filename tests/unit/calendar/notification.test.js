@@ -26,7 +26,8 @@ let CLOSING_DATE, CONTRACT_DATE
 
 async function setupBrands(without_checklists = false) {
   user = await User.getByEmail('test@rechat.com')
-  listing = await Listing.getByMLSNumber(10018693)
+  const listings = await Listing.getByMLSNumber(10018693)
+  listing = listings[0]
 
   const brand_data = {
     roles: {

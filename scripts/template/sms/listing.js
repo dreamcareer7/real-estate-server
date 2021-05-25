@@ -25,18 +25,17 @@ const run = async () => {
   context.enter()
 
   const user = await User.getByEmail(process.argv[2])
-  const listing = await Listing.getByMLSNumber(process.argv[3])
+  const listings = await Listing.getByMLSNumber(process.argv[3])
 
   const loginUrl = await User.getLoginLink({
     user,
     options: {
       action: 'OpenMarketingWizard',
-      listing: listing.id,
+      listing: listings[0].id,
     }
   })
 
   console.log(loginUrl)
-
 }
 
 run()

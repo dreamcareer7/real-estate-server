@@ -57,11 +57,11 @@ async function createContact(data) {
 
 async function createWarmList() {
   const id = await List.create(user.id, brand.id, {
-    name: 'Warm List',
+    name: 'Warm',
     filters: [
       {
         attribute_def: TAG,
-        value: 'Warm List'
+        value: 'Warm'
       }
     ],
     is_editable: true,
@@ -131,7 +131,7 @@ async function testCreateList() {
   expect(list.filters).to.have.length(1)
   expect(list.filters[0]).to.include({
     attribute_def: TAG,
-    value: 'Warm List',
+    value: 'Warm',
     operator: 'eq',
     invert: false,
     type: 'contact_list_filter'
@@ -177,13 +177,13 @@ async function testUpdateList() {
       list.id,
       {
         ...list,
-        name: 'Updated Warm List'
+        name: 'Updated Warm'
       },
       user.id
     )
 
     const updated = await List.get(list.id)
-    expect(updated.name).to.be.equal('Updated Warm List')
+    expect(updated.name).to.be.equal('Updated Warm')
   }
 
   async function updateFilterType() {
@@ -220,11 +220,11 @@ async function testFormatListName() {
       filters: [
         {
           attribute_def: TAG,
-          value: 'Warm List'
+          value: 'Warm'
         }
       ]
     })
-  ).to.be.equal('(Tag = Warm List)')
+  ).to.be.equal('(Tag = Warm)')
 }
 
 async function testFetchListsForBrand() {
@@ -358,12 +358,12 @@ async function testInitializeListMembers() {
 async function testGlobalBrandLists() {
   await BrandList.createAll(undefined, [
     {
-      name: 'Warm List',
+      name: 'Warm',
       touch_freq: 60,
       filters: [
         {
           attribute_def: TAG,
-          value: 'Warm List'
+          value: 'Warm'
         }
       ]
     }
@@ -372,28 +372,28 @@ async function testGlobalBrandLists() {
   const lists = await BrandList.getForBrand(brand.id)
 
   expect(lists).to.have.length(1)
-  expect(lists[0].name).to.be.equal('Warm List')
+  expect(lists[0].name).to.be.equal('Warm')
 }
 
 async function testBrandLists() {
   await BrandList.createAll(brand.id, [
     {
-      name: 'Warm List',
+      name: 'Warm',
       touch_freq: 60,
       filters: [
         {
           attribute_def: TAG,
-          value: 'Warm List'
+          value: 'Warm'
         }
       ]
     },
     {
-      name: 'Hot List',
+      name: 'Hot',
       touch_freq: 30,
       filters: [
         {
           attribute_def: TAG,
-          value: 'Hot List'
+          value: 'Hot'
         }
       ]
     }
@@ -413,8 +413,8 @@ async function testBrandLists() {
   const lists = await List.getForBrand(b2.id)
 
   expect(lists).to.have.length(2)
-  expect(lists[0].name).to.be.equal('Warm List')
-  expect(lists[1].name).to.be.equal('Hot List')
+  expect(lists[0].name).to.be.equal('Warm')
+  expect(lists[1].name).to.be.equal('Hot')
 }
 
 function testBrandListNameValidation(done) {

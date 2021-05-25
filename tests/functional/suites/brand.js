@@ -49,17 +49,17 @@ const createBrandLists = cb => {
 
   return frisby.create('create brand lists')
     .post(`/brands/${results.brand.createParent.data.id}/lists`, [{
-      name: 'Warm List',
+      name: 'Warm',
       filters: [{
         attribute_def: defs.tag,
-        value: 'Warm List'
+        value: 'Warm'
       }],
       touch_freq: 60
     }, {
-      name: 'Hot List',
+      name: 'Hot',
       filters: [{
         attribute_def: defs.tag,
-        value: 'Hot List'
+        value: 'Hot'
       }],
       touch_freq: 30
     }, {
