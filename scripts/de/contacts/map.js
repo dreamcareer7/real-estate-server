@@ -18,7 +18,7 @@ const map = ({object}, attrs) => {
     attributes.push({
       attribute_type: 'email',
       text: object.email,
-      id: find(attrs, { attribute_type: 'email' })?.id
+      id: find(attrs, { attribute_type: 'email', text: object.email })?.id
     })
 
   if (object.phone)
@@ -26,7 +26,7 @@ const map = ({object}, attrs) => {
       attribute_type: 'phone_number',
       text: object.phone,
       label: 'Phone',
-      id: find(attrs, { attribute_type: 'phone', label: 'Phone' })?.id
+      id: find(attrs, { attribute_type: 'phone', label: 'Phone', text: object.phone })?.id
     })
 
   if (object.mobilePhone)
@@ -34,7 +34,7 @@ const map = ({object}, attrs) => {
       attribute_type: 'phone_number',
       text: object.mobilePhone,
       label: 'Cell Phone',
-      id: find(attrs, { attribute_type: 'phone', label: 'Cell Phone' })?.id
+      id: find(attrs, { attribute_type: 'phone', label: 'Cell Phone', text: object.mobilePhone })?.id
     })
 
   if (object.workPhone)
@@ -42,7 +42,7 @@ const map = ({object}, attrs) => {
       attribute_type: 'phone_number',
       text: object.workPhone,
       label: 'Work Phone',
-      id: find(attrs, { attribute_type: 'phone', label: 'Work Phone' })?.id
+      id: find(attrs, { attribute_type: 'phone', label: 'Work Phone', text: object.workPhone })?.id
     })
 
   if (object.firstName)
