@@ -1,76 +1,632 @@
 
 module.exports = `
-<html xmlns='http://www.w3.org/1999/xhtml'xmlns:v='urn:schemas-microsoft-com:vml'xmlns:o='urn:schemas-microsoft-com:office:office'><head><meta name='x-apple-disable-message-reformatting' /><!--[if gte mso 9]><xml><o:OfficeDocumentSettings><o:AllowPNG/><o:PixelsPerInch>96</o:PixelsPerInch></o:OfficeDocumentSettings></xml><![endif]--><head><style>body {font-size:13px; font-family: Helvetica, Arial, san-serif;}</style></head><body><span style="mso-hide:all; color:transparent; display:none !important; height:0; opacity:0; visibility:hidden; width:0">Dear Christopher Austad:
-        A new lead/inquiry has been received on your listing.
-        Sandy         </span><table align="center" border="0" cellpadding="0" cellspacing="0" style="background-color: #ebebeb;" width="100%">
-          <tbody>
-            <tr>
-              <td style="padding: 32px;" valign="top" width="600">
-              <table align="center" border="0" cellpadding="0" cellspacing="0" height="100%" style="background-color: #FFFFFF;border-radius: 8px 8px 8px 8px;" width="600">
-                <tbody>
-                  <tr>
-                    <td valign="top">
-                    <table align="center" border="0" cellpadding="0" cellspacing="0" width="500">
-                      <tbody>
-                        <tr>
-                          <td align="center" style="padding: 16px;" valign="top"><a href="#" target="_blank"><img align="center" src="https://s3.amazonaws.com/xcelerate.xcelerate-us/logos/dark/elliman.png" width="350" /> </a></td>
-                        </tr>
-                        <tr>
-                          <td align="center" valign="top">
-                          <table border="0" cellpadding="0" cellspacing="0" width="500">
-                            <tbody>
-                              <tr>
-                                <td style="border-bottom: 1px solid #4A7EBB;" valign="top"></td>
-                              </tr>
-                            </tbody>
-                          </table>
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td style="padding: 30px 100px;" valign="top">
-                    <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%">
-                      <tbody>
-                        <tr>
-                          <td style="font-family: Arial, Helvetica, sans-serif;font-size: 16px;line-height: 22px;text-align: left;padding-bottom: 40px; color: #000000;" valign="top">Dear Christopher Austad:</td>
-                        </tr>
-                        <tr>
-                          <td style="font-family: Arial, Helvetica, sans-serif;font-size: 16px;line-height: 22px;text-align: left;padding-bottom: 15px; color: #000000;" valign="top">A new lead/inquiry has been received on your listing.</td>
-                        </tr>
-                        <tr>
-                          <td style="font-family: Arial, Helvetica, sans-serif;font-size: 16px;line-height: 22px;text-align: left;padding-bottom: 5px; color: #000000;" valign="top">Sandy </td>
-                        </tr>
-                        <tr>
-                          <td style="font-family: Arial, Helvetica, sans-serif;font-size: 16px;line-height: 22px;text-align: left;padding-bottom: 5px; color: #000000;" valign="top">scgators7@gmail.com</td>
-                        </tr>
-                        <tr>
-                          <td style="font-family: Arial, Helvetica, sans-serif;font-size: 16px;line-height: 22px;text-align: left;padding-bottom: 45px; color: #000000;" valign="top"></td>
-                        </tr>
-                        <tr>
-                          <td class="blank" style="margin-top: 0;margin-left: 0;margin-right: 0;margin-bottom: 0;padding-top: 0;padding-bottom: 15px;padding-left: 0;padding-right: 0;border-collapse: collapse;border-spacing: 0;-webkit-text-size-adjust: none;font-family: Arial, Helvetica, sans-serif; font-size:16px; color: #000000;">
-                          <table border="0" cellpadding="0" cellspacing="0" class="invoiceTable2" style="margin-top: 0;margin-left: 0;margin-right: 0;margin-bottom: 0;padding-top: 0;padding-bottom: 0;padding-left: 0;padding-right: 0;mso-table-lspace: 0pt;mso-table-rspace: 0pt;border-collapse: collapse;border-spacing: 0;background-color: #ffffff;" width="100%">
-                            <tbody>
-                              <tr>
-                                <td class="width480" style="margin-top: 0;margin-left: 0;margin-right: 0;margin-bottom: 0;padding-top: 5px;padding-bottom: 5px;padding-left: 16px;padding-right: 16px;border-collapse: collapse;border-spacing: 0;-webkit-text-size-adjust: none;font-family: Arial, Helvetica, sans-serif;text-align: left;vertical-align: top;width: 480px;font-size: 16px;line-height: 28px;color: #000000;background-color: #ffffff;">
-                                <p><span class="tagName" style="font-size:16px;color: #ffffff;white-space: nowrap;display: inline-block;background:#999999;background-position: center;">&nbsp;&nbsp;<span style="">2021-04-28 13:32:03</span>&nbsp;&nbsp;</span>&nbsp;&nbsp;<span style="font-size:16px"><a href="https://links.streeteasy.com/a/click?_t=d2badf3f98c7449b8c39c3a30ce79f47&_m=4aae04473bb04d2f8485b2db717fa492&_e=fhme0JIuJP33Kz6sEBoj9cWzJrO-KKH7vwn1yrkmYVMoQYqnHq1VhIi0e9wkygEb0MFjkDuvINE63jWQTiqWgJuLLwbfsuAeR0XyhK4Dtly8KAey89guYM_iaBtRvHDYlgXexqMUCYQh0tLRD26-2Nnps1edP5-iwfTWY11en_NirQQERyQhg060EMr_08PjBAA_LTE1nnkP0apX6Rk4f2YoEDwDBaLObYA9BYl5mnKGrQKnqQGBFw6X6VOHSIZ5JslLqHuX8qeHpKcz_nlNVolIEVjpFHJMMlN4xQ9wIyp2W1Y-vvAx97d03F9GOAYCdeqRFeuYdGEjjAHUshskh9fYwylxrH7ny-B32FXS5xXdHsYX6s_6OfpDzul5xNFBwQLzBB2OmPjh0KtldfOcPg%3D%3D">47-09 Fifth Street #502</a></span><br />
-                                <span class="servDetails" style="font-size: 16px;color: #000000; line-height: 16px;">Hi, is there a storage cage/locker, bicycle parking and a parking spot available for rent?</span></p>
-                                </td>
-                              </tr>
-                            </tbody>
-                          </table>
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-              </td>
-            </tr>
-          </tbody>
-</table></body></html>
+<html>
+  <head>
+    <title>Requested Form</title>
+  </head>
+  <body style="font: 10px helvetica, arial, sans-serif; color: #373737">
+    <table
+      border="0"
+      cellpadding="0"
+      cellspacing="0"
+      width="500"
+      style="padding: 10px"
+    >
+      <tr>
+        <td
+          colspan="2"
+          style="color:#373737; font-size:12px; font-weight:bold; line-height:10px margin: 4px; padding-bottom: 18px; font-family: Arial;"
+        >
+          ##DO NOT REPLY DIRECTLY TO THIS EMAIL. READ EMAIL BELOW TO GET
+          SENDER'S EMAIL ADDRESS.##Date and Time: 2021/05/25 12:51:05
+        </td>
+      </tr>
+      <tr>
+        <td
+          colspan="2"
+          style="
+            border-top: 1px solid #e5e5e5;
+            border-bottom: 1px solid #e5e5e5;
+            font-size: 12px;
+            font-weight: bold;
+            font-family: Arial;
+            color: #373737;
+          "
+        >
+          Marc Soto is interested in the following property below.
+        </td>
+      </tr>
+      <tr style="height: 5px" />
+      <tr>
+        <td
+          style="
+            width: 155px;
+            font-size: 12px;
+            font-weight: bold;
+            padding: 4px;
+            font-family: Arial;
+            color: #373737;
+          "
+        >
+          IDX:
+        </td>
+        <td
+          style="
+            padding: 4px;
+            font-size: 12px;
+            font-family: Arial;
+            color: #373737;
+          "
+        >
+          true
+        </td>
+      </tr>
+      <tr>
+        <td
+          style="
+            width: 155px;
+            font-size: 12px;
+            font-weight: bold;
+            padding: 4px;
+            font-family: Arial;
+            color: #373737;
+          "
+        >
+          Source:
+        </td>
+        <td
+          style="
+            padding: 4px;
+            font-size: 12px;
+            font-family: Arial;
+            color: #373737;
+          "
+        >
+          <a
+            target="_blank"
+            href="https://www.elliman.com/newyork/rentals/detail/612-l-577-14_h78484/14-golf-club-dr-amagansett-ny-11930"
+            >https://www.elliman.com/newyork/rentals/detail/612-l-577-14_h78484/14-golf-club-dr-amagansett-ny-11930</a
+          >
+        </td>
+      </tr>
+      <tr>
+        <td
+          style="
+            width: 155px;
+            font-size: 12px;
+            font-weight: bold;
+            padding: 4px;
+            font-family: Arial;
+            color: #373737;
+          "
+        >
+          MLS #:
+        </td>
+        <td
+          style="
+            padding: 4px;
+            font-size: 12px;
+            font-family: Arial;
+            color: #373737;
+          "
+        >
+          H78484
+        </td>
+      </tr>
+      <tr>
+        <td
+          style="
+            width: 155px;
+            font-size: 12px;
+            font-weight: bold;
+            padding: 4px;
+            font-family: Arial;
+            color: #373737;
+          "
+        >
+          Property ID:
+        </td>
+        <td
+          style="
+            padding: 4px;
+            font-size: 12px;
+            font-family: Arial;
+            color: #373737;
+          "
+        >
+          14_H78484
+        </td>
+      </tr>
+      <tr>
+        <td
+          style="
+            width: 155px;
+            font-size: 12px;
+            font-weight: bold;
+            padding: 4px;
+            font-family: Arial;
+            color: #373737;
+          "
+        >
+          Office Name:
+        </td>
+        <td
+          style="
+            padding: 4px;
+            font-size: 12px;
+            font-family: Arial;
+            color: #373737;
+          "
+        >
+          Home Listing Service
+        </td>
+      </tr>
+      <tr>
+        <td
+          style="
+            width: 155px;
+            font-size: 12px;
+            font-weight: bold;
+            padding: 4px;
+            font-family: Arial;
+            color: #373737;
+          "
+        >
+          Address:
+        </td>
+        <td
+          style="
+            padding: 4px;
+            font-size: 12px;
+            font-family: Arial;
+            color: #373737;
+          "
+        >
+          14 Golf Club Dr
+        </td>
+      </tr>
+      <tr>
+        <td
+          style="
+            width: 155px;
+            font-size: 12px;
+            font-weight: bold;
+            padding: 4px;
+            font-family: Arial;
+            color: #373737;
+          "
+        >
+          City:
+        </td>
+        <td
+          style="
+            padding: 4px;
+            font-size: 12px;
+            font-family: Arial;
+            color: #373737;
+          "
+        >
+          Amagansett, NY
+        </td>
+      </tr>
+      <tr>
+        <td
+          style="
+            width: 155px;
+            font-size: 12px;
+            font-weight: bold;
+            padding: 4px;
+            font-family: Arial;
+            color: #373737;
+          "
+        >
+          Zip Code:
+        </td>
+        <td
+          style="
+            padding: 4px;
+            font-size: 12px;
+            font-family: Arial;
+            color: #373737;
+          "
+        >
+          11930
+        </td>
+      </tr>
+      <tr>
+        <td
+          style="
+            width: 155px;
+            font-size: 12px;
+            font-weight: bold;
+            padding: 4px;
+            font-family: Arial;
+            color: #373737;
+          "
+        >
+          Price:
+        </td>
+        <td
+          style="
+            padding: 4px;
+            font-size: 12px;
+            font-family: Arial;
+            color: #373737;
+          "
+        >
+          $15,000
+        </td>
+      </tr>
+      <tr>
+        <td
+          style="
+            width: 25%px;
+            font-size: 12px;
+            font-weight: bold;
+            padding: 4px;
+            font-family: Arial;
+            color: #373737;
+          "
+        >
+          Consumer Name:
+        </td>
+        <td
+          style="
+            padding: 4px;
+            font-size: 12px;
+            font-family: Arial;
+            color: #373737;
+            width: 75%px;
+          "
+        >
+          Marc Soto
+        </td>
+      </tr>
+      <tr>
+        <td
+          style="
+            width: 25%;
+            font-size: 12px;
+            font-weight: bold;
+            padding: 4px;
+            font-family: Arial;
+            color: #373737;
+          "
+        >
+          Email Address:
+        </td>
+        <td
+          style="
+            padding: 4px;
+            font-size: 12px;
+            font-family: Arial;
+            color: #373737;
+            width: 75%px;
+          "
+        >
+          scgators7@gmail.com
+        </td>
+      </tr>
+      <tr>
+        <td
+          style="
+            width: 25%;
+            font-size: 12px;
+            font-weight: bold;
+            padding: 4px;
+            font-family: Arial;
+            color: #373737;
+          "
+        >
+          Phone#:
+        </td>
+        <td
+          style="
+            padding: 4px;
+            font-size: 12px;
+            font-family: Arial;
+            color: #373737;
+            width: 75%px;
+          "
+        />
+      </tr>
+      <tr>
+        <td
+          style="
+            width: 155px;
+            font-size: 12px;
+            font-weight: bold;
+            padding: 4px;
+            font-family: Arial;
+            color: #373737;
+          "
+        >
+          Preferred Contact Method:
+        </td>
+        <td
+          style="
+            padding: 4px;
+            font-size: 12px;
+            font-family: Arial;
+            color: #373737;
+          "
+        />
+      </tr>
+      <tr>
+        <td
+          style="
+            width: 25%;
+            font-size: 12px;
+            font-weight: bold;
+            padding: 4px;
+            font-family: Arial;
+            color: #373737;
+          "
+        >
+          Comments:
+        </td>
+        <td
+          style="
+            padding: 4px;
+            font-size: 12px;
+            width: 75%px;
+            font-family: Arial;
+            color: #333333;
+          "
+        >
+          Hi Elizabeth - is this rented for June? If not, would they do 10k for
+          the month? Just two people, so easy guests! Figured I'd reach out as
+          June is around the corner.
+          <br />
+          <br />Thanks!
+        </td>
+      </tr>
+      <tr>
+        <td
+          style="
+            width: 155px;
+            font-size: 12px;
+            font-weight: bold;
+            padding: 4px;
+            font-family: Arial;
+            color: #373737;
+          "
+        >
+          User IP:
+        </td>
+        <td
+          style="
+            padding: 4px;
+            font-size: 12px;
+            font-family: Arial;
+            color: #373737;
+          "
+        >
+          204.63.42.38
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2">
+          <table cellspacing="0" cellpadding="0" border="0">
+            <tbody>
+              <tr>
+                <td
+                  class="address"
+                  colspan="2"
+                  style="
+                    background-color: #f2f5f7;
+                    font-family: Gill Sans MT;
+                    font-size: 15px;
+                    padding: 6px 0 0 8px;
+                    border-bottom: 1px solid #ddd;
+                  "
+                >
+                  <a
+                    href="https://www.elliman.com/newyork/rentals/detail/612-l-577-14_h78484/14-golf-club-dr-amagansett-ny-11930"
+                    rel="bookmark"
+                    class=""
+                    style="
+                      color: #285483;
+                      text-decoration: none;
+                      width: 100%;
+                      display: block;
+                    "
+                    >14 Golf Club Dr
+                  </a>
+                  <div class="listing-item__address">
+                    <div class="c-address u-text-ellipsis">
+                      <span
+                        class="locality city"
+                        style="
+                          float: left;
+                          background-color: #f2f5f7;
+                          color: #333;
+                          font-size: 11px;
+                          font-weight: bold;
+                          padding-bottom: 7px;
+                          padding-right: 5px;
+                        "
+                        >Amagansett</span
+                      ><span class="separator">, </span
+                      ><span
+                        class="region"
+                        style="
+                          float: left;
+                          background-color: #f2f5f7;
+                          color: #333;
+                          font-size: 11px;
+                          font-weight: bold;
+                          padding-bottom: 7px;
+                          padding-right: 5px;
+                        "
+                        >NY</span
+                      >
+                      <span
+                        class="postal-code"
+                        style="
+                          float: left;
+                          background-color: #f2f5f7;
+                          color: #333;
+                          font-size: 11px;
+                          font-weight: bold;
+                          padding-bottom: 7px;
+                        "
+                        >11930</span
+                      >
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td valign="top" width="140" style="padding: 14px 7px">
+                  <img
+                    width="140"
+                    height="105"
+                    src="https://img-de.gtsstatic.net/reno/imagereader.aspx?imageurl=https://uploaded-images.outeast.com/uploads/image/file/1955892/gallery_new_20pool_20yard.jpg?date=2020-09-18&idlisting=612-l-577-14_h78484&w=140&h=105&permitphotoenlargement=false"
+                    alt="listing 612-l-577-14_h78484 thumbnail"
+                    style="border: 1px solid #ccc; display: block"
+                    id="THUM-612-l-577-14_h78484"
+                  />
+                </td>
+                <td valign="top" style="font-size: 11px; line-height: 16px">
+                  <ul
+                    style="
+                      list-style: none;
+                      padding: 14px 7px;
+                      margin: 0;
+                      color: #000;
+                    "
+                  >
+                    <li id="PRICE-612-l-577-14_h78484" class="price">
+                      <span class="price__value u-ignore-phonenumber"
+                        >$15,000<!----></span
+                      >
+                    </li>
+                    <li
+                      style="
+                        font-family: Arial;
+                        font-size: 11px;
+                        color: #333333;
+                      "
+                      class="infoWindow_3 bedrooms"
+                    >
+                      4 Bedrooms
+                    </li>
+                    <li
+                      class="bathrooms"
+                      style="
+                        font-family: Arial;
+                        font-size: 11px;
+                        color: #333333;
+                      "
+                    >
+                      3 Baths
+                    </li>
+                    <li
+                      class="partial-bathrooms"
+                      style="
+                        font-family: Arial;
+                        font-size: 11px;
+                        color: #333333;
+                      "
+                    >
+                      1 Half Bath
+                    </li>
+                    <li
+                      class="interior-space"
+                      style="
+                        font-family: Arial;
+                        font-size: 11px;
+                        color: #333333;
+                      "
+                    >
+                      3,500 Sq. Ft.
+                    </li>
+                    <li
+                      class="interior-price"
+                      style="
+                        font-family: Arial;
+                        font-size: 11px;
+                        color: #333333;
+                      "
+                    >
+                      $4Sq. Ft.
+                    </li>
+                    <li
+                      style="
+                        font-family: Arial;
+                        font-size: 11px;
+                        color: #333333;
+                      "
+                      class="infoWindow_4 property-type"
+                    >
+                      Single Family Home
+                    </li>
+                    <li
+                      class="mls-id"
+                      style="
+                        font-family: Arial;
+                        font-size: 11px;
+                        color: #333333;
+                      "
+                    >
+                      MLS#: H78484
+                    </li>
+                  </ul>
+                </td>
+              </tr>
+              <tr>
+                <td valign="top" style="padding: 0 7px">
+                  <span
+                    style="
+                      border: 1px solid #ccc;
+                      width: 140px;
+                      height: 100px;
+                      display: block;
+                    "
+                    ><img
+                      src="http://maps.googleapis.com/maps/api/staticmap?sensor=false&key=AIzaSyD5F9_jkKxHTOC95A2qpEXn7ptNRont46c&v=3.43&center=40.98776,-72.12826&zoom=15&size=138x103&markers=40.98776,-72.12826&channel=Widget"
+                      alt="map"
+                  /></span>
+                </td>
+                <td
+                  valign="top"
+                  style="
+                    color: #666;
+                    font-size: 11px;
+                    line-height: 16px;
+                    font-family: Arial;
+                  "
+                >
+                  Rental Registration #: 18-1059 Just a few blocks from the
+                  shops and restaurants of downtown Amagansett and ocean and bay
+                  beaches. This bright and open four bedroom and four bathroom
+                  home is perfect for summer beach living. The spacious and open
+                  living and dining rooms have a wonderful flow to the outdoor
+                  dining and pool area... 
+                  <div>
+                    <a
+                      target="_blank"
+                      href="https://www.elliman.com/newyork/rentals/detail/612-l-577-14_h78484/14-golf-club-dr-amagansett-ny-11930"
+                      style="
+                        display: block;
+                        color: #285483;
+                        font-size: 11px;
+                        font-weight: bold;
+                        text-decoration: none;
+                        font-family: Arial;
+                      "
+                    >
+                      View Listing Details »
+                    </a>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>
 `
