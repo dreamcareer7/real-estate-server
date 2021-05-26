@@ -10,6 +10,7 @@ export interface ILtsLead {
   tag: string;
   owner_id: string;
   lead_source: string;
+  lead_source_url: string;
   lead_subsource: string;
   listing_number: string;
   agent_mlsid: string;
