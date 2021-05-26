@@ -366,6 +366,46 @@ const addTask = cb => {
     })
 }
 
+function addFile(cb) {
+  const file = fs.createReadStream(path.resolve(__dirname, 'data/logo.png'))
+
+  return frisby
+    .create('add file to a task')
+    .post(
+      `/tasks/${results.deal.addTask.data.id}/attachments`,
+      {
+        file
+      },
+      {
+        json: false,
+        form: true
+      }
+    )
+    .addHeader('content-type', 'multipart/form-data')
+    .after(cb)
+    .expectStatus(200)
+}
+
+function renameFile(cb) {
+  const task = results.deal.addTask.data.id
+  const file = JSON.parse(results.deal.addFile).data.id // File upload call has json:true, therefore not parsed
+
+  const filename = 'renamed.png'
+
+  return frisby
+    .create('rename a file')
+    .post(`/tasks/${task}/files/${file}/rename`, {filename})
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      data: {
+        name: filename,
+        mime: 'image/png'
+      }
+    })
+}
+
 const addAnotherTask = cb => {
   const anotherTask = {
     title: 'Another Task',
@@ -890,6 +930,8 @@ module.exports = {
   updateChecklist,
   addTask,
   addAnotherTask,
+  addFile,
+  renameFile,
   updateTask,
   updateTasks,
   removeTask,
