@@ -97,7 +97,8 @@ const checkLeadEmailParser = cb => {
     .create('check lead email parser')
     .post('/webhook/contacts/leads/email', {
       'body-html': mailgunPayload,
-      'recipient': 'test@rechat.com',
+      'recipient': 'leads@mail.rechat.com',
+      'message-headers': String.raw`[["X-Mailgun-Incoming", "Yes"], ["Message-Id", "<20210524214332.1.DE8FA6518CD8978A@elliman.com>"], ["X-Envelope-From", "<customerrelations@elliman.com>"], ["Received", "from JCSMTP52.gpweb.gabriels.net (jcsmtp51.gabriels.net [209.11.220.51]) by mxa.mailgun.org with ESMTP id 60ac1e04.7fa411ee99f0-api-n20; Mon, 24 May 2021 21:43:32 -0000 (UTC)"], ["Received", "from CMSAWSWS12-118 (unknown [172.22.12.118])\tby JCSMTP52.gpweb.gabriels.net (Postfix) with ESMTP id 56EF35C;\tMon, 24 May 2021 17:43:31 -0400 (EDT)"], ["Mime-Version", "1.0"], ["Sender", "\"Elliman.com Inquiry\" <customerrelations@elliman.com>"], ["From", "\"Elliman.com Inquiry\" <customerrelations@elliman.com>"], ["To", "\"John Doe\" <test@rechat.com>"], ["Reply-To", "\"Elliman.com Inquiry\" <customerrelations@elliman.com>"], ["Date", "24 May 2021 17:43:31 -0400"], ["Subject", "www.elliman.com/newyork : Request More Information"], ["Content-Type", "multipart/alternative; boundary=\"--boundary_50_c7f9bc13-549c-4849-a345-61f205c11008\""]]`
     })
     .after(cb)
     .expectStatus(204)
