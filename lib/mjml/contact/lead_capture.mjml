@@ -135,7 +135,7 @@
         </mj-column>
       </mj-section>
 
-      <mj-section padding="0">
+      <mj-section border-left="1px solid #D7D9DC" border-right="1px solid #D7D9DC" padding="0px 20px">
         <mj-group>
           <mj-column width="100%">
             <mj-text css-class="txt7" align="center" font-family="Roboto" font-size="16px" font-weight="700" color="#009CBD" line-height="1" padding="10px 0">
@@ -147,7 +147,7 @@
       </mj-section>
       {% endif %}
 
-      <mj-section border-left="1px solid #D7D9DC" border-right="1px solid #D7D9DC" padding="0px 20px">
+      <mj-section padding="0">
         <mj-group>
           <mj-column width="100%" css-class="rounded1">
             <mj-spacer height="38px" />
