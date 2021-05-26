@@ -99,7 +99,7 @@
     "numeral": "^1.5.3",
     "nunjucks": "^3.2.3",
     "oauth2orize": "^1.11.0",
-    "papaparse": "^5.2.0",
+    "papaparse": "^5.3.0",
     "parse-address": "^1.1.2",
     "parse-full-name": "^1.2.5",
     "passport": "^0.4.1",

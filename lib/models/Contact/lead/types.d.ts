@@ -4,13 +4,13 @@ export interface ILtsLead {
   last_name: string;
   email: string;
   phone_number: string;
-  unit_number: string;
-  street_number: string;
   company: string;
-  country: string;
+  address: string;
+  message: string;
   tag: string;
   owner_id: string;
   lead_source: string;
+  lead_source_url: string;
   lead_subsource: string;
   listing_number: string;
   agent_mlsid: string;

@@ -472,10 +472,7 @@ function checkBuyerRescheduleNotifications(cb) {
               results.authorize.token.data.timezone
             ).format('MMM D, HH:mm')}": Sorry something came up`,
             type: 'showing_appointment_notification',
-          },
-          {
-            action: 'Created',
-          },
+          }
         ],
       },
     })
