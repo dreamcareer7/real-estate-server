@@ -81,7 +81,7 @@
         <mj-column width="9%"></mj-column>
         <mj-column width="82%">
           <mj-text css-class="txt1" padding-left="0" font-family="Roboto" font-size="20px" font-weight="700" color="#009CBD" line-height="1">{{address}}</mj-text>
-          <mj-text css-class="txt2" padding-left="0" font-family="Roboto" font-size="16px" font-weight="300" color="#0C2A3C" line-height="1">
+          <mj-text css-class="txt2" padding-left="0" font-family="Roboto" font-size="16px" font-weight="300" color="#0C2A3C" line-height="1.5">
             {{message}}
           </mj-text>
           <mj-spacer height="20px" />
@@ -89,7 +89,7 @@
           <mj-text css-class="txt3" padding="0" font-family="Roboto" font-size="16px" font-weight="700" color="#0F3057" line-height="1">
             {{display_name}}
           </mj-text>
-          <mj-text css-class="txt4" padding-left="0" font-family="Roboto" font-size="16px" font-weight="500" color="#A0A0A0" line-height="1">
+          <mj-text css-class="txt4" padding-left="0" font-family="Roboto" font-size="16px" font-weight="500" color="#A0A0A0" line-height="1.5">
             Received {{ timestamp | time('HH:mmA, MMM D, YYYY', timezone) }}
           </mj-text>
         </mj-column>
@@ -161,7 +161,7 @@
       <mj-group>
         <mj-column width="10%"></mj-column>
         <mj-column width="80%">
-          <mj-text css-class="txt8" color="#0C2A3C" align="center" font-family="Roboto" font-size="16px" font-weight="300" line-height="1.3" padding="0">
+          <mj-text css-class="txt8" color="#0C2A3C" align="center" font-family="Roboto" font-size="16px" font-weight="300" line-height="1.5" padding="0">
             You’ll see a 391% increase in your conversation rate if you respond within 5 minutes. 78% of sales go to first responder.
           </mj-text>
         </mj-column>
