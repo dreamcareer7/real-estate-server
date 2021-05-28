@@ -7,6 +7,8 @@
 const request = require('request-promise-native')
 const _ = require('lodash')
 
+const MLSJob = require('../../../lib/models/MLSJob')
+
 const syncRegions = require('./sync-regions')
 const syncOffices = require('./sync-offices')
 const syncAgents = require('./sync-agents')
@@ -70,6 +72,10 @@ const sync = async () => {
   await syncUsers(users)
   await syncOffices(offices)
   await syncAgents(users)
+
+  await promisify(MLSJob.insert)({
+    'sync_users'
+  })
 }
 
 const run = async() => {
