@@ -109,7 +109,7 @@ const map = ({object}, attrs) => {
     const found = find(attrs, { attribute_type: 'note', text: object.notes })
 
     !found && attributes.push({
-      attribute_type: 'notes',
+      attribute_type: 'note',
       text: object.notes,
     })
   }

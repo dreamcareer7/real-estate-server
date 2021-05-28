@@ -7,13 +7,18 @@
 const request = require('request-promise-native')
 const _ = require('lodash')
 
+const MLSJob = require('../../../lib/models/MLSJob')
+
 const syncRegions = require('./sync-regions')
 const syncOffices = require('./sync-offices')
 const syncAgents = require('./sync-agents')
 const syncUsers = require('./sync-users')
 const getRoot = require('./get-root')
 
+const promisify = require('../../../lib/utils/promisify')
 const createContext = require('../../workers/create-context')
+
+const attachContactEventHandlers = require('../../../lib/models/Contact/events')
 
 const config = {
   url: 'https://webapi.elliman.com/token?username=emil@rechat.com&password=Skiing4-Monetize-Excitable'
@@ -70,9 +75,14 @@ const sync = async () => {
   await syncUsers(users)
   await syncOffices(offices)
   await syncAgents(users)
+
+  await promisify(MLSJob.insert)({
+    name: 'de_users'
+  })
 }
 
 const run = async() => {
+  attachContactEventHandlers()
   const { commit, run } = await createContext()
 
   await run(async () => {

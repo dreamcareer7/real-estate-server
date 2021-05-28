@@ -6,11 +6,15 @@ const _ = require('lodash')
 
 const db = require('../../../lib/utils/db')
 const promisify = require('../../../lib/utils/promisify')
+const { peanar } = require('../../../lib/utils/peanar')
 
 const MLSJob = require('../../../lib/models/MLSJob')
 const Context = require('../../../lib/models/Context')
 const Contact = require('../../../lib/models/Contact/manipulate')
 const ContactAttribute = require('../../../lib/models/Contact/attribute/get')
+
+const attachContactEvents = require('../../../lib/models/Contact/events')
+const attachContactIntEventHandler = require('../../../lib/models/ContactIntegration/events')
 
 const createContext = require('../../workers/create-context')
 
@@ -193,11 +197,16 @@ const dateSync = async ({
 }
 
 const run = async() => {
+  await peanar.declareAmqResources()
+
+  attachContactEvents()
+  attachContactIntEventHandler()
+
   const { commit, run } = await createContext()
 
   const name = 'de_contacts'
-  const step = 20
-  const limit = 50
+  const step = 1
+  const limit = 1000
 
   await run(async () => {
     const last = await promisify(MLSJob.getLastRun)(name) || {

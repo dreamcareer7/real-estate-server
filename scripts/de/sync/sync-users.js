@@ -110,6 +110,8 @@ saved AS (
     user_type,
     (
       SELECT id FROM agents WHERE mls::text = data.mls AND LOWER(mlsid) = LOWER(data.mlsid)
+      ORDER BY status = 'Active', matrix_modified_dt
+      LIMIT 1
     )
   FROM de.users
   JOIN data ON de.users.username = data.username
@@ -187,6 +189,13 @@ UPDATE users SET
 FROM de.users
 WHERE public.users.id = de.users.user`
 
+const ENABLE_DAILY = `UPDATE public.users SET daily_enabled = TRUE
+  FROM de.users
+  JOIN public.users pu ON de.users.user = pu.id
+  WHERE pu.user_type = 'Agent'
+  AND pu.last_seen_at IS NOT NULL
+  AND public.users.id = pu.id`
+
 const setPhone = user => {
   const { number } = _.find(user.phoneNumbers, { type: 'Mobile' }) || _.find(user.phoneNumbers, { type: 'Direct' }) || {}
 
@@ -248,6 +257,7 @@ const syncUsers = async users => {
   await db.executeSql.promise(SET_PHONES)
   await db.executeSql.promise(SET_EMAILS)
   await db.executeSql.promise(CONFIRM)
+  await db.executeSql.promise(ENABLE_DAILY)
 }
 
 
