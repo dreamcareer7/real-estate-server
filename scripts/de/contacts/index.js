@@ -205,7 +205,7 @@ const run = async() => {
   const { commit, run } = await createContext()
 
   const name = 'de_contacts'
-  const step = 15
+  const step = 3
   const limit = 1000
 
   await run(async () => {
