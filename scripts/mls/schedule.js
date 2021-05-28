@@ -73,7 +73,10 @@ function runTask (task, cb) {
     p.kill()
   }
 
-  const timeout = setTimeout(timedout, 20 * 60 * 1000)
+  /* This used to be 20 minutes.
+   * Im changing it temporarily to a few hours so we can go through the DE contact sync jobs
+   */
+  const timeout = setTimeout(timedout, 400 * 60 * 1000)
 
   let alreadyDone = false
   const done = function () {
