@@ -23,6 +23,8 @@ require('../../../lib/models/Stripe')
 require('../../../lib/models/Godaddy/zone')
 require('../../../lib/models/Godaddy/purchase')
 require('../../../lib/models/Listing/notify-agents')
+require('../../../lib/controllers/contact/attributes')
+require('../../../lib/controllers/contact/contact')
 
 const queues = [
   {
