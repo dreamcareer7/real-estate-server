@@ -196,8 +196,8 @@ const run = async() => {
   const { commit, run } = await createContext()
 
   const name = 'de_contacts'
-  const step = 20
-  const limit = 50
+  const step = 15
+  const limit = 1000
 
   await run(async () => {
     const last = await promisify(MLSJob.getLastRun)(name) || {
