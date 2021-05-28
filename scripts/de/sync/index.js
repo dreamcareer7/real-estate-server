@@ -74,7 +74,7 @@ const sync = async () => {
   await syncAgents(users)
 
   await promisify(MLSJob.insert)({
-    name: 'sync_users'
+    name: 'de_users'
   })
 }
 
