@@ -17,6 +17,7 @@ Object.keys(definitions).forEach(queue_name => {
   Object.keys(definitions[queue_name]).forEach(task_name => {
     const definition = definitions[queue_name][task_name]
 
+    console.log('Job', queue_name, task_name, definition.enabled)
     if (definition.enabled === false) // Some are explicitly disabled
       return
 
