@@ -69,7 +69,7 @@
       <mj-group>
         <mj-column width="5%"></mj-column>
         <mj-column width="90%">
-          <mj-image padding="0" src="https://i.ibb.co/jfv6YrQ/lead-capture-header.png"></mj-image>
+          <mj-image padding="0" src="https://assets.rechat.com/email-templates/images/lead-capture-header.png"></mj-image>
         </mj-column>
         <mj-column width="5%"></mj-column>
       </mj-group>
