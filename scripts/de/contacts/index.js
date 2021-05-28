@@ -183,7 +183,7 @@ const dateSync = async ({
 
   let lastPage = res
 
-  while(lastPage.Data.length > Size) {
+  while(lastPage.Data.length >= Size) {
     await timeout(2000)
     Context.log('Pagination', results, '/', lastPage.TotalContacts)
     lastPage = await paginate({
