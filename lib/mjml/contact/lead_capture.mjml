@@ -101,7 +101,7 @@
     <mj-wrapper padding="30px" background-color="#fff">
       <mj-section padding="0">
         <mj-column css-class="rounded">
-          <mj-image src="https://i.ibb.co/1q1yyZd/Rocket-Clock.png" width="50px" padding-top="48px"></mj-image>
+          <mj-image src="https://assets.rechat.com/email-templates/images/Rocket-Clock.png" width="50px" padding-top="48px"></mj-image>
           <mj-text css-class="txt5" padding="0" align="center" font-family="Roboto" font-size="20px" font-weight="300" color="#0C2A3C" line-height="1.5">Call or email no later than {{suggested_action_timestamp | time('HH:mm A', timezone)}}</mj-text>
         </mj-column>
       </mj-section>
@@ -109,7 +109,7 @@
       {% if phone_number %}
       <mj-section border-left="1px solid #D7D9DC" border-right="1px solid #D7D9DC" padding="32px 20px 5px">
         <mj-column>
-          <mj-text css-class="txt6" padding="0" align="center" text-transform="uppercase" font-family="Roboto" font-size="18px" font-weight="700" color="#0C2A3C" line-height="1.5"><img style="padding:0 3px; width:18px;" src="https://i.ibb.co/4dJwVLs/Fill-1.png">
+          <mj-text css-class="txt6" padding="0" align="center" text-transform="uppercase" font-family="Roboto" font-size="18px" font-weight="700" color="#0C2A3C" line-height="1.5"><img style="padding:0 3px; width:18px;" src="https://assets.rechat.com/email-templates/images/Fill-1.png">
             Call Now
           </mj-text>
         </mj-column>
@@ -129,7 +129,7 @@
       {% if email %}
       <mj-section border-left="1px solid #D7D9DC" border-right="1px solid #D7D9DC" padding="20px 20px 5px">
         <mj-column>
-          <mj-text css-class="txt6" padding="0" align="center" text-transform="uppercase" font-family="Roboto" font-size="18px" font-weight="700" color="#0C2A3C" line-height="1.5"><img style="padding:0 3px; width:18px;" src="https://i.ibb.co/pQ1KM7h/Combined-Shape.png">
+          <mj-text css-class="txt6" padding="0" align="center" text-transform="uppercase" font-family="Roboto" font-size="18px" font-weight="700" color="#0C2A3C" line-height="1.5"><img style="padding:0 3px; width:18px;" src="https://assets.rechat.com/email-templates/images/Combined-Shape.png">
             Email
           </mj-text>
         </mj-column>
