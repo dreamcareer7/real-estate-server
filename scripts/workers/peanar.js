@@ -29,6 +29,7 @@ require('../../lib/models/Godaddy/zone')
 require('../../lib/models/Godaddy/purchase')
 require('../../lib/models/Listing/notify-agents')
 require('../../lib/controllers/contact/attributes')
+require('../../lib/controllers/contact/contact')
 
 // require('../../lib/models/Showings/worker')
 
