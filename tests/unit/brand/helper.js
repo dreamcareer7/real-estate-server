@@ -2,6 +2,7 @@ const _ = require('lodash')
 
 const checklists = require('./checklists')
 const contexts = require('./contexts')
+const property_types = require('./property_types')
 
 const Brand = require('../../../lib/models/Brand')
 
@@ -11,9 +12,13 @@ const BrandRole = {
 }
 
 const BrandContext = require('../../../lib/models/Brand/deal/context')
+const BrandPropertyType = {
+  ...require('../../../lib/models/Brand/deal/property_type/save'),
+  ...require('../../../lib/models/Brand/deal/property_type/get')
+}
 const BrandChecklist = require('../../../lib/models/Brand/deal/checklist')
 const BrandEmail = require('../../../lib/models/Brand/email/save')
-const BrandFlow = require('../../../lib/models/Brand/flow')
+const BrandFlow = require('../../../lib/models/Brand/flow/create')
 const BrandList = require('../../../lib/models/Brand/list')
 const Context = require('../../../lib/models/Context')
 const Form = require('../../../lib/models/Form')
@@ -27,7 +32,8 @@ const default_data = {
   },
 
   contexts,
-  checklists
+  checklists,
+  property_types,
 }
 
 async function create(data) {
@@ -40,6 +46,7 @@ async function create(data) {
     roles,
     contexts,
     checklists,
+    property_types,
     emails,
     flows,
     lists,
@@ -47,6 +54,17 @@ async function create(data) {
   } = data
 
   const b = await Brand.create(brand_props)
+
+  const property_types_by_label = {}
+  for (const { label, is_lease } of property_types) {
+    const property_type = await BrandPropertyType.create({
+      label,
+      is_lease,
+      brand: b.id,
+    })
+
+    property_types_by_label[label] = property_type.id
+  }
 
   for (const r in roles) {
     const role = await BrandRole.create({
@@ -67,11 +85,14 @@ async function create(data) {
     name: 'Test Form'
   })
 
-  for(const checklist of checklists) {
+  const saved_checklists = []
+  for(const { property_type, ...checklist } of checklists) {
     const saved = await BrandChecklist.create({
       ...checklist,
-      brand: b.id
+      brand: b.id,
+      property_type: property_types_by_label[property_type]
     })
+    saved_checklists.push(saved)
 
     const { tasks } = checklist
 
@@ -88,7 +109,13 @@ async function create(data) {
     await BrandContext.create({
       ...contexts[key],
       key,
-      brand: b.id
+      brand: b.id,
+      checklists: saved_checklists.map(c => {
+        return {
+          checklist: c.id,
+          is_required: true
+        }
+      })
     })
   }
 
@@ -117,6 +144,7 @@ async function create(data) {
             goal: step.email.goal,
             subject: step.email.subject,
             include_signature: step.email.include_signature,
+            event_type: 'last_step_date',
             body: step.email.body,
           })
 
@@ -151,8 +179,14 @@ function getChecklists(brand_id) {
   return BrandChecklist.getByBrand(brand_id)
 }
 
+async function getPropertyTypes(brand_id) {
+  const property_types = await BrandPropertyType.getByBrand(brand_id)
+  return _.keyBy(property_types, 'label')
+}
+
 module.exports = {
   create,
   getContexts,
-  getChecklists
+  getChecklists,
+  getPropertyTypes
 }

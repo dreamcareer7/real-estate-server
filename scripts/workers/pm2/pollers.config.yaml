@@ -1,0 +1,49 @@
+apps:
+  - script   : ./scripts/workers/index.js
+    args     : ./pollers/brand_template_thumbnails
+    name     : 'thumbnails'
+    kill_timeout : 15000
+  - script   : ./scripts/workers/index.js
+    args     : ./pollers/calendar_notifications
+    name     : 'calendar_notifications'
+    kill_timeout : 15000
+  - script   : ./scripts/workers/index.js
+    args     : ./pollers/crm_task_notifications
+    name     : 'crm_task_notifications'
+    kill_timeout : 15000
+  - script   : ./scripts/workers/index.js
+    args     : ./pollers/dailies
+    name     : 'dailies'
+    kill_timeout : 15000
+  - script   : ./scripts/workers/index.js
+    args     : ./pollers/triggers
+    name     : 'triggers'
+    kill_timeout : 15000
+  - script   : ./scripts/workers/index.js
+    args     : ./pollers/email_campaign_stats
+    name     : 'email_campaign_stats'
+    kill_timeout : 15000
+  - script   : ./scripts/workers/index.js
+    args     : ./pollers/email_campaigns
+    name     : 'email_campaigns'
+    kill_timeout : 25000
+  - script   : ./scripts/workers/index.js
+    args     : ./pollers/google
+    name     : 'google'
+    kill_timeout : 15000
+  - script   : ./scripts/workers/index.js
+    args     : ./pollers/microsoft
+    name     : 'microsoft'
+    kill_timeout : 15000
+  - script   : ./scripts/workers/index.js
+    args     : ./pollers/notifications
+    name     : 'notifications'
+    kill_timeout : 15000
+  - script   : ./scripts/workers/index.js
+    args     : ./pollers/deal_notifications
+    name     : 'deal_notifications'
+    kill_timeout : 15000
+  - script   : ./scripts/workers/index.js
+    args     : ./pollers/email_events_notifications
+    name     : 'email_events_notifications'
+    kill_timeout : 15000

@@ -3,9 +3,6 @@ registerSuite('contact', [
   'create'
 ])
 
-const HOUR = 3600
-const DAY = 24 * HOUR
-
 const addEmail = cb => {
   const email = {
     name: 'Email Name',
@@ -32,24 +29,33 @@ const addFlow = cb => {
     steps: [{
       title: 'Create Rechat email',
       description: 'Create a Rechat email address for the new guy to use in other services',
-      due_in: 10 * HOUR,
+      wait_for: { days: 0 },
+      time: '10:00:00',
+      event_type: 'last_step_date',
       event: {
         title: 'Create Rechat email',
         task_type: 'Other',
-      }
+      },
+      order: 1
     }, {
       title: 'Send them a test email',
       description: 'Automatically send them a test email to make sure it\'s working',
-      due_in: 8 * HOUR + DAY,
-      email: results.flow.addEmail.data.id
+      wait_for: { days: 1 },
+      time: '08:00:00',
+      event_type: 'last_step_date',
+      email: results.flow.addEmail.data.id,
+      order: 2
     }, {
       title: 'Demo of Rechat',
       description: 'Dan gives a quick demo of the Rechat system and explains how it works',
-      due_in: 3 * DAY + 14 * HOUR,
+      wait_for: { days: 3 },
+      time: '14:00:00',
+      event_type: 'last_step_date',
       event: {
         title: 'Demo of Rechat',
         task_type: 'Call',
-      }
+      },
+      order: 3
     }]
   }
 
@@ -61,7 +67,10 @@ const addFlow = cb => {
       data: {
         ...flow,
         steps: [
-          flow.steps[0],
+          {
+            ...flow.steps[0],
+            wait_for: {}
+          },
           {
             ...flow.steps[1],
             email: {
@@ -115,7 +124,10 @@ const addStepToFlow = cb => {
   const step = {
     title: 'Call to check on them',
     description: 'Call to check on them',
-    due_in: 7 * DAY + 10 * HOUR,
+    wait_for: { days: 7 },
+    time: '10:00:00',
+    event_type: 'last_step_date',
+    order: 4,
     event: {
       title: 'Call to check on them',
       task_type: 'Call',
@@ -123,25 +135,24 @@ const addStepToFlow = cb => {
   }
 
   return frisby.create('add a step to a brand flow')
-    .post(`/brands/${brand}/flows/${flow}/steps?associations[]=brand_flow_step.event&associations[]=brand_flow_step.email`, {
-      steps: [step]
-    })
+    .post(`/brands/${brand}/flows/${flow}/steps?associations[]=brand_flow_step.event&associations[]=brand_flow_step.email`, step)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
-      data: [step]
+      data: step
     })
 }
 
 const editBrandFlowStep = cb => {
   const brand = results.brand.createParent.data.id
   const flow = results.flow.getBrandFlows.data[0].id
-  const step_id = results.flow.addStepToFlow.data[0].id
-
+  const step_id = results.flow.addStepToFlow.data.id
   const step = {
     title: 'Meet with them to catch up',
     description: 'Meet with them to catch up',
-    due_in: 10 * DAY + 11 * HOUR,
+    wait_for: { days: 10 },
+    time: '11:00:00',
+    event_type: 'last_step_date',
     event: {
       title: 'Meet with them to catch up',
       task_type: 'In-Person Meeting',
@@ -165,7 +176,7 @@ const getBrandFlowById = cb => {
     results.flow.editBrandFlowStep.data
   ]
 
-  return frisby.create('get brand flows')
+  return frisby.create('get brand flow by id')
     .get(`/brands/${brand}/flows/${flow}?associations[]=brand_flow.steps&associations[]=brand_flow_step.event&associations[]=brand_flow_step.email`)
     .after(cb)
     .expectStatus(200)
@@ -182,7 +193,7 @@ const getBrandFlowById = cb => {
 const deleteFlowStep = cb => {
   const brand = results.brand.createParent.data.id
   const flow = results.flow.getBrandFlows.data[0].id
-  const step = results.flow.addStepToFlow.data[0].id
+  const step = results.flow.addStepToFlow.data.id
 
   return frisby.create('delete a brand flow step')
     .delete(`/brands/${brand}/flows/${flow}/steps/${step}`)
@@ -192,7 +203,7 @@ const deleteFlowStep = cb => {
 
 const enroll = cb => {
   return frisby.create('enroll a contact to a flow')
-    .post('/crm/flows?associations[]=contact.flows&associations[]=flow_step.crm_task&associations[]=flow_step.email', {
+    .post('/crm/flows?associations[]=flow.contact&associations[]=flow_step.crm_task&associations[]=flow_step.email', {
       origin: results.flow.getBrandFlows.data[0].id,
       starts_at: Date.now() / 1000,
       steps: results.flow.getBrandFlows.data[0].steps.map(s => s.id),
@@ -204,9 +215,36 @@ const enroll = cb => {
     .expectStatus(200)
     .expectJSON({
       data: [{
-        steps: [{}, {}, {}],
-        contact: results.contact.create.data[0].id
+        steps: [{}],
+        contact: {
+          id: results.contact.create.data[0].id
+        }
       }]
+    })
+}
+
+const executeTriggers = cb => {
+  return frisby.create('execute scheduled triggers')
+    .post('/jobs', {
+      name: 'Trigger.executeDue',
+      data: {}
+    })
+    .after(cb)
+    .expectStatus(200)
+}
+
+const getFlowWithExecutedStep = cb => {
+  return frisby.create('get the flow after first step is executed')
+    .get(`/contacts/${results.contact.create.data[0].id}?associations[]=contact.flows&associations[]=flow_step.crm_task&associations[]=flow_step.email`)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      data: {
+        flows: [{
+          steps: [{}],
+          id: results.flow.enroll.data[0].id
+        }]
+      }
     })
 }
 
@@ -227,7 +265,7 @@ const checkFlowAssociation = cb => {
     .expectJSON({
       data: {
         flows: [{
-          steps: [{}, {}, {}]
+          steps: [{}]
         }]
       }
     })
@@ -272,6 +310,8 @@ module.exports = {
   getBrandFlowById,
   deleteFlowStep,
   enroll,
+  executeTriggers,
+  getFlowWithExecutedStep,
   deleteFlowWithActiveFlows,
   checkFlowAssociation,
   stop,

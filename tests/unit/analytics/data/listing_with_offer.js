@@ -15,12 +15,11 @@ module.exports = async function(sellerAgent, buyerAgent, brand, mls_number) {
   return DealHelper.create(sellerAgent.id, brand.id, {
     is_draft: false,
     deal_type: 'Selling',
-    property_type: 'Resale',
+    property_type: 'New Home',
     checklists: [
       {},
       {
-        deal_type: 'Buying',
-        property_type: 'Resale',
+        checklist_type: 'Offer',
         context: {
           closing_date: {
             value: moment()

@@ -27,23 +27,25 @@ async function create(user_id, brand_id, data) {
 
   const brand_contexts = await BrandHelper.getContexts(brand_id)
   const brand_checklists = await BrandHelper.getChecklists(brand_id)
+  const brand_property_types = await BrandHelper.getPropertyTypes(brand_id)
 
   let deal = await Deal.create({
     ...deal_props,
     created_by: user_id,
-    brand: brand_id
+    brand: brand_id,
+    property_type: brand_property_types[deal_props.property_type].id
   })
 
   for (let i = 0; i < checklists.length; i++) {
     const {
       context,
-      deal_type = deal.deal_type,
+      checklist_type = checklists[i].checklist_type ?? deal.deal_type,
       property_type = deal.property_type,
       ...c
     } = checklists[i]
 
     const origin = brand_checklists.find(
-      bc => bc.deal_type === deal_type && bc.property_type === property_type
+      bc => bc.checklist_type === checklist_type && bc.property_type === property_type
     )
 
     const cl_data = deepmerge.all([
@@ -59,7 +61,7 @@ async function create(user_id, brand_id, data) {
     ])
 
     const cl = await DealChecklist.createWithTasks(cl_data, {
-      deal_type,
+      checklist_type,
       property_type
     })
 

@@ -16,7 +16,6 @@ const contacts = [{
 
 const deal = {
   deal_type: 'Buying',
-  property_type: 'Resale',
   deal_context: {
     'option_period': {
       value: moment().add(3, 'day').format()

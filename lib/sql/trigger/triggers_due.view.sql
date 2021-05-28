@@ -60,8 +60,8 @@ CREATE OR REPLACE VIEW triggers_due AS (
         ON (t.user = u.id)
     WHERE
       c.brand = t.brand
-      AND c.event_type = 'flow_start'
-      AND t.event_type = 'flow_start'
+      AND c.event_type = 'last_step_date'
+      AND t.event_type = 'last_step_date'
       AND t.deleted_at IS NULL
       AND t.executed_at IS NULL
       AND t.effective_at <= NOW()

@@ -153,7 +153,7 @@ SELECT deals.*,
       AND deals_checklists.deactivated_at IS NULL
       AND deals_checklists.terminated_at  IS NULL
       AND deals_checklists.deleted_at IS NULL
-      AND brands_checklists.deal_type = 'Buying'
+      AND brands_checklists.checklist_type = 'Offer'
   ) as has_active_offer,
 
   (

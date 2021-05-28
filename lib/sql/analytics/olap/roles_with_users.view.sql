@@ -28,6 +28,7 @@ CREATE OR REPLACE VIEW analytics.roles AS
       ON ((roles."user" = users.id) OR (roles.email = users.email) OR (roles.phone_number = users.phone_number))
     JOIN analytics.deals AS deals
       ON deals.id = roles.deal
+    JOIN brands_property_types bpt ON bpt.id = deals.property_type
   WHERE
     roles.deleted_at IS NULL
-    AND deals.property_type <> ALL(VALUES ('Residential Lease'::deal_property_type), ('Commercial Lease'::deal_property_type))
+    AND bpt.is_lease IS FALSE

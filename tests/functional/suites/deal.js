@@ -26,23 +26,30 @@ registerSuite('brand', [
   'addForm',
   'addTemplate',
   'addTask',
-  'addAnotherTask'
+  'addAnotherTask',
+  'addPropertyType'
 ])
 registerSuite('user', ['upgradeToAgentWithEmail'])
 
 const pdf = 'https://s3-us-west-2.amazonaws.com/rechat-forms/2672324.pdf'
 
 const create = (cb) => {
-  const data = JSON.parse(JSON.stringify(deal))
+  const data = {
+    ...JSON.parse(JSON.stringify(deal)),
+    property_type: results.brand.addPropertyType.data.id
+  }
 
   return frisby.create('create a deal')
-    .post('/deals?associations[]=deal.gallery', data)
+    .post('/deals?associations[]=deal.gallery&associations[]=deal.property_type&associations[]=brand_property_type.checklists', data)
     .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
-      data: data
+      data: {
+        ...data,
+        property_type: omit(results.brand.addPropertyType.data, 'checklists')
+      }
     })
 }
 
@@ -50,7 +57,7 @@ const patchListing = cb => {
   const patch = {
     listing: results.listing.getListing.data.id,
   }
-  const expected_object = Object.assign({}, omit(results.deal.create.data, ['gallery']), patch)
+  const expected_object = Object.assign({}, omit(results.deal.create.data, ['gallery', 'property_type']), patch)
 
   return frisby.create('set a listing for a deal')
     .patch(`/deals/${results.deal.create.data.id}/listing`, patch)
@@ -64,17 +71,18 @@ const patchListing = cb => {
 
 const patchPropertyType = cb => {
   const patch = {
-    property_type: 'New Home'
+    property_type: results.brand.addPropertyType.data.id
   }
-  const expected_object = Object.assign({}, results.deal.patchListing.data, patch)
 
   return frisby.create('change property type of a deal')
-    .patch(`/deals/${results.deal.create.data.id}/property_type`, patch)
+    .patch(`/deals/${results.deal.create.data.id}/property_type?associations[]=deal.property_type`, patch)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
-      data: expected_object
+      data: {
+        ...results.deal.patchListing.data
+      }
     })
 }
 
@@ -89,7 +97,7 @@ const patchDraft = cb => {
   const expected_object = Object.assign({}, results.deal.patchPropertyType.data, patch)
 
   return frisby.create('publish a deal to live mode')
-    .patch(`/deals/${results.deal.create.data.id}/draft`, patch)
+    .patch(`/deals/${results.deal.create.data.id}/draft?associations[]=deal.property_type`, patch)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
@@ -120,7 +128,8 @@ const addContext = cb => {
     'brokerwolf_id',
     'brokerwolf_row_version',
     'email',
-    'gallery'
+    'gallery',
+    'property_type'
   ]), {
     context: {
       list_date: {
@@ -301,7 +310,7 @@ const addChecklist = cb => {
       checklist,
 
       conditions: {
-        deal_type: results.brand.addChecklist.data.deal_type,
+        checklist_type: results.brand.addChecklist.data.checklist_type,
         property_type: results.brand.addChecklist.data.property_type,
       }
     })

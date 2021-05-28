@@ -1,5 +1,4 @@
 const _ = require('lodash')
-const sq = require('../../../lib/utils/squel_extensions')
 
 const contexts = [
   {
@@ -13,8 +12,6 @@ const contexts = [
     default_value: null,
     data_type: 'Text',
     format: null,
-    required: null,
-    optional: null,
     triggers_brokerwolf: false,
     order: 0
   },
@@ -29,14 +26,6 @@ const contexts = [
     default_value: null,
     data_type: 'Date',
     format: null,
-    required: sq.SqArray.from([
-      'Selling',
-      'Resale',
-      'New Home',
-      'Lot / Land',
-      'Commercial Sale'
-    ]),
-    optional: sq.SqArray.from([]),
     triggers_brokerwolf: false,
     order: 1
   },
@@ -51,20 +40,6 @@ const contexts = [
     default_value: null,
     data_type: 'Date',
     format: null,
-    required: sq.SqArray.from([
-      'Selling',
-      'Resale',
-      'New Home',
-      'Lot / Land',
-      'Commercial Sale'
-    ]),
-    optional: sq.SqArray.from([
-      'Commercial Sale',
-      'Lot / Land',
-      'New Home',
-      'Resale',
-      'Selling'
-    ]),
     triggers_brokerwolf: false,
     order: 2
   },
@@ -79,16 +54,6 @@ const contexts = [
     default_value: null,
     data_type: 'Date',
     format: null,
-    required: sq.SqArray.from(['Buying', 'Resale', 'New Home', 'Lot / Land', 'Commercial Sale']),
-    optional: sq.SqArray.from([
-      'Active Offer',
-      'Buying',
-      'Commercial Sale',
-      'Lot / Land',
-      'New Home',
-      'Resale',
-      'Selling'
-    ]),
     triggers_brokerwolf: false,
     order: 3
   },
@@ -103,16 +68,6 @@ const contexts = [
     default_value: null,
     data_type: 'Date',
     format: null,
-    required: sq.SqArray.from([]),
-    optional: sq.SqArray.from([
-      'Active Offer',
-      'Buying',
-      'Commercial Sale',
-      'Lot / Land',
-      'New Home',
-      'Resale',
-      'Selling'
-    ]),
     triggers_brokerwolf: false,
     order: 4
   },
@@ -127,16 +82,6 @@ const contexts = [
     default_value: null,
     data_type: 'Date',
     format: null,
-    required: sq.SqArray.from(['Buying', 'Resale', 'New Home', 'Lot / Land', 'Commercial Sale']),
-    optional: sq.SqArray.from([
-      'Active Offer',
-      'Buying',
-      'Commercial Sale',
-      'Lot / Land',
-      'New Home',
-      'Resale',
-      'Selling'
-    ]),
     triggers_brokerwolf: false,
     order: 5
   },
@@ -151,8 +96,6 @@ const contexts = [
     default_value: null,
     data_type: 'Date',
     format: null,
-    required: sq.SqArray.from([]),
-    optional: sq.SqArray.from(['Buying', 'Commercial Sale', 'Lot / Land', 'New Home', 'Resale']),
     triggers_brokerwolf: false,
     order: 6
   },
@@ -167,8 +110,6 @@ const contexts = [
     default_value: null,
     data_type: 'Date',
     format: null,
-    required: sq.SqArray.from([]),
-    optional: sq.SqArray.from(['Buying', 'Commercial Sale', 'Lot / Land', 'New Home', 'Resale']),
     triggers_brokerwolf: false,
     order: 7
   },
@@ -183,8 +124,6 @@ const contexts = [
     default_value: null,
     data_type: 'Date',
     format: null,
-    required: sq.SqArray.from([]),
-    optional: sq.SqArray.from(['Buying', 'Commercial Sale', 'Lot / Land', 'New Home', 'Resale']),
     triggers_brokerwolf: false,
     order: 8
   },
@@ -199,16 +138,6 @@ const contexts = [
     default_value: null,
     data_type: 'Date',
     format: null,
-    required: sq.SqArray.from(['Buying', 'Resale', 'New Home', 'Lot / Land', 'Commercial Sale']),
-    optional: sq.SqArray.from([
-      'Active Offer',
-      'Buying',
-      'Commercial Sale',
-      'Lot / Land',
-      'New Home',
-      'Resale',
-      'Selling'
-    ]),
     triggers_brokerwolf: false,
     order: 9
   },
@@ -223,16 +152,6 @@ const contexts = [
     default_value: null,
     data_type: 'Date',
     format: null,
-    required: sq.SqArray.from(['Buying', 'Resale', 'New Home', 'Lot / Land', 'Commercial Sale']),
-    optional: sq.SqArray.from([
-      'Active Offer',
-      'Buying',
-      'Commercial Sale',
-      'Lot / Land',
-      'New Home',
-      'Resale',
-      'Selling'
-    ]),
     triggers_brokerwolf: false,
     order: 10
   },
@@ -247,21 +166,6 @@ const contexts = [
     default_value: null,
     data_type: 'Number',
     format: 'Currency',
-    required: sq.SqArray.from([
-      'Selling',
-      'Resale',
-      'New Home',
-      'Lot / Land',
-      'Commercial Sale'
-    ]),
-    optional: sq.SqArray.from([
-      'Buying',
-      'Commercial Sale',
-      'Lot / Land',
-      'New Home',
-      'Resale',
-      'Selling'
-    ]),
     triggers_brokerwolf: false,
     order: 11
   },
@@ -276,16 +180,6 @@ const contexts = [
     default_value: null,
     data_type: 'Number',
     format: 'Currency',
-    required: sq.SqArray.from(['Buying', 'Resale', 'New Home', 'Lot / Land', 'Commercial Sale']),
-    optional: sq.SqArray.from([
-      'Active Offer',
-      'Buying',
-      'Commercial Sale',
-      'Lot / Land',
-      'New Home',
-      'Resale',
-      'Selling'
-    ]),
     triggers_brokerwolf: false,
     order: 12
   },
@@ -300,14 +194,6 @@ const contexts = [
     default_value: null,
     data_type: 'Number',
     format: 'Currency',
-    required: sq.SqArray.from(['Buying', 'Residential Lease', 'Commercial Lease']),
-    optional: sq.SqArray.from([
-      'Active Offer',
-      'Buying',
-      'Commercial Lease',
-      'Residential Lease',
-      'Selling'
-    ]),
     triggers_brokerwolf: false,
     order: 13
   },
@@ -322,8 +208,6 @@ const contexts = [
     default_value: null,
     data_type: 'Text',
     format: null,
-    required: sq.SqArray.from([]),
-    optional: sq.SqArray.from([]),
     triggers_brokerwolf: false,
     order: 14
   },
@@ -338,8 +222,6 @@ const contexts = [
     default_value: null,
     data_type: 'Text',
     format: null,
-    required: sq.SqArray.from([]),
-    optional: sq.SqArray.from([]),
     triggers_brokerwolf: false,
     order: 15
   },
@@ -354,8 +236,6 @@ const contexts = [
     default_value: null,
     data_type: 'Text',
     format: null,
-    required: sq.SqArray.from([]),
-    optional: sq.SqArray.from([]),
     triggers_brokerwolf: false,
     order: 16
   },
@@ -370,8 +250,6 @@ const contexts = [
     default_value: null,
     data_type: 'Text',
     format: null,
-    required: sq.SqArray.from([]),
-    optional: sq.SqArray.from([]),
     triggers_brokerwolf: false,
     order: 17
   },
@@ -386,8 +264,6 @@ const contexts = [
     default_value: null,
     data_type: 'Text',
     format: null,
-    required: sq.SqArray.from([]),
-    optional: sq.SqArray.from([]),
     triggers_brokerwolf: false,
     order: 18
   },
@@ -402,8 +278,6 @@ const contexts = [
     default_value: null,
     data_type: 'Text',
     format: null,
-    required: sq.SqArray.from([]),
-    optional: sq.SqArray.from([]),
     triggers_brokerwolf: false,
     order: 19
   },
@@ -418,8 +292,6 @@ const contexts = [
     default_value: null,
     data_type: 'Text',
     format: null,
-    required: sq.SqArray.from([]),
-    optional: sq.SqArray.from([]),
     triggers_brokerwolf: false,
     order: 20
   },
@@ -434,8 +306,6 @@ const contexts = [
     default_value: null,
     data_type: 'Text',
     format: null,
-    required: sq.SqArray.from([]),
-    optional: sq.SqArray.from([]),
     triggers_brokerwolf: false,
     order: 21
   },
@@ -450,8 +320,6 @@ const contexts = [
     default_value: null,
     data_type: 'Text',
     format: null,
-    required: sq.SqArray.from([]),
-    optional: sq.SqArray.from([]),
     triggers_brokerwolf: false,
     order: 22
   },
@@ -466,8 +334,6 @@ const contexts = [
     default_value: null,
     data_type: 'Text',
     format: null,
-    required: sq.SqArray.from([]),
-    optional: sq.SqArray.from([]),
     triggers_brokerwolf: false,
     order: 23
   },
@@ -482,8 +348,6 @@ const contexts = [
     default_value: null,
     data_type: 'Text',
     format: null,
-    required: sq.SqArray.from([]),
-    optional: sq.SqArray.from([]),
     triggers_brokerwolf: false,
     order: 24
   },
@@ -498,8 +362,6 @@ const contexts = [
     default_value: null,
     data_type: 'Text',
     format: null,
-    required: sq.SqArray.from([]),
-    optional: sq.SqArray.from([]),
     triggers_brokerwolf: false,
     order: 25
   },
@@ -514,8 +376,6 @@ const contexts = [
     default_value: null,
     data_type: 'Text',
     format: null,
-    required: sq.SqArray.from([]),
-    optional: sq.SqArray.from([]),
     triggers_brokerwolf: false,
     order: 26
   },
@@ -530,8 +390,6 @@ const contexts = [
     default_value: null,
     data_type: 'Text',
     format: null,
-    required: sq.SqArray.from([]),
-    optional: sq.SqArray.from([]),
     triggers_brokerwolf: false,
     order: 27
   },
@@ -546,8 +404,6 @@ const contexts = [
     default_value: null,
     data_type: 'Text',
     format: null,
-    required: sq.SqArray.from([]),
-    optional: sq.SqArray.from([]),
     triggers_brokerwolf: false,
     order: 28
   },
@@ -562,8 +418,6 @@ const contexts = [
     default_value: null,
     data_type: 'Text',
     format: null,
-    required: sq.SqArray.from([]),
-    optional: sq.SqArray.from([]),
     triggers_brokerwolf: false,
     order: 29
   },
@@ -578,8 +432,6 @@ const contexts = [
     default_value: null,
     data_type: 'Text',
     format: null,
-    required: sq.SqArray.from([]),
-    optional: sq.SqArray.from([]),
     triggers_brokerwolf: false,
     order: 30
   },
@@ -594,8 +446,6 @@ const contexts = [
     default_value: null,
     data_type: 'Text',
     format: null,
-    required: sq.SqArray.from([]),
-    optional: sq.SqArray.from([]),
     triggers_brokerwolf: false,
     order: 31
   },
@@ -610,8 +460,6 @@ const contexts = [
     default_value: null,
     data_type: 'Number',
     format: null,
-    required: sq.SqArray.from(['Selling', 'Buying', 'Resale', 'New Home', 'Residential Lease']),
-    optional: sq.SqArray.from(['Buying', 'Commercial Lease', 'Commercial Sale', 'Selling']),
     triggers_brokerwolf: false,
     order: 32
   },
@@ -626,8 +474,6 @@ const contexts = [
     default_value: null,
     data_type: 'Text',
     format: null,
-    required: sq.SqArray.from([]),
-    optional: sq.SqArray.from([]),
     triggers_brokerwolf: false,
     order: 33
   },
@@ -642,8 +488,6 @@ const contexts = [
     default_value: null,
     data_type: 'Number',
     format: null,
-    required: sq.SqArray.from([]),
-    optional: sq.SqArray.from(['Buying', 'Selling']),
     triggers_brokerwolf: false,
     order: 34
   },
@@ -658,8 +502,6 @@ const contexts = [
     default_value: null,
     data_type: 'Text',
     format: null,
-    required: sq.SqArray.from([]),
-    optional: sq.SqArray.from([]),
     triggers_brokerwolf: false,
     order: 35
   },
@@ -674,8 +516,6 @@ const contexts = [
     default_value: null,
     data_type: 'Text',
     format: null,
-    required: sq.SqArray.from([]),
-    optional: sq.SqArray.from([]),
     triggers_brokerwolf: false,
     order: 36
   },
@@ -690,17 +530,6 @@ const contexts = [
     default_value: null,
     data_type: 'Number',
     format: null,
-    required: sq.SqArray.from([]),
-    optional: sq.SqArray.from([
-      'Buying',
-      'Commercial Lease',
-      'Commercial Sale',
-      'Lot / Land',
-      'New Home',
-      'Resale',
-      'Residential Lease',
-      'Selling'
-    ]),
     triggers_brokerwolf: false,
     order: 37
   },
@@ -715,8 +544,6 @@ const contexts = [
     default_value: null,
     data_type: 'Number',
     format: null,
-    required: sq.SqArray.from([]),
-    optional: sq.SqArray.from([]),
     triggers_brokerwolf: false,
     order: 38
   },
@@ -731,8 +558,6 @@ const contexts = [
     default_value: null,
     data_type: 'Number',
     format: null,
-    required: sq.SqArray.from([]),
-    optional: sq.SqArray.from([]),
     triggers_brokerwolf: false,
     order: 39
   },
@@ -747,8 +572,6 @@ const contexts = [
     default_value: null,
     data_type: 'Text',
     format: null,
-    required: sq.SqArray.from([]),
-    optional: sq.SqArray.from([]),
     triggers_brokerwolf: false,
     order: 40
   },
@@ -763,8 +586,6 @@ const contexts = [
     default_value: null,
     data_type: 'Number',
     format: null,
-    required: sq.SqArray.from([]),
-    optional: sq.SqArray.from([]),
     triggers_brokerwolf: false,
     order: 41
   },
@@ -779,8 +600,6 @@ const contexts = [
     default_value: null,
     data_type: 'Number',
     format: 'Currency',
-    required: sq.SqArray.from(['Selling', 'Residential Lease', 'Commercial Lease']),
-    optional: sq.SqArray.from(['Buying', 'Commercial Lease', 'Residential Lease']),
     triggers_brokerwolf: false,
     order: 42
   },
@@ -795,14 +614,6 @@ const contexts = [
     default_value: null,
     data_type: 'Date',
     format: null,
-    required: sq.SqArray.from(['Buying', 'Residential Lease', 'Commercial Lease']),
-    optional: sq.SqArray.from([
-      'Active Offer',
-      'Buying',
-      'Commercial Lease',
-      'Residential Lease',
-      'Selling'
-    ]),
     triggers_brokerwolf: false,
     order: 43
   },
@@ -817,8 +628,6 @@ const contexts = [
     default_value: null,
     data_type: 'Date',
     format: null,
-    required: sq.SqArray.from([]),
-    optional: sq.SqArray.from(['Buying', 'Commercial Lease', 'Residential Lease']),
     triggers_brokerwolf: false,
     order: 44
   },
@@ -833,14 +642,6 @@ const contexts = [
     default_value: null,
     data_type: 'Date',
     format: null,
-    required: sq.SqArray.from(['Buying', 'Residential Lease', 'Commercial Lease']),
-    optional: sq.SqArray.from([
-      'Active Offer',
-      'Buying',
-      'Commercial Lease',
-      'Residential Lease',
-      'Selling'
-    ]),
     triggers_brokerwolf: false,
     order: 45
   },
@@ -855,14 +656,6 @@ const contexts = [
     default_value: null,
     data_type: 'Date',
     format: null,
-    required: sq.SqArray.from(['Buying', 'Residential Lease', 'Commercial Lease']),
-    optional: sq.SqArray.from([
-      'Active Offer',
-      'Buying',
-      'Commercial Lease',
-      'Residential Lease',
-      'Selling'
-    ]),
     triggers_brokerwolf: false,
     order: 46
   },
@@ -877,8 +670,6 @@ const contexts = [
     default_value: null,
     data_type: 'Text',
     format: null,
-    required: sq.SqArray.from([]),
-    optional: sq.SqArray.from([]),
     triggers_brokerwolf: false,
     order: 47
   },
@@ -893,8 +684,6 @@ const contexts = [
     default_value: null,
     data_type: 'Text',
     format: null,
-    required: sq.SqArray.from([]),
-    optional: sq.SqArray.from([]),
     triggers_brokerwolf: false,
     order: 48
   },
@@ -909,16 +698,6 @@ const contexts = [
     default_value: '0',
     data_type: 'Number',
     format: 'Currency',
-    required: sq.SqArray.from(['Buying', 'Resale', 'New Home', 'Lot / Land', 'Commercial Sale']),
-    optional: sq.SqArray.from([
-      'Buying',
-      'Commercial Sale',
-      'Lot / Land',
-      'New Home',
-      'Resale',
-      'Selling',
-      'Active Offer'
-    ]),
     triggers_brokerwolf: false,
     order: 49
   },
@@ -933,8 +712,6 @@ const contexts = [
     default_value: null,
     data_type: 'Number',
     format: 'Currency',
-    required: sq.SqArray.from([]),
-    optional: sq.SqArray.from(['Buying', 'Commercial Sale', 'Lot / Land', 'New Home', 'Resale']),
     triggers_brokerwolf: false,
     order: 50
   },
@@ -949,8 +726,6 @@ const contexts = [
     default_value: null,
     data_type: 'Text',
     format: null,
-    required: sq.SqArray.from([]),
-    optional: sq.SqArray.from(['Lot / Land', 'Selling']),
     triggers_brokerwolf: false,
     order: 51
   }

@@ -3,9 +3,14 @@ UPDATE
 SET
   title = $4::text,
   description = $5::text,
-  due_in = $6::interval,
-  email = $7::uuid,
-  is_automated = $8::boolean,
+  "order" = $6::smallint,
+  event_type = $7::text,
+  wait_for = $8::interval,
+  "time" = $9::interval,
+  email = $10::uuid,
+  template = $11::uuid,
+  template_instance = $12::uuid,
+  is_automated = $13::boolean,
   updated_at = now(),
   updated_by = $1,
   updated_within = $2::text

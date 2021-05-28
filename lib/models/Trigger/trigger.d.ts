@@ -109,19 +109,14 @@ type IEmailAction = {
 }
 
 type IFlowTrigger = {
-  object_type: 'flow';
-  event_type: 'flow_start';
   flow: UUID;
   flow_step: UUID;
-} & ({
-  trigger_object_type: 'deal';
-  deal: UUID;
 } | {
-  trigger_object_type: 'contact';
-  contact: UUID;
-});
+  flow: null;
+  flow_step: null;
+}
 
-export type IRawTrigger = IRawTriggerBase & (IContactTrigger | IDealTrigger | IFlowTrigger) & (IEventAction | IEmailAction);
+export type IRawTrigger = IRawTriggerBase & IFlowTrigger & (IContactTrigger | IDealTrigger) & (IEventAction | IEmailAction);
 
 interface IModel {
   id: UUID;

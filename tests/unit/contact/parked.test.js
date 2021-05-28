@@ -7,7 +7,7 @@ const Contact = {
 }
 const CrmTask = require('../../../lib/models/CRM/Task/upsert')
 const Context = require('../../../lib/models/Context')
-const Flow = require('../../../lib/models/Flow/upsert')
+const Flow = require('../../../lib/models/Flow/enroll')
 const User = require('../../../lib/models/User/get')
 
 const BrandHelper = require('../brand/helper')
@@ -16,9 +16,6 @@ const { attributes } = require('./helper')
 const { create } = require('./data/attribute.json')
 
 let user, brand
-
-const HOUR = 3600
-const DAY = 24 * HOUR
 
 /**
  * @param {any[]} data
@@ -53,8 +50,11 @@ async function setup() {
       steps: [{
         title: 'Create Rechat email',
         description: 'Create a Rechat email address for the new guy to use in other services',
-        due_in: 8 * HOUR + DAY,
+        wait_for: { days: 1},
+        time: '08:00:00',
         is_automated: false,
+        order: 1,
+        event_type: 'last_step_date',
         event: {
           title: 'Create Rechat email',
           task_type: 'Other',

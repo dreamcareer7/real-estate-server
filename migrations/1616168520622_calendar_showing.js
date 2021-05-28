@@ -794,7 +794,7 @@ const migrations = [
       NULL::timestamptz AS parent_deleted_at,
       GREATEST(created_at, updated_at, deleted_at) AS last_updated_at,
       'flow' AS object_type,
-      'flow_start' AS event_type,
+      'last_step_date' AS event_type,
       'Flow Start' AS type_label,
       starts_at::timestamptz AS "timestamp",
       starts_at::date AS "date",
@@ -1065,8 +1065,8 @@ const migrations = [
           ON (t.user = u.id)
       WHERE
         c.brand = t.brand
-        AND c.event_type = 'flow_start'
-        AND t.event_type = 'flow_start'
+        AND c.event_type = 'last_step_date'
+        AND t.event_type = 'last_step_date'
         AND t.deleted_at IS NULL
         AND t.executed_at IS NULL
         AND t.effective_at <= NOW()

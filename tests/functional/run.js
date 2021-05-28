@@ -6,7 +6,7 @@ const sortBy = require('lodash/sortBy')
 
 const path = require('path')
 const fs = require('fs')
-const EventEmitter = require('events')
+const { EventEmitter } = require('events')
 const program = require('commander')
 
 const Run = new EventEmitter()

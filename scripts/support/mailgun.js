@@ -2,7 +2,7 @@ const Context = require('../../lib/models/Context/index')
 require('../../lib/models/Job')
 const Email = require('../../lib/models/Email/index')
 const sql = require('../../lib/utils/sql')
-const createContext = require('../workers/create-context')
+const createContext = require('../workers/utils/create-context')
 
 const CAMPAIGN_ID = 'ff43b328-cb60-11ea-8e74-1650ce91b517'
 
