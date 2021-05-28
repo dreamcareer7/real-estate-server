@@ -92,7 +92,7 @@ const checkNotifications = cb => {
     })
 }
 
-const checkLeadEmailParser = cb => {
+const callLeadEmailWebhook = cb => {
   return frisby
     .create('check lead email parser')
     .post('/webhook/contacts/leads/email', {
@@ -126,6 +126,6 @@ module.exports = {
   checkContactForLead,
   checkNotifications,  
   patchUserLastSeen,
-  checkLeadEmailParser,
+  callLeadEmailWebhook,
   checkContactCreated
 }
