@@ -110,7 +110,7 @@ const checkContactCreated = cb => {
     .get('/contacts')
     .after((err, res, json) => {
       const email = 'scgators7@gmail.com'
-      const lead = json.data.find(c => c.email === email && c.source_type === 'Studio')
+      const lead = json.data.find(c => c.email === email) //  && c.source_type === 'Studio'
       if (!lead) throw `email ${email} must exists due lead email parser body`
 
       if (!lead.email || !lead.last_name || !lead.first_name) 
