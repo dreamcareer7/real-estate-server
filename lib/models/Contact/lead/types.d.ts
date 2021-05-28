@@ -22,6 +22,7 @@ export type ELeadSourceType =
   | 'Zillow'
   | 'Realtor'
   | 'Showing'
+  | 'Studio'
   ;
 
 export interface ILtsLeadUrlMetadata {
