@@ -15,6 +15,7 @@ const syncAgents = require('./sync-agents')
 const syncUsers = require('./sync-users')
 const getRoot = require('./get-root')
 
+const promisify = require('../../../lib/utils/promisify')
 const createContext = require('../../workers/create-context')
 
 const config = {
