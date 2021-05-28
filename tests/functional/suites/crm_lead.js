@@ -113,9 +113,8 @@ const checkContactCreated = cb => {
       const lead = json.data.find(c => c.email === email && c.source_type === 'Studio')
       if (!lead) throw `email ${email} must exists due lead email parser body`
 
-      const contact = json.data[exists]
-      if (!contact.email || !contact.last_name || !contact.first_name) 
-        throw `contact hast issue email not well parsed ${JSON.stringify(contact)}`
+      if (!lead.email || !lead.last_name || !lead.first_name) 
+        throw `lead has issue email not well parsed ${JSON.stringify(lead)}`
 
       cb(err, res, json)
     })
