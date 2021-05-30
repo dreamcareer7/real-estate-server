@@ -133,7 +133,7 @@ const save = async contacts => {
 const sync = async last => {
   let opts
 
-  const next = moment(last.Date).add(1000, 'day').format('YYYY-MM-DD')
+  const next = moment(last.Date).add(1, 'day').format('YYYY-MM-DD')
 
   if (last.ScrollId) {
     opts = {
