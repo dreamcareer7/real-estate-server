@@ -177,7 +177,7 @@ const forks = [
   },
   {
     queues: ['MLS.Photo', 'MLS.Listing', 'MLS.Listing.Photos.Validate'],
-    concurrency: 50
+    concurrency: 20
   }
 ]
 
