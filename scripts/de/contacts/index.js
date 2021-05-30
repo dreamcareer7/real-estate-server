@@ -48,6 +48,9 @@ const timeout = ms => {
 }
 
 const ExternalAuthenticationToken = 'YwBc4k2U5P75bdQreeGxqv6P'
+const name = 'de_contacts'
+const Size = 1000
+
 
 const groupByAgent = async contacts => {
   const emails = _.chain(contacts).map('object.agentEmail').uniq().filter(Boolean).value()
@@ -127,73 +130,81 @@ const save = async contacts => {
   return { updated, inserted }
 }
 
-const sync = async opts => {
-  const res = await request(opts)
+const sync = async last => {
+  let opts
+
+  const next = moment(last.Date).add(1000, 'day').format('YYYY-MM-DD')
+
+  if (last.ScrollId) {
+    opts = {
+      ScrollId: last.ScrollId
+    }
+  } else {
+    const StartDate = moment(last.Date).format('YYYY-MM-DD') 
+    const EndDate = next
+    
+    opts = {
+      StartDate,
+      EndDate,
+      From: 0,
+      Size
+    }
+  }
+
+  const options = {
+    url: config.url,
+    qs: {
+      ExternalAuthenticationToken,
+      ...opts
+    },
+    json: true
+  }
+
+  Context.log('Query', opts)
+
+  const res = await request(options)
+
+  if (!res.Data) {
+    Context.log('Error', res.Message)
+
+    await promisify(MLSJob.insert)({
+      name,
+      query: JSON.stringify({
+        Date: last.Date
+      })
+    })
+    return
+  }
+
   const { Data } = res
+
+  Context.log('Retrieved', res.RetrievedContacts, 'of', res.TotalContacts, 'Page', last.Page)
 
   const { inserted, updated } = await save(Data)
 
   await insertContacts(inserted)
   await updateContacts(updated)
 
-  return res
-}
+  let query
 
-const paginate = async({
-  ScrollId
-}) => {
-  const opts = {
-    url: config.url,
-    qs: {
-      ExternalAuthenticationToken,
-      ScrollId
-    },
-    json: true
+  if (Data.length >= Size) {
+    query = {
+      Date: last.Date,
+      ScrollId: res.ScrollId,
+      Page: last.Page + 1
+    }
+  } else {
+    query = {
+      Date: next,
+      Page: 0
+    }
   }
 
-  const res = await sync(opts)
-  return res
-}
-
-const dateSync = async ({
-  StartDate,
-  EndDate,
-  From,
-  Size
-}) => {
-
-  const opts = {
-    url: config.url,
-    qs: {
-      ExternalAuthenticationToken,
-      StartDate,
-      EndDate,
-      From,
-      Size
-    },
-    json: true
-  }
-
-  let results = 0
-
-  Context.log('Date', StartDate, EndDate, From, Size)
-
-  const res = await sync(opts)
-  results += res.Data.length
-
-  let lastPage = res
-
-  while(lastPage.Data.length >= Size) {
-    await timeout(2000)
-    Context.log('Pagination', results, '/', lastPage.TotalContacts)
-    lastPage = await paginate({
-      ScrollId: lastPage.ScrollId
-    })
-
-    results += lastPage.Data.length
-  }
-
-  return results
+  await promisify(MLSJob.insert)({
+    name,
+    query: JSON.stringify(query),
+    results: Data.length
+  })
 }
 
 const run = async() => {
@@ -204,40 +215,18 @@ const run = async() => {
 
   const { commit, run } = await createContext()
 
-  const name = 'de_contacts'
-  const step = 1
-  const limit = 1000
+  const initial = {
+    Date: "2012-12-29",
+    Page: 0
+  }
 
   await run(async () => {
     const last = await promisify(MLSJob.getLastRun)(name) || {
-      query: '2012-12-29',
-      offset: 0,
-      results: 0
+      query: JSON.stringify(initial)
     }
 
-    const format = 'YYYY-MM-DD'
-
-    const StartDate = moment(last.query).format(format)
-    const EndDate = moment(last.query).add(step, 'day').format(format)
-    const From = 0
-
-    const opts = {
-      StartDate,
-      EndDate,
-      Size: limit,
-      From
-    }
-
-    const results = await dateSync(opts)
-
-    Context.log('Synced', StartDate, EndDate, results, 'results')
-
-    await promisify(MLSJob.insert)({
-      name,
-      query: EndDate,
-      offset: From,
-      results
-    })
+    const query = JSON.parse(last.query)
+    await sync(query)
 
     await commit()
   })
