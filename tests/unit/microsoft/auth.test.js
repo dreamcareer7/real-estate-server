@@ -49,7 +49,7 @@ async function grantAccessFailedByBadState() {
   try {
     await MicrosoftAuthLink.grantAccess(data_1)
   } catch(ex) {
-    expect(ex.message).to.be.equal('Microsoft-Auth-Hook bad-state')
+    expect(ex.message).to.be.equal('Microsoft-Auth-Hook-Failed! Bad State')
   }
 }
 
@@ -62,7 +62,7 @@ async function grantAccessFailedByBadCode() {
   try {
     await MicrosoftAuthLink.grantAccess(data_1)
   } catch(ex) {
-    expect(ex.message).to.be.equal('Microsoft-Auth-Hook bad-code')
+    expect(ex.message).to.be.equal('Microsoft-Auth-Hook-Failed! Bad Code')
   }
 }
 
