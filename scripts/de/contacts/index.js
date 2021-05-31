@@ -1,4 +1,4 @@
-f#!/usr/bin/env node
+#!/usr/bin/env node
 
 const request = require('request-promise-native')
 const moment = require('moment')
