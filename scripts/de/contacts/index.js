@@ -49,7 +49,7 @@ const timeout = ms => {
 
 const ExternalAuthenticationToken = 'YwBc4k2U5P75bdQreeGxqv6P'
 const name = 'de_contacts'
-const Size = 200
+const Size = 1000
 
 
 const groupByAgent = async contacts => {
@@ -185,7 +185,11 @@ const sync = async last => {
 
   const { inserted, updated } = await save(Data)
 
+  Context.log('Saving Done')
+
   await insertContacts(inserted)
+
+  Context.log('Inserting Done')
   // await updateContacts(updated)
 
   let query
