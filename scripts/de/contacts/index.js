@@ -63,6 +63,7 @@ const groupByAgent = async contacts => {
 const insertContacts = async contacts => {
   const { grouped, agents } = await groupByAgent(contacts)
 
+  Context.log('Grouped');
   const pairs = []
 
   for(const email of Object.keys(grouped)) {
@@ -77,9 +78,11 @@ const insertContacts = async contacts => {
       return { ...contact, user }
     })
 
+    Context.log('Creating', mapped.length, 'contacts')
     const created = await Contact.create(mapped, user, brand, 'lts_lead', {
       activity: false
     })
+    Context.log('Done creating', mapped.length, 'contacts')
 
     for(const i in agent_contacts)
       pairs.push({
