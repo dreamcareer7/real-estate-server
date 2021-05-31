@@ -49,7 +49,7 @@ const timeout = ms => {
 
 const ExternalAuthenticationToken = 'YwBc4k2U5P75bdQreeGxqv6P'
 const name = 'de_contacts'
-const Size = 1000
+const Size = 200
 
 
 const groupByAgent = async contacts => {
