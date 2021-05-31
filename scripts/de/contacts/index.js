@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+f#!/usr/bin/env node
 
 const request = require('request-promise-native')
 const moment = require('moment')
@@ -49,7 +49,7 @@ const timeout = ms => {
 
 const ExternalAuthenticationToken = 'YwBc4k2U5P75bdQreeGxqv6P'
 const name = 'de_contacts'
-const Size = 1000
+const Size = 300
 
 
 const groupByAgent = async contacts => {
