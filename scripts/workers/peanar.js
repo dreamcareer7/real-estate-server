@@ -43,8 +43,12 @@ const queues = [
     concurrency: 5
   },
   {
-    queues: ['calendar', 'touches', 'showings'],
+    queues: ['calendar', 'showings'],
     concurrency: 2
+  },
+  {
+    queues: ['touches'],
+    concurrency: 10
   },
   {
     queues: ['flows', 'contacts', 'contact_lists', 'contact_duplicates', 'crm_tasks'],
