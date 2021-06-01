@@ -43,7 +43,7 @@ const queues = [
     concurrency: 5
   },
   {
-    queues: ['calendar', 'showings'],
+    queues: ['calendar', 'touches', 'showings'],
     concurrency: 2
   },
   {
