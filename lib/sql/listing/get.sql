@@ -68,6 +68,7 @@ listing_settings AS (
               EXTRACT(EPOCH FROM updated_at) AS updated_at,
               EXTRACT(EPOCH FROM start_time) AS start_time,
               EXTRACT(EPOCH FROM end_time) AS end_time,
+              tz,
               description
             FROM open_houses
             WHERE open_houses.listing_mui = listings.matrix_unique_id
