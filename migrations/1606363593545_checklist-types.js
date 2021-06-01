@@ -67,7 +67,7 @@ const migrations = [
     WHERE bpt.label = deals.property_type::text
     AND   bpt.brand IN(
       SELECT * FROM brand_parents(brand) ORDER BY 1 DESC LIMIT 1
-    )
+    ) LIMIT 1
   )`,
 
   'ALTER TABLE deals ALTER dynamic_property_type SET NOT NULL',
@@ -161,8 +161,8 @@ AND (
   'ALTER TABLE brands_deal_statuses DROP property_types',
   'ALTER TABLE brands_deal_statuses DROP deal_types',
 
-  'DROP VIEW analytics.roles',
-  'DROP VIEW analytics.deals',
+  'DROP VIEW IF EXISTS analytics.roles',
+  'DROP MATERIALIZED VIEW IF EXISTS analytics.deals',
 
   'ALTER TABLE brokerwolf_property_types DROP property_types',
   'ALTER TABLE brokerwolf_property_types ADD property_type uuid REFERENCES brands_property_types(id)',
