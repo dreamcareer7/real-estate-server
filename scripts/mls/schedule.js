@@ -44,7 +44,7 @@ function processLastRuns (queue, tasks) {
     })
 
   if (queues[queue].length() < 1) {
-    setTimeout(schedule.bind(null, queue), task.definition.interval)
+    setTimeout(schedule.bind(null, queue), 1000)
   }
 }
 
