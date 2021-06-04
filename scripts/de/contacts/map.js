@@ -14,6 +14,11 @@ const map = ({object}, attrs) => {
     text: 'Imported From Studio'
   })
 
+  isNew && attributes.push({
+    attribute_type: 'source_type',
+    text: 'Studio'
+  })
+
   if (object.email)
     attributes.push({
       attribute_type: 'email',
