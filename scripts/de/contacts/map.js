@@ -69,14 +69,14 @@ const map = ({object}, attrs) => {
   if (object.birthday)
     attributes.push({
       attribute_type: 'birthday',
-      date: new Date(object.birthday),
+      date: (new Date(object.birthday)).getTime(),
       id: find(attrs, { attribute_type: 'birthday' })?.id
     })
 
   if (object.anniversary)
     attributes.push({
       attribute_type: 'wedding_anniversary',
-      date: new Date(object.anniversary),
+      date: (new Date(object.anniversary)).getTime(),
       id: find(attrs, { attribute_type: 'wedding_anniversary' })?.id
     })
 
