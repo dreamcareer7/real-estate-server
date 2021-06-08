@@ -2,7 +2,6 @@ const db = require('../lib/utils/db')
 
 const migrations = [
   'BEGIN',
-  'CREATE INDEX IF NOT EXISTS notifications_created_at_idx ON notifications (created_at)',
   'COMMIT'
 ]
 
