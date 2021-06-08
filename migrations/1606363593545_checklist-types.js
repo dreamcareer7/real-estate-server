@@ -162,7 +162,7 @@ AND (
   'ALTER TABLE brands_deal_statuses DROP deal_types',
 
   'DROP VIEW IF EXISTS analytics.roles',
-  'DROP VIEW IF EXISTS analytics.deals',
+  'DROP MATERIALIZED VIEW IF EXISTS analytics.deals',
 
   'ALTER TABLE brokerwolf_property_types DROP property_types',
   'ALTER TABLE brokerwolf_property_types ADD property_type uuid REFERENCES brands_property_types(id)',
