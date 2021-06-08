@@ -644,7 +644,7 @@ declare type TDbSqlAddress =
   | 'showing/approvals/insert'
   | 'showing/approvals/table'
   | 'showing/availability/get'
-  | 'showing/availability/insert'
+  | 'showing/availability/update'
   | 'showing/availability/table'
   | 'showing/notification/get'
   | 'showing/role/delete'
