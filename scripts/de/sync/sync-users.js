@@ -101,7 +101,7 @@ saved AS (
     true,
     profile_image_url,
     cover_image_url,
-    'https://elliman.com/' || id,
+    'https://elliman.com/' || data.id,
     linkedin,
     facebook,
     youtube,
@@ -127,6 +127,7 @@ saved AS (
       youtube = EXCLUDED.youtube,
       instagram = EXCLUDED.instagram,
       twitter = EXCLUDED.twitter,
+      website = EXCLUDED.website,
       agent = COALESCE(users.agent, EXCLUDED.agent)
 
   RETURNING id, email

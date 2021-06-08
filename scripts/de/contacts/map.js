@@ -14,6 +14,11 @@ const map = ({object}, attrs) => {
     text: 'Imported From Studio'
   })
 
+  isNew && attributes.push({
+    attribute_type: 'source_type',
+    text: 'Studio'
+  })
+
   if (object.email)
     attributes.push({
       attribute_type: 'email',
@@ -69,14 +74,14 @@ const map = ({object}, attrs) => {
   if (object.birthday)
     attributes.push({
       attribute_type: 'birthday',
-      date: new Date(object.birthday),
+      date: (new Date(object.birthday)).getTime() / 1000,
       id: find(attrs, { attribute_type: 'birthday' })?.id
     })
 
   if (object.anniversary)
     attributes.push({
       attribute_type: 'wedding_anniversary',
-      date: new Date(object.anniversary),
+      date: (new Date(object.anniversary)).getTime() / 1000,
       id: find(attrs, { attribute_type: 'wedding_anniversary' })?.id
     })
 

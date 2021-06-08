@@ -4,7 +4,7 @@ require('../../../lib/models/MLS/workers')
 const queues = [
   {
     queues: ['MLS.Photo', 'MLS.Listing', 'MLS.Listing.Photos.Validate'],
-    concurrency: 50,
+    concurrency: 20,
   },
 ]
 
