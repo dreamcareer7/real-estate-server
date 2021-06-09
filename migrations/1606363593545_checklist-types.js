@@ -12,19 +12,38 @@ const migrations = [
     is_lease BOOLEAN NOT NULL
   )`,
 
+  `CREATE OR REPLACE FUNCTION brand_parents_deleted(id uuid) RETURNS
+   setof uuid
+AS
+$$
+  WITH RECURSIVE parents AS (
+    SELECT parent as brand, 1 as level FROM brands WHERE id = $1
+    UNION
+    SELECT parent as brand, level + 1 as level FROM brands JOIN parents ON brands.id = parents.brand 
+  ),
+
+  u AS (
+    SELECT $1 AS brand, 0 as level UNION SELECT brand, level FROM parents WHERE brand IS NOT NULL
+  )
+  SELECT brand FROM u ORDER BY level DESC
+$$
+STABLE
+PARALLEL SAFE
+LANGUAGE sql;
+`,
+
   `INSERT INTO brands_property_types (brand, label, is_lease)
     WITH pt AS (
       SELECT
-      brands.id as brand,
-      UNNEST(ENUM_RANGE(NULL::deal_property_type)) as label
-      FROM brands
+        DISTINCT (SELECT brand_parents_deleted(brands.id) LIMIT 1) as brand, 
+        UNNEST(ENUM_RANGE(NULL::deal_property_type)) as label
+      FROM brands_checklists bc JOIN brands ON bc.brand = brands.id
     )
     SELECT
       brand,
       label,
       label::text ILIKE '%Lease%' as is_lease
     FROM pt`,
-
 
   /*
    * Checklists
@@ -37,7 +56,8 @@ const migrations = [
   `UPDATE brands_checklists SET dynamic_property_type = (
     SELECT id FROM brands_property_types bpt
     WHERE bpt.label = brands_checklists.property_type::text
-    AND   bpt.brand = (SELECT * FROM brand_parents(brands_checklists.brand) ORDER BY 1 DESC LIMIT 1)
+    AND   bpt.brand IN (SELECT * FROM brand_parents_deleted(brands_checklists.brand))
+    ORDER BY 1 DESC LIMIT 1
   )`,
 
   'ALTER TABLE brands_checklists ALTER dynamic_property_type SET NOT NULL',
@@ -167,6 +187,9 @@ AND (
   'ALTER TABLE brokerwolf_property_types DROP property_types',
   'ALTER TABLE brokerwolf_property_types ADD property_type uuid REFERENCES brands_property_types(id)',
   'DROP TYPE deal_property_type',
+
+  'DROP FUNCTION brand_parents_deleted',
+
   'COMMIT'
 ]
 
