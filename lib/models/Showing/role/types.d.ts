@@ -45,7 +45,7 @@ export interface ShowingRolePopulated {
 
 export interface ShowingRoleInput {
   role: TDealRole;
-  user: UUID;
+  user?: UUID;
   brand: UUID;
   can_approve: boolean;
   confirm_notification_type: NotificationDeliveryType[];
