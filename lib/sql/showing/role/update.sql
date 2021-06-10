@@ -1,18 +1,17 @@
 UPDATE
   showings_roles
 SET
-  updated_by = $2::uuid,
   updated_at = now(),
-  role = $3::deal_role,
-  "user" = COALESCE($4::uuid, (
+  role = $2::deal_role,
+  "user" = COALESCE($3::uuid, (
     SELECT id FROM users WHERE LOWER(email) = LOWER($9)
   )),
-  confirm_notification_type = $5::boolean,
-  cancel_notification_type = $6::boolean,
-  can_approve = $7::boolean,
-  first_name = $8,
-  last_name = $9,
-  email = $10,
-  phone_number = $11
+  confirm_notification_type = $4::boolean,
+  cancel_notification_type = $5::boolean,
+  can_approve = $6::boolean,
+  first_name = $7,
+  last_name = $8,
+  email = $9,
+  phone_number = $10
 WHERE
   id = $1::uuid
