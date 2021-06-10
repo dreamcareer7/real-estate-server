@@ -11,7 +11,7 @@ SET
   notice_period = $8 * '1 second'::interval,
   approval_type = $9::showing_approval_type,
   feedback_template = $10::uuid,
-  address = CASE WHEN $11::json IS NULL THEN NULL ELSE JSON_TO_STDADDR($11::json) END,
+  address = CASE WHEN $11::json IS NULL THEN NULL ELSE JSON_TO_STDADDR($11::jsonb) END,
   allow_appraisal = $12::boolean,
   allow_inspection = $13::boolean,
   instructions = $14

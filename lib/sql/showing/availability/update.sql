@@ -1,11 +1,11 @@
-WITH d AS (
+WITH d AS MATERIALIZED (
   DELETE FROM
     showings_availabilities
   WHERE
     showing = $1::uuid
   RETURNING
     id
-), i AS (
+), i AS MATERIALIZED (
   INSERT INTO showings_availabilities (
     showing,
     weekday,
@@ -23,6 +23,6 @@ WITH d AS (
     id
 )
 SELECT
-  1
+  id
 FROM
   d, i
