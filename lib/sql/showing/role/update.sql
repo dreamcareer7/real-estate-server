@@ -6,8 +6,8 @@ SET
   "user" = COALESCE($3::uuid, (
     SELECT id FROM users WHERE LOWER(email) = LOWER($9)
   )),
-  confirm_notification_type = $4::boolean,
-  cancel_notification_type = $5::boolean,
+  confirm_notification_type = $4::notification_delivery_type[],
+  cancel_notification_type = $5::notification_delivery_type[],
   can_approve = $6::boolean,
   first_name = $7,
   last_name = $8,
