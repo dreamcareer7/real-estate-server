@@ -1,4 +1,4 @@
-WITH d AS (
+WITH d AS MATERIALIZED (
   DELETE FROM
     showings_availabilities
   WHERE
