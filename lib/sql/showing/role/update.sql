@@ -4,7 +4,7 @@ SET
   updated_by = $2::uuid,
   updated_at = now(),
   role = $3::deal_role,
-  user = COALESCE($4::uuid, (
+  "user" = COALESCE($4::uuid, (
     SELECT id FROM users WHERE LOWER(email) = LOWER($9)
   )),
   confirm_notification_type = $5::boolean,
