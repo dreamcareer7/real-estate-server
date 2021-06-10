@@ -14,6 +14,6 @@ INSERT INTO showings_availabilities (
   sr.availability::int4range
 FROM
   json_to_recordset($2::json) AS sr (
-    weekday smallint,
+    weekday iso_day_of_week,
     availability int4range
   )
