@@ -56,6 +56,7 @@ SELECT
       showings_roles
     WHERE
       showing = s.id
+      AND showings_roles.deleted_at IS NULL
       AND $2::text[] @> ARRAY['showing.roles']
   ) AS roles,
 
