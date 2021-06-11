@@ -9,6 +9,7 @@ SELECT
   showing AS showing_id,
   contact,
   buyer_message,
+  feedback,
 
   (
     SELECT

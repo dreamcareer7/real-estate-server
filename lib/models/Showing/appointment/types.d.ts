@@ -15,6 +15,12 @@ export interface ShowingAppointmentRequestPayload {
   contact: ILtsLead;
 }
 
+export interface AppointmentFeedback {
+  questions: string[];
+  answers: string[];
+  comment?: string;
+}
+
 export interface ShowingAppointment {
   id: UUID;
   created_at: number;
@@ -25,6 +31,7 @@ export interface ShowingAppointment {
   showing: UUID;
   contact: UUID;
   approvals: UUID[] | null;
+  feedback: AppointmentFeedback | null;
 }
 
 export interface ShowingAppointmentPublic {
