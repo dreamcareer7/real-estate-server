@@ -26,6 +26,8 @@ SELECT deals_checklists.*,
     origins.checklist_type = 'Offer'
   ) as is_terminatable,
 
+  origins.checklist_type,
+
   origins.tab_name,
 
   (
