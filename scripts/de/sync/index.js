@@ -16,7 +16,7 @@ const syncUsers = require('./sync-users')
 const getRoot = require('./get-root')
 
 const promisify = require('../../../lib/utils/promisify')
-const createContext = require('../../workers/create-context')
+const createContext = require('../../workers/utils/create-context')
 
 const attachContactEventHandlers = require('../../../lib/models/Contact/events')
 
