@@ -1,1 +1,1 @@
-SELECT id FROM brands_checklists WHERE brand = $1 AND deleted_at IS NULL
+SELECT id FROM brands_checklists WHERE brand IN(SELECT * FROM brand_parents($1)) AND deleted_at IS NULL
