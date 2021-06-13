@@ -41,6 +41,7 @@ SELECT brands_checklists.*,
     FROM
       brands_deal_statuses_checklists
     WHERE checklist = brands_checklists.id
+    ORDER BY is_active DESC, is_pending DESC, is_archived DESC, label ASC
   ) as statuses
 
 FROM brands_checklists
