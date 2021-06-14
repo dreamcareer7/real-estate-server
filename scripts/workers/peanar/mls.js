@@ -7,7 +7,7 @@ const queues = [
     concurrency: 20,
   }, {
     queues: ['MLS.Photo'],
-    concurrency: 60,
+    concurrency: 120,
   },
 ]
 
