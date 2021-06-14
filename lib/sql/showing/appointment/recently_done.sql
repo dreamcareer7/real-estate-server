@@ -4,5 +4,9 @@ SELECT
 FROM
   showings_appointments
 WHERE
-  status = 'Confirmed'::showing_appointment_status AND
+  status IN (
+    'Confirmed'::showing_appointment_status,
+    'Requested'::showing_appointment_status,
+    'Rescheduled'::showing_appointment_status
+  ) AND
   time < now() - interval $1;
