@@ -11,7 +11,7 @@ function start() {
     require('./google'),
     require('./microsoft'),
     require('./notifications'),
-    require('./triggers'),
+    // require('./triggers'),
   ]) {
     start()
   }
