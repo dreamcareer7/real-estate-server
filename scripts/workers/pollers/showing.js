@@ -5,7 +5,7 @@ function start () {
   poll({
     fn: updateRecentlyDone,
     name: 'Showing.updateRecentlyDone',
-    wait: 15 * 60_000 // 15 min
+    wait: 15 * 60000 // 15 min
   })
 }
 
