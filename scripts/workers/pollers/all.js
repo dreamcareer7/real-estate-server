@@ -12,6 +12,7 @@ function start() {
     require('./microsoft'),
     require('./notifications'),
     require('./triggers'),
+    require('./showing'),
   ]) {
     start()
   }
