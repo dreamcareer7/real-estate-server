@@ -1,9 +1,9 @@
 apps:
   - script   : ./scripts/workers/index.js
-    args     | ./peanar/common
+    args     : ./peanar/common
     name     : 'peanar_common'
     kill_timeout : 25000
   - script   : ./scripts/workers/index.js
-    args     | ./peanar/integrations
+    args     : ./peanar/integrations
     name     : 'integrations'
     kill_timeout : 25000

@@ -3,8 +3,11 @@ const { peanar } = require('../../../lib/utils/peanar')
 require('../../../lib/models/MLS/workers')
 const queues = [
   {
-    queues: ['MLS.Photo', 'MLS.Listing', 'MLS.Listing.Photos.Validate'],
+    queues: ['MLS.Listing', 'MLS.Listing.Photos.Validate'],
     concurrency: 20,
+  }, {
+    queues: ['MLS.Photo'],
+    concurrency: 120,
   },
 ]
 
