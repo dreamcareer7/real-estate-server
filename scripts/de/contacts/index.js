@@ -41,6 +41,7 @@ SET contact = pairs.contact
 FROM json_populate_recordset(NULL::de.contacts, $1) pairs
 WHERE de.contacts.id = pairs.id`
 
+// eslint-disable-next-line
 const timeout = ms => {
   return new Promise(resolve => {
     setTimeout(resolve, ms)
@@ -63,7 +64,7 @@ const groupByAgent = async contacts => {
 const insertContacts = async contacts => {
   const { grouped, agents } = await groupByAgent(contacts)
 
-  Context.log('Grouped');
+  Context.log('Grouped')
   const pairs = []
 
   for(const email of Object.keys(grouped)) {
@@ -94,6 +95,7 @@ const insertContacts = async contacts => {
   await db.executeSql.promise(SET_IDS, [JSON.stringify(pairs)])
 }
 
+// eslint-disable-next-line
 const updateContacts = async contacts => {
   const { grouped, agents } = await groupByAgent(contacts)
 
@@ -183,7 +185,7 @@ const sync = async last => {
 
   Context.log('Retrieved', res.RetrievedContacts, 'of', res.TotalContacts, 'Page', last.Page)
 
-  const { inserted, updated } = await save(Data)
+  const { inserted, /*updated*/ } = await save(Data)
 
   Context.log('Saving Done')
 
@@ -223,7 +225,7 @@ const run = async() => {
   const { commit, run } = await createContext()
 
   const initial = {
-    Date: "2012-12-29",
+    Date: '2012-12-29',
     Page: 0
   }
 
