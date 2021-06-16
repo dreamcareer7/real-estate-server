@@ -66,5 +66,6 @@ CREATE OR REPLACE VIEW triggers_due AS (
       AND t.executed_at IS NULL
       AND t.effective_at <= NOW()
       AND t.failed_at IS NULL
+      AND t.flow = c.id::uuid
   )
 )
