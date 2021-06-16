@@ -21,6 +21,7 @@ declare interface ITask extends ICrmAssociationsCategorized {
   title: string
   description: string
   due_date: number
+  end_date: number
   status: TTaskStatus
   task_type: TTaskType
 
@@ -33,8 +34,9 @@ declare interface ITask extends ICrmAssociationsCategorized {
 
   reminders: UUID[]
   associations?: UUID[]
-  files?: any[],
+  files?: any[]
   all_day: Boolean
+  metadata: any
 }
 
 declare interface ITaskInput {
