@@ -10,6 +10,7 @@ declare interface IUserBase {
   cover_image_url?: string;
   password?: string;
   last_seen_at?: number;
+  user_type?: string;
 }
 declare interface IUserInput extends IUserBase {
   agent?: UUID;
