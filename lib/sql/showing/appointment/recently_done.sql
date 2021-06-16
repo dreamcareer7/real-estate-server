@@ -4,5 +4,5 @@ SELECT
 FROM
   showings_appointments
 WHERE
-  status = ANY('{Confirmed,Requested,Rescheduled}'::showing_appointment_status[])
-  AND time < now() - interval $1;
+  status = ANY('{$1}'::showing_appointment_status[])
+  AND time < now() - interval $2;
