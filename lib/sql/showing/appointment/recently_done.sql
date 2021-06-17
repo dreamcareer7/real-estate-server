@@ -5,4 +5,4 @@ FROM
   showings_appointments
 WHERE
   status = ANY('{$1}'::showing_appointment_status[])
-  AND time < now() - interval $2;
+  AND time < now() - $1::interval;
