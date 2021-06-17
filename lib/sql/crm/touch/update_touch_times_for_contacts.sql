@@ -8,5 +8,6 @@ FROM
   get_touch_times_for_contacts($1::uuid[]) AS tt
 WHERE
   contacts.id = tt.contact
+  AND contacts.last_touch IS DISTINCT FROM tt.last_touch
 RETURNING
   contacts.id
