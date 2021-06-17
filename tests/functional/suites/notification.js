@@ -75,8 +75,8 @@ const pushNotification = (cb) => {
     })
 }
 
-const cancelPushNotification = (cb) => {
-  return frisby.create('cancel push')
+const cancelPushNotificationWithoutApp = (cb) => {
+  return frisby.create('cancel push without app')
     .delete('/notifications/tokens/' + results.notification.pushNotification.data.id)
     .after(cb)
     .expectStatus(200)
@@ -92,6 +92,22 @@ const cancelPushNotification = (cb) => {
       code: String,
       data: user_response
     })
+}
+
+const cancelPushNotification (cb) => {
+  const app = 'rechat'
+  const token = results.notification.pushNotification.data.id
+  
+  return frisby.create('cancel push')
+    .delete(`/notifications/tokens/${app}/${token}`)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      data: { type: 'user' },
+    })
+    .expectJSONLength(2)
+    .expectJSONTypes({ code: string, data: user_response })
 }
 
 const patchNotificationSettings = (cb) => {
@@ -131,6 +147,7 @@ module.exports = {
   acknowledgeNotification,
   acknowledgeRoomNotification,
   pushNotification,
+  cancelPushNotificationWithoutApp,
   cancelPushNotification,
   patchNotificationSettings,
   patchNotificationSettingsInvalid,
