@@ -551,24 +551,25 @@ function sellerAgentRejectAppointment (cb) {
 
 function checkAppointmentRejectionSmsForBuyer (cb) {
   const address = '5020  Junius Street'
-  const datetime = 'Jun 21, 11:00'
-  const comment = ''
+  const datetime = APPOINTMENT_TIME.tz('US/Central').format('MMM D, HH:mm')
+  const comment = 'Sorry something came up I have to cancel this'
   
   let expectedBody = `Sorry, your showing for ${address} at ${datetime} has been rejected.`
   if (comment) { expectedBody += `\n: ${comment}` }
-
-  /* FIXME: The response body does not match with `expectedBody`. Why?! */
-  expectedBody = 'Your showing request for 5020  Junius Street at Jun 21, 11:00 has been canceled.'
   
   return frisby
     .create('check appointment rejection sms for buyer')
     .get(`/sms/inbox/${BUYER_PHONE_NUMBER}`)
     .after(cb)
     .expectJSON({
-      data: [{
-        to: formatPhoneNumberForDialing(BUYER_PHONE_NUMBER),
-        body: expectedBody
-      }],
+      data: [
+        { /* Ignore first one */ },
+        { /* Ignore second one */ },
+        {
+          to: formatPhoneNumberForDialing(BUYER_PHONE_NUMBER),
+          body: expectedBody
+        }
+      ],
     })
 }
 
