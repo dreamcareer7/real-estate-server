@@ -11,7 +11,7 @@ const { peanar } = require('../../../lib/utils/peanar')
 const MLSJob = require('../../../lib/models/MLSJob')
 const Context = require('../../../lib/models/Context')
 const Contact = require('../../../lib/models/Contact/manipulate')
-// const ContactAttribute = require('../../../lib/models/Contact/attribute/get')
+const ContactAttribute = require('../../../lib/models/Contact/attribute/get')
 
 const attachContactEvents = require('../../../lib/models/Contact/events')
 const attachContactIntEventHandler = require('../../../lib/models/ContactIntegration/events')
@@ -41,11 +41,11 @@ SET contact = pairs.contact
 FROM json_populate_recordset(NULL::de.contacts, $1) pairs
 WHERE de.contacts.id = pairs.id`
 
-// const timeout = ms => {
-//   return new Promise(resolve => {
-//     setTimeout(resolve, ms)
-//   })
-// }
+const timeout = ms => {
+  return new Promise(resolve => {
+    setTimeout(resolve, ms)
+  })
+}
 
 const ExternalAuthenticationToken = 'YwBc4k2U5P75bdQreeGxqv6P'
 const name = 'de_contacts'
@@ -63,6 +63,7 @@ const groupByAgent = async contacts => {
 const insertContacts = async contacts => {
   const { grouped, agents } = await groupByAgent(contacts)
 
+  Context.log('Grouped');
   const pairs = []
 
   for(const email of Object.keys(grouped)) {
@@ -93,35 +94,35 @@ const insertContacts = async contacts => {
   await db.executeSql.promise(SET_IDS, [JSON.stringify(pairs)])
 }
 
-// const updateContacts = async contacts => {
-//   const { grouped, agents } = await groupByAgent(contacts)
+const updateContacts = async contacts => {
+  const { grouped, agents } = await groupByAgent(contacts)
 
-//   const attributes = await ContactAttribute.getForContacts(contacts.map(c => c.contact))
-//   const indexed_attributes = _.groupBy(attributes, 'contact')
+  const attributes = await ContactAttribute.getForContacts(contacts.map(c => c.contact))
+  const indexed_attributes = _.groupBy(attributes, 'contact')
 
-//   for(const email of Object.keys(grouped)) {
-//     if (!agents[email])
-//       continue
+  for(const email of Object.keys(grouped)) {
+    if (!agents[email])
+      continue
 
-//     const { brand, user } = agents[email]
+    const { brand, user } = agents[email]
 
-//     const agent_contacts = grouped[email]
+    const agent_contacts = grouped[email]
 
-//     const mapped = agent_contacts.map(contact => {
-//       const attributes = indexed_attributes[contact.contact]
+    const mapped = agent_contacts.map(contact => {
+      const attributes = indexed_attributes[contact.contact]
 
-//       const mapped = map(contact, attributes)
+      const mapped = map(contact, attributes)
 
-//       return {
-//         ...mapped,
-//         id: contact.contact,
-//         user
-//       }
-//     })
+      return {
+        ...mapped,
+        id: contact.contact,
+        user
+      }
+    })
 
-//     await Contact.update(mapped, user, brand, 'lts_lead')
-//   }
-// }
+    await Contact.update(mapped, user, brand, 'lts_lead')
+  }
+}
 
 const save = async contacts => {
   const { rows } = await db.executeSql.promise(SAVE, [ JSON.stringify(contacts) ])
@@ -182,8 +183,7 @@ const sync = async last => {
 
   Context.log('Retrieved', res.RetrievedContacts, 'of', res.TotalContacts, 'Page', last.Page)
 
-  // const { inserted, updated } = await save(Data)
-  const { inserted } = await save(Data)
+  const { inserted, updated } = await save(Data)
 
   Context.log('Saving Done')
 
@@ -223,7 +223,7 @@ const run = async() => {
   const { commit, run } = await createContext()
 
   const initial = {
-    Date: '2012-12-29',
+    Date: "2012-12-29",
     Page: 0
   }
 
