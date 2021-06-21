@@ -1,4 +1,8 @@
-DROP TRIGGER IF EXISTS update_current_deal_context ON deal_context;
+const db = require('../lib/utils/db')
+
+const migrations = [
+  'BEGIN',
+  `DROP TRIGGER IF EXISTS update_current_deal_context ON deal_context;
 DROP TRIGGER IF EXISTS update_current_deal_context ON deals_checklists;
 DROP TRIGGER IF EXISTS update_current_deal_context ON addresses;
 DROP TRIGGER IF EXISTS update_current_deal_context ON deals;
@@ -47,4 +51,23 @@ CREATE TRIGGER update_current_deal_context AFTER INSERT OR UPDATE on addresses
   FOR EACH ROW EXECUTE PROCEDURE update_current_deal_context_from_mls_trigger();
 
 CREATE TRIGGER update_current_deal_context AFTER INSERT OR UPDATE on deals
-  FOR EACH ROW EXECUTE PROCEDURE deals_updated_current_deal_context_trigger();
+  FOR EACH ROW EXECUTE PROCEDURE deals_updated_current_deal_context_trigger();`,
+  'COMMIT'
+]
+
+
+const run = async () => {
+  const { conn } = await db.conn.promise()
+
+  for(const sql of migrations) {
+    await conn.query(sql)
+  }
+
+  conn.release()
+}
+
+exports.up = cb => {
+  run().then(cb).catch(cb)
+}
+
+exports.down = () => {}
