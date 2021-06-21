@@ -94,7 +94,7 @@ const cancelPushNotificationWithoutApp = (cb) => {
     })
 }
 
-const cancelPushNotification (cb) => {
+const cancelPushNotification = (cb) => {
   const app = 'rechat'
   const token = results.notification.pushNotification.data.id
   
