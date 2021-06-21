@@ -107,7 +107,7 @@ const cancelPushNotification = (cb) => {
       data: { type: 'user' },
     })
     .expectJSONLength(2)
-    .expectJSONTypes({ code: string, data: user_response })
+    .expectJSONTypes({ code: String, data: user_response })
 }
 
 const patchNotificationSettings = (cb) => {
