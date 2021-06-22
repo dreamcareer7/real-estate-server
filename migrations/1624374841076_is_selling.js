@@ -2,7 +2,7 @@ const db = require('../lib/utils/db')
 
 const migrations = [
   'BEGIN',
-  'ALTER TABLE brands_deal_statuses ADD COLUMN is_selling DEFAULT FALSE',
+  'ALTER TABLE brands_deal_statuses ADD COLUMN is_selling BOOLEAN DEFAULT FALSE',
   'COMMIT'
 ]
 
