@@ -8,10 +8,11 @@ const airship = (job, done) => {
     notification_user,
     notification,
     user_id,
-    token
+    token,
+    app = 'rechat',
   } = job.data
 
-  Notification.sendToDevice(notification_user, notification, token, user_id, done)
+  Notification.sendToDevice(notification_user, notification, token, user_id, app, done)
 }
 
 const notification = (job, done) => {
