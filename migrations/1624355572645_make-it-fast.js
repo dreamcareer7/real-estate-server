@@ -1,4 +1,8 @@
-CREATE OR REPLACE FUNCTION propose_brand_agents(brand_id uuid, "user_id" uuid) RETURNS TABLE(
+const db = require('../lib/utils/db')
+
+const migrations = [
+  'BEGIN',
+  `CREATE OR REPLACE FUNCTION propose_brand_agents(brand_id uuid, "user_id" uuid) RETURNS TABLE(
   "agent" uuid,
   mui    bigint,
   mls    mls,
@@ -35,4 +39,25 @@ $$
 $$
 STABLE
 PARALLEL SAFE
-LANGUAGE sql;
+LANGUAGE sql;`,
+
+  'DROP FUNCTIOn user_has_contact_with_another'
+  'COMMIT'
+]
+
+
+const run = async () => {
+  const { conn } = await db.conn.promise()
+
+  for(const sql of migrations) {
+    await conn.query(sql)
+  }
+
+  conn.release()
+}
+
+exports.up = cb => {
+  run().then(cb).catch(cb)
+}
+
+exports.down = () => {}
