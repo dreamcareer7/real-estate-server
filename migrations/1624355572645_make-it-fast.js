@@ -41,7 +41,7 @@ STABLE
 PARALLEL SAFE
 LANGUAGE sql;`,
 
-  'DROP FUNCTIOn user_has_contact_with_another'
+  'DROP FUNCTIOn user_has_contact_with_another',
   'COMMIT'
 ]
 
