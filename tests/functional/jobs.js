@@ -4,6 +4,8 @@ require('../../lib/models/CRM/Task/worker')
 require('../../lib/models/CRM/Touch/worker')
 require('../../lib/models/Trigger/worker')
 
+const pollers = require('./pollers')
+
 const queues = Object.assign(
   require('../../scripts/workers/kue/queues.js'),
   require('./queues.js')
@@ -54,6 +56,19 @@ function installJobsRoute(app) {
       }
       res.json(result)
     })
+  })
+
+  app.post('/poll', (req, res) => {
+    const name = req.body.name
+    pollers[name]().then(
+      () => {
+        res.status(204)
+        res.end()
+      },
+      err => {
+        res.error(err)
+      }
+    )
   })
 }
 
