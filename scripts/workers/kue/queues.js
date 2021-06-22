@@ -25,7 +25,7 @@ const saveLastSeen = (job, done) => {
 module.exports = {
   airship_transport_send_device: {
     handler: airship,
-    parallel: config.airship.parallel
+    parallel: config.push.rechat.config.parallel
   },
 
   create_notification: {
