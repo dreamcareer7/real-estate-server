@@ -4,7 +4,7 @@ const migrations = [
   'BEGIN',
 
   `ALTER TABLE notifications
-     ADD COLUMN app notifications_app NOT NULL DEFAULT 'rechat'::notification_app`,
+     ADD COLUMN app notification_app NOT NULL DEFAULT 'rechat'::notification_app`,
   
   'COMMIT'
 ]
