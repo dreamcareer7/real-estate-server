@@ -541,6 +541,7 @@ function registerPushNotificationToken (cb) {
     .expectStatus(200)
 }
 
+// eslint-disable-next-line no-unused-vars
 function willGetPushNotificationAfterRequest (cb) {
   /* TODO: What we've to do here? */
 }
