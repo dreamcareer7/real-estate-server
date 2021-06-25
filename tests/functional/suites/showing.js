@@ -530,6 +530,29 @@ function sellerAgentCancelAppointment(cb) {
     })
 }
 
+function registerPushNotificationToken (cb) {
+  return frisby
+    .create('register push notification token')
+    .post('/notifications/tokens', {
+      channel: 'mock-player-id',
+      app: 'showingapp',
+    })
+    .after(cb)
+    .expectStatus(200)
+}
+
+function willGetPushNotificationAfterRequest (cb) {
+  /* TODO: What we've to do here? */
+}
+
+function unregisterNotificationToken (cb) {
+  return frisby
+    .create('unregister push notification token')
+    .delete('/notifications/tokens/showingapp/mock-player-id')
+    .after(cb)
+    .expectStatus(200)
+}
+
 module.exports = {
   create,
   createWithNoApprovalRequired,
@@ -557,6 +580,11 @@ module.exports = {
 
   makeAnotherAppointment: _makeAppointment('request a new appointment'),
   sellerAgentCancelAppointment,
+
+  registerPushNotificationToken,
+  makeAnAppointmentThatResultsPush: _makeAppointment('request another appointment to test push'),
+  // requestedAppointmentResultsPush: willGetPushNotificationAfterRequest,
+  unregisterNotificationToken,
 
   createWithValidationError,
 }
