@@ -16,6 +16,10 @@ apps:
     name     : 'mls_photos'
     kill_timeout : 15000
   - script   : ./scripts/workers/index.js
+    args     : ./peanar/mls_photos_bulk
+    name     : 'mls_photos_bulk'
+    kill_timeout : 15000
+  - script   : ./scripts/workers/index.js
     args     : ./peanar/email_campaign
     name     : 'email_campaign_worker'
     kill_timeout : 15000
