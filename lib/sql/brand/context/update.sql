@@ -1,9 +1,3 @@
-WITH to_delete AS (
-  DELETE FROM brands_contexts_checklists
-  WHERE context = $1
-),
-
-updated AS (
   UPDATE brands_contexts SET
     key = $2,
     label = $3,
@@ -19,13 +13,3 @@ updated AS (
     triggers_brokerwolf = $13
   WHERE id = $1
   RETURNING *
-)
-
-INSERT INTO brands_contexts_checklists
-  (context, checklist, is_required)
-  SELECT
-    (SELECT id FROM updated),
-    checklist,
-    COALESCE(is_required,  FALSE)
-  FROM json_populate_recordset(NULL::brands_contexts_checklists, $14::json)
-  RETURNING id
