@@ -1,0 +1,37 @@
+INSERT INTO photos(
+  matrix_unique_id,
+  listing_mui,
+  description,
+  url,
+  "order",
+  exif,
+  revision,
+  mls
+)
+(
+  SELECT
+    matrix_unique_id,
+    listing_mui,
+    description,
+    url,
+    "order",
+    exif,
+    revision,
+    mls
+  FROM
+    json_populate_recordset(null::photos, $1::json)
+)
+ON CONFLICT (matrix_unique_id, mls) DO UPDATE SET
+  description = EXCLUDED.description,
+  url = EXCLUDED.url,
+  "order" = EXCLUDED."order",
+  exif = EXCLUDED.exif,
+  revision = EXCLUDED.revision,
+  deleted_at = NULL
+
+WHERE
+  photos.matrix_unique_id = EXCLUDED.matrix_unique_id::text
+  AND photos.mls = EXCLUDED.mls::mls
+  AND photos.revision < EXCLUDED.revision
+
+RETURNING id
