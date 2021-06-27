@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 
 const { getByEmail }  = require('../../lib/models/User/get')
-const Email = require('../../lib/models/Email/get')
 
 require('../connection.js')
 const fs = require('fs')
