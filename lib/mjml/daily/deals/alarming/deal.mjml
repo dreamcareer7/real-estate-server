@@ -14,8 +14,8 @@
       >
       </mj-image>
     </mj-column>
-    <mj-column width="76%">
-      <mj-text padding-left="0">
+    <mj-column width="87%">
+      <mj-text padding-left="0" padding-top=0>
         <a href="{{url}}" style="font-family:'Lato'; font-size: 13px; font-weight:400; color: #000000;">
           {{ deal.title }}
           {% if deal.new_notifications %}
@@ -34,15 +34,26 @@
             </span>
           {% endif %}
         </a>
-        <div style="color: #949598;font-family:'Lato'; font-size: 13px; font-weight:400; ">
-          <br>
-          {{ deal.context.contract_status.text or deal.context.listing_status.text }}
+        <div style="color: #E57373;font-family:'Lato'; font-size: 13px; font-weight:400; padding-top: 3px; line-height: 15px;">
+          {% if deal.faired_at %}
+            <div>
+              ✱ Is not made visible to admins.
+            </div>
+          {% endif %}
+
+          {% if deal.declined %}
+            <div>
+              ✱ Has {{ deal.declined }} declined tasks.
+            </div>
+          {% endif %}
+
+          {% if deal.required %}
+            <div>
+              ✱ Has {{ deal.required }} required tasks.
+            </div>
+          {% endif %}
         </div>
       </mj-text>
-    </mj-column>
-
-    <mj-column width="11%">
-      {% include '../actions/deal.mjml' %}
     </mj-column>
   </mj-group>
 </mj-section>
