@@ -7,6 +7,7 @@ async function start() {
     require('./integrations'),
     require('./microsoft_notifications'),
     require('./mls'),
+    require('./mls_photos'),
   ]) {
     await start()
   }
