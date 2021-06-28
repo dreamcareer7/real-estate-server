@@ -1,4 +1,4 @@
-{
+[{
   "matrix_unique_id": "20751570",
   "listing_mui": 2508867,
   "description": "Living",
@@ -6,4 +6,12 @@
   "revision": 1,
   "url": "https://photo-url",
   "mls": "NTREIS"
-}
+}, {
+  "matrix_unique_id": "20751571",
+  "listing_mui": 2508867,
+  "description": "Living 2",
+  "order": 10,
+  "revision": 1,
+  "url": "https://photo-url-2",
+  "mls": "NTREIS"
+}]

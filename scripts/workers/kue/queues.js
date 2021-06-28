@@ -8,8 +8,10 @@ const airship = (job, done) => {
     notification_user,
     notification,
     user_id,
-    token
+    token,
   } = job.data
+
+  notification.app || (notification.app = 'rechat')
 
   Notification.sendToDevice(notification_user, notification, token, user_id, done)
 }
@@ -25,7 +27,7 @@ const saveLastSeen = (job, done) => {
 module.exports = {
   airship_transport_send_device: {
     handler: airship,
-    parallel: config.airship.parallel
+    parallel: config.push.rechat.config.parallel
   },
 
   create_notification: {
