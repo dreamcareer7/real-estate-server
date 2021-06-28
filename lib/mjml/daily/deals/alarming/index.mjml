@@ -1,0 +1,27 @@
+{% if alarming_deals.length > 0 %}
+  <mj-section padding="16px 0 0 0"></mj-section>
+
+  <mj-wrapper background-color="#ffffff" padding="0" border-radius="16px">
+    <mj-section padding-top="24px" padding-bottom="0">
+      <mj-column>
+        <mj-text css-class="title" padding="0" align="center" font-family="Lato" font-size="18px" font-weight="900" color="#000000">
+          <a href="{{ '/dashboard/deals' | url }}">
+            ⚠️ Warning!
+          </a>
+        </mj-text>
+      </mj-column>
+    </mj-section>
+
+    <mj-section padding-top="10px" padding-bottom="26px">
+      <mj-column padding-right="0">
+        <mj-text align="center" color="#b8b9bd" font-family="Lato" font-size="16px" font-weight="400" padding-top="0" >
+          You have closings upcoming but your deals are not ready yet.
+        </mj-text>
+      </mj-column>
+    </mj-section>
+
+    {% for deal in alarming_deals %}
+      {% include './deal.mjml' %}
+    {% endfor %}
+  </mj-wrapper>
+{% endif %}

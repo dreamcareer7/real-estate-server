@@ -1,0 +1,48 @@
+{% set uri %}/dashboard/deals/{{deal.id}}{% endset %}
+{% set url = uri | url %}
+
+<mj-section padding="0 5px 20px 5px">
+  <mj-group>
+    <mj-column width="13%">
+      <mj-image
+        padding="5px"
+        src="{{deal.context.photo.text or 'https://assets.rechat.com/daily/listing.png'}}"
+        href="{{ url }}"
+        border-radius="5px"
+        width="45px"
+        align="center"
+      >
+      </mj-image>
+    </mj-column>
+    <mj-column width="76%">
+      <mj-text padding-left="0" padding-top=0>
+        <a href="{{url}}" style="font-family:'Lato'; font-size: 13px; font-weight:400; color: #000000;">
+          {{ deal.title }}
+          {% if deal.new_notifications %}
+            <span style="
+                background: #E57373;
+                color: white;
+                border-radius: 100%;
+                min-width: 15px;
+                display: inline-block;
+                text-align: center;
+                padding: 3px;
+              "
+              title="{{deal.new_notifications | length}} Unread Messages"
+            >
+              {{deal.new_notifications | length}}
+            </span>
+          {% endif %}
+        </a>
+        <div style="color: #949598;font-family:'Lato'; font-size: 13px; font-weight:400; ">
+          <br>
+          {{ deal.context.contract_status.text or deal.context.listing_status.text }}
+        </div>
+      </mj-text>
+    </mj-column>
+
+    <mj-column width="11%">
+      {% include '../actions/deal.mjml' %}
+    </mj-column>
+  </mj-group>
+</mj-section>

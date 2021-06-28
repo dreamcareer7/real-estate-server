@@ -7,7 +7,7 @@ export interface ILtsLead {
   company: string;
   address: string;
   message: string;
-  tag: string;
+  tag: string | string[];
   owner_id: string;
   lead_source: string;
   lead_source_url: string;
