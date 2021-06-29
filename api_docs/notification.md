@@ -12,6 +12,10 @@ to users so that they can be on top of everything.
 <!-- include(tests/notification/pushNotification.md) -->
 
 ### Cancel receiving push notifications [DELETE /notifications/tokens/:id]
+**DEPRECATED**. use `DELETE /notification/tokens/:app/:id` instead.
+<!-- include(tests/notification/cancelPushNotificationWithoutApp.md) -->
+
+### Cancel receiving push notifications [DELETE /notifications/tokens/:app/:id]
 <!-- include(tests/notification/cancelPushNotification.md) -->
 
 ### Get a specific notification [GET /notifications/:id]
