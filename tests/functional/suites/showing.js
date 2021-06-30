@@ -530,6 +530,49 @@ function sellerAgentCancelAppointment(cb) {
     })
 }
 
+function sellerAgentRejectAppointment (cb) {
+  return frisby
+    .create('reject an appointment by seller agent')
+    .put(
+      `/showings/${results.showing.create.data.id}/appointments/${results.showing.makeAnotherAppointmentToReject.data.id}/approval`,
+      {
+        approved: false,
+        comment: 'Sorry something came up',
+      }
+    )
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      data: {
+        status: 'Canceled',
+      },
+    })  
+}
+
+function checkAppointmentRejectionSmsForBuyer (cb) {
+  const address = '5020  Junius Street'
+  const datetime = APPOINTMENT_TIME.tz('US/Central').format('MMM D, HH:mm')
+  const comment = 'Sorry something came up I have to cancel this'
+  
+  let expectedBody = `Sorry, your showing for ${address} at ${datetime} has been rejected.`
+  if (comment) { expectedBody += `\n: ${comment}` }
+  
+  return frisby
+    .create('check appointment rejection sms for buyer')
+    .get(`/sms/inbox/${BUYER_PHONE_NUMBER}`)
+    .after(cb)
+    .expectJSON({
+      data: [
+        { /* Ignore first one */ },
+        { /* Ignore second one */ },
+        {
+          to: formatPhoneNumberForDialing(BUYER_PHONE_NUMBER),
+          body: expectedBody
+        }
+      ],
+    })
+}
+
 module.exports = {
   create,
   createWithNoApprovalRequired,
@@ -557,6 +600,10 @@ module.exports = {
 
   makeAnotherAppointment: _makeAppointment('request a new appointment'),
   sellerAgentCancelAppointment,
+
+  makeAnotherAppointmentToReject: _makeAppointment('request another appointment to reject'),
+  sellerAgentRejectAppointment,
+  checkAppointmentRejectionSmsForBuyer,
 
   createWithValidationError,
 }
