@@ -218,7 +218,7 @@ const sortContexts = cb => {
     .put(`/brands/${brand_id}/contexts/sort`, items)
     .after(cb)
     .expectStatus(200)
-  }
+}
 
 const getContexts = cb => {
   return frisby.create('get brand context definitions')
