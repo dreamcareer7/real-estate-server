@@ -42,7 +42,7 @@
     </mj-column>
 
     <mj-column width="11%">
-      {% include '../actions/deal.mjml' %}
+      {% include '../../actions/deal.mjml' %}
     </mj-column>
   </mj-group>
 </mj-section>
