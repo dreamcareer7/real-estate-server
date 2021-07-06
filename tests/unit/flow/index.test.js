@@ -31,6 +31,7 @@ const Trigger = {
 }
 
 const { createContext, handleJobs } = require('../helper')
+const templates = require('../brand/templates')
 const BrandHelper = require('../brand/helper')
 const { attributes } = require('../contact/helper')
 
@@ -49,6 +50,7 @@ async function setup() {
   user = await User.getByEmail('test@rechat.com')
 
   brand = await BrandHelper.create({
+    templates,
     roles: {
       Admin: [user.id]
     },
