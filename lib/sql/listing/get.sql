@@ -38,6 +38,7 @@ listing_settings AS (
           SELECT id FROM offices
           WHERE offices.matrix_unique_id = listings.list_office_mui
           AND   offices.mls = listings.mls
+          AND   offices.status = 'Active'
           LIMIT 1
         ) as list_office,
         (
