@@ -193,7 +193,7 @@ async function setupFlowWithEmailAndTemplateInstanceStep() {
     }]
   })
 
-  const brandFlowStepIds = await sql.selectIds(`SELECT id FROM brands_flow_steps WHERE flow = $1`, [ brandFlowId ])
+  const brandFlowStepIds = await sql.selectIds('SELECT id FROM brands_flow_steps WHERE flow = $1', [ brandFlowId ])
   return {
     brandFlowId,
     brandFlowStepIds
@@ -213,8 +213,8 @@ async function testFlowWithEmailAndTemplateInstanceStep() {
 
   const campaigns = await sql.selectIds('SELECT id FROM email_campaigns WHERE brand = $1', [brand.id]).then(EmailCampaign.getAll)
   expect(campaigns).to.have.length(1)
-  expect(campaigns[0].html).to.be.equal(`<div>Hey, it's your birthday!!</div>`)
-  expect(campaigns[0].text).to.be.equal(`Hey, it's your birthday!!`)
+  expect(campaigns[0].html).to.be.equal('<div>Hey, it\'s your birthday!!</div>')
+  expect(campaigns[0].text).to.be.equal('Hey, it\'s your birthday!!')
 }
 
 async function testFlowProgress() {
