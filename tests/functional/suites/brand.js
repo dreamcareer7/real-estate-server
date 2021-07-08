@@ -202,6 +202,24 @@ const addTextContext = cb => {
     })
 }
 
+const sortContexts = cb => {
+  const items = [
+    {
+      id: results.brand.addDateContext.data.id,
+      order: 2
+    },
+
+    {
+      id: results.brand.addTextContext.data.id,
+      order: 3
+    }
+  ]
+  return frisby.create('sort context definitions')
+    .put(`/brands/${brand_id}/contexts/sort`, items)
+    .after(cb)
+    .expectStatus(200)
+}
+
 const getContexts = cb => {
   return frisby.create('get brand context definitions')
     .get(`/brands/${brand_id}/contexts`)
@@ -884,6 +902,7 @@ module.exports = {
 
   addDateContext,
   addTextContext,
+  sortContexts,
   getContexts,
   updateContext,
   deleteContext,

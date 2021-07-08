@@ -4,6 +4,7 @@ const moment = require('moment-timezone')
 const sql = require('../../../lib/utils/sql')
 const BrandFlow = {
   ...require('../../../lib/models/Brand/flow/get'),
+  ...require('../../../lib/models/Brand/flow/create'),
 }
 const BrandFlowStep = {
   ...require('../../../lib/models/Brand/flow_step/create'),
@@ -24,13 +25,17 @@ const Orm = {
   ...require('../../../lib/models/Orm/context'),
 }
 const User = require('../../../lib/models/User/get')
-
+const BrandTemplate = require('../../../lib/models/Template/brand/get')
+const Template = require('../../../lib/models/Template/get')
+const TemplateInstance = require('../../../lib/models/Template/instance/index')
 const Trigger = {
   ...require('../../../lib/models/Trigger/get'),
   ...require('../../../lib/models/Trigger/due'),
 }
+const EmailCampaign = require('../../../lib/models/Email/campaign/get')
 
 const { createContext, handleJobs } = require('../helper')
+const templates = require('../brand/templates')
 const BrandHelper = require('../brand/helper')
 const { attributes } = require('../contact/helper')
 
@@ -49,6 +54,7 @@ async function setup() {
   user = await User.getByEmail('test@rechat.com')
 
   brand = await BrandHelper.create({
+    templates,
     roles: {
       Admin: [user.id]
     },
@@ -148,6 +154,67 @@ async function testEnrollContact() {
   const [flow] = await Flow.enrollContacts(brand.id, user.id, brand_flow.id, Date.now() / 1000, brand_flow.steps.map(s => s.id), [id])
 
   return { flow, contact: id }
+}
+
+async function createTemplateInstance() {
+  const brandTemplates = await BrandTemplate.getForBrands({ brands: [brand.id] })
+
+  const template = await Template.get(brandTemplates[0].template)
+  const html = '<div>Hey, it\'s your birthday!!</div>'
+
+  const instance = await TemplateInstance.create({
+    template,
+    html,
+    deals: [],
+    contacts: [],
+    listings: [],
+    created_by: user
+  })
+
+  return instance
+}
+
+async function setupFlowWithEmailAndTemplateInstanceStep() {
+  const instance = await createTemplateInstance()
+
+  const brandFlowId = await BrandFlow.create(brand.id, user.id, {
+    created_by: user.id,
+    name: 'TemplateInstance step',
+    description: 'A flow with an template instance email step',
+    steps: [{
+      title: 'Happy birthday email',
+      description: 'Send a customized happy birthday email',
+      wait_for: { days: 1 },
+      time: '08:00:00',
+      order: 1,
+      is_automated: false,
+      event_type: 'last_step_date',
+      template_instance: instance.id
+    }]
+  })
+
+  const brandFlowStepIds = await sql.selectIds(`SELECT id FROM brands_flow_steps WHERE flow = $1`, [ brandFlowId ])
+  return {
+    brandFlowId,
+    brandFlowStepIds
+  }
+}
+
+async function testFlowWithEmailAndTemplateInstanceStep() {
+  const { brandFlowId, brandFlowStepIds } = await setupFlowWithEmailAndTemplateInstanceStep()
+  const contact = await createContact()
+  const [flow] = await Flow.enrollContacts(brand.id, user.id, brandFlowId, Date.now() / 1000, brandFlowStepIds, [contact])
+
+  const triggers = await sql.select('SELECT id FROM triggers WHERE flow = $1 and contact = $2', [ flow.id, contact ])
+  expect(triggers).to.have.length(1)
+
+  await Trigger.executeDue()
+  await handleJobs()
+
+  const campaigns = await sql.selectIds('SELECT id FROM email_campaigns WHERE brand = $1', [brand.id]).then(EmailCampaign.getAll)
+  expect(campaigns).to.have.length(1)
+  expect(campaigns[0].html).to.be.equal(`<div>Hey, it's your birthday!!</div>`)
+  expect(campaigns[0].text).to.be.equal(`Hey, it's your birthday!!`)
 }
 
 async function testFlowProgress() {
@@ -323,6 +390,7 @@ describe('Flow', () => {
   beforeEach(setup)
 
   it('should setup brand flows correctly', testBrandFlows)
+  it('should setup brand flow with template instance step', testFlowWithEmailAndTemplateInstanceStep)
   it('should enroll a contact to a flow', testEnrollContact)
   it('should progress to next step', testFlowProgress)
   it('should mark next step as failed in case of failure', testFlowProgressFail)
