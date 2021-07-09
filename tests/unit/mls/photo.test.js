@@ -9,10 +9,10 @@ const savePhoto = async () => {
   expect(id).to.be.a('string')
 }
 
-const bulkSavePhotos = async () => {
-  const ids = await Photo.createMany(json)
-  expect(ids).to.have.length(2)
-}
+// const bulkSavePhotos = async () => {
+//   const ids = await Photo.createMany(json)
+//   expect(ids).to.have.length(2)
+// }
 
 const deleteMissing = async () => {
   await savePhoto()
@@ -24,6 +24,6 @@ describe('MLS Photo', () => {
   createContext()
 
   it('should save a photo', savePhoto)
-  it('should save multiple photos at once', bulkSavePhotos)
+  // it('should save multiple photos at once', bulkSavePhotos)
   it('should delete missing photos', deleteMissing)
 })
