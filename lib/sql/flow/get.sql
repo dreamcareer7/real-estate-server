@@ -13,10 +13,11 @@ SELECT
   description,
   extract(epoch FROM starts_at) AS starts_at,
   contact,
+  extract(epoch FROM last_step_date) AS last_step_date,
 
   (
     SELECT
-      array_agg(id)
+      array_agg(id ORDER BY created_at)
     FROM
       flows_steps
     WHERE

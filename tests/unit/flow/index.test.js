@@ -92,7 +92,7 @@ async function setup() {
       }, {
         title: 'Demo of Rechat',
         description: 'Dan gives a quick demo of the Rechat system and explains how it works',
-        wait_for: { days: 2},
+        wait_for: {days: 5},
         time: '10:00:00',
         order: 3,
         is_automated: false,
@@ -193,7 +193,7 @@ async function setupFlowWithEmailAndTemplateInstanceStep() {
     }]
   })
 
-  const brandFlowStepIds = await sql.selectIds(`SELECT id FROM brands_flow_steps WHERE flow = $1`, [ brandFlowId ])
+  const brandFlowStepIds = await sql.selectIds('SELECT id FROM brands_flow_steps WHERE flow = $1', [ brandFlowId ])
   return {
     brandFlowId,
     brandFlowStepIds
@@ -213,8 +213,8 @@ async function testFlowWithEmailAndTemplateInstanceStep() {
 
   const campaigns = await sql.selectIds('SELECT id FROM email_campaigns WHERE brand = $1', [brand.id]).then(EmailCampaign.getAll)
   expect(campaigns).to.have.length(1)
-  expect(campaigns[0].html).to.be.equal(`<div>Hey, it's your birthday!!</div>`)
-  expect(campaigns[0].text).to.be.equal(`Hey, it's your birthday!!`)
+  expect(campaigns[0].html).to.be.equal('<div>Hey, it\'s your birthday!!</div>')
+  expect(campaigns[0].text).to.be.equal('Hey, it\'s your birthday!!')
 }
 
 async function testFlowProgress() {
@@ -385,24 +385,65 @@ async function testStopFlow() {
   expect(events).to.be.empty
 }
 
+async function testLastStepDateWithoutFirstStepExecuted() {
+  const id = await createContact()
+  const starts_at = Date.now() / 1000
+
+  const [flow] = await Flow.enrollContacts(brand.id, user.id, brand_flow.id, starts_at, [brand_flow.steps[2].id], [id])
+  await Trigger.executeDue()
+  await handleJobs()
+
+  const { last_step_date } = await sql.selectOne('SELECT extract(epoch FROM last_step_date) AS last_step_date FROM flows WHERE id = $1', [ flow.id ])
+  expect(last_step_date).to.be.equal(starts_at)
+}
+
+async function testLastStepDateWithFirstStepExecuted() {
+  const contact = await createContact()
+  const starts_at = Date.now() / 1000
+
+  const [flow] = await Flow.enrollContacts(brand.id, user.id, brand_flow.id, starts_at, brand_flow.steps.map(s => s.id), [contact])
+
+  await Trigger.executeDue()
+  await handleJobs()
+
+  const executed = await sql.select('SELECT * FROM triggers WHERE flow = $1 and contact = $2 AND executed_at IS NOT NULL', [ flow.id, contact ])
+  expect(executed).to.have.length(1)
+
+  const { last_step_date } = await sql.selectOne('SELECT extract(epoch FROM last_step_date) AS last_step_date FROM flows WHERE id = $1', [ flow.id ])
+  const { now } = await sql.selectOne('SELECT extract(epoch from now()) as now')
+  expect(last_step_date).to.be.equal(now)
+}
+
 describe('Flow', () => {
   createContext()
   beforeEach(setup)
 
-  it('should setup brand flows correctly', testBrandFlows)
-  it('should setup brand flow with template instance step', testFlowWithEmailAndTemplateInstanceStep)
-  it('should enroll a contact to a flow', testEnrollContact)
-  it('should progress to next step', testFlowProgress)
-  it('should mark next step as failed in case of failure', testFlowProgressFail)
-  it('should prevent duplicate enrollment', testDuplicateEnroll)
-  it('should stop a flow instance and delete all future events', testStopFlow)
-  it('should stop a flow instance if contact deleted', testStopFlowByDeleteContact)
+  describe('enroll', function() {
+    it('should enroll a contact to a flow', testEnrollContact)
+    it('should prevent duplicate enrollment', testDuplicateEnroll)
+  })
+  describe('progression', function() {
+    it('should progress to next step', testFlowProgress)
+    it('should mark next step as failed in case of failure', testFlowProgressFail)
+  })
+  describe('execution', function() {
+    it('should setup brand flow with template instance step', testFlowWithEmailAndTemplateInstanceStep)
+  })
+  describe('stop', function() {
+    it('should stop a flow instance and delete all future events', testStopFlow)
+    it('should stop a flow instance if contact deleted', testStopFlowByDeleteContact)
+  })
+  describe('last_step_date', function() {
+    it('should be same as flow created_at if first step is more than 3 days away', testLastStepDateWithoutFirstStepExecuted)
+    it('should be same as flow created_at if first step is less than 3 days away', testLastStepDateWithFirstStepExecuted)
+  })
 })
 
 describe('Brand Flow', () => {
   createContext()
   beforeEach(setup)
 
+  it('should setup brand flows correctly', testBrandFlows)
   it('should not touch step orders when no collision on create', testStepOrderNoCollisionOnCreate)
   it('should resolve order collision on create', testStepOrderCollisionOnCreate)
   it('should not touch step orders when no collision on update', testStepOrderNoCollisionOnUpdate)

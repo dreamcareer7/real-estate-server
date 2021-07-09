@@ -43,9 +43,11 @@ function createContext() {
   beforeEach(async() => {
     Metric.reset()
 
-    context = Context.create({
-      logger() {}
-    })
+    const ctx = {}
+    if (!process.env.CONTEXT_LOG) {
+      ctx.logger = function() {}
+    }
+    context = Context.create(ctx)
 
     context.enter()
 
