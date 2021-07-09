@@ -779,7 +779,7 @@ const updateManyContacts = cb => {
       }))
     })
     .after(cb)
-    .expectStatus(200)
+    .expectStatus(204)
 }
 
 function makeSureManyContactsTagIsAdded(cb) {
