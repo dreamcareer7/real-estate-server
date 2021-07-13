@@ -79,8 +79,8 @@ INSERT INTO listings (
   transaction_type,
   usage_type,
   structure_type,
-  is_address_public
-
+  is_address_public,
+  parcel_number
 ) VALUES (
   $1,
   $2,
@@ -162,7 +162,8 @@ INSERT INTO listings (
   $78,
   $79,
   $80,
-  $81
+  $81,
+  $82
 )
 
 ON CONFLICT (matrix_unique_id, mls) DO UPDATE SET
@@ -238,6 +239,7 @@ ON CONFLICT (matrix_unique_id, mls) DO UPDATE SET
   application_fee_yn = $72,
   revision = $74,
   is_address_public = $81,
+  parcel_number = $82,
   updated_at = CLOCK_TIMESTAMP()
 
 WHERE listings.matrix_unique_id = $4 AND listings.mls = $73::mls
