@@ -1,7 +1,9 @@
 const db = require('../lib/utils/db')
 
 const migrations = [
-  'ALTER TYPE mls ADD VALUE IF NOT EXISTS \'SEF\'',
+  'BEGIN',
+  'ALTER TABLE mls_jobs ADD COLUMN next_token text',
+  'COMMIT'
 ]
 
 

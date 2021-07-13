@@ -35,6 +35,13 @@ listing_settings AS (
           LIMIT 1
         ) as list_agent,
         (
+          SELECT id FROM offices
+          WHERE offices.matrix_unique_id = listings.list_office_mui
+          AND   offices.mls = listings.mls
+          AND   offices.status = 'Active'
+          LIMIT 1
+        ) as list_office,
+        (
           CASE WHEN $2::uuid IS NULL THEN FALSE ELSE (
              SELECT count(*) > 0 FROM recommendations
              LEFT JOIN recommendations_eav ON recommendations.id = recommendations_eav.recommendation

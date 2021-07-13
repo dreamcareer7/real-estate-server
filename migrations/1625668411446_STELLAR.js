@@ -1,7 +1,7 @@
 const db = require('../lib/utils/db')
 
 const migrations = [
-  'ALTER TYPE mls ADD VALUE IF NOT EXISTS \'SEF\'',
+  'ALTER TYPE mls ADD VALUE IF NOT EXISTS \'STELLAR\''
 ]
 
 

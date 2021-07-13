@@ -1,7 +1,10 @@
 const db = require('../lib/utils/db')
 
 const migrations = [
-  'ALTER TYPE mls ADD VALUE IF NOT EXISTS \'SEF\'',
+  'BEGIN',
+  `ALTER TABLE de.regions 
+    ADD timezone TEXT NOT NULL DEFAULT 'America/Chicago'`,
+  'COMMIT'
 ]
 
 
