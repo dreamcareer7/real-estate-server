@@ -74,7 +74,8 @@ declare type TNotificationObjectClass =
   | 'ContactAttributeDef'
   | 'ContactList'
   | 'ContactAttribute'
-  | 'DealContext';
+  | 'DealContext'
+  | 'ShowingAppointment';
 
 declare interface INotificationInput {
   id?: UUID;
