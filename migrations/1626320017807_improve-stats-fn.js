@@ -200,7 +200,7 @@ $$
   RETURNING *;
 $$
 LANGUAGE SQL;`,
-  'SELECT update_emails(id) FROM email_campaigns',
+  'SELECT update_email_campaign_stats(id) FROM email_campaigns',
   'COMMIT'
 ]
 
