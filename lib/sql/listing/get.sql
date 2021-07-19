@@ -10,6 +10,16 @@ listing_settings AS (
 ,listing AS (
   SELECT 'listing' AS TYPE,
         listings.*,
+        COALESCE(
+          listings.list_office_name,
+          (
+            SELECT name FROM offices
+            WHERE offices.matrix_unique_id = listings.list_office_mui
+            AND   offices.mls = listings.mls
+            AND   offices.status = 'Active'
+            LIMIT 1
+          )
+        ) AS list_office_name,
         (
           SELECT "user" FROM brand_agents
           ORDER BY (
