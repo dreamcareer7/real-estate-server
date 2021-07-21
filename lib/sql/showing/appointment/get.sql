@@ -10,6 +10,7 @@ SELECT
   contact,
   buyer_message,
   feedback,
+  feedback_email_sent,
 
   (
     SELECT
