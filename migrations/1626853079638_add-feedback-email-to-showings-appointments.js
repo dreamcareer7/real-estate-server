@@ -4,8 +4,7 @@ const db = require('../lib/utils/db')
 
 const migrations = [
   'BEGIN',
-  'ALTER TABLE showings_appointments ADD COLUMN feedback_email_sent BOOLEAN NOT NULL DEFAULT true',
-  'ALTER TABLE showings_appointments ALTER COLUMN feedback_email_sent SET DEFAULT false',
+  'ALTER TABLE showings_appointments ADD COLUMN feedback_email uuid REFERENCES emails(id)',
   'COMMIT',
 ]
 

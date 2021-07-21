@@ -1,7 +1,7 @@
 UPDATE
   showings_appointments
 SET
-  feedback_email_sent = $2::boolean,
+  feedback_email = $2::uuid,
   updated_at = NOW()
 WHERE
   id = $1::uuid
