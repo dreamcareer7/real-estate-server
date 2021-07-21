@@ -32,7 +32,7 @@ export interface ShowingAppointment {
   contact: UUID;
   approvals: UUID[] | null;
   feedback: AppointmentFeedback | null;
-  feedback_email_sent: boolean;
+  feedback_email: UUID;
 }
 
 export interface ShowingAppointmentPublic {
