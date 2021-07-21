@@ -1,5 +1,7 @@
 const db = require('../lib/utils/db')
 
+// TODO: store feedback email ID instead
+
 const migrations = [
   'BEGIN',
   'ALTER TABLE showings_appointments ADD COLUMN feedback_email_sent BOOLEAN NOT NULL DEFAULT true',
