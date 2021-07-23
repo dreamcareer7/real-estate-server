@@ -573,6 +573,13 @@ function checkAppointmentRejectionSmsForBuyer (cb) {
     })
 }
 
+function pollFinalizeRecentlyDone (cb) {
+  return frisby.create('finalize (complete) appointments recently done')
+    .post('/poll', { name: 'Showing.appointment.finalizeRecentlyDone' })
+    .after(cb)
+    .expectStatus(204)
+}
+
 module.exports = {
   create,
   createWithNoApprovalRequired,
@@ -604,6 +611,8 @@ module.exports = {
   makeAnotherAppointmentToReject: _makeAppointment('request another appointment to reject'),
   sellerAgentRejectAppointment,
   checkAppointmentRejectionSmsForBuyer,
-
+  
+  pollFinalizeRecentlyDone,
+  
   createWithValidationError,
 }
