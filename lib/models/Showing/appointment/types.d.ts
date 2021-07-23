@@ -54,7 +54,7 @@ export interface ShowingAppointmentPopulated {
   showing: ShowingPopulated;
   contact: IContact;
   approvals?: ShowingApproval[];
-  feedback_email_sent: boolean;
+  feedback_email: UUID | null;
 }
 
 export type AppointmentStatus =

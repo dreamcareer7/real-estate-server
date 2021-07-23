@@ -790,4 +790,4 @@ declare type TDbSqlAddress =
   | 'website/update'
   | 'showing/appointment/recently_done'
   | 'notification/unread_over_time'
-  | 'showing/appointment/update_feedback_email_sent';
+  | 'showing/appointment/update_feedback_email';
