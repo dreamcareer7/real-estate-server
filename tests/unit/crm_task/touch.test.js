@@ -118,22 +118,27 @@ async function testTouchDatesAfterGmailSync() {
     first_name: 'Saeed',
     tag: ['Hot'],
     email: ['saeed.vayghan@gmail.com']
-  }])
+  }, DEFAULT_CONTACTS[1]])
 
   await createGoogleMessages(user, brand)
   await handleJobs()
 
-  const c = await Contact.get(contact_ids[0])
+  await contactShould(contact_ids[0], c => {
+    if (!c.last_touch) throw new Error('Last touch was not set properly.')
+    if (!c.next_touch) throw new Error('Next touch was not set properly.')
 
-  if (!c.last_touch) throw new Error('Last touch was not set properly.')
-  if (!c.next_touch) throw new Error('Next touch was not set properly.')
+    const lt = moment.unix(c.last_touch)
+    const nt = moment.unix(c.next_touch)
 
-  const lt = moment.unix(c.last_touch)
-  const nt = moment.unix(c.next_touch)
+    const expected_last_touch = new Date('2019-08-05T13:32:52.000Z')
+    expect(c.last_touch).to.be.equal(expected_last_touch.getTime() / 1000)
+    expect(c.next_touch - c.last_touch).to.be.equal(HOT_LIST_TOUCH_FREQ * 24 * 3600 + (lt.utcOffset() - nt.utcOffset()) * 60)
+  })
 
-  const expected_last_touch = new Date('2019-08-05T13:32:52.000Z')
-  expect(c.last_touch).to.be.equal(expected_last_touch.getTime() / 1000)
-  expect(c.next_touch - c.last_touch).to.be.equal(HOT_LIST_TOUCH_FREQ * 24 * 3600 + (lt.utcOffset() - nt.utcOffset()) * 60)
+  await contactShould(contact_ids[1], c => {
+    expect(c.last_touch, 'Last touch was set on the wrong contact.').to.be.null
+    expect(c.next_touch, 'Next touch was set on the wrong contact.').to.be.null
+  })
 }
 
 async function testTouchDatesAfterOutlookSync() {
@@ -141,22 +146,27 @@ async function testTouchDatesAfterOutlookSync() {
     first_name: 'Saeed',
     tag: ['Hot'],
     email: ['saeed.vayghan@gmail.com']
-  }])
+  }, DEFAULT_CONTACTS[1]])
 
   await createMicrosoftMessages(user, brand)
   await handleJobs()
 
-  const c = await Contact.get(contact_ids[0])
+  await contactShould(contact_ids[0], c => {
+    if (!c.last_touch) throw new Error('Last touch was not set properly.')
+    if (!c.next_touch) throw new Error('Next touch was not set properly.')
+  
+    const lt = moment.unix(c.last_touch)
+    const nt = moment.unix(c.next_touch)
+  
+    const expected_last_touch = new Date('2019-08-01T06:23:19Z')
+    expect(c.last_touch).to.be.equal(expected_last_touch.getTime() / 1000)
+    expect(c.next_touch - c.last_touch).to.be.equal(HOT_LIST_TOUCH_FREQ * 24 * 3600 + (lt.utcOffset() - nt.utcOffset()) * 60)
+  })
 
-  if (!c.last_touch) throw new Error('Last touch was not set properly.')
-  if (!c.next_touch) throw new Error('Next touch was not set properly.')
-
-  const lt = moment.unix(c.last_touch)
-  const nt = moment.unix(c.next_touch)
-
-  const expected_last_touch = new Date('2019-08-01T06:23:19Z')
-  expect(c.last_touch).to.be.equal(expected_last_touch.getTime() / 1000)
-  expect(c.next_touch - c.last_touch).to.be.equal(HOT_LIST_TOUCH_FREQ * 24 * 3600 + (lt.utcOffset() - nt.utcOffset()) * 60)
+  await contactShould(contact_ids[1], c => {
+    expect(c.last_touch, 'Last touch was set on the wrong contact.').to.be.null
+    expect(c.next_touch, 'Next touch was set on the wrong contact.').to.be.null
+  })
 }
 
 async function testTouchDates() {
@@ -196,20 +206,25 @@ async function contactShould(id, fn) {
 async function testLastTouchAfterRemovedFromEvent() {
   Orm.setEnabledAssociations([ 'crm_task.associations' ])
 
-  const [contact_id] = await createContact([DEFAULT_CONTACTS[0]])
-  const task = await createTask([contact_id])
+  const [contact_1, contact_2] = await createContact()
+  const task = await createTask([contact_1])
 
   await handleJobs()
 
-  await contactShould(contact_id, c => {
+  await contactShould(contact_1, c => {
     if (!c.last_touch) throw new Error('Last touch was not set properly.')
     expect(c.last_touch).to.be.equal(task.due_date)
+  })
+
+  await contactShould(contact_2, c => {
+    expect(c.last_touch, 'Last touch was set on the wrong contact.').to.be.null
+    expect(c.next_touch, 'Next touch was set on the wrong contact.').to.be.null
   })
 
   await CrmAssociation.remove(task.associations || [], task.id, user.id)
   await handleJobs()
 
-  await contactShould(contact_id, c => {
+  await contactShould(contact_1, c => {
     if (c.last_touch) throw new Error('Last touch was not cleared properly.')
   })
 }
@@ -217,20 +232,25 @@ async function testLastTouchAfterRemovedFromEvent() {
 async function testLastTouchAfterEventIsDeleted() {
   Orm.setEnabledAssociations([ 'crm_task.associations' ])
 
-  const [contact_id] = await createContact([DEFAULT_CONTACTS[0]])
-  const task = await createTask([contact_id])
+  const [contact_1, contact_2] = await createContact()
+  const task = await createTask([contact_1])
 
   await handleJobs()
 
-  await contactShould(contact_id, c => {
+  await contactShould(contact_1, c => {
     if (!c.last_touch) throw new Error('Last touch was not set properly.')
     expect(c.last_touch).to.be.equal(task.due_date)
+  })
+
+  await contactShould(contact_2, c => {
+    expect(c.last_touch, 'Last touch was set on the wrong contact.').to.be.null
+    expect(c.next_touch, 'Next touch was set on the wrong contact.').to.be.null
   })
 
   await CrmTask.remove([task.id], user.id)
   await handleJobs()
 
-  await contactShould(contact_id, c => {
+  await contactShould(contact_1, c => {
     if (c.last_touch) throw new Error('Last touch was not cleared properly.')
   })
 }
@@ -261,16 +281,21 @@ async function testTouchDatesAfterEmailCampaign() {
 
   await handleJobs()
 
-  const c = await Contact.get(contact_ids[0])
+  await contactShould(contact_ids[0], c => {
+    if (!c.last_touch) throw new Error('Last touch was not set properly.')
+    if (!c.next_touch) throw new Error('Next touch was not set properly.')
+  
+    const lt = moment.unix(c.last_touch)
+    const nt = moment.unix(c.next_touch)
+  
+    expect(c.last_touch, 'Last touch should be same as email execution time').to.be.equal(now)
+    expect(c.next_touch - c.last_touch).to.be.equal(WARM_LIST_TOUCH_FREQ * 24 * 3600 + (lt.utcOffset() - nt.utcOffset()) * 60)
+  })
 
-  if (!c.last_touch) throw new Error('Last touch was not set properly.')
-  if (!c.next_touch) throw new Error('Next touch was not set properly.')
-
-  const lt = moment.unix(c.last_touch)
-  const nt = moment.unix(c.next_touch)
-
-  expect(c.last_touch, 'Last touch should be same as email execution time').to.be.equal(now)
-  expect(c.next_touch - c.last_touch).to.be.equal(WARM_LIST_TOUCH_FREQ * 24 * 3600 + (lt.utcOffset() - nt.utcOffset()) * 60)
+  await contactShould(contact_ids[1], c => {
+    expect(c.last_touch, 'Last touch was set on the wrong contact.').to.be.null
+    expect(c.next_touch, 'Next touch was set on the wrong contact.').to.be.null
+  })
 }
 
 async function testTouchDatesOnContactEmailManipulation() {
@@ -299,16 +324,21 @@ async function testTouchDatesOnContactEmailManipulation() {
   await handleJobs()
 
   const contact_ids = await createContact()
-  const c = await Contact.get(contact_ids[0])
+  await contactShould(contact_ids[0], c => {
+    if (!c.last_touch) throw new Error('Last touch was not set properly.')
+    if (!c.next_touch) throw new Error('Next touch was not set properly.')
+  
+    const lt = moment.unix(c.last_touch)
+    const nt = moment.unix(c.next_touch)
+  
+    expect(c.last_touch, 'Last touch should be same as email execution time').to.be.equal(now)
+    expect(c.next_touch - c.last_touch).to.be.equal(WARM_LIST_TOUCH_FREQ * 24 * 3600 + (lt.utcOffset() - nt.utcOffset()) * 60)
+  })
 
-  if (!c.last_touch) throw new Error('Last touch was not set properly.')
-  if (!c.next_touch) throw new Error('Next touch was not set properly.')
-
-  const lt = moment.unix(c.last_touch)
-  const nt = moment.unix(c.next_touch)
-
-  expect(c.last_touch, 'Last touch should be same as email execution time').to.be.equal(now)
-  expect(c.next_touch - c.last_touch).to.be.equal(WARM_LIST_TOUCH_FREQ * 24 * 3600 + (lt.utcOffset() - nt.utcOffset()) * 60)
+  await contactShould(contact_ids[1], c => {
+    expect(c.last_touch, 'Last touch was set on the wrong contact.').to.be.null
+    expect(c.next_touch, 'Next touch was set on the wrong contact.').to.be.null
+  })
 }
 
 async function testSortByLastTouch() {

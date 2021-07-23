@@ -1,6 +1,6 @@
 DROP TRIGGER IF EXISTS update_current_deal_context ON deal_context;
 DROP TRIGGER IF EXISTS update_current_deal_context ON deals_checklists;
-DROP TRIGGER IF EXISTS update_current_deal_context ON addresses;
+DROP TRIGGER IF EXISTS update_current_deal_context ON listings;
 DROP TRIGGER IF EXISTS update_current_deal_context ON deals;
 
 CREATE OR REPLACE FUNCTION update_current_deal_context_from_mls_trigger()
@@ -43,7 +43,7 @@ CREATE TRIGGER update_current_deal_context AFTER INSERT OR UPDATE ON deal_contex
 CREATE TRIGGER update_current_deal_context AFTER INSERT OR UPDATE ON deals_checklists
   FOR EACH ROW EXECUTE PROCEDURE update_current_deal_context_trigger();
 
-CREATE TRIGGER update_current_deal_context AFTER INSERT OR UPDATE on addresses
+CREATE TRIGGER update_current_deal_context AFTER INSERT OR UPDATE on listings
   FOR EACH ROW EXECUTE PROCEDURE update_current_deal_context_from_mls_trigger();
 
 CREATE TRIGGER update_current_deal_context AFTER INSERT OR UPDATE on deals

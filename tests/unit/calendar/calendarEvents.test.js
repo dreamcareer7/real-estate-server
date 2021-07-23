@@ -118,22 +118,23 @@ async function handleList() {
   const data = require('./data/contact.json')
   const contact_ids = await createContact(data)
 
-  await ListMember.findByListId(list.id)
+  const list_members = await ListMember.findByListId(list.id)
+  expect(list_members).not.to.be.empty
 
   Orm.setEnabledAssociations(['contact.lists'])
   const contact = await Contact.get(contact_ids[0])
+  expect(contact.next_touch).not.to.be.null
   expect(contact.lists).to.have.length(1)
 
   return { contact }
 }
-
 
 async function testContactEvent() {
   await handleList()
 
   const events = await fetchEvents()
 
-  expect(events).not.to.be.undefined
+  expect(events).not.to.be.undefined.and.empty
   expect(events[0].users).to.be.an('array')
   expect(events[0]).to.include({
     object_type: 'contact',
@@ -203,8 +204,6 @@ async function testCRMTaskEvent() {
 
 async function testEmailCampaignEvent() {
 }
-
-
 
 describe('Calendar Events', () => {
   createContext()

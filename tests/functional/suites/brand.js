@@ -202,6 +202,24 @@ const addTextContext = cb => {
     })
 }
 
+const sortContexts = cb => {
+  const items = [
+    {
+      id: results.brand.addDateContext.data.id,
+      order: 2
+    },
+
+    {
+      id: results.brand.addTextContext.data.id,
+      order: 3
+    }
+  ]
+  return frisby.create('sort context definitions')
+    .put(`/brands/${brand_id}/contexts/sort`, items)
+    .after(cb)
+    .expectStatus(200)
+}
+
 const getContexts = cb => {
   return frisby.create('get brand context definitions')
     .get(`/brands/${brand_id}/contexts`)
@@ -761,6 +779,20 @@ const updatePropertyType = cb => {
     })
 }
 
+const sortPropertyType = cb => {
+  const items = [
+    {
+      id: results.brand.addPropertyType.data.id,
+      order: 1
+    }
+  ]
+
+  return frisby.create('sort property types')
+    .put(`/brands/${brand_id}/deals/property_types/sort`, items)
+    .after(cb)
+    .expectStatus(200)
+}
+
 const getPropertyTypes = cb => {
   return frisby.create('get property types')
     .get(`/brands/${brand_id}/deals/property_types?associaions[]=brand_property_type.checklists`)
@@ -769,7 +801,10 @@ const getPropertyTypes = cb => {
     .expectJSON({
       code: 'OK',
       data: [
-        omit(results.brand.updatePropertyType.data, 'checklists')
+        omit({
+          ...results.brand.updatePropertyType.data,
+          order: 1 // Updated on previous test from 0 to 1
+        }, 'checklists')
       ]
     })
 }
@@ -850,6 +885,8 @@ module.exports = {
   addHostname,
   addPropertyType,
   updatePropertyType,
+  sortPropertyType,
+
   addChecklist,
   updateChecklist,
   addTask,
@@ -865,6 +902,7 @@ module.exports = {
 
   addDateContext,
   addTextContext,
+  sortContexts,
   getContexts,
   updateContext,
   deleteContext,

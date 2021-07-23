@@ -3,6 +3,7 @@ export interface IStoredFlow extends IModel {
   origin_id: UUID;
   starts_at: number;
   contact: UUID;
+  last_step_date: number;
   brand: UUID;
   name: string;
   description?: string;

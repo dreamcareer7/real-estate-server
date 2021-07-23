@@ -5,9 +5,6 @@ const queues = [
   {
     queues: ['MLS.Listing', 'MLS.Listing.Photos.Validate'],
     concurrency: 20,
-  }, {
-    queues: ['MLS.Photo'],
-    concurrency: 120,
   },
 ]
 

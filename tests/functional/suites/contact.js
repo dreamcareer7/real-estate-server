@@ -779,7 +779,7 @@ const updateManyContacts = cb => {
       }))
     })
     .after(cb)
-    .expectStatus(200)
+    .expectStatus(204)
 }
 
 function makeSureManyContactsTagIsAdded(cb) {
@@ -830,9 +830,9 @@ function getManyContactsList(cb) {
 function getContactsInManyContactsList(cb) {
   return frisby
     .create('get list of contacts in many contacts list')
-    .get('/contacts?associations[]=contact.lists&list=' + results.contact.createManyContactsList.data.id)
+    .get('/contacts?associations[]=contact.lists&lists[]=' + results.contact.createManyContactsList.data.id)
     .after((err, res, json) => {
-      if (!json.data.every(c => Boolean(c.next_touch)))
+      if (json.data.some(c => c.email !== null && c.next_touch === null))
         throw 'Next touch is not set on ManyContacts list members'
       cb(err, res, json)
     })
@@ -862,7 +862,7 @@ function checkIfNextTouchIsNull(cb) {
     .create('check if next_touch is cleared on many contacts')
     .get('/contacts?associations[]=contact.lists&list=' + results.contact.createManyContactsList.data.id)
     .after((err, res, json) => {
-      if (json.data.some(c => Boolean(c.next_touch)))
+      if (json.data.some(c => c.next_touch !== null))
         throw 'Next touch is not null on ManyContacts list members'
       cb(err, res, json)
     })
@@ -1093,7 +1093,8 @@ const sendEmailsToList = cb => {
       list: results.contact.createManyContactsList.data.id,
       recipient_type: 'List'
     }],
-    from: results.authorize.token.data.id
+    from: results.authorize.token.data.id,
+    due_at: new Date((results.contact.create.data[0].created_at - 10) * 1000).toISOString()
   }
 
   return frisby
@@ -1101,6 +1102,13 @@ const sendEmailsToList = cb => {
     .post('/emails', campaign)
     .after(cb)
     .expectStatus(200)
+}
+
+const pollEmailCampaigns = cb => {
+  return frisby.create('execute email campaigns')
+    .post('/poll', { name: 'EmailCampaign.sendDue' })
+    .after(cb)
+    .expectStatus(204)
 }
 
 module.exports = {
@@ -1140,9 +1148,11 @@ module.exports = {
   updateManyContacts,
   makeSureManyContactsTagIsAdded,
   sendEmailsToTag,
+  executeEmailToTag: pollEmailCampaigns,
   createManyContactsList,
   getManyContactsList,
   sendEmailsToList,
+  executeEmailsToList: pollEmailCampaigns,
   getContactsInManyContactsList,
   unsetTouchFreqOnManyContactsList,
   checkIfNextTouchIsNull,

@@ -22,6 +22,7 @@ const BrandFlow = require('../../../lib/models/Brand/flow/create')
 const BrandList = require('../../../lib/models/Brand/list')
 const Context = require('../../../lib/models/Context')
 const Form = require('../../../lib/models/Form')
+const Template = require('../../../lib/models/Template/create')
 
 const default_data = {
   name: 'Test Brand',
@@ -50,6 +51,7 @@ async function create(data) {
     emails,
     flows,
     lists,
+    templates,
     ...brand_props
   } = data
 
@@ -153,6 +155,12 @@ async function create(data) {
       }
 
       await BrandFlow.create(b.id, flow.created_by, flow)
+    }
+  }
+
+  if (Array.isArray(templates)) {
+    for (const template of templates) {
+      await Template.create({ ...template, brands: [b.id] })
     }
   }
 

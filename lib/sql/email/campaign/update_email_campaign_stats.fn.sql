@@ -10,7 +10,7 @@ $$
 
   recipient_counts AS (
     SELECT
-      recipient,
+      lower(recipient)                                     as recipient,
       count(*) filter(WHERE events.event = 'accepted')     as accepted,
       count(*) filter(WHERE events.event = 'rejected')     as rejected,
       count(*) filter(WHERE events.event = 'delivered')    as delivered,
@@ -56,8 +56,7 @@ $$
       ) as opened
 
     FROM events
-    GROUP BY recipient
-    ORDER BY recipient
+    GROUP BY lower(recipient)
   ),
 
   update_recipients AS (
@@ -73,7 +72,12 @@ $$
       opened       = rc.opened
     FROM recipient_counts rc
     WHERE ece.campaign = $1
-    AND LOWER(ece.email_address) = LOWER(rc.recipient)
+    AND LOWER(ece.email_address) = rc.recipient
+    AND (
+        (  ece.accepted,  ece.rejected,  ece.delivered,  ece.failed,  ece.clicked,  ece.unsubscribed,  ece.complained,  ece.stored,  ece.opened  )
+        IS DISTINCT FROM
+        (  rc.accepted,   rc.rejected,   rc.delivered,   rc.failed,   rc.clicked,   rc.unsubscribed,   rc.complained,   rc.stored,   rc.opened   )
+    )
   ),
 
   email_counts AS (
@@ -90,11 +94,10 @@ $$
         count(DISTINCT email) filter(WHERE events.event = 'stored')       as stored
       FROM events
       GROUP BY email
-      ORDER BY email
   ),
 
   update_emails AS (
-    UPDATE emails SET
+    UPDATE emails e SET
       accepted     = ec.accepted,
       rejected     = ec.rejected,
       delivered    = ec.delivered,
@@ -105,8 +108,13 @@ $$
       complained   = ec.complained,
       stored       = ec.stored
     FROM email_counts ec
-    WHERE emails.campaign = $1
-    AND emails.id = ec.email
+    WHERE e.campaign = $1
+    AND e.id = ec.email
+    AND (
+        (  e.accepted,   e.rejected,   e.delivered,   e.failed,   e.opened,   e.clicked,   e.unsubscribed,   e.complained,   e.stored   )
+        IS DISTINCT FROM
+        (  ec.accepted,  ec.rejected,  ec.delivered,  ec.failed,  ec.opened,  ec.clicked,  ec.unsubscribed,  ec.complained,  ec.stored  )
+    )
   ),
 
   campaign_counts AS (
@@ -168,7 +176,7 @@ $$
     FROM events
   )
 
-  UPDATE email_campaigns SET
+  UPDATE email_campaigns ec SET
     accepted     = cc.accepted,
     rejected     = cc.rejected,
     delivered    = cc.delivered,
@@ -179,6 +187,12 @@ $$
     complained   = cc.complained,
     stored       = cc.stored
   FROM campaign_counts cc
-  WHERE email_campaigns.id = $1 RETURNING *;
+  WHERE ec.id = $1
+    AND (
+        (  ec.accepted,  ec.rejected,  ec.delivered,  ec.failed,  ec.opened,  ec.clicked,  ec.unsubscribed,  ec.complained,  ec.stored  )
+        IS DISTINCT FROM
+        (  cc.accepted,  cc.rejected,  cc.delivered,  cc.failed,  cc.opened,  cc.clicked,  cc.unsubscribed,  cc.complained,  cc.stored  )
+  )
+  RETURNING *;
 $$
 LANGUAGE SQL;
