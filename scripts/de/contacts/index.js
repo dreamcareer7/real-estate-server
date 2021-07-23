@@ -16,7 +16,7 @@ const ContactAttribute = require('../../../lib/models/Contact/attribute/get')
 const attachContactEvents = require('../../../lib/models/Contact/events')
 const attachContactIntEventHandler = require('../../../lib/models/ContactIntegration/events')
 
-const createContext = require('../../workers/create-context')
+const createContext = require('../../workers/utils/create-context')
 
 const map = require('./map')
 
