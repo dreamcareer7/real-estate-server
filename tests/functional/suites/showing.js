@@ -580,6 +580,13 @@ function pollFinalizeRecentlyDone (cb) {
     .expectStatus(204)
 }
 
+function pollSendEmailNotification (cb) {
+  return frisby.create('send email notifications')
+    .post('/poll', { name: 'Showing.appointment.sendEmailNotification' })
+    .after(cb)
+    .expectStatus(204)
+}
+
 module.exports = {
   create,
   createWithNoApprovalRequired,
@@ -613,6 +620,7 @@ module.exports = {
   checkAppointmentRejectionSmsForBuyer,
   
   pollFinalizeRecentlyDone,
+  pollSendEmailNotification,
   
   createWithValidationError,
 }
