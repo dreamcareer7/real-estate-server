@@ -35,7 +35,7 @@
           {% endif %}
         </a>
         <div style="color: #E57373;font-family:'Lato'; font-size: 13px; font-weight:400; padding-top: 3px; line-height: 15px;">
-          {% if deal.faired_at %}
+          {% if !deal.faired_at %}
             <div>
               ✱ Is not made visible to admins.
             </div>
