@@ -14,7 +14,6 @@
   >
     <mj-column padding="16px 24px" vertical-align="middle">
       <mj-text
-        rechat-editable="true"
         css-class="appointment-small"
         padding="0"
         color="#000"
@@ -29,9 +28,9 @@
     </mj-column>
   </mj-section>
 
-  {% appointment.compact(listing, time) %}
-  {% card(instruction) %}
-  {% contactInfo.compact(contact) %}
+  {{ appointment.compact(listing, time) }}
+  {{ card(instruction) }}
+  {{ contactInfo.compact(contact) }}
  
   {% include '../../partials/spacer.mjml' %}
 {% endblock %}

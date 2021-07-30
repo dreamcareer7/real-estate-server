@@ -1,7 +1,7 @@
 {% extends '../../../email.mjml' %}
 
 {% import '../../partials/appointment.mjml' as appointment %}
-{% import '../../partials/contact-info.mjml' as contact %}
+{% import '../../partials/contact.mjml' as contactInfo %}
 
 {% block content %}
   {% include '../../partials/logo.mjml' %}
@@ -12,7 +12,6 @@
     background-color="#fff">
     <mj-column padding="16px 24px" vertical-align="middle">
       <mj-text
-        rechat-editable="true"
         css-class="appointment-small"
         padding="0"
         color="#000"
@@ -26,7 +25,6 @@
       </mj-text>
 
       <mj-text
-        rechat-editable="true"
         css-class="bold-24"
         padding="0"
         color="#000"
@@ -38,7 +36,6 @@
         {{ time }}
       </mj-text>
       <mj-text
-        rechat-editable="true"
         css-class="appointment-small"
         padding="0"
         color="#000"
@@ -53,5 +50,5 @@
   </mj-section>
 
   {{ appointment.preview(listing) }}
-  {{ contact.full(contact) }}
+  {{ contactInfo.full(contact) }}
 {% endblock %}

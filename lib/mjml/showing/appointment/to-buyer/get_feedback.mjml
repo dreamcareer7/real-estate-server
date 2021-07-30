@@ -14,9 +14,9 @@
     We would appreciate you and your client’s opinions. Please let us know about your feedback.
   {% endcall %}
 
-  {% button.primary(text='What\' your feedback?', href=feedbackUrl) %}
-  {% appointment.compact(listing, time) %}
-  {% contactInfo.compact(contact) %}
+  {{ button.primary(text='What\' your feedback?', href=feedbackUrl) }}
+  {{ appointment.compact(listing, time) }}
+  {{ contactInfo.compact(contact) }}
 
   {% include '../../partials/spacer.mjml' %}
 {% endblock %}
