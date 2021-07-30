@@ -8,11 +8,7 @@
     font-weight="400"
     line-height="20px"
     color="#000"
-    height=""
-    width="472px"
     container-background-color="#EAF4FC"
-    border="1px solid rgba(0, 0, 0, 0.12)"
-    border-radius="0px 8px 8px 8px"
   >{{ caller() }}</mj-text>
 {% endmacro %}
 
