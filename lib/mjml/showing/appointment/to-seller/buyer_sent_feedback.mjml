@@ -19,27 +19,29 @@
   </mj-section>
 
   {% call appointment.card(listing, contact, time) %}
-    {% if feedback %}
-      {% for question, answer in feedback.qas %}
-        {% call text.smallHeader() -%}
-          {{ question }}
-        {%- endcall %}
+    <mj-column padding="0" vertical-align="middle">
+      {% if feedback %}
+        {% for question, answer in feedback.qas %}
+          {% call text.smallHeader() -%}
+            {{ question }}
+          {%- endcall %}
 
-        {% call text.feedback() -%}
-          {{ answer }}
-        {%- endcall %}
-      {% endfor %}
+          {% call text.feedback() -%}
+            {{ answer }}
+          {%- endcall %}
+        {% endfor %}
 
-      {% if feedback.comment %}
-        {% call text.smallHeader() -%}
-          Comments or recommendations
-        {%- endcall %}
+        {% if feedback.comment %}
+          {% call text.smallHeader() -%}
+            Comments or recommendations
+          {%- endcall %}
 
-        {% call text.smallContent() -%}
-          {{ feedback.comment }}
-        {%- endcall %}        
+          {% call text.smallContent() -%}
+            {{ feedback.comment }}
+          {%- endcall %}        
+        {% endif %}
       {% endif %}
-    {% endif %}
+    </mj-column>
   {% endcall %}
 
   {% include '../../partials/spacer.mjml' %}

@@ -8,13 +8,21 @@
 {% block content %}
   {% include '../../partials/logo.mjml' %}
 
-  {% call text.smallContent() %}
-    Hi {{ firstName }}!
-    <br/>
-    We would appreciate you and your client’s opinions. Please let us know about your feedback.
-  {% endcall %}
+  <mj-section
+    css-class="Frame284-appointment"
+    padding="0"
+    background-color="#fff"
+  >
+    <mj-column padding="16px 24px" vertical-align="middle">
+      {% call text.smallContent() %}
+        Hi {{ firstName }}!
+        We would appreciate you and your client’s opinions. Please let us know about your feedback.
+      {% endcall %}
 
-  {{ button.primary(text='What\' your feedback?', href=feedbackUrl) }}
+      {{ button.primary(text='What\' your feedback?', href=feedbackUrl) }}
+    </mj-column>
+  </mj-section>
+
   {{ appointment.compact(listing, time) }}
   {{ contactInfo.compact(contact) }}
 

@@ -1,15 +1,22 @@
 {% extends '../../../email.mjml' %}
 
-{% import '../../partials/text.mjml' as text %}
 {% import '../../partials/appointment.mjml' as appointment %}
 {% import '../../partials/text.mjml' as text %}
 
 {% block content %}
   {% include '../../partials/logo.mjml' %}
 
-  {% call text.smallContent() %}
-    Hi {{ firstName }}! An appointment rejected:
-  {% endcall %}
+  <mj-section
+    css-class="Frame284-appointment"
+    padding="0"
+    background-color="#fff"
+  >
+    <mj-column padding="16px 24px" vertical-align="middle">
+      {% call text.smallContent() %}
+        Hi {{ firstName }}! An appointment rejected:
+      {% endcall %}
+    </mj-column>
+  </mj-section>
 
   {% call appointment.card(listing, contact, time) %}
     <mj-column padding="0" vertical-align="middle">
@@ -24,5 +31,5 @@
     </mj-column>
   {% endcall %}
 
-  {{ include '../../partials/spacer.mjml' }}
+  {% include '../../partials/spacer.mjml' %}
 {% endblock %}
