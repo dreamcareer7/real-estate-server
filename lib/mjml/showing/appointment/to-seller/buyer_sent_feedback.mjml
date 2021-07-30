@@ -1,9 +1,46 @@
-<mjml>
-  <mj-body>
-    <mj-section>
-      <mj-column>
-        <mj-text>To Seller Role: Buyer Sent Feedback</mj-text>
-      </mj-column>
-    </mj-section>
-  </mj-body>
-</mjml>
+{% extends '../../../email.mjml' %}
+
+{% import '../../partials/appointment.mjml' as appointment %}
+{% import '../../partials/text.mjml' as text %}
+{% import '../../partials/button.mjml' as button %}
+
+{% block content %}
+  {% include '../../partials/logo.mjml' %}
+  
+  <mj-section
+    css-class="Frame284-appointment"
+    padding="0"
+    background-color="#fff">
+    <mj-column padding="16px 24px" vertical-align="middle">
+      {% call text.smallContent() %}
+        Hi {{ firstName }}! A new feedback received for your recent appointment.
+      {% endcall %}
+    </mj-column>
+  </mj-section>
+
+  {% call appointment.card(listing, contact, time) %}
+    {% if feedback %}
+      {% for question, answer in feedback.qas %}
+        {% call text.smallHeader() -%}
+          {{ question }}
+        {%- endcall %}
+
+        {% call text.feedback() -%}
+          {{ answer }}
+        {%- endcall %}
+      {% endfor %}
+
+      {% if feedback.comment %}
+        {% call text.smallHeader() -%}
+          Comments or recommendations
+        {%- endcall %}
+
+        {% call text.smallContent() -%}
+          {{ feedback.comment }}
+        {%- endcall %}        
+      {% endif %}
+    {% endif %}
+  {% endcall %}
+
+  {% include '../../partials/spacer.mjml' %}
+{% endblock %}

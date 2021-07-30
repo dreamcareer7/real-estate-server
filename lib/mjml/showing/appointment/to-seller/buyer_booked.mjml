@@ -1,9 +1,26 @@
-<mjml>
-  <mj-body>
-    <mj-section>
-      <mj-column>
-        <mj-text>To Seller Role: Buyer Booked</mj-text>
-      </mj-column>
-    </mj-section>
-  </mj-body>
-</mjml>
+{% extends '../../../email.mjml' %}
+
+{% import '../../partials/appointment.mjml' as appointment %}
+{% import '../../partials/text.mjml' as text %}
+{% import '../../partials/button.mjml' as button %}
+
+{% block content %}
+  {% include '../../partials/logo.mjml' %}
+  
+  <mj-section
+    css-class="Frame284-appointment"
+    padding="0"
+    background-color="#fff">
+    <mj-column padding="16px 24px" vertical-align="middle">
+      {% call text.smallContent() %}
+        Hi {{ firstName }}! A new appointment waiting for your approval
+      {% endcall %}
+    </mj-column>
+  </mj-section>
+
+  {% call appointment.card(listing, contact, time) %}
+    {% button.approvalButtons(approveUrl, rescheduleUrl, rejectUrl) %}
+  {% endcall %}
+
+  {% include '../../partials/spacer.mjml' %}
+{% endblock %}

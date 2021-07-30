@@ -1,9 +1,22 @@
-<mjml>
-  <mj-body>
-    <mj-section>
-      <mj-column>
-        <mj-text>To Buyer: What's your feedback?</mj-text>
-      </mj-column>
-    </mj-section>
-  </mj-body>
-</mjml>
+{% extends '../../../email.mjml' %}
+
+{% import '../../partials/text.mjml' as text %}
+{% import '../../partials/button.mjml' as button %}
+{% import '../../partials/appointment.mjml' as appointment %}
+{% import '../../partials/contact.mjml' as contactInfo %}
+
+{% block content %}
+  {% include '../../partials/logo.mjml' %}
+
+  {% call text.smallContent() %}
+    Hi {{ firstName }}!
+    <br/>
+    We would appreciate you and your client’s opinions. Please let us know about your feedback.
+  {% endcall %}
+
+  {% button.primary(text='What\' your feedback?', href=feedbackUrl) %}
+  {% appointment.compact(listing, time) %}
+  {% contactInfo.compact(contact) %}
+
+  {% include '../../partials/spacer.mjml' %}
+{% endblock %}

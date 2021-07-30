@@ -1,0 +1,90 @@
+{% macro quote () %}
+  <mj-text
+    css-class="agent-header"
+    padding="16px"
+    align="left"
+    font-family="lato"
+    font-size="14px"
+    font-weight="400"
+    line-height="20px"
+    color="#000"
+    height=""
+    width="472px"
+    container-background-color="#EAF4FC"
+    border="1px solid rgba(0, 0, 0, 0.12)"
+    border-radius="0px 8px 8px 8px"
+  >{{ caller() }}</mj-text>
+{% endmacro %}
+
+{% macro smallHeader () %}
+  <mj-text
+    css-class="small-header"
+    padding="32px 0 0 0"
+    align="left"
+    font-family="lato"
+    font-size="14px"
+    font-weight="400"
+    line-height="20px"
+    color="#949598"
+  >{{ caller() }}</mj-text>
+{% endmacro %}
+
+{% macro feedback () %}
+  <mj-text
+    css-class="header"
+    padding="8px 0 0 0"
+    align="left"
+    font-family="lato"
+    font-size="20px"
+    font-weight="900"
+    line-height="32px"
+    color="#000"
+  >{{ caller() }}</mj-text>
+{% endmacro %}
+
+{% macro mediumContent () %}
+  <mj-text
+    css-class="bold-24"
+    padding="0"
+    color="#000"
+    font-family="lato"
+    align="left"
+    font-size="24px"
+    font-weight="900"
+    line-height="40px"
+  >{{ caller() }}</mj-text>
+{% endmacro %}
+
+{% macro smallContent () %}
+  <mj-text
+    css-class="reschedule-bold"
+    padding="0"
+    color="#000"
+    font-family="lato"
+    align="left"
+    font-size="14px"
+    font-weight="400"
+    line-height="20px"
+  >{{ caller() }}</mj-text>  
+{% endmacro %}
+
+{% macro mediumDanger (text) %}
+  <mj-text
+    css-class="header"
+    padding="0"
+    align="left"
+    font-family="lato"
+    font-size="20px"
+    font-weight="900"
+    line-height="32px"
+    color="#F44336"
+  >{{ caller() }}</mj-text>
+{% endmacro %}
+
+{% macro bold (text) %}
+  <span style="font-weight: 700">{{ text }}</span>
+{% endmacro %}
+
+{% macro gray (text) %}
+  <span style="color: #6c6d70">{{ text }}</span>
+{% endmacro %}

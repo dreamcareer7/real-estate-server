@@ -1,9 +1,28 @@
-<mjml>
-  <mj-body>
-    <mj-section>
-      <mj-column>
-        <mj-text>To Seller Role: Another Seller Role Canceled</mj-text>
-      </mj-column>
-    </mj-section>
-  </mj-body>
-</mjml>
+{% extends '../../../email.mjml' %}
+
+{% import '../../partials/text.mjml' as text %}
+{% import '../../partials/appointment.mjml' as appointment %}
+{% import '../../partials/text.mjml' as text %}
+
+{% block content %}
+  {% include '../../partials/logo.mjml' %}
+
+  {% call text.smallContent() %}
+    Hi {{ firstName }}! An appointment canceled:
+  {% endcall %}
+
+  {% call appointment.card(listing, contact, time) %}
+    <mj-column padding="0" vertical-align="middle">
+      {% call text.mediumDanger() %}
+        Showing Canceled
+      {% endcall %}
+
+      {% call text.smallContent() %}
+        {{ text.bold(canceler.fullName) }}{{ text.gray('(' + canceler.role + ')') }}
+        Canceled this showing.
+      {% endcall %}
+    </mj-column>
+  {% endcall %}
+
+  {{ include '../../partials/spacer.mjml' }}
+{% endblock %}

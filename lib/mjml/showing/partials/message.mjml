@@ -1,0 +1,50 @@
+{% macro message (title=null, summary=null, content=null) %}
+  <mj-section
+    css-class="Frame284-appointment"
+    padding="0"
+    background-color="#fff"
+  >
+    <mj-column padding="24px 24px 24px 40px" vertical-align="middle">
+      {% if (title) %}
+        <mj-text
+          css-class="appointment-small"
+          padding="0"
+          color="#000"
+          font-family="lato"
+          align="left"
+          font-size="16px"
+          font-weight="400"
+          line-height="24px"
+        >
+          {{ title }}
+        </mj-text>
+      {% endif %}
+
+      {% if (summary) %}
+        <mj-text
+          css-class="bold-24"
+          padding="0"
+          color="#000"
+          font-family="lato"
+          align="left"
+          font-size="24px"
+          font-weight="900"
+          line-height="40px"
+        >{{ summary }}</mj-text>
+      {% endif %}
+
+      {% if (content) %}
+        <mj-text
+          css-class="appointment-small"
+          padding="0"
+          color="#000"
+          font-family="lato"
+          align="left"
+          font-size="14px"
+          font-weight="400"
+          line-height="20px"
+        >{{ content }}</mj-text>
+      {% endif %}
+    </mj-column>
+  </mj-section>
+{% endmacro %}
