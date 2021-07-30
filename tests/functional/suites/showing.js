@@ -554,7 +554,7 @@ function sellerAgentRejectAppointment (cb) {
 function checkAppointmentRejectionSmsForBuyer (cb) {
   const address = '5020  Junius Street'
   const datetime = APPOINTMENT_TIME.tz('US/Central').format('MMM D, HH:mm')
-  const comment = 'Sorry something came up I have to cancel this'
+  const comment = 'Sorry something came up'
   
   let expectedBody = `Sorry, your showing for ${address} at ${datetime} has been rejected.`
   if (comment) { expectedBody += `\n: ${comment}` }
@@ -567,6 +567,8 @@ function checkAppointmentRejectionSmsForBuyer (cb) {
       data: [
         { /* Ignore first one */ },
         { /* Ignore second one */ },
+        { /* Ignore third one */ },
+        { /* Ignore fouth one */ },
         {
           to: formatPhoneNumberForDialing(BUYER_PHONE_NUMBER),
           body: expectedBody
