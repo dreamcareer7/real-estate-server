@@ -319,21 +319,23 @@ function checkAppointmentReceiptSmsForBuyer(cb) {
     })
 }
 
-function confirmAppointment(cb) {
-  const appt = results.showing.requestAppointment.data
-  return frisby
-    .create('confirm an appointment')
-    .put(`/showings/${results.showing.create.data.id}/appointments/${appt.id}/approval`, {
-      approved: true,
-      comment: 'You\'re welcome!',
-    })
-    .after(cb)
-    .expectStatus(200)
-    .expectJSON({
-      data: {
-        status: 'Confirmed',
-      },
-    })
+function confirmAppointment(sourceCase, comment = 'You\'re welcome!') {
+  return function confirmAppointmentImpl (cb) {
+    const appt = results.showing[sourceCase].data
+    return frisby
+      .create('confirm an appointment')
+      .put(`/showings/${results.showing.create.data.id}/appointments/${appt.id}/approval`, {
+        approved: true,
+        comment,
+      })
+      .after(cb)
+      .expectStatus(200)
+      .expectJSON({
+        data: {
+          status: 'Confirmed',
+        },
+      }) 
+  }
 }
 
 function checkAppointmentConfirmationSmsForBuyer(cb) {
@@ -600,7 +602,7 @@ module.exports = {
   checkAppointmentReceiptSmsForBuyer,
   checkNotificationCount,
   checkAppointmentNotifications,
-  confirmAppointment,
+  confirmAppointment: confirmAppointment('requestAppointment'),
   checkAppointmentConfirmationSmsForBuyer,
   requestAppointmentAutoConfirm,
   checkAppointmentAutoConfirmationTextMessagesForBuyer,
@@ -613,6 +615,7 @@ module.exports = {
   checkBuyerCancelNotifications,
 
   makeAnotherAppointment: _makeAppointment('request a new appointment'),
+  confirmAnotherAppointment: confirmAppointment('makeAnotherAppointment'),
   sellerAgentCancelAppointment,
 
   makeAnotherAppointmentToReject: _makeAppointment('request another appointment to reject'),
