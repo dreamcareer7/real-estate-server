@@ -6,7 +6,7 @@ SELECT
   status,
   buyer_message,
   (SELECT human_readable_id FROM showings WHERE showings.id = a.showing) AS showing,
-
+  (SELECT display_name FROM contacts WHERE contacts.id = a.contact) AS client_name,
   'showing_appointment_public' AS type
 FROM
   showings_appointments AS a
