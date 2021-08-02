@@ -789,5 +789,4 @@ declare type TDbSqlAddress =
   | 'website/insert_hostname'
   | 'website/update'
   | 'showing/appointment/recently_done'
-  | 'notification/unread_over_time'
-  | 'showing/appointment/update_feedback_email';
+  | 'notification/unread_over_time';
