@@ -44,7 +44,10 @@
         font-size="14px"
         font-weight="400"
         line-height="20px">
-        You can reschedule this showing or cancel this showing
+        You can
+        <a href="{{ rescheduleUrl }}">reschedule this showing</a>
+        or
+        <a href="{{ cancelUrl }}">cancel this showing</a>
       </mj-text>
     </mj-column>
   </mj-section>

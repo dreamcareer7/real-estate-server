@@ -65,27 +65,5 @@
     {% endif %}
   </mj-column>
   <mj-column width="2%"></mj-column>
-  <mj-column width="54%" padding="0" vertical-align="middle">
-    {% if rescheduleUrl %}
-      <mj-button
-        css-class="Email-new appointment-button"
-        width="110px"
-        height="40px"
-        padding="5px 0"
-        inner-padding="8px 16px"
-        align="left"
-        font-family="lato"
-        font-size="14px"
-        font-weight="700"
-        line-height="24px"
-        color="#000"
-        background-color="#fff"
-        border="1px solid rgba(0, 0, 0, 0.12)"
-        border-radius="4px"
-        href="{{ rescheduleUrl }}"
-      >
-        Reschedule
-      </mj-button>
-    {% endif %}
-  </mj-column>
+  <mj-column width="54%" padding="0" vertical-align="middle"></mj-column>
 {% endmacro %}
