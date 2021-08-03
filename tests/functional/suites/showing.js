@@ -495,10 +495,12 @@ function checkBuyerCancelNotifications(cb) {
   const appt = results.showing.requestAppointment.data
   return frisby
     .create('check buyer canceled notification')
-    .get('/notifications')
+    .get('/showings/notifications')
     .after(cb)
     .expectJSON({
       data: [
+        { /* Ignore 1st one */ },
+        { /* Ignore 2nd one */ },
         {
           object_class: 'ShowingAppointment',
           object: appt.id,
