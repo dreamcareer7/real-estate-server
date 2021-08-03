@@ -310,10 +310,10 @@ function checkAppointmentReceiptSmsForBuyer(cb) {
           to: formatPhoneNumberForDialing(BUYER_PHONE_NUMBER),
           body:
             `Your showing request for 5020  Junius Street at ${APPOINTMENT_TIME.format(
-              'MMM D, HH:mm'
+              'MMM Do, h:mmA'
             )} has been received.` +
             '\n\n' +
-            'Cancel via http://mock-branch-url, reschedule via http://mock-branch-url',
+            'Cancel via http://mock-branch-url\nReschedule via http://mock-branch-url',
         },
       ],
     })
@@ -348,10 +348,10 @@ function checkAppointmentConfirmationSmsForBuyer(cb) {
           to: formatPhoneNumberForDialing(BUYER_PHONE_NUMBER),
           body:
             `Your showing for 5020  Junius Street at ${APPOINTMENT_TIME.format(
-              'MMM D, HH:mm'
+              'MMM Do, h:mmA'
             )} has been confirmed.` +
             '\n\n' +
-            'Cancel via http://mock-branch-url, reschedule via http://mock-branch-url',
+            'Cancel via http://mock-branch-url\nReschedule via http://mock-branch-url',
         },
       ],
     })
@@ -376,10 +376,10 @@ function checkAppointmentAutoConfirmationTextMessagesForBuyer(cb) {
         {
           body:
             `Your showing request for 5020  Junius Street at ${APPOINTMENT_TIME.format(
-              'MMM D, HH:mm'
+              'MMM Do, h:mmA'
             )} has been received.` +
             '\n\n' +
-            'Cancel via http://mock-branch-url, reschedule via http://mock-branch-url',
+            'Cancel via http://mock-branch-url\nReschedule via http://mock-branch-url',
         },
       ],
     })
@@ -553,7 +553,7 @@ function sellerAgentRejectAppointment (cb) {
 
 function checkAppointmentRejectionSmsForBuyer (cb) {
   const address = '5020  Junius Street'
-  const datetime = APPOINTMENT_TIME.tz('US/Central').format('MMM D, HH:mm')
+  const datetime = APPOINTMENT_TIME.tz('US/Central').format('MMM Do, h:mmA')
   const comment = 'Sorry something came up I have to cancel this'
   
   let expectedBody = `Sorry, your showing for ${address} at ${datetime} has been rejected.`
