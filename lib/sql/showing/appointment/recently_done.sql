@@ -1,8 +1,7 @@
 SELECT
-  id,
-  status
+  id
 FROM
   showings_appointments
 WHERE
-  status = ANY($1::showing_appointment_status[])
-  AND time < now() - $2::interval;
+  status = ANY('{Confirmed,Requested,Rescheduled}'::showing_appointment_status[])
+  AND time < now() - $1::interval;
