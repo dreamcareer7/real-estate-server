@@ -193,6 +193,25 @@ async function testRenameTag() {
   await checkTags()
 }
 
+async function testChangeTagLetterCase() {
+  async function renameTag2() {
+    await ContactTag.rename(brand.id, user.id, 'Tag2', 'tag2')
+    await handleJobs()
+  }
+
+  async function checkTags() {
+    const tags = await ContactTag.getAll(brand.id)
+
+    expect(tags).to.have.length(9)
+    expect(tags.map(t => t.tag)).to.include.members(['tag2', 'Tag1', 'Tag3'])
+    expect(tags.map(t => t.tag)).not.to.include.members(['Tag2'])
+  }
+
+  await createContacts()
+  await renameTag2()
+  await checkTags()
+}
+
 async function testRenameTagFixesListFilters() {
   let list_id
 
@@ -376,6 +395,7 @@ describe('Contact', () => {
     it('should create tags implicitly after contacts are updated', testAutoTagCreateWithUpdatedContacts)
     it('should allow creating a tag manually', testCreateTagManually)
     it('should update contact tags after a tag is renamed', testRenameTag)
+    it('should update letter-case for tags', testChangeTagLetterCase)
     it('should update list filters and members after a tag is renamed', testRenameTagFixesListFilters)
     it('should delete tags globally', testDeleteTag)
     it('should allow adding back a deleted tag', testAddBackDeletedTag)
