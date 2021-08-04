@@ -502,7 +502,6 @@ function checkBuyerCancelNotifications(cb) {
     .expectJSON({
       data: [
         { /* Ignore 1st one */ },
-        { /* Ignore 2nd one */ },
         {
           object_class: 'ShowingAppointment',
           object: appt.id,
@@ -571,6 +570,7 @@ function checkAppointmentRejectionSmsForBuyer (cb) {
         { /* Ignore second one */ },
         { /* Ignore third one */ },
         { /* Ignore fouth one */ },
+        { /* Ignore fifth one */ },
         {
           to: formatPhoneNumberForDialing(BUYER_PHONE_NUMBER),
           body: expectedBody
