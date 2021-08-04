@@ -255,8 +255,31 @@ const setRegion = user => {
   }
 }
 
+const MlsMapping = {
+  LIMO: 'REBNY',
+  onekey: 'ONEKEY',
+  HGMLS: 'ONEKEY',
+  SAND: 'SDMLS',
+  GFLR: 'RAPB',
+  MFR: 'STELLAR',
+  
+}
+
+const setMls = user => {
+  return {
+    ...user,
+    mls: MlsMapping[user.mls] ?? user.mls
+  }
+}
+
 const syncUsers = async users => {
-  const data = JSON.stringify(users.map(setPhone).map(setSocials).map(setRegion))
+  const data = JSON.stringify(
+    users
+      .map(setPhone)
+      .map(setSocials)
+      .map(setRegion)
+      .map(setMls)
+  )
 
   const { rows } = await db.executeSql.promise(ORPHANIZE, [data])
 
