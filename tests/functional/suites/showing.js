@@ -319,21 +319,23 @@ function checkAppointmentReceiptSmsForBuyer(cb) {
     })
 }
 
-function confirmAppointment(cb) {
-  const appt = results.showing.requestAppointment.data
-  return frisby
-    .create('confirm an appointment')
-    .put(`/showings/${results.showing.create.data.id}/appointments/${appt.id}/approval`, {
-      approved: true,
-      comment: 'You\'re welcome!',
-    })
-    .after(cb)
-    .expectStatus(200)
-    .expectJSON({
-      data: {
-        status: 'Confirmed',
-      },
-    })
+function confirmAppointment(sourceCase, comment = 'You\'re welcome!') {
+  return function confirmAppointmentImpl (cb) {
+    const appt = results.showing[sourceCase].data
+    return frisby
+      .create('confirm an appointment')
+      .put(`/showings/${results.showing.create.data.id}/appointments/${appt.id}/approval`, {
+        approved: true,
+        comment,
+      })
+      .after(cb)
+      .expectStatus(200)
+      .expectJSON({
+        data: {
+          status: 'Confirmed',
+        },
+      }) 
+  }
 }
 
 function checkAppointmentConfirmationSmsForBuyer(cb) {
@@ -554,7 +556,7 @@ function sellerAgentRejectAppointment (cb) {
 function checkAppointmentRejectionSmsForBuyer (cb) {
   const address = '5020  Junius Street'
   const datetime = APPOINTMENT_TIME.tz('US/Central').format('MMM Do, h:mmA')
-  const comment = 'Sorry something came up I have to cancel this'
+  const comment = 'Sorry something came up'
   
   let expectedBody = `Sorry, your showing for ${address} at ${datetime} has been rejected.`
   if (comment) { expectedBody += `\n: ${comment}` }
@@ -567,12 +569,28 @@ function checkAppointmentRejectionSmsForBuyer (cb) {
       data: [
         { /* Ignore first one */ },
         { /* Ignore second one */ },
+        { /* Ignore third one */ },
+        { /* Ignore fouth one */ },
         {
           to: formatPhoneNumberForDialing(BUYER_PHONE_NUMBER),
           body: expectedBody
         }
       ],
     })
+}
+
+function pollFinalizeRecentlyDone (cb) {
+  return frisby.create('finalize (complete) appointments recently done')
+    .post('/poll', { name: 'Showing.appointment.finalizeRecentlyDone' })
+    .after(cb)
+    .expectStatus(204)
+}
+
+function pollSendEmailNotification (cb) {
+  return frisby.create('send email notifications')
+    .post('/poll', { name: 'Showing.appointment.sendEmailNotification' })
+    .after(cb)
+    .expectStatus(204)
 }
 
 module.exports = {
@@ -588,7 +606,7 @@ module.exports = {
   checkAppointmentReceiptSmsForBuyer,
   checkNotificationCount,
   checkAppointmentNotifications,
-  confirmAppointment,
+  confirmAppointment: confirmAppointment('requestAppointment'),
   checkAppointmentConfirmationSmsForBuyer,
   requestAppointmentAutoConfirm,
   checkAppointmentAutoConfirmationTextMessagesForBuyer,
@@ -601,11 +619,15 @@ module.exports = {
   checkBuyerCancelNotifications,
 
   makeAnotherAppointment: _makeAppointment('request a new appointment'),
+  confirmAnotherAppointment: confirmAppointment('makeAnotherAppointment'),
   sellerAgentCancelAppointment,
 
   makeAnotherAppointmentToReject: _makeAppointment('request another appointment to reject'),
   sellerAgentRejectAppointment,
   checkAppointmentRejectionSmsForBuyer,
-
+  
+  pollFinalizeRecentlyDone,
+  pollSendEmailNotification,
+  
   createWithValidationError,
 }
