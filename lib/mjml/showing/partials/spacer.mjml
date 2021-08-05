@@ -1,0 +1,15 @@
+<mj-section
+  mj-class="Agent"
+  background-color="#fff"
+  padding="16px 0"
+>
+  <mj-column padding="24px 0 20px" vertical-align="middle">
+    <mj-spacer
+      css-class="logo-bottom-line"
+      padding="0"
+      height="8px"
+      container-background-color="#F0F2F5"
+    ></mj-spacer>
+  </mj-column>
+</mj-section>
+

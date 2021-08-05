@@ -34,7 +34,12 @@ declare type TNotificationAction =
   | 'Available'
   | 'CreatedFor'
   | 'ReactedTo'
-  | 'Reviewed';
+  | 'Reviewed'
+  | 'Rescheduled'
+  | 'Canceled'
+  | 'GaveFeedbackFor'
+  | 'Confirmed'
+  | 'Rejected';
 
 declare type TNotificationObjectClass = 
   | 'Recommendation'
@@ -74,7 +79,9 @@ declare type TNotificationObjectClass =
   | 'ContactAttributeDef'
   | 'ContactList'
   | 'ContactAttribute'
-  | 'DealContext';
+  | 'DealContext'
+  | 'ShowingAppointment'
+  | 'ShowingRole';
 
 declare interface INotificationInput {
   id?: UUID;

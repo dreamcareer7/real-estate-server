@@ -1,0 +1,57 @@
+{% extends '../../../email.mjml' %}
+
+{% import '../../partials/appointment.mjml' as appointment %}
+{% import '../../partials/contact.mjml' as contactInfo %}
+
+{% block content %}
+  {% include '../../partials/logo.mjml' %}
+
+  <mj-section
+    css-class="Frame284-appointment"
+    padding="0"
+    background-color="#fff">
+    <mj-column padding="16px 24px" vertical-align="middle">
+      <mj-text
+        css-class="appointment-small"
+        padding="0"
+        color="#000"
+        font-family="lato"
+        align="left"
+        font-size="16px"
+        font-weight="400"
+        line-height="24px">
+        Hi {{ firstName }}! <br />
+        You appointment request for
+      </mj-text>
+
+      <mj-text
+        css-class="bold-24"
+        padding="0"
+        color="#000"
+        font-family="lato"
+        align="left"
+        font-size="24px"
+        font-weight="900"
+        line-height="40px">
+        {{ time }}
+      </mj-text>
+      <mj-text
+        css-class="appointment-small"
+        padding="0"
+        color="#000"
+        font-family="lato"
+        align="left"
+        font-size="14px"
+        font-weight="400"
+        line-height="20px">
+        Automatically approved. You can
+        <a href="{{ rescheduleUrl }}">reschedule this showing</a>
+        or
+        <a href="{{ cancelUrl }}">cancel this showing</a>
+      </mj-text>
+    </mj-column>
+  </mj-section>
+
+  {{ appointment.preview(listing) }}
+  {{ contactInfo.full(contact) }}
+{% endblock %}
