@@ -29,7 +29,7 @@ WITH tag_def AS (
     ca.contact
 ), tag_updates AS (
   UPDATE
-    crm_tags
+    crm_tags t1
   SET
     tag = $3,
     updated_at = NOW(),
@@ -39,13 +39,13 @@ WITH tag_def AS (
     tag = $2
     AND brand = $1
     AND NOT EXISTS (
-      SELECT 1 FROM crm_tags WHERE lower(tag) = lower($3)
+      SELECT 1 FROM crm_tags t2 WHERE lower(t2.tag) = lower($3) AND t1.id != t2.id
     )
   RETURNING
     1
 ), tag_delete AS (
   UPDATE
-    crm_tags
+    crm_tags t1
   SET
     deleted_at = NOW(),
     deleted_by = $4::uuid,
@@ -54,7 +54,7 @@ WITH tag_def AS (
     tag = $2
     AND brand = $1
     AND EXISTS (
-      SELECT 1 FROM crm_tags WHERE lower(tag) = lower($3)
+      SELECT 1 FROM crm_tags t2 WHERE lower(t2.tag) = lower($3) AND t1.id != t2.id
     )
   RETURNING
     1

@@ -41,7 +41,7 @@ SELECT brands_checklists.*,
     FROM
       brands_deal_statuses_checklists
     JOIN brands_deal_statuses ON brands_deal_statuses_checklists.status = brands_deal_statuses.id
-    WHERE checklist = brands_checklists.id
+    WHERE checklist = brands_checklists.id AND brands_deal_statuses.deleted_at IS NULL
   ) as statuses
 
 FROM brands_checklists

@@ -22,7 +22,9 @@ SELECT
     youtube,
     instagram,
     twitter,
-    offices
+    region,
+    offices,
+    de.regions.timezone as timezone
   FROM json_to_recordset($1)
   as input(
     username TEXT,
@@ -41,8 +43,10 @@ SELECT
     youtube TEXT,
     instagram TEXT,
     twitter TEXT,
+    region TEXT,
     offices jsonb
-  )`
+  )
+  JOIN de.regions ON input.region = de.regions.name`
 
 const ORPHANIZE = `
   WITH data AS (
@@ -92,6 +96,7 @@ saved AS (
     instagram,
     twitter,
     user_type,
+    timezone,
     agent
   )
   SELECT
@@ -108,6 +113,7 @@ saved AS (
     instagram,
     twitter,
     user_type,
+    timezone,
     (
       SELECT id FROM agents WHERE mls::text = data.mls AND LOWER(mlsid) = LOWER(data.mlsid)
       ORDER BY status = 'Active', matrix_modified_dt
@@ -242,9 +248,38 @@ const setSocials = user => {
   }
 }
 
-const syncUsers = async users => {
-  const data = JSON.stringify(users.map(setPhone).map(setSocials))
+const setRegion = user => {
+  return {
+    ...user,
+    region: user.offices[0].majorRegion
+  }
+}
 
+const MlsMapping = {
+  LIMO: 'REBNY',
+  onekey: 'ONEKEY',
+  HGMLS: 'ONEKEY',
+  SAND: 'SDMLS',
+  GFLR: 'RAPB',
+  MFR: 'STELLAR',
+  
+}
+
+const setMls = user => {
+  return {
+    ...user,
+    mls: MlsMapping[user.mls] ?? user.mls
+  }
+}
+
+const syncUsers = async users => {
+  const data = JSON.stringify(
+    users
+      .map(setPhone)
+      .map(setSocials)
+      .map(setRegion)
+      .map(setMls)
+  )
 
   const { rows } = await db.executeSql.promise(ORPHANIZE, [data])
 

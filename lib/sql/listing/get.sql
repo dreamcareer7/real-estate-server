@@ -10,6 +10,24 @@ listing_settings AS (
 ,listing AS (
   SELECT 'listing' AS TYPE,
         listings.*,
+        COALESCE(
+          listings.list_office_name,
+          (
+            SELECT name FROM offices
+            WHERE offices.matrix_unique_id = listings.list_office_mui
+            AND   offices.mls = listings.mls
+            LIMIT 1
+          )
+        ) AS list_office_name,
+        COALESCE(
+          listings.selling_office_name,
+          (
+            SELECT name FROM offices
+            WHERE offices.matrix_unique_id = listings.selling_office_mui
+            AND   offices.mls = listings.mls
+            LIMIT 1
+          )
+        ) AS selling_office_name,
         (
           SELECT "user" FROM brand_agents
           ORDER BY (
@@ -34,13 +52,6 @@ listing_settings AS (
           AND   agents.mls = listings.mls
           LIMIT 1
         ) as list_agent,
-        (
-          SELECT id FROM offices
-          WHERE offices.matrix_unique_id = listings.list_office_mui
-          AND   offices.mls = listings.mls
-          AND   offices.status = 'Active'
-          LIMIT 1
-        ) as list_office,
         (
           CASE WHEN $2::uuid IS NULL THEN FALSE ELSE (
              SELECT count(*) > 0 FROM recommendations
