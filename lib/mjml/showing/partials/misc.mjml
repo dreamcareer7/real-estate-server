@@ -1,0 +1,5 @@
+{% macro blueLink (href) -%}
+  <a href="{{ href }}"
+    style="color: #0945eb !important; text-decoration: none !important"
+  >{{ caller() }}</a>
+{%- endmacro %}
