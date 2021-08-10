@@ -1,17 +1,28 @@
-const repl = require('repl')
-const promisify = require('../lib/utils/promisify')
-const { enqueueJob } = require('../lib/utils/worker')
-const queue = require('../lib/utils/queue')
 const program = require('commander')
-const Brand = require('../lib/models/Brand')
-const Job = require('../lib/models/Job')
-const User = require('../lib/models/User/get')
+const path = require('path')
+const repl = require('repl')
 
 program
   .usage('npm run shell [options]')
   .option('-u, --user <user>', 'user-id to be preset on context')
   .option('-b, --brand <brand>', 'brand-id to be preset on context')
+  .option('-e, --env <env>', 'env file name to be used')
+  .option('-i, --import <imports...>', 'models and utils to import')
   .parse(process.argv)
+
+const options = program.opts();
+
+if (options.env) {
+  console.log(`setting up env using .env.${options.env}`)
+  require('dotenv').config({ path: path.resolve(process.cwd(), `.env.${options.env}`) })
+}
+
+const promisify = require('../lib/utils/promisify')
+const { enqueueJob } = require('../lib/utils/worker')
+const queue = require('../lib/utils/queue')
+const Brand = require('../lib/models/Brand')
+const Job = require('../lib/models/Job')
+const User = require('../lib/models/User/get')
 
 const db = require('../lib/utils/db')
 const sql = require('../lib/utils/sql')
@@ -36,6 +47,18 @@ attachFlowEventHandler()
 attachCalIntEventHandler()
 attachContactIntEventHandler()
 attachShowingEvents()
+
+function processImports(replContext) {
+  for (const part of options.import) {
+    switch (part) {
+      case 'google':
+        replContext.GoogleCredential = require('../lib/models/Google/credential/get')
+        replContext.GoogleApis = require('../lib/models/Google/plugin/googleapis')
+
+        break
+    }
+  }
+}
 
 const context = Context.create({
   id: '<rechat-shell>',
@@ -62,6 +85,7 @@ db.conn(async (err, client) => {
   r.context.context = context
   r.context.promisify = promisify
   r.context.enqueueJob = enqueueJob
+  processImports(r.context)
   r.context.handleJobs = async () => { 
     await promisify(Job.handle)(Context.get('jobs'))
     Context.set({ jobs: [], rabbit_jobs: [] })
