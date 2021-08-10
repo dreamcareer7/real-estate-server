@@ -41,7 +41,7 @@
         color="#000"
         font-weight="700"
         line-height="24px">
-        {{ contact.fullName }}
+        {{ contact.fullName or 'Unknown' }}
       </mj-text>
 
       <mj-text
@@ -53,7 +53,7 @@
         color="#6C6D70"
         font-weight="400"
         line-height="20px">
-        {{ contact.company }}
+        {{ contact.company or 'Unknown Company' }}
       </mj-text>
 
       <mj-text
@@ -65,7 +65,11 @@
         color="#6C6D70"
         font-weight="400"
         line-height="20px">
-        {{ contact.phone }} . {{ contact.email }}
+        {% if contact.phone and contact.email %}
+          {{ contact.phone }} . {{ contact.email }}
+        {% else %}
+          {{ contact.phone or contact.email }}
+        {% endif %}
       </mj-text>
     </mj-column>
   </mj-section>
@@ -125,9 +129,10 @@
           color="#000"
           font-weight="700"
           line-height="24px"
-        >{{ contact.fullName }}
-          <span style="color: #6c6d70">{{ contact.company }}</span></mj-text>
-
+        >
+          {{ contact.fullName }}
+          <span style="color: #6c6d70">{{ contact.company }}</span>
+        </mj-text>
         <mj-text
           css-class="agent-txt3"
           padding="0"
