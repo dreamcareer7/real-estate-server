@@ -2,6 +2,7 @@
 
 {% import '../../partials/appointment.mjml' as appointment %}
 {% import '../../partials/contact.mjml' as contactInfo %}
+{% from '../../partials/misc.mjml' import blueLink %}
 
 {% block content %}
   {% include '../../partials/logo.mjml' %}
@@ -45,9 +46,9 @@
         font-weight="400"
         line-height="20px">
         You can
-        <a href="{{ rescheduleUrl }}">reschedule this showing</a>
+        {% call blueLink(rescheduleUrl) %}reschedule this showing{% endcall %}
         or
-        <a href="{{ cancelUrl }}">cancel this showing</a>
+        {% call blueLink(cancelUrl) %}cancel this showing{% endcall %}
       </mj-text>
     </mj-column>
   </mj-section>
