@@ -749,7 +749,9 @@ const deleteStatus = cb => {
 const addPropertyType = cb => {
   const property_type = {
     label: 'Residential Lease',
-    is_lease: true
+    is_lease: true,
+    required_roles: ['Tenant', 'Landlord'],
+    optional_roles: ['Title']
   }
 
   return frisby.create('add a property type')
@@ -766,7 +768,9 @@ const updatePropertyType = cb => {
   const property_type = {
     ...results.brand.addPropertyType.data,
     label: 'Residential',
-    is_lease: false
+    is_lease: false,
+    required_roles: ['Buyer', 'Seller'],
+    optional_roles: ['BuyerAgent']
   }
 
   return frisby.create('update a property type')

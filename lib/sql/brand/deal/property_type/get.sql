@@ -6,7 +6,9 @@ SELECT brands_property_types.*,
     SELECT ARRAY_AGG(id) FROM brands_checklists
     WHERE property_type = brands_property_types.id
     AND   deleted_at IS NULL
-  ) as checklists
+  ) as checklists,
+  required_roles::text[] as required_roles,
+  optional_roles::text[] as optional_roles
 
 FROM brands_property_types
 JOIN unnest($1::uuid[]) WITH ORDINALITY t(pid, ord) ON brands_property_types.id = pid
