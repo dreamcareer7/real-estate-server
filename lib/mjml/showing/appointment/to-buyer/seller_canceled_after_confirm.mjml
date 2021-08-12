@@ -1,0 +1,38 @@
+{% extends '../../../email.mjml' %}
+
+{% import '../../partials/appointment.mjml' as appointment %}
+{% import '../../partials/text.mjml' as text %}
+
+{% block content %}
+  {% include '../../partials/logo.mjml' %}
+
+  <mj-section
+    css-class="Frame284-appointment"
+    padding="0"
+    background-color="#fff">
+    <mj-column padding="16px 24px" vertical-align="middle">
+      {% call text.smallContent() %}
+        Hi {{ firstName }}! An appointment was canceled:
+      {% endcall %}
+    </mj-column>
+  </mj-section>
+
+  {% call appointment.card(listing, contact, time) %}
+    <mj-column padding="0" vertical-align="middle">
+      {% call text.mediumDanger() %}
+        Showing Canceled
+      {% endcall %}
+
+      {% call text.smallContent() %}
+        {{ text.bold(canceler.fullName) }}{{ text.gray('(' + canceler.role + ')') }}
+        canceled this showing and said:
+      {% endcall %}
+
+      {% call text.quote() %}
+        {{ canceler.comment }}
+      {% endcall %}
+    </mj-column>
+  {% endcall %}
+
+  {% include '../../partials/spacer.mjml' %}
+{% endblock %}

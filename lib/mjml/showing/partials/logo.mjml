@@ -1,0 +1,18 @@
+<mj-section css-class="Frame284-logo" background-color="#fff" padding="0">
+  <mj-column padding="0" vertical-align="middle">
+    <mj-image
+      css-class="logo"
+      align="center"
+      src="https://assets.rechat.com/daily/logo.png"
+      width="188px"
+      height="32px"
+      padding="24px 24px 16px 24px">
+    </mj-image>
+    <mj-spacer
+      css-class="logo-bottom-line"
+      padding="0"
+      height="8px"
+      container-background-color="#F0F2F5">
+    </mj-spacer>
+  </mj-column>
+</mj-section>

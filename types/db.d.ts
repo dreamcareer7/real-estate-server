@@ -788,4 +788,5 @@ declare type TDbSqlAddress =
   | 'website/insert'
   | 'website/insert_hostname'
   | 'website/update'
-  | 'showing/appointment/recently_done';
+  | 'showing/appointment/recently_done'
+  | 'notification/unread_over_time';

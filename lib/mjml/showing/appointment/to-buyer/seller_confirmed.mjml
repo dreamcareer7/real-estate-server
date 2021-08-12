@@ -1,0 +1,36 @@
+{% extends '../../../email.mjml' %}
+
+{% from '../../partials/card.mjml' import card %}
+{% import '../../partials/appointment.mjml' as appointment %}
+{% import '../../partials/contact.mjml' as contactInfo %}
+
+{% block content %}
+  {% include '../../partials/logo.mjml' %}
+
+  <mj-section
+    css-class="Frame284-appointment"
+    padding="0"
+    background-color="#fff"
+  >
+    <mj-column padding="16px 24px" vertical-align="middle">
+      <mj-text
+        css-class="appointment-small"
+        padding="0"
+        color="#000"
+        font-family="lato"
+        align="left"
+        font-size="16px"
+        font-weight="400"
+        line-height="24px"
+      >
+        Hi {{ firstName }}! Your appointment is successfully approved. Here are the details of showing:
+      </mj-text>
+    </mj-column>
+  </mj-section>
+
+  {{ appointment.compact(listing, time) }}
+  {{ card(instruction) }}
+  {{ contactInfo.compact(contact) }}
+ 
+  {% include '../../partials/spacer.mjml' %}
+{% endblock %}

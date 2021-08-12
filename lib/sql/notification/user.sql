@@ -14,6 +14,9 @@ WITH c AS (
           OR notifications.auxiliary_object_class <> 'Deal'
         ) AND
 
+        -- Exclude showing-related notifications
+        notifications.app <> 'showingapp' AND
+
         notifications.specific = $1 AND
         COALESCE(NOT ($1 = ANY(exclude)), TRUE)
 )

@@ -1,0 +1,251 @@
+{% macro preview (listing) %}
+  <mj-wrapper css-class="Frame284-map"
+    padding="24px 24px 0 24px"
+    background-color="#fff">
+    <mj-section css-class="map-map"
+      background-color="#fff"
+      border="solid 1px rgba(0, 0, 0, 0.12)"
+      border-bottom="none"
+      padding="0">
+      <mj-column padding="0" vertical-align="middle">
+        <mj-image align="center"
+          src="{{ listing.mapUrl }}"
+          width="550px"
+          height="200px"
+          padding="0">
+        </mj-image>
+      </mj-column>
+    </mj-section>
+
+    <mj-section
+      css-class="map-listing"
+      padding="0"
+      background-color="#F9FAFC"
+      border="solid 1px rgba(0, 0, 0, 0.12)"
+      border-top="none">
+      <mj-column width="22%" padding="8px" vertical-align="middle">
+        <mj-image
+          css-class="listing-image"
+          align="center"
+          src="{{ listing.photoUrl }}"
+          width="120px"
+          height="80px"
+          padding="0"></mj-image>
+      </mj-column>
+
+      <mj-column width="78%" padding="8px" vertical-align="middle">
+        <mj-text
+          css-class="map-price"
+          padding="0"
+          color="#000"
+          font-family="lato"
+          align="left"
+          font-size="16px"
+          font-weight="700"
+          line-height="24px">
+          {{ listing.price | price }}
+        </mj-text>
+        <mj-text
+          css-class="map-address"
+          padding="0"
+          color="#000"
+          font-family="lato"
+          align="left"
+          font-size="16px"
+          font-weight="700"
+          line-height="24px">
+          {{ listing.address or 'Unknown Address' }}
+        </mj-text>
+        <mj-text
+          css-class="bold-24"
+          padding="0"
+          color="#000"
+          font-family="lato"
+          align="left"
+          font-size="24px"
+          font-weight="900"
+          line-height="40px">
+          {{ listing.beds or 0 }} bd . {{ listing.bathrooms or 0 }} ba . {{ listing.area or 0 }} ftsq
+        </mj-text>
+      </mj-column>
+    </mj-section>
+  </mj-wrapper>
+{% endmacro %}
+
+{% macro compact (listing, time) %}
+  <mj-wrapper
+    css-class="listing-listing"
+    padding="0 24px"
+    background-color="#fff"
+  >
+    <mj-section
+      css-class="listing-listing"
+      border="solid 1px rgba(0, 0, 0, 0.12)"
+      padding="0"
+    >
+      <mj-column width="25%" padding="0" vertical-align="middle">
+        <mj-image
+          css-class="listing-image"
+          align="center"
+          src="{{ listing.photoUrl }}"
+          width="136px"
+          height="96px"
+          padding="0"
+        ></mj-image>
+      </mj-column>
+
+      <mj-column width="75%" padding="16px" vertical-align="middle">
+        <mj-text
+          css-class="bold-20"
+          padding="0"
+          color="#000"
+          font-family="lato"
+          align="left"
+          font-size="20px"
+          font-weight="900"
+          line-height="32px"
+        >
+          {{ time or 'Unknown Time' }}
+        </mj-text>
+        <mj-text
+          css-class="listing-address"
+          padding="0"
+          color="#000"
+          font-family="lato"
+          align="left"
+          font-size="16px"
+          font-weight="400"
+          line-height="24px"
+        >
+          {{ listing.address or 'Unknown Address' }}
+        </mj-text>
+      </mj-column>
+    </mj-section>
+  </mj-wrapper>
+{% endmacro %}
+
+{% macro card (listing, contact, time) %}
+  <mj-wrapper
+    css-class="listing-listing"
+    padding="24px"
+    background-color="#fff"
+  >
+    <mj-section
+      css-class="listing-listing"
+      border="solid 1px rgba(0, 0, 0, 0.12)"
+      padding="24px"
+    >
+      <mj-column width="25%" padding="0" vertical-align="middle">
+        <mj-image
+          align="center"
+          src="{{ listing.photoUrl }}"
+          width="96px"
+          height="96px"
+          padding="0"
+          border-radius="50%"
+        ></mj-image>
+      </mj-column>
+
+      <mj-column width="75%" padding="16px" vertical-align="middle">
+        <mj-text
+          css-class="bold-20"
+          padding="0"
+          color="#000"
+          font-family="lato"
+          align="left"
+          font-size="20px"
+          font-weight="900"
+          line-height="32px"
+        >
+          {{ time or 'Unknown Time' }}
+        </mj-text>
+        <mj-text
+          css-class="listing-address"
+          padding="0"
+          color="#000"
+          font-family="lato"
+          align="left"
+          font-size="16px"
+          font-weight="400"
+          line-height="24px"
+        >
+          {{ listing.address or 'Unknown' }}
+        </mj-text>
+      </mj-column>
+    </mj-section>
+
+    <mj-section
+      mj-class="Email-needs approval-Agent"
+      background-color="#fff"
+      border="solid 1px rgba(0, 0, 0, 0.12)"
+      border-bottom="none"
+      border-top="none"
+      padding="24px 24px 16px 24px"
+    >
+      <mj-column padding="0" vertical-align="middle">
+        <mj-text
+          css-class="agent-header"
+          padding="0"
+          align="left"
+          font-family="lato"
+          font-size="16px"
+          font-weight="400"
+          line-height="24px"
+          color="#000"
+        >
+          {{ contact.fullName or 'Anonymous Agent' }}
+          {% if contact.company -%}
+            , <span style="color: #6c6d70">{{ contact.company }}</span>
+          {%- endif %}
+        </mj-text>
+      </mj-column>
+    </mj-section>
+    <mj-section
+      css-class="Email-needs approval-Agent"
+      border="solid 1px rgba(0, 0, 0, 0.12)"
+      border-top="none"
+      border-bottom="none"
+      padding="0 24px 24px"
+    >
+      <mj-column width="35%" padding="0" vertical-align="middle">
+        <mj-text
+          css-class="agent-txt2"
+          padding="0"
+          align="left"
+          font-family="lato"
+          font-size="16px"
+          color="#000"
+          font-weight="400"
+          line-height="24px"
+        >
+          <span style="color: #6c6d70; font-size: 12px">Phone</span><br />
+          {{ contact.phone or 'N/A' }}
+        </mj-text>
+      </mj-column>
+
+      <mj-column width="65%" padding="0" vertical-align="middle">
+        <mj-text
+          css-class="agent-txt2"
+          padding="0"
+          align="left"
+          font-family="lato"
+          font-size="16px"
+          color="#000"
+          font-weight="400"
+          line-height="24px"
+        >
+          <span style="color: #6c6d70; font-size: 12px">Email</span><br />
+          {{ contact.email or 'N/A' }}
+        </mj-text>
+      </mj-column>
+    </mj-section>
+    <mj-section
+      css-class="Email-needs approval-Agent"
+      border="solid 1px rgba(0, 0, 0, 0.12)"
+      border-top="none"
+      padding="0 24px 18px 24px"
+    >
+      {{ caller() }}
+    </mj-section>
+  </mj-wrapper>
+{% endmacro %}

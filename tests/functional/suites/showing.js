@@ -310,30 +310,32 @@ function checkAppointmentReceiptSmsForBuyer(cb) {
           to: formatPhoneNumberForDialing(BUYER_PHONE_NUMBER),
           body:
             `Your showing request for 5020  Junius Street at ${APPOINTMENT_TIME.format(
-              'MMM D, HH:mm'
+              'MMM Do, h:mmA'
             )} has been received.` +
             '\n\n' +
-            'Cancel via http://mock-branch-url, reschedule via http://mock-branch-url',
+            'Cancel via http://mock-branch-url\nReschedule via http://mock-branch-url',
         },
       ],
     })
 }
 
-function confirmAppointment(cb) {
-  const appt = results.showing.requestAppointment.data
-  return frisby
-    .create('confirm an appointment')
-    .put(`/showings/${results.showing.create.data.id}/appointments/${appt.id}/approval`, {
-      approved: true,
-      comment: 'You\'re welcome!',
-    })
-    .after(cb)
-    .expectStatus(200)
-    .expectJSON({
-      data: {
-        status: 'Confirmed',
-      },
-    })
+function confirmAppointment(sourceCase, comment = 'You\'re welcome!') {
+  return function confirmAppointmentImpl (cb) {
+    const appt = results.showing[sourceCase].data
+    return frisby
+      .create('confirm an appointment')
+      .put(`/showings/${results.showing.create.data.id}/appointments/${appt.id}/approval`, {
+        approved: true,
+        comment,
+      })
+      .after(cb)
+      .expectStatus(200)
+      .expectJSON({
+        data: {
+          status: 'Confirmed',
+        },
+      }) 
+  }
 }
 
 function checkAppointmentConfirmationSmsForBuyer(cb) {
@@ -348,10 +350,10 @@ function checkAppointmentConfirmationSmsForBuyer(cb) {
           to: formatPhoneNumberForDialing(BUYER_PHONE_NUMBER),
           body:
             `Your showing for 5020  Junius Street at ${APPOINTMENT_TIME.format(
-              'MMM D, HH:mm'
+              'MMM Do, h:mmA'
             )} has been confirmed.` +
             '\n\n' +
-            'Cancel via http://mock-branch-url, reschedule via http://mock-branch-url',
+            'Cancel via http://mock-branch-url\nReschedule via http://mock-branch-url',
         },
       ],
     })
@@ -376,10 +378,10 @@ function checkAppointmentAutoConfirmationTextMessagesForBuyer(cb) {
         {
           body:
             `Your showing request for 5020  Junius Street at ${APPOINTMENT_TIME.format(
-              'MMM D, HH:mm'
+              'MMM Do, h:mmA'
             )} has been received.` +
             '\n\n' +
-            'Cancel via http://mock-branch-url, reschedule via http://mock-branch-url',
+            'Cancel via http://mock-branch-url\nReschedule via http://mock-branch-url',
         },
       ],
     })
@@ -495,10 +497,11 @@ function checkBuyerCancelNotifications(cb) {
   const appt = results.showing.requestAppointment.data
   return frisby
     .create('check buyer canceled notification')
-    .get('/notifications')
+    .get('/showings/notifications')
     .after(cb)
     .expectJSON({
       data: [
+        { /* Ignore 1st one */ },
         {
           object_class: 'ShowingAppointment',
           object: appt.id,
@@ -551,8 +554,8 @@ function sellerAgentRejectAppointment (cb) {
 
 function checkAppointmentRejectionSmsForBuyer (cb) {
   const address = '5020  Junius Street'
-  const datetime = APPOINTMENT_TIME.tz('US/Central').format('MMM D, HH:mm')
-  const comment = 'Sorry something came up I have to cancel this'
+  const datetime = APPOINTMENT_TIME.tz('US/Central').format('MMM Do, h:mmA')
+  const comment = 'Sorry something came up'
   
   let expectedBody = `Sorry, your showing for ${address} at ${datetime} has been rejected.`
   if (comment) { expectedBody += `\n: ${comment}` }
@@ -565,6 +568,9 @@ function checkAppointmentRejectionSmsForBuyer (cb) {
       data: [
         { /* Ignore first one */ },
         { /* Ignore second one */ },
+        { /* Ignore third one */ },
+        { /* Ignore fouth one */ },
+        { /* Ignore fifth one */ },
         {
           to: formatPhoneNumberForDialing(BUYER_PHONE_NUMBER),
           body: expectedBody
@@ -576,6 +582,15 @@ function checkAppointmentRejectionSmsForBuyer (cb) {
 function pollFinalizeRecentlyDone (cb) {
   return frisby.create('finalize (complete) appointments recently done')
     .post('/poll', { name: 'Showing.appointment.finalizeRecentlyDone' })
+    .after(cb)
+    .expectStatus(204)
+}
+
+function pollSendEmailNotification (cb) {
+  /* TODO: this test scenario is not complete. create a unread notification,
+   * call this poller and then ensure that the email is sent */
+  return frisby.create('send email notifications')
+    .post('/poll', { name: 'Showing.appointment.sendEmailNotification' })
     .after(cb)
     .expectStatus(204)
 }
@@ -593,7 +608,7 @@ module.exports = {
   checkAppointmentReceiptSmsForBuyer,
   checkNotificationCount,
   checkAppointmentNotifications,
-  confirmAppointment,
+  confirmAppointment: confirmAppointment('requestAppointment'),
   checkAppointmentConfirmationSmsForBuyer,
   requestAppointmentAutoConfirm,
   checkAppointmentAutoConfirmationTextMessagesForBuyer,
@@ -606,6 +621,7 @@ module.exports = {
   checkBuyerCancelNotifications,
 
   makeAnotherAppointment: _makeAppointment('request a new appointment'),
+  confirmAnotherAppointment: confirmAppointment('makeAnotherAppointment'),
   sellerAgentCancelAppointment,
 
   makeAnotherAppointmentToReject: _makeAppointment('request another appointment to reject'),
@@ -613,6 +629,7 @@ module.exports = {
   checkAppointmentRejectionSmsForBuyer,
   
   pollFinalizeRecentlyDone,
+  pollSendEmailNotification,
   
   createWithValidationError,
 }
