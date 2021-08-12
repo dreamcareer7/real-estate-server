@@ -28,6 +28,9 @@ const {handleJob, installJobsRoute} = require('./jobs')
 
 const redisClient = redis.createClient(config.redis)
 
+const TEMP_PATH = path.resolve(__dirname, '../temp')
+require('rimraf').sync(path.resolve(TEMP_PATH, 'sms'))
+
 program
   .usage('[options] <suite> <suite>')
   .option('-s, --server <server>', 'Instead of setting your own version, run tests against <server>')
@@ -239,7 +242,6 @@ app.get('/sms/inbox/:number', (req, res) => {
     res.status(500)
     return res.end()
   }
-  const TEMP_PATH = path.resolve(__dirname, '../temp')
   const dir = path.resolve(TEMP_PATH, 'sms', suite, number)
 
   try {
