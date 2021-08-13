@@ -29,8 +29,7 @@ $$
   UPDATE deals_checklists 
   SET origin = e.fixed_checklist 
   FROM e 
-  WHERE deals_checklists.id = e.checklist 
-  RETURNING id, origin, deals_checklists.deal;
+  WHERE deals_checklists.id = e.checklist;
 
 
     RETURN NEW;

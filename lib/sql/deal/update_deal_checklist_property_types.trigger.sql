@@ -35,7 +35,7 @@ $$
 LANGUAGE PLPGSQL;
 
 
-DROP TRIGGER update_deal_checklist_property_types;
+DROP TRIGGER IF EXISTS update_deal_checklist_property_types ON deals;
 
 CREATE TRIGGER update_deal_checklist_property_types AFTER UPDATE on deals
 FOR EACH ROW
