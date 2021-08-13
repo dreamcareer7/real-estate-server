@@ -587,6 +587,8 @@ function pollFinalizeRecentlyDone (cb) {
 }
 
 function pollSendEmailNotification (cb) {
+  /* TODO: this test scenario is not complete. create a unread notification,
+   * call this poller and then ensure that the email is sent */
   return frisby.create('send email notifications')
     .post('/poll', { name: 'Showing.appointment.sendEmailNotification' })
     .after(cb)

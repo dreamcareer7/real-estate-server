@@ -10,7 +10,7 @@ program
   .option('-i, --import <imports...>', 'models and utils to import')
   .parse(process.argv)
 
-const options = program.opts();
+const options = program.opts()
 
 if (options.env) {
   console.log(`setting up env using .env.${options.env}`)
@@ -54,7 +54,8 @@ function processImports(replContext) {
       case 'google':
         replContext.GoogleCredential = require('../lib/models/Google/credential/get')
         replContext.GoogleApis = require('../lib/models/Google/plugin/googleapis')
-
+        break
+      default:
         break
     }
   }

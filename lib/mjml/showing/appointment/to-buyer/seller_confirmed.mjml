@@ -23,7 +23,7 @@
         font-weight="400"
         line-height="24px"
       >
-        Hi {{ firstName }}! Your appointment approved successfully. Here are the details of showing:
+        Hi {{ firstName }}! Your appointment is successfully approved. Here are the details of showing:
       </mj-text>
     </mj-column>
   </mj-section>

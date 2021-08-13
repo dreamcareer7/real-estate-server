@@ -12,7 +12,7 @@
     background-color="#fff">
     <mj-column padding="16px 24px" vertical-align="middle">
       {% call text.smallContent() %}
-        Hi {{ firstName }}! An appointment canceled:
+        Hi {{ firstName }}! An appointment was canceled:
       {% endcall %}
     </mj-column>
   </mj-section>
@@ -24,8 +24,8 @@
       {% endcall %}
 
       {% call text.smallContent() %}
-        {{ text.bold(canceler.fullName) }}{{ text.gray(canceler.role) }}
-        Canceled this showing and said:
+        {{ text.bold(canceler.fullName) }}{{ text.gray('(' + canceler.role + ')') }}
+        canceled this showing and said:
       {% endcall %}
 
       {% call text.quote() %}

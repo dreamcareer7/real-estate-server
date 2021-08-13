@@ -25,8 +25,8 @@
       {% endcall %}
 
       {% call text.smallContent() %}
-        {{ text.bold(rejecter.fullName) }}{{ text.gray(rejecter.role) }}
-        Rejected this showing.
+        {{ text.bold(rejecter.fullName) }}{{ text.gray('(' + rejecter.role + ')') }}
+        rejected this showing.
       {% endcall %}
     </mj-column>
   {% endcall %}
