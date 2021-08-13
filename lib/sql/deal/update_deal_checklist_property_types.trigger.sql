@@ -39,5 +39,5 @@ DROP TRIGGER IF EXISTS update_deal_checklist_property_types ON deals;
 
 CREATE TRIGGER update_deal_checklist_property_types AFTER UPDATE on deals
 FOR EACH ROW
-WHEN (OLD.property_type IS DISTINCT FROM NEW.property_type)
+WHEN (OLD.property_type IS DISTINCT FROM NEW.property_type OR OLD.deal_type IS DISTINCT FROM NEW.deal_type)
 EXECUTE PROCEDURE update_deal_checklist_property_types();
