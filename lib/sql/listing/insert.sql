@@ -80,7 +80,8 @@ INSERT INTO listings (
   usage_type,
   structure_type,
   is_address_public,
-  parcel_number
+  parcel_number,
+  public_display
 ) VALUES (
   $1,
   $2,
@@ -163,7 +164,8 @@ INSERT INTO listings (
   $79,
   $80,
   $81,
-  $82
+  $82,
+  $83
 )
 
 ON CONFLICT (matrix_unique_id, mls) DO UPDATE SET
@@ -240,6 +242,7 @@ ON CONFLICT (matrix_unique_id, mls) DO UPDATE SET
   revision = $74,
   is_address_public = $81,
   parcel_number = $82,
+  public_display = $83,
   updated_at = CLOCK_TIMESTAMP()
 
 WHERE listings.matrix_unique_id = $4 AND listings.mls = $73::mls

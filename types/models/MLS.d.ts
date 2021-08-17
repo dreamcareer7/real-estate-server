@@ -74,7 +74,7 @@ declare type Mls =
   | 'SMART'
   | 'EELI'
 
-declare interface IListing {
+declare interface IListing extends IModel {
   property: IProperty;
 
   price: number
