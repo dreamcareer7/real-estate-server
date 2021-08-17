@@ -5,6 +5,11 @@ WITH r AS MATERIALIZED (
       WHEN $2::listing_status[] IS NULL THEN TRUE
       ELSE status = ANY($2::listing_status[])
     END
+    AND (
+      $4::mls IS NULL
+      OR public_display IS TRUE
+      OR mls = $4::mls
+    )
   ORDER BY order_listings(status)
 )
 
