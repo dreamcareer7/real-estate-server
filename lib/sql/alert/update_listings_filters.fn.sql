@@ -83,7 +83,8 @@ $$
     listings.list_agent_mui,
     listings.co_list_agent_mui,
     listings.selling_agent_mui,
-    listings.co_selling_agent_mui
+    listings.co_selling_agent_mui,
+    listings.public_display
 
     FROM listings
     JOIN
