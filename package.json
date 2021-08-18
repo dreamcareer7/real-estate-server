@@ -41,7 +41,7 @@
     "@pm2/pm2-version-check": "^1.0.4",
     "@rechat/squel": "^5.14.2",
     "amanda": "^1.0.1",
-    "amqplib": "^0.7.1",
+    "amqplib": "^0.8.0",
     "async": "^1.5.2",
     "aws-sdk": "^2.940.0",
     "base64url": "^3.0.1",
