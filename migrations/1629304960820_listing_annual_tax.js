@@ -2,7 +2,7 @@ const db = require('../lib/utils/db')
 
 const migrations = [
   'BEGIN',
-  'ALTER TABLE listings ADD COLUMN IF NOT EXISTS annual_tax decimal DEFAULT NULL',
+  'ALTER TABLE listings ADD COLUMN IF NOT EXISTS annual_tax double precision DEFAULT NULL',
   'COMMIT'
 ]
 
