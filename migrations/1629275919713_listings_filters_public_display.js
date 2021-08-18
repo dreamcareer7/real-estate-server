@@ -2,7 +2,7 @@ const db = require('../lib/utils/db')
 
 const migrations = [
   'BEGIN',
-  'ALTER TABLE listings_filters ADD COLUMN public_display boolean NOT NULL DEFAULT TRUE',
+  'ALTER TABLE listings_filters ADD COLUMN IF NOT EXISTS public_display boolean NOT NULL DEFAULT TRUE',
 
   `CREATE OR REPLACE FUNCTION update_listings_filters()
     RETURNS trigger AS
