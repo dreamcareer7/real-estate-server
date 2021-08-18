@@ -57,6 +57,8 @@ function processImports(replContext) {
         break
       default:
         break
+      default:
+        break
     }
   }
 }
