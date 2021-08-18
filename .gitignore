@@ -25,3 +25,4 @@ scripts/setup/status.json
 tests/temp/*
 !tests/temp/.gitkeep
 .env*
+out
