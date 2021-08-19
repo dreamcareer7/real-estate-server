@@ -16,12 +16,12 @@
   >{{ text }}</mj-button>
 {% endmacro %}
 
-{% macro approvalButtons (approveUrl, rescheduleUrl, rejectUrl) %}
-  <mj-column width="21%" padding="0" vertical-align="middle">
-    {% if approveUrl %}
+{% macro approvalButton (text, href, colwidth='19%', width='80px', color='#000', bgcolor='#fff', border='none') %}
+  {% if href %}
+    <mj-column width="{{ colwidth }}" padding="0" vertical-align="middle">
       <mj-button
         css-class="Email-new appointment-button"
-        width="90px"
+        width="{{ width }}"
         height="40px"
         padding="5px 0"
         inner-padding="8px 16px"
@@ -30,40 +30,21 @@
         font-size="14px"
         font-weight="700"
         line-height="24px"
-        color="#fff"
-        background-color="#0945EB"
-        border="none"
+        color="{{ color }}"
+        background-color="{{ bgcolor }}"
+        border="{{ border }}"
         border-radius="4px"
-        href="{{ approveUrl }}"
-      >
-        Approve
-      </mj-button>
-    {% endif %}
-  </mj-column>
-  <mj-column width="2%"></mj-column>
-  <mj-column width="19%" padding="0" vertical-align="middle">
-    {% if rejectUrl %}
-      <mj-button
-        css-class="Email-new appointment-button"
-        width="80px"
-        height="40px"
-        padding="5px 0"
-        inner-padding="8px 16px"
-        align="left"
-        font-family="lato"
-        font-size="14px"
-        font-weight="700"
-        line-height="24px"
-        color="#000"
-        background-color="#fff"
-        border="1px solid rgba(0, 0, 0, 0.12)"
-        border-radius="4px"
-        href="{{ rejectUrl }}"
-      >
-        Reject
-      </mj-button>
-    {% endif %}
-  </mj-column>
-  <mj-column width="2%"></mj-column>
+        href="{{ href }}"
+      >{{ text }}</mj-button>
+    </mj-column>
+    <mj-column width="2%"></mj-column>
+  {% endif %}
+{% endmacro %}
+
+{% macro approvalButtons (approveUrl, rescheduleUrl, rejectUrl, cancelUrl) %}
+  {{ approvalButton('Approve', approveUrl, color='#fff', bgcolor='#0945EB', width='90px', colwidth='21%') }}
+  {{ approvalButton('Reschedule', rescheduleUrl, border='1px solid rgba(0, 0, 0, 0.12)', width='110px', colwidth='25%') }}
+  {{ approvalButton('Reject', rejectUrl, border='1px solid rgba(0, 0, 0, 0.12)') }}
+  {{ approvalButton('Cancel', cancelUrl, border='1px solid rgba(0, 0, 0, 0.12)') }}
   <mj-column width="54%" padding="0" vertical-align="middle"></mj-column>
 {% endmacro %}

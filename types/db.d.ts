@@ -466,6 +466,7 @@ declare type TDbSqlAddress =
   | 'google/message/update_is_read'
   | 'holiday/get'
   | 'holiday/upcoming'
+  | 'listing/access'
   | 'listing/agents'
   | 'listing/area/get'
   | 'listing/area/get_by_area'

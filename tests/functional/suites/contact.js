@@ -940,6 +940,64 @@ const changeTagTouchFreq = cb => {
     .expectStatus(204)
 }
 
+const renameBazTag = (cb) => {
+  return frisby.create('rename foo tag to bar')
+    .patch('/contacts/tags/baz', {
+      tag: 'BAZ'
+    })
+    .after(cb)
+    .expectStatus(204)
+}
+
+const checkBazTagIsRenamed = cb => {
+  return frisby.create('check whether baz tag is renamed')
+    .get('/contacts/tags')
+    .after((err, res, json) => {
+      const baz_tag = json.data.find(t => t.tag === 'BAZ')
+      if (!baz_tag) {
+        throw 'baz tag was deleted instead!'
+      }
+
+      cb(err, res, json)
+    })
+    .expectStatus(200)
+    .expectJSONLength('data', 14)
+    .expectJSON({
+      code: 'OK'
+    })
+}
+
+const setTouchFrequencyOnAgentTag = (cb) => {
+  return frisby.create('set touch frequency on tag Agent')
+    .patch('/contacts/tags/Agent', {
+      touch_freq: 10
+    })
+    .after(cb)
+    .expectStatus(204)
+}
+
+const checkTouchFrequencyOnAgentTag = cb => {
+  return frisby.create('check whether baz tag is renamed')
+    .get('/contacts/tags')
+    .after((err, res, json) => {
+      const baz_tag = json.data.find(t => t.tag === 'Agent')
+      if (!baz_tag) {
+        throw 'Agent tag was deleted instead!'
+      }
+
+      if (baz_tag.touch_freq !== 10) {
+        throw 'touch_freq not set correctly'
+      }
+
+      cb(err, res, json)
+    })
+    .expectStatus(200)
+    .expectJSONLength('data', 14)
+    .expectJSON({
+      code: 'OK'
+    })
+}
+
 // const verifyTagRenamed = cb => {
 //   return frisby.create('verify that tag is renamed')
 //     .get('/contacts/tags')
@@ -1161,6 +1219,10 @@ module.exports = {
   checkTagIsAdded,
   renameTag,
   changeTagTouchFreq,
+  renameBazTag,
+  checkBazTagIsRenamed,
+  setTouchFrequencyOnAgentTag,
+  checkTouchFrequencyOnAgentTag,
   // verifyTagRenamed,
   deleteTag,
   deleteTags,

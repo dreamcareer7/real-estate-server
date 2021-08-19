@@ -3,6 +3,7 @@
 {% from '../../partials/card.mjml' import card %}
 {% import '../../partials/appointment.mjml' as appointment %}
 {% import '../../partials/contact.mjml' as contactInfo %}
+{% import '../../partials/button.mjml' as button %}
 
 {% block content %}
   {% include '../../partials/logo.mjml' %}
@@ -28,7 +29,20 @@
     </mj-column>
   </mj-section>
 
-  {{ appointment.compact(listing, time) }}
+  {% if approveUrl or rescheduleUrl or rejectUrl or cancelUrl %}
+    {% call appointment.card(listing, contact, time) -%}
+      {{ button.approvalButtons(approveUrl, rescheduleUrl, rejectUrl, cancelUrl) }}
+    {%- endcall %}
+  {% else %}
+    {{ appointment.compact(listing, time) }}    
+  {% endif %}
+ 
+  <mj-section
+    css-class="Email-needs approval-Agent"
+    padding="0 24px 18px 24px"
+  >
+    
+  </mj-section>
   
   {% include '../../partials/spacer.mjml' %}
 {% endblock %}

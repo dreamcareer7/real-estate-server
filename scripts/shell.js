@@ -49,12 +49,11 @@ attachContactIntEventHandler()
 attachShowingEvents()
 
 function processImports(replContext) {
-  for (const part of options.import) {
+  for (const part of options.import ?? []) {
     switch (part) {
       case 'google':
         replContext.GoogleCredential = require('../lib/models/Google/credential/get')
         replContext.GoogleApis = require('../lib/models/Google/plugin/googleapis')
-
         break
       default:
         break

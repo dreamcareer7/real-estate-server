@@ -54,7 +54,7 @@
           font-size="16px"
           font-weight="700"
           line-height="24px">
-          {{ listing.address }}
+          {{ listing.address or 'Unknown Address' }}
         </mj-text>
         <mj-text
           css-class="bold-24"
@@ -65,7 +65,7 @@
           font-size="24px"
           font-weight="900"
           line-height="40px">
-          {{ listing.beds }} bd . {{ listing.bathrooms }} ba . {{ listing.area }} ftsq
+          {{ listing.beds or 0 }} bd . {{ listing.bathrooms or 0 }} ba . {{ listing.area or 0 }} ftsq
         </mj-text>
       </mj-column>
     </mj-section>
@@ -105,7 +105,7 @@
           font-weight="900"
           line-height="32px"
         >
-          {{ time }}
+          {{ time or 'Unknown Time' }}
         </mj-text>
         <mj-text
           css-class="listing-address"
@@ -117,7 +117,7 @@
           font-weight="400"
           line-height="24px"
         >
-          {{ listing.address }}
+          {{ listing.address or 'Unknown Address' }}
         </mj-text>
       </mj-column>
     </mj-section>
@@ -157,7 +157,7 @@
           font-weight="900"
           line-height="32px"
         >
-          {{ time }}
+          {{ time or 'Unknown Time' }}
         </mj-text>
         <mj-text
           css-class="listing-address"
@@ -169,7 +169,7 @@
           font-weight="400"
           line-height="24px"
         >
-          {{ listing.address }}
+          {{ listing.address or 'Unknown' }}
         </mj-text>
       </mj-column>
     </mj-section>
@@ -192,7 +192,11 @@
           font-weight="400"
           line-height="24px"
           color="#000"
-        >{{ contact.fullName }},<span style="color: #6c6d70">{{ contact.company }}</span>
+        >
+          {{ contact.fullName or 'Anonymous Agent' }}
+          {% if contact.company -%}
+            , <span style="color: #6c6d70">{{ contact.company }}</span>
+          {%- endif %}
         </mj-text>
       </mj-column>
     </mj-section>
@@ -215,7 +219,7 @@
           line-height="24px"
         >
           <span style="color: #6c6d70; font-size: 12px">Phone</span><br />
-          {{ contact.phone }}
+          {{ contact.phone or 'N/A' }}
         </mj-text>
       </mj-column>
 
@@ -231,7 +235,7 @@
           line-height="24px"
         >
           <span style="color: #6c6d70; font-size: 12px">Email</span><br />
-          {{ contact.email }}
+          {{ contact.email or 'N/A' }}
         </mj-text>
       </mj-column>
     </mj-section>

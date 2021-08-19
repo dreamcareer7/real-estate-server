@@ -1,9 +1,7 @@
 const db = require('../lib/utils/db')
 
 const migrations = [
-  'ALTER TYPE notification_action ADD VALUE IF NOT EXISTS \'Rejected\'',
-  'ALTER TYPE notification_action ADD VALUE IF NOT EXISTS \'Confirmed\'',
-  'ALTER TYPE notification_action ADD VALUE IF NOT EXISTS \'GaveFeedbackFor\'',
+  'ALTER TYPE notification_object_class ADD VALUE IF NOT EXISTS \'ShowingRole\'',
 ]
 
 

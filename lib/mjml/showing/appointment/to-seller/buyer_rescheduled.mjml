@@ -19,7 +19,7 @@
   </mj-section>
 
   {% call appointment.card(listing, contact, time) %}
-    {{ button.approvalButtons(approveUrl, rescheduleUrl, rejectUrl) }}
+    {{ button.approvalButtons(approveUrl, rescheduleUrl, rejectUrl, cancelUrl) }}
   {% endcall %}
 
   {% include '../../partials/spacer.mjml' %}
