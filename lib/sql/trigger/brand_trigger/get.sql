@@ -10,7 +10,7 @@ SELECT
   bt.created_at,
   bt.updated_at,
   bt.deleted_at,
-  'BrandTrigger' as type,
+  'brand_trigger' as type,
 FROM
   brand_triggers AS bt
   JOIN unnest($1::uuid[]) WITH ORDINALITY t(id, ord)
