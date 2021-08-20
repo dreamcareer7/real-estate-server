@@ -796,4 +796,6 @@ declare type TDbSqlAddress =
   | 'website/insert_hostname'
   | 'website/update'
   | 'trigger/brand_trigger/get'
-  | 'trigger/brand_trigger/get_for_brand_and_user';
+  | 'trigger/brand_trigger/get_for_brand'
+  | 'trigger/brand_trigger/upsert'
+  | 'trigger/brand_trigger/toggle';
