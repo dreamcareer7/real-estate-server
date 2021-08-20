@@ -181,6 +181,7 @@ declare type TDbSqlAddress =
   | 'contact/attribute_def/globals'
   | 'contact/attribute_def/has_access'
   | 'contact/attribute_def/update'
+  | 'contact/attribute_def/global_defs_names_by_data_type'
   | 'contact/authorized_brands'
   | 'contact/delete'
   | 'contact/duplicate/add'
