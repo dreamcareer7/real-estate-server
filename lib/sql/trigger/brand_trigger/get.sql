@@ -15,5 +15,7 @@ FROM
   brand_triggers AS bt
   JOIN unnest($1::uuid[]) WITH ORDINALITY t(id, ord)
     ON t.id = bt.id
+WHERE
+  bt.deleted_at IS NULL
 ORDER BY
   t.ord    
