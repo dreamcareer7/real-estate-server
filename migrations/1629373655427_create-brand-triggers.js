@@ -22,6 +22,8 @@ const migrations = [
 
     CONSTRAINT bt_template_xor_template_instance CHECK (num_nonnulls(template, template_instance) = 1)
   )`,
+  `CREATE UNIQUE INDEX bt_unique_by_brand_and_event_type
+    ON brand_triggers (brand, event_type)`,
   'COMMIT',
 ]
 
