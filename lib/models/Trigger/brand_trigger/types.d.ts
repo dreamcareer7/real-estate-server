@@ -1,3 +1,4 @@
+import { IStoredTemplateInstance } from '../../Template/instance/types';
 import { IStoredTemplate } from '../../Template/types';
 
 export interface BrandTrigger extends Omit<IModel, 'updated_by'> {
@@ -9,10 +10,9 @@ export interface BrandTrigger extends Omit<IModel, 'updated_by'> {
   subject: string;
 }
 
-export type TBrandTriggerAssociation = 'created_by' | 'brand' | 'template';
+export type TBrandTriggerAssociation = 'template_instance' | 'template';
 
 export interface BrandTriggerPopulated extends Omit<BrandTrigger, TBrandTriggerAssociation> {
-  created_by: IUser;
-  brand: IBrand;
+  template_instance: IStoredTemplateInstance;
   template: IStoredTemplate;
 }
