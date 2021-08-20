@@ -1,9 +1,7 @@
 const db = require('../lib/utils/db')
 
 const migrations = [
-  'BEGIN',
-  'CREATE INDEX CONCURRENTLY contacts_created_by ON contacts(created_by)',
-  'COMMIT'
+  'CREATE INDEX CONCURRENTLY contacts_created_by ON contacts(created_by)'
 ]
 
 
