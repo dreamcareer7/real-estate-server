@@ -3,6 +3,7 @@ SELECT agents.*,
        EXTRACT(EPOCH FROM created_at) AS created_at,
        EXTRACT(EPOCH FROM updated_at) AS updated_at,
        EXTRACT(EPOCH FROM deleted_at) AS deleted_at,
+       COALESCE(full_name, first_name || ' ' || last_name) AS full_name,
        (SELECT id FROM users WHERE agent = agents.id LIMIT 1) as user_id,
        (
         SELECT id FROM offices
