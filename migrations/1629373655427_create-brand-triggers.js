@@ -6,7 +6,6 @@ const migrations = [
     id uuid PRIMARY KEY NOT NULL DEFAULT uuid_generate_v4(),
 
     created_by uuid NOT NULL REFERENCES users (id),
-    "user" uuid NOT NULL REFERENCES users (id),
 
     brand uuid NOT NULL REFERENCES brands (id),
     template uuid REFERENCES brands_allowed_templates (id),
