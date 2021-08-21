@@ -1,5 +1,6 @@
 const createContext = require('./create-context')
 const Context = require('../../../lib/models/Context')
+const Metric = require('../../../lib/models/Metric')
 const Slack = require('../../../lib/models/Slack')
 
 let i = 1
@@ -65,9 +66,18 @@ const poll = ({ fn, name, wait = 5000 }) => {
     const ctxRes = await createContext({ id })
 
     await ctxRes.run(async () => {
+      /** @param {string[]} tags */
+      const report_time = (tags) => {
+        const time_spent = Number((process.hrtime.bigint() - start) / 1000000n)
+        Metric.histogram(`Poll.${name}`, time_spent / 1000, tags)
+      }
+      const start = process.hrtime.bigint()
+
       try {
         await execute(ctxRes)
+        report_time([ 'result:success' ])
       } catch (ex) {
+        report_time([ 'result:fail' ])
         Context.error(ex)
         Slack.send({
           channel: '7-server-errors',
