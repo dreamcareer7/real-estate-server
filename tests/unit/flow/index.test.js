@@ -1,5 +1,6 @@
 const { expect } = require('chai')
 const moment = require('moment-timezone')
+const mjml2html = require('mjml')
 
 const sql = require('../../../lib/utils/sql')
 const BrandFlow = {
@@ -156,11 +157,17 @@ async function testEnrollContact() {
   return { flow, contact: id }
 }
 
-async function createTemplateInstance() {
+async function createTemplateInstance({ mjml = false }) {
   const brandTemplates = await BrandTemplate.getForBrands({ brands: [brand.id] })
 
-  const template = await Template.get(brandTemplates[0].template)
-  const html = '<div>Hey, it\'s your birthday!!</div>'
+  const tpls = await Template.getAll(brandTemplates.map(bt => bt.template))
+  const template = tpls.find(t => t.mjml === mjml)
+  if (!template) {
+    throw new Error('Couldn\'t find a suitable template!')
+  }
+
+  const template_input = templates.find(t => t.name === template.name && t.variant === template.variant)
+  const html = template_input?.html
 
   const instance = await TemplateInstance.create({
     template,
@@ -174,8 +181,8 @@ async function createTemplateInstance() {
   return instance
 }
 
-async function setupFlowWithEmailAndTemplateInstanceStep() {
-  const instance = await createTemplateInstance()
+async function setupFlowWithEmailAndTemplateInstanceStep({ mjml } = { mjml: false }) {
+  const instance = await createTemplateInstance({ mjml })
 
   const brandFlowId = await BrandFlow.create(brand.id, user.id, {
     created_by: user.id,
@@ -195,6 +202,7 @@ async function setupFlowWithEmailAndTemplateInstanceStep() {
 
   const brandFlowStepIds = await sql.selectIds('SELECT id FROM brands_flow_steps WHERE flow = $1', [ brandFlowId ])
   return {
+    instance,
     brandFlowId,
     brandFlowStepIds
   }
@@ -213,8 +221,25 @@ async function testFlowWithEmailAndTemplateInstanceStep() {
 
   const campaigns = await sql.selectIds('SELECT id FROM email_campaigns WHERE brand = $1', [brand.id]).then(EmailCampaign.getAll)
   expect(campaigns).to.have.length(1)
-  expect(campaigns[0].html).to.be.equal('<div>Hey, it\'s your birthday!!</div>')
-  expect(campaigns[0].text).to.be.equal('Hey, it\'s your birthday!!')
+  expect(campaigns[0].html).to.be.equal('<div>Happy Birthday To You!</div>')
+  expect(campaigns[0].text).to.be.equal('Happy Birthday To You!')
+}
+
+async function testFlowWithEmailAndMjmlTemplateInstanceStep() {
+  const { instance, brandFlowId, brandFlowStepIds } = await setupFlowWithEmailAndTemplateInstanceStep({ mjml: true })
+  const contact = await createContact()
+  const [flow] = await Flow.enrollContacts(brand.id, user.id, brandFlowId, Date.now() / 1000, brandFlowStepIds, [contact])
+
+  const triggers = await sql.select('SELECT id FROM triggers WHERE flow = $1 and contact = $2', [ flow.id, contact ])
+  expect(triggers).to.have.length(1)
+
+  await Trigger.executeDue()
+  await handleJobs()
+
+  const campaigns = await sql.selectIds('SELECT id FROM email_campaigns WHERE brand = $1', [brand.id]).then(EmailCampaign.getAll)
+  expect(campaigns).to.have.length(1)
+  expect(campaigns[0].html).to.be.equal(mjml2html(instance.html, { minify: true }).html)
+  expect(campaigns[0].text).to.be.equal('Hello World')
 }
 
 async function testFlowProgress() {
@@ -428,6 +453,9 @@ describe('Flow', () => {
   })
   describe('execution', function() {
     it('should setup brand flow with template instance step', testFlowWithEmailAndTemplateInstanceStep)
+  })
+  describe('execution', function() {
+    it('should setup brand flow with a mjml template instance step', testFlowWithEmailAndMjmlTemplateInstanceStep)
   })
   describe('stop', function() {
     it('should stop a flow instance and delete all future events', testStopFlow)
