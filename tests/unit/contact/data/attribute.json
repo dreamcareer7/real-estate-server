@@ -17,6 +17,7 @@
       "attributes": {
         "first_name": "John",
         "last_name": "Doe",
+        "tag": ["Warm"],
         "email": [{
           "text": "abbas@rechat.com",
           "label": "Personal",
@@ -31,6 +32,12 @@
           "label": "Mobile",
           "is_primary": true
         }]
+      }
+    },
+    {
+      "attributes": {
+        "first_name": "Johnny",
+        "tag": ["Warm", "TagT", "TagT"]
       }
     }
   ]

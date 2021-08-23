@@ -72,7 +72,7 @@ declare interface IContact extends IContactBase {
   source_type?: string;
   source?: string;
   website?: string;
-  tag?: string;
+  tags?: string;
   address?: StdAddr[];
 
   display_name: string;
