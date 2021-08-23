@@ -217,7 +217,12 @@ const setPhone = user => {
     }
   }
 
-  const mlsid = user.id.split('.').pop()
+  const mlsid = (user.rbnyAgentId ?? user.id).split('.').pop()
+
+  if (user.mlsSystem === 'LIMO')
+    user.mlsSystem = 'REBNY'
+
+  console.log(user.email, user.mlsSystem, user.rbnyAgentId, mlsid)
 
   return {
     ...user,
