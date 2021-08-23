@@ -8,7 +8,7 @@ const migrations = [
     created_by uuid NOT NULL REFERENCES users (id),
 
     brand uuid NOT NULL REFERENCES brands (id),
-    template uuid REFERENCES brands_allowed_templates (id),
+    template uuid REFERENCES templates (id),
     template_instance uuid REFERENCES templates_instances (id),
 
     event_type text NOT NULL,
