@@ -1,5 +1,6 @@
 SELECT
-  id
+  id,
+  status
 FROM
   showings_appointments
 WHERE

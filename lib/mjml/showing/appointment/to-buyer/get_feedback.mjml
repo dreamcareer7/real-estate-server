@@ -24,7 +24,7 @@
   </mj-section>
 
   {{ appointment.compact(listing, time) }}
-  {{ contactInfo.compact(contact) }}
+  {{ contactInfo.full(contact) }}
 
   {% include '../../partials/spacer.mjml' %}
 {% endblock %}

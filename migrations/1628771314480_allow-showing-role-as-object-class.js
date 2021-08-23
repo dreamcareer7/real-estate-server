@@ -1,9 +1,7 @@
 const db = require('../lib/utils/db')
 
 const migrations = [
-  'BEGIN',
   'ALTER TYPE notification_object_class ADD VALUE IF NOT EXISTS \'ShowingRole\'',
-  'COMMIT'
 ]
 
 
