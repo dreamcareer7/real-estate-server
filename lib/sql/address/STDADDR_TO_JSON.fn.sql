@@ -23,7 +23,7 @@ RETURNS JSON AS $$
         'country',    NULLIF(($1).country, ''), -- USA -> Usa ?
         'postcode',   INITCAP(NULLIF(($1).postcode, '')),
         'box',        INITCAP(NULLIF(($1).box, '')),
-        'unit',       NULLIF(TRIM(REGEXP_REPLACE(($1).unit, 'unit|# ', '', 'gi')), ''),
+        'unit',       INITCAP(NULLIF(REPLACE(($1).unit, '# ', '#'), '')),
 
         'line1', NULLIF(
           (SELECT ARRAY_TO_STRING (
@@ -40,7 +40,7 @@ RETURNS JSON AS $$
               CASE
                 WHEN ($1).unit IS NULL THEN NULL
                 WHEN ($1).unit = '' THEN NULL
-                ELSE 'Unit ' || TRIM(REGEXP_REPLACE(($1).unit, 'unit|# ', '', 'gi'))
+                ELSE INITCAP(REPLACE(($1).unit, '# ', '#'))
               END,
               CASE
                 WHEN ($1).box IS NULL THEN NULL
@@ -76,7 +76,7 @@ RETURNS JSON AS $$
               CASE
                 WHEN ($1).unit IS NULL THEN NULL
                 WHEN ($1).unit = '' THEN NULL
-                ELSE 'Unit ' || TRIM(REGEXP_REPLACE(($1).unit, 'unit|# ', '', 'gi'))
+                ELSE (REPLACE(INITCAP(($1).unit), '# ', '#')) || ','
               END,
               CASE
                 WHEN ($1).box IS NULL THEN NULL
