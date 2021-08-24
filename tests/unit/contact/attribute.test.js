@@ -4,7 +4,10 @@ const expect = chai.expect
 
 const { createContext, handleJobs } = require('../helper')
 
-const Contact = require('../../../lib/models/Contact/manipulate')
+const Contact = {
+  ...require('../../../lib/models/Contact/get'),
+  ...require('../../../lib/models/Contact/manipulate'),
+}
 const AttributeDef = require('../../../lib/models/Contact/attribute_def/get')
 const ContactAttribute = require('../../../lib/models/Contact/attribute/get')
 const Context = require('../../../lib/models/Context')
@@ -127,6 +130,15 @@ async function testClearIsPrimaryOnUpdate() {
   }].map(a => _.find(new_attrs, a)).every(a => a)).to.be.true
 }
 
+async function testPatchingDoubleTags() {
+  const [id] = await createContact([create[2]])
+
+  await Contact.updateTags([id], [], user.id, brand.id, true)
+  const contact = await Contact.get(id)
+
+  expect(contact.tags, 'Expected both TagT tags to have been removed').to.be.null
+}
+
 describe('Contact', () => {
   createContext()
   beforeEach(setup)
@@ -135,5 +147,6 @@ describe('Contact', () => {
     it('should not clear new is_primary flags on insert', testDoesntClearIsPrimaryOnNewAttrsAfterInsert)
     it('should clear old is_primary flags on insert', testClearIsPrimaryOnInsert)
     it('should clear old is_primary flags on update', testClearIsPrimaryOnUpdate)
+    it('should delete tags even if there are double tags', testPatchingDoubleTags)
   })
 })
