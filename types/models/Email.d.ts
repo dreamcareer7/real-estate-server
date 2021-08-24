@@ -64,7 +64,7 @@ declare interface IEmailCampaignBase {
   cc?: IEmailRecipientInput[];
   bcc?: IEmailRecipientInput[];
   subject: string;
-  html: string;
+  html?: string;
   text?: string;
   attachments?: IEmailCampaignAttachmentInput[];
   include_signature?: boolean;
