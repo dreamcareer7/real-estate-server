@@ -27,3 +27,4 @@ WHERE
 
 
 ORDER BY deals.updated_at DESC
+LIMIT $2
