@@ -9,6 +9,7 @@ registerSuite('brand', [
 
 registerSuite('template', [
   'create',
+  'getForBrand',
   'instantiate',
 ])
 
@@ -26,7 +27,7 @@ const EVENT_TYPE = 'birthday'
 
 const theBrand = () => results.brand.create.data.id
 const theBrandTrigger = () => results.brand_trigger.create.data.id
-const theTemplate = () => results.template.create.data.id
+const theTemplate = () => results.template.getForBrand.data[0].id
 const theTemplateInstance = () => results.template.instantiate.data.id
 
 function create (cb) {
