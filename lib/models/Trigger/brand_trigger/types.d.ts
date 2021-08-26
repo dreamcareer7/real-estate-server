@@ -1,5 +1,4 @@
 import { IStoredTemplateInstance } from '../../Template/instance/types';
-import { IStoredTemplate } from '../../Template/types';
 
 export interface BrandTrigger extends Omit<IModel, 'updated_by'> {
   brand: UUID;
@@ -14,5 +13,5 @@ export type TBrandTriggerAssociation = 'template_instance' | 'template';
 
 export interface BrandTriggerPopulated extends Omit<BrandTrigger, TBrandTriggerAssociation> {
   template_instance: IStoredTemplateInstance;
-  template: IStoredTemplate;
+  template: IModel; // TODO: define BrandTemplate interface
 }
