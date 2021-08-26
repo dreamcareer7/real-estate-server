@@ -727,6 +727,7 @@ declare type TDbSqlAddress =
   | 'trigger/mark_executed'
   | 'trigger/mark_failed'
   | 'trigger/update'
+  | 'trigger/get_by_contact_and_event_type'
   | 'user/bulk_search_email'
   | 'user/bulk_search_phone'
   | 'user/change_password'
