@@ -228,16 +228,16 @@ const setPhone = user => {
     user.mlsSystem = 'REBNY'
 
   if (user.designation === 'LSA')
-    user.designation = 'LICENSED REAL ESTATE SALESPERSON'
+    user.designation = 'Licensed Real Estate Salesperson'
 
   if (user.designation === 'LBA')
-    user.designation = 'LICENSED ASSOCIATE REAL ESTATE BROKER'
+    user.designation = 'Licensed Associate Real Estate Broker'
 
   if (user.designation === 'BA')
-    user.designation = 'BROKER ASSOCIATE'
+    user.designation = 'Broker Associate'
 
   if (user.designation === 'RA')
-    user.designation = 'REALTOR ASSOCIATE'
+    user.designation = 'Realtor Associate'
 
   if (user.designation === 'None')
     user.designation = null
