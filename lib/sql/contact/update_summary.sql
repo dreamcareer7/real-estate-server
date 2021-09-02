@@ -48,6 +48,7 @@ SET
   partner_email = cs.partner_email,
   phone_number = cs.phone_number,
   tag = cs.tag,
+  tag_searchable = LOWER(cs.tag::text)::text[],
   website = cs.website,
   company = cs.company,
   birthday = cs.birthday,

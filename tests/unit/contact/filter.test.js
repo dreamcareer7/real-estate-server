@@ -77,6 +77,16 @@ async function testFilterTagAll() {
   expect(filter_res.total).to.equal(1)
 }
 
+async function testFilterTagCaseInsensitive() {
+  const filter_res = await Contact.fastFilter(brand.id, [{
+    attribute_type: 'tag',
+    operator: 'all',
+    value: ['tag1', 'tag2']
+  }], {})
+
+  expect(filter_res.total).to.equal(1)
+}
+
 async function testFilterFirstNameEquals() {
   const filter_res = await Contact.fastFilter(brand.id, [{
     attribute_type: 'first_name',
@@ -262,6 +272,7 @@ describe('Contact', () => {
     it('should filter by has no tags', testFilterNoTags)
     it('should filter by has any of tags', testFilterTagAny)
     it('should filter by has all tags', testFilterTagAll)
+    it('should not be case-sensitive in filtering by tags', testFilterTagCaseInsensitive)
     it('should filter by first name is', testFilterFirstNameEquals)
     it('should filter by first letter of sort field', testAlphabeticalFilter)
     it('should filter by task association', testCrmAssociationFilter)
