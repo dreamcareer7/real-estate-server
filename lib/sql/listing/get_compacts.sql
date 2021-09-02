@@ -115,6 +115,7 @@ SELECT 'compact_listing' AS TYPE,
                 street_dir_prefix,
                 street_name,
                 street_suffix,
+                street_dir_suffix,
                 CASE
                   WHEN addresses.unit_number IS NULL THEN NULL
                   WHEN addresses.unit_number = '' THEN NULL

@@ -124,6 +124,7 @@ address AS (
             addresses.street_dir_prefix,
             addresses.street_name,
             addresses.street_suffix,
+            addresses.street_dir_suffix,
             CASE
               WHEN addresses.unit_number IS NULL THEN NULL
               WHEN addresses.unit_number = '' THEN NULL
@@ -142,6 +143,7 @@ address AS (
             addresses.street_dir_prefix,
             addresses.street_name,
             addresses.street_suffix,
+            addresses.street_dir_suffix,
             CASE
               WHEN addresses.unit_number IS NULL THEN NULL
               WHEN addresses.unit_number = '' THEN NULL
