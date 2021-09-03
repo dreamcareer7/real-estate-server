@@ -24,4 +24,5 @@ WHERE
 RETURNING
   ca.id,
   ca.contact,
-  ca.attribute_type
+  ca.attribute_type,
+  ca.date
