@@ -120,11 +120,11 @@ address AS (
         SELECT ARRAY_TO_STRING
         (
           array_remove(ARRAY[
-            addresses.street_number,
-            addresses.street_dir_prefix,
-            addresses.street_name,
-            addresses.street_suffix,
-            addresses.street_dir_suffix,
+            NULLIF(addresses.street_number, ''),
+            NULLIF(addresses.street_dir_prefix, ''),
+            NULLIF(addresses.street_name, ''),
+            NULLIF(addresses.street_suffix, ''),
+            NULLIF(addresses.street_dir_suffix, ''),
             CASE
               WHEN addresses.unit_number IS NULL THEN NULL
               WHEN addresses.unit_number = '' THEN NULL
@@ -139,11 +139,11 @@ address AS (
         SELECT ARRAY_TO_STRING
         (
           array_remove(ARRAY[
-            addresses.street_number,
-            addresses.street_dir_prefix,
-            addresses.street_name,
-            addresses.street_suffix,
-            addresses.street_dir_suffix,
+            NULLIF(addresses.street_number, ''),
+            NULLIF(addresses.street_dir_prefix, ''),
+            NULLIF(addresses.street_name, ''),
+            NULLIF(addresses.street_suffix, ''),
+            NULLIF(addresses.street_dir_suffix, ''),
             CASE
               WHEN addresses.unit_number IS NULL THEN NULL
               WHEN addresses.unit_number = '' THEN NULL
