@@ -17,7 +17,7 @@
     t.contact
   FROM triggers AS t
   WHERE
-    COALESCE(t.executed_at > now() - '3d'::interval, TRUE)
+    (t.executed_at IS NULL OR t.executed_at > now() - '3 days'::interval)
     AND t.deleted_at IS NULL
     AND t.brand = $1::uuid
     AND t.action = 'schedule_email'
