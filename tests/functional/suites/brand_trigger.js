@@ -18,7 +18,7 @@ const WAIT_FOR = -2
 
 const BRAND_TRIGGER_RESP = {
   subject: SUBJECT,
-  wait_for: { seconds: WAIT_FOR },
+  wait_for: WAIT_FOR,
 }
 
 const MISSING_BRAND_TRIGGER = 'a0a0a0a0-b1b1-c2c2-d3d3-e4e4e4e4e4e4'
@@ -46,7 +46,7 @@ function create (cb) {
     .expectJSON({
       data: {
         subject: INIT_SUBJECT,
-        wait_for: { seconds: INIT_WAIT_FOR },
+        wait_for: INIT_WAIT_FOR,
       },
     })
 }
