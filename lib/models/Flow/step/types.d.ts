@@ -14,3 +14,8 @@ export interface IFlowStepInput {
   flow: UUID;
   origin: UUID;
 }
+
+export interface IFailedStep {
+  id: IStoredFlowStep['id'];
+  message: string;
+}

@@ -5,6 +5,7 @@
 
 SELECT
   id,
+  contact,
   flow
 FROM
   triggers
