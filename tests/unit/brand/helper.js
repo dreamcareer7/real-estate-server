@@ -20,6 +20,7 @@ const BrandChecklist = require('../../../lib/models/Brand/deal/checklist')
 const BrandEmail = require('../../../lib/models/Brand/email/save')
 const BrandFlow = require('../../../lib/models/Brand/flow/create')
 const BrandList = require('../../../lib/models/Brand/list')
+const BrandTemplate = require('../../../lib/models/Template/brand/index')
 const Context = require('../../../lib/models/Context')
 const Form = require('../../../lib/models/Form')
 const Template = require('../../../lib/models/Template/create')
@@ -160,7 +161,8 @@ async function create(data) {
 
   if (Array.isArray(templates)) {
     for (const template of templates) {
-      await Template.create({ ...template, brands: [b.id] })
+      const { id } = await Template.create({ ...template, brands: [b.id] })
+      await BrandTemplate.allow(id, b.id)
     }
   }
 
