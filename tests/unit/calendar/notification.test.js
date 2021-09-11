@@ -268,7 +268,7 @@ async function sendNotificationForDeal() {
   const notifications = await promisify(Notification.getForUser)(user.id, {})
   expect(notifications).not.to.be.empty
   expect(notifications[0].message).to.be.equal(
-    `9641  INWOOD Road has an Executed Date on ${render_filters.time(
+    `9641 INWOOD Road has an Executed Date on ${render_filters.time(
       Deal.getContext(deal, 'contract_date').getTime() / 1000,
       'MMM D, YYYY',
       'UTC'

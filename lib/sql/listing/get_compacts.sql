@@ -110,16 +110,17 @@ SELECT 'compact_listing' AS TYPE,
           (
             SELECT ARRAY_TO_STRING
             (
-              ARRAY[
-                street_number,
-                street_dir_prefix,
-                street_name,
-                street_suffix,
+              array_remove(ARRAY[
+                NULLIF(street_number, ''),
+                NULLIF(street_dir_prefix, ''),
+                NULLIF(street_name, ''),
+                NULLIF(street_suffix, ''),
+                NULLIF(street_dir_suffix, ''),
                 CASE
                   WHEN addresses.unit_number IS NULL THEN NULL
                   WHEN addresses.unit_number = '' THEN NULL
                   ELSE 'Unit ' || addresses.unit_number END
-              ], ' ', NULL
+              ], NULL), ' ', NULL
             )
           )
        ) AS address,

@@ -727,6 +727,7 @@ declare type TDbSqlAddress =
   | 'trigger/mark_executed'
   | 'trigger/mark_failed'
   | 'trigger/update'
+  | 'trigger/get_pending_contact_triggers'
   | 'user/bulk_search_email'
   | 'user/bulk_search_phone'
   | 'user/change_password'
@@ -807,4 +808,5 @@ declare type TDbSqlAddress =
   | 'trigger/brand_trigger/get'
   | 'trigger/brand_trigger/get_for_brand'
   | 'trigger/brand_trigger/upsert'
-  | 'trigger/brand_trigger/toggle';
+  | 'trigger/brand_trigger/toggle'
+  | 'trigger/brand_trigger/contact_ids_to_create_trigger_for';

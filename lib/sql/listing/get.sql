@@ -119,11 +119,12 @@ address AS (
        (
         SELECT ARRAY_TO_STRING
         (
-          ARRAY[
-            addresses.street_number,
-            addresses.street_dir_prefix,
-            addresses.street_name,
-            addresses.street_suffix,
+          array_remove(ARRAY[
+            NULLIF(addresses.street_number, ''),
+            NULLIF(addresses.street_dir_prefix, ''),
+            NULLIF(addresses.street_name, ''),
+            NULLIF(addresses.street_suffix, ''),
+            NULLIF(addresses.street_dir_suffix, ''),
             CASE
               WHEN addresses.unit_number IS NULL THEN NULL
               WHEN addresses.unit_number = '' THEN NULL
@@ -131,22 +132,23 @@ address AS (
             addresses.city || ',',
             addresses.state_code,
             addresses.postal_code
-          ], ' ', NULL
+          ], NULL), ' ', NULL
         )
       ) AS full_address,
       (
         SELECT ARRAY_TO_STRING
         (
-          ARRAY[
-            addresses.street_number,
-            addresses.street_dir_prefix,
-            addresses.street_name,
-            addresses.street_suffix,
+          array_remove(ARRAY[
+            NULLIF(addresses.street_number, ''),
+            NULLIF(addresses.street_dir_prefix, ''),
+            NULLIF(addresses.street_name, ''),
+            NULLIF(addresses.street_suffix, ''),
+            NULLIF(addresses.street_dir_suffix, ''),
             CASE
               WHEN addresses.unit_number IS NULL THEN NULL
               WHEN addresses.unit_number = '' THEN NULL
               ELSE 'Unit ' || addresses.unit_number END
-          ], ' ', NULL
+          ], NULL), ' ', NULL
         )
       ) AS street_address
   FROM addresses
