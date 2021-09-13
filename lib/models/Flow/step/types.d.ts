@@ -1,3 +1,5 @@
+import { IStoredFlow } from "../types"
+
 export interface IStoredFlowStep extends IModel {
   executed_at?: number;
   deleted_by: UUID;
@@ -15,7 +17,10 @@ export interface IFlowStepInput {
   origin: UUID;
 }
 
-export interface IFailedStep {
-  id: IStoredFlowStep['id'];
+export interface IFailure <M extends IModel> {
+  id: M['id'];
   message: string;
 }
+
+export type IFailedStep = IFailure<IStoredFlowStep>
+export type IFailedFlow = IFailure<IStoredFlow>
