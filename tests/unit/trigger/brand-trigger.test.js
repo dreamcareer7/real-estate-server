@@ -1,13 +1,14 @@
 const moment = require('moment-timezone')
 const { expect } = require('chai')
 
-const Trigger = require('/home/iman/Documents/Programming/JS/rechat/server/lib/models/Trigger/filter.js')
+const db = require('../../../lib/utils/db.js')
+const Trigger = require('../../../lib/models/Trigger/filter.js')
 const BrandTrigger = {
   ...require('../../../lib/models/Trigger/brand_trigger/workers'),
   ...require('../../../lib/models/Trigger/brand_trigger/create'),
   ...require('../../../lib/models/Trigger/brand_trigger/get'),
-}
-
+}.test
+const Campaign = require('../../../lib/models/Email/campaign/get.js')
 const Contact = {
   ...require('../../../lib/models/Contact/manipulate'),
   ...require('../../../lib/models/Contact/get'),
@@ -82,7 +83,7 @@ async function createContact() {
 }
 
 async function updateNonExistingBrandTrigger() {
-  const result = await BrandTrigger.updateTriggers('nonExistingBrandTriggerId')
+  const result = await BrandTrigger.updateTriggersHandler('nonExistingBrandTriggerId')
   expect(result).to.be.undefined
 }
 
@@ -91,29 +92,38 @@ async function createBrandTrigger() {
   await createContact()
   // @ts-ignore
   const brandTemplates = await BrandTemplate.getForBrands({ brands: [brand.id] })
+  const bt = {
+    template: brandTemplates[0].id,
+    brand: brand.id,
+    created_by: user.id,
+    event_type: 'birthday',
+    wait_for: -86400,
+    subject: 'birthday mail',
+    id: 'fakeBrandTriggerForTest',
+    type: 'birthday',
+    created_at: Number(new Date()),
+    updated_at: 0,
+  }
+  const brandTriggerId = await db.insert('trigger/brand_trigger/upsert', [
+    bt.brand,
+    bt.created_by,
+    bt.template,
+    bt.template_instance,
+    bt.event_type,
+    bt.wait_for,
+    bt.subject,
+  ])
 
-  const brandTriggerId = await BrandTrigger.upsert(
-    {
-      template: brandTemplates[0].id,
-      brand: brand.id,
-      created_by: user.id,
-      event_type: 'birthday',
-      wait_for: -86400,
-      subject: 'birthday mail',
-      id: 'fakeBrandTriggerForTest',
-      type: 'birthday',
-      created_at: Number(new Date()),
-      updated_at: 0,
-    },
-    true
-  )
+  await BrandTrigger.updateTriggersHandler(brandTriggerId, true)
   const brandTrigger = await BrandTrigger.get(brandTriggerId)
   expect(brandTrigger.id).to.be.eql(brandTriggerId)
   const triggers = await Trigger.filter({
     brand: brand.id,
     event_type: 'birthday',
   })
-  expect(triggers.length).length.to.be.eql(1)
+  expect(triggers.length).to.be.eql(1)
+  const campaigns = await Campaign.getByBrand(brand.id)
+  expect(campaigns.length).to.eql(1)
 }
 
 describe('Trigger', () => {
