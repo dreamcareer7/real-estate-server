@@ -8,7 +8,7 @@
   JOIN contacts AS c ON c.id = cad.contact
   WHERE
     cad.deleted_at IS NULL
-    AND c.primary_email IS NOT NULL
+    AND c.email[1] IS NOT NULL
     AND c.deleted_at IS NULL 
     AND c.brand = $1::uuid
     AND cad.attribute_type = $2::text
@@ -21,5 +21,5 @@
     AND t.deleted_at IS NULL
     AND t.brand = $1::uuid
     AND t.action = 'schedule_email'
-    AND t.event_type = $2::uuid
+    AND t.event_type = $2::text
 )
