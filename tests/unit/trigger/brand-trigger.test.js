@@ -11,7 +11,10 @@ const BrandTrigger = {
   ...require('../../../lib/models/Trigger/brand_trigger/create'),
   ...require('../../../lib/models/Trigger/brand_trigger/get'),
 }.test
-const Campaign = require('../../../lib/models/Email/campaign/get.js')
+const Campaign = {
+  ...require('../../../lib/models/Email/campaign/get.js'),
+  ...require('../../../lib/models/Email/campaign/create'),
+}
 const Contact = {
   ...require('../../../lib/models/Contact/manipulate'),
   ...require('../../../lib/models/Contact/get'),
@@ -22,25 +25,23 @@ const Context = require('../../../lib/models/Context')
 const BrandHelper = require('../brand/helper')
 const { attributes } = require('../contact/helper')
 const UserHelper = require('../user/helper')
-
 const { createContext, handleJobs } = require('../helper')
 const BrandTemplate = require('../../../lib/models/Template/brand/get')
 
 const BIRTHDAY = moment.utc().add(3, 'days').startOf('day').add(-20, 'years')
 
 let brand
-let template
+const template = {
+  name: 'fake-template-brand-trigger-test',
+  variant: 'Template40',
+  inputs: ['listing', 'user'],
+  template_type: 'JustSold',
+  medium: 'Email',
+  html: '<div>fakeTemplate</div>',
+  mjml: false,
+}
 
 const createBrand = async () => {
-  template = {
-    name: 'fake-template-brand-trigger-test',
-    variant: 'Template40',
-    inputs: ['listing', 'user'],
-    template_type: 'JustSold',
-    medium: 'Email',
-    html: '<div>fakeTemplate</div>',
-    mjml: false,
-  }
   const user = await UserHelper.TestUser()
   return BrandHelper.create({
     roles: {
@@ -113,7 +114,7 @@ async function createAndUpdateBrandTrigger() {
     event_type: 'birthday',
     wait_for: -86400,
     subject: 'birthday mail',
-    id: 'fakeBrandTriggerForTest',
+    id: '1d8f42ea-155f-11ec-82a8-0242ac130003',
     type: 'birthday',
     created_at: Number(new Date()),
     updated_at: 0,
@@ -144,7 +145,7 @@ async function createDateAttributes() {
     event_type: 'birthday',
     wait_for: -86400,
     subject: 'birthday mail',
-    id: 'fakeBrandTriggerForTest',
+    id: '1d8f42ea-155f-11ec-82a8-0242ac130003',
     type: 'birthday',
     created_at: Number(new Date()),
     updated_at: 0,
@@ -163,7 +164,13 @@ async function createDateAttributes() {
 async function deleteDateAttributes() {
   const user = await UserHelper.TestUser()
   const contact = await createContact()
-  const attributes = [{ attribute_type: 'birthday', contact: contact.id, created_by: user.id }]
+  const attributes = [
+    {
+      attribute_type: 'birthday',
+      contact: contact.id,
+      created_by: user.id,
+    },
+  ]
   // @ts-ignore
   const brandTemplates = await BrandTemplate.getForBrands({ brands: [brand.id] })
   const bt = {
@@ -173,16 +180,23 @@ async function deleteDateAttributes() {
     event_type: 'birthday',
     wait_for: -86400,
     subject: 'birthday mail',
-    id: 'fakeBrandTriggerForTest',
+    id: '1d8f42ea-155f-11ec-82a8-0242ac130003',
     type: 'birthday',
     created_at: Number(new Date()),
     updated_at: 0,
   }
-  await Trigger.create([{ ...bt, user: user.id, action: 'schedule_email' }])
+  const brandTriggerId = await insertBrandTriggerInDB(bt)
+  await BrandTrigger.updateTriggersHandler(brandTriggerId, true)
   await BrandTrigger.dateAttributesDeleted({ attributes, created_by: user.id })
-  const triggersAfterDelete = await Trigger.filter({ brand: brand.id, event_type: 'birthday' })
+  console.log('here')
+  const triggersAfterDelete = await Trigger.filter({
+    brand: brand.id,
+    event_type: 'birthday',
+  })
   expect(triggersAfterDelete.length).is.eql(0)
 }
+
+async function contactsMerged() {}
 
 describe('Trigger', () => {
   createContext()
