@@ -4,10 +4,10 @@ const { expect } = require('chai')
 const db = require('../../../lib/utils/db.js')
 const Trigger = require('../../../lib/models/Trigger/filter.js')
 const BrandTrigger = {
-  ...require('../../../lib/models/Trigger/brand_trigger/workers'),
+  ...require('../../../lib/models/Trigger/brand_trigger/workers').test,
   ...require('../../../lib/models/Trigger/brand_trigger/create'),
   ...require('../../../lib/models/Trigger/brand_trigger/get'),
-}.test
+}
 const Campaign = require('../../../lib/models/Email/campaign/get.js')
 const Contact = {
   ...require('../../../lib/models/Contact/manipulate'),
