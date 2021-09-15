@@ -122,7 +122,7 @@ async function createBrandTrigger() {
     event_type: 'birthday',
   })
   expect(triggers.length).to.be.eql(1)
-  const campaigns = await Campaign.getByBrand(brand.id)
+  const campaigns = await Campaign.getByBrand(brand.id, { havingDueAt: null })
   expect(campaigns.length).to.eql(1)
 }
 
