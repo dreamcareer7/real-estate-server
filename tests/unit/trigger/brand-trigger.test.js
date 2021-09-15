@@ -2,19 +2,15 @@ const moment = require('moment-timezone')
 const { expect } = require('chai')
 
 const Trigger = {
-  ...require('../../../lib/models/Trigger/create'),
   ...require('../../../lib/models/Trigger/filter.js'),
-  ...require('../../../lib/models/Trigger/get.js'),
+  ...require('../../../lib/models/Trigger/get'),
 }
-const BrandTriggerModel = {
-  ...require('../../../lib/models/Trigger/brand_trigger/workers'),
+const BrandTrigger = {
+  ...require('../../../lib/models/Trigger/brand_trigger/workers').test,
   ...require('../../../lib/models/Trigger/brand_trigger/create'),
   ...require('../../../lib/models/Trigger/brand_trigger/get'),
 }
-const Campaign = {
-  ...require('../../../lib/models/Email/campaign/get.js'),
-  ...require('../../../lib/models/Email/campaign/create'),
-}
+const Campaign = require('../../../lib/models/Email/campaign/get.js')
 const Contact = {
   ...require('../../../lib/models/Contact/manipulate'),
   ...require('../../../lib/models/Contact/get'),
@@ -29,8 +25,6 @@ const { createContext, handleJobs } = require('../helper')
 const BrandTemplate = require('../../../lib/models/Template/brand/get')
 
 const BIRTHDAY = moment.utc().add(3, 'days').startOf('day').add(-20, 'years')
-
-const BrandTrigger = { ...BrandTriggerModel, ...BrandTriggerModel.test }
 
 let brand
 const template = {
@@ -119,7 +113,7 @@ async function createAndUpdateBrandTrigger() {
     event_type: 'birthday',
   })
   expect(triggers.length).to.be.eql(1)
-  const campaigns = await Campaign.getByBrand(brand.id)
+  const campaigns = await Campaign.getByBrand(brand.id, { havingDueAt: null })
   expect(campaigns.length).to.eql(1)
 }
 
@@ -146,6 +140,7 @@ async function createDateAttributes() {
   const campaigns = await Campaign.getByBrand(brand.id)
   expect(campaigns.length).to.eql(1)
   const triggers = await Trigger.filter({
+    deleted_at: null,
     brand: brand.id,
     event_type: 'birthday',
   })
@@ -179,8 +174,8 @@ async function deleteDateAttributes() {
   const brandTriggerId = await BrandTrigger.insert(bt)
   await BrandTrigger.updateTriggersHandler(brandTriggerId, true)
   await BrandTrigger.dateAttributesDeleted({ attributes, created_by: user.id })
-  console.log('here')
   const triggersAfterDelete = await Trigger.filter({
+    deleted_at: null,
     brand: brand.id,
     event_type: 'birthday',
   })
@@ -190,7 +185,7 @@ async function deleteDateAttributes() {
 async function mergeContacts() {
   const user = await UserHelper.TestUser()
   const contact1 = await createContact(true)
-  const contact2 = await createContact()
+  const contact2 = await createContact(true)
   // @ts-ignore
   const brandTemplates = await BrandTemplate.getForBrands({ brands: [brand.id] })
   const bt = {
