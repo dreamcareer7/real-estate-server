@@ -6,11 +6,11 @@ const Trigger = {
   ...require('../../../lib/models/Trigger/filter.js'),
   ...require('../../../lib/models/Trigger/get.js'),
 }
-const BrandTrigger = {
+const BrandTriggerModel = {
   ...require('../../../lib/models/Trigger/brand_trigger/workers'),
   ...require('../../../lib/models/Trigger/brand_trigger/create'),
   ...require('../../../lib/models/Trigger/brand_trigger/get'),
-}.test
+}
 const Campaign = {
   ...require('../../../lib/models/Email/campaign/get.js'),
   ...require('../../../lib/models/Email/campaign/create'),
@@ -29,6 +29,8 @@ const { createContext, handleJobs } = require('../helper')
 const BrandTemplate = require('../../../lib/models/Template/brand/get')
 
 const BIRTHDAY = moment.utc().add(3, 'days').startOf('day').add(-20, 'years')
+
+const BrandTrigger = { ...BrandTriggerModel, ...BrandTriggerModel.test }
 
 let brand
 const template = {
