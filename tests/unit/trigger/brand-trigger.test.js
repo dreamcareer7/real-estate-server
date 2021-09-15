@@ -1,7 +1,6 @@
 const moment = require('moment-timezone')
 const { expect } = require('chai')
 
-const db = require('../../../lib/utils/db.js')
 const Trigger = {
   ...require('../../../lib/models/Trigger/create'),
   ...require('../../../lib/models/Trigger/filter.js'),
@@ -92,17 +91,6 @@ async function updateNonExistingBrandTrigger() {
   expect(result).to.be.undefined
 }
 
-function insertBrandTriggerInDB(brandTrigger) {
-  return db.insert('trigger/brand_trigger/upsert', [
-    brandTrigger.brand,
-    brandTrigger.created_by,
-    brandTrigger.template,
-    brandTrigger.template_instance,
-    brandTrigger.event_type,
-    brandTrigger.wait_for,
-    brandTrigger.subject,
-  ])
-}
 async function createAndUpdateBrandTrigger() {
   const user = await UserHelper.TestUser()
   await createContact(true)
@@ -120,7 +108,7 @@ async function createAndUpdateBrandTrigger() {
     created_at: Number(new Date()),
     updated_at: 0,
   }
-  const brandTriggerId = await insertBrandTriggerInDB(bt)
+  const brandTriggerId = await BrandTrigger.insert(bt)
   await BrandTrigger.updateTriggersHandler(brandTriggerId, true)
   const brandTrigger = await BrandTrigger.get(brandTriggerId)
   expect(brandTrigger.id).to.be.eql(brandTriggerId)
@@ -151,7 +139,7 @@ async function createDateAttributes() {
     created_at: Number(new Date()),
     updated_at: 0,
   }
-  await insertBrandTriggerInDB(bt)
+  await BrandTrigger.insert(bt)
   await BrandTrigger.dateAttributesCreated({ brand: brand.id, attributes })
   const campaigns = await Campaign.getByBrand(brand.id)
   expect(campaigns.length).to.eql(1)
@@ -186,7 +174,7 @@ async function deleteDateAttributes() {
     created_at: Number(new Date()),
     updated_at: 0,
   }
-  const brandTriggerId = await insertBrandTriggerInDB(bt)
+  const brandTriggerId = await BrandTrigger.insert(bt)
   await BrandTrigger.updateTriggersHandler(brandTriggerId, true)
   await BrandTrigger.dateAttributesDeleted({ attributes, created_by: user.id })
   console.log('here')
@@ -215,7 +203,7 @@ async function mergeContacts() {
     created_at: Number(new Date()),
     updated_at: 0,
   }
-  const brandTriggerId = await insertBrandTriggerInDB(bt)
+  const brandTriggerId = await BrandTrigger.insert(bt)
   await BrandTrigger.updateTriggersHandler(brandTriggerId, true)
   await BrandTrigger.contactsMerged({
     brand_id: brand.id,
