@@ -216,9 +216,79 @@ async function mergeContacts() {
   expect(triggerIds.length).is.eql(1)
 }
 
-describe('Trigger', () => {
+describe('BrandTrigger/workers', () => {
   createContext()
   beforeEach(setup)
+
+  context('.updateTriggersHandler()', () => {
+    // lib/models/Trigger/brand_trigger/workers.js:184-187
+    it('doesn\'t throw when brand trigger ID is missing')
+
+    // lib/models/Trigger/brand_trigger/workers.js:189-196
+    context('doesn\'t delete...', () => {
+      it('non-email triggers')
+      it('flow triggers')
+      it('effectively executed triggers')      
+    })
+    it('deletes all active *email* triggers of desired *event type*')
+
+    // lib/models/Trigger/brand_trigger/workers.js:198-206
+    context('doesn\'t create campaign for a contact...', () => {
+      it('having no email')
+      it('of another brand')
+      it('has no value for desired attribute type')
+      it('having active email trigger on desired attribute type')
+    })
+    it('creates campaign for *suitable* contacts')
+
+    // lib/models/Trigger/brand_trigger/workers.js:198-207
+    it('creates email triggers for suitable contacts on desired attribute type')
+  })
+
+  context('.dateAttributesCreated()', () => {
+    // lib/models/Trigger/brand_trigger/workers.js:229-232
+    it('doesn\'t throw when brand trigger ID is missing')
+
+    // lib/models/Trigger/brand_trigger/workers.js:229-232
+    context('doesn\'t create campaign for...', () => {
+      it('attributes having active trigger')
+      it('attribute types having no related brand trigger')
+    })
+
+    // lib/models/Trigger/brand_trigger/workers.js:243-246
+    it('creates email triggers for contacts having desired attribute type')
+  })
+
+  context('.dateAttributesDeleted()', () => {
+    // lib/models/Trigger/brand_trigger/workers.js:256-264
+    context('doesn\'t delete...', () => {
+      it('flow triggers')
+      it('non-email triggers')
+      it('triggers of other contacts')
+      it('triggers of other attribute type')
+      it('effectively executed triggers')
+    })
+    it('deletes active email triggers of the contacts')
+  })
+
+  context('.contactsMerged', () => {
+    // lib/models/Trigger/brand_trigger/workers.js:275-278
+    it('doesn\'t throw when brand trigger ID is missing')
+
+    context('doesn\'t create campaign for...', () => {
+      it('attribute types having no related brand trigger')
+      
+      // lib/models/Trigger/brand_trigger/workers.js:280-284
+      it('other contacts')
+
+      // lib/models/Trigger/brand_trigger/workers.js:305-306
+      it('attribute types already have active trigger')
+    })
+
+    // lib/models/Trigger/brand_trigger/workers.js:313-316
+    it('creates email triggers for merged contacts on suitable attribute types')
+  })
+  
 
   it('should return undefined', updateNonExistingBrandTrigger)
   it('should create a brand trigger successfully', createAndUpdateBrandTrigger)
