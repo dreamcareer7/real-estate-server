@@ -21,7 +21,7 @@ const Context = require('../../../lib/models/Context')
 const BrandHelper = require('../brand/helper')
 const { attributes } = require('../contact/helper')
 const UserHelper = require('../user/helper')
-const { createContext, handleJobs } = require('../helper')
+const { createContext } = require('../helper')
 const BrandTemplate = require('../../../lib/models/Template/brand/get')
 
 const BIRTHDAY = moment.utc().add(3, 'days').startOf('day').add(-20, 'years')
@@ -54,8 +54,6 @@ async function setup() {
   brand = await createBrand()
 
   Context.set({ user, brand })
-
-  //await handleJobs()
 }
 
 async function createContact(birthday) {
@@ -76,8 +74,6 @@ async function createContact(birthday) {
     user.id,
     brand.id
   )
-
-  //await handleJobs()
 
   return Contact.get(id)
 }
