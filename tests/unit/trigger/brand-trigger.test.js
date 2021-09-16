@@ -226,7 +226,7 @@ describe('BrandTrigger/workers', () => {
       it('flow triggers')
       it('effectively executed triggers')      
     })
-    it('deletes all active *email* triggers of desired *event type*')
+    it('deletes all active email triggers of desired event type')
 
     // lib/models/Trigger/brand_trigger/workers.js:198-206
     context('doesn\'t create campaign for a contact...', () => {
@@ -235,7 +235,7 @@ describe('BrandTrigger/workers', () => {
       it('has no value for desired attribute type')
       it('having active email trigger on desired attribute type')
     })
-    it('creates campaign for *suitable* contacts')
+    it('creates campaign for suitable contacts')
 
     // lib/models/Trigger/brand_trigger/workers.js:198-207
     it('creates email triggers for suitable contacts on desired attribute type')
@@ -267,7 +267,7 @@ describe('BrandTrigger/workers', () => {
     it('deletes active email triggers of the contacts')
   })
 
-  context('.contactsMerged', () => {
+  context('.contactsMerged()', () => {
     // lib/models/Trigger/brand_trigger/workers.js:275-278
     it('doesn\'t throw when brand trigger ID is missing')
 
