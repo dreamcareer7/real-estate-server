@@ -55,7 +55,7 @@ async function setup() {
 
   Context.set({ user, brand })
 
-  await handleJobs()
+  //await handleJobs()
 }
 
 async function createContact(birthday) {
@@ -69,7 +69,7 @@ async function createContact(birthday) {
           first_name: 'John',
           last_name: 'Doe',
           email: 'john@doe.com',
-          birthday: birthday ? BIRTHDAY.unix() : null,
+          ...(birthday ? { birthday: BIRTHDAY.unix() } : null),
         }),
       },
     ],
@@ -77,7 +77,7 @@ async function createContact(birthday) {
     brand.id
   )
 
-  await handleJobs()
+  //await handleJobs()
 
   return Contact.get(id)
 }
@@ -137,7 +137,7 @@ async function createDateAttributes() {
   }
   await BrandTrigger.insert(bt)
   await BrandTrigger.dateAttributesCreated({ brand: brand.id, attributes })
-  const campaigns = await Campaign.getByBrand(brand.id)
+  const campaigns = await Campaign.getByBrand(brand.id, { havingDueAt: null })
   expect(campaigns.length).to.eql(1)
   const triggers = await Trigger.filter({
     deleted_at: null,
