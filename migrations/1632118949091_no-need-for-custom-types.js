@@ -2,9 +2,9 @@ const db = require('../lib/utils/db')
 
 const migrations = [
   'BEGIN',
-  'DROP TYPE analytics.deal_visibility',
   'DROP MATERIALIZED VIEW analytics.deals',
-  
+  'DROP TYPE analytics.deal_visibility',
+
   `CREATE MATERIALIZED VIEW analytics.deals AS
   WITH ct AS (
     SELECT * FROM
