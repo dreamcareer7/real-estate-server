@@ -1,4 +1,6 @@
 const _ = require('lodash')
+const parser = require('parse-address')
+
 const Brand = require('../../../lib/models/Brand')
 const BrandRole = require('../../../lib/models/Brand/role/save')
 
@@ -67,6 +69,44 @@ const update = async offices => {
   ])
 }
 
+const UPDATE_SETTINGS = `
+WITH data AS (
+ SELECT * FROM json_to_recordset($1)
+ as input(id INT, address JSONB)
+ JOIN de.offices ON input.id = de.offices.id
+)
+UPDATE brand_settings SET
+  address = JSON_TO_STDADDR(data.address)
+FROM data
+WHERE brand_settings.brand = data.brand`
+
+const updateSettings = async offices => {
+  const mapped = offices.map(office => {
+    const { address } = office
+    const parsed = parser.parseLocation(address)
+
+    return {
+      id: office.id,
+      address: {
+        house_num: parsed.number,
+        predir: parsed.prefix,
+        pretype: parsed.type,
+        name: parsed.street,
+        suftype: parsed.suffix,
+        city: parsed.city || office.city,
+        state: parsed.state || office.state,
+        country: parsed.country,
+        postcode: parsed.zip || office.zip,
+        unit: parsed.sec_unit_num
+      }
+    }
+  })
+
+  await db.executeSql.promise(UPDATE_SETTINGS, [
+    JSON.stringify(mapped)
+  ])
+}
+
 const UPDATE_ADMINS = `
 WITH admins AS (
   SELECT input.* FROM json_to_recordset($1) AS input(username TEXT, office INT)
@@ -125,6 +165,7 @@ const syncAdmins = async offices => {
 const syncOffices = async offices => {
   await createNew(offices)
   await update(offices)
+  await updateSettings(offices)
 
   await syncAdmins(offices)
 }
