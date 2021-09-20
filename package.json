@@ -39,7 +39,7 @@
   "dependencies": {
     "@microsoft/microsoft-graph-client": "^2.2.1",
     "@pm2/pm2-version-check": "^1.0.4",
-    "@rechat/squel": "^5.14.2",
+    "@rechat/squel": "^5.15.0",
     "amanda": "^1.0.1",
     "amqplib": "^0.8.0",
     "async": "^1.5.2",
