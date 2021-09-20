@@ -7,10 +7,10 @@ CREATE MATERIALIZED VIEW analytics.deals AS
           deals.id,
           deals.created_at,
           deals.deal_type,
+          deals.faired_at,
           deals.listing,
           deals.brand,
           deals.title,
-          deals.faired_at,
           brands_property_types.label as property_type
         FROM
           deals
@@ -34,6 +34,7 @@ CREATE MATERIALIZED VIEW analytics.deals AS
           real_deals.created_at as deal_created_at,
           deals_roles.user,
           real_deals.deal_type,
+          real_deals.faired_at,
           real_deals.property_type,
           real_deals.listing,
           real_deals.brand,
@@ -56,6 +57,7 @@ CREATE MATERIALIZED VIEW analytics.deals AS
           ctx.*,
           real_deals.created_at as deal_created_at,
           real_deals.deal_type,
+          real_deals.faired_at,
           real_deals.property_type,
           real_deals.listing,
           real_deals.brand,
@@ -94,6 +96,7 @@ CREATE MATERIALIZED VIEW analytics.deals AS
             ctx.deal AS id,
             ctx.deal_created_at,
             ctx.deal_type,
+            ctx.faired_at,
             ctx.property_type,
             ctx.listing,
             ctx.brand,
@@ -108,6 +111,7 @@ CREATE MATERIALIZED VIEW analytics.deals AS
             agent.deal AS id,
             agent.deal_created_at as created_at,
             agent.deal_type,
+            agent.faired_at,
             agent.property_type,
             agent.listing,
             agent.brand,
