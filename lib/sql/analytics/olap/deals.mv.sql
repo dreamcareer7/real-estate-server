@@ -1,3 +1,6 @@
+## This type is created purely for Metabase, so we can have a drop down filter.
+CREATE TYPE analytics.deal_visibility AS ENUM('Draft', 'Published');
+
 CREATE MATERIALIZED VIEW analytics.deals AS
   WITH ct AS (
     SELECT * FROM
@@ -187,7 +190,12 @@ CREATE MATERIALIZED VIEW analytics.deals AS
   SELECT ct.id,
     ct.created_at,
     ct.deal_type,
-    ct.faired_at IS NOT NULL as is_draft,
+    (
+      CASE 
+        WHEN ct.faired_at IS NULL THEN 'Draft'::analytics.deal_visibility
+        ELSE                           'Published'::analytics.deal_visibility
+      END
+    ) as visibility,
     ct.property_type,
     ct.listing,
     ct.brand,

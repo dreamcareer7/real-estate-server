@@ -3,7 +3,10 @@ const db = require('../lib/utils/db')
 const migrations = [
   'BEGIN',
   'DROP MATERIALIZED VIEW analytics.deals',
-  `CREATE MATERIALIZED VIEW analytics.deals AS
+  
+  `CREATE TYPE analytics.deal_visibility AS ENUM('Draft', 'Published');
+
+CREATE MATERIALIZED VIEW analytics.deals AS
   WITH ct AS (
     SELECT * FROM
     crosstab($$
@@ -12,10 +15,10 @@ const migrations = [
           deals.id,
           deals.created_at,
           deals.deal_type,
+          deals.faired_at,
           deals.listing,
           deals.brand,
           deals.title,
-          deals.faired_at,
           brands_property_types.label as property_type
         FROM
           deals
@@ -39,6 +42,7 @@ const migrations = [
           real_deals.created_at as deal_created_at,
           deals_roles.user,
           real_deals.deal_type,
+          real_deals.faired_at,
           real_deals.property_type,
           real_deals.listing,
           real_deals.brand,
@@ -61,6 +65,7 @@ const migrations = [
           ctx.*,
           real_deals.created_at as deal_created_at,
           real_deals.deal_type,
+          real_deals.faired_at,
           real_deals.property_type,
           real_deals.listing,
           real_deals.brand,
@@ -99,6 +104,7 @@ const migrations = [
             ctx.deal AS id,
             ctx.deal_created_at,
             ctx.deal_type,
+            ctx.faired_at,
             ctx.property_type,
             ctx.listing,
             ctx.brand,
@@ -113,6 +119,7 @@ const migrations = [
             agent.deal AS id,
             agent.deal_created_at as created_at,
             agent.deal_type,
+            agent.faired_at,
             agent.property_type,
             agent.listing,
             agent.brand,
@@ -188,7 +195,12 @@ const migrations = [
   SELECT ct.id,
     ct.created_at,
     ct.deal_type,
-    ct.faired_at IS NOT NULL as is_draft,
+    (
+      CASE 
+        WHEN ct.faired_at IS NULL THEN 'Draft'::analytics.deal_visibility
+        ELSE                           'Published'::analytics.deal_visibility
+      END
+    ) as visibility,
     ct.property_type,
     ct.listing,
     ct.brand,
