@@ -10,6 +10,7 @@ listing_settings AS (
 
 SELECT 'compact_listing' AS TYPE,
        listings.id AS id,
+       listings.mls,
        EXTRACT(EPOCH FROM listings.created_at) AS created_at,
        EXTRACT(EPOCH FROM listings.updated_at) AS updated_at,
        EXTRACT(EPOCH FROM listings.deleted_at) AS deleted_at,
@@ -93,7 +94,7 @@ SELECT 'compact_listing' AS TYPE,
           'street_number', addresses.street_number,
           'street_name', addresses.street_name,
           'city', addresses.city,
-          'state', addresses.state,
+          'state', addresses.state_code,
           'postal_code', addresses.postal_code,
           'neighborhood', addresses.neighborhood,
           'street_suffix', addresses.street_suffix,
@@ -109,16 +110,17 @@ SELECT 'compact_listing' AS TYPE,
           (
             SELECT ARRAY_TO_STRING
             (
-              ARRAY[
-                street_number,
-                street_dir_prefix,
-                street_name,
-                street_suffix,
+              array_remove(ARRAY[
+                NULLIF(street_number, ''),
+                NULLIF(street_dir_prefix, ''),
+                NULLIF(street_name, ''),
+                NULLIF(street_suffix, ''),
+                NULLIF(street_dir_suffix, ''),
                 CASE
                   WHEN addresses.unit_number IS NULL THEN NULL
                   WHEN addresses.unit_number = '' THEN NULL
                   ELSE 'Unit ' || addresses.unit_number END
-              ], ' ', NULL
+              ], NULL), ' ', NULL
             )
           )
        ) AS address,

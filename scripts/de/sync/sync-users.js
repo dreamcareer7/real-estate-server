@@ -24,7 +24,8 @@ SELECT
     twitter,
     region,
     offices,
-    de.regions.timezone as timezone
+    de.regions.timezone as timezone,
+    designation
   FROM json_to_recordset($1)
   as input(
     username TEXT,
@@ -44,6 +45,7 @@ SELECT
     instagram TEXT,
     twitter TEXT,
     region TEXT,
+    designation TEXT,
     offices jsonb
   )
   JOIN de.regions ON input.region = de.regions.name`
@@ -97,6 +99,7 @@ saved AS (
     twitter,
     user_type,
     timezone,
+    designation,
     agent
   )
   SELECT
@@ -114,6 +117,7 @@ saved AS (
     twitter,
     user_type,
     timezone,
+    designation,
     (
       SELECT id FROM agents WHERE mls::text = data.mls AND LOWER(mlsid) = LOWER(data.mlsid)
       ORDER BY status = 'Active', matrix_modified_dt
@@ -134,6 +138,7 @@ saved AS (
       instagram = EXCLUDED.instagram,
       twitter = EXCLUDED.twitter,
       website = EXCLUDED.website,
+      designation = EXCLUDED.designation,
       agent = COALESCE(users.agent, EXCLUDED.agent)
 
   RETURNING id, email
@@ -222,7 +227,20 @@ const setPhone = user => {
   if (user.mlsSystem === 'LIMO')
     user.mlsSystem = 'REBNY'
 
-  console.log(user.email, user.mlsSystem, user.rbnyAgentId, mlsid)
+  if (user.designation === 'LSA')
+    user.designation = 'Licensed Real Estate Salesperson'
+
+  if (user.designation === 'LBA')
+    user.designation = 'Licensed Associate Real Estate Broker'
+
+  if (user.designation === 'BA')
+    user.designation = 'Broker Associate'
+
+  if (user.designation === 'RA')
+    user.designation = 'Realtor Associate'
+
+  if (user.designation === 'None')
+    user.designation = null
 
   return {
     ...user,
