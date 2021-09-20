@@ -28,7 +28,7 @@ $$
       (SELECT regexp_matches(listings.mls_area_major, E'[0-9]+'))[1]::int as mls_area_major,
       (SELECT regexp_matches(listings.mls_area_minor, E'[0-9]+'))[1]::int as mls_area_minor,
       properties.square_meters,
-      properties.bedroom_count,
+      properties.bedroom_count,      
       properties.half_bathroom_count,
       properties.full_bathroom_count,
       properties.property_type,
@@ -84,8 +84,11 @@ $$
     listings.co_list_agent_mui,
     listings.selling_agent_mui,
     listings.co_selling_agent_mui,
-    listings.public_display
-
+    listings.public_display,
+    properties.lot_size_area,
+    properties.bathroom_count,
+    listings.list_date,
+    
     FROM listings
     JOIN
       properties  ON listings.property_id = properties.id
