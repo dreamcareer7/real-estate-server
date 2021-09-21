@@ -8,7 +8,7 @@ WITH dr AS (
 
     agents.mlsid as mlsid,
 
-    COALESCE(deals_roles.agent, users.agent) AS agent,
+    deals_roles.agent AS agent,
 
     STDADDR_TO_JSON(deals_roles.current_address) AS current_address,
     STDADDR_TO_JSON(deals_roles.future_address)  AS future_address,
@@ -35,31 +35,11 @@ WITH dr AS (
         ], ' ', NULL
       )
     END
-    ) as legal_full_name,
+    ) as legal_full_name
 
-    bw.agent_id as agent_brokerwolf_id,
-    (
-    SELECT brokerwolf_id FROM brokerwolf_contact_types
-    WHERE roles @> ARRAY[deals_roles.role] AND roles IS NOT NULL
-    ) as brokerwolf_contact_type
   FROM deals_roles
-  LEFT JOIN users  ON deals_roles.user = users.id
-  LEFT JOIN agents ON users.agent = agents.id OR deals_roles.agent = agents.id
-  LEFT JOIN brokerwolf_agents_boards bw ON (
-    agents.mlsid = bw.mls_id
-    OR
-    /*
-    * In some cases, for example, the agent being a commercial one
-    * they don't have NTREIS accounts.
-    * We still need to make the connection.
-    * We use email address.
-    * So the email address needs to be added to WolfConnect
-    */
-    (
-      users.email = bw.mls_id
-      AND users.email_confirmed IS TRUE
-    )
-  )
+  LEFT JOIN agents ON deals_roles.agent = agents.id
+
   WHERE deals_roles.id = ANY($1::uuid[])
   ORDER BY deals_roles.id
 )
