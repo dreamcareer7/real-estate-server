@@ -10,5 +10,3 @@ WHERE
     public_display IS TRUE
     OR agents.id = $2::uuid
   )
-ORDER BY
-  t.ord
