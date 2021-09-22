@@ -263,7 +263,7 @@ describe('BrandTrigger/workers', () => {
     const triggers = await Trigger.filter({
       deleted_at: null,
       brand: brand.id,
-      event_type: 'birthday',
+      event_type: ['birthday'],
     })
     expect(triggers.length).to.eql(1)
   })
@@ -298,7 +298,7 @@ describe('BrandTrigger/workers', () => {
     const triggersAfterDelete = await Trigger.filter({
       deleted_at: null,
       brand: brand.id,
-      event_type: 'birthday',
+      event_type: ['birthday'],
     })
     expect(triggersAfterDelete.length).is.eql(0)
   })
@@ -332,7 +332,7 @@ describe('BrandTrigger/workers', () => {
     })
     const triggerIds = await Trigger.filter({
       brand: brand.id,
-      event_type: 'birthday',
+      event_type: ['birthday'],
       contacts: [contact1.id],
     })
     expect(triggerIds.length).is.eql(1)
