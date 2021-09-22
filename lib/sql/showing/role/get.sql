@@ -7,6 +7,7 @@ SELECT
   showing,
   role,
   "user" AS "user_id",
+  agent AS agent_id,
   brand,
   confirm_notification_type::text[],
   cancel_notification_type::text[],

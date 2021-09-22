@@ -3,6 +3,7 @@ INSERT INTO showings_roles (
   showing,
   role,
   "user",
+  agent,
   brand,
   can_approve,
   confirm_notification_type,
@@ -18,6 +19,12 @@ INSERT INTO showings_roles (
   COALESCE(sr.user, (
     SELECT id FROM users WHERE LOWER(users.email) = LOWER(sr.email)
   )),
+  COALESCE(sr.agent, (
+    SELECT ua.agent FROM users AS u WHERE LOWER(u.email) = LOWER(sr.email)
+      JOIN users_agents AS ua ON ua.user = u.id
+      ORDER BY ua.id
+      LIMIT 1
+  )),
   brand,
   can_approve,
   confirm_notification_type,
@@ -30,6 +37,7 @@ FROM
   json_to_recordset($3::json) AS sr (
     role deal_role,
     "user" uuid,
+    agent uuid,
     brand uuid,
     can_approve boolean,
     confirm_notification_type notification_delivery_type[],
