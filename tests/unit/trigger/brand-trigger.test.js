@@ -1,13 +1,20 @@
 const moment = require('moment-timezone')
 const { expect } = require('chai')
 
+const Flow = require ('../../../lib/models/Flow')
+const Template = require('../../../lib/models/Template')
+const TemplateInstance = require('../../../lib/models/Template/instance')
 const Trigger = {
   ...require('../../../lib/models/Trigger/filter.js'),
   ...require('../../../lib/models/Trigger/get'),
   ...require('../../../lib/models/Trigger/create'),
 }
-const BrandEvent = require('../../../lib/models/Brand/event/index')
-const BrandFlow = require('../../../lib/models/Flow/index')
+const BrandEvent = require('../../../lib/models/Brand/event')
+const BrandFlow = {
+  ...require('../../../lib/models/Brand/flow/get'),
+  ...require('../../../lib/models/Brand/flow/create'),
+}
+const BrandFlowStep = require('../../../lib/models/Brand/flow_step/get')
 const BrandTrigger = {
   ...require('../../../lib/models/Trigger/brand_trigger/workers').test, 
   ...require('../../../lib/models/Trigger/brand_trigger/create'), 
@@ -52,6 +59,27 @@ const createBrand = async () => {
     checklists: [],
     contexts: [],
     templates: [template],
+    // flows: [{
+    //   created_by: user.id,
+    //   name: 'Rechat Team Onboarding',
+    //   description: 'The process of on-boarding a new team member',
+    //   steps: [{
+    //     title: 'Send them a test email',
+    //     description: 'Automatically send them a test email to make sure it\'s working',
+    //     wait_for: {days: 1},
+    //     time: '08:00:00',
+    //     order: 2,
+    //     is_automated: true,
+    //     event_type: 'last_step_date',
+    //     email: {
+    //       name: 'Onboarding Email',
+    //       goal: 'Test email for new team members',
+    //       subject: 'Test email from Rechat',
+    //       include_signature: false,
+    //       body: 'Hey, this is a test!',
+    //     }
+    //   }]
+    // }]
   })
 }
 
@@ -145,7 +173,67 @@ describe('BrandTrigger/workers', () => {
         expect(firstTriggerId.length).to.be.eql(1)
       })
 
-      it('flow triggers')
+      it('flow triggers', async () => {
+        const { user, contact } = await createUserAndContact(true)
+        const brandTemplates = await BrandTemplate.getForBrands({ brands: [brand.id] })
+        const templates = await Template.getAll(brandTemplates.map(bt => bt.template))
+        const html = template.html
+        const instance = await TemplateInstance.create({
+          template: templates[0],
+          html,
+          deals: [],
+          contacts: [],
+          listings: [],
+          created_by: user
+        })
+        const brandFlowId = await BrandFlow.create(
+          brand.id,
+          user.id,
+          {
+            created_by: user.id,
+            name: 'TemplateInstance step',
+            description: 'A flow with an template instance email step',
+            steps: [{
+              title: 'Happy birthday email',
+              description: 'Send a customized happy birthday email',
+              wait_for: { days: 1 },
+              time: '08:00:00',
+              order: 1,
+              is_automated: false,
+              event_type: 'last_step_date',
+              template_instance: instance.id
+            }],
+          },
+        )
+        const brandFlows = await BrandFlow.forBrand(brand.id)
+        const [flow] = await Flow.enrollContacts(
+          brand.id,
+          user.id,
+          brandFlowId,
+          Date.now() / 1000,
+          brandFlows[0].steps,
+          [contact.id]
+        )
+        const triggerIds = await Trigger.filter(
+          { deleted_at: null, brand: brand.id }
+        )
+        const bt = {
+          template: brandTemplates[0].id,
+          brand: brand.id,
+          created_by: user.id,
+          event_type: 'birthday',
+          wait_for: -86400,
+          subject: 'birthday mail',
+          id: '1d8f42ea-155f-11ec-82a8-0242ac130003',
+          type: 'birthday',
+          created_at: Number(new Date()),
+          updated_at: 0,
+        }
+        const brandTriggerId = await BrandTrigger.insert(bt)
+        await BrandTrigger.updateTriggersHandler(brandTriggerId, true)
+        const trigger = await Trigger.get(triggerIds[0])
+        expect(Boolean(trigger)).to.be.true
+      })
 
       it('effectively executed triggers')      
     })
