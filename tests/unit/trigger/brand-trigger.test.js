@@ -138,8 +138,6 @@ describe('BrandTrigger/workers', () => {
         const firstTriggerId = await Trigger.filter(
           {deleted_at: null, brand: brand.id, action: ['create_event']}
         )
-        const triggers = await Trigger.getAll(firstTriggerId)
-        console.log(triggers)
         expect(firstTriggerId.length).to.be.eql(1)
       })
       it('flow triggers')
