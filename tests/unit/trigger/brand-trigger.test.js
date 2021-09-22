@@ -7,6 +7,7 @@ const Trigger = {
   ...require('../../../lib/models/Trigger/create'),
 }
 const BrandEvent = require('../../../lib/models/Brand/event/index')
+const BrandFlow = require('../../../lib/models/Flow/index')
 const BrandTrigger = {
   ...require('../../../lib/models/Trigger/brand_trigger/workers').test, 
   ...require('../../../lib/models/Trigger/brand_trigger/create'), 
@@ -95,10 +96,13 @@ describe('BrandTrigger/workers', () => {
 
   context('.updateTriggersHandler()', () => {
     // lib/models/Trigger/brand_trigger/workers.js:184-187
-    it('doesn\'t throw when brand trigger ID is missing')
+    it('doesn\'t throw when brand trigger ID is missing', async() => {
+      BrandTrigger.updateTriggersHandler()
+    })
 
     // lib/models/Trigger/brand_trigger/workers.js:189-196
     context('doesn\'t delete...', () => {
+
       it('non-email triggers', async()=> {
         const { user, contact } = await createUserAndContact(true)
         const brandEventIdsArray = await BrandEvent.createAll(
@@ -140,7 +144,9 @@ describe('BrandTrigger/workers', () => {
         )
         expect(firstTriggerId.length).to.be.eql(1)
       })
+
       it('flow triggers')
+
       it('effectively executed triggers')      
     })
     it('deletes all active email triggers of desired event type')
