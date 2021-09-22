@@ -125,9 +125,9 @@ describe('BrandTrigger/workers', () => {
           template: brandTemplates[0].id,
           brand: brand.id,
           created_by: user.id,
-          event_type: 'birthday',
+          event_type: 'anniversary',
           wait_for: -86400,
-          subject: 'birthday mail',
+          subject: 'anniversary mail',
           id: '1d8f42ea-155f-11ec-82a8-0242ac130003',
           type: 'birthday',
           created_at: Number(new Date()),
@@ -136,7 +136,7 @@ describe('BrandTrigger/workers', () => {
         const brandTriggerId = await BrandTrigger.insert(bt)
         await BrandTrigger.updateTriggersHandler(brandTriggerId, true)
         const firstTriggerId = await Trigger.filter(
-          {deleted_at: null, brand: brand.id, event_type: ['anniversary']}
+          {deleted_at: null, brand: brand.id, action: ['create_event']}
         )
         const triggers = await Trigger.getAll(firstTriggerId)
         console.log(triggers)
