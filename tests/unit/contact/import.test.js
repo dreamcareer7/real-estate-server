@@ -15,7 +15,6 @@ const User = require('../../../lib/models/User/get')
 
 const BrandHelper = require('../brand/helper')
 
-const mappings = require('../../functional/suites/data/csv_mappings')
 const contacts_json = require('../analytics/data/contacts')
 
 let user, brand
@@ -48,12 +47,67 @@ async function testImportFromCsv() {
     public: false
   })
 
+  const mappings = require('../../functional/suites/data/csv_mappings')
   ImportWorker.import_csv(user.id, brand.id, file.id, user.id, mappings)
 
   await handleJobs()
 
   const { total } = await Contact.filter(brand.id, [], { limit: 1 })
   expect(total).to.be.equal(192)
+}
+
+async function testCsvFullAddressColumns() {
+  const file = await AttachedFile.saveFromStream({
+    stream: fs.createReadStream(path.resolve(__dirname, '../../functional/suites/data/contacts-full-address-column.csv')),
+    filename: 'contacts.csv',
+    user,
+    path: user.id + '-' + Date.now().toString(),
+    relations: [
+      {
+        role: 'Brand',
+        role_id: brand.id
+      }
+    ],
+    public: false
+  })
+
+  const mappings = require('./data/fulladdress-mapping.json')
+  ImportWorker.import_csv(user.id, brand.id, file.id, user.id, mappings)
+
+  await handleJobs()
+
+  const { total, ids } = await Contact.filter(brand.id, [])
+  expect(total).to.be.equal(1)
+
+  const contact = await Contact.get(ids[0])
+  expect(contact.address).not.to.be.null
+}
+
+async function testCsvMultiTagColumn() {
+  const file = await AttachedFile.saveFromStream({
+    stream: fs.createReadStream(path.resolve(__dirname, '../../functional/suites/data/contacts-multi-tag-column.csv')),
+    filename: 'contacts.csv',
+    user,
+    path: user.id + '-' + Date.now().toString(),
+    relations: [
+      {
+        role: 'Brand',
+        role_id: brand.id
+      }
+    ],
+    public: false
+  })
+
+  const mappings = require('./data/multi-tag-mapping.json')
+  ImportWorker.import_csv(user.id, brand.id, file.id, user.id, mappings)
+
+  await handleJobs()
+
+  const { total, ids } = await Contact.filter(brand.id, [])
+  expect(total).to.be.equal(1)
+
+  const contact = await Contact.get(ids[0])
+  expect(contact.tags).to.have.members(['Tag1','Tag2','Tag3'])
 }
 
 async function testImportFromJson() {
@@ -71,6 +125,8 @@ describe('Contact', () => {
 
   describe('Import', () => {
     it('should import contacts from csv', testImportFromCsv)
+    it('should parse and import full address columns', testCsvFullAddressColumns)
+    it('should parse and import comma-separated multi valued columns', testCsvMultiTagColumn)
     it('should import contacts from json', testImportFromJson)
   })
 })
