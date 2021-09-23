@@ -13,7 +13,7 @@ export interface ShowingRole {
   showing: UUID;
   role: TDealRole;
   user_id: UUID;
-  agent_id: IAgent['id'];
+  agent_id: IAgent['id'] | null;
   brand: UUID;
   can_approve: boolean;
   confirm_notification_type: NotificationDeliveryType[];
@@ -35,7 +35,7 @@ export interface ShowingRolePopulated {
   user_id: UUID;
   user: IUser;
   agent_id: IAgent['id'];
-  agent: IAgent;
+  agent: IAgent | null;
   brand: UUID;
   can_approve: boolean;
   confirm_notification_type: NotificationDeliveryType[];
