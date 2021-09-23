@@ -34,7 +34,7 @@ const Context = require('../../../lib/models/Context')
 const BrandHelper = require('../brand/helper')
 const { attributes } = require('../contact/helper')
 const UserHelper = require('../user/helper')
-const { createContext } = require('../helper')
+const { createContext, handleJobs } = require('../helper')
 const BrandTemplate = require('../../../lib/models/Template/brand/get')
 
 const BIRTHDAY = moment.utc().add(3, 'days').startOf('day').add(-20, 'years')
@@ -125,7 +125,7 @@ describe('BrandTrigger/workers', () => {
   context('.updateTriggersHandler()', () => {
     // lib/models/Trigger/brand_trigger/workers.js:184-187
     it('doesn\'t throw when brand trigger ID is missing', async() => {
-      BrandTrigger.updateTriggersHandler()
+      await BrandTrigger.updateTriggersHandler()
     })
 
     // lib/models/Trigger/brand_trigger/workers.js:189-196
@@ -142,7 +142,7 @@ describe('BrandTrigger/workers', () => {
           brand_event: brandEventIdsArray[0],
           brand: brand.id,
           created_by: user.id,
-          event_type: 'anniversary',
+          event_type: 'birthday',
           user: user.id,
           contact: contact.id,
           wait_for: -86400,
@@ -150,28 +150,23 @@ describe('BrandTrigger/workers', () => {
         }
       
         // @ts-ignore
-        await Trigger.create([trigger_data])
+        const [triggerId] = await Trigger.create([trigger_data])
         // @ts-ignore
         const brandTemplates = await BrandTemplate.getForBrands({ brands: [brand.id] })
         const bt = {
           template: brandTemplates[0].id,
           brand: brand.id,
           created_by: user.id,
-          event_type: 'anniversary',
+          event_type: 'birthday',
           wait_for: -86400,
           subject: 'anniversary mail',
-          id: '1d8f42ea-155f-11ec-82a8-0242ac130003',
-          type: 'birthday',
-          created_at: Number(new Date()),
-          updated_at: 0,
         }
-        const brandTriggerId = await BrandTrigger.insert(bt)
-        await BrandTrigger.updateTriggersHandler(brandTriggerId, true)
-        const firstTriggerId = await Trigger.filter(
-          {deleted_at: null, brand: brand.id, action: ['create_event']}
-        )
-        expect(firstTriggerId.length).to.be.eql(1)
+        await BrandTrigger.upsert(bt, true)
+        await handleJobs()
+        const firstTrigger = await Trigger.get(triggerId)
+        expect(firstTrigger.deleted_at).to.be.null
       })
+
 
       it('flow triggers', async () => {
         const { user, contact } = await createUserAndContact(true)
@@ -206,7 +201,7 @@ describe('BrandTrigger/workers', () => {
           },
         )
         const brandFlows = await BrandFlow.forBrand(brand.id)
-        const [flow] = await Flow.enrollContacts(
+        await Flow.enrollContacts(
           brand.id,
           user.id,
           brandFlowId,
@@ -224,18 +219,14 @@ describe('BrandTrigger/workers', () => {
           event_type: 'birthday',
           wait_for: -86400,
           subject: 'birthday mail',
-          id: '1d8f42ea-155f-11ec-82a8-0242ac130003',
-          type: 'birthday',
-          created_at: Number(new Date()),
-          updated_at: 0,
         }
-        const brandTriggerId = await BrandTrigger.insert(bt)
-        await BrandTrigger.updateTriggersHandler(brandTriggerId, true)
+        await BrandTrigger.upsert(bt, true)
+        await handleJobs()
         const trigger = await Trigger.get(triggerIds[0])
-        expect(Boolean(trigger)).to.be.true
+        expect(trigger.deleted_at).to.be.null
       })
 
-      it('effectively executed triggers')      
+      it('effectively executed triggers')
     })
     it('deletes all active email triggers of desired event type')
 
@@ -313,13 +304,9 @@ describe('BrandTrigger/workers', () => {
       event_type: 'birthday',
       wait_for: -86400,
       subject: 'birthday mail',
-      id: '1d8f42ea-155f-11ec-82a8-0242ac130003',
-      type: 'birthday',
-      created_at: Number(new Date()),
-      updated_at: 0,
     }
-    const brandTriggerId = await BrandTrigger.insert(bt)
-    await BrandTrigger.updateTriggersHandler(brandTriggerId, true)
+    const brandTriggerId = await BrandTrigger.upsert(bt, true)
+    await handleJobs()
     const brandTrigger = await BrandTrigger.get(brandTriggerId)
     expect(brandTrigger.id).to.be.eql(brandTriggerId)
     const triggers = await Trigger.filter({
@@ -332,7 +319,8 @@ describe('BrandTrigger/workers', () => {
   })
 
   it('should create date attributes', async() => {
-    const { user, contact } = await createUserAndContact(true)
+    // todo
+    const { user, contact } = await createUserAndContact(false)
     const attributes = [{ attribute_type: 'birthday', contact: contact.id, created_by: user.id }]
     // @ts-ignore
     const brandTemplates = await BrandTemplate.getForBrands({ brands: [brand.id] })
@@ -343,10 +331,6 @@ describe('BrandTrigger/workers', () => {
       event_type: 'birthday',
       wait_for: -86400,
       subject: 'birthday mail',
-      id: '1d8f42ea-155f-11ec-82a8-0242ac130003',
-      type: 'birthday',
-      created_at: Number(new Date()),
-      updated_at: 0,
     }
     await BrandTrigger.insert(bt)
     await BrandTrigger.dateAttributesCreated({ brand: brand.id, attributes })
@@ -378,13 +362,11 @@ describe('BrandTrigger/workers', () => {
       event_type: 'birthday',
       wait_for: -86400,
       subject: 'birthday mail',
-      id: '1d8f42ea-155f-11ec-82a8-0242ac130003',
-      type: 'birthday',
-      created_at: Number(new Date()),
-      updated_at: 0,
     }
-    const brandTriggerId = await BrandTrigger.insert(bt)
-    await BrandTrigger.updateTriggersHandler(brandTriggerId, true)
+    await BrandTrigger.upsert(bt, true)
+    await handleJobs()
+    // todo
+    // import contact attribute model and delete a real attribute
     // @ts-ignore
     await BrandTrigger.dateAttributesDeleted({ attributes, created_by: user.id })
     const triggersAfterDelete = await Trigger.filter({
