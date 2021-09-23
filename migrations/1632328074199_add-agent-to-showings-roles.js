@@ -12,9 +12,6 @@ const migrations = [
    UPDATE showings_roles AS sr SET agent = fa.agent
      FROM first_agent AS fa
      WHERE fa.user = sr.user`,
-  // XXX: is it safe to delete all showings_roles where agent is still null?
-  'DELETE FROM showings_roles WHERE agent IS NULL',
-  'ALTER TABLE showings_roles ALTER COLUMN agent SET NOT NULL',
   'COMMIT'
 ]
 
