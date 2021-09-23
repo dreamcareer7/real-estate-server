@@ -34,7 +34,7 @@ export interface ShowingRolePopulated {
   role: TDealRole;
   user_id: UUID;
   user: IUser;
-  agent_id: IAgent['id'];
+  agent_id: IAgent['id'] | null;
   agent: IAgent | null;
   brand: UUID;
   can_approve: boolean;
