@@ -1,3 +1,11 @@
+const db = require('../lib/utils/db')
+
+const migrations = [
+  'BEGIN',
+  'DROP MATERIALIZED VIEW analytics.deals',
+  
+  `CREATE TYPE analytics.deal_visibility AS ENUM('Draft', 'Published');
+
 CREATE MATERIALIZED VIEW analytics.deals AS
   WITH ct AS (
     SELECT * FROM
@@ -189,8 +197,8 @@ CREATE MATERIALIZED VIEW analytics.deals AS
     ct.deal_type,
     (
       CASE 
-        WHEN ct.faired_at IS NULL THEN 'Draft'
-        ELSE                           'Published'
+        WHEN ct.faired_at IS NULL THEN 'Draft'::analytics.deal_visibility
+        ELSE                           'Published'::analytics.deal_visibility
       END
     ) as visibility,
     ct.property_type,
@@ -231,4 +239,23 @@ CREATE MATERIALIZED VIEW analytics.deals AS
   JOIN brands_relations AS br
     ON ct.brand = br.id;
 
-CREATE UNIQUE INDEX analytics_deals_idx ON analytics.deals(id);
+CREATE UNIQUE INDEX analytics_deals_idx ON analytics.deals(id);`,
+  'COMMIT'
+]
+
+
+const run = async () => {
+  const { conn } = await db.conn.promise()
+
+  for(const sql of migrations) {
+    await conn.query(sql)
+  }
+
+  conn.release()
+}
+
+exports.up = cb => {
+  run().then(cb).catch(cb)
+}
+
+exports.down = () => {}
