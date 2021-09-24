@@ -6,7 +6,7 @@
   "scripts": {
     "test": "node tests/functional/run.js --concurrency 20 --report",
     "test:unit": "npx mocha --exit --timeout 15000 tests/unit/**/*.test.js",
-    "start": "node index.js",
+    "start": "npx gulp",
     "workers": "npx pm2 start scripts/workers/ecosystem.config.yaml && npx pm2 logs",
     "docs": "node api_docs/index.js",
     "coverage": "npx nyc node tests/functional/run.js --docs --stop-on-fail --concurrency 20",
@@ -162,6 +162,8 @@
     "eslint-plugin-promise": "^4.3.1",
     "eslint-plugin-standard": "^4.0.1",
     "frisby": "github:emilsedgh/frisby#b74d835",
+    "gulp": "^4.0.2",
+    "gulp-eslint7": "^0.3.2",
     "jasmine-node": "^1.16.2",
     "madge": "^4.0.2",
     "mocha": "^8.4.0",
