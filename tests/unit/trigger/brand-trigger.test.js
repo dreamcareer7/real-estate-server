@@ -394,10 +394,6 @@ describe('BrandTrigger/workers', () => {
       event_type: 'birthday',
       wait_for: -86400,
       subject: 'birthday mail',
-      id: '1d8f42ea-155f-11ec-82a8-0242ac130003',
-      type: 'birthday',
-      created_at: Number(new Date()),
-      updated_at: 0,
     }
     await BrandTrigger.upsert(bt,true)
     await handleJobs()
