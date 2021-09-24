@@ -295,6 +295,7 @@ describe('BrandTrigger/workers', () => {
 
   it('should create a brand trigger successfully', async() => {
     const { user } = await createUserAndContact(true)
+    await handleJobs()
     // @ts-ignore
     const brandTemplates = await BrandTemplate.getForBrands({ brands: [brand.id] })
     const bt = {
@@ -309,18 +310,18 @@ describe('BrandTrigger/workers', () => {
     await handleJobs()
     const brandTrigger = await BrandTrigger.get(brandTriggerId)
     expect(brandTrigger.id).to.be.eql(brandTriggerId)
-    const triggers = await Trigger.filter({
+    const triggerIds = await Trigger.filter({
       brand: brand.id,
       event_type: 'birthday',
     })
-    expect(triggers.length).to.be.eql(1)
+    expect(triggerIds.length).to.be.eql(1)
     const campaigns = await Campaign.getByBrand(brand.id, { havingDueAt: null })
     expect(campaigns.length).to.eql(1)
   })
 
   it('should create date attributes', async() => {
-    // todo
     const { user, contact } = await createUserAndContact(false)
+    await handleJobs()
     const attributes = [{
       attribute_type: 'birthday', 
       contact: contact.id, 
@@ -339,14 +340,14 @@ describe('BrandTrigger/workers', () => {
     }
     await BrandTrigger.upsert(bt, true)
     await handleJobs()
+    await ContactAttribute.create(attributes, user.id, brand.id)
+    await handleJobs()
+    const campaigns = await Campaign.getByBrand(brand.id, { havingDueAt: null })
     const triggerIds = await Trigger.filter({
       deleted_at: null,
       brand: brand.id,
       event_type: ['birthday'],
     })
-    await ContactAttribute.create(attributes, user.id, brand.id)
-    await handleJobs()
-    const campaigns = await Campaign.getByBrand(brand.id, { havingDueAt: null })
     expect(campaigns.length).to.eql(1)
     const trigger = await Trigger.get(triggerIds[0])
     expect(trigger.deleted_at).to.be.null
@@ -354,6 +355,7 @@ describe('BrandTrigger/workers', () => {
 
   it('should delete date attributes', async() => {
     const { user, contact } = await createUserAndContact(true)
+    await handleJobs()
     // @ts-ignore
     const brandTemplates = await BrandTemplate.getForBrands({ brands: [brand.id] })
     const bt = {
@@ -367,8 +369,8 @@ describe('BrandTrigger/workers', () => {
     await BrandTrigger.upsert(bt, true)
     await handleJobs()
     const attributes = await ContactAttribute.getForContacts([contact.id])
-    const attribute = attributes[0]
-    await ContactAttribute.deleteForContact(contact.id, attribute.id, user.id)
+    const birthdayAttribute = attributes.find(attr => attr.attribute_type === 'birthday')
+    await ContactAttribute.deleteForContact(contact.id, birthdayAttribute.id, user.id)
     await handleJobs()
     const triggersAfterDelete = await Trigger.filter({
       deleted_at: null,
@@ -382,6 +384,7 @@ describe('BrandTrigger/workers', () => {
     const user = await UserHelper.TestUser()
     const contact1 = await createContact(false)
     const contact2 = await createContact(true)
+    await handleJobs()
     // @ts-ignore
     const brandTemplates = await BrandTemplate.getForBrands({ brands: [brand.id] })
     const bt = {
@@ -396,14 +399,14 @@ describe('BrandTrigger/workers', () => {
       created_at: Number(new Date()),
       updated_at: 0,
     }
-    const brandTriggerId = await BrandTrigger.insert(bt)
-    await BrandTrigger.updateTriggersHandler(brandTriggerId, true)
+    await BrandTrigger.upsert(bt,true)
+    await handleJobs()
     await Contact.merge([contact1.id], contact2.id, user.id, brand.id)
     await handleJobs()
     const triggerIds = await Trigger.filter({
       brand: brand.id,
       event_type: ['birthday'],
-      contacts: [contact1.id],
+      contacts: [contact2.id],
     })
     expect(triggerIds.length).is.eql(1)
   })
