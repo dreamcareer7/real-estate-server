@@ -830,7 +830,8 @@ function createAsset(cb) {
       `/brands/${results.brand.create.data.id}/assets`,
       {
         file: logo,
-        label: 'Asset Label'
+        label: 'Asset Label',
+        template_type: 'Christmas'
       },
       {
         json: false,
