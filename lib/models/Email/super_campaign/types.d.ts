@@ -3,6 +3,12 @@ export interface SuperCampaignRecipientInput {
   tag: string;
 }
 
+export interface SuperCampaignEmailCampaignInput {
+  brand: UUID;
+  campaign: UUID;
+  super_campaign: UUID;
+}
+
 export interface SuperCampaignRecipient extends IModel {
   brand: UUID;
   tag: string;
@@ -31,7 +37,6 @@ export interface SuperCampaignEmailCampaign {
 export interface SuperCampaignApiInput {
   due_at: string;
   subject: string;
-  include_signature: boolean;
   template_instance: UUID;
   recipients: SuperCampaignRecipientInput[];
 }
@@ -41,6 +46,15 @@ export interface SuperCampaignInput {
   brand: UUID;
   due_at: string;
   subject: string;
-  include_signature: boolean;
   template_instance: UUID;
+}
+
+export interface SuperCampaignStored extends IModel {
+  created_by: UUID;
+  brand: UUID;
+  due_at: number;
+  executed_at: number;
+  subject: string;
+  template_instance: UUID;
+  recipients: UUID[];
 }
