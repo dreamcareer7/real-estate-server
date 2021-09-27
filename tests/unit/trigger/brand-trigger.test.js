@@ -313,7 +313,38 @@ describe('BrandTrigger/workers', () => {
 
     // lib/models/Trigger/brand_trigger/workers.js:198-206
     context('doesn\'t create campaign for a contact...', () => {
-      it('having no email')
+      it('having no email', async() => {
+        const user = await UserHelper.TestUser()
+        await Contact.create(
+          [
+            {
+              user: user.id,
+              attributes: attributes({
+                first_name: 'John',
+                last_name: 'Doe',
+                email: 'john@gmail.com',
+                birthday: BIRTHDAY.unix(),
+              }),
+            },
+          ],
+          user.id,
+          brand.id
+        )
+        const brandTemplates = await BrandTemplate.getForBrands({ brands: [brand.id] })
+        const bt = {
+          template: brandTemplates[0].id,
+          brand: brand.id,
+          created_by: user.id,
+          event_type: 'birthday',
+          wait_for: -86400,
+          subject: 'birthday mail',
+        }
+        await BrandTrigger.upsert(bt, true)
+        await handleJobs()
+        const campaigns = await EmailCampaign.getByUser(user.id)
+        expect(campaigns.filter(campaign => Boolean(!campaign.deleted_at)).length).to.be.eql(0)
+      })
+
       it('of another brand')
       it('has no value for desired attribute type')
       it('having active email trigger on desired attribute type')
