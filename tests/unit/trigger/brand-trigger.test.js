@@ -2,6 +2,10 @@ const moment = require('moment-timezone')
 const { expect } = require('chai')
 
 const ContactAttribute = require('../../../lib/models/Contact/attribute/index')
+const EmailCampaign = {
+  ...require('../../../lib/models/Email/campaign/create'),
+  ...require('../../../lib/models/Email/campaign/get'),
+}
 const Flow = require ('../../../lib/models/Flow')
 const Template = require('../../../lib/models/Template')
 const TemplateInstance = require('../../../lib/models/Template/instance')
@@ -9,6 +13,8 @@ const Trigger = {
   ...require('../../../lib/models/Trigger/filter.js'),
   ...require('../../../lib/models/Trigger/get'),
   ...require('../../../lib/models/Trigger/create'),
+  ...require('../../../lib/models/Trigger/execute'),
+
 }
 const BrandEvent = require('../../../lib/models/Brand/event')
 const BrandFlow = {
@@ -59,27 +65,6 @@ const createBrand = async () => {
     checklists: [],
     contexts: [],
     templates: [template],
-    // flows: [{
-    //   created_by: user.id,
-    //   name: 'Rechat Team Onboarding',
-    //   description: 'The process of on-boarding a new team member',
-    //   steps: [{
-    //     title: 'Send them a test email',
-    //     description: 'Automatically send them a test email to make sure it\'s working',
-    //     wait_for: {days: 1},
-    //     time: '08:00:00',
-    //     order: 2,
-    //     is_automated: true,
-    //     event_type: 'last_step_date',
-    //     email: {
-    //       name: 'Onboarding Email',
-    //       goal: 'Test email for new team members',
-    //       subject: 'Test email from Rechat',
-    //       include_signature: false,
-    //       body: 'Hey, this is a test!',
-    //     }
-    //   }]
-    // }]
   })
 }
 
@@ -226,7 +211,51 @@ describe('BrandTrigger/workers', () => {
         expect(trigger.deleted_at).to.be.null
       })
 
-      it('effectively executed triggers')
+      it('effectively executed triggers', async () => {
+        const { user, contact } = await createUserAndContact(true)
+        await handleJobs()
+        // @ts-ignore
+        const [campaignId] = await EmailCampaign.createMany([{
+          brand: brand.id,
+          created_by: user.id,
+          due_at: null,
+          from: user.id,
+          html: '<div></div>',
+          subject: 'Hello!',
+          to: [{
+            recipient_type: 'Email',
+            email: 'john@doe.com',
+          }],
+        }])
+        const trigger_data = {
+          action: 'schedule_email',
+          brand: brand.id,
+          created_by: user.id,
+          event_type: 'birthday',
+          user: user.id,
+          campaign: campaignId,
+          contact: contact.id,
+          wait_for: -86400,
+          time: '10:00:00',
+        }
+        const [triggerId] = await Trigger.create([trigger_data])
+        await handleJobs()
+        await Trigger.execute(triggerId)
+        await handleJobs()
+        const brandTemplates = await BrandTemplate.getForBrands({ brands: [brand.id] })
+        const bt = {
+          template: brandTemplates[0].id,
+          brand: brand.id,
+          created_by: user.id,
+          event_type: 'birthday',
+          wait_for: -86400,
+          subject: 'birthday mail',
+        }
+        await BrandTrigger.upsert(bt, true)
+        await handleJobs()
+        const trigger = await Trigger.get(triggerId)
+        expect(trigger.deleted_at).not.to.be.null
+      })
     })
     it('deletes all active email triggers of desired event type')
 
