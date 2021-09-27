@@ -340,7 +340,37 @@ describe('BrandTrigger/workers', () => {
       })
 
       it('of another brand', async() => {
-        
+        const { user } = await createUserAndContact(true)
+        const newBrand = await BrandHelper.create({
+          roles: {
+            Admin: [user.id],
+          },
+          checklists: [],
+          contexts: [],
+          templates: [{...template, variant: 'Template41'}],
+        })
+        const brandTemplates = await BrandTemplate.getForBrands({ brands: [brand.id] })
+        const bt1 = {
+          template: brandTemplates[0].id,
+          brand: brand.id,
+          created_by: user.id,
+          event_type: 'birthday',
+          wait_for: -86400,
+          subject: 'birthday mail',
+        }
+        await BrandTrigger.upsert(bt1, true)
+        await handleJobs()
+        const campaignIds = await EmailCampaign.getByBrand(brand.id, { havingDueAt: null })
+          .then(res=> res.map(campaign=>campaign.id))
+        const bt2 = { ...bt1, brand: newBrand.id }
+        await BrandTrigger.upsert(bt2, true)
+        await handleJobs()
+        const campaigns = await EmailCampaign.getAll(campaignIds)
+        expect(
+          campaigns
+            .filter(campaign => !campaign.deleted_at)
+            .length
+        ).to.be.eql(campaignIds.length)
       })
       it('has no value for desired attribute type')
       it('having active email trigger on desired attribute type')
