@@ -1,6 +1,8 @@
 const moment = require('moment-timezone')
 const { expect } = require('chai')
 
+const sql = require('../../../lib/utils/sql')
+
 const ContactAttribute = require('../../../lib/models/Contact/attribute/index')
 const EmailCampaign = {
   ...require('../../../lib/models/Email/campaign/create'),
@@ -242,6 +244,11 @@ describe('BrandTrigger/workers', () => {
         await handleJobs()
         await Trigger.execute(triggerId)
         await handleJobs()
+        await sql.query(`
+          UPDATE triggers
+          SET executed_at = NOW() - INTERVAL '4 DAY'
+          WHERE id = $1
+        `, [triggerId])
         const brandTemplates = await BrandTemplate.getForBrands({ brands: [brand.id] })
         const bt = {
           template: brandTemplates[0].id,
@@ -254,10 +261,55 @@ describe('BrandTrigger/workers', () => {
         await BrandTrigger.upsert(bt, true)
         await handleJobs()
         const trigger = await Trigger.get(triggerId)
-        expect(trigger.deleted_at).not.to.be.null
+        expect(trigger.deleted_at).to.be.null
       })
     })
-    it('deletes all active email triggers of desired event type')
+    it('deletes all active email triggers of desired event type', async() => {
+      const { user, contact } = await createUserAndContact(true)
+      await handleJobs()
+      // @ts-ignore
+      const [campaignId] = await EmailCampaign.createMany([{
+        brand: brand.id,
+        created_by: user.id,
+        due_at: null,
+        from: user.id,
+        html: '<div></div>',
+        subject: 'Hello!',
+        to: [{
+          recipient_type: 'Email',
+          email: 'john@doe.com',
+        }],
+      }])
+      const trigger_data = {
+        action: 'schedule_email',
+        brand: brand.id,
+        created_by: user.id,
+        event_type: 'birthday',
+        user: user.id,
+        campaign: campaignId,
+        contact: contact.id,
+        wait_for: -86400,
+        time: '10:00:00',
+      }
+      const [triggerId] = await Trigger.create([trigger_data])
+      await handleJobs()
+      await Trigger.execute(triggerId)
+      await handleJobs()
+      
+      const brandTemplates = await BrandTemplate.getForBrands({ brands: [brand.id] })
+      const bt = {
+        template: brandTemplates[0].id,
+        brand: brand.id,
+        created_by: user.id,
+        event_type: 'birthday',
+        wait_for: -86400,
+        subject: 'birthday mail',
+      }
+      await BrandTrigger.upsert(bt, true)
+      await handleJobs()
+      const trigger = await Trigger.get(triggerId)
+      expect(trigger.deleted_at).not.to.be.null
+    })
 
     // lib/models/Trigger/brand_trigger/workers.js:198-206
     context('doesn\'t create campaign for a contact...', () => {
