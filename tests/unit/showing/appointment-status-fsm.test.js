@@ -84,7 +84,7 @@ describe('Showing/Appointment/status-fsm', () => {
     })
   })
 
-  context('.updateStatus()', () => {
+  context('.dispatch()', () => {
     it('calls handleAction w/ populated payload')
   })
 })
