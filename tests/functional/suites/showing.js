@@ -309,7 +309,7 @@ function checkAppointmentReceiptSmsForBuyer(cb) {
         {
           to: formatPhoneNumberForDialing(BUYER_PHONE_NUMBER),
           body:
-            `Your showing request for 5020  Junius Street at ${APPOINTMENT_TIME.format(
+            `Your showing request for 5020 Junius Street at ${APPOINTMENT_TIME.format(
               'MMM Do, h:mmA'
             )} has been received.` +
             '\n\n' +
