@@ -77,7 +77,7 @@ async function setup() {
   Context.set({ user, brand })
 }
 
-async function createContact(birthday) {
+async function createUserAndContact(birthdayBool) {
   const user = await UserHelper.TestUser()
 
   const [id] = await Contact.create(
@@ -88,7 +88,7 @@ async function createContact(birthday) {
           first_name: 'John',
           last_name: 'Doe',
           email: 'john@doe.com',
-          ...(birthday ? { birthday: BIRTHDAY.unix() } : null),
+          ...(birthdayBool ? { birthday: BIRTHDAY.unix() } : null),
         }),
       },
     ],
@@ -96,12 +96,7 @@ async function createContact(birthday) {
     brand.id
   )
 
-  return Contact.get(id)
-}
-
-async function createUserAndContact(birthdayBool) {
-  const user = await UserHelper.TestUser()
-  const contact = await createContact(birthdayBool)
+  const contact = await Contact.get(id)
   return { user, contact }
 }
 
@@ -322,7 +317,6 @@ describe('BrandTrigger/workers', () => {
               attributes: attributes({
                 first_name: 'John',
                 last_name: 'Doe',
-                email: 'john@gmail.com',
                 birthday: BIRTHDAY.unix(),
               }),
             },
@@ -345,7 +339,9 @@ describe('BrandTrigger/workers', () => {
         expect(campaigns.filter(campaign => Boolean(!campaign.deleted_at)).length).to.be.eql(0)
       })
 
-      it('of another brand')
+      it('of another brand', async() => {
+        
+      })
       it('has no value for desired attribute type')
       it('having active email trigger on desired attribute type')
     })
@@ -494,8 +490,8 @@ describe('BrandTrigger/workers', () => {
   
   it('should merge contacts', async() => {
     const user = await UserHelper.TestUser()
-    const contact1 = await createContact(false)
-    const contact2 = await createContact(true)
+    const { contact: contact1 } = await createUserAndContact(false)
+    const { contact: contact2 } = await createUserAndContact(true)
     await handleJobs()
     // @ts-ignore
     const brandTemplates = await BrandTemplate.getForBrands({ brands: [brand.id] })
