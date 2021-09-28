@@ -400,7 +400,7 @@ describe('BrandTrigger/workers', () => {
       
       it('having active email trigger on desired attribute type')
     })
-    
+
     it('creates campaign and trigger for suitable contacts', async() => {
       const { user } = await createUserAndContact(true)
       await handleJobs()
@@ -430,7 +430,9 @@ describe('BrandTrigger/workers', () => {
 
   context('.dateAttributesCreated()', () => {
     // lib/models/Trigger/brand_trigger/workers.js:229-232
-    it('doesn\'t throw when brand trigger ID is missing')
+    it('doesn\'t throw when brand trigger ID is missing', async () => {
+      await BrandTrigger.dateAttributesCreated({brand: brand.id, attributes: []})
+    })
 
     // lib/models/Trigger/brand_trigger/workers.js:229-232
     context('doesn\'t create campaign for...', () => {
