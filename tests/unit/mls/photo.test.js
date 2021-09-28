@@ -58,5 +58,5 @@ describe('MLS Photo', () => {
 
   it('should save some photos', savePhoto)
   it('should delete missing photos', deleteMissing)
-  it('should upsert some photos', updateSomePhotos)
+  it('should update some photos', updateSomePhotos)
 })
