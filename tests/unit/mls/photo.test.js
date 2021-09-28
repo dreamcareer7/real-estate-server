@@ -5,14 +5,9 @@ const { createContext } = require('../helper')
 const json = require('./json/photo')
 
 const savePhoto = async () => {
-  const id = await Photo.create(json[0])
-  expect(id).to.be.a('string')
+  const ids = await Photo.create(json)
+  expect(ids).to.be.an('array').and.to.have.lengthOf(2)
 }
-
-// const bulkSavePhotos = async () => {
-//   const ids = await Photo.createMany(json)
-//   expect(ids).to.have.length(2)
-// }
 
 const deleteMissing = async () => {
   await savePhoto()
@@ -23,7 +18,6 @@ const deleteMissing = async () => {
 describe('MLS Photo', () => {
   createContext()
 
-  it('should save a photo', savePhoto)
-  // it('should save multiple photos at once', bulkSavePhotos)
+  it('should save some photos', savePhoto)
   it('should delete missing photos', deleteMissing)
 })
