@@ -25,7 +25,8 @@ SELECT
     region,
     offices,
     de.regions.timezone as timezone,
-    designation
+    designation,
+    "d365AgentId"
   FROM json_to_recordset($1)
   as input(
     username TEXT,
@@ -46,6 +47,7 @@ SELECT
     twitter TEXT,
     region TEXT,
     designation TEXT,
+    "d365AgentId" TEXT,
     offices jsonb
   )
   JOIN de.regions ON input.region = de.regions.name`
