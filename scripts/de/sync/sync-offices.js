@@ -8,6 +8,12 @@ const db = require('../../../lib/utils/db')
 
 const INSERT = 'INSERT INTO de.offices(id, brand, admin_role) VALUES ($1, $2, $3)'
 
+const UPDATE = `WITH data AS(
+  SELECT * FROM json_to_recordset($1) as input(id INT, business_locations TEXT[])
+)
+UPDATE de.offices SET business_locations = data.business_locations
+FROM data WHERE de.offices.id = data.id`
+
 const add = async id => {
   const brand = await Brand.create({
     brand_type: Brand.OFFICE,
@@ -30,17 +36,25 @@ const add = async id => {
 
 const GET = 'SELECT * FROM de.offices'
 
-const createNew = async offices => {
+const save = async offices => {
   const { rows } = await db.executeSql.promise(GET)
 
   const existing = _.map(rows, 'id').sort()
-
   const not_existing = _.difference(_.map(offices, 'id').sort(), existing)
 
   await Promise.all(not_existing.map(add))
+
+  await db.executeSql.promise(UPDATE, [
+    JSON.stringify(offices.map(o => {
+      return {
+        ...o,
+        business_locations: o.businessLocations.map(b => b.businessLocation)
+      }
+    }))
+  ])
 }
 
-const UPDATE = `
+const UPDATE_BRANDS = `
 WITH data AS (
  SELECT * FROM json_to_recordset($1)
  as input(id INT, name TEXT, region TEXT)
@@ -56,8 +70,8 @@ u AS (
 SELECT NOW()
 `
 
-const update = async offices => {
-  await db.executeSql.promise(UPDATE, [
+const updateBrands = async offices => {
+  await db.executeSql.promise(UPDATE_BRANDS, [
     JSON.stringify(offices.map(o => {
       return {
         id: o.id,
@@ -163,8 +177,8 @@ const syncAdmins = async offices => {
 }
 
 const syncOffices = async offices => {
-  await createNew(offices)
-  await update(offices)
+  await save(offices)
+  await updateBrands(offices)
   await updateSettings(offices)
 
   await syncAdmins(offices)
