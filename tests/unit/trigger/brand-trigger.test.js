@@ -436,8 +436,62 @@ describe('BrandTrigger/workers', () => {
 
     // lib/models/Trigger/brand_trigger/workers.js:229-232
     context('doesn\'t create campaign for...', () => {
-      it('attributes having active trigger')
-      it('attribute types having no related brand trigger')
+      it('attributes having active trigger', async () => {
+        const { user, contact } = await createUserAndContact(true)
+        await handleJobs()
+        // @ts-ignore
+        const brandTemplates = await BrandTemplate.getForBrands({ brands: [brand.id] })
+        const bt = {
+          template: brandTemplates[0].id,
+          brand: brand.id,
+          created_by: user.id,
+          event_type: 'birthday',
+          wait_for: -86400,
+          subject: 'birthday mail',
+        }
+        await BrandTrigger.upsert(bt, true)
+        await handleJobs()
+        const campaignsThen = await Campaign.getByBrand(brand.id, { havingDueAt: null })
+        await BrandTrigger.dateAttributesCreated({
+          brand: brand.id, attributes: [{
+            attribute_type: 'birthday', 
+            contact: contact.id, 
+            created_by: user.id, 
+            date: BIRTHDAY.add(6, 'days').unix()
+          }]
+        })
+        await handleJobs()
+        const campaignsNow = await Campaign.getByBrand(brand.id, { havingDueAt: null })
+        expect(campaignsNow).to.eql(campaignsThen)
+      })
+
+      it('attribute types having no related brand trigger', async () => {
+        const { user, contact } = await createUserAndContact(false)
+        await handleJobs()
+        // @ts-ignore
+        const brandTemplates = await BrandTemplate.getForBrands({ brands: [brand.id] })
+        const bt = {
+          template: brandTemplates[0].id,
+          brand: brand.id,
+          created_by: user.id,
+          event_type: 'birthday',
+          wait_for: -86400,
+          subject: 'birthday mail',
+        }
+        await BrandTrigger.upsert(bt, true)
+        await handleJobs()
+        await BrandTrigger.dateAttributesCreated({
+          brand: brand.id, attributes: [{
+            attribute_type: 'wedding anniversary', 
+            contact: contact.id, 
+            created_by: user.id, 
+            date: BIRTHDAY.unix()
+          }]
+        })
+        await handleJobs()
+        const campaigns = await Campaign.getByBrand(brand.id, { havingDueAt: null })
+        expect(campaigns.length).to.be.eql(0)
+      })
     })
 
     // lib/models/Trigger/brand_trigger/workers.js:243-246
