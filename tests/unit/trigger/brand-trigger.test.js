@@ -592,10 +592,101 @@ describe('BrandTrigger/workers', () => {
         const trigger = await Trigger.get(triggerIds[0])
         expect(trigger.deleted_at).to.be.null
       })
-      it('non-email triggers')
+
+      it('non-email triggers', async () => {
+        const { user, contact } = await createUserAndContact(true)
+        const brandEventIdsArray = await BrandEvent.createAll(
+          user.id, brand.id, 
+          [{title: 'personal meeting', task_type: 'In-Person Meeting'}], 
+        )
+        const trigger_data = {
+          action: 'create_event',
+          brand_event: brandEventIdsArray[0],
+          brand: brand.id,
+          created_by: user.id,
+          event_type: 'birthday',
+          user: user.id,
+          contact: contact.id,
+          wait_for: -86400,
+          time: '10:00:00',
+        }
+      
+        // @ts-ignore
+        const [triggerId] = await Trigger.create([trigger_data])
+        // @ts-ignore
+        const brandTemplates = await BrandTemplate.getForBrands({ brands: [brand.id] })
+        const bt = {
+          template: brandTemplates[0].id,
+          brand: brand.id,
+          created_by: user.id,
+          event_type: 'birthday',
+          wait_for: -86400,
+          subject: 'anniversary mail',
+        }
+        await BrandTrigger.upsert(bt, true)
+        await handleJobs()
+        const attributes = await ContactAttribute.getForContacts([contact.id])
+        await ContactAttribute.delete(attributes.map(attr => attr.id), user.id)
+        await handleJobs()
+        const firstTrigger = await Trigger.get(triggerId)
+        expect(firstTrigger.deleted_at).to.be.null
+      })
+      
       it('triggers of other contacts')
       it('triggers of other attribute type')
-      it('effectively executed triggers')
+      it('effectively executed triggers', async () => {
+        const { user, contact } = await createUserAndContact(true)
+        await handleJobs()
+        // @ts-ignore
+        const [campaignId] = await EmailCampaign.createMany([{
+          brand: brand.id,
+          created_by: user.id,
+          due_at: null,
+          from: user.id,
+          html: '<div></div>',
+          subject: 'Hello!',
+          to: [{
+            recipient_type: 'Email',
+            email: 'john@doe.com',
+          }],
+        }])
+        const trigger_data = {
+          action: 'schedule_email',
+          brand: brand.id,
+          created_by: user.id,
+          event_type: 'birthday',
+          user: user.id,
+          campaign: campaignId,
+          contact: contact.id,
+          wait_for: -86400,
+          time: '10:00:00',
+        }
+        const [triggerId] = await Trigger.create([trigger_data])
+        await handleJobs()
+        await Trigger.execute(triggerId)
+        await handleJobs()
+        await sql.query(`
+          UPDATE triggers
+          SET executed_at = NOW() - INTERVAL '4 DAY'
+          WHERE id = $1
+        `, [triggerId])
+        const brandTemplates = await BrandTemplate.getForBrands({ brands: [brand.id] })
+        const bt = {
+          template: brandTemplates[0].id,
+          brand: brand.id,
+          created_by: user.id,
+          event_type: 'birthday',
+          wait_for: -86400,
+          subject: 'birthday mail',
+        }
+        await BrandTrigger.upsert(bt, true)
+        await handleJobs()
+        const attributes = await ContactAttribute.getForContacts([contact.id])
+        await ContactAttribute.delete(attributes.map(attr => attr.id), user.id)
+        await handleJobs()
+        const trigger = await Trigger.get(triggerId)
+        expect(trigger.deleted_at).to.be.null
+      })
     })
 
     it('deletes active email triggers of the contacts',  async() => {
@@ -628,7 +719,16 @@ describe('BrandTrigger/workers', () => {
 
   context('.contactsMerged()', () => {
     // lib/models/Trigger/brand_trigger/workers.js:275-278
-    it('doesn\'t throw when brand trigger ID is missing')
+    it('doesn\'t throw when brand trigger ID is missing', async () => {
+      const user = await UserHelper.TestUser()
+      const { contact: contact1 } = await createUserAndContact(false)
+      await handleJobs()
+      await BrandTrigger.contactsMerged({
+        user_id: user.id, 
+        contact_ids: [contact1.id], 
+        event_type: 'merge'
+      })
+    })
 
     context('doesn\'t create campaign for...', () => {
       it('attribute types having no related brand trigger')
@@ -637,7 +737,29 @@ describe('BrandTrigger/workers', () => {
       it('other contacts')
 
       // lib/models/Trigger/brand_trigger/workers.js:305-306
-      it('attribute types already have active trigger')
+      it('attribute types already have active trigger', async () => {
+        const user = await UserHelper.TestUser()
+        const { contact: contact1 } = await createUserAndContact(true)
+        const { contact: contact2 } = await createUserAndContact(true)
+        await handleJobs()
+        // @ts-ignore
+        const brandTemplates = await BrandTemplate.getForBrands({ brands: [brand.id] })
+        const bt = {
+          template: brandTemplates[0].id,
+          brand: brand.id,
+          created_by: user.id,
+          event_type: 'birthday',
+          wait_for: -86400,
+          subject: 'birthday mail',
+        }
+        await BrandTrigger.upsert(bt,true)
+        await handleJobs()
+        const campaignsThen = await EmailCampaign.getByBrand(brand.id, { havingDueAt: null })
+        await Contact.merge([contact1.id], contact2.id, user.id, brand.id)
+        await handleJobs()
+        const campaignsNow = await EmailCampaign.getByBrand(brand.id, { havingDueAt: null })
+        expect(campaignsNow).to.eql(campaignsThen)
+      })
     })
 
     // lib/models/Trigger/brand_trigger/workers.js:313-316
