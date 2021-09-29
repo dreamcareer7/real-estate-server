@@ -592,7 +592,46 @@ describe('BrandTrigger/workers', () => {
         const trigger = await Trigger.get(triggerIds[0])
         expect(trigger.deleted_at).to.be.null
       })
-      it('non-email triggers')
+
+      it('non-email triggers', async () => {
+        const { user, contact } = await createUserAndContact(true)
+        const brandEventIdsArray = await BrandEvent.createAll(
+          user.id, brand.id, 
+          [{title: 'personal meeting', task_type: 'In-Person Meeting'}], 
+        )
+        const trigger_data = {
+          action: 'create_event',
+          brand_event: brandEventIdsArray[0],
+          brand: brand.id,
+          created_by: user.id,
+          event_type: 'birthday',
+          user: user.id,
+          contact: contact.id,
+          wait_for: -86400,
+          time: '10:00:00',
+        }
+      
+        // @ts-ignore
+        const [triggerId] = await Trigger.create([trigger_data])
+        // @ts-ignore
+        const brandTemplates = await BrandTemplate.getForBrands({ brands: [brand.id] })
+        const bt = {
+          template: brandTemplates[0].id,
+          brand: brand.id,
+          created_by: user.id,
+          event_type: 'birthday',
+          wait_for: -86400,
+          subject: 'anniversary mail',
+        }
+        await BrandTrigger.upsert(bt, true)
+        await handleJobs()
+        const attributes = await ContactAttribute.getForContacts([contact.id])
+        await ContactAttribute.delete(attributes.map(attr => attr.id), user.id)
+        await handleJobs()
+        const firstTrigger = await Trigger.get(triggerId)
+        expect(firstTrigger.deleted_at).to.be.null
+      })
+      
       it('triggers of other contacts')
       it('triggers of other attribute type')
       it('effectively executed triggers')
