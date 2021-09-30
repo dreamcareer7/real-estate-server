@@ -1,3 +1,5 @@
+const _ = require('lodash')
+
 /**
  * @typedef {string | number | Partial<IContactAttributeInput>} TAttrType
  */
@@ -55,7 +57,7 @@ module.exports = {
         attribute_type: key(k)
       }
 
-      if (address_attrs.includes(attr.attribute_type)) {
+      if (address_attrs.includes(attr.attribute_type) && _.isNull(attr.index)) {
         attr.index = i
       }
 
