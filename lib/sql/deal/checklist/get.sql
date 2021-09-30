@@ -35,9 +35,7 @@ SELECT deals_checklists.*,
     AND deals_checklists.terminated_at  IS NULL
     AND deals_checklists.deleted_at     IS NULL
     AND origins.checklist_type = 'Offer'
-  ) as is_active_offer,
-
-  "order"
+  ) as is_active_offer
 
 FROM deals_checklists
 FULL JOIN brands_checklists origins ON deals_checklists.origin = origins.id
