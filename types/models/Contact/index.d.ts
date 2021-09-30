@@ -223,14 +223,16 @@ declare interface ICSVImporterMappingDef {
   attribute_def: UUID;
   attribute_type?: string;
   index?: number;
-  is_partner: boolean;
+  is_partner?: boolean;
+  multivalued?: boolean;
 }
 
 declare interface ICSVImporterMapping {
   def: IContactAttributeDef;
   label?: string;
   index?: number;
-  is_partner: boolean;
+  is_partner?: boolean;
+  multivalued?: boolean;
 }
 
 declare interface IContactDuplicateCluster {

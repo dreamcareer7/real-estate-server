@@ -81,6 +81,46 @@ async function testCsvFullAddressColumns() {
 
   const contact = await Contact.get(ids[0])
   expect(contact.address).not.to.be.null
+  expect(contact.address[0]).to.include({
+    city: 'Sandy Springs',
+    full: '5673 Peachtree Dunwoody Rd Suite 850, Sandy Springs Ga 30342',
+    name: 'Peachtree Dunwoody Rd',
+    type: 'stdaddr',
+    unit: 'Suite 850',
+    extra: 'Home',
+    line1: '5673 Peachtree Dunwoody Rd Suite 850',
+    line2: 'Sandy Springs Ga 30342',
+    state: 'Ga',
+    postcode: '30342',
+    house_num: '5673'
+  })
+}
+
+async function testCsvSameNameColumns() {
+  const file = await AttachedFile.saveFromStream({
+    stream: fs.createReadStream(path.resolve(__dirname, '../../functional/suites/data/contacts-multiple-tag-columns.csv')),
+    filename: 'contacts.csv',
+    user,
+    path: user.id + '-' + Date.now().toString(),
+    relations: [
+      {
+        role: 'Brand',
+        role_id: brand.id
+      }
+    ],
+    public: false
+  })
+
+  const mappings = require('./data/multiple-tag-columns-mapping.json')
+  ImportWorker.import_csv(user.id, brand.id, file.id, user.id, mappings)
+
+  await handleJobs()
+
+  const { total, ids } = await Contact.filter(brand.id, [])
+  expect(total).to.be.equal(1)
+
+  const contact = await Contact.get(ids[0])
+  expect(contact.tags).to.have.members(['Tag1','Tag2','Tag3'])
 }
 
 async function testCsvMultiTagColumn() {
@@ -126,6 +166,7 @@ describe('Contact', () => {
   describe('Import', () => {
     it('should import contacts from csv', testImportFromCsv)
     it('should parse and import full address columns', testCsvFullAddressColumns)
+    it('should parse and import multiple columns with the same name', testCsvSameNameColumns)
     it('should parse and import comma-separated multi valued columns', testCsvMultiTagColumn)
     it('should import contacts from json', testImportFromJson)
   })
