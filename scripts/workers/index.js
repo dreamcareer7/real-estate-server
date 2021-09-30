@@ -16,6 +16,7 @@ const attachTaskEventHandler = require('../../lib/models/CRM/Task/events')
 const attachTouchEventHandler = require('../../lib/models/CRM/Touch/events')
 const attachCalIntEventHandler = require('../../lib/models/CalendarIntegration/events')
 const attachContactIntEventHandler = require('../../lib/models/ContactIntegration/events')
+const attachBrandTriggerEventHandler = require('../../lib/models/Trigger/brand_trigger/events')
 
 const Blocked = require('blocked-at')
 const moduleControls = {
@@ -39,6 +40,7 @@ function attachModelEventHandlers() {
   attachTouchEventHandler()
   attachCalIntEventHandler()
   attachContactIntEventHandler()
+  attachBrandTriggerEventHandler()
 }
 
 function attachProcessEventHandlers() {
