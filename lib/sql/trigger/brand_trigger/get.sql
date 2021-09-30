@@ -1,14 +1,15 @@
 SELECT
   bt.id,
+  bt.created_by,
   bt.brand,
   bt.template,
   bt.template_instance,
   bt.event_type,
-  bt.wait_for,
+  extract(epoch FROM bt.wait_for) AS wait_for,
   bt.subject,
-  bt.created_at,
-  bt.updated_at,
-  bt.deleted_at,
+  extract(epoch FROM bt.created_at) AS created_at,
+  extract(epoch FROM bt.updated_at) AS updated_at,
+  extract(epoch FROM bt.deleted_at) AS deleted_at,
   'brand_trigger' as type
 FROM
   brand_triggers AS bt
