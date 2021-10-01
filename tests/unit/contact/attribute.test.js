@@ -135,8 +135,8 @@ async function testAddressAttributes() {
     attributes: {
       first_name: 'John',
       last_name: 'Doe',
-      city: 'Atlanta',
-      state: 'GA',
+      city: [{ text: 'Atlanta', index: 0 }],
+      state: [{ text: 'GA', index: 0 }]
     }
   }])
 
