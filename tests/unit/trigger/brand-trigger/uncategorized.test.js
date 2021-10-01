@@ -1,16 +1,10 @@
 const moment = require('moment-timezone')
 const { expect } = require('chai')
 
-const ContactAttribute = require('../../../../lib/models/Contact/attribute/index')
-
 const BrandTrigger = {
   ...require('../../../../lib/models/Trigger/brand_trigger/workers').test, 
   ...require('../../../../lib/models/Trigger/brand_trigger/create'), 
   ...require('../../../../lib/models/Trigger/brand_trigger/get'),
-}
-const Campaign = {
-  ...require('../../../../lib/models/Email/campaign/get.js'),
-  ...require('../../../../lib/models/Email/create.js'),
 }
 const Contact = require('../../../../lib/models/Contact/index')
 
@@ -138,7 +132,7 @@ describe('BrandTrigger/workers', () => {
   it(
     'should not create triggers for excluded contacts',
     async () => {
-      const contact1 = await createContact({
+      await createContact({
         userId: user.id, 
         birthday: BIRTHDAY.unix(),
         email: 'first_mail@fake.com',
