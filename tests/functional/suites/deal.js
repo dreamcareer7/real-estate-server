@@ -470,6 +470,24 @@ const updateTasks = cb => {
     })
 }
 
+const sortTasks = cb => {
+  const tasks = [{
+    id: results.deal.addTask.data.id,
+    order: 2
+  }, {
+    id: results.deal.addAnotherTask.data.id,
+    order: 1
+  }]
+
+  return frisby.create('sort tasks')
+    .put(`/deals/${results.deal.create.data.id}/checklists/${results.deal.addChecklist.data.id}/sort`, tasks)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK'
+    })
+}
+
 const removeTask = cb => {
   return frisby.create('delete another task')
     .delete(`/tasks/${results.deal.addAnotherTask.data.id}`)
@@ -943,6 +961,7 @@ module.exports = {
   renameFile,
   updateTask,
   updateTasks,
+  sortTasks,
   removeTask,
   makeSureAnotherTaskIsDeleted,
   makeSureAnotherTaskIsntReturnedInDealContext,
