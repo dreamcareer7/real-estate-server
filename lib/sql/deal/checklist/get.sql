@@ -9,7 +9,7 @@ SELECT deals_checklists.*,
 
   (
     SELECT
-      ARRAY_AGG(id ORDER BY tasks.created_at)
+      ARRAY_AGG(id ORDER BY tasks.order, tasks.created_at)
     FROM tasks
     WHERE
       checklist = deals_checklists.id
