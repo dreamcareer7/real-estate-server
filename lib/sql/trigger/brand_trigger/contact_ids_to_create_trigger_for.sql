@@ -20,6 +20,6 @@
     (t.executed_at IS NULL OR t.executed_at > now() - '3 days'::interval)
     AND t.deleted_at IS NULL
     AND t.brand = $1::uuid
-    AND t.action = 'schedule_email'
+    AND t.action = 'schedule_email'::trigger_action
     AND t.event_type = $2::text
 )

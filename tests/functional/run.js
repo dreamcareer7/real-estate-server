@@ -44,16 +44,18 @@ program
   .option('--commit <suite>', 'Commits the changes on specified suite after its done')
   .parse(process.argv)
 
-if (!program.concurrency)
-  program.concurrency = 1
+const options = program.opts()
 
-if (program.docs)
+if (!options.concurrency)
+  options.concurrency = 1
+
+if (options.docs)
   require('./docs.js')(program)
 
-if (program.curl)
-  require('./curl.js')(program)
+if (options.curl)
+  require('./curl.js')(options)
 else
-  require('./report.js')(program)
+  require('./report.js')(options)
 
 
 const getSuites = function (cb) {
@@ -75,12 +77,12 @@ function spawnProcesses (cb) {
 
     suites.map((suite) => Run.emit('register suite', suite))
 
-    async.mapLimit(suites, program.concurrency, spawnSuite, cb)
+    async.mapLimit(suites, options.concurrency, spawnSuite, cb)
   })
 }
 
 function spawnSuite (suite, cb) {
-  const url = program.server ? program.server : 'http://localhost:' + config.url.port
+  const url = options.server ? options.server : 'http://localhost:' + config.url.port
 
   const runner = fork(__dirname + '/runner.js', [suite, url], {
     execArgv: []
@@ -310,9 +312,9 @@ const setupApp = cb => {
     })
   })
 
-  if (!program.keep) {
+  if (!options.keep) {
     Run.on('suite done', (suite) => {
-      if (program.commit && program.commit === suite) {
+      if (options.commit && options.commit === suite) {
         connections[suite].query('COMMIT', err => {
           if (err)
             console.log('Error committing', err)
@@ -333,7 +335,7 @@ const setupApp = cb => {
 
 const steps = []
 
-if (!program.server)
+if (!options.server)
   steps.push(setupApp)
 
 steps.push(spawnProcesses)

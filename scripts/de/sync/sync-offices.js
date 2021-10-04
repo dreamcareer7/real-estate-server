@@ -1,10 +1,18 @@
 const _ = require('lodash')
+const parser = require('parse-address')
+
 const Brand = require('../../../lib/models/Brand')
 const BrandRole = require('../../../lib/models/Brand/role/save')
 
 const db = require('../../../lib/utils/db')
 
 const INSERT = 'INSERT INTO de.offices(id, brand, admin_role) VALUES ($1, $2, $3)'
+
+const UPDATE = `WITH data AS(
+  SELECT * FROM json_to_recordset($1) as input(id INT, business_locations TEXT[])
+)
+UPDATE de.offices SET business_locations = data.business_locations
+FROM data WHERE de.offices.id = data.id`
 
 const add = async id => {
   const brand = await Brand.create({
@@ -28,17 +36,25 @@ const add = async id => {
 
 const GET = 'SELECT * FROM de.offices'
 
-const createNew = async offices => {
+const save = async offices => {
   const { rows } = await db.executeSql.promise(GET)
 
   const existing = _.map(rows, 'id').sort()
-
   const not_existing = _.difference(_.map(offices, 'id').sort(), existing)
 
   await Promise.all(not_existing.map(add))
+
+  await db.executeSql.promise(UPDATE, [
+    JSON.stringify(offices.map(o => {
+      return {
+        ...o,
+        business_locations: o.businessLocations.map(b => b.businessLocation)
+      }
+    }))
+  ])
 }
 
-const UPDATE = `
+const UPDATE_BRANDS = `
 WITH data AS (
  SELECT * FROM json_to_recordset($1)
  as input(id INT, name TEXT, region TEXT)
@@ -54,8 +70,8 @@ u AS (
 SELECT NOW()
 `
 
-const update = async offices => {
-  await db.executeSql.promise(UPDATE, [
+const updateBrands = async offices => {
+  await db.executeSql.promise(UPDATE_BRANDS, [
     JSON.stringify(offices.map(o => {
       return {
         id: o.id,
@@ -64,6 +80,44 @@ const update = async offices => {
       }
     })
     )
+  ])
+}
+
+const UPDATE_SETTINGS = `
+WITH data AS (
+ SELECT * FROM json_to_recordset($1)
+ as input(id INT, address JSONB)
+ JOIN de.offices ON input.id = de.offices.id
+)
+UPDATE brand_settings SET
+  address = JSON_TO_STDADDR(data.address)
+FROM data
+WHERE brand_settings.brand = data.brand`
+
+const updateSettings = async offices => {
+  const mapped = offices.map(office => {
+    const { address } = office
+    const parsed = parser.parseLocation(address)
+
+    return {
+      id: office.id,
+      address: {
+        house_num: parsed.number,
+        predir: parsed.prefix,
+        pretype: parsed.type,
+        name: parsed.street,
+        suftype: parsed.suffix,
+        city: parsed.city || office.city,
+        state: parsed.state || office.state,
+        country: parsed.country,
+        postcode: parsed.zip || office.zip,
+        unit: parsed.sec_unit_num
+      }
+    }
+  })
+
+  await db.executeSql.promise(UPDATE_SETTINGS, [
+    JSON.stringify(mapped)
   ])
 }
 
@@ -123,8 +177,9 @@ const syncAdmins = async offices => {
 }
 
 const syncOffices = async offices => {
-  await createNew(offices)
-  await update(offices)
+  await save(offices)
+  await updateBrands(offices)
+  await updateSettings(offices)
 
   await syncAdmins(offices)
 }
