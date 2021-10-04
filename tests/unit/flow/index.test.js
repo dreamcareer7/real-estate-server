@@ -445,7 +445,7 @@ async function testLastStepDateWithFirstStepExecuted() {
   expect(last_step_date).to.be.equal(now)
 }
 
-async function testEnrollWithoutEmail () {
+async function testEnrollManyWithoutEmail () {
   const contactId1 = await createContact()
   const contactId2 = await createContact({
     first_name: 'Mohamad',
@@ -462,6 +462,27 @@ async function testEnrollWithoutEmail () {
   expect(res).to.be.an('array').that.is.not.empty
 }
 
+async function testEnrollOneWithoutEmail () {
+  const contactId = await createContact({
+    first_name: 'Mammad',
+    tag: ['Tag3', 'Tag4'],
+  })
+
+  const {
+    brandFlowId,
+    brandFlowStepIds
+  } = await setupFlowWithEmailAndTemplateInstanceStep()
+
+  const res = await Flow.enrollContacts(
+    brand.id, user.id, brandFlowId, Date.now() / 1000,
+    brandFlowStepIds, [contactId],
+  )
+
+  await handleJobs()
+
+  expect(res).to.be.an('array')
+}
+
 describe('Flow', () => {
   createContext()
   beforeEach(setup)
@@ -469,7 +490,8 @@ describe('Flow', () => {
   describe('enroll', function() {
     it('should enroll a contact to a flow', testEnrollContact)
     it('should prevent duplicate enrollment', testDuplicateEnroll)
-    it('successfully enrolls the contacts, when some of them have no email', testEnrollWithoutEmail)
+    it('successfully enrolls the contacts, when some of them have no email', testEnrollManyWithoutEmail)
+    it('successfully enrolls a contact, when it has no email', testEnrollOneWithoutEmail)
   })
   describe('progression', function() {
     it('should progress to next step', testFlowProgress)
