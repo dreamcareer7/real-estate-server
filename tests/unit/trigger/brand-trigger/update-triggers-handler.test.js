@@ -481,5 +481,34 @@ describe('BrandTrigger/workers', () => {
       const campaigns = await Campaign.getByBrand(brand.id, { havingDueAt: null })
       expect(campaigns.length).to.eql(1)
     })
+
+    it('creates campaign and trigger when a contact is added after activating GT', async() => {
+      // @ts-ignore
+      const brandTemplates = await BrandTemplate.getForBrands({ brands: [brand.id] })
+      const bt = {
+        template: brandTemplates[0].id,
+        brand: brand.id,
+        created_by: user.id,
+        event_type: 'birthday',
+        wait_for: -86400,
+        subject: 'birthday mail',
+      }
+      const brandTriggerId = await BrandTrigger.upsert(bt, true)
+      await handleJobs()
+      await createContact({
+        userId: user.id, 
+        birthday: moment.utc().unix(),
+        email: 'first_mail@fake.com',
+      })
+      await handleJobs()
+      await BrandTrigger.get(brandTriggerId)
+      const triggerIds = await Trigger.filter({
+        brand: brand.id,
+        event_type: 'birthday',
+      })
+      expect(triggerIds.length).to.be.eql(1)
+      const campaigns = await Campaign.getByBrand(brand.id, { havingDueAt: null })
+      expect(campaigns.length).to.eql(1)
+    })
   })
 })
