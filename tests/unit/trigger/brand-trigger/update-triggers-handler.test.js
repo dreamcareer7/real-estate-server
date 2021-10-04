@@ -46,6 +46,8 @@ const BrandTemplate = require('../../../../lib/models/Template/brand/get')
 const BIRTHDAY = moment.utc().add(3, 'days').startOf('day').add(-20, 'years')
 
 let brand
+let user
+
 const template = {
   name: 'fake-template-brand-trigger-test',
   variant: 'Template40',
@@ -57,7 +59,6 @@ const template = {
 }
 
 const createBrand = async () => {
-  const user = await UserHelper.TestUser()
   return BrandHelper.create({
     roles: {
       Admin: [user.id],
@@ -69,33 +70,33 @@ const createBrand = async () => {
 }
 
 async function setup() {
-  const user = await UserHelper.TestUser()
+  user = await UserHelper.TestUser()
   brand = await createBrand()
 
   Context.set({ user, brand })
 }
 
-async function createUserAndContact(birthdayBool) {
-  const user = await UserHelper.TestUser()
+
+async function createContact({ email, userId, birthday }) {
+  const attribute = {
+    first_name: 'John',
+    last_name: 'Doe',
+  }
+
+  if (birthday) attribute.birthday = birthday
+  if (email) attribute.email = email
 
   const [id] = await Contact.create(
-    [
-      {
-        user: user.id,
-        attributes: attributes({
-          first_name: 'John',
-          last_name: 'Doe',
-          email: 'john@doe.com',
-          ...(birthdayBool ? { birthday: BIRTHDAY.unix() } : null),
-        }),
-      },
-    ],
+    [{
+      user: user.id,
+      attributes: attributes(attribute),
+    }],
     user.id,
     brand.id
   )
 
   const contact = await Contact.get(id)
-  return { user, contact }
+  return contact
 }
 
 describe('BrandTrigger/workers', () => {
@@ -117,7 +118,11 @@ describe('BrandTrigger/workers', () => {
     context('doesn\'t delete...', () => {
   
       it('non-email triggers', async()=> {
-        const { user, contact } = await createUserAndContact(true)
+        const contact = await createContact({
+          userId: user.id, 
+          birthday: BIRTHDAY.unix(),
+          email: 'first_mail@fake.com',
+        })
         const brandEventIdsArray = await BrandEvent.createAll(
           user.id, brand.id, 
           [{title: 'personal meeting', task_type: 'In-Person Meeting'}], 
@@ -154,7 +159,11 @@ describe('BrandTrigger/workers', () => {
   
   
       it('flow triggers', async () => {
-        const { user, contact } = await createUserAndContact(true)
+        const contact = await createContact({
+          userId: user.id, 
+          birthday: BIRTHDAY.unix(),
+          email: 'first_mail@fake.com',
+        })
         const brandTemplates = await BrandTemplate.getForBrands({ brands: [brand.id] })
         const templates = await Template.getAll(brandTemplates.map(bt => bt.template))
         const html = template.html
@@ -212,7 +221,11 @@ describe('BrandTrigger/workers', () => {
       })
   
       it('effectively executed triggers', async () => {
-        const { user, contact } = await createUserAndContact(true)
+        const contact = await createContact({
+          userId: user.id, 
+          birthday: BIRTHDAY.unix(),
+          email: 'first_mail@fake.com',
+        })
         await handleJobs()
         // @ts-ignore
         const [campaignId] = await EmailCampaign.createMany([{
@@ -263,7 +276,11 @@ describe('BrandTrigger/workers', () => {
       })
     })
     it('deletes all active email triggers of desired event type', async() => {
-      const { user, contact } = await createUserAndContact(true)
+      const contact = await createContact({
+        userId: user.id, 
+        birthday: BIRTHDAY.unix(),
+        email: 'first_mail@fake.com',
+      })
       await handleJobs()
       // @ts-ignore
       const [campaignId] = await EmailCampaign.createMany([{
@@ -312,7 +329,6 @@ describe('BrandTrigger/workers', () => {
     // lib/models/Trigger/brand_trigger/workers.js:198-206
     context('doesn\'t create campaign for a contact...', () => {
       it('having no email', async() => {
-        const user = await UserHelper.TestUser()
         await Contact.create(
           [
             {
@@ -343,7 +359,11 @@ describe('BrandTrigger/workers', () => {
       })
   
       it('of another brand', async() => {
-        const { user } = await createUserAndContact(true)
+        await createContact({
+          userId: user.id, 
+          birthday: BIRTHDAY.unix(),
+          email: 'first_mail@fake.com',
+        })        
         const newBrand = await BrandHelper.create({
           roles: {
             Admin: [user.id],
@@ -377,7 +397,10 @@ describe('BrandTrigger/workers', () => {
       })
   
       it('has no value for desired attribute type', async () => {
-        const { user } = await createUserAndContact(false)
+        await createContact({
+          userId: user.id, 
+          email: 'first_mail@fake.com',
+        })
         await handleJobs()
         // @ts-ignore
         const brandTemplates = await BrandTemplate.getForBrands({ brands: [brand.id] })
@@ -400,7 +423,41 @@ describe('BrandTrigger/workers', () => {
     })
   
     it('creates campaign and trigger for suitable contacts', async() => {
-      const { user } = await createUserAndContact(true)
+      await createContact({
+        userId: user.id, 
+        birthday: BIRTHDAY.unix(),
+        email: 'first_mail@fake.com',
+      })
+      await handleJobs()
+      // @ts-ignore
+      const brandTemplates = await BrandTemplate.getForBrands({ brands: [brand.id] })
+      const bt = {
+        template: brandTemplates[0].id,
+        brand: brand.id,
+        created_by: user.id,
+        event_type: 'birthday',
+        wait_for: -86400,
+        subject: 'birthday mail',
+      }
+      const brandTriggerId = await BrandTrigger.upsert(bt, true)
+      await handleJobs()
+      const brandTrigger = await BrandTrigger.get(brandTriggerId)
+      expect(brandTrigger.id).to.be.eql(brandTriggerId)
+      const triggerIds = await Trigger.filter({
+        brand: brand.id,
+        event_type: 'birthday',
+      })
+      expect(triggerIds.length).to.be.eql(1)
+      const campaigns = await Campaign.getByBrand(brand.id, { havingDueAt: null })
+      expect(campaigns.length).to.eql(1)
+    })
+
+    it('creates campaign and trigger for suitable contacts even on the same day', async() => {
+      await createContact({
+        userId: user.id, 
+        birthday: BIRTHDAY.unix(),
+        email: 'first_mail@fake.com',
+      })
       await handleJobs()
       // @ts-ignore
       const brandTemplates = await BrandTemplate.getForBrands({ brands: [brand.id] })
