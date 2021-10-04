@@ -20,6 +20,7 @@ require('../../../lib/models/SMS')
 require('../../../lib/models/Daily')
 require('../../../lib/models/Envelope')
 require('../../../lib/models/Trigger/worker')
+require('../../../lib/models/Trigger/brand_trigger/workers')
 require('../../../lib/models/Stripe')
 require('../../../lib/models/Godaddy/zone')
 require('../../../lib/models/Godaddy/purchase')
@@ -86,7 +87,7 @@ const queues = [
     concurrency: 3
   },
   {
-    queues: ['trigger'],
+    queues: ['trigger', 'brand_trigger'],
     concurrency: 5
   },
   {
