@@ -2,7 +2,7 @@ const moment = require('moment-timezone')
 const { expect } = require('chai')
 
 const BrandTrigger = {
-  ...require('../../../../lib/models/Trigger/brand_trigger/workers').test, 
+  ...require('../../../../lib/models/Trigger/brand_trigger/workers'), 
   ...require('../../../../lib/models/Trigger/brand_trigger/create'), 
   ...require('../../../../lib/models/Trigger/brand_trigger/get'),
 }

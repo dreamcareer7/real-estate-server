@@ -23,7 +23,7 @@ const BrandFlow = {
   ...require('../../../../lib/models/Brand/flow/create'),
 }
 const BrandTrigger = {
-  ...require('../../../../lib/models/Trigger/brand_trigger/workers').test, 
+  ...require('../../../../lib/models/Trigger/brand_trigger/workers'), 
   ...require('../../../../lib/models/Trigger/brand_trigger/create'), 
   ...require('../../../../lib/models/Trigger/brand_trigger/get'),
 }
@@ -106,11 +106,12 @@ describe('BrandTrigger/workers', () => {
   context('.updateTriggersHandler()', () => {
     // lib/models/Trigger/brand_trigger/workers.js:184-187
     it('doesn\'t throw when brand trigger ID is missing', async() => {
-      await BrandTrigger.updateTriggersHandler()
+      await BrandTrigger.updateTriggers()
     })
   
     it('should return undefined for non existing brant trigger ID', async() => {
-      const result = await BrandTrigger.updateTriggersHandler('nonExistingBrandTriggerId')
+      const result = await BrandTrigger.updateTriggers('nonExistingBrandTriggerId')
+      await handleJobs()
       expect(result).to.be.undefined
     })
   

@@ -4,7 +4,7 @@ const { expect } = require('chai')
 const ContactAttribute = require('../../../../lib/models/Contact/attribute/index')
 
 const BrandTrigger = {
-  ...require('../../../../lib/models/Trigger/brand_trigger/workers').test, 
+  ...require('../../../../lib/models/Trigger/brand_trigger/workers'), 
   ...require('../../../../lib/models/Trigger/brand_trigger/create'), 
   ...require('../../../../lib/models/Trigger/brand_trigger/get'),
 }

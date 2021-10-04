@@ -24,7 +24,7 @@ const BrandFlow = {
   ...require('../../../../lib/models/Brand/flow/create'),
 }
 const BrandTrigger = {
-  ...require('../../../../lib/models/Trigger/brand_trigger/workers').test, 
+  ...require('../../../../lib/models/Trigger/brand_trigger/workers'), 
   ...require('../../../../lib/models/Trigger/brand_trigger/create'), 
   ...require('../../../../lib/models/Trigger/brand_trigger/get'),
 }
@@ -158,6 +158,7 @@ describe('BrandTrigger/workers', () => {
         await BrandTrigger.upsert(bt, true)
         await handleJobs()
         await BrandTrigger.dateAttributesDeleted({ attributes, userId: user.id })
+        await handleJobs()
         const trigger = await Trigger.get(triggerIds[0])
         expect(trigger.deleted_at).to.be.null
       })
