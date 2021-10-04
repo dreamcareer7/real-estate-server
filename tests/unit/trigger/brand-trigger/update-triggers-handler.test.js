@@ -455,7 +455,7 @@ describe('BrandTrigger/workers', () => {
     it('creates campaign and trigger for suitable contacts even on the same day', async() => {
       await createContact({
         userId: user.id, 
-        birthday: BIRTHDAY.unix(),
+        birthday: moment.utc().unix(),
         email: 'first_mail@fake.com',
       })
       await handleJobs()
