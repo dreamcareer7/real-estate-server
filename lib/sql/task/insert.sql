@@ -20,6 +20,6 @@ INSERT INTO tasks
   COALESCE($7, FALSE),
   COALESCE($8, FALSE),
   $9,
-  $10
+  COALESCE($10, 0)
 )
 RETURNING id
