@@ -66,7 +66,7 @@ async function createContact({ email, userId, birthday }) {
     birthday,
   }
 
-  if (email) attribute.email = email
+  attribute.email = email
 
   const [id] = await Contact.create(
     [{
@@ -84,51 +84,6 @@ async function createContact({ email, userId, birthday }) {
 describe('BrandTrigger/workers', () => {
   createContext()
   beforeEach(setup)
-
-  it(
-    'should create triggers when a new email address is added to a contact',
-    async () => {
-      // @ts-ignore
-      const contact = await createContact({
-        userId: user.id, 
-        birthday: BIRTHDAY.unix(),
-      })
-      await handleJobs()
-      // @ts-ignore
-      const brandTemplates = await BrandTemplate.getForBrands({ brands: [brand.id] })
-      const bt = {
-        template: brandTemplates[0].id,
-        brand: brand.id,
-        created_by: user.id,
-        event_type: 'birthday',
-        wait_for: -86400,
-        subject: 'birthday mail',
-      }
-      await BrandTrigger.upsert(bt, true)
-      await handleJobs()
-      await Contact.update(
-        [{
-          id: contact.id,
-          attributes: [{
-            attribute_type: 'email', 
-            text: 'doe@fakemail.com',
-            is_primary: true,
-          }],
-          parked: false
-        }],
-        user.id,
-        brand.id,
-      )
-      await handleJobs()
-      const triggers = await Trigger.filter({
-        brand: brand.id,
-        event_type: 'birthday',
-        deleted_at: null,
-      })
-      expect(triggers.length).to.be.eql(1)
-    }
-  )
-
   it(
     'should not create triggers for excluded contacts',
     async () => {

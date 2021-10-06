@@ -329,36 +329,7 @@ describe('BrandTrigger/workers', () => {
   
     // lib/models/Trigger/brand_trigger/workers.js:198-206
     context('doesn\'t create campaign for a contact...', () => {
-      it('having no email', async() => {
-        await Contact.create(
-          [
-            {
-              user: user.id,
-              attributes: attributes({
-                first_name: 'John',
-                last_name: 'Doe',
-                birthday: BIRTHDAY.unix(),
-              }),
-            },
-          ],
-          user.id,
-          brand.id
-        )
-        const brandTemplates = await BrandTemplate.getForBrands({ brands: [brand.id] })
-        const bt = {
-          template: brandTemplates[0].id,
-          brand: brand.id,
-          created_by: user.id,
-          event_type: 'birthday',
-          wait_for: -86400,
-          subject: 'birthday mail',
-        }
-        await BrandTrigger.upsert(bt, true)
-        await handleJobs()
-        const campaigns = await EmailCampaign.getByUser(user.id)
-        expect(campaigns.filter(campaign => Boolean(!campaign.deleted_at)).length).to.be.eql(0)
-      })
-  
+
       it('of another brand', async() => {
         await createContact({
           userId: user.id, 
@@ -423,93 +394,127 @@ describe('BrandTrigger/workers', () => {
       it('having active email trigger on desired attribute type')
     })
   
-    it('creates campaign and trigger for suitable contacts', async() => {
-      await createContact({
-        userId: user.id, 
-        birthday: BIRTHDAY.unix(),
-        email: 'first_mail@fake.com',
-      })
-      await handleJobs()
-      // @ts-ignore
-      const brandTemplates = await BrandTemplate.getForBrands({ brands: [brand.id] })
-      const bt = {
-        template: brandTemplates[0].id,
-        brand: brand.id,
-        created_by: user.id,
-        event_type: 'birthday',
-        wait_for: -86400,
-        subject: 'birthday mail',
-      }
-      const brandTriggerId = await BrandTrigger.upsert(bt, true)
-      await handleJobs()
-      const brandTrigger = await BrandTrigger.get(brandTriggerId)
-      expect(brandTrigger.id).to.be.eql(brandTriggerId)
-      const triggerIds = await Trigger.filter({
-        brand: brand.id,
-        event_type: 'birthday',
-      })
-      expect(triggerIds.length).to.be.eql(1)
-      const campaigns = await Campaign.getByBrand(brand.id, { havingDueAt: null })
-      expect(campaigns.length).to.eql(1)
-    })
+    // lib/models/Trigger/brand_trigger/workers.js:198-206
+    context('creates campaign and trigger for a contact...', () => {
 
-    it('creates campaign and trigger for suitable contacts even on the same day', async() => {
-      await createContact({
-        userId: user.id, 
-        birthday: moment.utc().unix(),
-        email: 'first_mail@fake.com',
+      it('when contacts are created before', async() => {
+        await createContact({
+          userId: user.id, 
+          birthday: BIRTHDAY.unix(),
+          email: 'first_mail@fake.com',
+        })
+        await handleJobs()
+        // @ts-ignore
+        const brandTemplates = await BrandTemplate.getForBrands({ brands: [brand.id] })
+        const bt = {
+          template: brandTemplates[0].id,
+          brand: brand.id,
+          created_by: user.id,
+          event_type: 'birthday',
+          wait_for: -86400,
+          subject: 'birthday mail',
+        }
+        const brandTriggerId = await BrandTrigger.upsert(bt, true)
+        await handleJobs()
+        const brandTrigger = await BrandTrigger.get(brandTriggerId)
+        expect(brandTrigger.id).to.be.eql(brandTriggerId)
+        const triggerIds = await Trigger.filter({
+          brand: brand.id,
+          event_type: 'birthday',
+        })
+        expect(triggerIds.length).to.be.eql(1)
+        const campaigns = await Campaign.getByBrand(brand.id, { havingDueAt: null })
+        expect(campaigns.length).to.eql(1)
       })
-      await handleJobs()
-      // @ts-ignore
-      const brandTemplates = await BrandTemplate.getForBrands({ brands: [brand.id] })
-      const bt = {
-        template: brandTemplates[0].id,
-        brand: brand.id,
-        created_by: user.id,
-        event_type: 'birthday',
-        wait_for: -86400,
-        subject: 'birthday mail',
-      }
-      const brandTriggerId = await BrandTrigger.upsert(bt, true)
-      await handleJobs()
-      const brandTrigger = await BrandTrigger.get(brandTriggerId)
-      expect(brandTrigger.id).to.be.eql(brandTriggerId)
-      const triggerIds = await Trigger.filter({
-        brand: brand.id,
-        event_type: 'birthday',
-      })
-      expect(triggerIds.length).to.be.eql(1)
-      const campaigns = await Campaign.getByBrand(brand.id, { havingDueAt: null })
-      expect(campaigns.length).to.eql(1)
-    })
 
-    it('creates campaign and trigger when a contact is added after activating GT', async() => {
+      it('when the action day is just today', async() => {
+        await createContact({
+          userId: user.id, 
+          birthday: moment.utc().unix(),
+          email: 'first_mail@fake.com',
+        })
+        await handleJobs()
+        // @ts-ignore
+        const brandTemplates = await BrandTemplate.getForBrands({ brands: [brand.id] })
+        const bt = {
+          template: brandTemplates[0].id,
+          brand: brand.id,
+          created_by: user.id,
+          event_type: 'birthday',
+          wait_for: -86400,
+          subject: 'birthday mail',
+        }
+        const brandTriggerId = await BrandTrigger.upsert(bt, true)
+        await handleJobs()
+        const brandTrigger = await BrandTrigger.get(brandTriggerId)
+        expect(brandTrigger.id).to.be.eql(brandTriggerId)
+        const triggerIds = await Trigger.filter({
+          brand: brand.id,
+          event_type: 'birthday',
+        })
+        expect(triggerIds.length).to.be.eql(1)
+        const campaigns = await Campaign.getByBrand(brand.id, { havingDueAt: null })
+        expect(campaigns.length).to.eql(1)
+      })
+
+      it('when a contact is added after activating GT', async() => {
       // @ts-ignore
-      const brandTemplates = await BrandTemplate.getForBrands({ brands: [brand.id] })
-      const bt = {
-        template: brandTemplates[0].id,
-        brand: brand.id,
-        created_by: user.id,
-        event_type: 'birthday',
-        wait_for: -86400,
-        subject: 'birthday mail',
-      }
-      const brandTriggerId = await BrandTrigger.upsert(bt, true)
-      await handleJobs()
-      await createContact({
-        userId: user.id, 
-        birthday: moment.utc().unix(),
-        email: 'first_mail@fake.com',
+        const brandTemplates = await BrandTemplate.getForBrands({ brands: [brand.id] })
+        const bt = {
+          template: brandTemplates[0].id,
+          brand: brand.id,
+          created_by: user.id,
+          event_type: 'birthday',
+          wait_for: -86400,
+          subject: 'birthday mail',
+        }
+        const brandTriggerId = await BrandTrigger.upsert(bt, true)
+        await handleJobs()
+        await createContact({
+          userId: user.id, 
+          birthday: moment.utc().unix(),
+          email: 'first_mail@fake.com',
+        })
+        await handleJobs()
+        await BrandTrigger.get(brandTriggerId)
+        const triggerIds = await Trigger.filter({
+          brand: brand.id,
+          event_type: 'birthday',
+        })
+        expect(triggerIds.length).to.be.eql(1)
+        const campaigns = await Campaign.getByBrand(brand.id, { havingDueAt: null })
+        expect(campaigns.length).to.eql(1)
       })
-      await handleJobs()
-      await BrandTrigger.get(brandTriggerId)
-      const triggerIds = await Trigger.filter({
-        brand: brand.id,
-        event_type: 'birthday',
+
+      it('when contact has no email', async() => {
+        await Contact.create(
+          [
+            {
+              user: user.id,
+              attributes: attributes({
+                first_name: 'John',
+                last_name: 'Doe',
+                birthday: BIRTHDAY.unix(),
+              }),
+            },
+          ],
+          user.id,
+          brand.id
+        )
+        const brandTemplates = await BrandTemplate.getForBrands({ brands: [brand.id] })
+        const bt = {
+          template: brandTemplates[0].id,
+          brand: brand.id,
+          created_by: user.id,
+          event_type: 'birthday',
+          wait_for: -86400,
+          subject: 'birthday mail',
+        }
+        await BrandTrigger.upsert(bt, true)
+        await handleJobs()
+        const campaigns = await EmailCampaign.getByUser(user.id)
+        expect(campaigns.filter(campaign => (!campaign.deleted_at)).length).to.be.eql(1)
       })
-      expect(triggerIds.length).to.be.eql(1)
-      const campaigns = await Campaign.getByBrand(brand.id, { havingDueAt: null })
-      expect(campaigns.length).to.eql(1)
     })
   })
 })
