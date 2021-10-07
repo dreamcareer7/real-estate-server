@@ -8,7 +8,8 @@ INSERT INTO tasks
   form,
   is_deletable,
   required,
-  origin
+  origin,
+  "order"
 ) VALUES (
   $1,
   $2,
@@ -18,6 +19,7 @@ INSERT INTO tasks
   $6,
   COALESCE($7, FALSE),
   COALESCE($8, FALSE),
-  $9
+  $9,
+  COALESCE($10, 0)
 )
 RETURNING id
