@@ -21,12 +21,75 @@ function createUser({ email }) {
 /**
  * @param {string} description 
  * @param {unknown[]} brands 
+ * @param {(response: unknown) => UUID} getActiveBrand
  */
-function createBrands(description, brands) {
+function createBrands(description, brands, getActiveBrand) {
   return cb => frisby.create(description)
     .post('/_/brands?associations[]=brand.children', brands)
-    .after(cb)
+    .after((err, res, json) => {
+      if (getActiveBrand) {
+        const activeBrand = getActiveBrand(json)
+        if (activeBrand) {
+          const setup = frisby.globalSetup()
+          setup.request.headers['X-Rechat-Brand'] = activeBrand
+          frisby.globalSetup(setup)      
+        }
+      }
+      cb(err, res, json)
+    })
     .expectStatus(200)
+}
+
+function beforeFrisby(fn, doBefore) {
+  return cb => {
+    doBefore()
+    return fn(cb)
+  }
+}
+
+/**
+ * @template F
+ * @param {F} fns 
+ * @returns {F}
+ */
+function beforeFirstFrisby(fns, doBefore) {
+  const [k, fn] = Object.entries(fns)[0]
+  fns[k] = beforeFrisby(fn, doBefore)
+
+  return fns
+}
+
+function afterFrisby(fn, doAfter) {
+  return cb => fn(cb).after(doAfter)
+}
+
+/**
+ * @template F
+ * @param {F} fns 
+ * @returns {F}
+ */
+function afterLastFrisby(fns, doAfter) {
+  const entries = Object.entries(fns)
+  const [k, fn] = entries[entries.length - 1]
+  fns[k] = afterFrisby(fn, doAfter)
+
+  return fns
+}
+
+/**
+ * @template F
+ * @param {() => UUID} brandFn 
+ * @param {F} fns 
+ * @returns {F}
+ */
+function switchBrand(brandFn, fns) {
+  return beforeFirstFrisby(fns, () => {
+    const setup = frisby.globalSetup()
+    setup.request.headers['X-Rechat-Brand'] = brandFn()
+    frisby.globalSetup(setup)
+
+    return fns
+  })
 }
 
 function getToken(email, cb) {
@@ -84,22 +147,19 @@ function runAsUser(email, fns) {
 
   if (user.access_token) {
     revertAuthorizationHeader = setToken(user.access_token)
-
-    return {
-      ...fns,
-      [`logoff_${email}`]: dummy(`log off as ${email}`, revertAuthorizationHeader)
-    }
+    return afterLastFrisby(fns, () => revertAuthorizationHeader())
   } else {
+    afterLastFrisby(fns, () => revertAuthorizationHeader())
     return {
       [`login_${email}`]: token,
       ...fns,
-      [`logoff_${email}`]: dummy(`log off as ${email}`, () => revertAuthorizationHeader())
     }
   }
 }
 
 module.exports = {
-  createUser,
   createBrands,
+  createUser,
   runAsUser,
+  switchBrand,
 }

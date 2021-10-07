@@ -1,11 +1,76 @@
 // @ts-nocheck
 
-const { createUser, createBrands, runAsUser } = require('../util')
+const { createUser, createBrands, runAsUser, switchBrand } = require('../util')
+
+const F = frisby.create.bind(frisby)
+const R = () => results.super_campaign
+
+const theTemplate = () => R().getTemplate.data[0].id
+const region = () => R().brands.data[0].id
+const office = () => R().brands.data[0].children[0].id
+const team = () => R().brands.data[0].children[0].children[0].id
 
 function dummy(description, cb) {
   return frisby.create(description)
     .get('/_/dummy')
     .after(cb)
+}
+
+function createEmpty(cb) {
+  return F('create empty super campaign')
+    .post('/email/super_campaigns', {})
+    .after(cb)
+    .expectStatus(200)
+}
+
+function getTemplate(cb) {
+  return frisby.create('get templates')
+    .get(`/brands/${region()}/templates?types[]=JustSold&mediums[]=Email`)
+    .after(cb)
+    .expectStatus(200)
+}
+
+function create(cb) {
+  const template = theTemplate()
+  return F('create a full super campaign')
+    .post('/email/super_campaigns', {
+      subject: 'Happy Labor Day!',
+      description: 'A super campaign for Labor Day holiday',
+      due_at: Date.now() / 1000,
+      template,
+      recipients: [{
+        brand: results.super_campaign.brands.data[0].id,
+        tag: 'Labor Day'
+      }],
+    })
+    .after(cb)
+    .expectStatus(200)
+}
+
+function updateSimpleDetails(cb) {
+  const template = theTemplate()
+  return F('create a full super campaign')
+    .patch(`/email/super_campaigns/${R().createEmpty.data.id}`, {
+      subject: 'Happy Labor Day!',
+      description: 'A super campaign for Labor Day holiday',
+      due_at: Date.now() / 1000,
+      template,
+    })
+    .after(cb)
+    .expectStatus(200)
+}
+
+function editRecipients(cb) {
+  const template = theTemplate()
+  return F('create a full super campaign')
+    .patch(`/email/super_campaigns/${R().createEmpty.data.id}`, {
+      subject: 'Happy Labor Day!',
+      description: 'A super campaign for Labor Day holiday',
+      due_at: Date.now() / 1000,
+      template,
+    })
+    .after(cb)
+    .expectStatus(200)
 }
 
 module.exports = {
@@ -17,6 +82,15 @@ module.exports = {
       Admin: ['test@rechat.com']
     },
     tags: ['Labor Day'],
+    templates: [{
+      name: 'fake-template-brand-trigger-test',
+      variant: 'Template40',
+      inputs: ['listing', 'user'],
+      template_type: 'JustSold',
+      medium: 'Email',
+      html: '<div>fakeTemplate</div>',
+      mjml: false,
+    }],
 
     contexts: [],
     checklists: [],
@@ -43,13 +117,17 @@ module.exports = {
         property_types: [],
       }]
     }]
-  }]),
-  createEmpty: cb => dummy('create empty super campaign', cb),
-  // create,
+  }], (response) => response.data[0].id),
 
-  // updateSimpleDetails,
-  // editTags,
-  // editDueDate,
+  ...switchBrand(region, {
+    getTemplate,
+    createEmpty,
+    create,
+    updateSimpleDetails,
+    editRecipients,
+    editDueDate,
+  }),
+
 
   // addBrands,
   // removeBrand,
@@ -57,10 +135,10 @@ module.exports = {
   // enrollAgent,
   // removeAgent,
 
-  ...runAsUser('agent@rechat.com', {
+  ...switchBrand(team, runAsUser('agent@rechat.com', {
     // optIn: dummy,
     optOut: cb => dummy('opt out of a super campaign', cb),
-  }),
+  })),
 
   // delete: deleteCampaign,
 }
