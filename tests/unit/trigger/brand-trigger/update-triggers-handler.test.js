@@ -77,7 +77,7 @@ async function setup() {
 }
 
 
-async function createContact({ email, userId, birthday }) {
+async function createContact({ email, birthday }) {
   const attribute = {
     first_name: 'John',
     last_name: 'Doe',
@@ -119,7 +119,6 @@ describe('BrandTrigger/workers', () => {
     context('doesn\'t delete...', () => {
       it('manual triggers, when you choose not to delete them', async () => {
         const contact = await createContact({
-          userId: user.id, 
           birthday: BIRTHDAY.unix(),
           email: 'first_mail@fake.com',
         })
@@ -167,7 +166,6 @@ describe('BrandTrigger/workers', () => {
 
       it('non-email triggers', async()=> {
         const contact = await createContact({
-          userId: user.id, 
           birthday: BIRTHDAY.unix(),
           email: 'first_mail@fake.com',
         })
@@ -208,8 +206,7 @@ describe('BrandTrigger/workers', () => {
   
       it('flow triggers', async () => {
         const contact = await createContact({
-          userId: user.id, 
-          birthday: BIRTHDAY.unix(),
+          birthday: moment.utc().unix(),
           email: 'first_mail@fake.com',
         })
         const brandTemplates = await BrandTemplate.getForBrands({ brands: [brand.id] })
@@ -237,7 +234,7 @@ describe('BrandTrigger/workers', () => {
               time: '08:00:00',
               order: 1,
               is_automated: false,
-              event_type: 'last_step_date',
+              event_type: 'birthday',
               template_instance: instance.id
             }],
           },
@@ -251,6 +248,7 @@ describe('BrandTrigger/workers', () => {
           brandFlows[0].steps,
           [contact.id]
         )
+        await handleJobs()
         const triggerIds = await Trigger.filter(
           { deleted_at: null, brand: brand.id }
         )
@@ -262,11 +260,22 @@ describe('BrandTrigger/workers', () => {
           wait_for: -86400,
           subject: 'birthday mail',
         }
+        const campaigns_before = await EmailCampaign.getByBrand(brand.id, { havingDueAt: null })
+        console.log('campaigns, before GT: ', campaigns_before)
+        const triggerIdsBeforeGT = await Trigger.filter(
+          { deleted_at: null, brand: brand.id }
+        )
+        const triggersBeforeGT = await Trigger.getAll(triggerIdsBeforeGT)
+        console.log('triggers before GT: ', triggersBeforeGT)
         await BrandTrigger.upsert(bt, true)
         await handleJobs()
         const triggerIdsAfterGT = await Trigger.filter(
           { deleted_at: null, brand: brand.id }
         )
+        const triggersAfterGT = await Trigger.getAll(triggerIdsAfterGT)
+        console.log('triggers: ', triggersAfterGT)
+        const campaigns = await EmailCampaign.getByBrand(brand.id, { havingDueAt: null })
+        console.log('campaigns: ', campaigns)
         const trigger = await Trigger.get(triggerIds[0])
         expect(triggerIdsAfterGT.length).to.be.eql(1)
         expect(trigger.deleted_at).to.be.null
@@ -274,7 +283,6 @@ describe('BrandTrigger/workers', () => {
   
       it('effectively executed triggers', async () => {
         const contact = await createContact({
-          userId: user.id, 
           birthday: BIRTHDAY.unix(),
           email: 'first_mail@fake.com',
         })
@@ -329,7 +337,6 @@ describe('BrandTrigger/workers', () => {
     })
     it('deletes all active email triggers of desired event type', async() => {
       const contact = await createContact({
-        userId: user.id, 
         birthday: BIRTHDAY.unix(),
         email: 'first_mail@fake.com',
       })
@@ -383,7 +390,6 @@ describe('BrandTrigger/workers', () => {
 
       it('of another brand', async() => {
         await createContact({
-          userId: user.id, 
           birthday: BIRTHDAY.unix(),
           email: 'first_mail@fake.com',
         })        
@@ -421,7 +427,6 @@ describe('BrandTrigger/workers', () => {
   
       it('has no value for desired attribute type', async () => {
         await createContact({
-          userId: user.id, 
           email: 'first_mail@fake.com',
         })
         await handleJobs()
@@ -450,7 +455,6 @@ describe('BrandTrigger/workers', () => {
 
       it('when contacts are created before', async() => {
         await createContact({
-          userId: user.id, 
           birthday: BIRTHDAY.unix(),
           email: 'first_mail@fake.com',
         })
@@ -480,7 +484,6 @@ describe('BrandTrigger/workers', () => {
 
       it('when the action day is just today', async() => {
         await createContact({
-          userId: user.id, 
           birthday: moment.utc().unix(),
           email: 'first_mail@fake.com',
         })
@@ -522,7 +525,6 @@ describe('BrandTrigger/workers', () => {
         const brandTriggerId = await BrandTrigger.upsert(bt, true)
         await handleJobs()
         await createContact({
-          userId: user.id, 
           birthday: moment.utc().unix(),
           email: 'first_mail@fake.com',
         })
