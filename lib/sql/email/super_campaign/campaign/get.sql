@@ -1,10 +1,7 @@
 SELECT
   super_campaign,
-  brand,
   campaign,
   extract(epoch from created_at) AS created_at,
-  extract(epoch from forked_at) AS forked_at,
-  extract(epoch from deleted_at) AS deleted_at,
 
   accepted,
   rejected,

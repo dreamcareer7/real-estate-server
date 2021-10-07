@@ -4,7 +4,7 @@ CREATE TABLE super_campaigns_recipients AS (
   updated_at timestamp DEFAULT now(),
   deleted_at timestamp,
   super_campaign uuid NOT NULL REFERENCES super_campaigns (id),
-  -- tag text NOT NULL,
+  tag text NOT NULL,
   brand uuid REFERENCES brands (id),
 
   UNIQUE (super_campaign, brand, tag)
