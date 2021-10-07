@@ -265,8 +265,6 @@ async function testFlowProgress() {
       .add(1, 'days')
       .add(8, 'hours')
       .unix()
-    /* FIXME: the test case passes only after adding following expression:
-     * Sometimes, I've to add extra 24 hours (DAY) as well */
   )
 
   const campaigns = await sql.select('SELECT id FROM email_campaigns WHERE brand = $1', [brand.id])
