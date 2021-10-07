@@ -15,6 +15,7 @@ digraph G {
                     <td align="left" border="1" sides="LRB" balign="LEFT">
                         <table border="0" cellspacing="0" cellpadding="0" align="left">
                             <tr><td port="id" align="left">+ id : uuid</td></tr>
+                            <tr><td align="left">+ template : uuid</td></tr>
                             <tr><td align="left">+ brand : uuid</td></tr>
                         </table>
                     </td>
