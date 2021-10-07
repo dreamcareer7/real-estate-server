@@ -60,7 +60,11 @@ function beforeFirstFrisby(fns, doBefore) {
 }
 
 function afterFrisby(fn, doAfter) {
-  return cb => fn(cb).after(doAfter)
+  return cb => {
+    const F = fn(cb)
+    F.current.after.unshift(doAfter)
+    return F
+  }
 }
 
 /**
@@ -92,74 +96,59 @@ function switchBrand(brandFn, fns) {
   })
 }
 
-function getToken(email, cb) {
-  const user = users.get(email) ?? dataUser
-
-  const auth_params = {
-    client_id: config.tests.client_id,
-    client_secret: config.tests.client_secret,
-    username: email,
-    password: user.password,
-    grant_type: 'password'
+function getTokenFor(email) {
+  return cb => {
+    const user = users.get(email) ?? dataUser
+  
+    const auth_params = {
+      client_id: config.tests.client_id,
+      client_secret: config.tests.client_secret,
+      username: email,
+      password: user.password,
+      grant_type: 'password'
+    }
+  
+    return frisby.create(`login as ${email}`)
+      .post('/oauth2/token', auth_params)
+      .afterJSON(body => {
+        user.access_token = body.access_token
+      })
+      .after(cb)
+      .expectStatus(200)
   }
-
-  return frisby.create(`login as ${email}`)
-    .post('/oauth2/token', auth_params)
-    .expectStatus(200)
-    .after((err, res, body) => {
-      user.access_token = body.access_token
-      cb(err, res, body)
-    })
-}
-
-function dummy(description, fn) {
-  return cb => frisby.create(description)
-    .get('/_/dummy')
-    .after((err, res, json) => {
-      fn()
-      cb(err, res, json)
-    })
 }
 
 function runAsUser(email, fns) {
+  let originalAuthorizationHeader
+
+  const revertAuthorizationHeader = () => {
+    const setup = frisby.globalSetup()
+    setup.request.headers['Authorization'] = originalAuthorizationHeader
+    frisby.globalSetup(setup)  
+  }
+
   function setToken(token) {
     const setup = frisby.globalSetup()
-
-    const originalAuthorizationHeader = setup.request.headers['Authorization']
+    originalAuthorizationHeader = setup.request.headers['Authorization']
     setup.request.headers['Authorization'] = 'Bearer ' + token
-
     frisby.globalSetup(setup)
-
-    return () => {
-      const setup = frisby.globalSetup()
-      setup.request.headers['Authorization'] = originalAuthorizationHeader
-      frisby.globalSetup(setup)  
-    }
   }
 
-  let revertAuthorizationHeader = () => {}
-  const token = cb => getToken(email, (err, res, json) => {
-    revertAuthorizationHeader = setToken(json.access_token)
-    cb(err, res, json)
+  beforeFirstFrisby(fns, () => {
+    const user = users.get(email) ?? dataUser
+  
+    setToken(user.access_token)
   })
 
-  const user = users.get(email) ?? dataUser
+  afterLastFrisby(fns, () => revertAuthorizationHeader())
 
-  if (user.access_token) {
-    revertAuthorizationHeader = setToken(user.access_token)
-    return afterLastFrisby(fns, () => revertAuthorizationHeader())
-  } else {
-    afterLastFrisby(fns, () => revertAuthorizationHeader())
-    return {
-      [`login_${email}`]: token,
-      ...fns,
-    }
-  }
+  return fns
 }
 
 module.exports = {
   createBrands,
   createUser,
+  getTokenFor,
   runAsUser,
   switchBrand,
 }

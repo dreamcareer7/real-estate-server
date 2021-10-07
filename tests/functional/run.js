@@ -244,12 +244,12 @@ function installTestMiddlewares(cb) {
   app.post('/_/brands', (req, res) => {
     const async = require('async')
     const BrandHelper = require('../unit/brand/helper')
-  
+
     async.mapSeries(req.body, (brand, cb) => BrandHelper.create(brand).nodeify(cb), function(err, response) {
       if (err) {
         throw err
       }
-  
+
       res.collection(response)
     })
   })

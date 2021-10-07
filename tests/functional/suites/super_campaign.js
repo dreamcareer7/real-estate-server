@@ -1,6 +1,6 @@
 // @ts-nocheck
 
-const { createUser, createBrands, runAsUser, switchBrand } = require('../util')
+const { createUser, createBrands, runAsUser, getTokenFor, switchBrand } = require('../util')
 
 const F = frisby.create.bind(frisby)
 const R = () => results.super_campaign
@@ -30,6 +30,16 @@ function getTemplate(cb) {
     .expectStatus(200)
 }
 
+function createdAllowedTag(cb) {
+  return frisby.create('create agent tag allowed for use in super campaigns')
+    .post(`/contacts/tags`, {
+      tag: 'Labor Day',
+      allowedForSuperCampaigns: true
+    })
+    .after(cb)
+    .expectStatus(204)
+}
+
 function create(cb) {
   const template = theTemplate()
   return F('create a full super campaign')
@@ -39,7 +49,7 @@ function create(cb) {
       due_at: Date.now() / 1000,
       template,
       recipients: [{
-        brand: results.super_campaign.brands.data[0].id,
+        brand: region(),
         tag: 'Labor Day'
       }],
     })
@@ -61,13 +71,12 @@ function updateSimpleDetails(cb) {
 }
 
 function editRecipients(cb) {
-  const template = theTemplate()
   return F('create a full super campaign')
     .patch(`/email/super_campaigns/${R().createEmpty.data.id}`, {
-      subject: 'Happy Labor Day!',
-      description: 'A super campaign for Labor Day holiday',
-      due_at: Date.now() / 1000,
-      template,
+      recipients: [{
+        brand: region(),
+        tag: 'Labor Day/Buyers'
+      }]
     })
     .after(cb)
     .expectStatus(200)
@@ -75,6 +84,7 @@ function editRecipients(cb) {
 
 module.exports = {
   createAgentUser: createUser({ email: 'agent@rechat.com' }),
+  agentAuth: getTokenFor('agent@rechat.com'),
   brands: createBrands('create brands', [{
     name: 'Manhattan',
     brand_type: 'Region',
@@ -119,15 +129,17 @@ module.exports = {
     }]
   }], (response) => response.data[0].id),
 
+  ...switchBrand(team, runAsUser('agent@rechat.com', {
+    createdAllowedTag,
+  })),
+
   ...switchBrand(region, {
     getTemplate,
     createEmpty,
     create,
     updateSimpleDetails,
     editRecipients,
-    editDueDate,
   }),
-
 
   // addBrands,
   // removeBrand,
