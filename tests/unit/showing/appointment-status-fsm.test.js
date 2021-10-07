@@ -33,7 +33,7 @@ describe('Showing/Appointment/status-fsm', () => {
     })
   })
 
-  context('finished()', () => {
+  context('finalized()', () => {
     it('populate all showing roles')
     it('clears notifications of populated showing roles')
   })
@@ -74,7 +74,7 @@ describe('Showing/Appointment/status-fsm', () => {
   context('handleAction()', () => {
     it('does nothing if status is not changed')
     it('calls completed if new status is Completed')
-    it('calls finished if new status is Completed or Canceled')
+    it('calls finalized if new status is Completed or Canceled')
     it('calls patchStatus w/ appointment ID and newStatus')
 
     context('when an approval is performed...', () => {
@@ -84,7 +84,7 @@ describe('Showing/Appointment/status-fsm', () => {
     })
   })
 
-  context('.dispatch()', () => {
+  context('.dispatchEvent()', () => {
     it('calls handleAction w/ populated payload')
   })
 })
