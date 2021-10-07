@@ -7,7 +7,6 @@ SELECT
   created_by,
   brand,
   subject,
-  include_signature,
   template_instance,
   (
     SELECT array_agg(id) FROM super_campaigns_recipients WHERE super_campaign = super_campaigns.id

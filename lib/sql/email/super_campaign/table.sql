@@ -8,5 +8,7 @@ CREATE TABLE super_campaigns AS (
   executed_at timestamp,
   due_at timestamp,
   subject text not null,
+
+  -- TODO: Discuss with Emil about the possibility of having to add templates
   template_instance uuid not null REFERENCES templates_instances (id)
 )
