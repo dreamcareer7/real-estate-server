@@ -117,7 +117,54 @@ describe('BrandTrigger/workers', () => {
   
     // lib/models/Trigger/brand_trigger/workers.js:189-196
     context('doesn\'t delete...', () => {
-  
+      it('manual triggers, when you choose not to delete them', async () => {
+        const contact = await createContact({
+          userId: user.id, 
+          birthday: BIRTHDAY.unix(),
+          email: 'first_mail@fake.com',
+        })
+        await handleJobs()
+        // @ts-ignore
+        const [campaignId] = await EmailCampaign.createMany([{
+          brand: brand.id,
+          created_by: user.id,
+          due_at: null,
+          from: user.id,
+          html: '<div></div>',
+          subject: 'Hello!',
+          to: [{
+            recipient_type: 'Email',
+            email: 'john@doe.com',
+          }],
+        }])
+        const trigger_data = {
+          action: 'schedule_email',
+          brand: brand.id,
+          created_by: user.id,
+          event_type: 'birthday',
+          user: user.id,
+          campaign: campaignId,
+          contact: contact.id,
+          wait_for: -86400,
+          time: '10:00:00',
+        }
+        const [triggerId] = await Trigger.create([trigger_data])
+        await handleJobs()
+        const brandTemplates = await BrandTemplate.getForBrands({ brands: [brand.id] })
+        const bt = {
+          template: brandTemplates[0].id,
+          brand: brand.id,
+          created_by: user.id,
+          event_type: 'birthday',
+          wait_for: -86400,
+          subject: 'birthday mail',
+        }
+        await BrandTrigger.upsert(bt, false)
+        await handleJobs()
+        const trigger = await Trigger.get(triggerId)
+        expect(trigger.deleted_at).to.be.null
+      })
+
       it('non-email triggers', async()=> {
         const contact = await createContact({
           userId: user.id, 
