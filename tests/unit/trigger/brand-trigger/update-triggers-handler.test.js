@@ -264,7 +264,11 @@ describe('BrandTrigger/workers', () => {
         }
         await BrandTrigger.upsert(bt, true)
         await handleJobs()
+        const triggerIdsAfterGT = await Trigger.filter(
+          { deleted_at: null, brand: brand.id }
+        )
         const trigger = await Trigger.get(triggerIds[0])
+        expect(triggerIdsAfterGT.length).to.be.eql(1)
         expect(trigger.deleted_at).to.be.null
       })
   
