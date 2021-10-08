@@ -50,7 +50,7 @@ function create(cb) {
       template,
       recipients: [{
         brand: region(),
-        tag: 'Labor Day'
+        tags: ['Labor Day']
       }],
     })
     .after(cb)

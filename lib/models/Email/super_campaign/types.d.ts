@@ -1,6 +1,6 @@
 export interface SuperCampaignRecipientInput {
   brand: UUID;
-  tag: string;
+  tags: string[];
 }
 
 export interface SuperCampaignEmailCampaignInput {

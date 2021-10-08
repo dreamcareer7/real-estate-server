@@ -1,6 +1,6 @@
 WITH to_insert AS (
   SELECT
-    tag,
+    tags,
     brand
   FROM
     json_populate_recordset(NULL::super_campaigns_recipients, $2::json)
@@ -14,13 +14,13 @@ clear AS (
 
 INSERT INTO super_campaigns_recipients (
   super_campaign,
-  tag,
+  tags,
   brand
 )
 
 SELECT
   $1::uuid,
-  tag,
+  tags,
   brand
 FROM
   to_insert
