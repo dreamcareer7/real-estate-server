@@ -137,8 +137,8 @@ module.exports = {
     getTemplate,
     createEmpty,
     create,
-    updateSimpleDetails,
-    editRecipients,
+    // updateSimpleDetails,
+    // editRecipients,
   }),
 
   // addBrands,
