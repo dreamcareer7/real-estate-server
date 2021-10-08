@@ -128,6 +128,7 @@ interface IModel {
   deleted_at: number;
 
   created_by: UUID;
+  contact: UUID;
 }
 
 type ExecutedTrigger = {

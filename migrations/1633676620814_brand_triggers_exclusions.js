@@ -3,10 +3,9 @@ const db = require('../lib/utils/db')
 const migrations = [
   'BEGIN',
   `CREATE TABLE brand_triggers_exclusions (
-    id uuid PRIMARY KEY NOT NULL DEFAULT uuid_generate_v4(),
     brand_trigger uuid NOT NULL REFERENCES brand_triggers (id),
     contact uuid NOT NULL REFERENCES contacts (id),
-    deleted_at timestamp
+    PRIMARY KEY (brand_trigger, contact)
   )`,
   'COMMIT'
 ]

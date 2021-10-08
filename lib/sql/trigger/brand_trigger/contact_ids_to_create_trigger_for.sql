@@ -28,5 +28,4 @@
   FROM brand_triggers_exclusions as bte
   WHERE
     bte.brand_trigger = $3::uuid
-    AND bte.deleted_at IS NULL
 )

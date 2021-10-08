@@ -4,8 +4,10 @@
 INSERT INTO brand_triggers_exclusions (
   brand_trigger,
   contact
-) VALUES (
+) SELECT 
   $1::uuid,
-  $2::uuid
-)
-RETURNING id
+  c.contact::uuid
+FROM
+  json_to_recordset($2::json) as c (
+    contact uuid
+  )

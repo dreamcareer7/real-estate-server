@@ -22,9 +22,7 @@ INSERT INTO triggers (
   brand_event,
   campaign,
 
-  scheduled_after,
-
-  is_global
+  scheduled_after
 )
 SELECT
   $1,
@@ -50,9 +48,7 @@ SELECT
   brand_event,
   campaign,
 
-  scheduled_after,
-
-  is_global
+  scheduled_after
 FROM
   json_populate_recordset(null::triggers, $2::json)
 RETURNING

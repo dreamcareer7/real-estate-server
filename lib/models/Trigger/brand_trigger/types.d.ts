@@ -27,8 +27,6 @@ export interface BrandTriggerPopulated extends Omit<BrandTrigger, TBrandTriggerA
 }
 
 export interface BrandTriggerExclusion {
-  id: UUID
   brand_trigger: UUID
   contact: UUID
-  deleted_at: number | null
 }
