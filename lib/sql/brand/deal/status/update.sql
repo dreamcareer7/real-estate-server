@@ -1,6 +1,6 @@
 WITH to_delete AS (
   DELETE FROM brands_deal_statuses_checklists
-  WHERE status = $1
+  WHERE status = $1 AND checklist IN(SELECT id FROM brands_checklists WHERE brand = $9)
 ),
 
 status AS (

@@ -174,7 +174,6 @@ const checkTask = cb => {
         checklists: [
           {
             tasks: [
-              {},
               {
                 id: results.deal.addTask.data.id
               }

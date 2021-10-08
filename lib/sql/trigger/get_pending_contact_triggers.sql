@@ -12,4 +12,4 @@ WHERE
   (CASE WHEN $2::uuid[] IS NOT NULL THEN contact = ANY($2::uuid[])
         ELSE contact IS NOT NULL END) AND
   event_type = $3::text AND
-  action = $4::text
+  action = $4::trigger_action

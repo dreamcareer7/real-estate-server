@@ -12,6 +12,11 @@ declare interface IEmailRecipientEmailInput {
   recipient_type: 'Email';
 }
 
+declare interface IEmailRecipientContactInput {
+  contact: UUID;
+  recipient_type: 'Contact';
+}
+
 declare interface IEmailRecipientBrandInput {
   brand: UUID;
   recipient_type: 'Brand';
@@ -36,6 +41,7 @@ declare interface IEmailCampaignAttachmentInput {
 
 declare type IEmailRecipientInput = 
   | IEmailRecipientEmailInput
+  | IEmailRecipientContactInput
   | IEmailRecipientListInput
   | IEmailRecipientTagInput
   | IEmailRecipientBrandInput
@@ -46,6 +52,7 @@ declare type IEmailRecipientInput =
 declare type TIsTagPresent = TIsPropertyPresent<IEmailRecipientInput, IEmailRecipientTagInput, 'tag'>;
 declare type TIsListPresent = TIsPropertyPresent<IEmailRecipientInput, IEmailRecipientListInput, 'list'>;
 declare type TIsEmailPresent = TIsPropertyPresent<IEmailRecipientInput, IEmailRecipientEmailInput, 'email'>;
+declare type TIsContactPresent = TIsPropertyPresent<IEmailRecipientInput, IEmailRecipientContactInput, 'contact'>;
 declare type TIsBrandPresent = TIsPropertyPresent<IEmailRecipientInput, IEmailRecipientBrandInput, 'brand'>;
 declare type TIsAgentPresent = TIsPropertyPresent<IEmailRecipientInput, IEmailRecipientAgentInput, 'agent'>;
 

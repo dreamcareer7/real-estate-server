@@ -13,12 +13,14 @@ require('../../../lib/models/Google/workers')
 require('../../../lib/models/Microsoft/workers')
 require('../../../lib/models/Deal/email')
 require('../../../lib/models/Deal/brokerwolf')
+require('../../../lib/models/Deal/D365')
 require('../../../lib/models/Email/send')
 require('../../../lib/models/Email/events')
 require('../../../lib/models/SMS')
 require('../../../lib/models/Daily')
 require('../../../lib/models/Envelope')
 require('../../../lib/models/Trigger/worker')
+require('../../../lib/models/Trigger/brand_trigger/workers')
 require('../../../lib/models/Stripe')
 require('../../../lib/models/Godaddy/zone')
 require('../../../lib/models/Godaddy/purchase')
@@ -28,7 +30,7 @@ require('../../../lib/controllers/contact/contact')
 
 const queues = [
   {
-    queues: ['brokerwolf'],
+    queues: ['brokerwolf', 'd365'],
     concurrency: 1
   },
   {
@@ -85,7 +87,7 @@ const queues = [
     concurrency: 3
   },
   {
-    queues: ['trigger'],
+    queues: ['trigger', 'brand_trigger'],
     concurrency: 5
   },
   {
