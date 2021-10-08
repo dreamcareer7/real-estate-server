@@ -1,5 +1,6 @@
 -- $1: brand_id
 -- $2: event_type (attribute_type)
+-- $3: brand_trigger_id
 
 (
   SELECT DISTINCT
@@ -22,4 +23,10 @@
     AND t.brand = $1::uuid
     AND t.action = 'schedule_email'::trigger_action
     AND t.event_type = $2::text
+) EXCEPT (
+  SELECT bte.contact
+  FROM brand_triggers_exclusions as bte
+  WHERE
+    bte.brand_trigger = $3::uuid
+    AND bte.deleted_at IS NULL
 )

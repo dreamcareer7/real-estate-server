@@ -5,6 +5,7 @@ const BrandTrigger = {
   ...require('../../../../lib/models/Trigger/brand_trigger/workers'), 
   ...require('../../../../lib/models/Trigger/brand_trigger/create'), 
   ...require('../../../../lib/models/Trigger/brand_trigger/get'),
+  ...require('../../../../lib/models/Trigger/brand_trigger/exclusions'),
 }
 const Contact = require('../../../../lib/models/Contact/index')
 
@@ -109,8 +110,9 @@ describe('BrandTrigger/workers', () => {
         subject: 'birthday mail',
       }
       // @ts-ignore
-      await BrandTrigger.upsert(bt, true, { exclude: [contact2.id] })
+      const brandTriggerId = await BrandTrigger.upsert(bt, true, { exclude: [contact2.id] })
       await handleJobs()
+      await BrandTrigger.makeExclusion(brandTriggerId, [contact2.id])
       const triggers = await Trigger.filter({
         brand: brand.id,
         event_type: 'birthday',
