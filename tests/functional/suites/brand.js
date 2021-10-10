@@ -864,6 +864,20 @@ const deleteAsset = cb => {
     .expectStatus(204)
 }
 
+function createWebhook(cb) {
+  return frisby
+    .create('create a webhook')
+    .post(`/brands/${results.brand.create.data.id}/webhooks`, {
+      topic: 'Showings',
+      url: 'https://localhost:3000'
+    })
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK'
+    })
+}
+
 module.exports = {
   createParent,
   attributeDefs,
@@ -940,6 +954,8 @@ module.exports = {
   createAsset,
   getAssets,
   deleteAsset,
+
+  createWebhook,
 
   removeBrand
 }

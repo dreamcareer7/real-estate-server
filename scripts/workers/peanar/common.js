@@ -24,6 +24,7 @@ require('../../../lib/models/Trigger/brand_trigger/workers')
 require('../../../lib/models/Stripe')
 require('../../../lib/models/Godaddy/zone')
 require('../../../lib/models/Godaddy/purchase')
+require('../../../lib/models/Brand/webhook/trigger')
 require('../../../lib/models/Listing/notify-agents')
 require('../../../lib/controllers/contact/attributes')
 require('../../../lib/controllers/contact/contact')
@@ -146,6 +147,11 @@ const queues = [
     queues: ['listing_notifications'],
     concurrency: 20
   },
+
+  {
+    queues: ['brand_webhook'],
+    concurrency: 50
+  }
 ]
 
 async function start() {
