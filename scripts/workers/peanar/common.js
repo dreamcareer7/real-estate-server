@@ -20,9 +20,11 @@ require('../../../lib/models/SMS')
 require('../../../lib/models/Daily')
 require('../../../lib/models/Envelope')
 require('../../../lib/models/Trigger/worker')
+require('../../../lib/models/Trigger/brand_trigger/workers')
 require('../../../lib/models/Stripe')
 require('../../../lib/models/Godaddy/zone')
 require('../../../lib/models/Godaddy/purchase')
+require('../../../lib/models/Brand/webhook/trigger')
 require('../../../lib/models/Listing/notify-agents')
 require('../../../lib/controllers/contact/attributes')
 require('../../../lib/controllers/contact/contact')
@@ -86,7 +88,7 @@ const queues = [
     concurrency: 3
   },
   {
-    queues: ['trigger'],
+    queues: ['trigger', 'brand_trigger'],
     concurrency: 5
   },
   {
@@ -145,6 +147,11 @@ const queues = [
     queues: ['listing_notifications'],
     concurrency: 20
   },
+
+  {
+    queues: ['brand_webhook'],
+    concurrency: 50
+  }
 ]
 
 async function start() {
