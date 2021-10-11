@@ -14,7 +14,7 @@ SELECT
   'crm_tag' AS type,
 
   (CASE
-    $3::uuid IS NULL THEN FALSE
+    WHEN $3::uuid IS NULL THEN FALSE
     ELSE EXISTS(
       SELECT 1 FROM super_campaigns_allowed_tags AS sct WHERE
         sct.brand = $1::uuid AND
