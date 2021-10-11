@@ -229,6 +229,8 @@ declare type TDbSqlAddress =
   | 'contact/tag/rename'
   | 'contact/tag/support_delete_all'
   | 'contact/tag/update_touch_freq'
+  | 'contact/tag/enable_auto_enroll_in_super_campaigns'
+  | 'contact/tag/disable_auto_enroll_in_super_campaigns'
   | 'contact/timeline'
   | 'contact/undelete'
   | 'contact/update_display_names'

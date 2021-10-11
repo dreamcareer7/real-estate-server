@@ -1,3 +1,7 @@
+-- $1: brand (ID)
+-- $2: creator users (IDs)
+-- $3: [current user (ID)]
+
 SELECT
   id,
   EXTRACT(EPOCH FROM created_at) AS created_at,
@@ -7,7 +11,19 @@ SELECT
   tag,
   tag AS text,
   touch_freq,
-  'crm_tag' AS type
+  'crm_tag' AS type,
+
+  (CASE
+    $3::uuid IS NULL THEN FALSE
+    ELSE EXISTS(
+      SELECT 1 FROM super_campaigns_allowed_tags AS sct WHERE
+        sct.brand = $1::uuid AND
+        sct.user = $3::uuid AND
+        sct.tag = tag
+        LIMIT 1
+    )
+   END) AS auto_enroll_in_super_campaigns
+
 FROM
   crm_tags
 WHERE
