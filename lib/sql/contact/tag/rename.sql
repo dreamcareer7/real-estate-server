@@ -1,3 +1,9 @@
+-- $1: brand (ID)
+-- $2: old tag name
+-- $3: new tag name
+-- $4: user (ID)
+-- $5: context ID
+
 WITH tag_def AS (
   SELECT id FROM contacts_attribute_defs WHERE name = 'tag' LIMIT 1
 ), list_updates AS (
@@ -58,6 +64,16 @@ WITH tag_def AS (
     )
   RETURNING
     1
+), sct_update AS (
+  UPDATE super_campaigns_allowed_tags AS sct
+  SET
+    tag = $3::text
+  WHERE
+    sct.brand = $1::uuid AND
+    sct.user = $4::uuid AND
+    sct.tag = $2::text
+  RETURNING
+    1
 )
 SELECT DISTINCT
   au.contact
@@ -68,4 +84,6 @@ FROM
   LEFT JOIN tag_delete
     ON TRUE
   LEFT JOIN tag_updates
+    ON TRUE
+  LEFT JOIN sct_update
     ON TRUE
