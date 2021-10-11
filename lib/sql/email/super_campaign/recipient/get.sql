@@ -4,7 +4,7 @@ SELECT
   extract(epoch FROM updated_at) AS updated_at,
   extract(epoch FROM deleted_at) AS deleted_at,
   super_campaign,
-  tag,
+  tags,
   brand
 FROM
   super_campaigns_recipients

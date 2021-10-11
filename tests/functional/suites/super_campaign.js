@@ -7,7 +7,7 @@ const R = () => results.super_campaign
 
 const theTemplate = () => R().getTemplate.data[0].id
 const region = () => R().brands.data[0].id
-const office = () => R().brands.data[0].children[0].id
+// const office = () => R().brands.data[0].children[0].id
 const team = () => R().brands.data[0].children[0].children[0].id
 
 function dummy(description, cb) {
@@ -32,7 +32,7 @@ function getTemplate(cb) {
 
 function createdAllowedTag(cb) {
   return frisby.create('create agent tag allowed for use in super campaigns')
-    .post(`/contacts/tags`, {
+    .post('/contacts/tags', {
       tag: 'Labor Day',
       allowedForSuperCampaigns: true
     })
@@ -50,37 +50,37 @@ function create(cb) {
       template,
       recipients: [{
         brand: region(),
-        tag: 'Labor Day'
+        tags: ['Labor Day']
       }],
     })
     .after(cb)
     .expectStatus(200)
 }
 
-function updateSimpleDetails(cb) {
-  const template = theTemplate()
-  return F('create a full super campaign')
-    .patch(`/email/super_campaigns/${R().createEmpty.data.id}`, {
-      subject: 'Happy Labor Day!',
-      description: 'A super campaign for Labor Day holiday',
-      due_at: Date.now() / 1000,
-      template,
-    })
-    .after(cb)
-    .expectStatus(200)
-}
+// function updateSimpleDetails(cb) {
+//   const template = theTemplate()
+//   return F('create a full super campaign')
+//     .patch(`/email/super_campaigns/${R().createEmpty.data.id}`, {
+//       subject: 'Happy Labor Day!',
+//       description: 'A super campaign for Labor Day holiday',
+//       due_at: Date.now() / 1000,
+//       template,
+//     })
+//     .after(cb)
+//     .expectStatus(200)
+// }
 
-function editRecipients(cb) {
-  return F('create a full super campaign')
-    .patch(`/email/super_campaigns/${R().createEmpty.data.id}`, {
-      recipients: [{
-        brand: region(),
-        tag: 'Labor Day/Buyers'
-      }]
-    })
-    .after(cb)
-    .expectStatus(200)
-}
+// function editRecipients(cb) {
+//   return F('create a full super campaign')
+//     .patch(`/email/super_campaigns/${R().createEmpty.data.id}`, {
+//       recipients: [{
+//         brand: region(),
+//         tag: 'Labor Day/Buyers'
+//       }]
+//     })
+//     .after(cb)
+//     .expectStatus(200)
+// }
 
 module.exports = {
   createAgentUser: createUser({ email: 'agent@rechat.com' }),
@@ -137,8 +137,8 @@ module.exports = {
     getTemplate,
     createEmpty,
     create,
-    updateSimpleDetails,
-    editRecipients,
+    // updateSimpleDetails,
+    // editRecipients,
   }),
 
   // addBrands,

@@ -7,6 +7,7 @@ CREATE MATERIALIZED VIEW analytics.deals AS
           deals.id,
           deals.created_at,
           deals.deal_type,
+          deals.faired_at,
           deals.listing,
           deals.brand,
           deals.title,
@@ -33,6 +34,7 @@ CREATE MATERIALIZED VIEW analytics.deals AS
           real_deals.created_at as deal_created_at,
           deals_roles.user,
           real_deals.deal_type,
+          real_deals.faired_at,
           real_deals.property_type,
           real_deals.listing,
           real_deals.brand,
@@ -55,6 +57,7 @@ CREATE MATERIALIZED VIEW analytics.deals AS
           ctx.*,
           real_deals.created_at as deal_created_at,
           real_deals.deal_type,
+          real_deals.faired_at,
           real_deals.property_type,
           real_deals.listing,
           real_deals.brand,
@@ -93,6 +96,7 @@ CREATE MATERIALIZED VIEW analytics.deals AS
             ctx.deal AS id,
             ctx.deal_created_at,
             ctx.deal_type,
+            ctx.faired_at,
             ctx.property_type,
             ctx.listing,
             ctx.brand,
@@ -107,6 +111,7 @@ CREATE MATERIALIZED VIEW analytics.deals AS
             agent.deal AS id,
             agent.deal_created_at as created_at,
             agent.deal_type,
+            agent.faired_at,
             agent.property_type,
             agent.listing,
             agent.brand,
@@ -150,6 +155,7 @@ CREATE MATERIALIZED VIEW analytics.deals AS
       id uuid,
       created_at timestamptz,
       deal_type deal_type,
+      faired_at timestamptz,
       property_type text,
       listing uuid,
       brand uuid,
@@ -181,6 +187,12 @@ CREATE MATERIALIZED VIEW analytics.deals AS
   SELECT ct.id,
     ct.created_at,
     ct.deal_type,
+    (
+      CASE 
+        WHEN ct.faired_at IS NULL THEN 'Draft'
+        ELSE                           'Published'
+      END
+    ) as visibility,
     ct.property_type,
     ct.listing,
     ct.brand,

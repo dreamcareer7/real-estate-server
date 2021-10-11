@@ -1,5 +1,5 @@
-CREATE TABLE super_campaigns_enrollments AS (
-  id uuid PRIMARY KEY uuid_generate_v4(),
+CREATE TABLE super_campaigns_enrollments (
+  id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
   created_at timestamp DEFAULT now(),
   updated_at timestamp DEFAULT now(),
   deleted_at timestamp,
@@ -7,12 +7,12 @@ CREATE TABLE super_campaigns_enrollments AS (
 
   super_campaign uuid NOT NULL REFERENCES super_campaigns (id),
   brand uuid REFERENCES brands (id),
-  user uuid REFERENCES users (id),
+  "user" uuid REFERENCES users (id),
 
   -- should we have a separate field for custom admin/agent tags? doesn't seem likely
   tags text[] NOT NULL,
 
-  UNIQUE (super_campaign, brand, user)
+  UNIQUE (super_campaign, brand, "user")
 );
 
 CREATE INDEX super_campaigns_enrollments_campaign_brand_idx ON super_campaigns_enrollments (super_campaign, brand);

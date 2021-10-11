@@ -13,7 +13,7 @@ SELECT
   ) as recipients
 FROM
   super_campaigns
-  JOIN unnest($1::text[]) WITH ORDINALITY t(eid, ord)
+  JOIN unnest($1::uuid[]) WITH ORDINALITY t(eid, ord)
     ON super_campaigns.id = eid
 ORDER BY
   t.ord

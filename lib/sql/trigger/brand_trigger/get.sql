@@ -1,5 +1,6 @@
 SELECT
   bt.id,
+  bt.created_by,
   bt.brand,
   bt.template,
   bt.template_instance,
