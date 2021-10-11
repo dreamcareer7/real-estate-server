@@ -84,8 +84,8 @@ function create(cb) {
     .expectStatus(200)
     .expectJSON({
       data: {
-	...data,
-	type: 'super_campaign'
+        ...data,
+        type: 'super_campaign'
       }
     })
 }
@@ -118,8 +118,8 @@ function updateTags(cb) {
     .expectStatus(200)
     .expectJSON({
       data: {
-	id,
-	tags: ['Labor Day/Buyers']
+        id,
+        tags: ['Labor Day/Buyers']
       }
     })
 }
@@ -135,8 +135,8 @@ function updateEligibility(cb) {
     .expectStatus(200)
     .expectJSON({
       data: {
-	id,
-	eligible_brands: [office()]
+        id,
+        eligible_brands: [office()]
       }
     })
 }
