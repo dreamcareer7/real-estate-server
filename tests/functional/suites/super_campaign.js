@@ -141,6 +141,16 @@ function updateEligibility(cb) {
     })
 }
 
+function get(cb) {
+  const id = R().createEmpty.data.id
+
+  return F('get super campaign')
+    .get(`/email/super-campaigns/${id}?associations[]=super_campaign.eligible_brands`)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON(R().updateEligibility)
+}
+
 module.exports = {
   listing_by_mls,
 
@@ -203,6 +213,8 @@ module.exports = {
     updateSimpleDetails,
     updateTags,
     updateEligibility,
+
+    get,
   }),
 
   // addBrands,
