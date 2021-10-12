@@ -30,7 +30,9 @@ SELECT
 
   scheduled_after,
 
-  'trigger' AS type
+  'trigger' AS type,
+
+  origin
 FROM
   triggers
   JOIN unnest($1::uuid[]) WITH ORDINALITY t(tid, ord)

@@ -131,6 +131,7 @@ interface IModel {
 
   created_by: UUID;
   contact: UUID;
+  origin?: UUID;
 }
 
 type ExecutedTrigger = {
