@@ -22,7 +22,12 @@ const BrandFlow = require('../../../lib/models/Brand/flow/create')
 const BrandList = require('../../../lib/models/Brand/list')
 const Context = require('../../../lib/models/Context')
 const Form = require('../../../lib/models/Form')
+const Tag = require('../../../lib/models/Contact/tag')
+const User = require('../../../lib/models/User/get')
 const Template = require('../../../lib/models/Template/create')
+const { isUUID } = require('../../../lib/utils/validator')
+
+const UserHelper = require('../user/helper')
 
 const default_data = {
   name: 'Test Brand',
@@ -52,10 +57,46 @@ async function create(data) {
     flows,
     lists,
     templates,
+    tags,
+    children,
     ...brand_props
   } = data
 
   const b = await Brand.create(brand_props)
+
+  for (const r in roles) {
+    const role = await BrandRole.create({
+      brand: b.id,
+      role: r,
+      acl: ['*']
+    })
+
+    for (const m of roles[r]) {
+      if (isUUID(m)) {
+        await BrandRole.addMember({
+          user: m,
+          role: role.id
+        })
+      } else {
+        const user = await User.getByEmail(m)
+        if (!user) continue
+
+        await BrandRole.addMember({
+          user: user.id,
+          role: role.id
+        })
+      }
+    }
+  }
+
+  if (Array.isArray(children)) {
+    for (const childBrand of children) {
+      await create({
+        ...childBrand,
+        parent: b.id
+      })
+    }
+  }
 
   const property_types_by_label = {}
   for (const { label, is_lease } of property_types) {
@@ -66,21 +107,6 @@ async function create(data) {
     })
 
     property_types_by_label[label] = property_type.id
-  }
-
-  for (const r in roles) {
-    const role = await BrandRole.create({
-      brand: b.id,
-      role: r,
-      acl: ['*']
-    })
-
-    for (const m of roles[r]) {
-      await BrandRole.addMember({
-        user: m,
-        role: role.id
-      })
-    }
   }
 
   const form = await Form.create({
@@ -166,6 +192,11 @@ async function create(data) {
 
   if (Array.isArray(lists)) {
     await BrandList.createAll(b.id, lists)
+  }
+
+  if (Array.isArray(tags)) {
+    const testUser = await UserHelper.TestUser()
+    await Promise.all(tags.map(t => Tag.create(b.id, testUser.id, t, null)))
   }
 
   Context.set({'db:log': original_log_setting})

@@ -265,7 +265,6 @@ async function testFlowProgress() {
       .add(1, 'days')
       .add(8, 'hours')
       .unix()
-      + 24 * 3600 - moment().utcOffset() * 60
   )
 
   const campaigns = await sql.select('SELECT id FROM email_campaigns WHERE brand = $1', [brand.id])
@@ -295,12 +294,12 @@ async function testFlowProgressFail() {
 
   const id = await createContact(attrs)
   const [flow] = await Flow.enrollContacts(brand.id, user.id, brand_flow.id, Date.now() / 1000, brand_flow.steps.map(s => s.id), [id])
-
+  
   await Trigger.executeDue()
   await handleJobs()
 
   const { steps } = await Flow.get(flow.id)
-  expect(steps, 'Two steps should be present after the second one failed to be schedule').to.have.length(2)
+  expect(steps, 'Three steps should be present after the second one failed to be scheduled').to.have.length(3)
 
   const flow_steps = await FlowStep.getAll(steps)
 
