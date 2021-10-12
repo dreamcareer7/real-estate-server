@@ -8,6 +8,8 @@ export interface ITriggerUpdateInput {
 
   brand_event?: UUID;
   campaign?: UUID;
+
+  origin: UUID | null;
 }
 
 export type ITriggerEndpointInput = {
