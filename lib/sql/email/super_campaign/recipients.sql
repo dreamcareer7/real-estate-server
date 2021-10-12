@@ -2,7 +2,7 @@ WITH rb AS (
   SELECT
     DISTINCT bc.id
   FROM
-    super_campaigns_recipients AS r
+    super_campaigns_eligibility AS r
     LATERAL CROSS JOIN brand_children(r.brand) AS bc(id)
   WHERE
     r.super_campaign = $1::uuid

@@ -7,8 +7,10 @@ CREATE TABLE super_campaigns (
   brand uuid not null REFERENCES brands (id),
   executed_at timestamp,
   due_at timestamp,
+  tags text[],
   subject text,
-
-  -- TODO: Discuss with Emil about the possibility of having to add templates
+  description text,
   template_instance uuid REFERENCES templates_instances (id)
-)
+);
+
+CREATE INDEX super_campaigns_brand_idx ON super_campaigns USING BTREE (brand)

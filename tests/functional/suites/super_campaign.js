@@ -1,13 +1,14 @@
 // @ts-nocheck
 
 const { createUser, createBrands, runAsUser, getTokenFor, switchBrand } = require('../util')
+const { by_mls: listing_by_mls } = require('./listing')
 
 const F = frisby.create.bind(frisby)
 const R = () => results.super_campaign
 
-const theTemplate = () => R().getTemplate.data[0].id
+const theTemplate = () => R().instantiateTemplate.data.id
 const region = () => R().brands.data[0].id
-// const office = () => R().brands.data[0].children[0].id
+const office = () => R().brands.data[0].children[0].id
 const team = () => R().brands.data[0].children[0].children[0].id
 
 function dummy(description, cb) {
@@ -18,7 +19,7 @@ function dummy(description, cb) {
 
 function createEmpty(cb) {
   return F('create empty super campaign')
-    .post('/email/super_campaigns', {})
+    .post('/email/super-campaigns', {})
     .after(cb)
     .expectStatus(200)
 }
@@ -28,6 +29,31 @@ function getTemplate(cb) {
     .get(`/brands/${region()}/templates?types[]=JustSold&mediums[]=Email`)
     .after(cb)
     .expectStatus(200)
+}
+
+function instantiateTemplate(cb) {
+  const id = R().getTemplate.data[0].template.id
+  const html = '<div>fakeTemplateInstance</div>'
+
+  const data = {
+    html,
+    deals: [],
+    listings: [
+      R().listing_by_mls.data[0].id
+    ],
+    contacts: []
+  }
+
+  return frisby.create('create an instance of a template')
+    .post(`/templates/${id}/instances`, data)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      data: {
+        html
+      }
+    })
 }
 
 function createdAllowedTag(cb) {
@@ -41,50 +67,96 @@ function createdAllowedTag(cb) {
 }
 
 function create(cb) {
-  const template = theTemplate()
+  const template_instance = theTemplate()
+  const data = {
+    subject: 'Happy Labor Day!',
+    description: 'A super campaign for Labor Day holiday',
+    due_at: Date.now() / 1000,
+    template_instance,
+    tags: ['Labor Day'],
+  }
   return F('create a full super campaign')
-    .post('/email/super_campaigns', {
-      subject: 'Happy Labor Day!',
-      description: 'A super campaign for Labor Day holiday',
-      due_at: Date.now() / 1000,
-      template,
-      recipients: [{
-        brand: region(),
-        tags: ['Labor Day']
-      }],
+    .post('/email/super-campaigns?associations[]=super_campaign.', {
+      ...data,
+      eligible_brands: [region()],
     })
     .after(cb)
     .expectStatus(200)
+    .expectJSON({
+      data: {
+        ...data,
+        type: 'super_campaign'
+      }
+    })
 }
 
-// function updateSimpleDetails(cb) {
-//   const template = theTemplate()
-//   return F('create a full super campaign')
-//     .patch(`/email/super_campaigns/${R().createEmpty.data.id}`, {
-//       subject: 'Happy Labor Day!',
-//       description: 'A super campaign for Labor Day holiday',
-//       due_at: Date.now() / 1000,
-//       template,
-//     })
-//     .after(cb)
-//     .expectStatus(200)
-// }
+function updateSimpleDetails(cb) {
+  const template_instance = theTemplate()
+  const data = {
+    subject: 'Happy Labor Day!',
+    description: 'A super campaign for Labor Day holiday',
+    due_at: Date.now() / 1000,
+    template_instance,
+  }
 
-// function editRecipients(cb) {
-//   return F('create a full super campaign')
-//     .patch(`/email/super_campaigns/${R().createEmpty.data.id}`, {
-//       recipients: [{
-//         brand: region(),
-//         tag: 'Labor Day/Buyers'
-//       }]
-//     })
-//     .after(cb)
-//     .expectStatus(200)
-// }
+  return F('update a super campaign')
+    .put(`/email/super-campaigns/${R().createEmpty.data.id}`, data)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      data
+    })
+}
+
+function updateTags(cb) {
+  const id = R().createEmpty.data.id
+  return F('update tags')
+    .put(`/email/super-campaigns/${id}/tags`, {
+      tags: ['Labor Day/Buyers']
+    })
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      data: {
+        id,
+        tags: ['Labor Day/Buyers']
+      }
+    })
+}
+
+function updateEligibility(cb) {
+  const id = R().createEmpty.data.id
+
+  return F('update eligibile brands')
+    .put(`/email/super-campaigns/${id}/eligibility?associations[]=super_campaign.eligible_brands`, {
+      eligible_brands: [office()]
+    })
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      data: {
+        id,
+        eligible_brands: [office()]
+      }
+    })
+}
+
+function get(cb) {
+  const id = R().createEmpty.data.id
+
+  return F('get super campaign')
+    .get(`/email/super-campaigns/${id}?associations[]=super_campaign.eligible_brands`)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON(R().updateEligibility)
+}
 
 module.exports = {
+  listing_by_mls,
+
   createAgentUser: createUser({ email: 'agent@rechat.com' }),
   agentAuth: getTokenFor('agent@rechat.com'),
+
   brands: createBrands('create brands', [{
     name: 'Manhattan',
     brand_type: 'Region',
@@ -135,10 +207,14 @@ module.exports = {
 
   ...switchBrand(region, {
     getTemplate,
+    instantiateTemplate,
     createEmpty,
     create,
-    // updateSimpleDetails,
-    // editRecipients,
+    updateSimpleDetails,
+    updateTags,
+    updateEligibility,
+
+    get,
   }),
 
   // addBrands,
