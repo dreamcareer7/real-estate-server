@@ -1,13 +1,16 @@
 #!/usr/bin/env node
 
 require('../connection.js')
-const Deal = require('../../lib/models/Deal')
+const { sync } = require('../../lib/models/Deal/D365')
+const Brand = require('../../lib/models/Brand/get')
+const Deal = require('../../lib/models/Deal/get')
 const promisify = require('../../lib/utils/promisify')
 
 const run = async () => {
   const deal = await promisify(Deal.get)(process.argv[2])
+  const parents = await Brand.getParents(deal.brand)
 
-  await Deal.notify({deal})
+  await sync(deal, parents)
 }
 
 run()
