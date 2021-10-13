@@ -23,11 +23,12 @@ export type AppointmentStatus =
   ;
 
 export type WebhookEvent =
+  | 'ApplicationChanged'
+  | 'AppointmentConfirmed'
   | 'ApplicationCreated'
-  | 'ShowListingCreated'
   | 'AppointmentRequested'
   | 'ShowListingChanged'
-  | 'ApplicationChanged'
+  | 'ShowListingCreated'
 // TODO: To be continued?
   ;
 
