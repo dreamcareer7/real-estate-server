@@ -15,6 +15,13 @@ export type AppointmentMethod =
   | 'InPersonAndVirtual'
   ;
 
+export type AppointmentStatus =
+  | 'Confirmed'
+  | 'Cancelled'
+  | 'Requested'
+  | 'Denied'
+  ;
+
 /**
  * The appointment request.
  */
