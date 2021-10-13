@@ -22,6 +22,15 @@ export type AppointmentStatus =
   | 'Denied'
   ;
 
+export type WebhookEvent =
+  | 'ApplicationCreated'
+  | 'ShowListingCreated'
+  | 'AppointmentRequested'
+  | 'ShowListingChanged'
+  | 'ApplicationChanged'
+// TODO: To be continued?
+  ;
+
 /**
  * The appointment request.
  */
@@ -1619,4 +1628,8 @@ export interface AccessTokenResult {
   token?: string | null;
   expiration?: string | null;
   notBefore?: string | null;
+}
+
+export type WebhookPayload = Record<string, any> & {
+  webhookEvent: WebhookEvent;
 }
