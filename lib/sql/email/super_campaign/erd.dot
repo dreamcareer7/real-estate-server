@@ -35,10 +35,10 @@ digraph G {
         >
     ]
     
-    super_campaigns_recipients [
+    super_campaigns_eligibility [
         label = <
             <table border="0" cellspacing="0" cellpadding="5">
-                <tr><td border="1">super_campaigns_recipients</td></tr>
+                <tr><td border="1">super_campaigns_eligibility</td></tr>
                 <tr>
                     <td align="left" border="1" sides="LRB" balign="LEFT">
                         <table border="0" cellspacing="0" cellpadding="0" align="left">
@@ -119,7 +119,7 @@ digraph G {
         >
     ]
     
-    super_campaigns_recipients:super_campaign -> super_campaigns:id
+    super_campaigns_eligibility:super_campaign -> super_campaigns:id
     super_campaigns_enrollments:super_campaign -> super_campaigns:id
     crm_tags:autoEnroll ->super_campaigns_allowed_tags [label="creates or deletes"]
 }
