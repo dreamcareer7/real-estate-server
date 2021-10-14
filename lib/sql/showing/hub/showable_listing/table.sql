@@ -46,5 +46,9 @@ CREATE TABLE showinghub.showable_listings (
   required_participants showinghub_required_participant NOT NULL,
   showing_method showinghub_showing_method NOT NULL,
   confirmation_type showinghub_confirmation_method NOT NULL,
-  showings_allowed showinghub_showing_status NOT NULL
-)
+  showings_allowed showinghub_showing_status NOT NULL,
+
+  showing uuid REFERENCES showings (id)
+);
+
+CREATE INDEX showinghub.showable_listings_showing_id_idx ON showinghub.showable_listings (showing)
