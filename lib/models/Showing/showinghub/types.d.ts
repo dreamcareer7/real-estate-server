@@ -1631,13 +1631,13 @@ export interface AccessTokenResult {
   notBefore?: string | null;
 }
 
-export interface WebhookPayload <D> {
+export interface WebhookPayload {
   organizationId: UUID;
   applicationId: UUID;
   subscriptionId: UUID;
   webhookEvent: WebhookEvent;
   attempt: number;
-  data: D;
+  data: Partial<Record<WebhookPayloadDataProp, any>>;
   creationTimeUtc: string;
 }
 
@@ -1647,3 +1647,69 @@ export interface CommonApiResult {
   exceptions?: string[] | null;
   message?: string | null;
 }
+
+export type WebhookPayloadDataProp =
+  | 'actualEndDatetime'
+  | 'actualStartDatetime'
+  | 'address1'
+  | 'address2'
+  | 'apiKey'
+  | 'application'
+  | 'applicationId'
+  | 'applicationName'
+  | 'applicationScope'
+  | 'appointmentMethod'
+  | 'appointmentNotes'
+  | 'appointmentStatus'
+  | 'appointmentType'
+  | 'appointments'
+  | 'buyingAgentID'
+  | 'buyingAgentLicenseNumber'
+  | 'buyingAgentLicenseState'
+  | 'buyingAgentMlsId'
+  | 'buyingAgentName'
+  | 'buyingAgentStateLicenseAffirmation'
+  | 'callBackUrl'
+  | 'cancelComments'
+  | 'cancelReason'
+  | 'city'
+  | 'comments'
+  | 'confirmationType'
+  | 'contactEmail'
+  | 'contactFirstName'
+  | 'contactLastName'
+  | 'contactPhone'
+  | 'createdBy'
+  | 'createdOn'
+  | 'endDatetime'
+  | 'id'
+  | 'listAgentLicenseNumber'
+  | 'listAgentLicenseStateAffirmation'
+  | 'listAgentMlsId'
+  | 'listAgentName'
+  | 'listingAgentLicenseState'
+  | 'listingId'
+  | 'modifiedBy'
+  | 'modifiedOn'
+  | 'organization'
+  | 'organizationId'
+  | 'reoccurringRestrictionsList'
+  | 'request'
+  | 'requestId'
+  | 'requestNotes'
+  | 'requestStatus'
+  | 'requiredParticipants'
+  | 'restrictions'
+  | 'showListing'
+  | 'showListingId'
+  | 'showListings'
+  | 'showableEndDate'
+  | 'showableStartDate'
+  | 'showingInstructions'
+  | 'showingMethod'
+  | 'showingsAllowed'
+  | 'startDatetime'
+  | 'state'
+  | 'upi'
+  | 'zipCode'
+  ;
