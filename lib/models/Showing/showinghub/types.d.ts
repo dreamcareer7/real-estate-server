@@ -1713,3 +1713,29 @@ export type WebhookPayloadDataProp =
   | 'upi'
   | 'zipCode'
   ;
+
+
+export interface ShowableListing {
+  id: UUID;
+  application_id: UUID;
+  listing_id: string;
+  created_on: string;
+  upi: string;
+  address1: string
+  city: string
+  state: string
+  zip_code: string
+  list_agent_mls_id: string
+  list_agent_name: string
+  list_agent_license_state_affirmation: boolean
+  list_agent_license_number: string;
+  list_agent_license_state: string;
+  showable_start_date: string;
+  showable_end_date: string;
+  showing_instructions: string;
+  required_participants: RequiredParticipants;
+  showing_method: ShowingMethod;
+  confirmation_type: ConfirmationType;
+  showings_allowed: ShowingStatus;
+  showing: UUID;
+}
