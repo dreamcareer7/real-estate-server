@@ -16,7 +16,8 @@ INSERT INTO showinghub.appointments (
   buying_agent_license_state,
   buying_agent_mls_id,
 
-  appointment_status
+  appointment_status,
+  appointment
 ) VALUES (
   $1,
   $2,
@@ -31,5 +32,6 @@ INSERT INTO showinghub.appointments (
   $11,
   $12,
   $13,
-  $14
+  $14,
+  $15
 )

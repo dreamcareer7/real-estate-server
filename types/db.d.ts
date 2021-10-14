@@ -686,6 +686,8 @@ declare type TDbSqlAddress =
   | 'showing/availability/insert'
   | 'showing/availability/table'
   | 'showing/availability/update'
+  | 'showing/hub/appointment/find_by_appointment'
+  | 'showing/hub/appointment/get'
   | 'showing/hub/appointment/insert'
   | 'showing/hub/appointment/table'
   | 'showing/hub/reoccuring/insert'

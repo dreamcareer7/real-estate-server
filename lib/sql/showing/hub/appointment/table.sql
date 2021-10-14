@@ -38,5 +38,6 @@ CREATE TABLE showinghub.appointments (
   buying_agent_license_state text,
   buying_agent_mls_id text,
 
-  appointment_status showinghub_appointment_status NOT NULL
+  appointment_status showinghub_appointment_status NOT NULL,
+  appointment uuid REFERENCES showings_appointments (id)
 )
