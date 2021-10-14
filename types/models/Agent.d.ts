@@ -19,6 +19,7 @@ declare interface IAgent extends IModel {
   updated_at: number
   deleted_at?: number
   created_at: number
+  license_number: string | null;
 
   user_id?: UUID;
   office_id?: UUID;
