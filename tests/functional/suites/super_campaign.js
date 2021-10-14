@@ -76,7 +76,7 @@ function create(cb) {
     tags: ['Labor Day'],
   }
   return F('create a full super campaign')
-    .post('/email/super-campaigns?associations[]=super_campaign.', {
+    .post('/email/super-campaigns', {
       ...data,
       eligible_brands: [region()],
     })
