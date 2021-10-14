@@ -35,3 +35,16 @@ INSERT INTO showinghub.appointments (
   $14,
   $15
 )
+ON CONFLICT (id) DO UPDATE SET
+  actual_start_date = $4,
+  actual_end_date = $5,
+  appointment_type = $6,
+  appointment_method = $7,
+
+  buying_agent_id = $8,
+  buying_agent_name = $9,
+  buying_agent_license_state_affirmation = $10,
+  buying_agent_license_number = $11,
+  buying_agent_license_state = $12,
+  buying_agent_mls_id = $13,
+  appointment_status = $14
