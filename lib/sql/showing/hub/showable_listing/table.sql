@@ -51,4 +51,4 @@ CREATE TABLE showinghub.showable_listings (
   showing uuid REFERENCES showings (id)
 );
 
-CREATE INDEX showinghub.showable_listings_showing_id_idx ON showinghub.showable_listings (showing)
+CREATE INDEX showable_listings_showing_id_idx ON showinghub.showable_listings (showing)
