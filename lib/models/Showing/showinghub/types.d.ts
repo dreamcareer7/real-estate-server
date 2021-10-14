@@ -1631,13 +1631,13 @@ export interface AccessTokenResult {
   notBefore?: string | null;
 }
 
-export interface WebhookPayload {
+export interface WebhookPayload<TPayload> {
   organizationId: UUID;
   applicationId: UUID;
   subscriptionId: UUID;
   webhookEvent: WebhookEvent;
   attempt: number;
-  data: Partial<Record<WebhookPayloadDataProp, any>>;
+  data: TPayload;
   creationTimeUtc: string;
 }
 
