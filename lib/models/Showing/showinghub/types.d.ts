@@ -1631,8 +1631,14 @@ export interface AccessTokenResult {
   notBefore?: string | null;
 }
 
-export type WebhookPayload = Record<string, any> & {
+export interface WebhookPayload <D> {
+  organizationId: UUID;
+  applicationId: UUID;
+  subscriptionId: UUID;
   webhookEvent: WebhookEvent;
+  attempt: number;
+  data: D;
+  creationTimeUtc: string;
 }
 
 export interface CommonApiResult {
