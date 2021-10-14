@@ -85,6 +85,7 @@ function create(cb) {
     .expectJSON({
       data: {
         ...data,
+        template_instance: undefined,
         type: 'super_campaign'
       }
     })
@@ -104,7 +105,8 @@ function updateSimpleDetails(cb) {
     .after(cb)
     .expectStatus(200)
     .expectJSON({
-      data
+      ...data,
+      template_instance: undefined,
     })
 }
 
