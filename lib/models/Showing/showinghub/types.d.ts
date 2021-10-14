@@ -1634,3 +1634,10 @@ export interface AccessTokenResult {
 export type WebhookPayload = Record<string, any> & {
   webhookEvent: WebhookEvent;
 }
+
+export interface CommonApiResult {
+  isSuccessful?: boolean;
+  results?: any[] | null;
+  exceptions?: string[] | null;
+  message?: string | null;
+}
