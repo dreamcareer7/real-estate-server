@@ -31,6 +31,7 @@ require('../../../lib/controllers/contact/contact')
 
 require('../../../lib/models/Showing/showinghub/showable_listing')
 require('../../../lib/models/Showing/showinghub/appointment')
+require('../../../lib/models/Showing/showinghub/webhook')
 
 const queues = [
   {
