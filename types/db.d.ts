@@ -729,7 +729,7 @@ declare type TDbSqlAddress =
   | 'trigger/update'
   | 'trigger/get_pending_contact_triggers'
   | 'trigger/active_contact_triggers'
-  | 'trigger/null-origin'
+  | 'trigger/clear-origin'
   | 'user/bulk_search_email'
   | 'user/bulk_search_phone'
   | 'user/change_password'
