@@ -29,7 +29,15 @@ require('../../../lib/models/Listing/notify-agents')
 require('../../../lib/controllers/contact/attributes')
 require('../../../lib/controllers/contact/contact')
 
+require('../../../lib/models/Showing/showinghub/showable_listing')
+require('../../../lib/models/Showing/showinghub/appointment')
+require('../../../lib/models/Showing/showinghub/webhook')
+
 const queues = [
+  {
+    queues: ['showinghub'],
+    concurrency: 1
+  },
   {
     queues: ['brokerwolf', 'd365'],
     concurrency: 1
