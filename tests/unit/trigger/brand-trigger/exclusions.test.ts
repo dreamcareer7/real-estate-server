@@ -127,7 +127,7 @@ describe('BrandTrigger/workers', () => {
 				brand: brand.id,
 				event_type: 'birthday',
 			})
-			await Trigger.deleteOrigin(triggerId)
+			await Trigger.clearOrigin(triggerId)
 			await BrandTrigger.makeExclusion(brandTriggerId, [contact.id])
 			const exclusions = await BrandTrigger.getExclusions([brandTriggerId])
 			expect(exclusions.length).to.be.eql(1)
