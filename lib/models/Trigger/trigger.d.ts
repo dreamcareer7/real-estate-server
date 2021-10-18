@@ -48,6 +48,8 @@ export interface ITriggerInput {
   scheduled_after?: UUID;
 
   is_global?: boolean;
+
+  origin: UUID;
 }
 
 interface IRawTriggerBase {
