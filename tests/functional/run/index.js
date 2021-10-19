@@ -114,6 +114,7 @@ app.use((req, res, next) => {
 
 app.on('after loading routes', () => {
   app.use((err, req, res, next) => {
+    console.error(err)
     Context.getActive().emit('error', err)
   })
 })
