@@ -1,4 +1,5 @@
 const ascurl = require('request-as-curl')
+const { Run } = require('./run/run')
 
 let enableResponse
 

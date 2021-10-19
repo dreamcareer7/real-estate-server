@@ -1,8 +1,4 @@
 const path = require('path')
-const { EventEmitter } = require('events')
-
-const Run = new EventEmitter()
-global['Run'] = Run
 
 const db = require('../../../lib/utils/db')
 const { peanar } = require('../../../lib/utils/peanar')
@@ -11,7 +7,7 @@ const AssertionError = require('assertion-error')
 
 const Context = require('../../../lib/models/Context')
 
-const {handleJob} = require('../jobs')
+const { handleJob } = require('../jobs')
 
 const TEMP_PATH = path.resolve(__dirname, '../temp')
 require('rimraf').sync(path.resolve(TEMP_PATH, 'sms'))

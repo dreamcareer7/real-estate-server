@@ -5,11 +5,8 @@ require('colors')
 
 const path = require('path')
 const fs = require('fs')
-const { EventEmitter } = require('events')
 const program = require('commander')
-
-const Run = new EventEmitter()
-global['Run'] = Run
+const { Run } = require('./run')
 
 const config = require('../../../lib/config.js')
 const migrate = require('../../../lib/utils/migrate')
