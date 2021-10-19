@@ -12,7 +12,9 @@ const migrations = [
    UPDATE showings_roles AS sr SET agent = fa.agent
      FROM first_agent AS fa
      WHERE fa.user = sr.user`,
-  'COMMIT'
+  `ALTER TABLE showings_roles ADD CONSTRAINT null_agent_if_null_user
+     CHECK (agent IS NULL OR "user" IS NOT NULL)`,
+  'COMMIT',
 ]
 
 
