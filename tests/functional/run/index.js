@@ -56,7 +56,7 @@ const getSuites = function (cb) {
   if (program.args.length > 0)
     return cb(null, program.args)
 
-  const files = fs.readdirSync(__dirname + '/suites')
+  const files = fs.readdirSync(__dirname + '/../suites')
   const suites = files
     .filter((file) => file.substring(file.length - 3, file.length) === '.js')
     .map((file) => file.replace('.js', ''))
