@@ -813,5 +813,5 @@ declare type TDbSqlAddress =
   | 'trigger/brand_trigger/toggle'
   | 'trigger/brand_trigger/contact_ids_to_create_trigger_for'
   | 'trigger/brand_trigger/exclusions/create'
-  | 'trigger/brand_trigger/exclusions/get_for_brand_triggers'
+  | 'trigger/brand_trigger/exclusions/get_contacts'
   | 'trigger/brand_trigger/exclusions/delete';

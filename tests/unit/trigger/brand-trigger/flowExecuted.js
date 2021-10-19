@@ -98,11 +98,9 @@ describe('BrandTrigger/workers', () => {
         birthday: BIRTHDAY.unix(),
         email: 'first_mail@fake.com',
       })
-      // @ts-ignore
       const brandTemplates = await BrandTemplate.getForBrands({ brands: [brand.id] })
       const templates = await Template.getAll(brandTemplates.map(bt => bt.template))
       const html = template.html
-      // @ts-ignore
       const instance = await TemplateInstance.create({
         template: templates[0],
         html,
@@ -118,7 +116,6 @@ describe('BrandTrigger/workers', () => {
           created_by: user.id,
           name: 'TemplateInstance step',
           description: 'A flow with an template instance email step',
-          // @ts-ignore
           steps: [{
             title: 'Happy birthday email',
             description: 'Send a customized happy birthday email',
@@ -156,10 +153,10 @@ describe('BrandTrigger/workers', () => {
       await handleJobs()
       await Trigger.execute(flowTriggerId)
       await handleJobs()
-      const [globalTriggerIds] = await Trigger.filter(
+      const [globalTriggerId] = await Trigger.filter(
         { deleted_at: null, brand: brand.id, origin: true }
       )
-      expect(Boolean(globalTriggerIds)).to.be.eql(true)
+      expect(globalTriggerId).to.be.ok
     })
   })	
 })

@@ -1,13 +1,12 @@
--- $1: brand_trigger_id
--- $2: contact_ids
+-- $1: brand
+-- $2: event_type
+-- $3: contact_ids
 
 INSERT INTO brand_triggers_exclusions (
-  brand_trigger,
+  brand,
+  event_type,
   contact
 ) SELECT 
   $1::uuid,
-  c.contact::uuid
-FROM
-  json_to_recordset($2::json) as c (
-    contact uuid
-  )
+  $2::text,
+  unnest($3::uuid[])

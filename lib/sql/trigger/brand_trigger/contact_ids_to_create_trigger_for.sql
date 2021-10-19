@@ -1,6 +1,5 @@
 -- $1: brand_id
 -- $2: event_type (attribute_type)
--- $3: brand_trigger_id
 
 (
   SELECT DISTINCT
@@ -27,5 +26,6 @@
   SELECT bte.contact
   FROM brand_triggers_exclusions as bte
   WHERE
-    bte.brand_trigger = $3::uuid
+    bte.brand = $1::uuid
+    AND bte.event_type = $2::text
 )

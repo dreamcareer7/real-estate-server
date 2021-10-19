@@ -128,8 +128,8 @@ describe('BrandTrigger/workers', () => {
 				event_type: 'birthday',
 			})
 			await Trigger.clearOrigin(triggerId)
-			await BrandTrigger.makeExclusion(brandTriggerId, [contact.id])
-			const exclusions = await BrandTrigger.getExclusions([brandTriggerId])
+			await BrandTrigger.makeExclusion(brand.id, bt.event_type, [contact.id])
+			const exclusions = await BrandTrigger.getExclusions(brandTriggerId, bt.event_type)
 			expect(exclusions.length).to.be.eql(1)
 			await BrandTrigger.updateTriggers(brandTriggerId, true)
 			await handleJobs()
@@ -139,7 +139,9 @@ describe('BrandTrigger/workers', () => {
 			})
 			const triggers = await Trigger.getAll(triggerIds)
 			expect(triggerIds.length).to.be.eql(1)
-			expect(triggers[0].origin).to.be.equal(null)
+      const theSameOldTrigger = await Trigger.get(triggerId)
+      expect(theSameOldTrigger.deleted_at).to.be.null
+			expect(theSameOldTrigger.origin).to.be.null
 		})
 	})
 	

@@ -25,8 +25,3 @@ export interface BrandTriggerPopulated extends Omit<BrandTrigger, TBrandTriggerA
   template_instance: IStoredTemplateInstance
   template: IModel // TODO: define BrandTemplate interface
 }
-
-export interface BrandTriggerExclusion {
-  brand_trigger: UUID
-  contact: UUID
-}

@@ -10,6 +10,5 @@ SET
   recurring = $7,
   brand_event = $8,
   campaign = $9,
-  origin = $10
 WHERE
   id = $1::uuid
