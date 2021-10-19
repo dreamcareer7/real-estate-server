@@ -4,6 +4,8 @@ SELECT agents.*,
        EXTRACT(EPOCH FROM updated_at) AS updated_at,
        EXTRACT(EPOCH FROM deleted_at) AS deleted_at,
        COALESCE(full_name, first_name || ' ' || last_name) AS full_name,
+       license_number,
+       (SELECT id FROM users WHERE agent = agents.id LIMIT 1) as user_id,
        (
         SELECT id FROM offices
         WHERE matrix_unique_id = agents.office_mui
@@ -25,3 +27,4 @@ SELECT agents.*,
 FROM agents
 JOIN unnest($1::uuid[]) WITH ORDINALITY t(aid, ord) ON agents.id = aid
 ORDER BY t.ord
+

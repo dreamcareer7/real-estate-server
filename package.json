@@ -6,7 +6,7 @@
   "scripts": {
     "test": "node tests/functional/run.js --concurrency 20 --report",
     "test:unit": "npx mocha --exit --timeout 15000 tests/unit/**/*.test.js",
-    "start": "node index.js",
+    "start": "npx gulp",
     "workers": "npx pm2 start scripts/workers/ecosystem.config.yaml && npx pm2 logs",
     "docs": "node api_docs/index.js",
     "coverage": "npx nyc node tests/functional/run.js --docs --stop-on-fail --concurrency 20",
@@ -18,7 +18,7 @@
     "heroku-postbuild": "npm run migrate:up"
   },
   "engines": {
-    "node": "^14.x",
+    "node": "^16.x",
     "npm": "7.x"
   },
   "nyc": {
@@ -39,7 +39,7 @@
   "dependencies": {
     "@microsoft/microsoft-graph-client": "^2.2.1",
     "@pm2/pm2-version-check": "^1.0.4",
-    "@rechat/squel": "^5.14.2",
+    "@rechat/squel": "^5.15.0",
     "amanda": "^1.0.1",
     "amqplib": "^0.8.0",
     "async": "^1.5.2",
@@ -95,6 +95,7 @@
     "mock-aws-s3": "^4.0.2",
     "moment": "^2.24.0",
     "moment-timezone": "^0.5.33",
+    "node-fetch": "^2.6.5",
     "nodemailer": "^6.6.2",
     "numeral": "^1.5.3",
     "nunjucks": "^3.2.3",
@@ -107,7 +108,7 @@
     "passport-oauth2-client-password": "^0.1.2",
     "passport-saml": "^2.2.0",
     "password-generator": "^2.3.2",
-    "pdfjs-dist": "github:rechat/pdfjs-dist",
+    "pdfjs-dist": "^2.9.359",
     "peanar": "^0.11.6",
     "pg": "^8.6.0",
     "pm2": "^4.5.6",
@@ -162,13 +163,17 @@
     "eslint-plugin-promise": "^4.3.1",
     "eslint-plugin-standard": "^4.0.1",
     "frisby": "github:emilsedgh/frisby#b74d835",
+    "gulp": "^4.0.2",
+    "gulp-eslint7": "^0.3.2",
     "jasmine-node": "^1.16.2",
     "madge": "^4.0.2",
     "mocha": "^8.4.0",
     "nock": "^13.1.1",
     "nyc": "^15.1.0",
+    "proxyquire": "^2.1.3",
     "request-as-curl": "^0.1.0",
     "rimraf": "^3.0.2",
+    "sinon": "^11.1.2",
     "typescript": "^4.3.5"
   }
 }

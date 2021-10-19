@@ -1,10 +1,12 @@
 SELECT
-  id
+  listings_filters.id
 FROM
-  listings
-  JOIN unnest($1::uuid[]) WITH ORDINALITY t(lid, ord) ON listings.id = lid
+  listings_filters
+  LEFT JOIN agents
+    ON listings_filters.mls = agents.mls
 WHERE
-  public_display IS TRUE
-  OR mls = $2::mls
-ORDER BY
-  t.ord
+  listings_filters.id = ANY($1::uuid[])
+  AND (
+    public_display IS TRUE
+    OR agents.id = $2::uuid
+  )

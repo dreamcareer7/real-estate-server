@@ -1,0 +1,125 @@
+digraph G {
+    fontname = "Bitstream Vera Sans"
+
+    node [
+        fontname = "Bitstream Vera Sans"
+        fontsize = 10
+        shape = "none"
+    ]
+    
+    super_campaigns [
+        label = <
+            <table border="0" cellspacing="0" cellpadding="5">
+                <tr><td border="1">super_campaigns</td></tr>
+                <tr>
+                    <td align="left" border="1" sides="LRB" balign="LEFT">
+                        <table border="0" cellspacing="0" cellpadding="0" align="left">
+                            <tr><td port="id" align="left">+ id : uuid</td></tr>
+                            <tr><td align="left">+ template : uuid</td></tr>
+                            <tr><td align="left">+ brand : uuid</td></tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="left" border="1" sides="LRB" balign="LEFT">
+                        <table border="0" cellspacing="0" cellpadding="0" align="left">
+                            <tr><td align="left">+ updateEnrollments()</td></tr>
+                            <tr><td align="left">+ updateRecipients(newRecipients)</td></tr>
+                            <tr><td align="left">+ enroll(brand, user, tags)</td></tr>
+                            <tr><td align="left">+ getDue() : super_campaign[]</td></tr>
+                            <tr><td align="left">+ execute()</td></tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        >
+    ]
+    
+    super_campaigns_eligibility [
+        label = <
+            <table border="0" cellspacing="0" cellpadding="5">
+                <tr><td border="1">super_campaigns_eligibility</td></tr>
+                <tr>
+                    <td align="left" border="1" sides="LRB" balign="LEFT">
+                        <table border="0" cellspacing="0" cellpadding="0" align="left">
+                            <tr><td port="super_campaign" align="left">+ super_campaign : uuid</td></tr>
+                            <tr><td align="left">+ brand : uuid</td></tr>
+                            <tr><td align="left">+ tags : text[]</td></tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        >
+    ]
+    
+    super_campaigns_enrollments [
+        label =<
+            <table border="0" cellspacing="0" cellpadding="5">
+                <tr><td border="1">super_campaigns_enrollments</td></tr>
+                <tr>
+                    <td align="left" border="1" sides="LRB" balign="LEFT">
+                        <table border="0" cellspacing="0" cellpadding="0" align="left">
+                            <tr><td port="super_campaign" align="left">+ super_campaign : uuid</td></tr>
+                            <tr><td align="left">+ brand : uuid</td></tr>
+                            <tr><td align="left">+ user : uuid</td></tr>
+                            <tr><td align="left">+ tags : text[]</td></tr>
+                            <tr><td align="left">+ campaign : uuid</td></tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="left" border="1" sides="LRB" balign="LEFT">
+                        <table border="0" cellspacing="0" cellpadding="0" align="left">
+                            <tr><td align="left">+ optOut()</td></tr>
+                            <tr><td align="left">+ updateTags(newTags)</td></tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        >
+    ]
+    
+    super_campaigns_allowed_tags [
+        label = <
+            <table border="0" cellspacing="0" cellpadding="5">
+                <tr><td border="1">super_campaigns_allowed_tags</td></tr>
+                <tr>
+                    <td align="left" border="1" sides="LRB" balign="LEFT">
+                        <table border="0" cellspacing="0" cellpadding="0" align="left">
+                            <tr><td align="left">+ brand : uuid</td></tr>
+                            <tr><td align="left">+ user : uuid</td></tr>
+                            <tr><td align="left">+ tag : text</td></tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        >
+    ]
+    
+    crm_tags [
+        label = <
+            <table border="0" cellspacing="0" cellpadding="5">
+                <tr><td border="1">crm_tags</td></tr>
+                <tr>
+                    <td align="left" border="1" sides="LRB" balign="LEFT">
+                        <table border="0" cellspacing="0" cellpadding="0" align="left">
+                            <tr><td align="left">+ brand : uuid</td></tr>
+                            <tr><td align="left">+ tag : text</td></tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="left" border="1" sides="LRB" balign="LEFT">
+                        <table border="0" cellspacing="0" cellpadding="0" align="left">
+                            <tr><td port="autoEnroll" align="left">+ updateAutoEnrollInSuperCampaigns(user)</td></tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        >
+    ]
+    
+    super_campaigns_eligibility:super_campaign -> super_campaigns:id
+    super_campaigns_enrollments:super_campaign -> super_campaigns:id
+    crm_tags:autoEnroll ->super_campaigns_allowed_tags [label="creates or deletes"]
+}

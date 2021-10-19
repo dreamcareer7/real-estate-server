@@ -830,7 +830,8 @@ function createAsset(cb) {
       `/brands/${results.brand.create.data.id}/assets`,
       {
         file: logo,
-        label: 'Asset Label'
+        label: 'Asset Label',
+        template_type: 'Christmas'
       },
       {
         json: false,
@@ -861,6 +862,20 @@ const deleteAsset = cb => {
     .delete(`/brands/${brand_id}/assets/${results.brand.getAssets.data[0].id}`)
     .after(cb)
     .expectStatus(204)
+}
+
+function createWebhook(cb) {
+  return frisby
+    .create('create a webhook')
+    .post(`/brands/${results.brand.create.data.id}/webhooks`, {
+      topic: 'Showings',
+      url: 'https://localhost:3000'
+    })
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK'
+    })
 }
 
 module.exports = {
@@ -939,6 +954,8 @@ module.exports = {
   createAsset,
   getAssets,
   deleteAsset,
+
+  createWebhook,
 
   removeBrand
 }

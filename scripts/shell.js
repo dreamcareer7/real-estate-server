@@ -37,6 +37,8 @@ const attachFlowEventHandler = require('../lib/models/Flow/events')
 const attachCalIntEventHandler = require('../lib/models/CalendarIntegration/events')
 const attachContactIntEventHandler = require('../lib/models/ContactIntegration/events')
 const attachShowingEvents = require('../lib/models/Showing/showing/events')
+const { attachShowingAppointmentEventHandlers } = require('../lib/models/Showing/showinghub/events')
+const attachBrandTriggerEventHandler = require('../lib/models/Trigger/brand_trigger/events')
 
 
 attachCalendarEvents()
@@ -47,6 +49,8 @@ attachFlowEventHandler()
 attachCalIntEventHandler()
 attachContactIntEventHandler()
 attachShowingEvents()
+attachShowingAppointmentEventHandlers()
+attachBrandTriggerEventHandler()
 
 function processImports(replContext) {
   for (const part of options.import ?? []) {

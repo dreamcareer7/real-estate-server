@@ -290,7 +290,7 @@ function checkAppointmentNotifications(cb) {
             object: appt.id,
             action: 'Created',
             subject_class: 'Contact',
-            title: '5020  Junius Street',
+            title: '5020 Junius Street',
             message: 'John Smith requested a showing',
             type: 'showing_appointment_notification',
           },
@@ -309,7 +309,7 @@ function checkAppointmentReceiptSmsForBuyer(cb) {
         {
           to: formatPhoneNumberForDialing(BUYER_PHONE_NUMBER),
           body:
-            `Your showing request for 5020  Junius Street at ${APPOINTMENT_TIME.format(
+            `Your showing request for 5020 Junius Street at ${APPOINTMENT_TIME.format(
               'MMM Do, h:mmA'
             )} has been received.` +
             '\n\n' +
@@ -349,7 +349,7 @@ function checkAppointmentConfirmationSmsForBuyer(cb) {
         {
           to: formatPhoneNumberForDialing(BUYER_PHONE_NUMBER),
           body:
-            `Your showing for 5020  Junius Street at ${APPOINTMENT_TIME.format(
+            `Your showing for 5020 Junius Street at ${APPOINTMENT_TIME.format(
               'MMM Do, h:mmA'
             )} has been confirmed.` +
             '\n\n' +
@@ -377,7 +377,7 @@ function checkAppointmentAutoConfirmationTextMessagesForBuyer(cb) {
       data: [
         {
           body:
-            `Your showing request for 5020  Junius Street at ${APPOINTMENT_TIME.format(
+            `Your showing request for 5020 Junius Street at ${APPOINTMENT_TIME.format(
               'MMM Do, h:mmA'
             )} has been received.` +
             '\n\n' +
@@ -553,7 +553,7 @@ function sellerAgentRejectAppointment (cb) {
 }
 
 function checkAppointmentRejectionSmsForBuyer (cb) {
-  const address = '5020  Junius Street'
+  const address = '5020 Junius Street'
   const datetime = APPOINTMENT_TIME.tz('US/Central').format('MMM Do, h:mmA')
   const comment = 'Sorry something came up'
   
@@ -570,7 +570,7 @@ function checkAppointmentRejectionSmsForBuyer (cb) {
         { /* Ignore second one */ },
         { /* Ignore third one */ },
         { /* Ignore fouth one */ },
-        { /* Ignore fifth one */ },
+        // { /* Ignore fifth one */ },
         {
           to: formatPhoneNumberForDialing(BUYER_PHONE_NUMBER),
           body: expectedBody

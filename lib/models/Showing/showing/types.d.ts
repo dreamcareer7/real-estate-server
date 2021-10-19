@@ -32,6 +32,8 @@ export interface Showing extends IModel {
 
   confirmed: number;
   visits: number;
+
+  instructions: string | null;
 }
 
 export interface ShowingPublic {

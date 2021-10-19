@@ -9,6 +9,16 @@ export interface BrandTrigger extends Omit<IModel, 'updated_by'> {
   subject: string
 }
 
+export interface BrandTriggerInput {
+  brand: UUID
+  template?: UUID
+  template_instance?: UUID
+  event_type: string
+  wait_for: number
+  subject: string
+  created_by: UUID
+}
+
 export type TBrandTriggerAssociation = 'template_instance' | 'template'
 
 export interface BrandTriggerPopulated extends Omit<BrandTrigger, TBrandTriggerAssociation> {

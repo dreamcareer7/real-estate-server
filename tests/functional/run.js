@@ -44,16 +44,18 @@ program
   .option('--commit <suite>', 'Commits the changes on specified suite after its done')
   .parse(process.argv)
 
-if (!program.concurrency)
-  program.concurrency = 1
+const options = program.opts()
 
-if (program.docs)
-  require('./docs.js')(program)
+if (!options.concurrency)
+  options.concurrency = 1
 
-if (program.curl)
-  require('./curl.js')(program)
+if (options.docs)
+  require('./docs.js')()
+
+if (options.curl)
+  require('./curl.js')(options)
 else
-  require('./report.js')(program)
+  require('./report.js')(options)
 
 
 const getSuites = function (cb) {
@@ -75,12 +77,12 @@ function spawnProcesses (cb) {
 
     suites.map((suite) => Run.emit('register suite', suite))
 
-    async.mapLimit(suites, program.concurrency, spawnSuite, cb)
+    async.mapLimit(suites, options.concurrency, spawnSuite, cb)
   })
 }
 
 function spawnSuite (suite, cb) {
-  const url = program.server ? program.server : 'http://localhost:' + config.url.port
+  const url = options.server ? options.server : 'http://localhost:' + config.url.port
 
   const runner = fork(__dirname + '/runner.js', [suite, url], {
     execArgv: []
@@ -229,41 +231,62 @@ const database = (req, res, next) => {
 
 app.use(database)
 
-app.post('_/rollback', (req, res) => {
-  rollback(req.query.suite)
-  res.end()
-})
-
-app.get('/sms/inbox/:number', (req, res) => {
-  const suite = req.header('x-suite')
-  const number = formatPhoneNumberForDialing(req.params.number)
+function installTestMiddlewares(cb) {
+  app.post('_/rollback', (req, res) => {
+    rollback(req.query.suite)
+    res.end()
+  })
   
-  if (!suite) {
-    res.status(500)
-    return res.end()
-  }
-  const dir = path.resolve(TEMP_PATH, 'sms', suite, number)
+  app.get('_/dummy', (req, res) => {
+    res.end()
+  })
+  
+  app.post('/_/brands', (req, res) => {
+    const async = require('async')
+    const BrandHelper = require('../unit/brand/helper')
 
-  try {
-    const files = fs.readdirSync(dir)
-    const messages = files.map(f => {
-      return {
-        ...JSON.parse(fs.readFileSync(path.resolve(dir, f), { encoding: 'utf-8' })),
-        timestamp: parseInt(f.replace(/\.json$/, ''))
+    async.mapSeries(req.body, (brand, cb) => BrandHelper.create(brand).nodeify(cb), function(err, response) {
+      if (err) {
+        throw err
       }
-    })
-    for (const f of files) {
-      fs.unlinkSync(path.resolve(dir, f))
-    }
-    res.json({
-      data: sortBy(messages, 'timestamp')
-    })
-  } catch {
-    res.status(404)
-  }
 
-  res.end()
-})
+      res.collection(response)
+    })
+  })
+  
+  app.get('/sms/inbox/:number', (req, res) => {
+    const suite = req.header('x-suite')
+    const number = formatPhoneNumberForDialing(req.params.number)
+    
+    if (!suite) {
+      res.status(500)
+      return res.end()
+    }
+    const dir = path.resolve(TEMP_PATH, 'sms', suite, number)
+  
+    try {
+      const files = fs.readdirSync(dir)
+      const messages = files.map(f => {
+        return {
+          ...JSON.parse(fs.readFileSync(path.resolve(dir, f), { encoding: 'utf-8' })),
+          timestamp: parseInt(f.replace(/\.json$/, ''))
+        }
+      })
+      for (const f of files) {
+        fs.unlinkSync(path.resolve(dir, f))
+      }
+      res.json({
+        data: sortBy(messages, 'timestamp')
+      })
+    } catch {
+      res.status(404)
+    }
+  
+    res.end()
+  })
+
+  cb()
+}
 
 app.use((req, res, next) => {
   const newAllowedHeaders = (res.get('Access-Control-Allow-Headers') || '')
@@ -310,9 +333,9 @@ const setupApp = cb => {
     })
   })
 
-  if (!program.keep) {
+  if (!options.keep) {
     Run.on('suite done', (suite) => {
-      if (program.commit && program.commit === suite) {
+      if (options.commit && options.commit === suite) {
         connections[suite].query('COMMIT', err => {
           if (err)
             console.log('Error committing', err)
@@ -333,8 +356,10 @@ const setupApp = cb => {
 
 const steps = []
 
-if (!program.server)
+if (!options.server) {
   steps.push(setupApp)
+  steps.push(installTestMiddlewares)
+}
 
 steps.push(spawnProcesses)
 

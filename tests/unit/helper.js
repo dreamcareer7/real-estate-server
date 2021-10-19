@@ -12,19 +12,23 @@ const attachCalendarEvents = require('../../lib/models/Calendar/events')
 const attachContactEvents = require('../../lib/models/Contact/events')
 const attachFlowEvents = require('../../lib/models/Flow/events')
 const attachShowingEvents = require('../../lib/models/Showing/showing/events')
+const {attachShowingAppointmentEventHandlers} = require('../../lib/models/Showing/showinghub/events')
 const attachTaskEventHandler = require('../../lib/models/CRM/Task/events')
 const attachTouchEventHandler = require('../../lib/models/CRM/Touch/events')
 const attachCalIntEventHandler = require('../../lib/models/CalendarIntegration/events')
 const attachContactIntEventHandler = require('../../lib/models/ContactIntegration/events')
+const attachBrandTriggerEventHandler = require('../../lib/models/Trigger/brand_trigger/events')
 
 attachCalendarEvents()
 attachContactEvents()
 attachFlowEvents()
 attachShowingEvents()
+attachShowingAppointmentEventHandlers()
 attachTouchEventHandler()
 attachTaskEventHandler()
 attachCalIntEventHandler()
 attachContactIntEventHandler()
+attachBrandTriggerEventHandler()
 
 const getDb = async () => {
   return new Promise((resolve, reject) => {
