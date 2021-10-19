@@ -5,13 +5,13 @@ SELECT agents.*,
        EXTRACT(EPOCH FROM deleted_at) AS deleted_at,
        COALESCE(full_name, first_name || ' ' || last_name) AS full_name,
        license_number,
-       (SELECT id FROM users WHERE agent = agents.id LIMIT 1) as user_id,
+       (SELECT id FROM users WHERE agent = agents.id LIMIT 1) AS user_id,
        (
         SELECT id FROM offices
         WHERE matrix_unique_id = agents.office_mui
         AND offices.mls = agents.mls
         LIMIT 1
-       ) as office_id,
+       ) AS office_id,
        (
          SELECT ARRAY_AGG(DISTINCT phone)
          FROM agents_phones p
