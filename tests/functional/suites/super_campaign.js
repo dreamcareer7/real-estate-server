@@ -105,8 +105,10 @@ function updateSimpleDetails(cb) {
     .after(cb)
     .expectStatus(200)
     .expectJSON({
-      ...data,
-      template_instance: undefined,
+      data: {
+        ...data,
+        template_instance: undefined,
+      },
     })
 }
 
