@@ -10,7 +10,7 @@ SELECT agents.*,
         WHERE matrix_unique_id = agents.office_mui
         AND offices.mls = agents.mls
         LIMIT 1
-       ) as office_id,
+       ) AS office_id,
        (
          SELECT ARRAY_AGG(DISTINCT phone)
          FROM agents_phones p
