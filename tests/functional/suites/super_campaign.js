@@ -8,7 +8,8 @@ const { by_mls: listing_by_mls } = require('./listing')
 
 const F = frisby.create.bind(frisby)
 const R = () => results.super_campaign
-const ID = (key) => () => R()[key].data.id
+const id = (key) => R()[key].data.id
+const ID = (key) => () => id(key)
 
 const theTemplate = () => R().instantiateTemplate.data.id
 const region = () => R().brands.data[0].id
@@ -117,7 +118,7 @@ function createdAllowedTag(cb) {
     .create('create agent tag allowed for use in super campaigns')
     .post('/contacts/tags', {
       tag: 'Labor Day',
-      allowedForSuperCampaigns: true,
+      auto_enroll_in_super_campaigns: true,
     })
     .after(cb)
     .expectStatus(204)
@@ -145,6 +146,28 @@ function create(cb) {
         template_instance: undefined,
         type: 'super_campaign',
       },
+    })
+}
+
+function checkEnrollments(cb) {
+  return F('check enrolled users after create')
+    .get(`/email/super-campaigns/${id('create')}/enrollments`)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      info: { total: 2 }
+    })
+    .expectJSON('data.?', {
+	    brand: theMatrix(),
+	    user: id('agentSmith'),
+	    tags: ['Labor Day'],
+	    type: 'super_campaign_enrollment'
+    })
+    .expectJSON('data.?', {
+	    brand: konoha(),
+	    user: id('naruto'),
+	    tags: ['Labor Day'],
+	    type: 'super_campaign_enrollment'
     })
 }
 
@@ -331,6 +354,7 @@ module.exports = {
     instantiateTemplate,
     createEmpty,
     create,
+    checkEnrollments,
     updateSimpleDetails,
     updateTags,
     updateEligibility,
