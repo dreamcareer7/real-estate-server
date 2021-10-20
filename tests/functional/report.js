@@ -1,4 +1,5 @@
 let write
+const { Run } = require('./run/run')
 
 module.exports = (program) => {
   write = process.stdout.write.bind(process.stdout)
