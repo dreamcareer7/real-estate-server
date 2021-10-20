@@ -155,19 +155,19 @@ function checkEnrollments(cb) {
     .after(cb)
     .expectStatus(200)
     .expectJSON({
-      info: { total: 2 }
+      info: { total: 2 },
     })
     .expectJSON('data.?', {
-	    brand: theMatrix(),
-	    user: id('agentSmith'),
-	    tags: ['Labor Day'],
-	    type: 'super_campaign_enrollment'
+      brand: theMatrix(),
+      user: id('agentSmith'),
+      tags: ['Labor Day'],
+      type: 'super_campaign_enrollment',
     })
     .expectJSON('data.?', {
-	    brand: konoha(),
-	    user: id('naruto'),
-	    tags: ['Labor Day'],
-	    type: 'super_campaign_enrollment'
+      brand: konoha(),
+      user: id('naruto'),
+      tags: ['Labor Day'],
+      type: 'super_campaign_enrollment',
     })
 }
 
