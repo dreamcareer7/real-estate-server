@@ -26,3 +26,6 @@ export interface SuperCampaignStored extends IModel {
 export interface Filter extends PaginationOptions {
   status?: 'DRAFT' | 'SCHEDULED' | 'IN_PROGRESS' | 'EXECUTED';
 }
+
+// TODO: specify properties
+export type SuperCampaignEnrollment = IModel & Record<string, any>
