@@ -105,13 +105,39 @@ describe('BrandTrigger/workers', () => {
   beforeEach(setup)
 
 	describe('makeExclusion function ...', () => {
-		it('prevents global trigger making', async () => {
+    it('prevents global trigger making if the exclusion is made before the GT', async () => {
 			const contact = await createContact({
 				birthday: BIRTHDAY.unix(),
 				email: 'first_mail@fake.com',
 			})
 			await handleJobs()
-			// @ts-ignore
+			const brandTemplates = await BrandTemplate.getForBrands({ brands: [brand.id] })
+			const bt = {
+				template: brandTemplates[0].id,
+				brand: brand.id,
+				created_by: user.id,
+				event_type: 'birthday',
+				wait_for: -86400,
+				subject: 'birthday mail',
+			}
+			await BrandTrigger.makeExclusion(brand.id, bt.event_type, [contact.id])
+      const brandTriggerId = await BrandTrigger.upsert(bt, true)
+			await handleJobs()
+			const exclusions = await BrandTrigger.getExclusions(brand.id, bt.event_type)
+			expect(exclusions.length).to.be.eql(1)
+			const triggerIds = await Trigger.filter({
+				brand: brand.id,
+				event_type: 'birthday',
+        origin: true,
+			})
+			expect(triggerIds.length).not.to.be.ok
+		})
+		it('prevents global trigger making in an update', async () => {
+			const contact = await createContact({
+				birthday: BIRTHDAY.unix(),
+				email: 'first_mail@fake.com',
+			})
+			await handleJobs()
 			const brandTemplates = await BrandTemplate.getForBrands({ brands: [brand.id] })
 			const bt = {
 				template: brandTemplates[0].id,
@@ -129,20 +155,18 @@ describe('BrandTrigger/workers', () => {
 			})
 			await Trigger.clearOrigin(triggerId)
 			await BrandTrigger.makeExclusion(brand.id, bt.event_type, [contact.id])
-			const exclusions = await BrandTrigger.getExclusions(brandTriggerId, bt.event_type)
+			const exclusions = await BrandTrigger.getExclusions(brand.id, bt.event_type)
 			expect(exclusions.length).to.be.eql(1)
-			await BrandTrigger.updateTriggers(brandTriggerId, true)
+			await BrandTrigger.updateTriggers(brandTriggerId, false)
 			await handleJobs()
 			const triggerIds = await Trigger.filter({
 				brand: brand.id,
 				event_type: 'birthday',
 			})
-			const triggers = await Trigger.getAll(triggerIds)
 			expect(triggerIds.length).to.be.eql(1)
       const theSameOldTrigger = await Trigger.get(triggerId)
       expect(theSameOldTrigger.deleted_at).to.be.null
 			expect(theSameOldTrigger.origin).to.be.null
 		})
 	})
-	
 })

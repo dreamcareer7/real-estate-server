@@ -6,7 +6,8 @@ INSERT INTO brand_triggers_exclusions (
   brand,
   event_type,
   contact
-) SELECT 
+) 
+SELECT 
   $1::uuid,
   $2::text,
-  unnest($3::uuid[])
+  UNNEST($3::uuid[])

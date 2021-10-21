@@ -6,5 +6,5 @@ SELECT
 FROM
   brand_triggers_exclusions AS e
 WHERE
-  e.brand_trigger = $1::uuid
+  e.brand = $1::uuid
   AND e.event_type = $2::text

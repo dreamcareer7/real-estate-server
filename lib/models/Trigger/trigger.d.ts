@@ -9,7 +9,7 @@ export interface ITriggerUpdateInput {
   brand_event?: UUID;
   campaign?: UUID;
 
-  origin: UUID | null;
+  origin?: UUID;
 }
 
 export type ITriggerEndpointInput = {
@@ -49,7 +49,7 @@ export interface ITriggerInput {
 
   is_global?: boolean;
 
-  origin: UUID;
+  origin?: UUID;
 }
 
 interface IRawTriggerBase {
@@ -60,6 +60,7 @@ interface IRawTriggerBase {
   time?: string;
   recurring: boolean;
   effective_at: number;
+  origin?: UUID;
 }
 
 type TContactEventTypes =
