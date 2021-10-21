@@ -24,5 +24,5 @@ export interface SuperCampaignStored extends IModel {
 }
 
 export interface Filter extends PaginationOptions {
-  status?: 'DRAFT' | 'SCHEDULED' | 'EXECUTED';
+  status?: 'DRAFT' | 'SCHEDULED' | 'IN_PROGRESS' | 'EXECUTED';
 }
