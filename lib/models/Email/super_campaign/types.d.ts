@@ -27,5 +27,9 @@ export interface Filter extends PaginationOptions {
   status?: 'DRAFT' | 'SCHEDULED' | 'IN_PROGRESS' | 'EXECUTED';
 }
 
-// TODO: specify properties
-export type SuperCampaignEnrollment = IModel & Record<string, any>
+export interface SuperCampaignEnrollment extends Pick<IModel, 'id' | 'created_at' | 'updated_at'> {
+  type: 'super_campaign_enrollment';
+  brand: IBrand['id'];
+  user: IUser['id'];
+  tags: string[];
+}
