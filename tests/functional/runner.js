@@ -1,3 +1,4 @@
+const _ = require('lodash')
 const jasmine = require('jasmine-node')
 const async = require('async')
 
@@ -13,18 +14,33 @@ frisby.globalSetup({
   }
 })
 
-const runFrisbies = function (tasks) {
-  const runF = function (task, cb) {
+const transformTasks = (suite, fns) => {
+  return Object.keys(fns)
+    .map((name) => ({
+      suite: suite,
+      name: name,
+      fn: fns[name]
+    }))
+}
+
+const runFrisbies = function (tasks, prefix = '', cb) {
+  const runF = function (task, doneCb) {
     try {
+      if (typeof task.fn === 'object') {
+        return runFrisbies(transformTasks(task.suite, task.fn), prefix ? prefix + '.' + task.name : task.name, doneCb)
+      }
+
       const f = task.fn((err, res) => {
         if (err) {
           console.error(err)
         }
     
-        if (res && res.body)
-          global.results[task.suite][task.name] = res.body
+        if (res && res.body) {
+          const key = `${task.suite}${prefix ? '.' + prefix : ''}.${task.name}`
+          _.set(global.results, key, res.body)
+        }
 
-        cb(err, res)
+        doneCb(err, res)
       })
 
       f.current.outgoing.headers['x-suite'] = process.argv[2]
@@ -45,7 +61,11 @@ const runFrisbies = function (tasks) {
     }
   }
 
-  async.forEachSeries(tasks, runF)
+  if (cb) {
+    async.forEachSeries(tasks, runF, cb)
+  } else {
+    async.forEachSeries(tasks, runF)
+  }
 }
 
 const prepareTasks = function () {

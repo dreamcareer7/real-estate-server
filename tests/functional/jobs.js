@@ -3,6 +3,7 @@ require('../../lib/models/MLS/workers')
 require('../../lib/models/CRM/Task/worker')
 require('../../lib/models/CRM/Touch/worker')
 require('../../lib/models/Trigger/worker')
+require('../../lib/models/Email/super_campaign/worker')
 
 const pollers = require('./pollers')
 
