@@ -1,5 +1,6 @@
 const criteria = require('./data/alert_criteria.js')
 const vcriteria = require('./data/valert_criteria.js')
+const listings_filters_criteria = require('./data/listings_filters_criteria.js')
 const alert_response = require('./expected_objects/alert.js')
 const info = require('./expected_objects/info.js')
 const compact_listing = require('./expected_objects/compact_listing.js')
@@ -248,7 +249,22 @@ function invalidUpdateAlertSetting(cb) {
     .expectStatus(500)
 }
 
-module.exports = {
+const listingsAgents = (cb) => {
+  return frisby.create('listings agents')
+    .post('/listings/filter/agents', listings_filters_criteria)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      data: [
+        {
+          type: 'agent',
+        }
+      ]
+    })
+}
+
+module.exports = {  
   create,
   feed,
   get,
@@ -264,5 +280,6 @@ module.exports = {
   deleteAlert,
   deleteAlertWorked,
   updateAlertSetting,
-  invalidUpdateAlertSetting
+  invalidUpdateAlertSetting,
+  listingsAgents
 }
