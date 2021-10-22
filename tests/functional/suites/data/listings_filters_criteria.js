@@ -1,3 +1,3 @@
 module.exports = {
-  mls_filter: 'NAVICA'
+  mls_filter: 'NTREIS'
 }
