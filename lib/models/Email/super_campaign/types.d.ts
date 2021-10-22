@@ -37,6 +37,8 @@ export interface SuperCampaignEnrollment extends Pick<IModel, 'id' | 'created_at
 
 export interface SuperCampaignEnrollmentFilterOptions extends Omit<PaginationOptions, 'order'> {
   super_campaign?: SuperCampaignStored['id'];
+  brand?: IBrand['id'];
+  user?: IUser['id'];
 }
 
 export type SuperCampaignEnrollmentInput = Pick<SuperCampaignStored, 'super_campaign' | 'brand' | 'user' | 'tags'>
