@@ -33,3 +33,7 @@ export interface SuperCampaignEnrollment extends Pick<IModel, 'id' | 'created_at
   user: IUser['id'];
   tags: string[];
 }
+
+export interface SuperCampaignEnrollmentFilterOptions extends Omit<PaginationOptions, 'order'> {
+  super_campaign?: SuperCampaignStored['id'];
+}
