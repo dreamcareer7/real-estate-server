@@ -356,6 +356,7 @@ declare type TDbSqlAddress =
   | 'email/super_campaign/update'
   | 'email/super_campaign/update_eligibility'
   | 'email/super_campaign/update_tags'
+  | 'email/super_campaign/lock'
   | 'email/super_campaign/mark_as_executed'
   | 'email/thread/get'
   | 'email/thread/prune'
