@@ -342,6 +342,7 @@ declare type TDbSqlAddress =
   | 'email/store_microsoft_id'
   | 'email/super_campaign/by_brand'
   | 'email/super_campaign/delete'
+  | 'email/super_campaign/enrollment/upsert_many'
   | 'email/super_campaign/enrollment/get'
   | 'email/super_campaign/enrollment/mark_as_forked'
   | 'email/super_campaign/enrollment/opt_out'
