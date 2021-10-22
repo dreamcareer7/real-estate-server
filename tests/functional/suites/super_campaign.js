@@ -169,7 +169,7 @@ function checkEnrollments(super_campaign, expected) {
   return (cb) => {
     expected = expected()
     const f = F('check enrolled users after create')
-      .get(`/email/super-campaigns/${super_campaign()}/enrollments`)
+      .get(`/email/super-campaigns/${super_campaign()}/enrollments?associations[]=super_campaign_enrollment.user&associations[]=super_campaign_enrollment.brand`)
       .after(cb)
       .expectStatus(200)
       .expectJSON({
@@ -265,13 +265,19 @@ function execute(id) {
   }
 }
 
-function checkResults(id) {
+function checkResults(super_campaign, expected) {
   return (cb) => {
-    return F('check super campaign results')
-      .get(`/email/super-campaigns/${id()}/results`)
+    const f = F('check super campaign results')
+      .get(
+        `/email/super-campaigns/${super_campaign()}/enrollments?associations[]=super_campaign_enrollment.campaign`
+      )
       .after(cb)
       .expectStatus(200)
-      .expectJSON({})
+
+    for (const e of expected()) {
+      f.expectJSON('data.?', e)
+    }
+    return f
   }
 }
 
@@ -409,8 +415,10 @@ module.exports = {
       updateEligibility: updateEligibility(ID('christmas.create')),
       checkEnrollments: checkEnrollments(ID('christmas.create'), () => [
         {
-          brand: theDarkSide(),
-          user: userId(DARTH_VADER)(),
+          brand: { id: theDarkSide() },
+          user: {
+            email: DARTH_VADER,
+          },
           tags: ['Christmas'],
         },
       ]),
@@ -420,21 +428,31 @@ module.exports = {
       create,
       checkEnrollments: checkEnrollments(ID('labor_day.create'), () => [
         {
-          brand: theMatrix(),
-          user: userId(AGENT_SMITH1)(),
+          brand: { id: theMatrix() },
+          user: {
+            email: AGENT_SMITH1,
+          },
           tags: ['Labor Day'],
         },
         {
-          brand: konoha(),
-          user: userId(NARUTO)(),
+          brand: { id: konoha() },
+          user: {
+            email: NARUTO,
+          },
           tags: ['Labor Day'],
         },
       ]),
 
       execute: execute(ID('labor_day.create')),
 
-      checkResults: checkResults(ID('labor_day.create'), [
-        
+      checkResults: checkResults(ID('labor_day.create'), () => [
+        {
+          campaign: {
+            subject: R().labor_day.create.subject,
+            type: 'email_campaign',
+          },
+          type: 'super_campaign_enrollment',
+        },
       ]),
     },
   }),
