@@ -44,7 +44,7 @@ const mlses = {
 }
 
 const mlsName = name => {
- return mlses[name.toUpperCase()] ?? name
+  return mlses[name.toUpperCase()] ?? name
 }
 
 const getData = async token => {
