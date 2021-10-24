@@ -57,7 +57,7 @@ const getData = async token => {
     },
     json: true
   })
-  const indexed_users = _.keyBy(all_users, 'id')
+  const indexed_users = _.keyBy(all_users, 'username')
 
   const duals =  await request({
     uri: 'https://webapi.elliman.com/api/rechat/dualagents',
@@ -66,23 +66,28 @@ const getData = async token => {
     },
     json: true
   })
-  const indexed_duals = _.keyBy(duals, 'primaryAgentId')
-  const secondary_ids = _.flatten(_.map(duals, 'secondaryAgentId'))
-  const primary_ids = _.difference(_.map(all_users, 'id'), secondary_ids)
 
-  const users = _.map(primary_ids, id => {
-    const user = indexed_users[id]
+  console.log(JSON.stringify(duals, 4, 4))
+
+  const indexed_duals = _.keyBy(duals, 'primaryAgentId')
+  const secondary_usernames = _.flatten(_.map(duals, 'secondaryAgentId'))
+  const primary_usernames = _.difference(_.map(all_users, 'username'), secondary_usernames)
+
+  const users = _.map(primary_usernames, username => {
+    const user = indexed_users[username]
     user.mlses = [
       {mls: mlsName(user.mlsSystem), id: user.id}
     ]
 
-    const secondaries = indexed_duals[id]?.secondaryAgentId || []
+    const secondaries = indexed_duals[username]?.secondaryAgentId || []
 
 
     secondaries.forEach(secondary_id => {
       const secondary_user = indexed_users[secondary_id]
       if (!secondary_user)
         return
+
+      console.log(secondary_user)
 
       user.mlses.push({
         mls: mlsName(secondary_user.mlsSystem), 
