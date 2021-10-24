@@ -67,8 +67,6 @@ const getData = async token => {
     json: true
   })
 
-  console.log(JSON.stringify(duals, 4, 4))
-
   const indexed_duals = _.keyBy(duals, 'primaryAgentId')
   const secondary_usernames = _.flatten(_.map(duals, 'secondaryAgentId'))
   const primary_usernames = _.difference(_.map(all_users, 'username'), secondary_usernames)
