@@ -33,15 +33,66 @@ const getToken = async () => {
   return token
 }
 
+const mlses = {
+  LIMO: 'REBNY',
+  ONEKEY: 'ONEKEY',
+  HGMLS: 'ONEKEY',
+  SAND: 'SDMLS',
+  GFLR: 'RAPB',
+  MFR: 'STELLAR',
+  
+}
+
+const mlsName = name => {
+ return mlses[name.toUpperCase()] ?? name
+}
+
 const getData = async token => {
   const uri = 'https://webapi.elliman.com/api/rechat/users'
 
-  const users = await request({
+  const all_users = await request({
     uri,
     headers: {
       Authorization: `Bearer ${token}`
     },
     json: true
+  })
+  const indexed_users = _.keyBy(all_users, 'id')
+
+  const duals =  await request({
+    uri: 'https://webapi.elliman.com/api/rechat/dualagents',
+    headers: {
+      Authorization: `Bearer ${token}`
+    },
+    json: true
+  })
+  const indexed_duals = _.keyBy(duals, 'primaryAgentId')
+  const secondary_ids = _.flatten(_.map(duals, 'secondaryAgentId'))
+  const primary_ids = _.difference(_.map(all_users, 'id'), secondary_ids)
+
+  const users = _.map(primary_ids, id => {
+    const user = indexed_users[id]
+    user.mlses = [
+      {mls: mlsName(user.mlsSystem), id: user.id}
+    ]
+
+    const secondaries = indexed_duals[id]?.secondaryAgentId || []
+
+
+    secondaries.forEach(secondary_id => {
+      const secondary_user = indexed_users[secondary_id]
+      if (!secondary_user)
+        return
+
+      user.mlses.push({
+        mls: mlsName(secondary_user.mlsSystem), 
+        id: secondary_user.id
+      })
+
+      user.offices.push(...secondary_user.offices)
+    })
+
+    return user
   })
 
   const offices = _.chain(users)
