@@ -5,5 +5,5 @@ SELECT
 FROM
   super_campaigns
 WHERE
-  id = $1::uuid AND
+  id = $1::uuid
 FOR UPDATE SKIP LOCKED
