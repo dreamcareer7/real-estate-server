@@ -445,7 +445,8 @@ module.exports = {
 
       execute: execute(ID('labor_day.create')),
 
-      checkResults: checkResults(ID('labor_day.create'), () => [
+      // XXX: do we're gonna remove results endpoint?
+      /* checkResults: checkResults(ID('labor_day.create'), () => [
         {
           campaign: {
             subject: R().labor_day.create.subject,
@@ -453,7 +454,7 @@ module.exports = {
           },
           type: 'super_campaign_enrollment',
         },
-      ]),
+      ]), */
     },
   }),
 
