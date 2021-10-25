@@ -268,4 +268,6 @@ declare interface IProperty {
   furnished_yn?: boolean
   fenced_yard_yn?: boolean
   block?: string
+  pets_policy?: string
+  amenities?: string[]
 }
