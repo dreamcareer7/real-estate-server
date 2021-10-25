@@ -42,4 +42,4 @@ export interface SuperCampaignEnrollmentFilterOptions extends Omit<PaginationOpt
   user?: IUser['id'];
 }
 
-export type SuperCampaignEnrollmentInput = Pick<SuperCampaignStored, 'super_campaign' | 'brand' | 'user' | 'tags'>
+export type SuperCampaignEnrollmentInput = Pick<SuperCampaignEnrollment, 'super_campaign' | 'brand' | 'user' | 'tags'>
