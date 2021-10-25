@@ -265,6 +265,7 @@ function execute(id) {
   }
 }
 
+// eslint-disable-next-line no-unused-vars
 function checkResults(super_campaign, expected) {
   return (cb) => {
     const f = F('check super campaign results')
