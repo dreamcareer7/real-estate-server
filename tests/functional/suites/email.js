@@ -197,7 +197,7 @@ const scheduleBrand = cb => {
         recipient_type: 'Brand'
       },
       {
-        agent: results.user.upgradeToAgentWithEmail.data.agent.id,
+        agent: results.user.upgradeToAgentWithEmail.data.agents[0].id,
         recipient_type: 'Agent'
       }
     ]

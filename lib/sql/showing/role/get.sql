@@ -7,6 +7,9 @@ SELECT
   showing,
   role,
   "user" AS "user_id",
+  /* XXX: do we need agent_id (as well as user_id)? 
+   * Maybe we can remove this alias and fetch it w/ its original name (agent) */
+  agent AS agent_id,
   brand,
   confirm_notification_type::text[],
   cancel_notification_type::text[],

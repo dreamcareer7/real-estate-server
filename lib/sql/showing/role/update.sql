@@ -4,14 +4,15 @@ SET
   updated_at = now(),
   role = $2::deal_role,
   "user" = COALESCE($3::uuid, (
-    SELECT id FROM users WHERE LOWER(email) = LOWER($9)
+    SELECT id FROM users WHERE LOWER(email) = LOWER($10)
   )),
-  confirm_notification_type = $4::notification_delivery_type[],
-  cancel_notification_type = $5::notification_delivery_type[],
-  can_approve = $6::boolean,
-  first_name = $7,
-  last_name = $8,
-  email = $9,
-  phone_number = $10
+  agent = $4::uuid,
+  confirm_notification_type = $5::notification_delivery_type[],
+  cancel_notification_type = $6::notification_delivery_type[],
+  can_approve = $7::boolean,
+  first_name = $8,
+  last_name = $9,
+  email = $10,
+  phone_number = $11
 WHERE
   id = $1::uuid

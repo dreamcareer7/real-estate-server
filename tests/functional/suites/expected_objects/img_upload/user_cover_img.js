@@ -24,7 +24,6 @@ module.exports = {
   'push_allowed': Boolean,
   'email_signature': v.optionalString,
   'address_id': v.optionalString,
-  'agent': v.optionalObject,
   'is_shadow': Boolean,
   'personal_room': v.optionalString,
   'brand': v.optionalString,
