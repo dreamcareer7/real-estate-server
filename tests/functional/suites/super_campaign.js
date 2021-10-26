@@ -292,6 +292,20 @@ function checkCampaign(cond) {
   }
 }
 
+function checkCreatedSuperCampaings (
+  cond,
+  message = 'check all existing super campaigns'
+) {
+  return cb => F(message)
+    .post('/email/super-campaigns/filter', {
+      start: 0,
+      limit: 50,
+    })
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON('data', cond())
+}
+
 module.exports = {
   listing_by_mls,
 
@@ -457,6 +471,18 @@ module.exports = {
         },
       ]), */
     },
+    createdSuperCampaigns: checkCreatedSuperCampaings(() => [
+      {
+        deleted_at: null,
+        subject: 'Happy Labor Day!',
+        tags: ['Christmas'],
+      },
+      {
+        deleted_at: null,
+        subject: 'Happy Labor Day!',
+        tags: ['Labor Day'],
+      },
+    ]),
   }),
 
   ...switchBrand(
