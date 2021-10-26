@@ -6,7 +6,6 @@ INSERT INTO users
       email,
       phone_number,
       user_type,
-      agent,
       is_shadow,
       brand,
       fake_email
@@ -21,7 +20,6 @@ VALUES
       $6,
       $7,
       $8,
-      $9,
-      $10
+      $9
     )
 RETURNING id

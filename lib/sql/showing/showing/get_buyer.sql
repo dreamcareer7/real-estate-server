@@ -64,7 +64,7 @@ SELECT
       JOIN users AS u
         ON r.user = u.id
       LEFT JOIN agents AS a
-        ON u.agent = a.id
+        ON r.agent = a.id
       LEFT JOIN offices AS o
         ON (a.office_mui = o.matrix_unique_id AND a.mls = o.mls)
     WHERE

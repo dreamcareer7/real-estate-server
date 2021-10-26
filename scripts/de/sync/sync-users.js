@@ -26,7 +26,8 @@ SELECT
     offices,
     de.regions.timezone as timezone,
     designation,
-    "d365AgentId"
+    "d365AgentId",
+    mlses
   FROM json_to_recordset($1)
   as input(
     username TEXT,
@@ -48,7 +49,8 @@ SELECT
     region TEXT,
     designation TEXT,
     "d365AgentId" TEXT,
-    offices jsonb
+    offices jsonb,
+    mlses jsonb
   )
   JOIN de.regions ON input.region = de.regions.name`
 
@@ -101,8 +103,7 @@ saved AS (
     twitter,
     user_type,
     timezone,
-    designation,
-    agent
+    designation
   )
   SELECT
     first_name,
@@ -119,12 +120,7 @@ saved AS (
     twitter,
     user_type,
     timezone,
-    designation,
-    (
-      SELECT id FROM agents WHERE mls::text = data.mls AND LOWER(mlsid) = LOWER(data.mlsid)
-      ORDER BY status = 'Active', matrix_modified_dt
-      LIMIT 1
-    )
+    designation
   FROM de.users
   JOIN data ON de.users.username = data.username
   ON CONFLICT (email) DO UPDATE SET
@@ -140,8 +136,7 @@ saved AS (
       instagram = EXCLUDED.instagram,
       twitter = EXCLUDED.twitter,
       website = EXCLUDED.website,
-      designation = EXCLUDED.designation,
-      agent = COALESCE(users.agent, EXCLUDED.agent)
+      designation = EXCLUDED.designation
 
   RETURNING id, email
 )
@@ -210,6 +205,16 @@ const ENABLE_DAILY = `UPDATE public.users SET daily_enabled = TRUE
   AND pu.last_seen_at IS NOT NULL
   AND public.users.id = pu.id`
 
+const SET_AGENTS = `INSERT INTO users_agents ("user", agent)
+  WITH mlses AS (
+    SELECT
+      de.users.user,
+      jsonb_array_elements(de.users.object->'mlses') as mls FROM de.users
+  )
+  SELECT mlses.user, agents.id FROM mlses
+  JOIN agents ON mlses.mls->>'mls'::text = agents.mls::text AND LOWER(mlses.mls->>'id') = LOWER(agents.mlsid)
+  ON CONFLICT DO NOTHING`
+
 const setPhone = user => {
   const { number } = _.find(user.phoneNumbers, { type: 'Mobile' }) || _.find(user.phoneNumbers, { type: 'Direct' }) || {}
 
@@ -225,9 +230,6 @@ const setPhone = user => {
   }
 
   const mlsid = (user.rbnyAgentId ?? user.id).split('.').pop()
-
-  if (user.mlsSystem === 'LIMO')
-    user.mlsSystem = 'REBNY'
 
   if (user.designation === 'LSA')
     user.designation = 'Licensed Real Estate Salesperson'
@@ -273,37 +275,11 @@ const setSocials = user => {
   }
 }
 
-const setRegion = user => {
-  return {
-    ...user,
-    region: user.offices[0].majorRegion
-  }
-}
-
-const MlsMapping = {
-  LIMO: 'REBNY',
-  onekey: 'ONEKEY',
-  HGMLS: 'ONEKEY',
-  SAND: 'SDMLS',
-  GFLR: 'RAPB',
-  MFR: 'STELLAR',
-  
-}
-
-const setMls = user => {
-  return {
-    ...user,
-    mls: MlsMapping[user.mls] ?? user.mls
-  }
-}
-
 const syncUsers = async users => {
   const data = JSON.stringify(
     users
       .map(setPhone)
       .map(setSocials)
-      .map(setRegion)
-      .map(setMls)
   )
 
   const { rows } = await db.executeSql.promise(ORPHANIZE, [data])
@@ -317,6 +293,7 @@ const syncUsers = async users => {
   await db.executeSql.promise(NULLIFY)
   await db.executeSql.promise(SET_PHONES)
   await db.executeSql.promise(SET_EMAILS)
+  await db.executeSql.promise(SET_AGENTS)
   await db.executeSql.promise(CONFIRM)
   await db.executeSql.promise(ENABLE_DAILY)
 }
