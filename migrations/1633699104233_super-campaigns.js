@@ -39,6 +39,7 @@ const migrations = [
     brand uuid REFERENCES brands (id),
     "user" uuid REFERENCES users (id),
     tags text[] NOT NULL,
+    detached boolean NOT NULL DEFAULT FALSE,
   
     UNIQUE (super_campaign, brand, "user")
   )`,

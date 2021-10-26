@@ -1,20 +1,24 @@
-INSERT INTO super_campaigns_enrollments (
+INSERT INTO super_campaigns_enrollments AS sce (
   super_campaign,
   brand,
   "user",
-  tags
+  tags,
+  detached
 )
 SELECT
   t.super_campaign,
   t.brand,
   t."user",
-  ARRAY(SELECT json_array_elements_text(t.tags))
+  ARRAY(SELECT json_array_elements_text(t.tags)),
+  COALESCE(t.detached, FALSE)
 FROM json_to_recordset($1::json) AS t (
   super_campaign uuid,
   brand uuid,
   "user" uuid,
-  tags json
+  tags json,
+  detached boolean
 )
-ON CONFLICT (super_campaign, brand, "user") DO UPDATE
-  SET tags = ARRAY(SELECT json_array_elements_text(t.tags))
+ON CONFLICT (super_campaign, brand, "user") DO UPDATE SET
+  tags = ARRAY(SELECT json_array_elements_text(t.tags)),
+  detached = COALESCE(t.detached, sce.detached)
 RETURNING id
