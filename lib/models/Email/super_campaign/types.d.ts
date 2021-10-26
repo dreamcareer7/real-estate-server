@@ -41,6 +41,8 @@ export interface SuperCampaignEnrollmentFilterOptions extends Omit<PaginationOpt
   super_campaign?: SuperCampaignStored['id'];
   brand?: IBrand['id'];
   user?: IUser['id'];
+  tags?: SuperCampaignEnrollment['tags'];
+  detached?: boolean;
 }
 
 interface SuperCampaignEnrollmentInput extends Pick<SuperCampaignEnrollment, 'super_campaign' | 'brand' | 'user' | 'tags'> {
