@@ -79,7 +79,7 @@ async function setup() {
 
 
 async function createContact({ email, birthday }) {
-  const attribute = {
+  const attribute: any = {
     first_name: 'John',
     last_name: 'Doe',
   }
