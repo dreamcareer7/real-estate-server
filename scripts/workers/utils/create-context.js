@@ -68,7 +68,7 @@ const createContext = async c => {
 
   const run = context.run
 
-  return { rollback, commit, run }
+  return { rollback, commit, run, context }
 }
 
 module.exports = createContext

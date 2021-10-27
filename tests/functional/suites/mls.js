@@ -26,7 +26,7 @@ const saveAlert = cb => {
 }
 
 const addListing = (cb) => {
-  const agent = results.user.upgradeToAgentWithEmail.data.agent
+  const [ agent ] = results.user.upgradeToAgentWithEmail.data.agents
   listing.listing.list_agent_mui = agent.matrix_unique_id
 
   return frisby.create('add a listing')

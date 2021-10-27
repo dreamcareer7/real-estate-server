@@ -20,9 +20,10 @@ $$
     (brands_users.deleted_at IS NULL AND brands_roles.deleted_at IS NULL) as enabled
 
   FROM users
-  LEFT JOIN agents  ON users.agent = agents.id
-  JOIN brands_users ON brands_users.user = users.id
-  JOIN brands_roles ON brands_users.role = brands_roles.id
+  LEFT JOIN users_agents ON users_agents.user = users.id
+  LEFT JOIN agents       ON users_agents.agent = agents.id
+  JOIN brands_users      ON brands_users.user = users.id
+  JOIN brands_roles      ON brands_users.role = brands_roles.id
   WHERE
     users.user_type = 'Agent'
     AND

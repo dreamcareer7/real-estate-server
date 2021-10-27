@@ -24,11 +24,20 @@ require('../../../lib/models/Trigger/brand_trigger/workers')
 require('../../../lib/models/Stripe')
 require('../../../lib/models/Godaddy/zone')
 require('../../../lib/models/Godaddy/purchase')
+require('../../../lib/models/Brand/webhook/trigger')
 require('../../../lib/models/Listing/notify-agents')
 require('../../../lib/controllers/contact/attributes')
 require('../../../lib/controllers/contact/contact')
 
+require('../../../lib/models/Showing/showinghub/showable_listing')
+require('../../../lib/models/Showing/showinghub/appointment')
+require('../../../lib/models/Showing/showinghub/webhook')
+
 const queues = [
+  {
+    queues: ['showinghub'],
+    concurrency: 1
+  },
   {
     queues: ['brokerwolf', 'd365'],
     concurrency: 1
@@ -146,6 +155,11 @@ const queues = [
     queues: ['listing_notifications'],
     concurrency: 20
   },
+
+  {
+    queues: ['brand_webhook'],
+    concurrency: 50
+  }
 ]
 
 async function start() {

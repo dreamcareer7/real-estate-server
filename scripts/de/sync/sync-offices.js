@@ -169,10 +169,19 @@ const syncAdmins = async offices => {
     })
   })
 
+  /*
+   * Uniqued so the query wouldn't need to run ON CONFLICT twice on a row
+   * Which  would fail on pg
+   */
+
+  const uniqued = _.uniqBy(admins, item => {
+    return `${item.userame}-${item.office}`
+  })
+
   await db.executeSql.promise(DISABLE_ALL)
 
   await db.executeSql.promise(UPDATE_ADMINS, [
-    JSON.stringify(admins)
+    JSON.stringify(uniqued)
   ])
 }
 

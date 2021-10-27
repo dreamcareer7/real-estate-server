@@ -4,7 +4,7 @@ require('../connection.js')
 require('../../lib/models/index.js')
 
 const Context = require('../../lib/models/Context')
-const EmailCampaign = require('../../lib/models/Email/campaign/worker')
+const EmailCampaign = require('../../lib/models/Email/campaign')
 const Job = require('../../lib/models/Job')
 
 

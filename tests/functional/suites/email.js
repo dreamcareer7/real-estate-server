@@ -15,6 +15,7 @@ registerSuite('user', ['upgradeToAgentWithEmail'])
 registerSuite('google', ['createGoogleCredential', 'getGoogleProfile'])
 registerSuite('microsoft', ['createMicrosoftCredential', 'getMicrosoftProfile'])
 
+registerSuite('template', ['create', 'instantiate'])
 
 const email = {
   to: [
@@ -126,6 +127,7 @@ const getEmail = cb => {
 const getByBrand = cb => {
   const updated = results.email.update.data
   const brand = results.email.scheduleBrand.data
+  const templated = results.email.scheduleWithTemplate.data
 
   return frisby
     .create('Get campaigns by brand')
@@ -134,6 +136,12 @@ const getByBrand = cb => {
     .expectStatus(200)
     .expectJSON({
       data: [
+        {
+          subject: templated.subject,
+          template: templated.template,
+          delivered: 0
+        },
+
         {
           subject: brand.subject,
           html: brand.html,
@@ -189,7 +197,7 @@ const scheduleBrand = cb => {
         recipient_type: 'Brand'
       },
       {
-        agent: results.user.upgradeToAgentWithEmail.data.agent.id,
+        agent: results.user.upgradeToAgentWithEmail.data.agents[0].id,
         recipient_type: 'Agent'
       }
     ]
@@ -246,6 +254,35 @@ const update = cb => {
       }
     })
 }
+
+const scheduleWithTemplate = cb => {
+  individual.from = results.authorize.token.data.id
+
+  const c = {
+    ...individual,
+    html: undefined,
+    subject: 'Campaign using a template',
+    template: results.template.instantiate.data.id,
+    to: [
+      {
+        brand: results.brand.create.data.id,
+        recipient_type: 'Brand'
+      },
+      {
+        agent: results.user.upgradeToAgentWithEmail.data.agent.id,
+        recipient_type: 'Agent'
+      }
+    ]
+  }
+
+  return frisby
+    .create('Schedule campaign with a template')
+    .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
+    .post('/emails/individual', c)
+    .after(cb)
+    .expectStatus(200)
+}
+
 
 const setIndividualAsTrue = cb => {
   const html = `<div>
@@ -813,6 +850,7 @@ module.exports = {
   schedule,
   scheduleIndividual,
   scheduleBrand,
+  scheduleWithTemplate,
   update,
   setIndividualAsTrue,
   setIndividualAsFalse,
