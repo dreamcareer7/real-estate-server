@@ -184,10 +184,7 @@ describe('BrandTrigger/workers', () => {
           wait_for: -86400,
           time: '10:00:00',
         }
-        
-        // @ts-ignore
         const [triggerId] = await Trigger.create([trigger_data])
-        // @ts-ignore
         const brandTemplates = await BrandTemplate.getForBrands({ brands: [brand.id] })
         const bt = {
           template: brandTemplates[0].id,

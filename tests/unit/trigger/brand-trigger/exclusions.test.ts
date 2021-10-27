@@ -70,7 +70,7 @@ const createBrand = async () => {
   })
 }
 
-async function setup() {
+async function setupTheTest() {
   user = await UserHelper.TestUser()
   brand = await createBrand()
 
@@ -79,7 +79,7 @@ async function setup() {
 
 
 async function createContact({ email, birthday }) {
-  const attribute: any = {
+  const attribute = {
     first_name: 'John',
     last_name: 'Doe',
   }
@@ -102,7 +102,7 @@ async function createContact({ email, birthday }) {
 
 describe('BrandTrigger/workers', () => {
   createContext()
-  beforeEach(setup)
+  beforeEach(setupTheTest)
 
 	describe('makeExclusion function ...', () => {
     it('prevents global trigger making if the exclusion is made before the GT', async () => {
