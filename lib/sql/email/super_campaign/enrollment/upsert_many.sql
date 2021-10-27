@@ -19,6 +19,10 @@ FROM json_to_recordset($1::json) AS t (
   detached boolean
 )
 ON CONFLICT (super_campaign, brand, "user") DO UPDATE SET
-  tags = ARRAY(SELECT json_array_elements_text(t.tags)),
-  detached = COALESCE(t.detached, sce.detached)
+  tags = excluded.tags::text[],
+  -- it cannot (re)attach a detached enrollment:
+  detached = (CASE excluded.detached
+    WHEN TRUE THEN TRUE
+    ELSE sce.detached
+  END)
 RETURNING id
