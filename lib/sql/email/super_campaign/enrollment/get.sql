@@ -5,6 +5,7 @@ SELECT
   brand,
   "user",
   tags,
+  detached,
 
   'super_campaign_enrollment' AS type
 FROM

@@ -6,6 +6,10 @@ const compact_listing = require('./expected_objects/compact_listing.js')
 const uuid = require('uuid')
 
 registerSuite('room', ['create', 'addUser'])
+registerSuite('agent', ['add'])
+registerSuite('mls', ['addListing'])
+
+
 const maximum_price = 100000
 
 const create = (cb) => {
@@ -248,7 +252,18 @@ function invalidUpdateAlertSetting(cb) {
     .expectStatus(500)
 }
 
-module.exports = {
+const listingsAgents = (cb) => {
+  return frisby.create('listings agents')
+    .post('/listings/filter/agents', vcriteria)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      data: []
+    })
+}
+
+module.exports = {  
   create,
   feed,
   get,
@@ -264,5 +279,6 @@ module.exports = {
   deleteAlert,
   deleteAlertWorked,
   updateAlertSetting,
-  invalidUpdateAlertSetting
+  invalidUpdateAlertSetting,
+  listingsAgents
 }
