@@ -20,6 +20,7 @@ FROM json_to_recordset($1::json) AS t (
 )
 ON CONFLICT (super_campaign, brand, "user") DO UPDATE SET
   tags = excluded.tags::text[],
+  deleted_at = NULL,
   -- it cannot (re)attach a detached enrollment:
   detached = (CASE excluded.detached
     WHEN TRUE THEN TRUE
