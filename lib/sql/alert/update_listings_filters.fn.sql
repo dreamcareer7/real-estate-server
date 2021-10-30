@@ -95,7 +95,7 @@ $$
     JOIN
       addresses   ON properties.address_id = addresses.id
 
-    WHERE listings.id = NEW.id;
+    WHERE listings.id = NEW.id AND listings.deleted_at IS NULL;
 
     RETURN NEW;
   END;
