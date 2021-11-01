@@ -767,12 +767,9 @@ declare type TDbSqlAddress =
   | 'trigger/mark_executed'
   | 'trigger/mark_failed'
   | 'trigger/update'
-<<<<<<< HEAD
   | 'trigger/get_pending_contact_triggers'
   | 'trigger/active_contact_triggers'
   | 'trigger/clear-origin'
-=======
->>>>>>> develop
   | 'user/bulk_search_email'
   | 'user/bulk_search_phone'
   | 'user/change_password'
@@ -849,7 +846,6 @@ declare type TDbSqlAddress =
   | 'website/get_user'
   | 'website/insert'
   | 'website/insert_hostname'
-<<<<<<< HEAD
   | 'website/update'
   | 'trigger/brand_trigger/get'
   | 'trigger/brand_trigger/get_for_brand'
@@ -859,6 +855,3 @@ declare type TDbSqlAddress =
   | 'trigger/brand_trigger/exclusions/create'
   | 'trigger/brand_trigger/exclusions/get_contacts'
   | 'trigger/brand_trigger/exclusions/delete';
-=======
-  | 'website/update';
->>>>>>> develop
