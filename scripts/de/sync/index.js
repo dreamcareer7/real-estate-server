@@ -74,7 +74,6 @@ const getData = async token => {
   })
 
   const indexed_duals = _.keyBy(duals, 'primaryAgentId')
-  const secondary_ids = new Set(_.chain(duals).map('secondaryAgentId').flatten().map(id => id.toLowerCase()).value())
 
   const users = _.map(normal_users, user => {
     user.mlses = [
@@ -97,8 +96,7 @@ const getData = async token => {
     })
 
     return user
-  })
-  .filter(Boolean)
+  }).filter(Boolean)
 
   const offices = _.chain(users)
     .map('offices')
