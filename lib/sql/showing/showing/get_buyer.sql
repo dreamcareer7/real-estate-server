@@ -49,7 +49,7 @@ SELECT
   (
     SELECT
       JSON_BUILD_OBJECT(
-        'id', u.agent,
+        'id', r.agent,
         'first_name', r.first_name,
         'last_name', r.last_name,
         'full_name', r.first_name || ' ' || r.last_name,

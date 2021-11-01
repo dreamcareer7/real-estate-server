@@ -159,6 +159,11 @@ function runAsUser(email, fns) {
   return fns
 }
 
+function currentBrand() {
+  const setup = frisby.globalSetup()
+  return setup.request.headers['X-Rechat-Brand']
+}
+
 module.exports = {
   createBrands,
   createUser,
@@ -166,4 +171,5 @@ module.exports = {
   runAsUser,
   switchBrand,
   userId,
+  currentBrand,
 }

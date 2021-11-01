@@ -6,6 +6,7 @@ function start() {
     require('./dailies'),
     require('./deal_notifications'),
     require('./email_campaigns'),
+    require('./super_campaigns'),
     require('./email_campaign_stats'),
     require('./email_events_notifications'),
     require('./google'),
