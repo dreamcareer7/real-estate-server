@@ -49,7 +49,7 @@ SELECT
   (
     SELECT
       JSON_BUILD_OBJECT(
-        'id', u.agent,
+        'id', r.agent,
         'first_name', r.first_name,
         'last_name', r.last_name,
         'full_name', r.first_name || ' ' || r.last_name,
@@ -64,7 +64,7 @@ SELECT
       JOIN users AS u
         ON r.user = u.id
       LEFT JOIN agents AS a
-        ON u.agent = a.id
+        ON r.agent = a.id
       LEFT JOIN offices AS o
         ON (a.office_mui = o.matrix_unique_id AND a.mls = o.mls)
     WHERE

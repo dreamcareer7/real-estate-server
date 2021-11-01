@@ -16,6 +16,7 @@ require('../../../lib/models/Deal/brokerwolf')
 require('../../../lib/models/Deal/D365')
 require('../../../lib/models/Email/send')
 require('../../../lib/models/Email/events')
+require('../../../lib/models/Email/super_campaign/worker')
 require('../../../lib/models/SMS')
 require('../../../lib/models/Daily')
 require('../../../lib/models/Envelope')
@@ -29,7 +30,15 @@ require('../../../lib/models/Listing/notify-agents')
 require('../../../lib/controllers/contact/attributes')
 require('../../../lib/controllers/contact/contact')
 
+require('../../../lib/models/Showing/showinghub/showable_listing')
+require('../../../lib/models/Showing/showinghub/appointment')
+require('../../../lib/models/Showing/showinghub/webhook')
+
 const queues = [
+  {
+    queues: ['showinghub'],
+    concurrency: 1
+  },
   {
     queues: ['brokerwolf', 'd365'],
     concurrency: 1

@@ -27,6 +27,9 @@ function logger (req, res, next) {
 
   next()
 }
+
+const { Run } = require('./run/run')
+
 Run.on('app ready', (app) => {
   app.use(logger)
 })

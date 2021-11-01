@@ -1,3 +1,5 @@
+const randomMobile = require('random-mobile')
+
 const config = require('../../lib/config.js')
 const dataUser = require('./suites/data/user.js')
 
@@ -8,11 +10,12 @@ function createUser({ email }) {
     .post('/users', {
       ...dataUser,
       email,
+      phone_number: randomMobile({ formatted: true }),
       client_id: config.tests.client_id,
       client_secret: config.tests.client_secret,
     })
     .after((err, res, body) => {
-      users.set(email, { ...res, password: dataUser.password })
+      users.set(email, { ...body.data, password: dataUser.password })
       cb(err, res, body)
     })
     .expectStatus(201)
@@ -96,6 +99,17 @@ function switchBrand(brandFn, fns) {
   })
 }
 
+function userId(email) {
+  return () => {
+    const user = users.get(email)
+    if (!user) {
+      throw new Error(`User ${email} not found.`)
+    }
+
+    return user.id
+  }
+}
+
 function getTokenFor(email) {
   return cb => {
     const user = users.get(email) ?? dataUser
@@ -145,10 +159,17 @@ function runAsUser(email, fns) {
   return fns
 }
 
+function currentBrand() {
+  const setup = frisby.globalSetup()
+  return setup.request.headers['X-Rechat-Brand']
+}
+
 module.exports = {
   createBrands,
   createUser,
   getTokenFor,
   runAsUser,
   switchBrand,
+  userId,
+  currentBrand,
 }

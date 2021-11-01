@@ -183,7 +183,9 @@ ON CONFLICT (matrix_unique_id, mls) DO UPDATE SET
   furnished_yn = $58,
   fenced_yard_yn = $59,
   block = $60,
-  updated_at = CLOCK_TIMESTAMP()
+  updated_at = CLOCK_TIMESTAMP(),
+  pets_policy = $62,
+  amenities = $63
 
 WHERE properties.matrix_unique_id = $6 AND properties.mls = $61::mls
 

@@ -14,5 +14,3 @@ CREATE TABLE super_campaigns_enrollments (
 
   UNIQUE (super_campaign, brand, "user")
 );
-
-CREATE INDEX super_campaigns_enrollments_campaign_brand_idx ON super_campaigns_enrollments (super_campaign, brand);

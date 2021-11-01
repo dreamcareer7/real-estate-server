@@ -24,5 +24,26 @@ export interface SuperCampaignStored extends IModel {
 }
 
 export interface Filter extends PaginationOptions {
-  status?: 'DRAFT' | 'SCHEDULED' | 'EXECUTED';
+  status?: 'DRAFT' | 'SCHEDULED' | 'IN_PROGRESS' | 'EXECUTED';
+  brand_in?: IBrand['id'][];
 }
+
+export interface SuperCampaignEnrollment extends Pick<IModel, 'id' | 'created_at' | 'updated_at'> {
+  super_campaign: SuperCampaignStored['id'];
+  type: 'super_campaign_enrollment';
+  brand: IBrand['id'];
+  user: IUser['id'];
+  tags: string[];
+  detached: boolean;
+}
+
+export interface SuperCampaignEnrollmentFilterOptions extends Omit<PaginationOptions, 'order'> {
+  super_campaign?: SuperCampaignStored['id'];
+  brand?: IBrand['id'];
+  user?: IUser['id'];
+  tags?: SuperCampaignEnrollment['tags'];
+  detached?: boolean;
+  including_deleted?: boolean;
+}
+
+export type SuperCampaignEnrollmentInput = Pick<SuperCampaignEnrollment, 'super_campaign' | 'brand' | 'user' | 'tags' | 'detached'>

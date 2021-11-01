@@ -102,7 +102,7 @@ module.exports = {
     'co_selling_office_mls_id': '',
     'co_selling_office_name': '',
     'co_selling_office_phone': '',
-    'list_agent_mui': 15545246,
+    'list_agent_mui': 155155530,
     'list_agent_direct_work_phone': '(214) 478-7099',
     'list_agent_email': 'janegordon@daveperrymiller.com',
     'list_agent_full_name': 'Jane Gordon',
@@ -148,6 +148,7 @@ module.exports = {
     'mls': 'NTREIS',
     'transaction_type': 'Sale',
     'usage_type': 'Residential',
-    'structure_type': 'SingleFamily'
+    'structure_type': 'SingleFamily',
+    'public_display': true
   }
 }
