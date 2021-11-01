@@ -75,6 +75,7 @@ const SAVE = `INSERT INTO de.agents_offices (
 VALUES ($1, $2, (
   SELECT id FROM users WHERE LOWER(email) = LOWER($3)
 ), $4, $5)
+ON CONFLICT DO NOTHING
 RETURNING *`
 
 const addUserToOffice = async ({user, office}) => {
@@ -100,6 +101,9 @@ const addUserToOffice = async ({user, office}) => {
   ])
 
   const [ row ] = rows
+
+  if (!row)
+    return
 
   await BrandRole.addMember({
     user: row.user,
