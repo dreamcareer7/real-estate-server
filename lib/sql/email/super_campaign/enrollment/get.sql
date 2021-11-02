@@ -6,6 +6,7 @@ SELECT
   "user",
   tags,
   detached,
+  campaign,
 
   'super_campaign_enrollment' AS type
 FROM
