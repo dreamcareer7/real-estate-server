@@ -3,6 +3,8 @@ const path = require('path')
 const fs = require('fs')
 const _ = require('lodash')
 
+const { AGENT_SMITH1, AGENT_SMITH2, AGENT_SMITH3, DARTH_VADER, NARUTO } = require('./data/super_campaign/emails')
+const brandSetup = require('./data/super_campaign/brand')
 const mappings = require('./data/super_campaign/csv_mappings')
 
 const {
@@ -13,6 +15,7 @@ const {
   switchBrand,
   userId,
   currentBrand,
+  resolve,
 } = require('../util')
 const { by_mls: listing_by_mls } = require('./listing')
 
@@ -35,12 +38,6 @@ const theDarkSide = () =>
   R().brands.data[0].children[0].children.find((b) => b.name === 'The Dark Side').id
 const konoha = () =>
   R().brands.data[0].children[0].children.find((b) => b.name === 'Konohagakur').id
-
-const AGENT_SMITH1 = 'smith@thematrix.me',
-  AGENT_SMITH2 = 'smith2@thematrix.me',
-  AGENT_SMITH3 = 'smith3@thematrix.me'
-const DARTH_VADER = 'darthvader@deathstar.com'
-const NARUTO = 'naruto@konoha.org'
 
 function uploadCSV(filename) {
   return (cb) => {
@@ -165,11 +162,23 @@ function create(cb) {
     })
 }
 
+function adminEnroll(super_campaign, enrollments) {
+  return cb => {
+    enrollments = resolve(enrollments)
+    return F('manually enroll a user')
+      .post(`/email/super-campaigns/${super_campaign()}/enrollments`, { enrollments })
+      .after(cb)
+      .expectStatus(201)
+  }
+}
+
 function checkEnrollments(super_campaign, expected) {
   return (cb) => {
-    expected = expected()
+    expected = resolve(expected)
     const f = F('check enrolled users after create')
-      .get(`/email/super-campaigns/${super_campaign()}/enrollments?associations[]=super_campaign_enrollment.user&associations[]=super_campaign_enrollment.brand`)
+      .get(
+        `/email/super-campaigns/${super_campaign()}/enrollments?associations[]=super_campaign_enrollment.user&associations[]=super_campaign_enrollment.brand`
+      )
       .after(cb)
       .expectStatus(200)
       .expectJSON({
@@ -265,9 +274,9 @@ function execute(id) {
   }
 }
 
-// eslint-disable-next-line no-unused-vars
 function checkResults(super_campaign, expected) {
   return (cb) => {
+    expected = resolve(expected)
     const f = F('check super campaign results')
       .get(
         `/email/super-campaigns/${super_campaign()}/enrollments?associations[]=super_campaign_enrollment.campaign`
@@ -275,7 +284,7 @@ function checkResults(super_campaign, expected) {
       .after(cb)
       .expectStatus(200)
 
-    for (const e of expected()) {
+    for (const e of expected) {
       f.expectJSON('data.?', e)
     }
     return f
@@ -292,19 +301,36 @@ function checkCampaign(cond) {
   }
 }
 
-function checkCreatedSuperCampaings (
-  cond,
-  message = 'check all existing super campaigns'
-) {
-  return cb => F(message)
-    .post('/email/super-campaigns/filter', {
-      start: 0,
-      limit: 50,
-    })
-    .after(cb)
-    .expectStatus(200)
-    .expectJSON('data', cond())
+function filter(expected, message = 'check all existing super campaigns') {
+  return (cb) => {
+    const f = F(message)
+      .post('/email/super-campaigns/filter', {
+        start: 0,
+        limit: 50,
+      })
+      .after(cb)
+      .expectStatus(200)
+
+    for (const e of expected()) {
+      f.expectJSON('data.?', e)
+    }
+
+    return f
+  }
 }
+
+const createdSuperCampaigns = filter(() => [
+  {
+    deleted_at: null,
+    subject: 'Happy Labor Day!',
+    tags: ['Christmas'],
+  },
+  {
+    deleted_at: null,
+    subject: 'Happy Labor Day!',
+    tags: ['Labor Day'],
+  },
+])
 
 module.exports = {
   listing_by_mls,
@@ -319,81 +345,7 @@ module.exports = {
   darthvaderAuth: getTokenFor(DARTH_VADER),
   narutoAuth: getTokenFor(NARUTO),
 
-  brands: createBrands(
-    'create brands',
-    [
-      {
-        name: 'Manhattan',
-        brand_type: 'Region',
-        roles: {
-          Admin: ['test@rechat.com'],
-        },
-        tags: ['Labor Day', 'Christmas'],
-        templates: [
-          {
-            name: 'fake-template-brand-trigger-test',
-            variant: 'Template40',
-            inputs: ['listing', 'user'],
-            template_type: 'JustSold',
-            medium: 'Email',
-            html: '<div>fakeTemplate</div>',
-            mjml: false,
-          },
-        ],
-
-        contexts: [],
-        checklists: [],
-        property_types: [],
-
-        children: [
-          {
-            name: '140 Franklin',
-            brand_type: 'Office',
-            roles: {
-              Admin: ['test@rechat.com'],
-            },
-            contexts: [],
-            checklists: [],
-            property_types: [],
-
-            children: [
-              {
-                name: 'The Matrix',
-                brand_type: 'Team',
-                roles: {
-                  Agent: [AGENT_SMITH1, AGENT_SMITH2, AGENT_SMITH3],
-                },
-                contexts: [],
-                checklists: [],
-                property_types: [],
-              },
-              {
-                name: 'The Dark Side',
-                brand_type: 'Personal',
-                roles: {
-                  Agent: [DARTH_VADER],
-                },
-                contexts: [],
-                checklists: [],
-                property_types: [],
-              },
-              {
-                name: 'Konohagakur',
-                brand_type: 'Team',
-                roles: {
-                  Agent: [NARUTO],
-                },
-                contexts: [],
-                checklists: [],
-                property_types: [],
-              },
-            ],
-          },
-        ],
-      },
-    ],
-    (response) => response.data[0].id
-  ),
+  brands: createBrands('create brands', brandSetup, (response) => response.data[0].id),
 
   ...switchBrand(
     theMatrix,
@@ -428,29 +380,47 @@ module.exports = {
       updateSimpleDetails: updateSimpleDetails(ID('christmas.create')),
       updateTags: updateTags(ID('christmas.create'), ['Christmas']),
       updateEligibility: updateEligibility(ID('christmas.create')),
-      checkEnrollments: checkEnrollments(ID('christmas.create'), () => [
+      checkEnrollments: checkEnrollments(ID('christmas.create'), [
         {
-          brand: { id: theDarkSide() },
+          brand: { id: theDarkSide },
           user: {
             email: DARTH_VADER,
           },
           tags: ['Christmas'],
         },
       ]),
+
+      enrollNaruto: adminEnroll(ID('christmas.create'), [{
+        brand: konoha,
+        user: userId(NARUTO),
+        tags: ['Christmas']
+      }]),
+
+      checkNarutoManuallyEnrolled: checkEnrollments(ID('christmas.create'), [
+        () => R().christmas.checkEnrollments.data[0],
+        {
+          brand: { id: konoha },
+          user: {
+            email: NARUTO,
+          },
+          tags: ['Christmas'],
+        },
+      ]),
+
       get,
     },
     labor_day: {
       create,
-      checkEnrollments: checkEnrollments(ID('labor_day.create'), () => [
+      checkEnrollments: checkEnrollments(ID('labor_day.create'), [
         {
-          brand: { id: theMatrix() },
+          brand: { id: theMatrix },
           user: {
             email: AGENT_SMITH1,
           },
           tags: ['Labor Day'],
         },
         {
-          brand: { id: konoha() },
+          brand: { id: konoha },
           user: {
             email: NARUTO,
           },
@@ -460,29 +430,17 @@ module.exports = {
 
       execute: execute(ID('labor_day.create')),
 
-      // XXX: do we're gonna remove results endpoint?
-      /* checkResults: checkResults(ID('labor_day.create'), () => [
+      checkResults: checkResults(ID('labor_day.create'), [
         {
           campaign: {
-            subject: R().labor_day.create.subject,
+            subject: () => R().labor_day.create.subject,
             type: 'email_campaign',
           },
           type: 'super_campaign_enrollment',
         },
-      ]), */
+      ]),
     },
-    createdSuperCampaigns: checkCreatedSuperCampaings(() => [
-      {
-        deleted_at: null,
-        subject: 'Happy Labor Day!',
-        tags: ['Christmas'],
-      },
-      {
-        deleted_at: null,
-        subject: 'Happy Labor Day!',
-        tags: ['Labor Day'],
-      },
-    ]),
+    createdSuperCampaigns,
   }),
 
   ...switchBrand(
