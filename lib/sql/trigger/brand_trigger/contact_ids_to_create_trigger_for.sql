@@ -22,4 +22,10 @@
     AND t.brand = $1::uuid
     AND t.action = 'schedule_email'::trigger_action
     AND t.event_type = $2::text
+) EXCEPT (
+  SELECT bte.contact
+  FROM brand_triggers_exclusions as bte
+  WHERE
+    bte.brand = $1::uuid
+    AND bte.event_type = $2::text
 )
