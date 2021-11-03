@@ -354,6 +354,7 @@ declare type TDbSqlAddress =
   | 'email/super_campaign/enrollment/delete_by'
   | 'email/super_campaign/enrollment/update_campaigns'
   | 'email/super_campaign/enrollment/synchronize_tags'
+  | 'email/super_campaign/enrollment/unionize_tags'
   | 'email/super_campaign/get'
   | 'email/super_campaign/insert'
   | 'email/super_campaign/recipients'
