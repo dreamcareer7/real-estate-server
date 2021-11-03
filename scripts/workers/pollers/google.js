@@ -4,8 +4,7 @@ const { poll } = require('../utils/poll')
 function start() {
   poll({
     fn: GoogleWorkers.Calendar.syncDue,
-    name: 'GoogleWorkers.Calendar.syncDue',
-    wait: 60000,
+    name: 'GoogleWorkers.Calendar.syncDue'
   })
 
   poll({
