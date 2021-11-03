@@ -193,16 +193,9 @@ function checkEnrollments(super_campaign, expected) {
   }
 }
 
-function updateSimpleDetails(id) {
+function updateSimpleDetails(id, data) {
   return (cb) => {
-    const template_instance = theTemplate()
-    const data = {
-      subject: 'Happy Labor Day!',
-      description: 'A super campaign for Labor Day holiday',
-      due_at: Date.now() / 1000,
-      template_instance,
-    }
-
+    data = resolve(data)
     return F('update a super campaign')
       .put(`/email/super-campaigns/${id()}`, data)
       .after(cb)
@@ -319,10 +312,29 @@ function filter(expected, message = 'check all existing super campaigns') {
   }
 }
 
+function getEligibleCampaigns(expected, expected_length = undefined) {
+  return cb => {
+    const f = F('get my eligible super campaigns')
+      .get('/email/super-campaigns/self')
+      .after(cb)
+      .expectStatus(200)
+
+    for (const e of resolve(expected)) {
+      f.expectJSON('data.?', e)
+    }
+
+    if (typeof expected_length === 'number') {
+      f.expectJSONLength('data', expected_length)
+    }
+
+    return f
+  }
+}
+
 const createdSuperCampaigns = filter(() => [
   {
     deleted_at: null,
-    subject: 'Happy Labor Day!',
+    subject: 'Happy New Year!',
     tags: ['Christmas'],
   },
   {
@@ -377,7 +389,12 @@ module.exports = {
     instantiateTemplate,
     christmas: {
       create: createEmpty,
-      updateSimpleDetails: updateSimpleDetails(ID('christmas.create')),
+      updateSimpleDetails: updateSimpleDetails(ID('christmas.create'), {
+        subject: 'Happy New Year!',
+        description: 'A super campaign for the new year!',
+        due_at: () => Date.now() / 1000,
+        template_instance: theTemplate,
+      }),
       updateTags: updateTags(ID('christmas.create'), ['Christmas']),
       updateEligibility: updateEligibility(ID('christmas.create')),
       checkEnrollments: checkEnrollments(ID('christmas.create'), [
@@ -449,6 +466,12 @@ module.exports = {
       checkLaborDayCampaignForAgentSmith: checkCampaign(() => ({
         subject: R().labor_day.create.subject,
       })),
+
+      getEligibleCampaigns: getEligibleCampaigns([
+        {
+          id: ID('christmas.create')
+        }
+      ], 1)
     })
   ),
 
