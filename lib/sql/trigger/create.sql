@@ -22,7 +22,9 @@ INSERT INTO triggers (
   brand_event,
   campaign,
 
-  scheduled_after
+  scheduled_after,
+
+  origin
 )
 SELECT
   $1,
@@ -48,7 +50,9 @@ SELECT
   brand_event,
   campaign,
 
-  scheduled_after
+  scheduled_after,
+
+  origin
 FROM
   json_populate_recordset(null::triggers, $2::json)
 RETURNING

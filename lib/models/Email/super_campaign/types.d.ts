@@ -26,6 +26,7 @@ export interface SuperCampaignStored extends IModel {
 export interface Filter extends PaginationOptions {
   status?: 'DRAFT' | 'SCHEDULED' | 'IN_PROGRESS' | 'EXECUTED';
   brand_in?: IBrand['id'][];
+  executed?: boolean;
 }
 
 export interface SuperCampaignEnrollment extends Pick<IModel, 'id' | 'created_at' | 'updated_at'> {
@@ -43,8 +44,8 @@ export interface SuperCampaignEnrollmentFilterOptions extends Omit<PaginationOpt
   user?: IUser['id'];
   tags?: SuperCampaignEnrollment['tags'];
   detached?: boolean;
+  including_deleted?: boolean;
+  executed?: boolean;
 }
 
-interface SuperCampaignEnrollmentInput extends Pick<SuperCampaignEnrollment, 'super_campaign' | 'brand' | 'user' | 'tags'> {
-  detached?: boolean;
-}
+export type SuperCampaignEnrollmentInput = Pick<SuperCampaignEnrollment, 'super_campaign' | 'brand' | 'user' | 'tags' | 'detached'>

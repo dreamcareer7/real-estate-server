@@ -16,6 +16,4 @@ runInContext(`calendar-notification-${new Date().toLocaleTimeString('en-us')}`, 
       name: 'calendar_notification'
     }
   )
-
-  process.exit()
 })

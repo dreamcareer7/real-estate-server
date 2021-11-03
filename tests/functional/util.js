@@ -164,6 +164,16 @@ function currentBrand() {
   return setup.request.headers['X-Rechat-Brand']
 }
 
+function resolve(obj) {
+  if (typeof obj === 'function') return resolve(obj())
+  if (obj === null || typeof obj !== 'object') return obj
+  if (Array.isArray(obj)) {
+    return obj.map(resolve)
+  }
+
+  return Object.fromEntries(Object.keys(obj).map(k => [k, resolve(obj[k])]))
+}
+
 module.exports = {
   createBrands,
   createUser,
@@ -172,4 +182,5 @@ module.exports = {
   switchBrand,
   userId,
   currentBrand,
+  resolve,
 }

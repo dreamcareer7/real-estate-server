@@ -8,6 +8,8 @@ export interface ITriggerUpdateInput {
 
   brand_event?: UUID;
   campaign?: UUID;
+
+  origin?: UUID;
 }
 
 export type ITriggerEndpointInput = {
@@ -44,6 +46,10 @@ export interface ITriggerInput {
   deal?: UUID;
 
   scheduled_after?: UUID;
+
+  is_global?: boolean;
+
+  origin?: UUID;
 }
 
 interface IRawTriggerBase {
@@ -54,6 +60,7 @@ interface IRawTriggerBase {
   time?: string;
   recurring: boolean;
   effective_at: number;
+  origin?: UUID;
 }
 
 type TContactEventTypes =
@@ -126,6 +133,8 @@ interface IModel {
   deleted_at: number;
 
   created_by: UUID;
+  contact: UUID;
+  origin?: UUID;
 }
 
 type ExecutedTrigger = {
