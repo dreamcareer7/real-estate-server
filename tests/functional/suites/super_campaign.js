@@ -202,12 +202,34 @@ function adminEnroll(super_campaign, enrollments) {
   }
 }
 
+function selfEnroll(super_campaign, { tags }) {
+  return cb => {
+    return F('self enroll into a super campaign')
+      .put(`/email/super-campaigns/${super_campaign()}/enrollments/self`, { tags })
+      .after(cb)
+      .expectStatus(200)
+  }
+}
+
 function checkEnrollments(super_campaign, conds) {
   return (cb) => {
     const f = F('check enrolled users after create')
       .get(
         `/email/super-campaigns/${super_campaign()}/enrollments?associations[]=super_campaign_enrollment.user&associations[]=super_campaign_enrollment.brand`
       )
+      .after(cb)
+      .expectStatus(200)
+
+    runFrisbyConditions(f, conds)
+
+    return f
+  }
+}
+
+function checkSelfEnrollments(conds) {
+  return (cb) => {
+    const f = F('check super campaigns the user is enrolled in')
+      .get('/email/super-campaigns/enrollments/self')
       .after(cb)
       .expectStatus(200)
 
@@ -505,6 +527,20 @@ module.exports = {
           },
         ],
         length: 1,
+      }),
+
+      enrollInChristmas: selfEnroll(ID('christmas.create'), {
+        tags: ['New Year'],
+      }),
+
+      getEnrollments: checkSelfEnrollments({
+        some: [
+          {
+            super_campaign: ID('christmas.create'),
+            tags: ['New Year'],
+          },
+        ],
+        total: 1,
       }),
     })
   ),
