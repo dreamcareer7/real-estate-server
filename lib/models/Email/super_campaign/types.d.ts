@@ -26,6 +26,7 @@ export interface SuperCampaignStored extends IModel {
 export interface Filter extends PaginationOptions {
   status?: 'DRAFT' | 'SCHEDULED' | 'IN_PROGRESS' | 'EXECUTED';
   brand_in?: IBrand['id'][];
+  executed?: boolean;
 }
 
 export interface SuperCampaignEnrollment extends Pick<IModel, 'id' | 'created_at' | 'updated_at'> {

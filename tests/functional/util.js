@@ -165,22 +165,13 @@ function currentBrand() {
 }
 
 function resolve(obj) {
-  if (typeof obj !== 'object') return obj
+  if (typeof obj === 'function') return resolve(obj())
+  if (obj === null || typeof obj !== 'object') return obj
   if (Array.isArray(obj)) {
     return obj.map(resolve)
   }
 
-  return Object.fromEntries(Object.keys(obj).map(k => {
-    if (typeof obj[k] === 'function') {
-      return [k, obj[k]()]
-    }
-
-    if (typeof obj[k] === 'object') {
-      return [k, resolve(obj[k])]
-    }
-
-    return [k, obj[k]]
-  }))
+  return Object.fromEntries(Object.keys(obj).map(k => [k, resolve(obj[k])]))
 }
 
 module.exports = {

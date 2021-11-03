@@ -39,6 +39,36 @@ const theDarkSide = () =>
 const konoha = () =>
   R().brands.data[0].children[0].children.find((b) => b.name === 'Konohagakur').id
 
+function runFrisbyConditions(f, conds) {
+  if (Array.isArray(conds.some)) {
+    for (const e of resolve(conds.some)) {
+      f.expectJSON('data.?', e)
+    }
+  }
+
+  if (Array.isArray(conds.every)) {
+    for (const e of resolve(conds.every)) {
+      f.expectJSON('data.*', e)
+    }
+  }
+
+  if (typeof conds.length === 'number') {
+    f.expectJSONLength('data', conds.length)
+  }
+
+  if (typeof conds.length === 'function') {
+    f.expectJSONLength('data', conds.length())
+  }
+
+  if (typeof conds.total === 'number') {
+    f.expectJSON({ info: { total: conds.total } })
+  }
+
+  if (typeof conds.total === 'function') {
+    f.expectJSON({ info: { total: conds.total() } })
+  }
+}
+
 function uploadCSV(filename) {
   return (cb) => {
     const csv = fs.createReadStream(path.resolve(__dirname, 'data/super_campaign', filename))
@@ -172,22 +202,16 @@ function adminEnroll(super_campaign, enrollments) {
   }
 }
 
-function checkEnrollments(super_campaign, expected) {
+function checkEnrollments(super_campaign, conds) {
   return (cb) => {
-    expected = resolve(expected)
     const f = F('check enrolled users after create')
       .get(
         `/email/super-campaigns/${super_campaign()}/enrollments?associations[]=super_campaign_enrollment.user&associations[]=super_campaign_enrollment.brand`
       )
       .after(cb)
       .expectStatus(200)
-      .expectJSON({
-        info: { total: expected.length },
-      })
 
-    for (const e of expected) {
-      f.expectJSON('data.?', { ...e, type: 'super_campaign_enrollment' })
-    }
+    runFrisbyConditions(f, conds)
 
     return f
   }
@@ -267,9 +291,8 @@ function execute(id) {
   }
 }
 
-function checkResults(super_campaign, expected) {
+function checkResults(super_campaign, conds) {
   return (cb) => {
-    expected = resolve(expected)
     const f = F('check super campaign results')
       .get(
         `/email/super-campaigns/${super_campaign()}/enrollments?associations[]=super_campaign_enrollment.campaign`
@@ -277,9 +300,8 @@ function checkResults(super_campaign, expected) {
       .after(cb)
       .expectStatus(200)
 
-    for (const e of expected) {
-      f.expectJSON('data.?', e)
-    }
+    runFrisbyConditions(f, conds)
+
     return f
   }
 }
@@ -294,7 +316,7 @@ function checkCampaign(cond) {
   }
 }
 
-function filter(expected, message = 'check all existing super campaigns') {
+function filter(conds, message = 'check all existing super campaigns') {
   return (cb) => {
     const f = F(message)
       .post('/email/super-campaigns/filter', {
@@ -304,45 +326,41 @@ function filter(expected, message = 'check all existing super campaigns') {
       .after(cb)
       .expectStatus(200)
 
-    for (const e of expected()) {
-      f.expectJSON('data.?', e)
-    }
+
+    runFrisbyConditions(f, conds)
 
     return f
   }
 }
 
-function getEligibleCampaigns(expected, expected_length = undefined) {
+function getEligibleCampaigns(conds) {
   return cb => {
     const f = F('get my eligible super campaigns')
       .get('/email/super-campaigns/self')
       .after(cb)
       .expectStatus(200)
 
-    for (const e of resolve(expected)) {
-      f.expectJSON('data.?', e)
-    }
-
-    if (typeof expected_length === 'number') {
-      f.expectJSONLength('data', expected_length)
-    }
+    runFrisbyConditions(f, conds)
 
     return f
   }
 }
 
-const createdSuperCampaigns = filter(() => [
-  {
-    deleted_at: null,
-    subject: 'Happy New Year!',
-    tags: ['Christmas'],
-  },
-  {
-    deleted_at: null,
-    subject: 'Happy Labor Day!',
-    tags: ['Labor Day'],
-  },
-])
+const createdSuperCampaigns = filter({
+  some: [
+    {
+      deleted_at: null,
+      subject: 'Happy New Year!',
+      tags: ['Christmas'],
+    },
+    {
+      deleted_at: null,
+      subject: 'Happy Labor Day!',
+      tags: ['Labor Day'],
+    },
+  ],
+  total: 2,
+})
 
 module.exports = {
   listing_by_mls,
@@ -397,65 +415,78 @@ module.exports = {
       }),
       updateTags: updateTags(ID('christmas.create'), ['Christmas']),
       updateEligibility: updateEligibility(ID('christmas.create')),
-      checkEnrollments: checkEnrollments(ID('christmas.create'), [
-        {
-          brand: { id: theDarkSide },
-          user: {
-            email: DARTH_VADER,
+      checkEnrollments: checkEnrollments(ID('christmas.create'), {
+        some: [
+          {
+            brand: { id: theDarkSide },
+            user: {
+              email: DARTH_VADER,
+            },
+            tags: ['Christmas'],
           },
+        ],
+        total: 1,
+      }),
+
+      enrollNaruto: adminEnroll(ID('christmas.create'), [
+        {
+          brand: konoha,
+          user: userId(NARUTO),
           tags: ['Christmas'],
         },
       ]),
 
-      enrollNaruto: adminEnroll(ID('christmas.create'), [{
-        brand: konoha,
-        user: userId(NARUTO),
-        tags: ['Christmas']
-      }]),
-
-      checkNarutoManuallyEnrolled: checkEnrollments(ID('christmas.create'), [
-        () => R().christmas.checkEnrollments.data[0],
-        {
-          brand: { id: konoha },
-          user: {
-            email: NARUTO,
+      checkNarutoManuallyEnrolled: checkEnrollments(ID('christmas.create'), {
+        some: [
+          () => R().christmas.checkEnrollments.data[0],
+          {
+            brand: { id: konoha },
+            user: {
+              email: NARUTO,
+            },
+            tags: ['Christmas'],
           },
-          tags: ['Christmas'],
-        },
-      ]),
+        ],
+        total: 2,
+      }),
 
       get,
     },
     labor_day: {
       create,
-      checkEnrollments: checkEnrollments(ID('labor_day.create'), [
-        {
-          brand: { id: theMatrix },
-          user: {
-            email: AGENT_SMITH1,
+      checkEnrollments: checkEnrollments(ID('labor_day.create'), {
+        some: [
+          {
+            brand: { id: theMatrix },
+            user: {
+              email: AGENT_SMITH1,
+            },
+            tags: ['Labor Day'],
           },
-          tags: ['Labor Day'],
-        },
-        {
-          brand: { id: konoha },
-          user: {
-            email: NARUTO,
+          {
+            brand: { id: konoha },
+            user: {
+              email: NARUTO,
+            },
+            tags: ['Labor Day'],
           },
-          tags: ['Labor Day'],
-        },
-      ]),
+        ],
+        total: 2,
+      }),
 
       execute: execute(ID('labor_day.create')),
 
-      checkResults: checkResults(ID('labor_day.create'), [
-        {
-          campaign: {
-            subject: () => R().labor_day.create.subject,
-            type: 'email_campaign',
+      checkResults: checkResults(ID('labor_day.create'), {
+        some: [
+          {
+            campaign: {
+              subject: () => R().labor_day.create.subject,
+              type: 'email_campaign',
+            },
+            type: 'super_campaign_enrollment',
           },
-          type: 'super_campaign_enrollment',
-        },
-      ]),
+        ],
+      }),
     },
     createdSuperCampaigns,
   }),
@@ -467,11 +498,14 @@ module.exports = {
         subject: R().labor_day.create.subject,
       })),
 
-      getEligibleCampaigns: getEligibleCampaigns([
-        {
-          id: ID('christmas.create')
-        }
-      ], 1)
+      getEligibleCampaigns: getEligibleCampaigns({
+        every: [
+          {
+            id: ID('christmas.create'),
+          },
+        ],
+        length: 1,
+      }),
     })
   ),
 
