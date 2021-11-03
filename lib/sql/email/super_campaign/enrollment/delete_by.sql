@@ -15,5 +15,9 @@ WHERE
   (CASE
     WHEN $3::uuid IS NULL THEN TRUE
     ELSE super_campaign = $3::uuid
+  END) AND
+  (CASE
+    WHEN $4::boolean IS NULL THEN TRUE
+    ELSE detached = $4::boolean
   END)
   
