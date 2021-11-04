@@ -39,3 +39,7 @@ GROUP BY
   c.id,
   t.brand,
   t.user
+ON CONFLICT (super_campaign, brand, "user") DO UPDATE SET
+  tags = excluded.tags::text[],
+  deleted_at = NULL,
+  detached = FALSE
