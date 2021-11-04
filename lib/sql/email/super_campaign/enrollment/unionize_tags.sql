@@ -15,19 +15,7 @@ SET
   )
 WHERE
   deleted_at IS NULL AND
-  (CASE
-    WHEN $2::boolean IS NULL THEN TRUE
-    ELSE detached = $2::boolean
-  END) AND
-  (CASE
-    WHEN $3::uuid IS NULL THEN TRUE
-    ELSE super_campaign = $3::uuid
-  END) AND
-  (CASE
-    WHEN $4::uuid IS NULL THEN TRUE
-    ELSE brand = $4::uuid
-  END) AND
-  (CASE
-    WHEN $5::uuid IS NULL THEN TRUE
-    ELSE "user" = $5::uuid
-  END)
+  COALESCE(detached = $2::boolean, TRUE) AND
+  COALESCE(super_campaign = $3::uuid, TRUE) AND
+  COALESCE(brand = $4::uuid, TRUE) AND
+  COALESCE("user" = $5::uuid, TRUE)

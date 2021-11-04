@@ -4,20 +4,7 @@ SET
   deleted_at = now(),
 WHERE
   deleted_at IS NULL AND
-  (CASE
-    WHEN $1::uuid IS NULL THEN TRUE
-    ELSE brand = $1::uuid
-  END) AND
-  (CASE
-    WHEN $2::uuid IS NULL THEN TRUE
-    ELSE "user" = $2::uuid
-  END) AND
-  (CASE
-    WHEN $3::uuid IS NULL THEN TRUE
-    ELSE super_campaign = $3::uuid
-  END) AND
-  (CASE
-    WHEN $4::boolean IS NULL THEN TRUE
-    ELSE detached = $4::boolean
-  END)
-  
+  COALESCE(brand = $1::uuid, TRUE) AND
+  COALESCE("user" = $2::uuid, TRUE) AND
+  COALESCE(super_campaign = $3::uuid, TRUE) AND
+  COALESCE(detached = $4::boolean, TRUE)  

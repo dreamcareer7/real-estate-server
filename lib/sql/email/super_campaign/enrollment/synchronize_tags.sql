@@ -11,7 +11,4 @@ WHERE
   deleted_at IS NULL AND
   detached = FALSE AND
   super_campaign = $1::uuid AND
-  (CASE
-    WHEN $3::text[] IS NULL THEN TRUE
-    ELSE tags <@ $3::text[] AND tags @> $3::text[]
-  END)
+  COALESCE(tags <@ $3::text[] AND tags @> $3::text[], TRUE)
