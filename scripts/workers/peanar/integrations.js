@@ -16,7 +16,7 @@ const queues = [
       // Actual calendar synchronization
       'microsoft_cal'
     ],
-    concurrency: 20
+    concurrency: 7
   }
 ]
 
