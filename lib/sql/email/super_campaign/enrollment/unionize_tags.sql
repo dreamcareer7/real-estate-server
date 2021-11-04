@@ -9,10 +9,11 @@ UPDATE
 SET
   updated_at = now(),
   tags = (
-    SELECT array_agg(t ORDER BY t) FROM (
-      SELECT DISTINCT UNNEST(tags::text[] || $1::text[]) AS t
-    ) AS tmp
-  )
+    SELECT array_agg(t1)
+      FROM unnest(tags::text[]) AS t1
+      LEFT JOIN unnest($1::text[]) AS t2 ON lower(t1) = lower(t2)
+      WHERE t2 IS NULL
+  ) || $1::text[]
 WHERE
   deleted_at IS NULL AND
   COALESCE(detached = $2::boolean, TRUE) AND
