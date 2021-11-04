@@ -1,7 +1,7 @@
 UPDATE
   super_campaigns_enrollments
 SET
-  deleted_at = now(),
+  deleted_at = now()
 WHERE
   deleted_at IS NULL AND
   COALESCE(brand = $1::uuid, TRUE) AND
