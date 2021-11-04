@@ -43,3 +43,6 @@ ON CONFLICT (super_campaign, brand, "user") DO UPDATE SET
   tags = excluded.tags::text[],
   deleted_at = NULL,
   detached = FALSE
+WHERE
+  deleted_at IS NOT NULL OR
+  detached = FALSE
