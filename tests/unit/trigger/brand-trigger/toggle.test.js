@@ -128,7 +128,7 @@ describe('BrandTrigger/update', () => {
     expect(brandTrigger.deleted_at).to.be.ok
   })
 
-  it('creates again in the enable mode', async () => {
+  it('creates again in the enable mode, with correct props', async () => {
     await createContact({
       birthday: BIRTHDAY.unix(),
       email: 'first_mail@fake.com',
@@ -148,13 +148,19 @@ describe('BrandTrigger/update', () => {
     await BrandTrigger.toggle(brandTriggerId, false)
     await BrandTrigger.toggle(brandTriggerId, true)
     await handleJobs()
-    const triggers = await Trigger.filter({
+    const triggerIds = await Trigger.filter({
       brand: brand.id,
       event_type: 'birthday',
       deleted_at: null,
     })
-    expect(triggers.length).to.be.eql(1)
+    expect(triggerIds.length).to.be.eql(1)
     const brandTrigger = await BrandTrigger.get(brandTriggerId)
     expect(brandTrigger.deleted_at).to.be.null
+    const triggerId = triggerIds[0]
+    const trigger = await Trigger.get(triggerId)
+    expect(trigger.time).to.be.ok
+    expect(trigger.recurring).to.be.ok
+    const due = await Trigger.getDue(triggerId)
+    expect(due).to.be.ok
   })
 })
