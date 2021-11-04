@@ -1,12 +1,18 @@
 const moment = require('moment-timezone')
 const { expect } = require('chai')
 
+/*
 const EmailCampaign = {
   ...require('../../../../lib/models/Email/campaign/create'),
   ...require('../../../../lib/models/Email/campaign/get'),
 }
 const Template = require('../../../../lib/models/Template')
 const TemplateInstance = require('../../../../lib/models/Template/instance')
+const Campaign = {
+  ...require('../../../../lib/models/Email/campaign/get.js'),
+  ...require('../../../../lib/models/Email/create.js'),
+  }
+*/
 const Trigger = {
   ...require('../../../../lib/models/Trigger/filter.js'),
   ...require('../../../../lib/models/Trigger/get'),
@@ -20,10 +26,7 @@ const BrandTrigger = {
   ...require('../../../../lib/models/Trigger/brand_trigger/get'),
   ...require('../../../../lib/models/Trigger/brand_trigger/update'),
 }
-const Campaign = {
-  ...require('../../../../lib/models/Email/campaign/get.js'),
-  ...require('../../../../lib/models/Email/create.js'),
-}
+
 const Contact = {
   ...require('../../../../lib/models/Contact/manipulate'),
   ...require('../../../../lib/models/Contact/get'),
