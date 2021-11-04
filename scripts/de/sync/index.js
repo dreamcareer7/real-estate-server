@@ -77,7 +77,7 @@ const getData = async token => {
 
   const users = _.map(normal_users, user => {
     user.mlses = [
-      {mls: mlsName(user.mlsSystem), id: user.id}
+      {mls: mlsName(user.mlsSystem), id: user.rbnyAgentId ?? user.id}
     ]
 
     const secondaries = indexed_duals[user.id]?.secondaryAgentId || []
