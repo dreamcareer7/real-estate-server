@@ -9,7 +9,7 @@ WITH to_delete AS (
     -- AND is_pinned IS FALSE
     AND deleted_at IS NULL
 )
-INSERT INTO super_campaigns_enrollments (
+INSERT INTO super_campaigns_enrollments as sce (
   super_campaign,
   brand,
   "user",
@@ -44,5 +44,5 @@ ON CONFLICT (super_campaign, brand, "user") DO UPDATE SET
   deleted_at = NULL,
   detached = FALSE
 WHERE
-  deleted_at IS NOT NULL OR
-  detached = FALSE
+  sce.deleted_at IS NOT NULL OR
+  sce.detached = FALSE
