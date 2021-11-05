@@ -6,6 +6,7 @@
 
 const request = require('request-promise-native')
 const _ = require('lodash')
+const fs = require('fs')
 
 const MLSJob = require('../../../lib/models/MLSJob')
 
@@ -110,6 +111,11 @@ const getData = async token => {
     .uniq()
     .value()
 
+  fs.writeFileSync('/tmp/normal-users.json', JSON.stringify(normal_users, 4, 4))
+  fs.writeFileSync('/tmp/all-users.json', JSON.stringify(all_users, 4, 4))
+  fs.writeFileSync('/tmp/duals.json', JSON.stringify(duals, 4, 4))
+  fs.writeFileSync('/tmp/users.json', JSON.stringify(users, 4, 4))
+
   return { users, regions, offices }
 }
 
@@ -120,9 +126,6 @@ const getData = async token => {
 const sync = async () => {
   const token = await getToken()
   const { users, regions, offices } = await getData(token)
-
-  const date = new Date()
-  require('fs').writeFileSync(`/tmp/${date}.json`, JSON.stringify(users))
 
   await getRoot() // Ensure root exists
   await syncRegions(regions)

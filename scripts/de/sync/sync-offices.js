@@ -144,7 +144,7 @@ RETURNING *
 `
 
 const DISABLE_ALL = `
-UPDATE brands_users SET deleted_at = COALESCE(deleted_at, NOW())
+UPDATE brands_users SET deleted_at = COALESCE(brands_users.deleted_at, NOW())
 FROM de.admins_offices
 JOIN de.offices ON de.admins_offices.office = de.offices.id
 JOIN de.users ON de.admins_offices.username = de.users.username
