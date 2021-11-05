@@ -59,16 +59,11 @@ const ORPHANIZE = `
     ${MAP}
   )
 
-  UPDATE users SET
-    email = uuid_generate_v4() || '@elimman.cm',
-    fake_email = TRUE,
-    phone_number = NULL
-  FROM de.users
-  WHERE de.users.user = public.users.id
-  AND de.users.username NOT IN(
+  UPDATE de.users SET deleted_at = NOW()
+  WHERE deleted_at IS NULL -- Dont redelete?
+  AND username NOT IN (
     SELECT username FROM data
   )
-  RETURNING *
 `
 
 const INSERT_USERNAMES = `
@@ -82,76 +77,51 @@ ON CONFLICT (username) DO UPDATE SET
   object = EXCLUDED.object,
   updated_at = NOW()`
 
-const SAVE_USERS = `
-WITH data AS (
-  ${MAP}
-),
-
-saved AS (
+const INSERT_USERS = `
+WITH saved AS (
   INSERT INTO users (
-    first_name,
-    last_name,
     email,
-    email_confirmed,
-    profile_image_url,
-    cover_image_url,
-    website,
-    linkedin,
-    facebook,
-    youtube,
-    instagram,
-    twitter,
-    user_type,
-    timezone,
-    designation
+    user_type
   )
   SELECT
-    first_name,
-    last_name,
-    email,
-    true,
-    profile_image_url,
-    cover_image_url,
-    'https://elliman.com/' || data.id,
-    linkedin,
-    facebook,
-    youtube,
-    instagram,
-    twitter,
-    user_type,
-    timezone,
-    designation
-  FROM de.users
-  JOIN data ON de.users.username = data.username
-  ON CONFLICT (email) DO UPDATE SET
-      first_name = EXCLUDED.first_name,
-      last_name = EXCLUDED.last_name,
-      email = EXCLUDED.email,
-      profile_image_url = EXCLUDED.profile_image_url,
-      cover_image_url = EXCLUDED.cover_image_url,
-      user_type = EXCLUDED.user_type,
-      linkedin = EXCLUDED.linkedin,
-      facebook = EXCLUDED.facebook,
-      youtube = EXCLUDED.youtube,
-      instagram = EXCLUDED.instagram,
-      twitter = EXCLUDED.twitter,
-      website = EXCLUDED.website,
-      designation = EXCLUDED.designation
-
+    DISTINCT ON(de.users.object->>'email')
+    de.users.object->>'email',
+    (de.users.object->>'user_type')::user_type
+  FROM de.users WHERE "user" IS NULL
   RETURNING id, email
 )
 
 UPDATE de.users
 SET "user" = saved.id
-FROM data
-JOIN saved ON LOWER(data.email) = LOWER(saved.email)
+FROM saved
 WHERE de.users."user" IS NULL
-AND de.users.username = data.username`
+AND LOWER(de.users.object->>'email') = LOWER(saved.email)
+RETURNING id`
+
+const UPDATE_USERS = `
+UPDATE public.users SET 
+    first_name = de.users.object->>'first_name',
+    last_name = de.users.object->>'last_name',
+    profile_image_url = de.users.object->>'profile_image_url',
+    cover_image_url = de.users.object->>'cover_image_url',
+    website = ('https://elliman.com/' || (de.users.object->>'id')),
+    linkedin = de.users.object->>'linkedin',
+    facebook = de.users.object->>'facebook',
+    youtube = de.users.object->>'youtube',
+    instagram = de.users.object->>'instagram',
+    twitter = de.users.object->>'twitter',
+    user_type = (de.users.object->>'user_type')::user_type,
+    timezone = de.users.object->>'timezone',
+    designation = de.users.object->>'designation'
+  FROM de.users
+  WHERE public.users.id = de.users.user
+  RETURNING id
+`
 
 const NULLIFY = `
 UPDATE users SET
   phone_number = NULL,
-  email = uuid_generate_v4() || '@elimman.com',
+  email = de.users.username || '-deleted-account@elliman.com',
   fake_email = true
 FROM de.users
 WHERE public.users.id = de.users.user
@@ -163,7 +133,9 @@ WITH phones AS (
     DISTINCT ON(de.users.object->>'phone_number')
     de.users.object->>'phone_number' as phone_number,
     "user"
-  FROM de.users ORDER BY de.users.object->>'phone_number', updated_at DESC
+  FROM de.users 
+  WHERE deleted_at IS NULL
+  ORDER BY de.users.object->>'phone_number', updated_at DESC
 )
 UPDATE users SET
   phone_number = phones.phone_number,
@@ -180,7 +152,10 @@ WITH emails AS (
     DISTINCT ON(de.users.object->>'email')
     de.users.object->>'email' as email,
     "user"
-  FROM de.users ORDER BY de.users.object->>'email', updated_at DESC
+  FROM de.users 
+  WHERE deleted_at IS NULL
+  ORDER BY de.users.object->>'email', updated_at DESC
+
 )
 UPDATE users SET
   email = emails.email,
@@ -289,7 +264,13 @@ const syncUsers = async users => {
   })
 
   await db.executeSql.promise(INSERT_USERNAMES, [data])
-  await db.executeSql.promise(SAVE_USERS, [data])
+
+  const inserts = await db.executeSql.promise(INSERT_USERS)
+  Context.log('Inserted', inserts.rows.length, 'new users')
+
+  const updates = await db.executeSql.promise(UPDATE_USERS)
+  Context.log('Updated', updates.rows.length, 'users')
+
   await db.executeSql.promise(NULLIFY)
   await db.executeSql.promise(SET_PHONES)
   await db.executeSql.promise(SET_EMAILS)
