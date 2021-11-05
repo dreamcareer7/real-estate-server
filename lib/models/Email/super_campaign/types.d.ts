@@ -23,10 +23,12 @@ export interface SuperCampaignStored extends IModel {
   eligible_brands: UUID[];
 }
 
-export interface Filter extends PaginationOptions {
+export interface Filter extends Omit<PaginationOptions, 'order'> {
   status?: 'DRAFT' | 'SCHEDULED' | 'IN_PROGRESS' | 'EXECUTED';
   brand_in?: IBrand['id'][];
   executed?: boolean;
+  order?: string[];
+  draft?: boolean;
 }
 
 export interface SuperCampaignEnrollment extends Pick<IModel, 'id' | 'created_at' | 'updated_at'> {
