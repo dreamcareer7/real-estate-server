@@ -48,6 +48,7 @@ export interface SuperCampaignEnrollmentFilterOptions extends Omit<PaginationOpt
   detached?: boolean;
   including_deleted?: boolean;
   executed?: boolean;
+  order?: string[];
 }
 
 export type SuperCampaignEnrollmentInput = Pick<SuperCampaignEnrollment, 'super_campaign' | 'brand' | 'user' | 'tags' | 'detached'>
