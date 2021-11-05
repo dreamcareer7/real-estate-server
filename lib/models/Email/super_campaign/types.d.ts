@@ -28,6 +28,7 @@ export interface Filter extends Omit<PaginationOptions, 'order'> {
   brand_in?: IBrand['id'][];
   executed?: boolean;
   order?: string[];
+  draft?: boolean;
 }
 
 export interface SuperCampaignEnrollment extends Pick<IModel, 'id' | 'created_at' | 'updated_at'> {
