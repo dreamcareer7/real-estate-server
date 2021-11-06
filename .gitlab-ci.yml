@@ -67,11 +67,14 @@ coverage:
     - psql -h "postgres" -U "$POSTGRES_USER" "$POSTGRES_DB" < ./data/minimal.sql
     - NODE_ENV="$ENV" npm install
     - npm run coverage
+    - mkdir -p coverage/raw
+    - cp istanbul/coverage-final.json coverage/raw/functional.json
   coverage: '/Lines\s+:\s([\d\.]+)/'
   artifacts:
     paths:
       - istanbul
       - docs
+      - coverage/raw/functional.json
   tags:
     - docker
 
@@ -98,13 +101,32 @@ unit_coverage:
     - export NODE_ENV=tests
     - npm run migrate:up
     - npm run coverage:unit
+    - mkdir -p coverage/raw
+    - cp istanbul/coverage-final.json coverage/raw/unit.json
   coverage: '/Lines\s+:\s([\d\.]+)/'
   artifacts:
     paths:
       - istanbul
       - docs
+      - coverage/raw/unit.json
   tags:
     - docker
+
+report:
+  stage: deploy
+  dependencies:
+    - coverage
+    - unit_coverage
+  script:
+    - mkdir coverage/merged && mkdir coverage/report
+    - npx nyc merge coverage/raw coverage/merged/merged.json
+    - npx nyc report -t coverage/merged --report-dir coverage/report --reporter=text-summary --reporter=html --reporter=cobertura
+  coverage: '/Lines\s+:\s([\d\.]+)/'
+  artifacts:
+    paths:
+      - coverage/report
+    reports:
+      cobertura: coverage/report/cobertura.xml
 
 docs:
   stage: deploy
