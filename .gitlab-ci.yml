@@ -126,7 +126,7 @@ report:
     paths:
       - coverage/report
     reports:
-      cobertura: coverage/report/cobertura.xml
+      cobertura: coverage/report/cobertura-coverage.xml
 
 docs:
   stage: deploy
