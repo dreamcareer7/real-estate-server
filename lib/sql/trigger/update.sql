@@ -9,6 +9,6 @@ SET
   "time" = $6,
   recurring = $7,
   brand_event = $8,
-  campaign = $9,
+  campaign = $9
 WHERE
   id = $1::uuid
