@@ -119,16 +119,16 @@ report:
     - unit_coverage
   script:
     - mkdir coverage/merged && mkdir coverage/report
-    - ls coverage
-    - ls coverage/raw
+    - ls -l coverage
+    - ls -l coverage/raw
     - npx nyc merge coverage/raw coverage/merged/merged.json
-    - ls coverage/merged
+    - ls -l coverage/merged
     - npx nyc report -t coverage/merged --report-dir coverage/report --reporter=text-summary --reporter=html --reporter=cobertura
-    - ls coverage/report
+    - ls -l coverage/report
   coverage: '/Lines\s+:\s([\d\.]+)/'
   artifacts:
     paths:
-      - coverage/report
+      - coverage
     reports:
       cobertura: coverage/report/cobertura-coverage.xml
 
