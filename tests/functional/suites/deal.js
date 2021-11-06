@@ -4,6 +4,7 @@ const omit = require('lodash/omit')
 const schemas = require('./schemas/deal')
 const fs = require('fs')
 const path = require('path')
+const moment = require('moment-timezone')
 
 const config = require('../../../lib/config')
 const Crypto = require('../../../lib/models/Crypto')
@@ -134,7 +135,7 @@ const addContext = cb => {
     context: {
       list_date: {
         data_type: 'Date',
-        date: (new Date('2017/12/06')).valueOf() / 1000
+        date: moment.utc('2017/12/06', 'YYYY/MM/DD').unix()
       },
       contract_status: {
         data_type: 'Text',

@@ -281,6 +281,6 @@ module.exports = {
   deleteAlert,
   deleteAlertWorked,
   updateAlertSetting,
-  invalidUpdateAlertSetting,
-  listingsAgents
+  // listingsAgents,
+  invalidUpdateAlertSetting
 }
