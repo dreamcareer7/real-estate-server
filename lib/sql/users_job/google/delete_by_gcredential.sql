@@ -1,7 +1,7 @@
 UPDATE
   users_jobs
 SET
-  status = null,
+  status = 'deleted',
   resume_at = null,
   deleted_at = now()
 WHERE

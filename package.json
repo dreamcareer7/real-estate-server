@@ -21,19 +21,6 @@
     "node": "^16.x",
     "npm": "7.x"
   },
-  "nyc": {
-    "extension": [
-      ".js"
-    ],
-    "exclude": [
-      "tests/**/*"
-    ],
-    "reporter": [
-      "text-summary",
-      "lcov"
-    ],
-    "report-dir": "./istanbul"
-  },
   "author": "",
   "license": "ISC",
   "dependencies": {
