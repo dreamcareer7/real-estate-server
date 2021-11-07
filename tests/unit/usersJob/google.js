@@ -53,7 +53,7 @@ async function upsert(jobName, status) {
 
 async function create() {
   const jobName = 'calendar'
-  const status  = 'pending'
+  const status  = 'waiting'
 
   const id = await upsert(jobName, status)
 
@@ -67,7 +67,7 @@ async function get() {
   const record = await UsersJob.get(id)
 
   expect(record.type).to.be.equal('users_jobs')
-  expect(record.status).to.be.equal('pending')
+  expect(record.status).to.be.equal('waiting')
   expect(record.metadata).to.be.deep.equal(metadata)
   expect(record.google_credential).to.be.equal(googleCredential.id)
   expect(record.microsoft_credential).to.be.equal(null)
@@ -89,7 +89,7 @@ async function getByGoogleCredential() {
   const record = await UsersJob.getByGoogleCredential(googleCredential.id, 'calendar')
 
   expect(record.type).to.be.equal('users_jobs')
-  expect(record.status).to.be.equal('pending')
+  expect(record.status).to.be.equal('waiting')
   expect(record.google_credential).to.be.equal(googleCredential.id)
   expect(record.microsoft_credential).to.be.equal(null)
   expect(record.deleted_at).to.be.equal(null)
@@ -128,7 +128,7 @@ async function deleteByGoogleCredentialAndJobFailed() {
   const record = await UsersJob.get(id)
 
   expect(record.type).to.be.equal('users_jobs')
-  expect(record.status).to.be.equal('pending')
+  expect(record.status).to.be.equal('waiting')
   expect(record.google_credential).to.be.equal(googleCredential.id)
   expect(record.microsoft_credential).to.be.equal(null)
   expect(record.deleted_at).to.be.equal(null)
