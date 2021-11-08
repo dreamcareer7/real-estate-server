@@ -45,6 +45,9 @@ SELECT
     EXTRACT(EPOCH FROM users.deleted_at)   AS deleted_at,
     EXTRACT(EPOCH FROM users.last_seen_at) AS last_seen_at,
     (
+        SELECT ARRAY_AGG(agent) FROM users_agents WHERE "user" = users.id
+    ) as agents,
+    (
         SELECT client_type FROM clients WHERE id = users.last_seen_by
     ) as last_seen_type,
     (

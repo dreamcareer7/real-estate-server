@@ -1,0 +1,13 @@
+{
+  "extension": [
+    ".js"
+  ],
+  "exclude": [
+    "tests/**/*"
+  ],
+  "reporter": [
+    "text-summary",
+    "json"
+  ],
+  "report-dir": "./istanbul"
+}

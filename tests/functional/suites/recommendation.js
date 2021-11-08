@@ -67,7 +67,9 @@ const markAsFavorite = (cb) => {
       code: 'OK',
       data: {
         type: 'recommendation',
-        favorited_by: [results.authorize.token.data],
+        favorited_by: [{
+          id: results.authorize.token.data.id
+        }],
       }
     })
     .expectJSONTypes({
@@ -87,7 +89,9 @@ const markAsHid = (cb) => {
       code: 'OK',
       data: {
         type: 'recommendation',
-        favorited_by: [results.authorize.token.data],
+        favorited_by: [{
+          id: results.authorize.token.data.id
+        }],
       }
     })
     .expectJSONTypes({
@@ -107,7 +111,9 @@ const markAsFavorite404 = (cb) => {
 
 const markAsFavoriteWorked = (cb) => {
   const expect = _.clone(results.recommendation.feed.data[0])
-  expect.favorited_by = [results.authorize.token.data]
+  expect.favorited_by = [{
+    id: results.authorize.token.data.id
+  }]
   expect.listing.favorited = true // Its now marked as favorited. This should be true now.
 
   return frisby.create('make sure favorite was successful')
