@@ -252,7 +252,6 @@ function invalidUpdateAlertSetting(cb) {
     .expectStatus(500)
 }
 
-// eslint-disable-next-line
 const listingsAgents = (cb) => {
   return frisby.create('listings agents')
     .post('/listings/filter/agents', vcriteria)
@@ -266,7 +265,7 @@ const listingsAgents = (cb) => {
     })
 }
 
-module.exports = {  
+module.exports = {
   create,
   feed,
   get,
@@ -282,6 +281,6 @@ module.exports = {
   deleteAlert,
   deleteAlertWorked,
   updateAlertSetting,
-  // listingsAgents,
+  listingsAgents,
   invalidUpdateAlertSetting
 }
