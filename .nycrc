@@ -7,7 +7,8 @@
   ],
   "reporter": [
     "text-summary",
-    "json"
+    "json",
+    "lcov"
   ],
   "report-dir": "./istanbul"
 }
