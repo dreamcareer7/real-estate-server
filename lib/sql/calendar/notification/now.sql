@@ -4,6 +4,7 @@ SELECT
   c.title,
   c.type_label,
   c.date AS "timestamp",
+  extract(epoch from c.date) AS unix_timestamp,
   extract(epoch from cns.reminder) as reminder,
   cns.object_type,
   cns.event_type,
