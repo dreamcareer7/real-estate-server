@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "node tests/functional/run/index.js --concurrency 20 --report",
-    "test:unit": "npx mocha --exit --timeout 15000 tests/unit/**/*.test.js",
+    "test:unit": "NODE_ENV=tests npx mocha --recursive --exit --timeout 15000 \"tests/unit/**/*.test.js\"",
     "start": "npx gulp",
     "workers": "npx pm2 start scripts/workers/ecosystem.config.yaml && npx pm2 logs",
     "docs": "node api_docs/index.js",
