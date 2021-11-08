@@ -259,9 +259,7 @@ const listingsAgents = (cb) => {
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
-      data: [{
-        stats: {}
-      }]
+      data: []
     })
 }
 
