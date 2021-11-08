@@ -554,7 +554,7 @@ module.exports = {
           user: {
             email: DARTH_VADER,
           },
-          tags: ['Christmas', 'New Year'],
+          tags: ['Christmas'],
         },
         {
           brand: { id: theMatrix },
