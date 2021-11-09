@@ -545,6 +545,29 @@ module.exports = {
     })
   ),
 
+  ...switchBrand(region, {
+    updateTagsAfterManualEnroll: updateTags(ID('christmas.create'), ['Christmas', 'New Year']),
+    checkEnrollmentsAfterUpdatingTags: checkEnrollments(ID('christmas.create'), {
+      some: [
+        {
+          brand: { id: theDarkSide },
+          user: {
+            email: DARTH_VADER,
+          },
+          tags: ['Christmas'],
+        },
+        {
+          brand: { id: theMatrix },
+          user: {
+            email: AGENT_SMITH1,
+          },
+          tags: ['Christmas', 'New Year'],
+        },
+      ],
+      total: 2,
+    }),
+  }),
+
   ...switchBrand(
     konoha,
     runAsUser(NARUTO, {
