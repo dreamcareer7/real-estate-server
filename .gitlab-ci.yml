@@ -125,7 +125,7 @@ report:
     - npx nyc merge coverage/raw coverage/merged/merged.json
     - head -n 10 coverage/merged/merged.json
     - ls -l coverage/merged
-    - npx nyc report -t coverage/merged --report-dir coverage/report --reporter=text-summary --reporter=html --reporter=cobertura
+    - npx nyc report -t "coverage/merged" --report-dir "coverage/report" --reporter=text-summary --reporter=html --reporter=cobertura
     - ls -l coverage/report
   coverage: '/Lines\s+:\s([\d\.]+)/'
   artifacts:
