@@ -83,7 +83,7 @@ AS $function$
       contacts_summaries.email,
       contacts_summaries.phone_number,
       contacts_summaries.company,
-      extract(epoch from contacts_summaries.birthday) AS birthday,
+      extract(epoch from contacts_summaries.birthday)::float8 AS birthday,
       contacts_summaries.profile_image_url,
       contacts_summaries.cover_image_url,
       contacts_summaries.job_title,
