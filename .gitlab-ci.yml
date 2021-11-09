@@ -118,6 +118,8 @@ report:
     - coverage
     - unit_coverage
   script:
+    - pwd
+    - ls /builds
     - npm i nyc
     - mkdir coverage/merged && mkdir coverage/report
     - ls -l coverage
