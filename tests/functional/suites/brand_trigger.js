@@ -184,6 +184,16 @@ function exclude (cb) {
     .expectStatus(204)
 }
 
+function unexclude (cb) {
+  return frisby
+    .create('unexclude a contact')
+    .delete(`/brands/${theBrand()}/triggers/${EVENT_TYPE}/exclusion`, {
+      contact: theContact()
+    })
+    .after(cb)
+    .expectStatus(204)
+}
+
 module.exports = {
   create,
   update,
@@ -197,4 +207,5 @@ module.exports = {
   enableNonExisting,
   patchWithInvalidAction,
   exclude,
+  unexclude,
 }
