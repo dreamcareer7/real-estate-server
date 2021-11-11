@@ -15,6 +15,7 @@ const Trigger = {
   ...require('../../../../lib/models/Trigger/get'),
   ...require('../../../../lib/models/Trigger/create'),
   ...require('../../../../lib/models/Trigger/update'),
+  ...require('../../../../lib/models/Trigger/delete'),
 }
 const BrandEvent = require('../../../../lib/models/Brand/event')
 const BrandFlow = {
@@ -171,6 +172,34 @@ describe('BrandTrigger/workers', () => {
       expect(theSameOldTrigger.deleted_at).to.be.null
 			expect(theSameOldTrigger.origin).to.be.null
 		})
+
+		it('runs when a trigger having an origin is deleted', async () => {
+			const contact = await createContact({
+				birthday: BIRTHDAY.unix(),
+				email: 'first_mail@fake.com',
+			})
+			await handleJobs()
+			const brandTemplates = await BrandTemplate.getForBrands({ brands: [brand.id] })
+			const bt = {
+				template: brandTemplates[0].id,
+				brand: brand.id,
+				created_by: user.id,
+				event_type: 'birthday',
+				wait_for: -86400,
+				subject: 'birthday mail',
+			}
+      await BrandTrigger.upsert(bt, true)
+			await handleJobs()
+			const [triggerId] = await Trigger.filter({
+				brand: brand.id,
+				event_type: 'birthday',
+        origin: true,
+				contact: contact.id
+			})
+			await Trigger.delete([triggerId])
+			const exclusions = await BrandTriggerExclusion.get(brand.id, bt.event_type)
+			expect(exclusions.length).to.be.ok
+		})
 	})
 
 	describe('delete exclusion function ...', () => {
@@ -202,7 +231,6 @@ describe('BrandTrigger/workers', () => {
         origin: true,
 				deleted_at: null,
 			})
-			expect(triggerIds.length).to.be.eql(1)
 		})
 	})
 })
