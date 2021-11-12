@@ -39,33 +39,19 @@ const theDarkSide = () =>
 const konoha = () =>
   R().brands.data[0].children[0].children.find((b) => b.name === 'Konohagakur').id
 
-function runFrisbyConditions(f, conds) {
-  if (Array.isArray(conds.some)) {
-    for (const e of resolve(conds.some)) {
-      f.expectJSON('data.?', e)
-    }
+function runFrisbyConditions(f, { some, every, length, total } = {}) {
+  resolve(some)?.forEach?.(s => f.expectJSON('data.?', s))
+
+  resolve(every)?.forEach?.(e => f.expectJSON('data.*', e))
+
+  length = resolve(length)
+  if (typeof length === 'number') {
+    f.expectJSONLength('data', length)
   }
 
-  if (Array.isArray(conds.every)) {
-    for (const e of resolve(conds.every)) {
-      f.expectJSON('data.*', e)
-    }
-  }
-
-  if (typeof conds.length === 'number') {
-    f.expectJSONLength('data', conds.length)
-  }
-
-  if (typeof conds.length === 'function') {
-    f.expectJSONLength('data', conds.length())
-  }
-
-  if (typeof conds.total === 'number') {
-    f.expectJSON({ info: { total: conds.total } })
-  }
-
-  if (typeof conds.total === 'function') {
-    f.expectJSON({ info: { total: conds.total() } })
+  total = resolve(total)
+  if (typeof total === 'number') {
+    f.expectJSON({ info: { total } })
   }
 }
 
@@ -368,6 +354,19 @@ function getEligibleCampaigns(conds) {
   }
 }
 
+function getEligibleAgents (id, conds, name = 'get eligible agents') {
+  return cb => {
+    const f = F(name)
+      .get(`/email/super-campaigns/${resolve(id)}/eligible/agents`)
+      .after(cb)
+      .expectStatus(200)
+
+    runFrisbyConditions(f, conds)
+
+    return f
+  }
+}
+
 const createdSuperCampaigns = filter({
   some: [
     {
@@ -437,6 +436,13 @@ module.exports = {
       }),
       updateTags: updateTags(ID('christmas.create'), ['Christmas']),
       updateEligibility: updateEligibility(ID('christmas.create')),
+
+      // TODO: create some agents...
+      checkEligibleAgents: getEligibleAgents(ID('christmas.create'), {
+        some: [],
+        total: 0,
+      }),
+      
       checkEnrollments: checkEnrollments(ID('christmas.create'), {
         some: [
           {
