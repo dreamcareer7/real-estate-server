@@ -1,26 +1,12 @@
 const moment = require('moment-timezone')
 const { expect } = require('chai')
 
-const sql = require('../../../../lib/utils/sql')
-
-const EmailCampaign = {
-  ...require('../../../../lib/models/Email/campaign/create'),
-  ...require('../../../../lib/models/Email/campaign/get'),
-}
-const Flow = require ('../../../../lib/models/Flow')
-const Template = require('../../../../lib/models/Template')
-const TemplateInstance = require('../../../../lib/models/Template/instance')
 const Trigger = {
   ...require('../../../../lib/models/Trigger/filter.js'),
   ...require('../../../../lib/models/Trigger/get'),
   ...require('../../../../lib/models/Trigger/create'),
   ...require('../../../../lib/models/Trigger/update'),
   ...require('../../../../lib/models/Trigger/delete'),
-}
-const BrandEvent = require('../../../../lib/models/Brand/event')
-const BrandFlow = {
-  ...require('../../../../lib/models/Brand/flow/get'),
-  ...require('../../../../lib/models/Brand/flow/create'),
 }
 const BrandTrigger = {
   ...require('../../../../lib/models/Trigger/brand_trigger/workers'), 
@@ -31,10 +17,6 @@ const BrandTriggerExclusion = {
   ...require('../../../../lib/models/Trigger/brand_trigger/exclusion/create'),
   ...require('../../../../lib/models/Trigger/brand_trigger/exclusion/get'),
   ...require('../../../../lib/models/Trigger/brand_trigger/exclusion/delete'),
-}
-const Campaign = {
-  ...require('../../../../lib/models/Email/campaign/get.js'),
-  ...require('../../../../lib/models/Email/create.js'),
 }
 const Contact = {
   ...require('../../../../lib/models/Contact/manipulate'),
@@ -127,7 +109,7 @@ describe('BrandTrigger', () => {
         await BrandTriggerExclusion.create(brand.id, bt.event_type, [contact.id])
         await BrandTrigger.upsert(bt, true)
         await handleJobs()
-        const exclusions = await BrandTriggerExclusion.get(brand.id, bt.event_type)
+        const exclusions = await BrandTriggerExclusion.getExcludedContactIds(brand.id, bt.event_type)
         expect(exclusions.length).to.be.eql(1)
         const triggerIds = await Trigger.filter({
           brand: brand.id,
@@ -159,7 +141,7 @@ describe('BrandTrigger', () => {
         })
         await Trigger.clearOrigin(triggerId)
         await BrandTriggerExclusion.create(brand.id, bt.event_type, [contact.id])
-        const exclusions = await BrandTriggerExclusion.get(brand.id, bt.event_type)
+        const exclusions = await BrandTriggerExclusion.getExcludedContactIds(brand.id, bt.event_type)
         expect(exclusions.length).to.be.eql(1)
         await BrandTrigger.updateTriggers(brandTriggerId, false)
         await handleJobs()
@@ -194,15 +176,8 @@ describe('BrandTrigger', () => {
         await BrandTrigger.upsert(bt, true)
         await handleJobs()
         await BrandTriggerExclusion.delete(brand.id, bt.event_type, [contact.id])
-        const exclusions = await BrandTriggerExclusion.get(brand.id, bt.event_type)
+        const exclusions = await BrandTriggerExclusion.getExcludedContactIds(brand.id, bt.event_type)
         expect(exclusions.length).to.be.eql(0)
-        await handleJobs()
-        const triggerIds = await Trigger.filter({
-          brand: brand.id,
-          event_type: 'birthday',
-          origin: true,
-          deleted_at: null,
-        })
       })
     })
   })
