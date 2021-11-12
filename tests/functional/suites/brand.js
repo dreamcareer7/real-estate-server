@@ -831,7 +831,8 @@ function createAsset(cb) {
       {
         file: logo,
         label: 'Asset Label',
-        template_type: 'Christmas'
+        template_type: 'Christmas',
+        medium: 'Email'
       },
       {
         json: false,
