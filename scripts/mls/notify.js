@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 const { justListed, openHouse, priceImprovement } = require('../../lib/models/Listing/notify-agents')
-const createContext = require('../workers/create-context')
+const createContext = require('../workers/utils/create-context')
 
 const send = async () => {
   const id = process.argv[2]

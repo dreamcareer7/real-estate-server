@@ -2,6 +2,7 @@ SELECT
   e.id,
   extract(epoch from created_at) as created_at,
   extract(epoch from updated_at) as updated_at,
+  extract(epoch from deleted_at) as deleted_at,
   brand,
   "user",
   tags,
