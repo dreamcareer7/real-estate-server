@@ -104,7 +104,6 @@ describe('BrandTrigger/workers', () => {
       it('attributes having active trigger', async () => {
         const { user, contact } = await createUserAndContact(true)
         await handleJobs()
-        // @ts-ignore
         const brandTemplates = await BrandTemplate.getForBrands({ brands: [brand.id] })
         const bt = {
           template: brandTemplates[0].id,
@@ -117,14 +116,16 @@ describe('BrandTrigger/workers', () => {
         await BrandTrigger.upsert(bt, true)
         await handleJobs()
         const campaignsThen = await Campaign.getByBrand(brand.id, { havingDueAt: null })
-        await BrandTrigger.dateAttributesCreated({
-          brand: brand.id, attributes: [{
+        await ContactAttribute.create(
+          [{
             attribute_type: 'birthday', 
             contact: contact.id, 
             created_by: user.id, 
             date: BIRTHDAY.add(6, 'days').unix()
-          }]
-        })
+          }],
+          user.id,
+          brand.id,
+        )
         await handleJobs()
         const campaignsNow = await Campaign.getByBrand(brand.id, { havingDueAt: null })
         expect(campaignsNow).to.eql(campaignsThen)
@@ -133,7 +134,6 @@ describe('BrandTrigger/workers', () => {
       it('attribute types having no related brand trigger', async () => {
         const { user, contact } = await createUserAndContact(false)
         await handleJobs()
-        // @ts-ignore
         const brandTemplates = await BrandTemplate.getForBrands({ brands: [brand.id] })
         const bt = {
           template: brandTemplates[0].id,
@@ -145,14 +145,16 @@ describe('BrandTrigger/workers', () => {
         }
         await BrandTrigger.upsert(bt, true)
         await handleJobs()
-        await BrandTrigger.dateAttributesCreated({
-          brand: brand.id, attributes: [{
-            attribute_type: 'wedding anniversary', 
+        await ContactAttribute.create(
+          [{
+            attribute_type: 'wedding_anniversary', 
             contact: contact.id, 
             created_by: user.id, 
-            date: BIRTHDAY.unix()
-          }]
-        })
+            date: BIRTHDAY.add(6, 'days').unix()
+          }],
+          user.id,
+          brand.id,
+        )
         await handleJobs()
         const campaigns = await Campaign.getByBrand(brand.id, { havingDueAt: null })
         expect(campaigns.length).to.be.eql(0)
@@ -163,13 +165,6 @@ describe('BrandTrigger/workers', () => {
     it('creates triggers and campaigns for contacts having desired attribute type', async() => {
       const { user, contact } = await createUserAndContact(false)
       await handleJobs()
-      const attributes = [{
-        attribute_type: 'birthday', 
-        contact: contact.id, 
-        created_by: user.id, 
-        date: BIRTHDAY.unix()
-      }]
-      // @ts-ignore
       const brandTemplates = await BrandTemplate.getForBrands({ brands: [brand.id] })
       const bt = {
         template: brandTemplates[0].id,
@@ -181,7 +176,16 @@ describe('BrandTrigger/workers', () => {
       }
       await BrandTrigger.upsert(bt, true)
       await handleJobs()
-      await ContactAttribute.create(attributes, user.id, brand.id)
+      await ContactAttribute.create(
+        [{
+          attribute_type: 'birthday', 
+          contact: contact.id, 
+          created_by: user.id, 
+          date: BIRTHDAY.unix()
+        }],
+        user.id,
+        brand.id,
+      )
       await handleJobs()
       const campaigns = await Campaign.getByBrand(brand.id, { havingDueAt: null })
       const triggerIds = await Trigger.filter({
