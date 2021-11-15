@@ -1,6 +1,7 @@
 const moment = require('moment-timezone')
 const { expect } = require('chai')
 
+const ContactAttribute = require('../../../../lib/models/Contact/attribute/index')
 const Trigger = {
   ...require('../../../../lib/models/Trigger/filter.js'),
   ...require('../../../../lib/models/Trigger/get'),
@@ -64,7 +65,7 @@ async function setup() {
 }
 
 
-async function createContact({ email, birthday }) {
+async function createContact({ email, birthday = 0 }) {
   const attribute = {
     first_name: 'John',
     last_name: 'Doe',
@@ -154,8 +155,44 @@ describe('BrandTrigger', () => {
         expect(theSameOldTrigger.deleted_at).to.be.null
         expect(theSameOldTrigger.origin).to.be.null
       })
+      it('prevents GT when a date attribute is created', async () => {
+        const contact = await createContact({
+          email: 'first_mail@fake.com',
+        })
+        await handleJobs()
+        const brandTemplates = await BrandTemplate.getForBrands({ brands: [brand.id] })
+        const bt = {
+          template: brandTemplates[0].id,
+          brand: brand.id,
+          created_by: user.id,
+          event_type: 'birthday',
+          wait_for: -86400,
+          subject: 'birthday mail',
+        }
+        await BrandTrigger.upsert(bt, true)
+        await handleJobs()
+        await BrandTriggerExclusion.create(brand.id, bt.event_type, [contact.id])
+        const exclusions = await BrandTriggerExclusion.getExcludedContactIds(brand.id, bt.event_type)
+        expect(exclusions.length).to.be.eql(1)
+        await ContactAttribute.create(
+          [{
+            attribute_type: 'birthday', 
+            contact: contact.id, 
+            created_by: user.id, 
+            date: BIRTHDAY.add(6, 'days').unix()
+          }],
+          user.id,
+          brand.id,
+        )
+        await handleJobs()
+        const triggerIds = await Trigger.filter({
+          brand: brand.id,
+          event_type: 'birthday',
+          contact: contact.id,
+        })
+        expect(triggerIds.length).to.be.eql(0)
+      })
     })
-
     describe('delete exclusion function ...', () => {
       it('unexcludes contacts from a GT, creating the required triggers', async () => {
         const contact = await createContact({
