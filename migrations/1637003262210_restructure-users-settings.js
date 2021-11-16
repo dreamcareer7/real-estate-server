@@ -25,7 +25,6 @@ const migrations = [
 
     created_at timestamp NOT NULL DEFAULT now(),
     updated_at timestamp NOT NULL DEFAULT now(),
-    deleted_at timestamp,   
 
     PRIMARY KEY ("user", brand)
   )`,
