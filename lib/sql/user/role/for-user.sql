@@ -30,13 +30,24 @@ WITH r AS (
 ), us AS (
   SELECT
     brand,
-    JSON_OBJECT_AGG(key, value) AS settings
+    json_build_object(
+     'grid_deals_agent_network_sort_field', grid_deals_agent_network_sort_field,
+     'mls-saved-search-hint-dismissed', "mls-saved-search-hint-dismissed",
+     'import_tooltip_visited', import_tooltip_visited,
+     'mls_sort_field', mls_sort_field,
+     'grid_deals_sort_field', grid_deals_sort_field,
+     'grid_contacts_sort_field', grid_contacts_sort_field,
+     'user_filter', user_filter,
+     'mls_last_browsing_location', mls_last_browsing_location,
+     'onboarding__marketing-center', "onboarding__marketing-center",
+     'contact_view_mode_field', contact_view_mode_field,
+     'grid_deals_sort_field_bo', grid_deals_sort_field_bo,
+     'insight_layout_sort_field', insight_layout_sort_field,
+     'deals_grid_filter_settings', deals_grid_filter_settings
+    ) AS settings
   FROM
     users_settings
-  WHERE
-    "user" = $1::uuid
-  GROUP BY
-    brand
+  WHERE "user" = $1::uuid
 )
 SELECT
   r.*,
