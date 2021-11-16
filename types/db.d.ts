@@ -801,7 +801,6 @@ declare type TDbSqlAddress =
   | 'user/remove_pw_reset_token'
   | 'user/role/for-user'
   | 'user/seen'
-  | 'user/settings/update'
   | 'user/sso/connect'
   | 'user/sso/get-user'
   | 'user/sso/provider/get-by-domain'
