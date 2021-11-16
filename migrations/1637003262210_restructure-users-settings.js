@@ -9,14 +9,14 @@ const migrations = [
     brand uuid NOT NULL REFERENCES brands(id),
 
     grid_deals_agent_network_sort_field json,
-    "mls-saved-search-hint-dismissed" json,
+    mls_saved_search_hint_dismissed json,
     import_tooltip_visited json,
     mls_sort_field json,
     grid_deals_sort_field json,
     grid_contacts_sort_field json,
     user_filter json,
     mls_last_browsing_location json,
-    "onboarding__marketing-center" json,
+    onboarding_marketing_center json,
     contact_view_mode_field json,
     grid_deals_sort_field_bo json,
     insight_layout_sort_field json,
@@ -33,14 +33,14 @@ const migrations = [
      "user",
      brand,
      grid_deals_agent_network_sort_field,
-     "mls-saved-search-hint-dismissed",
+     mls_saved_search_hint_dismissed,
      import_tooltip_visited,
      mls_sort_field,
      grid_deals_sort_field,
      grid_contacts_sort_field,
      user_filter,
      mls_last_browsing_location,
-     "onboarding__marketing-center",
+     onboarding_marketing_center,
      contact_view_mode_field,
      grid_deals_sort_field_bo,
      insight_layout_sort_field,
@@ -59,7 +59,7 @@ const migrations = [
      max(CASE WHEN
        key = 'mls-saved-search-hint-dismissed' THEN value::text
        ELSE NULL
-     END)::json AS "mls-saved-search-hint-dismissed",
+     END)::json AS mls_saved_search_hint_dismissed,
      max(CASE WHEN
        key = 'import_tooltip_visited' THEN value::text
        ELSE NULL
@@ -87,7 +87,7 @@ const migrations = [
      max(CASE WHEN
        key = 'onboarding__marketing-center' THEN value::text
        ELSE NULL
-     END)::json AS "onboarding__marketing-center",
+     END)::json AS onboarding_marketing_center,
      max(CASE WHEN
        key = 'contact_view_mode_field' THEN value::text
        ELSE NULL
