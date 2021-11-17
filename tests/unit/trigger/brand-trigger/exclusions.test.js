@@ -213,8 +213,15 @@ describe('BrandTrigger', () => {
         await BrandTrigger.upsert(bt, true)
         await handleJobs()
         await BrandTriggerExclusion.delete(brand.id, bt.event_type, [contact.id])
+        await handleJobs()
         const exclusions = await BrandTriggerExclusion.getExcludedContactIds(brand.id, bt.event_type)
         expect(exclusions.length).to.be.eql(0)
+        const triggerIds = await Trigger.filter({
+          brand: brand.id,
+          event_type: 'birthday',
+          contact: contact.id,
+        })
+        expect(triggerIds.length).to.be.eql(1)
       })
     })
   })
