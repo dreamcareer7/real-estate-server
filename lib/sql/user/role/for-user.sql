@@ -28,30 +28,11 @@ WITH r AS (
   GROUP BY
     brand
 ), us AS (
-  SELECT
-    brand,
-    json_build_object(
-     'grid_deals_agent_network_sort_field', grid_deals_agent_network_sort_field,
-     'mls-saved-search-hint-dismissed', mls_saved_search_hint_dismissed,
-     'import_tooltip_visited', import_tooltip_visited,
-     'mls_sort_field', mls_sort_field,
-     'grid_deals_sort_field', grid_deals_sort_field,
-     'grid_contacts_sort_field', grid_contacts_sort_field,
-     'user_filter', user_filter,
-     'mls_last_browsing_location', mls_last_browsing_location,
-     'onboarding__marketing-center', onboarding_marketing_center,
-     'contact_view_mode_field', contact_view_mode_field,
-     'grid_deals_sort_field_bo', grid_deals_sort_field_bo,
-     'insight_layout_sort_field', insight_layout_sort_field,
-     'deals_grid_filter_settings', deals_grid_filter_settings
-    ) AS settings
-  FROM
-    users_settings
-  WHERE "user" = $1::uuid
+  SELECT brand, id FROM users_settings WHERE "user" = $1::uuid
 )
 SELECT
   r.*,
-  us.settings as settings
+  us.id as settings
 FROM
   r
   LEFT JOIN us ON r.brand = us.brand
