@@ -5,6 +5,8 @@ const migrations = [
   'ALTER TABLE users_settings RENAME TO users_settings_old',
   
   `CREATE TABLE users_settings (
+    id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+
     "user" uuid NOT NULL REFERENCES users(id),
     brand uuid NOT NULL REFERENCES brands(id),
 
@@ -26,7 +28,7 @@ const migrations = [
     created_at timestamp NOT NULL DEFAULT now(),
     updated_at timestamp NOT NULL DEFAULT now(),
 
-    PRIMARY KEY ("user", brand)
+    UNIQUE("user", brand)
   )`,
 
   `INSERT INTO users_settings (
