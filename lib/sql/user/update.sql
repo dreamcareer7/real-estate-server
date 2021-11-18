@@ -10,5 +10,12 @@ SET first_name = $1,
     fake_email = CASE WHEN email IS DISTINCT FROM $3 THEN false ELSE fake_email END,
     is_shadow = $8,
     email_signature = $9,
-    daily_enabled = $10
-WHERE id = $11
+    daily_enabled = $10,
+    website = $11,
+    instagram = $12,
+    twitter = $13,
+    linkedin = $14,
+    youtube = $15,
+    facebook = $16
+
+WHERE id = $17
