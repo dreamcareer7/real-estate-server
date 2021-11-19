@@ -96,7 +96,8 @@ describe('BrandTrigger/get', () => {
         wait_for: -86400,
         subject: 'birthday mail',
       }
-      const brandTriggerId = await BrandTrigger.upsert(bt, true)
+      await BrandTrigger.upsert(bt, false)
+      await handleJobs()
       expect(await BrandTrigger.exists(brand.id, 'birthday')).to.be.true
     })
   })
