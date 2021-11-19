@@ -10,20 +10,20 @@ const migrations = [
     "user" uuid NOT NULL REFERENCES users(id),
     brand uuid NOT NULL REFERENCES brands(id),
 
-    grid_deals_agent_network_sort_field json,
-    mls_saved_search_hint_dismissed json,
-    import_tooltip_visited json,
-    mls_sort_field json,
-    grid_deals_sort_field json,
-    grid_contacts_sort_field json,
-    user_filter json,
+    grid_deals_agent_network_sort_field text,
+    mls_saved_search_hint_dismissed int, -- mls-saved-search-hint-dismissed
+    import_tooltip_visited int,
+    mls_sort_field text,
+    grid_deals_sort_field text,
+    grid_contacts_sort_field text,
+    user_filter json, -- uuid[]
     mls_last_browsing_location json,
-    onboarding_marketing_center json,
-    contact_view_mode_field json,
-    grid_deals_sort_field_bo json,
+    onboarding_marketing_center int, -- onboarding__marketing-center
+    contact_view_mode_field text, 
+    grid_deals_sort_field_bo text,
     insight_layout_sort_field json,
     deals_grid_filter_settings json,
-    super_campaign_admin_permission json DEFAULT 'false'::json,
+    super_campaign_admin_permission boolean NOT NULL DEFAULT false,
 
     created_at timestamp NOT NULL DEFAULT now(),
     updated_at timestamp NOT NULL DEFAULT now(),
@@ -55,53 +55,65 @@ const migrations = [
      brand,
    
      max(CASE WHEN
-       key = 'grid_deals_agent_network_sort_field' THEN value::text
+       key = 'grid_deals_agent_network_sort_field' THEN (value#>>'{}')::text
        ELSE NULL
-     END)::json AS grid_deals_agent_network_sort_field,
+     END) AS grid_deals_agent_network_sort_field,
+
      max(CASE WHEN
-       key = 'mls-saved-search-hint-dismissed' THEN value::text
+       key = 'mls-saved-search-hint-dismissed' THEN (value#>>'{}')::int
        ELSE NULL
-     END)::json AS mls_saved_search_hint_dismissed,
+     END) AS mls_saved_search_hint_dismissed,
+
      max(CASE WHEN
-       key = 'import_tooltip_visited' THEN value::text
+       key = 'import_tooltip_visited' THEN (value#>>'{}')::int
        ELSE NULL
-     END)::json AS import_tooltip_visited,
+     END) AS import_tooltip_visited,
+
      max(CASE WHEN
-       key = 'mls_sort_field' THEN value::text
+       key = 'mls_sort_field' THEN (value#>>'{}')::text
        ELSE NULL
-     END)::json AS mls_sort_field,
+     END) AS mls_sort_field,
+
      max(CASE WHEN
-       key = 'grid_deals_sort_field' THEN value::text
+       key = 'grid_deals_sort_field' THEN (value#>>'{}')::text
        ELSE NULL
-     END)::json AS grid_deals_sort_field,
+     END) AS grid_deals_sort_field,
+
      max(CASE WHEN
-       key = 'grid_contacts_sort_field' THEN value::text
+       key = 'grid_contacts_sort_field' THEN (value#>>'{}')::text
        ELSE NULL
-     END)::json AS grid_contacts_sort_field,
+     END) AS grid_contacts_sort_field,
+
      max(CASE WHEN
        key = 'user_filter' THEN value::text
        ELSE NULL
      END)::json AS user_filter,
+
      max(CASE WHEN
        key = 'mls_last_browsing_location' THEN value::text
        ELSE NULL
      END)::json AS mls_last_browsing_location,
+
      max(CASE WHEN
-       key = 'onboarding__marketing-center' THEN value::text
+       key = 'onboarding__marketing-center' THEN (value#>>'{}')::int
        ELSE NULL
-     END)::json AS onboarding_marketing_center,
+     END) AS onboarding_marketing_center,
+
      max(CASE WHEN
-       key = 'contact_view_mode_field' THEN value::text
+       key = 'contact_view_mode_field' THEN (value#>>'{}')::text
        ELSE NULL
-     END)::json AS contact_view_mode_field,
+     END) AS contact_view_mode_field,
+
      max(CASE WHEN
-       key = 'grid_deals_sort_field_bo' THEN value::text
+       key = 'grid_deals_sort_field_bo' THEN (value#>>'{}')::text
        ELSE NULL
-     END)::json AS grid_deals_sort_field_bo,
+     END) AS grid_deals_sort_field_bo,
+
      max(CASE WHEN
        key = 'insight_layout_sort_field' THEN value::text
        ELSE NULL
      END)::json AS insight_layout_sort_field,
+
      max(CASE WHEN
        key = 'deals_grid_filter_settings' THEN value::text
        ELSE NULL
