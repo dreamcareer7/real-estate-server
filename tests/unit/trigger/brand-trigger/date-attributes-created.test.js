@@ -142,7 +142,7 @@ describe('BrandTrigger/workers', () => {
         const [triggerId] = await Trigger.create([trigger_data])
         expect(triggerId).to.be.ok
         await handleJobs()
-        const trigger = await Trigger.get(triggerId)
+        let trigger = await Trigger.get(triggerId)
         expect(trigger).to.be.ok
         expect(trigger.deleted_at).to.be.null
         const brandTemplates = await BrandTemplate.getForBrands({ brands: [brand.id] })
@@ -162,6 +162,7 @@ describe('BrandTrigger/workers', () => {
           deleted_at: null,
         })
         expect(triggerIds.length).to.be.eql(1)
+        trigger = await Trigger.get(triggerIds[0])
         expect(trigger.deleted_at).to.be.null
         const campaignsThen = await Campaign.getByBrand(brand.id, { havingDueAt: null })
         await ContactAttribute.create(
