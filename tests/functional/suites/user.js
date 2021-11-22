@@ -1,3 +1,45 @@
+const {
+  createBrands,
+  runAsUser,
+  switchBrand,
+  userId,
+  currentBrand,
+} = require('../util')
+
+const brandSetup = [
+  {
+    name: 'Manhattan',
+    brand_type: 'Region',
+    roles: {
+      Admin: ['test@rechat.com'],
+    },
+    contexts: [],
+    checklists: [],
+    property_types: [],
+    children: [
+      {
+        name: '140 Franklin',
+        brand_type: 'Office',
+        roles: {
+          Admin: ['test@rechat.com'],
+        },
+        contexts: [],
+        checklists: [],
+        property_types: [],
+      }
+    ]
+  }, {
+    name: 'Brooklyn',
+    brand_type: 'Region',
+    roles: {
+      Admin: ['test@rechat.com'],
+    },
+    contexts: [],
+    checklists: [],
+    property_types: [],
+  }
+]
+
 const config = require('../../../lib/config.js')
 const user = require('./data/user.js')
 const uuid = require('uuid')
@@ -625,6 +667,35 @@ function patchUserProfileImage(cb) {
     })
 }
 
+function getUserBrands(cb) {
+  return frisby.create('get user brands')
+    .get('/users/self/brands?associations=brand.children')
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      data: [
+        {
+          "name": "Manhattan",
+          "brand_type": "Region",
+          "member_count": 1,
+          "children": [
+            {
+              "name": "140 Franklin",
+              "brand_type": "Office",
+              "member_count": 1,
+              "children": null,
+            }
+          ],
+        },
+        {
+          "name": "Brooklyn",
+          "brand_type": "Region",
+          "member_count": 1,
+          "children": null,
+        }
+      ]
+    })
+}
 
 module.exports = {
   lookupExpect404,
@@ -673,5 +744,9 @@ module.exports = {
   uploadEmailSignAttachments,
   patchUserCoverImage,
   patchUserProfileImage,
+
+  brands: createBrands('create brands', brandSetup, (response) => response.data[0].id),
+  getUserBrands,
+
   deleteUser
 }
