@@ -28,3 +28,5 @@ declare type TDealRole =
   | 'SellerPowerOfAttorney'
   | 'LandlordPowerOfAttorney'
   | 'TenantPowerOfAttorney'
+  | 'BuyerBroker'
+  | 'SellerBroker'

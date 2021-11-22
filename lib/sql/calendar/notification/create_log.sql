@@ -5,6 +5,6 @@ INSERT INTO calendar_notification_logs (
 )
 VALUES (
   $1,
-  $2,
+  to_timestamp($2),
   $3
 )

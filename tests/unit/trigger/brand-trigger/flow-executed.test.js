@@ -18,7 +18,6 @@ const BrandTrigger = {
   ...require('../../../../lib/models/Trigger/brand_trigger/workers'), 
   ...require('../../../../lib/models/Trigger/brand_trigger/create'), 
   ...require('../../../../lib/models/Trigger/brand_trigger/get'),
-  ...require('../../../../lib/models/Trigger/brand_trigger/exclusions'), 
 }
 const Contact = {
   ...require('../../../../lib/models/Contact/manipulate'),
@@ -92,7 +91,7 @@ describe('BrandTrigger/workers', () => {
   createContext()
   beforeEach(setup)
 
-  describe('makeExclusion function ...', () => {
+  describe('a flow trigger ...', () => {
     it('prevents global trigger making', async () => {
       const contact = await createContact({
         birthday: BIRTHDAY.unix(),
