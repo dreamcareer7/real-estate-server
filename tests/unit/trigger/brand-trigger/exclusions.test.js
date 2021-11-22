@@ -213,8 +213,45 @@ describe('BrandTrigger', () => {
         await BrandTrigger.upsert(bt, true)
         await handleJobs()
         await BrandTriggerExclusion.delete(brand.id, bt.event_type, [contact.id])
+        await handleJobs()
         const exclusions = await BrandTriggerExclusion.getExcludedContactIds(brand.id, bt.event_type)
         expect(exclusions.length).to.be.eql(0)
+        const triggerIds = await Trigger.filter({
+          brand: brand.id,
+          event_type: 'birthday',
+          contact: contact.id,
+        })
+        expect(triggerIds.length).to.be.eql(1)
+      })
+      it('does not create triggers if the exclusion is remade immediately', async () => {
+        const contact = await createContact({
+          birthday: BIRTHDAY.unix(),
+          email: 'first_mail@fake.com',
+        })
+        await handleJobs()
+        const brandTemplates = await BrandTemplate.getForBrands({ brands: [brand.id] })
+        const bt = {
+          template: brandTemplates[0].id,
+          brand: brand.id,
+          created_by: user.id,
+          event_type: 'birthday',
+          wait_for: -86400,
+          subject: 'birthday mail',
+        }
+        await BrandTriggerExclusion.create(brand.id, bt.event_type, [contact.id])
+        await BrandTrigger.upsert(bt, true)
+        await handleJobs()
+        await BrandTriggerExclusion.delete(brand.id, bt.event_type, [contact.id])
+        await BrandTriggerExclusion.create(brand.id, bt.event_type, [contact.id])
+        await handleJobs()
+        const exclusions = await BrandTriggerExclusion.getExcludedContactIds(brand.id, bt.event_type)
+        expect(exclusions.length).to.be.eql(1)
+        const triggerIds = await Trigger.filter({
+          brand: brand.id,
+          event_type: 'birthday',
+          contact: contact.id,
+        })
+        expect(triggerIds.length).to.be.eql(0)
       })
     })
   })
