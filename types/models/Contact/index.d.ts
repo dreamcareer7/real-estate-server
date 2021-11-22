@@ -202,6 +202,8 @@ declare interface IContactFilterOptions {
   created_lte?: number;
   deleted_gte?: number;
   deleted_lte?: number;
+  deleted_by?: UUID;
+  deleted_for?: string;
   alphabet?: string;
   crm_tasks?: UUID[];
   ids?: UUID[];
