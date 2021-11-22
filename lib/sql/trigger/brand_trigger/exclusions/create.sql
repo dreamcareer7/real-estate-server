@@ -11,3 +11,6 @@ SELECT
   $1::uuid,
   $2::text,
   UNNEST($3::uuid[])
+ON CONFLICT ON CONSTRAINT
+  brand_triggers_exclusions_pkey
+DO NOTHING

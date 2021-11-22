@@ -13,6 +13,8 @@ registerSuite('template', [
   'instantiate',
 ])
 
+registerSuite('contact', ['getAttributeDefs', 'create'])
+
 const SUBJECT = 'Another fake email subject'
 const WAIT_FOR = -2
 
@@ -29,6 +31,7 @@ const theBrand = () => results.brand.create.data.id
 const theBrandTrigger = () => results.brand_trigger.create.data.id
 const theTemplate = () => results.template.getForBrand.data[0].id
 const theTemplateInstance = () => results.template.instantiate.data.id
+const theContact = () => results.contact.create.data[0].id
 
 function create (cb) {
   const INIT_SUBJECT = 'Some fake email subject'
@@ -171,6 +174,26 @@ function patchWithInvalidAction (cb) {
     .expectStatus(404)
 }
 
+function exclude (cb) {
+  return frisby
+    .create('exclude a contact')
+    .post(`/brands/${theBrand()}/triggers/${EVENT_TYPE}/exclusion`, {
+      contact: theContact()
+    })
+    .after(cb)
+    .expectStatus(204)
+}
+
+function unexclude (cb) {
+  return frisby
+    .create('unexclude a contact')
+    .delete(`/brands/${theBrand()}/triggers/${EVENT_TYPE}/exclusion`, {
+      contact: theContact()
+    })
+    .after(cb)
+    .expectStatus(204)
+}
+
 module.exports = {
   create,
   update,
@@ -183,4 +206,6 @@ module.exports = {
   disableNonExisting,
   enableNonExisting,
   patchWithInvalidAction,
+  exclude,
+  unexclude,
 }

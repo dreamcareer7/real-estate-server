@@ -827,11 +827,13 @@ function createAsset(cb) {
   return frisby
     .create('create an asset')
     .post(
-      `/brands/${results.brand.create.data.id}/assets`,
+      '/brands/assets',
       {
         file: logo,
         label: 'Asset Label',
-        template_type: 'Christmas'
+        template_type: 'Christmas',
+        medium: 'Email',
+        brands: [results.brand.create.data.id].join(',') // You can provide a comma-separated list of brand ids.
       },
       {
         json: false,
