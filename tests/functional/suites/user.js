@@ -714,6 +714,15 @@ const settings = {
       .expectJSON([{ key, value }])
   },
 
+  putInvalidSetting (key, value, name = `put invalid setting ${key}`) {
+    return cb => frisby
+      .create(name)
+      .put(`/users/self/settings/${key}`, { value })
+      .after(cb)
+      .expectStatus(400)
+      .expectJSON({ message: String })
+  },
+
   check (settings, name = 'check user settings') {
     return cb => frisby
       .create(name)
@@ -784,7 +793,7 @@ module.exports = {
   putSecondStrSetting: settings.put(settings.keys.STR2, 'bar'),
   nullifySecondStringSetting: settings.put(settings.keys.STR2, null),
   
-  putUnknownSetting: settings.put('some_unknown_key', 1.234),
+  putInvalidSetting: settings.putInvalidSetting('some_invalid_key', 1.234),
 
   checkSettings: settings.check({
     [settings.keys.BOOL]: true,
@@ -794,8 +803,6 @@ module.exports = {
     [settings.keys.JSON]: { foo: 'bar', baz: [0] },
 
     [settings.keys.STR2]: null,
-    
-    some_unknown_key: 1.234,
   }),
 
   deleteUser
