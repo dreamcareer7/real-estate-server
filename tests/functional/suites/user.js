@@ -1,10 +1,4 @@
-const {
-  createBrands,
-  runAsUser,
-  switchBrand,
-  userId,
-  currentBrand,
-} = require('../util')
+const { createBrands } = require('../util')
 
 const brandSetup = [
   {
@@ -675,23 +669,23 @@ function getUserBrands(cb) {
     .expectJSON({
       data: [
         {
-          "name": "Manhattan",
-          "brand_type": "Region",
-          "member_count": 1,
-          "children": [
+          name: 'Manhattan',
+          brand_type: 'Region',
+          member_count: 1,
+          children: [
             {
-              "name": "140 Franklin",
-              "brand_type": "Office",
-              "member_count": 1,
-              "children": null,
+              name: '140 Franklin',
+              brand_type: 'Office',
+              member_count: 1,
+              children: null,
             }
           ],
         },
         {
-          "name": "Brooklyn",
-          "brand_type": "Region",
-          "member_count": 1,
-          "children": null,
+          name: 'Brooklyn',
+          brand_type: 'Region',
+          member_count: 1,
+          children: null,
         }
       ]
     })
