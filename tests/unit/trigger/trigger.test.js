@@ -189,6 +189,14 @@ const testDeleteExecutedTrigger = async () => {
   expect(campaign.deleted_at).not.be.null
 }
 
+const testDeleteContactHavingATrigger = async () => {
+  const trigger = await createTrigger()
+  await Contact.delete([trigger.contact], trigger.created_by)
+  await handleJobs()
+  const triggerNow = await Trigger.get(trigger.id)
+  expect(triggerNow.deleted_at).to.be.ok
+}
+
 describe('Trigger', () => {
   createContext()
   beforeEach(setup)
@@ -198,4 +206,5 @@ describe('Trigger', () => {
   it('should execute triggers 3 days before due', testExecuteTrigger)
   it('should delete associated campaign if not executed yet', testDeleteExecutedTrigger)
   it('should create another trigger after recurring trigger is executed', testExecuteRecurringTrigger)
+  it('should delete a trigger when the contact is deleted', testDeleteContactHavingATrigger)
 })
