@@ -691,6 +691,39 @@ function getUserBrands(cb) {
     })
 }
 
+const settings = {
+  keys: {
+    BOOL: 'super_campaign_admin_permission',
+    INT: 'onboarding_marketing_center',
+    STR1: 'grid_deals_agent_network_sort_field',
+    STR2: 'grid_deals_sort_field',
+    ARRAY: 'user_filter',
+    JSON: 'deals_grid_filter_settings',
+  },
+
+  put (key, value, name = '') {
+    if (!name) {
+      name = `${value === null ? 'nullify' : 'put'} setting ${key}`
+    }
+    
+    return cb => frisby
+      .create(name)
+      .put(`/users/self/settings/${key}`, { value })
+      .after(cb)
+      .expectStatus(200)
+      .expectJSON([{ key, value }])
+  },
+
+  check (settings, name = 'check user settings') {
+    return cb => frisby
+      .create(name)
+      .get('/users/self/roles')
+      .after(cb)
+      .expectStatus(200)
+      .expectJSON({ data: [{ settings }] })
+  },
+}
+
 module.exports = {
   lookupExpect404,
   create,
@@ -741,6 +774,29 @@ module.exports = {
 
   brands: createBrands('create brands', brandSetup, (response) => response.data[0].id),
   getUserBrands,
+  
+  putBoolSetting: settings.put(settings.keys.BOOL, true),
+  putIntSetting: settings.put(settings.keys.INT, 1),
+  putFirstStrSetting: settings.put(settings.keys.STR1, 'foo'),
+  putArraySetting: settings.put(settings.keys.ARRAY, ['one', 2, true]),
+  putJsonSetting: settings.put(settings.keys.JSON, { foo: 'bar', baz: [0] }),
+  
+  putSecondStrSetting: settings.put(settings.keys.STR2, 'bar'),
+  nullifySecondStringSetting: settings.put(settings.keys.STR2, null),
+  
+  putUnknownSetting: settings.put('some_unknown_key', 1.234),
+
+  checkSettings: settings.check({
+    [settings.keys.BOOL]: true,
+    [settings.keys.INT]: 1,
+    [settings.keys.STR1]: 'foo',
+    [settings.keys.ARRAY]: ['one', 2, true],
+    [settings.keys.JSON]: { foo: 'bar', baz: [0] },
+
+    [settings.keys.STR2]: null,
+    
+    some_unknown_key: 1.234,
+  }),
 
   deleteUser
 }
