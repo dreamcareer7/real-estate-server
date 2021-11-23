@@ -694,7 +694,8 @@ function getUserBrands(cb) {
 const settings = {
   keys: {
     BOOL: 'super_campaign_admin_permission',
-    INT: 'onboarding_marketing_center',
+    // Something that includes dash and/or double underscores:
+    INT: 'onboarding__marketing-center',
     STR1: 'grid_deals_agent_network_sort_field',
     STR2: 'grid_deals_sort_field',
     ARRAY: 'user_filter',
