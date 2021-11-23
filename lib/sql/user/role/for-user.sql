@@ -28,19 +28,11 @@ WITH r AS (
   GROUP BY
     brand
 ), us AS (
-  SELECT
-    brand,
-    JSON_OBJECT_AGG(key, value) AS settings
-  FROM
-    users_settings
-  WHERE
-    "user" = $1::uuid
-  GROUP BY
-    brand
+  SELECT brand, id FROM users_settings WHERE "user" = $1::uuid
 )
 SELECT
   r.*,
-  us.settings as settings
+  us.id as settings
 FROM
   r
   LEFT JOIN us ON r.brand = us.brand

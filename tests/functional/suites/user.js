@@ -694,7 +694,8 @@ function getUserBrands(cb) {
 const settings = {
   keys: {
     BOOL: 'super_campaign_admin_permission',
-    INT: 'onboarding_marketing_center',
+    // Something that includes dash and/or double underscores:
+    INT: 'onboarding__marketing-center',
     STR1: 'grid_deals_agent_network_sort_field',
     STR2: 'grid_deals_sort_field',
     ARRAY: 'user_filter',
@@ -712,6 +713,15 @@ const settings = {
       .after(cb)
       .expectStatus(200)
       .expectJSON([{ key, value }])
+  },
+
+  putInvalid (key, value, name, message = String) {
+    return cb => frisby
+      .create(name)
+      .put(`/users/self/settings/${key}`, { value })
+      .after(cb)
+      .expectStatus(400)
+      .expectJSON({ message })
   },
 
   check (settings, name = 'check user settings') {
@@ -783,8 +793,15 @@ module.exports = {
   
   putSecondStrSetting: settings.put(settings.keys.STR2, 'bar'),
   nullifySecondStringSetting: settings.put(settings.keys.STR2, null),
-  
-  putUnknownSetting: settings.put('some_unknown_key', 1.234),
+
+  /* FIXME: Somehow enable these test-cases as well. ATM, enabling them will
+   * lead to false failure on next test-cases: */
+  //putInvalidSettingKey: settings.putInvalid(
+  //  'some_invalid_key', 1.234, 'put value for an invalid setting key'
+  //),
+  //putInvalidSettingValue: settings.putInvalid(
+  //  settings.keys.INT, 'foo', 'put invalid value for a valid setting key'
+  //),
 
   checkSettings: settings.check({
     [settings.keys.BOOL]: true,
@@ -794,8 +811,6 @@ module.exports = {
     [settings.keys.JSON]: { foo: 'bar', baz: [0] },
 
     [settings.keys.STR2]: null,
-    
-    some_unknown_key: 1.234,
   }),
 
   deleteUser
