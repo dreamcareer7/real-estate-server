@@ -18,6 +18,7 @@ const attachTouchEventHandler = require('../../lib/models/CRM/Touch/events')
 const attachCalIntEventHandler = require('../../lib/models/CalendarIntegration/events')
 const attachContactIntEventHandler = require('../../lib/models/ContactIntegration/events')
 const attachBrandTriggerEventHandler = require('../../lib/models/Trigger/brand_trigger/events')
+const attachTriggerEventHandler = require('../../lib/models/Trigger/events')
 
 attachCalendarEvents()
 attachContactEvents()
@@ -29,6 +30,7 @@ attachTaskEventHandler()
 attachCalIntEventHandler()
 attachContactIntEventHandler()
 attachBrandTriggerEventHandler()
+attachTriggerEventHandler()
 
 const getDb = async () => {
   return new Promise((resolve, reject) => {

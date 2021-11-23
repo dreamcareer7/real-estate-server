@@ -39,7 +39,7 @@ const attachContactIntEventHandler = require('../lib/models/ContactIntegration/e
 const attachShowingEvents = require('../lib/models/Showing/showing/events')
 const { attachShowingAppointmentEventHandlers } = require('../lib/models/Showing/showinghub/events')
 const attachBrandTriggerEventHandler = require('../lib/models/Trigger/brand_trigger/events')
-
+const attachTriggerEventHandler = require('../lib/models/Trigger/events')
 
 attachCalendarEvents()
 attachContactEvents()
@@ -51,6 +51,7 @@ attachContactIntEventHandler()
 attachShowingEvents()
 attachShowingAppointmentEventHandlers()
 attachBrandTriggerEventHandler()
+attachTriggerEventHandler()
 
 function processImports(replContext) {
   for (const part of options.import ?? []) {
