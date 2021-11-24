@@ -99,6 +99,7 @@ declare interface IEmailCampaign extends IEmailCampaignBase {
   due_at: number | null;
   executed_at: number;
   created_at: number;
+  deleted_at?: number;
 }
 
 declare interface IEmail {
