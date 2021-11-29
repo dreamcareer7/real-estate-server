@@ -37,7 +37,7 @@ WHERE
   AND br.deleted_at IS NULL
   AND bu.deleted_at IS NULL
   AND COALESCE(us.super_campaign_admin_permission, FALSE)
-  AND t.tag = ANY(c.tags)
+  AND LOWER(t.tag) IN (SELECT LOWER(lt) FROM UNNEST(c.tags) AS lt)
 GROUP BY
   c.id,
   t.brand,
