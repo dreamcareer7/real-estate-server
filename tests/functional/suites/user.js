@@ -762,6 +762,13 @@ function getActiveBrandRole(expected) {
     .expectJSON('data', expected)
 }
 
+function changeActiveBrand(cb) {
+  return frisby.create('change active brand')
+    .patch('/users/self/active_brand')
+    .after(cb)
+    .expectStatus(204)
+}
+
 module.exports = {
   lookupExpect404,
   create,
@@ -867,6 +874,17 @@ module.exports = {
       },
       subscription: null,
       type: 'user_role',
+    }),
+  }),
+
+  ...switchBrand(() => results.user.brands.data[0].children[0].id, {
+    changeActiveBrand,
+    getActiveBrandRoleAfterChange: getActiveBrandRole({
+      brand: {
+        name: '140 Franklin',
+        type: 'brand'
+      },
+      acl: ['*'],
     }),
   }),
 
