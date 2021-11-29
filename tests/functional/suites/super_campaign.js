@@ -55,6 +55,16 @@ function runFrisbyConditions(f, { some, every, length, total } = {}) {
   }
 }
 
+function setAdminPermissionSetting (
+  value,
+  name = `Set admin permission setting := ${value}`
+) {
+  return cb => frisby.create(name)
+    .put('/users/self/settings/super_campaign_admin_permission', { value })
+    .after(cb)
+    .expectStatus(200)
+}
+
 function uploadCSV(filename) {
   return (cb) => {
     const csv = fs.createReadStream(path.resolve(__dirname, 'data/super_campaign', filename))
@@ -404,6 +414,7 @@ module.exports = {
       createdAllowedTagForAgentSmith: createdAllowedTag('Labor Day'),
       uploadCsvForAgentSmith: uploadCSV('agent1.csv'),
       importCsvForAgentSmith: importCSV(ID('uploadCsvForAgentSmith'), userId(AGENT_SMITH1)),
+      permitAutoEnrollmentForAgentSmith1: setAdminPermissionSetting(true),
     })
   ),
   ...switchBrand(
@@ -412,6 +423,7 @@ module.exports = {
       createdAllowedTagForDarthVader: createdAllowedTag('Christmas'),
       uploadCsvForDarthVader: uploadCSV('agent2.csv'),
       importCsvForDarthVader: importCSV(ID('uploadCsvForDarthVader'), userId(DARTH_VADER)),
+      permitAutoEnrollmentForDarthVader: setAdminPermissionSetting(true),
     })
   ),
   ...switchBrand(
@@ -420,6 +432,7 @@ module.exports = {
       createdAllowedTagForNaruto: createdAllowedTag('Labor Day'),
       uploadCsvForNaruto: uploadCSV('agent3.csv'),
       importCsvForNaruto: importCSV(ID('uploadCsvForNaruto'), userId(NARUTO)),
+      permitAutoEnrollmentForNaruto: setAdminPermissionSetting(true),
     })
   ),
 
@@ -553,6 +566,7 @@ module.exports = {
 
   ...switchBrand(region, {
     updateTagsAfterManualEnroll: updateTags(ID('christmas.create'), ['Christmas', 'New Year']),
+    
     checkEnrollmentsAfterUpdatingTags: checkEnrollments(ID('christmas.create'), {
       some: [
         {
