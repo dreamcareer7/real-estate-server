@@ -859,6 +859,28 @@ const getAssets = cb => {
     })
 }
 
+function shareAsset(cb) {
+  const text = 'Please share this'
+
+  const data = {
+    text,
+    recipients: [
+      '+14243828604'
+    ]
+  }
+
+  const asset = JSON.parse(results.brand.createAsset).data[0]
+
+  return frisby
+    .create('share an asset with text')
+    .post(`/brands/${results.brand.create.data.id}/assets/${asset.id}/share`, data)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK'
+    })
+}
+
 const deleteAsset = cb => {
   return frisby.create('delete a brand asset')
     .delete(`/brands/${brand_id}/assets/${results.brand.getAssets.data[0].id}`)
@@ -955,6 +977,7 @@ module.exports = {
 
   createAsset,
   getAssets,
+  shareAsset,
   deleteAsset,
 
   createWebhook,
