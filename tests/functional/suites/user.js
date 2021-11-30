@@ -756,7 +756,7 @@ const settings = {
 function getActiveBrandRole(expected) {
   return (cb) => frisby
     .create('get active brand role')
-    .get('/users/self/active_brand')
+    .get('/users/self/active-role')
     .after(cb)
     .expectStatus(200)
     .expectJSON('data', expected)
@@ -764,7 +764,7 @@ function getActiveBrandRole(expected) {
 
 function changeActiveBrand(cb) {
   return frisby.create('change active brand')
-    .patch('/users/self/active_brand')
+    .patch('/users/self/active-brand')
     .after(cb)
     .expectStatus(204)
 }
