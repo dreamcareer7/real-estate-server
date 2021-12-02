@@ -28,13 +28,16 @@ FROM
     ON bc.brand = br.brand
   JOIN brands_users AS bu
     ON br.id = bu."role"
+  JOIN users_settings AS us
+    ON us.user = bu.user AND us.brand = bc.brand
   JOIN super_campaigns_allowed_tags AS t
     ON t.brand = bc.brand AND t.user = bu.user
 WHERE
   c.id = $1::uuid
   AND br.deleted_at IS NULL
   AND bu.deleted_at IS NULL
-  AND t.tag = ANY(c.tags)
+  AND COALESCE(us.super_campaign_admin_permission, FALSE)
+  AND LOWER(t.tag) IN (SELECT LOWER(lt) FROM UNNEST(c.tags) AS lt)
 GROUP BY
   c.id,
   t.brand,
@@ -44,5 +47,13 @@ ON CONFLICT (super_campaign, brand, "user") DO UPDATE SET
   deleted_at = NULL,
   detached = FALSE
 WHERE
-  sce.deleted_at IS NOT NULL OR
-  sce.detached = FALSE
+  (
+    SELECT COALESCE(us.super_campaign_admin_permission, FALSE)
+    FROM users_settings AS us
+    WHERE us.brand = excluded.brand AND us.user = excluded.user
+  ) = TRUE
+  AND
+  (
+    sce.deleted_at IS NOT NULL OR
+    sce.detached = FALSE
+  )

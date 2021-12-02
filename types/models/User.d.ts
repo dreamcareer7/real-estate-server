@@ -28,6 +28,7 @@ declare interface IUser extends IModel, IUserBase {
 
     secondary_password?: string;
 
+    active_brand: UUID;
     agent?: IAgent;
 
     display_name: string;
