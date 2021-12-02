@@ -34,6 +34,19 @@ registerSuite('user', ['upgradeToAgentWithEmail'])
 
 const pdf = 'https://s3-us-west-2.amazonaws.com/rechat-forms/2672324.pdf'
 
+const getRoleDefinitions = (cb) => {
+  return frisby.create('get role definitions')
+    .get(`/deals/roles/definitions`)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK'
+    })
+    .expectJSONTypes({
+      code: String,
+    })
+}
+
 const create = (cb) => {
   const data = {
     ...JSON.parse(JSON.stringify(deal)),
@@ -935,6 +948,7 @@ function downloadGalleryZip(cb) {
 }
 
 module.exports = {
+  getRoleDefinitions,
   create,
   addChecklist,
   addContext,

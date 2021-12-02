@@ -788,7 +788,7 @@ const updatePropertyType = cb => {
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
-       data: {
+      data: {
         ...property_type,
         required_roles: [
           { role: 'Buyer' },
