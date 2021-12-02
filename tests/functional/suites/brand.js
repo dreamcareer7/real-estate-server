@@ -561,7 +561,7 @@ const updateUserSettings = cb => {
     })
     .addHeader('X-Rechat-Brand', brand_id)
     .after(cb)
-    .expectStatus(204)
+    .expectStatus(200)
 }
 
 const getUserRoles = cb => {
