@@ -760,7 +760,16 @@ const addPropertyType = cb => {
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
-      data: property_type
+      data: {
+        ...property_type,
+        required_roles: [
+          { role: 'Tenant' },
+          { role: 'Landlord' }
+        ],
+        optional_roles: [
+          { role: 'Title' },
+        ]
+      }
     })
 }
 
@@ -779,7 +788,16 @@ const updatePropertyType = cb => {
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
-      data: property_type
+       data: {
+        ...property_type,
+        required_roles: [
+          { role: 'Buyer' },
+          { role: 'Seller' }
+        ],
+        optional_roles: [
+          { role: 'BuyerAgent' },
+        ]
+      }
     })
 }
 
