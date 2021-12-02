@@ -731,7 +731,7 @@ const settings = {
       .create(name)
       .put(`/users/self/settings/${key}`, { value })
       .after(cb)
-      .expectStatus(204)
+      .expectStatus(200)
   },
 
   putInvalid (key, value, name, message = String) {
