@@ -65,13 +65,25 @@ async function create(data) {
   const b = await Brand.create(brand_props)
 
   for (const r in roles) {
-    const role = await BrandRole.create({
-      brand: b.id,
-      role: r,
-      acl: ['*']
-    })
+    let role, members
 
-    for (const m of roles[r]) {
+    if (Array.isArray(roles[r])) {
+      role = await BrandRole.create({
+        brand: b.id,
+        role: r,
+        acl: ['*']
+      })
+      members = roles[r]
+    } else {
+      role = await BrandRole.create({
+        brand: b.id,
+        role: r,
+        acl: roles[r].acl
+      })
+      members = roles[r].members
+    }
+
+    for (const m of members) {
       if (isUUID(m)) {
         await BrandRole.addMember({
           user: m,

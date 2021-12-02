@@ -16,6 +16,7 @@ const ContactAttribute = require('../../../lib/models/Contact/attribute/get')
 const attachContactEvents = require('../../../lib/models/Contact/events')
 const attachContactIntEventHandler = require('../../../lib/models/ContactIntegration/events')
 const attachBrandTriggerEventHandler = require('../../../lib/models/Trigger/brand_trigger/events')
+const attachTriggerEventHandler = require('../../../lib/models/Trigger/events')
 
 const createContext = require('../../workers/utils/create-context')
 
@@ -223,7 +224,8 @@ const run = async() => {
   attachContactEvents()
   attachContactIntEventHandler()
   attachBrandTriggerEventHandler()
-
+  attachTriggerEventHandler()
+  
   const { commit, run } = await createContext()
 
   const initial = {

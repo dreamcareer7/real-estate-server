@@ -1,4 +1,10 @@
-CREATE OR REPLACE FUNCTION update_current_deal_context(deal_id uuid)
+const db = require('../lib/utils/db')
+
+const migrations = [
+  'BEGIN',
+  `ALTER TYPE deal_context_source 
+    ADD VALUE 'PropertyType'`,
+  `CREATE OR REPLACE FUNCTION update_current_deal_context(deal_id uuid)
 RETURNS void AS
 $$
   BEGIN
@@ -72,13 +78,13 @@ $$
         NULL::uuid as approved_by,
         NULL::timestamp with time zone as approved_at,
         'property_type' as key,
-        brands_property_types.label::text as text,
-        null::double precision,
-        null::timestamp with time zone,
-        'Text'::context_data_type as data_type,
+        brands_property_types.label as text,
+        null as number,
+        null as date,
+        'text' as data_type,
         $1::uuid as deal,
         NULL::uuid as checklist,
-        'PropertyType'::deal_context_source as source
+        'MLS'::deal_context_source as source
       FROM brands_property_types WHERE id = (
         (SELECT property_type FROM deals WHERE id = $1)
       )
@@ -130,4 +136,23 @@ $$
 
   END;
 $$
-LANGUAGE PLPGSQL;
+LANGUAGE PLPGSQL;`,
+  'COMMIT'
+]
+
+
+const run = async () => {
+  const { conn } = await db.conn.promise()
+
+  for(const sql of migrations) {
+    await conn.query(sql)
+  }
+
+  conn.release()
+}
+
+exports.up = cb => {
+  run().then(cb).catch(cb)
+}
+
+exports.down = () => {}

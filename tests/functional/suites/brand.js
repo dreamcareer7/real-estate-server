@@ -561,7 +561,7 @@ const updateUserSettings = cb => {
     })
     .addHeader('X-Rechat-Brand', brand_id)
     .after(cb)
-    .expectStatus(200)
+    .expectStatus(204)
 }
 
 const getUserRoles = cb => {
@@ -760,7 +760,16 @@ const addPropertyType = cb => {
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
-      data: property_type
+      data: {
+        ...property_type,
+        required_roles: [
+          { role: 'Tenant' },
+          { role: 'Landlord' }
+        ],
+        optional_roles: [
+          { role: 'Title' },
+        ]
+      }
     })
 }
 
@@ -779,7 +788,16 @@ const updatePropertyType = cb => {
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
-      data: property_type
+      data: {
+        ...property_type,
+        required_roles: [
+          { role: 'Buyer' },
+          { role: 'Seller' }
+        ],
+        optional_roles: [
+          { role: 'BuyerAgent' },
+        ]
+      }
     })
 }
 
@@ -856,6 +874,28 @@ const getAssets = cb => {
     .expectJSON({
       code: 'OK',
       data: [results.brand.createAsset.data]
+    })
+}
+
+function shareAsset(cb) {
+  const text = 'Please share this'
+
+  const data = {
+    text,
+    recipients: [
+      '+14243828604'
+    ]
+  }
+
+  const asset = JSON.parse(results.brand.createAsset).data[0]
+
+  return frisby
+    .create('share an asset with text')
+    .post(`/brands/${results.brand.create.data.id}/assets/${asset.id}/share`, data)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK'
     })
 }
 
@@ -955,6 +995,7 @@ module.exports = {
 
   createAsset,
   getAssets,
+  shareAsset,
   deleteAsset,
 
   createWebhook,

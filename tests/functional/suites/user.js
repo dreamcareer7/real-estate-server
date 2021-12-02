@@ -1,4 +1,4 @@
-const { createBrands } = require('../util')
+const { createBrands, switchBrand } = require('../util')
 
 const brandSetup = [
   {
@@ -20,7 +20,22 @@ const brandSetup = [
         contexts: [],
         checklists: [],
         property_types: [],
-      }
+        children: [
+          {
+            name: 'John Doe\'s Team',
+            brand_type: 'Team',
+            roles: {
+              Agent: {
+                acl: ['CRM', 'Deals'],
+                members: ['test+email@rechat.com']
+              },
+            },
+            contexts: [],
+            checklists: [],
+            property_types: [],
+          }
+        ]  
+      },
     ]
   }, {
     name: 'Brooklyn',
@@ -677,7 +692,12 @@ function getUserBrands(cb) {
               name: '140 Franklin',
               brand_type: 'Office',
               member_count: 1,
-              children: null,
+              children: [{
+                name: 'John Doe\'s Team',
+                brand_type: 'Team',
+                member_count: 1,
+                children: null
+              }],
             }
           ],
         },
@@ -712,7 +732,6 @@ const settings = {
       .put(`/users/self/settings/${key}`, { value })
       .after(cb)
       .expectStatus(200)
-      .expectJSON([{ key, value }])
   },
 
   putInvalid (key, value, name, message = String) {
@@ -730,8 +749,24 @@ const settings = {
       .get('/users/self/roles')
       .after(cb)
       .expectStatus(200)
-      .expectJSON({ data: [{ settings }] })
+      .expectJSON('data.?', { settings })
   },
+}
+
+function getActiveBrandRole(expected) {
+  return (cb) => frisby
+    .create('get active brand role')
+    .get('/users/self/active-role')
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON('data', expected)
+}
+
+function changeActiveBrand(cb) {
+  return frisby.create('change active brand')
+    .patch('/users/self/active-brand')
+    .after(cb)
+    .expectStatus(204)
 }
 
 module.exports = {
@@ -811,6 +846,46 @@ module.exports = {
     [settings.keys.JSON]: { foo: 'bar', baz: [0] },
 
     [settings.keys.STR2]: null,
+  }),
+
+  getActiveBrandRoleAsOwnBrand: getActiveBrandRole({
+    brand: {
+      name: 'Manhattan',
+      type: 'brand'
+    },
+    acl: ['*'],
+    settings: {
+      type: 'user_setting'
+    },
+    subscription: null,
+    type: 'user_role',
+  }),
+
+  ...switchBrand(() => results.user.brands.data[0].children[0].children[0].id, {
+    putSettingInAnotherBrand: settings.put(settings.keys.BOOL, true),
+    getActiveBrandRoleAsAgentBrand: getActiveBrandRole({
+      brand: {
+        name: 'John Doe\'s Team',
+        type: 'brand'
+      },
+      acl: ['CRM', 'Deals'],
+      settings: {
+        type: 'user_setting'
+      },
+      subscription: null,
+      type: 'user_role',
+    }),
+  }),
+
+  ...switchBrand(() => results.user.brands.data[0].children[0].id, {
+    changeActiveBrand,
+    getActiveBrandRoleAfterChange: getActiveBrandRole({
+      brand: {
+        name: '140 Franklin',
+        type: 'brand'
+      },
+      acl: ['*'],
+    }),
   }),
 
   deleteUser
