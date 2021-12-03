@@ -1,4 +1,7 @@
-CREATE OR REPLACE FUNCTION update_current_deal_context(deal_id uuid)
+const db = require('../lib/utils/db')
+
+const migrations = [
+  `CREATE OR REPLACE FUNCTION update_current_deal_context(deal_id uuid)
 RETURNS void AS
 $$
   BEGIN
@@ -130,4 +133,22 @@ $$
 
   END;
 $$
-LANGUAGE PLPGSQL;
+LANGUAGE PLPGSQL;`
+]
+
+
+const run = async () => {
+  const { conn } = await db.conn.promise()
+
+  for(const sql of migrations) {
+    await conn.query(sql)
+  }
+
+  conn.release()
+}
+
+exports.up = cb => {
+  run().then(cb).catch(cb)
+}
+
+exports.down = () => {}
