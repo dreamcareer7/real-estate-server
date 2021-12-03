@@ -36,7 +36,7 @@ const pdf = 'https://s3-us-west-2.amazonaws.com/rechat-forms/2672324.pdf'
 
 const getRoleDefinitions = (cb) => {
   return frisby.create('get role definitions')
-    .get(`/deals/roles/definitions`)
+    .get('/deals/roles/definitions')
     .after(cb)
     .expectStatus(200)
     .expectJSON({
