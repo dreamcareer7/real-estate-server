@@ -3,4 +3,5 @@ UPDATE
 SET
   deleted_at = NOW()
 WHERE
-  id = $1::uuid
+  deleted_at IS NULL AND
+  id = ANY($1::uuid[])
