@@ -15,9 +15,9 @@ const userId = process.argv[3]
 
 runInContext(`delete-user-triggers-${new Date().toLocaleTimeString('en-us')}`, async () => {
   const flowIds = await Flow.filter({ brand: brandId, created_by: userId })
-  await Promise.all(
-    flowIds.map(async (flowId) => Flow.stop(userId, flowId))
-  )
+  for (let i = 0; i < flowIds.length; i++) {
+    await Flow.stop(userId, flowIds[i])
+  }
   const triggers = await Trigger.filter({
     brand: brandId,
     created_by: userId,
