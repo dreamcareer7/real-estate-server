@@ -622,7 +622,25 @@ module.exports = {
     })
   ),
 
+  ...switchBrand(konoha, runAsUser(NARUTO, {
+    deleteInvalid: deleteSuperCampaign(
+      'an-invalid-id',
+      'try to delete an invalid ID',
+      400,
+    ),
+    deleteMissing: deleteSuperCampaign(
+      'aaaaaaaa-bbbb-4ccc-9ddd-eeeeeeeeeeee',
+      'try to delete a missing super campaign',
+      404,
+    ),
+    deleteUnauthorized: deleteSuperCampaign(
+      ID('christmas.create'),
+      'try to delete a super campaign that belongs to someone else',
+      403,
+    ),
+  })),
+  
   ...switchBrand(region, {
-    successfullyDeleteSuperCampaign: deleteSuperCampaign(ID('christmas.create')),
+    delete: deleteSuperCampaign(ID('christmas.create')),
   })
 }
