@@ -377,6 +377,17 @@ function getEligibleAgents (id, conds, name = 'get eligible agents') {
   }
 }
 
+function deleteSuperCampaign (
+  id,
+  name = 'delete the super campaign',
+  status = 204
+) {
+  return cb => F(name)
+    .delete(`/email/super-campaigns/${resolve(id)}`)
+    .after(cb)
+    .expectStatus(status)
+}
+
 const createdSuperCampaigns = filter({
   some: [
     {
@@ -611,5 +622,7 @@ module.exports = {
     })
   ),
 
-  // delete: deleteCampaign,
+  ...switchBrand(region, {
+    successfullyDeleteSuperCampaign: deleteSuperCampaign(ID('christmas.create')),
+  })
 }
