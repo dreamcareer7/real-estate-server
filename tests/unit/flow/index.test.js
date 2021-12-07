@@ -32,6 +32,7 @@ const TemplateInstance = require('../../../lib/models/Template/instance/index')
 const Trigger = {
   ...require('../../../lib/models/Trigger/get'),
   ...require('../../../lib/models/Trigger/due'),
+  ...require('../../../lib/models/Trigger/filter'),
 }
 const EmailCampaign = require('../../../lib/models/Email/campaign/get')
 
@@ -489,6 +490,43 @@ async function testEnrollOneWithoutEmail () {
   expect(res).to.be.an('array')
 }
 
+//TODO rename
+async function testFlowExecutionForNewSitutation() {
+  const contactId = await createContact({
+    first_name: 'Mammad',
+    tag: ['Tag3', 'Tag4'],
+  })
+  const brandFlowId = await BrandFlow.create(brand.id, user.id, {
+    created_by: user.id,
+    name: 'FLOW',
+    description: 'A flow',
+    steps: [{
+      title: 'Happy birthday email',
+      description: 'Send a customized happy birthday email',
+      wait_for: { days: 0 },
+      time: '00:00:01',
+      is_automated: false,
+      event_type: 'last_step_date',
+      order: 1,
+      event: {
+        title: 'Create Rechat email',
+        task_type: 'Other',
+      },
+    }],
+  })
+  const brandFlows = await BrandFlow.forBrand(brand.id)
+  const [flow] = await Flow.enrollContacts(
+    brand.id,
+    user.id,
+    brandFlowId,
+    moment.tz(user.timezone).startOf('day').valueOf() / 1000,
+    brandFlows[0].steps,
+    [contactId],
+  )
+  const [triggerId] = await Trigger.filter({flow: flow.id})
+  const trigger = await Trigger.get(triggerId)
+  expect(trigger.effective_at).to.be.eql(flow.starts_at)
+}
 describe('Flow', () => {
   createContext()
   beforeEach(setup)
@@ -528,4 +566,5 @@ describe('Brand Flow', () => {
   it('should resolve order collision on create', testStepOrderCollisionOnCreate)
   it('should not touch step orders when no collision on update', testStepOrderNoCollisionOnUpdate)
   it('should resolve order collision on update', testStepOrderCollisionOnUpdate)
+  it('should be good!!', testFlowExecutionForNewSitutation)
 })
