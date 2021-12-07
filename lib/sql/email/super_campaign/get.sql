@@ -11,9 +11,21 @@ SELECT
   description,
   tags,
   template_instance,
+
   (
-    SELECT array_agg(brand) FROM super_campaigns_eligibility WHERE super_campaign = super_campaigns.id
-  ) as eligible_brands,
+    SELECT array_agg(brand)
+    FROM super_campaigns_eligibility
+    WHERE super_campaign = super_campaigns.id
+  ) AS eligible_brands,
+
+  (
+    SELECT count(*)::int
+    FROM super_campaigns_enrollments AS sce
+    WHERE
+      sce.super_campaign = super_campaigns.id AND
+      sce.deleted_at IS NULL
+  ) AS enrollments_count,
+
   'super_campaign' AS type
 FROM
   super_campaigns

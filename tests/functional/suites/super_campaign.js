@@ -279,14 +279,23 @@ function updateEligibility(id) {
   }
 }
 
-function getSuperCampaign(cb) {
-  const super_campaign = id('christmas.create')
-
-  return F('get super campaign')
-    .get(`/email/super-campaigns/${super_campaign}?associations[]=super_campaign.eligible_brands`)
-    .after(cb)
-    .expectStatus(200)
-    .expectJSON(R().christmas.updateEligibility)
+function getSuperCampaign ({
+  id = ID('christmas.create'),
+  name = 'get super campaign',
+  eligibleBrands = true,
+  status = 200,
+  json, 
+} = {}) {
+  return cb => {
+    const url = `/email/super-campaigns/${resolve(id)}`
+    const assocs = '?associations[]=super_campaign.eligible_brands'
+    
+    return F(name)
+      .get(url + (eligibleBrands ? assocs : ''))
+      .after(cb)
+      .expectStatus(status)
+      .expectJSON(resolve(json))
+  }
 }
 
 function execute(id) {
@@ -493,7 +502,13 @@ module.exports = {
         total: 2,
       }),
 
-      get: getSuperCampaign,
+      get: getSuperCampaign({
+        json () {
+          const expected = { ...R().christmas.updateEligibility }
+          expected.data = { ...expected.data, enrollments_count: 2 }
+          return expected
+        }
+      }),
     },
     labor_day: {
       create,
