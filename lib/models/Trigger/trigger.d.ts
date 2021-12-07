@@ -32,7 +32,7 @@ export interface ITriggerInput {
   wait_for: number;
   time?: string;
   recurring?: boolean;
-  effective_at?: number;
+  effective_at?: string;
 
   flow?: UUID;
   flow_step?: UUID;
