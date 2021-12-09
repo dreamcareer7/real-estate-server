@@ -42,15 +42,15 @@ async function hasAccess() {
   const thread = await ThreadMessage.get(message.thread_key)
 
   try {
-    await ThreadMessage.hasAccess(message.id, user.id, brand.id)
+    await ThreadMessage.hasAccess(thread, user.id, brand.id)
   } catch (ex) {
     expect(ex.message).to.be.equal(`EmailThread ${message.id} not found.`)
   }
 
-  const status = await ThreadMessage.hasAccess(thread.id, user.id, brand.id)
+  const status = await ThreadMessage.hasAccess(thread, user.id, brand.id)
   expect(status).to.be.equal(true)
 
-  const status_1 = await ThreadMessage.hasAccess(thread.id, user.id, user.id)
+  const status_1 = await ThreadMessage.hasAccess(thread, user.id, user.id)
   expect(status_1).to.be.equal(false)
 }
 
