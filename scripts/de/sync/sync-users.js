@@ -75,7 +75,8 @@ INSERT INTO de.users (username, object, updated_at)
 SELECT username, ROW_TO_JSON(data), NOW() FROM data
 ON CONFLICT (username) DO UPDATE SET
   object = EXCLUDED.object,
-  updated_at = NOW()`
+  updated_at = NOW(),
+  deleted_at = NULL -- Undelete is they have appeared again`
 
 const INSERT_USERS = `
 WITH saved AS (
@@ -88,6 +89,7 @@ WITH saved AS (
     de.users.object->>'email',
     (de.users.object->>'user_type')::user_type
   FROM de.users WHERE "user" IS NULL
+  ON CONFLICT(email) DO UPDATE SET updated_at = NOW()
   RETURNING id, email
 )
 

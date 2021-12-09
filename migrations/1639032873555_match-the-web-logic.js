@@ -1,4 +1,7 @@
-CREATE OR REPLACE VIEW deal_statuses AS (
+const db = require('../lib/utils/db')
+
+const migrations = [
+  `CREATE OR REPLACE VIEW deal_statuses AS (
   WITH deal_brands AS (
     SELECT d.id as deal, brand_parents(d.brand) as brand FROM deals d
   )
@@ -40,4 +43,22 @@ CREATE OR REPLACE VIEW deal_statuses AS (
     AND deals.deleted_at IS NULL
 
   ORDER BY deals.id, cdc.key = 'contract_status' DESC, bds.id IS NULL, cdc.created_at DESC
-)
+)`
+]
+
+
+const run = async () => {
+  const { conn } = await db.conn.promise()
+
+  for(const sql of migrations) {
+    await conn.query(sql)
+  }
+
+  conn.release()
+}
+
+exports.up = cb => {
+  run().then(cb).catch(cb)
+}
+
+exports.down = () => {}
