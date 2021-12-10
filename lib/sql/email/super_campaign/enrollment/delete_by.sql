@@ -11,6 +11,7 @@ WHERE
     WHEN $4 = 'automatic' THEN created_by IS NULL
     WHEN $4 = 'self' THEN created_by = "user"
     WHEN $4 = 'admin' THEN created_by <> "user"
+    WHEN $4 = 'manual' THEN created_by IS NOT NULL
     ELsE TRUE
   END)
 

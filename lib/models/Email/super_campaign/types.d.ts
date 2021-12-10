@@ -53,4 +53,9 @@ export interface SuperCampaignEnrollmentFilterOptions extends Omit<PaginationOpt
 
 export type SuperCampaignEnrollmentInput = Pick<SuperCampaignEnrollment, 'super_campaign' | 'brand' | 'user' | 'tags' | 'created_by'>
 
-export type SuperCampaignEnrollmentCause = 'automatic' | 'self' | 'admin'
+export type SuperCampaignEnrollmentCause =
+  | 'automatic'
+  | 'self'
+  | 'admin'
+  | 'manual' // AKA non-automatic
+  ;
