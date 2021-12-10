@@ -1,5 +1,5 @@
 -- $1: tags
--- $2: [detached]
+-- $2: [cause]
 -- $3: [super_campaign (ID)]
 -- $4: [brand (ID)]
 -- $5: [user (ID)]
@@ -16,7 +16,12 @@ SET
   ) || $1::text[]
 WHERE
   deleted_at IS NULL AND
-  COALESCE(detached = $2::boolean, TRUE) AND
+  (CASE
+    WHEN $2 = 'automatic' THEN created_by IS NULL
+    WHEN $2 = 'self' THEN created_by = "user"
+    WHEN $2 = 'admin' THEN created_by <> "user"
+    ELSE TRUE
+  END) AND
   COALESCE(super_campaign = $3::uuid, TRUE) AND
   COALESCE(brand = $4::uuid, TRUE) AND
   COALESCE("user" = $5::uuid, TRUE)

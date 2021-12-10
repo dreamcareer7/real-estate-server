@@ -37,7 +37,7 @@ export interface SuperCampaignEnrollment extends Pick<IModel, 'id' | 'created_at
   brand: IBrand['id'];
   user: IUser['id'];
   tags: string[];
-  detached: boolean;
+  created_by: IUser['id'] | null;
 }
 
 export interface SuperCampaignEnrollmentFilterOptions extends Omit<PaginationOptions, 'order'> {
@@ -45,10 +45,12 @@ export interface SuperCampaignEnrollmentFilterOptions extends Omit<PaginationOpt
   brand?: IBrand['id'];
   user?: IUser['id'];
   tags?: SuperCampaignEnrollment['tags'];
-  detached?: boolean;
   including_deleted?: boolean;
   executed?: boolean;
   order?: string[];
+  cause?: SuperCampaignEnrollmentCause;
 }
 
-export type SuperCampaignEnrollmentInput = Pick<SuperCampaignEnrollment, 'super_campaign' | 'brand' | 'user' | 'tags' | 'detached'>
+export type SuperCampaignEnrollmentInput = Pick<SuperCampaignEnrollment, 'super_campaign' | 'brand' | 'user' | 'tags' | 'created_by'>
+
+export type SuperCampaignEnrollmentCause = 'automatic' | 'self' | 'admin'
