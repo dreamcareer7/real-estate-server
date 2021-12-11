@@ -13,13 +13,15 @@ INSERT INTO super_campaigns_enrollments as sce (
   super_campaign,
   brand,
   "user",
-  tags
+  tags,
+  created_by
 )
 SELECT
   c.id AS super_campaign,
   t.brand,
   t.user,
-  array_agg(t.tag)
+  array_agg(t.tag),
+  NULL AS created_by
 FROM
   super_campaigns AS c
   CROSS JOIN unnest($3::uuid[]) AS e(brand)
@@ -45,7 +47,7 @@ GROUP BY
 ON CONFLICT (super_campaign, brand, "user") DO UPDATE SET
   tags = excluded.tags::text[],
   deleted_at = NULL,
-  detached = FALSE
+  created_by = NULL
 WHERE
   (
     SELECT COALESCE(us.super_campaign_admin_permission, FALSE)
@@ -55,5 +57,5 @@ WHERE
   AND
   (
     sce.deleted_at IS NOT NULL OR
-    sce.detached = FALSE
+    sce.created_by IS DISTINCT FROM excluded.user
   )
