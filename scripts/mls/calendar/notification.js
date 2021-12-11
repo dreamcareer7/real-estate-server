@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 
-const Context = require('../../../lib/models/Context')
 const MLSJob = require('../../../lib/models/MLSJob')
 const CalendarWorker = require('../../../lib/models/Calendar/worker/notification')
 const { runInContext } = require('../../../lib/models/Context/util')

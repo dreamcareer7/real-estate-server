@@ -7,8 +7,6 @@ const AssertionError = require('assertion-error')
 
 const Context = require('../../../lib/models/Context')
 
-const { handleJob } = require('../jobs')
-
 const TEMP_PATH = path.resolve(__dirname, '../temp')
 require('rimraf').sync(path.resolve(TEMP_PATH, 'sms'))
 
