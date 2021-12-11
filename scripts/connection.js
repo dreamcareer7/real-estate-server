@@ -6,7 +6,6 @@ const Peanar = require('peanar')
 
 const deasync = require('deasync')
 require('colors')
-const Job = require('../lib/models/Job')
 const Context = require('../lib/models/Context')
 
 // @ts-ignore
@@ -15,12 +14,9 @@ peanar._createEnqueuer = Peanar.prototype._createEnqueuer
 const context = Context.create()
 
 const getConnection = deasync(db.conn)
-const jobs = []
-jobs.push = job => { Job.handle([job], () => {}); return 1 }
 
 context.set({
   db: getConnection(),
-  jobs,
   rabbit_jobs: []
 })
 context.enter()

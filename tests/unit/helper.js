@@ -63,7 +63,6 @@ function createContext() {
 
     context.set({
       db: conn,
-      jobs: [],
       rabbit_jobs: [],
       'db:log': false
     })
@@ -119,7 +118,6 @@ const prepareContext = async c => {
 
   context.set({
     db: conn,
-    jobs: [],
     rabbit_jobs: [],
   })
 
@@ -150,11 +148,7 @@ async function executeInContext(c, fn) {
 }
 
 async function handleJobs() {
-  while (Context.get('jobs').length > 0 || Context.get('rabbit_jobs').length > 0) {
-    while (Context.get('jobs').length > 0) {
-      const job = Context.get('jobs').shift()
-      await promisify(handleJob)(job.type, null, job.data)
-    }
+  while (Context.get('rabbit_jobs').length > 0) {
     await peanar.enqueueContextJobs()
   }
 }

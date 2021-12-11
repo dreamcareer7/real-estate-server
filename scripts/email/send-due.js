@@ -5,13 +5,13 @@ require('../../lib/models/index.js')
 
 const Context = require('../../lib/models/Context')
 const EmailCampaign = require('../../lib/models/Email/campaign')
-const Job = require('../../lib/models/Job')
 
+const { peanar } = require('../../lib/utils/peanar')
 
 const send = async () => {
   await EmailCampaign.send(process.argv[2])
   Context.log('Starting to handle jobs')
-  await Job.handleContextJobs()
+  await peanar.enqueueContextJobs()
   Context.log('Script Done')
   process.exit()
 }

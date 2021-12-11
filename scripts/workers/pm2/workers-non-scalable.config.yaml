@@ -1,9 +1,5 @@
 apps:
   - script   : ./scripts/workers/index.js
-    args     : ./kue/index
-    name     : 'kue_workers'
-    kill_timeout : 15000
-  - script   : ./scripts/workers/index.js
     args     : ./peanar/microsoft_notifications
     name     : 'microsoft_notifications'
     kill_timeout : 15000

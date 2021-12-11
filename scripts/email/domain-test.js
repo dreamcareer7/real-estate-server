@@ -4,7 +4,8 @@ require('../connection.js')
 require('../../lib/models/index.js')
 
 const Email = require('../../lib/models/Email/create')
-const Job = require('../../lib/models/Job')
+
+const { peanar } = require('../../lib/utils/peanar')
 
 const { getDomainForUser } = require('../../lib/models/Email/campaign/domain')
 
@@ -39,7 +40,7 @@ const send = async () => {
   const saved = await Email.create(email)
   console.log(saved)
 
-  await Job.handleContextJobs()
+  await peanar.enqueueContextJobs()
 }
 
 send()
