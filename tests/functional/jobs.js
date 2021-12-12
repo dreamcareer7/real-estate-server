@@ -8,14 +8,13 @@ require('../../lib/models/Email/super_campaign/worker')
 const pollers = require('./pollers')
 
 const queues = Object.assign(
-  require('../../scripts/workers/kue/queues.js'),
   require('./queues.js')
 )
 const { peanar } = require('../../lib/utils/peanar')
 
 function handleJob(queue, name, data, cb) {
   if (queues[queue]) {
-    return handleKueJob(queue, data, cb)
+    return handle(queue, data, cb)
   }
 
   return handlePeanarJob({
@@ -27,7 +26,7 @@ function handleJob(queue, name, data, cb) {
   }).nodeify(cb)
 }
 
-function handleKueJob(name, data, cb) {
+function handle(name, data, cb) {
   Context.log('Handling job', name)
   queues[name].handler({type: name, data}, cb)
 }

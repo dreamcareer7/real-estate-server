@@ -1,9 +1,8 @@
 const Context = require('../../../lib/models/Context')
 const db = require('../../../lib/utils/db')
+const { peanar } = require('../../../lib/utils/peanar')
 
 const createContext = async c => {
-  const Job = require('../../../lib/models/Job')
-
   const context = Context.create({
     ...c
   })
@@ -34,7 +33,7 @@ const createContext = async c => {
 
     Context.log('Committed 👌')
 
-    await Job.handleContextJobs()
+    await peanar.enqueueContextJobs()
 
     context.exit()
     done()
@@ -62,7 +61,6 @@ const createContext = async c => {
 
   context.set({
     db: conn,
-    jobs: [],
     rabbit_jobs: [],
   })
 

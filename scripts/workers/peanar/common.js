@@ -2,6 +2,8 @@ const { peanar } = require('../../../lib/utils/peanar')
 
 const config = require('../../../lib/config')
 
+require('../../../lib/models/User/last-seen')
+require('../../../lib/models/Notification/device')
 require('../../../lib/models/Calendar/worker')
 require('../../../lib/models/Contact/worker')
 require('../../../lib/models/Flow/worker')
@@ -35,6 +37,14 @@ require('../../../lib/models/Showing/showinghub/appointment')
 require('../../../lib/models/Showing/showinghub/webhook')
 
 const queues = [
+  {
+    queues: ['users_last_seen'],
+    concurrency: 100
+  },
+  {
+    queues: ['send_to_device'],
+    concurrency: 30
+  },
   {
     queues: ['showinghub'],
     concurrency: 1

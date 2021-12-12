@@ -1,5 +1,4 @@
 const Context = require('../../lib/models/Context/index')
-require('../../lib/models/Job')
 const Email = require('../../lib/models/Email/index')
 const sql = require('../../lib/utils/sql')
 const createContext = require('../workers/utils/create-context')

@@ -127,7 +127,7 @@ async function main() {
   if (process.argv.length > 2) {
     registerModules(process.argv.slice(2))
   } else {
-    registerModules(['./peanar/all', './kue', './pollers/all'])
+    registerModules(['./peanar/all', './pollers/all'])
   }
 
   await start()
