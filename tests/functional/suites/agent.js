@@ -7,7 +7,7 @@ const add = (cb) => {
     .post('/jobs', {
       queue: 'MLS.Agent',
       name: 'mls_agent',
-      data: {processed: agent}
+      data: { processed: agent }
     })
     .after(cb)
     .expectStatus(200)
@@ -25,7 +25,8 @@ const getByMlsId = (cb) => {
           mlsid: agent.mlsid,
           first_name: agent.first_name,
           last_name: agent.last_name,
-          email: agent.email
+          email: agent.email,
+          nrds: agent.nrds
         }
       ]
     })
