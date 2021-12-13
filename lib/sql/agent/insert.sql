@@ -43,7 +43,7 @@ ON CONFLICT (matrix_unique_id, mls) DO UPDATE SET
   matrix_modified_dt = $16,
   license_number = $17,
   designation = $18,
-  nrds = $19,
+  nrds = $20,
   updated_at = CLOCK_TIMESTAMP()
   WHERE agents.matrix_unique_id = $15 AND agents.mls =$19::mls
 RETURNING id
