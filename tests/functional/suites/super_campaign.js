@@ -583,8 +583,15 @@ module.exports = {
           },
           tags: ['Christmas', 'New Year'],
         },
+        {
+          brand: { id: konoha },
+          user: {
+            email: NARUTO,
+          },
+          tags: ['Christmas', 'New Year'],
+        },
       ],
-      total: 2,
+      total: 3,
     }),
   }),
 

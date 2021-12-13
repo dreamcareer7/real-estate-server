@@ -69,15 +69,15 @@ const poll = ({ fn, name, wait = 5000 }) => {
       /** @param {string[]} tags */
       const report_time = (tags) => {
         const time_spent = Number((process.hrtime.bigint() - start) / 1000000n)
-        Metric.histogram(`Poll.${name}`, time_spent / 1000, tags)
+        Metric.histogram('Poll', time_spent / 1000, tags)
       }
       const start = process.hrtime.bigint()
 
       try {
         await execute(ctxRes)
-        report_time([ 'result:success' ])
+        report_time([ 'result:success', name ])
       } catch (ex) {
-        report_time([ 'result:fail' ])
+        report_time([ 'result:fail', name ])
         Context.error(ex)
         Slack.send({
           channel: '7-server-errors',

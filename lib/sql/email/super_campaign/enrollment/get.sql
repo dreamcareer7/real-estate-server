@@ -6,7 +6,7 @@ SELECT
   brand,
   "user",
   tags,
-  detached,
+  created_by,
   super_campaign,
   campaign,
 
