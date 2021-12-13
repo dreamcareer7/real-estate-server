@@ -58,7 +58,7 @@ SELECT
         )
       )
     ELSE  
-      '[]'::jsonb
+      NULL
     END
   ) AS messages,
   (
