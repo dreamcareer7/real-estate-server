@@ -570,7 +570,7 @@ function checkAppointmentRejectionSmsForBuyer (cb) {
         { /* Ignore second one */ },
         { /* Ignore third one */ },
         { /* Ignore fouth one */ },
-        // { /* Ignore fifth one */ },
+        { /* Ignore fifth one */ },
         {
           to: formatPhoneNumberForDialing(BUYER_PHONE_NUMBER),
           body: expectedBody
