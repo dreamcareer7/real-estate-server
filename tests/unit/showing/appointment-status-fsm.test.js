@@ -278,7 +278,7 @@ describe('Showing/Appointment/status-fsm', () => {
       payload.action = 'BuyerCanceled'
       expect(utils.guessNewStatus(payload)).to.be.equal('Canceled')
 
-      payload.action = 'BuyerRescheduled'
+      payload.action = 'Rescheduled'
       expect(utils.guessNewStatus(payload)).to.be.equal('Rescheduled')      
     })
     
