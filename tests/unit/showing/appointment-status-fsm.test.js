@@ -205,26 +205,6 @@ describe('Showing/Appointment/status-fsm', () => {
     // noop
   })
 
-  context('utils.predicate()', () => {
-    context('returns a function that...', () => {
-      it('returns true when its args include actual value', () => {
-        utils.predicate.callThrough()
-
-        const pred = utils.predicate('foo')        
-
-        expect(pred('baz', 'foo', 'bar')).to.be.true
-      })
-      
-      it('returns false when iss args does not include actual value', () => {
-        utils.predicate.callThrough()
-        
-        const pred = utils.predicate('1')
-
-        expect(pred('1 ', 1, 1n)).to.be.false
-      })
-    })
-  })
-
   context('handlers.finalized()', () => {
     it('populate all showing roles', async () => {
       const payload = make.payload()
@@ -394,7 +374,6 @@ describe('Showing/Appointment/status-fsm', () => {
       const payload = make.payload()
 
       utils.guessNewStatus.withArgs(payload).returns('Completed')
-      utils.predicate.callThrough()
 
       await handlers.handleAction(payload)
 
@@ -405,7 +384,6 @@ describe('Showing/Appointment/status-fsm', () => {
     
     it('calls handlers.finalized if new status is Completed or Canceled', async () => {
       const payload = make.payload()
-      utils.predicate.callThrough()
       
       for (const finalStatus of ['Completed', 'Canceled']) {
         utils.guessNewStatus.withArgs(payload).returns(finalStatus)
@@ -441,7 +419,6 @@ describe('Showing/Appointment/status-fsm', () => {
         const payload = make.approvalPayload()
         payload.appointment.status = oldStatus
 
-        utils.predicate.callThrough()
         utils.guessNewStatus.withArgs(payload).returns(newStatus)
 
         await handlers.handleAction(payload)
