@@ -3,23 +3,23 @@ INSERT INTO super_campaigns_enrollments AS sce (
   brand,
   "user",
   tags,
-  detached
+  created_by
 )
 SELECT
   t.super_campaign,
   t.brand,
   t."user",
   ARRAY(SELECT json_array_elements_text(t.tags)),
-  COALESCE(t.detached, FALSE)
+  t.created_by
 FROM json_to_recordset($1::json) AS t (
   super_campaign uuid,
   brand uuid,
   "user" uuid,
   tags json,
-  detached boolean
+  created_by uuid
 )
 ON CONFLICT (super_campaign, brand, "user") DO UPDATE SET
   tags = excluded.tags::text[],
-  detached = excluded.detached,
+  created_by = excluded.created_by,
   deleted_at = NULL
 RETURNING id

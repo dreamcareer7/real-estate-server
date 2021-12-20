@@ -9,6 +9,6 @@ SET
   updated_at = now()
 WHERE
   deleted_at IS NULL AND
-  detached = FALSE AND
+  created_by IS DISTINCT FROM "user" AND
   super_campaign = $1::uuid AND
   COALESCE(tags <@ $3::text[] AND tags @> $3::text[], TRUE)

@@ -7,4 +7,11 @@ WHERE
   COALESCE(brand = $1::uuid, TRUE) AND
   COALESCE("user" = $2::uuid, TRUE) AND
   COALESCE(super_campaign = $3::uuid, TRUE) AND
-  COALESCE(detached = $4::boolean, TRUE)  
+  (CASE
+    WHEN $4 = 'automatic' THEN created_by IS NULL
+    WHEN $4 = 'self' THEN created_by = "user"
+    WHEN $4 = 'admin' THEN created_by <> "user"
+    WHEN $4 = 'manual' THEN created_by IS NOT NULL
+    ELsE TRUE
+  END)
+
