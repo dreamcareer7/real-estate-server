@@ -777,6 +777,18 @@ const filter = (cb) => {
     })
 }
 
+const filterToXlsx = (cb) => {
+  return frisby.create('search for a deal and export it to xlsx')
+    .post('/deals/filter.xlsx', {
+      query: 'Imaginary',
+      $order: ['deals.updated_at', 'DESC'],
+      limit: 100,
+      start: 0
+    })
+    .after(cb)
+    .expectStatus(200)
+}
+
 const filterByContext = (cb) => {
   return frisby.create('search for a deal by context')
     .post('/deals/filter', {
@@ -967,6 +979,7 @@ module.exports = {
   getContexts,
   getTemplates,
   filter,
+  filterToXlsx,
   filterByContext,
   filterByContextEmpty,
   updateChecklist,
