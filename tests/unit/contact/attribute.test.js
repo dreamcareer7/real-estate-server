@@ -11,7 +11,6 @@ const Contact = {
 const AttributeDef = require('../../../lib/models/Contact/attribute_def/get')
 const ContactAttribute = require('../../../lib/models/Contact/attribute/get')
 const Context = require('../../../lib/models/Context')
-const Metric = require('../../../lib/models/Metric')
 const User = require('../../../lib/models/User/get')
 
 
@@ -102,8 +101,6 @@ async function testClearIsPrimaryOnUpdate() {
       }
     })
   }], user.id, brand.id)
-
-  expect(Metric.get('query:contact/attribute/clear_primaries')).to.be.equal(2)
 
   const new_attrs = await ContactAttribute.getForContacts([id], [
     defs.get('email'),
