@@ -23,7 +23,7 @@ const dumpLtsLead = cb => {
     brand: results.brand.create.data.id,
     protocol: 'LeadTransmissionStandard',
     mls: ['NTREIS'],
-    source: 'AgentWebsite'
+    source: 'Website'
   }
 
   const key = b64.encode(Crypto.encrypt(JSON.stringify(keyData)))
@@ -79,7 +79,7 @@ const checkContactForLead = cb => {
 
 const checkNotifications = cb => {
   return frisby
-    .create('check if the was notified of the new lead')
+    .create('check if the agent was notified of the new lead')
     .get('/notifications')
     .after(cb)
     .expectStatus(200)
