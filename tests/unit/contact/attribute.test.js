@@ -77,8 +77,6 @@ async function testClearIsPrimaryOnInsert() {
     })
   }], user.id, brand.id)
 
-  expect(Metric.get('query:contact/attribute/clear_primaries')).to.be.equal(2)
-
   const attrs = await ContactAttribute.getForContacts([id], [
     defs.get('email'),
     defs.get('phone_number'),
