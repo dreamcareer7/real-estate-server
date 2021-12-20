@@ -76,7 +76,6 @@ async function createContact({ email, birthday = 0 }) {
   if (birthday) attribute.birthday = birthday
   if (email) attribute.email = email
 
-  console.log({attributes: attributes(attribute)})
   const [id] = await Contact.create(
     [{
       user: user.id,
