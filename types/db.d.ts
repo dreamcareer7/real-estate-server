@@ -359,6 +359,7 @@ declare type TDbSqlAddress =
   | 'email/super_campaign/enrollment/update'
   | 'email/super_campaign/enrollment/update_campaigns'
   | 'email/super_campaign/enrollment/upsert_many'
+  | 'email/super_campaign/enrollment/patch'
   | 'email/super_campaign/get'
   | 'email/super_campaign/insert'
   | 'email/super_campaign/lock'

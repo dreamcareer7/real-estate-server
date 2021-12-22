@@ -38,6 +38,7 @@ export interface SuperCampaignEnrollment extends Pick<IModel, 'id' | 'created_at
   user: IUser['id'];
   tags: string[];
   created_by: IUser['id'] | null;
+  notifications_enabled: boolean;
 }
 
 export interface SuperCampaignEnrollmentFilterOptions extends Omit<PaginationOptions, 'order'> {
