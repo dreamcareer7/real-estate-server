@@ -388,6 +388,21 @@ function deleteSuperCampaign (
     .expectStatus(status)
 }
 
+function toggleNotifications (
+  id,
+  enable,
+  name = `${enable ? 'enable' : 'disable'} notifications`,
+  status = 200,
+) {
+  return cb => F(name)
+    .patch(
+      `/email/super-campaigns/${resolve(id)}/enrollments/self`,
+      { notifications_enabled: enable },
+    )
+    .after(cb)
+    .expectStatus(status)
+}
+
 const createdSuperCampaigns = filter({
   some: [
     {
@@ -568,6 +583,8 @@ module.exports = {
       enrollInChristmas: selfEnroll(ID('christmas.create'), {
         tags: ['New Year'],
       }),
+
+      enableNotifications: toggleNotifications(ID('christmas.create'), true),
 
       getEnrollments: checkSelfEnrollments({
         some: [
