@@ -91,7 +91,7 @@ describe('BrandTrigger/workers', () => {
   createContext()
   beforeEach(setup)
 
-  describe('when a non-recurring flow trigger executes ...', () => {
+  describe('when a flow is stopped', () => {
     it('the relevant global trigger will work!', async () => {
       const contact = await createContact({
         birthday: BIRTHDAY.unix(),
@@ -128,7 +128,7 @@ describe('BrandTrigger/workers', () => {
         },
       )
       const brandFlows = await BrandFlow.forBrand(brand.id)
-      await Flow.enrollContacts(
+      const [flow] = await Flow.enrollContacts(
         brand.id,
         user.id,
         brandFlowId,
@@ -137,9 +137,6 @@ describe('BrandTrigger/workers', () => {
         [contact.id]
       )
       await handleJobs()
-      const [flowTriggerId] = await Trigger.filter(
-        { deleted_at: null, brand: brand.id }
-      )
       const bt = {
         template: brandTemplates[0].id,
         brand: brand.id,
@@ -150,7 +147,7 @@ describe('BrandTrigger/workers', () => {
       }
       await BrandTrigger.upsert(bt, true)
       await handleJobs()
-      await Trigger.execute(flowTriggerId)
+      await Flow.stop(user.id, flow.id)
       await handleJobs()
       const [globalTriggerId] = await Trigger.filter(
         { deleted_at: null, brand: brand.id, origin: true }
