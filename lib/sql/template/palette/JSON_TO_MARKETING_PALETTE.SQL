@@ -57,7 +57,8 @@ RETURNS marketing_palette AS $$
       $1->>'inverted-container-text-color',
 
       $1->>'website',
-      $1->>'name'
+      $1->>'name',
+      $1->>'phone_number'
     )::marketing_palette
 $$
 LANGUAGE SQL
