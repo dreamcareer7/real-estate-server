@@ -92,7 +92,7 @@ describe('BrandTrigger/workers', () => {
   beforeEach(setup)
 
   describe('when a flow is stopped', () => {
-    it('the relevant global trigger will work!', async () => {
+    it('creates the relevant trigger based on brand trigger', async () => {
       const contact = await createContact({
         birthday: BIRTHDAY.unix(),
         email: 'first_mail@fake.com',
