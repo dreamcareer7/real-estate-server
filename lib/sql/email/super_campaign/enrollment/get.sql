@@ -9,6 +9,7 @@ SELECT
   created_by,
   super_campaign,
   campaign,
+  notifications_enabled,
 
   'super_campaign_enrollment' AS type
 FROM

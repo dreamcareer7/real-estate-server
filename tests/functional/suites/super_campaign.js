@@ -1,7 +1,8 @@
 // @ts-nocheck
 const path = require('path')
 const fs = require('fs')
-const _ = require('lodash')
+const get = require('lodash/get')
+const omit = require('lodash/omit')
 
 const { AGENT_SMITH1, AGENT_SMITH2, AGENT_SMITH3, DARTH_VADER, NARUTO } = require('./data/super_campaign/emails')
 const brandSetup = require('./data/super_campaign/brand')
@@ -25,7 +26,7 @@ const id = (key) => {
   if (typeof key === 'function') {
     key = key.name
   }
-  return _.get(R(), `${key}.data.id`)
+  return get(R(), `${key}.data.id`)
 }
 const ID = (key) => () => id(key)
 
@@ -59,7 +60,7 @@ function setAdminPermissionSetting (
   value,
   name = `Set admin permission setting := ${value}`
 ) {
-  return cb => frisby.create(name)
+  return cb => F(name)
     .put('/users/self/settings/super_campaign_admin_permission', { value })
     .after(cb)
     .expectStatus(200)
@@ -69,8 +70,7 @@ function uploadCSV(filename) {
   return (cb) => {
     const csv = fs.createReadStream(path.resolve(__dirname, 'data/super_campaign', filename))
 
-    return frisby
-      .create('upload a CSV file')
+    return F('upload a CSV file')
       .post(
         '/contacts/upload',
         {
@@ -100,8 +100,7 @@ function importCSV(file_id, owner) {
       mappings,
     }
 
-    return frisby
-      .create('import contacts from CSV file')
+    return F('import contacts from CSV file')
       .post('/contacts/import.csv', data)
       .after(cb)
       .expectStatus(200)
@@ -109,7 +108,7 @@ function importCSV(file_id, owner) {
 }
 
 function dummy(description, cb) {
-  return frisby.create(description).get('/_/dummy').after(cb)
+  return F(description).get('/_/dummy').after(cb)
 }
 
 function createEmpty(cb) {
@@ -120,8 +119,7 @@ function createEmpty(cb) {
 }
 
 function getTemplate(cb) {
-  return frisby
-    .create('get templates')
+  return F('get templates')
     .get(`/brands/${region()}/templates?types[]=JustSold&mediums[]=Email`)
     .after(cb)
     .expectStatus(200)
@@ -138,8 +136,7 @@ function instantiateTemplate(cb) {
     contacts: [],
   }
 
-  return frisby
-    .create('create an instance of a template')
+  return F('create an instance of a template')
     .post(`/templates/${id}/instances`, data)
     .after(cb)
     .expectStatus(200)
@@ -152,15 +149,13 @@ function instantiateTemplate(cb) {
 }
 
 function createdAllowedTag(tag) {
-  return (cb) =>
-    frisby
-      .create('create agent tag allowed for use in super campaigns')
-      .post('/contacts/tags', {
-        tag,
-        auto_enroll_in_super_campaigns: true,
-      })
-      .after(cb)
-      .expectStatus(204)
+  return (cb) => F('create agent tag allowed for use in super campaigns')
+    .post('/contacts/tags', {
+      tag,
+      auto_enroll_in_super_campaigns: true,
+    })
+    .after(cb)
+    .expectStatus(204)
 }
 
 function create(cb) {
@@ -181,8 +176,7 @@ function create(cb) {
     .expectStatus(200)
     .expectJSON({
       data: {
-        ...data,
-        template_instance: undefined,
+        ...omit(data, 'template_instance'),
         type: 'super_campaign',
       },
     })
@@ -243,10 +237,7 @@ function updateSimpleDetails(id, data) {
       .after(cb)
       .expectStatus(200)
       .expectJSON({
-        data: {
-          ...data,
-          template_instance: undefined,
-        },
+        data: omit(data, 'template_instance'),
       })
   }
 }
@@ -288,14 +279,23 @@ function updateEligibility(id) {
   }
 }
 
-function get(cb) {
-  const super_campaign = id('christmas.create')
-
-  return F('get super campaign')
-    .get(`/email/super-campaigns/${super_campaign}?associations[]=super_campaign.eligible_brands`)
-    .after(cb)
-    .expectStatus(200)
-    .expectJSON(R().christmas.updateEligibility)
+function getSuperCampaign ({
+  id = ID('christmas.create'),
+  name = 'get super campaign',
+  eligibleBrands = true,
+  status = 200,
+  json, 
+} = {}) {
+  return cb => {
+    const url = `/email/super-campaigns/${resolve(id)}`
+    const assocs = '?associations[]=super_campaign.eligible_brands'
+    
+    return F(name)
+      .get(url + (eligibleBrands ? assocs : ''))
+      .after(cb)
+      .expectStatus(status)
+      .expectJSON(resolve(json))
+  }
 }
 
 function execute(id) {
@@ -375,6 +375,32 @@ function getEligibleAgents (id, conds, name = 'get eligible agents') {
 
     return f
   }
+}
+
+function deleteSuperCampaign (
+  id,
+  name = 'delete the super campaign',
+  status = 204
+) {
+  return cb => F(name)
+    .delete(`/email/super-campaigns/${resolve(id)}`)
+    .after(cb)
+    .expectStatus(status)
+}
+
+function toggleNotifications (
+  id,
+  enable,
+  name = `${enable ? 'enable' : 'disable'} notifications`,
+  status = 200,
+) {
+  return cb => F(name)
+    .patch(
+      `/email/super-campaigns/${resolve(id)}/enrollments/self`,
+      { notifications_enabled: enable },
+    )
+    .after(cb)
+    .expectStatus(status)
 }
 
 const createdSuperCampaigns = filter({
@@ -491,7 +517,13 @@ module.exports = {
         total: 2,
       }),
 
-      get,
+      get: getSuperCampaign({
+        json () {
+          const expected = { ...R().christmas.updateEligibility }
+          expected.data = { ...expected.data, enrollments_count: 2 }
+          return expected
+        }
+      }),
     },
     labor_day: {
       create,
@@ -551,6 +583,8 @@ module.exports = {
       enrollInChristmas: selfEnroll(ID('christmas.create'), {
         tags: ['New Year'],
       }),
+
+      enableNotifications: toggleNotifications(ID('christmas.create'), true),
 
       getEnrollments: checkSelfEnrollments({
         some: [
@@ -618,5 +652,25 @@ module.exports = {
     })
   ),
 
-  // delete: deleteCampaign,
+  ...switchBrand(konoha, runAsUser(NARUTO, {
+    deleteInvalid: deleteSuperCampaign(
+      'an-invalid-id',
+      'try to delete an invalid ID',
+      400,
+    ),
+    deleteMissing: deleteSuperCampaign(
+      'aaaaaaaa-bbbb-4ccc-9ddd-eeeeeeeeeeee',
+      'try to delete a missing super campaign',
+      404,
+    ),
+    deleteUnauthorized: deleteSuperCampaign(
+      ID('christmas.create'),
+      'try to delete a super campaign that belongs to someone else',
+      403,
+    ),
+  })),
+  
+  ...switchBrand(region, {
+    delete: deleteSuperCampaign(ID('christmas.create')),
+  })
 }
