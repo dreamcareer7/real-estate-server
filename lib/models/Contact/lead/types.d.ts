@@ -31,4 +31,5 @@ export interface ILtsLeadUrlMetadata {
   protocol: TLeadProtocol;
   mls?: string[];
   source?: ELeadSourceType;
+  notify?: boolean;
 }
