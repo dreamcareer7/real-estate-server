@@ -137,20 +137,8 @@ const queues = [
     concurrency: 5
   },
   {
-    queues: ['email_high', 'email_event'],
-    concurrency: 20
-  },
-  {
-    queues: ['email_archive'],
-    concurrency: 200
-  },
-  {
     queues: ['daily_email'],
     concurrency: 5
-  },
-  {
-    queues: ['email'],
-    concurrency: 20
   },
   {
     queues: ['register_domain', 'create_zone', 'update_nameservers', 'capture_charge'],
