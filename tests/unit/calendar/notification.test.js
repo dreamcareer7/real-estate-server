@@ -12,6 +12,8 @@ const CalendarNotification = require('../../../lib/models/Calendar/notification'
 const CalendarWorker = require('../../../lib/models/Calendar/worker/notification')
 const Contact = require('../../../lib/models/Contact/manipulate')
 const Context = require('../../../lib/models/Context')
+const Email = require('../../../lib/models/Email/get')
+const Orm = require('../../../lib/models/Orm/context')
 const Deal = require('../../../lib/models/Deal')
 const { Listing } = require('../../../lib/models/Listing')
 const Notification = require('../../../lib/models/Notification')
@@ -81,12 +83,22 @@ async function setup(without_checklists = false) {
 }
 
 async function getEmails() {
-  return sql.selectWithError(`
+  Orm.setPublicFields({ select: ['email.html', 'email.text'], omit: [] })
+
+  const ids = await sql.selectIds(`
     SELECT
-      *
+      id
     FROM
       emails
   `)
+
+  const emails = await Email.getAll(ids)
+  
+  if (emails.length === 0) {
+    throw new Error('No emails found!')
+  }
+
+  return emails
 }
 
 async function createDeal() {
