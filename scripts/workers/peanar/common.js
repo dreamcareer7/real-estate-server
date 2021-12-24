@@ -14,6 +14,7 @@ require('../../../lib/models/Microsoft/workers')
 require('../../../lib/models/Deal/email')
 require('../../../lib/models/Deal/brokerwolf')
 require('../../../lib/models/Deal/D365')
+require('../../../lib/models/Email/archive')
 require('../../../lib/models/Email/send')
 require('../../../lib/models/Email/events')
 require('../../../lib/models/Email/super_campaign/worker')
@@ -138,6 +139,10 @@ const queues = [
   {
     queues: ['email_high', 'email_event'],
     concurrency: 20
+  },
+  {
+    queues: ['email_archive'],
+    concurrency: 200
   },
   {
     queues: ['daily_email'],
