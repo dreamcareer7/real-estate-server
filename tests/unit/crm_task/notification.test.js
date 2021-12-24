@@ -39,7 +39,7 @@ async function getNotifications(user_id) {
 }
 
 async function getEmails() {
-  Orm.setPublicFields({ select: ['email.html', 'email.text'], omit: [] })
+  Orm.setPublicFields({ select: { email: ['html', 'text'] }, omit: {} })
 
   const ids = await sql.selectIds(`
     SELECT

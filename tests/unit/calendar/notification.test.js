@@ -83,7 +83,7 @@ async function setup(without_checklists = false) {
 }
 
 async function getEmails() {
-  Orm.setPublicFields({ select: ['email.html', 'email.text'], omit: [] })
+  Orm.setPublicFields({ select: { email: ['html', 'text'] }, omit: {} })
 
   const ids = await sql.selectIds(`
     SELECT
