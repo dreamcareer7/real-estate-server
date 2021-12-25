@@ -1,6 +1,9 @@
 const { peanar } = require('../../../lib/utils/peanar')
 
-require('../../../lib/models/MLS/workers')
+require('../../../lib/models/Email/archive/upload')
+require('../../../lib/models/Email/send')
+require('../../../lib/models/Email/events')
+
 const queues = [
   {
     queues: ['email_high', 'email_event'],
