@@ -6,7 +6,7 @@ const archive = require('../../lib/models/Email/archive/upload')
 const Context = require('../../lib/models/Context')
 
 const query = `
-  SELECT id FROM emails WHERE html IS NOT NULL OR text IS NOT NULL LIMIT 100000
+  SELECT id FROM emails WHERE html IS NOT NULL OR text IS NOT NULL LIMIT 500000
 `
 
 async function archiveEmails() {
