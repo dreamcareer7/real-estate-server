@@ -19,6 +19,7 @@ const BrandTrigger = {
   ...require('../../../../lib/models/Trigger/brand_trigger/create'), 
   ...require('../../../../lib/models/Trigger/brand_trigger/get'),
 }
+const BrandTriggerExclusion = require('../../../../lib/models/Trigger/brand_trigger/exclusion/create')
 const Contact = {
   ...require('../../../../lib/models/Contact/manipulate'),
   ...require('../../../../lib/models/Contact/get'),
@@ -153,6 +154,70 @@ describe('BrandTrigger/workers', () => {
         { deleted_at: null, brand: brand.id, origin: true }
       )
       expect(globalTriggerId).to.be.ok
+    })
+
+    it('doesn\'t create any trigger when the contact is excluded', async () => {
+      const contact = await createContact({
+        birthday: BIRTHDAY.unix(),
+        email: 'first_mail@fake.com',
+      })
+      await BrandTriggerExclusion.create(brand.id, 'birthday', [contact.id])
+      const brandTemplates = await BrandTemplate.getForBrands({ brands: [brand.id] })
+      const templates = await Template.getAll(brandTemplates.map(bt => bt.template))
+      const html = template.html
+      const instance = await TemplateInstance.create({
+        template: templates[0],
+        html,
+        deals: [],
+        contacts: [],
+        listings: [],
+        created_by: user
+      })
+      const brandFlowId = await BrandFlow.create(
+        brand.id,
+        user.id,
+        {
+          created_by: user.id,
+          name: 'TemplateInstance step',
+          description: 'A flow with an template instance email step',
+          steps: [{
+            title: 'Happy birthday email',
+            description: 'Send a customized happy birthday email',
+            wait_for: { days: 1 },
+            time: '08:00:00',
+            order: 1,
+            is_automated: false,
+            event_type: 'birthday',
+            template_instance: instance.id
+          }],
+        },
+      )
+      const brandFlows = await BrandFlow.forBrand(brand.id)
+      const [flow] = await Flow.enrollContacts(
+        brand.id,
+        user.id,
+        brandFlowId,
+        Date.now() / 1000,
+        brandFlows[0].steps,
+        [contact.id]
+      )
+      await handleJobs()
+      const bt = {
+        template: brandTemplates[0].id,
+        brand: brand.id,
+        created_by: user.id,
+        event_type: 'birthday',
+        wait_for: -86400,
+        subject: 'birthday mail',
+      }
+      await BrandTrigger.upsert(bt, true)
+      await handleJobs()
+      await Flow.stop(user.id, flow.id)
+      await handleJobs()
+      const globalTriggerIds = await Trigger.filter(
+        { deleted_at: null, brand: brand.id, origin: true }
+      )
+      expect(globalTriggerIds.length).to.be.equal(0)
     })
   })	
 })
