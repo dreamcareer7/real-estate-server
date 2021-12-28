@@ -406,6 +406,7 @@ declare type TDbSqlAddress =
   | 'flow/migrate'
   | 'flow/remaining_steps'
   | 'flow/set_last_executed_at'
+  | 'flow/step/create'
   | 'flow/step/delete'
   | 'flow/step/get'
   | 'flow/step/mark_executed'
