@@ -22,7 +22,7 @@ async function main() {
   await peanar.declareAmqResources()
   Context.log('connected to peanar instance...')
 
-  let counter = 1
+  const counter = 1
   await runInContext(`EmailArchive-${counter}`, archiveEmails, undefined, { exitAfterFinish: false })
   await timers.setTimeout(60 * 1000)
 
