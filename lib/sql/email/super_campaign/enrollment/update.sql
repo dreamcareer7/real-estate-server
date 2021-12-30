@@ -18,9 +18,9 @@ INSERT INTO super_campaigns_enrollments as sce (
 )
 SELECT
   c.id AS super_campaign,
-  t.brand,
-  t.user,
-  array_agg(t.tag),
+  bc.brand,
+  bu.user,
+  c.tags,
   NULL AS created_by
 FROM
   super_campaigns AS c
@@ -29,21 +29,18 @@ FROM
   JOIN brands_roles AS br
     ON bc.brand = br.brand
   JOIN brands_users AS bu
-    ON br.id = bu."role"
+    ON br.id = bu.role
   JOIN users_settings AS us
     ON us.user = bu.user AND us.brand = bc.brand
-  JOIN super_campaigns_allowed_tags AS t
-    ON t.brand = bc.brand AND t.user = bu.user
 WHERE
   c.id = $1::uuid
   AND br.deleted_at IS NULL
   AND bu.deleted_at IS NULL
   AND COALESCE(us.super_campaign_admin_permission, FALSE)
-  AND LOWER(t.tag) IN (SELECT LOWER(lt) FROM UNNEST(c.tags) AS lt)
 GROUP BY
   c.id,
-  t.brand,
-  t.user
+  bc.brand,
+  bu.user
 ON CONFLICT (super_campaign, brand, "user") DO UPDATE SET
   tags = excluded.tags::text[],
   deleted_at = NULL,
