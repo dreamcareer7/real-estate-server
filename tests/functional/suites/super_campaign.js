@@ -148,11 +148,14 @@ function instantiateTemplate(cb) {
     })
 }
 
-function createdAllowedTag(tag) {
+function createdAllowedTag(
+  tag,
+  allowed = false, // Temporary?
+) {
   return (cb) => F('create agent tag allowed for use in super campaigns')
     .post('/contacts/tags', {
       tag,
-      auto_enroll_in_super_campaigns: true,
+      auto_enroll_in_super_campaigns: allowed,
     })
     .after(cb)
     .expectStatus(204)
@@ -201,9 +204,13 @@ function selfEnroll(super_campaign, { tags }) {
   }
 }
 
-function checkEnrollments(super_campaign, conds) {
+function checkEnrollments(
+  super_campaign,
+  conds,
+  name = 'check enrolled users after create',
+) {
   return (cb) => {
-    const f = F('check enrolled users after create')
+    const f = F(name)
       .get(
         `/email/super-campaigns/${super_campaign()}/enrollments?associations[]=super_campaign_enrollment.user&associations[]=super_campaign_enrollment.brand`
       )
@@ -458,7 +465,7 @@ module.exports = {
       createdAllowedTagForNaruto: createdAllowedTag('Labor Day'),
       uploadCsvForNaruto: uploadCSV('agent3.csv'),
       importCsvForNaruto: importCSV(ID('uploadCsvForNaruto'), userId(NARUTO)),
-      permitAutoEnrollmentForNaruto: setAdminPermissionSetting(true),
+      // permitAutoEnrollmentForNaruto: setAdminPermissionSetting(true),
     })
   ),
 
@@ -485,42 +492,52 @@ module.exports = {
       checkEnrollments: checkEnrollments(ID('christmas.create'), {
         some: [
           {
-            brand: { id: theDarkSide },
-            user: {
-              email: DARTH_VADER,
-            },
+            user: { email: AGENT_SMITH1 },
+            brand: { id: theMatrix },
             tags: ['Christmas'],
           },
-        ],
-        total: 1,
-      }),
-
-      enrollNaruto: adminEnroll(ID('christmas.create'), [
-        {
-          brand: konoha,
-          user: userId(NARUTO),
-          tags: ['Christmas'],
-        },
-      ]),
-
-      checkNarutoManuallyEnrolled: checkEnrollments(ID('christmas.create'), {
-        some: [
-          () => R().christmas.checkEnrollments.data[0],
           {
-            brand: { id: konoha },
-            user: {
-              email: NARUTO,
-            },
+            user: { email: DARTH_VADER },
+            brand: { id: theDarkSide },
             tags: ['Christmas'],
           },
         ],
         total: 2,
       }),
 
+      enrollNaruto: adminEnroll(ID('christmas.create'), [
+        {
+          brand: konoha,
+          user: userId(NARUTO),
+          tags: ['Christmas', 'OnlyForNaruto'],
+        },
+      ]),
+
+      checkNarutoManuallyEnrolled: checkEnrollments(ID('christmas.create'), {
+        some: [
+          {
+            user: { email: AGENT_SMITH1 },
+            brand: { id: theMatrix },
+            tags: ['Christmas'],
+          },
+          {
+            user: { email: DARTH_VADER },
+            brand: { id: theDarkSide },
+            tags: ['Christmas'],
+          },
+          {
+            user: { email: NARUTO },
+            brand: { id: konoha },
+            tags: ['Christmas', 'OnlyForNaruto'],
+          },
+        ],
+        total: 3,
+      }),
+
       get: getSuperCampaign({
         json () {
           const expected = { ...R().christmas.updateEligibility }
-          expected.data = { ...expected.data, enrollments_count: 2 }
+          expected.data = { ...expected.data, enrollments_count: 3 }
           return expected
         }
       }),
@@ -530,17 +547,13 @@ module.exports = {
       checkEnrollments: checkEnrollments(ID('labor_day.create'), {
         some: [
           {
+            user: { email: AGENT_SMITH1 },
             brand: { id: theMatrix },
-            user: {
-              email: AGENT_SMITH1,
-            },
             tags: ['Labor Day'],
           },
           {
-            brand: { id: konoha },
-            user: {
-              email: NARUTO,
-            },
+            user: { email: DARTH_VADER },
+            brand: { id: theDarkSide },
             tags: ['Labor Day'],
           },
         ],
@@ -604,25 +617,19 @@ module.exports = {
     checkEnrollmentsAfterUpdatingTags: checkEnrollments(ID('christmas.create'), {
       some: [
         {
-          brand: { id: theDarkSide },
-          user: {
-            email: DARTH_VADER,
-          },
-          tags: ['Christmas'],
-        },
-        {
+          user: { email: AGENT_SMITH1 },
           brand: { id: theMatrix },
-          user: {
-            email: AGENT_SMITH1,
-          },
           tags: ['Christmas', 'New Year'],
         },
         {
-          brand: { id: konoha },
-          user: {
-            email: NARUTO,
-          },
+          user: { email: DARTH_VADER },
+          brand: { id: theDarkSide },
           tags: ['Christmas', 'New Year'],
+        },
+        {
+          user: { email: NARUTO },
+          brand: { id: konoha },
+          tags: ['OnlyForNaruto', 'Christmas', 'New Year'],
         },
       ],
       total: 3,
@@ -630,8 +637,8 @@ module.exports = {
   }),
 
   ...switchBrand(
-    konoha,
-    runAsUser(NARUTO, {
+    theMatrix,
+    runAsUser(AGENT_SMITH1, {
       checkLaborDayCampaignForNaruto: checkCampaign(() => ({
         subject: R().labor_day.create.subject,
       })),
