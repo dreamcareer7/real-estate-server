@@ -34,7 +34,7 @@ FROM
     ON us.user = bu.user AND us.brand = bc.brand
 WHERE
   c.id = $1::uuid
-  AND cardinality(c.tags) > 0
+  AND cardinality(c.tags::text[]) > 0
   AND br.deleted_at IS NULL
   AND bu.deleted_at IS NULL
   AND COALESCE(us.super_campaign_admin_permission, FALSE)
