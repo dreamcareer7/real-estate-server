@@ -81,7 +81,7 @@ const queues = [
     concurrency: 5
   },
   {
-    queues: ['microsoft_contacts_migration'],
+    queues: ['microsoft_migration'],
     concurrency: 1
   },
   {
