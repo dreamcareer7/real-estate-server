@@ -1,4 +1,4 @@
-const { expect } = require('chai')
+const { expect, assert } = require('chai')
 const moment = require('moment-timezone')
 const mjml2html = require('mjml')
 
@@ -33,6 +33,7 @@ const Trigger = {
   ...require('../../../lib/models/Trigger/get'),
   ...require('../../../lib/models/Trigger/due'),
   ...require('../../../lib/models/Trigger/filter'),
+  ...require('../../../lib/models/Trigger/execute'),
 }
 const EmailCampaign = require('../../../lib/models/Email/campaign/get')
 
@@ -46,65 +47,77 @@ let user, brand, brand_flow
 const HOUR = 3600
 const DAY = 24 * HOUR
 
+const BIRTHDAY = moment.utc().add(2, 'days').startOf('day').add(-20, 'years')
+
 const CONTACT = {
   first_name: 'Abbas',
   email: 'abbas@rechat.com',
   tag: ['Tag1', 'Tag2'],
 }
 
+/**
+ * @param {string} userId 
+ * @returns {any[]}
+ */
+const defaultFlowSteps = (userId) => [{
+  created_by: userId,
+  name: 'Rechat Team Onboarding',
+  description: 'The process of on-boarding a new team member',
+  steps: [{
+    title: 'Create Rechat email',
+    description: 'Create a Rechat email address for the new guy to use in other services',
+    wait_for: {days: 1},
+    time: '08:00:00',
+    order: 1,
+    is_automated: false,
+    event_type: 'last_step_date',
+    event: {
+      title: 'Create Rechat email',
+      task_type: 'Other',
+    }
+  }, {
+    title: 'Send them a test email',
+    description: 'Automatically send them a test email to make sure it\'s working',
+    wait_for: {days: 1},
+    time: '08:00:00',
+    order: 2,
+    is_automated: true,
+    event_type: 'last_step_date',
+    email: {
+      name: 'Onboarding Email',
+      goal: 'Test email for new team members',
+      subject: 'Test email from Rechat',
+      include_signature: false,
+      body: 'Hey, this is a test!',
+    }
+  }, {
+    title: 'Demo of Rechat',
+    description: 'Dan gives a quick demo of the Rechat system and explains how it works',
+    wait_for: {days: 5},
+    time: '10:00:00',
+    order: 3,
+    is_automated: false,
+    event_type: 'last_step_date',
+    event: {
+      title: 'Demo of Rechat',
+      task_type: 'Call',
+    }
+  }]
+}]
+
 async function setup() {
   user = await User.getByEmail('test@rechat.com')
+
+  if (!user) {
+    assert.fail('failed to make user')
+  }
 
   brand = await BrandHelper.create({
     templates,
     roles: {
       Admin: [user.id]
     },
-    flows: [{
-      created_by: user.id,
-      name: 'Rechat Team Onboarding',
-      description: 'The process of on-boarding a new team member',
-      steps: [{
-        title: 'Create Rechat email',
-        description: 'Create a Rechat email address for the new guy to use in other services',
-        wait_for: {days: 1},
-        time: '08:00:00',
-        order: 1,
-        is_automated: false,
-        event_type: 'last_step_date',
-        event: {
-          title: 'Create Rechat email',
-          task_type: 'Other',
-        }
-      }, {
-        title: 'Send them a test email',
-        description: 'Automatically send them a test email to make sure it\'s working',
-        wait_for: {days: 1},
-        time: '08:00:00',
-        order: 2,
-        is_automated: true,
-        event_type: 'last_step_date',
-        email: {
-          name: 'Onboarding Email',
-          goal: 'Test email for new team members',
-          subject: 'Test email from Rechat',
-          include_signature: false,
-          body: 'Hey, this is a test!',
-        }
-      }, {
-        title: 'Demo of Rechat',
-        description: 'Dan gives a quick demo of the Rechat system and explains how it works',
-        wait_for: {days: 5},
-        time: '10:00:00',
-        order: 3,
-        is_automated: false,
-        event_type: 'last_step_date',
-        event: {
-          title: 'Demo of Rechat',
-          task_type: 'Call',
-        }
-      }]
-    }]
+    flows: defaultFlowSteps(user.id)
   })
 
   Context.set({ user, brand })
@@ -135,6 +148,8 @@ async function testBrandFlows() {
  * @param {Object} attrs
  * @param {string=} [attrs.first_name]
  * @param {string=} [attrs.email]
+ * @param {number=} [attrs.birthday]
+ * @param {number=} [attrs.wedding_anniversary]
  * @param {string[]=} [attrs.tag]
  */
 async function createContact(attrs = CONTACT) {
@@ -490,8 +505,7 @@ async function testEnrollOneWithoutEmail () {
   expect(res).to.be.an('array')
 }
 
-//TODO rename
-async function testFlowExecutionForNewSitutation() {
+async function testFlowTriggerEffectiveAtDate() {
   const contactId = await createContact({
     first_name: 'Mammad',
     tag: ['Tag3', 'Tag4'],
@@ -523,10 +537,65 @@ async function testFlowExecutionForNewSitutation() {
     brandFlows[0].steps,
     [contactId],
   )
-  const [triggerId] = await Trigger.filter({flow: flow.id})
+  const [triggerId] = await Trigger.filter({ flow: flow.id })
   const trigger = await Trigger.get(triggerId)
   expect(trigger.effective_at).to.be.eql(flow.starts_at)
 }
+
+async function testStopFlowWithNotEffectiveExecutedTrigger() {
+  const contactId = await createContact({
+    first_name: 'Mammad',
+    email: 'test@yahoo.com',
+    birthday: BIRTHDAY.unix(),
+    wedding_anniversary: BIRTHDAY.unix(),
+    tag: ['Tag3', 'Tag4'],
+  })
+  const instance = await createTemplateInstance({ mjml: true })
+  const brandFlowId = await BrandFlow.create(brand.id, user.id, {
+    created_by: user.id,
+    name: 'TemplateInstance step',
+    description: 'A flow with an template instance email step',
+    steps: [{
+      title: 'Happy birthday email',
+      description: 'Send a customized happy birthday email',
+      wait_for: { days: 0 },
+      time: '08:00:00',
+      order: 1,
+      is_automated: true,
+      event_type: 'birthday',
+      template_instance: instance.id,
+    }, {
+      title: 'Happy wedding_anniversary email',
+      description: 'Send a customized happy wedding_anniversary email',
+      wait_for: { days: 0 },
+      time: '08:00:00',
+      order: 2,
+      is_automated: true,
+      event_type: 'wedding_anniversary',
+      template_instance: instance.id,
+    }]
+  })
+  await handleJobs()
+  const brandFlow = await BrandFlow.get(brandFlowId)
+  const [flow] = await Flow.enrollContacts(
+    brand.id,
+    user.id,
+    brandFlowId,
+    moment.tz(user.timezone).startOf('day').valueOf() / 1000,
+    brandFlow.steps,
+    [contactId],
+  )
+  const [triggerId] = await Trigger.filter({ flow: flow.id })
+  await Trigger.execute(triggerId)
+  const [nextTriggerId] = await Trigger.filter({ flow: flow.id, executed_at: null })
+  await Trigger.execute(nextTriggerId)
+  await Flow.stop(user.id, flow.id)
+  const triggers = await Trigger.getAll([triggerId, nextTriggerId])
+  for (const t of triggers) {
+    expect(t.deleted_at).to.be.ok
+  }
+}
+
 describe('Flow', () => {
   createContext()
   beforeEach(setup)
@@ -566,5 +635,6 @@ describe('Brand Flow', () => {
   it('should resolve order collision on create', testStepOrderCollisionOnCreate)
   it('should not touch step orders when no collision on update', testStepOrderNoCollisionOnUpdate)
   it('should resolve order collision on update', testStepOrderCollisionOnUpdate)
-  it('should be good!!', testFlowExecutionForNewSitutation)
+  it('trigger.effective_at should be the same as flow.starts_at', testFlowTriggerEffectiveAtDate)
+  it('should be good!!', testStopFlowWithNotEffectiveExecutedTrigger)
 })
