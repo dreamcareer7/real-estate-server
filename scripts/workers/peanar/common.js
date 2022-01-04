@@ -81,6 +81,10 @@ const queues = [
     concurrency: 5
   },
   {
+    queues: ['microsoft_contacts_migration'],
+    concurrency: 1
+  },
+  {
     queues: ['microsoft_disconnect'],
     concurrency: 1
   },
