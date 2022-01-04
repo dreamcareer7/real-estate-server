@@ -1,4 +1,5 @@
 const MicrosoftWorker = require('../../../lib/models/Microsoft/workers')
+const { migrationDue } = require('../../../lib/models/Microsoft/migration/job')
 const { poll } = require('../utils/poll')
 
 function start() {
@@ -32,6 +33,11 @@ function start() {
     fn: MicrosoftWorker.Outlook.syncByQuery,
     name: 'MicrosoftWorker.Outlook.syncByQuery',
     wait: 5000,
+  })
+
+  poll({
+    fn: migrationDue,
+    name: 'MicrosoftWorker.Migration.syncDue',
   })
 }
 
