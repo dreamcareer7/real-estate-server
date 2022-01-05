@@ -9,3 +9,6 @@ WHERE listings.id = $1
 AND users.deleted_at IS NULL
 AND agents.deleted_at IS NULL
 AND agents.status = 'Active'
+
+AND users.daily_enabled IS TRUE -- This is temporary and must be removed later.
+                                -- Once DE California is onboarded, this condition can be removed
