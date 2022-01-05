@@ -41,9 +41,10 @@ const Trigger = {
   ...require('../../../../lib/models/Trigger/get'),
   ...require('../../../../lib/models/Trigger/create'),
   ...require('../../../../lib/models/Trigger/execute'),
+  ...require('../../../../lib/models/Trigger/due'),
 }
   
-const BIRTHDAY = moment.utc().add(3, 'days').startOf('day').add(-20, 'years')
+const BIRTHDAY = moment.utc().add(2, 'days').startOf('day').add(-20, 'years')
 
 let brand
 let user
@@ -206,10 +207,10 @@ describe('BrandTrigger/workers', () => {
             steps: [{
               title: 'Happy birthday email',
               description: 'Send a customized happy birthday email',
-              wait_for: { days: 1 },
+              wait_for: { days: 0 },
               time: '08:00:00',
               order: 1,
-              is_automated: false,
+              is_automated: true,
               event_type: 'birthday',
               template_instance: instance.id
             }],
@@ -237,7 +238,7 @@ describe('BrandTrigger/workers', () => {
           brand: brand.id,
           created_by: user.id,
           event_type: 'birthday',
-          wait_for: -86400,
+          wait_for: 0,
           subject: 'birthday mail',
         }
         await BrandTrigger.upsert(bt, false)
@@ -247,20 +248,28 @@ describe('BrandTrigger/workers', () => {
             attribute_type: 'birthday', 
             contact: contact.id, 
             created_by: user.id, 
-            date: BIRTHDAY.add(6, 'days').unix()
+            date: BIRTHDAY.unix()
           }],
           user.id,
           brand.id,
         )
         await handleJobs()
+        await Trigger.execute(triggerIdsThen[0])
+        await handleJobs()
         const triggerIdsNow = await Trigger.filter({
           brand: brand.id,
           contact: [contact.id],
           deleted_at: null,
+          executed_at: null,
         })
         const flowTrigger = await Trigger.get(flowTriggerId)
         expect(flowTrigger.deleted_at).to.be.not.ok
+        expect(flowTrigger.flow).to.be.ok
         expect(triggerIdsNow.length).to.be.eql(1)
+        const globalTrigger = await Trigger.get(triggerIdsNow[0])
+        expect(globalTrigger.origin).to.be.ok
+        expect(globalTrigger.effective_at >= BIRTHDAY.add(1).unix())
+        expect(globalTrigger.executed_at).to.be.not.ok
       })
 
       it('attribute types having no related brand trigger', async () => {
