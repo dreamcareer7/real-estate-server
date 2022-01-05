@@ -268,7 +268,7 @@ describe('BrandTrigger/workers', () => {
         expect(triggerIdsNow.length).to.be.eql(1)
         const globalTrigger = await Trigger.get(triggerIdsNow[0])
         expect(globalTrigger.origin).to.be.ok
-        expect(globalTrigger.effective_at >= BIRTHDAY.add(1).unix())
+        expect(globalTrigger.effective_at >= BIRTHDAY.add(1, 'days').unix())
         expect(globalTrigger.executed_at).to.be.not.ok
       })
 
