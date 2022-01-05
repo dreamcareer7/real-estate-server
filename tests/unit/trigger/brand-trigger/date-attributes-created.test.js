@@ -43,7 +43,7 @@ const Trigger = {
   ...require('../../../../lib/models/Trigger/execute'),
 }
   
-const BIRTHDAY = moment.utc().add(3, 'days').startOf('day').add(-20, 'years')
+const BIRTHDAY = moment.utc().add(2, 'days').startOf('day').add(-20, 'years')
 
 let brand
 let user
