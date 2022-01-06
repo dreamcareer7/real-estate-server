@@ -41,6 +41,7 @@ const { createContext, handleJobs } = require('../helper')
 const templates = require('../brand/templates')
 const BrandHelper = require('../brand/helper')
 const { attributes } = require('../contact/helper')
+const db = require('../../../lib/utils/db')
 
 let user, brand, brand_flow
 
@@ -150,6 +151,7 @@ async function testBrandFlows() {
  * @param {string=} [attrs.email]
  * @param {number=} [attrs.birthday]
  * @param {number=} [attrs.wedding_anniversary]
+ * @param {number=} [attrs.home_anniversary]
  * @param {string[]=} [attrs.tag]
  */
 async function createContact(attrs = CONTACT) {
@@ -424,6 +426,84 @@ async function testStopFlowByDeleteContact() {
   expect(deleted.deleted_at).not.to.be.null
 }
 
+async function testStopFlowWithManyExecutedTriggers() {
+  const contactId = await createContact({
+    first_name: 'Mammad',
+    email: 'test@yahoo.com',
+    birthday: BIRTHDAY.unix(),
+    wedding_anniversary: BIRTHDAY.unix(),
+    home_anniversary: BIRTHDAY.unix(),
+    tag: ['Tag3', 'Tag4'],
+  })
+  const instance = await createTemplateInstance({ mjml: true })
+  const brandFlowId = await BrandFlow.create(brand.id, user.id, {
+    created_by: user.id,
+    name: 'TemplateInstance step',
+    description: 'A flow with an template instance email step',
+    steps: [{
+      title: 'Happy birthday email',
+      description: 'Send a customized happy birthday email',
+      wait_for: { days: 0 },
+      time: '08:00:00',
+      order: 1,
+      is_automated: true,
+      event_type: 'birthday',
+      template_instance: instance.id,
+    }, {
+      title: 'Happy wedding_anniversary email',
+      description: 'Send a customized happy wedding_anniversary email',
+      wait_for: { days: 0 },
+      time: '08:00:00',
+      order: 2,
+      is_automated: true,
+      event_type: 'wedding_anniversary',
+      template_instance: instance.id,
+    }, {
+      title: 'Happy home_anniversary email',
+      description: 'Send a customized happy home_anniversary email',
+      wait_for: { days: 0 },
+      time: '08:00:00',
+      order: 3,
+      is_automated: true,
+      event_type: 'home_anniversary',
+      template_instance: instance.id,
+    }]
+  })
+  await handleJobs()
+  const brandFlow = await BrandFlow.get(brandFlowId)
+  const [flow] = await Flow.enrollContacts(
+    brand.id,
+    user.id,
+    brandFlowId,
+    moment.tz(user.timezone).startOf('day').valueOf() / 1000,
+    brandFlow.steps,
+    [contactId],
+  )
+  const triggerIds = await Trigger.filter({ flow: flow.id })
+  expect(triggerIds.length).to.be.equal(1)
+  const firstTrigger = await Trigger.get(triggerIds[0])
+  await Trigger.execute(triggerIds[0])
+  await db.query.promise('email/campaign/mark-as-executed', [firstTrigger.campaign])
+  for (let i = 0; i < 2; i++) {
+    const [newTriggerId] = await Trigger.filter({ flow: flow.id, executed_at: null })
+    await Trigger.execute(newTriggerId)
+    triggerIds.push(newTriggerId)
+  }
+  const newTriggerIds = await Trigger.filter({ flow: flow.id, executed_at: null })
+  expect(newTriggerIds.length).to.be.not.ok
+  await Flow.stop(user.id, flow.id)
+  const triggers = await Trigger.getAll(triggerIds)
+  for (const t of triggers) {
+    expect(t.deleted_at).to.be.ok
+  }
+  await handleJobs()
+  const campaignIds = triggers.map((t) => t.campaign)
+  const campaigns = await EmailCampaign.getAll(campaignIds)
+  expect(campaigns[0].deleted_at).to.be.not.ok
+  expect(campaigns[1].deleted_at).to.be.ok
+  expect(campaigns[2].deleted_at).to.be.ok  
+}
+
 async function testStopFlow() {
   const { flow } = await testEnrollContact()
 
@@ -542,60 +622,6 @@ async function testFlowTriggerEffectiveAtDate() {
   expect(trigger.effective_at).to.be.eql(flow.starts_at)
 }
 
-async function testStopFlowWithNotEffectiveExecutedTrigger() {
-  const contactId = await createContact({
-    first_name: 'Mammad',
-    email: 'test@yahoo.com',
-    birthday: BIRTHDAY.unix(),
-    wedding_anniversary: BIRTHDAY.unix(),
-    tag: ['Tag3', 'Tag4'],
-  })
-  const instance = await createTemplateInstance({ mjml: true })
-  const brandFlowId = await BrandFlow.create(brand.id, user.id, {
-    created_by: user.id,
-    name: 'TemplateInstance step',
-    description: 'A flow with an template instance email step',
-    steps: [{
-      title: 'Happy birthday email',
-      description: 'Send a customized happy birthday email',
-      wait_for: { days: 0 },
-      time: '08:00:00',
-      order: 1,
-      is_automated: true,
-      event_type: 'birthday',
-      template_instance: instance.id,
-    }, {
-      title: 'Happy wedding_anniversary email',
-      description: 'Send a customized happy wedding_anniversary email',
-      wait_for: { days: 0 },
-      time: '08:00:00',
-      order: 2,
-      is_automated: true,
-      event_type: 'wedding_anniversary',
-      template_instance: instance.id,
-    }]
-  })
-  await handleJobs()
-  const brandFlow = await BrandFlow.get(brandFlowId)
-  const [flow] = await Flow.enrollContacts(
-    brand.id,
-    user.id,
-    brandFlowId,
-    moment.tz(user.timezone).startOf('day').valueOf() / 1000,
-    brandFlow.steps,
-    [contactId],
-  )
-  const [triggerId] = await Trigger.filter({ flow: flow.id })
-  await Trigger.execute(triggerId)
-  const [nextTriggerId] = await Trigger.filter({ flow: flow.id, executed_at: null })
-  await Trigger.execute(nextTriggerId)
-  await Flow.stop(user.id, flow.id)
-  const triggers = await Trigger.getAll([triggerId, nextTriggerId])
-  for (const t of triggers) {
-    expect(t.deleted_at).to.be.ok
-  }
-}
-
 describe('Flow', () => {
   createContext()
   beforeEach(setup)
@@ -619,6 +645,7 @@ describe('Flow', () => {
   describe('stop', function() {
     it('should stop a flow instance and delete all future events', testStopFlow)
     it('should stop a flow instance if contact deleted', testStopFlowByDeleteContact)
+    it('should delete all triggers related to the flow', testStopFlowWithManyExecutedTriggers)
   })
   describe('last_step_date', function() {
     it('should be same as flow created_at if first step is more than 3 days away', testLastStepDateWithoutFirstStepExecuted)
@@ -636,5 +663,4 @@ describe('Brand Flow', () => {
   it('should not touch step orders when no collision on update', testStepOrderNoCollisionOnUpdate)
   it('should resolve order collision on update', testStepOrderCollisionOnUpdate)
   it('trigger.effective_at should be the same as flow.starts_at', testFlowTriggerEffectiveAtDate)
-  it('should be good!!', testStopFlowWithNotEffectiveExecutedTrigger)
 })

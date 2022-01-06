@@ -12,4 +12,3 @@ WHERE
   AND t.deleted_at IS NULL
 ORDER BY
   bfs."order" DESC
-LIMIT 2
