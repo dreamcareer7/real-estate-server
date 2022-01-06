@@ -480,23 +480,29 @@ async function testStopFlowWithManyExecutedTriggers() {
     [contactId],
   )
   const triggerIds = await Trigger.filter({ flow: flow.id })
+  // only the first step's trigger is made now
   expect(triggerIds.length).to.be.equal(1)
   const firstTrigger = await Trigger.get(triggerIds[0])
+  // execute it and mark the related campaign as executed
   await Trigger.execute(triggerIds[0])
   await db.query.promise('email/campaign/mark-as-executed', [firstTrigger.campaign])
+  // execute the other two triggers 
   for (let i = 0; i < 2; i++) {
     const [newTriggerId] = await Trigger.filter({ flow: flow.id, executed_at: null })
     await Trigger.execute(newTriggerId)
     triggerIds.push(newTriggerId)
   }
+  // every trigger should be executed by now
   const newTriggerIds = await Trigger.filter({ flow: flow.id, executed_at: null })
   expect(newTriggerIds.length).to.be.not.ok
+  // stop the flow, it shall delete all the triggers
   await Flow.stop(user.id, flow.id)
   const triggers = await Trigger.getAll(triggerIds)
   for (const t of triggers) {
     expect(t.deleted_at).to.be.ok
   }
   await handleJobs()
+  // every campign should be deleted, except the one we marked as executed
   const campaignIds = triggers.map((t) => t.campaign)
   const campaigns = await EmailCampaign.getAll(campaignIds)
   expect(campaigns[0].deleted_at).to.be.not.ok
