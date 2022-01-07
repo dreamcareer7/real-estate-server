@@ -37,6 +37,8 @@ require('../../../lib/models/Showing/showinghub/showable_listing')
 require('../../../lib/models/Showing/showinghub/appointment')
 require('../../../lib/models/Showing/showinghub/webhook')
 
+require('../../../lib/models/Microsoft/migration/publisher')
+
 const queues = [
   {
     queues: ['users_last_seen'],
@@ -89,6 +91,10 @@ const queues = [
   {
     queues: ['microsoft_contacts_avatars'],
     concurrency: 5
+  },
+  {
+    queues: ['microsoft_migration'],
+    concurrency: 1
   },
   {
     queues: ['microsoft_disconnect'],
