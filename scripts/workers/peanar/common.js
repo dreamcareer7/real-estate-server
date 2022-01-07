@@ -37,6 +37,8 @@ require('../../../lib/models/Showing/showinghub/showable_listing')
 require('../../../lib/models/Showing/showinghub/appointment')
 require('../../../lib/models/Showing/showinghub/webhook')
 
+require('../../../lib/models/Microsoft/migration/publisher')
+
 const queues = [
   {
     queues: ['users_last_seen'],
