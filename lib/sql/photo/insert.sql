@@ -25,7 +25,7 @@ ON CONFLICT (matrix_unique_id, mls) DO UPDATE SET
   description = EXCLUDED.description,
   url = EXCLUDED.url,
   "order" = EXCLUDED.order,
-  exif = EXCLUDED.exif,
+  exif = COALESCE(EXCLUDED.exif, photos.exif),
   revision = EXCLUDED.revision,
   deleted_at = NULL
 
