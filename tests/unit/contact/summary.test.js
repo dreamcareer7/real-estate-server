@@ -397,7 +397,8 @@ async function testAddressSummary() {
 
   expect(created.address).to.have.length(2)
 
-  expect(created.address[1]).to.be.eql({
+  created.address.sort((a, b) => (a.city > b.city) ? 1 : -1)
+  expect(created.address[0]).to.be.eql({
     house_num: '1200',
     name: 'Main',
     suftype: 'Street',
@@ -409,7 +410,7 @@ async function testAddressSummary() {
     type: 'stdaddr'
   })
 
-  expect(created.address[0]).to.be.eql({
+  expect(created.address[1]).to.be.eql({
     house_num: '3535',
     name: 'Bluffs',
     suftype: 'Ln',
