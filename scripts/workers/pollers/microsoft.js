@@ -35,10 +35,10 @@ function start() {
     wait: 5000,
   })
 
-  poll({
-    fn: migrationDue,
-    name: 'MicrosoftWorker.Migration.syncDue',
-  })
+  // poll({
+  //   fn: migrationDue,
+  //   name: 'MicrosoftWorker.Migration.syncDue',
+  // })
 }
 
 module.exports = {
