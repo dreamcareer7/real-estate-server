@@ -31,16 +31,16 @@ runInContext(`archive-old-emails-${new Date().toLocaleTimeString('en-us')}`, asy
         is_initial_completed: true,
       }
     )
-    return
-  }
-  for (let i = 0; i < emails.length; i++) {
-    await archive(emails[i].id)
-  }
-  await promisify(MLSJob.insert)(
-    {
-      name: 'archive_old_emails',
-      last_modified_date: emails[emails.length - 1].created_at.toISOString(),
+  } else {
+    for (let i = 0; i < emails.length; i++) {
+      await archive(emails[i].id)
     }
-  )
-  Context.log(`queued ${emails.length} emails to be archived.`)
+    await promisify(MLSJob.insert)(
+      {
+        name: 'archive_old_emails',
+        last_modified_date: emails[emails.length - 1].created_at.toISOString(),
+      }
+    )
+    Context.log(`queued ${emails.length} emails to be archived.`)
+  }
 })
