@@ -31,11 +31,11 @@ runInContext(`archive-old-emails-${new Date().toLocaleTimeString('en-us')}`, asy
     await archive(emails[i].id)
   }
   Context.log('let\'s insert in MLSJob')
-  Context.log('last created_at is ' + emails[emails.length - 1].created_at)
+  Context.log('last created_at is ' + emails[emails.length - 1].created_at.toISOString())
   await promisify(MLSJob.insert)(
     {
       name: 'archive_old_emails',
-      last_modified_date: emails[emails.length - 1].created_at,
+      last_modified_date: emails[emails.length - 1].created_at.toISOString(),
     }
   )
   Context.log(`queued ${emails.length} emails to be archived.`)
