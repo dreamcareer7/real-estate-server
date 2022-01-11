@@ -20,7 +20,7 @@ const query = `SELECT id, created_at
 `
 
 runInContext(`archive-old-emails-${new Date().toLocaleTimeString('en-us')}`, async () => {
-  const lastEmailDate = (await promisify(MLSJob.getLastRun)('archive_old_emails'))?.[0]?.last_modified
+  const lastEmailDate = (await promisify(MLSJob.getLastRun)('archive_old_emails'))?.[0]?.last_modified_date
   const time = lastEmailDate || defaultTtime
   const emails = await sql.select(query, [time])
   if (!emails) { return }
