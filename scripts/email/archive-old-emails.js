@@ -23,7 +23,7 @@ runInContext(`archive-old-emails-${new Date().toLocaleTimeString('en-us')}`, asy
   const lastEmailDate = (await promisify(MLSJob.getLastRun)('archive_old_emails'))?.[0]?.last_modified_date
   const time = lastEmailDate || defaultTtime
   const emails = await sql.select(query, [time])
-  if (!emails) { return }
+  if (!emails.length) { return }
   for (let i = 0; i < emails.length; i++) {
     await archive(emails[i].id)
   }
