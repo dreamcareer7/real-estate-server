@@ -21,12 +21,16 @@ const query = `SELECT id, created_at
 
 runInContext(`archive-old-emails-${new Date().toLocaleTimeString('en-us')}`, async () => {
   const lastEmailDate = (await promisify(MLSJob.getLastRun)('archive_old_emails'))?.[0]?.last_modified_date
+  Context.log(`lastEmailDate: ${lastEmailDate}`)
   const time = lastEmailDate || defaultTtime
+  Context.log(`time in query ${time}`)
   const emails = await sql.select(query, [time])
+  Context.log(`let's archive ${emails.length} count`)
   if (!emails) { return }
   for (let i = 0; i < emails.length; i++) {
     await archive(emails[i].id)
   }
+  Context.log('let\'s insert in MLSJob')
   await promisify(MLSJob.insert)(
     {
       name: 'archive_old_emails',
