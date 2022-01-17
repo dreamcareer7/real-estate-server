@@ -1,6 +1,6 @@
 const sinon = require('sinon')
 const proxyquire = require('proxyquire')
-const { expect } = require('chai')
+const { assert, expect } = require('chai')
 
 const { stub } = sinon
 
@@ -63,7 +63,7 @@ const make = {
     approvals = [make.approval('appr1'), make.approval('appr2')]    
   ) => ({ action, showing, appointment, approvals }),
 
-  approvalPayload: (...props) => make.payload('ApprovalPerformed', ...props)
+  approvalPayload: (...props) => make.payload('ApprovalPerformed', ...props),
 }
 
 describe('Showing/Appointment/status-fsm', () => {
@@ -119,7 +119,7 @@ describe('Showing/Appointment/status-fsm', () => {
         
         utils.everyoneApproved.callThrough()
 
-        expect(utils.everyoneApproved(approvals, roles)).to.be.false                
+        expect(utils.everyoneApproved(approvals, roles)).to.be.false
       })
     })
     
@@ -197,7 +197,7 @@ describe('Showing/Appointment/status-fsm', () => {
       utils.send.callThrough()
       await utils.send(Promise.resolve(mailer))
 
-      expect(mailer.send.calledOnce)
+      assert(mailer.send.calledOnce)
     })
   })
 
@@ -214,7 +214,7 @@ describe('Showing/Appointment/status-fsm', () => {
       
       await handlers.finalized(payload)
 
-      expect(Role.getAll.calledOnceWithExactly(payload.showing.roles))
+      assert(Role.getAll.calledOnceWithExactly(payload.showing.roles))
     })
     
     it('clears notifications of populated showing roles', async () => {
@@ -232,7 +232,7 @@ describe('Showing/Appointment/status-fsm', () => {
       await handlers.finalized(payload)
 
       expect(notification.clearNotifications.callCount).to.be.equal(roles.length)
-      expect(notification.clearNotifications.alwaysCalledWithMatch(
+      assert(notification.clearNotifications.alwaysCalledWithMatch(
         sinon.match.in(userIds),
         payload.appointment.id
       ))
@@ -247,9 +247,9 @@ describe('Showing/Appointment/status-fsm', () => {
 
       await handlers.completed(payload)
 
-      expect(notification.sendGetFeedbackTextMessageToBuyer
+      assert(notification.sendGetFeedbackTextMessageToBuyer
         .calledOnceWithExactly(payload.appointment.id))
-      expect(mailerFactory.forGetFeedbackEmail
+      assert(mailerFactory.forGetFeedbackEmail
         .calledOnceWithExactly(payload.appointment))
     })
   })
@@ -343,8 +343,10 @@ describe('Showing/Appointment/status-fsm', () => {
           .returns(true)
         utils.guessNewStatus.callThrough()
 
-        expect(utils.everyoneApproved.calledOnce)
-        expect(utils.guessNewStatus(payload)).to.be.equal('Confirmed')
+        const newStatus = utils.guessNewStatus(payload)
+        
+        assert(utils.everyoneApproved.calledOnce)
+        expect(newStatus).to.be.equal('Confirmed')
       })
       
       it('old status if action is not handled', () => {
@@ -352,49 +354,56 @@ describe('Showing/Appointment/status-fsm', () => {
 
         utils.guessNewStatus.callThrough()
 
-        expect(utils.guessNewStatus(payload)).to.be.equal(payload.appointment.status)
+        expect(utils.guessNewStatus(payload))
+          .to.be.equal(payload.appointment.status)
       })
     })
   })
 
   context('handlers.handleAction()', () => {
-    it('does nothing if status is not changed', async () => {
+    it('does not patchStatus if status is not changed', async () => {
       const payload = make.payload()
-      
-      utils.guessNewStatus.withArgs(payload).returns(payload.action)
+
+      utils.guessNewStatus.withArgs(payload).returns(payload.appointment.status)
+      handlers.handleAction.callThrough()
 
       await handlers.handleAction(payload)
-
-      expect(utils.guessNewStatus.calledOnceWithExactly(payload))
-      expect(utils.patchStatus.notCalled)
-      expect(utils.validateTransition.notCalled)
+      
+      assert(utils.guessNewStatus.calledOnceWithExactly(payload))
+      assert(utils.validateTransition.calledOnce)
+      assert(utils.patchStatus.notCalled)
     })
     
     it('calls handlers.completed if new status is Completed', async () => {
       const payload = make.payload()
 
       utils.guessNewStatus.withArgs(payload).returns('Completed')
-
+      handlers.handleAction.callThrough()
+      
       await handlers.handleAction(payload)
 
-      expect(utils.validateTransition.calledOnce)
-      expect(utils.patchStatus.calledOnce)
-      expect(handlers.completed.calledOnceWithExactly(payload))
+      assert(utils.validateTransition.calledOnce)
+      assert(utils.patchStatus.calledOnce)
+      assert(handlers.completed.calledOnceWithExactly(payload))
     })
     
     it('calls handlers.finalized if new status is Completed or Canceled', async () => {
       const payload = make.payload()
+
+      handlers.handleAction.callThrough()
       
       for (const finalStatus of ['Completed', 'Canceled']) {
         utils.guessNewStatus.withArgs(payload).returns(finalStatus)
 
         await handlers.handleAction(payload)
 
-        expect(utils.validateTransition.calledOnce)
-        expect(utils.patchStatus.calledOnce)
-        expect(handlers.finalized.calledOnceWithExactly(payload))      
-        
-        sinon.reset()
+        assert(utils.validateTransition.calledOnce)
+        assert(utils.patchStatus.calledOnce)
+        assert(handlers.finalized.calledOnceWithExactly(payload))
+
+        utils.validateTransition.reset()
+        utils.patchStatus.reset()
+        handlers.finalized.reset()
       }
     })
     
@@ -404,15 +413,30 @@ describe('Showing/Appointment/status-fsm', () => {
       const newStatus = 'NewStatus'
 
       utils.guessNewStatus.withArgs(payload).returns(newStatus)
+      handlers.handleAction.callThrough()
 
       await handlers.handleAction(payload)
 
-      expect(utils.validateTransition.calledOnceWithExactly(
+      assert(utils.validateTransition.calledOnceWithExactly(
         appt.status, newStatus
       ))
 
-      expect(utils.patchStatus.calledOnceWithExactly(appt.id, newStatus))
+      assert(utils.patchStatus.calledOnceWithExactly(appt.id, newStatus))
     })
+
+
+    it('calls handlers.autoConfirmed when a rescheduled appt is auto confirmed', async () => {
+      const payload = make.payload('Rescheduled')
+
+      utils.guessNewStatus.withArgs(payload).returns('Confirmed')
+      handlers.handleAction.callThrough()
+
+      await handlers.handleAction(payload)
+
+      assert(handlers.autoConfirmed.calledOnce)
+    })
+
+    it('calls handlers.rescheduled when the appt is gonna be rescheduled')
 
     context('when an approval is performed...', () => {
       async function testApproval (oldStatus, newStatus, handler) {
@@ -420,10 +444,11 @@ describe('Showing/Appointment/status-fsm', () => {
         payload.appointment.status = oldStatus
 
         utils.guessNewStatus.withArgs(payload).returns(newStatus)
+        handlers.handleAction.callThrough()
 
         await handlers.handleAction(payload)
 
-        expect(handlers[handler].calledOnceWithExactly(payload))
+        assert(handlers[handler].calledOnceWithExactly(payload))
 
         sinon.reset()
       }
@@ -457,7 +482,7 @@ describe('Showing/Appointment/status-fsm', () => {
       
       await dispatchEvent(action, apptId)
 
-      expect(handlers.handleAction.calledOnce)
+      assert(handlers.handleAction.calledOnce)
 
       const payload = handlers.handleAction.firstCall.firstArg
 
