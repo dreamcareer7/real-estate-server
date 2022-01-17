@@ -67,6 +67,11 @@ const make = {
 }
 
 const NOOP_MAILER = Object.freeze({ async send () { } })
+
+/* FIXME: assert(foo) is not descriptive enough...
+ * Option 1) [Install and] Use sinon-chai instead
+ * Option 2) Provide assertion description in 2nd parameter: assert(foo, '...') */
+
 describe('Showing/Appointment/status-fsm', () => {
   afterEach(() => sinon.reset())
   
