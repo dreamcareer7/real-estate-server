@@ -66,6 +66,7 @@ const make = {
   approvalPayload: (...props) => make.payload('ApprovalPerformed', ...props),
 }
 
+const NOOP_MAILER = Object.freeze({ async send () { } })
 describe('Showing/Appointment/status-fsm', () => {
   afterEach(() => sinon.reset())
   
@@ -255,11 +256,64 @@ describe('Showing/Appointment/status-fsm', () => {
   })
 
   context('handlers.confirmed()', () => {
-    it('sends appointment-confirmed sms & email to buyer')
-    it('sends confirmation notif to other roles')
+    it('calls utils.approvalNotFound if no confirmed approval found', async () => {
+      const payload = make.payload()
+
+      utils.findLatestApproval.withArgs(payload, true).returns(undefined)
+      handlers.confirmed.callThrough()
+
+      await handlers.confirmed(payload)
+
+      assert(utils.approvalNotFound.calledOnce)
+      assert(utils.send.notCalled)
+      assert(mailerFactory.forConfirmedAppointment.notCalled)
+      assert(notification.sendAppointmentConfirmedNotificationToBuyer.notCalled)
+      assert(
+        notification.sendAppointmentConfirmedNotificationToOtherRoles.notCalled
+      )
+    })
+    
+    it('sends suitable notifs to roles and buyer', async () => {
+      const payload = make.payload()
+      const appt = payload.appointment
+      const appr = payload.approvals[0]
+      
+      utils.findLatestApproval
+        .withArgs(payload.approvals, true).returns(appr)
+      handlers.confirmed.callThrough()
+
+      await handlers.confirmed(payload)
+
+      assert(utils.approvalNotFound.notCalled)
+      assert(utils.send.calledOnce)
+      assert(mailerFactory.forConfirmedAppointment.calledOnceWithExactly(appt))
+      assert(
+        notification.sendAppointmentConfirmedNotificationToBuyer
+          .calledOnceWithExactly(appt.id)
+      )
+      assert(
+        notification.sendAppointmentConfirmedNotificationToOtherRoles
+          .calledOnceWithExactly(appt.id, appr.role)
+      )
+    })
   })
 
   context('handlers.rejected()', () => {
+    it('calls utils.approvalNotFound if no rejected approval found', async () => {
+      const payload = make.payload()
+
+      utils.findLatestApproval.withArgs(payload, false).returns(undefined)
+      handlers.rejected.callThrough()
+
+      await handlers.rejected(payload)
+
+      assert(utils.approvalNotFound.calledOnce)
+      assert(utils.send.notCalled)
+      assert(mailerFactory.forRejectedAppointment.notCalled)
+      assert(notification.sendAppointmentRejectedNotificationToBuyer.notCalled)
+      assert(notification.sendAppointmentRejectedNotificationToOtherRoles.notCalled)
+    })
+    
     it('sends appointment-rejected sms & email to buyer')
     it('sends rejection notif to other roles')
   })
@@ -267,6 +321,31 @@ describe('Showing/Appointment/status-fsm', () => {
   context('handlers.canceledAfterConfirm()', () => {
     it('sends appointment-canceled sms & email to buyer')
     it('sends cancelation notif to other roles')
+  })
+
+  context('handlers.autoConfirmed()', () => {
+    it('sends appointment-auto-confirmed sms & email to buyer')
+    it('sends auto-confirmation notif to roles')
+  })
+
+  context('handlers.requested()', () => {
+    it('sends appointment-requested sms & email to buyer')
+    it('sends request notif to roles')
+  })
+
+  context('handlers.buyerCanceled()', () => {
+    it('sends appointment-canceled sms & email to buyer')
+    it('sends cancel notif to roles')
+  })
+
+  context('handlers.gaveFeedback()', () => {
+    it('sends feedback-received sms & email to buyer')
+    it('sends feedback notif to roles')
+  })
+
+  context('handlers.rescheduled()', () => {
+    it('sends appointment-rescheduled sms & email to buyer')
+    it('sends rescheduled notif to roles')
   })
 
   context('utils.guessNewStatus()', () => {
@@ -292,6 +371,15 @@ describe('Showing/Appointment/status-fsm', () => {
 
       payload.appointment.status = 'NotConfirmed'
       expect(utils.guessNewStatus(payload)).to.be.equal('Canceled')
+    })
+
+    it('returns Confirmed for an rescheduled appt. that needs no approval', () => {
+      const payload = make.payload('Rescheduled')
+
+      utils.guessNewStatus.callThrough()
+
+      payload.showing.approval_type = 'None'
+      expect(utils.guessNewStatus(payload)).to.be.equal('Confirmed')
     })
 
     context('when an approval is performed returns...', () => {
@@ -465,6 +553,15 @@ describe('Showing/Appointment/status-fsm', () => {
       it('calls handlers.canceledAfterConfirm if it was a cancelation', async () => {
         await testApproval('Confirmed', 'Canceled', 'canceledAfterConfirm')
       })
+    })
+
+    context('when buyer gives feedback...', () => {
+      it('calls handlers.gaveFeedback')
+    })
+
+    context('when an appt is requested...', () => {
+      it('calls handlers.autoConfirmed if the status gonna be Confirmed')
+      it('calls handlers.requested if the status gonna be Requested')
     })
   })
 
