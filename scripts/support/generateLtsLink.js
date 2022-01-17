@@ -6,13 +6,13 @@ function generateLtsLink({
   brand,
   user,
   protocol = 'LeadTransmissionProtocol',
-  mls = 'NTREIS',
+  mls = [],
   source,
 }) {
   const payload = JSON.stringify({ brand, user, protocol, mls, source })
   const encrypted = Crypto.encrypt(payload)
 
-  return Url.api({ uri: b64.encode(encrypted) })
+  return Url.api({ uri: '/contacts/leads/' + b64.encode(encrypted) })
 }
 
 function decodeLtsLink(key) {

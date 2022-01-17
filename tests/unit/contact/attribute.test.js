@@ -11,7 +11,6 @@ const Contact = {
 const AttributeDef = require('../../../lib/models/Contact/attribute_def/get')
 const ContactAttribute = require('../../../lib/models/Contact/attribute/get')
 const Context = require('../../../lib/models/Context')
-const Metric = require('../../../lib/models/Metric')
 const User = require('../../../lib/models/User/get')
 
 
@@ -77,8 +76,6 @@ async function testClearIsPrimaryOnInsert() {
     })
   }], user.id, brand.id)
 
-  expect(Metric.get('query:contact/attribute/clear_primaries')).to.be.equal(2)
-
   const attrs = await ContactAttribute.getForContacts([id], [
     defs.get('email'),
     defs.get('phone_number'),
@@ -105,8 +102,6 @@ async function testClearIsPrimaryOnUpdate() {
     })
   }], user.id, brand.id)
 
-  expect(Metric.get('query:contact/attribute/clear_primaries')).to.be.equal(2)
-
   const new_attrs = await ContactAttribute.getForContacts([id], [
     defs.get('email'),
     defs.get('phone_number'),
@@ -130,6 +125,21 @@ async function testClearIsPrimaryOnUpdate() {
   }].map(a => _.find(new_attrs, a)).every(a => a)).to.be.true
 }
 
+async function testAddressAttributes() {
+  const [ id ] = await createContact([{
+    attributes: {
+      first_name: 'John',
+      last_name: 'Doe',
+      city: [{ text: 'Atlanta', index: 0 }],
+      state: [{ text: 'GA', index: 0 }]
+    }
+  }])
+
+  const contact = await Contact.get(id)
+  // FIXME: This should actually be GA instead
+  expect(contact.address[0].state).to.be.equal('Ga')
+}
+
 async function testPatchingDoubleTags() {
   const [id] = await createContact([create[2]])
 
@@ -148,5 +158,6 @@ describe('Contact', () => {
     it('should clear old is_primary flags on insert', testClearIsPrimaryOnInsert)
     it('should clear old is_primary flags on update', testClearIsPrimaryOnUpdate)
     it('should delete tags even if there are double tags', testPatchingDoubleTags)
+    it('should summarize contact addresses into a stdaddr field', testAddressAttributes)
   })
 })

@@ -18,14 +18,12 @@ if (options.env) {
 }
 
 const promisify = require('../lib/utils/promisify')
-const { enqueueJob } = require('../lib/utils/worker')
-const queue = require('../lib/utils/queue')
 const Brand = require('../lib/models/Brand')
-const Job = require('../lib/models/Job')
 const User = require('../lib/models/User/get')
 
 const db = require('../lib/utils/db')
 const sql = require('../lib/utils/sql')
+const { peanar } = require('../lib/utils/peanar')
 const Context = require('../lib/models/Context/index')
 const redis = require('../lib/data-service/redis').createClient()
 
@@ -90,16 +88,13 @@ db.conn(async (err, client) => {
   r.context.sql = sql
   r.context.context = context
   r.context.promisify = promisify
-  r.context.enqueueJob = enqueueJob
   processImports(r.context)
   r.context.handleJobs = async () => { 
-    await promisify(Job.handle)(Context.get('jobs'))
-    Context.set({ jobs: [], rabbit_jobs: [] })
+    await peanar.enqueueContextJobs()
   }
 
   context.set({
     db: client,
-    jobs: [],
     rabbit_jobs: []
   })
 
@@ -118,7 +113,6 @@ db.conn(async (err, client) => {
 
 
 function cleanup() {
-  queue.shutdown(500, () => {})
   redis.quit()
   context.get('db').release()
   db.close()

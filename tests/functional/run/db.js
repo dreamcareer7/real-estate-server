@@ -7,8 +7,6 @@ const AssertionError = require('assertion-error')
 
 const Context = require('../../../lib/models/Context')
 
-const { handleJob } = require('../jobs')
-
 const TEMP_PATH = path.resolve(__dirname, '../temp')
 require('rimraf').sync(path.resolve(TEMP_PATH, 'sms'))
 
@@ -59,27 +57,9 @@ const database = (req, res, next) => {
   res.end = function (data, encoding, callback) {
     if (req.headers['x-handle-jobs'] === 'yes') {
       async.whilst(() => {
-        return (Context.get('jobs') || []).length > 0 || (Context.get('rabbit_jobs') || []).length > 0
+        return (Context.get('rabbit_jobs') || []).length > 0
       }, cb => {
-        async.parallel([
-          cb => {
-            async.whilst(() => {
-              const jobs = Context.get('jobs')
-              return jobs.length > 0
-            }, (cb) => {
-              const job = Context.get('jobs').shift()
-              handleJob(job.type, null, job.data, (err, result) => {
-                if (result) {
-                  Context.log(JSON.stringify(result, null, 2))
-                }
-                cb(err, result)
-              })
-            }, cb)
-          },
-          cb => {
-            peanar.enqueueContextJobs().nodeify(cb)
-          }
-        ], cb)
+        peanar.enqueueContextJobs().nodeify(cb)
       }, (err) => {
         if (err) {
           console.error(err)
@@ -97,7 +77,6 @@ const database = (req, res, next) => {
   if (connections[suite]) {
     context.set({
       db: connections[suite],
-      jobs: [],
       rabbit_jobs: [],
       suite
     })
@@ -114,8 +93,7 @@ const database = (req, res, next) => {
     const cb = () => {
       connections[suite] = conn
       context.set({
-        db: conn,
-        jobs: []
+        db: conn
       })
       context.run(next)
     }

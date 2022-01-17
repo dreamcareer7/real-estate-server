@@ -2,6 +2,8 @@ const { peanar } = require('../../../lib/utils/peanar')
 
 const config = require('../../../lib/config')
 
+require('../../../lib/models/User/last-seen')
+require('../../../lib/models/Notification/device')
 require('../../../lib/models/Calendar/worker')
 require('../../../lib/models/Contact/worker')
 require('../../../lib/models/Flow/worker')
@@ -14,6 +16,7 @@ require('../../../lib/models/Microsoft/workers')
 require('../../../lib/models/Deal/email')
 require('../../../lib/models/Deal/brokerwolf')
 require('../../../lib/models/Deal/D365')
+require('../../../lib/models/Email/archive/upload')
 require('../../../lib/models/Email/send')
 require('../../../lib/models/Email/events')
 require('../../../lib/models/Email/super_campaign/worker')
@@ -34,7 +37,17 @@ require('../../../lib/models/Showing/showinghub/showable_listing')
 require('../../../lib/models/Showing/showinghub/appointment')
 require('../../../lib/models/Showing/showinghub/webhook')
 
+require('../../../lib/models/Microsoft/migration/publisher')
+
 const queues = [
+  {
+    queues: ['users_last_seen'],
+    concurrency: 100
+  },
+  {
+    queues: ['send_to_device'],
+    concurrency: 30
+  },
   {
     queues: ['showinghub'],
     concurrency: 1
@@ -78,6 +91,10 @@ const queues = [
   {
     queues: ['microsoft_contacts_avatars'],
     concurrency: 5
+  },
+  {
+    queues: ['microsoft_migration'],
+    concurrency: 1
   },
   {
     queues: ['microsoft_disconnect'],
@@ -136,16 +153,8 @@ const queues = [
     concurrency: 5
   },
   {
-    queues: ['email_high', 'email_event'],
-    concurrency: 20
-  },
-  {
     queues: ['daily_email'],
     concurrency: 5
-  },
-  {
-    queues: ['email'],
-    concurrency: 20
   },
   {
     queues: ['register_domain', 'create_zone', 'update_nameservers', 'capture_charge'],

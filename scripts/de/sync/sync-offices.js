@@ -86,11 +86,16 @@ const updateBrands = async offices => {
 const UPDATE_SETTINGS = `
 WITH data AS (
  SELECT * FROM json_to_recordset($1)
- as input(id INT, address JSONB)
+ as input(id INT, address JSONB, phone_number TEXT)
  JOIN de.offices ON input.id = de.offices.id
 )
 UPDATE brand_settings SET
-  address = JSON_TO_STDADDR(data.address)
+  address = JSON_TO_STDADDR(data.address),
+  marketing_palette =  JSON_TO_MARKETING_PALETTE(
+    COALESCE(MARKETING_PALETTE_TO_JSON(null::marketing_palette)::jsonb, '{}'::jsonb)
+      ||
+    JSON_BUILD_OBJECT('phone_number', data.phone_number)::jsonb
+  )
 FROM data
 WHERE brand_settings.brand = data.brand`
 
@@ -101,6 +106,7 @@ const updateSettings = async offices => {
 
     return {
       id: office.id,
+      phone_number: office.phone,
       address: {
         house_num: parsed.number,
         predir: parsed.prefix,

@@ -2,11 +2,9 @@ process.env.NODE_ENV = 'tests'
 
 const db = require('../../lib/utils/db')
 const { peanar } = require('../../lib/utils/peanar')
-const promisify = require('../../lib/utils/promisify')
 
 const Context = require('../../lib/models/Context')
 const Metric = require('../../lib/models/Metric')
-const { handleJob } = require('../functional/jobs')
 
 const attachCalendarEvents = require('../../lib/models/Calendar/events')
 const attachContactEvents = require('../../lib/models/Contact/events')
@@ -63,7 +61,6 @@ function createContext() {
 
     context.set({
       db: conn,
-      jobs: [],
       rabbit_jobs: [],
       'db:log': false
     })
@@ -119,7 +116,6 @@ const prepareContext = async c => {
 
   context.set({
     db: conn,
-    jobs: [],
     rabbit_jobs: [],
   })
 
@@ -150,11 +146,7 @@ async function executeInContext(c, fn) {
 }
 
 async function handleJobs() {
-  while (Context.get('jobs').length > 0 || Context.get('rabbit_jobs').length > 0) {
-    while (Context.get('jobs').length > 0) {
-      const job = Context.get('jobs').shift()
-      await promisify(handleJob)(job.type, null, job.data)
-    }
+  while (Context.get('rabbit_jobs').length > 0) {
     await peanar.enqueueContextJobs()
   }
 }

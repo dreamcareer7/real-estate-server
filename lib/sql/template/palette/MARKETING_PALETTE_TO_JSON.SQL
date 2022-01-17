@@ -59,7 +59,8 @@ RETURNS JSON AS $$
         'inverted-logo-square',          ($1)."inverted-logo-square",
 
         'website',                       ($1)."website",
-        'name',                          ($1)."name"
+        'name',                          ($1)."name",
+        'phone_number',                  ($1)."phone_number"
       )
     ) as palette
   )

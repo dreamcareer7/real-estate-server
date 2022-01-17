@@ -7,3 +7,7 @@ apps:
     args     : ./peanar/integrations
     name     : 'integrations'
     kill_timeout : 25000
+  - script   : ./scripts/workers/index.js
+    args     : ./peanar/email
+    name     : 'email'
+    kill_timeout : 25000

@@ -1,0 +1,21 @@
+{
+  "First Name": {
+    "attribute_type": "first_name"
+  },
+  "Last Name": {
+    "attribute_type": "last_name"
+  },
+  "E-mail Address": {
+    "attribute_type": "email",
+    "index": 0
+  },
+  "Primary Phone": {
+    "attribute_type": "phone_number",
+    "label": "Primary",
+    "index": 0
+  },
+  "Tags": {
+    "attribute_type": "tag",
+    "multivalued": true
+  }
+}

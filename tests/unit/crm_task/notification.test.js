@@ -11,6 +11,7 @@ const BrandHelper = require('../brand/helper')
 
 const sql = require('../../../lib/utils/sql')
 
+const Email = require('../../../lib/models/Email/get')
 const Orm = require('../../../lib/models/Orm/context')
 const Context = require('../../../lib/models/Context')
 const CrmTask = require('../../../lib/models/CRM/Task')
@@ -38,12 +39,22 @@ async function getNotifications(user_id) {
 }
 
 async function getEmails() {
-  return sql.selectWithError(`
+  Orm.setPublicFields({ select: { email: ['html', 'text'] }, omit: {} })
+
+  const ids = await sql.selectIds(`
     SELECT
-      *
+      id
     FROM
       emails
   `)
+
+  const emails = await Email.getAll(ids)
+  
+  if (emails.length === 0) {
+    throw new Error('No emails found!')
+  }
+
+  return emails
 }
 
 async function expectEmailWithSubject(subject) {
