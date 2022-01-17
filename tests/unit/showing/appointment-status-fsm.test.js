@@ -19,13 +19,29 @@ const notification = {
   sendAppointmentCanceledNotificationToOtherRoles: stub(),
   sendAppointmentConfirmedNotificationToOtherRoles: stub(),
   sendAppointmentRejectedNotificationToOtherRoles: stub(),
+  sendAppointmentCanceledAfterConfirmToBuyer: stub(),
+  sendAppointmentCancelReceiptToBuyer: stub(),
+  sendAppointmentAutoConfirmedToRoles: stub(),
+  sendAppointmentAutoConfirmedToBuyer: stub(),
+  sendAppointmentRequestNotification: stub(),
+  sendAppointmentRequestReceiptToBuyer: stub(),
+  sendCancelNotificationToRoles: stub(),
+  sendFeedbackReceivedNotificationToRoles: stub(),
+  sendRescheduleNotificationToRoles: stub(),
 }
 
 const mailerFactory = {
   forGetFeedbackEmail: stub(),
   forConfirmedAppointment: stub(),
   forRejectedAppointment: stub(),
-  forCanceledAppointmentAfterConfir: stub(),
+  forCanceledAppointmentAfterConfirm: stub(),
+  forAutoConfirmedAppointment: stub(),  
+  forNotification: stub(),
+  forBuyerOriginatedNotification: stub(),
+  forSellerOriginatedNotification: stub(),
+  forReceivedFeedback: stub(),
+  forRequestedAppointment: stub(),
+  forRescheduledAppointment: stub(),
 }
 
 const {
@@ -48,7 +64,15 @@ sinon.stub(handlers)
 
 const make = {
   approval: (id = 'appr', approved = false) => ({ id, approved }),
-  appointment: (id = 'appt', status = 'OldStatus') => ({ id, status }),
+  appointment: (
+    id = 'appt',
+    status = 'OldStatus',
+    buyer_message = 'Fake Buyer Message'
+  ) => ({
+    id,
+    status,
+    buyer_message,
+  }),
 
   showing: (
     id = 'show',
@@ -65,8 +89,6 @@ const make = {
 
   approvalPayload: (...props) => make.payload('ApprovalPerformed', ...props),
 }
-
-const NOOP_MAILER = Object.freeze({ async send () { } })
 
 /* FIXME: assert(foo) is not descriptive enough...
  * Option 1) [Install and] Use sinon-chai instead
@@ -316,41 +338,181 @@ describe('Showing/Appointment/status-fsm', () => {
       assert(utils.send.notCalled)
       assert(mailerFactory.forRejectedAppointment.notCalled)
       assert(notification.sendAppointmentRejectedNotificationToBuyer.notCalled)
-      assert(notification.sendAppointmentRejectedNotificationToOtherRoles.notCalled)
+      assert(
+        notification.sendAppointmentRejectedNotificationToOtherRoles.notCalled
+      )
     })
-    
-    it('sends appointment-rejected sms & email to buyer')
-    it('sends rejection notif to other roles')
+
+    it('sends suitable notifs to roles and buyer', async () => {
+      const payload = make.payload()
+      const appt = payload.appointment
+      const appr = payload.approvals[0]
+
+      utils.findLatestApproval
+        .withArgs(payload.approvals, false).returns(appr)
+      handlers.rejected.callThrough()
+
+      await handlers.rejected(payload)
+
+      assert(utils.approvalNotFound.notCalled)
+      assert(utils.send.calledOnce)
+      assert(mailerFactory.forRejectedAppointment.calledOnceWithExactly(appt))
+      assert(
+        notification.sendAppointmentRejectedNotificationToBuyer
+          .calledOnceWithExactly(appt.id, appr)
+      )
+      assert(
+        notification.sendAppointmentRejectedNotificationToOtherRoles
+          .calledOnceWithExactly(appt.id, appr.role)
+      )
+    })
   })
 
   context('handlers.canceledAfterConfirm()', () => {
-    it('sends appointment-canceled sms & email to buyer')
-    it('sends cancelation notif to other roles')
+    it('calls utils.approvalNotFound if no canceled approval found', async () => {
+      const payload = make.payload()
+
+      utils.findLatestApproval.withArgs(payload, false).returns(undefined)
+      handlers.canceledAfterConfirm.callThrough()
+
+      await handlers.canceledAfterConfirm(payload)
+
+      assert(utils.approvalNotFound.calledOnce)
+      assert(utils.send.notCalled)
+      assert(mailerFactory.forCanceledAppointmentAfterConfirm.notCalled)
+      assert(notification.sendAppointmentCanceledAfterConfirmToBuyer.notCalled)
+      assert(
+        notification.sendAppointmentCanceledNotificationToOtherRoles.notCalled
+      )
+    })
+
+    it('sends suitable notifs to roles and buyer', async () => {
+      const payload = make.payload()
+      const appt = payload.appointment
+      const appr = payload.approvals[0]
+
+      utils.findLatestApproval.withArgs(payload.approvals, false).returns(appr)
+      handlers.canceledAfterConfirm.callThrough()
+
+      await handlers.canceledAfterConfirm(payload)
+
+      assert(utils.approvalNotFound.notCalled)
+      assert(utils.send.calledOnce)
+      assert(
+        mailerFactory.forCanceledAppointmentAfterConfirm
+          .calledOnceWithExactly(appt)
+      )
+      assert(
+        notification.sendAppointmentCanceledAfterConfirmToBuyer
+          .calledOnceWithExactly(appt.id, appr)
+      )
+      assert(
+        notification.sendAppointmentCanceledNotificationToOtherRoles
+          .calledOnceWithExactly(appt.id, appr.role)
+      )
+    })
   })
 
   context('handlers.autoConfirmed()', () => {
-    it('sends appointment-auto-confirmed sms & email to buyer')
-    it('sends auto-confirmation notif to roles')
+    it('sends suitable notifs to roles and buyer', async () => {
+      const payload = make.payload()
+      const appt = payload.appointment
+
+      handlers.autoConfirmed.callThrough()
+
+      await handlers.autoConfirmed(payload)
+
+      assert(
+        notification.sendAppointmentAutoConfirmedToRoles
+          .calledOnceWithExactly(appt.id)
+      )
+      assert(
+        notification.sendAppointmentAutoConfirmedToBuyer
+          .calledOnceWithExactly(appt.id)
+      )
+      assert(
+        mailerFactory.forAutoConfirmedAppointment.calledOnceWithExactly(appt)
+      )
+      assert(utils.send.calledOnce)
+    })
   })
 
   context('handlers.requested()', () => {
-    it('sends appointment-requested sms & email to buyer')
-    it('sends request notif to roles')
+    it('sends suitable notifs to roles and buyer', async () => {
+      const payload = make.payload()
+      const appt = payload.appointment
+
+      handlers.requested.callThrough()
+
+      await handlers.requested(payload)
+
+      assert(
+        notification.sendAppointmentRequestNotification
+          .calledOnceWithExactly(appt.id)
+      )
+      assert(
+        notification.sendAppointmentRequestReceiptToBuyer
+          .calledOnceWithExactly(appt.id)
+      )
+      assert(mailerFactory.forRequestedAppointment.calledOnceWithExactly(appt))
+      assert(utils.send.calledOnce)
+    })
   })
 
   context('handlers.buyerCanceled()', () => {
-    it('sends appointment-canceled sms & email to buyer')
-    it('sends cancel notif to roles')
+    it('sends suitable notifs to roles and buyer', async () => {
+      const payload = make.payload()
+      const appt = payload.appointment
+
+      handlers.buyerCanceled.callThrough()
+
+      await handlers.buyerCanceled(payload)
+
+      assert(
+        notification.sendCancelNotificationToRoles
+          .calledOnceWithExactly(appt.id, appt.buyer_message ?? '')
+      )
+      assert(
+        notification.sendAppointmentCancelReceiptToBuyer
+          .calledOnceWithExactly(appt.id)
+      )
+    })
   })
 
   context('handlers.gaveFeedback()', () => {
-    it('sends feedback-received sms & email to buyer')
-    it('sends feedback notif to roles')
+    it('sends suitable notifs to roles and buyer', async () => {
+      const payload = make.payload()
+      const appt = payload.appointment
+
+      handlers.gaveFeedback.callThrough()
+
+      await handlers.gaveFeedback(payload)
+
+      assert(
+        notification.sendFeedbackReceivedNotificationToRoles
+          .calledOnceWithExactly(appt.id)
+      )
+      assert(mailerFactory.forReceivedFeedback.calledOnceWithExactly(appt))
+      assert(utils.send.calledOnce)
+    })
   })
 
   context('handlers.rescheduled()', () => {
-    it('sends appointment-rescheduled sms & email to buyer')
-    it('sends rescheduled notif to roles')
+    it('sends suitable notifs to roles and buyer', async () => {
+      const payload = make.payload()
+      const appt = payload.appointment
+
+      handlers.rescheduled.callThrough()
+
+      await handlers.rescheduled(payload)
+
+      assert(
+        notification.sendRescheduleNotificationToRoles
+          .calledOnceWithExactly(appt.id, appt.buyer_message ?? '')
+      )
+      assert(mailerFactory.forRescheduledAppointment.calledOnceWithExactly(appt))
+      assert(utils.send.calledOnce)
+    })
   })
 
   context('utils.guessNewStatus()', () => {
@@ -529,7 +691,16 @@ describe('Showing/Appointment/status-fsm', () => {
       assert(handlers.autoConfirmed.calledOnce)
     })
 
-    it('calls handlers.rescheduled when the appt is gonna be rescheduled')
+    it('calls handlers.rescheduled when the appt is gonna be rescheduled', async () => {
+      const payload = make.payload('Rescheduled')
+
+      utils.guessNewStatus.withArgs(payload).returns('Rescheduled')
+      handlers.handleAction.callThrough()
+
+      await handlers.handleAction(payload)
+      
+      assert(handlers.rescheduled.calledOnce)
+    })
 
     context('when an approval is performed...', () => {
       async function testApproval (oldStatus, newStatus, handler) {
@@ -561,12 +732,45 @@ describe('Showing/Appointment/status-fsm', () => {
     })
 
     context('when buyer gives feedback...', () => {
-      it('calls handlers.gaveFeedback')
+      it('calls handlers.gaveFeedback', async () => {
+        const payload = make.payload('GaveFeedback')
+        const appt = payload.appointment
+
+        utils.guessNewStatus.withArgs(payload).returns(appt.status)
+        handlers.handleAction.callThrough()
+
+        await handlers.handleAction(payload)
+
+        assert(handlers.gaveFeedback.calledOnce)
+      })
     })
 
     context('when an appt is requested...', () => {
-      it('calls handlers.autoConfirmed if the status gonna be Confirmed')
-      it('calls handlers.requested if the status gonna be Requested')
+      it('calls handlers.autoConfirmed if the status gonna be Confirmed', async () => {
+        const payload = make.payload('Requested')
+        payload.appointment.status = 'Requested'
+        
+        utils.guessNewStatus.withArgs(payload).returns('Confirmed')
+        handlers.handleAction.callThrough()
+
+        await handlers.handleAction(payload)
+
+        assert(handlers.autoConfirmed.calledOnce)
+      })
+      
+      it('calls handlers.requested if the status gonna remain Requested', async () => {
+        const payload = make.payload('Requested')
+        const appt = payload.appointment
+
+        appt.status = 'Requested'
+
+        utils.guessNewStatus.withArgs(payload).returns(appt.status)
+        handlers.handleAction.callThrough()
+
+        await handlers.handleAction(payload)
+
+        assert(handlers.requested.calledOnce)
+      })
     })
   })
 
