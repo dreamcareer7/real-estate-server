@@ -554,6 +554,7 @@ declare type TDbSqlAddress =
   | 'microsoft/contact/get_by_credential'
   | 'microsoft/contact/get_by_microsoft_credential'
   | 'microsoft/contact/get_by_rechat_contacts'
+  | 'microsoft/contact/get_by_remote_folder_id'
   | 'microsoft/contact/get_by_remote_ids'
   | 'microsoft/contact/get_by_source'
   | 'microsoft/contact/hard_delete'
