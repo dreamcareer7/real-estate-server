@@ -368,6 +368,8 @@ function requestAppointmentAutoConfirm(cb) {
 }
 
 function checkAppointmentAutoConfirmationTextMessagesForBuyer(cb) {
+  const time = APPOINTMENT_TIME.format('MMM Do, h:mmA')
+  
   return frisby
     .create('check appointment confirmation text message from buyer inbox')
     .get(`/sms/inbox/${BUYER_PHONE_NUMBER}`)
@@ -376,12 +378,12 @@ function checkAppointmentAutoConfirmationTextMessagesForBuyer(cb) {
     .expectJSON({
       data: [
         {
-          body:
-            `Your showing request for 5020 Junius Street at ${APPOINTMENT_TIME.format(
-              'MMM Do, h:mmA'
-            )} has been received.` +
-            '\n\n' +
-            'Cancel via http://mock-branch-url\nReschedule via http://mock-branch-url',
+          body: [
+            `Your showing for 5020 Junius Street at ${time} has been automatically confirmed.`,
+            '',
+            'Cancel via http://mock-branch-url',
+            'Reschedule via http://mock-branch-url',         
+          ].join('\n'),
         },
       ],
     })
@@ -570,7 +572,7 @@ function checkAppointmentRejectionSmsForBuyer (cb) {
         { /* Ignore second one */ },
         { /* Ignore third one */ },
         { /* Ignore fouth one */ },
-        // { /* Ignore fifth one */ },
+        { /* Ignore fifth one */ },
         {
           to: formatPhoneNumberForDialing(BUYER_PHONE_NUMBER),
           body: expectedBody
