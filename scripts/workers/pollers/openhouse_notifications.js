@@ -1,4 +1,4 @@
-const { openhouseWorker } = require('../../../lib/models/Listing/notify-agents')
+const { openhouseWorker } = require('../../../lib/models/OpenHouse/worker')
 const { poll } = require('../utils/poll')
 
 function start() {
