@@ -561,6 +561,7 @@ declare type TDbSqlAddress =
   | 'microsoft/contact/hard_delete'
   | 'microsoft/contact/restore'
   | 'microsoft/contact/update'
+  | 'microsoft/contact/update_avatar'
   | 'microsoft/contact_folder/get'
   | 'microsoft/contact_folder/get_by_credential'
   | 'microsoft/contact_folder/insert'
