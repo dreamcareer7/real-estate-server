@@ -50,7 +50,7 @@ async function create() {
       microsoft_credential: credential.id,
       contact: contactIds[0],
       remote_id: mcontact.id,
-      data: JSON.stringify(mcontact.data),
+      data: (mcontact.data),
       source: mcontact.source,
       etag: 'etag',
       parked: false
@@ -76,6 +76,7 @@ async function create() {
     expect(microsoftContact.microsoft_credential).to.be.equal(createdMicrosoftContact.microsoft_credential)
     expect(microsoftContact.remote_id).to.be.equal(createdMicrosoftContact.remote_id)
     expect(microsoftContact.contact).to.not.be.equal(null)
+    expect(microsoftContact.data).to.not.be.equal(microsoft_contacts_offline[0].data)
   }
 
   const result = await ContactIntegration.insert(integration_records)
@@ -95,7 +96,7 @@ async function update() {
     records.push({
       microsoft_credential: credential.id,
       remote_id: mcontact.remote_id,
-      data: JSON.stringify(sample),
+      data: (sample),
       source: mcontact.source,
       etag: 'etag',
       parked: false
