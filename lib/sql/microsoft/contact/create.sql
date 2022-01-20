@@ -1,9 +1,9 @@
 INSERT INTO microsoft_contacts 
 	(microsoft_credential, remote_id, contact, "data", etag, parked)
 SELECT 
-    microsoft_credential, remote_id, contact, "data", etag, parked
-FROM 
-    json_populate_recordset(null::microsoft_contacts, $1::json)
+    t.microsoft_credential, t.remote_id, t.contact, t."data", t.etag, t.parked
+FROM
+	json_to_recordset($1::json) as t(microsoft_credential UUID, remote_id text, contact UUID, "data" jsonb, etag text, parked bool)
 ON conflict 
 	(microsoft_credential, remote_id) 
 WHERE 
