@@ -117,7 +117,7 @@ const getEmail = cb => {
 
   return frisby
     .create('Get an email from a campaign')
-    .get(`/emails/${campaign.id}/emails/${campaign.emails[0].id}`)
+    .get(`/emails/${campaign.id}/emails/${campaign.emails[0].id}?associations[]=email_campaign.emails&associations[]=email_campaign.recipients&associations[]=email_campaign_email.email`)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
@@ -869,15 +869,15 @@ const openEmailUpdateStats = cb => {
 }
 
 
-const checkEmailAfterVisitingByCodeTwo = (cb) => {  
+const checkEmailAfterVisitingByBlackListIps = (cb) => {  
   const campaign = results.email.get.data
 
   return frisby
-    .create('email should not be opened if the request comes from codeTwo')
+    .create('email should not be opened if the request comes from the blackList servers')
     .get(`/emails/${campaign.id}/emails/${campaign.emails[0].id}?associations[]=email_campaign.emails&associations[]=email_campaign.recipients&associations[]=email_campaign_email.email`)
     .after(function (err, res, json) {
       if (json.data.email.opened) {
-        throw 'Email should not be opened with codeTwo IPs'
+        throw 'Email should not be opened with the blackList IPs'
       }
       cb(err, res, json)
     })
@@ -926,5 +926,5 @@ module.exports = {
   syncThreadsByContact,
   openEmail,
   openEmailUpdateStats,
-  checkEmailAfterVisitingByCodeTwo
+  checkEmailAfterVisitingByBlackListIps
 }
