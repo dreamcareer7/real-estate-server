@@ -46,12 +46,10 @@ ON CONFLICT (super_campaign, brand, "user") DO UPDATE SET
   created_by = NULL
 WHERE
   (
+    sce.deleted_at IS NULL AND
+    sce.created_by IS NULL
+  ) AND (
     SELECT COALESCE(us.super_campaign_admin_permission, FALSE)
     FROM users_settings AS us
     WHERE us.brand = excluded.brand AND us.user = excluded.user
   ) = TRUE
-  AND
-  (
-    sce.deleted_at IS NOT NULL OR
-    sce.created_by IS NULL
-  )
