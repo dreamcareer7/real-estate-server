@@ -1,13 +1,11 @@
 WITH to_delete AS (
-  UPDATE
+  DELETE FROM
     super_campaigns_enrollments
-  SET
-    deleted_at = now()
   WHERE
-    super_campaign = $1::uuid
+    deleted_at IS NULL
+    AND created_by IS NULL
+    AND super_campaign = $1::uuid
     AND brand = ANY($2::uuid[])
-    -- AND is_pinned IS FALSE
-    AND deleted_at IS NULL
 )
 INSERT INTO super_campaigns_enrollments as sce (
   super_campaign,
@@ -55,5 +53,5 @@ WHERE
   AND
   (
     sce.deleted_at IS NOT NULL OR
-    sce.created_by IS DISTINCT FROM excluded.user
+    sce.created_by IS NULL
   )
