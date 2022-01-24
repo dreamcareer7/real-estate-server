@@ -19,7 +19,8 @@ SELECT
   grid_deals_sort_field_bo,
   insight_layout_sort_field,
   deals_grid_filter_settings,
-  super_campaign_admin_permission
+  super_campaign_admin_permission,
+  listings_add_mls_account_reminder_dismissed
 FROM
   users_settings
   JOIN unnest($1::uuid[]) WITH ORDINALITY t(eid, ord)
