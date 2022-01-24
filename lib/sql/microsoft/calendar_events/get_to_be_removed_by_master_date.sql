@@ -1,5 +1,5 @@
 SELECT 
-	id
+	event_id as id
 FROM 
 	microsoft_calendar_events
 WHERE 
