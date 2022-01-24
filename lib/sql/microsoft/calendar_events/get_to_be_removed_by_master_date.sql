@@ -9,7 +9,7 @@ WHERE
 	AND deleted_at IS NULL
 	AND (
 	(
-			event_start->>'dateTime')::timestamp with time zone  < $4::timestamp with time zone
+			event_start->>'dateTime')::date  < $4::date
 		OR 
-			(event_start->>'dateTime')::timestamp with time zone > $5::timestamp with time zone
+			(event_start->>'dateTime')::date > $5::date
 	)
