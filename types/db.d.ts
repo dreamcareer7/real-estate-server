@@ -548,6 +548,7 @@ declare type TDbSqlAddress =
   | 'microsoft/calendar_events/get'
   | 'microsoft/calendar_events/get_by_calendar_and_event_ids'
   | 'microsoft/calendar_events/get_by_calendar_ids'
+  | 'microsoft/calendar_events/get_to_be_removed_by_master_date'
   | 'microsoft/calendar_events/insert'
   | 'microsoft/calendar_events/restore_by_remote_ids'
   | 'microsoft/contact/count'
