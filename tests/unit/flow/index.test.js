@@ -542,6 +542,11 @@ async function testLastStepDateWithFirstStepExecuted() {
 
   const [flow] = await Flow.enrollContacts(brand.id, user.id, brand_flow.id, starts_at, brand_flow.steps.map(s => s.id), [contact])
 
+  const [triggerId] = await Trigger.filter({ contact, deleted_at: null })
+  const trigger = await Trigger.getDue(triggerId)
+  if (!trigger?.timestamp) {
+    assert.fail('no timestamp in trigger due')
+  }
   await Trigger.executeDue()
   await handleJobs()
 
@@ -549,8 +554,7 @@ async function testLastStepDateWithFirstStepExecuted() {
   expect(executed).to.have.length(1)
 
   const { last_step_date } = await sql.selectOne('SELECT extract(epoch FROM last_step_date) AS last_step_date FROM flows WHERE id = $1', [ flow.id ])
-  const { now } = await sql.selectOne('SELECT extract(epoch from now()) as now')
-  expect(last_step_date).to.be.equal(now)
+  expect(last_step_date).to.be.equal(trigger.timestamp)
 }
 
 async function testEnrollManyWithoutEmail () {
