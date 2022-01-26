@@ -529,11 +529,13 @@ async function testLastStepDateWithoutFirstStepExecuted() {
   const starts_at = Date.now() / 1000
 
   const [flow] = await Flow.enrollContacts(brand.id, user.id, brand_flow.id, starts_at, [brand_flow.steps[2].id], [id])
+
   await Trigger.executeDue()
   await handleJobs()
 
+  const expectedLastStepDate = moment.unix(starts_at).startOf('day').utc(true).unix()
   const { last_step_date } = await sql.selectOne('SELECT extract(epoch FROM last_step_date) AS last_step_date FROM flows WHERE id = $1', [ flow.id ])
-  expect(last_step_date).to.be.equal(starts_at)
+  expect(last_step_date).to.be.equal(expectedLastStepDate)
 }
 
 async function testLastStepDateWithFirstStepExecuted() {
@@ -542,15 +544,19 @@ async function testLastStepDateWithFirstStepExecuted() {
 
   const [flow] = await Flow.enrollContacts(brand.id, user.id, brand_flow.id, starts_at, brand_flow.steps.map(s => s.id), [contact])
 
+  const [triggerId] = await Trigger.filter({ contact, deleted_at: null })
+  const trigger = await Trigger.getDue(triggerId)
+  if (!trigger?.timestamp) {
+    assert.fail('no timestamp in trigger due')
+  }
   await Trigger.executeDue()
   await handleJobs()
 
   const executed = await sql.select('SELECT * FROM triggers WHERE flow = $1 and contact = $2 AND executed_at IS NOT NULL', [ flow.id, contact ])
   expect(executed).to.have.length(1)
-
+  const expectedLastStepDate = moment.unix(trigger.timestamp).startOf('day').utc(true).unix()
   const { last_step_date } = await sql.selectOne('SELECT extract(epoch FROM last_step_date) AS last_step_date FROM flows WHERE id = $1', [ flow.id ])
-  const { now } = await sql.selectOne('SELECT extract(epoch from now()) as now')
-  expect(last_step_date).to.be.equal(now)
+  expect(last_step_date).to.be.equal(expectedLastStepDate)
 }
 
 async function testEnrollManyWithoutEmail () {
