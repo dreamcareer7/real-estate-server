@@ -246,7 +246,8 @@ ON CONFLICT (matrix_unique_id, mls) DO UPDATE SET
   parcel_number = $82,
   public_display = $83,
   annual_tax = $84,
-  updated_at = CLOCK_TIMESTAMP()
+  updated_at = CLOCK_TIMESTAMP(),
+  deleted_at = NULL
 
 WHERE listings.matrix_unique_id = $4 AND listings.mls = $73::mls
 
