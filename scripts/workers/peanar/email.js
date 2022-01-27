@@ -11,7 +11,7 @@ const queues = [
   },
   {
     queues: ['email_archive'],
-    concurrency: 60
+    concurrency: 80
   },
   {
     queues: ['email'],
