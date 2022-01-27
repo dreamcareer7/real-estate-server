@@ -1,4 +1,8 @@
-CREATE OR REPLACE VIEW email_campaigns_recipient_emails AS ((
+const db = require('../lib/utils/db')
+
+const migrations = [
+  'BEGIN',
+  `CREATE OR REPLACE VIEW email_campaigns_recipient_emails AS ((
     SELECT
       campaign,
       ecr.email,
@@ -203,4 +207,22 @@ CREATE OR REPLACE VIEW email_campaigns_recipient_emails AS ((
       email_campaigns_recipients.recipient_type = 'Contact'
       AND contacts.deleted_at IS NULL
       AND contacts.email IS NOT NULL
-  ))
+  ))`,
+  'COMMIT',
+]
+
+const run = async () => {
+  const { conn } = await db.conn.promise()
+
+  for(const sql of migrations) {
+    await conn.query(sql)
+  }
+
+  conn.release()
+}
+
+exports.up = cb => {
+  run().then(cb).catch(cb)
+}
+
+exports.down = () => {}
