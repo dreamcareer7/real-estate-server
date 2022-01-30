@@ -10,4 +10,4 @@ WHERE
   )
 
   AND status = 'Active'
-  AND CASE $2::mls IS NULL THEN TRUE ELSE mls = $2::mls END
+  AND CASE WHEN $2::mls IS NULL THEN TRUE ELSE mls = $2::mls END
