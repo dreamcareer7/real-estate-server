@@ -4,7 +4,6 @@ INSERT INTO photos(
   description,
   url,
   "order",
-  exif,
   revision,
   mls
 )
@@ -15,7 +14,6 @@ INSERT INTO photos(
     description,
     url,
     "order",
-    exif,
     revision,
     mls
   FROM
@@ -25,7 +23,6 @@ ON CONFLICT (matrix_unique_id, mls) DO UPDATE SET
   description = EXCLUDED.description,
   url = EXCLUDED.url,
   "order" = EXCLUDED."order",
-  exif = EXCLUDED.exif,
   revision = EXCLUDED.revision,
   deleted_at = NULL
 
