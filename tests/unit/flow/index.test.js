@@ -533,7 +533,7 @@ async function testLastStepDateWithoutFirstStepExecuted() {
   await Trigger.executeDue()
   await handleJobs()
 
-  const expectedLastStepDate = moment.unix(starts_at).startOf('day').utc(true).unix()
+  const expectedLastStepDate = moment.unix(starts_at).tz(user.timezone).startOf('day').utc(true).unix()
   const { last_step_date } = await sql.selectOne('SELECT extract(epoch FROM last_step_date) AS last_step_date FROM flows WHERE id = $1', [ flow.id ])
   expect(last_step_date).to.be.equal(expectedLastStepDate)
 }
