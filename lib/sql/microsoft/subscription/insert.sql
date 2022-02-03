@@ -31,4 +31,6 @@ ON CONFLICT (microsoft_credential, resource) DO UPDATE SET
   expiration_date_time = $7,
   creator_id = $8,
   application_id = $9
+  updated_at = NOW(),
+  deleted_at = NULL
 RETURNING id
