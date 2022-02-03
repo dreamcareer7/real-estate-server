@@ -47,3 +47,6 @@ apps:
     args     : ./pollers/email_events_notifications
     name     : 'email_events_notifications'
     kill_timeout : 15000
+  - script   : ./scripts/workers/index.js
+    args     : ./pollers/super_campaigns
+    name     : 'super_campaigns'
