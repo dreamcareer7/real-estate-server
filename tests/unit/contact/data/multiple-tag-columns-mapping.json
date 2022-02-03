@@ -1,0 +1,15 @@
+{
+  "First Name": {
+    "attribute_type": "first_name"
+  },
+  "Last Name": {
+    "attribute_type": "last_name"
+  },
+  "E-mail Address": {
+    "attribute_type": "email",
+    "index": 0
+  },
+  "Tag": {
+    "attribute_type": "tag"
+  }
+}
