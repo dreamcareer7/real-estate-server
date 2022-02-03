@@ -23,26 +23,25 @@
 
             .report-page {
                 display: flex;
-                height: 100%;
-                width: 612px;
+                min-height: 11in;
+                max-height: 11in;
+                width: 8.5in;
 
                 border-left: 1px solid rgba(0, 0, 0, 0.1);
                 border-right: 1px solid rgba(0, 0, 0, 0.1);
             }
             .report-page > .side-strip {
-                background-color: #00B286;
+                {% set color = palette['inverted-container-bg-color'] %}
+                background-color: rgba({{color[0]}}, {{color[1]}}, {{color[2]}}, 1);
                 position: relative;
-                width: 24px;
+                width: 32px;
                 height: 100%;
-                left: 0px;
+                left: -1px;
                 top: 0px;
 
                 display: flex;
                 flex: 0 0 24px;
                 align-items: flex-end;
-            }
-            .report-page > .side-strip > .image-holder {
-                margin-bottom: 24px;
             }
             .report-page > .main-content {
                 display: flex;
@@ -54,7 +53,7 @@
             .report-page > .main-content .body {
                 display: flex;
                 flex-direction: column;
-                gap: 16px;
+                gap: 26px;
             }
 
             .report-header {
@@ -62,7 +61,7 @@
             }
             .report-header > .report-title {
                 text-transform: uppercase;
-                font-size: 12px;
+                font-size: 16px;
                 line-height: 32px;
                 letter-spacing: 1px;
 
@@ -73,7 +72,7 @@
             }
             .report-header > .report-brief {
                 display: flex;
-                gap: 32px;
+                gap: 16px;
                 align-items: center;
                 font-size: 10px;
             }
@@ -103,7 +102,7 @@
             }
             .header .page-number .digit {
                 font-size: 32px;
-                line-height: 32px;
+                line-height: 24px;
             }
 
             section.report-section {
@@ -120,7 +119,6 @@
                 padding-right: 54px;
                 display: flex;
                 flex-direction: column;
-                gap: 16px;
             }
             section.report-section .section-header--title{
                 font-weight: 900;
@@ -129,7 +127,7 @@
                 color: #000000;
             }
             section.report-section .section-header--divider {
-                width: 100%;
+                width: 65%;
                 display: flex;
                 align-items: center;
             }
@@ -152,23 +150,24 @@
                 display: flex;
                 align-items: center;
                 border-radius: 2px;
-                height: 24px;
+                height: 36px;
                 padding-left: 8px;
                 padding-right: 8px;
             }
             section.report-section .row:nth-child(even)  .single-section > .section-strip {
-                background: rgba(0, 178, 134, 0.05);
+                {% set color = palette['inverted-container-bg-color'] %}
+                background: rgba({{color[0]}}, {{color[1]}}, {{color[2]}}, 0.05);
             }
             section.report-section .row:nth-child(odd) .single-section > .section-strip {
                 background: #ffffff;
             }
             section.report-section .single-section > .section-strip .section--label {
-                font-size: 10px;
+                font-size: 12px;
                 line-height: 20px;
                 color: #58595C;
             }
             section.report-section .single-section > .section-strip .section--value {
-                font-size: 11px;
+                font-size: 13px;
                 line-height: 20px;
                 text-align: right;
                 color: #000000;
@@ -190,45 +189,10 @@
         <div class="container">
             <div class="row report-page">
                 <div class="col side-strip">
-                    <div class="image-holder">
-                        <img src="powered-by-rechat.svg" />
-                    </div>
                 </div>
                 <div class="col main-content">
-                    <header class="header">
-                        <div class="report-header">
-                            <div class="report-logo">
-                                <img src="rechat-white-logo.svg" />
-                            </div>
-                            <div class="report-title">
-                                Transaction Summary
-                            </div>
-                            <div class="report-brief">
-                              {% set mls_number = deal.context.mls_number %}
-                              {% if mls_number %}
-                                <div class="brief mls">
-                                    <span class="brief--label">MLS#</span>
-                                    <span class="brief--value">{{mls_number.text}}</span>
-                                </div>
-                              {% endif %}
-                              {% set full_address = deal.context.full_address %}
-                              {% if full_address %}
-                                <div class="brief address">
-                                    <span class="brief--label">ADDRESS</span>
-                                    <span class="brief--value">{{full_address.text}}</span>
-                                </div>
-                              {% endif %}
-                            </div>
-                        </div>
-                        <div class="page-number">
-                            <div class="digit">
-                                #1
-                            </div>
-                            <div>
-                                Page
-                            </div>
-                        </div>
-                    </header>
+                    {% set page = 1 %}
+                    {% include './header.html' %}
                     <div class="body">
                         <section class="report-section associate-details">
                             <div class="section--header">
@@ -258,57 +222,28 @@
                               {% endfor %}
                             </div>
                         </section>
-                        {% for role_name, roles in roles | groupby('role') %}
-                          <section class="report-section associate-details">
-                              <div class="section--header">
-                                  <div class="section-header--title">{{role_name}}</div>
-                                  <div class="section-header--divider">
-                                      <div class="hr"></div>
-                                  </div>
-                              </div>
-                              <div class="report-section--body">
-                                {% for role in roles %}
-                                    <div class="seller-index">
-                                        {% if roles.length > 1 %}#{{ loop.index }}{% endif %}
-                                    </div>
-                                    <div class="row double-section">
-                                        <div class="col single-section">
-                                            <div class="section-strip">
-                                                <span class="section--label">Name</span>
-                                                <span class="section--value">{{role.legal_full_name}}</span>
-                                            </div>
-                                        </div>
 
-                                        <div class="col single-section">
-                                            <div class="section-strip">
-                                                <span class="section--label">Company</span>
-                                                <span class="section--value">{{role.company_title}}</span>
-                                            </div>
-                                        </div>
-                                    </div>
 
-                                    <div class="row double-section">
-                                        <div class="col single-section">
-                                            <div class="section-strip">
-                                                <span class="section--label">Email</span>
-                                                <span class="section--value">{{role.email}}</span>
-                                            </div>
-                                        </div>
 
-                                        <div class="col single-section">
-                                            <div class="section-strip">
-                                                <span class="section--label">Phone</span>
-                                                <span class="section--value">{{role.phone_number}}</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                {% endfor %}
-                              </div>
-                          </section>
-                        {% endfor %}
+                        {% set page_roles = roles.slice(0,3) %}
+                        {% include './roles.html' %}
                     </div>
                 </div>
             </div>
+
+            {% for page_roles in roles.slice(3) | batch(5) %}
+              <div class="row report-page">
+                  <div class="col side-strip">
+                  </div>
+                  <div class="col main-content">
+                      {% set page = loop.index + 1 %}
+                      {% include './header.html' %}
+                      <div class="body">
+                      {% include './roles.html' %}
+                      </div>
+                  </div>
+              </div>
+            {% endfor %}
         </div>
     </body>
 </html>
