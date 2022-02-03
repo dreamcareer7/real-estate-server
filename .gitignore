@@ -26,3 +26,4 @@ tests/temp/*
 !tests/temp/.gitkeep
 .env*
 out
+postgres

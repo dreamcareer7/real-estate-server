@@ -18,6 +18,7 @@ export interface UserSettingFields {
   insight_layout_sort_field: Nullable<JsonObject>;
   deals_grid_filter_settings: Nullable<JsonObject>;
   super_campaign_admin_permission: boolean;
+  listings_add_mls_account_reminder_dismissed: boolean;
 }
 
 export interface UserSetting extends Omit<IModel, MissingProps>, UserSettingFields {

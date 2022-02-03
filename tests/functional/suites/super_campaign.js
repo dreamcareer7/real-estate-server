@@ -249,6 +249,19 @@ function updateSimpleDetails(id, data) {
   }
 }
 
+// eslint-disable-next-line no-unused-vars
+function invalidUpdateSimpleDetails (
+  id,
+  data,
+  name = 'update a super campaign (invalid)',
+  status = 400,
+) {
+  return cb => F(name)
+    .put(`/email/super-campaigns/${resolve(id)}`, resolve(data))
+    .after(cb)
+    .expectStatus(status)
+}
+
 function updateTags(id, tags) {
   return (cb) => {
     return F('update tags')
@@ -474,6 +487,18 @@ module.exports = {
     instantiateTemplate,
     christmas: {
       create: createEmpty,
+
+      // setDueAtWithoutTemplateInstance: invalidUpdateSimpleDetails(
+      //   ID('christmas.create'),
+      //   {
+      //     subject: 'Invalid',
+      //     description: 'Invalid Invalid Invalid',
+      //     due_at: () => Date.now() / 1000,
+      //     template_instance: null,        
+      //   },
+      //   'set due_at when template_instance is not set',
+      // ),
+      
       updateSimpleDetails: updateSimpleDetails(ID('christmas.create'), {
         subject: 'Happy New Year!',
         description: 'A super campaign for the new year!',

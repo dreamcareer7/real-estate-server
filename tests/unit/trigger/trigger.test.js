@@ -20,7 +20,7 @@ const EmailCampaign = {
 }
 const Orm = require('../../../lib/models/Orm/context')
 const Context = require('../../../lib/models/Context')
-// const sql = require('../../../lib/utils/sql')
+const sql = require('../../../lib/utils/sql')
 
 const BrandHelper = require('../brand/helper')
 const { attributes } = require('../contact/helper')
@@ -120,16 +120,15 @@ const createTrigger = async (triggerProps = {}) => {
   return trigger
 }
 
-const testDueTrigger = async () => {
-  const trigger = await createTrigger()
+const testDueTrigger = async (triggerProps = {}) => {
+  const trigger = await createTrigger(triggerProps)
   const due = await Trigger.getDueTriggers()
-
   expect(due).to.have.members([trigger.id])
 }
 
-const testExecuteTrigger = async () => {
+const testExecuteTrigger = async (triggerProps = {}) => {
   const user = await UserHelper.TestUser()
-  const { id } = await createTrigger()
+  const { id } = await createTrigger(triggerProps)
 
   await Trigger.executeDue()
   await handleJobs()
@@ -155,8 +154,8 @@ const testExecuteTrigger = async () => {
   return { trigger, campaign }
 }
 
-const testExecuteRecurringTrigger = async () => {
-  const trigger = await createTrigger({ recurring: true })
+const testExecuteRecurringTrigger = async (triggerProps = {}) => {
+  const trigger = await createTrigger({ recurring: true, ...triggerProps })
   const { timestamp } = await Trigger.getDue(trigger.id)
 
   Orm.setEnabledAssociations(['contact.triggers'])
@@ -210,6 +209,47 @@ const testDeleteContactHavingAnExecutedTrigger = async () => {
   expect(campaign.deleted_at).to.be.ok
 }
 
+const createContactlessTrigger = async () => {
+  await createTrigger({ contact: null, event_type: 'easter' })
+}
+
+const createHoliday = async() => {
+  await sql.query(`
+    INSERT INTO holidays
+      (created_at, updated_at, name, template_type, starts_at, ends_at)
+      VALUES (NOW(), NOW(), $1, $2, $3, $4) 
+  `, [
+    'easter',
+    'Easter',
+    moment.utc().add(3, 'days').toISOString(),
+    moment.utc().add(2, 'years').add(2, 'days').toISOString()
+  ])
+}
+
+const testDueContactlessTrigger = async(createTheHoliday = true) => {
+  if (createTheHoliday) {
+    await createHoliday()
+  }
+  await testDueTrigger({ contact: null, event_type: 'easter' })
+}
+
+const testExecuteContactlessTrigger = async(createTheHoliday = true) => {
+  if (createTheHoliday) {
+    await createHoliday()
+  }
+  await testExecuteTrigger({ contact: null, event_type: 'easter' })
+}
+
+// NOT IMPLEMENTED YET! The prevention of duplicate triggers.
+
+// const testCreatingDoubleContactlessTriggers = async () => {
+//   await createHoliday()
+//   await createContactlessTrigger()
+//   return (testDueContactlessTrigger())
+//     .catch((e) => null)
+//     .then(() => { assert.fail('created double holiday triggers!') })
+// }
+
 describe('Trigger', () => {
   createContext()
   beforeEach(setup)
@@ -221,4 +261,11 @@ describe('Trigger', () => {
   it('should create another trigger after recurring trigger is executed', testExecuteRecurringTrigger)
   it('should delete a trigger when the contact is deleted', testDeleteContactHavingATrigger)
   it('should delete campaigns and triggers when a contact is deleted', testDeleteContactHavingAnExecutedTrigger)
+
+  context('holiday triggers', () => {
+    it('should create a trigger without a contact successfully', createContactlessTrigger)
+    it('should identify a due tigger without a contact', testDueContactlessTrigger)
+    it('should execute a trigger without a contact, 3 days before due', testExecuteContactlessTrigger)
+    // it('cannot be made double on the same event', testCreatingDoubleContactlessTriggers)
+  })
 })
