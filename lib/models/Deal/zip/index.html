@@ -4,10 +4,17 @@
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet">
         <style type="text/css">
+            @media print {
+              @page {
+                size: letter;
+              }
+            }
+
             body {
                 font-family: Lato;
                 font-style: normal;
                 font-weight: normal;
+                width: 8.5in;
             }
             .no-margin {
                 margin: 0;
