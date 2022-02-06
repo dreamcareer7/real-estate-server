@@ -1,10 +1,11 @@
 {% if event.event_type === 'child_birthday' or event.event_type === 'birthday'
       or event.event_type === 'wedding_anniversary' or event.event_type === 'home_anniversary' %}
   <mj-column padding="0" width="11%">
-    {% include './email.mjml' %}
-  </mj-column>
-    <mj-column padding="0" width="11%">
     {% include './call.mjml' %}
+  </mj-column>
+
+  <mj-column padding="0" width="11%">
+    {% include './email.mjml' %}
   </mj-column>
 {% elseif event.object_type === 'deal_context' %}
   {% set deal = deals[event.deal] %}
