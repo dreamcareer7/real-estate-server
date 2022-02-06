@@ -28,5 +28,6 @@
     {% include './emails/index.mjml' %}
     {% include './holidays/index.mjml' %}
     {% include './webinars/index.mjml' %}
+    {% include './whatsnew/index.mjml' %}
 
 {% endblock %}

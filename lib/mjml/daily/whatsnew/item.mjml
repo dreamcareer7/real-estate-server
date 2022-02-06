@@ -3,9 +3,8 @@
     <mj-column width="13%">
       <mj-image
         padding="5px"
-        src="{{session.host.avatar}}"
+        src="{{item.icon}}"
         href="{{ session.url }}"
-        border-radius="50%"
         width="45px"
         align="center"
       >
@@ -21,15 +20,11 @@
         font-weight="400"
       >
         <div>
-          {{ session.date | time('dddd MMMM Do, hh:mm A', user.timezone) }}
+          {{ item.date | time('dddd MMMM Do', user.timezone) }}
           <br><br>
         </div>
 
-        <a style="color: #000" href="{{ session.url }}">{{session.topic}}</a>
-
-        <div style="margin:5px 0;">
-          <a style="color: #949598" href="{{ session.url }}">By: {{ session.host.name }}, {{ session.host.role }}</a>
-        </div>
+        <a style="color: #000" href="{{ item.url }}">{{item.title}}</a>
       </mj-text>
     </mj-column>
 
@@ -45,7 +40,7 @@
         padding="3px"
         inner-padding="0"
         border-radius="50%"
-        href="{{session.url}}"
+        href="{{item.url}}"
         align="center"
         mj-class="actions"
       >
