@@ -1,14 +1,16 @@
 <mj-section padding="0 5px 20px 5px">
   <mj-group>
     <mj-column width="13%">
-      <mj-image
-        padding="5px"
-        src="{{item.icon}}"
-        href="{{ session.url }}"
-        width="45px"
-        align="center"
-      >
-      </mj-image>
+      {% if item.icon %}
+        <mj-image
+          padding="5px"
+          src="{{item.icon}}"
+          href="{{ item.url }}"
+          width="45px"
+          align="center"
+        >
+        </mj-image>
+      {% endif %}
     </mj-column>
     <mj-column width="65%">
       <mj-text
@@ -20,7 +22,7 @@
         font-weight="400"
       >
         <div>
-          {{ item.date | time('dddd MMMM Do', user.timezone) }}
+          {{ item.date | time('dddd MMMM Do', 'UTC') }}
           <br><br>
         </div>
 
