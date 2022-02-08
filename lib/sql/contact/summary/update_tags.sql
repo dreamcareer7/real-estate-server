@@ -1,12 +1,22 @@
-WITH ctags AS (
+EXPLAIN ANALYZE WITH cids AS (
+  SELECT
+    id
+  FROM
+    contacts
+  WHERE
+    brand = $1::uuid
+    AND deleted_at IS NULL
+),
+ctags AS (
   SELECT
     ca.contact AS id,
     array_agg(ca.text) AS tag
   FROM
-    contacts_attributes AS ca
+    contacts_attributes_text AS ca
+    JOIN cids
+      ON cids.id = ca.contact
   WHERE
-    ca.contact = ANY($1::uuid[])
-    AND ca.deleted_at IS NULL
+    ca.deleted_at IS NULL
     AND ca.attribute_type = 'tag'
   GROUP BY
     1
@@ -15,7 +25,7 @@ WITH ctags AS (
     cids.id,
     ctags.tag
   FROM
-    unnest($1::uuid[]) AS cids(id)
+    cids
     LEFT JOIN ctags
       ON ctags.id = cids.id
 )
@@ -28,4 +38,3 @@ FROM
   c
 WHERE
   contacts.id = c.id
-
