@@ -575,6 +575,7 @@ declare type TDbSqlAddress =
   | 'microsoft/credential/get_by_user'
   | 'microsoft/credential/insert'
   | 'microsoft/credential/outlook_sync_due'
+  | 'microsoft/credential/remove_contacts_sync_tokens'
   | 'microsoft/credential/revoke'
   | 'microsoft/credential/revoked'
   | 'microsoft/credential/update_contact_folders_sync_token'
