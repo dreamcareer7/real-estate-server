@@ -1,5 +1,5 @@
 const moment = require('moment-timezone')
-const { expect } = require('chai')
+const { assert, expect } = require('chai')
 // const _ = require('lodash')
 
 const Trigger = {
@@ -20,13 +20,13 @@ const EmailCampaign = {
 }
 const Orm = require('../../../lib/models/Orm/context')
 const Context = require('../../../lib/models/Context')
-const sql = require('../../../lib/utils/sql')
 
 const BrandHelper = require('../brand/helper')
 const { attributes } = require('../contact/helper')
 const UserHelper = require('../user/helper')
 
 const { createContext, handleJobs } = require('../helper')
+const sql = require('../../../lib/utils/sql')
 
 const BIRTHDAY = moment.utc().add(3, 'days').startOf('day').add(-20, 'years')
 let brand
@@ -173,6 +173,15 @@ const testExecuteRecurringTrigger = async (triggerProps = {}) => {
 
   const clonedTrigger = await Trigger.get(contactTriggers[0])
   expect(clonedTrigger.scheduled_after).to.be.equal(trigger.id)
+
+  if (!clonedTrigger.campaign) {
+    assert.fail('expected the cloned trigger to have a campaign')
+  }
+
+  await handleJobs()
+
+  const emailCampaignRecipients = await sql.selectOne('SELECT * FROM email_campaigns_recipients WHERE campaign = $1', [clonedTrigger.campaign])
+  expect(emailCampaignRecipients).to.be.ok
 
   const expected = timestamp - clonedTrigger.wait_for + 86400
   expect(clonedTrigger.effective_at, `expected ${new Date(clonedTrigger.effective_at * 1000).toISOString()} be equal to ${new Date(expected * 1000).toISOString()}`).to.be.equal(expected)
