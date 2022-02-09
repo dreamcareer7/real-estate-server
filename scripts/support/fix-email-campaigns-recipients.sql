@@ -8,8 +8,8 @@ WITH problematic_triggers as (
       ON ec.id = ecr.campaign
     WHERE
       ecr.id IS NULL
-)
-WITH parent_triggers as (
+),
+parent_triggers as (
   SELECT
     t.brand, t.campaign,
     ec.from, ecr.tag, ecr.list, ecr.contact,
@@ -29,3 +29,5 @@ INSERT
     (campaign, tag, list, contact, email, brand, send_type, recipient_type, agent)
 SELECT
   (campaign, tag, list, contact, email, brand, send_type, recipient_type, agent)
+FROM
+  parent_triggers
