@@ -1,0 +1,37 @@
+<header class="header">
+    <div class="report-header">
+        <div class="report-logo">
+            <img src="{{palette['container-logo-wide'] or palette['container-logo-square']}}" height="24" />
+        </div>
+        <div class="report-title">
+            Transaction Summary
+        </div>
+        <div class="report-brief">
+            {% set mls_number = deal.context.mls_number %}
+            {% if mls_number %}
+            <div class="brief mls">
+                <span class="brief--label">MLS#</span>
+                <span class="brief--value">{{mls_number.text}}</span>
+            </div>
+            {% endif %}
+            {% set full_address = deal.context.full_address %}
+            {% if full_address %}
+            <div class="brief">
+              <span class="brief--label">|</span>
+            </div>
+            <div class="brief address">
+                <span class="brief--label">ADDRESS</span>
+                <span class="brief--value">{{full_address.text}}</span>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    <div class="page-number">
+        <div class="digit">
+            #{{page}}
+        </div>
+        <div>
+            Page
+        </div>
+    </div>
+</header>

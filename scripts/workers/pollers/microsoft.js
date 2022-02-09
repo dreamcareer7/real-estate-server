@@ -1,5 +1,9 @@
 const MicrosoftWorker = require('../../../lib/models/Microsoft/workers')
+<<<<<<< HEAD
 const { migrationDue } = require('../../../lib/models/Microsoft/migration/job')
+=======
+// const { migrationDue } = require('../../../lib/models/Microsoft/migration/job')
+>>>>>>> testing
 const { poll } = require('../utils/poll')
 
 function start() {

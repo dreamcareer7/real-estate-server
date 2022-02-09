@@ -32,6 +32,7 @@ export interface ShowingAppointment {
   contact: UUID;
   approvals: UUID[] | null;
   feedback: AppointmentFeedback | null;
+  buyer_message: string | null;
 }
 
 export interface ShowingAppointmentPublic {
@@ -41,6 +42,7 @@ export interface ShowingAppointmentPublic {
   time: string;
   status: AppointmentStatus;
   showing: UUID;
+  buyer_message: string | null;
 }
 
 export interface ShowingAppointmentPopulated {
@@ -53,6 +55,7 @@ export interface ShowingAppointmentPopulated {
   showing: ShowingPopulated;
   contact: IContact;
   approvals?: ShowingApproval[];
+  buyer_message: string | null;
 }
 
 export type AppointmentStatus =
