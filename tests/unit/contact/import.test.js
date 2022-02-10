@@ -96,6 +96,30 @@ async function testCsvFullAddressColumns() {
   })
 }
 
+async function testCsvFullAddressColumns3() {
+  const file = await AttachedFile.saveFromStream({
+    stream: fs.createReadStream(path.resolve(__dirname, './data/full-address-bogus.csv')),
+    filename: 'contacts.csv',
+    user,
+    path: user.id + '-' + Date.now().toString(),
+    relations: [
+      {
+        role: 'Brand',
+        role_id: brand.id
+      }
+    ],
+    public: false
+  })
+
+  const mappings = require('./data/full-address-bogus.json')
+  ImportWorker.import_csv(user.id, brand.id, file.id, user.id, mappings)
+
+  await handleJobs()
+
+  const { total } = await Contact.filter(brand.id, [])
+  expect(total).to.be.equal(1)
+}
+
 async function testCsvFullAddressColumns2() {
   const file = await AttachedFile.saveFromStream({
     stream: fs.createReadStream(path.resolve(__dirname, './data/fulladdress2.csv')),
@@ -197,6 +221,7 @@ describe('Contact', () => {
     it('should import contacts from csv', testImportFromCsv)
     it('should parse and import full address columns', testCsvFullAddressColumns)
     it('should parse and import full address column without unit number', testCsvFullAddressColumns2)
+    it('should parse and import unparseable full address column', testCsvFullAddressColumns3)
     it('should parse and import multiple columns with the same name', testCsvSameNameColumns)
     it('should parse and import comma-separated multi valued columns', testCsvMultiTagColumn)
     it('should import contacts from json', testImportFromJson)
