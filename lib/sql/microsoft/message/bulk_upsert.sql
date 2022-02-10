@@ -14,7 +14,7 @@ SELECT
     
 FROM
 	json_to_recordset($1::json) as t(
-        microsoft_credential uuid, message_id text, thread_id text, thread_key text, internet_message_id text, in_reply_to ,  in_bound bool, 
+        microsoft_credential uuid, message_id text, thread_id text, thread_key text, internet_message_id text, in_reply_to text, in_bound bool, 
         is_read bool, is_archived bool, recipients text, 
         "subject" text, has_attachments bool, attachments jsonb, 
         from_raw jsonb, to_raw jsonb, cc_raw jsonb, bcc_raw jsonb, "from" text, "to" text, cc text, bcc text, 
