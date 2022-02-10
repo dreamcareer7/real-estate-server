@@ -1448,6 +1448,114 @@ async function contactAttributeUpdateForRemoveBusinessPhones() {
   expect(attributes).to.be.deep.equal(finalAttributes)
 }
 
+async function contactAttributeUpdateForNotes() {
+  const data = {
+    'id': 'AAkALgAAAAAAHYQDEapmEc2byACqAC-EWg0A_NC1cclwhkSvBk37XnSPZgAABL16rwAA',
+    'title': '',
+    'surname': 'Durkin',
+    'birthday': null,
+    'jobTitle': 'Chief Executive Officer',
+    'nickName': null,
+    'changeKey': 'EQAAABQAAAD5ehW28J5WR7XHNAnZHJ8mAAAwBg==',
+    'givenName': 'Scott',
+    'categories': [],
+    'homePhones': [],
+    'middleName': '',
+    'spouseName': null,
+    '@odata.etag': 'W/\'EQAAABQAAAD5ehW28J5WR7XHNAnZHJ8mAAAwBg==\'',
+    '@odata.type': '#microsoft.graph.contact',
+    'companyName': 'Douglas Elliman Real Estate',
+    'displayName': 'Durkin, Scott',
+    'homeAddress': {},
+    'mobilePhone': null,
+    'otherAddress': {},
+    'personalNotes': 'Second Note',
+    'businessPhones': [],
+    'emailAddresses': [
+      {
+        'name': 'Scott Durkin (scott.durkin@elliman.com)',
+        'address': 'scott.durkin@elliman.com'
+      }
+    ],
+    'parentFolderId': 'AAMkADcyYWFjYzM0LThjOTMtNDEyOS1iMmVjLWY0YTY1MDgyMDAxZQAuAAAAAACUQOcrabZxTbSelFiJZBTmAQD40LVxyXCGRK8GTftedI9mAAAAAAEOAAA=',
+    'businessAddress': {},
+    'createdDateTime': '2021-09-23T13:58:36Z',
+    'businessHomePage': null,
+    'lastModifiedDateTime': '2022-01-08T06:59:09Z'
+  }
+  const oldData = {
+    'id': 'AAMkADcyYWFjYzM0LThjOTMtNDEyOS1iMmVjLWY0YTY1MDgyMDAxZQBGAAAAAACUQOcrabZxTbSelFiJZBTmBwD40LVxyXCGRK8GTftedI9mAAAAgA2BAAD40LVxyXCGRK8GTftedI9mAAAAgDVdAAA=',
+    'title': '',
+    'surname': 'Durkin',
+    'birthday': null,
+    'jobTitle': 'Chief Executive Officer',
+    'nickName': null,
+    'changeKey': 'EQAAABYAAAD40LVxyXCGRK8GTftedI9mAAAIz9fq',
+    'givenName': 'Scott',
+    'categories': [],
+    'homePhones': [],
+    'middleName': '',
+    'spouseName': null,
+    '@odata.etag': 'W/\'EQAAABYAAAD40LVxyXCGRK8GTftedI9mAAAIz9fq\'',
+    '@odata.type': '#microsoft.graph.contact',
+    'companyName': 'Douglas Elliman Real Estate',
+    'displayName': 'Durkin, Scott',
+    'homeAddress': {},
+    'mobilePhone': null,
+    'otherAddress': {},
+    'personalNotes': 'First Note',
+    'businessPhones': [],
+    'emailAddresses': [
+      {
+        'name': 'Scott Durkin (scott.durkin@elliman.com)',
+        'address': 'scott.durkin@elliman.com'
+      }
+    ],
+    'parentFolderId': 'AAMkADcyYWFjYzM0LThjOTMtNDEyOS1iMmVjLWY0YTY1MDgyMDAxZQAuAAAAAACUQOcrabZxTbSelFiJZBTmAQD40LVxyXCGRK8GTftedI9mAAAAgA2BAAA=',
+    'businessAddress': {},
+    'createdDateTime': '2021-09-23T13:58:36Z',
+    'businessHomePage': null,
+    'lastModifiedDateTime': '2021-09-29T18:01:35Z'
+  }
+  const refinedAtts = [
+    {
+      'id': 'cfd5f795-9f33-4f9c-807f-456018bc0ed4',
+      'contact': 'ab1285af-4cef-4970-97b9-fbc338218142',
+      'attribute_def': 'b14d0fad-a96e-4d08-aad7-8a4191886d4b',
+      'created_at': 1642704004.56652,
+      'updated_at': 1642704004.56652,
+      'deleted_at': null,
+      'label': null,
+      'is_primary': false,
+      'is_partner': false,
+      'index': null,
+      'created_by': '26b22f76-6e6b-11ec-849f-42010a960002',
+      'updated_by': null,
+      'attribute_type': 'note',
+      'text': 'First Note',
+      'date': null,
+      'type': 'contact_attribute'
+    },
+  ]
+  const contactFolders =  {
+    'AAMkADcyYWFjYzM0LThjOTMtNDEyOS1iMmVjLWY0YTY1MDgyMDAxZQAuAAAAAACUQOcrabZxTbSelFiJZBTmAQD40LVxyXCGRK8GTftedI9mAAAAgA7SAAA=': '4Sharing'
+  }
+  const finalAttributes = [
+    {
+      id: 'cfd5f795-9f33-4f9c-807f-456018bc0ed4',
+      attribute_type: 'note',
+      text: 'Second Note'
+    }
+  ]
+
+  // @ts-ignore
+  const {attributes, deletedAtt} = findNewAttributes(data, oldData, refinedAtts, contactFolders)
+  console.log({attributes, deletedAtt})
+  expect(deletedAtt.length).to.be.equal(0)
+  expect(attributes.length).to.be.equal(1)
+  expect(attributes).to.be.deep.equal(finalAttributes)
+}
+
 describe('Microsoft', () => {
   describe('Microsoft Contacts', () => {
     createContext()
@@ -1471,5 +1579,6 @@ describe('Microsoft', () => {
     it('should update contact attribute and handel undefined old attributes', contactAttributeUpdateForUndefinedAttributes)
     it('should update contact attribute for business address', contactAttributeUpdateForBusinessAddress)
     it('should update contact attribute for remove business phones', contactAttributeUpdateForRemoveBusinessPhones)
+    it('should update contact attribute for notes', contactAttributeUpdateForNotes)
   })
 })

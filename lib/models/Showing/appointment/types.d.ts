@@ -43,6 +43,7 @@ export interface ShowingAppointmentPublic {
   status: AppointmentStatus;
   showing: UUID;
   buyer_message: string | null;
+  role_message: string | null;
 }
 
 export interface ShowingAppointmentPopulated {
