@@ -54,4 +54,4 @@ SET
     deleted_at = EXCLUDED.deleted_at,
     updated_at = now()
 RETURNING
-    *
+    id, microsoft_credential, internet_message_id, message_id, thread_id, thread_key
