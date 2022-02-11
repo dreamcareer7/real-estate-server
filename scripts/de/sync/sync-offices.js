@@ -180,8 +180,8 @@ const syncAdmins = async offices => {
    * Which  would fail on pg
    */
 
-  const uniqued = _.uniqBy(admins, item => {
-    return `${item.userame}-${item.office}`
+  const uniqued = _.uniqWith(admins, (a,b) => {
+    return a.username === b.username && a.office === b.office
   })
 
   await db.executeSql.promise(DISABLE_ALL)
