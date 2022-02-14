@@ -50,6 +50,10 @@ const placeholders = [
     value: recipient.first_name
   },
 
+  {
+    field: '{{recipient.empty_attribute}}',
+    value: ''
+  },
 
   {
     field: '{{recipient.empty_attribute or "foo"}}',
