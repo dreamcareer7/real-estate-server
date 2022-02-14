@@ -123,8 +123,8 @@ const bogus = [
 
 
 const testPlaceholder = ({field, value}) => {
-  const must = lorem.replace('PLACEHOLDER_HERE', value)
-  const text = lorem.replace('PLACEHOLDER_HERE', field)
+  const must = lorem.replace(/PLACEHOLDER_HERE/g, value)
+  const text = lorem.replace(/PLACEHOLDER_HERE/g, field)
   const result = render(text, {recipient})
 
   expect(result).to.equal(must)
