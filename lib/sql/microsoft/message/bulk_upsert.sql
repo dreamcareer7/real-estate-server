@@ -6,12 +6,10 @@ INSERT INTO microsoft_messages
         message_created_at, message_date, deleted_at
     )
 SELECT 
-    
     t.microsoft_credential, t.message_id, t.thread_id, t.thread_key, t.internet_message_id, t.in_reply_to, t.in_bound, t.is_read, t.is_archived, t.recipients,
     t."subject", t.has_attachments, t.attachments,
     t.from_raw, t.to_raw, t.cc_raw, t.bcc_raw, t."from", t."to", t.cc, t.bcc,
     t.message_created_at, t.message_date, t.deleted_at
-    
 FROM
 	json_to_recordset($1::json) as t(
         microsoft_credential uuid, message_id text, thread_id text, thread_key text, internet_message_id text, in_reply_to text, in_bound bool, 
@@ -52,6 +50,6 @@ SET
     message_date = EXCLUDED.message_date,
 
     deleted_at = EXCLUDED.deleted_at,
-    updated_at = now()
+    updated_at = NOW()
 RETURNING
-    id, microsoft_credential, internet_message_id, message_id, thread_id, thread_key
+    "id", microsoft_credential, internet_message_id, message_id, thread_id, thread_key
