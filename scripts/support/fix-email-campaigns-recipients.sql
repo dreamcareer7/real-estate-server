@@ -4,10 +4,10 @@ WITH problematic_triggers as (
       triggers t
     JOIN email_campaigns ec
       ON t.campaign = ec.id
-    LEFT JOIN email_campaigns_recipients ecr
-      ON ec.id = ecr.campaign
-    WHERE
-      ecr.id IS NULL
+  WHERE NOT EXISTS (SELECT 1
+    FROM email_campaigns_recipients AS ecr
+    WHERE ecr.campaign = ec.id
+  )
 ),
 parent_triggers as (
   SELECT
