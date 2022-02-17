@@ -5,7 +5,7 @@ FROM
 join
   facebook_credentials
 on
-  facebook_pages.facebook_credential_id = facebook_credentials.id
+  facebook_pages.facebook_credential = facebook_credentials.id
 WHERE 
   facebook_credentials.user = $1
   AND facebook_credentials.brand = $2
