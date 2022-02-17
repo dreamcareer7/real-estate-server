@@ -104,4 +104,5 @@ export interface ShowingFilterOptions {
   deal?: UUID;
   listing?: UUID;
   live?: boolean;
+  query?: string;
 }

@@ -12,6 +12,7 @@ registerSuite('brand', [
 
 registerSuite('user', ['create', 'upgradeToAgentWithEmail', 'markAsNonShadow'])
 registerSuite('listing', ['getListing'])
+registerSuite('agent', ['getByMlsId'])
 
 const showings = {}
 let sellerAgent
@@ -30,6 +31,7 @@ function _create(description, override, cb) {
     email: results.authorize.token.data.email,
     phone_number: results.authorize.token.data.phone_number,
     user: results.authorize.token.data.id,
+    agent: results.agent.getByMlsId.data[0].id,
   }
 
   /** @type {import("../../../lib/models/Showing/showing/types").ShowingInput} */
@@ -198,6 +200,23 @@ function filter(cb) {
     .expectJSON({
       data: [results.showing.create.data],
     })
+}
+
+function search (query, {
+  name = `Search for '${query}'`,
+  expect = null,
+  status = 200,
+} = {}) {
+  return cb => {
+    const f = frisby.create(name)
+      .post('/showings/filter', { query })
+      .after(cb)
+      .expectStatus(status)
+    
+    expect && f.expectJSON(expect())
+
+    return f
+  }
 }
 
 function getShowingPublic(cb) {
@@ -605,6 +624,36 @@ module.exports = {
   getShowing,
   filter,
 
+  searchForCompleteAgentName: search('John Doe', {
+    name: 'search for complete agent name',
+    expect: () => ({ info: { count: 4, total: 4 } }),
+  }),
+
+  searchForPartialAgentName: search(',Jo:&(Do)|', {
+    name: 'search for partial agent name',
+    expect: () => ({ info: { count: 4, total: 4 } }),
+  }),
+
+  searchForAddress: search('5020 Jun Stree Dalla', {
+    name: 'search for listing address',
+    expect: () => ({ info: { count: 3, total: 3 } }),
+  }),
+
+  searchForMlsNumber: search('13103256', {
+    name: 'search for MLS#',
+    expect: () => ({ info: { count: 3, total: 3 } }),
+  }),
+
+  searchMixed: search('Joh:&)502,(1310|Dall:Jun', {
+    name: 'mixed search',
+    expect: () => ({ info: { count: 3, total: 3 } }),
+  }),
+
+  searchWithoutResult: search('John 5020 13103256 wontmatchforsure', {
+    name: 'search without result',
+    expect: () => ({ info: { count: 0, total: 0 } }),
+  }),
+  
   getShowingPublic,
   requestAppointment: _makeAppointment('request an appointment'),
   checkAppointmentReceiptSmsForBuyer,
