@@ -30,7 +30,7 @@ INSERT INTO showings_roles (
   phone_number
 FROM
   json_to_recordset($3::json) AS sr (
-    role deal_role,
+    role showing_role,
     "user" uuid,
     agent uuid,
     brand uuid,

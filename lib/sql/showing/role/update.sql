@@ -2,7 +2,7 @@ UPDATE
   showings_roles
 SET
   updated_at = now(),
-  role = $2::deal_role,
+  role = $2::showing_role,
   "user" = COALESCE($3::uuid, (
     SELECT id FROM users WHERE LOWER(email) = LOWER($10)
   )),
