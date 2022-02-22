@@ -2,6 +2,7 @@ const db = require('../lib/utils/db')
 
 const migrations = [
   'BEGIN',
+  'UPDATE microsoft_messages SET new_message_id= null WHERE new_message_id=\'not_found\'',
   'ALTER TABLE microsoft_messages RENAME COLUMN message_id TO old_message_id',
   'ALTER TABLE microsoft_messages ALTER COLUMN old_message_id DROP NOT NULL',
   'ALTER TABLE microsoft_messages RENAME COLUMN new_message_id TO message_id',
