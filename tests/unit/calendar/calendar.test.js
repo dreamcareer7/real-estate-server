@@ -1,4 +1,7 @@
 const { expect } = require('chai')
+const ical = require('ical')
+const { Mock } = require('./data/mock')
+
 const moment = require('moment-timezone')
 
 const { createContext, handleJobs } = require('../helper')
@@ -249,6 +252,52 @@ async function testCorrectTimezone() {
   }, user.timezone)
 }
 
+async function testExportForEvents() {
+  const high = moment().add(1, 'year').unix()
+  const low = moment().add(-1, 'year').unix()
+
+  const now = moment()
+  const next30Mins = now.clone().add(30 ,'minutes')
+  const next60Mins = now.clone().add(60 ,'minutes')
+
+  const tasks = [
+    Mock.getCrmTaskEvent({ brand: brand.id, created_by: user.id, assignees: [user.id], due_date: now.unix(), all_day: true }),
+    Mock.getCrmTaskEvent({ brand: brand.id, created_by: user.id, assignees: [user.id], due_date: now.unix(), all_day: true }),
+    Mock.getCrmTaskEvent({ brand: brand.id, created_by: user.id, assignees: [user.id], due_date: now.unix(), end_date: next30Mins.unix(), all_day: false, task_type: 'crm_task' }),
+    Mock.getCrmTaskEvent({ brand: brand.id, created_by: user.id, assignees: [user.id], due_date: next30Mins.unix(), end_date: next60Mins.unix(), all_day: false, task_type: 'crm_task' }),
+  ]
+  
+  await Promise.all(tasks.map(task => CrmTask.create(task)))
+  
+  const feeds = await getAsICal([{ brand: brand.id, users: [user.id] }], {
+    low,
+    high
+  }, 'Asia/Tehran')
+
+  const distrustFeed = ical.parseICS(feeds)
+  const feedValues = Object.values(distrustFeed)
+
+  const dateFormat = (dateInString) => moment(dateInString).tz('Asia/Tehran').format('YYYY/MM/DD') // skip the time
+
+  const eventFormat = (dateInString) => moment(dateInString).tz('Asia/Tehran').format('YYYY/MM/DD hh:mm') // skip secondes and milliseconds 
+  
+  expect(eventFormat(feedValues[1]['dtstamp'])).to.be.equal(eventFormat(now))
+  expect(dateFormat(feedValues[1]['start'])).to.be.equal(dateFormat(now))
+  expect(dateFormat(feedValues[1]['end'])).to.be.equal(dateFormat(now))
+
+  expect(eventFormat(feedValues[2]['dtstamp'])).to.be.equal(eventFormat(now))
+  expect(dateFormat(feedValues[2]['start'])).to.be.equal(dateFormat(now))
+  expect(dateFormat(feedValues[2]['end'])).to.be.equal(dateFormat(now))
+
+  expect(eventFormat(feedValues[3]['dtstamp'])).to.be.equal(eventFormat(now))
+  expect(eventFormat(feedValues[3]['start'])).to.be.equal(eventFormat(now))
+  expect(eventFormat(feedValues[3]['end'])).to.be.equal(eventFormat(next30Mins))
+
+  expect(eventFormat(feedValues[4]['dtstamp'])).to.be.equal(eventFormat(now))
+  expect(eventFormat(feedValues[4]['start'])).to.be.equal(eventFormat(next30Mins))
+  expect(eventFormat(feedValues[4]['end'])).to.be.equal(eventFormat(next60Mins))
+}
+
 function testContactEvent(event_type, type_label) {
   return async () => {
     await Contact.create([{
@@ -477,6 +526,7 @@ describe('Calendar', () => {
   describe('Events', () => {
     beforeEach(setup)
     it('should put events in correct timezones', testCorrectTimezone)
+    it('should export events correctly for allday and none allday events', testExportForEvents)
   })
 
   describe('Contacts', () => {
