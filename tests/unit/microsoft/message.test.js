@@ -343,7 +343,7 @@ describe('Microsoft', () => {
     createContext()
     beforeEach(setup)
 
-    it.only('should create some microsoft-messages', create)
+    it('should create some microsoft-messages', create)
     it('should return microsoft-message by messages_id', getByMessageId)
     it('should handle failure of microsoft-contact get by messages_id', getByMessageIdFailed)
     it('should return a list of unique credential ids based on thread_keys', getDistinctCredentialByThread)
