@@ -591,6 +591,7 @@ declare type TDbSqlAddress =
   | 'microsoft/mail_folders/get'
   | 'microsoft/mail_folders/get_by_credential'
   | 'microsoft/mail_folders/upsert'
+  | 'microsoft/message/bulk_upsert'
   | 'microsoft/message/count'
   | 'microsoft/message/delete_many'
   | 'microsoft/message/filter_message_ids'
