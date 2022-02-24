@@ -84,7 +84,7 @@ async function importFiles ({
       stream: createReadStream(path.join(directory, file)),
     })
 
-    await importCsv.immediate(
+    await importCsv(
       userId,
       brandId,
       fileId,
