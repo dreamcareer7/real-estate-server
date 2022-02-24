@@ -17,7 +17,7 @@ const User = {
  * @param {string} key 
  * @returns {Promise<string>}
  */
-async function getUserId(emailMapping, key) {
+async function getUserId (emailMapping, key) {
   const email = emailMapping.get(key)
   assert(email, `No email address found for ${key}`)
 
@@ -34,7 +34,7 @@ async function getUserId(emailMapping, key) {
  * @param {Map<string, string>} opts.emailMapping
  * @param {string[]} opts.files
  */
-async function importFiles({
+async function importFiles ({
   path: root,
   mappingDef,
   emailMapping,
@@ -113,6 +113,8 @@ function initProgram (program) {
     .option('-M, --mapping-json <mappingDefJson', 'Mapping def. file')
     .option('-e, --email-mapping <emailMapping>', 'Email mapping')
     .option('-E, --email-mapping-json <emailMappingJson>', 'Email mapping file')
+    .option('--folder-column <folderCol>', 'Folder column name', 'Name')
+    .option('--email-column <emailCol>', 'Email column name', 'Email')
 }
 
 /** @param {import('commander').program} program */
@@ -123,9 +125,15 @@ async function main (program) {
     .then(String)
     .then(JSON.parse))
 
-  const emailMapping = opts.emailMapping || (await fs.readFile(opts.emailMappingJson)
+  let emailMapping = opts.emailMapping || (await fs.readFile(opts.emailMappingJson)
     .then(String)
     .then(JSON.parse))
+
+  if (Array.isArray(emailMapping)) {
+    emailMapping = new Map(emailMapping.map(m => [m[opts.folderCol], m[opts.emailCol]]))
+  } else {
+    emailMapping = new Map(Object.entries(emailMapping))
+  }
   
   return traversalCsvImport({
     path: opts.path,
