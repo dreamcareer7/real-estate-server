@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 const { promises: fs, createReadStream } = require('fs')
 const groupBy = require('lodash/groupBy')
-const memoize = require('lodash/memoize')
 const path = require('path')
 
 const { import_csv: importCsv } = require('../../lib/models/Contact/worker/import')
@@ -11,8 +10,6 @@ const User = {
   ...require('../../lib/models/User/brand'),
   ...require('../../lib/models/User/get'),
 }
-
-const findUserByEmail = memoize(User.getByEmail)
 
 /**
  * @param {Map<string, string>} emailMapping 
