@@ -113,8 +113,8 @@ function initProgram (program) {
     .option('-M, --mapping-json <mappingDefJson', 'Mapping def. file')
     .option('-e, --email-mapping <emailMapping>', 'Email mapping')
     .option('-E, --email-mapping-json <emailMappingJson>', 'Email mapping file')
-    .option('--folder-column <folderCol>', 'Folder column name', 'Name')
-    .option('--email-column <emailCol>', 'Email column name', 'Email')
+    .option('--folder-column [folderCol]', 'Folder column name', 'Name')
+    .option('--email-column [emailCol]', 'Email column name', 'Email')
 }
 
 /** @param {import('commander').program} program */
