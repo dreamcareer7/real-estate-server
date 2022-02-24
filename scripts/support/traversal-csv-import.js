@@ -52,9 +52,9 @@ async function importFiles ({
     }
 
     // @ts-ignore
-    const { fileId } = await AttachedFile.saveFromStream({
-      filename: `${Date.now()}-${file}.csv`,
-      path: `${userId}/contacts`,
+    const { id: fileId } = await AttachedFile.saveFromStream({
+      filename: `${Date.now()}-${file}`,
+      path: `user-${userId}/contacts`,
       user: userId,
       stream: createReadStream(path.join(root, file)),
     })
