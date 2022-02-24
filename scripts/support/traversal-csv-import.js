@@ -66,12 +66,13 @@ async function importFiles ({
       continue
     }
 
+    Context.log([
+      `Brand ID: ${brandId}`,
+      `User ID: ${userId}`,
+      `CSV File: ${file}`,
+    ].join(', '))
+
     if (dryRun) {
-      Context.log([
-        `Brand ID: ${brandId}`,
-        `User ID: ${userId}`,
-        `CSV File: ${file}`,
-      ].join(', '))
       continue
     }
 
@@ -83,7 +84,7 @@ async function importFiles ({
       stream: createReadStream(path.join(directory, file)),
     })
 
-    await importCsv(
+    await importCsv.immediate(
       userId,
       brandId,
       fileId,
