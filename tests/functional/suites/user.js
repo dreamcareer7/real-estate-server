@@ -868,7 +868,7 @@ module.exports = {
         name: 'John Doe\'s Team',
         type: 'brand'
       },
-      acl: ['CRM', 'Deals'],
+      acl: ['Deals'],
       settings: {
         type: 'user_setting'
       },
