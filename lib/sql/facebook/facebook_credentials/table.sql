@@ -8,7 +8,7 @@ CREATE TABLE facebook_credentials (
     last_name TEXT,
     access_token TEXT,
     scope TEXT,    
-    created_at timestamp with time zone DEFAULT CLOCK_TIMESTAMP(),
-    updated_at timestamp with time zone DEFAULT CLOCK_TIMESTAMP(),     
+    created_at timestamp DEFAULT CLOCK_TIMESTAMP(),
+    updated_at timestamp DEFAULT CLOCK_TIMESTAMP(),     
     CONSTRAINT facebook_credentials_facebook_brand UNIQUE (facebook_id, brand)    
   )
