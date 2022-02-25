@@ -103,7 +103,7 @@ INSERT INTO email_threads (
     microsoft_messages.thread_key, message_date
 )
 ON CONFLICT (id) DO UPDATE SET
-  deleted_at = null,
+  deleted_at = EXCLUDED.deleted_at,
   updated_at = now(),
   subject = EXCLUDED.subject,
   last_message_id = EXCLUDED.last_message_id,
