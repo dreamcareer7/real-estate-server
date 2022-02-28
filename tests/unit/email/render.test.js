@@ -62,6 +62,11 @@ const placeholders = [
   },
 
   {
+    field: '{{recipient.phone_number or "phone"}}',
+    value: 'phone'
+  },
+
+  {
     field: '{{recipient.empty_attribute or "foo"}}',
     value: 'foo'
   },
