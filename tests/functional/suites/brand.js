@@ -191,14 +191,23 @@ const addDateContext = cb => {
 }
 
 const addTextContext = cb => {
-  const { contract_status }  = contexts
+  const contract_status = {
+    ...contexts.contract_status,
+    checklists: [
+      {
+        checklist: results.brand.addChecklist.data.id,
+        is_required: true
+      }
+    ]
+  }
+
   return frisby.create('add a context definition to a brand')
     .post(`/brands/${brand_id}/contexts?associations[]=brand_context.checklists`, contract_status)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
-      data: contract_status
+      data: omit(contract_status, 'checklists')
     })
 }
 
