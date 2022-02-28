@@ -883,4 +883,14 @@ declare type TDbSqlAddress =
   | 'facebook/facebook_pages/get'
   | 'facebook/facebook_pages/get_by_user'
   | 'facebook/facebook_pages/delete'
+  | 'social_post/due'
+  | 'social_post/lock'
+  | 'social_post/mark-as-executed'
+  | 'social_post/get'
+  | 'social_post/save-error'
+  | 'social_post/insert'
+  | 'social_post/delete'
+  | 'social_post/update'
+  | 'social_post/update-worker-result'
+  
   ;
