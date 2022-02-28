@@ -2,7 +2,7 @@ const fs = require('fs')
 const path = require('path')
 const brand = require('./data/brand.js')
 const contexts = require('./data/context.js')
-const { omit } = require('lodash')
+const { omit, find } = require('lodash')
 
 registerSuite('office', ['add'])
 registerSuite('form', ['create'])
@@ -297,8 +297,9 @@ const updateChecklist = cb => {
 }
 
 const deleteChecklist = cb => {
+  const current_offer = find(results.brand.addPropertyType.data.checklists, {checklist_type: 'Offer'})
   return frisby.create('delete a checklist to a brand')
-    .delete(`/brands/${brand_id}/checklists/${results.brand.addChecklist.data.id}`)
+    .delete(`/brands/${brand_id}/checklists/${current_offer.id}`)
     .after(cb)
     .expectStatus(204)
 }
@@ -948,6 +949,7 @@ module.exports = {
   updatePropertyType,
   sortPropertyType,
 
+  deleteChecklist,
   addChecklist,
   updateChecklist,
   addTask,
@@ -957,7 +959,6 @@ module.exports = {
   getPropertyTypes,
   deletePropertyType,
   deleteTask,
-  deleteChecklist,
   getByHostname,
   removeHostname,
 
