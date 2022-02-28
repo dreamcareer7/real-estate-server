@@ -4,6 +4,7 @@ const { Listing }   = require('../../lib/models/Listing')
 const Notification  = require('../../lib/models/Notification')
 const School = require('../../lib/models/School')
 const EmailCampaign = require('../../lib/models/Email/campaign/due')
+const SocialPost = require('../../lib/models/SocialPost/due')
 const EmailCampaignStats = require('../../lib/models/Email/campaign/stats')
 const GoogleCredential     = require('../../lib/models/Google/credential')
 const MicrosoftCredential  = require('../../lib/models/Microsoft/credential')
@@ -56,6 +57,10 @@ const sendDueEmailCampaigns = (job, cb) => {
   EmailCampaign.sendDue().nodeify(cb)
 }
 
+const sendDueSocialPost = (job, cb) => {
+  SocialPost.sendDue().nodeify(cb)
+}
+
 const executedDueTriggers = (job, cb) => {
   Trigger.executeDue().nodeify(cb)
 }
@@ -101,7 +106,8 @@ const list = {
   'EmailCampaignStats.updateStats': updateEmailCampaginStats,
   'GoogleCredential.create': CreateGoogleCredential,
   'MicrosoftCredential.create': CreateMicrosoftCredential,
-  'BrandTemplate.updateThumbnails': updateTemplateThumbnails
+  'BrandTemplate.updateThumbnails': updateTemplateThumbnails,
+  'SocialPost.sendDue': sendDueSocialPost,
 }
 
 const queues = {}
