@@ -5,9 +5,9 @@
 
     <mj-wrapper background-color="#ffffff" padding="0">
 
-          <mj-section background-color="#FAF9EA" padding-top="0">
+      <mj-section padding="0">
         <mj-column>
-            <mj-image padding="0" width="400px" src="https://assets.rechat.com/daily/header.png" />
+            <mj-image padding="0" src="https://assets.rechat.com/daily/header/1.png" />
         </mj-column>
       </mj-section>
 
@@ -28,5 +28,6 @@
     {% include './emails/index.mjml' %}
     {% include './holidays/index.mjml' %}
     {% include './webinars/index.mjml' %}
+    {% include './whatsnew/index.mjml' %}
 
 {% endblock %}

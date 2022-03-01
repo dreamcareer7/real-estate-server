@@ -21,6 +21,7 @@ registerSuite('brokerwolf', [
   'mapContactType'
 ])
 registerSuite('brand', [
+  'deleteChecklist',
   'addChecklist',
   'addDateContext',
   'addTextContext',

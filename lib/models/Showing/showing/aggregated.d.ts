@@ -1,3 +1,5 @@
+import { TShowingRole } from '../role/types';
+
 export type DayOfWeek =
   | 'Monday'
   | 'Tuesday'
@@ -36,7 +38,7 @@ export interface ShowingRole {
   deleted_at: number;
   created_by: number;
   showing: UUID;
-  role: TDealRole;
+  role: TShowingRole;
   user: UUID;
   brand: UUID;
   can_approve: boolean;
@@ -95,7 +97,7 @@ export interface ShowingAppointment {
 
 export interface ShowingRoleInput {
   // The same deal role enum
-  role: TDealRole;
+  role: TShowingRole;
   user: UUID;
   brand: UUID;
   can_approve: boolean;
