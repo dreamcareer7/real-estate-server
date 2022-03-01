@@ -41,7 +41,8 @@ const mlsContext = async () => {
 
   const deal = await DealHelper.create(user.id, brand.id, {
     listing: listing.id,
-    deal_type: 'Selling'
+    deal_type: 'Selling',
+    checklists: [{}] // We need it to create a checklist so there's a contexts activated
   })
 
   expect(deal.context.street_address.text).to.equal(listing.property.address.street_address)

@@ -4,6 +4,14 @@ export type NotificationDeliveryType =
   | 'sms'
   ;
 
+export type TShowingRole =
+  | 'Admin/Assistant'  
+  | 'CoSellerAgent'
+  | 'SellerAgent'
+  | 'Tenant'
+  | 'Other'
+  ;
+
 export interface ShowingRole {
   id: UUID;
   created_at: number;
@@ -11,7 +19,7 @@ export interface ShowingRole {
   deleted_at: number;
   created_by: number;
   showing: UUID;
-  role: TDealRole;
+  role: TShowingRole;
   user_id: UUID;
   agent_id: IAgent['id'] | null;
   brand: UUID;
@@ -31,7 +39,7 @@ export interface ShowingRolePopulated {
   deleted_at: number;
   created_by: number;
   showing: UUID;
-  role: TDealRole;
+  role: TShowingRole;
   user_id: UUID;
   user: IUser;
   agent_id: IAgent['id'] | null;
@@ -47,7 +55,7 @@ export interface ShowingRolePopulated {
 }
 
 export interface ShowingRoleInput {
-  role: TDealRole;
+  role: TShowingRole;
   user?: UUID;
   agent?: IAgent['id'];
   brand: UUID;

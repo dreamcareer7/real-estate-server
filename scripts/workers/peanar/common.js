@@ -16,6 +16,7 @@ require('../../../lib/models/Microsoft/workers')
 require('../../../lib/models/Deal/email')
 require('../../../lib/models/Deal/brokerwolf')
 require('../../../lib/models/Deal/D365')
+require('../../../lib/models/Deal/MoveEasy')
 require('../../../lib/models/Email/archive/upload')
 require('../../../lib/models/Email/send')
 require('../../../lib/models/Email/events')
@@ -53,7 +54,7 @@ const queues = [
     concurrency: 1
   },
   {
-    queues: ['brokerwolf', 'd365'],
+    queues: ['brokerwolf', 'd365', 'move_easy'],
     concurrency: 1
   },
   {

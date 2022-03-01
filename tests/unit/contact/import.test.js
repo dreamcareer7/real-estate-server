@@ -96,6 +96,60 @@ async function testCsvFullAddressColumns() {
   })
 }
 
+async function testCsvFullAddressColumns3() {
+  const file = await AttachedFile.saveFromStream({
+    stream: fs.createReadStream(path.resolve(__dirname, './data/full-address-bogus.csv')),
+    filename: 'contacts.csv',
+    user,
+    path: user.id + '-' + Date.now().toString(),
+    relations: [
+      {
+        role: 'Brand',
+        role_id: brand.id
+      }
+    ],
+    public: false
+  })
+
+  const mappings = require('./data/full-address-bogus.json')
+  ImportWorker.import_csv(user.id, brand.id, file.id, user.id, mappings)
+
+  await handleJobs()
+
+  const { total } = await Contact.filter(brand.id, [])
+  expect(total).to.be.equal(1)
+}
+
+async function testCsvFullAddressColumns2() {
+  const file = await AttachedFile.saveFromStream({
+    stream: fs.createReadStream(path.resolve(__dirname, './data/fulladdress2.csv')),
+    filename: 'contacts.csv',
+    user,
+    path: user.id + '-' + Date.now().toString(),
+    relations: [
+      {
+        role: 'Brand',
+        role_id: brand.id
+      }
+    ],
+    public: false
+  })
+
+  const mappings = require('./data/fulladdress-mapping.json')
+  ImportWorker.import_csv(user.id, brand.id, file.id, user.id, mappings)
+
+  await handleJobs()
+
+  const { total, ids } = await Contact.filter(brand.id, [])
+  expect(total).to.be.equal(1)
+
+  const contact = await Contact.get(ids[0])
+  expect(contact.address).not.to.be.null
+  expect(contact.address[0]).to.include({
+    house_num: '1496', name: 'Trudie Park'
+  })
+}
+
 async function testCsvSameNameColumns() {
   const file = await AttachedFile.saveFromStream({
     stream: fs.createReadStream(path.resolve(__dirname, '../../functional/suites/data/contacts-multiple-tag-columns.csv')),
@@ -166,6 +220,8 @@ describe('Contact', () => {
   describe('Import', () => {
     it('should import contacts from csv', testImportFromCsv)
     it('should parse and import full address columns', testCsvFullAddressColumns)
+    it('should parse and import full address column without unit number', testCsvFullAddressColumns2)
+    it('should parse and import unparseable full address column', testCsvFullAddressColumns3)
     it('should parse and import multiple columns with the same name', testCsvSameNameColumns)
     it('should parse and import comma-separated multi valued columns', testCsvMultiTagColumn)
     it('should import contacts from json', testImportFromJson)

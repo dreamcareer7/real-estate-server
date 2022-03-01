@@ -28,6 +28,7 @@ const notification = {
   sendCancelNotificationToRoles: stub(),
   sendFeedbackReceivedNotificationToRoles: stub(),
   sendRescheduleNotificationToRoles: stub(),
+  sendFeedbackReceivedTextMessageToBuyer: stub(),
 }
 
 const mailerFactory = {

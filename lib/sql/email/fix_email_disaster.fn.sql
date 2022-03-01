@@ -1,4 +1,4 @@
-CREATE FUNCTION fix_email_disaster(campaign uuid) RETURNS void LANGUAGE SQL AS $$
+CREATE FUNCTION fix_email_disaster(campaign uuid, min_elapsed_time integer) RETURNS void LANGUAGE SQL AS $$
   WITH mistaken_emails AS (
     SELECT
       ee.id
@@ -27,5 +27,5 @@ CREATE FUNCTION fix_email_disaster(campaign uuid) RETURNS void LANGUAGE SQL AS $
   WHERE
     emails.id = de.email;
   
-  SELECT update_email_campaign_stats($1);
+  SELECT update_email_campaign_stats($1, $2);
 $$;
