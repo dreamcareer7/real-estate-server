@@ -11,7 +11,7 @@ with items as (
 upsert as (
  INSERT INTO
   facebook_pages (
-    facebook_credential_id,
+    facebook_credential,
     access_token,
     name,
     facebook_page_id,
@@ -28,7 +28,7 @@ upsert as (
     instagram_username,
     instagram_profile_picture_url
   FROM items
-  ON CONFLICT(facebook_credential_id, instagram_business_account_id) do update set 
+  ON CONFLICT(facebook_credential, instagram_business_account_id) do update set 
   access_token = excluded.access_token,
   name = excluded.name,
   instagram_username = excluded.instagram_username,
@@ -42,7 +42,7 @@ update facebook_pages
   set 
     deleted_at = CLOCK_TIMESTAMP(),
     revoked = true
-  where facebook_credential_id = $1::uuid
+  where facebook_credential = $1::uuid
   and instagram_business_account_id not in (
     select instagram_business_account_id from items
   )
