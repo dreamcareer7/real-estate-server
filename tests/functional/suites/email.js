@@ -37,7 +37,7 @@ const individual = {
   notifications_enabled: true
 }
 
-const mailgun_id = 'example-mailgun-id-email-1'
+
 
 
 
@@ -63,15 +63,24 @@ const sendDue = cb => {
     .expectStatus(200)
 }
 
+const getMailGunId = cb => {  
+  return frisby
+    .create('Get MailGun Id')
+    .get(`/emails/${results.email.schedule.data.id}?associations[]=email_campaign.emails&associations[]=email_campaign.recipients&associations[]=email_campaign_email.email`)
+    .after(cb)    
+    .expectStatus(200)    
+}
+
 const addEvent = cb => {
+  
   const data = {
     'event-data': {
-      timestamp: 1531818450.203548,
+      timestamp: new Date().getTime(),
       recipient: email.to[0].email,
       event: 'delivered',
       message: {
         headers: {
-          'message-id': mailgun_id
+          'message-id': results.email.getMailGunId.data.emails[0].email.mailgun_id
         }
       }
     }
@@ -95,11 +104,11 @@ const updateStats = cb => {
     .expectStatus(200)
 }
 
-const get = cb => {
+const get = cb => {  
   return frisby
     .create('Get the campaign')
     .get(`/emails/${results.email.schedule.data.id}?associations[]=email_campaign.emails&associations[]=email_campaign.recipients&associations[]=email_campaign_email.email`)
-    .after(cb)
+    .after(cb)    
     .expectStatus(200)
     .expectJSON({
       data: {
@@ -896,6 +905,7 @@ module.exports = {
   enableDisableNotification,
   checkNotificationEnabled,
   sendDue,
+  getMailGunId,
   addEvent,
   updateStats,
   get,
