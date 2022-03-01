@@ -7,6 +7,7 @@ const pollers = {
   'EmailCampaign.sendDue': EmailCampaign.sendDue,
   'EmailCampaign.updateStats': EmailCampaignStats.updateStats,
   'Showing.appointment.finalizeRecentlyDone': ShowingAppointment.finalizeRecentlyDone,
+  'Showing.appointment.sendEmailNotification': ShowingAppointment.sendEmailNotification,
   'SocialPost.sendDue': SocialPost.sendDue,
 }
 
