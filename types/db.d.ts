@@ -530,6 +530,7 @@ declare type TDbSqlAddress =
   | 'listing/subdivision/search'
   | 'listing/touch'
   | 'listing/update_status'
+  | 'listing/get_mls_info'
   | 'message/get'
   | 'message/post'
   | 'message/retrieve'
