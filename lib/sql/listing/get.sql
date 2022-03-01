@@ -10,11 +10,7 @@ listing_settings AS (
 ,listing AS (
   SELECT 'listing' AS TYPE,
         listings.*,
-        (
-          SELECT id FROM mls_info
-          WHERE mls_info.mls=listings.mls
-          LIMIT 1
-        ) as mls_info,
+        listings.mls as mls_info,
         COALESCE(
           listings.list_office_name,
           (
