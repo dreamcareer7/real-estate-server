@@ -1,1 +1,0 @@
-UPDATE emails SET google_id = $2 WHERE id = $1
