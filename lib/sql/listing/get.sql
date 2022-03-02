@@ -10,7 +10,6 @@ listing_settings AS (
 ,listing AS (
   SELECT 'listing' AS TYPE,
         listings.*,
-        listings.mls as mls_info,
         COALESCE(
           listings.list_office_name,
           (
