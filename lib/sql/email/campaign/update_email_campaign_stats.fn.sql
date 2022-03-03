@@ -1,11 +1,22 @@
-CREATE OR REPLACE FUNCTION update_email_campaign_stats(campaign_id uuid)
+CREATE OR REPLACE FUNCTION update_email_campaign_stats(campaign_id uuid, min_elapsed_time integer)
 RETURNS void AS
 $$
   WITH events AS (
     SELECT recipient, event, email, campaign, object, client_os
     FROM emails_events
     JOIN emails ON emails.id = emails_events.email
-    WHERE emails.campaign = $1
+    WHERE emails.campaign = $1 and
+    (
+      (
+        emails_events.event in ('opened', 'clicked') and
+        EXTRACT(EPOCH FROM(emails_events.created_at - emails.sent_at)) > $2
+      )
+      or
+      (
+        emails_events.event not in ('opened', 'clicked') 
+      )
+    )
+    
   ),
 
   recipient_counts AS (

@@ -20,7 +20,7 @@ FROM
 ON conflict 
 	(microsoft_credential, message_id) 
 WHERE 
-	deleted_at is null 
+	message_id IS NOT NULL
 DO UPDATE
 SET 
     message_id = EXCLUDED.message_id,

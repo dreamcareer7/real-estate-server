@@ -1,8 +1,11 @@
 const _ = require('lodash')
 const parser = require('parse-address')
+const pnu = require('google-libphonenumber').PhoneNumberUtil.getInstance()
 
 const Brand = require('../../../lib/models/Brand')
 const BrandRole = require('../../../lib/models/Brand/role/save')
+
+const Context = require('../../../lib/models/Context')
 
 const db = require('../../../lib/utils/db')
 
@@ -104,9 +107,19 @@ const updateSettings = async offices => {
     const { address } = office
     const parsed = parser.parseLocation(address)
 
+    let phone_number = office.phone
+    if (phone_number) {
+      try {
+        const parsed = pnu.parse(phone_number, 'US')
+        phone_number = pnu.formatNumberForMobileDialing(parsed)
+      } catch(e) {
+        Context.log('Invalid phone', phone_number, 'for', office.id, e)
+      }
+    }
+
     return {
       id: office.id,
-      phone_number: office.phone,
+      phone_number,
       address: {
         house_num: parsed.number,
         predir: parsed.prefix,

@@ -118,6 +118,14 @@ async function create(data) {
       brand: b.id,
     })
 
+    /*
+     * The BrandPropertyType.create() function automatically created 3 checklists as a convenience.
+     * But during tests they are not needed as we'll create our own checklists.
+     * Having both will create issues.
+     * So, we just delete the ones created automatically and create new ones instead
+     */
+    await Promise.all(property_type.checklists.map(BrandChecklist.delete))
+
     property_types_by_label[label] = property_type.id
   }
 
@@ -226,8 +234,8 @@ async function getContexts(brand_id) {
  * @param {UUID} brand_id
  * @returns {Promise<any[]>}
  */
-function getChecklists(brand_id) {
-  return BrandChecklist.getByBrand(brand_id)
+function getChecklists(ids) {
+  return BrandChecklist.getAll(ids)
 }
 
 async function getPropertyTypes(brand_id) {
