@@ -39,7 +39,8 @@ const the = {
   parentBrandId: () => results.showing.brands.data[0].id,
   childBrandId: () => results.showing.brands.data[0].children[0].id,
 
-  showingId: () => results.showing.create.data.id,
+  showing: () => results.showing.create.data,
+  showingId: () => the.showing().id,
   
   sellerAgent: () => ({
     brand: the.childBrandId(),
@@ -217,7 +218,7 @@ function filter(cb) {
     .after(cb)
     .expectStatus(200)
     .expectJSON({
-      data: [results.showing.create.data],
+      data: [the.showing()],
     })
 }
 
@@ -239,7 +240,7 @@ function search (query, {
 }
 
 function getShowingPublic(cb) {
-  const showing_id = results.showing.create.data.human_readable_id
+  const showing_id = the.showing().human_readable_id
   return frisby
     .create('get showing public info')
     .get(`/showings/public/${showing_id}`)
@@ -247,7 +248,7 @@ function getShowingPublic(cb) {
     .expectStatus(200)
     .expectJSON({
       data: {
-        id: results.showing.create.data.human_readable_id,
+        id: showing_id,
         agent: {
           first_name: 'John',
           last_name: 'Doe',
@@ -262,7 +263,7 @@ function getShowingPublic(cb) {
 function _makeAppointment(msg, showing_id, expected_status = 'Requested') {
   return (cb) => {
     if (!showing_id) {
-      showing_id = results.showing.create.data.human_readable_id
+      showing_id = the.showing().human_readable_id
     }
     return frisby
       .create(msg)
@@ -360,7 +361,7 @@ function confirmAppointment(sourceCase, comment = 'You\'re welcome!') {
     const appt = results.showing[sourceCase].data
     return frisby
       .create('confirm an appointment')
-      .put(`/showings/${results.showing.create.data.id}/appointments/${appt.id}/approval`, {
+      .put(`/showings/${ths.showing().id}/appointments/${appt.id}/approval`, {
         approved: true,
         comment,
       })
@@ -497,7 +498,7 @@ function checkBuyerRescheduleNotifications(cb) {
   return frisby
     .create('check buyer rescheduled notification')
     .get(
-      `/showings/${results.showing.create.data.id}/appointments/${appt.id}/?associations[]=showing_appointment.notifications`
+      `/showings/${the.showing().id}/appointments/${appt.id}/?associations[]=showing_appointment.notifications`
     )
     .after(cb)
     .expectJSON({
@@ -556,7 +557,7 @@ function sellerAgentCancelAppointment(cb) {
   return frisby
     .create('cancel an appointment by seller agent')
     .put(
-      `/showings/${results.showing.create.data.id}/appointments/${results.showing.makeAnotherAppointment.data.id}/approval`,
+      `/showings/${the.showing().id}/appointments/${results.showing.makeAnotherAppointment.data.id}/approval`,
       {
         approved: false,
         comment: 'Sorry something came up I have to cancel this',
@@ -575,7 +576,7 @@ function sellerAgentRejectAppointment (cb) {
   return frisby
     .create('reject an appointment by seller agent')
     .put(
-      `/showings/${results.showing.create.data.id}/appointments/${results.showing.makeAnotherAppointmentToReject.data.id}/approval`,
+      `/showings/${the.showing().id}/appointments/${results.showing.makeAnotherAppointmentToReject.data.id}/approval`,
       {
         approved: false,
         comment: 'Sorry something came up',
