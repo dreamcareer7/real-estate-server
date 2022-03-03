@@ -149,7 +149,7 @@ function runAsUauthorized (fns) {
   }
 
   let originalAuthz = null
-  beforeFirstFrisby(fns, () => originalAuthz = setToken(undefined))
+  beforeFirstFrisby(fns, () => { originalAuthz = setToken(undefined) })
   afterLastFrisby(fns, () => setToken(originalAuthz))
   
   return fns

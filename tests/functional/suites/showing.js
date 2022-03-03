@@ -229,9 +229,9 @@ function search (query, {
 } = {}) {
   return cb => {
     const f = frisby.create(name)
-          .post('/showings/filter', { query })
-          .after(cb)
-          .expectStatus(status)
+      .post('/showings/filter', { query })
+      .after(cb)
+      .expectStatus(status)
     
     expect && f.expectJSON(expect())
 
@@ -347,8 +347,8 @@ function checkAppointmentReceiptSmsForBuyer(cb) {
           to: formatPhoneNumberForDialing(BUYER_PHONE_NUMBER),
           body:
           `Your showing request for 5020 Junius Street at ${APPOINTMENT_TIME.format(
-              'MMM Do, h:mmA'
-            )} has been received.` +
+            'MMM Do, h:mmA'
+          )} has been received.` +
             '\n\n' +
             'Cancel via http://mock-branch-url\nReschedule via http://mock-branch-url',
         },
@@ -361,7 +361,7 @@ function confirmAppointment(sourceCase, comment = 'You\'re welcome!') {
     const appt = results.showing[sourceCase].data
     return frisby
       .create('confirm an appointment')
-      .put(`/showings/${ths.showing().id}/appointments/${appt.id}/approval`, {
+      .put(`/showings/${the.showing().id}/appointments/${appt.id}/approval`, {
         approved: true,
         comment,
       })
@@ -387,8 +387,8 @@ function checkAppointmentConfirmationSmsForBuyer(cb) {
           to: formatPhoneNumberForDialing(BUYER_PHONE_NUMBER),
           body:
           `Your showing for 5020 Junius Street at ${APPOINTMENT_TIME.format(
-              'MMM Do, h:mmA'
-            )} has been confirmed.` +
+            'MMM Do, h:mmA'
+          )} has been confirmed.` +
             '\n\n' +
             'Cancel via http://mock-branch-url\nReschedule via http://mock-branch-url',
         },
