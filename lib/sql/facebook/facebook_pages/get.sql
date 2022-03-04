@@ -11,8 +11,7 @@ SELECT
     EXTRACT(EPOCH FROM facebook_pages.updated_at) AS updated_at,
     EXTRACT(EPOCH FROM facebook_pages.deleted_at) AS deleted_at,
     facebook_credentials.brand as brand,
-    facebook_credentials.user as user,
-    facebook_credentials.access_token as facebook_access_token,
+    facebook_credentials.user as user,   
     'facebook_page' as "type"
 FROM
     facebook_pages    
