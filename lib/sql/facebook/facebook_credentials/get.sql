@@ -1,4 +1,5 @@
 SELECT   
+    facebook_credentials.id,
     facebook_credentials.user,
     facebook_credentials.brand,
     facebook_credentials.facebook_id,
@@ -7,6 +8,7 @@ SELECT
     facebook_credentials.last_name,
     facebook_credentials.access_token,
     facebook_credentials.scope,
+    facebook_credentials.access_token,
     EXTRACT(EPOCH FROM facebook_credentials.created_at) AS created_at,
     EXTRACT(EPOCH FROM facebook_credentials.updated_at) AS updated_at,    
     'facebook_credential' as "type"

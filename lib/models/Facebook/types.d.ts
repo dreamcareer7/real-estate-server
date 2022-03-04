@@ -27,3 +27,34 @@ export interface FacebookProfile {
     }
   }
 }
+
+export interface FacebookCredential {
+  id: UUID;
+  user: UUID
+  brand: UUID
+  facebook_id: string
+  facebook_email: string
+  first_name: string
+  last_name: string
+  scope: string
+  access_token: string
+  created_at: number
+  updated_at: number
+  type: string
+}
+
+export interface DBFacebookPage {
+  id: UUID
+  facebook_credential: UUID
+  name: string
+  facebook_page_id: string
+  instagram_business_account_id: string
+  instagram_username: string
+  instagram_profile_picture_url: string
+  revoked: boolean
+  created_at: number
+  updated_at: number
+  type: string
+  brand: UUID
+  user: UUID
+}
