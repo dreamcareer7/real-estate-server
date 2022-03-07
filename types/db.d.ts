@@ -881,4 +881,11 @@ declare type TDbSqlAddress =
   | 'website/get_user'
   | 'website/insert'
   | 'website/insert_hostname'
-  | 'website/update';
+  | 'website/update'
+  | 'facebook/facebook_credentials/insert'
+  | 'facebook/facebook_credentials/get'
+  | 'facebook/facebook_pages/upsert_many'
+  | 'facebook/facebook_pages/get'
+  | 'facebook/facebook_pages/get_by_user'
+  | 'facebook/facebook_pages/delete'
+  ;
