@@ -27,7 +27,7 @@ const { peanar } = require('../lib/utils/peanar')
 const Context = require('../lib/models/Context/index')
 const redis = require('../lib/data-service/redis').createClient()
 
-require('../lib/models/event_listeners')()
+require('../lib/models/Context/events')()
 
 function processImports(replContext) {
   for (const part of options.import ?? []) {

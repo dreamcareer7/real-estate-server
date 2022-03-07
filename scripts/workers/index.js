@@ -8,7 +8,7 @@ const db = require('../../lib/utils/db')
 const Slack = require('../../lib/models/Slack')
 
 const Context = require('../../lib/models/Context')
-const attachModelEventHandlers = require('../../lib/models/event_listeners')
+const attachModelEventHandlers = require('../../lib/models/Context/events')
 
 const Blocked = require('blocked-at')
 const moduleControls = {

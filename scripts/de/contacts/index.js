@@ -13,7 +13,7 @@ const Context = require('../../../lib/models/Context')
 const Contact = require('../../../lib/models/Contact/manipulate')
 const ContactAttribute = require('../../../lib/models/Contact/attribute/get')
 
-const attachModelEventListeners = require('../../../lib/models/event_listeners')
+const attachModelEventListeners = require('../../../lib/models/Context/events')
 
 const createContext = require('../../workers/utils/create-context')
 

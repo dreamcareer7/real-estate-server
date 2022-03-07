@@ -6,7 +6,7 @@ const { peanar } = require('../../lib/utils/peanar')
 const Context = require('../../lib/models/Context')
 const Metric = require('../../lib/models/Metric')
 
-require('../../lib/models/event_listeners')()
+require('../../lib/models/Context/events')()
 
 const getDb = async () => {
   return new Promise((resolve, reject) => {
