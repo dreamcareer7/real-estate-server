@@ -143,6 +143,7 @@ declare type TContactActionReason =
   | 'deals'
   | 'import_csv'
   | 'import_json'
+  | 'import_xlsx'
   | 'merge'
   | 'deleted_definition'
   | 'google_integration'
@@ -230,7 +231,7 @@ declare interface ICSVImporterMappingDef {
 }
 
 declare interface ICSVImporterMapping {
-  def: IContactAttributeDef;
+  def: IContactAttributeDef | { name: string };
   label?: string;
   index?: number;
   is_partner?: boolean;
