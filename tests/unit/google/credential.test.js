@@ -1,5 +1,5 @@
 const { expect } = require('chai')
-const { createContext } = require('../helper')
+const { createContext, handleJobs } = require('../helper')
 
 const Context          = require('../../../lib/models/Context')
 const User             = require('../../../lib/models/User/get')
@@ -188,10 +188,7 @@ async function disconnectOnLeavingBrand() {
   const { credential } = await createGoogleCredential(user, brand)
   await removeMember(brand.roles[0], user.id)
 
-  // Need to be delayed until the emitted message has been received 
-  await new Promise((resolve) => {
-    setTimeout(resolve, 10)
-  })
+  await handleJobs()
 
   const updatedCredential_1 = await GoogleCredential.get(credential.id)
   expect(updatedCredential_1.revoked).to.be.equal(true)
