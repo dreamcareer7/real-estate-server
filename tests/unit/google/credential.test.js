@@ -8,7 +8,6 @@ const { removeMember } = require('../../../lib/models/Brand/role/members')
 const GoogleCredential = require('../../../lib/models/Google/credential')
 
 const { createGoogleCredential } = require('./helper')
-const { remove } = require('lodash')
 
 let user, brand
 
@@ -189,6 +188,11 @@ async function disconnectOnLeavingBrand() {
   const { credential } = await createGoogleCredential(user, brand)
   await removeMember(brand.roles[0], user.id)
 
+  // Need to be delayed until the emitted message has been received 
+  await new Promise((resolve) => {
+    setTimeout(resolve, 10)
+  })
+
   const updatedCredential_1 = await GoogleCredential.get(credential.id)
   expect(updatedCredential_1.revoked).to.be.equal(true)
 }
@@ -342,7 +346,7 @@ describe('Google', () => {
     it('should disconnect a google-credential', disconnect)
     it('should handle returned exception from disconnect google-credential', disconnectFailed)
     it('should revoke a google-credential', revoke)
-    it.only('should disconnect a google-credential on leaving brand', disconnectOnLeavingBrand)
+    it('should revoke a google-credential on leaving brand', disconnectOnLeavingBrand)
     
     it('should update google-credential\'s profile', updateProfile)
     it('should update google-credential\'s gmail-profile', updateGmailProfile)
