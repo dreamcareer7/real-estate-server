@@ -11,7 +11,7 @@ const validCode = 'validCode'
 
 function requestFacebookAccess(cb) {
   return F('request facebook access')
-    .get('/users/self/facebook/auth', {
+    .get(`/brands/${theBrand()}/users/self/facebook/auth`, {
       followRedirect: false,
     })
     .after((err, res, body) => {
@@ -34,7 +34,7 @@ function authDone(cb) {
 
 function getInstagramProfiles(cb) {
   return F('get instagram profiles from multi facebook accounts')
-    .get('/users/self/facebook')
+    .get(`/brands/${theBrand()}/users/self/facebook`)
     .after((err, res, body) => {
       cb(err, res, body)
     })
@@ -76,7 +76,7 @@ function scheduleInstagramPost(cb) {
   const template = R().instantiateTemplate.data.id
 
   return F('schedule instagram post')
-    .post('/social-post', {
+    .post(`/brands/${theBrand()}/social-post`, {
       facebookPage,
       template,
       due_at: new Date(new Date().getTime() - 10 * 60 * 1000).toISOString(),
@@ -99,7 +99,7 @@ function scheduleAnotherInstagramPost(cb) {
   const template = R().instantiateTemplate.data.id
 
   return F('schedule instagram post for testing update api')
-    .post('/social-post', {
+    .post(`/brands/${theBrand()}/social-post`, {
       facebookPage,
       template,
       due_at: new Date(new Date().getTime() - 10 * 60 * 1000),
@@ -122,7 +122,7 @@ function scheduleAnotherInstagramPostForTestingFailedJob(cb) {
   const template = R().instantiateTemplate.data.id
 
   return F('schedule instagram post for testing failed job')
-    .post('/social-post', {
+    .post(`/brands/${theBrand()}/social-post`, {
       facebookPage,
       template,
       due_at: new Date(new Date().getTime() - 10 * 60 * 1000),
@@ -144,7 +144,7 @@ function updateSocialPost(cb) {
   const socialPost = R().scheduleAnotherInstagramPost.data.id
 
   return F('reschedule social post for a next hour')
-    .put(`/social-post/${socialPost}`, {
+    .put(`/brands/${theBrand()}/social-post/${socialPost}`, {
       dueAt: new Date(new Date().getTime() + 10 * 60 * 1000),
     })
     .after(cb)
@@ -156,7 +156,7 @@ function scheduleInstagramPostForTestingDeleteMethod(cb) {
   const template = R().instantiateTemplate.data.id
 
   return F('schedule instagram post for testing delete method')
-    .post('/social-post', {
+    .post(`/brands/${theBrand()}/social-post`, {
       facebookPage,
       template,
       due_at: new Date(new Date().getTime() - 10 * 60 * 1000),
@@ -170,7 +170,7 @@ function deleteSocialPost(cb) {
   const socialPostId = R().scheduleInstagramPostForTestingDeleteMethod.data.id
 
   return F('social post should successfully be deleted')
-    .delete(`/social-post/${socialPostId}`)
+    .delete(`/brands/${theBrand()}/social-post/${socialPostId}`)
     .after(cb)
     .expectStatus(204)
 }
@@ -191,7 +191,7 @@ function getUserSocialPosts(cb) {
   const executedSocialPostId = R().scheduleInstagramPost.data.id
 
   return F('get executed social posts of brand')
-    .get('/social-post?executed=true')
+    .get(`/brands/${theBrand()}/social-post?executed=true`)
     .after((err, res, body) => {
       const rowThatShouldBeDeleted = body.data.find(
         (socialPost) => socialPost.id === deletedSocialPostId
@@ -219,7 +219,7 @@ function getScheduledSocialPost(cb) {
   const facebookPageWithFailedJob = R().getInstagramProfiles.data[1].id
 
   return F('get scheduled social posts of brand')
-    .get('/social-post?executed=false')
+    .get(`/brands/${theBrand()}/social-post?executed=false`)
     .after((err, res, body) => {
       const scheduledPost = body.data.find((socialPost) => socialPost.id === scheduled)
 
@@ -242,7 +242,7 @@ function getScheduledSocialPost(cb) {
 
 function getEmptyList(cb) {
   return F('get empty list if you provide the wrong limit or start option')
-    .get('/social-post?limit=1&start=10')
+    .get(`/brands/${theBrand()}/social-post?limit=1&start=10`)
     .after((err, res, body) => {
       if (body.data.length !== 0) {
         throw new Error('get empty list if you provide the wrong limit or start option')
@@ -257,7 +257,7 @@ function updateExecutedPost(cb) {
   const socialPost = R().scheduleInstagramPost.data.id
 
   return F('user can not update executed post')
-    .put(`/social-post/${socialPost}`, {
+    .put(`/brands/${theBrand()}/social-post/${socialPost}`, {
       dueAt: new Date(new Date().getTime() + 10 * 60 * 1000),
     })
     .after(cb)
