@@ -7,6 +7,7 @@ export interface ShowingAppointmentInput {
   time: string;
   contact: UUID;
   status: AppointmentStatus;
+  email: string;
 }
 
 export interface ShowingAppointmentRequestPayload {
@@ -33,6 +34,7 @@ export interface ShowingAppointment {
   approvals: UUID[] | null;
   feedback: AppointmentFeedback | null;
   buyer_message: string | null;
+  email: string;
 }
 
 export interface ShowingAppointmentPublic {
@@ -57,6 +59,7 @@ export interface ShowingAppointmentPopulated {
   contact: IContact;
   approvals?: ShowingApproval[];
   buyer_message: string | null;
+  email: string;
 }
 
 export type AppointmentStatus =

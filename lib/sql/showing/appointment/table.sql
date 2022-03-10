@@ -17,5 +17,6 @@ CREATE TABLE IF NOT EXISTS showings_appointments (
   status showing_appointment_status NOT NULL DEFAULT 'Pending'::showing_appointment_status,
 
   showing uuid NOT NULL REFERENCES showings (id),
-  contact uuid NOT NULL REFERENCES contacts (id)
+  contact uuid NOT NULL REFERENCES contacts (id),
+  email text
 )
