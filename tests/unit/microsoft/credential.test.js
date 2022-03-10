@@ -151,14 +151,31 @@ async function revoke() {
   expect(updatedCredential_1.revoked).to.be.equal(true)
 }
 
-async function disconnectOnLeavingBrand() {
+async function disconnectOnLeavingWithMultipleRole() {
+  brand = await BrandHelper.create({
+    roles: { Admin: [user.id], Marketing: [user.id] },
+    contexts: [],
+    checklists: []
+  })
+  Context.set({ user, brand })
+
   const { credential } = await createMicrosoftCredential(user, brand)
   await removeMember(brand.roles[0], user.id)
 
   await handleJobs()
 
-  const updatedCredential_1 = await MicrosoftCredential.get(credential.id)
-  expect(updatedCredential_1.revoked).to.be.equal(true)
+  const theCredential = await MicrosoftCredential.get(credential.id)
+  expect(theCredential.revoked).to.be.equal(false)
+}
+
+async function disconnectOnLeavingWithSingleRole() {
+  const { credential } = await createMicrosoftCredential(user, brand)
+  await removeMember(brand.roles[0], user.id)
+
+  await handleJobs()
+
+  const theCredential = await MicrosoftCredential.get(credential.id)
+  expect(theCredential.revoked).to.be.equal(true)
 }
 
 async function updateProfile() {
@@ -270,7 +287,8 @@ describe('Microsoft', () => {
     it('should disable/enable a microsoft-credential', disconnect)
     it('should handle returned exception from disable/enable microsoft-credential', disconnectFailed)
     it('should revoke a microsoft-credential', revoke)
-    it('should revoke a microsoft-credential on leaving brand', disconnectOnLeavingBrand)
+    it('should revoke a microsoft-credential on leaving brand with a multiple role', disconnectOnLeavingWithMultipleRole)
+    it('should revoke a microsoft-credential on leaving brand with a single role', disconnectOnLeavingWithSingleRole)
 
     it('should update microsoft-credential\'s profile', updateProfile)
     it('should update microsoft-credential\'s primary email address', updatePrimaryEmail)
