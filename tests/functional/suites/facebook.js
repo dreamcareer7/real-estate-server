@@ -100,9 +100,9 @@ const compareData = (dbData, validData) => {
   }
 }
 
-function requestFacebookAccess(cb) {
+function requestFacebookAccess(cb) {  
   return F('request facebook access')
-    .get('/users/self/facebook/auth', {
+    .get(`/brands/${theBrand()}/users/self/facebook/auth`, {
       followRedirect: false,
     })
     .after((err, res, body) => {
@@ -136,7 +136,7 @@ function connectAnotherFacebookAccount(cb) {
 
 function getInstagramProfiles(cb) {
   return F('get instagram profiles from multi facebook accounts')
-    .get('/users/self/facebook')
+    .get(`/brands/${theBrand()}/users/self/facebook`)
     .after((err, res, body) => {
       const validData = getFakeDataByFacebookCode([validCode, validCode2])
       compareData(body.data, validData)
@@ -158,7 +158,7 @@ function updateFacebookPermissions(cb) {
 
 function getInstagramProfilesAfterUpdatingPermissions(cb) {
   return F('get instagram profiles after updating permissions')
-    .get('/users/self/facebook')
+    .get(`/brands/${theBrand()}/users/self/facebook`)
     .after((err, res, body) => {
       const validData = getFakeDataByFacebookCode([validCode2, validCodeForUpsert])
       compareData(body.data, validData)
@@ -169,14 +169,14 @@ function getInstagramProfilesAfterUpdatingPermissions(cb) {
 
 function disconnect(cb) {
   return F('disconnect instagram account')
-    .delete(`/users/self/facebook/${R().getInstagramProfilesAfterUpdatingPermissions.data[0].id}`)
+    .delete(`/brands/${theBrand()}/users/self/facebook/${R().getInstagramProfilesAfterUpdatingPermissions.data[0].id}`)
     .after(cb)
     .expectStatus(204)
 }
 
 function getInstagramProfilesAfterDisconnecting(cb) {
   return F('get instagram profiles after disconnecting')
-    .get('/users/self/facebook')
+    .get(`/brands/${theBrand()}/users/self/facebook`)
     .after((err, res, body) => {
       const deletedId = R().getInstagramProfilesAfterUpdatingPermissions.data[0].id
       const rowThatShouldHaveRemoved = body.data.find((r) => r.id === deletedId)
