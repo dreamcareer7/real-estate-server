@@ -6,8 +6,7 @@ const migrations = [
     id uuid NOT NULL DEFAULT uuid_generate_v4() PRIMARY KEY,
     mls mls NOT NULL UNIQUE,
     disclaimer text,
-    logo text,
-    type text DEFAULT 'mls_info'
+    logo text
   )`,
   'COMMIT'
 ]
