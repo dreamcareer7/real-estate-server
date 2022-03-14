@@ -13,10 +13,7 @@ const Context = require('../../../lib/models/Context')
 const Contact = require('../../../lib/models/Contact/manipulate')
 const ContactAttribute = require('../../../lib/models/Contact/attribute/get')
 
-const attachContactEvents = require('../../../lib/models/Contact/events')
-const attachContactIntEventHandler = require('../../../lib/models/ContactIntegration/events')
-const attachBrandTriggerEventHandler = require('../../../lib/models/Trigger/brand_trigger/events')
-const attachTriggerEventHandler = require('../../../lib/models/Trigger/events')
+const attachModelEventListeners = require('../../../lib/models/Context/events')
 
 const createContext = require('../../workers/utils/create-context')
 
@@ -221,10 +218,7 @@ const sync = async last => {
 const run = async() => {
   await peanar.declareAmqResources()
 
-  attachContactEvents()
-  attachContactIntEventHandler()
-  attachBrandTriggerEventHandler()
-  attachTriggerEventHandler()
+  attachModelEventListeners()
   
   const { commit, run } = await createContext()
 

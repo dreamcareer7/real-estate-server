@@ -1,6 +1,19 @@
 const moment = require('moment-timezone')
 const { formatPhoneNumberForDialing } = require('../../../lib/models/ObjectUtil')
 
+const brandSetup = require('./data/showing/brand')
+const emails = require('./data/showing/emails')
+
+const {
+  resolve,
+  createUser,
+  getTokenFor,
+  createBrands,
+  switchBrand,
+  runAsUser,
+  runAsUauthorized,
+} = require('../util')
+
 registerSuite('brand', [
   'createParent',
   'attributeDefs',
@@ -14,26 +27,37 @@ registerSuite('user', ['create', 'upgradeToAgentWithEmail', 'markAsNonShadow'])
 registerSuite('listing', ['getListing'])
 registerSuite('agent', ['getByMlsId'])
 
-const showings = {}
-let sellerAgent
+const RESCHEDULED_TIME = moment().tz('America/Chicago').startOf('hour').day(8).hour(11)
+const APPOINTMENT_TIME = moment().tz('America/Chicago').startOf('hour').day(8).hour(9)
 
+const AGENT_PHONE_NUMBER = '+100000000000'
 const BUYER_PHONE_NUMBER = '(972) 481-1312'
 
-function _create(description, override, cb) {
-  sellerAgent = {
-    brand: results.brand.create.data.id,
+const the = {
+  agent: () => results.showing.agent.data,
+  
+  parentBrandId: () => results.showing.brands.data[0].id,
+  childBrandId: () => results.showing.brands.data[0].children[0].id,
+
+  showing: () => results.showing.create.data,
+  showingId: () => the.showing().id,
+  
+  sellerAgent: () => ({
+    brand: the.childBrandId(),
     can_approve: true,
     role: 'SellerAgent',
     cancel_notification_type: ['email'],
     confirm_notification_type: ['push', 'email'],
     first_name: 'John',
     last_name: 'Doe',
-    email: results.authorize.token.data.email,
-    phone_number: results.authorize.token.data.phone_number,
-    user: results.authorize.token.data.id,
+    email: the.agent().email,
+    phone_number: AGENT_PHONE_NUMBER,
+    user: the.agent().id,
     agent: results.agent.getByMlsId.data[0].id,
-  }
+  })
+}
 
+function _create(description, override, cb) {
   /** @type {import("../../../lib/models/Showing/showing/types").ShowingInput} */
   const showing = {
     approval_type: 'All',
@@ -49,7 +73,7 @@ function _create(description, override, cb) {
     allow_inspection: true,
     instructions: 'The key is in the locker',
     same_day_allowed: true,
-    roles: [sellerAgent],
+    roles: [the.sellerAgent()],
     start_date: new Date().toISOString(),
     listing: results.listing.getListing.data.id,
     notice_period: 3 * 3600,
@@ -61,22 +85,16 @@ function _create(description, override, cb) {
       ...showing,
       ...override,
     })
-    .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
+    .addHeader('X-RECHAT-BRAND', the.childBrandId())
     .addHeader('x-handle-jobs', 'yes')
-    .after((err, res, json) => {
-      if (res.statusCode === 200) {
-        showings[json.data.id] = json.data
-      }
-
-      return cb(err, res, json)
-    })
+    .after(cb)
 }
 
 function create(cb) {
   return _create('create a showing', {}, function (err, res, json) {
     const setup = frisby.globalSetup()
 
-    setup.request.headers['X-RECHAT-BRAND'] = results.brand.create.data.id
+    setup.request.headers['X-RECHAT-BRAND'] = the.childBrandId()
     setup.request.headers['x-handle-jobs'] = 'yes'
 
     frisby.globalSetup(setup)
@@ -129,9 +147,9 @@ function createWithTenantRole(cb) {
     'create a showing with a tenant role',
     {
       roles: [
-        sellerAgent,
+        the.sellerAgent(),
         {
-          brand: results.brand.create.data.id,
+          brand: the.childBrandId(),
           can_approve: true,
           role: 'Tenant',
           cancel_notification_type: ['email'],
@@ -179,16 +197,18 @@ function createWithValidationError(cb) {
   ).expectStatus(400)
 }
 
-function getShowing(cb) {
-  return frisby
-    .create('get a showing by id')
-    .get(`/showings/${results.showing.create.data.id}`)
+function getShowing({
+  name = 'get a showing by id',
+  id = the.showingId,
+  status = 200,
+  expect = { data: { type: 'showing' } },
+} = {}) {
+  return cb => frisby
+    .create(name)
+    .get(`/showings/${resolve(id)}`)
     .after(cb)
-    .expectJSON({
-      data: {
-        type: 'showing',
-      },
-    })
+    .expectStatus(status)
+    .expectJSON(resolve(expect))
 }
 
 function filter(cb) {
@@ -198,7 +218,7 @@ function filter(cb) {
     .after(cb)
     .expectStatus(200)
     .expectJSON({
-      data: [results.showing.create.data],
+      data: [the.showing()],
     })
 }
 
@@ -220,7 +240,7 @@ function search (query, {
 }
 
 function getShowingPublic(cb) {
-  const showing_id = results.showing.create.data.human_readable_id
+  const showing_id = the.showing().human_readable_id
   return frisby
     .create('get showing public info')
     .get(`/showings/public/${showing_id}`)
@@ -228,7 +248,7 @@ function getShowingPublic(cb) {
     .expectStatus(200)
     .expectJSON({
       data: {
-        id: results.showing.create.data.human_readable_id,
+        id: showing_id,
         agent: {
           first_name: 'John',
           last_name: 'Doe',
@@ -240,12 +260,10 @@ function getShowingPublic(cb) {
     })
 }
 
-const APPOINTMENT_TIME = moment().tz('America/Chicago').startOf('hour').day(8).hour(9)
-
 function _makeAppointment(msg, showing_id, expected_status = 'Requested') {
   return (cb) => {
     if (!showing_id) {
-      showing_id = results.showing.create.data.human_readable_id
+      showing_id = the.showing().human_readable_id
     }
     return frisby
       .create(msg)
@@ -328,9 +346,9 @@ function checkAppointmentReceiptSmsForBuyer(cb) {
         {
           to: formatPhoneNumberForDialing(BUYER_PHONE_NUMBER),
           body:
-            `Your showing request for 5020 Junius Street at ${APPOINTMENT_TIME.format(
-              'MMM Do, h:mmA'
-            )} has been received.` +
+          `Your showing request for 5020 Junius Street at ${APPOINTMENT_TIME.format(
+            'MMM Do, h:mmA'
+          )} has been received.` +
             '\n\n' +
             'Cancel via http://mock-branch-url\nReschedule via http://mock-branch-url',
         },
@@ -343,7 +361,7 @@ function confirmAppointment(sourceCase, comment = 'You\'re welcome!') {
     const appt = results.showing[sourceCase].data
     return frisby
       .create('confirm an appointment')
-      .put(`/showings/${results.showing.create.data.id}/appointments/${appt.id}/approval`, {
+      .put(`/showings/${the.showing().id}/appointments/${appt.id}/approval`, {
         approved: true,
         comment,
       })
@@ -368,9 +386,9 @@ function checkAppointmentConfirmationSmsForBuyer(cb) {
         {
           to: formatPhoneNumberForDialing(BUYER_PHONE_NUMBER),
           body:
-            `Your showing for 5020 Junius Street at ${APPOINTMENT_TIME.format(
-              'MMM Do, h:mmA'
-            )} has been confirmed.` +
+          `Your showing for 5020 Junius Street at ${APPOINTMENT_TIME.format(
+            'MMM Do, h:mmA'
+          )} has been confirmed.` +
             '\n\n' +
             'Cancel via http://mock-branch-url\nReschedule via http://mock-branch-url',
         },
@@ -455,7 +473,7 @@ function buyerAgentGetAppointment(cb) {
       },
     })
 }
-const RESCHEDULED_TIME = moment().tz('America/Chicago').startOf('hour').day(8).hour(11)
+
 function buyerAgentRescheduleAppointment(cb) {
   const appt = results.showing.buyerAgentGetAppointment.data
   return frisby
@@ -480,7 +498,7 @@ function checkBuyerRescheduleNotifications(cb) {
   return frisby
     .create('check buyer rescheduled notification')
     .get(
-      `/showings/${results.showing.create.data.id}/appointments/${appt.id}/?associations[]=showing_appointment.notifications`
+      `/showings/${the.showing().id}/appointments/${appt.id}/?associations[]=showing_appointment.notifications`
     )
     .after(cb)
     .expectJSON({
@@ -539,7 +557,7 @@ function sellerAgentCancelAppointment(cb) {
   return frisby
     .create('cancel an appointment by seller agent')
     .put(
-      `/showings/${results.showing.create.data.id}/appointments/${results.showing.makeAnotherAppointment.data.id}/approval`,
+      `/showings/${the.showing().id}/appointments/${results.showing.makeAnotherAppointment.data.id}/approval`,
       {
         approved: false,
         comment: 'Sorry something came up I have to cancel this',
@@ -558,7 +576,7 @@ function sellerAgentRejectAppointment (cb) {
   return frisby
     .create('reject an appointment by seller agent')
     .put(
-      `/showings/${results.showing.create.data.id}/appointments/${results.showing.makeAnotherAppointmentToReject.data.id}/approval`,
+      `/showings/${the.showing().id}/appointments/${results.showing.makeAnotherAppointmentToReject.data.id}/approval`,
       {
         approved: false,
         comment: 'Sorry something came up',
@@ -617,70 +635,117 @@ function pollSendEmailNotification (cb) {
 }
 
 module.exports = {
-  create,
-  createWithNoApprovalRequired,
-  createHippocket,
-  createWithTenantRole,
-  getShowing,
-  filter,
+  admin: createUser({ email: emails.admin }),
+  agent: createUser({ email: emails.agent }),
 
-  searchForCompleteAgentName: search('John Doe', {
-    name: 'search for complete agent name',
-    expect: () => ({ info: { count: 4, total: 4 } }),
-  }),
+  adminAuth: getTokenFor(emails.admin),
+  agentAuth: getTokenFor(emails.agent),
 
-  searchForPartialAgentName: search(',Jo:&(Do)|', {
-    name: 'search for partial agent name',
-    expect: () => ({ info: { count: 4, total: 4 } }),
-  }),
+  brands: createBrands('create showing brands', [brandSetup], r => r.data[0].id),
+  
+  ...switchBrand(the.childBrandId, runAsUser(emails.agent, {
+    create,
+    createWithNoApprovalRequired,
+    createHippocket,
+    createWithTenantRole,
+  })),
 
-  searchForAddress: search('5020 Jun Stree Dalla', {
-    name: 'search for listing address',
-    expect: () => ({ info: { count: 3, total: 3 } }),
-  }),
-
-  searchForMlsNumber: search('13103256', {
-    name: 'search for MLS#',
-    expect: () => ({ info: { count: 3, total: 3 } }),
-  }),
-
-  searchMixed: search('Joh:&)502,(1310|Dall:Jun', {
-    name: 'mixed search',
-    expect: () => ({ info: { count: 3, total: 3 } }),
-  }),
-
-  searchWithoutResult: search('John 5020 13103256 wontmatchforsure', {
-    name: 'search without result',
-    expect: () => ({ info: { count: 0, total: 0 } }),
+  getShowingAccessDenied: getShowing({
+    name: 'try to access a forbidden showing (403)',
+    status: 403,
+    expect: { code: 'AccessForbidden' },
   }),
   
-  getShowingPublic,
-  requestAppointment: _makeAppointment('request an appointment'),
-  checkAppointmentReceiptSmsForBuyer,
-  checkNotificationCount,
-  checkAppointmentNotifications,
-  confirmAppointment: confirmAppointment('requestAppointment'),
-  checkAppointmentConfirmationSmsForBuyer,
-  requestAppointmentAutoConfirm,
-  checkAppointmentAutoConfirmationTextMessagesForBuyer,
-  checkShowingTotalCount,
-  upcomingAppointments,
-  buyerAgentGetAppointment,
-  buyerAgentRescheduleAppointment,
-  checkBuyerRescheduleNotifications,
-  buyerAgentCancelAppointment,
-  checkBuyerCancelNotifications,
+  ...switchBrand(the.parentBrandId, runAsUser(emails.admin, {
+    getShowing: getShowing(),
+    filter,
 
-  makeAnotherAppointment: _makeAppointment('request a new appointment'),
-  confirmAnotherAppointment: confirmAppointment('makeAnotherAppointment'),
-  sellerAgentCancelAppointment,
+    searchForCompleteAgentName: search('John Doe', {
+      name: 'search for complete agent name',
+      expect: () => ({ info: { count: 4, total: 4 } }),
+    }),
 
-  makeAnotherAppointmentToReject: _makeAppointment('request another appointment to reject'),
-  sellerAgentRejectAppointment,
-  checkAppointmentRejectionSmsForBuyer,
+    searchForPartialAgentName: search(',Jo:&(Do)|', {
+      name: 'search for partial agent name',
+      expect: () => ({ info: { count: 4, total: 4 } }),
+    }),
+
+    searchForAddress: search('5020 Jun Stree Dalla', {
+      name: 'search for listing address',
+      expect: () => ({ info: { count: 3, total: 3 } }),
+    }),
+
+    searchForMlsNumber: search('13103256', {
+      name: 'search for MLS#',
+      expect: () => ({ info: { count: 3, total: 3 } }),
+    }),
+
+    searchMixed: search('Joh:&)502,(1310|Dall:Jun', {
+      name: 'mixed search',
+      expect: () => ({ info: { count: 3, total: 3 } }),
+    }),
+
+    searchWithoutResult: search('John 5020 13103256 wontmatchforsure', {
+      name: 'search without result',
+      expect: () => ({ info: { count: 0, total: 0 } }),
+    }),
+  })),
+
+  ...runAsUauthorized({
+    getShowingPublic,
+    requestAppointment: _makeAppointment('request an appointment'),
+    checkAppointmentReceiptSmsForBuyer,
+  }),
+
+  ...switchBrand(the.childBrandId, runAsUser(emails.agent, {
+    checkNotificationCount,
+    checkAppointmentNotifications,
+    confirmAppointment: confirmAppointment('requestAppointment'),
+    checkAppointmentConfirmationSmsForBuyer,
+  })),
+
+  ...runAsUauthorized({
+    requestAppointmentAutoConfirm,
+    checkAppointmentAutoConfirmationTextMessagesForBuyer,
+  }),
+
+  ...switchBrand(the.childBrandId, runAsUser(emails.agent, {
+    checkShowingTotalCount,
+    upcomingAppointments,
+  })),
   
-  pollFinalizeRecentlyDone,
-  pollSendEmailNotification,
-  
-  createWithValidationError,
+  ...runAsUauthorized({
+    buyerAgentGetAppointment,
+    buyerAgentRescheduleAppointment,
+  }),
+
+  ...switchBrand(the.childBrandId, runAsUser(emails.agent, {
+    checkBuyerRescheduleNotifications,
+  })),
+
+  ...runAsUauthorized({
+    buyerAgentCancelAppointment,
+  }),
+
+  ...switchBrand(the.childBrandId, runAsUser(emails.agent, {
+    checkBuyerCancelNotifications,
+  })),
+
+  ...runAsUauthorized({
+    makeAnotherAppointment: _makeAppointment('request a new appointment'),
+  }),
+
+  ...switchBrand(the.childBrandId, runAsUser(emails.agent, {
+    confirmAnotherAppointment: confirmAppointment('makeAnotherAppointment'),
+    sellerAgentCancelAppointment,
+
+    makeAnotherAppointmentToReject: _makeAppointment('request another appointment to reject'),
+    sellerAgentRejectAppointment,
+    checkAppointmentRejectionSmsForBuyer,
+    
+    pollFinalizeRecentlyDone,
+    pollSendEmailNotification,
+    
+    createWithValidationError,
+  })),
 }
