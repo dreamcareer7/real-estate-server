@@ -4,7 +4,7 @@ SELECT
   social_posts.user,
   social_posts.caption,
   social_posts.facebook_page,
-  social_posts.template,
+  social_posts.template_instance,
   social_posts.post_link,
   social_posts.failed_at,
   social_posts.failure,

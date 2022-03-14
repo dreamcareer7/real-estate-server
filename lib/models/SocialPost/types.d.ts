@@ -3,7 +3,7 @@ export interface Post {
   brand: UUID
   user: UUID
   facebook_page: UUID
-  template?: UUID
+  template_instance?: UUID
   caption?: string
   post_link?: string
   failed_at?: number
@@ -29,7 +29,7 @@ export interface FilterResult {
 
 export interface SocialPostInsertInput {
   facebookPage: UUID
-  template: UUID
+  templateInstance: UUID
   due_at: number
   caption: string
 }

@@ -73,12 +73,12 @@ function instantiateTemplate(cb) {
 
 function scheduleInstagramPost(cb) {
   const facebookPage = R().getInstagramProfiles.data[0].id
-  const template = R().instantiateTemplate.data.id
+  const templateInstance = R().instantiateTemplate.data.id
 
   return F('schedule instagram post')
     .post(`/brands/${theBrand()}/social-post`, {
       facebookPage,
-      template,
+      templateInstance,
       due_at: new Date(new Date().getTime() - 10 * 60 * 1000).toISOString(),
       caption: 'test',
     })
@@ -89,19 +89,19 @@ function scheduleInstagramPost(cb) {
       data: {
         caption: 'test',
         facebook_page: facebookPage,
-        template,
+        template_instance: templateInstance,
       },
     })
 }
 
 function scheduleAnotherInstagramPost(cb) {
   const facebookPage = R().getInstagramProfiles.data[0].id
-  const template = R().instantiateTemplate.data.id
+  const templateInstance = R().instantiateTemplate.data.id
 
   return F('schedule instagram post for testing update api')
     .post(`/brands/${theBrand()}/social-post`, {
       facebookPage,
-      template,
+      templateInstance,
       due_at: new Date(new Date().getTime() - 10 * 60 * 1000),
       caption: 'this post should not be executed now',
     })
@@ -112,19 +112,19 @@ function scheduleAnotherInstagramPost(cb) {
       data: {
         caption: 'this post should not be executed now',
         facebook_page: facebookPage,
-        template,
+        template_instance: templateInstance,
       },
     })
 }
 
 function scheduleAnotherInstagramPostForTestingFailedJob(cb) {
   const facebookPage = R().getInstagramProfiles.data[1].id
-  const template = R().instantiateTemplate.data.id
+  const templateInstance = R().instantiateTemplate.data.id
 
   return F('schedule instagram post for testing failed job')
     .post(`/brands/${theBrand()}/social-post`, {
       facebookPage,
-      template,
+      templateInstance,
       due_at: new Date(new Date().getTime() - 10 * 60 * 1000),
       caption: 'this post should be failed in job',
     })
@@ -135,7 +135,7 @@ function scheduleAnotherInstagramPostForTestingFailedJob(cb) {
       data: {
         caption: 'this post should be failed in job',
         facebook_page: facebookPage,
-        template,
+        template_instance: templateInstance,
       },
     })
 }
@@ -153,12 +153,12 @@ function updateSocialPost(cb) {
 
 function scheduleInstagramPostForTestingDeleteMethod(cb) {
   const facebookPage = R().getInstagramProfiles.data[0].id
-  const template = R().instantiateTemplate.data.id
+  const templateInstance = R().instantiateTemplate.data.id
 
   return F('schedule instagram post for testing delete method')
     .post(`/brands/${theBrand()}/social-post`, {
       facebookPage,
-      template,
+      templateInstance,
       due_at: new Date(new Date().getTime() - 10 * 60 * 1000),
       caption: 'test',
     })
