@@ -1,9 +1,10 @@
 const { expect } = require('chai')
-const { createContext } = require('../helper')
+const { createContext, handleJobs } = require('../helper')
 
 const Context          = require('../../../lib/models/Context')
 const User             = require('../../../lib/models/User/get')
 const BrandHelper      = require('../brand/helper')
+const { removeMember } = require('../../../lib/models/Brand/role/members')
 const GoogleCredential = require('../../../lib/models/Google/credential')
 
 const { createGoogleCredential } = require('./helper')
@@ -183,6 +184,33 @@ async function revoke() {
   expect(updatedCredential_1.revoked).to.be.equal(true)
 }
 
+async function disconnectOnLeavingWithMultipleRole() {
+  brand = await BrandHelper.create({
+    roles: { Admin: [user.id], Marketing: [user.id] },
+    contexts: [],
+    checklists: []
+  })
+  Context.set({ user, brand })
+
+  const { credential } = await createGoogleCredential(user, brand)
+  await removeMember(brand.roles[0], user.id)
+
+  await handleJobs()
+
+  const theCredential = await GoogleCredential.get(credential.id)
+  expect(theCredential.revoked).to.be.equal(false)
+}
+
+async function disconnectOnLeavingWithSingleRole() {
+  const { credential } = await createGoogleCredential(user, brand)
+  await removeMember(brand.roles[0], user.id)
+
+  await handleJobs()
+
+  const theCredential = await GoogleCredential.get(credential.id)
+  expect(theCredential.revoked).to.be.equal(true)
+}
+
 async function updateProfile() {
   const createdCredential = await create()
 
@@ -332,6 +360,8 @@ describe('Google', () => {
     it('should disconnect a google-credential', disconnect)
     it('should handle returned exception from disconnect google-credential', disconnectFailed)
     it('should revoke a google-credential', revoke)
+    it('should revoke a google-credential on leaving brand with a multiple role', disconnectOnLeavingWithMultipleRole)
+    it('should revoke a google-credential on leaving brand with a single role', disconnectOnLeavingWithSingleRole)
     
     it('should update google-credential\'s profile', updateProfile)
     it('should update google-credential\'s gmail-profile', updateGmailProfile)
