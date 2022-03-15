@@ -260,15 +260,12 @@ async function testExportForEvents() {
   const next30Mins = now.clone().add(30 ,'minutes')
   const next60Mins = now.clone().add(60 ,'minutes')
 
-  const tasks = [
-    Mock.getCrmTaskEvent({ brand: brand.id, created_by: user.id, assignees: [user.id], due_date: now.unix(), all_day: true }),
-    Mock.getCrmTaskEvent({ brand: brand.id, created_by: user.id, assignees: [user.id], due_date: now.unix(), all_day: true }),
-    Mock.getCrmTaskEvent({ brand: brand.id, created_by: user.id, assignees: [user.id], due_date: now.unix(), end_date: next30Mins.unix(), all_day: false, task_type: 'crm_task' }),
-    Mock.getCrmTaskEvent({ brand: brand.id, created_by: user.id, assignees: [user.id], due_date: next30Mins.unix(), end_date: next60Mins.unix(), all_day: false, task_type: 'crm_task' }),
-  ]
   
-  await Promise.all(tasks.map(task => CrmTask.create(task)))
-  
+  await CrmTask.create(Mock.getCrmTaskEvent({ brand: brand.id, created_by: user.id, assignees: [user.id], due_date: now.unix(), all_day: true }))
+  await CrmTask.create(Mock.getCrmTaskEvent({ brand: brand.id, created_by: user.id, assignees: [user.id], due_date: now.unix(), all_day: true }))
+  await CrmTask.create(Mock.getCrmTaskEvent({ brand: brand.id, created_by: user.id, assignees: [user.id], due_date: now.unix(), end_date: next30Mins.unix(), all_day: false, task_type: 'crm_task' }))
+  await CrmTask.create(Mock.getCrmTaskEvent({ brand: brand.id, created_by: user.id, assignees: [user.id], due_date: next30Mins.unix(), end_date: next60Mins.unix(), all_day: false, task_type: 'crm_task' }))
+
   const feeds = await getAsICal([{ brand: brand.id, users: [user.id] }], {
     low,
     high
@@ -280,7 +277,7 @@ async function testExportForEvents() {
   const dateFormat = (dateInString) => moment(dateInString).tz('Asia/Tehran').format('YYYY/MM/DD') // skip the time
 
   const eventFormat = (dateInString) => moment(dateInString).tz('Asia/Tehran').format('YYYY/MM/DD hh:mm') // skip secondes and milliseconds 
-  console.log({feedValues},{now}, {next30Mins}, {next60Mins})
+
   expect(eventFormat(feedValues[1]['dtstamp'])).to.be.equal(eventFormat(now))
   expect(dateFormat(feedValues[1]['start'])).to.be.equal(dateFormat(now))
   expect(dateFormat(feedValues[1]['end'])).to.be.equal(dateFormat(now))
@@ -526,7 +523,7 @@ describe('Calendar', () => {
   describe('Events', () => {
     beforeEach(setup)
     it('should put events in correct timezones', testCorrectTimezone)
-    it.only('should export events correctly for allday and none allday events', testExportForEvents)
+    it('should export events correctly for allday and none allday events', testExportForEvents)
   })
 
   describe('Contacts', () => {
