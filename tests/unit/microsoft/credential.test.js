@@ -1,9 +1,10 @@
 const { expect }        = require('chai')
-const { createContext } = require('../helper')
+const { createContext, handleJobs } = require('../helper')
 
 const Context             = require('../../../lib/models/Context')
 const User                = require('../../../lib/models/User/get')
 const BrandHelper         = require('../brand/helper')
+const { removeMember }    = require('../../../lib/models/Brand/role/members')
 const MicrosoftCredential = require('../../../lib/models/Microsoft/credential')
 
 const { createMicrosoftCredential } = require('./helper')
@@ -150,6 +151,33 @@ async function revoke() {
   expect(updatedCredential_1.revoked).to.be.equal(true)
 }
 
+async function disconnectOnLeavingWithMultipleRole() {
+  brand = await BrandHelper.create({
+    roles: { Admin: [user.id], Marketing: [user.id] },
+    contexts: [],
+    checklists: []
+  })
+  Context.set({ user, brand })
+
+  const { credential } = await createMicrosoftCredential(user, brand)
+  await removeMember(brand.roles[0], user.id)
+
+  await handleJobs()
+
+  const theCredential = await MicrosoftCredential.get(credential.id)
+  expect(theCredential.revoked).to.be.equal(false)
+}
+
+async function disconnectOnLeavingWithSingleRole() {
+  const { credential } = await createMicrosoftCredential(user, brand)
+  await removeMember(brand.roles[0], user.id)
+
+  await handleJobs()
+
+  const theCredential = await MicrosoftCredential.get(credential.id)
+  expect(theCredential.revoked).to.be.equal(true)
+}
+
 async function updateProfile() {
   const createdCredential = await create()
 
@@ -259,6 +287,9 @@ describe('Microsoft', () => {
     it('should disable/enable a microsoft-credential', disconnect)
     it('should handle returned exception from disable/enable microsoft-credential', disconnectFailed)
     it('should revoke a microsoft-credential', revoke)
+    it('should revoke a microsoft-credential on leaving brand with a multiple role', disconnectOnLeavingWithMultipleRole)
+    it('should revoke a microsoft-credential on leaving brand with a single role', disconnectOnLeavingWithSingleRole)
+
     it('should update microsoft-credential\'s profile', updateProfile)
     it('should update microsoft-credential\'s primary email address', updatePrimaryEmail)
 
