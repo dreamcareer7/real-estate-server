@@ -278,19 +278,19 @@ async function testExportForEvents() {
 
   const eventFormat = (dateInString) => moment(dateInString).tz('America/Chicago').format('YYYY/MM/DD hh:mm') // skip secondes and milliseconds 
 
-  // expect(eventFormat(feedValues[1]['dtstamp'])).to.be.equal(eventFormat(now))
+  expect(eventFormat(feedValues[1]['dtstamp'])).to.be.equal(eventFormat(now))
   expect(dateFormat(feedValues[1]['start'])).to.be.equal(dateFormat(now))
   expect(dateFormat(feedValues[1]['end'])).to.be.equal(dateFormat(now))
 
-  // expect(eventFormat(feedValues[2]['dtstamp'])).to.be.equal(eventFormat(now))
+  expect(eventFormat(feedValues[2]['dtstamp'])).to.be.equal(eventFormat(now))
   expect(dateFormat(feedValues[2]['start'])).to.be.equal(dateFormat(now))
   expect(dateFormat(feedValues[2]['end'])).to.be.equal(dateFormat(now))
 
-  // expect(eventFormat(feedValues[3]['dtstamp'])).to.be.equal(eventFormat(now))
+  expect(eventFormat(feedValues[3]['dtstamp'])).to.be.equal(eventFormat(now))
   expect(eventFormat(feedValues[3]['start'])).to.be.equal(eventFormat(now))
   expect(eventFormat(feedValues[3]['end'])).to.be.equal(eventFormat(next30Mins))
 
-  // expect(eventFormat(feedValues[4]['dtstamp'])).to.be.equal(eventFormat(now))
+  expect(eventFormat(feedValues[4]['dtstamp'])).to.be.equal(eventFormat(now))
   expect(eventFormat(feedValues[4]['start'])).to.be.equal(eventFormat(next30Mins))
   expect(eventFormat(feedValues[4]['end'])).to.be.equal(eventFormat(next60Mins))
 }
@@ -563,8 +563,8 @@ describe('Calendar', () => {
   describe('Events', () => {
     beforeEach(setup)
     it('should put events in correct timezones', testCorrectTimezone)
-    it.only('should export events correctly for allday and none allday events', testExportForEvents)
-    it.only('should export events correctly for deals events', testExportForDealsEvents)
+    it('should export events correctly for allday and none allday events', testExportForEvents)
+    it('should export events correctly for deals events', testExportForDealsEvents)
   })
 
   describe('Contacts', () => {
