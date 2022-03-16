@@ -26,9 +26,9 @@
               {% else %}
                 {{ campaign.delivered }} Recipients
               {% endif %}
-              -  {{ campaign.executed_at | calendar }}
+              -  {{ campaign.executed_at | calendar(user.timezone) }}
             {% else %}
-              Scheduled for {{ campaign.due_at | calendar }}
+              Scheduled for {{ campaign.due_at | calendar(user.timezone) }}
             {% endif %}
         </div>
 
