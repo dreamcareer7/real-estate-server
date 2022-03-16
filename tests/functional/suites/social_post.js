@@ -264,6 +264,26 @@ function updateExecutedPost(cb) {
     .expectStatus(403)
 }
 
+function disconnect(cb) {
+  const facebookPage = R().getInstagramProfiles.data[0].id
+  return F('disconnect instagram account')
+    .delete(`/brands/${theBrand()}/users/self/facebook/${facebookPage}`)
+    .after(cb)
+    .expectStatus(204)
+}
+
+function getUserSocialPostsAfterDisconnecting(cb) { 
+  return F('social posts should be deleted after disconnecting the facebook page')
+    .get(`/brands/${theBrand()}/social-post?executed=true`)
+    .after((err, res, body) => {
+      if (body.data.length) {
+        throw new Error('social posts should be deleted after disconnecting the facebook page')
+      }
+      cb(err, res, body)
+    })
+    .expectStatus(200)
+}
+
 module.exports = {
   brands: createBrands('create brands', brandSetup, (response) => response.data[0].id),
   ...switchBrand(theBrand, {
@@ -283,5 +303,7 @@ module.exports = {
     getScheduledSocialPost,
     getEmptyList,
     updateExecutedPost,
+    disconnect,
+    getUserSocialPostsAfterDisconnecting
   }),
 }

@@ -897,5 +897,5 @@ declare type TDbSqlAddress =
   | 'social_post/delete'
   | 'social_post/update'
   | 'social_post/update-worker-result'
-  
+  | 'social_post/delete_by_facebook_page'
   ;
