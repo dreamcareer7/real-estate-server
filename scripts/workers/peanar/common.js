@@ -172,6 +172,11 @@ const queues = [
   {
     queues: ['brand_webhook'],
     concurrency: 50
+  },
+
+  {
+    queues: ['social_post'],
+    concurrency: 1
   }
 ]
 
