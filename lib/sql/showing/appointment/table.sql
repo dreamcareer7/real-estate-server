@@ -18,5 +18,9 @@ CREATE TABLE IF NOT EXISTS showings_appointments (
 
   showing uuid NOT NULL REFERENCES showings (id),
   contact uuid NOT NULL REFERENCES contacts (id),
-  email text
+  email text,
+  phone_number text,
+  first_name text,
+  last_name text,
+  company text
 )
