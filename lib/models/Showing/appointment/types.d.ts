@@ -8,6 +8,7 @@ export interface ShowingAppointmentInput {
   contact: UUID;
   status: AppointmentStatus;
   email: string;
+  phone_number: string;
 }
 
 export interface ShowingAppointmentRequestPayload {
