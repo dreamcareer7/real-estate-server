@@ -73,10 +73,11 @@ function instantiateTemplate(cb) {
 
 function scheduleInstagramPost(cb) {
   const facebookPage = R().getInstagramProfiles.data[0].id
+  const user = R().getInstagramProfiles.data[0].user
   const templateInstance = R().instantiateTemplate.data.id
 
   return F('schedule instagram post')
-    .post(`/brands/${theBrand()}/social-post`, {
+    .post(`/brands/${theBrand()}/social-post?associations[]=social_post.template_instance&associations[]=social_post.user`, {
       facebookPage,
       templateInstance,
       due_at: new Date(new Date().getTime() - 10 * 60 * 1000).toISOString(),
@@ -89,7 +90,12 @@ function scheduleInstagramPost(cb) {
       data: {
         caption: 'test',
         facebook_page: facebookPage,
-        template_instance: templateInstance,
+        template_instance: {
+          id: templateInstance
+        },
+        user: {
+          id: user
+        }
       },
     })
 }
@@ -111,8 +117,7 @@ function scheduleAnotherInstagramPost(cb) {
       code: 'OK',
       data: {
         caption: 'this post should not be executed now',
-        facebook_page: facebookPage,
-        template_instance: templateInstance,
+        facebook_page: facebookPage
       },
     })
 }
@@ -135,7 +140,6 @@ function scheduleAnotherInstagramPostForTestingFailedJob(cb) {
       data: {
         caption: 'this post should be failed in job',
         facebook_page: facebookPage,
-        template_instance: templateInstance,
       },
     })
 }
