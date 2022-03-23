@@ -626,7 +626,7 @@ describe('Calendar', () => {
     it('should hide critical dates from dropped deals', testHidingDroppedDeals)
     it('should return home anniversary from closing dates', testDealClosingDateHomeAnniversary)
     it('should return home anniversary from lease ends', testDealLeaseEndHomeAnniversary)
-    it.only('should export deals events correctly for deals events', testDealExportEvents)
+    it('should export deals events correctly for deals events', testDealExportEvents)
   })
 
   describe('Events', () => {
