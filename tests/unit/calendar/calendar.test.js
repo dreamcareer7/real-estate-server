@@ -252,6 +252,75 @@ async function testCorrectTimezone() {
   }, user.timezone)
 }
 
+async function testDealExportEvents() {
+  const high = moment().add(1, 'year').unix()
+  const low = moment().add(-1, 'year').unix()
+  const now = moment().utc()
+  const fiveDaysAgo = now.clone().add(-5, 'day')
+  const tenDaysAgo = now.clone().add(-10, 'day')
+  await DealHelper.create(user.id, brand.id, {
+    deal_type: 'Buying',
+    checklists: [{
+      context: {
+        contract_date: { value: fiveDaysAgo.format() },
+        closing_date: { value: tenDaysAgo.format() },
+      },
+    }],
+    roles: [{
+      role: 'BuyerAgent',
+      email: user.email,
+      phone_number: user.phone_number,
+      legal_first_name: user.first_name,
+      legal_last_name: user.last_name
+    }, {
+      role: 'Buyer',
+      email: 'john@doe.com',
+      phone_number: '(281) 531-6582',
+      legal_first_name: 'John',
+      legal_last_name: 'Doe'
+    }],
+    listing: listing.id,
+    is_draft: false
+  })
+
+  await Contact.create([{
+    user: user.id,
+    attributes: attributes({
+      first_name: 'John',
+      last_name: 'Doe',
+      email: 'john@doe.com',
+    }),
+  }], user.id, brand.id)
+
+  await handleJobs()
+  await sql.update('REFRESH MATERIALIZED VIEW CONCURRENTLY deals_brands')
+  await sql.update('REFRESH MATERIALIZED VIEW calendar.deals_buyers')
+  await sql.update('REFRESH MATERIALIZED VIEW calendar.deals_closed_buyers')
+
+  const feeds = await getAsICal([{ brand: brand.id, users: [user.id] }], {
+    low,
+    high
+  }, 'America/Chicago')
+
+  const distrustFeed = ical.parseICS(feeds)
+  const feedValues = Object.values(distrustFeed)
+
+  const dateFormat = (dateInString) => moment(dateInString).format('YYYY/MM/DD') // skip the time
+  const eventFormat = (dateInString) => moment(dateInString).tz('America/Chicago').format('YYYY/MM/DD hh:mm') // skip secondes and milliseconds 
+
+  expect(eventFormat(feedValues[1]['dtstamp'])).to.be.equal(eventFormat(now))
+  expect(dateFormat(feedValues[1]['start'])).to.be.equal(dateFormat(tenDaysAgo))
+  expect(dateFormat(feedValues[1]['end'])).to.be.equal(dateFormat(tenDaysAgo))
+
+  expect(eventFormat(feedValues[2]['dtstamp'])).to.be.equal(eventFormat(now))
+  expect(dateFormat(feedValues[2]['start'])).to.be.equal(dateFormat(tenDaysAgo))
+  expect(dateFormat(feedValues[2]['end'])).to.be.equal(dateFormat(tenDaysAgo))
+
+  expect(eventFormat(feedValues[3]['dtstamp'])).to.be.equal(eventFormat(now))
+  expect(dateFormat(feedValues[3]['start'])).to.be.equal(dateFormat(fiveDaysAgo))
+  expect(dateFormat(feedValues[3]['end'])).to.be.equal(dateFormat(fiveDaysAgo))
+}
+
 async function testExportForEvents() {
   const high = moment().add(1, 'year').unix()
   const low = moment().add(-1, 'year').unix()
@@ -275,7 +344,6 @@ async function testExportForEvents() {
   const feedValues = Object.values(distrustFeed)
 
   const dateFormat = (dateInString) => moment(dateInString).format('YYYY/MM/DD') // skip the time
-
   const eventFormat = (dateInString) => moment(dateInString).tz('America/Chicago').format('YYYY/MM/DD hh:mm') // skip secondes and milliseconds 
 
   expect(eventFormat(feedValues[1]['dtstamp'])).to.be.equal(eventFormat(now))
@@ -558,6 +626,7 @@ describe('Calendar', () => {
     it('should hide critical dates from dropped deals', testHidingDroppedDeals)
     it('should return home anniversary from closing dates', testDealClosingDateHomeAnniversary)
     it('should return home anniversary from lease ends', testDealLeaseEndHomeAnniversary)
+    it.only('should export deals events correctly for deals events', testDealExportEvents)
   })
 
   describe('Events', () => {
