@@ -5,7 +5,7 @@ WITH user_brands AS (
 SELECT
   count(*) > 0 AS has_access
 FROM deals
-  LEFT JOIN deals_roles ON deals.id = deals_roles.deal AND (
+  LEFT JOIN deals_roles ON deals.id = deals_roles.deal AND deals_roles.deleted_at IS NULL AND (
   (
     deals.deal_type = 'Selling' AND
     NOT (deals_roles.role IN('BuyerAgent', 'CoBuyerAgent'))
