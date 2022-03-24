@@ -1,33 +1,19 @@
-EXPLAIN ANALYZE WITH cids AS (
-  SELECT
-    id
-  FROM
-    contacts
-  WHERE
-    brand = $1::uuid
-    AND deleted_at IS NULL
-),
-ctags AS (
+WITH ctags AS MATERIALIZED (
   SELECT
     ca.contact AS id,
-    array_agg(ca.text) AS tag
+    array_agg(ca.text ORDER BY ca.text) AS tag
   FROM
-    contacts_attributes_text AS ca
-    JOIN cids
-      ON cids.id = ca.contact
+    contacts AS c
+    LEFT JOIN contacts_attributes_text AS ca ON c.id = ca.contact
   WHERE
     ca.deleted_at IS NULL
+    AND c.deleted_at IS NULL
+    AND c.brand = $1::uuid
     AND ca.attribute_type = 'tag'
   GROUP BY
-    1
-), c AS (
-  SELECT
-    cids.id,
-    ctags.tag
-  FROM
-    cids
-    LEFT JOIN ctags
-      ON ctags.id = cids.id
+    ca.contact
+  HAVING
+    min(c.tag) IS DISTINCT FROM array_agg(ca.text ORDER BY ca.text)
 )
 UPDATE
   contacts
@@ -35,6 +21,7 @@ SET
   tag = c.tag,
   tag_searchable = LOWER(c.tag::text)::text[]
 FROM
-  c
+  ctags AS c
 WHERE
   contacts.id = c.id
+  AND contacts.tag IS DISTINCT FROM c.tag
