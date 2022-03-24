@@ -1,6 +1,6 @@
 const db = require('../lib/utils/db')
 
-const mlsListQuery = `SELECT enum_range(NULL::mls)`
+const mlsListQuery = 'SELECT enum_range(NULL::mls)'
 
 const disclaimer = `Listing information provided in part by the {{MLS}}, for personal, non-commercial use by viewers of this site and may not be reproduced or redistributed. All information is deemed reliable but not guaranteed. Copyright © {{MLS}} 2022. All rights reserved. Last updated at Mar 23, 2022 11:45 PM.
 The data relating to real estate for sale on this website appears in part through the {{MLS}} Internet Data Exchange program, a voluntary cooperative exchange of property listing data between licensed real estate brokerage firms in which participates, and is provided by {{MLS}} through a licensing agreement.`
