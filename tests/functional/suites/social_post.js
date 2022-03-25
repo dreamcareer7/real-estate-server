@@ -93,7 +93,7 @@ function scheduleInstagramPost(cb) {
         template_instance: {
           id: templateInstance
         },
-        created_by: user
+        created_by: user,
       },
     })
 }
