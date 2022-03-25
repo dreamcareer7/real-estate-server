@@ -1,7 +1,7 @@
 export interface Post {
   id: UUID
   brand: UUID
-  user: UUID
+  created_by: UUID
   facebook_page: UUID
   template_instance?: UUID
   caption?: string

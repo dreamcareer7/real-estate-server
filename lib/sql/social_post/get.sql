@@ -1,7 +1,7 @@
 SELECT
   social_posts.id,
   social_posts.brand,
-  social_posts.user,
+  social_posts.created_by,
   social_posts.caption,
   social_posts.facebook_page,
   social_posts.template_instance,
