@@ -20,7 +20,8 @@ CREATE OR REPLACE VIEW public.unread_notifications AS
     notifications.specific,
     notifications.exclude,
     notifications_users."user",
-    notifications."data"
+    notifications."data",
+    notifications.transports
    FROM notifications
      JOIN notifications_users ON notifications.id = notifications_users.notification
      FULL JOIN notifications_deliveries ON notifications.id = notifications_deliveries.notification AND notifications_users."user" = notifications_deliveries."user"

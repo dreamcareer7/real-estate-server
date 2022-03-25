@@ -1,9 +1,3 @@
-export type NotificationDeliveryType =
-  | 'email'
-  | 'push'
-  | 'sms'
-  ;
-
 export type TShowingRole =
   | 'Admin/Assistant'  
   | 'CoSellerAgent'
@@ -24,8 +18,8 @@ export interface ShowingRole {
   agent_id: IAgent['id'] | null;
   brand: UUID;
   can_approve: boolean;
-  confirm_notification_type: NotificationDeliveryType[];
-  cancel_notification_type: NotificationDeliveryType[];
+  confirm_notification_type: TNotificationDeliveryType[];
+  cancel_notification_type: TNotificationDeliveryType[];
   first_name: string;
   last_name: string;
   email: string;
@@ -46,8 +40,8 @@ export interface ShowingRolePopulated {
   agent: IAgent | null;
   brand: UUID;
   can_approve: boolean;
-  confirm_notification_type: NotificationDeliveryType[];
-  cancel_notification_type: NotificationDeliveryType[];
+  confirm_notification_type: TNotificationDeliveryType[];
+  cancel_notification_type: TNotificationDeliveryType[];
   first_name: string;
   last_name: string;
   email: string;
@@ -60,8 +54,8 @@ export interface ShowingRoleInput {
   agent?: IAgent['id'];
   brand: UUID;
   can_approve: boolean;
-  confirm_notification_type: NotificationDeliveryType[];
-  cancel_notification_type: NotificationDeliveryType[];
+  confirm_notification_type: TNotificationDeliveryType[];
+  cancel_notification_type: TNotificationDeliveryType[];
   first_name: string;
   last_name: string;
   email: string;

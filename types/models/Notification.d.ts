@@ -1,3 +1,9 @@
+declare type TNotificationDeliveryType =
+  | 'email'
+  | 'push'
+  | 'sms'
+  ;
+
 declare type TNotificationAction = 
   | 'Liked'
   | 'Composed'
@@ -116,6 +122,8 @@ declare interface INotificationInput {
   auxiliary_subject_class?: TNotificationObjectClass;
 
   data?: Record<string, any>;
+
+  transports?: TNotificationDeliveryType[] | null;
 }
 
 declare interface INotification {
@@ -151,6 +159,8 @@ declare interface INotification {
   auxiliary_object_class?: TNotificationObjectClass;
   auxiliary_subject?: any;
   auxiliary_subject_class?: TNotificationObjectClass;
+
+  transports: TNotificationDeliveryType[] | null;
 }
 
 declare interface INotificationPopulated<S, O> extends INotification {

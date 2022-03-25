@@ -10,12 +10,6 @@ export type DayOfWeek =
   | 'Sunday'
   ;
 
-export type NotificationDeliveryType =
-  | 'email'
-  | 'push'
-  | 'sms'
-  ;
-
 export type AppointmentStatus =
   | 'Pending'
   | 'Approved'
@@ -42,8 +36,8 @@ export interface ShowingRole {
   user: UUID;
   brand: UUID;
   can_approve: boolean;
-  confirm_notification_type: NotificationDeliveryType[];
-  cancel_notification_type: NotificationDeliveryType[];
+  confirm_notification_type: TNotificationDeliveryType[];
+  cancel_notification_type: TNotificationDeliveryType[];
   first_name: string;
   last_name: string;
   email: string;
@@ -101,8 +95,8 @@ export interface ShowingRoleInput {
   user: UUID;
   brand: UUID;
   can_approve: boolean;
-  confirm_notification_type: NotificationDeliveryType[];
-  cancel_notification_type: NotificationDeliveryType[];
+  confirm_notification_type: TNotificationDeliveryType[];
+  cancel_notification_type: TNotificationDeliveryType[];
   first_name: string;
   last_name: string;
   email: string;
