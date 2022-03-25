@@ -14,10 +14,7 @@ SELECT
   EXTRACT(EPOCH FROM social_posts.deleted_at) AS deleted_at,
   EXTRACT(EPOCH FROM social_posts.due_at) AS due_at,
   EXTRACT(EPOCH FROM social_posts.executed_at) AS executed_at,
-  users.first_name as owner_first_name,
-  users.last_name as owner_last_name,
-  users.profile_image_url as owner_profile_image_url,
-  users.profile_image_thumbnail_url as owner_profile_image_thumbnail_url
+  users.id as owner
 FROM
   social_posts
   JOIN facebook_pages on facebook_pages.id = social_posts.facebook_page

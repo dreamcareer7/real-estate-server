@@ -77,7 +77,7 @@ function scheduleInstagramPost(cb) {
   const templateInstance = R().instantiateTemplate.data.id
 
   return F('schedule instagram post')
-    .post(`/brands/${theBrand()}/social-post?associations[]=social_post.template_instance`, {
+    .post(`/brands/${theBrand()}/social-post?associations[]=social_post.template_instance&associations[]=social_post.owner`, {
       facebookPage,
       templateInstance,
       due_at: new Date(new Date().getTime() - 10 * 60 * 1000).toISOString(),
@@ -94,6 +94,9 @@ function scheduleInstagramPost(cb) {
           id: templateInstance
         },
         created_by: user,
+        owner: {
+          id: user
+        }
       },
     })
 }
