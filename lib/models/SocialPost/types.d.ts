@@ -13,6 +13,7 @@ export interface Post {
   deleted_at?: number
   due_at?: number
   executed_at?: number
+  owner: UUID
 }
 
 export interface Filter {

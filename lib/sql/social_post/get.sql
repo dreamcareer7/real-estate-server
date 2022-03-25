@@ -14,12 +14,11 @@ SELECT
   EXTRACT(EPOCH FROM social_posts.deleted_at) AS deleted_at,
   EXTRACT(EPOCH FROM social_posts.due_at) AS due_at,
   EXTRACT(EPOCH FROM social_posts.executed_at) AS executed_at,
-  users.id as owner
+  facebook_credentials.user as owner
 FROM
   social_posts
   JOIN facebook_pages on facebook_pages.id = social_posts.facebook_page
   JOIN facebook_credentials on facebook_credentials.id = facebook_pages.facebook_credential
-  JOIN users on users.id = facebook_credentials.user
   JOIN unnest($1::uuid[])
   WITH ORDINALITY t (eid, ord) ON social_posts.id = eid
 ORDER BY
