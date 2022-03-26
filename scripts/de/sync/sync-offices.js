@@ -121,16 +121,16 @@ const updateSettings = async offices => {
       id: office.id,
       phone_number,
       address: {
-        house_num: parsed.number,
-        predir: parsed.prefix,
-        pretype: parsed.type,
-        name: parsed.street,
-        suftype: parsed.suffix,
-        city: parsed.city || office.city,
-        state: parsed.state || office.state,
-        country: parsed.country,
-        postcode: parsed.zip || office.zip,
-        unit: parsed.sec_unit_num
+        house_num: parsed?.number,
+        predir: parsed?.prefix,
+        pretype: parsed?.type,
+        name: parsed?.street,
+        suftype: parsed?.suffix,
+        city: parsed?.city || office.city,
+        state: parsed?.state || office.state,
+        country: parsed?.country,
+        postcode: parsed?.zip || office.zip,
+        unit: parsed?.sec_unit_num
       }
     }
   })
