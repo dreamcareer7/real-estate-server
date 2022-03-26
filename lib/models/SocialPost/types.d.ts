@@ -1,7 +1,7 @@
 export interface Post {
   id: UUID
   brand: UUID
-  user: UUID
+  created_by: UUID
   facebook_page: UUID
   template_instance?: UUID
   caption?: string
@@ -13,6 +13,7 @@ export interface Post {
   deleted_at?: number
   due_at?: number
   executed_at?: number
+  owner: UUID
 }
 
 export interface Filter {
