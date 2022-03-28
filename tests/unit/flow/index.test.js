@@ -148,18 +148,23 @@ async function testBrandFlows() {
   for (const i in steps) {
     if (steps[i].wait_for.hours) {
       expect(steps[i].wait_for.hours).to.be.equal(defaultSteps[i].wait_for.hours)
+      expect(steps[i].wait_for_unit).to.be.equal('hours')
     }
     if (steps[i].wait_for.days) {
       expect(steps[i].wait_for.days).to.be.equal(defaultSteps[i].wait_for.days)
+      expect(steps[i].wait_for_unit).to.be.equal('days')
     }
     if (steps[i].wait_for.weeks) {
       expect(steps[i].wait_for.weeks).to.be.equal(defaultSteps[i].wait_for.weeks)
+      expect(steps[i].wait_for_unit).to.be.equal('weeks')
     }
     if (steps[i].wait_for.months) {
       expect(steps[i].wait_for.months).to.be.equal(defaultSteps[i].wait_for.months)
+      expect(steps[i].wait_for_unit).to.be.equal('months')
     }
     if (steps[i].wait_for.years) {
       expect(steps[i].wait_for.years).to.be.equal(defaultSteps[i].wait_for.years)
+      expect(steps[i].wait_for_unit).to.be.equal('years')
     }
   }
 }

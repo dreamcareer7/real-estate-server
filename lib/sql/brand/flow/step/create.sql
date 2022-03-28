@@ -40,7 +40,7 @@ FROM
     description text,
     event_type text,
     wait_for interval,
-    wait_for_unit time_step,
+    wait_for_unit interval_unit,
     "time" time,
     "order" smallint,
     flow uuid,
