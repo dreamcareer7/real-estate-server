@@ -1,12 +1,19 @@
-export type TPostgresInterval = {
-  [P in 'hours' | 'days' | 'weeks' | 'months' | 'years']?: number;
+export enum TimeStepUnit {
+  HOURS = 'hours',
+  DAYS = 'days',
+  WEEKS = 'weeks',
+  MONTHS = 'months',
+  YEARS = 'years',
 }
+
+export type TimeInterval = Partial<Record<TimeStepUnit, number>>
 export interface IBaseBrandFlowStep {
   is_automated: boolean;
   title: string;
   description?: string;
   order: number;
-  wait_for: TPostgresInterval;
+  wait_for: TimeInterval;
+  wait_for_unit: TimeStepUnit;
   time: string;
   event_type: string;
   flow: UUID;
@@ -29,7 +36,7 @@ export interface IPopulatedBrandFlowStep<T extends 'brand_flow.steps' | 'brand_f
   title: string;
   description?: string;
   order: number;
-  wait_for: Record<'hours' | 'days' | 'weeks' | 'months' | 'years', number>;
+  wait_for: TimeInterval;
   event_type: string;
   flow: UUID;
   event: T extends 'brand_flow_step.event' ? IBrandEvent : never;
