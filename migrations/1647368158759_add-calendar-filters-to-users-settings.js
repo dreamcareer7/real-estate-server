@@ -3,7 +3,7 @@ const db = require('../lib/utils/db')
 const migrations = [
   'BEGIN',
   `ALTER TABLE users_settings
-     ADD COLUMN calendar_filters json`,
+     ADD COLUMN IF NOT EXISTS calendar_filters json`,
   'COMMIT',
 ]
 
