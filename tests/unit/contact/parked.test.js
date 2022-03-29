@@ -117,6 +117,25 @@ async function testUnparkOnFlowEnroll() {
   expect(updated.parked).to.be.false
 }
 
+async function testNewParkedContactWithEmail() {
+  const parked = [false, true]
+  let counter = 0
+  const newContactEmails = ['new1@contact.com', 'new2@contact.com']
+  const contactsIds = await Contact.create(newContactEmails.map(contactEmail => {
+    counter++
+    return {
+      user: user.id,
+      attributes: [{ attribute_type: 'source_type', text: 'Google' }, { attribute_type: 'email', text: contactEmail }],
+      parked: parked[counter - 1]
+    }
+  }), user.id, brand.id, 'direct_request', { activity: false, get: false })
+  
+  const contacts = await Contact.getAll(contactsIds)
+
+  expect(contacts[0]['parked']).to.be.false
+  expect(contacts[1]['parked']).to.be.true
+}
+
 describe('Contact', () => {
   createContext()
   beforeEach(setup)
@@ -125,5 +144,6 @@ describe('Contact', () => {
     it('Updating a contact puts it out of parked state', testUnparkOnUpdate)
     it('Adding a contact to an event puts it out of parked state', testUnparkOnCrmTask)
     it('Enroll a contact into a flow puts it out of parked state', testUnparkOnFlowEnroll)
+    it('Create new parked contacts with email', testNewParkedContactWithEmail)
   })
 })
