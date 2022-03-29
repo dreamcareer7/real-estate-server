@@ -7,6 +7,7 @@ export interface IBaseBrandFlowStep {
   description?: string;
   order: number;
   wait_for: TPostgresInterval;
+  wait_for_unit: 'hours' | 'days' | 'weeks' | 'months' | 'years';
   time: string;
   event_type: string;
   flow: UUID;

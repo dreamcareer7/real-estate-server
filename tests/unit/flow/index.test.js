@@ -79,7 +79,7 @@ const defaultFlowSteps = (userId) => [{
   }, {
     title: 'Send them a test email',
     description: 'Automatically send them a test email to make sure it\'s working',
-    wait_for: {days: 1},
+    wait_for: {weeks: 1},
     time: '08:00:00',
     order: 2,
     is_automated: true,
@@ -142,7 +142,31 @@ async function loadFlow() {
 }
 
 async function testBrandFlows() {
-  expect(brand_flow.steps).to.have.length(3)
+  const { steps } = brand_flow
+  const [{ steps: defaultSteps }] = defaultFlowSteps(user.id)
+  expect(steps).to.have.length(3)
+  for (const i in steps) {
+    if (steps[i].wait_for.hours) {
+      expect(steps[i].wait_for.hours).to.be.equal(defaultSteps[i].wait_for.hours)
+      expect(steps[i].wait_for_unit).to.be.equal('hours')
+    }
+    if (steps[i].wait_for.days) {
+      expect(steps[i].wait_for.days).to.be.equal(defaultSteps[i].wait_for.days)
+      expect(steps[i].wait_for_unit).to.be.equal('days')
+    }
+    if (steps[i].wait_for.weeks) {
+      expect(steps[i].wait_for.weeks).to.be.equal(defaultSteps[i].wait_for.weeks)
+      expect(steps[i].wait_for_unit).to.be.equal('weeks')
+    }
+    if (steps[i].wait_for.months) {
+      expect(steps[i].wait_for.months).to.be.equal(defaultSteps[i].wait_for.months)
+      expect(steps[i].wait_for_unit).to.be.equal('months')
+    }
+    if (steps[i].wait_for.years) {
+      expect(steps[i].wait_for.years).to.be.equal(defaultSteps[i].wait_for.years)
+      expect(steps[i].wait_for_unit).to.be.equal('years')
+    }
+  }
 }
 
 /**
