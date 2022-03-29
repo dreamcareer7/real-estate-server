@@ -408,10 +408,14 @@ async function testStepOrderCollisionOnCreate() {
 async function testDuplicateEnroll() {
   const id = await createContact()
 
-  await Flow.enrollContacts(brand.id, user.id, brand_flow.id, Date.now() / 1000, brand_flow.steps.map(s => s.id), [id])
+  const lastWeek = moment.utc().add(-1, 'week').unix() / 1000
+  await Flow.enrollContacts(brand.id, user.id, brand_flow.id, lastWeek, brand_flow.steps.map(s => s.id), [id])
+
   const res = await Flow.enrollContacts(brand.id, user.id, brand_flow.id, Date.now() / 1000, brand_flow.steps.map(s => s.id), [id])
 
   expect(res).to.be.empty
+
+
 }
 
 async function testStopFlowByDeleteContact() {
