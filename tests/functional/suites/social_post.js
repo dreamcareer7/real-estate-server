@@ -150,7 +150,7 @@ function updateSocialPost(cb) {
 
   return F('reschedule social post for a next hour')
     .put(`/brands/${theBrand()}/social-post/${socialPost}`, {
-      dueAt: new Date(new Date().getTime() + 10 * 60 * 1000),
+      due_at: new Date(new Date().getTime() + 10 * 60 * 1000),
     })
     .after(cb)
     .expectStatus(200)
@@ -254,7 +254,7 @@ function updateExecutedPost(cb) {
 
   return F('user can not update executed post')
     .put(`/brands/${theBrand()}/social-post/${socialPost}`, {
-      dueAt: new Date(new Date().getTime() + 10 * 60 * 1000),
+      due_at: new Date(new Date().getTime() + 10 * 60 * 1000),
     })
     .after(cb)
     .expectStatus(403)
