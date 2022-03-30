@@ -48,16 +48,15 @@ async function testMarkDuplicateSameEmail() {
   expect(clusters[0].contacts).to.have.members(ids)
 }
 
-async function testMarkDuplicateSamePhone() {
-  const ids = await createContact(same_phone)
+async function testIgnoreSamePhone() {
+  await createContact(same_phone)
 
   const clusters = await ContactDuplicate.findForBrand(brand.id, { start: 0, limit: 10 })
-  expect(clusters).to.have.length(1)
-  expect(clusters[0].contacts).to.have.members(ids)
+  expect(clusters).to.have.length(0)
 }
 
 async function testFindDuplicatesForBothContacts() {
-  const ids = await createContact(same_phone)
+  const ids = await createContact(same_email)
 
   let cluster
 
@@ -71,7 +70,7 @@ async function testFindDuplicatesForBothContacts() {
 }
 
 async function testUpdateDuplicateEdges() {
-  const ids = await createContact(same_phone)
+  const ids = await createContact(same_email)
   let clusters
 
   clusters = await ContactDuplicate.findForBrand(brand.id, {})
@@ -91,8 +90,8 @@ async function testUpdateDuplicateEdges() {
         id: ids[0],
         attributes: [
           {
-            id: contactA.attributes.find(a => a.attribute_type === 'phone_number').id,
-            text: '(703) 726-1600'
+            id: contactA.attributes.find(a => a.attribute_type === 'email').id,
+            text: 'some.other.email@gmail.com'
           }
         ]
       }
@@ -108,7 +107,7 @@ async function testUpdateDuplicateEdges() {
 }
 
 async function testRemoveDuplicateEdges() {
-  const ids = await createContact(same_phone)
+  const ids = await createContact(same_email)
   let clusters
 
   clusters = await ContactDuplicate.findForBrand(brand.id, {})
@@ -159,7 +158,7 @@ describe('Contact', () => {
 
   describe('Duplicates', () => {
     it('should mark contacts with same email as duplicate', testMarkDuplicateSameEmail)
-    it('should mark contacts with same phone as duplicate', testMarkDuplicateSamePhone)
+    it('should not mark contacts with same phone as duplicate', testIgnoreSamePhone)
     it('should find duplicate cluster for any of contacts', testFindDuplicatesForBothContacts)
     it('should dissolve the duplicate cluster after credential update', testUpdateDuplicateEdges)
     it('should dissolve the duplicate cluster after contact delete', testRemoveDuplicateEdges)
