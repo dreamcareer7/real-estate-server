@@ -103,6 +103,18 @@ const defaultFlowSteps = (userId) => [{
       title: 'Demo of Rechat',
       task_type: 'Call',
     }
+  }, {
+    title: 'After a long time',
+    description: '23 months is passed',
+    wait_for: {months: 23},
+    time: '10:00:00',
+    order: 4,
+    is_automated: false,
+    event_type: 'last_step_date',
+    event: {
+      title: 'After a long time',
+      task_type: 'Call',
+    }
   }]
 }]
 
@@ -144,7 +156,7 @@ async function loadFlow() {
 async function testBrandFlows() {
   const { steps } = brand_flow
   const [{ steps: defaultSteps }] = defaultFlowSteps(user.id)
-  expect(steps).to.have.length(3)
+  expect(steps).to.have.length(4)
   for (const i in steps) {
     if (steps[i].wait_for.hours) {
       expect(steps[i].wait_for.hours).to.be.equal(defaultSteps[i].wait_for.hours)
