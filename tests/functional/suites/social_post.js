@@ -150,7 +150,7 @@ function updateSocialPost(cb) {
 
   return F('reschedule social post for a next hour')
     .put(`/brands/${theBrand()}/social-post/${socialPost}`, {
-      dueAt: new Date(new Date().getTime() + 10 * 60 * 1000),
+      due_at: new Date(new Date().getTime() + 10 * 60 * 1000),
     })
     .after(cb)
     .expectStatus(200)
@@ -221,7 +221,6 @@ function getUserSocialPosts(cb) {
 
 function getScheduledSocialPost(cb) {
   const scheduled = R().scheduleAnotherInstagramPost.data.id
-  const facebookPageWithFailedJob = R().getInstagramProfiles.data[1].id
 
   return F('get scheduled social posts of brand')
     .get(`/brands/${theBrand()}/social-post?executed=false`)
@@ -231,15 +230,7 @@ function getScheduledSocialPost(cb) {
       if (!scheduledPost) {
         throw new Error(`social post with id ${scheduled} should be exist and executed`)
       }
-
-      const failedPost = body.data.find((socialPost) => socialPost.facebook_page === facebookPageWithFailedJob)
-
-      if (!failedPost || !failedPost.failed_at) {
-        throw new Error(
-          `social post with id ${facebookPageWithFailedJob} should be failed while publishing on instagram`
-        )
-      }
-
+     
       cb(err, res, body)
     })
     .expectStatus(200)
@@ -263,27 +254,35 @@ function updateExecutedPost(cb) {
 
   return F('user can not update executed post')
     .put(`/brands/${theBrand()}/social-post/${socialPost}`, {
-      dueAt: new Date(new Date().getTime() + 10 * 60 * 1000),
+      due_at: new Date(new Date().getTime() + 10 * 60 * 1000),
     })
     .after(cb)
     .expectStatus(403)
 }
 
 function disconnect(cb) {
-  const facebookPage = R().getInstagramProfiles.data[0].id
+  const socialPost = R().getInstagramProfiles.data[0].id
   return F('disconnect instagram account')
-    .delete(`/brands/${theBrand()}/users/self/facebook/${facebookPage}`)
+    .delete(`/brands/${theBrand()}/users/self/facebook/${socialPost}`)
     .after(cb)
     .expectStatus(204)
 }
 
 function getUserSocialPostsAfterDisconnecting(cb) { 
   return F('social posts should be deleted after disconnecting the facebook page')
-    .get(`/brands/${theBrand()}/social-post?executed=true`)
+    .get(`/brands/${theBrand()}/social-post`)
     .after((err, res, body) => {
-      if (body.data.length) {
+      const disconnectedPost = body.data.find((socialPost) => socialPost.facebook_page === R().getInstagramProfiles.data[0].id)
+      const connectedPost = body.data.find((socialPost) => socialPost.facebook_page === R().getInstagramProfiles.data[1].id)
+
+      if (disconnectedPost) {
         throw new Error('social posts should be deleted after disconnecting the facebook page')
       }
+
+      if (!connectedPost) {
+        throw new Error('social posts should not be deleted after disconnecting the facebook page')
+      }
+
       cb(err, res, body)
     })
     .expectStatus(200)
