@@ -11,6 +11,7 @@ SELECT
   description,
   event_type,
   wait_for,
+  wait_for_unit,
   "time",
   event,
   email,

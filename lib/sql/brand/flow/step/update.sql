@@ -6,6 +6,7 @@ SET
   "order" = $6::smallint,
   event_type = $7::text,
   wait_for = $8::interval,
+  wait_for_unit = $14::interval_unit,
   "time" = $9::interval,
   email = $10::uuid,
   template = $11::uuid,
