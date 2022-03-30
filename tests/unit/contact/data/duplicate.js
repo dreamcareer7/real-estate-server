@@ -19,7 +19,12 @@ module.exports = [
     {
       attributes: attributes({
         first_name: 'Thomas',
-        email: ['tom@rechat.com'],
+        email: ['tom@rechat.com', 'john@doe.com']
+      })
+    },
+    {
+      attributes: attributes({
+        first_name: 'Lena',
         phone_number: '+12345678901'
       })
     }

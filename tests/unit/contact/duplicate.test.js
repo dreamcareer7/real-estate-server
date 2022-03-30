@@ -13,7 +13,7 @@ const sql = require('../../../lib/utils/sql')
 const BrandHelper = require('../brand/helper')
 const UserHelper = require('../user/helper')
 
-let user, brand, contact_ids
+let user, brand, contact_ids, expected_duplicate_cluster, lena
 
 async function setup() {
   user = await UserHelper.TestUser()
@@ -39,6 +39,8 @@ async function createContact() {
     'direct_request',
     { activity: false, get: false, relax: false }
   )
+  expected_duplicate_cluster = contact_ids.slice(0, 3)
+  lena = contact_ids[3]
 
   await handleJobs()
 }
@@ -53,7 +55,7 @@ async function testContactDuplicateCluster() {
   const duplicate = await Duplicates.findForContact(brand.id, contact_ids[0])
 
   expect(duplicate.contacts).to.have.length(3)
-  expect(duplicate.contacts).to.have.members(contact_ids)
+  expect(duplicate.contacts).to.have.members(expected_duplicate_cluster)
 }
 
 async function testRemoveContactFromCluster() {
@@ -68,7 +70,7 @@ async function testRemoveContactFromCluster() {
 
   const new_clusters = await Duplicates.findForBrand(brand.id)
   expect(new_clusters).to.have.length(1)
-  expect(new_clusters[0].contacts).to.have.members(_.without(contact_ids, thomas.id))
+  expect(new_clusters[0].contacts).to.have.members(_.without(expected_duplicate_cluster, thomas.id))
 }
 
 async function testRemoveWholeCluster() {
@@ -111,7 +113,7 @@ async function testMergeAll() {
   await handleJobs()
 
   const contacts = await Contact.filter(brand.id, [], {})
-  expect(contacts.ids).to.have.members(clusters.map(cl => cl.contacts[0]))
+  expect(contacts.ids).to.have.members(clusters.map(cl => cl.contacts[0]).concat(lena))
 
   expect(await Duplicates.findForBrand(brand_id)).to.be.empty
 }
