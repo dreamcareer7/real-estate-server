@@ -5,7 +5,6 @@ const Contact = {
   ...require('../../../lib/models/Contact/manipulate'),
   ...require('../../../lib/models/Contact/get'),
 }
-const CrmTask = require('../../../lib/models/CRM/Task/upsert')
 const Context = require('../../../lib/models/Context')
 const Flow = require('../../../lib/models/Flow/enroll')
 const User = require('../../../lib/models/User/get')
@@ -84,28 +83,6 @@ async function testUnparkOnUpdate() {
   expect(updated.parked).to.be.false
 }
 
-async function testUnparkOnCrmTask() {
-  const [contact] = await createContact([create[0]])
-
-  await CrmTask.create({
-    brand: brand.id,
-    created_by: user.id,
-    due_date: Date.now() / 1000,
-    status: 'PENDING',
-    task_type: 'Call',
-    title: 'Called Jay',
-    associations: [{
-      association_type: 'contact',
-      contact,
-    }]
-  })
-
-  await handleJobs()
-
-  const updated = await Contact.get(contact)
-  expect(updated.parked).to.be.false
-}
-
 async function testUnparkOnFlowEnroll() {
   const [contact] = await createContact([create[0]])
   const [flow] = await BrandFlow.forBrand(brand.id)
@@ -142,7 +119,6 @@ describe('Contact', () => {
 
   describe('Parked', () => {
     it('Updating a contact puts it out of parked state', testUnparkOnUpdate)
-    it('Adding a contact to an event puts it out of parked state', testUnparkOnCrmTask)
     it('Enroll a contact into a flow puts it out of parked state', testUnparkOnFlowEnroll)
     it('Create new parked contacts with email', testNewParkedContactWithEmail)
   })
