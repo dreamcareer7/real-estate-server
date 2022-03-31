@@ -10,6 +10,11 @@ SELECT
   contact,
   buyer_message,
   feedback,
+  email,
+  phone_number,
+  first_name,
+  last_name,
+  company,
 
   (
     SELECT
