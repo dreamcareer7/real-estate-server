@@ -2,7 +2,7 @@ const db = require('../lib/utils/db')
 
 const migrations = [
   'BEGIN',
-  `CREATE TYPE interval_unit AS ENUM (
+  `CREATE TYPE IF NOT EXISTS interval_unit AS ENUM (
     'hours',
     'days',
     'weeks',
@@ -10,7 +10,7 @@ const migrations = [
     'years'
   )`,
   `ALTER TABLE brands_flow_steps
-    ADD COLUMN wait_for_unit interval_unit`,
+    ADD COLUMN IF NOT EXISTS wait_for_unit interval_unit`,
   'COMMIT',
 ]
 
