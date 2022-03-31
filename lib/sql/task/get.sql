@@ -9,6 +9,7 @@ tasks AS (
   EXTRACT(EPOCH FROM tasks.created_at) AS created_at,
   EXTRACT(EPOCH FROM tasks.updated_at) AS updated_at,
   EXTRACT(EPOCH FROM tasks.deleted_at) AS deleted_at,
+  tasks.acl::text[] as acl,
   'task' as type,
   (
     SELECT deal FROM deals_checklists WHERE id = tasks.checklist
