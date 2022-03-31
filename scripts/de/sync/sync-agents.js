@@ -13,16 +13,16 @@ const DISABLE_NONEXISTING_USERS = `
 UPDATE brands_roles SET
   deleted_at = (
     CASE
-      WHEN input.username IS NULL THEN COALESCE(deleted_at, NOW())
+      WHEN input.key IS NULL THEN COALESCE(deleted_at, NOW())
     ELSE
       NULL
     END
   )
 FROM de.agents_offices
-JOIN json_to_recordset($1) as input("username" TEXT, office INT)
-ON de.agents_offices.username = input.username AND de.agents_offices.office = input.office
+JOIN json_to_recordset($1) as input("key" TEXT, office INT)
+ON de.agents_offices.key = input.key AND de.agents_offices.office = input.office
 WHERE brands_roles.id = de.agents_offices.agent_role
-RETURNING input.username, input.office`
+RETURNING input.key, input.office`
 
 const UPDATE_BRANDS = `
 UPDATE brands
@@ -46,9 +46,10 @@ const syncAgents = async users => {
       })
 
       const found = _.find(existing, {
-        username: user.username,
+        key: user.key.toString(),
         office: office.id
       })
+
       if (found)
         return
 
@@ -65,12 +66,12 @@ const syncAgents = async users => {
   ])
 
   deletedRoles.forEach(deleted => {
-    console.log('Deleted', deleted.username, 'on office', deleted.office)
+    console.log('Deleted', deleted.key, 'on office', deleted.office)
   })
 }
 
 const SAVE = `INSERT INTO de.agents_offices (
-  username, office, "user", brand, agent_role
+  key, office, "user", brand, agent_role
 )
 VALUES ($1, $2, (
   SELECT id FROM users WHERE LOWER(email) = LOWER($3)
@@ -93,7 +94,7 @@ const addUserToOffice = async ({user, office}) => {
 
 
   const { rows } = await db.executeSql.promise(SAVE, [
-    user.username,
+    user.key,
     office.id,
     user.email,
     brand.id,
