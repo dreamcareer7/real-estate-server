@@ -231,7 +231,7 @@ declare interface ICSVImporterMappingDef {
 }
 
 declare interface ICSVImporterMapping {
-  def: IContactAttributeDef | { name: string };
+  def: IContactAttributeDef;
   label?: string;
   index?: number;
   is_partner?: boolean;
