@@ -334,7 +334,7 @@ async function testExportForEvents() {
   await CrmTask.create(Mock.getCrmTaskEvent({ brand: brand.id, created_by: user.id, assignees: [user.id], due_date: now.unix(), all_day: true }))
   await CrmTask.create(Mock.getCrmTaskEvent({ brand: brand.id, created_by: user.id, assignees: [user.id], due_date: now.unix(), end_date: next30Mins.unix(), all_day: false, task_type: 'crm_task' }))
   await CrmTask.create(Mock.getCrmTaskEvent({ brand: brand.id, created_by: user.id, assignees: [user.id], due_date: next30Mins.unix(), end_date: next60Mins.unix(), all_day: false, task_type: 'crm_task' }))
-  
+
   const feeds = await getAsICal([{ brand: brand.id, users: [user.id] }], {
     low,
     high
