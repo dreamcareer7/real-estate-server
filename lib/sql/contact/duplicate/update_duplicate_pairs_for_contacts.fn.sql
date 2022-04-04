@@ -15,12 +15,12 @@ AS $$
     SELECT
       text
     FROM
-      contacts_attributes AS ca
+      contacts_attributes_text AS ca
     WHERE
       ca.deleted_at IS NULL
-      AND attribute_type IN ('email', 'phone_number')
+      AND attribute_type = 'email'
       AND contact = ANY($2)
-  ), duplicate_attrs AS (
+  ), duplicate_clusters AS (
     SELECT
       text, array_agg(contact) ids
     FROM
@@ -34,13 +34,7 @@ AS $$
       AND brand = $1::uuid
     GROUP BY
       text
-  ), duplicate_clusters AS (
-    SELECT
-      ids
-    FROM
-      duplicate_attrs
-    WHERE
-      ARRAY_LENGTH(ids, 1) > 1
+    HAVING ARRAY_LENGTH(array_agg(contact), 1) > 1
   )
   INSERT INTO
     contacts_duplicate_pairs

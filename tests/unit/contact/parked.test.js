@@ -5,7 +5,6 @@ const Contact = {
   ...require('../../../lib/models/Contact/manipulate'),
   ...require('../../../lib/models/Contact/get'),
 }
-const CrmTask = require('../../../lib/models/CRM/Task/upsert')
 const Context = require('../../../lib/models/Context')
 const Flow = require('../../../lib/models/Flow/enroll')
 const User = require('../../../lib/models/User/get')
@@ -84,28 +83,6 @@ async function testUnparkOnUpdate() {
   expect(updated.parked).to.be.false
 }
 
-async function testUnparkOnCrmTask() {
-  const [contact] = await createContact([create[0]])
-
-  await CrmTask.create({
-    brand: brand.id,
-    created_by: user.id,
-    due_date: Date.now() / 1000,
-    status: 'PENDING',
-    task_type: 'Call',
-    title: 'Called Jay',
-    associations: [{
-      association_type: 'contact',
-      contact,
-    }]
-  })
-
-  await handleJobs()
-
-  const updated = await Contact.get(contact)
-  expect(updated.parked).to.be.false
-}
-
 async function testUnparkOnFlowEnroll() {
   const [contact] = await createContact([create[0]])
   const [flow] = await BrandFlow.forBrand(brand.id)
@@ -117,13 +94,32 @@ async function testUnparkOnFlowEnroll() {
   expect(updated.parked).to.be.false
 }
 
+async function testNewParkedContactWithEmail() {
+  const parked = [false, true]
+  let counter = 0
+  const newContactEmails = ['new1@contact.com', 'new2@contact.com']
+  const contactsIds = await Contact.create(newContactEmails.map(contactEmail => {
+    counter++
+    return {
+      user: user.id,
+      attributes: [{ attribute_type: 'source_type', text: 'Google' }, { attribute_type: 'email', text: contactEmail }],
+      parked: parked[counter - 1]
+    }
+  }), user.id, brand.id, 'direct_request', { activity: false, get: false })
+  
+  const contacts = await Contact.getAll(contactsIds)
+
+  expect(contacts[0]['parked']).to.be.false
+  expect(contacts[1]['parked']).to.be.true
+}
+
 describe('Contact', () => {
   createContext()
   beforeEach(setup)
 
   describe('Parked', () => {
     it('Updating a contact puts it out of parked state', testUnparkOnUpdate)
-    it('Adding a contact to an event puts it out of parked state', testUnparkOnCrmTask)
     it('Enroll a contact into a flow puts it out of parked state', testUnparkOnFlowEnroll)
+    it('Create new parked contacts with email', testNewParkedContactWithEmail)
   })
 })
