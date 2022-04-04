@@ -3,7 +3,7 @@ const { runInContext } = require('../../lib/models/Context/util')
 const Context = require('../../lib/models/Context/index')
 
 runInContext('generate_lts_link', async (program) => {
-  const link = generateLtsLink({
+  const link = await generateLtsLink({
     brand: program.brand,
     user: program.user,
     mls: ['NTREIS'],
