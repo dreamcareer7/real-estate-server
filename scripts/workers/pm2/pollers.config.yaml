@@ -53,3 +53,6 @@ apps:
   - script   : ./scripts/workers/index.js
     args     : ./pollers/openhouse_notifications.js
     name     : 'agents_openhouse_notifications'
+  - script   : ./scripts/workers/index.js
+    args     : ./pollers/showing.js
+    name     : 'showing'
