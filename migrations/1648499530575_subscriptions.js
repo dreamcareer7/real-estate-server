@@ -1,4 +1,4 @@
-"const db = require('../lib/utils/db')
+const db = require('../lib/utils/db')
 
 const migrations = [
   'BEGIN',
@@ -26,4 +26,3 @@ exports.up = cb => {
 }
 
 exports.down = () => {}
-"
