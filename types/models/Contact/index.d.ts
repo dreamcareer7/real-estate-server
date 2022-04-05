@@ -144,6 +144,7 @@ declare type TContactActionReason =
   | 'import_csv'
   | 'import_json'
   | 'import_xlsx'
+  | 'import_spreadsheet'
   | 'merge'
   | 'deleted_definition'
   | 'google_integration'
