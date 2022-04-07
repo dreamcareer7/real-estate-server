@@ -189,7 +189,7 @@ const recommendManually = (cb) => {
 
 const recommendManuallybyListingId = (cb) => {
   return frisby.create('recommend manually by listing ID')
-    .post('/v2/rooms/' + results.room.create.data.id + '/recs', {
+    .post('/rooms/' + results.room.create.data.id + '/recs', {
       listing_id: results.recommendation.markAsSeen.data.listing.id,
       notification: true
     })
