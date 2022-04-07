@@ -1,6 +1,7 @@
 const cheerio = require('cheerio')
 const { expect } = require('chai')
 const moment = require('moment-timezone')
+const { Mock } = require('./data/mock')
 
 const { createContext, handleJobs } = require('../helper')
 
@@ -18,10 +19,13 @@ const Deal = require('../../../lib/models/Deal')
 const { Listing } = require('../../../lib/models/Listing')
 const Notification = require('../../../lib/models/Notification')
 const User = require('../../../lib/models/User/get')
+const CrmTask = require('../../../lib/models/CRM/Task')
+const CrmTaskNotification = require('../../../lib/models/CRM/Task/worker/notification')
 
 const BrandHelper = require('../brand/helper')
 const DealHelper = require('../deal/helper')
 const { attributes } = require('../contact/helper')
+const Reminder = require('../../../lib/models/CRM/Task/reminder')
 
 let user, brand, listing, deal
 let CLOSING_DATE, CONTRACT_DATE
@@ -435,6 +439,61 @@ async function testResetNotificationSettings() {
   expect(settings).to.be.empty
 }
 
+async function testEventDueNotification() {
+  const now = moment().utc()
+  const nextFiveSeconds = now.clone().add(5 ,'seconds')
+  const previousHour = now.clone().add(-60 ,'minutes')
+  const nextHour = now.clone().add(60 ,'minutes')
+  const nextTwoHour = now.clone().add(120 ,'minutes')
+
+  await CrmTask.createMany([
+    Mock.getCrmTaskEvent({ brand: brand.id, created_by: user.id, assignees: [user.id], due_date: previousHour.unix(), end_date: nextFiveSeconds.unix(), all_day: false, task_type: 'crm_task' }),
+    Mock.getCrmTaskEvent({ brand: brand.id, created_by: user.id, assignees: [user.id], due_date: nextFiveSeconds.unix(), end_date: nextHour.unix(), all_day: false, task_type: 'crm_task' }),
+    Mock.getCrmTaskEvent({ brand: brand.id, created_by: user.id, assignees: [user.id], due_date: nextHour.unix(), end_date: nextTwoHour.unix(), all_day: false, task_type: 'crm_task' }),
+  ])
+
+  await CrmTaskNotification.sendTaskDueNotifications()
+
+  const notifications = await promisify(Notification.getForUser)(user.id, {})
+  // Should has one notification based on the above configs
+  expect(notifications.length).to.be.equal(1)
+}
+
+async function testEventReminderNotification() {
+  const now = moment().utc()
+  const nextFiveSeconds = now.clone().add(5 ,'seconds')
+  const nextHour = now.clone().add(60 ,'minutes')
+
+  const withReminder = {
+    ...Mock.getCrmTaskEvent({ brand: brand.id, created_by: user.id, assignees: [user.id], due_date: now.unix(), end_date: nextHour.unix(), all_day: false, task_type: 'crm_task', status: 'PENDING' }),
+    reminders: [
+      {
+        is_relative: true,
+        timestamp: nextFiveSeconds.unix(),
+
+      }
+    ]
+  }
+
+  const withOutReminder = {
+    ...Mock.getCrmTaskEvent({ brand: brand.id, created_by: user.id, assignees: [user.id], due_date: now.unix(), end_date: nextHour.unix(), all_day: false, task_type: 'crm_task', status: 'PENDING' })
+  }
+  await CrmTask.createMany([
+    withReminder,
+    withOutReminder,
+  ])
+
+  const events = await CrmTask.getForUser(user.id, brand.id, {})
+  const reminders = await Reminder.get(events[0]['reminders'][0])
+  expect(reminders).to.not.equal(null)
+
+  await CrmTaskNotification.sendReminderNotifications()
+
+  const notifications = await promisify(Notification.getForUser)(user.id, {})
+  // Should has one notification based on the above configs
+  expect(notifications.length).to.be.equal(1)
+}
+
 describe('Calendar', () => {
   createContext()
 
@@ -457,6 +516,8 @@ describe('Calendar', () => {
       it('should log the event notification', makeSureItsLogged)
       it('should send email for unread notifications', sendEmailForUnread)
       it('should log email delivery', makeSureEmailDeliveryIsLogged)
+      it('should create a notification for an event on due date', testEventDueNotification)
+      it('should create a notification for an event on reminder date', testEventReminderNotification)
     })
   })
 
