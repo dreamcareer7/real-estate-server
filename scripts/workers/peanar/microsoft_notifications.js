@@ -3,11 +3,11 @@ const { peanar } = require('../../../lib/utils/peanar')
 require('../../../lib/models/Microsoft/workers')
 
 const queues = [
-  {
-    // Does not scale
-    queues: ['microsoft_notifications'],
-    concurrency: 100,
-  },
+  // {
+  //   // Does not scale
+  //   queues: ['microsoft_notifications'],
+  //   concurrency: 100,
+  // },
   {
     // Scale?
     queues: ['microsoft_cal_notifications'],
