@@ -18,7 +18,7 @@ WITH cs AS (
       company,
       email,
       phone_number,
-      ''
+      'Guest'
     ) AS display_name,
     COALESCE(
       CASE WHEN first_name IS NOT NULL AND last_name IS NOT NULL THEN last_name || ' ' || first_name ELSE NULL END,
@@ -29,7 +29,7 @@ WITH cs AS (
       company,
       email,
       phone_number,
-      ''
+      'Guest'
     ) AS sort_field
   FROM
     cs
