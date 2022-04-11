@@ -269,7 +269,7 @@ AS $function$
         contacts_summaries.company,
         contacts_summaries.email[1],
         contacts_summaries.phone_number[1],
-        'Guest'
+        ''
       ) AS display_name,
 
       COALESCE(
@@ -281,7 +281,7 @@ AS $function$
         contacts_summaries.company,
         contacts_summaries.email[1],
         contacts_summaries.phone_number[1],
-        'Guest'
+        ''
       ) AS sort_field,
 
       COALESCE(

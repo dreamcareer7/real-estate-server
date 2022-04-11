@@ -107,25 +107,6 @@ async function testFQuery(q, expected_length) {
   return filter_res
 }
 
-async function testFilterByGuest() {
-  await Contact.create([
-    {
-      attributes: [
-        {
-          attribute_type: 'birthday',
-          date: Date.now() / 1000
-        }
-      ],
-      user: user.id
-    }
-  ], user.id, brand.id)
-
-  await handleJobs()
-
-  await testFFQuery(['Guest'], 1)
-  await testFQuery(['Guest'], 1)
-}
-
 async function testFilterByQuery() {
   async function testFastFilter() {
     const { ids } = await testFFQuery(['Emil'], 2)
@@ -280,7 +261,6 @@ describe('Contact', () => {
 
   describe('Full-Text Search', () => {
     it('should full-text search', testFilterByQuery)
-    it('should filter by Guest', testFilterByGuest)
     it('should fts-filter even if terms contain empty string', testFTSWithEmptyString)
     it('should escape special characters', testFTSEscape)
   })

@@ -37,7 +37,7 @@ AS $function$
     company,
     email,
     phone_number,
-    'Guest'
+    ''
   ) AS display_name
   FROM
     pivoted
