@@ -9,7 +9,7 @@ SELECT
     company,
     email,
     phone_number,
-    'Guest'
+    ''
   ) AS display_name,
   COALESCE(
     nickname,
@@ -17,7 +17,7 @@ SELECT
     company,
     email,
     phone_number,
-    'Guest'
+    ''
   ) AS abbreviated_display_name,
   'contact_summary' AS type
 FROM

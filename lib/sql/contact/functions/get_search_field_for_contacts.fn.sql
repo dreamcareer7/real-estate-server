@@ -75,7 +75,7 @@ AS $$
   )
   SELECT
     cids.id,
-    COALESCE(search_field, setweight(to_tsvector('simple', 'Guest'), 'D')) AS search_field
+    search_field
   FROM
     unnest(contact_ids) cids(id)
     LEFT JOIN combined

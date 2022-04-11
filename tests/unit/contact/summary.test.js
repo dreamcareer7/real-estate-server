@@ -153,10 +153,10 @@ async function testEmptyContact() {
   await handleJobs()
 
   const contact = await sql.selectOne('SELECT * FROM contacts WHERE id = $1', [id])
-  expect(contact.search_field).to.be.equal('\'guest\':1')
+  expect(contact.search_field).to.be.null
 
   const summary = await sql.selectOne('SELECT * FROM contacts WHERE id = $1', [id])
-  expect(summary.search_field).to.be.equal('\'guest\':1')
+  expect(summary.search_field).to.be.null
 }
 
 async function testMarketingName() {
@@ -248,7 +248,7 @@ async function testGetSummaries() {
   expect(contact).to.include({
     first_name: null,
     email: null,
-    display_name: 'Guest'
+    display_name: ''
   })
 }
 
