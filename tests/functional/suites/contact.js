@@ -117,10 +117,24 @@ const createSingleAttrContact = cb => {
     .expectJSON({
       data: [
         {
-          display_name: ''
+          display_name: 'Guest'
         }
       ]
     })
+}
+
+const stringSearchForGuest = cb => {
+  return frisby
+    .create('search for Guest contacts')
+    .post('/contacts/filter?q[]=Guest')
+    .after(cb)
+    .expectJSONLength('data', 1)
+    .expectJSON({
+      data: [{
+        id: results.contact.createSingleAttrContact.data[0].id
+      }]
+    })
+    .expectStatus(200)
 }
 
 const removeSingleAttrContact = cb => {
@@ -1160,6 +1174,7 @@ module.exports = {
   create,
   createCompanyContact,
   createSingleAttrContact,
+  stringSearchForGuest,
   removeSingleAttrContact,
   importManyContacts,
   createEmptyContactFails,
