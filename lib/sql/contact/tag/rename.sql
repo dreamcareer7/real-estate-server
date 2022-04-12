@@ -44,8 +44,9 @@ WITH tag_def AS (
   WHERE
     tag = $2
     AND brand = $1
+    AND deleted_at IS NULL
     AND NOT EXISTS (
-      SELECT 1 FROM crm_tags t2 WHERE lower(t2.tag) = lower($3) AND t1.id != t2.id
+      SELECT 1 FROM crm_tags t2 WHERE lower(t2.tag) = lower($3) AND t1.id != t2.id AND deleted_at IS NULL
     )
   RETURNING
     1
@@ -59,8 +60,9 @@ WITH tag_def AS (
   WHERE
     tag = $2
     AND brand = $1
+    AND deleted_at IS NULL
     AND EXISTS (
-      SELECT 1 FROM crm_tags t2 WHERE lower(t2.tag) = lower($3) AND t1.id != t2.id
+      SELECT 1 FROM crm_tags t2 WHERE lower(t2.tag) = lower($3) AND t1.id != t2.id AND deleted_at IS NULL
     )
   RETURNING
     1
