@@ -16,15 +16,15 @@ WITH inserted AS (
     $10,
     $11
   )
-  RETURNING id
+  RETURNING id, created_at
 ),
 
 current_campaign AS (
-  SELECT campaign FROM emails WHERE id = $1::uuid
+  SELECT campaign, sent_at FROM emails WHERE id = $1::uuid
 )
 
 SELECT
-  t1.id AS email_event_id, t2.campaign AS campaign_id
+  t1.id AS email_event_id, t2.campaign AS campaign_id, EXTRACT(EPOCH FROM(t1.created_at - t2.sent_at)) as sent_diff
 FROM
   inserted t1 CROSS JOIN current_campaign t2
 
