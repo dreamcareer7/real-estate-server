@@ -187,6 +187,26 @@ const recommendManually = (cb) => {
     })
 }
 
+const recommendManuallybyListingId = (cb) => {
+  return frisby.create('recommend manually by listing ID')
+    .post('/rooms/' + results.room.create.data.id + '/recs', {
+      listing_id: results.recommendation.markAsSeen.data.listing.id,
+      notification: true
+    })
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      data: {
+        type: 'recommendation'
+      }
+    })
+    .expectJSONTypes({
+      code: String,
+      data: recommendation_response
+    })
+}
+
 const recommendManuallyWorked = (cb) => {
   return frisby.create('make sure recommendManually was successful')
     .get('/rooms/' + results.room.create.data.id + '/recs/' + results.recommendation.feed.data[0].id)
@@ -229,6 +249,7 @@ module.exports = {
   markAsSeen,
   markAsSeen404,
   recommendManually,
+  recommendManuallybyListingId,
   recommendManuallyWorked,
   bulkMarkAsRead,
   getFavoritedListings
