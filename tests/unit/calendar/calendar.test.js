@@ -321,6 +321,37 @@ async function testDealExportEvents() {
   expect(dateFormat(feedValues[3]['end'])).to.be.equal(dateFormat(fiveDaysAgo))
 }
 
+async function testExportForEventsOnNullEndDate() {
+  const high = moment().add(1, 'year').unix()
+  const low = moment().add(-1, 'year').unix()
+
+  const now = moment().utc()
+  const next30Mins = now.clone().add(30 ,'minutes')
+  const next120Mins = now.clone().add(120 ,'minutes')
+  const next150Mins = now.clone().add(150 ,'minutes')
+
+  await CrmTask.create(Mock.getCrmTaskEvent({ brand: brand.id, created_by: user.id, assignees: [user.id], due_date: now.unix(), end_date: null, all_day: false, task_type: 'crm_task' }))
+  await CrmTask.create(Mock.getCrmTaskEvent({ brand: brand.id, created_by: user.id, assignees: [user.id], due_date: next30Mins.unix(), end_date: null, all_day: false, task_type: 'crm_task' }))
+
+  const feeds = await getAsICal([{ brand: brand.id, users: [user.id] }], {
+    low,
+    high
+  }, 'America/Chicago')
+
+  const distrustFeed = ical.parseICS(feeds)
+  const feedValues = Object.values(distrustFeed)
+
+  const eventFormat = (dateInString) => moment(dateInString).tz('America/Chicago').format('YYYY/MM/DD hh:mm') // skip secondes and milliseconds 
+
+  expect(eventFormat(feedValues[1]['dtstamp'])).to.be.equal(eventFormat(now))
+  expect(eventFormat(feedValues[1]['start'])).to.be.equal(eventFormat(now))
+  expect(eventFormat(feedValues[1]['end'])).to.be.equal(eventFormat(next120Mins))
+
+  expect(eventFormat(feedValues[2]['dtstamp'])).to.be.equal(eventFormat(now))
+  expect(eventFormat(feedValues[2]['start'])).to.be.equal(eventFormat(next30Mins))
+  expect(eventFormat(feedValues[2]['end'])).to.be.equal(eventFormat(next150Mins))
+}
+
 async function testExportForEvents() {
   const high = moment().add(1, 'year').unix()
   const low = moment().add(-1, 'year').unix()
@@ -634,6 +665,7 @@ describe('Calendar', () => {
     it('should put events in correct timezones', testCorrectTimezone)
     it('should export events correctly for allday and none allday events', testExportForEvents)
     it('should export events correctly for deals events', testExportForDealsEvents)
+    it('should export events correctly for on null endDate events', testExportForEventsOnNullEndDate)
   })
 
   describe('Contacts', () => {
