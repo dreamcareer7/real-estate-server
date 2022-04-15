@@ -1,4 +1,3 @@
-const xlsx = require('xlsx')
 const path = require('path')
 const fs = require('fs')
 const mappings = require('./data/csv_mappings')
@@ -8,7 +7,9 @@ registerSuite('contact', [
 ])
 
 const CSV_PATH = path.resolve(__dirname, 'data', 'contacts.csv')
-const CSV_ROWS = 192
+const XLS_PATH = path.resolve(__dirname, 'data', 'contacts.xls')
+const XLSX_PATH = path.resolve(__dirname, 'data', 'contacts.xlsx')
+const NROWS = 192
 
 const R = () => results
 const F = frisby
@@ -22,30 +23,13 @@ const the = {
 }
 
 /**
- * @param {xlsx.BookType} bookType
- * @returns {import('stream').Readable}
- */
-function createWorkbook (bookType) {
-  const wb = xlsx.readFile(CSV_PATH)
-  const buff = xlsx.write(wb, { type: 'buffer', bookType })
-
-  // XXX Why this is not working?! maybe Frisby does not support Readable Streams
-  // return require('stream').Readable.from(buff)
-
-  const fileName = `rechat-test-contact-import.${bookType}`
-  const filePath = path.resolve(require('os').tmpdir(), fileName)
-  fs.writeFileSync(filePath, buff)
-  return fs.createReadStream(filePath)
-}
-
-/**
- * @param {import('stream').Readable} readable 
+ * @param {import('fs').ReadStream} stream 
  * @param {string} name 
  */
-function upload (readable, name) {
+function upload (stream, name) {
   return cb => F
     .create(name)
-    .post('/contacts/upload', { file: readable }, { json: false, form: true })
+    .post('/contacts/upload', { file: stream }, { json: false, form: true })
     .addHeader('content-type', 'multipart/form-data')
     .after((err, res, body) => cb(err, {...res, body: JSON.parse(body)}, body))
     .expectStatus(200)
@@ -99,23 +83,23 @@ module.exports = {
     ownerId: the.userId, 
     ext: 'csv', 
   }),
-  getContacts: checkContacts(CSV_ROWS),
+  getContacts: checkContacts(NROWS),
 
-  uploadXls: upload(createWorkbook('xls'), 'upload a XLS file'),
+  uploadXls: upload(fs.createReadStream(XLS_PATH), 'upload a XLS file'),
   importXls: importFile({
     name: 'import contacts from XLS file',
     fileId: the.xlsFileId,
     ownerId: the.userId,
     ext: 'xls',
   }),
-  getContactsXls: checkContacts(CSV_ROWS * 2),
+  getContactsXls: checkContacts(NROWS * 2),
 
-  uploadXlsx: upload(createWorkbook('xlsx'), 'upload a XLSX file'),
+  uploadXlsx: upload(fs.createReadStream(XLSX_PATH), 'upload a XLSX file'),
   importXlsx: importFile({
     name: 'import contacts from XLSX file',
     fileId: the.xlsxFileId,
     ownerId: the.userId,
     ext: 'xlsx',
   }),
-  getContactsXlsx: checkContacts(CSV_ROWS * 3),
+  getContactsXlsx: checkContacts(NROWS * 3),
 }
