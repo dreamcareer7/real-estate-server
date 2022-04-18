@@ -1,4 +1,5 @@
 const createContext = require('./create-context')
+const createMonitor = require('./create-monitor')
 const Context = require('../../../lib/models/Context')
 const Metric = require('../../../lib/models/Metric')
 const Slack = require('../../../lib/models/Slack')
@@ -23,6 +24,9 @@ async function shutdown() {
 }
 
 const poll = ({ fn, name, wait = 5000 }) => {
+  
+  createMonitor({ name, wait })
+
   async function again() {
     if (shutting_down) return
 
@@ -75,9 +79,9 @@ const poll = ({ fn, name, wait = 5000 }) => {
 
       try {
         await execute(ctxRes)
-        report_time([ 'result:success', name ])
+        report_time(['result:success', name])
       } catch (ex) {
-        report_time([ 'result:fail', name ])
+        report_time(['result:fail', name])
         Context.error(ex)
         Slack.send({
           channel: '7-server-errors',
