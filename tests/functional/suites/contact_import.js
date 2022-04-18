@@ -75,16 +75,19 @@ function checkContacts(
     .expectStatus(200)
 }
 
-module.exports = {
-  uploadCSV: upload(fs.createReadStream(CSV_PATH), 'upload a CSV file'),
-  importCSV: importFile({
-    name: 'import contacts from CSV file',
-    fileId: the.csvFileId, 
-    ownerId: the.userId, 
-    ext: 'csv', 
-  }),
-  getContacts: checkContacts(NROWS),
+/**
+ * Delete all existing contacts
+ * @param {string=} [name]
+ */
+function clearContacts (name = 'delete all contacts') {
+  return cb => F
+    .create(name)
+    .delete('/contacts')
+    .after(cb)
+    .expectStatus(204)
+}
 
+module.exports = {
   uploadXls: upload(fs.createReadStream(XLS_PATH), 'upload a XLS file'),
   importXls: importFile({
     name: 'import contacts from XLS file',
@@ -92,8 +95,9 @@ module.exports = {
     ownerId: the.userId,
     ext: 'xls',
   }),
-  getContactsXls: checkContacts(NROWS * 2),
-
+  getContactsXls: checkContacts(NROWS),
+  clearContactsXls: clearContacts(),
+  
   uploadXlsx: upload(fs.createReadStream(XLSX_PATH), 'upload a XLSX file'),
   importXlsx: importFile({
     name: 'import contacts from XLSX file',
@@ -101,5 +105,17 @@ module.exports = {
     ownerId: the.userId,
     ext: 'xlsx',
   }),
-  getContactsXlsx: checkContacts(NROWS * 3),
+  getContactsXlsx: checkContacts(NROWS),
+  clearContactsXlsx: clearContacts(),
+  
+  uploadCSV: upload(fs.createReadStream(CSV_PATH), 'upload a CSV file'),
+  importCSV: importFile({
+    name: 'import contacts from CSV file',
+    fileId: the.csvFileId,
+    ownerId: the.userId,
+    ext: 'csv',
+  }),
+  getContacts: checkContacts(NROWS),
+  // keep imported contacts. maybe usable in another test:
+  // clearContactsCsv: clearContacts(),
 }
