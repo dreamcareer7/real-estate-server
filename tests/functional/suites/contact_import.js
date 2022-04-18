@@ -2,7 +2,7 @@ const path = require('path')
 const fs = require('fs')
 const mappings = require('./data/csv_mappings')
 
-registerSuite('contact', [
+global.registerSuite('contact', [
   'getAttributeDefs'
 ])
 
@@ -11,8 +11,8 @@ const XLS_PATH = path.resolve(__dirname, 'data', 'contacts.xls')
 const XLSX_PATH = path.resolve(__dirname, 'data', 'contacts.xlsx')
 const NROWS = 192
 
-const R = () => results
-const F = frisby
+const R = () => global.results
+const F = global.frisby
 
 const resolve = x => typeof x === 'function' ? x() : x
 const the = {
@@ -23,8 +23,8 @@ const the = {
 }
 
 /**
- * @param {import('fs').ReadStream} stream 
- * @param {string} name 
+ * @param {import('fs').ReadStream} stream
+ * @param {string} name
  */
 function upload (stream, name) {
   return cb => F
@@ -37,7 +37,7 @@ function upload (stream, name) {
 }
 
 /**
- * @param {object} opts 
+ * @param {object} opts
  * @param {UUID | (() => UUID)} opts.fileId
  * @param {UUID | (() => UUID)} opts.ownerId
  * @param {string | (() => string)} opts.ext
@@ -60,7 +60,7 @@ function importFile ({ fileId, ownerId, ext, name }) {
  * @param {string=} [name]
  */
 function checkContacts(
-  expectedTotal, 
+  expectedTotal,
   name = `check if ${expectedTotal} contacts are imported`,
 ) {
   return cb => F
