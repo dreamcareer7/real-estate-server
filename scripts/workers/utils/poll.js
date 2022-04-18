@@ -1,8 +1,8 @@
 const createContext = require('./create-context')
-const createMonitor = require('./create-monitor')
 const Context = require('../../../lib/models/Context')
 const Metric = require('../../../lib/models/Metric')
 const Slack = require('../../../lib/models/Slack')
+const _ = require('lodash')
 
 let i = 1
 
@@ -24,8 +24,17 @@ async function shutdown() {
 }
 
 const poll = ({ fn, name, wait = 5000 }) => {
-  
-  createMonitor({ name, wait })
+  /* If in 15m, sum of polls count are half or less of half of what it should be, then trigger alert.
+  For example, if we poll every 5s and during 15 minutes 90 or less of polls have failed (beause the sum of polls = 180)
+  then trigger alert. */
+  Metric.monitor(
+    {
+      name,
+      query: `sum(last_15m):Poll.count{${_.toLower(name)}}.as_count() <= ${_.floor((15 * 60) / (wait / 1000) / 2)}`,
+      type: 'query alert',
+      message: '@slack-9-mls-monitoring',
+      tags: ['POLLER']
+    })
 
   async function again() {
     if (shutting_down) return
