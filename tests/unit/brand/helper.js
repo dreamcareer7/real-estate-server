@@ -71,7 +71,7 @@ async function create(data) {
       role = await BrandRole.create({
         brand: b.id,
         role: r,
-        acl: ['*']
+        acl: ['Admin']
       })
       members = roles[r]
     } else {
