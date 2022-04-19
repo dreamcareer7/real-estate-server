@@ -21,7 +21,7 @@ const run = async () => {
 
   for (const mls of mlsList) {
     if (mls === 'REBNY') continue
-    await conn.query(migration, [mls, disclaimer.replaceAll('{{MLS}}')])
+    await conn.query(migration, [mls, disclaimer.replaceAll('{{MLS}}', mls)])
   }
 
   conn.release()
