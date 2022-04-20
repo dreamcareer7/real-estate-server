@@ -20,26 +20,25 @@ $$
   UNION ALL
 
   SELECT deals.id as deal, deals_roles.brand, 'Agents'::task_acl as acl FROM deals
-    JOIN deals_roles ON deals.id = deals_roles.deal AND (
-      (
-        deals.deal_type = 'Selling' AND
-        NOT (deals_roles.role IN('BuyerAgent', 'CoBuyerAgent'))
-      )
-      OR
-      (
-        deals.deal_type = 'Buying'  AND
-        NOT (deals_roles.role IN ('SellerAgent'::deal_role, 'CoSellerAgent'::deal_role))
-      )
+  JOIN deals_roles ON deals.id = deals_roles.deal AND (
+    (
+      deals.deal_type = 'Selling' AND
+      NOT (deals_roles.role IN('BuyerAgent', 'CoBuyerAgent'))
     )
-    LEFT JOIN deals_checklists ON
-      deals_roles.checklist = deals_checklists.id
-      AND
-      (
-        deals_roles.deleted_at          IS NULL
-        AND deals_checklists.deactivated_at IS NULL
-        AND deals_checklists.terminated_at  IS NULL
-      )
-    WHERE deals_roles.brand IN (SELECT user_brands($1::uuid, ARRAY['Deals']))
+    OR
+    (
+      deals.deal_type = 'Buying'  AND
+      NOT (deals_roles.role IN ('SellerAgent'::deal_role, 'CoSellerAgent'::deal_role))
+    )
+  )
+  LEFT JOIN deals_checklists ON
+    deals_roles.checklist = deals_checklists.id
+  WHERE
+  deals_roles.brand IN (SELECT user_brands($1::uuid, ARRAY['Deals']))
+  AND deals_roles.deleted_at          IS NULL
+  AND deals_checklists.deactivated_at IS NULL
+  AND deals_checklists.terminated_at  IS NULL
+
 $$
 LANGUAGE sql STABLE;`
 ]
