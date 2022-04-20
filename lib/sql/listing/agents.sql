@@ -7,6 +7,7 @@ JOIN agents ON listings.mls = agents.mls
 JOIN users_agents ON agents.id = users_agents.agent
 JOIN users ON users.id = users_agents.user
 LEFT JOIN listing_notification_subscriptions ON users.id = listing_notification_subscriptions.user
+          AND listing_notification_subscriptions.types @> ARRAY[$2]::listing_notification_subscription
 WHERE listings.id = $1
 AND users.deleted_at IS NULL
 AND agents.deleted_at IS NULL
