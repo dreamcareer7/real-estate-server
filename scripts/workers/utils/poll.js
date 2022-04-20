@@ -27,14 +27,19 @@ const poll = ({ fn, name, wait = 5000 }) => {
   /* If in 15m, sum of polls count are half or less of half of what it should be, then trigger alert.
   For example, if we poll every 5s and during 15 minutes 90 or less of polls have failed (beause the sum of polls = 180)
   then trigger alert. */
-  Metric.monitor(
-    {
-      name,
-      query: `sum(last_15m):Poll.count{${_.toLower(name)}}.as_count() <= ${_.floor((15 * 60) / (wait / 1000) / 2)}`,
-      type: 'query alert',
-      message: '@slack-9-mls-monitoring',
-      tags: ['POLLER']
+  Metric.monitor({
+    name,
+    query: `sum(last_15m):Poll.count{${_.toLower(name)}}.as_count() <= ${_.floor((15 * 60) / (wait / 1000) / 2)}`,
+    type: 'query alert',
+    message: '@slack-9-mls-monitoring',
+    tags: ['POLLER']
+  }).catch(err => {
+    Context.error(err)
+    Slack.send({
+      channel: '7-server-errors',
+      text: `Poller error (${name}): Error while creating datadog monitor!\n\`${err}\``
     })
+  })
 
   async function again() {
     if (shutting_down) return
