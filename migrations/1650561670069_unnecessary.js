@@ -1,4 +1,7 @@
-CREATE OR REPLACE FUNCTION THEME_TO_JSON(input theme)
+const db = require('../lib/utils/db')
+
+const migrations = [
+  `CREATE OR REPLACE FUNCTION THEME_TO_JSON(input theme)
 RETURNS JSON AS $$
 
   WITH theme AS (
@@ -114,4 +117,22 @@ RETURNS JSON AS $$
       )
     END
 $$
-LANGUAGE SQL;
+LANGUAGE SQL;`
+]
+
+
+const run = async () => {
+  const { conn } = await db.conn.promise()
+
+  for(const sql of migrations) {
+    await conn.query(sql)
+  }
+
+  conn.release()
+}
+
+exports.up = cb => {
+  run().then(cb).catch(cb)
+}
+
+exports.down = () => {}
