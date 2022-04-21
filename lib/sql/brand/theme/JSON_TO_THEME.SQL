@@ -47,8 +47,8 @@ RETURNS theme AS $$
       $1->'palette'->'background'->>'level2',
       $1->'palette'->'background'->>'level1',
 
-      $1->'navbar'->>'background',
-      $1->'navbar'->>'contrastText',
+      $1->'navbar'->'background'->>'color',
+      $1->'navbar'->'background'->>'contrastText',
 
       $1->'navbar'->'logo'->>'url',
 
