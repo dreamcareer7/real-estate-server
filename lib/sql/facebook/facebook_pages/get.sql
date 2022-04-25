@@ -24,5 +24,8 @@ JOIN
     unnest($1::uuid[]) WITH ORDINALITY t(pid, ord)
 ON 
     facebook_pages.id = pid
+WHERE 
+  facebook_pages.revoked IS FALSE
+  AND facebook_pages.deleted_at IS NULL
 ORDER BY 
-    t.ord
+    t.ord 
