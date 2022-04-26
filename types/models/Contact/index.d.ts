@@ -192,6 +192,8 @@ declare interface IContactFilterOptions {
   activities?: UUID[];
   created_by?: UUID;
   updated_by?: UUID;
+  created_for?: TContactActionReason;
+  updated_for?: TContactActionReason;
   updated_gte?: number;
   updated_lte?: number;
   last_touch_gte?: number;
