@@ -25,6 +25,7 @@ const email = {
       recipient_type: 'Email'
     },
   ],
+  tags: ['mailGunTag'],
   due_at: new Date(),
   html: '<div>Hi</div>',
   subject: 'Email Subject',
@@ -116,7 +117,8 @@ const get = cb => {
         html: email.html,
         delivered: 1,
         recipients: email.to,
-        notifications_enabled: false
+        notifications_enabled: false,
+        tags: email.tags
       }
     })
 }
@@ -200,6 +202,7 @@ const scheduleBrand = cb => {
 
   const c = {
     ...individual,
+    tags: ['campaignTag'],
     subject: 'Brand Campaign To {{recipient.email}}',
     to: [
       {
@@ -236,6 +239,7 @@ const update = cb => {
     ...individual,
     subject,
     html,
+    tags: ['updatedCampaignTag'],
     to: [
       {
         email: 'foo@bar.com',
@@ -272,6 +276,7 @@ const scheduleWithTemplate = cb => {
     ...individual,
     html: undefined,
     subject: 'Campaign using a template',
+    tags: ['scheduledCampaignTag'],
     template: results.template.instantiate.data.id,
     to: [
       {
