@@ -74,11 +74,6 @@ const rules = [
     rule: '1 Ramadan',
   },
   {
-    template_type: 'Ramadan',
-    name: 'End of Ramadan (Eid al-Fitr)',
-    rule: '1 Shawwal',
-  },
-  {
     template_type: 'Kwanzaa',
     name: 'Kwanzaa',
     rule: '12-26',
