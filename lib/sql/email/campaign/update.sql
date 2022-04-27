@@ -10,5 +10,5 @@ UPDATE email_campaigns SET
   notifications_enabled = COALESCE($10, true),
   template = $11,
   individual = COALESCE($12, individual),
-  tags = $13
+  tags = COALESCE($13,tags)
 WHERE id = $1
