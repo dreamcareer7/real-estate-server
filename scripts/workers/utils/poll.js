@@ -30,7 +30,7 @@ const poll = ({ fn, name, wait = 5000 }) => {
     name,
     query: `avg(last_1h):anomalies(avg:Poll.count{${_.toLower(name)}}.as_count(), 'agile', 2, direction='both', interval=60, alert_window='last_15m', seasonality='hourly', timezone='utc', count_default_zero='true') >= 1`,
     type: 'query alert',
-    message: '@9-operation',
+    message: '@slack-9-operation',
     tags: ['POLLER']
   }).catch(err => {
     Context.error(err)
