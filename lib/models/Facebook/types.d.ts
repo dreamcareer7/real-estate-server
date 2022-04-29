@@ -51,6 +51,7 @@ export interface DBFacebookPage {
   instagram_business_account_id: string
   instagram_username: string
   instagram_profile_picture_url: string
+  instagram_profile_picture_file: UUID
   revoked: boolean
   created_at: number
   updated_at: number
