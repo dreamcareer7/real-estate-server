@@ -85,6 +85,12 @@ Updates a single contact and its attributes. If attributes have `id`, they are u
 ### Import contacts from CSV [POST /contacts/import.csv]
 <!-- include(tests/contact_import/importCSV.md) -->
 
+### Import contacts from XLS [POST /contacts/import.xls]
+<!-- include(tests/contact_import/importXls.md) -->
+
+### Import contacts from XLSX [POST /contacts/import.xlsx]
+<!-- include(tests/contact_import/importXlsx.md) -->
+
 # Group Attributes
 
 ## Overview
