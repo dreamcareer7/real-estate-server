@@ -162,6 +162,25 @@ function updateTask(cb) {
     })
 }
 
+function cloneTask(cb) {
+  const task_id = results.task.create.data.id
+  const new_title = 'follow-up'
+  return frisby
+    .create('clone a task')
+    .post(
+      `/crm/tasks/${task_id}/clone`,
+      { title: new_title }
+    )
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      data: {
+        task_type: 'Todo',
+        title: new_title,
+      }
+    })
+}
+
 function updateAssignee(cb) {
   const updated_task = fixResponseTaskToInput(results.task.updateTask.data)
 
@@ -487,10 +506,10 @@ function getAllReturnsAll(cb) {
     .expectStatus(200)
     .expectJSON({
       info: {
-        total: 2
+        total: 3
       }
     })
-    .expectJSONLength('data', 2)
+    .expectJSONLength('data', 3)
 }
 
 function orderWorks(cb) {
@@ -503,7 +522,7 @@ function orderWorks(cb) {
     })
     .expectJSON({
       info: {
-        total: 2
+        total: 3
       }
     })
     .expectStatus(200)
@@ -550,10 +569,10 @@ function filterByDueDate(cb) {
     .expectStatus(200)
     .expectJSON({
       info: {
-        total: 2
+        total: 3
       }
     })
-    .expectJSONLength('data', 2)
+    .expectJSONLength('data', 3)
 }
 
 function stringFilter(cb) {
@@ -995,6 +1014,7 @@ module.exports = {
   createWithInvalidAssociationId,
   getForUser,
   updateTask,
+  cloneTask,
   updateAssignee,
   addContactAssociation,
   refreshTaskAssociations,
