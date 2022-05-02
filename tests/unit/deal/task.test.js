@@ -13,7 +13,7 @@ const createChecklist = async () => {
 
   const brand = await BrandHelper.create({
     roles: {
-      Admin: [user.id]
+      Admin: [user.id],
     }
   })
   Context.set({ brand })

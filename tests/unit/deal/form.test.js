@@ -2,6 +2,7 @@ const { expect } = require('chai')
 const { createContext } = require('../helper')
 const BrandHelper = require('../brand/helper')
 const Form = require('../../../lib/models/Form')
+const User = require('../../../lib/models/User/get')
 
 const add = async (form = {}) => {
   const name = 'Test Form'
@@ -42,8 +43,16 @@ const getAll = async () => {
 }
 
 const getByBrand = async () => {
-  const brand1 = await BrandHelper.create()
-  const brand2 = await BrandHelper.create()
+  const user = await User.getByEmail('test@rechat.com')
+
+  const props = {
+    roles: {
+      Admin: [user.id],
+    }
+  }
+
+  const brand1 = await BrandHelper.create(props)
+  const brand2 = await BrandHelper.create(props)
 
   const brand1Form = await add({
     brand: brand1.id

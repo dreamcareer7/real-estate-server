@@ -4,8 +4,6 @@ RETURNS JSON AS $$
   WITH theme AS (
     SELECT JSON_STRIP_NULLS(
       JSON_BUILD_OBJECT(
-        'navbar_logo',           ($1)."navbar-logo",
-
         'palette',
         JSON_BUILD_OBJECT(
           'common',
@@ -79,13 +77,26 @@ RETURNS JSON AS $$
             'default',          ($1)."background-default",
             'level1',           ($1)."background-level1",
             'level2',           ($1)."background-level2"
-          )),
-
-          'navbar',
-          JSON_STRIP_NULLS(JSON_BUILD_OBJECT(
-            'background',       ($1)."navbar-background",
-            'contrastText',     ($1)."navbar-contrast-text"
           ))
+        ),
+        'navbar',
+        JSON_STRIP_NULLS(JSON_BUILD_OBJECT(
+          'logo',       JSON_STRIP_NULLS(JSON_BUILD_OBJECT(
+                            'url',    ($1)."navbar-logo"
+                        )),
+
+          'button',     JSON_STRIP_NULLS(JSON_BUILD_OBJECT(
+                            'main',          ($1)."navbar-button-main",
+                            'light',         ($1)."navbar-button-light",
+                            'dark',          ($1)."navbar-button-dark",
+                            'contrastText',  ($1)."navbar-button-contrast-text"
+                        )),
+
+          'background',   JSON_STRIP_NULLS(JSON_BUILD_OBJECT(
+                            'color',         ($1)."navbar-background",
+                            'contrastText',  ($1)."navbar-contrast-text"
+                        ))
+          )
         )
       )
     ) as theme
