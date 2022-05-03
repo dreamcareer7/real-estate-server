@@ -15,7 +15,7 @@ const queues = [
   },
   {
     queues: ['email'],
-    concurrency: 50
+    concurrency: 25
   },
 ]
 
