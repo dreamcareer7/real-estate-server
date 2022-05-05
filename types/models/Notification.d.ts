@@ -124,6 +124,7 @@ declare interface INotificationInput {
   data?: Record<string, any>;
 
   transports?: TNotificationDeliveryType[] | null;
+  phone_number?: string | null;
 }
 
 declare interface INotification {
@@ -161,6 +162,7 @@ declare interface INotification {
   auxiliary_subject_class?: TNotificationObjectClass;
 
   transports: TNotificationDeliveryType[] | null;
+  phone_number: string | null;
 }
 
 declare interface INotificationPopulated<S, O> extends INotification {
