@@ -20,8 +20,6 @@ WITH cdeals AS (
     AND $3::text[] @> ARRAY['contact.lists']
   GROUP BY
     contact
-), touch_freqs AS (
-  SELECT * FROM get_contact_touch_freqs($1::uuid[])
 )
 SELECT
   id,
@@ -33,7 +31,7 @@ SELECT
   extract(epoch FROM last_touch) AS last_touch,
   last_touch_action,
   extract(epoch FROM next_touch) AS next_touch,
-  (SELECT MIN(touch_freq) FROM touch_freqs AS tf WHERE tf.id = contacts.id) AS touch_freq,
+  touch_freq,
   id AS summary,
   ios_address_book_id,
   android_address_book_id,
