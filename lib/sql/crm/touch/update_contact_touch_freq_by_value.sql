@@ -5,4 +5,4 @@ UPDATE contacts AS c SET
   touch_freq = $2::int
 WHERE
   c.id = ANY($1::uuid[]) AND
-  $2::int < COALESCE(c.touch_freq, 0)
+  (c.touch_freq IS NULL OR c.touch_freq > $2::int)
