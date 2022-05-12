@@ -2,6 +2,7 @@ const _ = require('lodash')
 const uuid = require('uuid')
 const { contact, companyContact } = require('./data/contact.js')
 const manyContacts = require('./data/manyContacts.js')
+const { strict: assert } = require('assert')
 
 registerSuite('brand', [
   'createParent',
@@ -857,13 +858,16 @@ function unsetTouchFreqOnManyContactsList(cb) {
     .expectStatus(200)
 }
 
-function checkIfNextTouchIsNull(cb) {
+function checkIfNextTouchDoesNotChange(cb) {
   return frisby
-    .create('check if next_touch is cleared on many contacts')
+    .create('check if next_touch does not change after clearing on crm list')
     .get('/contacts?associations[]=contact.lists&list=' + results.contact.createManyContactsList.data.id)
     .after((err, res, json) => {
-      if (json.data.some(c => c.next_touch !== null))
-        throw 'Next touch is not null on ManyContacts list members'
+      const oldVals = results.contact.getContactsInManyContactsList.data
+      const diff = _.xorBy(json.data, oldVals, o => `${o.id}@${o.touch_freq}`)
+
+      assert.equal(diff.length, 0, 'Next touch changed')
+        
       cb(err, res, json)
     })
     .expectStatus(200)
@@ -1213,7 +1217,7 @@ module.exports = {
   executeEmailsToList: pollEmailCampaigns,
   getContactsInManyContactsList,
   unsetTouchFreqOnManyContactsList,
-  checkIfNextTouchIsNull,
+  checkIfNextTouchDoesNotChange,
   getAllTags,
   addTag,
   checkTagIsAdded,
