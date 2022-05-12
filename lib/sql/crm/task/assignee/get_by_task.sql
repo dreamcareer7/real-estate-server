@@ -1,7 +1,11 @@
 SELECT
-  id, "user"
+  a.id, a.user
 FROM
-  crm_tasks_assignees
+  crm_tasks_assignees a
+  JOIN crm_tasks t
+    ON t.id = a.crm_task
+  JOIN LATERAL user_brands(a.user, NULL) ub(brand)
+    ON t.brand = ub.brand
 WHERE
-  crm_task = $1::uuid
-  AND deleted_at IS NULL
+  a.crm_task = $1::uuid
+  AND a.deleted_at IS NULL

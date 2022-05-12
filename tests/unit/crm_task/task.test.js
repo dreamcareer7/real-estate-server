@@ -8,6 +8,7 @@ const Orm = require('../../../lib/models/Orm/context')
 
 const Context = require('../../../lib/models/Context')
 const CrmTask = require('../../../lib/models/CRM/Task')
+const Assignee = require('../../../lib/models/CRM/Task/assignee')
 const CrmTaskEmitter = require('../../../lib/models/CRM/Task/emitter')
 const CrmAssociation = require('../../../lib/models/CRM/Association')
 const Contact = require('../../../lib/models/Contact/manipulate')
@@ -141,6 +142,14 @@ function testCreateManyEmitsCreateEvent(done) {
   createTwoTasks().catch(done)
 }
 
+async function testAssignees() {
+  const task = await CrmTask.create(base_task)
+  await BrandHelper.removeMember(brand.id, user.id)
+
+  const assignees = await Assignee.getForTask(task.id)
+  expect(assignees).to.be.empty
+}
+
 describe('CrmTask', () => {
   createContext()
   beforeEach(setup)
@@ -148,4 +157,5 @@ describe('CrmTask', () => {
   it('should allow updating association metadata', testUpdateAssociation)
   it('should create multiple tasks', testCreateMany)
   it('should emit create event when creating multiple tasks', testCreateManyEmitsCreateEvent)
+  it('should not include removed users in assignees', testAssignees)
 })
