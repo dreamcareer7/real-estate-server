@@ -98,6 +98,7 @@ declare type ICrmTaskAssociationInputWithId = ICrmTaskAssociationInput & { id?: 
 
 declare interface ITaskFilters extends IAssociationFilters {
   q?: string
+  title?: string
   assignee?: UUID
   created_by?: UUID
   updated_by?: UUID
