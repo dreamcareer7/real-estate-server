@@ -1,9 +1,15 @@
 SELECT
-  id
+  r.id
 FROM
-  reminders
+  reminders r
+  JOIN crm_tasks t
+    ON r.task = t.id
+  JOIN brands b
+    ON t.brand = b.id
 WHERE
-  needs_notification IS True
-  AND deleted_at IS NULL
-  AND "timestamp" <  (now() + interval '20 seconds')
-  AND "timestamp" >= (now() - interval '2 hours')
+  r.needs_notification IS True
+  AND r.deleted_at IS NULL
+  AND t.deleted_at IS NULL
+  AND b.deleted_at IS NULL
+  AND r.timestamp <  (now() + interval '20 seconds')
+  AND r.timestamp >= (now() - interval '2 hours')
