@@ -874,6 +874,20 @@ function checkIfNextTouchDoesNotChange(cb) {
     .expectJSONLength('data', manyContacts.length)
 }
 
+function updateContactTouchFreqManually (cb) {
+  const contactId = results.contact.create.data[0].id
+  const touchFreq = 43
+  
+  return frisby
+    .create('update contact touch_freq manually')
+    .patch(`/contacts/${contactId}/touch`, { touch_freq: touchFreq })
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      data: { id: contactId, touch_freq: touchFreq },
+    })
+}
+
 const getAllTags = (cb) => {
   return frisby.create('get all Tags')
     .get('/contacts/tags')
@@ -1218,6 +1232,7 @@ module.exports = {
   getContactsInManyContactsList,
   unsetTouchFreqOnManyContactsList,
   checkIfNextTouchDoesNotChange,
+  updateContactTouchFreqManually,
   getAllTags,
   addTag,
   checkTagIsAdded,
