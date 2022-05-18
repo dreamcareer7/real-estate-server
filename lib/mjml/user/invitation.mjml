@@ -86,11 +86,11 @@
       <mj-group>
         <mj-column width="28%"></mj-column>
         <mj-column width="20%">
-          <mj-image padding="0" alt="App Store" src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg" href="https://apps.apple.com/us/app/rechat/id974093560"></mj-image>
+          <mj-image padding="0" alt="App Store" src="https://i.ibb.co/mNwG2j7/apple-store-download-logo.png" href="https://apps.apple.com/us/app/rechat/id974093560"></mj-image>
         </mj-column>
         <mj-column width="4%"></mj-column>
-        <mj-column width="25%">
-          <mj-image padding="0" alt="Google Play" src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" href="https://play.google.com/store/apps/details?id=com.rechat.mobile&hl=en&gl=US"></mj-image>
+        <mj-column width="20%">
+          <mj-image padding="0" alt="Google Play" src="https://i.ibb.co/NYf4Xs0/google-play-download-logo.png" href="https://play.google.com/store/apps/details?id=com.rechat.mobile&hl=en&gl=US"></mj-image>
         </mj-column>
         <mj-column width="28%"></mj-column>
       </mj-group>
