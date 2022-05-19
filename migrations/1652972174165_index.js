@@ -2,7 +2,7 @@ const db = require('../lib/utils/db')
 
 const migrations = [
   'CREATE INDEX CONCURRENTLY email_campaign_email_email ON email_campaign_emails(email)'
-  ]
+]
 
 
 const run = async () => {
