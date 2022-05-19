@@ -12,11 +12,14 @@ SELECT email_campaigns.*,
     WHERE campaign = email_campaigns.id
   ) AS sent,
 
-  (
-    SELECT ARRAY_AGG(id)
-    FROM email_campaigns_recipients
-    WHERE campaign = email_campaigns.id
-  ) AS recipients,
+  (CASE WHEN 'email_campaign.recipients' = ANY($2::text[])
+    THEN (
+      SELECT ARRAY_AGG(id)
+      FROM email_campaigns_recipients
+      WHERE campaign = email_campaigns.id
+    )
+    ELSE ARRAY[]::uuid[]
+  END) AS recipients,
 
   (
     SELECT ARRAY_AGG(email_campaign_attachments.id)
