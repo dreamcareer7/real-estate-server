@@ -15,4 +15,4 @@ apps:
     args     : ./peanar/email
     name     : 'email'
     kill_timeout : 25000
-    instances: 5
+    instances: 1
