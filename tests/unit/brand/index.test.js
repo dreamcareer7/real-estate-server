@@ -1,9 +1,8 @@
-const { expect } = require('chai')
+
 const { createContext, handleJobs } = require('../helper')
 const randomMobile = require('random-mobile')
 const config = require('../../../lib/config')
 const BrandHelper = require('./helper')
-const fs = require('fs')
 const User = {
   ...require('../../../lib/models/User/get'),
   ...require('../../../lib/models/User/create'),
