@@ -283,6 +283,7 @@ declare type TDbSqlAddress =
   | 'crm/touch/update_touch_times_for_contacts'
   | 'crm/touch/update_contact_touch_freq_by_list_membership'
   | 'crm/touch/update_contact_touch_freq_by_value'
+  | 'crm/touch/update_contact_touch_freq_by_tags'
   | 'daily/due'
   | 'daily/get'
   | 'daily/save'
