@@ -1,6 +1,6 @@
 const _ = require('lodash')
 const uuid = require('uuid')
-const { contact, companyContact } = require('./data/contact.js')
+const { contact, companyContact, contactWithTouchFreq } = require('./data/contact.js')
 const manyContacts = require('./data/manyContacts.js')
 const { strict: assert } = require('assert')
 
@@ -34,6 +34,8 @@ function getAttributeDefs(cb) {
       defs = _.keyBy(json.data, 'name')
 
       _fixContactAttributeDefs(contact)
+      _fixContactAttributeDefs(contactWithTouchFreq)
+      
       _fixContactAttributeDefs(companyContact)
       for (const c of manyContacts) {
         c.user = results.authorize.token.data.id
@@ -624,7 +626,7 @@ const deleteContactWorked = cb => {
     .get('/contacts?associations[]=contact.attributes&associations[]=contact.lists')
     .after(cb)
     .expectStatus(200)
-    .expectJSONLength('data', before_count - 3 - 4)
+    .expectJSONLength('data', before_count - 3 - 4 + 1)
     .expectJSON({
       code: 'OK',
     })
@@ -885,6 +887,43 @@ function updateContactTouchFreqManually (cb) {
     .expectStatus(200)
     .expectJSON({
       data: { id: contactId, touch_freq: touchFreq },
+    })
+}
+
+function createContactWithTagAndTouchFreq (cb) {
+  return frisby
+    .create('add a contact with touch-freq and tag attribute')
+    .post('/contacts?get=true&relax=false&activity=true', {
+      contacts: [contactWithTouchFreq],
+    })
+    .addHeader('x-handle-jobs', 'yes')
+    .after(cb)
+    .expectStatus(200)
+    .expectJSONLength('data', 1)
+    .expectJSON({
+      data: [{
+        type: 'contact',
+        /* FIXME: Currently, touch_freq is null at first and after
+         * _handling jobs_, it will be changed to 60. */
+        touch_freq: null,
+      }],
+    })
+}
+
+function checkIfContactTouchFreqIsPreferred (cb) {
+  const contactId = results.contact.createContactWithTagAndTouchFreq.data[0].id
+  
+  return frisby
+    .create('check if contact touch-freq is preferred')
+    .get(`/contacts/${contactId}`)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      data: {
+        type: 'contact',
+        id: contactId,
+        touch_freq: 60, // because it has BAZ tag
+      }
     })
 }
 
@@ -1240,6 +1279,8 @@ module.exports = {
   changeTagTouchFreq,
   renameBazTag,
   checkBazTagIsRenamed,
+  createContactWithTagAndTouchFreq,
+  checkIfContactTouchFreqIsPreferred,
   setTouchFrequencyOnAgentTag,
   checkTouchFrequencyOnAgentTag,
   // verifyTagRenamed,
