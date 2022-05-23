@@ -1,7 +1,7 @@
 const { expect } = require('chai')
 const isValidHostname = require('is-valid-hostname')
 
-const slugify = require('../../../lib/utils/slugify')
+const slugify = require('../../../lib/models/Website/slugify')
 
 describe('utils/slugify', () => {
   it('returns a url safe string', () => {
