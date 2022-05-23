@@ -24,14 +24,13 @@ async function shutdown() {
 }
 
 const poll = ({ fn, name, wait = 5000 }) => {
-  /* If in 15m, sum of polls count are half or less of half of what it should be, then trigger alert.
-  For example, if we poll every 5s and during 15 minutes 90 or less of polls have failed (beause the sum of polls = 180)
+  /* If in 15m, sum of polls count are below or above of what their pattern was in the past hour, 
   then trigger alert. */
   Metric.monitor({
     name,
-    query: `sum(last_15m):Poll.count{${_.toLower(name)}}.as_count() <= ${_.floor((15 * 60) / (wait / 1000) / 2)}`,
+    query: `avg(last_1h):anomalies(avg:Poll.count{${_.toLower(name)}}.as_count(), 'agile', 2, direction='both', interval=60, alert_window='last_15m', seasonality='hourly', timezone='utc', count_default_zero='true') >= 1`,
     type: 'query alert',
-    message: '@slack-9-mls-monitoring',
+    message: '@slack-9-operation',
     tags: ['POLLER']
   }).catch(err => {
     Context.error(err)
@@ -93,9 +92,9 @@ const poll = ({ fn, name, wait = 5000 }) => {
 
       try {
         await execute(ctxRes)
-        report_time(['result:success', name])
+        report_time(['result:success', name, `name:${name}`])
       } catch (ex) {
-        report_time(['result:fail', name])
+        report_time(['result:fail', name, `name:${name}`])
         Context.error(ex)
         Slack.send({
           channel: '7-server-errors',

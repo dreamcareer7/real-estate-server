@@ -1,4 +1,7 @@
-CREATE OR REPLACE FUNCTION THEME_TO_JSON(input theme)
+const db = require('../lib/utils/db')
+
+const migrations = [
+  `CREATE OR REPLACE FUNCTION THEME_TO_JSON(input theme)
 RETURNS JSON AS $$
 
   WITH theme AS (
@@ -77,25 +80,26 @@ RETURNS JSON AS $$
             'default',          ($1)."background-default",
             'level1',           ($1)."background-level1",
             'level2',           ($1)."background-level2"
-          ))
-        ),
-        'navbar',
-        JSON_STRIP_NULLS(JSON_BUILD_OBJECT(
-          'logo',       JSON_STRIP_NULLS(JSON_BUILD_OBJECT(
-                            'url',    ($1)."navbar-logo"
-                        )),
+          )),
 
-          'button',     JSON_STRIP_NULLS(JSON_BUILD_OBJECT(
-                            'main',          ($1)."navbar-button-main",
-                            'light',         ($1)."navbar-button-light",
-                            'dark',          ($1)."navbar-button-dark",
-                            'contrastText',  ($1)."navbar-button-contrast-text"
-                        )),
+          'navbar',
+          JSON_STRIP_NULLS(JSON_BUILD_OBJECT(
+            'logo',       JSON_STRIP_NULLS(JSON_BUILD_OBJECT(
+                              'url',    ($1)."navbar-logo"
+                          )),
 
-          'background',   JSON_STRIP_NULLS(JSON_BUILD_OBJECT(
-                            'color',         ($1)."navbar-background",
-                            'contrastText',  ($1)."navbar-contrast-text"
-                        ))
+            'button',     JSON_STRIP_NULLS(JSON_BUILD_OBJECT(
+                              'main',          ($1)."navbar-button-main",
+                              'light',         ($1)."navbar-button-light",
+                              'dark',          ($1)."navbar-button-dark",
+                              'contrastText',  ($1)."navbar-button-contrast-text"
+                          )),
+
+            'background',   JSON_STRIP_NULLS(JSON_BUILD_OBJECT(
+                              'color',         ($1)."navbar-background",
+                              'contrastText',  ($1)."navbar-contrast-text"
+                          ))
+            )
           )
         )
       )
@@ -113,4 +117,22 @@ RETURNS JSON AS $$
       )
     END
 $$
-LANGUAGE SQL;
+LANGUAGE SQL;`
+]
+
+
+const run = async () => {
+  const { conn } = await db.conn.promise()
+
+  for(const sql of migrations) {
+    await conn.query(sql)
+  }
+
+  conn.release()
+}
+
+exports.up = cb => {
+  run().then(cb).catch(cb)
+}
+
+exports.down = () => {}
