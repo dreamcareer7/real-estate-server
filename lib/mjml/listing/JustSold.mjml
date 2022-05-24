@@ -7,11 +7,11 @@
     <mj-section padding-top="18px" padding-bottom="15px">
       <mj-column>
         <mj-text align="center" font-family="Lato" font-size="18px" font-weight="900">
-          {{listing.property.address.street_address}} was Just Listed!<br><br>
+          {{listing.property.address.street_address}} was Just Sold!<br><br>
         </mj-text>
 
         <mj-text align="left" line-height=1.3 color="#555557" font-family="Lato" font-size="16px" font-weight="400" padding-top="0" >
-          Congrats on your listing. Let us present you a few different ways you can market it.
+          Congrats on closing the deal! This opens up a great window of opportunity for you to keep in touch with your sphere of influence.
         </mj-text>
       </mj-column>
     </mj-section>
@@ -24,7 +24,7 @@
           </mj-text>
 
           <mj-text align="left" line-height=1.3 color="#555557" font-family="Lato" font-size="16px" font-weight="400" padding-top="0" >
-            Do you have an Instagram or Facebook account? Our social marketing platform allows you to create beautiful posts. It's super easy and wouldn't take more than a couple of minutes. You can also do this on your phone.
+            Here are some prepared social pieces you can use to post to your Facebook or Instagram accounts. It wouldn't take more than a couple of minutes. Also, as usual, you can customize the templates very quickly with a few basic clicks.
           </mj-text>
         </mj-column>
       </mj-section>
@@ -51,8 +51,8 @@
           </mj-text>
 
           <mj-text align="left" line-height=1.3 color="#555557" font-family="Lato" font-size="16px" font-weight="400" padding-top="0" >
-            Here you can see a few examples of available email marketing templates. There are more templates available, make sure you check them out.<br>
-            Don't forget about Agent Network. It allows you to find/email agents who are likely to be interested in your listing. It's an amazing tool for finding potential buyers.
+            These beautiful prepared emails are also ready to be sent out to your contacts and sphere of influence.<br> 
+            Feel free to pick one and update your friends and family on this achievement.
           </mj-text>
         </mj-column>
       </mj-section>
