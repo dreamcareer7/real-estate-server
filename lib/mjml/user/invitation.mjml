@@ -41,14 +41,14 @@
       <mj-column></mj-column>
     </mj-section>
 
-    <mj-section padding="0px" border-top="8px solid {{ theme['navbar-button-main'] }}" background-color="#FFFFFF">
+    <mj-section padding="0px" border-top="8px solid {{ navbarColor }}" background-color="#FFFFFF">
       <mj-group>
         <mj-column width="10%"></mj-column>
 
         <mj-column width="80%" padding="45px 0px">
           <!--Logo Part-->
           <mj-text align="center" padding="0px">
-            <img class="logo" src="{{ palette['container-logo-wide'] }}" alt="{{ brand.name }} Logo">
+            <img class="logo" src="{{ logoSrc }}" alt="{{ brand.name }} Logo">
           </mj-text>
           <!--Heading Part-->
           <mj-text css-class="heading" padding="36px 0px 8px 0px" align="center" color="#1A1B1D" font-size="24px" line-height="40px" font-weight="900">
@@ -59,7 +59,7 @@
             You're one click away from setting up your account and experiencing all the incredible tools and features offered to you!
           </mj-text>
           <!--Button Part-->
-          <mj-button href="{{link}}" padding="18px 0px 0px 0px" inner-padding="8px 16px" border-radius="4px" background-color="{{ theme.navbar.button.main }}" font-weight="700" font-size="14px" line-height="24px" color="#ffffff">
+          <mj-button href="{{link}}" padding="18px 0px 0px 0px" inner-padding="8px 16px" border-radius="4px" background-color="{{ navbarColor }}" font-weight="700" font-size="14px" line-height="24px" color="#ffffff">
             ACCEPT INVITATION
           </mj-button>
         </mj-column>
