@@ -29,6 +29,10 @@ const getEmails = async () => {
 }
 
 const save = async () => {
+  // in this test I'm creating a user and a parent and a child brand
+  // then I send an invitation email and finally I check the sent emails
+  // to make sure user's settings is applied in his emails
+  
   const createShadowUser = async () => {
     const user = await promisify(User.create)({
       ...userJson,
@@ -41,7 +45,7 @@ const save = async () => {
     return user
   }
 
-  const createBrand = async (userId) => {
+  const createBrand = async (userId, parent) => {
     return BrandHelper.create({
       roles: {
         Agent: { acl: ['Marketing'], members: [userId] },
@@ -49,11 +53,25 @@ const save = async () => {
       checklists: [],
       contexts: [],
       templates: [],
+      parent
     })
   }
 
   const userId = await createShadowUser()
-  const brand = await createBrand(userId)
+  const parentBrand = await createBrand(userId)
+  const brand = await createBrand(userId, parentBrand.id)
+  
+  const color = '#486fe1'
+  const logo = 'http://test.com/fake.jpeg'
+
+  await BrandSettings.set({
+    user: userId,
+    brand: parentBrand.id,
+    key: 'marketing_palette',
+    value: {
+      'container-logo-wide': logo
+    },
+  })
 
   await BrandSettings.set({
     user: userId,
@@ -62,7 +80,7 @@ const save = async () => {
     value: {
       navbar: {
         button: {
-          main: '#3A3B3E',
+          main: color,
         },
       },
     },
@@ -72,10 +90,22 @@ const save = async () => {
   await BrandUser.inviteMember(brand.id, userId)
   await handleJobs()
   const emails = await getEmails()
+
   // because we sent 2 emails in this case
   if (emails.length !== 2) {
     throw new Error(`expect 2 emails sent but '${emails.length}' sent`)
   }
+
+  const brandInvitation = emails.find(e => e.subject.includes(`You've been invited to`))
+  
+  if (!brandInvitation.html.includes(color)) {
+    throw new Error('Navbar color is not applied')
+  }
+  
+  if (!brandInvitation.html.includes(logo)) {
+    throw new Error('Logo src is not applied')
+  }
+
 }
 
 describe('Brand', () => {
