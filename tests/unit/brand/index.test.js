@@ -96,7 +96,7 @@ const save = async () => {
     throw new Error(`expect 2 emails sent but '${emails.length}' sent`)
   }
 
-  const brandInvitation = emails.find(e => e.subject.includes(`You've been invited to`))
+  const brandInvitation = emails.find(e => e.subject.includes('You\'ve been invited to'))
   
   if (!brandInvitation.html.includes(color)) {
     throw new Error('Navbar color is not applied')
