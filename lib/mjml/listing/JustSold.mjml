@@ -1,0 +1,93 @@
+{% extends "../email.mjml" %}
+
+{% block content %}
+  <mj-section padding="16px 0 0 0"></mj-section>
+
+  <mj-wrapper background-color="#ffffff" padding="0">
+    <mj-section padding-top="18px" padding-bottom="15px">
+      <mj-column>
+        <mj-text align="center" font-family="Lato" font-size="18px" font-weight="900">
+          {{listing.property.address.street_address}} was Just Sold!<br><br>
+        </mj-text>
+
+        <mj-text align="left" line-height=1.3 color="#555557" font-family="Lato" font-size="16px" font-weight="400" padding-top="0" >
+          Congrats on closing the deal! This opens up a great window of opportunity for you to keep in touch with your sphere of influence.
+        </mj-text>
+      </mj-column>
+    </mj-section>
+
+    {% if socials.length > 0 %}
+      <mj-section padding-top="18px" padding-bottom="15px">
+        <mj-column>
+          <mj-text padding="0" align="center" font-family="Lato" font-size="18px" font-weight="900">
+            Social Marketing<br><br>
+          </mj-text>
+
+          <mj-text align="left" line-height=1.3 color="#555557" font-family="Lato" font-size="16px" font-weight="400" padding-top="0" >
+            Here are some prepared social pieces you can use to post to your Facebook or Instagram accounts. It wouldn't take more than a couple of minutes. Also, as usual, you can customize the templates very quickly with a few basic clicks.
+          </mj-text>
+        </mj-column>
+      </mj-section>
+
+      {% set thumbnails = socials %}
+      {% include './thumbnails.mjml' %}
+
+      <mj-section padding-top=0 padding-bottom=0>
+        <mj-column>
+          {% set type = 'JustListed' %}
+          {% set medium = 'Social' %}
+          {% set text = 'Social Marketing' %}
+          {% set brand = mc_brand %}
+          {% include './cta.mjml' %}
+        </mj-column>
+      </mj-section>
+    {% endif %}
+
+    {% if emails.length > 0 %}
+      <mj-section padding-top="18px" padding-bottom="15px">
+        <mj-column>
+          <mj-text padding="0" align="center" font-family="Lato" font-size="18px" font-weight="900">
+            Email Marketing<br><br>
+          </mj-text>
+
+          <mj-text align="left" line-height=1.3 color="#555557" font-family="Lato" font-size="16px" font-weight="400" padding-top="0" >
+            These beautiful prepared emails are also ready to be sent out to your contacts and sphere of influence.<br> 
+            Feel free to pick one and update your friends and family on this achievement.
+          </mj-text>
+        </mj-column>
+      </mj-section>
+
+      {% set thumbnails = emails %}
+      {% include './thumbnails.mjml' %}
+
+      <mj-section padding-top=0 padding-bottom=0>
+        <mj-column>
+          {% set type = 'JustListed' %}
+          {% set medium = 'Email' %}
+          {% set text = 'Email Marketing' %}
+          {% set brand = mc_brand %}
+          {% include './cta.mjml' %}
+        </mj-column>
+
+        <mj-column>
+          {% set url = {
+            uri: '/dashboard/agent-network/agents',
+            query: {
+              listing: listing.id,
+              title: listing.property.address.street_address
+            }
+          } %}
+          {% set text = 'Agent Network' %}
+          {% include './cta.mjml' %}
+        </mj-column>
+      </mj-section>
+    {% endif %}
+
+    <mj-section padding=0>
+      <mj-column padding=0>
+        <mj-spacer height="20px" />
+      </mj-column>
+    </mj-section>
+
+  </mj-wrapper>
+{% endblock %}
