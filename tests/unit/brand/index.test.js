@@ -9,9 +9,13 @@ const User = {
 }
 const Orm = require('../../../lib/models/Orm/context')
 const Email = require('../../../lib/models/Email/get')
+const BrandRole = require('../../../lib/models/Brand/role/get')
 const sql = require('../../../lib/utils/sql')
 const BrandSettings = require('../../../lib/models/Brand/settings/set')
-const BrandUser = require('../../../lib/models/Brand/user/invite')
+const BrandUser = {
+  ...require('../../../lib/models/Brand/user/invite'),
+  ...require('../../../lib/models/Brand/user/get')
+}
 const promisify = require('../../../lib/utils/promisify')
 const userJson = require('./json/user.json')
 
@@ -106,10 +110,22 @@ const save = async () => {
     throw new Error('Logo src is not applied')
   }
 
+  const roles = await BrandRole.getByUser(brand.id, userId)
+
+  for (const role of roles) {
+    const brandUserId = await BrandUser.getByRoleAndUser(role, userId)
+    if (!brandUserId) {
+      throw new Error('brandUserId is not found')
+    }
+    const dbBrandUser = await BrandUser.get(brandUserId)
+    if (!dbBrandUser.last_invited_at) {
+      throw new Error('last_invited_at is not set')
+    }
+  }
 }
 
 describe('Brand', () => {
   createContext()
 
-  it('should send an email when invite user calls', save)
+  it('should send an email and update last_invited_at when invite user calls', save)
 })
