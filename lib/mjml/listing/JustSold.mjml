@@ -83,34 +83,6 @@
       </mj-section>
     {% endif %}
 
-    {% if websites.length > 0 %}
-      <mj-section padding-top="18px" padding-bottom="15px">
-        <mj-column>
-          <mj-text padding="0" align="center" font-family="Lato" font-size="18px" font-weight="900">
-            Create a Website<br><br>
-          </mj-text>
-
-          <mj-text align="left" line-height=1.3 color="#555557" font-family="Lato" font-size="16px" font-weight="400" padding-top="0" >
-            Create a website for your listing in less than 5 minutes. Seriously! We will even give you a nice free internet address (although you can purchase your own domain name as well). We think your client would be <i>really</i> impressed!
-          </mj-text>
-        </mj-column>
-      </mj-section>
-
-      {% set thumbnails = websites %}
-      {% include './thumbnails.mjml' %}
-
-      <mj-section padding-top=0 padding-bottom=0>
-        <mj-column>
-          {% set url = {
-            uri: '/dashboard/websites'
-          } %}
-          {% set text = 'Website Builder' %}
-          {% set brand = websites_brand %}
-          {% include './cta.mjml' %}
-        </mj-column>
-      </mj-section>
-    {% endif %}
-
     <mj-section padding=0>
       <mj-column padding=0>
         <mj-spacer height="20px" />
