@@ -1,7 +1,7 @@
 const db = require('../lib/utils/db')
 
 const migrations = [
-  'CREATE INDEX CONCURRENTLY IF NOT EXISTS current_deal_context_searchable ON current_deal_context (searchable)'
+  'CREATE INDEX CONCURRENTLY IF NOT EXISTS current_deal_context_searchable ON current_deal_context (deal, searchable) WHERE text IS NOT NULL AND deleted_at IS NULL'
 ]
 
 
