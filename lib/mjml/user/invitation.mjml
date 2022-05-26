@@ -48,11 +48,11 @@
         <mj-column width="80%" padding="45px 0px">
           <!--Logo Part-->
           <mj-text align="center" padding="0px">
-            <img class="logo" src="{{ logoSrc }}" alt="{{ brand.name }} Logo">
+            <img class="logo" src="{{ logoSrc }}" alt="{{ brandName }} Logo">
           </mj-text>
           <!--Heading Part-->
           <mj-text css-class="heading" padding="36px 0px 8px 0px" align="center" color="#1A1B1D" font-size="24px" line-height="40px" font-weight="900">
-            You’ve been invited to use {{ brand.name }}
+            You’ve been invited to use {{ brandName }}
           </mj-text>
           <!--Paragraph Part-->
           <mj-text css-class="paragraph" padding="8px 0px 18px 0px" align="center" color="#3A3B3E" font-size="16px" line-height="24px" font-weight="400">
