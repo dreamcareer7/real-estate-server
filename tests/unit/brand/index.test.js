@@ -49,7 +49,8 @@ const save = async () => {
     return user
   }
 
-  const createBrand = async (userId, parent) => {
+  const BrokerageName = 'TestBrokerage'
+  const createBrand = async (userId, extraProp) => {
     return BrandHelper.create({
       roles: {
         Agent: { acl: ['Marketing'], members: [userId] },
@@ -57,13 +58,13 @@ const save = async () => {
       checklists: [],
       contexts: [],
       templates: [],
-      parent
+      ...extraProp
     })
   }
 
   const userId = await createShadowUser()
-  const parentBrand = await createBrand(userId)
-  const brand = await createBrand(userId, parentBrand.id)
+  const parentBrand = await createBrand(userId, {brand_type: 'Brokerage', name: BrokerageName})
+  const brand = await createBrand(userId, {parent: parentBrand.id, brand_type: 'Team'} )
   
   const color = '#486fe1'
   const logo = 'http://test.com/fake.jpeg'
@@ -102,6 +103,11 @@ const save = async () => {
 
   const brandInvitation = emails.find(e => e.subject.includes('You\'ve been invited to'))
   
+  BrokerageName
+  if (!brandInvitation.html.includes(BrokerageName)) {
+    throw new Error('Brokerage Name is not applied')
+  }
+
   if (!brandInvitation.html.includes(color)) {
     throw new Error('Navbar color is not applied')
   }
