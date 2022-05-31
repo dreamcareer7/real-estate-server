@@ -96,14 +96,16 @@ const save = async () => {
   await handleJobs()
   const emails = await getEmails()
 
-  // because we sent 2 emails in this case
+  // because we sent 2 emails in this case. 
+  // first one for creating user in createShadowUser method
+  // and the next one, when we call invite method and now we are testing the invite method
+  const userInvitationEmailIndex = 1
   if (emails.length !== 2) {
     throw new Error(`expect 2 emails sent but '${emails.length}' sent`)
   }
 
-  const brandInvitation = emails.find(e => e.subject.includes('You\'ve been invited to'))
+  const brandInvitation = emails[userInvitationEmailIndex]
   
-  BrokerageName
   if (!brandInvitation.html.includes(BrokerageName)) {
     throw new Error('Brokerage Name is not applied')
   }
