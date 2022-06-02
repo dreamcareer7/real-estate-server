@@ -41,7 +41,7 @@
       <mj-column></mj-column>
     </mj-section>
 
-    <mj-section padding="0px" border-top="8px solid {{ navbarColor }}" background-color="#FFFFFF">
+    <mj-section padding="0px" border-top="8px solid {{ navbarColor }}" background-color="{{ containerBgColor }}">
       <mj-group>
         <mj-column width="10%"></mj-column>
 

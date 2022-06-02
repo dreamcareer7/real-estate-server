@@ -68,13 +68,14 @@ const save = async () => {
   
   const color = '#486fe1'
   const logo = 'http://test.com/fake.jpeg'
-
+  const containerBgColor = '#F3F5F9'
   await BrandSettings.set({
     user: userId,
     brand: parentBrand.id,
     key: 'marketing_palette',
     value: {
-      'container-logo-wide': logo
+      'container-logo-wide': logo,
+      'container-bg-color': containerBgColor
     },
   })
 
@@ -116,6 +117,10 @@ const save = async () => {
   
   if (!brandInvitation.html.includes(logo)) {
     throw new Error('Logo src is not applied')
+  }
+
+  if (!brandInvitation.html.includes(containerBgColor)) {
+    throw new Error('ContainerBgColor is not applied')
   }
 
   const roles = await BrandRole.getByUser(brand.id, userId)
