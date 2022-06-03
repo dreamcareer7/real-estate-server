@@ -22,7 +22,9 @@ CREATE OR REPLACE VIEW new_notifications AS
     notifications.title,
     notifications.data,
     notifications_users.user as "user",
-    notifications_users.message as message
+    notifications_users.message as message,
+    notifications.transports,
+    notifications.phone_number
   FROM notifications
   JOIN
     notifications_users ON notifications.id = notifications_users.notification
