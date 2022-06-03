@@ -1,6 +1,4 @@
-const { strict: assert } = require('assert')
 const merge = require('lodash/merge')
-const pick = require('lodash/pick')
 const moment = require('moment')
 const proxyquire = require('proxyquire')
 const sinon = require('sinon')
@@ -155,7 +153,7 @@ async function setup () {
   })
 
   const listingId = await sql.selectId(
-    `SELECT id FROM listings ORDER BY created_at ASC LIMIT 1`
+    'SELECT id FROM listings ORDER BY created_at ASC LIMIT 1',
   )
 
   const { contact } = await ContactLead.saveContact(
