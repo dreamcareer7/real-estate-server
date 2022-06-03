@@ -47,10 +47,15 @@ RETURNS theme AS $$
       $1->'palette'->'background'->>'level2',
       $1->'palette'->'background'->>'level1',
 
-      $1->'palette'->'navbar'->>'background',
-      $1->'palette'->'navbar'->>'contrastText',
+      $1->'navbar'->'background'->>'color',
+      $1->'navbar'->'background'->>'contrastText',
 
-      $1->>'navbar_logo'
+      $1->'navbar'->'logo'->>'url',
+
+      $1->'navbar'->'button'->>'main',
+      $1->'navbar'->'button'->>'light',
+      $1->'navbar'->'button'->>'dark',
+      $1->'navbar'->'button'->>'contrastText'
     )::theme
 $$
 LANGUAGE SQL

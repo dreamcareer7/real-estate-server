@@ -101,6 +101,7 @@ export interface ShowingInput {
 
 export interface ShowingFilterOptions {
   brand?: UUID;
+  parentBrand?: IBrand['id'];
   deal?: UUID;
   listing?: UUID;
   live?: boolean;

@@ -5,12 +5,8 @@ $$
     UPDATE current_deal_context SET deleted_at = NOW() WHERE deal = deal_id AND deleted_at IS NULL;
 
     WITH definitions AS (
-      SELECT brands_contexts.* FROM deals_checklists
-        JOIN brands_checklists ON deals_checklists.origin = brands_checklists.id
-        JOIN brands_contexts_checklists ON brands_checklists.id = brands_contexts_checklists.checklist
-        JOIN brands_contexts ON brands_contexts_checklists.context = brands_contexts.id
-
-        WHERE deals_checklists.deal = $1
+      SELECT * FROM brands_contexts
+      WHERE brand IN (SELECT brand_parents((SELECT brand FROM deals WHERE id = $1)))
     ),
 
     last_deal_context AS (

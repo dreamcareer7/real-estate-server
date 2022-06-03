@@ -19,7 +19,7 @@ const getRoot = require('./get-root')
 const promisify = require('../../../lib/utils/promisify')
 const createContext = require('../../workers/utils/create-context')
 
-const attachContactEventHandlers = require('../../../lib/models/Contact/events')
+const attachModelEventListeners = require('../../../lib/models/Context/events')
 
 const config = {
   url: 'https://webapi.elliman.com/token?username=emil@rechat.com&password=Skiing4-Monetize-Excitable'
@@ -139,7 +139,7 @@ const sync = async () => {
 }
 
 const run = async() => {
-  attachContactEventHandlers()
+  attachModelEventListeners()
   const { commit, run } = await createContext()
 
   await run(async () => {

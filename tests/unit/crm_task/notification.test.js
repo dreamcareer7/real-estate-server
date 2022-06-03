@@ -182,6 +182,7 @@ async function testTaskIsDue() {
         .add(1, 'second')
         .unix(),
       title: 'Test TaskIsDue',
+      description: '<strong>Hello, </strong><i>World!</i>',
       task_type: 'Call',
       status: 'PENDING'
     }
@@ -204,6 +205,7 @@ async function testTaskIsDue() {
   const $ = cheerio.load(html)
 
   expect($('#row2 th p:nth-child(1)').text().trim()).to.be.equal(task.title)
+  expect(($('#row3 th p:nth-child(1)').html() ?? '').trim()).to.be.equal(task.description)
 }
 
 async function testReminderIsDue() {

@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 const { promises: fs, createReadStream } = require('fs')
+const { strict: assert } = require('assert')
 const groupBy = require('lodash/groupBy')
+const pick = require('lodash/pick')
 const path = require('path')
 
 const { import_csv: importCsv } = require('../../lib/models/Contact/worker/import')
@@ -12,24 +14,45 @@ const User = {
 }
 
 /**
+ * @param {string} jsonStr
+ * @param {string} jsonPath
+ * @returns {Promise<Object>}
+ */
+async function readJson (jsonStr, jsonPath) {
+  if (jsonStr) { return JSON.parse(jsonStr) }
+  
+  return fs.readFile(jsonPath).then(String).then(JSON.parse)
+}
+
+/**
+ * @param {Object | Array} json
+ * @param {Object} opts
+ * @param {string} opts.folderColumn
+ * @param {string} opts.emailColumn
+ * @returns {Map<string, string>}
+ */
+function parseEmailMapping (json, { folderColumn, emailColumn }) {
+  assert(typeof json === 'object' && json)
+
+  if (!Array.isArray(json)) {
+    return new Map(Object.entries(json))
+  }
+
+  return new Map(json.map(m => [m[folderColumn], m[emailColumn]]))
+}
+
+/**
  * @param {Map<string, string>} emailMapping 
  * @param {string} dir 
  * @returns {Promise<string | null>}
  */
 async function getUserId (emailMapping, dir, root = '/') {
-  let d = dir
-
-  while (d !== root) {
-    const dirname = path.basename(d)
-    const email = emailMapping.get(dirname)
+  for (let d = dir;; d = path.dirname(d)) {
+    const email = emailMapping.get(path.basename(d))
     const user = email ? await User.getByEmail(email) : null
 
-    if (!email || !user) {
-      d = path.dirname(d)
-      continue
-    }
-    
-    return user.id
+    if (user) { return user.id }
+    if (d === root) { break }
   }
 
   Context.error(`No email and/or user found for ${dir}`)
@@ -58,7 +81,8 @@ async function importFiles ({
   const userId = await getUserId(emailMapping, directory, root)
   if (!userId) { return }
 
-  const brandId = await User.getUserBrands(userId).then(brands => brands[0])
+  const brandId = await User.getUserBrands(userId).then(brands => brands?.[0])
+  assert(brandId, 'Impossible state')
 
   for (const file of files) {
     if (path.extname(file).toLowerCase() !== '.csv') {
@@ -72,9 +96,7 @@ async function importFiles ({
       `CSV File: ${file}`,
     ].join(', '))
 
-    if (dryRun) {
-      continue
-    }
+    if (dryRun) { continue }
 
     // @ts-ignore
     const { id: fileId } = await AttachedFile.saveFromStream({
@@ -96,25 +118,25 @@ async function importFiles ({
 
 /**
  * @param {Object} opts
- * @param {string} opts.directory
  * @param {string} opts.root
+ * @param {string=} [opts.directory]
  * @param {Object} opts.mappingDef
  * @param {Map<string, string>} opts.emailMapping
  * @param {boolean=} [opts.dryRun=false]
  */
 async function traversalCsvImport ({ 
-  directory,
   root,
+  directory = root,
   mappingDef,
   emailMapping,
   dryRun = false,
 }) {
-  const { directories, files, etc } = groupBy(
+  const { directories = [], files = [], etc = [] } = groupBy(
     await fs.readdir(directory, { withFileTypes: true }),
     c => c.isFile() ? 'files' : c.isDirectory() ? 'directories' : 'etc',
   )
 
-  for (const entry of etc ?? []) {
+  for (const entry of etc) {
     Context.warn(`Unknown entry: ${entry}`)
   }
 
@@ -123,11 +145,11 @@ async function traversalCsvImport ({
     root,
     mappingDef,
     emailMapping,
-    files: files?.map?.(f => f.name) ?? [],
+    files: files.map(f => f.name),
     dryRun,
   })
 
-  for (const dir of directories ?? []) {
+  for (const dir of directories) {
     await traversalCsvImport({
       directory: path.join(directory, dir.name),
       root,
@@ -155,27 +177,20 @@ function initProgram (program) {
 async function main (program) {
   const opts = program.opts()
 
-  const mappingDef = opts.mappingDef || (await fs.readFile(opts.mappingJson)
-    .then(String)
-    .then(JSON.parse))
-
-  let emailMapping = opts.emailMapping || (await fs.readFile(opts.emailMappingJson)
-    .then(String)
-    .then(JSON.parse))
-
-  if (Array.isArray(emailMapping)) {
-    emailMapping = new Map(emailMapping.map(m => [m[opts.folderColumn], m[opts.emailColumn]]))
-  } else {
-    emailMapping = new Map(Object.entries(emailMapping))
-  }
-  
   if (opts.dryRun) {
     Context.log('[Running in dry-run mode]')
   }
 
+  const mappingDef = await readJson(opts.mappingDef, opts.mappingJson)
+  const emailMappingRaw = await readJson(opts.emailMapping, opts.emailMappingJson)
+
+  const emailMapping = parseEmailMapping(
+    emailMappingRaw,
+    pick(opts, 'folderColumn', 'emailColumn'),
+  )
+
   return traversalCsvImport({
-    directory: opts.path,
-    root: opts.path,
+    root: path.resolve(opts.path),
     mappingDef,
     emailMapping,
     dryRun: opts.dryRun,

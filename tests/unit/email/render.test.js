@@ -17,12 +17,13 @@ const lorem = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do e
 
 const recipient = {
   first_name: 'John',
+  last_name: null,
   address: [
     {
       street_address: '1265 Barry'
     }
   ],
-  phone_number: null
+  phone_number: '+14243828604'
 }
 
 const placeholders = [
@@ -57,13 +58,13 @@ const placeholders = [
   },
 
   {
-    field: '{{recipient.phone_number}}',
+    field: '{{recipient.last_name}}',
     value: ''
   },
 
   {
-    field: '{{recipient.phone_number or "phone"}}',
-    value: 'phone'
+    field: '{{recipient.last_name or "last"}}',
+    value: 'last'
   },
 
   {
@@ -79,6 +80,11 @@ const placeholders = [
   {
     field: '{{recipient.empty_attribute or "😀"}}',
     value: '😀'
+  },
+
+  {
+    field: '{{recipient.phone_number}}',
+    value: '(424) 382-8604'
   },
 
   {

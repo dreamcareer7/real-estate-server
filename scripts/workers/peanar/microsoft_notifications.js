@@ -6,7 +6,7 @@ const queues = [
   {
     // Does not scale
     queues: ['microsoft_notifications'],
-    concurrency: 1,
+    concurrency: 300,
   },
   {
     // Scale?

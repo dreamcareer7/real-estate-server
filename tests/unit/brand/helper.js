@@ -7,6 +7,7 @@ const property_types = require('./property_types')
 const Brand = require('../../../lib/models/Brand')
 
 const BrandRole = {
+  ...require('../../../lib/models/Brand/role/get'),
   ...require('../../../lib/models/Brand/role/save'),
   ...require('../../../lib/models/Brand/role/members')
 }
@@ -71,7 +72,7 @@ async function create(data) {
       role = await BrandRole.create({
         brand: b.id,
         role: r,
-        acl: ['*']
+        acl: ['Admin']
       })
       members = roles[r]
     } else {
@@ -231,7 +232,7 @@ async function getContexts(brand_id) {
 }
 
 /**
- * @param {UUID} brand_id
+ * @param {UUID[]} ids
  * @returns {Promise<any[]>}
  */
 function getChecklists(ids) {
@@ -243,9 +244,17 @@ async function getPropertyTypes(brand_id) {
   return _.keyBy(property_types, 'label')
 }
 
+async function removeMember(brand, user) {
+  const roles = await BrandRole.getByUser(brand, user)
+  for (const role of roles) {
+    await BrandRole.removeMember(role, user)
+  }
+}
+
 module.exports = {
   create,
   getContexts,
   getChecklists,
-  getPropertyTypes
+  getPropertyTypes,
+  removeMember
 }

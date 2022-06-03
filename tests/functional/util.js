@@ -132,6 +132,29 @@ function getTokenFor(email) {
   }
 }
 
+/**
+ * @template {Record<string, Function>} T
+ * @param {T} fns
+ * @returns {T}
+ */
+function runAsUauthorized (fns) {
+  function setToken (authz) {
+    const setup = frisby.globalSetup()
+
+    const original = setup.request.headers.Authorization
+    setup.request.headers.Authorization = authz
+
+    frisby.globalSetup(setup)
+    return original 
+  }
+
+  let originalAuthz = null
+  beforeFirstFrisby(fns, () => { originalAuthz = setToken(undefined) })
+  afterLastFrisby(fns, () => setToken(originalAuthz))
+  
+  return fns
+}
+
 function runAsUser(email, fns) {
   let originalAuthorizationHeader
 
@@ -178,6 +201,7 @@ module.exports = {
   createBrands,
   createUser,
   getTokenFor,
+  runAsUauthorized,
   runAsUser,
   switchBrand,
   userId,

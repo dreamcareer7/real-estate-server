@@ -6,7 +6,17 @@ $$
     FROM emails_events
     JOIN emails ON emails.id = emails_events.email
     WHERE emails.campaign = $1 and
-    EXTRACT(EPOCH FROM(emails_events.created_at - emails.sent_at)) > $2
+    (
+      (
+        emails_events.event in ('opened', 'clicked') and
+        EXTRACT(EPOCH FROM(emails_events.created_at - emails.sent_at)) > $2
+      )
+      or
+      (
+        emails_events.event not in ('opened', 'clicked') 
+      )
+    )
+    
   ),
 
   recipient_counts AS (

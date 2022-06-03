@@ -216,6 +216,16 @@ module.exports = [
     ios_address_book_id: 'F57C8277-585D-4327-88A6-B5689FF69DFE'
   },
   {
+    attributes: [{
+      attribute_type: 'last_name',
+      text: 'Zakroff'
+    },
+    {
+      attribute_type: 'email',
+      text: 'hank-zakroff@mac.com'
+    }],
+  },
+  {
     attributes: [
       {
         attribute_type: 'first_name',

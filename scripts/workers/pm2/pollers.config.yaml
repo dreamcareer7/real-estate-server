@@ -54,5 +54,8 @@ apps:
     args     : ./pollers/openhouse_notifications.js
     name     : 'agents_openhouse_notifications'
   - script   : ./scripts/workers/index.js
+    args     : ./pollers/showing.js
+    name     : 'showing'
+  - script   : ./scripts/workers/index.js
     args     : ./pollers/social_posts.js
     name     : 'social_posts'

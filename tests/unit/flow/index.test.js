@@ -79,7 +79,7 @@ const defaultFlowSteps = (userId) => [{
   }, {
     title: 'Send them a test email',
     description: 'Automatically send them a test email to make sure it\'s working',
-    wait_for: {days: 1},
+    wait_for: {weeks: 1},
     time: '08:00:00',
     order: 2,
     is_automated: true,
@@ -101,6 +101,18 @@ const defaultFlowSteps = (userId) => [{
     event_type: 'last_step_date',
     event: {
       title: 'Demo of Rechat',
+      task_type: 'Call',
+    }
+  }, {
+    title: 'After a long time',
+    description: '23 months is passed',
+    wait_for: {months: 23},
+    time: '10:00:00',
+    order: 4,
+    is_automated: false,
+    event_type: 'last_step_date',
+    event: {
+      title: 'After a long time',
       task_type: 'Call',
     }
   }]
@@ -142,7 +154,31 @@ async function loadFlow() {
 }
 
 async function testBrandFlows() {
-  expect(brand_flow.steps).to.have.length(3)
+  const { steps } = brand_flow
+  const [{ steps: defaultSteps }] = defaultFlowSteps(user.id)
+  expect(steps).to.have.length(4)
+  for (const i in steps) {
+    if (steps[i].wait_for.hours) {
+      expect(steps[i].wait_for.hours).to.be.equal(defaultSteps[i].wait_for.hours)
+      expect(steps[i].wait_for_unit).to.be.equal('hours')
+    }
+    if (steps[i].wait_for.days) {
+      expect(steps[i].wait_for.days).to.be.equal(defaultSteps[i].wait_for.days)
+      expect(steps[i].wait_for_unit).to.be.equal('days')
+    }
+    if (steps[i].wait_for.weeks) {
+      expect(steps[i].wait_for.weeks).to.be.equal(defaultSteps[i].wait_for.weeks)
+      expect(steps[i].wait_for_unit).to.be.equal('weeks')
+    }
+    if (steps[i].wait_for.months) {
+      expect(steps[i].wait_for.months).to.be.equal(defaultSteps[i].wait_for.months)
+      expect(steps[i].wait_for_unit).to.be.equal('months')
+    }
+    if (steps[i].wait_for.years) {
+      expect(steps[i].wait_for.years).to.be.equal(defaultSteps[i].wait_for.years)
+      expect(steps[i].wait_for_unit).to.be.equal('years')
+    }
+  }
 }
 
 /**
@@ -408,10 +444,14 @@ async function testStepOrderCollisionOnCreate() {
 async function testDuplicateEnroll() {
   const id = await createContact()
 
-  await Flow.enrollContacts(brand.id, user.id, brand_flow.id, Date.now() / 1000, brand_flow.steps.map(s => s.id), [id])
+  const lastWeek = moment.utc().add(-1, 'week').unix() / 1000
+  await Flow.enrollContacts(brand.id, user.id, brand_flow.id, lastWeek, brand_flow.steps.map(s => s.id), [id])
+
   const res = await Flow.enrollContacts(brand.id, user.id, brand_flow.id, Date.now() / 1000, brand_flow.steps.map(s => s.id), [id])
 
   expect(res).to.be.empty
+
+
 }
 
 async function testStopFlowByDeleteContact() {
