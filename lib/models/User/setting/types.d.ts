@@ -20,6 +20,7 @@ export interface UserSettingFields {
   super_campaign_admin_permission: boolean;
   listings_add_mls_account_reminder_dismissed: boolean;
   calendar_filters: JsonObject;
+  contact_touch_reminder_hint_dismissed: boolean;
 }
 
 export interface UserSetting extends Omit<IModel, MissingProps>, UserSettingFields {
