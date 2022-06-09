@@ -528,7 +528,7 @@ function checkAppointmentRejectionSmsForBuyer (cb) {
     .create('check appointment rejection sms for buyer')
     .get(`/sms/inbox/${BUYER_PHONE_NUMBER}`)
     .after(cb)
-    .expectJSON('data.5', {
+    .expectJSON('data.6', {
       to: formatPhoneNumberForDialing(BUYER_PHONE_NUMBER),
       body: expectedBody
     })
