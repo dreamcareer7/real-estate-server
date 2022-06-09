@@ -59,7 +59,7 @@
             You're one click away from setting up your account and experiencing all the incredible tools and features offered to you!
           </mj-text>
           <!--Button Part-->
-          <mj-button href="{{link}}" padding="18px 0px 0px 0px" inner-padding="8px 16px" border-radius="4px" background-color="{{ navbarColor }}" font-weight="700" font-size="14px" line-height="24px" color="#ffffff">
+          <mj-button href="{{link}}" border="{{ buttonBorder }}" padding="18px 0px 0px 0px" inner-padding="8px 16px" border-radius="4px" background-color="{{ buttonBgColor }}" font-weight="{{ buttonFontWeight }}" font-size="{{ buttonFontSize }}" line-height="24px" color="{{ buttonTextColor }}">
             ACCEPT INVITATION
           </mj-button>
         </mj-column>
