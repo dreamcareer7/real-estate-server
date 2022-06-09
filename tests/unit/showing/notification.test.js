@@ -212,7 +212,7 @@ describe('Showing/notification', () => {
       await helper.reschedule(apptId)
 
       const contact = defaults.request.contact
-      assert(FakeSMS.send.notCalled, 'one (or more) SMS(s) has been sent to the buyer')
+      assert(FakeSMS.send.calledOnce, 'no SMS has been sent to the buyer')
       assertEmailSent(contact.email, 'Appointment Rescheduled')
 
       assertOneNotif({
