@@ -645,6 +645,7 @@ declare type TDbSqlAddress =
   | 'notification/tokens/delete'
   | 'notification/unread'
   | 'notification/unread_over_time'
+  | 'notification/non_delivered'
   | 'notification/unread_room'
   | 'notification/unregister_push'
   | 'notification/user'
