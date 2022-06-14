@@ -360,6 +360,8 @@ async function testTouchReminderOnContact() {
   const [id] = await createContact()
 
   await ContactTag.update_touch_frequency(brand.id, user.id, 'Warm', 10)
+  await handleJobs()
+  
   const contact = await Contact.get(id)
 
   expect(contact.touch_freq).to.be.equal(10)
