@@ -4,6 +4,7 @@ const { createContext, handleJobs } = require('../helper')
 const contactsData = require('./data/filter.json')
 
 const Contact = require('../../../lib/models/Contact')
+const { fastFilter: mixedFilter } = require('../../../lib/models/Contact/filter2')
 const Context = require('../../../lib/models/Context')
 const CrmTask = require('../../../lib/models/CRM/Task')
 const User = require('../../../lib/models/User/get')
@@ -263,6 +264,27 @@ async function testFTSEscape() {
   await testFQuery(['+1', '(214)', '642-1552'], 0)
 }
 
+async function testMixedFilter() {
+  await (async function () {
+    const filter_res = await mixedFilter(brand.id, [{
+      attribute_type: 'tag',
+      value: 'Tag3'
+    }, {
+      attribute_type: 'city',
+      value: 'Dallas'
+    }], {})
+    expect(filter_res.total).to.equal(1)
+  })()
+
+  await (async function () {
+    const filter_res = await mixedFilter(brand.id, [{
+      attribute_type: 'tag',
+      value: 'Tag3'
+    }], {})
+    expect(filter_res.total).to.equal(1)
+  })()
+}
+
 describe('Contact', () => {
   createContext()
   beforeEach(setup)
@@ -276,6 +298,7 @@ describe('Contact', () => {
     it('should filter by first name is', testFilterFirstNameEquals)
     it('should filter by first letter of sort field', testAlphabeticalFilter)
     it('should filter by task association', testCrmAssociationFilter)
+    it('should filter by both global and custom attributes', testMixedFilter)
   })
 
   describe('Full-Text Search', () => {
