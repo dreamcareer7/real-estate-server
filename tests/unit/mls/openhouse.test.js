@@ -21,7 +21,7 @@ const promisifyS = stub().callsFake(() => {
   return redis.zadd
 })
 
-const { create: createOpenHouse } = proxyquire('../../../lib/models/OpenHouse/Create', {
+const { create: createOpenHouse } = proxyquire('../../../lib/models/OpenHouse/create', {
   '../../utils/promisify': promisifyS
 })
 
