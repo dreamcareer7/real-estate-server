@@ -3,7 +3,6 @@ const sinon = require('sinon')
 const { stub } = sinon
 const proxyquire = require('proxyquire')
 const { createContext } = require('../helper')
-const sql = require('../../../lib/utils/sql')
 const OpenHouse = {
   ...require('../../../lib/models/OpenHouse/get'),
 }
