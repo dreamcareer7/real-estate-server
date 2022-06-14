@@ -61,6 +61,11 @@
       {
         "attribute_type": "tag",
         "text": "Tag3"
+      },
+      {
+        "attribute_type": "city",
+        "text": "Dallas",
+        "index": 0
       }
     ]
   },
