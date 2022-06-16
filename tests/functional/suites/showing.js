@@ -102,16 +102,12 @@ function create(cb) {
     cb(err, res, json)
   })
     .expectStatus(200)
-    .expectJSON({
-      data: {
-        type: 'showing',
-        roles: [
-          {
-            first_name: 'John',
-            last_name: 'Doe',
-          },
-        ],
-      },
+    .expectJSON('data', {
+      type: 'showing',
+      roles: [{
+        first_name: 'John',
+        last_name: 'Doe',
+      }],
     })
 }
 
@@ -125,20 +121,16 @@ function createHippocket(cb) {
   }
   return _create('create a showing', { address, listing: undefined }, cb)
     .expectStatus(200)
-    .expectJSON({
-      data: {
-        type: 'showing',
-      },
+    .expectJSON('data', {
+      type: 'showing',
     })
 }
 
 function createWithNoApprovalRequired(cb) {
   return _create('create a showing with no approvals required', { approval_type: 'None' }, cb)
     .expectStatus(200)
-    .expectJSON({
-      data: {
-        type: 'showing',
-      },
+    .expectJSON('data', {
+      type: 'showing',
     })
 }
 
@@ -164,17 +156,15 @@ function createWithTenantRole(cb) {
     cb
   )
     .expectStatus(200)
-    .expectJSONTypes({
-      data: {
-        roles: [
-          {
-            user_id: String,
-          },
-          {
-            user_id: String,
-          },
-        ],
-      },
+    .expectJSONTypes('data', {
+      roles: [
+        {
+          user_id: String,
+        },
+        {
+          user_id: String,
+        },
+      ],
     })
 }
 
@@ -217,9 +207,8 @@ function filter(cb) {
     .post('/showings/filter?associations[]=showing.availabilities&associations[]=showing.roles')
     .after(cb)
     .expectStatus(200)
-    .expectJSON({
-      data: [the.showing()],
-    })
+    .expectJSONLength('data', 4)
+    .expectJSON('data.?', the.showing())
 }
 
 function search (query, {
@@ -246,17 +235,15 @@ function getShowingPublic(cb) {
     .get(`/showings/public/${showing_id}`)
     .after(cb)
     .expectStatus(200)
-    .expectJSON({
-      data: {
-        id: showing_id,
-        agent: {
-          first_name: 'John',
-          last_name: 'Doe',
-          full_name: 'John Doe',
-          type: 'showing_agent'
-        },
-        type: 'showing_public',
+    .expectJSON('data', {
+      id: showing_id,
+      agent: {
+        first_name: 'John',
+        last_name: 'Doe',
+        full_name: 'John Doe',
+        type: 'showing_agent'
       },
+      type: 'showing_public',
     })
 }
 
@@ -284,12 +271,10 @@ function _makeAppointment(msg, showing_id, expected_status = 'Requested') {
       .removeHeader('Authorization')
       .after(cb)
       .expectStatus(200)
-      .expectJSON({
-        data: {
-          status: expected_status,
-          showing: {
-            id: showing_id,
-          },
+      .expectJSON('data', {
+        status: expected_status,
+        showing: {
+          id: showing_id,
         },
       })
   }
@@ -300,10 +285,8 @@ function checkNotificationCount(cb) {
     .create('check notifications count')
     .get('/showings/notifications?limit=1')
     .after(cb)
-    .expectJSON({
-      info: {
-        total: 1
-      }
+    .expectJSON('info', {
+      total: 1
     })
 }
 
@@ -315,24 +298,22 @@ function checkAppointmentNotifications(cb) {
       `/showings/${results.showing.create.data.id}/appointments/${appt.id}/?associations[]=showing_appointment.notifications&associations[]=showing_appointment.contact`
     )
     .after(cb)
-    .expectJSON({
-      data: {
-        contact: {
-          source_type: 'Showing',
-          type: 'contact'
-        },
-        notifications: [
-          {
-            object_class: 'ShowingAppointment',
-            object: appt.id,
-            action: 'Created',
-            subject_class: 'Contact',
-            title: '5020 Junius Street',
-            message: 'John Smith requested a showing',
-            type: 'showing_appointment_notification',
-          },
-        ],
+    .expectJSON('data', {
+      contact: {
+        source_type: 'Showing',
+        type: 'contact'
       },
+      notifications: [
+        {
+          object_class: 'ShowingAppointment',
+          object: appt.id,
+          action: 'Created',
+          subject_class: 'Contact',
+          title: '5020 Junius Street',
+          message: 'John Smith requested a showing',
+          type: 'showing_appointment_notification',
+        },
+      ],
     })
 }
 
@@ -341,19 +322,10 @@ function checkAppointmentReceiptSmsForBuyer(cb) {
     .create('check appointment receipt text message from buyer inbox')
     .get(`/sms/inbox/${BUYER_PHONE_NUMBER}`)
     .after(cb)
-    .expectJSON({
-      data: [
-        {
-          to: formatPhoneNumberForDialing(BUYER_PHONE_NUMBER),
-          body:
-          `Your showing request for 5020 Junius Street at ${APPOINTMENT_TIME.format(
-            'MMM Do, h:mmA'
-          )} has been received.` +
-            '\n\n' +
-            'Cancel via http://mock-branch-url\nReschedule via http://mock-branch-url',
-        },
-      ],
-    })
+    .expectJSON('data', [{
+      to: formatPhoneNumberForDialing(BUYER_PHONE_NUMBER),
+      body: `Your showing request for 5020 Junius Street at ${APPOINTMENT_TIME.format('MMM Do, h:mmA')} has been received.\n\nCancel via http://mock-branch-url\nReschedule via http://mock-branch-url`,
+    }])
 }
 
 function confirmAppointment(sourceCase, comment = 'You\'re welcome!') {
@@ -367,10 +339,8 @@ function confirmAppointment(sourceCase, comment = 'You\'re welcome!') {
       })
       .after(cb)
       .expectStatus(200)
-      .expectJSON({
-        data: {
-          status: 'Confirmed',
-        },
+      .expectJSON('data', {
+        status: 'Confirmed',
       }) 
   }
 }
@@ -381,19 +351,10 @@ function checkAppointmentConfirmationSmsForBuyer(cb) {
     .get(`/sms/inbox/${BUYER_PHONE_NUMBER}`)
     .after(cb)
     .expectStatus(200)
-    .expectJSON({
-      data: [
-        {
-          to: formatPhoneNumberForDialing(BUYER_PHONE_NUMBER),
-          body:
-          `Your showing for 5020 Junius Street at ${APPOINTMENT_TIME.format(
-            'MMM Do, h:mmA'
-          )} has been confirmed.` +
-            '\n\n' +
-            'Cancel via http://mock-branch-url\nReschedule via http://mock-branch-url',
-        },
-      ],
-    })
+    .expectJSON('data', [{
+      to: formatPhoneNumberForDialing(BUYER_PHONE_NUMBER),
+      body: `Your showing for 5020 Junius Street at ${APPOINTMENT_TIME.format('MMM Do, h:mmA')} has been confirmed.\n\nCancel via http://mock-branch-url\nReschedule via http://mock-branch-url`,
+    }])
 }
 
 function requestAppointmentAutoConfirm(cb) {
@@ -412,18 +373,9 @@ function checkAppointmentAutoConfirmationTextMessagesForBuyer(cb) {
     .get(`/sms/inbox/${BUYER_PHONE_NUMBER}`)
     .after(cb)
     .expectStatus(200)
-    .expectJSON({
-      data: [
-        {
-          body: [
-            `Your showing for 5020 Junius Street at ${time} has been automatically confirmed.`,
-            '',
-            'Cancel via http://mock-branch-url',
-            'Reschedule via http://mock-branch-url',         
-          ].join('\n'),
-        },
-      ],
-    })
+    .expectJSON('data', [{
+      body: `Your showing for 5020 Junius Street at ${time} has been automatically confirmed.\n\nCancel via http://mock-branch-url\nReschedule via http://mock-branch-url`,
+    }])
 }
 
 function checkShowingTotalCount(cb) {
@@ -432,11 +384,9 @@ function checkShowingTotalCount(cb) {
     .create('check total appointment count on showing')
     .get(`/showings/${showing_id}`)
     .after(cb)
-    .expectJSON({
-      data: {
-        visits: 1,
-        confirmed: 1,
-      },
+    .expectJSON('data', {
+      visits: 1,
+      confirmed: 1,
     })
 }
 
@@ -449,13 +399,9 @@ function upcomingAppointments(cb) {
     .get(`/calendar?object_types[]=showing_appointment&low=${low}&high=${high}`)
     .after(cb)
     .expectStatus(200)
-    .expectJSON({
-      data: [
-        {
-          type: 'calendar_event',
-        },
-      ],
-    })
+    .expectJSON('data', [{
+      type: 'calendar_event',
+    }])
 }
 
 function buyerAgentGetAppointment(cb) {
@@ -466,11 +412,9 @@ function buyerAgentGetAppointment(cb) {
     .removeHeader('X-RECHAT-BRAND')
     .removeHeader('Authorization')
     .after(cb)
-    .expectJSON({
-      data: {
-        id: appt.id,
-        status: 'Confirmed',
-      },
+    .expectJSON('data', {
+      id: appt.id,
+      status: 'Confirmed',
     })
 }
 
@@ -486,10 +430,8 @@ function buyerAgentRescheduleAppointment(cb) {
     .removeHeader('Authorization')
     .after(cb)
     .expectStatus(200)
-    .expectJSON({
-      data: {
-        status: 'Rescheduled'
-      },
+    .expectJSON('data', {
+      status: 'Rescheduled'
     })
 }
 
@@ -501,21 +443,13 @@ function checkBuyerRescheduleNotifications(cb) {
       `/showings/${the.showing().id}/appointments/${appt.id}/?associations[]=showing_appointment.notifications`
     )
     .after(cb)
-    .expectJSON({
-      data: {
-        notifications: [
-          {
-            object_class: 'ShowingAppointment',
-            object: appt.id,
-            action: 'Rescheduled',
-            subject_class: 'Contact',
-            message: `John Smith rescheduled the showing for "${RESCHEDULED_TIME.tz(
-              results.authorize.token.data.timezone
-            ).format('MMM D, HH:mm')}": Sorry something came up`,
-            type: 'showing_appointment_notification',
-          }
-        ],
-      },
+    .expectJSON('data.notifications.0', {
+      object_class: 'ShowingAppointment',
+      object: appt.id,
+      action: 'Rescheduled',
+      subject_class: 'Contact',
+      message: `John Smith rescheduled the showing for "${RESCHEDULED_TIME.tz(results.authorize.token.data.timezone).format('MMM D, HH:mm')}": Sorry something came up`,
+      type: 'showing_appointment_notification',
     })
 }
 
@@ -538,18 +472,13 @@ function checkBuyerCancelNotifications(cb) {
     .create('check buyer canceled notification')
     .get('/showings/notifications')
     .after(cb)
-    .expectJSON({
-      data: [
-        { /* Ignore 1st one */ },
-        {
-          object_class: 'ShowingAppointment',
-          object: appt.id,
-          action: 'Canceled',
-          subject_class: 'Contact',
-          message: 'John Smith canceled the showing: Sorry something came up',
-          type: 'notification',
-        },
-      ],
+    .expectJSON('data.1', {
+      object_class: 'ShowingAppointment',
+      object: appt.id,
+      action: 'Canceled',
+      subject_class: 'Contact',
+      message: 'John Smith canceled the showing: Sorry something came up',
+      type: 'notification',
     })
 }
 
@@ -565,10 +494,8 @@ function sellerAgentCancelAppointment(cb) {
     )
     .after(cb)
     .expectStatus(200)
-    .expectJSON({
-      data: {
-        status: 'Canceled',
-      },
+    .expectJSON('data', {
+      status: 'Canceled',
     })
 }
 
@@ -584,10 +511,8 @@ function sellerAgentRejectAppointment (cb) {
     )
     .after(cb)
     .expectStatus(200)
-    .expectJSON({
-      data: {
-        status: 'Canceled',
-      },
+    .expectJSON('data', {
+      status: 'Canceled',
     })  
 }
 
@@ -603,18 +528,9 @@ function checkAppointmentRejectionSmsForBuyer (cb) {
     .create('check appointment rejection sms for buyer')
     .get(`/sms/inbox/${BUYER_PHONE_NUMBER}`)
     .after(cb)
-    .expectJSON({
-      data: [
-        { /* Ignore first one */ },
-        { /* Ignore second one */ },
-        { /* Ignore third one */ },
-        { /* Ignore fouth one */ },
-        { /* Ignore fifth one */ },
-        {
-          to: formatPhoneNumberForDialing(BUYER_PHONE_NUMBER),
-          body: expectedBody
-        }
-      ],
+    .expectJSON('data.6', {
+      to: formatPhoneNumberForDialing(BUYER_PHONE_NUMBER),
+      body: expectedBody
     })
 }
 
