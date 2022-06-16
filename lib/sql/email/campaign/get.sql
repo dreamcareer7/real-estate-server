@@ -42,7 +42,8 @@ SELECT email_campaigns.*,
 
   headers,
   google_credential,
-  microsoft_credential
+  microsoft_credential,
+  recipients_count
 
 FROM email_campaigns
 JOIN unnest($1::uuid[]) WITH ORDINALITY t(eid, ord) ON email_campaigns.id = eid
