@@ -10,7 +10,8 @@ INSERT INTO tasks
   required,
   origin,
   "order",
-  acl
+  acl,
+  application
 ) VALUES (
   $1,
   $2,
@@ -22,6 +23,7 @@ INSERT INTO tasks
   COALESCE($8, FALSE),
   $9,
   COALESCE($10, 0),
-  COALESCE($11, ARRAY['BackOffice', 'Agents']::task_acl[])
+  COALESCE($11, ARRAY['BackOffice', 'Agents']::task_acl[]),
+  $12
 )
 RETURNING *
