@@ -34,7 +34,7 @@ async function calcChunk ({ chunkSize = 1000 } = {}) {
 
 async function calcRecipientsCount ({ maxIters = 200 } = {}) {
   for (let i = 1; i <= maxIters; ++i) {
-    const { run, commit } = createContext({ id: `calc-recipients-count-${i}` })
+    const { run, commit } = await createContext({ id: `calc-recipients-count-${i}` })
 
     const nUpdated = await run(calcChunk)
     await commit()
