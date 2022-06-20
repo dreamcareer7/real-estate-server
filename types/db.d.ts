@@ -907,4 +907,9 @@ declare type TDbSqlAddress =
   | 'website/get_user'
   | 'website/insert'
   | 'website/insert_hostname'
-  | 'website/update';
+  | 'website/update'
+  | 'lead_channel/insert'
+  | 'lead_channel/get'
+  | 'lead_channel/update'
+  | 'lead_channel/delete'
+  ;
