@@ -1,5 +1,6 @@
 #!/usr/bin/env/node
 
+const createContext = require('../workers/utils/create-context')
 const sql = require('../../lib/utils/sql')
 
 const query = `
@@ -27,20 +28,32 @@ const query = `
   WHERE rc.campaign = ec.id
 `
 
-async function calcRecipientsCount ({ chunkSize = 1000 } = {}) {
+async function calcChunk ({ chunkSize = 1000 } = {}) {
   return sql.update(query, [chunkSize])
 }
 
-if (process.env.NODE_ENV !== 'tests') {
-  const { runInContext } = require('../../lib/models/Context/util')
+async function calcRecipientsCount ({ maxIters = 200 } = {}) {
+  for (let i = 1; i <= maxIters; ++i) {
+    const { run, commit } = createContext({ id: `calc-recipients-count-${i}` })
 
-  runInContext(
-    `calc-recipients-count-${new Date().toISOString()}`,
-    calcRecipientsCount
-  ).catch(err => {
-    console.error(err)
-    process.exit(1)
-  })
+    const nUpdated = await run(calcChunk)
+    await commit()
+
+    if (nUpdated === 0) { return }
+  }
 }
 
-module.exports = { calcRecipientsCount }
+if (process.env.NODE_ENV !== 'tests') {
+  calcRecipientsCount().then(
+    () => process.exit(0),
+    err => {
+      console.error(err)
+      process.exit(1)
+    }
+  )
+}
+
+module.exports = {
+  calcRecipientsCount,
+  calcChunk,
+}
