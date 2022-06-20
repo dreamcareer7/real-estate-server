@@ -18,7 +18,7 @@ SELECT email_campaigns.*,
       FROM email_campaigns_recipients
       WHERE campaign = email_campaigns.id
     )
-    ELSE ARRAY[]::uuid[]
+    ELSE NULL
   END) AS recipients,
 
   (
