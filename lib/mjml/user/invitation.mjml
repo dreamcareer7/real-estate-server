@@ -1,0 +1,108 @@
+<mjml>
+
+  <mj-head>
+    <mj-title>Accept Invitation Rechat</mj-title>
+    <mj-font name="Lato" href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&display=swap" />
+    <mj-attributes>
+      <mj-all font-family="Lato,Helvetica,Sans Serif" />
+    </mj-attributes>
+
+    <mj-style>
+      .logo {
+        width: auto;
+        height: 56px;
+      }
+
+      @media (max-width: 480px) {
+        .heading div {
+          font-size: 20px !important;
+          line-height: 30px !important;
+
+        }
+
+        .paragraph div {
+          font-size: 15px !important;
+          line-height: 25px !important;
+        }
+
+        .logo {
+          width: 100%;
+          height: auto;
+        }
+      }
+    </mj-style>
+  </mj-head>
+
+  <mj-body background-color="#F2F4F8">
+
+    <!--Main Section-->
+
+    <mj-section padding="56px 0px 0px 0px" background-color="#F2F4F8">
+      <mj-column></mj-column>
+    </mj-section>
+
+    <mj-section padding="0px" border-top="8px solid {{ navbarColor }}" background-color="{{ containerBgColor }}">
+      <mj-group>
+        <mj-column width="10%"></mj-column>
+
+        <mj-column width="80%" padding="45px 0px">
+          <!--Logo Part-->
+          <mj-text align="center" padding="0px">
+            <img class="logo" src="{{ logoSrc }}" alt="{{ brandName }} Logo">
+          </mj-text>
+          <!--Heading Part-->
+          <mj-text css-class="heading" padding="36px 0px 8px 0px" align="center" color="#1A1B1D" font-size="24px" line-height="40px" font-weight="900">
+            You’ve been invited to use {{ brandName }}
+          </mj-text>
+          <!--Paragraph Part-->
+          <mj-text css-class="paragraph" padding="8px 0px 18px 0px" align="center" color="#3A3B3E" font-size="16px" line-height="24px" font-weight="400">
+            You're one click away from setting up your account and experiencing all the incredible tools and features offered to you!
+          </mj-text>
+          <!--Button Part-->
+          <mj-button href="{{link}}" border="{{ buttonBorder }}" padding="18px 0px 0px 0px" inner-padding="8px 16px" border-radius="4px" background-color="{{ buttonBgColor }}" font-weight="{{ buttonFontWeight }}" font-size="{{ buttonFontSize }}" line-height="24px" color="{{ buttonTextColor }}">
+            ACCEPT INVITATION
+          </mj-button>
+        </mj-column>
+
+        <mj-column width="10%"></mj-column>
+      </mj-group>
+    </mj-section>
+
+    <!--Footer Section-->
+
+    <mj-section padding="32px 0px 20px 0px">
+      <mj-group>
+        <mj-column width="8%"></mj-column>
+        <mj-column width="84%">
+          <mj-text color="#061126" font-size="12px" font-weight="400" align="center" padding="0" line-height="20px" letter-spacing="0.4px">
+            Rechat ® 2022, All Rights Reserved.
+          </mj-text>
+        </mj-column>
+        <mj-column width="8%"></mj-column>
+      </mj-group>
+    </mj-section>
+
+    <mj-section padding="0">
+      <mj-group>
+        <mj-column width="28%"></mj-column>
+        <mj-column width="20%">
+          <mj-image padding="0" alt="App Store" src="https://i.ibb.co/mNwG2j7/apple-store-download-logo.png" href="https://apps.apple.com/us/app/rechat/id974093560"></mj-image>
+        </mj-column>
+        <mj-column width="4%"></mj-column>
+        <mj-column width="20%">
+          <mj-image padding="0" alt="Google Play" src="https://i.ibb.co/NYf4Xs0/google-play-download-logo.png" href="https://play.google.com/store/apps/details?id=com.rechat.mobile&hl=en&gl=US"></mj-image>
+        </mj-column>
+        <mj-column width="28%"></mj-column>
+      </mj-group>
+    </mj-section>
+
+    <mj-section padding="30px 0px 70px 0px">
+      <mj-column width="40%"></mj-column>
+      <mj-column width="20%">
+        <mj-image src="https://rechat-assets.s3.amazonaws.com/email-templates/images/Powered-By-Rechat.png" padding="0" href="https://rechat.com/"></mj-image>
+      </mj-column>
+      <mj-column width="40%"></mj-column>
+    </mj-section>
+
+  </mj-body>
+</mjml>

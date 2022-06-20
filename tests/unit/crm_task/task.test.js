@@ -11,6 +11,7 @@ const Orm = {
 
 const Context = require('../../../lib/models/Context')
 const CrmTask = require('../../../lib/models/CRM/Task')
+const Assignee = require('../../../lib/models/CRM/Task/assignee')
 const CrmTaskEmitter = require('../../../lib/models/CRM/Task/emitter')
 const CrmAssociation = require('../../../lib/models/CRM/Association')
 const Contact = require('../../../lib/models/Contact/manipulate')
@@ -188,6 +189,14 @@ async function testClone() {
   expect(reminders[0].timestamp).to.be.equal(base_task.due_date - 3600)
 }
 
+async function testAssignees() {
+  const task = await CrmTask.create(base_task)
+  await BrandHelper.removeMember(brand.id, user.id)
+
+  const assignees = await Assignee.getForTask(task.id)
+  expect(assignees).to.be.empty
+}
+
 describe('CrmTask', () => {
   createContext()
   beforeEach(setup)
@@ -196,4 +205,5 @@ describe('CrmTask', () => {
   it('should create multiple tasks', testCreateMany)
   it('should emit create event when creating multiple tasks', testCreateManyEmitsCreateEvent)
   it('should clone a trigger', testClone)
+  it('should not include removed users in assignees', testAssignees)
 })
