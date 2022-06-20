@@ -41,7 +41,9 @@ const invalidArgumentSave = async () => {
     // @ts-ignore
     await LeadChannel.create()
     throw new Error('Should throw error if argument is not provided')
-  } catch (error) {}
+  } catch {
+    return
+  }
 }
 
 const create = async () => {
