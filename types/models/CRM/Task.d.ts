@@ -105,6 +105,7 @@ declare interface ITaskFilters extends IAssociationFilters {
   brand?: UUID
   status?: TTaskStatus
   task_type?: TTaskType
+  type?: 'Task' | 'Event'
   due_gte?: number
   due_lte?: number
 }
