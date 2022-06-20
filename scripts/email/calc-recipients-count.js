@@ -6,7 +6,9 @@ const query = `
   WITH
   chunk AS (
     SELECT * FROM email_campaigns
-    WHERE executed_at IS NOT NULL
+    WHERE
+      executed_at IS NOT NULL AND
+      recipients_count IS NULL
     LIMIT $1::int
     FOR UPDATE SKIP LOCKED
   ),
