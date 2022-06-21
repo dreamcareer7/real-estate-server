@@ -13,19 +13,12 @@ const query = `
     LIMIT $1::int
     FOR UPDATE SKIP LOCKED
   ),
-  recipients_emails AS (
-    SELECT
-      email,
-      campaign
-    FROM email_campaigns_recipient_emails
-    WHERE email IS NOT NULL
-  ),
   recipients_counts AS (
     SELECT
       ch.id AS campaign,
-      count(DISTINCT lower(trim(re.email))) AS recipients_count
+      count(DISTINCT lower(trim(ece.email_address))) AS recipients_count
     FROM chunk AS ch
-    LEFT JOIN recipients_emails AS re ON re.campaign = ch.id
+    LEFT JOIN email_campaign_emails AS ece ON ece.campaign = ch.id
     GROUP BY ch.id
   )
   UPDATE email_campaigns AS ec SET
