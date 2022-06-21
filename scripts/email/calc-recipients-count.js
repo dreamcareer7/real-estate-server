@@ -6,21 +6,27 @@ const sql = require('../../lib/utils/sql')
 const query = `
   WITH
   chunk AS (
-    SELECT * FROM email_campaigns
+    SELECT id FROM email_campaigns
     WHERE
       executed_at IS NOT NULL AND
       recipients_count IS NULL
     LIMIT $1::int
     FOR UPDATE SKIP LOCKED
   ),
+  recipients_emails AS (
+    SELECT
+      email,
+      campaign
+    FROM email_campaigns_recipient_emails
+    WHERE email IS NOT NULL
+  ),
   recipients_counts AS (
     SELECT
-      ecre.campaign,
-      count(DISTINCT lower(trim(ecre.email))) AS recipients_count
+      ch.id AS campaign,
+      count(DISTINCT lower(trim(re.email))) AS recipients_count
     FROM chunk AS ch
-    JOIN email_campaigns_recipient_emails AS ecre ON ecre.campaign = ch.id
-    WHERE ecre.email IS NOT NULL
-    GROUP BY ecre.campaign
+    LEFT JOIN recipients_emails AS re ON re.campaign = ch.id
+    GROUP BY ch.id
   )
   UPDATE email_campaigns AS ec SET
     recipients_count = rc.recipients_count
