@@ -4,7 +4,7 @@ const { createContext, handleJobs } = require('../helper')
 const contactsData = require('./data/filter.json')
 
 const Contact = require('../../../lib/models/Contact')
-const { fastFilter: mixedFilter } = require('../../../lib/models/Contact/filter2')
+const { fastFilter: mixedFilter, contactFilterQuery } = require('../../../lib/models/Contact/filter2')
 const Context = require('../../../lib/models/Context')
 const CrmTask = require('../../../lib/models/CRM/Task')
 const User = require('../../../lib/models/User/get')
@@ -285,6 +285,23 @@ async function testMixedFilter() {
   })()
 }
 
+async function testFilterQuery() {
+  const q = await contactFilterQuery(
+    brand.id,
+    [
+      {
+        attribute_type: 'birthday',
+        operator: 'eq',
+        value: null,
+        invert: true,
+      },
+    ],
+    {}
+  )
+
+  console.log(q.toParam())
+}
+
 describe('Contact', () => {
   createContext()
   beforeEach(setup)
@@ -306,5 +323,9 @@ describe('Contact', () => {
     it('should filter by Guest', testFilterByGuest)
     it('should fts-filter even if terms contain empty string', testFTSWithEmptyString)
     it('should escape special characters', testFTSEscape)
+  })
+
+  describe('Query generator', () => {
+    it('should log the query', testFilterQuery)
   })
 })
