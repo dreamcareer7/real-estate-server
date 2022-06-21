@@ -60,6 +60,25 @@ declare interface ITaskInput {
   all_day?: Boolean
 }
 
+declare interface ITaskCloneInput {
+  brand?: UUID
+  created_by?: UUID
+
+  title?: string
+  description?: string
+  due_date?: number
+  end_date?: number
+  status?: TTaskStatus
+  task_type?: TTaskType
+
+  reminders?: IReminderInput[]
+  associations?: ICrmTaskAssociationInput[]
+  assignees?: UUID[]
+
+  metadata?: any
+  all_day?: Boolean
+}
+
 declare type TBaseTaskInputKeys = 'title' | 'description' | 'status' | 'due_date' | 'end_date' | 'task_type' | 'metadata';
 declare type IBaseTaskInput = Pick<ITaskInput, TBaseTaskInputKeys>;
 
@@ -98,12 +117,14 @@ declare type ICrmTaskAssociationInputWithId = ICrmTaskAssociationInput & { id?: 
 
 declare interface ITaskFilters extends IAssociationFilters {
   q?: string
+  title?: string
   assignee?: UUID
   created_by?: UUID
   updated_by?: UUID
   brand?: UUID
   status?: TTaskStatus
   task_type?: TTaskType
+  type?: 'Task' | 'Event'
   due_gte?: number
   due_lte?: number
 }

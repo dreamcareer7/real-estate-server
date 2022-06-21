@@ -1,7 +1,8 @@
 const _ = require('lodash')
 const uuid = require('uuid')
-const { contact, companyContact } = require('./data/contact.js')
+const { contact, companyContact, contactWithTouchFreq } = require('./data/contact.js')
 const manyContacts = require('./data/manyContacts.js')
+const { strict: assert } = require('assert')
 
 registerSuite('brand', [
   'createParent',
@@ -33,6 +34,8 @@ function getAttributeDefs(cb) {
       defs = _.keyBy(json.data, 'name')
 
       _fixContactAttributeDefs(contact)
+      _fixContactAttributeDefs(contactWithTouchFreq)
+      
       _fixContactAttributeDefs(companyContact)
       for (const c of manyContacts) {
         c.user = results.authorize.token.data.id
@@ -623,7 +626,7 @@ const deleteContactWorked = cb => {
     .get('/contacts?associations[]=contact.attributes&associations[]=contact.lists')
     .after(cb)
     .expectStatus(200)
-    .expectJSONLength('data', before_count - 3 - 4)
+    .expectJSONLength('data', before_count - 3 - 4 + 1)
     .expectJSON({
       code: 'OK',
     })
@@ -857,17 +860,71 @@ function unsetTouchFreqOnManyContactsList(cb) {
     .expectStatus(200)
 }
 
-function checkIfNextTouchIsNull(cb) {
+function checkIfNextTouchDoesNotChange(cb) {
   return frisby
-    .create('check if next_touch is cleared on many contacts')
+    .create('check if next_touch does not change after clearing on crm list')
     .get('/contacts?associations[]=contact.lists&list=' + results.contact.createManyContactsList.data.id)
     .after((err, res, json) => {
-      if (json.data.some(c => c.next_touch !== null))
-        throw 'Next touch is not null on ManyContacts list members'
+      const oldVals = results.contact.getContactsInManyContactsList.data
+      const diff = _.xorBy(json.data, oldVals, o => `${o.id}@${o.touch_freq}`)
+
+      assert.equal(diff.length, 0, 'Next touch changed')
+        
       cb(err, res, json)
     })
     .expectStatus(200)
     .expectJSONLength('data', manyContacts.length)
+}
+
+function updateContactTouchFreqManually (cb) {
+  const contactId = results.contact.create.data[0].id
+  const touchFreq = 43
+  
+  return frisby
+    .create('update contact touch_freq manually')
+    .patch(`/contacts/${contactId}/touch`, { touch_freq: touchFreq })
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      data: { id: contactId, touch_freq: touchFreq },
+    })
+}
+
+function createContactWithTagAndTouchFreq (cb) {
+  return frisby
+    .create('add a contact with touch-freq and tag attribute')
+    .post('/contacts?get=true&relax=false&activity=true', {
+      contacts: [contactWithTouchFreq],
+    })
+    .addHeader('x-handle-jobs', 'yes')
+    .after(cb)
+    .expectStatus(200)
+    .expectJSONLength('data', 1)
+    .expectJSON({
+      data: [{
+        type: 'contact',
+        /* FIXME: Currently, touch_freq is null at first and after
+         * _handling jobs_, it will be changed to 60. */
+        touch_freq: null,
+      }],
+    })
+}
+
+function checkIfContactTouchFreqIsPreferred (cb) {
+  const contactId = results.contact.createContactWithTagAndTouchFreq.data[0].id
+  
+  return frisby
+    .create('check if contact touch-freq is preferred')
+    .get(`/contacts/${contactId}`)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      data: {
+        type: 'contact',
+        id: contactId,
+        touch_freq: 60, // because it has BAZ tag
+      }
+    })
 }
 
 const getAllTags = (cb) => {
@@ -1213,7 +1270,8 @@ module.exports = {
   executeEmailsToList: pollEmailCampaigns,
   getContactsInManyContactsList,
   unsetTouchFreqOnManyContactsList,
-  checkIfNextTouchIsNull,
+  checkIfNextTouchDoesNotChange,
+  updateContactTouchFreqManually,
   getAllTags,
   addTag,
   checkTagIsAdded,
@@ -1221,6 +1279,8 @@ module.exports = {
   changeTagTouchFreq,
   renameBazTag,
   checkBazTagIsRenamed,
+  createContactWithTagAndTouchFreq,
+  checkIfContactTouchFreqIsPreferred,
   setTouchFrequencyOnAgentTag,
   checkTouchFrequencyOnAgentTag,
   // verifyTagRenamed,

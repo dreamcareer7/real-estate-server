@@ -100,6 +100,7 @@ declare interface IEmailCampaign extends IEmailCampaignBase {
   executed_at: number;
   created_at: number;
   deleted_at?: number;
+  tags?: string[];
 }
 
 declare interface IEmail {

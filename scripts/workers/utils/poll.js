@@ -92,9 +92,9 @@ const poll = ({ fn, name, wait = 5000 }) => {
 
       try {
         await execute(ctxRes)
-        report_time(['result:success', name])
+        report_time(['result:success', name, `name:${name}`])
       } catch (ex) {
-        report_time(['result:fail', name])
+        report_time(['result:fail', name, `name:${name}`])
         Context.error(ex)
         Slack.send({
           channel: '7-server-errors',
