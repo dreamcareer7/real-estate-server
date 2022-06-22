@@ -36,6 +36,11 @@ function processImports(replContext) {
         replContext.GoogleCredential = require('../lib/models/Google/credential/get')
         replContext.GoogleApis = require('../lib/models/Google/plugin/googleapis')
         break
+      case 'microsoft':
+        console.log('importing microsoft modules...')
+        replContext.MicrosoftCredential = require('../lib/models/Microsoft/credential/get')
+        replContext.MicrosoftApis = require('../lib/models/Microsoft/plugin/client')
+        break
       default:
         break
     }
