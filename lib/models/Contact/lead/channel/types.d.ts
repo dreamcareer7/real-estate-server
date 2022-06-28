@@ -94,7 +94,7 @@ export interface Zillow {
 }
 
 export interface Zillow_Sns{
-  Message: Zillow
+  Message: string
   Type: string
   MessageId: string
   TopicArn: string
