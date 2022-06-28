@@ -66,11 +66,20 @@ async function setup({ sourceType = 'Zillow' }) {
   }
 }
 
+const setLeachChannelId = (leadChannelId) => {
+  const jsonMessage = JSON.parse(zillowJson.Message)
+  jsonMessage.ContactMessage.ContactInfo.PartnerAgentIdentifier = leadChannelId
+  
+  return {
+    ...zillowJson,
+    Message: JSON.stringify(jsonMessage)
+  }
+}
+
 const saveZillowContact = async () => {
   const { leadChannelId } = await setup({})
-  zillowJson.Message.ContactMessage.ContactInfo.PartnerAgentIdentifier = leadChannelId
 
-  await Zillow.save(JSON.stringify(zillowJson))
+  await Zillow.save(JSON.stringify(setLeachChannelId(leadChannelId)))
 
   const [leadChannel, zillowContacts, contacts] = await Promise.all([
     LeadChannel.get(leadChannelId),
@@ -112,13 +121,11 @@ const saveZillowContact = async () => {
 
 const updateZillowContact = async () => {
   const { leadChannelId } = await setup({})
-  zillowJson.Message.ContactMessage.ContactInfo.PartnerAgentIdentifier = leadChannelId
-
   // create a new contact
-  await Zillow.save(JSON.stringify(zillowJson))
+  await Zillow.save(JSON.stringify(setLeachChannelId(leadChannelId)))
 
   // update the contact if email and user and brand is exist
-  await Zillow.save(JSON.stringify(zillowJson))
+  await Zillow.save(JSON.stringify(setLeachChannelId(leadChannelId)))
 
   const [leadChannel, zillowContacts, contacts] = await Promise.all([
     LeadChannel.get(leadChannelId),
@@ -146,10 +153,8 @@ const deletedLeadChannel = async () => {
   try {
     const { leadChannelId, userId } = await setup({})
     await LeadChannel.deleteById(leadChannelId, userId)
-    zillowJson.Message.ContactMessage.ContactInfo.PartnerAgentIdentifier = leadChannelId
-
     // create a new contact
-    await Zillow.save(JSON.stringify(zillowJson))
+    await Zillow.save(JSON.stringify(setLeachChannelId(leadChannelId)))
   } catch (error) {
     err = error
   }
@@ -190,8 +195,8 @@ const invalidLeadChannelSource = async () => {
   let err
   try {
     const { leadChannelId } = await setup({ sourceType: 'Realtor' })
-    zillowJson.Message.ContactMessage.ContactInfo.PartnerAgentIdentifier = leadChannelId
-    await Zillow.save(JSON.stringify(zillowJson))
+    
+    await Zillow.save(JSON.stringify(setLeachChannelId(leadChannelId)))
   } catch (error) {
     err = error
   }
