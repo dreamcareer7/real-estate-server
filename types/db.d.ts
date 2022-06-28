@@ -912,4 +912,6 @@ declare type TDbSqlAddress =
   | 'lead_channel/get'
   | 'lead_channel/update'
   | 'lead_channel/delete'
+  | 'lead_channel/update_counter'
+  | 'zillow_contact/upsert'
   ;

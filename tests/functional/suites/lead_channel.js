@@ -10,7 +10,7 @@ function createLeadChannel(cb) {
   }
 
   return F('Should create a lead channel')
-    .post(`/brands/${theBrand()}/lead-channel`, data)
+    .post(`/brands/${theBrand()}/leads/channels`, data)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
@@ -23,7 +23,7 @@ function createLeadChannel(cb) {
 
 function getUserLeads(cb) {
   return F('get user lead channels')
-    .get(`/brands/${theBrand()}/lead-channel`)
+    .get(`/brands/${theBrand()}/leads/channels`)
     .after((err, res, body) => {
       if (!body.data || !body.data.length) {
         throw new Error('lead channels is empty')
@@ -47,7 +47,7 @@ function updateLeadChannel(cb) {
   }
 
   return F('Should update the lead channel')
-    .put(`/brands/${theBrand()}/lead-channel/${leadChannelId}`, data)
+    .put(`/brands/${theBrand()}/leads/channels/${leadChannelId}`, data)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
@@ -67,7 +67,7 @@ function deleteLeadChannel(cb) {
   }
 
   return F('Should delete the lead channel')
-    .delete(`/brands/${theBrand()}/lead-channel/${leadChannelId}`, data)
+    .delete(`/brands/${theBrand()}/leads/channels/${leadChannelId}`, data)
     .after(cb)
     .expectStatus(204)
 }

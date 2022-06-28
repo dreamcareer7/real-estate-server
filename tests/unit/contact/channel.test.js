@@ -4,10 +4,10 @@ const BrandHelper = require('../brand/helper')
 const Context = require('../../../lib/models/Context')
 
 const LeadChannel = {
-  ...require('../../../lib/models/LeadChannel/create'),
-  ...require('../../../lib/models/LeadChannel/get'),
-  ...require('../../../lib/models/LeadChannel/delete'),
-  ...require('../../../lib/models/LeadChannel/update'),
+  ...require('../../../lib/models/Contact/lead/channel/create'),
+  ...require('../../../lib/models/Contact/lead/channel/get'),
+  ...require('../../../lib/models/Contact/lead/channel/delete'),
+  ...require('../../../lib/models/Contact/lead/channel/update'),
 }
 
 async function setup() {
