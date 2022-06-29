@@ -1,4 +1,5 @@
 const { createBrands, switchBrand } = require('../util')
+const config = require('../../../lib/config')
 const brandSetup = require('./data/lead_channel/brand')
 const F = frisby.create.bind(frisby)
 const R = () => results.lead_channel
@@ -72,6 +73,36 @@ function deleteLeadChannel(cb) {
     .expectStatus(204)
 }
 
+function zillowUnAuthorized(cb) {
+  const data = {}
+
+  return F('Should get unAuhthorized status')
+    .post('/leads/channels/zillow', data)
+    .after(cb)
+    .expectStatus(401)
+}
+
+function zillowSuccess(cb) {
+  const data = {}
+
+  return F('Should get success if basic auth is provided')
+    .post('/leads/channels/zillow', data)
+    .addHeader('Authorization', `Basic ${new Buffer(config.zillow_sns.user + ':' + config.zillow_sns.pass).toString('base64')}`)
+    .after(cb)
+    .expectStatus(200)
+}
+
+function zillowFailed(cb) {
+  const data = {}
+
+  return F('Should get success if basic auth is provided')
+    .post('/leads/channels/zillow', data)
+    .addHeader('Authorization', `Basic ${new Buffer('invalid:invalid').toString('base64')}`)
+    .after(cb)
+    .expectStatus(401)
+}
+
+
 module.exports = {
   brands: createBrands('create brands', brandSetup, (response) => response.data[0].id),
   ...switchBrand(theBrand, {
@@ -79,5 +110,8 @@ module.exports = {
     getUserLeads,
     updateLeadChannel,
     deleteLeadChannel,
+    zillowUnAuthorized,
+    zillowSuccess,
+    zillowFailed
   }),
 }
