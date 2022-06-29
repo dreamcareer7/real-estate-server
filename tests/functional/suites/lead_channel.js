@@ -95,7 +95,7 @@ function zillowSuccess(cb) {
 function zillowFailed(cb) {
   const data = {}
 
-  return F('Should get success if basic auth is provided')
+  return F('Should get unAuhthorized status with invalid credentials')
     .post('/leads/channels/zillow', data)
     .addHeader('Authorization', `Basic ${new Buffer('invalid:invalid').toString('base64')}`)
     .after(cb)
