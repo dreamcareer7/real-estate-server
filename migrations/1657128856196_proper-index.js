@@ -2,7 +2,7 @@ const db = require('../lib/utils/db')
 
 const migrations = [
   'DROP INDEX CONCURRENTLY IF EXISTS microsoft_messages_thread_key_not_deleted',
-  'CREATE INDEX CONCURRENTLY microsoft_messages_thread_key ON microsoft_messages(thread_key)',
+  'CREATE INDEX CONCURRENTLY IF NOT EXISTS microsoft_messages_thread_key ON microsoft_messages(thread_key)',
 ]
 
 
