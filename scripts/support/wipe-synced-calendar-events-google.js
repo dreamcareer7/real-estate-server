@@ -1,7 +1,7 @@
 const { runInContext } = require('../../lib/models/Context/util')
-const GoogleCredential = require('../../lib/models/Google/credential/get');
-const GoogleCalendar = require('../../lib/models/Google/calendar/get');
-const { deleteLocalCalendars } = require('../../lib/models/Google/workers/calendars/calendar');
+const GoogleCredential = require('../../lib/models/Google/credential/get')
+const GoogleCalendar = require('../../lib/models/Google/calendar/get')
+const { deleteLocalCalendars } = require('../../lib/models/Google/workers/calendars/calendar')
 
 /**
  * @param {import('commander').Command} program 

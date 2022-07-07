@@ -7,6 +7,7 @@ const MAP = `
 SELECT
     key,
     id,
+    username,
     mlsid,
     "firstName" as first_name,
     "lastName" as last_name,
@@ -32,6 +33,7 @@ SELECT
   as input(
     key TEXT,
     id TEXT,
+    username TEXT,
     mlsid TEXT,
     "firstName" TEXT,
     "lastName" TEXT,
@@ -107,7 +109,7 @@ UPDATE public.users SET
     last_name = de.users.object->>'last_name',
     profile_image_url = de.users.object->>'profile_image_url',
     cover_image_url = de.users.object->>'cover_image_url',
-    website = ('https://elliman.com/' || (de.users.object->>'id')),
+    website = ('https://elliman.com/' || (de.users.object->>'username')),
     linkedin = de.users.object->>'linkedin',
     facebook = de.users.object->>'facebook',
     youtube = de.users.object->>'youtube',

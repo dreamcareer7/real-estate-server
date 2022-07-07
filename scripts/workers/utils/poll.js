@@ -80,28 +80,33 @@ const poll = ({ fn, name, wait = 5000 }) => {
 
     const id = `process-${process.pid}-${name}-${++i}`
 
-    const ctxRes = await createContext({ id })
+    try {
+      const ctxRes = await createContext({ id })
 
-    await ctxRes.run(async () => {
-      /** @param {string[]} tags */
-      const report_time = (tags) => {
-        const time_spent = Number((process.hrtime.bigint() - start) / 1000000n)
-        Metric.histogram('Poll', time_spent / 1000, tags)
-      }
-      const start = process.hrtime.bigint()
+      await ctxRes.run(async () => {
+        /** @param {string[]} tags */
+        const report_time = (tags) => {
+          const time_spent = Number((process.hrtime.bigint() - start) / 1000000n)
+          Metric.histogram('Poll', time_spent / 1000, tags)
+        }
+        const start = process.hrtime.bigint()
 
-      try {
-        await execute(ctxRes)
-        report_time(['result:success', name, `name:${name}`])
-      } catch (ex) {
-        report_time(['result:fail', name, `name:${name}`])
-        Context.error(ex)
-        Slack.send({
-          channel: '7-server-errors',
-          text: `Poller error (${name}): Error while creating context!\n\`${ex}\``
-        })
-      }
-    })
+        try {
+          await execute(ctxRes)
+          report_time(['result:success', name, `name:${name}`])
+        } catch (ex) {
+          report_time(['result:fail', name, `name:${name}`])
+          Context.error(ex)
+          Slack.send({
+            channel: '7-server-errors',
+            text: `Poller error (${name}): Error while creating context!\n\`${ex}\``
+          })
+        }
+      })
+    } catch(e) {
+      Context.log('Failed to run poller. Trying again in', wait, e)
+      polling_timeouts.set(name, setTimeout(again, wait))
+    }
 
     if (shutting_down) {
       Context.log('Pollers: shutdown completed')
