@@ -8,7 +8,7 @@ const { deleteLocalCalendars } = require('../../lib/models/Google/workers/calend
  */
 async function main(program) {
   const options = program.opts()
-  const cred = await GoogleCredential.get(options.credential);
+  const cred = await GoogleCredential.get(options.credential)
   const calendars = await GoogleCalendar.getAllByGoogleCredential(cred.id)
   console.log(calendars.map(c => c.id))
 
