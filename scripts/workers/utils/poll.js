@@ -24,11 +24,11 @@ async function shutdown() {
 }
 
 const poll = ({ fn, name, wait = 5000 }) => {
-  /* If in 15m, sum of polls count are below or above of what their pattern was in the past hour, 
+  /* If in 30m, sum of polls count are below or above of what their pattern was in the past hour,
   then trigger alert. */
   Metric.monitor({
     name,
-    query: `avg(last_1h):anomalies(avg:Poll.count{${_.toLower(name)}}.as_count(), 'agile', 2, direction='both', interval=60, alert_window='last_15m', seasonality='hourly', timezone='utc', count_default_zero='true') >= 1`,
+    query: `avg(last_1h):anomalies(avg:Poll.count{${_.toLower(name)}}.as_count(), 'agile', 2, direction='below', interval=60, alert_window='last_30m', seasonality='hourly', timezone='utc', count_default_zero='true') >= 1`,
     type: 'query alert',
     message: '@slack-9-operation',
     tags: ['POLLER']
