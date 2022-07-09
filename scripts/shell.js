@@ -1,6 +1,6 @@
 const { program } = require('commander')
 const path = require('path')
-const repl = require('repl')
+const repl = require('node:repl')
 
 /**
  * @typedef ShellOptions
@@ -98,10 +98,16 @@ db.conn(async (err, client) => {
     process.exit(1)
   }
 
-  const r = repl.start({
+  /** @type {repl.REPLServer} */
+  const r = new repl.REPLServer({
     prompt: 'Rechat Shell> ',
     replMode: repl.REPL_MODE_STRICT,
     domain: context.domain
+  })
+  r.setupHistory(path.resolve(__dirname, '.shell.history'), (err, rs) => {
+    if (err) {
+      console.error(err)
+    }
   })
 
   r.on('exit', cleanup)
@@ -131,6 +137,8 @@ db.conn(async (err, client) => {
     context.log(`Active brand set to ${brand.name}`)
     context.set({ brand })
   }
+
+  r.displayPrompt()
 })
 
 

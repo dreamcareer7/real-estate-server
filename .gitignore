@@ -27,3 +27,4 @@ tests/temp/*
 .env*
 out
 postgres
+scripts/.shell.history
