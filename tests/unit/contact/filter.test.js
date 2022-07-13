@@ -103,7 +103,7 @@ async function testFFQuery(q, expected_length) {
   return filter_res
 }
 async function testFQuery(q, expected_length) {
-  const filter_res = await Contact.filter(brand.id, [], { q, order: 'display_name' })
+  const filter_res = await Contact.filter(brand.id, user.id, [], { q, order: 'display_name' })
   expect(filter_res.total).to.equal(expected_length)
   return filter_res
 }
@@ -173,7 +173,7 @@ async function testAlphabeticalFilter() {
     expect(filter_res.total).to.equal(expected_length)
   }
   async function testFilter(alphabet, expected_length) {
-    const filter_res = await Contact.filter(brand.id, [], { alphabet })
+    const filter_res = await Contact.filter(brand.id, user.id, [], { alphabet })
     expect(filter_res.total).to.equal(expected_length)
   }
 
@@ -236,7 +236,7 @@ async function testCrmAssociationFilter() {
    * @param {number} expected_length 
    */
   async function testFilter(crm_tasks, expected_length, filter_type = 'and') {
-    const filter_res = await Contact.filter(brand.id, [], { crm_tasks, filter_type })
+    const filter_res = await Contact.filter(brand.id, user.id, [], { crm_tasks, filter_type })
     expect(filter_res.total).to.equal(expected_length)
   }
 

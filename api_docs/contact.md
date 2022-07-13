@@ -255,3 +255,6 @@ CSV               |
 
 ### Delete an attribute definition [DELETE /contacts/attribute_defs/:id]
 <!-- include(tests/contact_attribute_def/remove.md) -->
+
+### Assign contact (lead) assignees [PUT /contacts/:id/assignees]
+<!-- include(tests/contact_role/assign.md) -->
