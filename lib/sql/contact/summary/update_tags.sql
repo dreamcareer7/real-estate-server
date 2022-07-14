@@ -32,7 +32,8 @@ EXPLAIN ANALYZE WITH ctags AS MATERIALIZED (
   UPDATE
     contacts
   SET
-    tag = NULL
+    tag = NULL,
+    tag_searchable = NULL
   FROM
     no_tags
   WHERE
@@ -42,7 +43,8 @@ EXPLAIN ANALYZE WITH ctags AS MATERIALIZED (
 UPDATE
   contacts
 SET
-  tag = c.tag
+  tag = c.tag,
+  tag_searchable = lower(c.tag::text)::text[]
 FROM
   ctags AS c
 WHERE
