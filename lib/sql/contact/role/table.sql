@@ -3,7 +3,7 @@ CREATE TYPE contact_role AS ENUM (
   'assignee'
 );
 
-CREATE TABLE contacts_roles (
+CREATE TABLE contact_roles (
   id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
   brand uuid NOT NULL REFERENCES brands(id),
   contact uuid NOT NULL REFERENCES contacts(id),

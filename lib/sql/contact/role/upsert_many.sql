@@ -3,7 +3,7 @@
 -- $3: created_by: uuid
 -- $4: json: { brand: uuid, user: uuid }[]
 
-INSERT INTO contacts_roles (
+INSERT INTO contact_roles (
   contact,
   role,
   created_by,
