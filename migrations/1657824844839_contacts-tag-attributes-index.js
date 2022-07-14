@@ -1,9 +1,7 @@
 const db = require('../lib/utils/db')
 
 const migrations = [
-  'BEGIN',
   'CREATE INDEX CONCURRENTLY IF NOT EXISTS contacts_attributes_tag_contact_idx ON contacts_attributes_text (contact) WHERE attribute_type = \'tag\' AND deleted_at IS NULL',
-  'COMMIT'
 ]
 
 
