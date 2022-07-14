@@ -8,7 +8,6 @@ const {
   createBrands,
   switchBrand,
   runAsUser,
-  runAsUauthorized,
 } = require('../util')
 
 const data = (function () {
