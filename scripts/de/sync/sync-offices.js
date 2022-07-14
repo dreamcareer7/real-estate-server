@@ -93,12 +93,8 @@ WITH data AS (
  JOIN de.offices ON input.id = de.offices.id
 )
 UPDATE brand_settings SET
-  address = JSON_TO_STDADDR(data.address),
-  marketing_palette =  JSON_TO_MARKETING_PALETTE(
-    COALESCE(MARKETING_PALETTE_TO_JSON(null::marketing_palette)::jsonb, '{}'::jsonb)
-      ||
-    JSON_BUILD_OBJECT('phone_number', data.phone_number)::jsonb
-  )
+  marketing_palette.phone_number = data.phone_number,
+  marketing_palette.address = JSON_TO_STDADDR(data.address)
 FROM data
 WHERE brand_settings.brand = data.brand`
 
