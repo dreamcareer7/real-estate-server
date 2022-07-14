@@ -10,7 +10,7 @@ SELECT
   cr.deleted_at,
   cr.created_by
 FROM
-  contact_roles AS cr
+  contacts_roles AS cr
   JOIN unnest($1::uuid[]) WITH ORDINALITY inp(id, ord)
     ON cr.id = inp.id
 ORDER BY

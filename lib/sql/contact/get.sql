@@ -139,7 +139,7 @@ SELECT
     SELECT
       array_agg(cr.id)
     FROM
-      contact_roles AS cr
+      contacts_roles AS cr
     WHERE
       'contact.assignees' = ANY($3::text[]) AND
       cr.deleted_at IS NULL AND

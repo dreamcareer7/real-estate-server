@@ -1,6 +1,6 @@
 -- $1: uuid[]
 
-UPDATE contact_roles SET
+UPDATE contacts_roles SET
   deleted_at = now()
 WHERE
   deleted_at IS NULL AND
