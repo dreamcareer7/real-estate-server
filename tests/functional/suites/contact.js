@@ -726,10 +726,10 @@ function moveContactToWarmListStage(cb) {
     .expectStatus(200)
 }
 
-function patchOwner(cb) {
+function changeOwner(cb) {
   return frisby
     .create('change contact owner')
-    .patch('/contacts/' + results.contact.create.data[0].id, {
+    .put('/contacts/' + results.contact.create.data[0].id + '/owner', {
       user: results.authorize.token.data.id
     })
     .after(cb)
@@ -1255,7 +1255,7 @@ module.exports = {
   areEmailsLowered,
   updateAttribute,
   updateContact,
-  patchOwner,
+  changeOwner,
   moveContactToWarmListStage,
   contactShouldBeInWarmList,
   deleteWarmList,

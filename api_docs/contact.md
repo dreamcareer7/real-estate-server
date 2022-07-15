@@ -73,6 +73,9 @@ Updates a single contact and its attributes. If attributes have `id`, they are u
 
 <!-- include(tests/contact/updateContact.md) -->
 
+### Update owner of a contact [PUT /contact/:id/owner]
+<!-- include(tests/contact/changeOwner.md) -->
+
 ### Deleting a contact [DELETE /contacts/:id]
 <!-- include(tests/contact/deleteContact.md) -->
 
