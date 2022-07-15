@@ -138,7 +138,7 @@ async function testMergeWithSameEmails() {
 
   Orm.setEnabledAssociations(['contact.attributes'])
 
-  const contacts = await Contact.getForBrand(brand.id, [], {})
+  const contacts = await Contact.getForBrand(brand.id, user.id, [], {})
   expect(contacts).to.have.length(1)
 
   const populated = await Orm.populate({

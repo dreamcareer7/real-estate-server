@@ -209,7 +209,7 @@ async function testImportFromJson() {
 
   await handleJobs()
 
-  const contacts = await Contact.getForBrand(brand.id, [], {})
+  const contacts = await Contact.getForBrand(brand.id, user.id, [], {})
   expect(contacts).to.have.length(3)
 }
 
