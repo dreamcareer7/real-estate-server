@@ -3,12 +3,16 @@ const db = require('../lib/utils/db')
 const migrations = [
   'BEGIN',
 
+  /* This view is not related to lead assignment. However, it's not used
+   * anywhere in the project, so it's safe to drop */
+  'DROP VIEW IF EXISTS contacts_roles',
+
   `CREATE TYPE contact_role AS ENUM (
      'owner',
      'assignee'
    )`,
 
-  `CREATE TABLE contact_roles (
+  `CREATE TABLE contacts_roles (
      id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
      brand uuid NOT NULL REFERENCES brands(id),
      contact uuid NOT NULL REFERENCES contacts(id),
@@ -36,16 +40,14 @@ const migrations = [
      LANGUAGE sql
      IMMUTABLE AS $$
        SELECT contact.brand = curr_brand OR (
-         curr_user IS NOT NULL AND (
-           contact."user" = curr_user OR EXISTS(
+         curr_user IS NOT NULL AND EXISTS(
              SELECT 1
-             FROM contact_roles AS cr
+             FROM contacts_roles AS cr
              WHERE
                cr.brand = curr_brand AND
                cr."user" = curr_user AND
                deleted_at IS NULL AND
                role IN ('assignee', 'owner')
-           )
          )
        )
      $$`,
@@ -58,16 +60,14 @@ const migrations = [
      LANGUAGE sql
      IMMUTABLE AS $$
        SELECT contact.brand = curr_brand OR (
-         curr_user IS NOT NULL AND (
-           contact."user" = curr_user OR EXISTS(
+         curr_user IS NOT NULL AND EXISTS(
              SELECT 1
-             FROM contact_roles AS cr
+             FROM contacts_roles AS cr
              WHERE
                cr.brand = curr_brand AND
                cr."user" = curr_user AND
                deleted_at IS NULL AND
                role IN ('assignee', 'owner')
-           )
          )
        )
      $$`,
@@ -340,7 +340,7 @@ const migrations = [
        WHERE
          id = parent;
 
-       INSERT INTO contact_roles (
+       INSERT INTO contacts_roles (
          contact,
          role,
          created_by,
@@ -354,7 +354,7 @@ const migrations = [
          cr.brand,
          cr."user"
        FROM unnest(children) AS child_id
-       JOIN contact_roles AS cr ON cr.contact = child_id
+       JOIN contacts_roles AS cr ON cr.contact = child_id
        WHERE cr.deleted_at IS NULL
        ON CONFLICT DO NOTHING;
 
