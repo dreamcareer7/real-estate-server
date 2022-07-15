@@ -170,7 +170,7 @@ async function testRenameTag() {
   }
 
   async function checkFastFilter() {
-    const { total } = await Contact.fastFilter(brand.id, [{
+    const { total } = await Contact.fastFilter(brand.id, user.id, [{
       attribute_type: 'tag',
       value: 'Tag0'
     }], {})
@@ -272,7 +272,7 @@ async function testDeleteTag() {
   }
 
   async function checkFastFilter() {
-    const { total } = await Contact.fastFilter(brand.id, [{
+    const { total } = await Contact.fastFilter(brand.id, user.id, [{
       attribute_type: 'tag',
       value: 'Tag2'
     }], {})
