@@ -266,7 +266,7 @@ async function testFTSEscape() {
 
 async function testMixedFilter() {
   await (async function () {
-    const filter_res = await mixedFilter(brand.id, [{
+    const filter_res = await mixedFilter(brand.id, user.id, [{
       attribute_type: 'tag',
       value: 'Tag3'
     }, {
@@ -277,7 +277,7 @@ async function testMixedFilter() {
   })()
 
   await (async function () {
-    const filter_res = await mixedFilter(brand.id, [{
+    const filter_res = await mixedFilter(brand.id, user.id, [{
       attribute_type: 'tag',
       value: 'Tag3'
     }], {})
