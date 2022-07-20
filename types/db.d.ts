@@ -342,6 +342,7 @@ declare type TDbSqlAddress =
   | 'email/campaign/update-stats'
   | 'email/campaign/update'
   | 'email/campaign/used_quota'
+  | 'email/campaign/update_recipients_count'
   | 'email/clear_body'
   | 'email/event/get'
   | 'email/event/mailgun_add'

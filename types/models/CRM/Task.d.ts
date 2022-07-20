@@ -119,6 +119,7 @@ declare interface ITaskFilters extends IAssociationFilters {
   q?: string
   title?: string
   assignee?: UUID
+  assignees?: UUID[]
   created_by?: UUID
   updated_by?: UUID
   brand?: UUID
