@@ -124,6 +124,9 @@ describe('Contact', () => {
     assigneeBrand = await brandHelper.create({
       roles: { Admin: [assigneeId, assigneeSibId] },
       parent: adminBrand.id,
+      checklists: [],
+      contexts: [],
+      templates: [],
     })
 
     await testHelper.handleJobs()
