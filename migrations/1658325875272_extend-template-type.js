@@ -5,13 +5,13 @@ const migrations = [
   ADD VALUE 'JuneTeenth'`,
 
   `ALTER TYPE template_type
-  ADD VALUE 'Summer'`,
+  ADD VALUE 'FirstDayOfSummer'`,
 
   `ALTER TYPE template_type
   ADD VALUE 'Pride'`,
 
   `ALTER TYPE template_type
-  ADD VALUE ' AsianAmericanAndPacificIslanderHeritageMonth'`,
+  ADD VALUE 'AsianAmericanAndPacificIslanderHeritageMonth'`,
 
   `ALTER TYPE template_type
   ADD VALUE 'BlackHistoryMonth'`,
@@ -20,19 +20,19 @@ const migrations = [
   ADD VALUE 'EarthDay'`,
 
   `ALTER TYPE template_type
-  ADD VALUE 'Spring'`,
+  ADD VALUE 'FirstDayOfSpring'`,
 
   `ALTER TYPE template_type
   ADD VALUE 'CincoDeMayo'`,
 
   `ALTER TYPE template_type
-  ADD VALUE 'Fall'`,
+  ADD VALUE 'FirstDayOfFall'`,
   
   `ALTER TYPE template_type
-  ADD VALUE 'Winter'`,
+  ADD VALUE 'FirstDayOfWinter'`,
 
   `ALTER TYPE template_type
-  ADD VALUE ' YomKippur'`,
+  ADD VALUE 'YomKippur'`,
 
 ]
 
