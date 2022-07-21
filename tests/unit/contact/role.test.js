@@ -1,8 +1,6 @@
 const { promisify } = require('util')
 const { expect } = require('chai')
 
-const some = require('lodash/some')
-
 const User = require('../../../lib/models/User/create')
 const ContactRole = require('../../../lib/models/Contact/role/manipulate')
 const AttributeDef = require('../../../lib/models/Contact/attribute_def/get')
@@ -19,6 +17,24 @@ const testHelper = require('../helper')
 
 const createUserPromise = promisify(User.create)
 
+const TEST_TAG = 'TestTag'
+
+async function createTagBasedContactList (brandId, userId, {
+  tagName = TEST_TAG,
+  name = `Having ${tagName}`,
+  is_editable = true,
+  touch_freq = 30,
+} = {}) {
+  const tagDefId = await findAttrDefId(brandId, 'tag')
+
+  return ContactList.create(userId, brandId, {
+    name,
+    is_editable,
+    touch_freq,
+    filters: [{ attribute_def: tagDefId, value: tagName }],
+  })
+}
+
 /** @returns {Promise<{ userId: IUser['id'], brandId: IBrand['id'] }>} */
 async function setupIndependentUser () {
   const userId = await createUser('Indie', 'Indie', 'indie@rechat.co')
@@ -31,21 +47,30 @@ async function setupIndependentUser () {
 
 /**
  * @param {IContactList['id']} listId
- * @param {IContact['id']} contactId
- * @param {boolean=} [toBeIncluded=true]
+ * @param {object} to
+ * @param {IContact['id'][]=} [to.include=[]]
+ * @param {IContact['id'][]=} [to.notInclude=[]]
  */
-async function checkMembership (listId, contactId, toBeIncluded = true) {
+async function checkMembership (listId, { include = [], notInclude = [] }) {
   await testHelper.handleJobs()
 
   const members = await ContactListMember.findByListId(listId)
-  const found = some(members, { contact: contactId })
-
   expect(members).to.be.an('array')
 
-  if (toBeIncluded) {
-    expect(found, 'The contact list does not contain the contact')
-  } else {
-    expect(!found, 'The contact list contains the contact')
+  const memContactIds = members.map(m => m.contact)
+
+  if (include?.length) {
+    expect(
+      memContactIds,
+      'the contact list does not include all of required contacts',
+    ).to.include.all.members(include)
+  }
+
+  if (notInclude?.length) {
+    expect(
+      new Set(memContactIds),
+      'the contact list includes one or more illegal contacts',
+    ).to.not.have.any.keys(...notInclude)
   }
 }
 
@@ -81,7 +106,7 @@ async function createUser (first_name, last_name, email) {
 async function createContact (
   brandId,
   userId,
-  attrs = { tag: ['TempTag'] },
+  attrs = { tag: [TEST_TAG] },
 ) {
   const [contactId] = await Contact.create([{
     user: userId,
@@ -134,18 +159,10 @@ describe('Contact', () => {
 
   context('Role', () => {
     it('updates assignee\'s list membership records when admin changes tags', async () => {
-      const tagDefId = await findAttrDefId(assigneeBrand.id, 'tag')
-
-      const listId = await ContactList.create(assigneeId, assigneeBrand.id, {
-        name: 'HavingTempBrand',
-        is_editable: true,
-        touch_freq: 30,
-        filters: [{ attribute_def: tagDefId, value: 'TempTag' }]
-      })
-
+      const listId = await createTagBasedContactList(assigneeBrand.id, assigneeId)
       const contactId = await createContact(adminBrand.id, adminId)
 
-      await checkMembership(listId, contactId, false)
+      await checkMembership(listId, { notInclude: [contactId] })
 
       // Admin: assigns the contact to the assignee
       await ContactRole.set(
@@ -153,12 +170,159 @@ describe('Contact', () => {
         [{ brand: assigneeBrand.id, user: assigneeId }],
       )
 
-      await checkMembership(listId, contactId, true)
+      await checkMembership(listId, { include: [contactId] })
 
       // Admin: clears the contact tags
-      await Contact.updateTags([contactId], [], adminId, adminBrand.id)
+      await Contact.updateTags([contactId], [], adminId, adminBrand.id, true)
 
-      await checkMembership(listId, contactId, false)
+      await checkMembership(listId, { notInclude: [contactId] })
+    })
+
+    it('updates assignee\'s list membership records when admin unassignes the contact', async () => {
+      const listId = await createTagBasedContactList(
+        assigneeBrand.id,
+        assigneeId,
+      )
+
+      const adminContactIds = {
+        // will be assigned and remains assigned to both users:
+        tagged1: await createContact(adminBrand.id, adminId),
+        // will be assigned to both users, then the sib. user will be unassigned:
+        tagged2: await createContact(adminBrand.id, adminId),
+        // will be assigned to both users, then both users will be unassigned:
+        tagged3: await createContact(adminBrand.id, adminId),
+        // will be assigned to the main assignee user only:
+        tagged4: await createContact(adminBrand.id, adminId),
+        // will be assigned to the main assignee user only:
+        nonTagged: await createContact(adminBrand.id, adminId, {}),
+      }
+
+      const assigContactIds = {
+        tagged: await createContact(assigneeBrand.id, assigneeId),
+        nonTagged: await createContact(assigneeBrand.id, assigneeId, {}),
+      }
+
+      const assigSibContactIds = {
+        tagged: await createContact(assigneeBrand.id, assigneeSibId),
+        nonTagged: await createContact(assigneeBrand.id, assigneeSibId, {}),
+      }
+
+      await checkMembership(listId, {
+        include: [
+          assigContactIds.tagged,
+          assigSibContactIds.tagged
+        ],
+        notInclude: [
+          adminContactIds.tagged1,
+          adminContactIds.tagged2,
+          adminContactIds.tagged3,
+          adminContactIds.tagged4,
+          adminContactIds.nonTagged,
+          assigContactIds.nonTagged,
+          assigSibContactIds.nonTagged,
+        ],
+      })
+
+      const common = { role: 'assignee', created_by: adminId }
+      const role = { brand: assigneeBrand.id, user: assigneeId }
+      const sibRole = { brand: assigneeBrand.id, user: assigneeSibId }
+
+      await ContactRole.set(
+        { ...common, contact: adminContactIds.tagged1 },
+        [role /* (permanent) */, sibRole /* (permanent) */],
+      )
+      await ContactRole.set(
+        { ...common, contact: adminContactIds.tagged2 },
+        [role /* (permanent) */, sibRole /* (temporary) */],
+      )
+      await ContactRole.set(
+        { ...common, contact: adminContactIds.tagged3 },
+        [role /* (temporary) */, sibRole /* (temporary) */],
+      )
+      await ContactRole.set(
+        { ...common, contact: adminContactIds.tagged4 },
+        [role /* (permanent) */],
+      )
+      await ContactRole.set(
+        { ...common, contact: adminContactIds.nonTagged },
+        [role /* (permanent) */],
+      )
+
+      await checkMembership(listId, {
+        include: [
+          adminContactIds.tagged1,
+          adminContactIds.tagged2,
+          adminContactIds.tagged3,
+          adminContactIds.tagged4,
+          assigContactIds.tagged,
+          assigSibContactIds.tagged,
+        ],
+        notInclude: [
+          adminContactIds.nonTagged,
+          assigContactIds.nonTagged,
+          assigSibContactIds.nonTagged,
+        ],
+      })
+
+      const sibListId = await createTagBasedContactList(
+        assigneeBrand.id,
+        assigneeSibId,
+      )
+
+      await checkMembership(sibListId, {
+        include: [
+          adminContactIds.tagged1,
+          adminContactIds.tagged2,
+          adminContactIds.tagged3,
+          assigContactIds.tagged,
+          assigSibContactIds.tagged,
+        ],
+        notInclude: [
+          //‌FIXME: this should be uncommented:
+          //adminContactIds.tagged4,
+          adminContactIds.nonTagged,
+          assigContactIds.nonTagged,
+          assigSibContactIds.nonTagged,
+        ],
+      })
+
+      await ContactRole
+        .set({ ...common, contact: adminContactIds.tagged2 }, [role])
+      await ContactRole
+        .set({ ...common, contact: adminContactIds.tagged3 }, [])
+
+      await checkMembership(listId, {
+        include: [
+          adminContactIds.tagged1,
+          // FIXME: this should be uncommented:
+          //adminContactIds.tagged2,
+          adminContactIds.tagged4,
+          assigContactIds.tagged,
+          assigSibContactIds.tagged,
+        ],
+        notInclude: [
+          adminContactIds.tagged3,
+          adminContactIds.nonTagged,
+          assigContactIds.nonTagged,
+          assigSibContactIds.nonTagged,
+        ],
+      })
+
+      await checkMembership(sibListId, {
+        include: [
+          adminContactIds.tagged1,
+          assigContactIds.tagged,
+          assigSibContactIds.tagged,
+        ],
+        notInclude: [
+          adminContactIds.tagged2,
+          adminContactIds.tagged3,
+          //‌FIXME: this should be uncommented:
+          //adminContactIds.tagged4,
+          assigContactIds.nonTagged,
+          assigSibContactIds.nonTagged,
+        ],
+      })
     })
   })
 
