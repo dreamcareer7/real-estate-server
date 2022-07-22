@@ -4,7 +4,7 @@ const { keyBy } = require('lodash')
 const db = require('../lib/utils/db')
 
 const migrations = ['BEGIN']
-// seasons calendar https://www.calendardate.com/year2022.php
+
 const rules = [
   {
     template_type: 'JuneTeenth',
@@ -44,144 +44,25 @@ const rules = [
   {
     template_type: 'FirstDayOfSpring',
     name: 'First Day of Spring',
-    rule: '2022-03-20',
-  },
-  {
-    template_type: 'FirstDayOfSpring',
-    name: 'First Day of Spring',
-    rule: '2023-03-20',
-  },
-  {
-    template_type: 'FirstDayOfSpring',
-    name: 'First Day of Spring',
-    rule: '2024-03-19',
-  },
-  {
-    template_type: 'FirstDayOfSpring',
-    name: 'First Day of Spring',
-    rule: '2025-03-20',
-  },
-  {
-    template_type: 'FirstDayOfSpring',
-    name: 'First Day of Spring',
-    rule: '2026-03-20',
-  },
-  {
-    template_type: 'FirstDayOfSpring',
-    name: 'First Day of Spring',
-    rule: '2027-03-20',
-  },
-  {
-    template_type: 'FirstDayOfSpring',
-    name: 'First Day of Spring',
-    rule: '2028-03-20',
-  },
-  {
-    template_type: 'FirstDayOfSpring',
-    name: 'First Day of Spring',
-    rule: '2029-03-20',
-  },
-  {
-    template_type: 'FirstDayOfSpring',
-    name: 'First Day of Spring',
-    rule: '2030-03-20',
+    rule: 'march equinox',
   },
   {
     template_type: 'FirstDayOfSummer',
     name: 'First Day of Summer',
-    rule: '2022-06-21',
-  },
-  {
-    template_type: 'FirstDayOfSummer',
-    name: 'First Day of Summer',
-    rule: '2023-06-21',
-  },
-  {
-    template_type: 'FirstDayOfSummer',
-    name: 'First Day of Summer',
-    rule: '2024-06-20',
-  },
-  {
-    template_type: 'FirstDayOfSummer',
-    name: 'First Day of Summer',
-    rule: '2025-06-20',
-  },
-  {
-    template_type: 'FirstDayOfSummer',
-    name: 'First Day of Summer',
-    rule: '2026-06-20',
-  },
-  {
-    template_type: 'FirstDayOfSummer',
-    name: 'First Day of Summer',
-    rule: '2027-06-20',
-  },
-  {
-    template_type: 'FirstDayOfSummer',
-    name: 'First Day of Summer',
-    rule: '2028-06-20',
-  },
-  {
-    template_type: 'FirstDayOfSummer',
-    name: 'First Day of Summer',
-    rule: '2029-06-20',
-  },
-  {
-    template_type: 'FirstDayOfSummer',
-    name: 'First Day of Summer',
-    rule: '2030-06-20',
+    rule: 'june solstice',
   },
   {
     template_type: 'FirstDayOfFall',
     name: 'First Day of Fall',
-    rule: '2022-09-22',
-  },
-  {
-    template_type: 'FirstDayOfFall',
-    name: 'First Day of Fall',
-    rule: '2023-09-23',
-  },
-  {
-    template_type: 'FirstDayOfFall',
-    name: 'First Day of Fall',
-    rule: '2024-09-22',
-  },
-  {
-    template_type: 'FirstDayOfFall',
-    name: 'First Day of Fall',
-    rule: '2025-09-22',
-  },
-  {
-    template_type: 'FirstDayOfFall',
-    name: 'First Day of Fall',
-    rule: '2026-09-22',
-  },
-  {
-    template_type: 'FirstDayOfFall',
-    name: 'First Day of Fall',
-    rule: '2027-09-22',
-  },
-  {
-    template_type: 'FirstDayOfFall',
-    name: 'First Day of Fall',
-    rule: '2028-09-22',
-  },
-  {
-    template_type: 'FirstDayOfFall',
-    name: 'First Day of Fall',
-    rule: '2029-09-22',
-  },
-  {
-    template_type: 'FirstDayOfFall',
-    name: 'First Day of Fall',
-    rule: '2030-09-22',
+    rule: 'september equinox',
   },
   {
     template_type: 'FirstDayOfWinter',
     name: 'First Day of Winter',
-    rule: '12-21',
+    rule: 'december solstice',
   },
 ]
+
 const load = async () => {
   const holidays = new Holidays()
 
