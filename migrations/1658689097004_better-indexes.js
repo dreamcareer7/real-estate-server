@@ -1,14 +1,11 @@
 const db = require('../lib/utils/db')
 
 const migrations = [
-  'BEGIN',
   'DROP INDEX CONCURRENTLY agents_phones_agent',
   'DROP INDEX CONCURRENTLY agents_emails_agent',
 
   'CREATE INDEX CONCURRENTLY agents_phones_agent ON agents_phones(mui, mls, phone)',
-  'CREATE INDEX CONCURRENTLY agents_emails_agent ON agents_emails(mui, mls, email)',
-
-  'COMMIT'
+  'CREATE INDEX CONCURRENTLY agents_emails_agent ON agents_emails(mui, mls, email)'
 ]
 
 
