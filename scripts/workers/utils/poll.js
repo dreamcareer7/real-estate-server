@@ -28,7 +28,7 @@ const poll = ({ fn, name, wait = 5000 }) => {
   then trigger alert. */
   Metric.monitor({
     name,
-    query: `avg(last_1h):anomalies(avg:Poll.count{${_.toLower(name)}}.as_count(), 'agile', 3, direction='below', interval=600, alert_window='last_15m', seasonality='daily', timezone='utc', count_default_zero='true') >= 1`,
+    query: `avg(last_12h):anomalies(avg:Poll.count{${_.toLower(name)}}.as_count(), 'robust', 5, direction='below', interval=120, alert_window='last_15m', seasonality='daily', timezone='utc', count_default_zero='true') >= 1`,
     type: 'query alert',
     message: '@slack-9-operation',
     tags: ['POLLER']

@@ -9,6 +9,7 @@ const _ = require('lodash')
 const fs = require('fs')
 
 const MLSJob = require('../../../lib/models/MLSJob')
+const Context = require('../../../lib/models/Context')
 
 const syncRegions = require('./sync-regions')
 const syncOffices = require('./sync-offices')
@@ -127,11 +128,15 @@ const sync = async () => {
   const token = await getToken()
   const { users, regions, offices } = await getData(token)
 
-  await getRoot() // Ensure root exists
-  await syncRegions(regions)
-  await syncUsers(users)
-  await syncOffices(offices)
-  await syncAgents(users)
+  try {
+    await getRoot() // Ensure root exists
+    await syncRegions(regions)
+    await syncUsers(users)
+    await syncOffices(offices)
+    await syncAgents(users)
+  } catch(e) {
+    Context.log('Error syncing users', e)
+  }
 
   await promisify(MLSJob.insert)({
     name: 'de_users'
