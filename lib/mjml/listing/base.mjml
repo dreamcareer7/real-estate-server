@@ -1,0 +1,111 @@
+<mjml>
+  <mj-head>
+    <mj-font name="Roboto" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap"></mj-font>
+    <mj-font name="Cormorant" href="https://fonts.googleapis.com/css2?family=Cormorant:wght@300;400;700&display=swap"></mj-font>
+    <mj-style>
+      .footerLink.border,
+      .footerImage.border {
+        border-right: 1px solid #C2A99D;
+      }
+
+      .logo {
+        width: auto;
+        height: 36px;
+      }
+
+      .circle div {
+        border: 1px solid;
+        border-radius: 100%;
+        width: 38px;
+        height: 38px;
+        line-height: 38px !important;
+      }  
+
+      @media (max-width:480px) {
+
+        .footerLink,
+        .footerImage.border {
+          border-right: none !important;
+        }
+
+        .footerLink a {
+          font-size: 10px !important;
+        }
+
+        .copyRight div {
+          font-size: 12px !important;
+        }
+      }
+    </mj-style>
+  </mj-head>
+  <mj-body background-color="#F5F5F5">
+    <mj-section>
+      <mj-column padding="25px 0px 20px 0px">
+        <mj-text align="center" padding="0px">
+          <img class="logo" src="{{ logoSrc }}" alt="{{ brandName }} Logo">
+        </mj-text>
+      </mj-column>
+    </mj-section>
+    {% block content %}{% endblock %}
+
+    <mj-section background-color="#F5F5F5" padding="4px">
+    </mj-section>
+    <mj-section>
+      <mj-column>
+        <mj-image css-class="footerImage border" width="230px" align="center" src="https://assets.rechat.com/devise icon.png" />
+      </mj-column>
+      <mj-column>
+        <mj-image width="114px" align="center" src="https://assets.rechat.com/google-play.png" href="https://play.google.com/store/apps/details?id=com.rechat.mobile&hl=en&gl=US" />
+        <mj-image width="114px" align="center" src="https://assets.rechat.com/app-store.png" href="https://apps.apple.com/us/app/rechat/id974093560" />
+      </mj-column>
+    </mj-section>
+
+    <mj-section padding="0px">
+      <mj-column>
+        <mj-text align="center" font-family="Roboto" font-size="18px" font-weight="700" color="#a6a6a6">
+          Powered by
+          <span style="color:#0F3057">rechat</span>
+          <span style="color:#008891" font-size="32px">.</span>
+        </mj-text>
+
+        <mj-text padding-bottom="0px" css-class="copyRight" align="center" font-family="Roboto" font-size="14px" color="#00172B">
+          Rechat ® 2022, All Rights Reserved. MLS ® Terms
+        </mj-text>
+
+      </mj-column>
+    </mj-section>
+
+    <mj-section>
+      <mj-group>
+        <mj-column>
+          <mj-text css-class="footerLink border" padding="0px" align="center" font-family="Roboto" font-size="14px" color="#00172B">
+            <a style="text-decoration: none; color: inherit" href="https://rechat.com/privacy-policy/">
+              Privacy Policy
+            </a>
+          </mj-text>
+        </mj-column>
+        <mj-column>
+          <mj-text css-class="footerLink border" padding="0px" align="center" font-family="Roboto" font-size="14px" color="#00172B">
+            <a style="text-decoration: none; color: inherit" href="https://rechat.com/terms-of-service/">
+              Terms & Conditions
+            </a>
+          </mj-text>
+        </mj-column>
+        <mj-column>
+          <mj-text css-class="footerLink border" padding="0px" align="center" font-family="Roboto" font-size="14px" color="#00172B">
+            <a style="text-decoration: none; color: inherit" href="mailto: support@rehcat.com">
+              Support Account
+            </a>
+          </mj-text>
+        </mj-column>
+        <mj-column>
+          <mj-text css-class="footerLink" padding="0px" align="center" font-family="Roboto" font-size="14px" color="#00172B">
+            <a style="text-decoration: none; color: inherit" href="%tag_unsubscribe_url%">
+              Unsubscribe
+            </a>
+          </mj-text>
+        </mj-column>
+      </mj-group>
+    </mj-section>
+  </mj-body>
+</mjml>
