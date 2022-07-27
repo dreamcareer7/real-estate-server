@@ -79,7 +79,7 @@ const setLeachChannelId = (leadChannelId) => {
 const saveZillowContact = async () => {
   const { leadChannelId } = await setup({})
 
-  await Zillow.save(JSON.stringify(setLeachChannelId(leadChannelId)))
+  await Zillow.save(setLeachChannelId(leadChannelId))
 
   const [leadChannel, zillowContacts, contacts] = await Promise.all([
     LeadChannel.get(leadChannelId),
@@ -122,10 +122,10 @@ const saveZillowContact = async () => {
 const updateZillowContact = async () => {
   const { leadChannelId } = await setup({})
   // create a new contact
-  await Zillow.save(JSON.stringify(setLeachChannelId(leadChannelId)))
+  await Zillow.save(setLeachChannelId(leadChannelId))
 
   // update the contact if email and user and brand is exist
-  await Zillow.save(JSON.stringify(setLeachChannelId(leadChannelId)))
+  await Zillow.save(setLeachChannelId(leadChannelId))
 
   const [leadChannel, zillowContacts, contacts] = await Promise.all([
     LeadChannel.get(leadChannelId),
@@ -154,7 +154,7 @@ const deletedLeadChannel = async () => {
     const { leadChannelId, userId } = await setup({})
     await LeadChannel.deleteById(leadChannelId, userId)
     // create a new contact
-    await Zillow.save(JSON.stringify(setLeachChannelId(leadChannelId)))
+    await Zillow.save(setLeachChannelId(leadChannelId))
   } catch (error) {
     err = error
   }
@@ -182,7 +182,7 @@ const invalidLeadChannelId = async () => {
   let err
   try {
     await setup({})
-    await Zillow.save(JSON.stringify(zillowJson))
+    await Zillow.save(zillowJson)
   } catch (error) {
     err = error
   }
@@ -196,7 +196,7 @@ const invalidLeadChannelSource = async () => {
   try {
     const { leadChannelId } = await setup({ sourceType: 'Realtor' })
     
-    await Zillow.save(JSON.stringify(setLeachChannelId(leadChannelId)))
+    await Zillow.save(setLeachChannelId(leadChannelId))
   } catch (error) {
     err = error
   }
