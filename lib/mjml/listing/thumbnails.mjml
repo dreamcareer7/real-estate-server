@@ -1,13 +1,30 @@
-{% for couple in thumbnails | batch(2) %}
-  <mj-section padding-top="10px" padding-bottom=0>
-    <mj-column width="49.5%">
-      <mj-image border="1px solid #d5d6d8" padding-bottom=0 padding-top="10px" src="{{couple[0].url}}" />
-    </mj-column>
+{% set url = {
+    uri: '/dashboard/marketing/wizard',
+    brand: brand,
+    query: {
+      listingId: listing.id,
+      medium: medium,
+      templateType: type
+    }
+} %}
+  
+{% for couple in thumbnails | batch(3) %}
+<mj-section padding-bottom="20px" background-color="#FFFFFF" padding-top="0px">
+  <mj-column width="32.5%">
+    <mj-image href="{{url | url}}" border="1px solid #d5d6d8" padding-bottom=0 padding-top="5px" src="{{couple[0].url}}" />
+  </mj-column>
 
-    <mj-column width="49.5%">
-      {% if couple[1] %}
-        <mj-image border="1px solid #d5d6d8" padding-bottom=0 padding-top="10px" src="{{couple[1].url}}" />
-      {% endif %}
-    </mj-column>
-  </mj-section>
+  <mj-column width="32.5%">
+    {% if couple[1] %}
+    <mj-image href="{{url | url}}" border="1px solid #d5d6d8" padding-bottom=0 padding-top="5px" src="{{couple[1].url}}" />
+    {% endif %}
+  </mj-column>
+
+  <mj-column width="32.5%">
+    {% if couple[1] %}
+    <mj-image href="{{url | url}}" border="1px solid #d5d6d8" padding-bottom=0 padding-top="5px" src="{{couple[2].url}}" />
+    {% endif %}
+  </mj-column>
+
+</mj-section>
 {% endfor %}
