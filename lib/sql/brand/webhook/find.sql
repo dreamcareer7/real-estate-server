@@ -5,4 +5,4 @@ FROM
   JOIN unnest($1::uuid[]) AS b(brand) USING (brand)
 WHERE 
   topic = $2
-  deleted_at IS NULL
+  AND deleted_at IS NULL
