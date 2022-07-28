@@ -1,0 +1,3 @@
+<mj-text padding-bottom="16px" align="center" font-family="Lato" font-size="18px" font-weight="900" css-class="circle">
+  {{number}}
+</mj-text>

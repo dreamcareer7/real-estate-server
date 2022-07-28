@@ -11,11 +11,13 @@
 {% endif %}
 
 <mj-button
-  font-family="Lato"
-  font-weight="bold"
+  font-family="Roboto"
+  font-size="18px"
+  font-weight="700"
   href="{{url | url}}"
   width="100%"
-  background-color="#39CCAA"
+  color="#009CBD"
+  background-color="#ffffff"
 >
   {{ text }}
 </mj-button>
