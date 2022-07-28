@@ -52,11 +52,11 @@
     </mj-section>
     <mj-section>
       <mj-column>
-        <mj-image css-class="footerImage border" width="230px" align="center" src="https://assets.rechat.com/devise icon.png" />
+        <mj-image css-class="footerImage border" width="230px" align="center" src="https://assets.rechat.com/device-footer.png" />
       </mj-column>
       <mj-column>
-        <mj-image width="114px" align="center" src="https://assets.rechat.com/google-play.png" href="https://play.google.com/store/apps/details?id=com.rechat.mobile&hl=en&gl=US" />
-        <mj-image width="114px" align="center" src="https://assets.rechat.com/app-store.png" href="https://apps.apple.com/us/app/rechat/id974093560" />
+        <mj-image width="114px" align="center" src="https://assets.rechat.com/google.png" href="https://play.google.com/store/apps/details?id=com.rechat.mobile&hl=en&gl=US" />
+        <mj-image width="114px" align="center" src="https://assets.rechat.com/apple.png" href="https://apps.apple.com/us/app/rechat/id974093560" />
       </mj-column>
     </mj-section>
 
