@@ -3,8 +3,12 @@ const db = require('../lib/utils/db')
 const migrations = [
   'BEGIN',
   'ALTER TABLE emails_events ADD occured_at timestamp without time zone',
-  `UPDATE emails_events
-    SET occured_at = COALESCE((TIMESTAMP 'epoch' + (object->'timestamp')::int * INTERVAL '1 second'), url = object->>'url', created_at)`,
+  `UPDATE emails_events SET
+    occured_at = COALESCE(
+      (TIMESTAMP 'epoch' + (object->'timestamp')::int * INTERVAL '1 second'),
+      created_at
+    ),
+    url = object->>'url'`,
   'ALTER TABLE emails_events DROP "object"',
   `CREATE OR REPLACE FUNCTION update_email_campaign_stats(campaign_id uuid, min_elapsed_time integer)
 RETURNS void AS
