@@ -7,15 +7,13 @@ WITH inserted AS (
     ),
     $2::email_event,
     to_timestamp($3),
-    to_timestamp($4),
+    to_timestamp($3),
+    $4,
     $5,
     $6,
     $7,
     $8,
-    $9,
-    $10,
-    $11,
-    $12
+    $9
   )
   RETURNING id, created_at
 ),
