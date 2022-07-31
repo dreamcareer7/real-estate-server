@@ -21,6 +21,9 @@ CREATE OR REPLACE VIEW crm_last_touches AS (
           AND ct.deleted_at IS NULL
           AND ct.task_type <> ALL('{Note,Other}')
           AND ct.due_date <= NOW()
+          -- There is an index call crm_tasks_last_touches made for this query.
+          -- If you make changes to this query, please make sure you update the index.
+          -- The index makes this query to index-only. Otherwise it'd be extremely expensive.
       ) UNION ALL (
         SELECT
           c.id,
