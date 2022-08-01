@@ -6,7 +6,7 @@ FROM
   (
     SELECT
       cids.id AS contact,
-      MIN(COALESCE(last_touch, NOW()) + (touch_freq || ' days')::interval) AS next_touch
+      MIN(COALESCE(last_touch, NOW()) + (tf.touch_freq || ' days')::interval) AS next_touch
     FROM
       unnest($1::uuid[]) AS cids(id)
       JOIN contacts AS c
