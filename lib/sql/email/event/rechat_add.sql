@@ -13,7 +13,8 @@ WITH inserted AS (
     $6,
     $7,
     $8,
-    $9
+    $9,
+    $10
   )
   RETURNING id, created_at
 ),
