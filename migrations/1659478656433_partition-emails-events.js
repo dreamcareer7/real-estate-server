@@ -18,7 +18,7 @@ const migrations = [
     campaign uuid REFERENCES email_campaigns(id)
 ) PARTITION BY HASH(campaign);`,
 
-  `CREATE INDEX emails_events_campaign ON ee(campaign);`,
+  'CREATE INDEX emails_events_campaign ON ee(campaign);',
 
   'CREATE TABLE emails_events0 PARTITION OF ee FOR VALUES WITH (MODULUS 50,REMAINDER 0);',
   'CREATE TABLE emails_events1 PARTITION OF ee FOR VALUES WITH (MODULUS 50,REMAINDER 1);',
