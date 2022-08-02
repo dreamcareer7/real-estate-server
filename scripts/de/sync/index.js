@@ -125,6 +125,15 @@ const getData = async token => {
  */
 
 const sync = async () => {
+  /*
+   * We save the job first, so if there's an error, it wouldnt retry immediately.
+   * Otherwise in case of failure this may fall into a retry loop forever which can be
+   * really expensive on db.
+   */
+  await promisify(MLSJob.insert)({
+    name: 'de_users'
+  })
+
   const token = await getToken()
   const { users, regions, offices } = await getData(token)
 
@@ -137,10 +146,6 @@ const sync = async () => {
   } catch(e) {
     Context.log('Error syncing users', e)
   }
-
-  await promisify(MLSJob.insert)({
-    name: 'de_users'
-  })
 }
 
 const run = async() => {

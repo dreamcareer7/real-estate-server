@@ -1,4 +1,16 @@
-CREATE OR REPLACE FUNCTION update_email_campaign_stats(campaign_id uuid, min_elapsed_time integer)
+const db = require('../lib/utils/db')
+
+const migrations = [
+  'BEGIN',
+  'ALTER TABLE emails_events ADD occured_at timestamp without time zone',
+  `UPDATE emails_events SET
+    occured_at = COALESCE(
+      (TIMESTAMP 'epoch' + (object->'timestamp')::int * INTERVAL '1 second'),
+      created_at
+    ),
+    url = object->>'url'`,
+  'ALTER TABLE emails_events DROP "object"',
+  `CREATE OR REPLACE FUNCTION update_email_campaign_stats(campaign_id uuid, min_elapsed_time integer)
 RETURNS void AS
 $$
   WITH events AS (
@@ -13,10 +25,10 @@ $$
       )
       or
       (
-        emails_events.event not in ('opened', 'clicked') 
+        emails_events.event not in ('opened', 'clicked')
       )
     )
-    
+
   ),
 
   recipient_counts AS (
@@ -205,3 +217,23 @@ $$
   RETURNING *;
 $$
 LANGUAGE SQL;
+`,
+  'COMMIT'
+]
+
+
+const run = async () => {
+  const { conn } = await db.conn.promise()
+
+  for(const sql of migrations) {
+    await conn.query(sql)
+  }
+
+  conn.release()
+}
+
+exports.up = cb => {
+  run().then(cb).catch(cb)
+}
+
+exports.down = () => {}
