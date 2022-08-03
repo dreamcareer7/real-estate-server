@@ -1,5 +1,5 @@
 WITH inserted AS (
-  INSERT INTO emails_events (email, event, created_at, recipient, url, ip, client_os, client_type, device_type, location, occured_at, campaign)
+  INSERT INTO emails_events (email, event, created_at, recipient, url, ip, client_os, client_type, device_type, location, occured_at)
   VALUES
   (
     (
@@ -14,10 +14,7 @@ WITH inserted AS (
     $8,
     $9,
     $10,
-    to_timestamp($11),
-    (
-      SELECT emails.campaign FROM emails WHERE mailgun_id = $1
-    )
+    to_timestamp($11)
   )
   RETURNING id, created_at
 ),

@@ -1,5 +1,5 @@
 WITH inserted AS (
-  INSERT INTO emails_events (email, event, created_at, occured_at, recipient, url, ip, client_os, client_type, device_type, location, campaign)
+  INSERT INTO emails_events (email, event, created_at, occured_at, recipient, url, ip, client_os, client_type, device_type, location)
   VALUES
   (
     (
@@ -14,10 +14,7 @@ WITH inserted AS (
     $7,
     $8,
     $9,
-    $10,
-    (
-      SELECT emails.campaign FROM emails WHERE id = $1::uuid
-    )
+    $10
   )
   RETURNING id, created_at
 ),
