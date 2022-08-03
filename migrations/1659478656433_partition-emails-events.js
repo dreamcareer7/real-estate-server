@@ -18,9 +18,8 @@ const migrations = [
     campaign uuid REFERENCES email_campaigns(id)
 ) PARTITION BY HASH(campaign);`,
 
-  'ALTER TABLE emails_events ADD PRIMARY KEY(id, campaign);',
+  'ALTER TABLE ee ADD PRIMARY KEY(id, campaign);',
   'CREATE INDEX emails_events_campaign ON ee(campaign);',
-  'CREATE INDEX emails_events_campaign ON ee(email);',
 
   'CREATE TABLE emails_events0 PARTITION OF ee FOR VALUES WITH (MODULUS 50,REMAINDER 0);',
   'CREATE TABLE emails_events1 PARTITION OF ee FOR VALUES WITH (MODULUS 50,REMAINDER 1);',
