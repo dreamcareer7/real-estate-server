@@ -81,17 +81,20 @@ const run = async () => {
       )
 
       const revisedTheme = []
+      
       for (let index = 0; index < settings.rows.length; index++) {
         const setting = settings.rows[index]
 
         const error = {}
         const newColors = {}
-
+        let findData = false
+        
         colorKeys.forEach((key) => {
           let themeValue = setting[key]
           if (setting[key]) {
             try {
               const color = Color(setting[key])
+              findData = true
               themeValue = `rgba(${color.red()},${color.green()},${color.blue()},${color.alpha()})`
             } catch (err) {
               error[key] = setting[key]
@@ -100,11 +103,13 @@ const run = async () => {
           newColors[key] = themeValue
         })
 
-        revisedTheme.push({
-          id: setting.id,
-          ...newColors,
-        })
-
+        if (findData) {
+          revisedTheme.push({
+            id: setting.id,
+            ...newColors,
+          })
+        }
+    
         if (Object.keys(error).length) {
           console.log(
             `parsing color in brand setting '${setting.id}' has following errors: ${JSON.stringify(
