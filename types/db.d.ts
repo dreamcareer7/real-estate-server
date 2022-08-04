@@ -139,6 +139,7 @@ declare type TDbSqlAddress =
   | 'brand/template/insert'
   | 'brand/update'
   | 'brand/webhook/find'
+  | 'brand/webhook/find_in_parents'
   | 'brand/webhook/get'
   | 'brand/webhook/insert'
   | 'brokerwolf/classifications/get-id'
