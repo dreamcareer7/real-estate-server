@@ -50,7 +50,7 @@ const generateMigration = () => {
   for (let i = 0; i < colorKeys.length; i++) {
     const color = colorKeys[i]
     str += ` ${split} (
-      (theme)."${color}" ~* '^rgba\((\d{1,3}%?),\s*(\d{1,3}%?),\s*(\d{1,3}%?),\s*(\d*(?:\.\d+)?)\)$'
+      (theme)."${color}" ~* '^rgba\\((\\d{1,3}%?),\\s*(\\d{1,3}%?),\\s*(\\d{1,3}%?),\\s*(\\d*(?:\\.\\d+)?)\\)$'
       or
       (theme)."${color}" is null
       or 
