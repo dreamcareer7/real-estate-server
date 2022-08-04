@@ -1,23 +1,106 @@
-CREATE OR REPLACE FUNCTION update_email_campaign_stats(campaign_id uuid, min_elapsed_time integer)
+const db = require('../lib/utils/db')
+
+const migrations = [
+  'BEGIN',
+  `CREATE TABLE ee (
+    id uuid NOT NULL DEFAULT uuid_generate_v1(),
+    email uuid not null,
+    created_at timestamp with time zone not null,
+    recipient text,
+    event email_event not null,
+    url text,
+    ip text,
+    client_os text,
+    client_type text,
+    device_type emails_events_device,
+    location json,
+    occured_at timestamp without time zone,
+    campaign uuid REFERENCES email_campaigns(id)
+) PARTITION BY HASH(campaign);`,
+
+  'ALTER TABLE ee ADD PRIMARY KEY(id, campaign);',
+  'CREATE INDEX emails_events_campaign ON ee(campaign);',
+
+  'CREATE TABLE emails_events0 PARTITION OF ee FOR VALUES WITH (MODULUS 50,REMAINDER 0);',
+  'CREATE TABLE emails_events1 PARTITION OF ee FOR VALUES WITH (MODULUS 50,REMAINDER 1);',
+  'CREATE TABLE emails_events2 PARTITION OF ee FOR VALUES WITH (MODULUS 50,REMAINDER 2);',
+  'CREATE TABLE emails_events3 PARTITION OF ee FOR VALUES WITH (MODULUS 50,REMAINDER 3);',
+  'CREATE TABLE emails_events4 PARTITION OF ee FOR VALUES WITH (MODULUS 50,REMAINDER 4);',
+  'CREATE TABLE emails_events5 PARTITION OF ee FOR VALUES WITH (MODULUS 50,REMAINDER 5);',
+  'CREATE TABLE emails_events6 PARTITION OF ee FOR VALUES WITH (MODULUS 50,REMAINDER 6);',
+  'CREATE TABLE emails_events7 PARTITION OF ee FOR VALUES WITH (MODULUS 50,REMAINDER 7);',
+  'CREATE TABLE emails_events8 PARTITION OF ee FOR VALUES WITH (MODULUS 50,REMAINDER 8);',
+  'CREATE TABLE emails_events9 PARTITION OF ee FOR VALUES WITH (MODULUS 50,REMAINDER 9);',
+  'CREATE TABLE emails_events10 PARTITION OF ee FOR VALUES WITH (MODULUS 50,REMAINDER 10);',
+  'CREATE TABLE emails_events11 PARTITION OF ee FOR VALUES WITH (MODULUS 50,REMAINDER 11);',
+  'CREATE TABLE emails_events12 PARTITION OF ee FOR VALUES WITH (MODULUS 50,REMAINDER 12);',
+  'CREATE TABLE emails_events13 PARTITION OF ee FOR VALUES WITH (MODULUS 50,REMAINDER 13);',
+  'CREATE TABLE emails_events14 PARTITION OF ee FOR VALUES WITH (MODULUS 50,REMAINDER 14);',
+  'CREATE TABLE emails_events15 PARTITION OF ee FOR VALUES WITH (MODULUS 50,REMAINDER 15);',
+  'CREATE TABLE emails_events16 PARTITION OF ee FOR VALUES WITH (MODULUS 50,REMAINDER 16);',
+  'CREATE TABLE emails_events17 PARTITION OF ee FOR VALUES WITH (MODULUS 50,REMAINDER 17);',
+  'CREATE TABLE emails_events18 PARTITION OF ee FOR VALUES WITH (MODULUS 50,REMAINDER 18);',
+  'CREATE TABLE emails_events19 PARTITION OF ee FOR VALUES WITH (MODULUS 50,REMAINDER 19);',
+  'CREATE TABLE emails_events20 PARTITION OF ee FOR VALUES WITH (MODULUS 50,REMAINDER 20);',
+  'CREATE TABLE emails_events21 PARTITION OF ee FOR VALUES WITH (MODULUS 50,REMAINDER 21);',
+  'CREATE TABLE emails_events22 PARTITION OF ee FOR VALUES WITH (MODULUS 50,REMAINDER 22);',
+  'CREATE TABLE emails_events23 PARTITION OF ee FOR VALUES WITH (MODULUS 50,REMAINDER 23);',
+  'CREATE TABLE emails_events24 PARTITION OF ee FOR VALUES WITH (MODULUS 50,REMAINDER 24);',
+  'CREATE TABLE emails_events25 PARTITION OF ee FOR VALUES WITH (MODULUS 50,REMAINDER 25);',
+  'CREATE TABLE emails_events26 PARTITION OF ee FOR VALUES WITH (MODULUS 50,REMAINDER 26);',
+  'CREATE TABLE emails_events27 PARTITION OF ee FOR VALUES WITH (MODULUS 50,REMAINDER 27);',
+  'CREATE TABLE emails_events28 PARTITION OF ee FOR VALUES WITH (MODULUS 50,REMAINDER 28);',
+  'CREATE TABLE emails_events29 PARTITION OF ee FOR VALUES WITH (MODULUS 50,REMAINDER 29);',
+  'CREATE TABLE emails_events30 PARTITION OF ee FOR VALUES WITH (MODULUS 50,REMAINDER 30);',
+  'CREATE TABLE emails_events31 PARTITION OF ee FOR VALUES WITH (MODULUS 50,REMAINDER 31);',
+  'CREATE TABLE emails_events32 PARTITION OF ee FOR VALUES WITH (MODULUS 50,REMAINDER 32);',
+  'CREATE TABLE emails_events33 PARTITION OF ee FOR VALUES WITH (MODULUS 50,REMAINDER 33);',
+  'CREATE TABLE emails_events34 PARTITION OF ee FOR VALUES WITH (MODULUS 50,REMAINDER 34);',
+  'CREATE TABLE emails_events35 PARTITION OF ee FOR VALUES WITH (MODULUS 50,REMAINDER 35);',
+  'CREATE TABLE emails_events36 PARTITION OF ee FOR VALUES WITH (MODULUS 50,REMAINDER 36);',
+  'CREATE TABLE emails_events37 PARTITION OF ee FOR VALUES WITH (MODULUS 50,REMAINDER 37);',
+  'CREATE TABLE emails_events38 PARTITION OF ee FOR VALUES WITH (MODULUS 50,REMAINDER 38);',
+  'CREATE TABLE emails_events39 PARTITION OF ee FOR VALUES WITH (MODULUS 50,REMAINDER 39);',
+  'CREATE TABLE emails_events40 PARTITION OF ee FOR VALUES WITH (MODULUS 50,REMAINDER 40);',
+  'CREATE TABLE emails_events41 PARTITION OF ee FOR VALUES WITH (MODULUS 50,REMAINDER 41);',
+  'CREATE TABLE emails_events42 PARTITION OF ee FOR VALUES WITH (MODULUS 50,REMAINDER 42);',
+  'CREATE TABLE emails_events43 PARTITION OF ee FOR VALUES WITH (MODULUS 50,REMAINDER 43);',
+  'CREATE TABLE emails_events44 PARTITION OF ee FOR VALUES WITH (MODULUS 50,REMAINDER 44);',
+  'CREATE TABLE emails_events45 PARTITION OF ee FOR VALUES WITH (MODULUS 50,REMAINDER 45);',
+  'CREATE TABLE emails_events46 PARTITION OF ee FOR VALUES WITH (MODULUS 50,REMAINDER 46);',
+  'CREATE TABLE emails_events47 PARTITION OF ee FOR VALUES WITH (MODULUS 50,REMAINDER 47);',
+  'CREATE TABLE emails_events48 PARTITION OF ee FOR VALUES WITH (MODULUS 50,REMAINDER 48);',
+  'CREATE TABLE emails_events49 PARTITION OF ee FOR VALUES WITH (MODULUS 50,REMAINDER 49);',
+
+  `INSERT INTO ee
+  SELECT emails_events.*, emails.campaign
+  FROM emails_events JOIN emails ON emails_events.email = emails.id
+  WHERE emails.campaign IS NOT NULL`,
+
+  'ALTER TABLE emails_events RENAME TO emails_events_old',
+  'ALTER TABLE ee RENAME TO emails_events',
+
+  `CREATE OR REPLACE FUNCTION update_email_campaign_stats(campaign_id uuid, min_elapsed_time integer)
 RETURNS void AS
 $$
-  WITH campaign_events AS (
-    SELECT recipient, event, email, emails_events.campaign, occured_at, client_os, emails.sent_at, emails_events.created_at
+  WITH events AS (
+    SELECT recipient, event, email, emails_events.campaign, occured_at, client_os
     FROM emails_events
     JOIN emails ON emails.id = emails_events.email
-    WHERE emails_events.campaign = $1
-  ),
-  events AS (
-    SELECT * FROM campaign_events WHERE
+    WHERE emails.campaign = $1 and
     (
-    event in ('opened', 'clicked') and
-    EXTRACT(EPOCH FROM(created_at - sent_at)) > $2
+      (
+        emails_events.event in ('opened', 'clicked') and
+        EXTRACT(EPOCH FROM(emails_events.created_at - emails.sent_at)) > $2
+      )
+      or
+      (
+        emails_events.event not in ('opened', 'clicked')
+      )
     )
-    or
-    (
-    event not in ('opened', 'clicked')
-    )
+
   ),
+
   recipient_counts AS (
     SELECT
       lower(recipient)                                    as recipient,
@@ -203,4 +286,24 @@ $$
   )
   RETURNING *;
 $$
-LANGUAGE SQL;
+LANGUAGE SQL;`,
+
+  'COMMIT'
+]
+
+
+const run = async () => {
+  const { conn } = await db.conn.promise()
+
+  for(const sql of migrations) {
+    await conn.query(sql)
+  }
+
+  conn.release()
+}
+
+exports.up = cb => {
+  run().then(cb).catch(cb)
+}
+
+exports.down = () => {}
