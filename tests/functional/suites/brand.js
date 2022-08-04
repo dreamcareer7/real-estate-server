@@ -538,11 +538,11 @@ const updateBrandTheme = cb => {
   const theme = {
     palette: {
       primary: {
-        main: '#ffffff',
+        main: 'rgba(191,81,81,0.87)',
         contrastText: 'rgba(191,81,81,0.87)'
       },
       secondary: {
-        main: '#f50057'
+        main: 'rgba(191,81,81,0.87)'
       }
     }
   }
