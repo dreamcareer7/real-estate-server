@@ -168,7 +168,7 @@ function cloneTask(cb) {
   return frisby
     .create('clone a task')
     .post(
-      `/crm/tasks/${task_id}/clone`,
+      `/crm/tasks/${task_id}/clone?associations[]=crm_task.associations`,
       { title: new_title }
     )
     .after(cb)
@@ -177,6 +177,9 @@ function cloneTask(cb) {
       data: {
         task_type: 'Todo',
         title: new_title,
+        associations: [{
+          association_type: 'listing'
+        }]
       }
     })
 }
@@ -682,14 +685,18 @@ function filterByAssignee(cb) {
     .expectJSON({
       data: [{
         assignees: [{
-          id: results.authorize.token.data.id
+          id: results.task.registerNewUser.data.id
+        }]
+      }, {
+        assignees: [{
+          id: results.task.registerNewUser.data.id
         }]
       }],
       info: {
-        total: 1
+        total: 2
       }
     })
-    .expectJSONLength('data', 1)
+    .expectJSONLength('data', 2)
 }
 
 function filterByNonExistingAssignee(cb) {
