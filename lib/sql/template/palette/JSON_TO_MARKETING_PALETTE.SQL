@@ -58,7 +58,9 @@ RETURNS marketing_palette AS $$
 
       $1->>'website',
       $1->>'name',
-      $1->>'phone_number'
+      $1->>'phone_number',
+
+      JSON_TO_STDADDR(($1->>'address')::jsonb)
     )::marketing_palette
 $$
 LANGUAGE SQL

@@ -6,6 +6,7 @@ SELECT
     facebook_credentials.facebook_email,
     facebook_credentials.first_name,
     facebook_credentials.last_name,
+    facebook_credentials.access_token,
     facebook_credentials.scope,
     facebook_credentials.access_token,
     EXTRACT(EPOCH FROM facebook_credentials.created_at) AS created_at,

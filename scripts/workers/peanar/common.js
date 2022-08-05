@@ -40,6 +40,8 @@ require('../../../lib/models/Showing/showinghub/webhook')
 
 require('../../../lib/models/Microsoft/migration/publisher')
 
+require('../../../lib/models/SocialPost/worker')
+
 const queues = [
   {
     queues: ['users_last_seen'],
@@ -170,6 +172,11 @@ const queues = [
   {
     queues: ['brand_webhook'],
     concurrency: 50
+  },
+
+  {
+    queues: ['social_post'],
+    concurrency: 1
   }
 ]
 

@@ -8,6 +8,8 @@ const { AGENT_SMITH1, AGENT_SMITH2, AGENT_SMITH3, DARTH_VADER, NARUTO } = requir
 const brandSetup = require('./data/super_campaign/brand')
 const mappings = require('./data/super_campaign/csv_mappings')
 
+const DUE_AT = Date.now() / 1000 - 1
+
 const {
   createUser,
   createBrands,
@@ -166,7 +168,7 @@ function create(cb) {
   const data = {
     subject: 'Happy Labor Day!',
     description: 'A super campaign for Labor Day holiday',
-    due_at: Date.now() / 1000,
+    due_at: DUE_AT,
     template_instance,
     tags: ['Labor Day'],
   }
@@ -607,6 +609,7 @@ module.exports = {
     runAsUser(AGENT_SMITH1, {
       checkLaborDayCampaignForAgentSmith: checkCampaign(() => ({
         subject: R().labor_day.create.subject,
+        due_at: DUE_AT,
       })),
 
       getEligibleCampaigns: getEligibleCampaigns({
@@ -666,6 +669,7 @@ module.exports = {
     runAsUser(AGENT_SMITH1, {
       checkLaborDayCampaignForNaruto: checkCampaign(() => ({
         subject: R().labor_day.create.subject,
+        due_at: DUE_AT,
       })),
     })
   ),

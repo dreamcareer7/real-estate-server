@@ -11,6 +11,13 @@ SELECT id,
        postal_code,
        license_number,
        email,
+       broker_mls_id,
+       (
+        SELECT id FROM agents
+        WHERE agents.matrix_unique_id = offices.broker_mui
+        AND agents.mls = offices.mls
+        LIMIT 1
+       ) AS broker,
        ARRAY_TO_STRING (
         ARRAY[
           NULLIF(city, ''),

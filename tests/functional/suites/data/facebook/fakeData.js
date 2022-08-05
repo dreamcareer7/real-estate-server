@@ -1,27 +1,27 @@
 const instagramProfiles = {
   insta1: {
-    profile_picture_url: 'http://test.com/insta.jpg',
+    profile_picture_url: 'http://insta.com/insta.jpg',
     biography: 'hi1',
     id: 'insta1',
     username: 'instagram1',
     website: 'rechat.com',
   },
   insta2: {
-    profile_picture_url: 'http://test.com/insta2.jpg',
+    profile_picture_url: 'http://insta.com/insta2.jpg',
     biography: 'hi2',
     id: 'insta2',
     username: 'instagram2',
     website: 'rechat2.com',
   },
   insta3: {
-    profile_picture_url: 'http://test.com/insta3.jpg',
+    profile_picture_url: 'http://insta.com/insta3.jpg',
     biography: 'hi3',
     id: 'insta3',
     username: 'instagram3',
     website: 'rechat3.com', 
   },
   insta4: {
-    profile_picture_url: 'http://test.com/insta4.jpg',
+    profile_picture_url: 'http://insta.com/insta4.jpg',
     biography: 'hi4',
     id: 'insta4',
     username: 'instagram4',
@@ -41,7 +41,7 @@ const facebookData = {
         data: {
           height: 50,
           is_silhouette: false,
-          url: 'http://test.com/test.jpg',
+          url: 'http://insta.com/test.jpg',
           width: 50,
         },
       },
@@ -64,7 +64,7 @@ const facebookData = {
             name: 'page2',
             id: 'page2Id',
           },
-          instaId: instagramProfiles.insta2.id,
+          instaId: instagramProfiles.insta2.id, // I use this ID in social_post mock test
         },
         {
           page: {
@@ -89,7 +89,7 @@ const facebookData = {
         data: {
           height: 50,
           is_silhouette: false,
-          url: 'http://test.com/test.jpg',
+          url: 'http://insta.com/test.jpg',
           width: 50,
         },
       },
@@ -119,7 +119,7 @@ const facebookData = {
         data: {
           height: 50,
           is_silhouette: false,
-          url: 'http://test.com/test.jpg',
+          url: 'http://insta.com/test.jpg',
           width: 50,
         },
       },
@@ -158,7 +158,7 @@ const facebookData = {
         data: {
           height: 50,
           is_silhouette: false,
-          url: 'http://test.com/test.jpg',
+          url: 'http://insta.com/test.jpg',
           width: 50,
         },
       },
@@ -178,7 +178,7 @@ const facebookData = {
         data: {
           height: 50,
           is_silhouette: false,
-          url: 'http://test.com/test.jpg',
+          url: 'http://insta.com/test.jpg',
           width: 50,
         },
       },

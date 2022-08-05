@@ -9,6 +9,7 @@ const _ = require('lodash')
 const fs = require('fs')
 
 const MLSJob = require('../../../lib/models/MLSJob')
+const Context = require('../../../lib/models/Context')
 
 const syncRegions = require('./sync-regions')
 const syncOffices = require('./sync-offices')
@@ -124,18 +125,27 @@ const getData = async token => {
  */
 
 const sync = async () => {
-  const token = await getToken()
-  const { users, regions, offices } = await getData(token)
-
-  await getRoot() // Ensure root exists
-  await syncRegions(regions)
-  await syncUsers(users)
-  await syncOffices(offices)
-  await syncAgents(users)
-
+  /*
+   * We save the job first, so if there's an error, it wouldnt retry immediately.
+   * Otherwise in case of failure this may fall into a retry loop forever which can be
+   * really expensive on db.
+   */
   await promisify(MLSJob.insert)({
     name: 'de_users'
   })
+
+  const token = await getToken()
+  const { users, regions, offices } = await getData(token)
+
+  try {
+    await getRoot() // Ensure root exists
+    await syncRegions(regions)
+    await syncUsers(users)
+    await syncOffices(offices)
+    await syncAgents(users)
+  } catch(e) {
+    Context.log('Error syncing users', e)
+  }
 }
 
 const run = async() => {

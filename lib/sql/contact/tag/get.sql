@@ -1,6 +1,7 @@
 -- $1: brand (ID)
--- $2: creator users (IDs)
+-- $2: [creator users (IDs)]
 -- $3: [current user (ID)]
+-- $4: [tags]
 
 SELECT
   id,
@@ -30,5 +31,6 @@ WHERE
   brand = $1::uuid
   AND deleted_at IS NULL
   AND (CASE WHEN $2::uuid[] IS NULL THEN TRUE ELSE created_by = ANY($2::uuid[]) END)
+  AND (CASE WHEN $4::text[] IS NULL THEN TRUE ELSE tag = ANY($4::text[]) END)
 ORDER BY
   tag

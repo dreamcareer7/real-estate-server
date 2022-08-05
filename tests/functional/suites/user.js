@@ -853,7 +853,7 @@ module.exports = {
       name: 'Manhattan',
       type: 'brand'
     },
-    acl: ['*'],
+    acl: ['Admin'],
     settings: {
       type: 'user_setting'
     },
@@ -884,7 +884,7 @@ module.exports = {
         name: '140 Franklin',
         type: 'brand'
       },
-      acl: ['*'],
+      acl: ['Admin'],
     }),
   }),
 

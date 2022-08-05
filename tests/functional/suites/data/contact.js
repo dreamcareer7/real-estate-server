@@ -143,7 +143,17 @@ const companyContact = {
   ]
 }
 
+const contactWithTouchFreq = {
+  attributes: [
+    {
+      attribute_type: 'tag',
+      text: 'BAZ', // this tag will be created (touch_freq: 60)
+    }
+  ]
+}
+
 module.exports = {
   contact,
-  companyContact
+  companyContact,
+  contactWithTouchFreq,
 }

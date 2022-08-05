@@ -1,3 +1,8 @@
+declare type TNotificationApp =
+  | 'showingapp'
+  | 'rechat'
+  ;
+
 declare type TNotificationDeliveryType =
   | 'email'
   | 'push'
@@ -125,6 +130,7 @@ declare interface INotificationInput {
 
   transports?: TNotificationDeliveryType[] | null;
   phone_number?: string | null;
+  app?: TNotificationApp;
 }
 
 declare interface INotification {
