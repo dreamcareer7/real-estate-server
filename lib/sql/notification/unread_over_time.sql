@@ -1,6 +1,7 @@
 SELECT
   'notification' as type,
-  unread_notifications.*
+  unread_notifications.*,
+  unread_notifications.transports::text[]
 FROM unread_notifications
 WHERE
   deleted_at IS NULL AND
