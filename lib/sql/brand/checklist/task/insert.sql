@@ -11,5 +11,7 @@ INSERT INTO brands_checklists_tasks (
   $3,
   $4,
   $5,
-  COALESCE($6, FALSE)
+  COALESCE($6, FALSE),
+  $7,
+  COALESCE($8, ARRAY['BackOffice', 'Agents']::task_acl[])
 )

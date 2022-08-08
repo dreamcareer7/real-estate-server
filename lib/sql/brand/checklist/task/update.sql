@@ -4,4 +4,6 @@ UPDATE brands_checklists_tasks SET
   form = $4,
   "order" = $5,
   required = COALESCE($6, FALSE)
+  tab_name = $7,
+  acl = COALESCE($8, ARRAY['BackOffice', 'Agents']::task_acl[])
 WHERE id = $1
