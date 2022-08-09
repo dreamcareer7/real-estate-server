@@ -4,7 +4,9 @@ INSERT INTO brands_checklists_tasks (
   form,
   "order",
   checklist,
-  required
+  required,
+  tab_name,
+  acl
 ) VALUES (
   $1,
   $2,
@@ -13,5 +15,5 @@ INSERT INTO brands_checklists_tasks (
   $5,
   COALESCE($6, FALSE),
   $7,
-  COALESCE($8, ARRAY['BackOffice', 'Agents']::task_acl[])
+  $8::task_acl[]
 )
