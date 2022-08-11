@@ -46,6 +46,7 @@ const migrations = [
              WHERE
                cr.brand = curr_brand AND
                cr."user" = curr_user AND
+               cr.contact = contact.id AND
                deleted_at IS NULL AND
                role IN ('assignee', 'owner')
          )
@@ -66,6 +67,7 @@ const migrations = [
              WHERE
                cr.brand = curr_brand AND
                cr."user" = curr_user AND
+               cr.contact = contact.id AND
                deleted_at IS NULL AND
                role IN ('assignee', 'owner')
          )
