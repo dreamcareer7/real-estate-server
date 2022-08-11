@@ -69,7 +69,7 @@ CREATE OR REPLACE VIEW email_campaigns_recipient_emails AS ((
       JOIN email_campaigns_recipients
         ON email_campaigns.id =  email_campaigns_recipients.campaign
       JOIN contacts
-        ON email_campaigns.brand = contacts.brand
+        ON check_contact_read_access(contacts, email_campaigns.brand, email_campaigns.from)
       JOIN UNNEST(contacts.tag) AS ct
         ON LOWER(ct) = LOWER(email_campaigns_recipients.tag)
     WHERE
@@ -88,7 +88,7 @@ CREATE OR REPLACE VIEW email_campaigns_recipient_emails AS ((
       JOIN email_campaigns_recipients
         ON email_campaigns.id =  email_campaigns_recipients.campaign
       JOIN contacts
-        ON email_campaigns.brand = contacts.brand
+        ON check_contact_read_access(contacts, email_campaigns.brand, email_campaigns.from)
       JOIN UNNEST(contacts.tag) AS ct
         ON LOWER(ct) = LOWER(email_campaigns_recipients.tag)
     WHERE
