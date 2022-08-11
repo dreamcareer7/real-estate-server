@@ -115,7 +115,7 @@ RETURNS JSON AS $$
                       CASE
                         WHEN ($1).unit IS NULL THEN NULL
                         WHEN ($1).unit = '' THEN NULL
-                        ELSE (REPLACE(INITCAP(($1).unit), '# ', '#')) || ','
+                        ELSE (REPLACE(INITCAP(($1).unit), '# ', '#'))
                       END,
                       CASE
                         WHEN ($1).box IS NULL THEN NULL
@@ -154,7 +154,8 @@ RETURNS JSON AS $$
       )
     END
 $$
-LANGUAGE SQL;`
+LANGUAGE SQL;
+`
 ]
 
 
