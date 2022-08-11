@@ -405,7 +405,7 @@ async function testAddressSummary() {
     city: 'Dallas',
     line1: '1200 Main St',
     line2: 'Dallas',
-    full: '1200 Main St Dallas',
+    full: '1200 Main St, Dallas',
     extra: 'Home',
     type: 'stdaddr'
   })
@@ -525,7 +525,7 @@ async function testAddressSummaryWithoutPrimary() {
     city: 'Dallas',
     line1: '1200 Main St',
     line2: 'Dallas',
-    full: '1200 Main St Dallas',
+    full: '1200 Main St, Dallas',
     extra: 'Home',
     type: 'stdaddr'
   })
