@@ -15,5 +15,13 @@ WHERE
       r.deleted_at IS NULL
       AND r.brand = ANY(SELECT brand FROM user_brands)
     )
+    OR (
+      r.deleted_at IS NULL
+      AND r.user = $2::uuid
+      AND EXISTS (SELECT 1
+                  FROM users AS u
+                  WHERE u.id = $2::uuid
+                    AND u.is_shadow)
+    )
   )
   AND (($3::boolean IS FALSE) OR (can_approve IS TRUE))
