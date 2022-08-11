@@ -9,6 +9,7 @@ CREATE OR REPLACE VIEW email_campaigns_recipient_emails AS ((
       email_campaigns AS ec
       JOIN email_campaigns_recipients AS ecr
         ON ec.id = ecr.campaign
+      -- in case of assigned contacts, 'c' will be NULL but it's fine:
       LEFT JOIN contacts AS c
         ON ((c.email && ARRAY[ecr.email]) AND (c.brand = ec.brand) AND (c.deleted_at IS NULL))
     WHERE
@@ -30,7 +31,8 @@ CREATE OR REPLACE VIEW email_campaigns_recipient_emails AS ((
       JOIN crm_lists_members
         ON email_campaigns_recipients.list = crm_lists_members.list
       JOIN contacts
-        ON (crm_lists_members.contact = contacts.id AND email_campaigns.brand = contacts.brand)
+        ON (crm_lists_members.contact = contacts.id AND
+            check_contact_read_access(contacts, email_campaigns.brand, email_campaigns.from))
     WHERE
       email_campaigns_recipients.recipient_type = 'List'
       AND contacts.deleted_at IS NULL
@@ -50,7 +52,8 @@ CREATE OR REPLACE VIEW email_campaigns_recipient_emails AS ((
       JOIN crm_lists_members
         ON email_campaigns_recipients.list = crm_lists_members.list
       JOIN contacts
-        ON (crm_lists_members.contact = contacts.id AND email_campaigns.brand = contacts.brand)
+        ON (crm_lists_members.contact = contacts.id AND
+            check_contact_read_access(contacts, email_campaigns.brand, email_campaigns.from))
     WHERE
       email_campaigns_recipients.recipient_type = 'List'
       AND contacts.deleted_at IS NULL
@@ -108,7 +111,8 @@ CREATE OR REPLACE VIEW email_campaigns_recipient_emails AS ((
       JOIN email_campaigns_recipients
         ON email_campaigns.id = email_campaigns_recipients.campaign
       JOIN contacts
-        ON (email_campaigns_recipients.contact = contacts.id AND email_campaigns.brand = contacts.brand)
+        ON (email_campaigns_recipients.contact = contacts.id AND
+            check_contact_read_access(contacts, email_campaigns.brand, email_campaigns.from))
     WHERE
       email_campaigns_recipients.recipient_type = 'Email'
       AND contacts.deleted_at IS NULL
@@ -124,7 +128,7 @@ CREATE OR REPLACE VIEW email_campaigns_recipient_emails AS ((
       JOIN email_campaigns_recipients
         ON email_campaigns.id = email_campaigns_recipients.campaign
       JOIN contacts
-        ON email_campaigns.brand = contacts.brand
+        ON check_contact_read_access(contacts, email_campaigns.brand, email_campaigns.from)
     WHERE
       email_campaigns_recipients.recipient_type = 'AllContacts'
       AND contacts.deleted_at IS NULL
@@ -142,7 +146,7 @@ CREATE OR REPLACE VIEW email_campaigns_recipient_emails AS ((
       JOIN email_campaigns_recipients
         ON email_campaigns.id = email_campaigns_recipients.campaign
       JOIN contacts
-        ON email_campaigns.brand = contacts.brand
+        ON check_contact_read_access(contacts, email_campaigns.brand, email_campaigns.from)
     WHERE
       email_campaigns_recipients.recipient_type = 'AllContacts'
       AND contacts.deleted_at IS NULL
@@ -165,6 +169,7 @@ CREATE OR REPLACE VIEW email_campaigns_recipient_emails AS ((
         ON ba."user" = u.id
       LEFT JOIN contacts_users AS cu
         ON cu."user" = u.id
+      -- Again here seems there's no need to check_contact_read_access:
       LEFT JOIN contacts AS c
         ON c.id = cu.contact AND c.brand = ec.brand AND c.deleted_at IS NULL AND c.parked IS NOT TRUE
     WHERE
@@ -198,7 +203,8 @@ CREATE OR REPLACE VIEW email_campaigns_recipient_emails AS ((
       JOIN email_campaigns_recipients
         ON email_campaigns.id = email_campaigns_recipients.campaign
       JOIN contacts
-        ON (email_campaigns_recipients.contact = contacts.id AND email_campaigns.brand = contacts.brand)
+        ON (email_campaigns_recipients.contact = contacts.id AND
+            check_contact_read_access(contacts, email_campaigns.brand, email_campaigns.from))
     WHERE
       email_campaigns_recipients.recipient_type = 'Contact'
       AND contacts.deleted_at IS NULL
