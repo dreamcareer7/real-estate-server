@@ -278,8 +278,7 @@ describe('Contact', () => {
           assigSibContactIds.tagged,
         ],
         notInclude: [
-          //‌FIXME: this should be uncommented:
-          //adminContactIds.tagged4,
+          adminContactIds.tagged4,
           adminContactIds.nonTagged,
           assigContactIds.nonTagged,
           assigSibContactIds.nonTagged,
@@ -294,8 +293,7 @@ describe('Contact', () => {
       await checkMembership(listId, {
         include: [
           adminContactIds.tagged1,
-          // FIXME: this should be uncommented:
-          //adminContactIds.tagged2,
+          adminContactIds.tagged2,
           adminContactIds.tagged4,
           assigContactIds.tagged,
           assigSibContactIds.tagged,
@@ -317,8 +315,7 @@ describe('Contact', () => {
         notInclude: [
           adminContactIds.tagged2,
           adminContactIds.tagged3,
-          //‌FIXME: this should be uncommented:
-          //adminContactIds.tagged4,
+          adminContactIds.tagged4,
           assigContactIds.nonTagged,
           assigSibContactIds.nonTagged,
         ],
@@ -331,6 +328,7 @@ describe('Contact', () => {
       const indie = await setupIndependentUser()
 
       const adminContactId = await createContact(adminBrand.id, adminId)
+      const adminContactId2 = await createContact(adminBrand.id, adminId)
       const assigneeContactId = await createContact(assigneeBrand.id, assigneeId)
 
       // Admin: assigns the contact to the assignee
@@ -353,13 +351,13 @@ describe('Contact', () => {
       /** @type {[UUID, UUID, UUID[] | null, UUID[]][]} */
       const testCalls = [
         // [brandId, userId, usersOption, expectedResult]
-        [...as.admin, null, [adminContactId]],
-        [...as.admin, [adminId, adminSibId], [adminContactId]],
+        [...as.admin, null, [adminContactId, adminContactId2]],
+        [...as.admin, [adminId, adminSibId], [adminContactId, adminContactId2]],
         [...as.admin, [adminSibId], []],
         [...as.admin, [assigneeId], []],
-        [...as.adminSib, null, [adminContactId]],
-        [...as.adminSib, [adminId], [adminContactId]],
-        [...as.adminSib, [adminSibId], [adminContactId]],
+        [...as.adminSib, null, [adminContactId, adminContactId2]],
+        [...as.adminSib, [adminId], [adminContactId, adminContactId2]],
+        [...as.adminSib, [adminSibId], [adminContactId, adminContactId2]],
         [...as.assig, null, [assigneeContactId, adminContactId]],
         [...as.assig, [assigneeId], [assigneeContactId, adminContactId]],
         [...as.assig, [assigneeSibId], []],
