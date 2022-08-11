@@ -1,4 +1,7 @@
 const { expect } = require('chai')
+const ical = require('ical')
+const { Mock } = require('./data/mock')
+
 const moment = require('moment-timezone')
 
 const { createContext, handleJobs } = require('../helper')
@@ -249,6 +252,188 @@ async function testCorrectTimezone() {
   }, user.timezone)
 }
 
+async function testDealExportEvents() {
+  const high = moment().add(1, 'year').unix()
+  const low = moment().add(-1, 'year').unix()
+  const now = moment().utc()
+  const fiveDaysAgo = now.clone().add(-5, 'day')
+  const tenDaysAgo = now.clone().add(-10, 'day')
+  await DealHelper.create(user.id, brand.id, {
+    deal_type: 'Buying',
+    checklists: [{
+      context: {
+        contract_date: { value: fiveDaysAgo.format() },
+        closing_date: { value: tenDaysAgo.format() },
+      },
+    }],
+    roles: [{
+      role: 'BuyerAgent',
+      email: user.email,
+      phone_number: user.phone_number,
+      legal_first_name: user.first_name,
+      legal_last_name: user.last_name
+    }, {
+      role: 'Buyer',
+      email: 'john@doe.com',
+      phone_number: '(281) 531-6582',
+      legal_first_name: 'John',
+      legal_last_name: 'Doe'
+    }],
+    listing: listing.id,
+    is_draft: false
+  })
+
+  await Contact.create([{
+    user: user.id,
+    attributes: attributes({
+      first_name: 'John',
+      last_name: 'Doe',
+      email: 'john@doe.com',
+    }),
+  }], user.id, brand.id)
+
+  await handleJobs()
+  await sql.update('REFRESH MATERIALIZED VIEW CONCURRENTLY deals_brands')
+  await sql.update('REFRESH MATERIALIZED VIEW calendar.deals_buyers')
+  await sql.update('REFRESH MATERIALIZED VIEW calendar.deals_closed_buyers')
+
+  const feeds = await getAsICal([{ brand: brand.id, users: [user.id] }], {
+    low,
+    high
+  }, 'America/Chicago')
+
+  const distrustFeed = ical.parseICS(feeds)
+  const feedValues = Object.values(distrustFeed)
+
+  const dateFormat = (dateInString) => moment(dateInString).format('YYYY/MM/DD') // skip the time
+  const eventFormat = (dateInString) => moment(dateInString).tz('America/Chicago').format('YYYY/MM/DD hh:mm') // skip secondes and milliseconds 
+
+  expect(eventFormat(feedValues[1]['dtstamp'])).to.be.equal(eventFormat(now))
+  expect(dateFormat(feedValues[1]['start'])).to.be.equal(dateFormat(tenDaysAgo))
+  expect(dateFormat(feedValues[1]['end'])).to.be.equal(dateFormat(tenDaysAgo))
+
+  expect(eventFormat(feedValues[2]['dtstamp'])).to.be.equal(eventFormat(now))
+  expect(dateFormat(feedValues[2]['start'])).to.be.equal(dateFormat(tenDaysAgo))
+  expect(dateFormat(feedValues[2]['end'])).to.be.equal(dateFormat(tenDaysAgo))
+
+  expect(eventFormat(feedValues[3]['dtstamp'])).to.be.equal(eventFormat(now))
+  expect(dateFormat(feedValues[3]['start'])).to.be.equal(dateFormat(fiveDaysAgo))
+  expect(dateFormat(feedValues[3]['end'])).to.be.equal(dateFormat(fiveDaysAgo))
+}
+
+async function testExportForEventsOnNullEndDate() {
+  const high = moment().add(1, 'year').unix()
+  const low = moment().add(-1, 'year').unix()
+
+  const now = moment().utc()
+  const next30Mins = now.clone().add(30 ,'minutes')
+  const next120Mins = now.clone().add(120 ,'minutes')
+  const next150Mins = now.clone().add(150 ,'minutes')
+
+  await CrmTask.create(Mock.getCrmTaskEvent({ brand: brand.id, created_by: user.id, assignees: [user.id], due_date: now.unix(), end_date: null, all_day: false, task_type: 'crm_task' }))
+  await CrmTask.create(Mock.getCrmTaskEvent({ brand: brand.id, created_by: user.id, assignees: [user.id], due_date: next30Mins.unix(), end_date: null, all_day: false, task_type: 'crm_task' }))
+
+  const feeds = await getAsICal([{ brand: brand.id, users: [user.id] }], {
+    low,
+    high
+  }, 'America/Chicago')
+
+  const distrustFeed = ical.parseICS(feeds)
+  const feedValues = Object.values(distrustFeed)
+
+  const eventFormat = (dateInString) => moment(dateInString).tz('America/Chicago').format('YYYY/MM/DD hh:mm') // skip secondes and milliseconds 
+
+  expect(eventFormat(feedValues[1]['dtstamp'])).to.be.equal(eventFormat(now))
+  expect(eventFormat(feedValues[1]['start'])).to.be.equal(eventFormat(now))
+  expect(eventFormat(feedValues[1]['end'])).to.be.equal(eventFormat(next120Mins))
+
+  expect(eventFormat(feedValues[2]['dtstamp'])).to.be.equal(eventFormat(now))
+  expect(eventFormat(feedValues[2]['start'])).to.be.equal(eventFormat(next30Mins))
+  expect(eventFormat(feedValues[2]['end'])).to.be.equal(eventFormat(next150Mins))
+}
+
+async function testExportForEvents() {
+  const high = moment().add(1, 'year').unix()
+  const low = moment().add(-1, 'year').unix()
+
+  const now = moment().utc()
+  const next30Mins = now.clone().add(30 ,'minutes')
+  const next60Mins = now.clone().add(60 ,'minutes')
+
+  
+  await CrmTask.create(Mock.getCrmTaskEvent({ brand: brand.id, created_by: user.id, assignees: [user.id], due_date: now.unix(), all_day: true }))
+  await CrmTask.create(Mock.getCrmTaskEvent({ brand: brand.id, created_by: user.id, assignees: [user.id], due_date: now.unix(), all_day: true }))
+  await CrmTask.create(Mock.getCrmTaskEvent({ brand: brand.id, created_by: user.id, assignees: [user.id], due_date: now.unix(), end_date: next30Mins.unix(), all_day: false, task_type: 'crm_task' }))
+  await CrmTask.create(Mock.getCrmTaskEvent({ brand: brand.id, created_by: user.id, assignees: [user.id], due_date: next30Mins.unix(), end_date: next60Mins.unix(), all_day: false, task_type: 'crm_task' }))
+
+  const feeds = await getAsICal([{ brand: brand.id, users: [user.id] }], {
+    low,
+    high
+  }, 'America/Chicago')
+
+  const distrustFeed = ical.parseICS(feeds)
+  const feedValues = Object.values(distrustFeed)
+
+  const dateFormat = (dateInString) => moment(dateInString).format('YYYY/MM/DD') // skip the time
+  const eventFormat = (dateInString) => moment(dateInString).tz('America/Chicago').format('YYYY/MM/DD hh:mm') // skip secondes and milliseconds 
+
+  expect(eventFormat(feedValues[1]['dtstamp'])).to.be.equal(eventFormat(now))
+  expect(dateFormat(feedValues[1]['start'])).to.be.equal(dateFormat(now))
+  expect(dateFormat(feedValues[1]['end'])).to.be.equal(dateFormat(now))
+
+  expect(eventFormat(feedValues[2]['dtstamp'])).to.be.equal(eventFormat(now))
+  expect(dateFormat(feedValues[2]['start'])).to.be.equal(dateFormat(now))
+  expect(dateFormat(feedValues[2]['end'])).to.be.equal(dateFormat(now))
+
+  expect(eventFormat(feedValues[3]['dtstamp'])).to.be.equal(eventFormat(now))
+  expect(eventFormat(feedValues[3]['start'])).to.be.equal(eventFormat(now))
+  expect(eventFormat(feedValues[3]['end'])).to.be.equal(eventFormat(next30Mins))
+
+  expect(eventFormat(feedValues[4]['dtstamp'])).to.be.equal(eventFormat(now))
+  expect(eventFormat(feedValues[4]['start'])).to.be.equal(eventFormat(next30Mins))
+  expect(eventFormat(feedValues[4]['end'])).to.be.equal(eventFormat(next60Mins))
+}
+
+async function testExportForDealsEvents() {
+  const high = moment().add(1, 'year').unix()
+  const low = moment().add(-1, 'year').unix()
+
+  const now = moment()
+  const nextDay = now.clone().add(1 ,'days')
+  const previousDay = now.clone().subtract(1 ,'days')
+
+
+  await CrmTask.create(Mock.getCrmTaskEvent({ brand: brand.id, created_by: user.id, assignees: [user.id], due_date: previousDay.unix(), all_day: true }))
+  await CrmTask.create(Mock.getCrmTaskEvent({ brand: brand.id, created_by: user.id, assignees: [user.id], due_date: now.unix(), all_day: true }))
+  await CrmTask.create(Mock.getCrmTaskEvent({ brand: brand.id, created_by: user.id, assignees: [user.id], due_date: nextDay.unix(), all_day: true }))
+  
+  const feeds = await getAsICal([{ brand: brand.id, users: [user.id] }], {
+    low,
+    high
+  }, 'America/Chicago')
+
+  const distrustFeed = ical.parseICS(feeds)
+  const feedValues = Object.values(distrustFeed)
+
+  const dateFormat = (dateInString) => moment(dateInString).format('YYYY/MM/DD') // skip the time
+
+  const eventFormat = (dateInString) => moment(dateInString).tz('America/Chicago').format('YYYY/MM/DD hh:mm') // skip secondes and milliseconds 
+
+  expect(eventFormat(feedValues[1]['dtstamp'])).to.be.equal(eventFormat(now))
+  expect(dateFormat(feedValues[1]['start'])).to.be.equal(dateFormat(previousDay))
+  expect(dateFormat(feedValues[1]['end'])).to.be.equal(dateFormat(previousDay))
+
+  expect(eventFormat(feedValues[2]['dtstamp'])).to.be.equal(eventFormat(now))
+  expect(dateFormat(feedValues[2]['start'])).to.be.equal(dateFormat(now))
+  expect(dateFormat(feedValues[2]['end'])).to.be.equal(dateFormat(now))
+
+  expect(eventFormat(feedValues[3]['dtstamp'])).to.be.equal(eventFormat(now))
+  expect(dateFormat(feedValues[3]['start'])).to.be.equal(dateFormat(nextDay))
+  expect(dateFormat(feedValues[3]['end'])).to.be.equal(dateFormat(nextDay))
+
+
+}
+
 function testContactEvent(event_type, type_label) {
   return async () => {
     await Contact.create([{
@@ -472,11 +657,15 @@ describe('Calendar', () => {
     it('should hide critical dates from dropped deals', testHidingDroppedDeals)
     it('should return home anniversary from closing dates', testDealClosingDateHomeAnniversary)
     it('should return home anniversary from lease ends', testDealLeaseEndHomeAnniversary)
+    it('should export deals events correctly for deals events', testDealExportEvents)
   })
 
   describe('Events', () => {
     beforeEach(setup)
     it('should put events in correct timezones', testCorrectTimezone)
+    it('should export events correctly for allday and none allday events', testExportForEvents)
+    it('should export events correctly for deals events', testExportForDealsEvents)
+    it('should export events correctly for on null endDate events', testExportForEventsOnNullEndDate)
   })
 
   describe('Contacts', () => {

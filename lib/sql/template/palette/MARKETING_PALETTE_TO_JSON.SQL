@@ -60,7 +60,9 @@ RETURNS JSON AS $$
 
         'website',                       ($1)."website",
         'name',                          ($1)."name",
-        'phone_number',                  ($1)."phone_number"
+        'phone_number',                  ($1)."phone_number",
+
+        'address',                       STDADDR_TO_JSON(($1)."address")
       )
     ) as palette
   )

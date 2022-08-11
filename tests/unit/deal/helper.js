@@ -26,14 +26,15 @@ async function create(user_id, brand_id, data) {
   const { roles, checklists, ...deal_props } = data
 
   const brand_contexts = await BrandHelper.getContexts(brand_id)
-  const brand_checklists = await BrandHelper.getChecklists(brand_id)
   const brand_property_types = await BrandHelper.getPropertyTypes(brand_id)
+  const property_type = brand_property_types[deal_props.property_type]
+  const brand_checklists = await BrandHelper.getChecklists(property_type.checklists)
 
   let deal = await Deal.create({
     ...deal_props,
     created_by: user_id,
     brand: brand_id,
-    property_type: brand_property_types[deal_props.property_type].id
+    property_type: property_type.id
   })
 
   for (let i = 0; i < checklists.length; i++) {

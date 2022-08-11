@@ -1,3 +1,5 @@
+import { TShowingRole } from '../role/types';
+
 export type DayOfWeek =
   | 'Monday'
   | 'Tuesday'
@@ -6,12 +8,6 @@ export type DayOfWeek =
   | 'Friday'
   | 'Saturday'
   | 'Sunday'
-  ;
-
-export type NotificationDeliveryType =
-  | 'email'
-  | 'push'
-  | 'sms'
   ;
 
 export type AppointmentStatus =
@@ -36,12 +32,12 @@ export interface ShowingRole {
   deleted_at: number;
   created_by: number;
   showing: UUID;
-  role: TDealRole;
+  role: TShowingRole;
   user: UUID;
   brand: UUID;
   can_approve: boolean;
-  confirm_notification_type: NotificationDeliveryType[];
-  cancel_notification_type: NotificationDeliveryType[];
+  confirm_notification_type: TNotificationDeliveryType[];
+  cancel_notification_type: TNotificationDeliveryType[];
   first_name: string;
   last_name: string;
   email: string;
@@ -95,12 +91,12 @@ export interface ShowingAppointment {
 
 export interface ShowingRoleInput {
   // The same deal role enum
-  role: TDealRole;
+  role: TShowingRole;
   user: UUID;
   brand: UUID;
   can_approve: boolean;
-  confirm_notification_type: NotificationDeliveryType[];
-  cancel_notification_type: NotificationDeliveryType[];
+  confirm_notification_type: TNotificationDeliveryType[];
+  cancel_notification_type: TNotificationDeliveryType[];
   first_name: string;
   last_name: string;
   email: string;

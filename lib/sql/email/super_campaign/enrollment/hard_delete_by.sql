@@ -10,4 +10,9 @@ WHERE
     WHEN $4 = 'admin' THEN created_by <> "user"
     WHEN $4 = 'manual' THEN created_by IS NOT NULL
     ELsE TRUE
+  END) AND
+  (CASE
+    WHEN $5::boolean = TRUE THEN deleted_at IS NOT NULL
+    WHEN $5::boolean = FALSE THEN deleted_at IS NULL
+    ELSE TRUE
   END)

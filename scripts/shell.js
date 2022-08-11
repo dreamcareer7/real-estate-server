@@ -1,6 +1,16 @@
-const program = require('commander')
+const { program } = require('commander')
 const path = require('path')
-const repl = require('repl')
+const repl = require('node:repl')
+
+/**
+ * @typedef ShellOptions
+ * @property {UUID=} user
+ * @property {UUID=} brand
+ * @property {string=} env
+ * @property {UUID=} googleCredential
+ * @property {UUID=} microsoftCredential
+ * @property {string[]=} import
+ */
 
 program
   .usage('npm run shell [options]')
@@ -8,8 +18,11 @@ program
   .option('-b, --brand <brand>', 'brand-id to be preset on context')
   .option('-e, --env <env>', 'env file name to be used')
   .option('-i, --import <imports...>', 'models and utils to import')
+  .option('-g, --google-credential <google-credential>', 'google credential to be loaded automatically')
+  .option('-m, --microsoft-credential <microsoft-credential>', 'microsoft credential to be loaded automatically')
   .parse(process.argv)
 
+/** @type {ShellOptions} */
 const options = program.opts()
 
 if (options.env) {
@@ -27,36 +40,45 @@ const { peanar } = require('../lib/utils/peanar')
 const Context = require('../lib/models/Context/index')
 const redis = require('../lib/data-service/redis').createClient()
 
-const attachCalendarEvents = require('../lib/models/Calendar/events')
-const attachContactEvents = require('../lib/models/Contact/events')
-const attachTouchEventHandler = require('../lib/models/CRM/Touch/events')
-const attachTaskEventHandler = require('../lib/models/CRM/Task/events')
-const attachFlowEventHandler = require('../lib/models/Flow/events')
-const attachCalIntEventHandler = require('../lib/models/CalendarIntegration/events')
-const attachContactIntEventHandler = require('../lib/models/ContactIntegration/events')
-const attachShowingEvents = require('../lib/models/Showing/showing/events')
-const { attachShowingAppointmentEventHandlers } = require('../lib/models/Showing/showinghub/events')
-const attachBrandTriggerEventHandler = require('../lib/models/Trigger/brand_trigger/events')
-const attachTriggerEventHandler = require('../lib/models/Trigger/events')
+require('../lib/models/Context/events')()
 
-attachCalendarEvents()
-attachContactEvents()
-attachTouchEventHandler()
-attachTaskEventHandler()
-attachFlowEventHandler()
-attachCalIntEventHandler()
-attachContactIntEventHandler()
-attachShowingEvents()
-attachShowingAppointmentEventHandlers()
-attachBrandTriggerEventHandler()
-attachTriggerEventHandler()
+async function loadGoogleCredential(replContext, cred_id) {
+  const cred = await replContext.GoogleCredential.get(cred_id)
+  const google = await replContext.GoogleApis.getGoogleClient(cred)
 
-function processImports(replContext) {
+  replContext.cred = cred
+  replContext.google = google
+}
+
+async function loadMicrosoftCredential(replContext, cred_id) {
+  const cred = await replContext.MicrosoftCredential.get(cred_id)
+  const { microsoft } = await replContext.MicrosoftApis.getMGraphClient(cred)
+
+  replContext.cred = cred
+  replContext.microsoft = microsoft
+}
+
+async function processImports(replContext) {
   for (const part of options.import ?? []) {
     switch (part) {
       case 'google':
         replContext.GoogleCredential = require('../lib/models/Google/credential/get')
-        replContext.GoogleApis = require('../lib/models/Google/plugin/googleapis')
+        replContext.GoogleApis = require('../lib/models/Google/plugin/client')
+
+        if (options.googleCredential) {
+          await loadGoogleCredential(replContext, options.googleCredential)
+        }
+
+        break
+      case 'microsoft':
+        console.log('importing microsoft modules...')
+        replContext.MicrosoftCredential = require('../lib/models/Microsoft/credential/get')
+        replContext.MicrosoftApis = require('../lib/models/Microsoft/plugin/client')
+
+        if (options.microsoftCredential) {
+          await loadMicrosoftCredential(replContext, options.microsoftCredential)
+        }
+
         break
       default:
         break
@@ -76,39 +98,47 @@ db.conn(async (err, client) => {
     process.exit(1)
   }
 
-  const r = repl.start({
+  /** @type {repl.REPLServer} */
+  const r = new repl.REPLServer({
     prompt: 'Rechat Shell> ',
     replMode: repl.REPL_MODE_STRICT,
     domain: context.domain
   })
+  r.setupHistory(path.resolve(__dirname, '.shell.history'), (err, rs) => {
+    if (err) {
+      console.error(err)
+    }
+  })
 
   r.on('exit', cleanup)
-
-  r.context.db = db
-  r.context.sql = sql
-  r.context.context = context
-  r.context.promisify = promisify
-  processImports(r.context)
-  r.context.handleJobs = async () => { 
-    await peanar.enqueueContextJobs()
-  }
 
   context.set({
     db: client,
     rabbit_jobs: []
   })
 
-  if (program.user) {
-    const user = await User.get(program.user)
+  r.context.db = db
+  r.context.sql = sql
+  r.context.context = context
+  r.context.promisify = promisify
+  await processImports(r.context)
+  r.context.handleJobs = async () => { 
+    await peanar.enqueueContextJobs()
+  }
+
+  if (options.user) {
+    const user = await User.get(options.user)
     context.log(`Logged in as ${user.display_name}`)
     context.set({ user })
   }
 
-  if (program.brand) {
-    const brand = await Brand.get(program.brand)
+  if (options.brand) {
+    const brand = await Brand.get(options.brand)
     context.log(`Active brand set to ${brand.name}`)
     context.set({ brand })
   }
+
+  r.displayPrompt()
 })
 
 

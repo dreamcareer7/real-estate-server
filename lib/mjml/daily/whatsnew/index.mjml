@@ -1,0 +1,24 @@
+{% if whatsnew.length > 0 %}
+  <mj-section padding="16px 0 0 0"></mj-section>
+  <mj-wrapper background-color="#ffffff" padding="0px" border-radius="16px">
+    <mj-section padding-bottom="0" padding-top="24px">
+      <mj-column>
+        <mj-text css-class="title" padding="0" align="center" font-family="Lato" font-size="18px" font-weight="900" color="#000000">
+          What's New?
+        </mj-text>
+      </mj-column>
+    </mj-section>
+
+    <mj-section padding-top="10px" padding-bottom="26px">
+      <mj-column padding-right="0">
+        <mj-text align="center" color="#b8b9bd" font-family="Lato" font-size="16px" font-weight="400" padding-top="0" >
+          Here are some of the recent improvements in Rechat
+        </mj-text>
+      </mj-column>
+    </mj-section>
+
+    {% for item in whatsnew %}
+      {% include './item.mjml' %}
+    {% endfor %}
+  </mj-wrapper>
+{% endif %}

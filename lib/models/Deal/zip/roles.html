@@ -1,0 +1,48 @@
+{% for role_name, roles in page_roles | groupby('role') %}
+  <section class="report-section associate-details">
+      <div class="section--header">
+          <div class="section-header--title">{{all_roles[role_name].title}}</div>
+          <div class="section-header--divider">
+              <div class="hr"></div>
+          </div>
+      </div>
+      <div class="report-section--body">
+          {% for role in roles %}
+              <div class="seller-index">
+                  {% if role.num %} #{{role.num}} {% endif %}
+              </div>
+              <div class="row double-section">
+                  <div class="col single-section">
+                      <div class="section-strip">
+                          <span class="section--label">Name</span>
+                          <span class="section--value">{{role.legal_full_name}}</span>
+                      </div>
+                  </div>
+
+                  <div class="col single-section">
+                      <div class="section-strip">
+                          <span class="section--label">Company</span>
+                          <span class="section--value">{{role.company_title}}</span>
+                      </div>
+                  </div>
+              </div>
+
+              <div class="row double-section">
+                  <div class="col single-section">
+                      <div class="section-strip">
+                          <span class="section--label">Email</span>
+                          <span class="section--value">{{role.email}}</span>
+                      </div>
+                  </div>
+
+                  <div class="col single-section">
+                      <div class="section-strip">
+                          <span class="section--label">Phone</span>
+                          <span class="section--value">{{role.phone_number}}</span>
+                      </div>
+                  </div>
+              </div>
+          {% endfor %}
+      </div>
+  </section>
+{% endfor %}

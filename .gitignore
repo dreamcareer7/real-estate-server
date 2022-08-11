@@ -26,3 +26,5 @@ tests/temp/*
 !tests/temp/.gitkeep
 .env*
 out
+postgres
+scripts/.shell.history

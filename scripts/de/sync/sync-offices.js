@@ -1,8 +1,11 @@
 const _ = require('lodash')
 const parser = require('parse-address')
+const pnu = require('google-libphonenumber').PhoneNumberUtil.getInstance()
 
 const Brand = require('../../../lib/models/Brand')
 const BrandRole = require('../../../lib/models/Brand/role/save')
+
+const Context = require('../../../lib/models/Context')
 
 const db = require('../../../lib/utils/db')
 
@@ -90,12 +93,8 @@ WITH data AS (
  JOIN de.offices ON input.id = de.offices.id
 )
 UPDATE brand_settings SET
-  address = JSON_TO_STDADDR(data.address),
-  marketing_palette =  JSON_TO_MARKETING_PALETTE(
-    COALESCE(MARKETING_PALETTE_TO_JSON(null::marketing_palette)::jsonb, '{}'::jsonb)
-      ||
-    JSON_BUILD_OBJECT('phone_number', data.phone_number)::jsonb
-  )
+  marketing_palette.phone_number = data.phone_number,
+  marketing_palette.address = JSON_TO_STDADDR(data.address)
 FROM data
 WHERE brand_settings.brand = data.brand`
 
@@ -104,20 +103,30 @@ const updateSettings = async offices => {
     const { address } = office
     const parsed = parser.parseLocation(address)
 
+    let phone_number = office.phone
+    if (phone_number) {
+      try {
+        const parsed = pnu.parse(phone_number, 'US')
+        phone_number = pnu.formatNumberForMobileDialing(parsed)
+      } catch(e) {
+        Context.log('Invalid phone', phone_number, 'for', office.id, e)
+      }
+    }
+
     return {
       id: office.id,
-      phone_number: office.phone,
+      phone_number,
       address: {
-        house_num: parsed.number,
-        predir: parsed.prefix,
-        pretype: parsed.type,
-        name: parsed.street,
-        suftype: parsed.suffix,
-        city: parsed.city || office.city,
-        state: parsed.state || office.state,
-        country: parsed.country,
-        postcode: parsed.zip || office.zip,
-        unit: parsed.sec_unit_num
+        house_num: parsed?.number,
+        predir: parsed?.prefix,
+        pretype: parsed?.type,
+        name: parsed?.street,
+        suftype: parsed?.suffix,
+        city: parsed?.city || office.city,
+        state: parsed?.state || office.state,
+        country: parsed?.country,
+        postcode: parsed?.zip || office.zip,
+        unit: parsed?.sec_unit_num
       }
     }
   })
@@ -129,13 +138,13 @@ const updateSettings = async offices => {
 
 const UPDATE_ADMINS = `
 WITH admins AS (
-  SELECT input.* FROM json_to_recordset($1) AS input(username TEXT, office INT)
-  JOIN de.users ON input.username = de.users.username
+  SELECT input.* FROM json_to_recordset($1) AS input(key TEXT, office INT)
+  JOIN de.users ON input.key = de.users.key
 ),
 
 saved AS (
-  INSERT INTO de.admins_offices (username, office)
-  SELECT username, office FROM admins
+  INSERT INTO de.admins_offices (key, office)
+  SELECT key, office FROM admins
   ON CONFLICT DO NOTHING
   RETURNING *
 )
@@ -144,7 +153,7 @@ INSERT INTO brands_users(role, "user")
 SELECT de.offices.admin_role, de.users.user
 FROM admins
 JOIN de.offices ON admins.office   = de.offices.id
-JOIN de.users   ON admins.username = de.users.username
+JOIN de.users   ON admins.key = de.users.key
 ON CONFLICT ("user", role) DO UPDATE SET deleted_at = NULL
 RETURNING *
 `
@@ -153,7 +162,7 @@ const DISABLE_ALL = `
 UPDATE brands_users SET deleted_at = COALESCE(brands_users.deleted_at, NOW())
 FROM de.admins_offices
 JOIN de.offices ON de.admins_offices.office = de.offices.id
-JOIN de.users ON de.admins_offices.username = de.users.username
+JOIN de.users ON de.admins_offices.key = de.users.key
 WHERE brands_users.user = de.users.user AND brands_users.role = de.offices.admin_role`
 
 const syncAdmins = async offices => {
@@ -162,14 +171,14 @@ const syncAdmins = async offices => {
   offices.forEach(office => {
     office.managers.forEach(m => {
       admins.push({
-        username: m.username,
+        key: m.key,
         office: office.id
       })
     })
 
     office.admins.forEach(a => {
       admins.push({
-        username: a.username,
+        key: a.key,
         office: office.id
       })
     })
@@ -180,8 +189,8 @@ const syncAdmins = async offices => {
    * Which  would fail on pg
    */
 
-  const uniqued = _.uniqBy(admins, item => {
-    return `${item.userame}-${item.office}`
+  const uniqued = _.uniqWith(admins, (a,b) => {
+    return a.key === b.key && a.office === b.office
   })
 
   await db.executeSql.promise(DISABLE_ALL)

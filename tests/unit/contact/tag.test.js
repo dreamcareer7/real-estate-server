@@ -320,6 +320,7 @@ async function testAddExistingTagsToContacts() {
 
   await handleJobs()
 }
+
 async function testAddBackDeletedTagByUsingInContact() {
   const [id] = await Contact.create([{
     user: user.id,
@@ -342,6 +343,43 @@ async function testAddBackDeletedTagByUsingInContact() {
   expect(tags).to.have.length(7)
   expect(tags.map(t => t.tag)).to.include.members(['Tag0'])
 }
+
+async function testRenameTagToDeletedTag() {
+  await Contact.create([{
+    user: user.id,
+    attributes: ContactHelper.attributes({
+      first_name: 'John',
+      last_name: 'Doe',
+    })
+  }], user.id, brand.id)
+
+  await ContactTag.create(
+    brand.id,
+    user.id,
+    'Tag0',
+    120,
+    false
+  )
+
+  await ContactTag.create(
+    brand.id,
+    user.id,
+    'Tag1',
+    100,
+    false
+  )
+
+  await ContactTag.delete(brand.id, user.id, ['Tag0'])
+
+
+  await ContactTag.rename(brand.id, user.id, 'Tag1', 'Tag0')
+
+  const tags = await ContactTag.getAll(brand.id)
+  expect(tags).to.have.length(7)
+  expect(tags.map(t => t.tag)).to.include.members(['Tag0'])
+}
+
+
 
 function testCreateDuplicateTagFail(done) {
   ContactTag.create(brand.id, user.id, 'Tag0', null).then(() => {
@@ -399,6 +437,7 @@ describe('Contact', () => {
     it('should update list filters and members after a tag is renamed', testRenameTagFixesListFilters)
     it('should delete tags globally', testDeleteTag)
     it('should allow adding back a deleted tag', testAddBackDeletedTag)
+    it('should allow renaming a tag to a deleted tag', testRenameTagToDeletedTag)
     it('should allow adding back a deleted tag by using it in a contact', testAddBackDeletedTagByUsingInContact)
 
     // Duplicate tag

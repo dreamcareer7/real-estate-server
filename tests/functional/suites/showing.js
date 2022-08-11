@@ -1,6 +1,19 @@
 const moment = require('moment-timezone')
 const { formatPhoneNumberForDialing } = require('../../../lib/models/ObjectUtil')
 
+const brandSetup = require('./data/showing/brand')
+const emails = require('./data/showing/emails')
+
+const {
+  resolve,
+  createUser,
+  getTokenFor,
+  createBrands,
+  switchBrand,
+  runAsUser,
+  runAsUauthorized,
+} = require('../util')
+
 registerSuite('brand', [
   'createParent',
   'attributeDefs',
@@ -12,26 +25,39 @@ registerSuite('brand', [
 
 registerSuite('user', ['create', 'upgradeToAgentWithEmail', 'markAsNonShadow'])
 registerSuite('listing', ['getListing'])
+registerSuite('agent', ['getByMlsId'])
 
-const showings = {}
-let sellerAgent
+const RESCHEDULED_TIME = moment().tz('America/Chicago').startOf('hour').day(8).hour(11)
+const APPOINTMENT_TIME = moment().tz('America/Chicago').startOf('hour').day(8).hour(9)
 
+const AGENT_PHONE_NUMBER = '+100000000000'
 const BUYER_PHONE_NUMBER = '(972) 481-1312'
 
-function _create(description, override, cb) {
-  sellerAgent = {
-    brand: results.brand.create.data.id,
+const the = {
+  agent: () => results.showing.agent.data,
+  
+  parentBrandId: () => results.showing.brands.data[0].id,
+  childBrandId: () => results.showing.brands.data[0].children[0].id,
+
+  showing: () => results.showing.create.data,
+  showingId: () => the.showing().id,
+  
+  sellerAgent: () => ({
+    brand: the.childBrandId(),
     can_approve: true,
     role: 'SellerAgent',
     cancel_notification_type: ['email'],
     confirm_notification_type: ['push', 'email'],
     first_name: 'John',
     last_name: 'Doe',
-    email: results.authorize.token.data.email,
-    phone_number: results.authorize.token.data.phone_number,
-    user: results.authorize.token.data.id,
-  }
+    email: the.agent().email,
+    phone_number: AGENT_PHONE_NUMBER,
+    user: the.agent().id,
+    agent: results.agent.getByMlsId.data[0].id,
+  })
+}
 
+function _create(description, override, cb) {
   /** @type {import("../../../lib/models/Showing/showing/types").ShowingInput} */
   const showing = {
     approval_type: 'All',
@@ -47,7 +73,7 @@ function _create(description, override, cb) {
     allow_inspection: true,
     instructions: 'The key is in the locker',
     same_day_allowed: true,
-    roles: [sellerAgent],
+    roles: [the.sellerAgent()],
     start_date: new Date().toISOString(),
     listing: results.listing.getListing.data.id,
     notice_period: 3 * 3600,
@@ -59,22 +85,16 @@ function _create(description, override, cb) {
       ...showing,
       ...override,
     })
-    .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
+    .addHeader('X-RECHAT-BRAND', the.childBrandId())
     .addHeader('x-handle-jobs', 'yes')
-    .after((err, res, json) => {
-      if (res.statusCode === 200) {
-        showings[json.data.id] = json.data
-      }
-
-      return cb(err, res, json)
-    })
+    .after(cb)
 }
 
 function create(cb) {
   return _create('create a showing', {}, function (err, res, json) {
     const setup = frisby.globalSetup()
 
-    setup.request.headers['X-RECHAT-BRAND'] = results.brand.create.data.id
+    setup.request.headers['X-RECHAT-BRAND'] = the.childBrandId()
     setup.request.headers['x-handle-jobs'] = 'yes'
 
     frisby.globalSetup(setup)
@@ -82,16 +102,12 @@ function create(cb) {
     cb(err, res, json)
   })
     .expectStatus(200)
-    .expectJSON({
-      data: {
-        type: 'showing',
-        roles: [
-          {
-            first_name: 'John',
-            last_name: 'Doe',
-          },
-        ],
-      },
+    .expectJSON('data', {
+      type: 'showing',
+      roles: [{
+        first_name: 'John',
+        last_name: 'Doe',
+      }],
     })
 }
 
@@ -105,20 +121,16 @@ function createHippocket(cb) {
   }
   return _create('create a showing', { address, listing: undefined }, cb)
     .expectStatus(200)
-    .expectJSON({
-      data: {
-        type: 'showing',
-      },
+    .expectJSON('data', {
+      type: 'showing',
     })
 }
 
 function createWithNoApprovalRequired(cb) {
   return _create('create a showing with no approvals required', { approval_type: 'None' }, cb)
     .expectStatus(200)
-    .expectJSON({
-      data: {
-        type: 'showing',
-      },
+    .expectJSON('data', {
+      type: 'showing',
     })
 }
 
@@ -127,9 +139,9 @@ function createWithTenantRole(cb) {
     'create a showing with a tenant role',
     {
       roles: [
-        sellerAgent,
+        the.sellerAgent(),
         {
-          brand: results.brand.create.data.id,
+          brand: the.childBrandId(),
           can_approve: true,
           role: 'Tenant',
           cancel_notification_type: ['email'],
@@ -144,17 +156,15 @@ function createWithTenantRole(cb) {
     cb
   )
     .expectStatus(200)
-    .expectJSONTypes({
-      data: {
-        roles: [
-          {
-            user_id: String,
-          },
-          {
-            user_id: String,
-          },
-        ],
-      },
+    .expectJSONTypes('data', {
+      roles: [
+        {
+          user_id: String,
+        },
+        {
+          user_id: String,
+        },
+      ],
     })
 }
 
@@ -177,16 +187,18 @@ function createWithValidationError(cb) {
   ).expectStatus(400)
 }
 
-function getShowing(cb) {
-  return frisby
-    .create('get a showing by id')
-    .get(`/showings/${results.showing.create.data.id}`)
+function getShowing({
+  name = 'get a showing by id',
+  id = the.showingId,
+  status = 200,
+  expect = { data: { type: 'showing' } },
+} = {}) {
+  return cb => frisby
+    .create(name)
+    .get(`/showings/${resolve(id)}`)
     .after(cb)
-    .expectJSON({
-      data: {
-        type: 'showing',
-      },
-    })
+    .expectStatus(status)
+    .expectJSON(resolve(expect))
 }
 
 function filter(cb) {
@@ -195,38 +207,50 @@ function filter(cb) {
     .post('/showings/filter?associations[]=showing.availabilities&associations[]=showing.roles')
     .after(cb)
     .expectStatus(200)
-    .expectJSON({
-      data: [results.showing.create.data],
-    })
+    .expectJSONLength('data', 4)
+    .expectJSON('data.?', the.showing())
+}
+
+function search (query, {
+  name = `Search for '${query}'`,
+  expect = null,
+  status = 200,
+} = {}) {
+  return cb => {
+    const f = frisby.create(name)
+      .post('/showings/filter', { query })
+      .after(cb)
+      .expectStatus(status)
+    
+    expect && f.expectJSON(expect())
+
+    return f
+  }
 }
 
 function getShowingPublic(cb) {
-  const showing_id = results.showing.create.data.human_readable_id
+  const showing_id = the.showing().human_readable_id
   return frisby
     .create('get showing public info')
     .get(`/showings/public/${showing_id}`)
     .after(cb)
     .expectStatus(200)
-    .expectJSON({
-      data: {
-        id: results.showing.create.data.human_readable_id,
-        agent: {
-          first_name: 'John',
-          last_name: 'Doe',
-          full_name: 'John Doe',
-          type: 'showing_agent'
-        },
-        type: 'showing_public',
+    .expectJSON('data', {
+      id: showing_id,
+      agent: {
+        first_name: 'John',
+        last_name: 'Doe',
+        full_name: 'John Doe',
+        type: 'showing_agent'
       },
+      type: 'showing_public',
     })
 }
-
-const APPOINTMENT_TIME = moment().tz('America/Chicago').startOf('hour').day(8).hour(9)
 
 function _makeAppointment(msg, showing_id, expected_status = 'Requested') {
   return (cb) => {
     if (!showing_id) {
-      showing_id = results.showing.create.data.human_readable_id
+      showing_id = the.showing().human_readable_id
     }
     return frisby
       .create(msg)
@@ -247,12 +271,10 @@ function _makeAppointment(msg, showing_id, expected_status = 'Requested') {
       .removeHeader('Authorization')
       .after(cb)
       .expectStatus(200)
-      .expectJSON({
-        data: {
-          status: expected_status,
-          showing: {
-            id: showing_id,
-          },
+      .expectJSON('data', {
+        status: expected_status,
+        showing: {
+          id: showing_id,
         },
       })
   }
@@ -263,10 +285,8 @@ function checkNotificationCount(cb) {
     .create('check notifications count')
     .get('/showings/notifications?limit=1')
     .after(cb)
-    .expectJSON({
-      info: {
-        total: 1
-      }
+    .expectJSON('info', {
+      total: 1
     })
 }
 
@@ -278,24 +298,22 @@ function checkAppointmentNotifications(cb) {
       `/showings/${results.showing.create.data.id}/appointments/${appt.id}/?associations[]=showing_appointment.notifications&associations[]=showing_appointment.contact`
     )
     .after(cb)
-    .expectJSON({
-      data: {
-        contact: {
-          source_type: 'Showing',
-          type: 'contact'
-        },
-        notifications: [
-          {
-            object_class: 'ShowingAppointment',
-            object: appt.id,
-            action: 'Created',
-            subject_class: 'Contact',
-            title: '5020 Junius Street',
-            message: 'John Smith requested a showing',
-            type: 'showing_appointment_notification',
-          },
-        ],
+    .expectJSON('data', {
+      contact: {
+        source_type: 'Showing',
+        type: 'contact'
       },
+      notifications: [
+        {
+          object_class: 'ShowingAppointment',
+          object: appt.id,
+          action: 'Created',
+          subject_class: 'Contact',
+          title: '5020 Junius Street',
+          message: 'John Smith requested a showing',
+          type: 'showing_appointment_notification',
+        },
+      ],
     })
 }
 
@@ -304,19 +322,10 @@ function checkAppointmentReceiptSmsForBuyer(cb) {
     .create('check appointment receipt text message from buyer inbox')
     .get(`/sms/inbox/${BUYER_PHONE_NUMBER}`)
     .after(cb)
-    .expectJSON({
-      data: [
-        {
-          to: formatPhoneNumberForDialing(BUYER_PHONE_NUMBER),
-          body:
-            `Your showing request for 5020 Junius Street at ${APPOINTMENT_TIME.format(
-              'MMM Do, h:mmA'
-            )} has been received.` +
-            '\n\n' +
-            'Cancel via http://mock-branch-url\nReschedule via http://mock-branch-url',
-        },
-      ],
-    })
+    .expectJSON('data', [{
+      to: formatPhoneNumberForDialing(BUYER_PHONE_NUMBER),
+      body: `Your showing request for 5020 Junius Street at ${APPOINTMENT_TIME.format('MMM Do, h:mmA')} has been received.\n\nCancel via http://mock-branch-url\nReschedule via http://mock-branch-url`,
+    }])
 }
 
 function confirmAppointment(sourceCase, comment = 'You\'re welcome!') {
@@ -324,16 +333,14 @@ function confirmAppointment(sourceCase, comment = 'You\'re welcome!') {
     const appt = results.showing[sourceCase].data
     return frisby
       .create('confirm an appointment')
-      .put(`/showings/${results.showing.create.data.id}/appointments/${appt.id}/approval`, {
+      .put(`/showings/${the.showing().id}/appointments/${appt.id}/approval`, {
         approved: true,
         comment,
       })
       .after(cb)
       .expectStatus(200)
-      .expectJSON({
-        data: {
-          status: 'Confirmed',
-        },
+      .expectJSON('data', {
+        status: 'Confirmed',
       }) 
   }
 }
@@ -344,19 +351,10 @@ function checkAppointmentConfirmationSmsForBuyer(cb) {
     .get(`/sms/inbox/${BUYER_PHONE_NUMBER}`)
     .after(cb)
     .expectStatus(200)
-    .expectJSON({
-      data: [
-        {
-          to: formatPhoneNumberForDialing(BUYER_PHONE_NUMBER),
-          body:
-            `Your showing for 5020 Junius Street at ${APPOINTMENT_TIME.format(
-              'MMM Do, h:mmA'
-            )} has been confirmed.` +
-            '\n\n' +
-            'Cancel via http://mock-branch-url\nReschedule via http://mock-branch-url',
-        },
-      ],
-    })
+    .expectJSON('data', [{
+      to: formatPhoneNumberForDialing(BUYER_PHONE_NUMBER),
+      body: `Your showing for 5020 Junius Street at ${APPOINTMENT_TIME.format('MMM Do, h:mmA')} has been confirmed.\n\nCancel via http://mock-branch-url\nReschedule via http://mock-branch-url`,
+    }])
 }
 
 function requestAppointmentAutoConfirm(cb) {
@@ -375,18 +373,9 @@ function checkAppointmentAutoConfirmationTextMessagesForBuyer(cb) {
     .get(`/sms/inbox/${BUYER_PHONE_NUMBER}`)
     .after(cb)
     .expectStatus(200)
-    .expectJSON({
-      data: [
-        {
-          body: [
-            `Your showing for 5020 Junius Street at ${time} has been automatically confirmed.`,
-            '',
-            'Cancel via http://mock-branch-url',
-            'Reschedule via http://mock-branch-url',         
-          ].join('\n'),
-        },
-      ],
-    })
+    .expectJSON('data', [{
+      body: `Your showing for 5020 Junius Street at ${time} has been automatically confirmed.\n\nCancel via http://mock-branch-url\nReschedule via http://mock-branch-url`,
+    }])
 }
 
 function checkShowingTotalCount(cb) {
@@ -395,11 +384,9 @@ function checkShowingTotalCount(cb) {
     .create('check total appointment count on showing')
     .get(`/showings/${showing_id}`)
     .after(cb)
-    .expectJSON({
-      data: {
-        visits: 1,
-        confirmed: 1,
-      },
+    .expectJSON('data', {
+      visits: 1,
+      confirmed: 1,
     })
 }
 
@@ -412,13 +399,9 @@ function upcomingAppointments(cb) {
     .get(`/calendar?object_types[]=showing_appointment&low=${low}&high=${high}`)
     .after(cb)
     .expectStatus(200)
-    .expectJSON({
-      data: [
-        {
-          type: 'calendar_event',
-        },
-      ],
-    })
+    .expectJSON('data', [{
+      type: 'calendar_event',
+    }])
 }
 
 function buyerAgentGetAppointment(cb) {
@@ -429,14 +412,12 @@ function buyerAgentGetAppointment(cb) {
     .removeHeader('X-RECHAT-BRAND')
     .removeHeader('Authorization')
     .after(cb)
-    .expectJSON({
-      data: {
-        id: appt.id,
-        status: 'Confirmed',
-      },
+    .expectJSON('data', {
+      id: appt.id,
+      status: 'Confirmed',
     })
 }
-const RESCHEDULED_TIME = moment().tz('America/Chicago').startOf('hour').day(8).hour(11)
+
 function buyerAgentRescheduleAppointment(cb) {
   const appt = results.showing.buyerAgentGetAppointment.data
   return frisby
@@ -449,10 +430,8 @@ function buyerAgentRescheduleAppointment(cb) {
     .removeHeader('Authorization')
     .after(cb)
     .expectStatus(200)
-    .expectJSON({
-      data: {
-        status: 'Rescheduled'
-      },
+    .expectJSON('data', {
+      status: 'Rescheduled'
     })
 }
 
@@ -461,24 +440,16 @@ function checkBuyerRescheduleNotifications(cb) {
   return frisby
     .create('check buyer rescheduled notification')
     .get(
-      `/showings/${results.showing.create.data.id}/appointments/${appt.id}/?associations[]=showing_appointment.notifications`
+      `/showings/${the.showing().id}/appointments/${appt.id}/?associations[]=showing_appointment.notifications`
     )
     .after(cb)
-    .expectJSON({
-      data: {
-        notifications: [
-          {
-            object_class: 'ShowingAppointment',
-            object: appt.id,
-            action: 'Rescheduled',
-            subject_class: 'Contact',
-            message: `John Smith rescheduled the showing for "${RESCHEDULED_TIME.tz(
-              results.authorize.token.data.timezone
-            ).format('MMM D, HH:mm')}": Sorry something came up`,
-            type: 'showing_appointment_notification',
-          }
-        ],
-      },
+    .expectJSON('data.notifications.0', {
+      object_class: 'ShowingAppointment',
+      object: appt.id,
+      action: 'Rescheduled',
+      subject_class: 'Contact',
+      message: `John Smith rescheduled the showing for "${RESCHEDULED_TIME.tz(results.authorize.token.data.timezone).format('MMM D, HH:mm')}": Sorry something came up`,
+      type: 'showing_appointment_notification',
     })
 }
 
@@ -501,18 +472,13 @@ function checkBuyerCancelNotifications(cb) {
     .create('check buyer canceled notification')
     .get('/showings/notifications')
     .after(cb)
-    .expectJSON({
-      data: [
-        { /* Ignore 1st one */ },
-        {
-          object_class: 'ShowingAppointment',
-          object: appt.id,
-          action: 'Canceled',
-          subject_class: 'Contact',
-          message: 'John Smith canceled the showing: Sorry something came up',
-          type: 'notification',
-        },
-      ],
+    .expectJSON('data.1', {
+      object_class: 'ShowingAppointment',
+      object: appt.id,
+      action: 'Canceled',
+      subject_class: 'Contact',
+      message: 'John Smith canceled the showing: Sorry something came up',
+      type: 'notification',
     })
 }
 
@@ -520,7 +486,7 @@ function sellerAgentCancelAppointment(cb) {
   return frisby
     .create('cancel an appointment by seller agent')
     .put(
-      `/showings/${results.showing.create.data.id}/appointments/${results.showing.makeAnotherAppointment.data.id}/approval`,
+      `/showings/${the.showing().id}/appointments/${results.showing.makeAnotherAppointment.data.id}/approval`,
       {
         approved: false,
         comment: 'Sorry something came up I have to cancel this',
@@ -528,10 +494,8 @@ function sellerAgentCancelAppointment(cb) {
     )
     .after(cb)
     .expectStatus(200)
-    .expectJSON({
-      data: {
-        status: 'Canceled',
-      },
+    .expectJSON('data', {
+      status: 'Canceled',
     })
 }
 
@@ -539,7 +503,7 @@ function sellerAgentRejectAppointment (cb) {
   return frisby
     .create('reject an appointment by seller agent')
     .put(
-      `/showings/${results.showing.create.data.id}/appointments/${results.showing.makeAnotherAppointmentToReject.data.id}/approval`,
+      `/showings/${the.showing().id}/appointments/${results.showing.makeAnotherAppointmentToReject.data.id}/approval`,
       {
         approved: false,
         comment: 'Sorry something came up',
@@ -547,10 +511,8 @@ function sellerAgentRejectAppointment (cb) {
     )
     .after(cb)
     .expectStatus(200)
-    .expectJSON({
-      data: {
-        status: 'Canceled',
-      },
+    .expectJSON('data', {
+      status: 'Canceled',
     })  
 }
 
@@ -566,18 +528,9 @@ function checkAppointmentRejectionSmsForBuyer (cb) {
     .create('check appointment rejection sms for buyer')
     .get(`/sms/inbox/${BUYER_PHONE_NUMBER}`)
     .after(cb)
-    .expectJSON({
-      data: [
-        { /* Ignore first one */ },
-        { /* Ignore second one */ },
-        { /* Ignore third one */ },
-        { /* Ignore fouth one */ },
-        { /* Ignore fifth one */ },
-        {
-          to: formatPhoneNumberForDialing(BUYER_PHONE_NUMBER),
-          body: expectedBody
-        }
-      ],
+    .expectJSON('data.6', {
+      to: formatPhoneNumberForDialing(BUYER_PHONE_NUMBER),
+      body: expectedBody
     })
 }
 
@@ -598,40 +551,117 @@ function pollSendEmailNotification (cb) {
 }
 
 module.exports = {
-  create,
-  createWithNoApprovalRequired,
-  createHippocket,
-  createWithTenantRole,
-  getShowing,
-  filter,
+  admin: createUser({ email: emails.admin }),
+  agent: createUser({ email: emails.agent }),
 
-  getShowingPublic,
-  requestAppointment: _makeAppointment('request an appointment'),
-  checkAppointmentReceiptSmsForBuyer,
-  checkNotificationCount,
-  checkAppointmentNotifications,
-  confirmAppointment: confirmAppointment('requestAppointment'),
-  checkAppointmentConfirmationSmsForBuyer,
-  requestAppointmentAutoConfirm,
-  checkAppointmentAutoConfirmationTextMessagesForBuyer,
-  checkShowingTotalCount,
-  upcomingAppointments,
-  buyerAgentGetAppointment,
-  buyerAgentRescheduleAppointment,
-  checkBuyerRescheduleNotifications,
-  buyerAgentCancelAppointment,
-  checkBuyerCancelNotifications,
+  adminAuth: getTokenFor(emails.admin),
+  agentAuth: getTokenFor(emails.agent),
 
-  makeAnotherAppointment: _makeAppointment('request a new appointment'),
-  confirmAnotherAppointment: confirmAppointment('makeAnotherAppointment'),
-  sellerAgentCancelAppointment,
-
-  makeAnotherAppointmentToReject: _makeAppointment('request another appointment to reject'),
-  sellerAgentRejectAppointment,
-  checkAppointmentRejectionSmsForBuyer,
+  brands: createBrands('create showing brands', [brandSetup], r => r.data[0].id),
   
-  pollFinalizeRecentlyDone,
-  pollSendEmailNotification,
+  ...switchBrand(the.childBrandId, runAsUser(emails.agent, {
+    create,
+    createWithNoApprovalRequired,
+    createHippocket,
+    createWithTenantRole,
+  })),
+
+  getShowingAccessDenied: getShowing({
+    name: 'try to access a forbidden showing (403)',
+    status: 403,
+    expect: { code: 'AccessForbidden' },
+  }),
   
-  createWithValidationError,
+  ...switchBrand(the.parentBrandId, runAsUser(emails.admin, {
+    getShowing: getShowing(),
+    filter,
+
+    searchForCompleteAgentName: search('John Doe', {
+      name: 'search for complete agent name',
+      expect: () => ({ info: { count: 4, total: 4 } }),
+    }),
+
+    searchForPartialAgentName: search(',Jo:&(Do)|', {
+      name: 'search for partial agent name',
+      expect: () => ({ info: { count: 4, total: 4 } }),
+    }),
+
+    searchForAddress: search('5020 Jun Stree Dalla', {
+      name: 'search for listing address',
+      expect: () => ({ info: { count: 3, total: 3 } }),
+    }),
+
+    searchForMlsNumber: search('13103256', {
+      name: 'search for MLS#',
+      expect: () => ({ info: { count: 3, total: 3 } }),
+    }),
+
+    searchMixed: search('Joh:&)502,(1310|Dall:Jun', {
+      name: 'mixed search',
+      expect: () => ({ info: { count: 3, total: 3 } }),
+    }),
+
+    searchWithoutResult: search('John 5020 13103256 wontmatchforsure', {
+      name: 'search without result',
+      expect: () => ({ info: { count: 0, total: 0 } }),
+    }),
+  })),
+
+  ...runAsUauthorized({
+    getShowingPublic,
+    requestAppointment: _makeAppointment('request an appointment'),
+    checkAppointmentReceiptSmsForBuyer,
+  }),
+
+  ...switchBrand(the.childBrandId, runAsUser(emails.agent, {
+    checkNotificationCount,
+    checkAppointmentNotifications,
+    confirmAppointment: confirmAppointment('requestAppointment'),
+    checkAppointmentConfirmationSmsForBuyer,
+  })),
+
+  ...runAsUauthorized({
+    requestAppointmentAutoConfirm,
+    checkAppointmentAutoConfirmationTextMessagesForBuyer,
+  }),
+
+  ...switchBrand(the.childBrandId, runAsUser(emails.agent, {
+    checkShowingTotalCount,
+    upcomingAppointments,
+  })),
+  
+  ...runAsUauthorized({
+    buyerAgentGetAppointment,
+    buyerAgentRescheduleAppointment,
+  }),
+
+  ...switchBrand(the.childBrandId, runAsUser(emails.agent, {
+    checkBuyerRescheduleNotifications,
+  })),
+
+  ...runAsUauthorized({
+    buyerAgentCancelAppointment,
+  }),
+
+  ...switchBrand(the.childBrandId, runAsUser(emails.agent, {
+    checkBuyerCancelNotifications,
+  })),
+
+  ...runAsUauthorized({
+    makeAnotherAppointment: _makeAppointment('request a new appointment'),
+  }),
+
+  ...switchBrand(the.childBrandId, runAsUser(emails.agent, {
+    confirmAnotherAppointment: confirmAppointment('makeAnotherAppointment'),
+    sellerAgentCancelAppointment,
+
+    makeAnotherAppointmentToReject: _makeAppointment('request another appointment to reject'),
+    sellerAgentRejectAppointment,
+    checkAppointmentRejectionSmsForBuyer,
+    
+    pollFinalizeRecentlyDone,
+    pollSendEmailNotification,
+    
+    createWithValidationError,
+  })),
 }

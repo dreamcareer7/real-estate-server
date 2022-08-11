@@ -23,5 +23,6 @@ async function TestUser() {
 }
 
 module.exports = {
-  TestUser
+  TestUser,
+  fetchUser,
 }

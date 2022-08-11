@@ -21,6 +21,7 @@ registerSuite('brokerwolf', [
   'mapContactType'
 ])
 registerSuite('brand', [
+  'deleteChecklist',
   'addChecklist',
   'addDateContext',
   'addTextContext',
@@ -959,6 +960,14 @@ function downloadGalleryZip(cb) {
     .expectStatus(200)
 }
 
+function downloadDealZip(cb) {
+  return frisby
+    .create('download a deal zip archive')
+    .get(`/deals/${results.deal.create.data.id}.zip`)
+    .after(cb)
+    .expectStatus(200)
+}
+
 module.exports = {
   getRoleDefinitions,
   create,
@@ -1015,6 +1024,7 @@ module.exports = {
   sortGalleryItems,
   createGalleryZipUrl,
   downloadGalleryZip,
+  downloadDealZip,
   removeRole,
   remove
 }

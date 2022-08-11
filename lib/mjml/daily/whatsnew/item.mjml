@@ -1,0 +1,57 @@
+<mj-section padding="0 5px 20px 5px">
+  <mj-group>
+    <mj-column width="13%">
+      {% if item.icon %}
+        <mj-image
+          padding="5px"
+          src="{{item.icon}}"
+          href="{{ item.url }}"
+          width="45px"
+          align="center"
+        >
+        </mj-image>
+      {% endif %}
+    </mj-column>
+    <mj-column width="65%">
+      <mj-text
+        padding-left="0"
+        padding-right="0"
+        color="#949598"
+        font-family="Lato"
+        font-size="13px"
+        font-weight="400"
+      >
+        <div>
+          {{ item.date | time('dddd MMMM Do', 'UTC') }}
+          <br><br>
+        </div>
+
+        <a style="color: #000" href="{{ item.url }}">{{item.title}}</a>
+      </mj-text>
+    </mj-column>
+
+    <mj-column padding="0" width="11%"></mj-column>
+
+    <mj-column padding="0" width="11%">
+      <mj-button
+        font-family="Lato"
+        background-color="#E7E9EC"
+        font-weight="bold"
+        font-size="13px"
+        color="black"
+        padding="3px"
+        inner-padding="0"
+        border-radius="50%"
+        href="{{item.url}}"
+        align="center"
+        mj-class="actions"
+      >
+        <img
+          src="https://assets.rechat.com/daily/signup.png"
+          title="Sign up for Webinar"
+          style="width:35px;width:35px;object-fit:contain;vertical-align:middle;"
+        />
+      </mj-button>
+    </mj-column>
+  </mj-group>
+</mj-section>

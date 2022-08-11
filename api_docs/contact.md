@@ -85,6 +85,12 @@ Updates a single contact and its attributes. If attributes have `id`, they are u
 ### Import contacts from CSV [POST /contacts/import.csv]
 <!-- include(tests/contact_import/importCSV.md) -->
 
+### Import contacts from XLS [POST /contacts/import.xls]
+<!-- include(tests/contact_import/importXls.md) -->
+
+### Import contacts from XLSX [POST /contacts/import.xlsx]
+<!-- include(tests/contact_import/importXlsx.md) -->
+
 # Group Attributes
 
 ## Overview
@@ -158,6 +164,9 @@ Tags collection is the set of all tags that are used in contacts and/or manually
 
 ### Set touch reminder on a tag [PATCH /contacts/tags/:tag/touch]
 <!-- include(tests/contact/changeTagTouchFreq.md) -->
+
+### Set touch reminder on a contact [PATCH /contacts/:id/touch]
+<!-- include(tests/contact/updateContactTouchFreqManually.md) -->
 
 ### Delete a tag from all contacts [DELETE /contacts/tags/:tag]
 <!-- include(tests/contact/deleteTag.md) -->

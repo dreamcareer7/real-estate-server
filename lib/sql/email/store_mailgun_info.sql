@@ -1,0 +1,1 @@
+UPDATE emails SET mailgun_id = $2, sent_at = to_timestamp($3) WHERE id = $1

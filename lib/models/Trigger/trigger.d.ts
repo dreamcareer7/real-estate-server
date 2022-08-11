@@ -78,6 +78,12 @@ interface IContactTrigger {
   contact: UUID;
 }
 
+interface IHolidayTrigger {
+  object_type: 'holiday';
+  trigger_object_type: 'holiday';
+  event_type: string;
+}
+
 type TDealEventTypes =
   | 'lease_application_date'
   | 'financing_due'
@@ -123,7 +129,7 @@ type IFlowTrigger = {
   flow_step: null;
 }
 
-export type IRawTrigger = IRawTriggerBase & IFlowTrigger & (IContactTrigger | IDealTrigger) & (IEventAction | IEmailAction);
+export type IRawTrigger = IRawTriggerBase & IFlowTrigger & (IContactTrigger | IDealTrigger | IHolidayTrigger) & (IEventAction | IEmailAction);
 
 interface IModel {
   id: UUID;

@@ -1,0 +1,100 @@
+{% extends "./base.mjml" %}
+
+{% block content %}
+<mj-section background-color="#FFFFFF" padding="70px 44px">
+  <mj-column>
+    <mj-text align="center" font-family="Cormorant" font-size="32px" font-weight="700" color="#00172B">PRICE IMPROVED</mj-text>
+    <mj-text align="center" font-family="Cormorant" font-size="32px" font-weight="700" color="#00172B">MARKETING CAMPAIGN</mj-text>
+    <mj-text align="center" font-family="Cormorant" font-size="24px" color="#00172B">for</mj-text>
+    <mj-text align="center" font-family="Cormorant" font-size="28px" color="#00172B"> {{listing.property.address.street_address}} </mj-text>
+  </mj-column>
+</mj-section>
+
+{% if socials.length > 0 %}
+{% set margin = '4px' %}
+{% include './margin.mjml' %}
+<mj-section background-color="#FFFFFF" padding="70px 44px 0px 44px">
+  <mj-column>
+    {% set number = 1 %}
+    {% include './circle.mjml' %}
+    <mj-text align="center" font-family="Roboto" font-size="18px" color="#009CBD">SOCIAL</mj-text>
+    <mj-text align="center" font-family="Cormorant" font-size="36px" font-weight="700" color="#00172B">POST AND STORIES</mj-text>
+    <mj-text align="center" font-family="Roboto" font-size="18px" font-weight="300" color="#00172B"> Share or schedule your posts for Instagram and Facebook </mj-text>
+  </mj-column>
+</mj-section>
+{% set thumbnails = socials %}
+{% set type = 'PriceImprovement' %}
+{% set medium = 'Social' %}
+{% set text = 'VIEW ALL' %}
+{% set brand = mc_brand %}
+{% include './thumbnails.mjml' %}
+<mj-section padding-top=0 padding-bottom="36px" background-color="#FFFFFF">
+  <mj-column>
+    {% include './cta.mjml' %}
+  </mj-column>
+</mj-section>
+{% endif %}
+
+{% if emails.length > 0 %}
+{% set margin = '4px' %}
+{% include './margin.mjml' %}
+<mj-section background-color="#FFFFFF" padding="70px 44px 39px 44px">
+  <mj-column>
+    {% set number = 2 %}
+    {% include './circle.mjml' %}
+    <mj-text align="center" font-family="Roboto" font-size="18px" color="#009CBD">EMAIL MARKETING</mj-text>
+    <mj-text align="center" font-family="Cormorant" font-size="36px" font-weight="700" color="#00172B">GET AN OFFER</mj-text>
+    <mj-text align="center" line-height="29px" font-family="Roboto" font-size="18px" font-weight="300" color="#00172B"> Let your sphere know there is a new price and generate new excitement around the listing. </mj-text>
+    <mj-image border="1px solid #d5d6d8" width="235px" padding-bottom=0 padding-top="5px" src="{{emails[0].url}}" />
+    {% set type = 'PriceImprovement' %}
+    {% set medium = 'Email' %}
+    {% set text = 'VIEW MORE DESIGNS' %}
+    {% set brand = mc_brand %}
+    {% include './cta.mjml' %}
+  </mj-column>
+</mj-section>
+{% endif %}
+
+{% set margin = '4px' %}
+{% include './margin.mjml' %}
+<mj-section background-color="#FFFFFF" padding="70px 44px 39px 44px">
+  <mj-column>
+    {% set number = 3 %}
+    {% include './circle.mjml' %}
+    <mj-text align="center" font-family="Roboto" font-size="18px" color="#009CBD">AGENT NETWORK</mj-text>
+    <mj-text align="center" font-family="Cormorant" font-size="36px" font-weight="700" color="#00172B">MARKET TO TOP AGENTS</mj-text>
+    <mj-text align="center" line-height="29px" font-family="Roboto" font-size="18px" font-weight="300" color="#00172B"> Take advantage of our powerful and proprietary AI-based agent search tool. Identify the top agents in your area based on your listing, buyers, or volume and email them with one click. </mj-text>
+    {% set url = {
+    uri: '/dashboard/agent-network/agents',
+    query: {
+    listing: listing.id,
+    title: listing.property.address.street_address
+    }
+    } %}
+    {% set text = 'GO TO MY AGENT NETWORK' %}
+    {% include './cta.mjml' %}
+  </mj-column>
+</mj-section>
+
+{% if websites.length > 0 %}
+{% set margin = '4px' %}
+{% include './margin.mjml' %}
+<mj-section background-color="#FFFFFF" padding="70px 44px 39px 44px">
+  <mj-column>
+    {% set number = 4 %}
+    {% include './circle.mjml' %}
+    <mj-text align="center" font-family="Roboto" font-size="18px" color="#009CBD">WEBSITE</mj-text>
+    <mj-text align="center" font-family="Cormorant" font-size="36px" font-weight="700" color="#00172B">WOW YOUR SELLER</mj-text>
+    <mj-text align="center" line-height="29px" font-family="Roboto" font-size="18px" font-weight="300" color="#00172B"> Haven’t built your website yet? Elevate your listing by creating its very own website! The process can be done in less than five minutes and is sure to impress. All listing websites come with an auto-generated web address at no cost to you (although you are welcome to purchase and use your own domain name as well).
+    </mj-text>
+    <mj-image border="1px solid #d5d6d8" width="235px" padding-bottom=0 padding-top="5px" src="{{websites[0].url}}" />
+    {% set url = {
+    uri: '/dashboard/websites'
+    } %}
+    {% set text = 'START YOUR WEBSITE' %}
+    {% set brand = websites_brand %}
+    {% include './cta.mjml' %}
+  </mj-column>
+</mj-section>
+{% endif %}
+{% endblock %}

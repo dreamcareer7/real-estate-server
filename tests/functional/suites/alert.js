@@ -182,6 +182,21 @@ const virtual = (cb) => {
     })
 }
 
+const virtualCount = (cb) => {
+  return frisby.create('count a virtual alert')
+    .post('/valerts/count', vcriteria)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+    })
+    .expectJSONTypes({
+      info: {
+        total: results.alert.virtual.info.count
+      }
+    })
+}
+
 const virtualByAgent = (cb) => {
   const criteria = {
     property_types: vcriteria.property_types,
@@ -274,6 +289,7 @@ module.exports = {
   patchAlert404,
   patchAlertWorked,
   virtual,
+  virtualCount,
   virtualByAgent,
   deleteAlert404,
   deleteAlert,

@@ -14,6 +14,8 @@ function start() {
     require('./notifications'),
     require('./triggers'),
     require('./showing'),
+    require('./openhouse_notifications'),
+    require('./social_posts')
   ]) {
     start()
   }

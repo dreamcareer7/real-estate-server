@@ -47,3 +47,15 @@ apps:
     args     : ./pollers/email_events_notifications
     name     : 'email_events_notifications'
     kill_timeout : 15000
+  - script   : ./scripts/workers/index.js
+    args     : ./pollers/super_campaigns
+    name     : 'super_campaigns'
+  - script   : ./scripts/workers/index.js
+    args     : ./pollers/openhouse_notifications.js
+    name     : 'agents_openhouse_notifications'
+  - script   : ./scripts/workers/index.js
+    args     : ./pollers/showing.js
+    name     : 'showing'
+  - script   : ./scripts/workers/index.js
+    args     : ./pollers/social_posts.js
+    name     : 'social_posts'

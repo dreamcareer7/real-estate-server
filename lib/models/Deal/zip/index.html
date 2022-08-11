@@ -1,0 +1,325 @@
+<html>
+    <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet">
+        <style type="text/css">
+            /* Box sizing rules */
+            *,
+            *::before,
+            *::after {
+                box-sizing: border-box;
+            }
+
+            /* Remove default margin */
+            body,
+            h1,
+            h2,
+            h3,
+            h4,
+            p,
+            figure,
+            blockquote,
+            dl,
+            dd {
+                margin: 0;
+            }
+
+            /* Remove list styles on ul, ol elements with a list role, which suggests default styling will be removed */
+            ul[role='list'],
+            ol[role='list'] {
+                list-style: none;
+            }
+
+            /* Set core root defaults */
+            html:focus-within {
+                scroll-behavior: smooth;
+            }
+
+            /* Set core body defaults */
+            body {
+                min-height: 100vh;
+                text-rendering: optimizeSpeed;
+                line-height: 1.5;
+            }
+
+            /* A elements that don't have a class get default styles */
+            a:not([class]) {
+                text-decoration-skip-ink: auto;
+            }
+
+            /* Make images easier to work with */
+            img,
+            picture {
+                max-width: 100%;
+                display: block;
+            }
+
+            @media print {
+              @page {
+                size: letter;
+              }
+            }
+
+            body {
+                font-family: Lato;
+                font-style: normal;
+                font-weight: normal;
+                width: 8.5in;
+            }
+            .no-margin {
+                margin: 0;
+            }
+
+            .container {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+
+                height: 100%;
+            }
+
+            .report-page {
+                display: flex;
+                min-height: 11in;
+                max-height: 11in;
+                width: 8.5in;
+
+                border-left: 1px solid rgba(0, 0, 0, 0.1);
+                border-right: 1px solid rgba(0, 0, 0, 0.1);
+            }
+            .report-page > .side-strip {
+                {% set color = palette['inverted-container-bg-color'] %}
+                background-color: rgba({{color[0]}}, {{color[1]}}, {{color[2]}}, 1);
+                position: relative;
+                width: 32px;
+                height: 100%;
+                left: -1px;
+                top: 0px;
+
+                display: flex;
+                flex: 0 0 24px;
+                align-items: flex-end;
+                justify-content: center;
+                font-size: 13px;
+            }
+            .report-page > .side-strip > div {
+              {% set color = palette['inverted-container-text-color'] %}
+              color: rgba({{color[0]}}, {{color[1]}}, {{color[2]}}, .7);
+              writing-mode: vertical-lr;
+              padding-bottom: 20px;
+            }
+            .report-page > .side-strip > div > b {
+              color: rgba({{color[0]}}, {{color[1]}}, {{color[2]}}, 1);
+            }
+            .report-page > .main-content {
+                display: flex;
+                flex-direction: column;
+                padding: 16px 0 16px 40px;
+                width: 100%;
+                gap: 24px;
+            }
+            .report-page > .main-content .body {
+                display: flex;
+                flex-direction: column;
+                gap: 26px;
+            }
+
+            .report-header {
+                flex: 1 0 auto;
+            }
+            .report-header > .report-title {
+                text-transform: uppercase;
+                font-size: 14px;
+                line-height: 32px;
+                letter-spacing: 1px;
+
+                display: flex;
+                align-items: center;
+
+                color: #1A1B1D;
+            }
+            .report-header > .report-brief {
+                display: flex;
+                gap: 16px;
+                align-items: center;
+                font-size: 14px;
+            }
+            .report-header > .report-brief .brief--label {
+                line-height: 24px;
+
+                text-transform: uppercase;
+                color: #949598;
+            }
+            .report-header > .report-brief .brief--value {
+                line-height: 20px;
+
+                text-transform: uppercase;
+                color: #000000;
+            }
+
+            .header {
+                display: flex;
+                padding-right: 24px;
+            }
+
+            .header .page-number {
+                color: #D7D9DC;
+                font-size: 12px;
+                line-height: 20px;
+                text-align: right;
+                font-weight: bold;
+            }
+            .header .page-number .digit {
+                font-size: 32px;
+                line-height: 24px;
+            }
+
+            section.report-section {
+                display: flex;
+                flex-direction: column;
+                gap: 16px;
+            }
+            section.report-section > .section--header {
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+            }
+            section.report-section > .report-section--body{
+                padding-right: 54px;
+                display: flex;
+                flex-direction: column;
+            }
+            section.report-section .section-header--title{
+                font-weight: 900;
+                font-size: 16px;
+                line-height: 20px;
+                color: #000000;
+            }
+            section.report-section .section-header--divider {
+                width: 65%;
+                display: flex;
+                align-items: center;
+            }
+            section.report-section .section-header--divider > .hr {
+                border-top: 1px solid rgba(0, 0, 0, 0.1);
+                width: 100%;
+            }
+
+            section.report-section .double-section {
+                display: flex;
+                gap: 4px;
+            }
+            section.report-section .double-section > .single-section {
+                flex: 1 1 50%;
+            }
+            section.report-section .single-section {
+                width: 100%;
+            }
+            section.report-section .single-section > .section-strip {
+                display: flex;
+                align-items: center;
+                border-radius: 2px;
+                height: 36px;
+                padding-left: 8px;
+                padding-right: 8px;
+            }
+            section.report-section .row:nth-child(even)  .single-section > .section-strip {
+                {% set color = palette['inverted-container-bg-color'] %}
+                background: rgba({{color[0]}}, {{color[1]}}, {{color[2]}}, 0.05);
+            }
+            section.report-section .row:nth-child(odd) .single-section > .section-strip {
+                background: #ffffff;
+            }
+            section.report-section .single-section > .section-strip .section--label {
+                font-size: 12px;
+                line-height: 20px;
+                color: #58595C;
+            }
+            section.report-section .single-section > .section-strip .section--value {
+                font-size: 13px;
+                line-height: 20px;
+                text-align: right;
+                color: #000000;
+                margin-left: auto;
+            }
+
+            .seller-index {
+                font-size: 24px;
+                line-height: 32px;
+                display: flex;
+                align-items: center;
+                color: #E7E9EC;
+                margin: 8px;
+            }
+
+        </style>
+    </head>
+    <body class="no-margin">
+        <div class="container">
+            <div class="row report-page">
+                <div class="col side-strip">
+                  <div>
+                    Powered by <b>Rechat</b>
+                  </div>
+                </div>
+                <div class="col main-content">
+                    {% set page = 1 %}
+                    {% include './header.html' %}
+                    <div class="body">
+                        <section class="report-section associate-details">
+                            <div class="section--header">
+                                <div class="section-header--title">Details</div>
+                                <div class="section-header--divider">
+                                    <div class="hr"></div>
+                                </div>
+                            </div>
+                            <div class="report-section--body">
+                              {% for group in contexts | batch(2) %}
+                                <div class="row double-section">
+                                    <div class="col single-section">
+                                        <div class="section-strip">
+                                            <span class="section--label">{{group[0].definition.label}}</span>
+                                            <span class="section--value">{{group[0].text}}</span>
+                                        </div>
+                                    </div>
+                                    <div class="col single-section">
+                                      {% if group[1] %}
+                                        <div class="section-strip">
+                                            <span class="section--label">{{group[1].definition.label}}</span>
+                                            <span class="section--value">{{group[1].text}}</span>
+                                        </div>
+                                      {% endif %}
+                                    </div>
+                                </div>
+                              {% endfor %}
+                            </div>
+                        </section>
+
+
+
+                        {% set page_roles = roles.slice(0,3) %}
+                        {% include './roles.html' %}
+                    </div>
+                </div>
+            </div>
+
+            {% for page_roles in roles.slice(3) | batch(5) %}
+              <div class="row report-page">
+                  <div class="col side-strip">
+                    <div>
+                      Powered by <b>Rechat</b>
+                    </div>
+                  </div>
+                  <div class="col main-content">
+                      {% set page = loop.index + 1 %}
+                      {% include './header.html' %}
+                      <div class="body">
+                      {% include './roles.html' %}
+                      </div>
+                  </div>
+              </div>
+            {% endfor %}
+        </div>
+    </body>
+</html>

@@ -7,6 +7,7 @@ const property_types = require('./property_types')
 const Brand = require('../../../lib/models/Brand')
 
 const BrandRole = {
+  ...require('../../../lib/models/Brand/role/get'),
   ...require('../../../lib/models/Brand/role/save'),
   ...require('../../../lib/models/Brand/role/members')
 }
@@ -71,7 +72,7 @@ async function create(data) {
       role = await BrandRole.create({
         brand: b.id,
         role: r,
-        acl: ['*']
+        acl: ['Admin']
       })
       members = roles[r]
     } else {
@@ -117,6 +118,14 @@ async function create(data) {
       is_lease,
       brand: b.id,
     })
+
+    /*
+     * The BrandPropertyType.create() function automatically created 3 checklists as a convenience.
+     * But during tests they are not needed as we'll create our own checklists.
+     * Having both will create issues.
+     * So, we just delete the ones created automatically and create new ones instead
+     */
+    await Promise.all(property_type.checklists.map(BrandChecklist.delete))
 
     property_types_by_label[label] = property_type.id
   }
@@ -223,11 +232,11 @@ async function getContexts(brand_id) {
 }
 
 /**
- * @param {UUID} brand_id
+ * @param {UUID[]} ids
  * @returns {Promise<any[]>}
  */
-function getChecklists(brand_id) {
-  return BrandChecklist.getByBrand(brand_id)
+function getChecklists(ids) {
+  return BrandChecklist.getAll(ids)
 }
 
 async function getPropertyTypes(brand_id) {
@@ -235,9 +244,17 @@ async function getPropertyTypes(brand_id) {
   return _.keyBy(property_types, 'label')
 }
 
+async function removeMember(brand, user) {
+  const roles = await BrandRole.getByUser(brand, user)
+  for (const role of roles) {
+    await BrandRole.removeMember(role, user)
+  }
+}
+
 module.exports = {
   create,
   getContexts,
   getChecklists,
-  getPropertyTypes
+  getPropertyTypes,
+  removeMember
 }

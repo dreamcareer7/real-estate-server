@@ -18,7 +18,7 @@ module.exports = {
     attribute_type: 'birthday'
   },
   Anniversary: {
-    attribute_type: 'important_date',
+    attribute_type: 'wedding_anniversary',
     label: 'Wedding Anniversary'
   },
   'E-mail Address': {

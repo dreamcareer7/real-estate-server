@@ -3,7 +3,7 @@ version: '3'
 services:
   postgres:
     container_name: 'postgres-rechat-server'
-    image: 'mdillon/postgis:10-alpine'
+    image: 'postgis/postgis:13-3.2-alpine'
     environment:
       POSTGRES_USER: 'postgres'
       POSTGRES_PASSWORD: 'changeme'

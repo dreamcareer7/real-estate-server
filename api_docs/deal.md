@@ -126,5 +126,8 @@ get a list of available contexts for each brand.
 ### Sort gallery items [PUT /deals/:id/gallery/items/sort]
 <!-- include(tests/deal/sortGalleryItems.md) -->
 
-### Generate a Zip file [POST /deals/:id/gallery.zip]
+### Generate a Zip url for deal's gallery [POST /deals/:id/gallery.zip]
 <!-- include(tests/deal/createGalleryZipUrl.md) -->
+
+### Download a Zip archive for deal documents [GET /deals/:id.zip]
+<!-- include(tests/deal/downloadDealZip.md) -->

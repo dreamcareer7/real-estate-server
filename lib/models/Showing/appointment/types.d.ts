@@ -7,6 +7,11 @@ export interface ShowingAppointmentInput {
   time: string;
   contact: UUID;
   status: AppointmentStatus;
+  email: string;
+  phone_number: string;
+  first_name: string;
+  last_name: string;
+  company: string;
 }
 
 export interface ShowingAppointmentRequestPayload {
@@ -21,10 +26,8 @@ export interface AppointmentFeedback {
   comment?: string;
 }
 
-export interface ShowingAppointment {
-  id: UUID;
-  created_at: number;
-  updated_at: number;
+export interface ShowingAppointment extends Omit<IModel, 'deleted_at' | 'created_by' | 'updated_by'> {
+  type: 'showing_appointment';
   source: string;
   time: Date;
   status: AppointmentStatus;
@@ -33,6 +36,11 @@ export interface ShowingAppointment {
   approvals: UUID[] | null;
   feedback: AppointmentFeedback | null;
   buyer_message: string | null;
+  email: string | null;
+  phone_number: string | null;
+  first_name: string | null;
+  last_name: string | null;
+  company: string | null;
 }
 
 export interface ShowingAppointmentPublic {
@@ -43,19 +51,13 @@ export interface ShowingAppointmentPublic {
   status: AppointmentStatus;
   showing: UUID;
   buyer_message: string | null;
+  role_message: string | null;
 }
 
-export interface ShowingAppointmentPopulated {
-  id: UUID;
-  created_at: number;
-  updated_at: number;
-  source: string;
-  time: Date;
-  status: AppointmentStatus;
+export interface ShowingAppointmentPopulated extends Omit<ShowingAppointment, 'showing' | 'contact' | 'approvals'>{
   showing: ShowingPopulated;
   contact: IContact;
   approvals?: ShowingApproval[];
-  buyer_message: string | null;
 }
 
 export type AppointmentStatus =

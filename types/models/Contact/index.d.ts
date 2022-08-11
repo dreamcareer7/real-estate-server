@@ -143,6 +143,8 @@ declare type TContactActionReason =
   | 'deals'
   | 'import_csv'
   | 'import_json'
+  | 'import_xlsx'
+  | 'import_spreadsheet'
   | 'merge'
   | 'deleted_definition'
   | 'google_integration'
@@ -192,6 +194,8 @@ declare interface IContactFilterOptions {
   activities?: UUID[];
   created_by?: UUID;
   updated_by?: UUID;
+  created_for?: TContactActionReason;
+  updated_for?: TContactActionReason;
   updated_gte?: number;
   updated_lte?: number;
   last_touch_gte?: number;
@@ -249,9 +253,10 @@ declare interface IContactDuplicateClusterInput {
   sub_contacts: UUID[];
 }
 
-declare interface IContactTag {
-  id: UUID;
+declare interface IContactTag extends Omit<IModel, 'deleted_at'> {
+  tag: string;
   text: string;
-  created_at: number;
-  updated_at: number;
+  touch_freq: number | null;
+  type: 'crm_tag';
+  auto_enroll_in_super_campaigns: boolean;
 }

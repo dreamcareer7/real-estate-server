@@ -16,10 +16,11 @@ const query = `SELECT id, created_at
     AND (mailgun_id IS NOT NULL OR google_id IS NOT NULL OR microsoft_id IS NOT NULL)
     AND (created_at::timestamptz > $1::timestamptz)
   ORDER BY created_at ASC
-  LIMIT 1000
+  LIMIT 6000
 `
 
 runInContext(`archive-old-emails-${new Date().toLocaleTimeString('en-us')}`, async () => {
+  Context.set({ 'db:log': true })
   const lastEmailDate = (await promisify(MLSJob.getLastRun)('archive_old_emails'))?.[0]?.last_modified_date
   const time = lastEmailDate || defaultTtime
   const emails = await sql.select(query, [time])

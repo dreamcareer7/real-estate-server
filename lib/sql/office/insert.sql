@@ -31,7 +31,9 @@ INSERT INTO offices(
   st_postal_code_plus4,
   st_state,
   url,
-  mls
+  mls,
+  broker_mui,
+  broker_mls_id
 ) VALUES (
   $1,
   $2,
@@ -65,7 +67,9 @@ INSERT INTO offices(
   $30,
   $31,
   $32,
-  $33::mls
+  $33::mls,
+  $34,
+  $35
 ) ON CONFLICT (matrix_unique_id, mls) DO UPDATE SET
   board = $1,
   email = $2,
@@ -99,6 +103,8 @@ INSERT INTO offices(
   st_postal_code_plus4 = $30,
   st_state = $31,
   url = $32,
+  broker_mui = $34,
+  broker_mls_id = $35,
   updated_at = CLOCK_TIMESTAMP()
   WHERE offices.matrix_unique_id = $13 AND offices.mls = $33::mls
 RETURNING id

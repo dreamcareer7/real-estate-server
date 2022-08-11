@@ -16,6 +16,7 @@ require('../../../lib/models/Microsoft/workers')
 require('../../../lib/models/Deal/email')
 require('../../../lib/models/Deal/brokerwolf')
 require('../../../lib/models/Deal/D365')
+require('../../../lib/models/Deal/MoveEasy')
 require('../../../lib/models/Email/archive/upload')
 require('../../../lib/models/Email/send')
 require('../../../lib/models/Email/events')
@@ -39,6 +40,8 @@ require('../../../lib/models/Showing/showinghub/webhook')
 
 require('../../../lib/models/Microsoft/migration/publisher')
 
+require('../../../lib/models/SocialPost/worker')
+
 const queues = [
   {
     queues: ['users_last_seen'],
@@ -53,7 +56,7 @@ const queues = [
     concurrency: 1
   },
   {
-    queues: ['brokerwolf', 'd365'],
+    queues: ['brokerwolf', 'd365', 'move_easy'],
     concurrency: 1
   },
   {
@@ -169,6 +172,11 @@ const queues = [
   {
     queues: ['brand_webhook'],
     concurrency: 50
+  },
+
+  {
+    queues: ['social_post'],
+    concurrency: 1
   }
 ]
 

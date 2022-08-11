@@ -2,6 +2,7 @@
 
 const path = require('path')
 const fs = require('fs')
+const Crypto = require('../../../lib/models/Crypto')
 
 registerSuite('brand', [
   'createParent',
@@ -24,6 +25,7 @@ const email = {
       recipient_type: 'Email'
     },
   ],
+  tags: ['mailGunTag'],
   due_at: new Date(),
   html: '<div>Hi</div>',
   subject: 'Email Subject',
@@ -36,7 +38,7 @@ const individual = {
   notifications_enabled: true
 }
 
-const mailgun_id = 'example-mailgun-id-email-1'
+
 
 
 
@@ -62,15 +64,24 @@ const sendDue = cb => {
     .expectStatus(200)
 }
 
+const getMailGunId = cb => {  
+  return frisby
+    .create('Get MailGun Id')
+    .get(`/emails/${results.email.schedule.data.id}?associations[]=email_campaign.emails&associations[]=email_campaign.recipients&associations[]=email_campaign_email.email`)
+    .after(cb)    
+    .expectStatus(200)    
+}
+
 const addEvent = cb => {
+  
   const data = {
     'event-data': {
-      timestamp: 1531818450.203548,
+      timestamp: new Date().getTime(),
       recipient: email.to[0].email,
       event: 'delivered',
       message: {
         headers: {
-          'message-id': mailgun_id
+          'message-id': results.email.getMailGunId.data.emails[0].email.mailgun_id
         }
       }
     }
@@ -94,11 +105,11 @@ const updateStats = cb => {
     .expectStatus(200)
 }
 
-const get = cb => {
+const get = cb => {  
   return frisby
     .create('Get the campaign')
-    .get(`/emails/${results.email.schedule.data.id}?associations[]=email_campaign.emails&associations[]=email_campaign.recipients`)
-    .after(cb)
+    .get(`/emails/${results.email.schedule.data.id}?associations[]=email_campaign.emails&associations[]=email_campaign.recipients&associations[]=email_campaign_email.email`)
+    .after(cb)    
     .expectStatus(200)
     .expectJSON({
       data: {
@@ -106,7 +117,8 @@ const get = cb => {
         html: email.html,
         delivered: 1,
         recipients: email.to,
-        notifications_enabled: false
+        notifications_enabled: false,
+        tags: email.tags
       }
     })
 }
@@ -116,7 +128,7 @@ const getEmail = cb => {
 
   return frisby
     .create('Get an email from a campaign')
-    .get(`/emails/${campaign.id}/emails/${campaign.emails[0].id}`)
+    .get(`/emails/${campaign.id}/emails/${campaign.emails[0].id}?associations[]=email_campaign.emails&associations[]=email_campaign.recipients&associations[]=email_campaign_email.email`)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
@@ -190,6 +202,7 @@ const scheduleBrand = cb => {
 
   const c = {
     ...individual,
+    tags: ['campaignTag'],
     subject: 'Brand Campaign To {{recipient.email}}',
     to: [
       {
@@ -226,6 +239,7 @@ const update = cb => {
     ...individual,
     subject,
     html,
+    tags: ['updatedCampaignTag'],
     to: [
       {
         email: 'foo@bar.com',
@@ -262,6 +276,7 @@ const scheduleWithTemplate = cb => {
     ...individual,
     html: undefined,
     subject: 'Campaign using a template',
+    tags: ['scheduledCampaignTag'],
     template: results.template.instantiate.data.id,
     to: [
       {
@@ -845,6 +860,43 @@ function syncThreadsByContact(cb) {
     .expectStatus(200)
 }
 
+function openEmail(cb) {  
+  const campaign = results.email.get.data
+  const emailId = campaign.emails[0].email.id
+  const enc = Crypto.encrypt(JSON.stringify({ email: emailId, origin: 'gmail' }))
+  return (
+    frisby
+      .create('create the request to visit the email')
+      .get(`/emails/events/${encodeURIComponent(enc)}`)
+      .addHeader('x-handle-jobs', 'yes')
+      .after(cb)
+      .addHeader('X-Forwarded-For', '13.74.137.176')  // codeTwoIP
+      .expectStatus(200)
+  )
+}
+
+const openEmailUpdateStats = cb => {
+  return frisby.create('update email status')
+    .post('/poll', { name: 'EmailCampaign.updateStats' })
+    .after(cb)
+    .expectStatus(204)
+}
+
+
+const checkEmailAfterVisitingByBlackListIps = (cb) => {  
+  const campaign = results.email.get.data
+
+  return frisby
+    .create('email should not be opened if the request comes from the blackList servers')
+    .get(`/emails/${campaign.id}/emails/${campaign.emails[0].id}?associations[]=email_campaign.emails&associations[]=email_campaign.recipients&associations[]=email_campaign_email.email`)
+    .after(function (err, res, json) {
+      if (json.data.email.opened) {
+        throw 'Email should not be opened with the blackList IPs'
+      }
+      cb(err, res, json)
+    })
+    .expectStatus(200)   
+}
 
 module.exports = {
   schedule,
@@ -858,6 +910,7 @@ module.exports = {
   enableDisableNotification,
   checkNotificationEnabled,
   sendDue,
+  getMailGunId,
   addEvent,
   updateStats,
   get,
@@ -885,5 +938,8 @@ module.exports = {
   batchUpdateIsRead,
   batchTrash,
   batchArchive,
-  syncThreadsByContact
+  syncThreadsByContact,
+  openEmail,
+  openEmailUpdateStats,
+  checkEmailAfterVisitingByBlackListIps
 }

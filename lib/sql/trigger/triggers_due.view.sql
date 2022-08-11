@@ -68,4 +68,26 @@ CREATE OR REPLACE VIEW triggers_due AS (
       AND t.failed_at IS NULL
       AND t.flow = c.id::uuid
   )
+  UNION ALL
+  (
+    SELECT
+      t.*,
+      'holiday' AS trigger_object_type,
+      c.object_type,
+      (c.next_occurence AT TIME ZONE 'UTC' AT TIME ZONE u.timezone) + t.wait_for + t.time AS timestamp,
+      (c.next_occurence AT TIME ZONE 'UTC' AT TIME ZONE u.timezone) + t.wait_for + t.time - interval '3 days' AS due_at
+    FROM
+      triggers AS t
+      JOIN calendar.holiday AS c
+        ON t.event_type = c.event_type
+      JOIN users AS u
+        ON (t.user = u.id)
+    WHERE
+      t.contact IS NULL
+      AND t.deal IS NULL
+      AND t.deleted_at IS NULL
+      AND t.executed_at IS NULL
+      AND t.effective_at <= NOW()
+      AND t.failed_at IS NULL
+  )
 )

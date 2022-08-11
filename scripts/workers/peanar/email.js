@@ -6,16 +6,12 @@ require('../../../lib/models/Email/events')
 
 const queues = [
   {
-    queues: ['email_high', 'email_event'],
+    queues: ['email_high'],
     concurrency: 20
-  },
-  {
-    queues: ['email_archive'],
-    concurrency: 60
   },
   {
     queues: ['email'],
-    concurrency: 20
+    concurrency: 35
   },
 ]
 

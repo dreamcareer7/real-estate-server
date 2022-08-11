@@ -16,7 +16,11 @@ const Review = require('../../../lib/models/Review')
 const createTask = async () => {
   const user = await User.getByEmail('test@rechat.com')
 
-  const brand = await BrandHelper.create()
+  const brand = await BrandHelper.create({
+    roles: {
+      Admin: [user.id],
+    }
+  })
   Context.set({ brand, user })
 
   const deal = await DealHelper.create(user.id, brand.id, {

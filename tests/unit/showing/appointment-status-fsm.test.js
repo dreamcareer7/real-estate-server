@@ -28,6 +28,8 @@ const notification = {
   sendCancelNotificationToRoles: stub(),
   sendFeedbackReceivedNotificationToRoles: stub(),
   sendRescheduleNotificationToRoles: stub(),
+  sendFeedbackReceivedTextMessageToBuyer: stub(),
+  sendAppointmentRescheduledNotificationToBuyer: stub(),
 }
 
 const mailerFactory = {
@@ -509,6 +511,10 @@ describe('Showing/Appointment/status-fsm', () => {
       assert(
         notification.sendRescheduleNotificationToRoles
           .calledOnceWithExactly(appt.id, appt.buyer_message ?? '')
+      )
+      assert(
+        notification.sendAppointmentRescheduledNotificationToBuyer
+          .calledOnceWithExactly(appt.id)
       )
       assert(mailerFactory.forRescheduledAppointment.calledOnceWithExactly(appt))
       assert(utils.send.calledOnce)

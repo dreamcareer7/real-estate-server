@@ -1,7 +1,9 @@
-export type NotificationDeliveryType =
-  | 'email'
-  | 'push'
-  | 'sms'
+export type TShowingRole =
+  | 'Admin/Assistant'  
+  | 'CoSellerAgent'
+  | 'SellerAgent'
+  | 'Tenant'
+  | 'Other'
   ;
 
 export interface ShowingRole {
@@ -11,13 +13,13 @@ export interface ShowingRole {
   deleted_at: number;
   created_by: number;
   showing: UUID;
-  role: TDealRole;
+  role: TShowingRole;
   user_id: UUID;
   agent_id: IAgent['id'] | null;
   brand: UUID;
   can_approve: boolean;
-  confirm_notification_type: NotificationDeliveryType[];
-  cancel_notification_type: NotificationDeliveryType[];
+  confirm_notification_type: TNotificationDeliveryType[];
+  cancel_notification_type: TNotificationDeliveryType[];
   first_name: string;
   last_name: string;
   email: string;
@@ -31,15 +33,15 @@ export interface ShowingRolePopulated {
   deleted_at: number;
   created_by: number;
   showing: UUID;
-  role: TDealRole;
+  role: TShowingRole;
   user_id: UUID;
   user: IUser;
   agent_id: IAgent['id'] | null;
   agent: IAgent | null;
   brand: UUID;
   can_approve: boolean;
-  confirm_notification_type: NotificationDeliveryType[];
-  cancel_notification_type: NotificationDeliveryType[];
+  confirm_notification_type: TNotificationDeliveryType[];
+  cancel_notification_type: TNotificationDeliveryType[];
   first_name: string;
   last_name: string;
   email: string;
@@ -47,13 +49,13 @@ export interface ShowingRolePopulated {
 }
 
 export interface ShowingRoleInput {
-  role: TDealRole;
+  role: TShowingRole;
   user?: UUID;
   agent?: IAgent['id'];
   brand: UUID;
   can_approve: boolean;
-  confirm_notification_type: NotificationDeliveryType[];
-  cancel_notification_type: NotificationDeliveryType[];
+  confirm_notification_type: TNotificationDeliveryType[];
+  cancel_notification_type: TNotificationDeliveryType[];
   first_name: string;
   last_name: string;
   email: string;

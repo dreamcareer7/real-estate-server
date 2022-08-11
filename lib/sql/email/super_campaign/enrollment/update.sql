@@ -1,13 +1,11 @@
 WITH to_delete AS (
-  UPDATE
+  DELETE FROM
     super_campaigns_enrollments
-  SET
-    deleted_at = now()
   WHERE
-    super_campaign = $1::uuid
+    deleted_at IS NULL
+    AND created_by IS NULL
+    AND super_campaign = $1::uuid
     AND brand = ANY($2::uuid[])
-    -- AND is_pinned IS FALSE
-    AND deleted_at IS NULL
 )
 INSERT INTO super_campaigns_enrollments as sce (
   super_campaign,
@@ -48,12 +46,10 @@ ON CONFLICT (super_campaign, brand, "user") DO UPDATE SET
   created_by = NULL
 WHERE
   (
+    sce.deleted_at IS NULL AND
+    sce.created_by IS NULL
+  ) AND (
     SELECT COALESCE(us.super_campaign_admin_permission, FALSE)
     FROM users_settings AS us
     WHERE us.brand = excluded.brand AND us.user = excluded.user
   ) = TRUE
-  AND
-  (
-    sce.deleted_at IS NOT NULL OR
-    sce.created_by IS DISTINCT FROM excluded.user
-  )

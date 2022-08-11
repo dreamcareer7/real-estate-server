@@ -4,10 +4,14 @@ const { createContext } = require('../helper')
 
 const BrandHelper = require('../brand/helper')
 
-const Orm = require('../../../lib/models/Orm/context')
+const Orm = {
+  ...require('../../../lib/models/Orm/context'),
+  ...require('../../../lib/models/Orm/index')
+}
 
 const Context = require('../../../lib/models/Context')
 const CrmTask = require('../../../lib/models/CRM/Task')
+const Assignee = require('../../../lib/models/CRM/Task/assignee')
 const CrmTaskEmitter = require('../../../lib/models/CRM/Task/emitter')
 const CrmAssociation = require('../../../lib/models/CRM/Association')
 const Contact = require('../../../lib/models/Contact/manipulate')
@@ -141,6 +145,58 @@ function testCreateManyEmitsCreateEvent(done) {
   createTwoTasks().catch(done)
 }
 
+async function testClone() {
+  const [contact] = await createContact()
+
+  const rawTask = await CrmTask.create({
+    ...base_task,
+    title: 'all_day true',
+    associations: [{
+      association_type: 'contact',
+      contact
+    }],
+    reminders: [{
+      is_relative: false,
+      timestamp: base_task.due_date - 3600
+    }],
+    all_day: true
+  })
+
+  const associations = ['crm_task.associations', 'crm_task.reminders', 'crm_task.assignees']
+  Orm.setEnabledAssociations(associations)
+
+  const [task] = await Orm.populate({
+    models: [rawTask],
+    associations,
+  })
+
+  const clonedTask = await CrmTask.clone({brand: brand.id, title: 'new_one', created_by: user.id}, task.id)
+  expect(clonedTask.title).to.be.equal('new_one')
+  expect(clonedTask.task_type).to.be.equal('Call')
+  expect(clonedTask.status).to.be.equal('PENDING')
+
+  const [populatedClonedTask] = await Orm.populate({
+    models: [clonedTask],
+    associations,
+  })
+
+  /** @type {ICrmAssociation[]} */ const assocs = populatedClonedTask.associations
+  expect(assocs.length).to.be.equal(1)
+  expect(assocs[0].association_type).to.be.equal('contact')
+
+  /** @type {IReminder[]} */ const reminders = populatedClonedTask.reminders
+  expect(reminders.length).to.be.equal(1)
+  expect(reminders[0].timestamp).to.be.equal(base_task.due_date - 3600)
+}
+
+async function testAssignees() {
+  const task = await CrmTask.create(base_task)
+  await BrandHelper.removeMember(brand.id, user.id)
+
+  const assignees = await Assignee.getForTask(task.id)
+  expect(assignees).to.be.empty
+}
+
 describe('CrmTask', () => {
   createContext()
   beforeEach(setup)
@@ -148,4 +204,6 @@ describe('CrmTask', () => {
   it('should allow updating association metadata', testUpdateAssociation)
   it('should create multiple tasks', testCreateMany)
   it('should emit create event when creating multiple tasks', testCreateManyEmitsCreateEvent)
+  it('should clone a trigger', testClone)
+  it('should not include removed users in assignees', testAssignees)
 })

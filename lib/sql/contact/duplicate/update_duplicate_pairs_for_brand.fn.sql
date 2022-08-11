@@ -2,27 +2,27 @@ CREATE OR REPLACE FUNCTION update_duplicate_pairs_for_brand(brand_id uuid)
 RETURNS void
 LANGUAGE SQL
 AS $$
-  WITH duplicate_attrs AS (
+  DELETE FROM
+    contacts_duplicate_pairs
+  WHERE
+    ignored_at IS NULL
+    AND brand = $1;
+
+  WITH duplicate_clusters AS (
     SELECT
       text, array_agg(contact) ids
     FROM
-      contacts_attributes AS ca
+      contacts_attributes_text AS ca
       JOIN contacts
         ON ca.contact = contacts.id
     WHERE
       contacts.deleted_at IS NULL
       AND ca.deleted_at IS NULL
-      AND attribute_type IN ('email', 'phone_number')
+      AND attribute_type = 'email'
       AND brand = $1::uuid
     GROUP BY
       text
-  ), duplicate_clusters AS (
-    SELECT
-      ids
-    FROM
-      duplicate_attrs
-    WHERE
-      ARRAY_LENGTH(ids, 1) > 1
+    HAVING ARRAY_LENGTH(array_agg(contact), 1) > 1
   )
   INSERT INTO
     contacts_duplicate_pairs (a, b, brand)

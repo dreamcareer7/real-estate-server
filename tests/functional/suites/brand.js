@@ -2,7 +2,7 @@ const fs = require('fs')
 const path = require('path')
 const brand = require('./data/brand.js')
 const contexts = require('./data/context.js')
-const { omit } = require('lodash')
+const { omit, find } = require('lodash')
 
 registerSuite('office', ['add'])
 registerSuite('form', ['create'])
@@ -191,14 +191,23 @@ const addDateContext = cb => {
 }
 
 const addTextContext = cb => {
-  const { contract_status }  = contexts
+  const contract_status = {
+    ...contexts.contract_status,
+    checklists: [
+      {
+        checklist: results.brand.addChecklist.data.id,
+        is_required: true
+      }
+    ]
+  }
+
   return frisby.create('add a context definition to a brand')
     .post(`/brands/${brand_id}/contexts?associations[]=brand_context.checklists`, contract_status)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
-      data: contract_status
+      data: omit(contract_status, 'checklists')
     })
 }
 
@@ -297,8 +306,9 @@ const updateChecklist = cb => {
 }
 
 const deleteChecklist = cb => {
+  const current_offer = find(results.brand.addPropertyType.data.checklists, {checklist_type: 'Offer'})
   return frisby.create('delete a checklist to a brand')
-    .delete(`/brands/${brand_id}/checklists/${results.brand.addChecklist.data.id}`)
+    .delete(`/brands/${brand_id}/checklists/${current_offer.id}`)
     .after(cb)
     .expectStatus(204)
 }
@@ -528,11 +538,11 @@ const updateBrandTheme = cb => {
   const theme = {
     palette: {
       primary: {
-        main: '#ffffff',
+        main: 'rgba(191,81,81,0.87)',
         contrastText: 'rgba(191,81,81,0.87)'
       },
       secondary: {
-        main: '#f50057'
+        main: 'rgba(191,81,81,0.87)'
       }
     }
   }
@@ -948,6 +958,7 @@ module.exports = {
   updatePropertyType,
   sortPropertyType,
 
+  deleteChecklist,
   addChecklist,
   updateChecklist,
   addTask,
@@ -957,7 +968,6 @@ module.exports = {
   getPropertyTypes,
   deletePropertyType,
   deleteTask,
-  deleteChecklist,
   getByHostname,
   removeHostname,
 

@@ -8,6 +8,8 @@ const { AGENT_SMITH1, AGENT_SMITH2, AGENT_SMITH3, DARTH_VADER, NARUTO } = requir
 const brandSetup = require('./data/super_campaign/brand')
 const mappings = require('./data/super_campaign/csv_mappings')
 
+const DUE_AT = Date.now() / 1000 - 1
+
 const {
   createUser,
   createBrands,
@@ -166,7 +168,7 @@ function create(cb) {
   const data = {
     subject: 'Happy Labor Day!',
     description: 'A super campaign for Labor Day holiday',
-    due_at: Date.now() / 1000,
+    due_at: DUE_AT,
     template_instance,
     tags: ['Labor Day'],
   }
@@ -247,6 +249,19 @@ function updateSimpleDetails(id, data) {
         data: omit(data, 'template_instance'),
       })
   }
+}
+
+// eslint-disable-next-line no-unused-vars
+function invalidUpdateSimpleDetails (
+  id,
+  data,
+  name = 'update a super campaign (invalid)',
+  status = 400,
+) {
+  return cb => F(name)
+    .put(`/email/super-campaigns/${resolve(id)}`, resolve(data))
+    .after(cb)
+    .expectStatus(status)
 }
 
 function updateTags(id, tags) {
@@ -474,6 +489,18 @@ module.exports = {
     instantiateTemplate,
     christmas: {
       create: createEmpty,
+
+      // setDueAtWithoutTemplateInstance: invalidUpdateSimpleDetails(
+      //   ID('christmas.create'),
+      //   {
+      //     subject: 'Invalid',
+      //     description: 'Invalid Invalid Invalid',
+      //     due_at: () => Date.now() / 1000,
+      //     template_instance: null,        
+      //   },
+      //   'set due_at when template_instance is not set',
+      // ),
+      
       updateSimpleDetails: updateSimpleDetails(ID('christmas.create'), {
         subject: 'Happy New Year!',
         description: 'A super campaign for the new year!',
@@ -582,6 +609,7 @@ module.exports = {
     runAsUser(AGENT_SMITH1, {
       checkLaborDayCampaignForAgentSmith: checkCampaign(() => ({
         subject: R().labor_day.create.subject,
+        due_at: DUE_AT,
       })),
 
       getEligibleCampaigns: getEligibleCampaigns({
@@ -641,6 +669,7 @@ module.exports = {
     runAsUser(AGENT_SMITH1, {
       checkLaborDayCampaignForNaruto: checkCampaign(() => ({
         subject: R().labor_day.create.subject,
+        due_at: DUE_AT,
       })),
     })
   ),

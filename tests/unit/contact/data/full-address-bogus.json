@@ -1,0 +1,25 @@
+{
+  "First Name": {
+    "attribute_type": "first_name"
+  },
+  "Last Name": {
+    "attribute_type": "last_name"
+  },
+  "Email": {
+    "attribute_type": "email",
+    "index": 0
+  },
+  "Phone": {
+    "attribute_type": "phone_number",
+    "label": "Primary",
+    "index": 0
+  },
+  "Work": {
+    "attribute_type": "company"
+  },
+  "Shipping Address": {
+    "attribute_type": "full_address",
+    "label": "Home",
+    "index": 0
+  }
+}

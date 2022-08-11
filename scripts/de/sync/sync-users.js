@@ -5,8 +5,9 @@ const Context = require('../../../lib/models/Context')
 
 const MAP = `
 SELECT
-    username,
+    key,
     id,
+    username,
     mlsid,
     "firstName" as first_name,
     "lastName" as last_name,
@@ -30,8 +31,9 @@ SELECT
     mlses
   FROM json_to_recordset($1)
   as input(
-    username TEXT,
+    key TEXT,
     id TEXT,
+    username TEXT,
     mlsid TEXT,
     "firstName" TEXT,
     "lastName" TEXT,
@@ -61,22 +63,23 @@ const ORPHANIZE = `
 
   UPDATE de.users SET deleted_at = NOW()
   WHERE deleted_at IS NULL -- Dont redelete?
-  AND username NOT IN (
-    SELECT username FROM data
+  AND key NOT IN (
+    SELECT key FROM data
   )
 `
 
-const INSERT_USERNAMES = `
+const INSERT_KEYS = `
 WITH data AS (
   ${MAP}
 )
 
-INSERT INTO de.users (username, object, updated_at)
-SELECT username, ROW_TO_JSON(data), NOW() FROM data
-ON CONFLICT (username) DO UPDATE SET
+INSERT INTO de.users (key, object, updated_at)
+SELECT key, ROW_TO_JSON(data), NOW() FROM data
+ON CONFLICT (key) DO UPDATE SET
   object = EXCLUDED.object,
   updated_at = NOW(),
-  deleted_at = NULL -- Undelete is they have appeared again`
+  deleted_at = NULL -- Undelete is they have appeared again
+RETURNING *`
 
 const INSERT_USERS = `
 WITH saved AS (
@@ -106,7 +109,7 @@ UPDATE public.users SET
     last_name = de.users.object->>'last_name',
     profile_image_url = de.users.object->>'profile_image_url',
     cover_image_url = de.users.object->>'cover_image_url',
-    website = ('https://elliman.com/' || (de.users.object->>'id')),
+    website = ('https://elliman.com/' || (de.users.object->>'username')),
     linkedin = de.users.object->>'linkedin',
     facebook = de.users.object->>'facebook',
     youtube = de.users.object->>'youtube',
@@ -123,7 +126,7 @@ UPDATE public.users SET
 const NULLIFY = `
 UPDATE users SET
   phone_number = NULL,
-  email = de.users.username || '-deleted-account@elliman.com',
+  email = de.users.key || '-deleted-account@elliman.com',
   fake_email = true
 FROM de.users
 WHERE public.users.id = de.users.user
@@ -262,10 +265,10 @@ const syncUsers = async users => {
   const { rows } = await db.executeSql.promise(ORPHANIZE, [data])
 
   rows.forEach(r => {
-    Context.log('Removing', r.username)
+    Context.log('Removing', r.key)
   })
 
-  await db.executeSql.promise(INSERT_USERNAMES, [data])
+  await db.executeSql.promise(INSERT_KEYS, [data])
 
   const inserts = await db.executeSql.promise(INSERT_USERS)
   Context.log('Inserted', inserts.rows.length, 'new users')
