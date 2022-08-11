@@ -389,8 +389,8 @@ describe('Showing/notification', () => {
       const showingId = await helper.create({
         approval_type: 'None',
         roles: [helper.roleInput(Context.get('userObject'), {
-          confirm_notification_type: [],
-          cancel_notification_type: [],
+          confirm_notification_type: ['sms'],
+          cancel_notification_type: ['sms'],
         })],
       })
       const apptId = await helper.request(showingId)
