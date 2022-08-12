@@ -681,8 +681,9 @@ function filterByAssignee(cb) {
     .expectStatus(200)
     .expectJSON({
       data: [{
+        id: results.task.cloneTask.data.id,
         assignees: [{
-          id: results.authorize.token.data.id
+          id: results.task.registerNewUser.data.id
         }]
       }],
       info: {
