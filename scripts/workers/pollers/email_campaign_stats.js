@@ -5,6 +5,7 @@ function start() {
   poll({
     fn: EmailCampaignStats.updateStats,
     name: 'EmailCampaignStats.updateStats',
+    wait: 30000
   })
 }
 

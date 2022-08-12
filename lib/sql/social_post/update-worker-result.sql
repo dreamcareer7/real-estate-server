@@ -1,8 +1,9 @@
 UPDATE
     social_posts
 SET
-    insta_file = $2,
-    post_link = $3,
-    published_media_id = $4
+    insta_file = COALESCE($2, insta_file),
+    post_link = COALESCE($3, post_link),
+    published_media_id = COALESCE($4, published_media_id),
+    media_container_id = COALESCE($5, media_container_id)
 WHERE
     id = $1

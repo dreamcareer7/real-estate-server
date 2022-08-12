@@ -17,7 +17,9 @@ RETURNS stdaddr AS $$
       $1->>'country',
       $1->>'postcode',
       $1->>'box',
-      $1->>'unit'
+      $1->>'unit',
+      $1->>'line1',
+      $1->>'line2'
     )::stdaddr
 $$
 LANGUAGE SQL

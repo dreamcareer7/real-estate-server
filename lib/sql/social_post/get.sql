@@ -8,6 +8,7 @@ SELECT
   social_posts.post_link,
   social_posts.failed_at,
   social_posts.failure,
+  social_posts.media_container_id,
   'social_post' AS TYPE,
   EXTRACT(EPOCH FROM social_posts.created_at) AS created_at,
   EXTRACT(EPOCH FROM social_posts.updated_at) AS updated_at,

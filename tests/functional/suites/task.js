@@ -684,19 +684,16 @@ function filterByAssignee(cb) {
     .expectStatus(200)
     .expectJSON({
       data: [{
-        assignees: [{
-          id: results.task.registerNewUser.data.id
-        }]
-      }, {
+        id: results.task.cloneTask.data.id,
         assignees: [{
           id: results.task.registerNewUser.data.id
         }]
       }],
       info: {
-        total: 2
+        total: 1
       }
     })
-    .expectJSONLength('data', 2)
+    .expectJSONLength('data', 1)
 }
 
 function filterByNonExistingAssignee(cb) {

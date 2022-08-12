@@ -1,4 +1,4 @@
-export interface TPopulateOptions<TModel, TAssociation, TFormat extends 'nested' | 'references' = 'nested'> {
+export interface TPopulateOptions<TModel, TAssociation, TFormat extends 'nested' | 'references'> {
   models: TModel[];
   associations?: TAssociation[];
   format: TFormat;
