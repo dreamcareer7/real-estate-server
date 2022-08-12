@@ -168,7 +168,7 @@ function cloneTask(cb) {
   return frisby
     .create('clone a task')
     .post(
-      `/crm/tasks/${task_id}/clone`,
+      `/crm/tasks/${task_id}/clone?associations[]=crm_task.associations`,
       { title: new_title }
     )
     .after(cb)
@@ -177,6 +177,9 @@ function cloneTask(cb) {
       data: {
         task_type: 'Todo',
         title: new_title,
+        associations: [{
+          association_type: 'listing'
+        }]
       }
     })
 }
