@@ -66,7 +66,7 @@ const save = async () => {
   const parentBrand = await createBrand(userId, {brand_type: 'Brokerage', name: BrokerageName})
   const brand = await createBrand(userId, {parent: parentBrand.id, brand_type: 'Team'} )
   
-  const color = '#486fe1'
+  const color = 'rgba(191,81,81,0.87)'
   const logo = 'http://test.com/fake.jpeg'
   const containerBgColor = '#F3F5F9'
   await BrandSettings.set({

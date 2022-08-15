@@ -101,19 +101,19 @@ describe('Showing/Appointment/status-fsm', () => {
   
   context('utils.everyoneApproved()', () => {
     context('returns false when...', () => {
-      it('approvals are empty', () => {
+      it('approvals are empty', async () => {
         utils.everyoneApproved.callThrough()
 
-        expect(utils.everyoneApproved([], [{}, {}])).to.be.false
+        expect(await utils.everyoneApproved([], [{}, {}])).to.be.false
       })
 
-      it('roles are empty', () => {
+      it('roles are empty', async () => {
         utils.everyoneApproved.callThrough()
 
-        expect(utils.everyoneApproved([{}, {}], [])).to.be.false
+        expect(await utils.everyoneApproved([{}, {}], [])).to.be.false
       })
 
-      it('there\'s no intersection between roles and approvals', () => {
+      it('there\'s no intersection between roles and approvals and some of remaining roles has write access', async () => {
         const roles = ['r1', 'r2']
         const approvals = [
           { approved: true, role: 'r3' },
@@ -122,10 +122,14 @@ describe('Showing/Appointment/status-fsm', () => {
         
         utils.everyoneApproved.callThrough()
 
-        expect(utils.everyoneApproved(approvals, roles)).to.be.false
+        Role.getAll
+          .withArgs(['r1', 'r2'])
+          .resolves([{ can_approve: false }, { can_approve: true }])
+
+        expect(await utils.everyoneApproved(approvals, roles)).to.be.false
       })
 
-      it('some roles reject', () => {
+      it('some roles reject', async () => {
         const roles = ['r1', 'r2']
         const approvals = [
           { approved: true, role: 'r1' },
@@ -136,10 +140,10 @@ describe('Showing/Appointment/status-fsm', () => {
         
         utils.everyoneApproved.callThrough()
 
-        expect(utils.everyoneApproved(approvals, roles)).to.be.false        
+        expect(await utils.everyoneApproved(approvals, roles)).to.be.false
       })
       
-      it('some roles have no approval', () => {
+      it('some roles having write access have no approval', async () => {
         const roles = ['r1', 'r2']
         const approvals = [
           { approved: true, role: 'r1' },
@@ -148,12 +152,13 @@ describe('Showing/Appointment/status-fsm', () => {
         ]
         
         utils.everyoneApproved.callThrough()
+        Role.getAll.withArgs(['r2']).resolves([{ can_approve: true }])
 
-        expect(utils.everyoneApproved(approvals, roles)).to.be.false
+        expect(await utils.everyoneApproved(approvals, roles)).to.be.false
       })
     })
     
-    it('returns true when all roles confirmed', () => {
+    it('returns true when all roles confirmed', async () => {
       const roles = ['r1', 'r2']
       const approvals = [
         { approved: true, role: 'r1' },
@@ -164,7 +169,17 @@ describe('Showing/Appointment/status-fsm', () => {
       
       utils.everyoneApproved.callThrough()
 
-      expect(utils.everyoneApproved(approvals, roles)).to.be.true
+      expect(await utils.everyoneApproved(approvals, roles)).to.be.true
+    })
+
+    it('returns true when some roles lacking write access have not approved', async () => {
+      const roles = ['r1', 'r2']
+      const approvals = [{ approved: true, role: 'r1' }]
+
+      utils.everyoneApproved.callThrough()
+      Role.getAll.withArgs(['r2']).resolves([{ can_approve: false }])
+
+      expect(await utils.everyoneApproved(approvals, roles)).to.be.true
     })
   })
 
@@ -521,101 +536,101 @@ describe('Showing/Appointment/status-fsm', () => {
     })
   })
 
-  context('utils.guessNewStatus()', () => {
-    it('maps simple actions to their related appointment status', () => {
+  context('utils.guessNewStatus()', async () => {
+    it('maps simple actions to their related appointment status', async () => {
       const payload = make.payload()
       
       utils.guessNewStatus.callThrough()
       
       payload.action = 'BuyerCanceled'
-      expect(utils.guessNewStatus(payload)).to.be.equal('Canceled')
+      expect(await utils.guessNewStatus(payload)).to.be.equal('Canceled')
 
       payload.action = 'Rescheduled'
-      expect(utils.guessNewStatus(payload)).to.be.equal('Rescheduled')      
+      expect(await utils.guessNewStatus(payload)).to.be.equal('Rescheduled')
     })
     
-    it('returns Completed/Canceled for Finished based on old status', () => {
+    it('returns Completed/Canceled for Finished based on old status', async () => {
       const payload = make.payload('Finished')
       
       utils.guessNewStatus.callThrough()
 
       payload.appointment.status = 'Confirmed'
-      expect(utils.guessNewStatus(payload)).to.be.equal('Completed')
+      expect(await utils.guessNewStatus(payload)).to.be.equal('Completed')
 
       payload.appointment.status = 'NotConfirmed'
-      expect(utils.guessNewStatus(payload)).to.be.equal('Canceled')
+      expect(await utils.guessNewStatus(payload)).to.be.equal('Canceled')
     })
 
-    it('returns Confirmed for an rescheduled appt. that needs no approval', () => {
+    it('returns Confirmed for an rescheduled appt. that needs no approval', async () => {
       const payload = make.payload('Rescheduled')
 
       utils.guessNewStatus.callThrough()
 
       payload.showing.approval_type = 'None'
-      expect(utils.guessNewStatus(payload)).to.be.equal('Confirmed')
+      expect(await utils.guessNewStatus(payload)).to.be.equal('Confirmed')
     })
 
     context('when an approval is performed returns...', () => {
-      it('Canceled if someone rejected', () => {
+      it('Canceled if someone rejected', async () => {
         const payload = make.approvalPayload()
 
         utils.guessNewStatus.callThrough()
 
-        expect(utils.guessNewStatus(payload)).to.be.equal('Canceled')
+        expect(await utils.guessNewStatus(payload)).to.be.equal('Canceled')
       })
       
-      it('Confirmed if approval type is None', () => {
+      it('Confirmed if approval type is None', async () => {
         const payload = make.approvalPayload()
         payload.approvals.forEach(a => { a.approved = true })
         payload.showing.approval_type = 'None'
 
         utils.guessNewStatus.callThrough()
 
-        expect(utils.guessNewStatus(payload)).to.be.equal('Confirmed')
+        expect(await utils.guessNewStatus(payload)).to.be.equal('Confirmed')
       })
       
-      it('Requested when approvals is empty', () => {
+      it('Requested when approvals is empty', async () => {
         const payload = make.approvalPayload()
         payload.approvals.forEach(a => { a.approved = true })
         payload.approvals = []
 
         utils.guessNewStatus.callThrough()
 
-        expect(utils.guessNewStatus(payload)).to.be.equal('Requested')
+        expect(await utils.guessNewStatus(payload)).to.be.equal('Requested')
       })
       
-      it('Confirmed if someone confirmed and approval type is Any', () => {
+      it('Confirmed if someone confirmed and approval type is Any', async () => {
         const payload = make.approvalPayload()
         payload.showing.approval_type = 'Any'
         payload.approvals = [make.approval('confirmed-approval', true)]
 
         utils.guessNewStatus.callThrough()
 
-        expect(utils.guessNewStatus(payload)).to.be.equal('Confirmed')
+        expect(await utils.guessNewStatus(payload)).to.be.equal('Confirmed')
       })
       
-      it('Confirmed if all roles confirmed and approval type is All', () => {
+      it('Confirmed if all roles confirmed and approval type is All', async () => {
         const payload = make.approvalPayload()
         payload.showing.roles = ['r1', 'r2']
         payload.approvals.forEach(a => { a.approved = true })
 
         utils.everyoneApproved
           .withArgs(payload.approvals, payload.showing.roles)
-          .returns(true)
+          .resolves(true)
         utils.guessNewStatus.callThrough()
 
-        const newStatus = utils.guessNewStatus(payload)
+        const newStatus = await utils.guessNewStatus(payload)
         
         assert(utils.everyoneApproved.calledOnce)
         expect(newStatus).to.be.equal('Confirmed')
       })
       
-      it('old status if action is not handled', () => {
+      it('old status if action is not handled', async () => {
         const payload = make.payload('MissingAction')
 
         utils.guessNewStatus.callThrough()
 
-        expect(utils.guessNewStatus(payload))
+        expect(await utils.guessNewStatus(payload))
           .to.be.equal(payload.appointment.status)
       })
     })

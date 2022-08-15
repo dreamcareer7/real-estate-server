@@ -72,8 +72,42 @@ const search = (cb) => {
         mlsid: agent.mlsid,
         first_name: agent.first_name,
         last_name: agent.last_name,
-        email: agent.email
+        email: agent.email,
+        mls: agent.mls
       }]
+    })
+}
+
+const searchByMls = (cb) => {
+  return frisby.create('search for an agent limited to an mls')
+    .get(`/agents/search?q=${agent.first_name}&mls[]=${agent.mls}`)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      data: [{
+        mlsid: agent.mlsid,
+        first_name: agent.first_name,
+        last_name: agent.last_name,
+        email: agent.email,
+        mls: agent.mls
+      }]
+    })
+}
+
+
+const searchByMlsInverted = (cb) => {
+  return frisby.create('search for an agent limited to an mls that will return no results')
+    .get(`/agents/search?q=${agent.first_name}&mls[]=CRMLS`)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      data: [],
+      info: {
+        count: 0,
+        total: 0
+      }
     })
 }
 
@@ -108,5 +142,7 @@ module.exports = {
   getById,
   getByOffice,
   search,
+  searchByMls,
+  searchByMlsInverted,
   report
 }

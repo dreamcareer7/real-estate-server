@@ -4,5 +4,5 @@ SET
   deleted_at = now(),
   deleted_by = $2::uuid
 WHERE
-  "user" = ANY($1)
+  crm_task = ANY($1::uuid[])
   AND deleted_at IS NULL

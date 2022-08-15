@@ -19,76 +19,96 @@ RETURNS JSON AS $$
         'ruralroute', INITCAP(NULLIF(($1).ruralroute, '')),
         'extra',      INITCAP(NULLIF(($1).extra, '')),
         'city',       INITCAP(NULLIF(($1).city, '')),
-        'state',      INITCAP(NULLIF(($1).state, '')),
+        'state',      NULLIF((CASE WHEN LENGTH(TRIM(($1).state)) = 2 THEN UPPER(($1).state) ELSE INITCAP(($1).state) END), ''),
         'country',    NULLIF(($1).country, ''), -- USA -> Usa ?
         'postcode',   INITCAP(NULLIF(($1).postcode, '')),
         'box',        INITCAP(NULLIF(($1).box, '')),
         'unit',       INITCAP(NULLIF(REPLACE(($1).unit, '# ', '#'), '')),
 
         'line1', NULLIF(
-          (SELECT ARRAY_TO_STRING (
-            ARRAY[
-              INITCAP(NULLIF(($1).building, '')),
-              INITCAP(NULLIF(($1).house_num, '')),
-              INITCAP(NULLIF(($1).predir, '')),
-              INITCAP(NULLIF(($1).qual, '')),
-              INITCAP(NULLIF(($1).pretype, '')),
-              INITCAP(NULLIF(($1).name, '')),
-              (SELECT abbrev FROM street_type),
-              INITCAP(NULLIF(($1).sufdir, '')),
-              INITCAP(NULLIF(($1).ruralroute, '')),
-              CASE
-                WHEN ($1).unit IS NULL THEN NULL
-                WHEN ($1).unit = '' THEN NULL
-                ELSE INITCAP(REPLACE(($1).unit, '# ', '#'))
-              END,
-              CASE
-                WHEN ($1).box IS NULL THEN NULL
-                WHEN ($1).box = '' THEN NULL
-                ELSE INITCAP(($1).box)
-              END
-            ], ' ', NULL
-          )
-        ), ''),
+          COALESCE(
+            NULLIF(($1).line1, ''),
+            (SELECT ARRAY_TO_STRING (
+              ARRAY[
+                INITCAP(NULLIF(($1).building, '')),
+                INITCAP(NULLIF(($1).house_num, '')),
+                INITCAP(NULLIF(($1).predir, '')),
+                INITCAP(NULLIF(($1).qual, '')),
+                INITCAP(NULLIF(($1).pretype, '')),
+                INITCAP(NULLIF(($1).name, '')),
+                (SELECT abbrev FROM street_type),
+                INITCAP(NULLIF(($1).sufdir, '')),
+                INITCAP(NULLIF(($1).ruralroute, '')),
+                CASE
+                  WHEN ($1).unit IS NULL THEN NULL
+                  WHEN ($1).unit = '' THEN NULL
+                  ELSE INITCAP(REPLACE(($1).unit, '# ', '#'))
+                END,
+                CASE
+                  WHEN ($1).box IS NULL THEN NULL
+                  WHEN ($1).box = '' THEN NULL
+                  ELSE INITCAP(($1).box)
+                END
+              ], ' ', NULL
+            )
+          )), ''),
 
         'line2', NULLIF(
-          (SELECT ARRAY_TO_STRING (
-            ARRAY[
-              INITCAP(NULLIF(($1).city, '')),
-              INITCAP(NULLIF(($1).state, '')),
-              INITCAP(NULLIF(($1).postcode, ''))
-            ], ' ', NULL
-          )), ''
+          COALESCE(
+            NULLIF(($1).line2, ''),
+            (SELECT ARRAY_TO_STRING (
+              ARRAY[
+                INITCAP(NULLIF(($1).city, '')),
+                NULLIF((CASE WHEN LENGTH(TRIM(($1).state)) = 2 THEN UPPER(($1).state) ELSE INITCAP(($1).state) END), ''),
+                INITCAP(NULLIF(($1).postcode, ''))
+              ], ' ', NULL
+            ))), ''
         ),
 
         'full', NULLIF(
-          (SELECT ARRAY_TO_STRING (
+          ARRAY_TO_STRING(
             ARRAY[
-              INITCAP(NULLIF(($1).building, '')),
-              INITCAP(NULLIF(($1).house_num, '')),
-              INITCAP(NULLIF(($1).predir, '')),
-              INITCAP(NULLIF(($1).qual, '')),
-              INITCAP(NULLIF(($1).pretype, '')),
-              INITCAP(NULLIF(($1).name, '')),
-              (SELECT abbrev FROM street_type),
-              INITCAP(NULLIF(($1).sufdir, '')),
-              INITCAP(NULLIF(($1).ruralroute, '')),
-              CASE
-                WHEN ($1).unit IS NULL THEN NULL
-                WHEN ($1).unit = '' THEN NULL
-                ELSE (REPLACE(INITCAP(($1).unit), '# ', '#')) || ','
-              END,
-              CASE
-                WHEN ($1).box IS NULL THEN NULL
-                WHEN ($1).box = '' THEN NULL
-                ELSE INITCAP(($1).box)
-              END,
-              INITCAP(NULLIF(($1).city, '')),
-              INITCAP(NULLIF(($1).state, '')),
-              INITCAP(NULLIF(($1).postcode, ''))
-            ], ' ', NULL
-          )
-        ), '')
+              COALESCE(
+                NULLIF(($1).line1, ''),
+                ARRAY_TO_STRING(
+                    ARRAY[
+                      NULLIF(($1).building, ''),
+                      INITCAP(NULLIF(($1).building, '')),
+                      INITCAP(NULLIF(($1).house_num, '')),
+                      INITCAP(NULLIF(($1).predir, '')),
+                      INITCAP(NULLIF(($1).qual, '')),
+                      INITCAP(NULLIF(($1).pretype, '')),
+                      INITCAP(NULLIF(($1).name, '')),
+                      (SELECT abbrev FROM street_type),
+                      INITCAP(NULLIF(($1).sufdir, '')),
+                      INITCAP(NULLIF(($1).ruralroute, '')),
+                      CASE
+                        WHEN ($1).unit IS NULL THEN NULL
+                        WHEN ($1).unit = '' THEN NULL
+                        ELSE (REPLACE(INITCAP(($1).unit), '# ', '#'))
+                      END,
+                      CASE
+                        WHEN ($1).box IS NULL THEN NULL
+                        WHEN ($1).box = '' THEN NULL
+                        ELSE INITCAP(($1).box)
+                      END
+                    ], ' ', NULL
+                )
+              ),
+              COALESCE(
+                NULLIF(($1).line2, ''),
+                (
+                  SELECT ARRAY_TO_STRING(
+                    ARRAY[
+                      INITCAP(NULLIF(($1).city, '')),
+                      NULLIF((CASE WHEN LENGTH(TRIM(($1).state)) = 2 THEN UPPER(($1).state) ELSE INITCAP(($1).state) END), ''),
+                      INITCAP(NULLIF(($1).postcode, ''))
+                    ], ' ', NULL
+                  )
+                )
+            )
+          ], ', ', NULL
+        ), ', ')
       )
     ) as address
   )

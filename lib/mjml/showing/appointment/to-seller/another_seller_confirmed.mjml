@@ -29,14 +29,10 @@
     </mj-column>
   </mj-section>
 
-  {% if approveUrl or rescheduleUrl or rejectUrl or cancelUrl %}
-    {% call appointment.card(listing, contact, time) -%}
-      {{ button.approvalButtons(approveUrl, rescheduleUrl, rejectUrl, cancelUrl) }}
-    {%- endcall %}
-  {% else %}
-    {{ appointment.compact(listing, time) }}    
-  {% endif %}
- 
+  {% call appointment.card(listing, contact, time) -%}
+    {{ button.approvalButtons(approveUrl, rescheduleUrl, rejectUrl, cancelUrl) }}
+  {%- endcall %}
+
   <mj-section
     css-class="Email-needs approval-Agent"
     padding="0 24px 18px 24px"

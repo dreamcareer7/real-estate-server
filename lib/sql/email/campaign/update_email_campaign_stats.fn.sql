@@ -1,27 +1,26 @@
 CREATE OR REPLACE FUNCTION update_email_campaign_stats(campaign_id uuid, min_elapsed_time integer)
 RETURNS void AS
 $$
-  WITH events AS (
-    SELECT recipient, event, email, campaign, object, client_os
+  WITH campaign_events AS (
+    SELECT recipient, event, email, emails_events.campaign, occured_at, client_os, emails.sent_at, emails_events.created_at
     FROM emails_events
     JOIN emails ON emails.id = emails_events.email
-    WHERE emails.campaign = $1 and
-    (
-      (
-        emails_events.event in ('opened', 'clicked') and
-        EXTRACT(EPOCH FROM(emails_events.created_at - emails.sent_at)) > $2
-      )
-      or
-      (
-        emails_events.event not in ('opened', 'clicked') 
-      )
-    )
-    
+    WHERE emails_events.campaign = $1
   ),
-
+  events AS (
+    SELECT * FROM campaign_events WHERE
+    (
+    event in ('opened', 'clicked') and
+    EXTRACT(EPOCH FROM(created_at - sent_at)) > $2
+    )
+    or
+    (
+    event not in ('opened', 'clicked')
+    )
+  ),
   recipient_counts AS (
     SELECT
-      lower(recipient)                                     as recipient,
+      lower(recipient)                                    as recipient,
       count(*) filter(WHERE events.event = 'accepted')     as accepted,
       count(*) filter(WHERE events.event = 'rejected')     as rejected,
       count(*) filter(WHERE events.event = 'delivered')    as delivered,
@@ -55,9 +54,7 @@ $$
         SELECT
           count(
             DISTINCT (
-              ('epoch'::timestamptz + '300 seconds'::INTERVAL * (EXTRACT(epoch FROM (
-                (TIMESTAMP 'epoch' + (object->'timestamp')::int * INTERVAL '1 second')
-              ))::int4 / 300))::text
+              ('epoch'::timestamptz + '300 seconds'::INTERVAL * (EXTRACT(epoch FROM (occured_at))::int4 / 300))::text
               ||
               '-'
               ||

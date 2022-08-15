@@ -1,33 +1,54 @@
-WITH ctags AS MATERIALIZED (
+EXPLAIN ANALYZE WITH ctags AS MATERIALIZED (
   SELECT
     c.id,
-    array_agg(ca.text ORDER BY ca.text) FILTER (WHERE ca.text IS NOT NULL) AS tag
+    array_agg(ca.text ORDER BY ca.text) AS tag
   FROM
-    contacts AS c
-    LEFT JOIN (
-      SELECT
-        *
-      FROM
-        contacts_attributes_text
-      WHERE
-        deleted_at IS NULL
-        AND attribute_type = 'tag'
-    ) AS ca ON c.id = ca.contact
+    contacts_attributes_text AS ca
+    JOIN contacts AS c
+      ON c.id = ca.contact
   WHERE
     c.deleted_at IS NULL
+    AND ca.deleted_at IS NULL
+    AND ca.attribute_type = 'tag'
     AND c.brand = $1::uuid
   GROUP BY
     c.id
-  HAVING
-    min(c.tag) IS DISTINCT FROM array_agg(ca.text ORDER BY ca.text)
+), no_tags AS (
+  SELECT
+    id
+  FROM
+    contacts AS c
+  WHERE
+    c.deleted_at IS NULL
+    AND c.brand = $1::uuid
+
+  EXCEPT
+
+  SELECT
+    id
+  FROM
+    ctags
+), update_no_tags AS (
+  UPDATE
+    contacts
+  SET
+    tag = NULL,
+    tag_searchable = NULL
+  FROM
+    no_tags
+  WHERE
+    contacts.id = no_tags.id
+    AND tag IS NOT NULL
 )
 UPDATE
   contacts
 SET
   tag = c.tag,
-  tag_searchable = LOWER(c.tag::text)::text[]
+  tag_searchable = lower(c.tag::text)::text[]
 FROM
   ctags AS c
 WHERE
   contacts.id = c.id
   AND contacts.tag IS DISTINCT FROM c.tag
+  AND brand = $1::uuid
+  AND deleted_at IS NULL

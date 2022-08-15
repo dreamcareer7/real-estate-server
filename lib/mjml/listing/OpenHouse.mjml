@@ -1,114 +1,101 @@
-{% extends "../email.mjml" %}
+{% extends "./base.mjml" %}
 
 {% block content %}
-  <mj-section padding="16px 0 0 0"></mj-section>
+<mj-section background-color="#FFFFFF" padding="70px 44px">
+  <mj-column>
+    <mj-text align="center" font-family="Cormorant" font-size="32px" font-weight="700" color="#00172B">OPEN HOUSE</mj-text>
+    <mj-text align="center" font-family="Cormorant" font-size="32px" font-weight="700" color="#00172B">MARKETING CAMPAIGN</mj-text>
+    <mj-text align="center" font-family="Cormorant" font-size="24px" color="#00172B">for</mj-text>
+    <mj-text align="center" font-family="Cormorant" font-size="28px" color="#00172B"> {{listing.property.address.street_address}} </mj-text>
+  </mj-column>
+</mj-section>
 
-  <mj-wrapper background-color="#ffffff" padding="0">
-    <mj-section padding-top="18px" padding-bottom="15px">
-      <mj-column>
-        <mj-text align="center" font-family="Lato" font-size="18px" font-weight="900">
-          Hosting an Open House?
-        </mj-text>
+{% if openHouses.length > 0 %}
+{% set margin = '4px' %}
+{% include './margin.mjml' %}
+<mj-section background-color="#FFFFFF" padding="70px 44px 39px 44px">
+  <mj-column>
+    {% set number = 1 %}
+    {% include './circle.mjml' %}
+    <mj-text align="center" font-family="Roboto" font-size="18px" color="#009CBD">SIGN UP FORM</mj-text>
+    <mj-text align="center" font-family="Cormorant" font-size="36px" font-weight="700" color="#00172B">LEAD CAPTURE</mj-text>
+    <mj-text align="center" font-family="Cormorant" font-size="36px" font-weight="700" color="#00172B">REGISTRATION FORM</mj-text>
+    <mj-text align="center" line-height="29px" font-family="Roboto" font-size="18px" font-weight="300" color="#00172B">Instead of using pen and paper to register information about visitors, allow us to host a digital registration page for your open house event. Anyone who registers, we'll automatically add them to your CRM.</mj-text>
+    <mj-image border="1px solid #d5d6d8" width="235px" padding-bottom=0 padding-top="5px" src="{{openHouses[0].url}}" />
+    {% set url = {
+    uri: '/dashboard/open-house'
+    } %}
+    {% set text = 'GO TO CRM' %}
+    {% set brand = mc_brand %}
+    {% include './cta.mjml' %}
+  </mj-column>
+</mj-section>
+{% endif %}
 
-        <mj-text align="left" line-height=1.3 color="#555557" font-family="Lato" font-size="16px" font-weight="400" padding-top="0" >
-          We were told you're hosting an open house on {{listing.property.address.street_address}}. We offer several different tools to help you market and manage it.
-        </mj-text>
-      </mj-column>
-    </mj-section>
+{% if socials.length > 0 %}
+{% set margin = '4px' %}
+{% include './margin.mjml' %}
+<mj-section background-color="#FFFFFF" padding="70px 44px 0px 44px">
+  <mj-column>
+    {% set number = 2 %}
+    {% include './circle.mjml' %}
+    <mj-text align="center" font-family="Roboto" font-size="18px" color="#009CBD">SOCIAL</mj-text>
+    <mj-text align="center" font-family="Cormorant" font-size="36px" font-weight="700" color="#00172B">POST AND STORIES</mj-text>
+    <mj-text align="center" font-family="Roboto" font-size="18px" font-weight="300" color="#00172B"> Leverage your Facebook and Instagram to drive more traffic to your Open House. </mj-text>
+  </mj-column>
+</mj-section>
+{% set thumbnails = socials %}
+{% set type = 'OpenHouse' %}
+{% set medium = 'Social' %}
+{% set text = 'VIEW ALL' %}
+{% set brand = mc_brand %}
+{% include './thumbnails.mjml' %}
+<mj-section padding-top=0 padding-bottom="36px" background-color="#FFFFFF">
+  <mj-column>
+    {% include './cta.mjml' %}
+  </mj-column>
+</mj-section>
+{% endif %}
 
-    {% if socials.length > 0 %}
-      <mj-section padding-top="18px" padding-bottom="15px">
-        <mj-column>
-          <mj-text padding="0" align="center" font-family="Lato" font-size="18px" font-weight="900">
-            Social Marketing<br><br>
-          </mj-text>
+{% if emails.length > 0 %}
+{% set margin = '4px' %}
+{% include './margin.mjml' %}
+<mj-section background-color="#FFFFFF" padding="70px 44px 39px 44px">
+  <mj-column>
+    {% set number = 3 %}
+    {% include './circle.mjml' %}
+    <mj-text align="center" font-family="Roboto" font-size="18px" color="#009CBD">EMAIL MARKETING</mj-text>
+    <mj-text align="center" font-family="Cormorant" font-size="36px" font-weight="700" color="#00172B">WOW YOUR SPHERE</mj-text>
+    <mj-text align="center" line-height="29px" font-family="Roboto" font-size="18px" font-weight="300" color="#00172B">Market your Open House to your sphere or use Agent Network to let the top agents in the area know.. </mj-text>
+    <mj-image border="1px solid #d5d6d8" width="235px" padding-bottom=0 padding-top="5px" src="{{emails[0].url}}" />
+    {% set type = 'OpenHouse' %}
+    {% set medium = 'Email' %}
+    {% set text = 'VIEW MORE DESIGNS' %}
+    {% set brand = mc_brand %}
+    {% include './cta.mjml' %}
+  </mj-column>
+</mj-section>
+{% endif %}
 
-          <mj-text align="left" line-height=1.3 color="#555557" font-family="Lato" font-size="16px" font-weight="400" padding-top="0" >
-            Leverage your Facebook and Instagram and let your network know your open house.
-          </mj-text>
-        </mj-column>
-      </mj-section>
-
-      {% set thumbnails = socials %}
-      {% include './thumbnails.mjml' %}
-
-      <mj-section padding-top=0 padding-bottom=0>
-        <mj-column>
-          {% set type = 'OpenHouse' %}
-          {% set medium = 'Social' %}
-          {% set text = 'Social Marketing' %}
-          {% set brand = mc_brand %}
-          {% include './cta.mjml' %}
-        </mj-column>
-      </mj-section>
-    {% endif %}
-
-    {% if emails.length > 0 %}
-      <mj-section padding-top="18px" padding-bottom="15px">
-        <mj-column>
-          <mj-text padding="0" align="center" font-family="Lato" font-size="18px" font-weight="900">
-            Email Marketing<br><br>
-          </mj-text>
-
-          <mj-text align="left" line-height=1.3 color="#555557" font-family="Lato" font-size="16px" font-weight="400" padding-top="0">
-            Another opportunity to market your listing to your contacts and/or potential interested agents using Agent Network.
-          </mj-text>
-        </mj-column>
-      </mj-section>
-
-      {% set thumbnails = emails %}
-      {% include './thumbnails.mjml' %}
-
-      <mj-section padding-top=0 padding-bottom=0>
-        <mj-column>
-          {% set type = 'OpenHouse' %}
-          {% set medium = 'Email' %}
-          {% set text = 'Email Marketing' %}
-          {% set brand = mc_brand %}
-          {% include './cta.mjml' %}
-        </mj-column>
-
-        <mj-column>
-          {% set url = {
-            uri: '/dashboard/agent-network/agents',
-            query: {
-              listing: listing.id,
-              title: listing.property.address.street_address
-            }
-          } %}
-          {% set text = 'Agent Network' %}
-          {% include './cta.mjml' %}
-        </mj-column>
-      </mj-section>
-    {% endif %}
-
-    <mj-section padding-top="18px" padding-bottom="15px">
-      <mj-column>
-        <mj-text padding="0" align="center" font-family="Lato" font-size="18px" font-weight="900">
-          Manage your Open House Registration<br><br>
-        </mj-text>
-
-        <mj-text align="left" line-height=1.3 color="#555557" font-family="Lato" font-size="16px" font-weight="400" padding-top="0">
-          Instead of using paper and pen to register information about visitors, allow us to host a digital registration page for your open house event. Anyone who registers, we'll automatically add them to your crm.
-        </mj-text>
-      </mj-column>
-    </mj-section>
-
-    <mj-section padding-top=0 padding-bottom=0>
-      <mj-column>
-        {% set url = {
-            uri: '/dashboard/open-house'
-          } %}
-          {% set text = 'Manage Open House Registrations' %}
-          {% include './cta.mjml' %}
-      </mj-column>
-    </mj-section>
-
-    <mj-section padding=0>
-      <mj-column padding=0>
-        <mj-spacer height="20px" />
-      </mj-column>
-    </mj-section>
-
-  </mj-wrapper>
+{% if websites.length > 0 %}
+{% set margin = '4px' %}
+{% include './margin.mjml' %}
+<mj-section background-color="#FFFFFF" padding="70px 44px 39px 44px">
+  <mj-column>
+    {% set number = 4 %}
+    {% include './circle.mjml' %}
+    <mj-text align="center" font-family="Roboto" font-size="18px" color="#009CBD">WEBSITE</mj-text>
+    <mj-text align="center" font-family="Cormorant" font-size="36px" font-weight="700" color="#00172B">WOW YOUR SELLER</mj-text>
+    <mj-text align="center" line-height="29px" font-family="Roboto" font-size="18px" font-weight="300" color="#00172B"> Haven’t built your website yet? Elevate your listing by creating its very own website! The process can be done in less than five minutes and is sure to impress. All listing websites come with an auto-generated web address at no cost to you, and yes, you can purchase and use your own domain name as well.
+    </mj-text>
+    <mj-image border="1px solid #d5d6d8" width="235px" padding-bottom=0 padding-top="5px" src="{{websites[0].url}}" />
+    {% set url = {
+    uri: '/dashboard/websites'
+    } %}
+    {% set text = 'START YOUR WEBSITE' %}
+    {% set brand = websites_brand %}
+    {% include './cta.mjml' %}
+  </mj-column>
+</mj-section>
+{% endif %}
 {% endblock %}
