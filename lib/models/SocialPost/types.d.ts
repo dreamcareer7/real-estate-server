@@ -14,6 +14,7 @@ export interface Post {
   due_at?: number
   executed_at?: number
   owner: UUID
+  media_container_id: string
 }
 
 export interface Filter {

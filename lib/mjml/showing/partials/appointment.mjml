@@ -193,7 +193,7 @@
           line-height="24px"
           color="#000"
         >
-          {{ contact.fullName or 'Anonymous Agent' }}
+          {{ contact.fullName or 'Anonymous' }}
           {% if contact.company -%}
             , <span style="color: #6c6d70">{{ contact.company }}</span>
           {%- endif %}
