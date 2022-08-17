@@ -95,16 +95,35 @@ function createContact (contact, userId, name = 'create a contact') {
  * @param {string} [name]
  */
 function assignContact (contactId, brandId, userId, name = '(re)assign the contact') {
+  const associations = [
+    'associations[]=contact.assignees',
+    'associations[]=contact_role.brand',
+    'associations[]=contact_role.user',
+  ].join('&')
+
   return cb => frisby
     .create(name)
-    .put(`/contacts/${resolve(contactId)}/assignees`, {
+    .put(`/contacts/${resolve(contactId)}/assignees?${associations}`, {
       assignees: [{
         brand: resolve(brandId),
         user: resolve(userId),
       }]
     })
     .after(cb)
-    .expectStatus(204)
+    .expectStatus(200)
+    .expectJSONLength('data.assignees', 1)
+    .expectJSON('data', {
+      type: 'contact',
+      id: contactId,
+      deleted_at: null,
+      assignees: [{
+        type: 'contact_role',
+        role: 'assignee',
+        deleted_at: null,
+        brand: { type: 'brand', id: brandId, deleted_at: null },
+        user: { type: 'user', id: userId, deleted_at: null },
+      }]
+    })
 }
 
 /**
