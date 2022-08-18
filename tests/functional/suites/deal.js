@@ -200,7 +200,7 @@ const addRole = cb => {
         name: 'Bellagio',
         suftype: 'Rd',
         city: 'Los Angeles',
-        state: 'Ca',
+        state: 'CA',
         country: 'USA',
         postcode: '90049'
       }

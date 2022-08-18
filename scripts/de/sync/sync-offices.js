@@ -1,5 +1,4 @@
 const _ = require('lodash')
-const parser = require('parse-address')
 const pnu = require('google-libphonenumber').PhoneNumberUtil.getInstance()
 
 const Brand = require('../../../lib/models/Brand')
@@ -101,7 +100,6 @@ WHERE brand_settings.brand = data.brand`
 const updateSettings = async offices => {
   const mapped = offices.map(office => {
     const { address } = office
-    const parsed = parser.parseLocation(address)
 
     let phone_number = office.phone
     if (phone_number) {
@@ -117,16 +115,10 @@ const updateSettings = async offices => {
       id: office.id,
       phone_number,
       address: {
-        house_num: parsed?.number,
-        predir: parsed?.prefix,
-        pretype: parsed?.type,
-        name: parsed?.street,
-        suftype: parsed?.suffix,
-        city: parsed?.city || office.city,
-        state: parsed?.state || office.state,
-        country: parsed?.country,
-        postcode: parsed?.zip || office.zip,
-        unit: parsed?.sec_unit_num
+        line1: address,
+        city: office.city,
+        state: office.state,
+        postcode: office.zip,
       }
     }
   })

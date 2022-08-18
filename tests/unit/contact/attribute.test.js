@@ -136,8 +136,7 @@ async function testAddressAttributes() {
   }])
 
   const contact = await Contact.get(id)
-  // FIXME: This should actually be GA instead
-  expect(contact.address[0].state).to.be.equal('Ga')
+  expect(contact.address[0].state).to.be.equal('GA')
 }
 
 async function testPatchingDoubleTags() {

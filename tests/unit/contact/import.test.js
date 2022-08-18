@@ -83,14 +83,14 @@ async function testCsvFullAddressColumns() {
   expect(contact.address).not.to.be.null
   expect(contact.address[0]).to.include({
     city: 'Sandy Springs',
-    full: '5673 Peachtree Dunwoody Rd Suite 850, Sandy Springs Ga 30342',
+    full: '5673 Peachtree Dunwoody Rd Suite 850, Sandy Springs GA 30342',
     name: 'Peachtree Dunwoody Rd',
     type: 'stdaddr',
     unit: 'Suite 850',
     extra: 'Home',
     line1: '5673 Peachtree Dunwoody Rd Suite 850',
-    line2: 'Sandy Springs Ga 30342',
-    state: 'Ga',
+    line2: 'Sandy Springs GA 30342',
+    state: 'GA',
     postcode: '30342',
     house_num: '5673'
   })
