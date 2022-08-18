@@ -197,7 +197,7 @@ const getSingleContact = cb => {
         id: results.contact.create.data[0].id,
         display_name: 'Johnny',
         partner_name: 'Jane Doe',
-        sort_field: 'Doe John'
+        sort_field: 'Johnny'
       }
     })
 }
