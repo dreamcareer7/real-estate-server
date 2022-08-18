@@ -261,9 +261,9 @@ AS $function$
       contacts_summaries.website,
 
       COALESCE(
-        CASE WHEN contacts_summaries.first_name IS NOT NULL AND contacts_summaries.last_name IS NOT NULL THEN contacts_summaries.first_name || ' ' || contacts_summaries.last_name ELSE NULL END,
-        contacts_summaries.marketing_name,
         contacts_summaries.nickname,
+        contacts_summaries.marketing_name,
+        CASE WHEN contacts_summaries.first_name IS NOT NULL AND contacts_summaries.last_name IS NOT NULL THEN contacts_summaries.first_name || ' ' || contacts_summaries.last_name ELSE NULL END,
         contacts_summaries.first_name,
         contacts_summaries.last_name,
         contacts_summaries.company,
@@ -273,11 +273,11 @@ AS $function$
       ) AS display_name,
 
       COALESCE(
+        contacts_summaries.nickname,
         CASE WHEN contacts_summaries.first_name IS NOT NULL AND contacts_summaries.last_name IS NOT NULL THEN contacts_summaries.last_name || ' ' || contacts_summaries.first_name ELSE NULL END,
         contacts_summaries.last_name,
         contacts_summaries.marketing_name,
         contacts_summaries.first_name,
-        contacts_summaries.nickname,
         contacts_summaries.company,
         contacts_summaries.email[1],
         contacts_summaries.phone_number[1],
@@ -285,8 +285,8 @@ AS $function$
       ) AS sort_field,
 
       COALESCE(
-        CASE WHEN contacts_summaries.partner_first_name IS NOT NULL AND contacts_summaries.partner_last_name IS NOT NULL THEN contacts_summaries.partner_first_name || ' ' || contacts_summaries.partner_last_name ELSE NULL END,
         contacts_summaries.partner_nickname,
+        CASE WHEN contacts_summaries.partner_first_name IS NOT NULL AND contacts_summaries.partner_last_name IS NOT NULL THEN contacts_summaries.partner_first_name || ' ' || contacts_summaries.partner_last_name ELSE NULL END,
         contacts_summaries.partner_first_name,
         contacts_summaries.partner_last_name,
         contacts_summaries.partner_company,
