@@ -1,7 +1,7 @@
 const db = require('../lib/utils/db')
 
 const migrations = [
-  'ALTER TYPE mls ADD VALUE \'perchwell\'',
+  'ALTER TYPE mls ADD VALUE \'PERCHWELL\'',
 ]
 
 
