@@ -5,6 +5,7 @@ require('../../lib/models/CRM/Touch/worker')
 require('../../lib/models/Trigger/worker')
 require('../../lib/models/Email/super_campaign/worker')
 require('../../lib/models/SocialPost/worker')
+require('../../lib/models/Contact/lead/channel/worker')
 
 const pollers = require('./pollers')
 
