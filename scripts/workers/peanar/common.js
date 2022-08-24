@@ -41,7 +41,7 @@ require('../../../lib/models/Showing/showinghub/webhook')
 require('../../../lib/models/Microsoft/migration/publisher')
 
 require('../../../lib/models/SocialPost/worker')
-require('../../../lib/models/Contact/lead/channel/Zillow/worker')
+require('../../../lib/models/Contact/lead/channel/worker')
 
 const queues = [
   {
