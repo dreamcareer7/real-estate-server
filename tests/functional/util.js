@@ -1,3 +1,4 @@
+const { Stream } = require('stream')
 const randomMobile = require('random-mobile')
 
 const config = require('../../lib/config.js')
@@ -22,8 +23,8 @@ function createUser({ email }) {
 }
 
 /**
- * @param {string} description 
- * @param {unknown[]} brands 
+ * @param {string} description
+ * @param {unknown[]} brands
  * @param {(response: unknown) => UUID} getActiveBrand
  */
 function createBrands(description, brands, getActiveBrand) {
@@ -35,7 +36,7 @@ function createBrands(description, brands, getActiveBrand) {
         if (activeBrand) {
           const setup = frisby.globalSetup()
           setup.request.headers['X-Rechat-Brand'] = activeBrand
-          frisby.globalSetup(setup)      
+          frisby.globalSetup(setup)
         }
       }
       cb(err, res, json)
@@ -52,7 +53,7 @@ function beforeFrisby(fn, doBefore) {
 
 /**
  * @template F
- * @param {F} fns 
+ * @param {F} fns
  * @returns {F}
  */
 function beforeFirstFrisby(fns, doBefore) {
@@ -72,7 +73,7 @@ function afterFrisby(fn, doAfter) {
 
 /**
  * @template F
- * @param {F} fns 
+ * @param {F} fns
  * @returns {F}
  */
 function afterLastFrisby(fns, doAfter) {
@@ -85,8 +86,8 @@ function afterLastFrisby(fns, doAfter) {
 
 /**
  * @template F
- * @param {() => UUID} brandFn 
- * @param {F} fns 
+ * @param {() => UUID} brandFn
+ * @param {F} fns
  * @returns {F}
  */
 function switchBrand(brandFn, fns) {
@@ -113,7 +114,7 @@ function userId(email) {
 function getTokenFor(email) {
   return cb => {
     const user = users.get(email) ?? dataUser
-  
+
     const auth_params = {
       client_id: config.tests.client_id,
       client_secret: config.tests.client_secret,
@@ -121,7 +122,7 @@ function getTokenFor(email) {
       password: user.password,
       grant_type: 'password'
     }
-  
+
     return frisby.create(`login as ${email}`)
       .post('/oauth2/token', auth_params)
       .afterJSON(body => {
@@ -145,13 +146,13 @@ function runAsUauthorized (fns) {
     setup.request.headers.Authorization = authz
 
     frisby.globalSetup(setup)
-    return original 
+    return original
   }
 
   let originalAuthz = null
   beforeFirstFrisby(fns, () => { originalAuthz = setToken(undefined) })
   afterLastFrisby(fns, () => setToken(originalAuthz))
-  
+
   return fns
 }
 
@@ -161,7 +162,7 @@ function runAsUser(email, fns) {
   const revertAuthorizationHeader = () => {
     const setup = frisby.globalSetup()
     setup.request.headers['Authorization'] = originalAuthorizationHeader
-    frisby.globalSetup(setup)  
+    frisby.globalSetup(setup)
   }
 
   function setToken(token) {
@@ -173,7 +174,7 @@ function runAsUser(email, fns) {
 
   beforeFirstFrisby(fns, () => {
     const user = users.get(email) ?? dataUser
-  
+
     setToken(user.access_token)
   })
 
@@ -189,7 +190,7 @@ function currentBrand() {
 
 function resolve(obj) {
   if (typeof obj === 'function') return resolve(obj())
-  if (obj === null || typeof obj !== 'object') return obj
+  if (obj === null || typeof obj !== 'object' || obj instanceof Stream) return obj
   if (Array.isArray(obj)) {
     return obj.map(resolve)
   }
