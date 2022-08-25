@@ -1,4 +1,4 @@
-const { Stream } = require('stream')
+const isPlainObject = require('loadsh/isPlainObject')
 const randomMobile = require('random-mobile')
 
 const config = require('../../lib/config.js')
@@ -190,10 +190,8 @@ function currentBrand() {
 
 function resolve(obj) {
   if (typeof obj === 'function') return resolve(obj())
-  if (obj === null || typeof obj !== 'object' || obj instanceof Stream) return obj
-  if (Array.isArray(obj)) {
-    return obj.map(resolve)
-  }
+  if (Array.isArray(obj)) return obj.map(resolve)
+  if (!isPlainObject(obj)) return obj
 
   return Object.fromEntries(Object.keys(obj).map(k => [k, resolve(obj[k])]))
 }
