@@ -47,10 +47,10 @@ function addAbbasToBrand(cb) {
   return frisby
     .create('add Abbas to the team')
     .post(`/brands/${brand_id}/roles/${role_id}/members`, {
-      users: [results.task.registerNewUser.data.id]
+      user: results.task.registerNewUser.data.id,
     })
     .after(cb)
-    .expectStatus(200)  
+    .expectStatus(200)
 }
 
 const getTokenForAbbas = cb => {
