@@ -48,6 +48,9 @@ function addAbbasToBrand(cb) {
     .create('add Abbas to the team')
     .post(`/brands/${brand_id}/roles/${role_id}/members`, {
       user: results.task.registerNewUser.data.id,
+    }, {
+      form: true,
+      json: false,
     })
     .after(cb)
     .expectStatus(200)
