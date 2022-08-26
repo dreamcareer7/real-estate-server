@@ -1,4 +1,4 @@
-const isPlainObject = require('loadsh/isPlainObject')
+const isPlainObject = require('lodash/isPlainObject')
 const randomMobile = require('random-mobile')
 
 const config = require('../../lib/config.js')
