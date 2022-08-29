@@ -195,9 +195,9 @@ const getSingleContact = cb => {
     .expectJSON({
       data: {
         id: results.contact.create.data[0].id,
-        display_name: 'John Doe',
+        display_name: 'Johnny',
         partner_name: 'Jane Doe',
-        sort_field: 'Doe John'
+        sort_field: 'Johnny'
       }
     })
 }
