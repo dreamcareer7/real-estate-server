@@ -122,7 +122,7 @@ async function testUpdateAssignedTask() {
         .add(10, 'minutes')
         .unix(),
       title: 'Test assigned task update',
-      task_type: 'Call',
+      task_type: 'Other',
       status: 'PENDING'
     }
   )
@@ -136,7 +136,7 @@ async function testUpdateAssignedTask() {
         .add(20, 'minutes')
         .unix(),
       title: 'Test assigned task update',
-      task_type: 'Call',
+      task_type: 'Other',
       status: 'PENDING'
     },
     userA.id
@@ -201,7 +201,7 @@ async function testTaskIsDue() {
   expect(notifications).to.have.length(1)
   expect(notifications[0].action).to.equal('IsDue')
 
-  const { html } = await expectEmailWithSubject('Upcoming Rechat Event')
+  const { html } = await expectEmailWithSubject('Upcoming Task')
   const $ = cheerio.load(html)
 
   expect($('#row2 th p:nth-child(1)').text().trim()).to.be.equal(task.title)
@@ -243,7 +243,7 @@ async function testReminderIsDue() {
   expect(notifications).to.have.length(1)
   expect(notifications[0].action).to.equal('IsDue')
 
-  const { html } = await expectEmailWithSubject('Upcoming Rechat Event')
+  const { html } = await expectEmailWithSubject('Upcoming Task')
   const $ = cheerio.load(html)
 
   expect($('#row2 th p:nth-child(1)').text().trim()).to.be.equal(task.title)
