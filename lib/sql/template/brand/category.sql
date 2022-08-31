@@ -10,6 +10,8 @@ FROM     (
                        (
                               SELECT Brand_parents(brand_ids)
                               FROM   unnest($1::uuid[]) brand_ids)
+                AND ($2::template_type[]   IS NULL OR $2 @> ARRAY[templates.template_type])
+                AND ($3::template_medium[] IS NULL OR $3 @> ARRAY[templates.medium])
                 AND    deleted_at IS NULL
                 UNION ALL
                 SELECT template_type,
@@ -19,6 +21,8 @@ FROM     (
                        (
                               SELECT brand_parents(brand_ids)
                               FROM   unnest($1::uuid[]) brand_ids)
+                AND ($2::template_type[]   IS NULL OR $2 @> ARRAY[brands_assets.template_type])
+                AND ($3::template_medium[] IS NULL OR $3 @> ARRAY[brands_assets.medium])                              
                 AND    deleted_at IS NULL) AS data
 GROUP BY template_type,
          medium         

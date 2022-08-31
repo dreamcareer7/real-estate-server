@@ -23,9 +23,13 @@ Each time a user saves a template for himself, we call that copy a Template _Ins
 
 <!-- include(tests/template/getForBrand.md) -->
 
-### Get all categories [GET /brands/:brand/templates/categories]
+### Get all categories [GET /brands/:brand/templates/categories{?mediums,types}]]
 
 `brand` (uuid) ID of the brand
+
+`mediums` (Array) Applicable mediums
+
+`types`  (Array) Applicable template types
 
 <!-- include(tests/template/getCategoriesForBrand.md) -->
 

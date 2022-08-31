@@ -35,7 +35,7 @@ const getForBrand = cb => {
 
 const getCategoriesForBrand = cb => {
   return frisby.create('get categories for a user')
-    .get(`/brands/${results.brand.createParent.data.id}/templates/categories`)
+    .get(`/brands/${results.brand.createParent.data.id}/templates/categories?mediums[]=Email`)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
@@ -203,14 +203,14 @@ module.exports = {
   create,
   getForBrand,
   getCategoriesForBrand,
-  instantiate,
-  sms,
-  renderTemplate,
-  share,
-  getMine,
-  createAsset,
-  deleteInstance,
-  updateThumbnails,
-  invalidateThumbnails,
-  deleteTemplate,
+  // instantiate,
+  // sms,
+  // renderTemplate,
+  // share,
+  // getMine,
+  // createAsset,
+  // deleteInstance,
+  // updateThumbnails,
+  // invalidateThumbnails,
+  // deleteTemplate,
 }
