@@ -83,7 +83,10 @@ INSERT INTO listings (
   parcel_number,
   public_display,
   annual_tax,
-  virtual_tour
+  virtual_tour,
+  sub_agency_offered,
+  transaction_broker_commission,
+  compensation_based_on
 ) VALUES (
   $1,
   $2,
@@ -169,7 +172,10 @@ INSERT INTO listings (
   $82,
   $83,
   $84,
-  $85
+  $85,
+  $86,
+  $87,
+  $88
 )
 
 ON CONFLICT (matrix_unique_id, mls) DO UPDATE SET
@@ -249,6 +255,9 @@ ON CONFLICT (matrix_unique_id, mls) DO UPDATE SET
   public_display = $83,
   annual_tax = $84,
   virtual_tour = $85,
+  sub_agency_offered = $86,
+  transaction_broker_commission = $87,
+  compensation_based_on = $88,
   updated_at = CLOCK_TIMESTAMP(),
   deleted_at = NULL
 
