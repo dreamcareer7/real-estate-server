@@ -6,7 +6,9 @@ FROM     (
                 FROM   brands_allowed_templates bat
                 JOIN   templates
                 ON     bat.template = templates.id
-                WHERE  bat.brand IN
+                WHERE  '1' = $4 
+                AND
+                bat.brand IN
                        (
                               SELECT Brand_parents(brand_ids)
                               FROM   unnest($1::uuid[]) brand_ids)
@@ -17,7 +19,9 @@ FROM     (
                 SELECT template_type,
                        medium
                 FROM   brands_assets
-                WHERE  brand IN
+                WHERE  '1' = $5
+                AND 
+                brand IN
                        (
                               SELECT brand_parents(brand_ids)
                               FROM   unnest($1::uuid[]) brand_ids)

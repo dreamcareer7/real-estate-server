@@ -35,7 +35,7 @@ const getForBrand = cb => {
 
 const getCategoriesForBrand = cb => {
   return frisby.create('get categories for a user')
-    .get(`/brands/${results.brand.createParent.data.id}/templates/categories?mediums[]=Email`)
+    .get(`/brands/${results.brand.createParent.data.id}/templates/categories?mediums[]=Email&filter=template`)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
