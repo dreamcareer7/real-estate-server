@@ -24,11 +24,11 @@ const run = async () => {
     const template_instance_ids = rows.map(r => r.template_instance)
     const instances = await TemplateInstance.getAll(template_instance_ids)
 
-    await promisify(async.eachLimit)(instances, 20, (i, cb) => {
-      async.retry({
-        times: 5
-      }, (i, cb) => rerender(i).nodeify(cb), cb)
-    })
+    const retryable = (i, cb) => {
+      async.retry({times: 5}, callback => rerender(i).nodeify(callback), cb)
+    }
+
+    await promisify(async.eachLimit)(instances, 20, retryable)
   })
 
   conn.release()
