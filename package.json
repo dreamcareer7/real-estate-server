@@ -28,7 +28,7 @@
   "license": "ISC",
   "dependencies": {
     "@datadog/datadog-api-client": "^1.0.0-beta.9",
-    "@microsoft/microsoft-graph-client": "^2.2.1",
+    "@microsoft/microsoft-graph-client": "^3.0.2",
     "@pm2/pm2-version-check": "^1.0.4",
     "@rechat/squel": "^5.15.0",
     "amanda": "^1.0.1",
