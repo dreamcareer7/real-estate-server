@@ -9,7 +9,7 @@ const Context = require('../lib/models/Context')
 const promisify = require('../lib/utils/promisify')
 const async = require('async')
 
-const all_query = `SELECT DISTINCT ON(ws.website) ws.template_instance FROM websites w JOIN websites_snapshots ws ON w.id = ws.website WHERE ws.template_instance IS NOT NULL AND w.deleted_at IS NOT NULL ORDER BY ws.website, ws.created_at DESC LIMIT 10`
+const all_query = `SELECT DISTINCT ON(ws.website) ws.template_instance FROM websites w JOIN websites_snapshots ws ON w.id = ws.website WHERE ws.template_instance IS NOT NULL AND w.deleted_at IS NOT NULL ORDER BY ws.website, ws.created_at DESC`
 
 const run = async () => {
   const { conn } = await db.conn.promise()
@@ -19,6 +19,8 @@ const run = async () => {
 
   await context.run(async () => {
     const { rows } = await conn.query(all_query)
+
+    Context.log('Total', rows.length)
 
     const template_instance_ids = rows.map(r => r.template_instance)
     const instances = await TemplateInstance.getAll(template_instance_ids)
@@ -31,8 +33,10 @@ const run = async () => {
   conn.release()
 }
 
+let i = 0
 const rerender = async template_instance => {
-  console.log('I')
+  Context.log(i++)
+
   const template = await Template.get(template_instance.template)
   const file = await AttachedFile.get(template_instance.file)
 
