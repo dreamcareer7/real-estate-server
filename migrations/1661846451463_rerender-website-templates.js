@@ -26,9 +26,8 @@ const run = async () => {
 
     await promisify(async.eachLimit)(instances, 20, (i, cb) => {
       async.retry({
-        times: 5,
-        task: (i, cb) => rerender(i).nodeify(cb)
-      }, i, cb)
+        times: 5
+      }, (i, cb) => rerender(i).nodeify(cb), cb)
     })
   })
 
