@@ -1,24 +1,20 @@
-WITH related_contacts_roles AS (
-  SELECT *
-  FROM all_contacts_roles AS cr
-  WHERE
-    cr.role_user = $3::uuid OR (
-      cr.role_brand = $2::uuid AND
-      cr.role_type = 'owner'::contact_role
-    )
+WITH assigned_contacts AS MATERIALIZED (
+  SELECT array_agg(cr.contact) AS assigned_contacts
+  FROM contacts_roles AS cr
+  WHERE cr.deleted_at IS NULL
+    AND cr.brand = $2::uuid
+    AND cr.user = $3::uuid
+    AND cr.role = 'assignee'::contact_role
 )
 SELECT
   c.id,
-  bool_or(cr.role_contact IS NOT NULL) as "read",
-  bool_or(cr.role_contact IS NOT NULL) as "write",
-  bool_or(cr.role_type IS NOT DISTINCT FROM 'owner') AS "delete"
+  c.brand = $2::uuid OR c.id = ANY(ac.assigned_contacts) AS "read",
+  c.brand = $2::uuid OR c.id = ANY(ac.assigned_contacts) AS "write",
+  c.brand = $2::uuid AS "delete"
 FROM
   contacts AS c
+CROSS JOIN assigned_contacts AS ac
 JOIN
   unnest($1::uuid[]) WITH ORDINALITY t(did, ord) ON c.id = did
-LEFT JOIN
-  related_contacts_roles AS cr ON cr.role_contact = c.id
 WHERE
   c.deleted_at IS NULL
-GROUP BY
-  c.id
