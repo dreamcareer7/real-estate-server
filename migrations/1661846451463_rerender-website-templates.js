@@ -8,7 +8,7 @@ const Context = require('../lib/models/Context')
 const promisify = require('../lib/utils/promisify')
 const async = require('async')
 
-const all_query = 'SELECT DISTINCT ON(ws.website) ws.template_instance FROM websites w JOIN websites_snapshots ws ON w.id = ws.website WHERE ws.template_instance IS NOT NULL AND w.deleted_at IS NOT NULL ORDER BY ws.website, ws.created_at DESC'
+const all_query = 'SELECT DISTINCT ON(ws.website) ws.template_instance FROM  websites_snapshots ws  WHERE ws.template_instance IS NOT NULL  ORDER BY ws.website, ws.created_at DESC'
 
 const run = async () => {
   const { conn } = await db.conn.promise()
