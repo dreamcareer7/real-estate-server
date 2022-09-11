@@ -1,7 +1,8 @@
 const db = require('../lib/utils/db')
 
 const migrations = [
-  'ALTER TABLE email_campaigns ALTER delivered TYPE integer'
+  'ALTER TABLE email_campaigns ALTER delivered TYPE integer',
+  'ALTER TABLE email_campaigns ALTER opened TYPE integer'
 ]
 
 
