@@ -18,6 +18,7 @@ export interface ILtsLead {
   // to the user associated with the lead capture link.
   agent_mlsid: string;
   office_mlsid: string;
+  lead_channel?: UUID;
 }
 
 export type ELeadSourceType =

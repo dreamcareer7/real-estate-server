@@ -795,6 +795,7 @@ declare type TDbSqlAddress =
   | 'template/brand/allow'
   | 'template/brand/delete'
   | 'template/brand/for-brand'
+  | 'template/brand/category'
   | 'template/brand/get-invalids'
   | 'template/brand/get'
   | 'template/brand/invalidate-brand'
@@ -913,4 +914,11 @@ declare type TDbSqlAddress =
   | 'website/get_user'
   | 'website/insert'
   | 'website/insert_hostname'
-  | 'website/update';
+  | 'website/update'
+  | 'contact/lead/channel/insert'
+  | 'contact/lead/channel/get'
+  | 'contact/lead/channel/update'
+  | 'contact/lead/channel/delete'
+  | 'contact/lead/channel/update_counter'
+  | 'zillow_contact/upsert'
+  ;
