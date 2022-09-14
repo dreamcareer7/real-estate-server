@@ -795,6 +795,7 @@ declare type TDbSqlAddress =
   | 'template/brand/allow'
   | 'template/brand/delete'
   | 'template/brand/for-brand'
+  | 'template/brand/category'
   | 'template/brand/get-invalids'
   | 'template/brand/get'
   | 'template/brand/invalidate-brand'

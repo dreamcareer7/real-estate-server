@@ -876,6 +876,21 @@ function createAsset(cb) {
     })
 }
 
+const getAssetCategoriesForBrand = cb => {
+  return frisby.create('get categories for a user')
+    .get(`/brands/${results.brand.create.data.id}/templates/categories?filter=asset`)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      data: {
+        Christmas: [
+          'Email'
+        ]
+      }
+    })
+}
+
 const getAssets = cb => {
   return frisby.create('get brand assets')
     .get(`/brands/${brand_id}/assets`)
@@ -1004,6 +1019,7 @@ module.exports = {
   deleteStatus,
 
   createAsset,
+  getAssetCategoriesForBrand,
   getAssets,
   shareAsset,
   deleteAsset,

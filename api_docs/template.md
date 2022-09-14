@@ -23,6 +23,18 @@ Each time a user saves a template for himself, we call that copy a Template _Ins
 
 <!-- include(tests/template/getForBrand.md) -->
 
+### Get all categories [GET /brands/:brand/templates/categories{?mediums,types, filter}]]
+
+`brand` (uuid) ID of the brand
+
+`mediums` (Array) Applicable mediums
+
+`types`  (Array) Applicable template types
+
+`filter` (string) template | asset | undefined
+
+<!-- include(tests/template/getCategoriesForBrand.md) -->
+
 ### Save a template [POST /templates]
 ::: warning
   Use this endpoint to save a user-edited template and get it rendered
