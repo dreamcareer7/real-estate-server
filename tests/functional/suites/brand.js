@@ -3,10 +3,13 @@ const path = require('path')
 const brand = require('./data/brand.js')
 const contexts = require('./data/context.js')
 const { omit, find } = require('lodash')
+const { resolve } = require('../util')
 
 registerSuite('office', ['add'])
 registerSuite('form', ['create'])
 registerSuite('billing_plan', ['create'])
+
+const sampleImage = () => fs.createReadStream(path.join(__dirname, 'data/img/sample.jpg'))
 
 const hostname = 'testhost'
 let brand_id
@@ -424,20 +427,37 @@ const deleteRole = cb => {
     .expectStatus(204)
 }
 
-const addMember = cb => {
-  return frisby.create('add a user to a brand role')
-    .post(`/brands/${brand_id}/roles/${results.brand.addRole.data.id}/members`, {
-      emails: ['invited-member@boer.rechat.com']
-    })
-    .after(cb)
-    .expectStatus(200)
-    .expectJSON({
-      code: 'OK',
-      data: [{
-        email: 'invited-member@boer.rechat.com',
-        type: 'user'
-      }]
-    })
+/**
+ * @param {Record<string, any>} body
+ * @param {object} opts
+ * @param {string=} [opts.name]
+ * @param {number=} [opts.expectedStatus]
+ * @param {number?=} [opts.expectedLen]
+ */
+const addMember = (body, {
+  name = 'add a user to a brand role via ' + (Object.keys(body).join('+') || 'nothing'),
+  expectedStatus = 200,
+  expectedLen = null,
+} = {}) => {
+  return cb => {
+    const f = frisby.create(name)
+      .post(
+        `/brands/${brand_id}/roles/${results.brand.addRole.data.id}/members`,
+        resolve(body),
+        { form: true, json: false },
+      )
+      .after(cb)
+
+    if (expectedStatus) {
+      f.expectStatus(expectedStatus)
+    }
+
+    if (expectedLen) {
+      f.expectJSONLength('data', expectedLen)
+    }
+
+    return f
+  }
 }
 
 const getMembers = cb => {
@@ -451,7 +471,7 @@ const getMembers = cb => {
         type: 'user'
       }]
     })
-    .expectJSONLength('data', 1)
+    .expectJSONLength('data', 7)
 }
 
 const deleteMember = cb => {
@@ -959,7 +979,132 @@ module.exports = {
   updateRole,
   getRoles,
 
-  addMember,
+  addNewMemberWithEmail: addMember({
+    email: 'invited-member+email1@rechat.co',
+    first_name: 'AAA',
+  }, {
+    name: 'create a member with email',
+    expectedLen: 1,
+  }),
+
+  addNewMemberWithEmailAndAvatar: addMember({
+    email: 'invited-member+email2@rechat.co',
+    avatar: sampleImage(),
+  }, {
+    name: 'create a member with email+avatar',
+    expectedLen: 2,
+  }),
+
+  addNewMemberWithPhone: addMember({
+    phone_number: '+14099990001',
+    last_name: 'BBB',
+  }, {
+    name: 'create a member with phone',
+    expectedLen: 3,
+  }),
+
+  addNewMemberWithPhoneAndAvatar: addMember({
+    phone_number: '+14099990002',
+    avatar: sampleImage(),
+  }, {
+    name: 'create a member with phone+avatar',
+    expectedLen: 4,
+  }),
+
+  addMemberWithUser: addMember({
+    user: () => results.authorize.token.data.id,
+    // when user is provided, other fields will be ignored:
+    last_name: 'CCC',
+  }, {
+    name: 'add an existing user as member',
+    expectedLen: 5,
+  }),
+
+  addNewMemberMixed: addMember({
+    email: 'invited-member+email3@rechat.co',
+    phone_number: '+14099990003',
+    first_name: 'DDD',
+    last_name: 'EEE',
+  }, {
+    name: 'add a new member with email+phone',
+    expectedLen: 6,
+  }),
+
+  addNewMemberMixedWithAvatar: addMember({
+    email: 'invited-member+email4@rechat.co',
+    phone_number: '+14099990004',
+    first_name: 'FFF',
+    last_name: 'GGG',
+  }, {
+    name: 'add a new member with email+phone+avatar',
+    expectedLen: 7,
+  }),
+
+  addMemberWithEmailAndPhone: addMember({
+    email: 'invited-member+email4@rechat.co',
+    phone_number: '+14099990004',
+  }, {
+    name: 'add an existing user using email+phone',
+    expectedLen: 7,
+  }),
+
+  addMemberWithEmailAndAvatar: addMember({
+    email: 'invited-member+email3@rechat.co',
+    avatar: sampleImage(),
+  }, {
+    name: 'add an existing member using email and update its avatar (ignored)',
+    expectedLen: 7,
+  }),
+
+  addMemberWithPhoneAndAvatar: addMember({
+    phone_number: '+14099990004',
+    avatar: sampleImage(),
+    expectedLen: 7,
+  }, {
+    name: 'add an existing member using phone and update its avatar (ignored)',
+  }),
+
+  addMemberWithUserAndAvatar: addMember({
+    user: () => results.authorize.token.data.id,
+    avatar: sampleImage(),
+  }, {
+    name: 'add an existing member using user id and update its avatar (ignored)',
+    expectedLen: 7,
+  }),
+
+  tryToAddByConflictingIdAndEmail: addMember({
+    user: () => results.authorize.token.data.id,
+    email: 'invited-member+email4@rechat.co',
+  }, {
+    name: 'try to add a member using conflicting user ID and email (409)',
+    expectedStatus: 409,
+  }),
+
+  tryToAddByConflictingIdAndPhone: addMember({
+    user: () => results.authorize.token.data.id,
+    phone_number: '+14099990002',
+  }, {
+    name: 'try to add a member using conflicting user ID and phone (409)',
+    expectedStatus: 409,
+  }),
+
+  tryToAddByConflictingEmailAndPhone: addMember({
+    email: 'invited-member+email4@rechat.co',
+    phone_number: '+14099990002',
+  }, {
+    name: 'try to add a member using conflicting email and phone (409)',
+    expectedStatus: 409,
+  }),
+
+  tryToAddByConflictingIdAndEmailAndPhone: addMember({
+    user: () => results.authorize.token.data.id,
+    email: 'invited-member+email4@rechat.co',
+    phone_number: '+14099990002',
+  }, {
+    name: 'try to add a member using conflicting user ID, phone and email (409)',
+    expectedStatus: 409,
+  }),
+
   getMembers,
 
   getAgents,
