@@ -266,6 +266,25 @@ const filterContactsHavingTwoTags = cb => {
     .expectStatus(200)
 }
 
+const filterContactsWithQuerySortByLastTouchRank = cb => {
+  return frisby
+    .create('text search ordered by last touch rank')
+    .post('/contacts/filter?start=0&limit=50&order=-last_touch_rank&alphabet&filter_type=and', {
+      query: 'test',
+      users: [results.authorize.token.data.id]
+    })
+    .after(cb)
+    .expectJSONLength('data', 1)
+    .expectJSON({
+      data: [
+        {
+          id: results.contact.create.data[0].id,
+        },
+      ],
+    })
+    .expectStatus(200)
+}
+
 const invertedFilter = cb => {
   return frisby
     .create('filter by contact attributes using invert option')
@@ -1241,6 +1260,7 @@ module.exports = {
   getGibberishContact,
   filterContacts,
   filterContactsHavingTwoTags,
+  filterContactsWithQuerySortByLastTouchRank,
   invertedFilter,
   stringSearch,
   stringSearchInBody,
