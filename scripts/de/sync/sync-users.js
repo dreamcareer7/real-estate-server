@@ -164,7 +164,8 @@ WITH emails AS (
 )
 UPDATE users SET
   email = emails.email,
-  email_confirmed = TRUE
+  email_confirmed = TRUE,
+  fake_email = FALSE
 FROM emails
 WHERE users.id = emails.user AND (
   SELECT count(*) FROM users WHERE LOWER(email) = LOWER(emails.email)
