@@ -64,16 +64,16 @@ const sendDue = cb => {
     .expectStatus(200)
 }
 
-const getMailGunId = cb => {  
+const getMailGunId = cb => {
   return frisby
     .create('Get MailGun Id')
     .get(`/emails/${results.email.schedule.data.id}?associations[]=email_campaign.emails&associations[]=email_campaign.recipients&associations[]=email_campaign_email.email`)
-    .after(cb)    
-    .expectStatus(200)    
+    .after(cb)
+    .expectStatus(200)
 }
 
 const addEvent = cb => {
-  
+
   const data = {
     'event-data': {
       timestamp: new Date().getTime(),
@@ -95,6 +95,25 @@ const addEvent = cb => {
     .expectStatus(200)
 }
 
+function unsubscribe (cb) {
+  return frisby
+    .create('Add unsubscribe event to the email')
+    .post('/emails/events', {
+      'event-data': {
+        timestamp: Date.now(),
+        recipient: email.to[0].email,
+        event: 'unsubscribed',
+        message: {
+          headers: {
+            'message-id': results.email.getMailGunId.data.emails[0].email.mailgun_id,
+          },
+        },
+      }
+    })
+    .after(cb)
+    .expectStatus(200)
+}
+
 const updateStats = cb => {
   return frisby
     .create('Update campaign stats')
@@ -105,11 +124,11 @@ const updateStats = cb => {
     .expectStatus(200)
 }
 
-const get = cb => {  
+const get = cb => {
   return frisby
     .create('Get the campaign')
     .get(`/emails/${results.email.schedule.data.id}?associations[]=email_campaign.emails&associations[]=email_campaign.recipients&associations[]=email_campaign_email.email`)
-    .after(cb)    
+    .after(cb)
     .expectStatus(200)
     .expectJSON({
       data: {
@@ -806,7 +825,7 @@ function getThread(cb) {
         subject: results.email.getGmailMessage.data.subject,
         message_count: 1,
         type: 'email_thread'
-      }    
+      }
     })
 }
 
@@ -860,7 +879,7 @@ function syncThreadsByContact(cb) {
     .expectStatus(200)
 }
 
-function openEmail(cb) {  
+function openEmail(cb) {
   const campaign = results.email.get.data
   const emailId = campaign.emails[0].email.id
   const enc = Crypto.encrypt(JSON.stringify({ email: emailId, origin: 'gmail' }))
@@ -883,7 +902,7 @@ const openEmailUpdateStats = cb => {
 }
 
 
-const checkEmailAfterVisitingByBlackListIps = (cb) => {  
+const checkEmailAfterVisitingByBlackListIps = (cb) => {
   const campaign = results.email.get.data
 
   return frisby
@@ -895,7 +914,7 @@ const checkEmailAfterVisitingByBlackListIps = (cb) => {
       }
       cb(err, res, json)
     })
-    .expectStatus(200)   
+    .expectStatus(200)
 }
 
 module.exports = {
@@ -912,6 +931,7 @@ module.exports = {
   sendDue,
   getMailGunId,
   addEvent,
+  unsubscribe,
   updateStats,
   get,
   getEmail,
