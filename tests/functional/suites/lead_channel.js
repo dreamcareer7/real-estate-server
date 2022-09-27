@@ -102,6 +102,34 @@ function zillowFailed(cb) {
     .expectStatus(401)
 }
 
+function realtorUnAuthorized(cb) {
+  const data = {}
+
+  return F('Should get unAuhthorized status for realtor')
+    .post('/leads/channels/realtor', data)
+    .after(cb)
+    .expectStatus(401)
+    .expectJSON({
+      status_code: 401,
+      message: 'Unauthorized',
+      description: 'Unauthorized'
+    })
+}
+
+function realtorSuccess(cb) {
+  const data = {}
+
+  return F('Should get success if basic auth is provided')
+    .post('/leads/channels/realtor', data)
+    .addHeader('x-api-key', 'test')
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      message: 'OK',
+      description: 'The request has succeeded.',
+      status_code: 200
+    })
+}
 
 module.exports = {
   brands: createBrands('create brands', brandSetup, (response) => response.data[0].id),
@@ -112,6 +140,8 @@ module.exports = {
     deleteLeadChannel,
     zillowUnAuthorized,
     zillowSuccess,
-    zillowFailed
+    zillowFailed,
+    realtorUnAuthorized,
+    realtorSuccess,
   }),
 }
