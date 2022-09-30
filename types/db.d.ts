@@ -921,4 +921,5 @@ declare type TDbSqlAddress =
   | 'contact/lead/channel/delete'
   | 'contact/lead/channel/update_counter'
   | 'zillow_contact/upsert'
+  | 'contact/lead/realtor/upsert'
   ;

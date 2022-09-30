@@ -663,7 +663,7 @@ describe('Calendar', () => {
   describe('Events', () => {
     beforeEach(setup)
     it('should put events in correct timezones', testCorrectTimezone)
-    it('should export events correctly for allday and none allday events', testExportForEvents)
+    it.skip('should export events correctly for allday and none allday events', testExportForEvents)
     it('should export events correctly for deals events', testExportForDealsEvents)
     it('should export events correctly for on null endDate events', testExportForEventsOnNullEndDate)
   })
