@@ -50,7 +50,7 @@ const mlsName = name => {
 }
 
 const getData = async token => {
-  const normal_users = await request({
+  const users = await request({
     uri: 'https://webapi.elliman.com/api/rechat/users',
     headers: {
       Authorization: `Bearer ${token}`
@@ -58,47 +58,22 @@ const getData = async token => {
     json: true
   })
 
-  const all_users = await request({
-    uri: 'https://webapi.elliman.com/api/rechat/users/full',
-    headers: {
-      Authorization: `Bearer ${token}`
-    },
-    json: true
-  })
-  const indexed_users = _.keyBy(all_users, 'id')
-
-  const duals =  await request({
-    uri: 'https://webapi.elliman.com/api/rechat/dualagents',
-    headers: {
-      Authorization: `Bearer ${token}`
-    },
-    json: true
-  })
-
-  const indexed_duals = _.keyBy(duals, 'primaryAgentId')
-
-  const users = _.map(normal_users, user => {
+  users.forEach(user => {
     user.mlses = [
       {mls: mlsName(user.mlsSystem), id: user.rbnyAgentId ?? user.id}
     ]
 
-    const secondaries = indexed_duals[user.id]?.secondaryAgentId || []
-
-    secondaries.forEach(secondary_id => {
-      const secondary_user = indexed_users[secondary_id]
-      if (!secondary_user)
-        return
-
+    user.additionalIds?.forEach(additional => {
       user.mlses.push({
-        mls: mlsName(secondary_user.mlsSystem), 
-        id: secondary_user.id
+        mls: mlsName(additional.mlsSystem),
+        id: additional.id
       })
 
-      user.offices.push(...secondary_user.offices)
+      user.offices.push(additional.office)
     })
 
     return user
-  }).filter(Boolean)
+  })
 
   const offices = _.chain(users)
     .map('offices')
@@ -112,17 +87,11 @@ const getData = async token => {
     .uniq()
     .value()
 
-  fs.writeFileSync('/tmp/normal-users.json', JSON.stringify(normal_users, 4, 4))
-  fs.writeFileSync('/tmp/all-users.json', JSON.stringify(all_users, 4, 4))
-  fs.writeFileSync('/tmp/duals.json', JSON.stringify(duals, 4, 4))
   fs.writeFileSync('/tmp/users.json', JSON.stringify(users, 4, 4))
 
   return { users, regions, offices }
 }
 
-/*
- * TODO: Existing Users
- */
 
 const sync = async () => {
   /*
