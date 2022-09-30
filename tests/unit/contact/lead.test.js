@@ -1,6 +1,7 @@
 const { createContext } = require('../helper')
 const zillowJson = require('./data/zillow.json')
-const realtorJson = require('./data/realtor.json')
+const realtorJson1 = require('./data/realtor.json')
+const realtorJson2 = require('./data/realtor.json')
 const sql = require('../../../lib/utils/sql')
 
 const UserHelper = require('../user/helper')
@@ -85,9 +86,9 @@ const setLeachChannelIdForZillow = (leadChannelId) => {
   }
 }
 
-const setLeachChannelIdForRealtor = (leadChannelId) => {
-  realtorJson.Lead.lead_info.partner_customer_id = leadChannelId
-  return realtorJson
+const setLeachChannelIdForRealtor = (json, leadChannelId) => {
+  json.Lead.lead_info.partner_customer_id = leadChannelId
+  return json
 }
 
 const saveZillowContact = async () => {
@@ -103,6 +104,7 @@ const saveZillowContact = async () => {
     getZillowContacts(),
     getContacts(),
   ])
+
 
   if (leadChannel.capture_number !== 1) {
     throw new Error('capture_number is not updated')
@@ -209,16 +211,17 @@ const invalidLeadChannelSource = async () => {
   }
 }
 
-const saveRealtorContact = async () => {
+const saveRealtorContact = async (json) => {
   const { leadChannelId } = await setup({ sourceType: 'Realtor' })
 
-  await LeadChannel.save({ source: 'Realtor', ...setLeachChannelIdForRealtor(leadChannelId) })
+  await LeadChannel.save({ source: 'Realtor', ...setLeachChannelIdForRealtor(json, leadChannelId) })
 
   const [leadChannel, realtorContacts, contacts] = await Promise.all([
     LeadChannel.get(leadChannelId),
     getRealtorContacts(),
     getContacts(),
   ])
+
 
   if (leadChannel.capture_number !== 1) {
     throw new Error('capture_number is not updated')
@@ -252,13 +255,21 @@ const saveRealtorContact = async () => {
   }
 }
 
+const saveRealtorContactBasedOnFirstSchema = async () => {
+  return saveRealtorContact(realtorJson1)
+}
+
+const saveRealtorContactBasedOnSecondSchema = async () => {
+  return saveRealtorContact(realtorJson2)
+}
+
 const updateRealtorContact = async () => {
   const { leadChannelId } = await setup({ sourceType: 'Realtor' })
 
-  await LeadChannel.save({ source: 'Realtor', ...setLeachChannelIdForRealtor(leadChannelId) })
+  await LeadChannel.save({ source: 'Realtor', ...setLeachChannelIdForRealtor(realtorJson1, leadChannelId) })
 
   // update
-  await LeadChannel.save({ source: 'Realtor', ...setLeachChannelIdForRealtor(leadChannelId) })
+  await LeadChannel.save({ source: 'Realtor', ...setLeachChannelIdForRealtor(realtorJson1, leadChannelId) })
 
   const [leadChannel, realtorContacts, contacts] = await Promise.all([
     LeadChannel.get(leadChannelId),
@@ -315,7 +326,8 @@ describe('Lead channel', () => {
   it('Throw an error with invalid zillow channel source', invalidLeadChannelSource)
   it('Should create a new contact correctly when the source is Zillow', saveZillowContact)
   it('Should update the contact if email and user and brand is exist when the source is Zillow', updateZillowContact)
-  it('Should create a new contact correctly when the source is Realtor', saveRealtorContact)
+  it('Should create a new contact correctly when the source is Realtor with schema type 1', saveRealtorContactBasedOnFirstSchema)
+  it('Should create a new contact correctly when the source is Realtor with schema type 2', saveRealtorContactBasedOnSecondSchema)
   it('Should update the contact correctly when the source is Realtor', updateRealtorContact)
   it('Should throw an error when the source is invalid', invalidSource)
 })
