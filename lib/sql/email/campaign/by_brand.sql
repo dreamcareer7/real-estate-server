@@ -12,7 +12,7 @@ all_campaigns AS (
               WHEN $2::boolean THEN due_at IS NOT NULL
               WHEN NOT $2::boolean THEN due_at IS NULL END)
   ORDER BY created_at DESC
-)
+),
 executed_campaigns AS (
   SELECT
     id,
@@ -20,7 +20,7 @@ executed_campaigns AS (
   FROM all_campaigns
   WHERE executed_at IS NOT NULL
   LIMIT floor($3::real / 2)
-)
+),
 scheduled_campaigns AS (
   SELECT
     id,
