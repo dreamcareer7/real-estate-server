@@ -25,6 +25,6 @@ UNION ALL
 -- Scheduled campaigns
 (SELECT id
  FROM all_campaigns
- WHERE executed_at IS NOT NULL
+ WHERE executed_at IS NULL
  ORDER BY created_at DESC
  LIMIT ceil($3::real / 2))
