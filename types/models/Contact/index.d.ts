@@ -223,6 +223,7 @@ declare interface IContactFilterOptions {
   parked?: boolean;
   forUpdate?: boolean;
   skipTotal?: boolean;
+  select?: (keyof IContact)[];
 }
 
 declare interface ICSVImporterMappingDef {
