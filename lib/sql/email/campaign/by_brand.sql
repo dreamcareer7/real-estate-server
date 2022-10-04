@@ -1,4 +1,5 @@
-WITH all_campaigns AS (
+WITH
+all_campaigns AS (
   SELECT
     id,
     created_at,
@@ -12,19 +13,25 @@ WITH all_campaigns AS (
               WHEN NOT $2::boolean THEN due_at IS NULL END)
   ORDER BY created_at DESC
 )
-
--- Executed campaigns
-(SELECT id
- FROM all_campaigns
- WHERE executed_at IS NOT NULL
- ORDER BY created_at DESC
- LIMIT floor($3::real / 2))
-
-UNION ALL
-
--- Scheduled campaigns
-(SELECT id
- FROM all_campaigns
- WHERE executed_at IS NULL
- ORDER BY created_at DESC
- LIMIT ceil($3::real / 2))
+executed_campaigns AS (
+  SELECT
+    id,
+    created_at
+  FROM all_campaigns
+  WHERE executed_at IS NOT NULL
+  LIMIT floor($3::real / 2)
+)
+scheduled_campaigns AS (
+  SELECT
+    id,
+    created_at
+  FROM all_campaigns
+  WHERE executed_at IS NULL
+  LIMIT ceil($3::real / 2)
+)
+SELECT
+  mix.id
+FROM (SELECT * FROM executed_campaigns
+      UNION ALL
+      SELECT * FROM scheduled_campaigns) AS mix
+ORDER BY mix.created_at DESC
