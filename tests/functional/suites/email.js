@@ -2,6 +2,7 @@
 
 const path = require('path')
 const fs = require('fs')
+const omit = require('lodash/omit')
 const Crypto = require('../../../lib/models/Crypto')
 
 registerSuite('brand', [
@@ -38,9 +39,17 @@ const individual = {
   notifications_enabled: true
 }
 
+const draftEmail = {
+  ...email,
+  due_at: undefined,
+  from: null, // will be mutated later
+}
 
-
-
+const scheduledEmail = {
+  ...email,
+  due_at: new Date(Date.now() + 3600),
+  from: null, // will be mutated later
+}
 
 const schedule = cb => {
   email.from = results.authorize.token.data.id
@@ -49,6 +58,28 @@ const schedule = cb => {
     .create('Schedule an email campaign')
     .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
     .post('/emails', email)
+    .after(cb)
+    .expectStatus(200)
+}
+
+const createDraft = cb => {
+  draftEmail.from = results.authorize.token.data.id
+
+  return frisby
+    .create('Schedule an email campaign')
+    .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
+    .post('/emails', draftEmail)
+    .after(cb)
+    .expectStatus(200)
+}
+
+const createScheduled = cb => {
+  scheduledEmail.from = results.authorize.token.data.id
+
+  return frisby
+    .create('Schedule an email campaign')
+    .addHeader('X-RECHAT-BRAND', results.brand.create.data.id)
+    .post('/emails', scheduledEmail)
     .after(cb)
     .expectStatus(200)
 }
@@ -155,54 +186,104 @@ const getEmail = cb => {
     })
 }
 
-const getByBrand = cb => {
+const expectedCampaigns = () => {
   const updated = results.email.update.data
   const brand = results.email.scheduleBrand.data
   const templated = results.email.scheduleWithTemplate.data
 
+  return [
+    {
+      subject: templated.subject,
+      template: templated.template,
+      delivered: 0
+    },
+    {
+      subject: brand.subject,
+      html: brand.html,
+      sent: 2,
+      recipients: [
+        {
+          recipient_type: 'Brand'
+        }
+      ]
+    },
+    {
+      subject: updated.subject,
+      html: updated.html,
+      delivered: 0,
+      recipients: [
+        {
+          email: updated.recipients[0].email
+        }
+      ]
+    },
+    {
+      subject: email.subject,
+      html: email.html,
+      delivered: 1,
+      recipients: individual.to
+    }
+  ]
+}
+
+const getByBrand = cb => {
   return frisby
     .create('Get campaigns by brand')
     .get(`/brands/${results.brand.create.data.id}/emails/campaigns?associations[]=email_campaign.recipients`)
     .after(cb)
     .expectStatus(200)
     .expectJSON({
-      data: [
-        {
-          subject: templated.subject,
-          template: templated.template,
-          delivered: 0
-        },
-
-        {
-          subject: brand.subject,
-          html: brand.html,
-          sent: 2,
-          recipients: [
-            {
-              recipient_type: 'Brand'
-            }
-          ]
-        },
-
-        {
-          subject: updated.subject,
-          html: updated.html,
-          delivered: 0,
-          recipients: [
-            {
-              email: updated.recipients[0].email
-            }
-          ]
-        },
-
-        {
-          subject: email.subject,
-          html: email.html,
-          delivered: 1,
-          recipients: individual.to
-        }
-      ]
+      data: expectedCampaigns(),
     })
+}
+
+const paginateCampaigns = (limit, start) => cb => {
+  const qs = [
+    'associations[]=email_campaign.recipients',
+    `limit=${limit}`,
+    `start=${start}`,
+    'status=any',
+  ].join('&')
+
+  const expected = expectedCampaigns().slice(start, start + limit)
+
+  return frisby
+    .create('Paginate campaigns by brand')
+    .get(`/brands/${results.brand.create.data.id}/emails/campaigns?${qs}`)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSONLength('data', expected.length)
+    .expectJSON('data', expected)
+}
+
+const filterScheduledCampaigns = cb => {
+  const qs = [
+    'associations[]=email_campaign.recipients',
+    'status=scheduled',
+  ].join('&')
+
+  return frisby
+    .create('Filter scheduled campaigns')
+    .get(`/brands/${results.brand.create.data.id}/emails/campaigns?${qs}`)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSONLength('data', 1)
+    .expectJSON('data', [omit(scheduledEmail, 'from', 'to', 'due_at')])
+}
+
+const filterDraftCampaigns = cb => {
+  const qs = [
+    'associations[]=email_campaign.recipients',
+    'status=draft',
+  ].join('&')
+
+  return frisby
+    .create('Filter draft campaigns')
+    .get(`/brands/${results.brand.create.data.id}/emails/campaigns?${qs}`)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSONLength('data', 1)
+    .expectJSON('data', [omit(draftEmail, 'from', 'to', 'due_at')])
 }
 
 const scheduleIndividual = cb => {
@@ -936,6 +1017,11 @@ module.exports = {
   get,
   getEmail,
   getByBrand,
+  paginateCampaigns: paginateCampaigns(2, 2),
+  createScheduled,
+  filterScheduledCampaigns,
+  createDraft,
+  filterDraftCampaigns,
   remove,
   uploadAttachment,
   scheduleGmailMessage,

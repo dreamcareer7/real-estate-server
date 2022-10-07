@@ -23,8 +23,8 @@ const BrandFlow = {
   ...require('../../../../lib/models/Brand/flow/create'),
 }
 const BrandTrigger = {
-  ...require('../../../../lib/models/Trigger/brand_trigger/workers'), 
-  ...require('../../../../lib/models/Trigger/brand_trigger/create'), 
+  ...require('../../../../lib/models/Trigger/brand_trigger/workers'),
+  ...require('../../../../lib/models/Trigger/brand_trigger/create'),
   ...require('../../../../lib/models/Trigger/brand_trigger/get'),
 }
 const Campaign = {
@@ -102,19 +102,19 @@ async function createContact({ email, birthday }) {
 describe('BrandTrigger/workers', () => {
   createContext()
   beforeEach(setup)
-  
+
   context('.updateTriggersHandler()', () => {
     // lib/models/Trigger/brand_trigger/workers.js:184-187
     it('doesn\'t throw when brand trigger ID is missing', async() => {
       await BrandTrigger.updateTriggers()
     })
-  
+
     it('should return undefined for non existing brant trigger ID', async() => {
       const result = await BrandTrigger.updateTriggers('nonExistingBrandTriggerId')
       await handleJobs()
       expect(result).to.be.undefined
     })
-  
+
     // lib/models/Trigger/brand_trigger/workers.js:189-196
     context('doesn\'t delete...', () => {
       it('manual triggers, when you choose not to delete them', async () => {
@@ -169,8 +169,8 @@ describe('BrandTrigger/workers', () => {
           email: 'first_mail@fake.com',
         })
         const brandEventIdsArray = await BrandEvent.createAll(
-          user.id, brand.id, 
-          [{title: 'personal meeting', task_type: 'In-Person Meeting'}], 
+          user.id, brand.id,
+          [{title: 'personal meeting', task_type: 'In-Person Meeting'}],
         )
         const trigger_data = {
           action: 'create_event',
@@ -198,8 +198,8 @@ describe('BrandTrigger/workers', () => {
         const firstTrigger = await Trigger.get(triggerId)
         expect(firstTrigger.deleted_at).to.be.null
       })
-  
-  
+
+
       it('flow triggers', async () => {
         const contact = await createContact({
           birthday: moment.utc().unix(),
@@ -265,7 +265,7 @@ describe('BrandTrigger/workers', () => {
         expect(triggerIdsAfterGT.length).to.be.eql(1)
         expect(trigger.deleted_at).to.be.null
       })
-  
+
       it('effectively executed triggers', async () => {
         const contact = await createContact({
           birthday: BIRTHDAY.unix(),
@@ -354,7 +354,7 @@ describe('BrandTrigger/workers', () => {
       await handleJobs()
       await Trigger.execute(triggerId)
       await handleJobs()
-        
+
       const brandTemplates = await BrandTemplate.getForBrands({ brands: [brand.id] })
       const bt = {
         template: brandTemplates[0].id,
@@ -369,7 +369,7 @@ describe('BrandTrigger/workers', () => {
       const trigger = await Trigger.get(triggerId)
       expect(trigger.deleted_at).not.to.be.null
     })
-  
+
     // lib/models/Trigger/brand_trigger/workers.js:198-206
     context('doesn\'t create campaign for a contact...', () => {
 
@@ -377,7 +377,7 @@ describe('BrandTrigger/workers', () => {
         await createContact({
           birthday: BIRTHDAY.unix(),
           email: 'first_mail@fake.com',
-        })        
+        })
         const newBrand = await BrandHelper.create({
           roles: {
             Admin: [user.id],
@@ -397,7 +397,7 @@ describe('BrandTrigger/workers', () => {
         }
         await BrandTrigger.upsert(bt1, true)
         await handleJobs()
-        const campaignIds = await EmailCampaign.getByBrand(brand.id, { havingDueAt: null })
+        const campaignIds = await EmailCampaign.getByBrand(brand.id, { status: 'any' })
           .then(res=> res.map(campaign=>campaign.id))
         const bt2 = { ...bt1, brand: newBrand.id }
         await BrandTrigger.upsert(bt2, true)
@@ -409,7 +409,7 @@ describe('BrandTrigger/workers', () => {
             .length
         ).to.be.eql(campaignIds.length)
       })
-  
+
       it('has no value for desired attribute type', async () => {
         await createContact({
           email: 'first_mail@fake.com',
@@ -426,14 +426,14 @@ describe('BrandTrigger/workers', () => {
         }
         await BrandTrigger.upsert(bt, true)
         await handleJobs()
-        const campaignIds = await EmailCampaign.getByBrand(brand.id, { havingDueAt: null })
+        const campaignIds = await EmailCampaign.getByBrand(brand.id, { status: 'any' })
           .then(res=> res.map(campaign=>campaign.id))
         expect(campaignIds.length).to.be.eql(0)
       })
-        
+
       it('having active email trigger on desired attribute type')
     })
-  
+
     // lib/models/Trigger/brand_trigger/workers.js:198-206
     context('creates campaign and trigger for a contact...', () => {
 
@@ -461,7 +461,7 @@ describe('BrandTrigger/workers', () => {
           event_type: 'birthday',
         })
         expect(triggerIds.length).to.be.eql(1)
-        const campaigns = await Campaign.getByBrand(brand.id, { havingDueAt: null })
+        const campaigns = await Campaign.getByBrand(brand.id, { status: 'any' })
         expect(campaigns.length).to.eql(1)
       })
 
@@ -489,7 +489,7 @@ describe('BrandTrigger/workers', () => {
           event_type: 'birthday',
         })
         expect(triggerIds.length).to.be.eql(1)
-        const campaigns = await Campaign.getByBrand(brand.id, { havingDueAt: null })
+        const campaigns = await Campaign.getByBrand(brand.id, { status: 'any' })
         expect(campaigns.length).to.eql(1)
       })
 
@@ -521,7 +521,7 @@ describe('BrandTrigger/workers', () => {
         expect(trigger.recurring).to.be.ok
         const due = await Trigger.getDue(triggerId)
         expect(due).to.be.ok
-        const campaigns = await Campaign.getByBrand(brand.id, { havingDueAt: null })
+        const campaigns = await Campaign.getByBrand(brand.id, { status: 'any' })
         expect(campaigns.length).to.eql(1)
       })
 
@@ -547,7 +547,7 @@ describe('BrandTrigger/workers', () => {
           event_type: 'birthday',
         })
         expect(triggerIds.length).to.be.eql(1)
-        const campaigns = await Campaign.getByBrand(brand.id, { havingDueAt: null })
+        const campaigns = await Campaign.getByBrand(brand.id, { status: 'any' })
         expect(campaigns.length).to.eql(1)
       })
 
