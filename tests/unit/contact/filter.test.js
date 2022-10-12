@@ -41,7 +41,7 @@ async function createContact() {
 }
 
 async function testFilterTagEquals() {
-  const filter_res = await Contact.fastFilter(brand.id, [{
+  const filter_res = await Contact.fastFilter(brand.id, user.id, [{
     attribute_type: 'tag',
     value: 'Tag1'
   }], {})
@@ -50,7 +50,7 @@ async function testFilterTagEquals() {
 }
 
 async function testFilterNoTags() {
-  const filter_res = await Contact.fastFilter(brand.id, [{
+  const filter_res = await Contact.fastFilter(brand.id, user.id, [{
     attribute_type: 'tag',
     value: null
   }], {})
@@ -59,7 +59,7 @@ async function testFilterNoTags() {
 }
 
 async function testFilterTagAny() {
-  const filter_res = await Contact.fastFilter(brand.id, [{
+  const filter_res = await Contact.fastFilter(brand.id, user.id, [{
     attribute_type: 'tag',
     operator: 'any',
     value: ['Tag1']
@@ -69,7 +69,7 @@ async function testFilterTagAny() {
 }
 
 async function testFilterTagAll() {
-  const filter_res = await Contact.fastFilter(brand.id, [{
+  const filter_res = await Contact.fastFilter(brand.id, user.id, [{
     attribute_type: 'tag',
     operator: 'all',
     value: ['Tag1', 'Tag2']
@@ -79,7 +79,7 @@ async function testFilterTagAll() {
 }
 
 async function testFilterTagCaseInsensitive() {
-  const filter_res = await Contact.fastFilter(brand.id, [{
+  const filter_res = await Contact.fastFilter(brand.id, user.id, [{
     attribute_type: 'tag',
     operator: 'all',
     value: ['tag1', 'tag2']
@@ -89,7 +89,7 @@ async function testFilterTagCaseInsensitive() {
 }
 
 async function testFilterFirstNameEquals() {
-  const filter_res = await Contact.fastFilter(brand.id, [{
+  const filter_res = await Contact.fastFilter(brand.id, user.id, [{
     attribute_type: 'first_name',
     value: 'John'
   }], {})
@@ -98,12 +98,12 @@ async function testFilterFirstNameEquals() {
 }
 
 async function testFFQuery(q, expected_length) {
-  const filter_res = await Contact.fastFilter(brand.id, [], { q, order: 'display_name' })
+  const filter_res = await Contact.fastFilter(brand.id, user.id, [], { q, order: 'display_name' })
   expect(filter_res.total).to.equal(expected_length)
   return filter_res
 }
 async function testFQuery(q, expected_length) {
-  const filter_res = await Contact.filter(brand.id, [], { q, order: 'display_name' })
+  const filter_res = await Contact.filter(brand.id, user.id, [], { q, order: 'display_name' })
   expect(filter_res.total).to.equal(expected_length)
   return filter_res
 }
@@ -169,11 +169,11 @@ async function testFTSWithEmptyString() {
 
 async function testAlphabeticalFilter() {
   async function testFastFilter(alphabet, expected_length) {
-    const filter_res = await Contact.fastFilter(brand.id, [], { alphabet })
+    const filter_res = await Contact.fastFilter(brand.id, user.id, [], { alphabet })
     expect(filter_res.total).to.equal(expected_length)
   }
   async function testFilter(alphabet, expected_length) {
-    const filter_res = await Contact.filter(brand.id, [], { alphabet })
+    const filter_res = await Contact.filter(brand.id, user.id, [], { alphabet })
     expect(filter_res.total).to.equal(expected_length)
   }
 
@@ -226,7 +226,7 @@ async function testCrmAssociationFilter() {
    * @param {number} expected_length 
    */
   async function testFastFilter(crm_tasks, expected_length, filter_type = 'and') {
-    const filter_res = await Contact.fastFilter(brand.id, [], { crm_tasks, filter_type })
+    const filter_res = await Contact.fastFilter(brand.id, user.id, [], { crm_tasks, filter_type })
     expect(filter_res.total).to.equal(expected_length)
   }
 
@@ -236,7 +236,7 @@ async function testCrmAssociationFilter() {
    * @param {number} expected_length 
    */
   async function testFilter(crm_tasks, expected_length, filter_type = 'and') {
-    const filter_res = await Contact.filter(brand.id, [], { crm_tasks, filter_type })
+    const filter_res = await Contact.filter(brand.id, user.id, [], { crm_tasks, filter_type })
     expect(filter_res.total).to.equal(expected_length)
   }
 
@@ -266,7 +266,7 @@ async function testFTSEscape() {
 
 async function testMixedFilter() {
   await (async function () {
-    const filter_res = await mixedFilter(brand.id, [{
+    const filter_res = await mixedFilter(brand.id, user.id, [{
       attribute_type: 'tag',
       value: 'Tag3'
     }, {
@@ -277,7 +277,7 @@ async function testMixedFilter() {
   })()
 
   await (async function () {
-    const filter_res = await mixedFilter(brand.id, [{
+    const filter_res = await mixedFilter(brand.id, user.id, [{
       attribute_type: 'tag',
       value: 'Tag3'
     }], {})

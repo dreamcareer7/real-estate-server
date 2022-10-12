@@ -87,6 +87,7 @@ declare interface IContact extends IContactBase {
   lists?: UUID[];
   flows?: UUID[];
   triggers?: UUID[];
+  assignees?: UUID[];
 }
 
 declare interface IContactAttribute {
@@ -261,4 +262,14 @@ declare interface IContactTag extends Omit<IModel, 'deleted_at'> {
   touch_freq: number | null;
   type: 'crm_tag';
   auto_enroll_in_super_campaigns: boolean;
+}
+
+declare type TContactRole = 'owner' | 'assignee';
+
+declare interface IContactRole extends Omit<IModel, 'updated_by'> {
+  type: 'contact_role';
+  brand: IBrand['id'];
+  contact: IContact['id'];
+  user: IUser['id'];
+  role: TContactRole;
 }

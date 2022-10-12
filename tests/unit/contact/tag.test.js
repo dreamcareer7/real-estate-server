@@ -161,7 +161,7 @@ async function testRenameTag() {
   }
 
   async function checkFilter() {
-    const { total } = await Contact.filter(brand.id, [{
+    const { total } = await Contact.filter(brand.id, user.id, [{
       attribute_type: 'tag',
       value: 'Tag0'
     }], {})
@@ -170,7 +170,7 @@ async function testRenameTag() {
   }
 
   async function checkFastFilter() {
-    const { total } = await Contact.fastFilter(brand.id, [{
+    const { total } = await Contact.fastFilter(brand.id, user.id, [{
       attribute_type: 'tag',
       value: 'Tag0'
     }], {})
@@ -263,7 +263,7 @@ async function testCreateTagManually() {
 
 async function testDeleteTag() {
   async function checkFilter() {
-    const { total } = await Contact.filter(brand.id, [{
+    const { total } = await Contact.filter(brand.id, user.id, [{
       attribute_type: 'tag',
       value: 'Tag2'
     }], {})
@@ -272,7 +272,7 @@ async function testDeleteTag() {
   }
 
   async function checkFastFilter() {
-    const { total } = await Contact.fastFilter(brand.id, [{
+    const { total } = await Contact.fastFilter(brand.id, user.id, [{
       attribute_type: 'tag',
       value: 'Tag2'
     }], {})

@@ -73,6 +73,9 @@ Updates a single contact and its attributes. If attributes have `id`, they are u
 
 <!-- include(tests/contact/updateContact.md) -->
 
+### Update owner of a contact [PUT /contact/:id/owner]
+<!-- include(tests/contact/changeOwner.md) -->
+
 ### Deleting a contact [DELETE /contacts/:id]
 <!-- include(tests/contact/deleteContact.md) -->
 
@@ -255,3 +258,6 @@ CSV               |
 
 ### Delete an attribute definition [DELETE /contacts/attribute_defs/:id]
 <!-- include(tests/contact_attribute_def/remove.md) -->
+
+### Assign contact (lead) assignees [PUT /contacts/:id/assignees]
+<!-- include(tests/contact_role/assign.md) -->
