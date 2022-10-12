@@ -1159,6 +1159,7 @@ async function testOmitUnsubscribedRecipients () {
 
   const filteredRecipients = await EmailCampaign.omitUnsubscribedRecipients(
     brand1.id,
+    userA.id,
     Object.values(emails).map(email => ({ email })),
   )
 
