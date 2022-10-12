@@ -34,6 +34,7 @@ declare interface IContactBase {
   ios_address_book_id?: string;
   android_address_book_id?: string;
   parked?: boolean;
+  lead_channel?: UUID;
 }
 
 declare interface IContactInput extends IContactBase {
@@ -223,6 +224,7 @@ declare interface IContactFilterOptions {
   parked?: boolean;
   forUpdate?: boolean;
   skipTotal?: boolean;
+  select?: (keyof IContact)[];
 }
 
 declare interface ICSVImporterMappingDef {

@@ -146,7 +146,8 @@ SELECT
       cr.contact = contacts.id AND
       cr.role = 'assignee'
   ) AS assignees,
-  'contact' as type
+  'contact' as type,
+  lead_channel
 FROM
   contacts
   JOIN unnest($1::uuid[]) WITH ORDINALITY t(cid, ord) ON contacts.id = t.cid

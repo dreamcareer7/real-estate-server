@@ -122,7 +122,7 @@ async function testUpdateAssignedTask() {
         .add(10, 'minutes')
         .unix(),
       title: 'Test assigned task update',
-      task_type: 'Call',
+      task_type: 'Other',
       status: 'PENDING'
     }
   )
@@ -136,7 +136,7 @@ async function testUpdateAssignedTask() {
         .add(20, 'minutes')
         .unix(),
       title: 'Test assigned task update',
-      task_type: 'Call',
+      task_type: 'Other',
       status: 'PENDING'
     },
     userA.id
@@ -155,13 +155,15 @@ async function testUpdateAssignedTask() {
   const { html, subject } = await expectEmailWithSubject('Updated Event')
   const $ = cheerio.load(html)
 
+  const displayed_task_type = task.task_type === 'Other' ? 'Event' : task.task_type
+
   expect(subject).to.be.equal('Updated Event')
 
   expect($('#row1 th p:first-child').text().trim()).to.be.equal(userA.display_name)
   expect($('#row1 th p:nth-child(2)').text().trim()).to.be.equal('updated an event.')
   expect($('#row1 th p:nth-child(3)').text().trim()).to.be.equal(`Updated on ${render_filters.time(task.updated_at, 'MMM Do, YYYY, hh:mm A', userB.timezone)}`)
 
-  expect($('#row2 tbody:nth-child(1) p:nth-child(1)').text().trim().replace(/\s{2,}/g, ' ')).to.be.equal(`${task.task_type} | ${render_filters.time(task.due_date, 'MMM Do, YYYY, hh:mm A', userB.timezone)}`)
+  expect($('#row2 tbody:nth-child(1) p:nth-child(1)').text().trim().replace(/\s{2,}/g, ' ')).to.be.equal(`${displayed_task_type} | ${render_filters.time(task.due_date, 'MMM Do, YYYY, hh:mm A', userB.timezone)}`)
   expect($('#row2 tbody:nth-child(1) p:nth-child(2)').text().trim().replace(/\s{2,}/g, ' ')).to.be.equal(task.title)
   expect($('#row2 tbody:nth-child(1) p:nth-child(3)').text().trim().replace(/\s{2,}/g, ' ')).to.be.equal('')
 
@@ -201,7 +203,7 @@ async function testTaskIsDue() {
   expect(notifications).to.have.length(1)
   expect(notifications[0].action).to.equal('IsDue')
 
-  const { html } = await expectEmailWithSubject('Upcoming Rechat Event')
+  const { html } = await expectEmailWithSubject('Upcoming Task')
   const $ = cheerio.load(html)
 
   expect($('#row2 th p:nth-child(1)').text().trim()).to.be.equal(task.title)
@@ -243,7 +245,7 @@ async function testReminderIsDue() {
   expect(notifications).to.have.length(1)
   expect(notifications[0].action).to.equal('IsDue')
 
-  const { html } = await expectEmailWithSubject('Upcoming Rechat Event')
+  const { html } = await expectEmailWithSubject('Upcoming Task')
   const $ = cheerio.load(html)
 
   expect($('#row2 th p:nth-child(1)').text().trim()).to.be.equal(task.title)

@@ -796,7 +796,7 @@ async function testGMFailure() {
     await EmailCampaign.createMany([campaignObj])
   } catch (ex) {
     expect(ex.message).to.be.equal('It is not allowed to send both google and microsoft ceredentials.')
-  } 
+  }
 }
 
 async function testGmailLoadOfRecipients() {
@@ -809,7 +809,7 @@ async function testGmailLoadOfRecipients() {
   for (i; i < 1005; i++) {
     to.push({
       email: `gholi_${i}@rechat.com`,
-      recipient_type: Email.EMAIL      
+      recipient_type: Email.EMAIL
     })
   }
 
@@ -850,7 +850,7 @@ async function testOutlookLoadOfRecipients() {
   for (i; i < 1005; i++) {
     to.push({
       email: `gholi_${i}@rechat.com`,
-      recipient_type: Email.EMAIL      
+      recipient_type: Email.EMAIL
     })
   }
 
@@ -1009,7 +1009,7 @@ async function saveError() {
 
     await EmailCampaign.saveError(campaign, ex.message)
     const updated = await EmailCampaign.get(campaign.id)
-  
+
     expect(updated.id).to.be.equal(campaign.id)
     expect(updated.failure).to.be.equal(ex.message)
   }
@@ -1044,7 +1044,7 @@ async function saveThreadKey() {
 
   const result   = await EmailCampaign.createMany([campaignObj])
   const campaign = await EmailCampaign.get(result[0])
-  
+
   await EmailCampaign.saveThreadKey(campaign.id, 'thread_key')
 
   const updated = await EmailCampaign.get(result[0])
@@ -1069,7 +1069,7 @@ async function update() {
     google_credential: null,
     microsoft_credential: null
   })
-  
+
   expect(updated_one.subject).to.be.equal('custom_subject')
   expect(updated_one.google_credential).to.be.equal(null)
   expect(updated_one.microsoft_credential).to.be.equal(null)
@@ -1083,7 +1083,7 @@ async function update() {
     microsoft_credential: null,
     notifications_enabled: true
   })
-  
+
   expect(updated_two.google_credential).to.be.equal(googleCredential.id)
   expect(updated_two.microsoft_credential).to.be.equal(null)
   expect(updated_two.notifications_enabled).to.be.equal(true)
@@ -1096,7 +1096,7 @@ async function update() {
     google_credential: null,
     microsoft_credential: microsoftCredential.id
   })
-  
+
   expect(updated_three.google_credential).to.be.equal(null)
   expect(updated_three.microsoft_credential).to.be.equal(microsoftCredential.id)
 
@@ -1109,7 +1109,7 @@ async function update() {
     microsoft_credential: microsoftCredential.id,
     individual: true
   })
-  
+
   expect(updated_four.individual).to.be.equal(true)
 
   try {
@@ -1136,9 +1136,36 @@ async function enableDisableNotification() {
 
   await EmailCampaign.enableDisableNotification(campaign.id, false)
   const updated_two = await EmailCampaign.get(campaign.id)
-  expect(updated_two.notifications_enabled).to.be.equal(false)  
+  expect(updated_two.notifications_enabled).to.be.equal(false)
 }
 
+async function testOmitUnsubscribedRecipients () {
+  const emails = {
+    subscribed: 'contact+subs@rechat.com',
+    unsubscribed: 'contact+unsub@rechat.com',
+    independent: 'noncontact@rechat.com',
+  }
+
+  const opts = { activity: false, get: false, relax: false }
+  const contactsInfo = [{
+    user: userA.id,
+    attributes: attributes({ email: emails.subscribed })
+  }, {
+    user: userA.id,
+    attributes: attributes({ email: emails.unsubscribed, tag: ['Unsubscribed'] }),
+  }]
+
+  await Contact.create(contactsInfo, userA.id, brand1.id, 'direct_request', opts)
+
+  const filteredRecipients = await EmailCampaign.omitUnsubscribedRecipients(
+    brand1.id,
+    Object.values(emails).map(email => ({ email })),
+  )
+
+  expect(filteredRecipients)
+    .to.be.an('array').with.lengthOf(2)
+    .which.satisfies(rec => rec.every(r => r.email !== emails.unsubscribde))
+}
 
 describe('Email', () => {
   createContext()
@@ -1159,7 +1186,7 @@ describe('Email', () => {
   it('should fail after attaching large files for mailgun', testCampaignWithLargeAttachments)
   it('should fail after attaching large files for gmail', testGmailWithLargeAttachments)
   it('should fail after attaching large files for outlook', testOutlookWithLargeAttachments)
-  
+
   it('should handle a gmail-message', testGoogleEmail)
   it('should handle an outlook-message', testMicrosoftEmail)
   it('should fail when both of google and microsoft are present', testGMFailure)
@@ -1174,4 +1201,6 @@ describe('Email', () => {
 
   it('should update a campaign record', update)
   it('should update campaign\'s notifications_enabled status', enableDisableNotification)
+
+  it('should omit unsubscribed recipients', testOmitUnsubscribedRecipients)
 })

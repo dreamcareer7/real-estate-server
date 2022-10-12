@@ -16,6 +16,7 @@ declare interface ICalendarFilterQuery {
   object_types?: TCalendarObjectType[];
   limit?: number;
   accessible_to?: UUID;
+  origin?: 'rechat' | 'google' | 'microsoft';
   users?: UUID[];
 }
 

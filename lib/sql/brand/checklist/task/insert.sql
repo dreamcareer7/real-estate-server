@@ -4,12 +4,16 @@ INSERT INTO brands_checklists_tasks (
   form,
   "order",
   checklist,
-  required
+  required,
+  tab_name,
+  acl
 ) VALUES (
   $1,
   $2,
   $3,
   $4,
   $5,
-  COALESCE($6, FALSE)
+  COALESCE($6, FALSE),
+  $7,
+  $8::task_acl[]
 )

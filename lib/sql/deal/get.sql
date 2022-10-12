@@ -83,7 +83,7 @@ SELECT deals.*,
 
   (
     SELECT
-      ARRAY_AGG(DISTINCT COALESCE(forms.tab_name, brands_checklists_tasks.tab_name, brands_checklists.tab_name))
+      ARRAY_AGG(DISTINCT COALESCE(brands_checklists_tasks.tab_name, forms.tab_name, brands_checklists.tab_name))
     FROM tasks
     JOIN deals_checklists             ON tasks.checklist = deals_checklists.id
     JOIN brands_checklists            ON deals_checklists.origin = brands_checklists.id

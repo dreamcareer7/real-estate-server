@@ -16,6 +16,7 @@ SET first_name = $1,
     twitter = $13,
     linkedin = $14,
     youtube = $15,
-    facebook = $16
+    facebook = $16,
+    tiktok = $17
 
-WHERE id = $17
+WHERE id = $18

@@ -195,9 +195,9 @@ const getSingleContact = cb => {
     .expectJSON({
       data: {
         id: results.contact.create.data[0].id,
-        display_name: 'John Doe',
+        display_name: 'Johnny',
         partner_name: 'Jane Doe',
-        sort_field: 'Doe John'
+        sort_field: 'Johnny'
       }
     })
 }
@@ -262,6 +262,25 @@ const filterContactsHavingTwoTags = cb => {
       data: [{
         id: results.contact.create.data[0].id
       }]
+    })
+    .expectStatus(200)
+}
+
+const filterContactsWithQuerySortByLastTouchRank = cb => {
+  return frisby
+    .create('text search ordered by last touch rank')
+    .post('/contacts/filter?start=0&limit=50&order=-last_touch_rank&alphabet&filter_type=and', {
+      query: 'test',
+      users: [results.authorize.token.data.id]
+    })
+    .after(cb)
+    .expectJSONLength('data', 1)
+    .expectJSON({
+      data: [
+        {
+          id: results.contact.create.data[0].id,
+        },
+      ],
     })
     .expectStatus(200)
 }
@@ -1241,6 +1260,7 @@ module.exports = {
   getGibberishContact,
   filterContacts,
   filterContactsHavingTwoTags,
+  filterContactsWithQuerySortByLastTouchRank,
   invertedFilter,
   stringSearch,
   stringSearchInBody,
