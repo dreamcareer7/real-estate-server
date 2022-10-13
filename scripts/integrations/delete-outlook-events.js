@@ -38,7 +38,7 @@ const SQL = {
 }
 
 /** @param {string} s */
-const truncate = (s, n = 10) => (s.length > n) ? s.slice(0, n - 1) + '&hellip;' : s
+const truncate = (s, n = 10) => (s.length > n) ? s.slice(0, n - 1) + '...' : s
 
 /**
  * @param {string} query
@@ -83,6 +83,19 @@ async function deleteEvents (cred, cal, events) {
   assert(events.every(e => e.microsoft_credential === cred.id))
   assert(events.every(e => e.microsoft_calendar === cal.id))
 
+  Context.log('Deleting local events...')
+  await MicrosoftCalendarEvent.bulkDelete(
+    events.map(event => ({
+      microsoft_credential: cred.id,
+      microsoft_calendar: cal.id,
+      event_id: event.event_id,
+    }))
+  )
+
+  Context.log('Deleting calendar integrations by event IDs...')
+  await sql.update(SQL.deleteIntegrationsByEventId, [events.map(e => e.event_id)])
+
+  Context.log('Deleting remote events...')
   const client = await getClient(cred.id, 'calendar')
 
   const { failed } = await client.batchDeleteEvents(
@@ -94,19 +107,10 @@ async function deleteEvents (cred, cal, events) {
   )
 
   if (failed?.length) {
-    // error
+    Context.error('Deleting remote events failed. Result:')
+    Context.log(JSON.stringify(failed, null, 2))
+    throw new Error('Rollback')
   }
-
-  await MicrosoftCalendarEvent.bulkDelete(
-    events.map(event => ({
-      microsoft_credential: cred.id,
-      microsoft_calendar: cal.id,
-      event_id: event.event_id,
-    }))
-  )
-
-  Context.log('Deleting calendar integrations by event IDs...')
-  await sql.update(SQL.deleteIntegrationsByEventId, events.map(e => e.event_id))
 }
 
 /**
