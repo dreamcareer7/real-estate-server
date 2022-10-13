@@ -93,7 +93,7 @@ async function deleteEvents (cred, cal, events) {
   )
 
   Context.log('Deleting calendar integrations by event IDs...')
-  await sql.update(SQL.deleteIntegrationsByEventId, [events.map(e => e.event_id)])
+  await sql.update(SQL.deleteIntegrationsByEventId, [events.map(e => e.id)])
 
   Context.log('Deleting remote events...')
   const client = await getClient(cred.id, 'calendar')
