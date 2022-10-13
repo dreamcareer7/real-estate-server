@@ -5,14 +5,20 @@ const migrations = [
 
   /* This view is not related to lead assignment. However, it's not used
    * anywhere in the project, so it's safe to drop */
-  'DROP VIEW IF EXISTS contacts_roles',
+  `DO $$ BEGIN
+     DROP TABLE IF EXISTS contacts_roles;
+     EXCEPTION WHEN wrong_object_type THEN
+       DROP VIEW IF EXISTS contacts_roles;
+   END $$`,
+
+  'DROP TYPE IF EXISTS contact_role',
 
   `CREATE TYPE contact_role AS ENUM (
      'owner',
      'assignee'
    )`,
 
-  `CREATE TABLE contacts_roles (
+  `CREATE TABLE IF NOT EXISTS contacts_roles (
      id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
      brand uuid NOT NULL REFERENCES brands(id),
      contact uuid NOT NULL REFERENCES contacts(id),
@@ -771,7 +777,7 @@ const migrations = [
       AND contacts.email IS NOT NULL
       AND contacts_roles.deleted_at IS NULL
   ))`,
-  
+
   'COMMIT',
 ]
 
