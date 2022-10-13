@@ -5,7 +5,8 @@
 -- $5: start (integer | NULL)
 
 SELECT
-  id
+  id,
+  COUNT(*) OVER()::INT AS total
 FROM email_campaigns
 WHERE
   brand = $1::uuid
