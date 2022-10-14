@@ -2,6 +2,7 @@
 
 require('colors')
 const { strict: assert } = require('assert')
+
 const sql = require('../../lib/utils/sql')
 
 const getClient = require('../../lib/models/Microsoft/client')
@@ -9,7 +10,7 @@ const Context = require('../../lib/models/Context')
 
 const MicrosoftCredential = require('../../lib/models/Microsoft/credential/get')
 const MicrosoftCalendar = require('../../lib/models/Microsoft/calendar/get')
-const CrmTask = require('../../lib/models/Task/delete')
+const CrmTask = require('../../lib/models/CRM/Task/upsert')
 const MicrosoftCalendarEvent = {
   ...require('../../lib/models/Microsoft/calendar_events/delete'),
   ...require('../../lib/models/Microsoft/calendar_events/get'),
@@ -98,18 +99,26 @@ async function deleteEvents (cred, cal, events) {
   Context.log('Deleting remote events...')
   const client = await getClient(cred.id, 'calendar')
 
-  const { failed } = await client.batchDeleteEvents(
-    events.map((event, index) => ({
-      requestId: index + 1,
-      calendarId: cal.calendar_id,
-      eventId: event.event_id,
-    }))
-  )
+  let res, chunks = events.map((event, index) => ({
+    requestId: String(index + 1),
+    calendarId: cal.calendar_id,
+    eventId: event.event_id,
+  }))
 
-  if (failed?.length) {
+  for (let i = 0; i < 4; i++) {
+    Context.log(`Round ${i}...`)
+    res = await client.batchDeleteEvents(chunks)
+    if (!res.failed.length) { break }
+
+    const non404 = res.failed.filter(f => f.status !== 404).map(f => f.id)
+    chunks = chunks.filter(c => non404.includes(c.requestId))
+    Context.log(`Still there are ${chunks.length} events to delete...`)
+    Context.log(JSON.stringify(non404, null, 2))
+  }
+
+  if (res?.failed?.length) {
     Context.error('Deleting remote events failed. Result:')
-    Context.log(JSON.stringify(failed, null, 2))
-    throw new Error('Rollback')
+    Context.log(JSON.stringify(res.failed, null, 2))
   }
 }
 
@@ -144,6 +153,7 @@ async function deleteOutlookEvents (program) {
   assert(opts.credential?.trim?.(), 'credential is required')
   assert(opts.calendar?.trim?.(), 'calendar is required')
   assert(opts.query?.trim?.(), 'query is required')
+  assert(opts.user?.trim?.(), 'user is required')
 
   const cred = await getMicrosoftCredential(opts)
   const cal = await MicrosoftCalendar.get(opts.calendar)
@@ -157,7 +167,7 @@ async function deleteOutlookEvents (program) {
 
   if (!opts.dryRun) {
     await deleteEvents(cred, cal, events)
-    await CrmTask.deleteAll(taskIds)
+    await CrmTask.remove(taskIds, opts.user)
     return
   }
 
