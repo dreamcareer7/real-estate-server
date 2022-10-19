@@ -3,6 +3,7 @@
 const path = require('path')
 const fs = require('fs')
 const Crypto = require('../../../lib/models/Crypto')
+const config = require('../../../lib/config')
 
 registerSuite('brand', [
   'createParent',
@@ -18,6 +19,10 @@ registerSuite('microsoft', ['createMicrosoftCredential', 'getMicrosoftProfile'])
 
 registerSuite('template', ['create', 'instantiate'])
 
+const html = `<div>Hi
+  ${config.imgix.domains.map(d => `<img src="https://${d}/test.jpg" />`)}
+</div>`
+
 const email = {
   to: [
     {
@@ -27,7 +32,7 @@ const email = {
   ],
   tags: ['mailGunTag'],
   due_at: new Date(),
-  html: '<div>Hi</div>',
+  html,
   subject: 'Email Subject',
   notifications_enabled: false
 }
