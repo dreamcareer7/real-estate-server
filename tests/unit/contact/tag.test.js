@@ -1,8 +1,12 @@
 const { expect } = require('chai')
+const zip = require('lodash/zip')
 
 const { createContext, handleJobs } = require('../helper')
 
-const Contact = require('../../../lib/models/Contact')
+const Contact = {
+  ...require('../../../lib/models/Contact/manipulate'),
+  ...require('../../../lib/models/Contact/get'),
+}
 const AttributeDef = require('../../../lib/models/Contact/attribute_def/get')
 const ContactList = require('../../../lib/models/Contact/list')
 const ListMember = require('../../../lib/models/Contact/list/members')
@@ -217,7 +221,7 @@ async function testRenameTagFixesListFilters() {
 
   async function setTheStage() {
     const def_ids_by_name = await AttributeDef.getDefsByName(brand.id)
-  
+
     await createContacts()
     list_id = await ContactList.create(user.id, brand.id, {
       name: 'Test List',
@@ -423,6 +427,54 @@ function testRenameToEmptyTagFail(done) {
   )
 }
 
+/**
+ * @param {object} opts
+ * @param {string[][]} opts.initialTags
+ * @param {string[]} opts.newTags
+ * @param {string[][]} opts.expectedTags
+ * @param {boolean} opts.shouldDelete
+ */
+async function testUpdateTags({ initialTags, newTags, expectedTags, shouldDelete }) {
+  const contactInfos = initialTags.map(tags => ({
+    attributes: tags.map(t => ({ attribute_type: 'tag', text: t })),
+    brand: brand.id,
+    user: user.id,
+  }))
+
+  const contactIds = await Contact.create(contactInfos, user.id, brand.id)
+  await Contact.updateTags(contactIds, newTags, user.id, brand.id, shouldDelete)
+
+  for (const [idx, [cid, et]] of zip(contactIds, expectedTags).entries()) {
+    /** @type {string[]} */
+    const actualTags = /** @type {any} */((await Contact.get(cid)).tags)
+
+    console.log({ actualTags })
+
+    expect(actualTags, `Contact [${idx}] has not expected tags after update`)
+      .to.have.same.members(et ?? [])
+  }
+}
+
+async function testDedupeTags () {
+  await testUpdateTags({
+    shouldDelete: true,
+    initialTags: [[
+      'Dupl1', 'DUPL1', ' dupl1', ' dupl1', '  DUPL1  ',
+      ' Dupl2   ', 'Dupl2', 'Dupl2', ' dupl2', ' dupl2', 'DUPL2',
+      'Some', 'Other', 'Unique', 'Tags',
+    ], [
+      'DUPL3', ' dupl3', 'DUPL3', '\tDupl3',
+      'Some',
+      'Indie', 'indie  ', '  iNDie ',
+    ]],
+    newTags: ['Dupl1', 'Dupl2', 'DUPL3', 'Other', 'Unique', 'Tags'],
+    expectedTags: [
+      ['Dupl1', 'Dupl2', 'DUPL3', 'Other', 'Unique', 'Tags'],
+      ['Dupl1', 'Dupl2', 'DUPL3', 'Other', 'Unique', 'Tags', 'Indie'],
+    ],
+  })
+}
+
 describe('Contact', () => {
   createContext()
   beforeEach(setup)
@@ -448,5 +500,13 @@ describe('Contact', () => {
     // Empty tag
     it('should not allow creating an empty tag', testCreateEmptyTagFail)
     it('should not allow renaming to empty tag', testRenameToEmptyTagFail)
+  })
+
+  describe.only('updateTags', () => {
+    context('when replacing tags... (shouldDelete = true)', () => {
+      it('deletes existing duplicate tags (case-insensitive, trimmed)', testDedupeTags)
+    })
+
+    // TODO: add more test cases regarding to Contact.updateTags.
   })
 })
