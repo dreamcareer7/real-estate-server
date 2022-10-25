@@ -135,6 +135,17 @@ SELECT
     WHERE
       contact = id
   ) as deals,
+  (
+    SELECT
+      array_agg(cr.id)
+    FROM
+      contacts_roles AS cr
+    WHERE
+      'contact.assignees' = ANY($3::text[]) AND
+      cr.deleted_at IS NULL AND
+      cr.contact = contacts.id AND
+      cr.role = 'assignee'
+  ) AS assignees,
   'contact' as type,
   lead_channel
 FROM

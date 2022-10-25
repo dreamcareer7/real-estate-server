@@ -52,7 +52,7 @@ async function testImportFromCsv() {
 
   await handleJobs()
 
-  const { total } = await Contact.filter(brand.id, [], { limit: 1 })
+  const { total } = await Contact.filter(brand.id, user.id, [], { limit: 1 })
   expect(total).to.be.equal(192)
 }
 
@@ -76,7 +76,7 @@ async function testCsvFullAddressColumns() {
 
   await handleJobs()
 
-  const { total, ids } = await Contact.filter(brand.id, [])
+  const { total, ids } = await Contact.filter(brand.id, user.id, [])
   expect(total).to.be.equal(1)
 
   const contact = await Contact.get(ids[0])
@@ -116,7 +116,7 @@ async function testCsvFullAddressColumns3() {
 
   await handleJobs()
 
-  const { total } = await Contact.filter(brand.id, [])
+  const { total } = await Contact.filter(brand.id, user.id, [])
   expect(total).to.be.equal(1)
 }
 
@@ -140,7 +140,7 @@ async function testCsvFullAddressColumns2() {
 
   await handleJobs()
 
-  const { total, ids } = await Contact.filter(brand.id, [])
+  const { total, ids } = await Contact.filter(brand.id, user.id, [])
   expect(total).to.be.equal(1)
 
   const contact = await Contact.get(ids[0])
@@ -170,7 +170,7 @@ async function testCsvSameNameColumns() {
 
   await handleJobs()
 
-  const { total, ids } = await Contact.filter(brand.id, [])
+  const { total, ids } = await Contact.filter(brand.id, user.id, [])
   expect(total).to.be.equal(1)
 
   const contact = await Contact.get(ids[0])
@@ -197,7 +197,7 @@ async function testCsvMultiTagColumn() {
 
   await handleJobs()
 
-  const { total, ids } = await Contact.filter(brand.id, [])
+  const { total, ids } = await Contact.filter(brand.id, user.id, [])
   expect(total).to.be.equal(1)
 
   const contact = await Contact.get(ids[0])
@@ -209,7 +209,7 @@ async function testImportFromJson() {
 
   await handleJobs()
 
-  const contacts = await Contact.getForBrand(brand.id, [], {})
+  const contacts = await Contact.getForBrand(brand.id, user.id, [], {})
   expect(contacts).to.have.length(3)
 }
 

@@ -13,6 +13,7 @@ SELECT
   "global",
   singular,
   show,
+  filterable,
   editable,
   searchable,
   has_label,

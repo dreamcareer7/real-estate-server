@@ -28,6 +28,7 @@
   "license": "ISC",
   "dependencies": {
     "@datadog/datadog-api-client": "^1.0.0-beta.9",
+    "@imgix/js-core": "^3.6.1",
     "@microsoft/microsoft-graph-client": "^3.0.2",
     "@pm2/pm2-version-check": "^1.0.4",
     "@rechat/squel": "^5.15.0",
@@ -63,6 +64,7 @@
     "express": "^4.17.1",
     "express-rate-limit": "^6.3.0",
     "geoip-lite": "^1.4.2",
+    "get-urls": "^10.0.1",
     "godaddy": "^0.3.1",
     "google-libphonenumber": "^3.2.21",
     "googleapis": "^66.0.0",

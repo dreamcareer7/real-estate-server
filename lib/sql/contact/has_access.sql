@@ -1,10 +1,20 @@
+WITH assigned_contacts AS MATERIALIZED (
+  SELECT array_agg(cr.contact) AS assigned_contacts
+  FROM contacts_roles AS cr
+  WHERE cr.deleted_at IS NULL
+    AND cr.brand = $2::uuid
+    AND cr.user = $3::uuid
+    AND cr.role = 'assignee'::contact_role
+)
 SELECT
-  id,
-  check_contact_read_access(contacts, $2) AS "read",
-  check_contact_write_access(contacts, $2) AS "write"
+  c.id,
+  c.brand = $2::uuid OR c.id = ANY(ac.assigned_contacts) AS "read",
+  c.brand = $2::uuid OR c.id = ANY(ac.assigned_contacts) AS "write",
+  c.brand = $2::uuid AS "delete"
 FROM
-  contacts
+  contacts AS c
+CROSS JOIN assigned_contacts AS ac
 JOIN
-  unnest($1::uuid[]) WITH ORDINALITY t(did, ord) ON contacts.id = did
+  unnest($1::uuid[]) WITH ORDINALITY t(did, ord) ON c.id = did
 WHERE
-  deleted_at IS NULL
+  c.deleted_at IS NULL

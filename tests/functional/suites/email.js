@@ -3,6 +3,7 @@
 const path = require('path')
 const fs = require('fs')
 const Crypto = require('../../../lib/models/Crypto')
+const config = require('../../../lib/config')
 
 registerSuite('brand', [
   'createParent',
@@ -18,6 +19,10 @@ registerSuite('microsoft', ['createMicrosoftCredential', 'getMicrosoftProfile'])
 
 registerSuite('template', ['create', 'instantiate'])
 
+const html = `<div>Hi
+  ${config.imgix.domains.map(d => `<img src="https://${d}/test.jpg" />`)}
+</div>`
+
 const email = {
   to: [
     {
@@ -27,7 +32,7 @@ const email = {
   ],
   tags: ['mailGunTag'],
   due_at: new Date(),
-  html: '<div>Hi</div>',
+  html,
   subject: 'Email Subject',
   notifications_enabled: false
 }
@@ -64,16 +69,16 @@ const sendDue = cb => {
     .expectStatus(200)
 }
 
-const getMailGunId = cb => {  
+const getMailGunId = cb => {
   return frisby
     .create('Get MailGun Id')
     .get(`/emails/${results.email.schedule.data.id}?associations[]=email_campaign.emails&associations[]=email_campaign.recipients&associations[]=email_campaign_email.email`)
-    .after(cb)    
-    .expectStatus(200)    
+    .after(cb)
+    .expectStatus(200)
 }
 
 const addEvent = cb => {
-  
+
   const data = {
     'event-data': {
       timestamp: new Date().getTime(),
@@ -95,6 +100,25 @@ const addEvent = cb => {
     .expectStatus(200)
 }
 
+function unsubscribe (cb) {
+  return frisby
+    .create('Add unsubscribe event to the email')
+    .post('/emails/events', {
+      'event-data': {
+        timestamp: Date.now(),
+        recipient: email.to[0].email,
+        event: 'unsubscribed',
+        message: {
+          headers: {
+            'message-id': results.email.getMailGunId.data.emails[0].email.mailgun_id,
+          },
+        },
+      }
+    })
+    .after(cb)
+    .expectStatus(200)
+}
+
 const updateStats = cb => {
   return frisby
     .create('Update campaign stats')
@@ -105,11 +129,11 @@ const updateStats = cb => {
     .expectStatus(200)
 }
 
-const get = cb => {  
+const get = cb => {
   return frisby
     .create('Get the campaign')
     .get(`/emails/${results.email.schedule.data.id}?associations[]=email_campaign.emails&associations[]=email_campaign.recipients&associations[]=email_campaign_email.email`)
-    .after(cb)    
+    .after(cb)
     .expectStatus(200)
     .expectJSON({
       data: {
@@ -806,7 +830,7 @@ function getThread(cb) {
         subject: results.email.getGmailMessage.data.subject,
         message_count: 1,
         type: 'email_thread'
-      }    
+      }
     })
 }
 
@@ -860,7 +884,7 @@ function syncThreadsByContact(cb) {
     .expectStatus(200)
 }
 
-function openEmail(cb) {  
+function openEmail(cb) {
   const campaign = results.email.get.data
   const emailId = campaign.emails[0].email.id
   const enc = Crypto.encrypt(JSON.stringify({ email: emailId, origin: 'gmail' }))
@@ -883,7 +907,7 @@ const openEmailUpdateStats = cb => {
 }
 
 
-const checkEmailAfterVisitingByBlackListIps = (cb) => {  
+const checkEmailAfterVisitingByBlackListIps = (cb) => {
   const campaign = results.email.get.data
 
   return frisby
@@ -895,7 +919,7 @@ const checkEmailAfterVisitingByBlackListIps = (cb) => {
       }
       cb(err, res, json)
     })
-    .expectStatus(200)   
+    .expectStatus(200)
 }
 
 module.exports = {
@@ -912,6 +936,7 @@ module.exports = {
   sendDue,
   getMailGunId,
   addEvent,
+  unsubscribe,
   updateStats,
   get,
   getEmail,

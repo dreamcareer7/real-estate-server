@@ -112,7 +112,7 @@ async function testMergeAll() {
 
   await handleJobs()
 
-  const contacts = await Contact.filter(brand.id, [], {})
+  const contacts = await Contact.filter(brand.id, user.id, [], {})
   expect(contacts.ids).to.have.members(clusters.map(cl => cl.contacts[0]).concat(lena))
 
   expect(await Duplicates.findForBrand(brand_id)).to.be.empty

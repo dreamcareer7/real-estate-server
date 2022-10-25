@@ -9,7 +9,7 @@ cluster_members AS (
     JOIN contacts
       ON contact = contacts.id
   WHERE
-    check_contact_read_access(contacts.*, $1::uuid)
+    contacts.brand = $1::uuid
     AND deleted_at IS NULL
     AND cluster = (SELECT cluster FROM cluster_id LIMIT 1)
 )

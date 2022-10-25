@@ -259,6 +259,24 @@ AS $$
   WHERE
     id = parent;
 
+  INSERT INTO contacts_roles (
+    contact,
+    role,
+    created_by,
+    brand,
+    "user"
+  )
+  SELECT
+    cr.contact,
+    cr.role,
+    cr.created_by,
+    cr.brand,
+    cr."user"
+  FROM unnest(children) AS child_id
+  JOIN contacts_roles AS cr ON cr.contact = child_id
+  WHERE cr.deleted_at IS NULL
+  ON CONFLICT DO NOTHING;
+
   /* Delete child contacts */
   UPDATE
     contacts

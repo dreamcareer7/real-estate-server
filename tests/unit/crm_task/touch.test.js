@@ -184,7 +184,7 @@ async function testTouchDates() {
   expect(c.last_touch).to.be.equal(task.due_date)
   expect(c.next_touch - c.last_touch).to.be.equal(WARM_LIST_TOUCH_FREQ * 24 * 3600 + (lt.utcOffset() - nt.utcOffset()) * 60)
 
-  const { ids } = await Contact.fastFilter(brand.id, [], {
+  const { ids } = await Contact.fastFilter(brand.id, user.id, [], {
     last_touch_gte: Date.now() / 1000 - 7 * 24 * 3600
   })
 
@@ -345,7 +345,7 @@ async function testSortByLastTouch() {
   const contact_ids = await createContact()
   await createTask(contact_ids.slice(0, 1))
 
-  const { ids } = await Contact.fastFilter(brand.id, [], {
+  const { ids } = await Contact.fastFilter(brand.id, user.id, [], {
     order: '-last_touch'
   })
 
