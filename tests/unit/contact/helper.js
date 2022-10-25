@@ -1,10 +1,8 @@
-const _ = require('lodash')
-
 /**
  * @typedef {string | number | Partial<IContactAttributeInput>} TAttrType
  */
 
-const address_attrs = [
+ const address_attrs = [
   'postal_code',
   'street_number',
   'street_prefix',
@@ -35,6 +33,10 @@ module.exports = {
         date: val
       }
 
+      if (val instanceof Date) return {
+        date: val.getTime() / 1000
+      }
+
       return val
     }
 
@@ -51,17 +53,27 @@ module.exports = {
      * @param {number=} i
      */
     function getAttr(k, v, i) {
-      const attr = {
-        ...value(v),
-        is_partner: /^spouse_/.test(k),
-        attribute_type: key(k)
+      function a(is_partner, k, v, i) {
+        const attr = {
+          ...value(v),
+          is_partner,
+          attribute_type: key(k)
+        }
+  
+        if (address_attrs.includes(attr.attribute_type) && typeof attr.index !== 'number') {
+          attr.index = i
+        }
+  
+        return attr
       }
 
-      if (address_attrs.includes(attr.attribute_type) && _.isNull(attr.index)) {
-        attr.index = i
+      const is_partner = /^spouse_/.test(k)
+
+      if (k === 'address') {
+        return Object.keys(v).map(k => a(is_partner, k, v[k], i))
       }
 
-      return attr
+      return a(is_partner, k, v, i)
     }
 
     /** @type {IContactAttributeInput[]} */
@@ -69,10 +81,10 @@ module.exports = {
 
     for (const [k, v] of Object.entries(attrs)) {
       if (Array.isArray(v)) {
-        result = result.concat(v.map((vv, i) => getAttr(k, vv, i)))
+        result = result.concat(v.flatMap((vv, i) => getAttr(k, vv, i)))
       }
       else {
-        result.push(getAttr(k, v, 0))
+        result = result.concat(getAttr(k, v, 0))
       }
     }
 
