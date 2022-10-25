@@ -2,7 +2,7 @@
  * @typedef {string | number | Partial<IContactAttributeInput>} TAttrType
  */
 
- const address_attrs = [
+const address_attrs = [
   'postal_code',
   'street_number',
   'street_prefix',
