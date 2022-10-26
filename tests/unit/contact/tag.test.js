@@ -463,7 +463,7 @@ async function testUpdateTags({ initialTags, newTags, expectedTags, shouldDelete
     /** @type {string[]} */
     const actualTags = /** @type {any} */(contact.tags)
 
-    expect(actualTags, `Contact [${idx}] has\'nt got expected tags after update`)
+    expect(actualTags, `Contact [${idx}] has'nt got expected tags after update`)
       .to.be.an('array')
       .with.lengthOf(et?.length ?? 0)
       .which.has.same.members(et ?? [])
@@ -578,7 +578,7 @@ async function testDedupeTagsScript () {
     /** @type {string[]} */
     const actualTags = /** @type {any} */((await Contact.get(cid)).tags)
 
-    expect(actualTags, `Contact [${idx}] has\'nt got expected tags after running the script`)
+    expect(actualTags, `Contact [${idx}] has'nt got expected tags after running the script`)
       .to.be.an('array')
       .with.lengthOf(et?.length ?? 0)
       .which.has.same.members(et ?? [])
