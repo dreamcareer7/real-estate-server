@@ -213,6 +213,44 @@ async function testImportFromJson() {
   expect(contacts).to.have.length(3)
 }
 
+async function testOmitDuplicateTags () {
+  const inputTags = [
+    ' tag1  ', 'Tag1 ', ' TAG1', 'tAg1', ' TaG1',
+    'tag2 ', 'Tag2 ', ' TaG2 ',
+  ]
+  const expectedTags = ['tag1', 'tag2']
+
+  const csvContent = [
+    'First Name,Last Name,E-mail Address,Tags',
+    `FFFFFFFFFF,LLLLLLLLL,test@rechat.co,"${inputTags}"`,
+  ].join('\n')
+
+  // @ts-expect-error-next-line
+  const file = await AttachedFile.saveFromBuffer({
+    filename: 'contacts_with_duplicate_tags.csv',
+    path: `${user.id}-${Date.now()}`,
+    buffer: Buffer.from(csvContent),
+    user,
+    relations: [{
+      role: 'Brand',
+      role_id: brand.id,
+    }],
+  })
+
+  const mappings = require('./data/multi-tag-mapping.json')
+  await ImportWorker.import_csv(user.id, brand.id, file.id, user.id, mappings)
+  await handleJobs()
+
+  const { total, ids } = await Contact.filter(brand.id, user.id, [])
+  expect(total, `${total} contacts created after import, instead of one`).to.be.equal(1)
+
+  const contact = await Contact.get(ids[0])
+
+  expect(contact.tags).to.be.an('array')
+    .with.lengthOf(expectedTags.length)
+    .and.has.same.members(expectedTags)
+}
+
 describe('Contact', () => {
   createContext()
   beforeEach(setup)
@@ -225,5 +263,6 @@ describe('Contact', () => {
     it('should parse and import multiple columns with the same name', testCsvSameNameColumns)
     it('should parse and import comma-separated multi valued columns', testCsvMultiTagColumn)
     it('should import contacts from json', testImportFromJson)
+    it('should add unique tags only', testOmitDuplicateTags)
   })
 })
