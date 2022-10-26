@@ -572,7 +572,7 @@ async function testDedupeTagsScript () {
   ]
 
   const contactIds = await createContactsWithTags(initialTags)
-  await dedupeContactsTagsScript.dedupeAll()
+  await dedupeContactsTagsScript.dedupeChunk(contactIds.length)
 
   for (const [idx, [cid, et]] of zip(contactIds, expectedTags).entries()) {
     /** @type {string[]} */
