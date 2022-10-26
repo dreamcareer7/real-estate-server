@@ -13,7 +13,7 @@ const DEFAULT_ROUNDS = 100
 
 const SQL = {
   findSomeContactsWithDuplicateTags: `
-    SELECT id, tag FROM contacts
+    SELECT id, tag, "user", created_by, brand FROM contacts
     WHERE array_length(tag, 1) <> (
       SELECT count(DISTINCT trim(lower(each_tag))) FROM unnest(tag) AS each_tag
     )
@@ -33,10 +33,17 @@ async function dedupeChunk (chunkSize = DEFAULT_CHUNK_SIZE) {
   if (!contacts.length) { return 0 }
 
   for (const contact of contacts) {
+    if (!contact.brand) {
+      Context.warn(`Contact ${contact.id} doesn't have brand.`)
+    }
+    if (!contact.user) {
+      Context.warn(`Contact ${contact.id} doesn't have an owner (user). creator user (created_by) will be used instead`)
+    }
+
     await Contact.updateTags(
       [contact.id],
       belt.uniqCaseInsensitive(contact.tag),
-      contact.user,
+      contact.user || contact.created_by,
       contact.brand,
       true,
     )
@@ -99,4 +106,8 @@ if (require.main === module) {
     console.error(err)
     process.exit(1)
   })
+}
+
+module.exports = {
+  dedupeAll,
 }
