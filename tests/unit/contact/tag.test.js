@@ -4,7 +4,9 @@ const zip = require('lodash/zip')
 const { createContext, handleJobs } = require('../helper')
 
 const Contact = {
+  ...require('../../../lib/models/Contact/fast_filter'),
   ...require('../../../lib/models/Contact/manipulate'),
+  ...require('../../../lib/models/Contact/filter'),
   ...require('../../../lib/models/Contact/get'),
 }
 const AttributeDef = require('../../../lib/models/Contact/attribute_def/get')
@@ -448,30 +450,99 @@ async function testUpdateTags({ initialTags, newTags, expectedTags, shouldDelete
     /** @type {string[]} */
     const actualTags = /** @type {any} */((await Contact.get(cid)).tags)
 
-    console.log({ actualTags })
-
     expect(actualTags, `Contact [${idx}] has not expected tags after update`)
-      .to.have.same.members(et ?? [])
+      .to.have.lengthOf(et?.length ?? 0)
+      .and.same.members(et ?? [])
   }
 }
 
-async function testDedupeTags () {
+async function testUniqNewTags () {
+  for (const shouldDelete of [false, true]) {
+    await testUpdateTags({
+      shouldDelete,
+      initialTags: [[]],
+      newTags: ['tag3', 'tag1', 'Tag1', 'tag2', ' Tag1  ', '\tTaG1', 'tAg1'],
+      expectedTags: [['tag3', 'tag1', 'tag2']],
+    })
+  }
+}
+
+async function testNotToCreateDuplicateTags () {
   await testUpdateTags({
     shouldDelete: true,
-    initialTags: [[
-      'Dupl1', 'DUPL1', ' dupl1', ' dupl1', '  DUPL1  ',
-      ' Dupl2   ', 'Dupl2', 'Dupl2', ' dupl2', ' dupl2', 'DUPL2',
-      'Some', 'Other', 'Unique', 'Tags',
-    ], [
-      'DUPL3', ' dupl3', 'DUPL3', '\tDupl3',
-      'Some',
-      'Indie', 'indie  ', '  iNDie ',
-    ]],
-    newTags: ['Dupl1', 'Dupl2', 'DUPL3', 'Other', 'Unique', 'Tags'],
-    expectedTags: [
-      ['Dupl1', 'Dupl2', 'DUPL3', 'Other', 'Unique', 'Tags'],
-      ['Dupl1', 'Dupl2', 'DUPL3', 'Other', 'Unique', 'Tags', 'Indie'],
+    initialTags: [
+      ['Dup1', 'Common', 'Dup2'],
+      ['Dup1', 'Common', 'Dup3'],
     ],
+    newTags: ['Dup1'],
+    expectedTags: [
+      ['Dup1', 'Dup2'],
+      ['Dup1', 'Dup3'],
+    ],
+  })
+}
+
+async function testFixCase () {
+  await testUpdateTags({
+    shouldDelete: true,
+    initialTags: [
+      ['TAG1', 'Tag2'],
+      ['tAg1', 'tag3'],
+    ],
+    newTags: ['Tag1'],
+    expectedTags: [
+      ['Tag1', 'Tag2'],
+      ['Tag1', 'tag3'],
+    ],
+  })
+}
+
+async function testDedupeTagsUpdating () {
+  await testUpdateTags({
+    shouldDelete: true,
+    initialTags: [
+      ['indie1', 'uniq1', 'Uniq1', ' UNIQ1  ', 'CoMMon', 'common', 'Common  ', 'common2'],
+      ['indie2', 'uniq2', 'UniQ2 ', 'common', 'cOmmOn', 'CoMMon', 'Common  ', ' Common ', 'common2'],
+    ],
+    newTags: ['uniq1', 'common', 'Uniq2'],
+    expectedTags: [
+      ['indie1', 'uniq1', 'common', 'Uniq2'],
+      ['indie2', 'uniq1', 'common', 'Uniq2'],
+    ],
+  })
+}
+
+async function testDedupeTagsExisting () {
+  /* XXX: this isn't a useful feature though. it was only added accidentally by
+   * me and I've kept it, because it's usable in a migration script. */
+  await testUpdateTags({
+    shouldDelete: true,
+    initialTags: [
+      [' Tag1 ', ' Tag1 ', 'TAG1'],
+      ['\ttag2\t', '\ttag2\t', 'TAG2'],
+    ],
+    newTags: ['tag3'],
+    expectedTags: [
+      [' Tag1 ', 'TAG1', 'tag3'],
+      ['\ttag2\t', 'TAG2', 'tag3'],
+    ],
+  })
+}
+
+async function testNotToAddDuplicateTags () {
+  await testUpdateTags({
+    shouldDelete: false,
+    initialTags: [
+      ['  Dup1 ', 'DUP1 ', 'Common', 'Tag2'],
+      ['dup1', 'Common', 'Tag3'],
+      ['Common', 'Tag4'],
+    ],
+    newTags: ['dup1', 'Dup1', 'DUP1'],
+    expectedTags: [
+      ['  Dup1 ', 'DUP1 ', 'Common', 'Tag2'],
+      ['dup1', 'Common', 'Tag3'],
+      ['dup1', 'Common', 'Tag4'],
+    ]
   })
 }
 
@@ -502,11 +573,18 @@ describe('Contact', () => {
     it('should not allow renaming to empty tag', testRenameToEmptyTagFail)
   })
 
-  describe.only('updateTags', () => {
+  describe('updateTags', () => {
+    it('ignores duplicate tags in newTags (case-insensitive, trimmed)', testUniqNewTags)
+
     context('when replacing tags... (shouldDelete = true)', () => {
-      it('deletes existing duplicate tags (case-insensitive, trimmed)', testDedupeTags)
+      it('doesn\'t create duplicate tags', testNotToCreateDuplicateTags)
+      it('fixes text case', testFixCase)
+      it('dedupes existing tags when updating them (case-insensitive, trimmed)', testDedupeTagsUpdating)
+      it('dedupes existing non-updating tags (case-sensitive)', testDedupeTagsExisting)
     })
 
-    // TODO: add more test cases regarding to Contact.updateTags.
+    context('when adding new tags... (shouldDelete = false)', () => {
+      it('adds only new unique tags (case-insensitive, trimmed)', testNotToAddDuplicateTags)
+    })
   })
 })
