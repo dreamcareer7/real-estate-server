@@ -1,15 +1,20 @@
 const { expect } = require('chai')
+const fs = require('fs')
+const path = require('path')
+const yaml = require('js-yaml')
 
 const { createContext, handleJobs } = require('../helper')
 const contactsData = require('./data/filter.json')
 
 const Contact = require('../../../lib/models/Contact')
-const { fastFilter: mixedFilter, contactFilterQuery } = require('../../../lib/models/Contact/filter2')
+const { fastFilter } = require('../../../lib/models/Contact/fast_filter')
 const Context = require('../../../lib/models/Context')
 const CrmTask = require('../../../lib/models/CRM/Task')
 const User = require('../../../lib/models/User/get')
 
 const BrandHelper = require('../brand/helper')
+const { attributes } = require('./helper')
+const sql = require('../../../lib/utils/sql')
 
 let user, brand, contact_ids
 
@@ -24,13 +29,11 @@ async function setup() {
     contexts: []
   })
   Context.set({ user, brand })
-
-  await createContact()
 }
 
-async function createContact() {
+async function createContact(data = contactsData) {
   contact_ids = await Contact.create(
-    contactsData.map(c => ({ ...c, user: user.id })),
+    data.map(c => ({ ...c, user: user.id })),
     user.id,
     brand.id,
     'direct_request',
@@ -38,63 +41,8 @@ async function createContact() {
   )
 
   await handleJobs()
-}
 
-async function testFilterTagEquals() {
-  const filter_res = await Contact.fastFilter(brand.id, user.id, [{
-    attribute_type: 'tag',
-    value: 'Tag1'
-  }], {})
-
-  expect(filter_res.total).to.equal(1)
-}
-
-async function testFilterNoTags() {
-  const filter_res = await Contact.fastFilter(brand.id, user.id, [{
-    attribute_type: 'tag',
-    value: null
-  }], {})
-
-  expect(filter_res.total).to.equal(1)
-}
-
-async function testFilterTagAny() {
-  const filter_res = await Contact.fastFilter(brand.id, user.id, [{
-    attribute_type: 'tag',
-    operator: 'any',
-    value: ['Tag1']
-  }], {})
-
-  expect(filter_res.total).to.equal(1)
-}
-
-async function testFilterTagAll() {
-  const filter_res = await Contact.fastFilter(brand.id, user.id, [{
-    attribute_type: 'tag',
-    operator: 'all',
-    value: ['Tag1', 'Tag2']
-  }], {})
-
-  expect(filter_res.total).to.equal(1)
-}
-
-async function testFilterTagCaseInsensitive() {
-  const filter_res = await Contact.fastFilter(brand.id, user.id, [{
-    attribute_type: 'tag',
-    operator: 'all',
-    value: ['tag1', 'tag2']
-  }], {})
-
-  expect(filter_res.total).to.equal(1)
-}
-
-async function testFilterFirstNameEquals() {
-  const filter_res = await Contact.fastFilter(brand.id, user.id, [{
-    attribute_type: 'first_name',
-    value: 'John'
-  }], {})
-
-  expect(filter_res.total).to.equal(1)
+  return contact_ids
 }
 
 async function testFFQuery(q, expected_length) {
@@ -108,26 +56,9 @@ async function testFQuery(q, expected_length) {
   return filter_res
 }
 
-async function testFilterByGuest() {
-  await Contact.create([
-    {
-      attributes: [
-        {
-          attribute_type: 'birthday',
-          date: Date.now() / 1000
-        }
-      ],
-      user: user.id
-    }
-  ], user.id, brand.id)
-
-  await handleJobs()
-
-  await testFFQuery(['Guest'], 1)
-  await testFQuery(['Guest'], 1)
-}
-
 async function testFilterByQuery() {
+  await createContact()
+
   async function testFastFilter() {
     const { ids } = await testFFQuery(['Emil'], 2)
     const contacts = await Contact.getAll(ids, user.id)
@@ -148,6 +79,8 @@ async function testFilterByQuery() {
 }
 
 async function testFTSWithEmptyString() {
+  await createContact()
+
   async function testFastFilter() {
     const { ids } = await testFFQuery(['Emil', ''], 2)
     const contacts = await Contact.getAll(ids, user.id)
@@ -167,32 +100,9 @@ async function testFTSWithEmptyString() {
   await testFilter()
 }
 
-async function testAlphabeticalFilter() {
-  async function testFastFilter(alphabet, expected_length) {
-    const filter_res = await Contact.fastFilter(brand.id, user.id, [], { alphabet })
-    expect(filter_res.total).to.equal(expected_length)
-  }
-  async function testFilter(alphabet, expected_length) {
-    const filter_res = await Contact.filter(brand.id, user.id, [], { alphabet })
-    expect(filter_res.total).to.equal(expected_length)
-  }
-
-  await testFastFilter('j', 1)
-  await testFastFilter('J', 1)
-  await testFastFilter('g', 0)
-
-  await testFilter('j', 1)
-  await testFilter('J', 1)
-  await testFilter('g', 0)
-
-  await testFastFilter('jo', 1)
-  await testFastFilter('jo%', 0)
-
-  await testFilter('jo', 1)
-  await testFilter('jo%', 0)
-}
-
 async function testCrmAssociationFilter() {
+  await createContact()
+
   /** @type {ITaskInput[]} */
   const tasks = [{
     title: 'Task A',
@@ -260,13 +170,17 @@ async function testCrmAssociationFilter() {
 }
 
 async function testFTSEscape() {
+  await createContact()
+
   await testFFQuery(['+1', '(214)', '642-1552'], 0)
   await testFQuery(['+1', '(214)', '642-1552'], 0)
 }
 
 async function testMixedFilter() {
+  await createContact()
+
   await (async function () {
-    const filter_res = await mixedFilter(brand.id, user.id, [{
+    const filter_res = await fastFilter(brand.id, user.id, [{
       attribute_type: 'tag',
       value: 'Tag3'
     }, {
@@ -277,7 +191,7 @@ async function testMixedFilter() {
   })()
 
   await (async function () {
-    const filter_res = await mixedFilter(brand.id, user.id, [{
+    const filter_res = await fastFilter(brand.id, user.id, [{
       attribute_type: 'tag',
       value: 'Tag3'
     }], {})
@@ -285,47 +199,97 @@ async function testMixedFilter() {
   })()
 }
 
-async function testFilterQuery() {
-  const q = await contactFilterQuery(
-    brand.id,
-    [
-      {
-        attribute_type: 'birthday',
-        operator: 'eq',
-        value: null,
-        invert: true,
-      },
-    ],
-    {}
-  )
+function traverseFiltersDir() {
+  const filter_dir = path.resolve(__dirname, 'filter')
+  
+  function traverse(current_dir) {
+    const contents = fs.readdirSync(current_dir, { encoding: 'utf-8' })
+    const sub_dirs = contents.filter(c => {
+      const s = fs.statSync(path.resolve(current_dir, c))
+      return s.isDirectory()
+    })
+    const test_cases = contents.filter(c => c.endsWith('.yaml'))
 
-  console.log(q.toParam())
+    for (const test_case of test_cases) {
+      const test_case_file = path.resolve(current_dir, test_case)
+      const contents = yaml.loadAll(fs.readFileSync(test_case_file, 'utf8'))
+
+      for (const doc of contents) {
+        describe(doc.description ?? test_case.replace('.yaml', ''), function() {
+          for (const c of doc.tests) {
+            let batch = c.batch
+            if (!batch) {
+              batch = [{
+                filter: c.filter,
+                expected: c.expected
+              }]
+            }
+            it(c.description, testContactFilter(
+              c.contacts,
+              batch
+            ))
+          }
+        })
+      }
+    }
+
+    for (const sub_dir of sub_dirs) {
+      describe(sub_dir, function() {
+        traverse(path.resolve(current_dir, sub_dir))
+      })
+    }
+  }
+
+  traverse(filter_dir)
+}
+
+/**
+ * @param {object} contacts 
+ * @param {{ filter: IContactFilterOptions & { attributes: IContactAttributeFilter[] }; expected: number[] }[]} batch
+ */
+function testContactFilter(contacts, batch) {
+  return async function() {
+    const users = await sql.select('SELECT id, email FROM users WHERE deleted_at IS NULL')
+    const users_by_email = users.reduce((dic, u) => {
+      dic[u.email] = u.id
+      return dic
+    }, {})
+    const ids = await Contact.create(
+      contacts.map(({ user, assignees, ...c }) => ({
+        attributes: attributes(c),
+        user: users_by_email[user],
+      })),
+      user.id,
+      brand.id,
+      'direct_request',
+      { activity: false, get: false, relax: false }
+    )
+  
+    await handleJobs()
+    
+    for (let i = 0; i < batch.length; i++) {
+      const { filter, expected } = batch[i]
+      const { ids: found } = await Contact.fastFilter(brand.id, user.id, filter.attributes, filter)
+  
+      expect(found.map(id => ids.indexOf(id)), `Expectation ${i}`).to.have.members(expected)
+    }
+  }
 }
 
 describe('Contact', () => {
   createContext()
   beforeEach(setup)
 
-  describe('Filter', () => {
-    it('should filter by has a tag', testFilterTagEquals)
-    it('should filter by has no tags', testFilterNoTags)
-    it('should filter by has any of tags', testFilterTagAny)
-    it('should filter by has all tags', testFilterTagAll)
-    it('should not be case-sensitive in filtering by tags', testFilterTagCaseInsensitive)
-    it('should filter by first name is', testFilterFirstNameEquals)
-    it('should filter by first letter of sort field', testAlphabeticalFilter)
+  describe('Filter', traverseFiltersDir)
+
+  describe('Filter - Additional', () => {
     it('should filter by task association', testCrmAssociationFilter)
     it('should filter by both global and custom attributes', testMixedFilter)
   })
 
   describe('Full-Text Search', () => {
     it('should full-text search', testFilterByQuery)
-    it('should filter by Guest', testFilterByGuest)
     it('should fts-filter even if terms contain empty string', testFTSWithEmptyString)
     it('should escape special characters', testFTSEscape)
-  })
-
-  describe('Query generator', () => {
-    it('should log the query', testFilterQuery)
   })
 })

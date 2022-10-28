@@ -1,0 +1,58 @@
+contacts: &contacts
+  - first_name: John
+    email: john@rechat.com
+  - first_name: Emil
+    last_name: Sedgh
+    email: emil@rechat.com
+  - first_name: Thomas
+    marketing_name: Thomas and Emily
+    spouse_first_name: Emily
+    email: thomas@rechat.com
+    address:
+      - city: Dallas
+  - first_name: Mark
+    last_name: Twain
+    email: marktwain@gmail.com
+
+description: text attributes
+
+tests:
+  - description: first name equals
+    contacts: *contacts
+    filter:
+      attributes:
+        - attribute_type: first_name
+          operator: eq
+          value: John
+    expected:
+      - 0
+  - description: terms search
+    contacts: *contacts
+    filter:
+      q:
+        - Emil
+      order: display_name
+    expected:
+      - 1
+      - 2
+  - description: alphabet search
+    contacts: *contacts
+    batch:
+      - filter:
+          alphabet: J
+        expected:
+          - 0
+      - filter:
+          alphabet: j
+        expected:
+          - 0
+      - filter:
+          alphabet: G
+        expected: []
+      - filter:
+          alphabet: jo
+        expected:
+          - 0
+      - filter:
+          alphabet: jo%
+        expected: []
