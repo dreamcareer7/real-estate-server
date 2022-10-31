@@ -1,8 +1,14 @@
 const { expect } = require('chai')
+const zip = require('lodash/zip')
 
 const { createContext, handleJobs } = require('../helper')
 
-const Contact = require('../../../lib/models/Contact')
+const Contact = {
+  ...require('../../../lib/models/Contact/fast_filter'),
+  ...require('../../../lib/models/Contact/manipulate'),
+  ...require('../../../lib/models/Contact/filter'),
+  ...require('../../../lib/models/Contact/get'),
+}
 const AttributeDef = require('../../../lib/models/Contact/attribute_def/get')
 const ContactList = require('../../../lib/models/Contact/list')
 const ListMember = require('../../../lib/models/Contact/list/members')
@@ -13,6 +19,7 @@ const Orm = {
   ...require('../../../lib/models/Orm/context'),
 }
 const User = require('../../../lib/models/User/get')
+const dedupeContactsTagsScript = require('../../../scripts/crm/dedupe-contacts-tags')
 
 const BrandHelper = require('../brand/helper')
 const ContactHelper = require('../contact/helper')
@@ -217,7 +224,7 @@ async function testRenameTagFixesListFilters() {
 
   async function setTheStage() {
     const def_ids_by_name = await AttributeDef.getDefsByName(brand.id)
-  
+
     await createContacts()
     list_id = await ContactList.create(user.id, brand.id, {
       name: 'Test List',
@@ -423,6 +430,161 @@ function testRenameToEmptyTagFail(done) {
   )
 }
 
+/**
+ * @param {string[][]} tagsArrays
+ * @returns {Promise<IContact['id'][]>}
+ */
+async function createContactsWithTags (tagsArrays) {
+  const contactInfos = tagsArrays.map(tags => ({
+    attributes: tags.map(t => ({ attribute_type: 'tag', text: t })),
+    brand: brand.id,
+    user: user.id,
+  }))
+
+  return Contact.create(contactInfos, user.id, brand.id, 'direct_request', {
+    relax: false, get: false, activity: false,
+  })
+}
+
+/**
+ * @param {object} opts
+ * @param {string[][]} opts.initialTags
+ * @param {string[]} opts.newTags
+ * @param {string[][]} opts.expectedTags
+ * @param {boolean} opts.shouldDelete
+ */
+async function testUpdateTags({ initialTags, newTags, expectedTags, shouldDelete }) {
+  const contactIds = await createContactsWithTags(initialTags)
+  await Contact.updateTags(contactIds, newTags, user.id, brand.id, shouldDelete)
+
+  for (const [idx, [cid, et]] of zip(contactIds, expectedTags).entries()) {
+    const contact = await Contact.get(cid)
+
+    /** @type {string[]} */
+    const actualTags = /** @type {any} */(contact.tags)
+
+    expect(actualTags, `Contact [${idx}] has'nt got expected tags after update`)
+      .to.be.an('array')
+      .with.lengthOf(et?.length ?? 0)
+      .which.has.same.members(et ?? [])
+  }
+}
+
+async function testUniqNewTags () {
+  for (const shouldDelete of [false, true]) {
+    await testUpdateTags({
+      shouldDelete,
+      initialTags: [[]],
+      newTags: ['tag3', 'tag1', 'Tag1', 'tag2', ' Tag1  ', '\tTaG1', 'tAg1'],
+      expectedTags: [['tag3', 'tag1', 'tag2']],
+    })
+  }
+}
+
+async function testNotToCreateDuplicateTags () {
+  await testUpdateTags({
+    shouldDelete: true,
+    initialTags: [
+      ['Dup1', 'Common', 'Dup2'],
+      ['Dup1', 'Common', 'Dup3'],
+    ],
+    newTags: ['Dup1'],
+    expectedTags: [
+      ['Dup1', 'Dup2'],
+      ['Dup1', 'Dup3'],
+    ],
+  })
+}
+
+async function testFixCase () {
+  await testUpdateTags({
+    shouldDelete: true,
+    initialTags: [
+      ['TAG1', 'Tag2'],
+      ['tAg1', 'tag3'],
+    ],
+    newTags: ['Tag1'],
+    expectedTags: [
+      ['Tag1', 'Tag2'],
+      ['Tag1', 'tag3'],
+    ],
+  })
+}
+
+async function testDedupeTagsUpdating () {
+  await testUpdateTags({
+    shouldDelete: true,
+    initialTags: [
+      ['indie1', 'uniq1', 'Uniq1', ' UNIQ1  ', 'CoMMon', 'common', 'Common  ', 'common2'],
+      ['indie2', 'uniq2', 'UniQ2 ', 'common', 'cOmmOn', 'CoMMon', 'Common  ', ' Common ', 'common2'],
+    ],
+    newTags: ['uniq1', 'common', 'Uniq2'],
+    expectedTags: [
+      ['indie1', 'uniq1', 'common', 'Uniq2'],
+      ['indie2', 'uniq1', 'common', 'Uniq2'],
+    ],
+  })
+}
+
+async function testDedupeTagsExisting () {
+  /* XXX: this isn't a useful feature though. it was only added accidentally by
+   * me and I've kept it, because it's usable in a migration script. */
+  await testUpdateTags({
+    shouldDelete: true,
+    initialTags: [
+      [' Tag1 ', ' Tag1 ', 'TAG1'],
+      ['\ttag2\t', '\ttag2\t', 'TAG2'],
+    ],
+    newTags: ['tag3'],
+    expectedTags: [
+      [' Tag1 ', 'TAG1', 'tag3'],
+      ['\ttag2\t', 'TAG2', 'tag3'],
+    ],
+  })
+}
+
+async function testNotToAddDuplicateTags () {
+  await testUpdateTags({
+    shouldDelete: false,
+    initialTags: [
+      ['  Dup1 ', 'DUP1 ', 'Common', 'Tag2'],
+      ['dup1', 'Common', 'Tag3'],
+      ['Common', 'Tag4'],
+    ],
+    newTags: ['dup1', 'Dup1', 'DUP1'],
+    expectedTags: [
+      ['  Dup1 ', 'DUP1 ', 'Common', 'Tag2'],
+      ['dup1', 'Common', 'Tag3'],
+      ['dup1', 'Common', 'Tag4'],
+    ]
+  })
+}
+
+async function testDedupeTagsScript () {
+  const initialTags = [
+    ['  COn1 ', 'CON1', ' con1', 'coN1 ', '  Con1', 'CoN1 ', '  Con1  ', 'Indie1', 'Common '],
+    [' CoN2  ', 'Con2 ', ' Con2 ', ' Indie2', ' common  '],
+  ]
+
+  const expectedTags = [
+    ['Con1', 'Indie1', 'Common'],
+    ['Con2', 'Indie2', 'common'],
+  ]
+
+  const contactIds = await createContactsWithTags(initialTags)
+  await dedupeContactsTagsScript.dedupeChunk(contactIds.length)
+
+  for (const [idx, [cid, et]] of zip(contactIds, expectedTags).entries()) {
+    /** @type {string[]} */
+    const actualTags = /** @type {any} */((await Contact.get(cid)).tags)
+
+    expect(actualTags, `Contact [${idx}] has'nt got expected tags after running the script`)
+      .to.be.an('array')
+      .with.lengthOf(et?.length ?? 0)
+      .which.has.same.members(et ?? [])
+  }
+}
+
 describe('Contact', () => {
   createContext()
   beforeEach(setup)
@@ -448,5 +610,22 @@ describe('Contact', () => {
     // Empty tag
     it('should not allow creating an empty tag', testCreateEmptyTagFail)
     it('should not allow renaming to empty tag', testRenameToEmptyTagFail)
+  })
+
+  describe('updateTags', () => {
+    it('ignores duplicate tags in newTags (case-insensitive, trimmed)', testUniqNewTags)
+
+    context('when replacing tags... (shouldDelete = true)', () => {
+      it('doesn\'t create duplicate tags', testNotToCreateDuplicateTags)
+      it('fixes text case', testFixCase)
+      it('dedupes existing tags when updating them (case-insensitive, trimmed)', testDedupeTagsUpdating)
+      it('dedupes existing non-updating tags (case-sensitive)', testDedupeTagsExisting)
+    })
+
+    context('when adding new tags... (shouldDelete = false)', () => {
+      it('adds only new unique tags (case-insensitive, trimmed)', testNotToAddDuplicateTags)
+    })
+
+    it('(scripts/crm/dedupe-contacts-tags#dedupeAll) removes duplicate tags', testDedupeTagsScript)
   })
 })
