@@ -322,7 +322,6 @@ declare type TDbSqlAddress =
   | 'email/campaign/attachments/get'
   | 'email/campaign/attachments/get_by_campaing'
   | 'email/campaign/attachments/insert'
-  | 'email/campaign/by_brand'
   | 'email/campaign/by_user'
   | 'email/campaign/check_quota'
   | 'email/campaign/delete'

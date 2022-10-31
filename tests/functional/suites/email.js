@@ -243,6 +243,7 @@ const paginateCampaigns = (limit, start) => cb => {
     `limit=${limit}`,
     `start=${start}`,
     'status=any',
+    'order=-created_at,+updated_at',
   ].join('&')
 
   const expected = expectedCampaigns().slice(start, start + limit)
