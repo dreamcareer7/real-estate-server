@@ -170,10 +170,10 @@ const queues = [
   //   concurrency: 20
   // },
 
-  // {
-  //   queues: ['brand_webhook'],
-  //   concurrency: 50
-  // },
+  {
+    queues: ['brand_webhook'],
+    concurrency: 50
+  },
 
   {
     queues: ['social_post'],
