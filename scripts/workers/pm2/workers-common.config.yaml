@@ -1,0 +1,5 @@
+apps:
+  - script   : ./scripts/workers/index.js
+    args     : ./peanar/common
+    name     : 'peanar_common'
+    kill_timeout : 25000
