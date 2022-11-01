@@ -175,15 +175,15 @@ const queues = [
   //   concurrency: 50
   // },
 
-  // {
-  //   queues: ['social_post'],
-  //   concurrency: 1
-  // },
+  {
+    queues: ['social_post'],
+    concurrency: 1
+  },
 
-  // {
-  //   queues: ['lead_capture'],
-  //   concurrency: 1
-  // }
+  {
+    queues: ['lead_capture'],
+    concurrency: 1
+  }
 ]
 
 async function start() {
