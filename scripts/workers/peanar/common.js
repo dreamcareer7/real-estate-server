@@ -68,18 +68,14 @@ const queues = [
     queues: ['calendar', 'touches', 'showings'],
     concurrency: 2
   },
-  // {
-  //   queues: ['contacts', 'contact_lists', 'contact_duplicates'],
-  //   concurrency: 10
-  // },
   {
-    queues: ['flows', 'crm_tasks'],
+    queues: ['flows', 'contacts', 'contact_lists', 'contact_duplicates', 'crm_tasks'],
     concurrency: 10
   },
-  // {
-  //   queues: ['contact_import'],
-  //   concurrency: 15
-  // },
+  {
+    queues: ['contact_import'],
+    concurrency: 15
+  },
   {
     queues: ['MLS.Office', 'MLS.Room', 'MLS.Agent'],
     concurrency: 50
