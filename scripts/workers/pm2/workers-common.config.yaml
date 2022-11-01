@@ -3,3 +3,5 @@ apps:
     args     : ./peanar/common
     name     : 'peanar_common'
     kill_timeout : 25000
+    env:
+      DEBUG: peanar:broker
