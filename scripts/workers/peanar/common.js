@@ -148,10 +148,10 @@ const queues = [
     concurrency: 10
   },
 
-  // {
-  //   queues: ['brand_template_thumbnail'],
-  //   concurrency: 100
-  // },
+  {
+    queues: ['brand_template_thumbnail'],
+    concurrency: 100
+  },
   // {
   //   queues: ['envelope_update'],
   //   concurrency: 5
