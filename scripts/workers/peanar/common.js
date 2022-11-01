@@ -64,10 +64,10 @@ const queues = [
     queues: ['deal_email'],
     concurrency: 5
   },
-  {
-    queues: ['calendar', 'touches', 'showings'],
-    concurrency: 2
-  },
+  // {
+  //   queues: ['calendar', 'touches', 'showings'],
+  //   concurrency: 2
+  // },
   {
     queues: ['flows', 'contacts', 'contact_lists', 'contact_duplicates', 'crm_tasks'],
     concurrency: 10
@@ -88,65 +88,65 @@ const queues = [
     queues: ['sms'],
     concurrency: config.twilio.parallel
   },
-  {
-    queues: ['microsoft_contacts'],
-    concurrency: 5
-  },
-  {
-    queues: ['microsoft_contacts_avatars'],
-    concurrency: 5
-  },
-  {
-    queues: ['microsoft_migration'],
-    concurrency: 1
-  },
-  {
-    queues: ['microsoft_disconnect'],
-    concurrency: 1
-  },
-  {
-    queues: ['outlook_by_query'],
-    concurrency: 2
-  },
+  // {
+  //   queues: ['microsoft_contacts'],
+  //   concurrency: 5
+  // },
+  // {
+  //   queues: ['microsoft_contacts_avatars'],
+  //   concurrency: 5
+  // },
+  // {
+  //   queues: ['microsoft_migration'],
+  //   concurrency: 1
+  // },
+  // {
+  //   queues: ['microsoft_disconnect'],
+  //   concurrency: 1
+  // },
+  // {
+  //   queues: ['outlook_by_query'],
+  //   concurrency: 2
+  // },
 
-  {
-    queues: ['gmail_webhooks'],
-    concurrency: 3
-  },
-  {
-    queues: ['google_cal_webhooks'],
-    concurrency: 3
-  },
-  {
-    queues: ['trigger', 'brand_trigger'],
-    concurrency: 5
-  },
-  {
-    queues: ['google_contacts'],
-    concurrency: 5
-  },
-  {
-    queues: ['google_contacts_avatars'],
-    concurrency: 5
-  },
-  {
-    queues: ['google_disconnect'],
-    concurrency: 1
-  },
-  {
-    queues: ['gmail_by_query'],
-    concurrency: 2
-  },
+  // {
+  //   queues: ['gmail_webhooks'],
+  //   concurrency: 3
+  // },
+  // {
+  //   queues: ['google_cal_webhooks'],
+  //   concurrency: 3
+  // },
+  // {
+  //   queues: ['trigger', 'brand_trigger'],
+  //   concurrency: 5
+  // },
+  // {
+  //   queues: ['google_contacts'],
+  //   concurrency: 5
+  // },
+  // {
+  //   queues: ['google_contacts_avatars'],
+  //   concurrency: 5
+  // },
+  // {
+  //   queues: ['google_disconnect'],
+  //   concurrency: 1
+  // },
+  // {
+  //   queues: ['gmail_by_query'],
+  //   concurrency: 2
+  // },
 
-  {
-    queues: ['calendar_integration'],
-    concurrency: 10
-  },
+  // {
+  //   queues: ['calendar_integration'],
+  //   concurrency: 10
+  // },
 
-  {
-    queues: ['contact_integration'],
-    concurrency: 10
-  },
+  // {
+  //   queues: ['contact_integration'],
+  //   concurrency: 10
+  // },
 
   {
     queues: ['brand_template_thumbnail'],
