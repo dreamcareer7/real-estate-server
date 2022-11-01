@@ -148,42 +148,42 @@ const queues = [
     concurrency: 10
   },
 
-  {
-    queues: ['brand_template_thumbnail'],
-    concurrency: 100
-  },
-  {
-    queues: ['envelope_update'],
-    concurrency: 5
-  },
-  {
-    queues: ['daily_email'],
-    concurrency: 5
-  },
-  {
-    queues: ['register_domain', 'create_zone', 'update_nameservers', 'capture_charge'],
-    concurrency: 20
-  },
+  // {
+  //   queues: ['brand_template_thumbnail'],
+  //   concurrency: 100
+  // },
+  // {
+  //   queues: ['envelope_update'],
+  //   concurrency: 5
+  // },
+  // {
+  //   queues: ['daily_email'],
+  //   concurrency: 5
+  // },
+  // {
+  //   queues: ['register_domain', 'create_zone', 'update_nameservers', 'capture_charge'],
+  //   concurrency: 20
+  // },
 
-  {
-    queues: ['listing_notifications'],
-    concurrency: 20
-  },
+  // {
+  //   queues: ['listing_notifications'],
+  //   concurrency: 20
+  // },
 
-  {
-    queues: ['brand_webhook'],
-    concurrency: 50
-  },
+  // {
+  //   queues: ['brand_webhook'],
+  //   concurrency: 50
+  // },
 
-  {
-    queues: ['social_post'],
-    concurrency: 1
-  },
+  // {
+  //   queues: ['social_post'],
+  //   concurrency: 1
+  // },
 
-  {
-    queues: ['lead_capture'],
-    concurrency: 1
-  }
+  // {
+  //   queues: ['lead_capture'],
+  //   concurrency: 1
+  // }
 ]
 
 async function start() {
