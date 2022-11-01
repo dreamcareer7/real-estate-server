@@ -165,10 +165,10 @@ const queues = [
   //   concurrency: 20
   // },
 
-  // {
-  //   queues: ['listing_notifications'],
-  //   concurrency: 20
-  // },
+  {
+    queues: ['listing_notifications'],
+    concurrency: 20
+  },
 
   {
     queues: ['brand_webhook'],
