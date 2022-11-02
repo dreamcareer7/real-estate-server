@@ -156,10 +156,10 @@ const queues = [
     queues: ['envelope_update'],
     concurrency: 5
   },
-  // {
-  //   queues: ['daily_email'],
-  //   concurrency: 5
-  // },
+  {
+    queues: ['daily_email'],
+    concurrency: 5
+  },
   {
     queues: ['register_domain', 'create_zone', 'update_nameservers', 'capture_charge'],
     concurrency: 20
