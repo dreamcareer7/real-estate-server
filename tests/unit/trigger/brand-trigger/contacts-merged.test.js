@@ -12,8 +12,8 @@ const Trigger = {
   ...require('../../../../lib/models/Trigger/execute'),
 }
 const BrandTrigger = {
-  ...require('../../../../lib/models/Trigger/brand_trigger/workers'), 
-  ...require('../../../../lib/models/Trigger/brand_trigger/create'), 
+  ...require('../../../../lib/models/Trigger/brand_trigger/workers'),
+  ...require('../../../../lib/models/Trigger/brand_trigger/create'),
   ...require('../../../../lib/models/Trigger/brand_trigger/get'),
 }
 const Contact = {
@@ -97,8 +97,8 @@ describe('BrandTrigger/workers', () => {
       })
       await handleJobs()
       await BrandTrigger.contactsMerged({
-        user_id: user.id, 
-        contact_ids: [contact.id], 
+        user_id: user.id,
+        contact_ids: [contact.id],
         event_type: 'merge'
       })
     })
@@ -126,10 +126,10 @@ describe('BrandTrigger/workers', () => {
         }
         await BrandTrigger.upsert(bt,true)
         await handleJobs()
-        const campaignsThen = await EmailCampaign.getByBrand(brand.id, { havingDueAt: null })
+        const campaignsThen = await EmailCampaign.getByBrand(brand.id, { status: 'any' })
         await Contact.merge([contact1.id], contact2.id, user.id, brand.id)
         await handleJobs()
-        const campaignsNow = await EmailCampaign.getByBrand(brand.id, { havingDueAt: null })
+        const campaignsNow = await EmailCampaign.getByBrand(brand.id, { status: 'any' })
         expect(campaignsNow).to.eql(campaignsThen)
       })
 
@@ -156,10 +156,10 @@ describe('BrandTrigger/workers', () => {
         }
         await BrandTrigger.upsert(bt,true)
         await handleJobs()
-        const campaignsThen = await EmailCampaign.getByBrand(brand.id, { havingDueAt: null })
+        const campaignsThen = await EmailCampaign.getByBrand(brand.id, { status: 'any' })
         await Contact.merge([contact1.id], contact2.id, user.id, brand.id)
         await handleJobs()
-        const campaignsNow = await EmailCampaign.getByBrand(brand.id, { havingDueAt: null })
+        const campaignsNow = await EmailCampaign.getByBrand(brand.id, { status: 'any' })
         expect(campaignsNow).to.eql(campaignsThen)
       })
 
@@ -184,10 +184,10 @@ describe('BrandTrigger/workers', () => {
         }
         await BrandTrigger.upsert(bt, true)
         await handleJobs()
-        const campaignsThen = await EmailCampaign.getByBrand(brand.id, { havingDueAt: null })
+        const campaignsThen = await EmailCampaign.getByBrand(brand.id, { status: 'any' })
         await Contact.merge([contact1.id], contact2.id, user.id, brand.id)
         await handleJobs()
-        const campaignsNow = await EmailCampaign.getByBrand(brand.id, { havingDueAt: null })
+        const campaignsNow = await EmailCampaign.getByBrand(brand.id, { status: 'any' })
         expect(campaignsNow).to.eql(campaignsThen)
       })
 
@@ -203,7 +203,7 @@ describe('BrandTrigger/workers', () => {
         }
         await BrandTrigger.upsert(bt,true)
         await handleJobs()
-        const campaignsThen = await EmailCampaign.getByBrand(brand.id, { havingDueAt: null })
+        const campaignsThen = await EmailCampaign.getByBrand(brand.id, { status: 'any' })
         await BrandTrigger.contactsMerged({
           brand_id: brand.id,
           contact_ids: [
@@ -212,7 +212,7 @@ describe('BrandTrigger/workers', () => {
           ]
         })
         await handleJobs()
-        const campaignsNow = await EmailCampaign.getByBrand(brand.id, { havingDueAt: null })
+        const campaignsNow = await EmailCampaign.getByBrand(brand.id, { status: 'any' })
         expect(campaignsNow).to.eql(campaignsThen)
       })
     })
