@@ -24,8 +24,8 @@ const BrandFlow = {
   ...require('../../../../lib/models/Brand/flow/create'),
 }
 const BrandTrigger = {
-  ...require('../../../../lib/models/Trigger/brand_trigger/workers'), 
-  ...require('../../../../lib/models/Trigger/brand_trigger/create'), 
+  ...require('../../../../lib/models/Trigger/brand_trigger/workers'),
+  ...require('../../../../lib/models/Trigger/brand_trigger/create'),
   ...require('../../../../lib/models/Trigger/brand_trigger/get'),
 }
 const Contact = {
@@ -143,6 +143,7 @@ describe('BrandTrigger/workers', () => {
           brandFlows[0].steps,
           [contact.id]
         )
+        await handleJobs()
         const triggerIds = await Trigger.filter(
           { deleted_at: null, brand: brand.id }
         )
@@ -166,8 +167,8 @@ describe('BrandTrigger/workers', () => {
       it('non-email triggers', async () => {
         const { user, contact } = await createUserAndContact(true)
         const brandEventIdsArray = await BrandEvent.createAll(
-          user.id, brand.id, 
-          [{title: 'personal meeting', task_type: 'In-Person Meeting'}], 
+          user.id, brand.id,
+          [{title: 'personal meeting', task_type: 'In-Person Meeting'}],
         )
         const trigger_data = {
           action: 'create_event',
@@ -180,7 +181,7 @@ describe('BrandTrigger/workers', () => {
           wait_for: -86400,
           time: '10:00:00',
         }
-      
+
         // @ts-ignore
         const [triggerId] = await Trigger.create([trigger_data])
         // @ts-ignore
@@ -201,7 +202,7 @@ describe('BrandTrigger/workers', () => {
         const firstTrigger = await Trigger.get(triggerId)
         expect(firstTrigger.deleted_at).to.be.null
       })
-      
+
       it('triggers of other contacts')
       it('triggers of other attribute type')
       it('effectively executed triggers', async () => {
