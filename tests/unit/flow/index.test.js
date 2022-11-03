@@ -57,7 +57,7 @@ const CONTACT = {
 }
 
 /**
- * @param {string} userId 
+ * @param {string} userId
  * @returns {any[]}
  */
 const defaultFlowSteps = (userId) => [{
@@ -213,6 +213,7 @@ async function testEnrollContact() {
   const id = await createContact()
 
   const [flow] = await Flow.enrollContacts(brand.id, user.id, brand_flow.id, Date.now() / 1000, brand_flow.steps.map(s => s.id), [id])
+  await handleJobs()
 
   return { flow, contact: id }
 }
@@ -272,6 +273,7 @@ async function testFlowWithEmailAndTemplateInstanceStep() {
   const { brandFlowId, brandFlowStepIds } = await setupFlowWithEmailAndTemplateInstanceStep()
   const contact = await createContact()
   const [flow] = await Flow.enrollContacts(brand.id, user.id, brandFlowId, Date.now() / 1000, brandFlowStepIds, [contact])
+  await handleJobs()
 
   const triggers = await sql.select('SELECT id FROM triggers WHERE flow = $1 and contact = $2', [ flow.id, contact ])
   expect(triggers).to.have.length(1)
@@ -289,6 +291,7 @@ async function testFlowWithEmailAndMjmlTemplateInstanceStep() {
   const { instance, brandFlowId, brandFlowStepIds } = await setupFlowWithEmailAndTemplateInstanceStep({ mjml: true })
   const contact = await createContact()
   const [flow] = await Flow.enrollContacts(brand.id, user.id, brandFlowId, Date.now() / 1000, brandFlowStepIds, [contact])
+  await handleJobs()
 
   const triggers = await sql.select('SELECT id FROM triggers WHERE flow = $1 and contact = $2', [ flow.id, contact ])
   expect(triggers).to.have.length(1)
@@ -348,7 +351,8 @@ async function testFlowProgressFail() {
 
   const id = await createContact(attrs)
   const [flow] = await Flow.enrollContacts(brand.id, user.id, brand_flow.id, Date.now() / 1000, brand_flow.steps.map(s => s.id), [id])
-  
+  await handleJobs()
+
   await Trigger.executeDue()
   await handleJobs()
 
@@ -446,8 +450,10 @@ async function testDuplicateEnroll() {
 
   const lastWeek = moment.utc().add(-1, 'week').unix() / 1000
   await Flow.enrollContacts(brand.id, user.id, brand_flow.id, lastWeek, brand_flow.steps.map(s => s.id), [id])
+  await handleJobs()
 
   const res = await Flow.enrollContacts(brand.id, user.id, brand_flow.id, Date.now() / 1000, brand_flow.steps.map(s => s.id), [id])
+  await handleJobs()
 
   expect(res).to.be.empty
 
@@ -519,6 +525,7 @@ async function testStopFlowWithManyExecutedTriggers() {
     brandFlow.steps,
     [contactId],
   )
+  await handleJobs()
   const triggerIds = await Trigger.filter({ flow: flow.id })
   // only the first step's trigger is made now
   expect(triggerIds.length).to.be.equal(1)
@@ -526,7 +533,7 @@ async function testStopFlowWithManyExecutedTriggers() {
   // execute it and mark the related campaign as executed
   await Trigger.execute(triggerIds[0])
   await db.query.promise('email/campaign/mark-as-executed', [firstTrigger.campaign])
-  // execute the other two triggers 
+  // execute the other two triggers
   for (let i = 0; i < 2; i++) {
     const [newTriggerId] = await Trigger.filter({ flow: flow.id, executed_at: null })
     await Trigger.execute(newTriggerId)
@@ -547,7 +554,7 @@ async function testStopFlowWithManyExecutedTriggers() {
   const campaigns = await EmailCampaign.getAll(campaignIds)
   expect(campaigns[0].deleted_at).to.be.not.ok
   expect(campaigns[1].deleted_at).to.be.ok
-  expect(campaigns[2].deleted_at).to.be.ok  
+  expect(campaigns[2].deleted_at).to.be.ok
 }
 
 async function testStopFlow() {
@@ -569,6 +576,7 @@ async function testLastStepDateWithoutFirstStepExecuted() {
   const starts_at = Date.now() / 1000
 
   const [flow] = await Flow.enrollContacts(brand.id, user.id, brand_flow.id, starts_at, [brand_flow.steps[2].id], [id])
+  await handleJobs()
 
   await Trigger.executeDue()
   await handleJobs()
@@ -583,6 +591,7 @@ async function testLastStepDateWithFirstStepExecuted() {
   const starts_at = Date.now() / 1000
 
   const [flow] = await Flow.enrollContacts(brand.id, user.id, brand_flow.id, starts_at, brand_flow.steps.map(s => s.id), [contact])
+  await handleJobs()
 
   const [triggerId] = await Trigger.filter({ contact, deleted_at: null })
   const trigger = await Trigger.getDue(triggerId)
@@ -669,6 +678,7 @@ async function testFlowTriggerEffectiveAtDate() {
     brandFlows[0].steps,
     [contactId],
   )
+  await handleJobs()
   const [triggerId] = await Trigger.filter({ flow: flow.id })
   const trigger = await Trigger.get(triggerId)
   expect(trigger.effective_at).to.be.eql(flow.starts_at)
@@ -679,6 +689,7 @@ async function testDoubleFlowTriggersWithLastStepDateEventType(){
   const starts_at = Date.now() / 1000
 
   await Flow.enrollContacts(brand.id, user.id, brand_flow.id, starts_at, brand_flow.steps.map(s => s.id), [contact])
+  await handleJobs()
   const secondBrandFlowId = await BrandFlow.create(brand.id, user.id, {
     created_by: user.id,
     name: 'new',
@@ -748,6 +759,7 @@ async function testDoubleFlowTriggersWithRegularEventType(){
     firstBrandFlow.steps,
     [contact],
   )
+  await handleJobs()
   const [theTriggerId] = await Trigger.filter({
     contact,
     flow: true,
