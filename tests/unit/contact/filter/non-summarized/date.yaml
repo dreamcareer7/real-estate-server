@@ -1,0 +1,72 @@
+contacts: &contacts
+  - first_name: John
+    last_name: Doe
+    wedding_anniversary: 2000-01-01
+  - first_name: Joe
+    wedding_anniversary: 2022-06-12
+  - first_name: Jane
+
+tests:
+  - description: wedding anniversary equals
+    contacts: *contacts
+    filter:
+      attributes:
+        - attribute_type: wedding_anniversary
+          operator: eq
+          value: 2000-01-01
+    expected:
+      - 0
+
+  - description: wedding anniversary does not equal
+    contacts: *contacts
+    filter:
+      attributes:
+        - attribute_type: wedding_anniversary
+          operator: eq
+          value: 2000-01-01
+          invert: true
+    expected:
+      - 1
+      - 2
+
+  - description: wedding anniversary exists
+    contacts: *contacts
+    filter:
+      attributes:
+        - attribute_type: wedding_anniversary
+          operator: eq
+          value: ~
+          invert: true
+    expected:
+      - 0
+      - 1
+
+  - description: wedding anniversary does not exist
+    contacts: *contacts
+    filter:
+      attributes:
+        - attribute_type: wedding_anniversary
+          operator: eq
+          value: ~
+    expected:
+      - 2
+
+  - description: wedding anniversary greater than
+    contacts: *contacts
+    filter:
+      attributes:
+        - attribute_type: wedding_anniversary
+          operator: gte
+          value: 2020-01-01
+    expected:
+      - 1
+
+  - description: wedding anniversary less than
+    contacts: *contacts
+    filter:
+      attributes:
+        - attribute_type: wedding_anniversary
+          operator: lte
+          value: 2020-01-01
+    expected:
+      - 0

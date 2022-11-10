@@ -1,0 +1,74 @@
+contacts: &contacts
+  - first_name: John
+    last_name: Doe
+    birthday: 2000-01-01
+  - first_name: Joe
+    birthday: 1988-06-12
+  - first_name: Jane
+
+description: date attributes
+
+tests:
+  - description: birthday equals
+    contacts: *contacts
+    filter:
+      attributes:
+        - attribute_type: birthday
+          operator: eq
+          value: 2000-01-01
+    expected:
+      - 0
+
+  - description: birthday does not equal
+    contacts: *contacts
+    filter:
+      attributes:
+        - attribute_type: birthday
+          operator: eq
+          value: 2000-01-01
+          invert: true
+    expected:
+      - 1
+      - 2
+
+  - description: birthday exists
+    contacts: *contacts
+    filter:
+      attributes:
+        - attribute_type: birthday
+          operator: eq
+          value: ~
+          invert: true
+    expected:
+      - 0
+      - 1
+
+  - description: birthday does not exist
+    contacts: *contacts
+    filter:
+      attributes:
+        - attribute_type: birthday
+          operator: eq
+          value: ~
+    expected:
+      - 2
+
+  - description: birthday greater than
+    contacts: *contacts
+    filter:
+      attributes:
+        - attribute_type: birthday
+          operator: gte
+          value: 2000-01-01
+    expected:
+      - 0
+
+  - description: birthday less than
+    contacts: *contacts
+    filter:
+      attributes:
+        - attribute_type: birthday
+          operator: lte
+          value: 1999-01-01
+    expected:
+      - 1

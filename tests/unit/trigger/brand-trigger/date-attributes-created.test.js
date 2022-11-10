@@ -9,8 +9,8 @@ const BrandFlow = {
 const ContactAttribute = require('../../../../lib/models/Contact/attribute/index')
 
 const BrandTrigger = {
-  ...require('../../../../lib/models/Trigger/brand_trigger/workers'), 
-  ...require('../../../../lib/models/Trigger/brand_trigger/create'), 
+  ...require('../../../../lib/models/Trigger/brand_trigger/workers'),
+  ...require('../../../../lib/models/Trigger/brand_trigger/create'),
   ...require('../../../../lib/models/Trigger/brand_trigger/get'),
 }
 const Campaign = {
@@ -42,7 +42,7 @@ const Trigger = {
   ...require('../../../../lib/models/Trigger/create'),
   ...require('../../../../lib/models/Trigger/execute'),
 }
-  
+
 const BIRTHDAY = moment.utc().add(2, 'days').startOf('day').add(-20, 'years')
 
 let brand
@@ -101,13 +101,13 @@ async function createContact({ email, birthday = 0 }) {
 describe('BrandTrigger/workers', () => {
   createContext()
   beforeEach(setup)
-  
+
   context('.dateAttributesCreated()', () => {
     // lib/models/Trigger/brand_trigger/workers.js:229-232
     it('doesn\'t throw when brand trigger ID is missing', async () => {
       await BrandTrigger.dateAttributesCreated({brand: brand.id, attributes: []})
     })
-  
+
     // lib/models/Trigger/brand_trigger/workers.js:229-232
     context('doesn\'t create campaign for...', () => {
       it('attributes having active manual trigger', async () => {
@@ -164,22 +164,22 @@ describe('BrandTrigger/workers', () => {
         expect(triggerIds.length).to.be.eql(1)
         trigger = await Trigger.get(triggerIds[0])
         expect(trigger.deleted_at).to.be.null
-        const campaignsThen = await Campaign.getByBrand(brand.id, { havingDueAt: null })
+        const campaignsThen = await Campaign.getByBrand(brand.id, { status: 'any' })
         await ContactAttribute.create(
           [{
-            attribute_type: 'birthday', 
-            contact: contact.id, 
-            created_by: user.id, 
+            attribute_type: 'birthday',
+            contact: contact.id,
+            created_by: user.id,
             date: BIRTHDAY.add(6, 'days').unix()
           }],
           user.id,
           brand.id,
         )
         await handleJobs()
-        const campaignsNow = await Campaign.getByBrand(brand.id, { havingDueAt: null })
+        const campaignsNow = await Campaign.getByBrand(brand.id, { status: 'any' })
         expect(campaignsNow).to.eql(campaignsThen)
       })
-  
+
       it('attributes having active flow trigger', async () => {
         const contact = await createContact({
           email: 'first_mail@fake.com',
@@ -244,9 +244,9 @@ describe('BrandTrigger/workers', () => {
         await handleJobs()
         await ContactAttribute.create(
           [{
-            attribute_type: 'birthday', 
-            contact: contact.id, 
-            created_by: user.id, 
+            attribute_type: 'birthday',
+            contact: contact.id,
+            created_by: user.id,
             date: BIRTHDAY.add(6, 'days').unix()
           }],
           user.id,
@@ -281,20 +281,20 @@ describe('BrandTrigger/workers', () => {
         await handleJobs()
         await ContactAttribute.create(
           [{
-            attribute_type: 'wedding_anniversary', 
-            contact: contact.id, 
-            created_by: user.id, 
+            attribute_type: 'wedding_anniversary',
+            contact: contact.id,
+            created_by: user.id,
             date: BIRTHDAY.add(6, 'days').unix()
           }],
           user.id,
           brand.id,
         )
         await handleJobs()
-        const campaigns = await Campaign.getByBrand(brand.id, { havingDueAt: null })
+        const campaigns = await Campaign.getByBrand(brand.id, { status: 'any' })
         expect(campaigns.length).to.be.eql(0)
       })
     })
-  
+
     // lib/models/Trigger/brand_trigger/workers.js:243-246
     it('creates triggers and campaigns for contacts having desired attribute type', async() => {
       const contact = await createContact({
@@ -314,16 +314,16 @@ describe('BrandTrigger/workers', () => {
       await handleJobs()
       await ContactAttribute.create(
         [{
-          attribute_type: 'birthday', 
-          contact: contact.id, 
-          created_by: user.id, 
+          attribute_type: 'birthday',
+          contact: contact.id,
+          created_by: user.id,
           date: BIRTHDAY.unix()
         }],
         user.id,
         brand.id,
       )
       await handleJobs()
-      const campaigns = await Campaign.getByBrand(brand.id, { havingDueAt: null })
+      const campaigns = await Campaign.getByBrand(brand.id, { status: 'any' })
       const triggerIds = await Trigger.filter({
         deleted_at: null,
         brand: brand.id,
@@ -351,7 +351,7 @@ describe('BrandTrigger/workers', () => {
         email: 'first_mail@fake.com',
       })
       await handleJobs()
-      const campaigns = await Campaign.getByBrand(brand.id, { havingDueAt: null })
+      const campaigns = await Campaign.getByBrand(brand.id, { status: 'any' })
       const triggerIds = await Trigger.filter({
         deleted_at: null,
         brand: brand.id,
@@ -363,4 +363,4 @@ describe('BrandTrigger/workers', () => {
       expect(trigger.deleted_at).to.be.null
     })
   })
-})  
+})

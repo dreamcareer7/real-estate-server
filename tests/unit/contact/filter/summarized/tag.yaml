@@ -1,0 +1,77 @@
+contacts: &contacts
+  - first_name: John
+    email: john@rechat.com
+    tag:
+    - Tag1
+    - Tag2
+  - first_name: Emil
+    last_name: Sedgh
+    email: emil@rechat.com
+    tag:
+      - Tag2
+  - first_name: Thomas
+    marketing_name: Thomas and Emily
+    spouse_first_name: Emily
+    email: thomas@rechat.com
+    tag: Tag3
+    address:
+      - city: Dallas
+  - first_name: Mark
+    last_name: Twain
+    email: marktwain@gmail.com
+
+description: tags
+
+tests:
+  - description: tag equals
+    contacts: *contacts
+    filter:
+      attributes:
+        - attribute_type: tag
+          operator: eq
+          value: Tag1
+    expected:
+      - 0
+  - description: no tags
+    contacts: *contacts
+    filter:
+      attributes:
+        - attribute_type: tag
+          operator: eq
+          value: null
+    expected:
+      - 3
+  - description: any of specified tags
+    contacts: *contacts
+    filter:
+      attributes:
+        - attribute_type: tag
+          operator: any
+          value:
+            - Tag1
+            - Tag2
+    expected:
+      - 0
+      - 1
+  - description: all of specified tags
+    contacts: *contacts
+    filter:
+      attributes:
+        - attribute_type: tag
+          operator: all
+          value:
+            - Tag1
+            - Tag2
+    expected:
+      - 0
+  - description: all of specified tags, case-insensitive
+    contacts: *contacts
+    filter:
+      attributes:
+        - attribute_type: tag
+          operator: all
+          value:
+            - tag1
+            - tag2
+    expected:
+      - 0

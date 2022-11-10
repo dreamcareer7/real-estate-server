@@ -18,7 +18,11 @@ const run = async () => {
 
   let i = 1
   for(const domain of domains) {
-    await update(domain.name)
+    try {
+      await update(domain.name)
+    } catch(e) {
+      console.log(domain.name, e)
+    }
     console.log(`${i++}/${domains.length} \t ${domain.name}`)
   }
 }
