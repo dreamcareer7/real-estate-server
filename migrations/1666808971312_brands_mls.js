@@ -2,7 +2,7 @@ const db = require('../lib/utils/db')
 
 const migrations = [
   'BEGIN',
-  `CREATE TABLE brands_mls (
+  `CREATE TABLE IF NOT EXISTS brands_mls (
     id serial PRIMARY KEY,
     brand uuid NOT NULL REFERENCES brands (id),
     mls mls NOT NULL,
