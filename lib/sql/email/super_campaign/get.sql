@@ -3,6 +3,7 @@ super_campaign_stats AS (
   SELECT
     sc.id,
     count(sce.id)::int AS enrollments_count,
+    sum(coalesce(ec.recipients_count, 0))::int AS recipients_count,
     sum(coalesce(ec.delivered, 0))::int AS delivered,
     sum(coalesce(ec.opened, 0))::int AS opened,
     sum(coalesce(ec.clicked, 0))::int AS clicked,
@@ -39,6 +40,7 @@ SELECT
   ) AS eligible_brands,
 
   coalesce(stats.enrollments_count, 0) AS enrollments_count,
+  coalesce(stats.recipients_count, 0) AS recipients_count,
   coalesce(stats.delivered, 0) AS delivered,
   coalesce(stats.opened, 0) AS opened,
   coalesce(stats.clicked, 0) AS clicked,
