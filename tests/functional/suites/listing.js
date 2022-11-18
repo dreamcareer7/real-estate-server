@@ -153,6 +153,19 @@ function invalidUpdateListingSetting(cb) {
     .expectStatus(500)
 }
 
+/** @param {UUID} listingId */
+function getListingBranchLink (listingId) {
+  return cb => frisby
+    .create('Get listing branch link')
+    .get(`/listings/${listingId}/deep-link`)
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      url: 'http://mock-branch-url',
+    })
+}
+
 // const listingInquiry = cb => {
 //   return frisby.create('Inquire listings')
 //     .post('/listings/'+ listing.id + '/inquiry')
@@ -163,6 +176,7 @@ module.exports = {
   by_mls,
   by_mls400,
   getListing,
+  getListingBranchLink: getListingBranchLink(listing.id),
   getListing404,
   by_query,
   searchSubdivisions,
