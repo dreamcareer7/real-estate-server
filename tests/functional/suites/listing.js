@@ -162,7 +162,7 @@ function getListingBranchLink (listingId) {
     .expectStatus(200)
     .expectJSON({
       code: 'OK',
-      url: 'http://mock-branch-url',
+      data: { url: 'http://mock-branch-url' },
     })
 }
 
