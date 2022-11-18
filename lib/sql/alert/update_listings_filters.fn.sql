@@ -3,7 +3,6 @@ CREATE OR REPLACE FUNCTION update_listings_filters()
 $$
   BEGIN
     DELETE FROM listings_filters WHERE id = NEW.id;
-
     INSERT INTO listings_filters
     SELECT
       listings.id AS id,
@@ -28,7 +27,7 @@ $$
       (SELECT regexp_matches(listings.mls_area_major, E'[0-9]+'))[1]::int as mls_area_major,
       (SELECT regexp_matches(listings.mls_area_minor, E'[0-9]+'))[1]::int as mls_area_minor,
       properties.square_meters,
-      properties.bedroom_count,      
+      properties.bedroom_count,
       properties.half_bathroom_count,
       properties.full_bathroom_count,
       properties.property_type,
@@ -79,25 +78,27 @@ $$
           listings.mls_number
         ], ' ', NULL
       ) as address,
-    listings.mls AS mls,
-    listings.list_agent_mui,
-    listings.co_list_agent_mui,
-    listings.selling_agent_mui,
-    listings.co_selling_agent_mui,
-    listings.public_display,
-    properties.lot_size_area,
-    properties.bathroom_count,
-    listings.list_date,
-    
+      listings.mls AS mls,
+      listings.list_agent_mui,
+      listings.co_list_agent_mui,
+      listings.selling_agent_mui,
+      listings.co_selling_agent_mui,
+      listings.public_display,
+      co_list_agent2_mui bigint,
+      co_list_agent3_mui bigint,
+      co_selling_agent2_mui bigint,
+      co_selling_agent3_mui bigint,
+      co_list_agent2_mls_id text,
+      co_list_agent3_mls_id text,
+      co_selling_agent2_mls_id text,
+      co_selling_agent3_mls_id text
     FROM listings
     JOIN
       properties  ON listings.property_id = properties.id
     JOIN
       addresses   ON properties.address_id = addresses.id
-
     WHERE listings.id = NEW.id AND listings.deleted_at IS NULL;
-
-    RETURN NEW;
+      RETURN NEW;
   END;
 $$
-LANGUAGE PLPGSQL;
+LANGUAGE PLPGSQL
