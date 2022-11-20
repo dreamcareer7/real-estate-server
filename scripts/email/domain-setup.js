@@ -137,11 +137,11 @@ const sendInstructions = async mailgunDomain => {
                   <br>The following are the DNS records that need to be added. If you don't know what that means, its a sign you need to get in touch with the owner of the domain or your IT team. <br><br>
 
                   ${[...info.receiving_dns_records, ...info.sending_dns_records].map(record => {
-                      if (!record.name) //Mailgun MX domain's (receiving_dns_records) don't have a name but the formattRecord needs it
-                        record.name = mailgunDomain
+    if (!record.name) //Mailgun MX domain's (receiving_dns_records) don't have a name but the formattRecord needs it
+      record.name = mailgunDomain
 
-                    return formattRecord(record)
-                  }).join('<br>')}
+    return formattRecord(record)
+  }).join('<br>')}
 
                   <br>
                   Please let us know if you have any questions on this.`
