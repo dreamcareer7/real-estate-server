@@ -289,6 +289,7 @@ const createDistributionList = (cb) => {
       postal_code: '123456',
       country: 'Iran',
       phone: 'sorry Im not that guy',
+      mls: 'NTREIS'
     })
     .after(cb)
     .expectStatus(200)
@@ -299,7 +300,7 @@ const createDistributionList = (cb) => {
 
 const getDistributionList = (cb) => {
   return frisby.create('get distribution list')
-    .post('/listings/filter/agents', { postalCode: '123456' })
+    .post('/listings/filter/agents', { postalCode: '123456', mls: 'NTREIS' })
     .after(cb)
     .expectStatus(200)
     .expectJSON({
