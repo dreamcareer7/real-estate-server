@@ -3,7 +3,71 @@ CREATE OR REPLACE FUNCTION update_listings_filters()
 $$
   BEGIN
     DELETE FROM listings_filters WHERE id = NEW.id;
-    INSERT INTO listings_filters
+
+    INSERT INTO listings_filters (
+      id,
+      status,
+      price,
+      matrix_unique_id,
+      close_date,
+      list_office_mls_id,
+      co_list_office_mls_id,
+      list_agent_mls_id,
+      co_list_agent_mls_id,
+      selling_office_mls_id,
+      co_selling_office_mls_id,
+      selling_agent_mls_id,
+      co_selling_agent_mls_id,
+      close_price,
+      created_at,
+      mls_number,
+      application_fee_yn,
+      mls_area_major,
+      mls_area_minor,
+      square_meters,
+      bedroom_count,
+      half_bathroom_count,
+      full_bathroom_count,
+      property_type,
+      property_subtype,
+      year_built,
+      pool_yn,
+      pets_yn,
+      lot_square_meters,
+      parking_spaces_covered_total,
+      architectural_style,
+      subdivision_name,
+      school_district,
+      elementary_school_name,
+      intermediate_school_name,
+      junior_high_school_name,
+      middle_school_name,
+      primary_school_name,
+      high_school_name,
+      senior_high_school_name,
+      appliances_yn,
+      furnished_yn,
+      fenced_yard_yn,
+      number_of_pets_allowed,
+      location,
+      county_or_parish,
+      postal_code,
+      address,
+      mls,
+      list_agent_mui,
+      co_list_agent_mui,
+      selling_agent_mui,
+      co_selling_agent_mui,
+      public_display,
+      co_list_agent2_mui,
+      co_list_agent2_mls_id,
+      co_list_agent3_mui,
+      co_list_agent3_mls_id,
+      co_selling_agent2_mui,
+      co_selling_agent2_mls_id,
+      co_selling_agent3_mui,
+      co_selling_agent3_mls_id
+    )
     SELECT
       listings.id AS id,
       listings.status AS status,
@@ -24,8 +88,8 @@ $$
       listings.application_fee_yn,
       -- Areas are stored as something like this: MCKINNEY AREA (53)
       -- When filteting, we only want the number (53). So we extract it.
-      (SELECT regexp_matches(listings.mls_area_major, E'[0-9]+'))[1]::int as mls_area_major,
-      (SELECT regexp_matches(listings.mls_area_minor, E'[0-9]+'))[1]::int as mls_area_minor,
+      (SELECT regexp_matches(listings.mls_area_major, E'[0-9]+'))[1]::int AS mls_area_major,
+      (SELECT regexp_matches(listings.mls_area_minor, E'[0-9]+'))[1]::int AS mls_area_minor,
       properties.square_meters,
       properties.bedroom_count,
       properties.half_bathroom_count,
@@ -77,28 +141,26 @@ $$
           ),
           listings.mls_number
         ], ' ', NULL
-      ) as address,
+      ) AS address,
       listings.mls AS mls,
       listings.list_agent_mui,
       listings.co_list_agent_mui,
       listings.selling_agent_mui,
       listings.co_selling_agent_mui,
       listings.public_display,
-      co_list_agent2_mui bigint,
-      co_list_agent3_mui bigint,
-      co_selling_agent2_mui bigint,
-      co_selling_agent3_mui bigint,
-      co_list_agent2_mls_id text,
-      co_list_agent3_mls_id text,
-      co_selling_agent2_mls_id text,
-      co_selling_agent3_mls_id text
+      listings.co_list_agent2_mui,
+      listings.co_list_agent2_mls_id,
+      listings.co_list_agent3_mui,
+      listings.co_list_agent3_mls_id,
+      listings.co_selling_agent2_mui,
+      listings.co_selling_agent2_mls_id,
+      listings.co_selling_agent3_mui,
+      listings.co_selling_agent3_mls_id
     FROM listings
-    JOIN
-      properties  ON listings.property_id = properties.id
-    JOIN
-      addresses   ON properties.address_id = addresses.id
+    JOIN properties ON listings.property_id = properties.id
+    JOIN addresses ON properties.address_id = addresses.id
     WHERE listings.id = NEW.id AND listings.deleted_at IS NULL;
-      RETURN NEW;
+    RETURN NEW;
   END;
 $$
 LANGUAGE PLPGSQL
