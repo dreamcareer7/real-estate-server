@@ -157,6 +157,27 @@ declare interface IListing extends IModel {
   transaction_type?: string
   usage_type?: string
   structure_type?: string
+
+  co_list_agent2_mui?: string
+  co_list_agent2_direct_work_phone?: string
+  co_list_agent2_email?: string
+  co_list_agent2_full_name?: string
+  co_list_agent2_mls_id?: string
+  co_list_agent3_mui?: string
+  co_list_agent3_direct_work_phone?: string
+  co_list_agent3_email?: string
+  co_list_agent3_full_name?: string
+  co_list_agent3_mls_id?: string
+  co_selling_agent2_mui?: string
+  co_selling_agent2_direct_work_phone?: string
+  co_selling_agent2_email?: string
+  co_selling_agent2_full_name?: string
+  co_selling_agent2_mls_id?: string
+  co_selling_agent3_mui?: string
+  co_selling_agent3_direct_work_phone?: string
+  co_selling_agent3_email?: string
+  co_selling_agent3_full_name?: string
+  co_selling_agent3_mls_id?: string
 }
 
 declare interface IAddress {

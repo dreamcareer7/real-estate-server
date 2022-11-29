@@ -86,7 +86,28 @@ INSERT INTO listings (
   virtual_tour,
   sub_agency_offered,
   transaction_broker_commission,
-  compensation_based_on
+  compensation_based_on,
+
+  co_list_agent2_mui,
+  co_list_agent2_direct_work_phone,
+  co_list_agent2_email,
+  co_list_agent2_full_name,
+  co_list_agent2_mls_id,
+  co_list_agent3_mui,
+  co_list_agent3_direct_work_phone,
+  co_list_agent3_email,
+  co_list_agent3_full_name,
+  co_list_agent3_mls_id,
+  co_selling_agent2_mui,
+  co_selling_agent2_direct_work_phone,
+  co_selling_agent2_email,
+  co_selling_agent2_full_name,
+  co_selling_agent2_mls_id,
+  co_selling_agent3_mui,
+  co_selling_agent3_direct_work_phone,
+  co_selling_agent3_email,
+  co_selling_agent3_full_name,
+  co_selling_agent3_mls_id
 ) VALUES (
   $1,
   $2,
@@ -175,7 +196,28 @@ INSERT INTO listings (
   $85,
   $86,
   $87,
-  $88
+  $88,
+
+  $89,
+  $90,
+  $91,
+  $92,
+  $93,
+  $94,
+  $95,
+  $96,
+  $97,
+  $98,
+  $99,
+  $100,
+  $101,
+  $102,
+  $103,
+  $104,
+  $105,
+  $106,
+  $107,
+  $108
 )
 
 ON CONFLICT (matrix_unique_id, mls) DO UPDATE SET
@@ -258,6 +300,28 @@ ON CONFLICT (matrix_unique_id, mls) DO UPDATE SET
   sub_agency_offered = $86,
   transaction_broker_commission = $87,
   compensation_based_on = $88,
+
+  co_list_agent2_mui                  = $89,
+  co_list_agent2_direct_work_phone    = $90,
+  co_list_agent2_email                = $91,
+  co_list_agent2_full_name            = $92,
+  co_list_agent2_mls_id               = $93,
+  co_list_agent3_mui                  = $94,
+  co_list_agent3_direct_work_phone    = $95,
+  co_list_agent3_email                = $96,
+  co_list_agent3_full_name            = $97,
+  co_list_agent3_mls_id               = $98,
+  co_selling_agent2_mui               = $99,
+  co_selling_agent2_direct_work_phone = $100,
+  co_selling_agent2_email             = $101,
+  co_selling_agent2_full_name         = $102,
+  co_selling_agent2_mls_id            = $103,
+  co_selling_agent3_mui               = $104,
+  co_selling_agent3_direct_work_phone = $105,
+  co_selling_agent3_email             = $106,
+  co_selling_agent3_full_name         = $107,
+  co_selling_agent3_mls_id            = $108,
+
   updated_at = CLOCK_TIMESTAMP(),
   deleted_at = NULL
 
