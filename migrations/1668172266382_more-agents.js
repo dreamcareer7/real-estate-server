@@ -29,7 +29,7 @@ const migrations = [
      ADD COLUMN IF NOT EXISTS co_selling_agent3_full_name text,
      ADD COLUMN IF NOT EXISTS co_selling_agent3_mls_id text`,
 
-
+/*
   `ALTER TABLE listings_filters
      ADD COLUMN IF NOT EXISTS co_list_agent2_mui bigint,
      ADD COLUMN IF NOT EXISTS co_list_agent2_mls_id text,
@@ -42,7 +42,7 @@ const migrations = [
 
      ADD COLUMN IF NOT EXISTS co_selling_agent3_mui bigint,
      ADD COLUMN IF NOT EXISTS co_selling_agent3_mls_id text`,
-
+*/
 
   `CREATE INDEX IF NOT EXISTS listings_filters_co_list_agent2_mui
      ON public.listings_filters USING btree (co_list_agent2_mui)`,
