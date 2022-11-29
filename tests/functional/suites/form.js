@@ -3,6 +3,8 @@ const form_response = require('./expected_objects/form.js')
 const omit = require('lodash/omit')
 
 registerSuite('brand', ['createParent', 'create'])
+registerSuite('user', ['upgradeToAgentWithEmail'])
+
 
 const create = cb => {
   return frisby.create('create a form')
@@ -73,9 +75,20 @@ const getAll = (cb) => {
     })
 }
 
+const generate = (cb) => {
+  return frisby.create('generate')
+    .get(`/brands/${results.brand.create.data.id}/forms/${results.form.get.data.id}`, {
+      followRedirect: false
+    })
+    .after(cb)
+    .expectStatus(302)
+}
+
+
 module.exports = {
   create,
   update,
   get,
   getAll,
+  generate
 }

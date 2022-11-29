@@ -2,6 +2,8 @@ require('colors')
 const gulp = require('gulp')
 const eslint = require('gulp-eslint7')
 const spawn = require('child_process').spawn
+const { ESLint } = require('eslint')
+
 
 gulp.task('lint', () => {
   return gulp.src(['**/*.js', '!node_modules/**'])
@@ -28,24 +30,30 @@ process.on('exit', () => {
 
 gulp.task('default', gulp.parallel('lint', 'server', function () {}))
 
-const watcher = gulp.watch('lib/**/*', gulp.parallel('server'))
 
-watcher.on('change', function(path) {
-  process.stdout.write('\x033c')
+const run = async () => {
+  const lint = new ESLint({})
+  const formatter = await lint.loadFormatter()
+  const watcher = gulp.watch('lib/**/*', gulp.parallel('server'))
 
-  if(path.split('.').pop() === 'js')
-    lintFile(path)
-})
+  async function lintFile(file) {
+    const results = await lint.lintFiles([file])
 
-const CLIEngine = require('eslint').CLIEngine
-const cli = new CLIEngine({})
-const formatter = cli.getFormatter()
+    if (results[0] && results[0].errorCount > 0)
+      console.log(formatter.format(results))
+    else
+      console.log(file.green, 'Looks good eslint-wise'.green)
+  }
 
 
-function lintFile(file) {
-  const report = cli.executeOnFiles([file])
-  if (report.results[0] && report.results[0].errorCount > 0)
-    console.log(formatter(report.results))
-  else
-    console.log(file.green, 'Looks good eslint-wise'.green)
+
+  watcher.on('change', function(path) {
+    process.stdout.write('\x033c')
+
+    if(path.split('.').pop() === 'js')
+      lintFile(path)
+  })
 }
+
+run()
+
