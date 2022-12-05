@@ -1,4 +1,63 @@
-CREATE OR REPLACE FUNCTION update_listings_filters()
+const db = require('../lib/utils/db')
+
+const migrations = [
+  'BEGIN',
+
+
+  `ALTER TABLE listings
+     ADD COLUMN IF NOT EXISTS co_list_agent2_mui bigint,
+     ADD COLUMN IF NOT EXISTS co_list_agent2_direct_work_phone text,
+     ADD COLUMN IF NOT EXISTS co_list_agent2_email text,
+     ADD COLUMN IF NOT EXISTS co_list_agent2_full_name text,
+     ADD COLUMN IF NOT EXISTS co_list_agent2_mls_id text,
+
+     ADD COLUMN IF NOT EXISTS co_list_agent3_mui bigint,
+     ADD COLUMN IF NOT EXISTS co_list_agent3_direct_work_phone text,
+     ADD COLUMN IF NOT EXISTS co_list_agent3_email text,
+     ADD COLUMN IF NOT EXISTS co_list_agent3_full_name text,
+     ADD COLUMN IF NOT EXISTS co_list_agent3_mls_id text,
+
+     ADD COLUMN IF NOT EXISTS co_selling_agent2_mui bigint,
+     ADD COLUMN IF NOT EXISTS co_selling_agent2_direct_work_phone text,
+     ADD COLUMN IF NOT EXISTS co_selling_agent2_email text,
+     ADD COLUMN IF NOT EXISTS co_selling_agent2_full_name text,
+     ADD COLUMN IF NOT EXISTS co_selling_agent2_mls_id text,
+
+     ADD COLUMN IF NOT EXISTS co_selling_agent3_mui bigint,
+     ADD COLUMN IF NOT EXISTS co_selling_agent3_direct_work_phone text,
+     ADD COLUMN IF NOT EXISTS co_selling_agent3_email text,
+     ADD COLUMN IF NOT EXISTS co_selling_agent3_full_name text,
+     ADD COLUMN IF NOT EXISTS co_selling_agent3_mls_id text`,
+
+
+  `ALTER TABLE listings_filters
+     ADD COLUMN IF NOT EXISTS co_list_agent2_mui bigint,
+     ADD COLUMN IF NOT EXISTS co_list_agent2_mls_id text,
+
+     ADD COLUMN IF NOT EXISTS co_list_agent3_mui bigint,
+     ADD COLUMN IF NOT EXISTS co_list_agent3_mls_id text,
+
+     ADD COLUMN IF NOT EXISTS co_selling_agent2_mui bigint,
+     ADD COLUMN IF NOT EXISTS co_selling_agent2_mls_id text,
+
+     ADD COLUMN IF NOT EXISTS co_selling_agent3_mui bigint,
+     ADD COLUMN IF NOT EXISTS co_selling_agent3_mls_id text`,
+
+
+  `CREATE INDEX IF NOT EXISTS listings_filters_co_list_agent2_mui
+     ON public.listings_filters USING btree (co_list_agent2_mui)`,
+
+  `CREATE INDEX IF NOT EXISTS listings_filters_co_list_agent3_mui
+     ON public.listings_filters USING btree (co_list_agent3_mui)`,
+
+  `CREATE INDEX IF NOT EXISTS listings_filters_co_selling_agent2_mui
+     ON public.listings_filters USING btree (co_selling_agent2_mui)`,
+
+  `CREATE INDEX IF NOT EXISTS listings_filters_co_selling_agent3_mui
+     ON public.listings_filters USING btree (co_selling_agent3_mui)`,
+
+
+  `CREATE OR REPLACE FUNCTION update_listings_filters()
   RETURNS trigger AS
 $$
   BEGIN
@@ -163,4 +222,24 @@ $$
     RETURN NEW;
   END;
 $$
-LANGUAGE PLPGSQL
+LANGUAGE PLPGSQL`,
+
+
+  'COMMIT',
+]
+
+const run = async () => {
+  const { conn } = await db.conn.promise()
+
+  for(const sql of migrations) {
+    await conn.query(sql)
+  }
+
+  conn.release()
+}
+
+exports.up = cb => {
+  run().then(cb).catch(cb)
+}
+
+exports.down = () => {}
