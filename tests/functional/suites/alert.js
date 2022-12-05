@@ -300,7 +300,7 @@ const createDistributionList = (cb) => {
 
 const getDistributionList = (cb) => {
   return frisby.create('get distribution list')
-    .post('/listings/filter/agents', { postal_code: '123456', mls: 'NTREIS' })
+    .post('/listings/filter/agents', { postal_codes: ['123456'], mls: 'NTREIS' })
     .after(cb)
     .expectStatus(200)
     .expectJSON({
