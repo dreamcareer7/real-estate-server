@@ -78,7 +78,7 @@ const updateBrands = async offices => {
       return {
         id: o.id,
         name: o.name,
-        region: o.majorRegion
+        region: o.region
       }
     })
     )
