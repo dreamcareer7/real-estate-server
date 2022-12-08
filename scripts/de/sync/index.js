@@ -82,7 +82,7 @@ const getData = async token => {
     .value()
 
   const regions = _.chain(offices)
-    .map('majorRegion')
+    .map('region')
     .sort()
     .uniq()
     .value()

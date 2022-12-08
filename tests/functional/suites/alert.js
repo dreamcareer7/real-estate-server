@@ -4,7 +4,6 @@ const alert_response = require('./expected_objects/alert.js')
 const info = require('./expected_objects/info.js')
 const compact_listing = require('./expected_objects/compact_listing.js')
 const uuid = require('uuid')
-
 registerSuite('room', ['create', 'addUser'])
 registerSuite('agent', ['add'])
 registerSuite('mls', ['addListing'])
@@ -278,6 +277,38 @@ const listingsAgents = (cb) => {
     })
 }
 
+const createDistributionList = (cb) => {
+  return frisby.create('create distribution list')
+    .post('/distributionList', { 
+      email: 'test@test.com',
+      first_name: 'hossein',
+      last_name: 'derakhshan',
+      title: 'agent khubu',
+      city: 'shiraz',
+      state: 'fars',
+      postal_code: '123456',
+      country: 'Iran',
+      phone: 'sorry Im not that guy',
+      mls: 'NTREIS'
+    })
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK'
+    })
+}
+
+const getDistributionList = (cb) => {
+  return frisby.create('get distribution list')
+    .post('/listings/filter/agents', { postal_codes: ['123456'], mls: 'NTREIS' })
+    .after(cb)
+    .expectStatus(200)
+    .expectJSON({
+      code: 'OK',
+      data: []
+    })
+}
+
 module.exports = {
   create,
   feed,
@@ -296,5 +327,7 @@ module.exports = {
   deleteAlertWorked,
   updateAlertSetting,
   listingsAgents,
-  invalidUpdateAlertSetting
+  invalidUpdateAlertSetting,
+  createDistributionList,
+  getDistributionList
 }
