@@ -22,9 +22,7 @@ SELECT
   super_campaign_admin_permission,
   listings_add_mls_account_reminder_dismissed,
   calendar_filters,
-  contact_touch_reminder_hint_dismissed,
-  insight_social_posts_sort_field,
-  insight_super_campaigns_sort_field
+  contact_touch_reminder_hint_dismissed
 FROM
   users_settings
   JOIN unnest($1::uuid[]) WITH ORDINALITY t(eid, ord)

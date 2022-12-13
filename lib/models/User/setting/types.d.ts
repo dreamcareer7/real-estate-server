@@ -21,8 +21,6 @@ export interface UserSettingFields {
   listings_add_mls_account_reminder_dismissed: boolean;
   calendar_filters: JsonObject;
   contact_touch_reminder_hint_dismissed: boolean;
-  insight_social_posts_sort_field: Nullable<JsonObject>;
-  insight_super_campaigns_sort_field: Nullable<JsonObject>;
 }
 
 export interface UserSetting extends Omit<IModel, MissingProps>, UserSettingFields {
