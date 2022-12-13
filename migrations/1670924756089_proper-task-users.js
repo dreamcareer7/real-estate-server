@@ -15,7 +15,7 @@ const migrations = [
 
 
   // For #2420
-  `UPDATE rooms_users SET notification_setting = 'N_MENTIONES' WHERE id IN(
+  `UPDATE rooms_users SET notification_setting = 'N_MENTIONS' WHERE id IN(
     SELECT ru.id FROM tasks
     JOIN      rooms_users ru ON tasks.room = ru.room
     JOIN      deals_checklists dc ON dc.id = tasks.checklist
