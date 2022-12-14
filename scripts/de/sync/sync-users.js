@@ -136,7 +136,7 @@ UPDATE public.users SET
     user_type = (de.users.object->>'user_type')::user_type,
     timezone = de.users.object->>'timezone',
     designation = de.users.object->>'designation',
-    personal_room = COALESCE(personal_room, (SELECT owner FROM rooms WHERE owner = public.users.id AND room_type = 'Personal'))
+    personal_room = COALESCE(personal_room, (SELECT id FROM rooms WHERE owner = public.users.id AND room_type = 'Personal'))
   FROM de.users
   WHERE public.users.id = de.users.user
   RETURNING id
