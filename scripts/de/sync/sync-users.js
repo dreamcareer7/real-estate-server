@@ -107,7 +107,8 @@ const UPDATE_USERS = `
 WITH users_with_no_room AS (
     SELECT public.users.id FROM public.users
     JOIN de.users ON de.users.user = public.users.id
-    WHERE public.users.personal_room IS NULL
+    LEFT JOIN rooms ON rooms.owner = public.users.id AND rooms.room_type = 'Personal'
+    WHERE public.users.personal_room IS NULL AND rooms.id IS NULL
 ),
 
 inserted_rooms AS (
