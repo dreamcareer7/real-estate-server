@@ -104,6 +104,24 @@ AND LOWER(de.users.object->>'email') = LOWER(saved.email)
 RETURNING id`
 
 const UPDATE_USERS = `
+WITH users_with_no_room AS (
+    SELECT public.users.id FROM public.users
+    JOIN de.users ON de.users.user = public.users.id
+    LEFT JOIN rooms ON rooms.owner = public.users.id AND rooms.room_type = 'Personal'
+    WHERE public.users.personal_room IS NULL AND rooms.id IS NULL
+),
+
+inserted_rooms AS (
+    INSERT INTO rooms(room_type, owner)
+    SELECT 'Personal', id FROM users_with_no_room
+    RETURNING *
+),
+
+rooms_users AS (
+    INSERT INTO rooms_users(room, "user")
+    SELECT id, owner FROM inserted_rooms
+)
+
 UPDATE public.users SET 
     first_name = de.users.object->>'first_name',
     last_name = de.users.object->>'last_name',
@@ -117,7 +135,8 @@ UPDATE public.users SET
     twitter = de.users.object->>'twitter',
     user_type = (de.users.object->>'user_type')::user_type,
     timezone = de.users.object->>'timezone',
-    designation = de.users.object->>'designation'
+    designation = de.users.object->>'designation',
+    personal_room = COALESCE(personal_room, (SELECT id FROM rooms WHERE owner = public.users.id AND room_type = 'Personal'))
   FROM de.users
   WHERE public.users.id = de.users.user
   RETURNING id
